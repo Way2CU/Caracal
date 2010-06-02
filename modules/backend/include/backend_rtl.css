@@ -1,0 +1,18 @@
+/*
+	Backend Style Sheet for RTL languages
+	Copyright (c) 2010. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+body {
+	direction: rtl;
+}
+
+div#backend_Menu ul#navigation > li {
+	float: right;
+}
+
+div#backend_Menu ul#navigation li > ul {
+	left: auto;
+	right: -20px;
+}

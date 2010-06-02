@@ -1,0 +1,42 @@
+<document>
+	<language name="עברית" short="heb">
+		<constant name="username" value="שם משתמש" />
+		<constant name="password" value="סיסמא" />
+		<constant name="captcha" value="Captcha" />
+		<constant name="login" value="התחבר" />
+		<constant name="logout" value="התנתק" />
+		<constant name="message_login_ok" value="כניסתך לממשק המנהל אושרה, אנא המתן להעברתך" />
+		<constant name="message_login_error" value="שם משתמש או סיסמא לא תקינים" />
+		<constant name="message_logout" value="יציאת מממשק המנהל בהצלחה" />
+	</language>
+	<language name="English" short="en">
+		<constant name="username" value="Username" />
+		<constant name="password" value="Password" />
+		<constant name="captcha" value="Captcha" />
+		<constant name="login" value="Login" />
+		<constant name="message_login_ok" value="You were successfully logged in. Please wait while being redirected!" />
+		<constant name="message_login_error" value="Invalid username and/or password." />
+		<constant name="message_logout" value="Logout successful!" />
+		<constant name="logout" value="Logout" />
+	</language>
+	<language name="Srpski" short="sr-lat">
+		<constant name="username" value="Korisničko ime:" />
+		<constant name="password" value="Lozinka:" />
+		<constant name="captcha" value="Captcha:" />
+		<constant name="login" value="Prijava" />
+		<constant name="message_login_ok" value="Uspešno ste se prijavili na sistem. Preusmeravanje je u toku, molimo sačekajte!" />
+		<constant name="message_login_error" value="Netačno korisničko ime ili lozinka." />
+		<constant name="message_logout" value="Uspešna odjava sa sistema!" />
+		<constant name="logout" value="Odjava" />
+	</language>
+	<language name="Srpski" short="sr-cyr">
+		<constant name="username" value="Корисничко име:" />
+		<constant name="password" value="Лозинка:" />
+		<constant name="captcha" value="Captcha:" />
+		<constant name="login" value="Пријава" />
+		<constant name="message_login_ok" value="Успешно сте се пријавили на систем. Преусмеравање је у току, молимо сачекајте!" />
+		<constant name="message_login_error" value="Нетачно корисничко име или лозинка." />
+		<constant name="message_logout" value="Успешна одјава са система!" />
+		<constant name="logout" value="Одјава" />
+	</language>
+</document>

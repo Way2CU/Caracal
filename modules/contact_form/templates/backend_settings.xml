@@ -1,0 +1,18 @@
+<document>
+	<form method="post">
+		<input type="hidden" name="section" value="backend" class="hidden"/>
+		<input type="hidden" name="backend_action" value="settings_save" class="hidden"/>
+		<input type="hidden" name="module" value="contact_form" class="hidden"/>
+		
+		<span class="label"><_text constant="backend_address" module="contact_form"/></span>
+		<input name="mail_to" value="$settings['mail_to']" eval="value"/>
+		
+		<span class="label"><_text constant="backend_subject" module="contact_form"/></span>
+		<input name="mail_subject" value="$settings['mail_subject']" eval="value"/>
+		
+		<span class="label"><_text constant="backend_language" module="contact_form"/></span>
+		<_module name="contact_form" action="print_backend_language_selector" control_name="mail_language"/>
+		
+		<button type="submit"><_text constant="save" module="backend"/></button>
+	</form>
+</document>

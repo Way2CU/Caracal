@@ -1,0 +1,65 @@
+﻿<document>
+	<language name="עברית" short="heb">
+		<constant name="firstname" value="שם" />
+		<constant name="lastname" value="שם משפחה" />
+		<constant name="company" value="חברה" />
+		<constant name="message" value="הודעה" />
+		<constant name="reset" value="אפס" />
+		<constant name="send" value="שלח" />
+		<constant name="clear" value="נקה" />
+		<constant name="phone" value="טלפון" />
+		<constant name="mobile" value="נייד" />
+		<constant name="fax" value="פקס" />
+		<constant name="email" value="דואל" />
+		<constant name="captcha" value="יש להקליד את האותיות והמספרים המופיעים בתמונה לפניכם" />
+		<constant name="captcha_error" value="יש להקליד את האותיות והמספרים המופיעים בתמונה לפניכם" />
+		<constant name="thank_you" value="תודה על פניתכם, נחזור אליכם בהקדם" />
+		<constant name="backend_address" value="כתובת היעד" />
+		<constant name="backend_subject" value="נושא ההודעה" />
+		<constant name="backend_language" value="שפת ההודעה" />
+		<constant name="backend_message_saved" value="המידע נשמר בהצלחה" />
+		<constant name="backend_save" value="שמור" />
+	</language>
+	<language name="English" short="en">
+		<constant name="firstname" value="Firstname" />
+		<constant name="lastname" value="Lastname" />
+		<constant name="company" value="Company name" />
+		<constant name="message" value="Message content" />
+		<constant name="reset" value="Reset" />
+		<constant name="send" value="Send" />
+		<constant name="clear" value="Clear" />
+		<constant name="phone" value="Phone number" />
+		<constant name="mobile" value="Cellphone number" />
+		<constant name="fax" value="Fax number" />
+		<constant name="email" value="E-Mail" />
+		<constant name="captcha" value="Please enter text from image" />
+		<constant name="captcha_error" value="Captcha verification failed" />
+		<constant name="thank_you" value="Thank you for contacting us!" />
+		<constant name="backend_address" value="Destination address" />
+		<constant name="backend_subject" value="Message subject" />
+		<constant name="backend_language" value="Language used in message" />
+		<constant name="backend_message_saved" value="Saved new data!" />
+		<constant name="backend_save" value="Save" />
+	</language>
+	<language name="Srpski" short="sr">
+		<constant name="firstname" value="Ime" />
+		<constant name="lastname" value="Prezime" />
+		<constant name="company" value="Kompanija" />
+		<constant name="message" value="Sadrzaj poruke" />
+		<constant name="reset" value="Reset" />
+		<constant name="send" value="Posalji" />
+		<constant name="clear" value="Ocisti" />
+		<constant name="phone" value="Telefon" />
+		<constant name="mobile" value="Mobilni telefon" />
+		<constant name="fax" value="Fax" />
+		<constant name="email" value="E-Mail" />
+		<constant name="captcha" value="Unesite teks sa slike" />
+		<constant name="captcha_error" value="Uneli ste pogresan tekst sa slike" />
+		<constant name="thank_you" value="Vasa poruka je poslata. Hvala." />
+		<constant name="backend_address" value="Adresa primaoca" />
+		<constant name="backend_subject" value="Naslov poruke" />
+		<constant name="backend_language" value="Jezik koji se koristi u poruci" />
+		<constant name="backend_message_saved" value="Novi podaci su snimljeni!" />
+		<constant name="backend_save" value="Save" />
+	</language>
+</document>

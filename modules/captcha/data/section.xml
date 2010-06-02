@@ -1,0 +1,7 @@
+<document>
+	<section name="captcha">
+		<language name="all">
+			<action name="_default" file="templates/section_default.xml"/>
+		</language>
+	</section>
+</document>

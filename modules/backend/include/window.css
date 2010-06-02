@@ -1,0 +1,375 @@
+/*
+	WINDOW STYLE SHEET
+	Copyright (c) 2009. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+
+div.window,
+div.window_inactive {
+	display: block;
+
+	position: absolute;
+}
+
+div.window_inactive {
+	opacity: 0.6;
+}
+
+div.window h6 {
+	display: block;
+	height: 17px;
+
+	margin: 0px;
+	padding: 0px;
+	padding-top: 6px;
+
+	color: silver;
+	font-family: Tahoma,Helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+
+	cursor: default;
+}
+
+div.window_inactive h6 {
+	display: block;
+	height: 17px;
+
+	margin: 0px;
+	padding: 0px;
+	padding-top: 6px;
+
+	color: gray;
+	font-family: Tahoma,Helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+
+	cursor: default;
+}
+
+/**
+ * Window Border
+ */
+div.window div.title_bar,
+div.window_inactive div.title_bar {
+	display: block;
+
+	padding-left: 15px;
+
+	background-image: url(../images/window/title_bar_left.png);
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+div.window div.title_bar div.title_bar_right,
+div.window_inactive div.title_bar div.title_bar_right {
+	display: block;
+
+	padding-right: 20px;
+
+	background-image: url(../images/window/title_bar_right.png);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+
+div.window div.title_bar div.title_bar_right div.title_bar_content,
+div.window_inactive div.title_bar div.title_bar_right div.title_bar_content {
+	display: block;
+	height: 25px;
+
+	padding-top: 6px;
+
+	background-image: url(../images/window/title_bar_back.png);
+	background-repeat: repeat-x;
+	background-position: top left;
+}
+
+div.window div.content_holder,
+div.window_inactive div.content_holder {
+	display: block;
+
+	padding-left: 10px;
+
+	background-image: url(../images/window/content_left.png);
+	background-repeat: repeat-y;
+	background-position: top left;
+}
+
+div.window div.content_holder div.content_holder_right,
+div.window_inactive div.content_holder div.content_holder_right {
+	display: block;
+
+	padding-right: 15px;
+
+	background-image: url(../images/window/content_right.png);
+	background-repeat: repeat-y;
+	background-position: top right;
+}
+
+div.window div.content_holder div.content_holder_right div.content,
+div.window_inactive div.content_holder div.content_holder_right div.content {
+	display: block;
+
+	min-height: 30px;
+
+	padding: 3px;
+	padding-top: 5px;
+
+	background-color: #eff3f5;
+
+	font-size: 13px;
+}
+
+div.window div.loading,
+div.window_inactive div.loading {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-image: url(../images/loading.gif);
+}
+
+div.window div.bottom,
+div.window_inactive div.bottom {
+	display: block;
+
+	padding-left: 24px;
+
+	background-image: url(../images/window/bottom_left.png);
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+div.window div.bottom div.bottom_right,
+div.window_inactive div.bottom div.bottom_right {
+	display: block;
+
+	padding-right: 22px;
+
+	background-image: url(../images/window/bottom_right.png);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+
+div.window div.bottom div.bottom_right div.bottom_content,
+div.window_inactive div.bottom div.bottom_right div.bottom_content {
+	display: block;
+	height: 23px;
+
+	background-image: url(../images/window/bottom_back.png);
+	background-repeat: repeat-x;
+	background-position: top left;
+}
+
+div.window div.main_menu,
+div.window_inactive div.main_menu {
+	display: block;
+
+	margin: 0px;
+	padding: 2px;
+
+	border: 1px solid #A3ACD8;
+	border-radius: 4px;
+	background-color: #B8BFE1;
+
+	color: #1A1A1A;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+div.window div.main_menu a,
+div.window_inactive div.main_menu a {
+	display: inline-block;
+
+	padding: 3px;
+	padding-left: 7px;
+	padding-right: 7px;
+
+	color: #1A1A1A;
+	text-decoration: none;
+}
+
+div.window div.main_menu a:hover,
+div.window_inactive div.main_menu a:hover {
+	border-radius: 3px;
+	background-color: #2E3E6A;
+
+	color: white;
+}
+
+div.window div.content label,
+div.window_inactive div.content label {
+	display: block;
+
+	margin-bottom: 10px;
+}
+
+div.window div.content label span,
+div.window_inactive div.content label span {
+	display: block;
+}
+
+
+div.window div.content div.main_menu,
+div.window_inactive div.content div.main_menu,
+div.window div.content div.button_bar,
+div.window_inactive div.content div.button_bar,
+div.window div.content div.scrollable_list,
+div.window_inactive div.content div.scrollable_list {
+	margin-bottom: 5px;
+}
+
+div.window div.content div:last-child,
+div.window_inactive div.content div:last-child {
+	margin-bottom: 0px;
+}
+
+div.window div.content label:last-child,
+div.window_inactive div.content label:last-child {
+	margin-bottom: 0px;
+}
+
+div.window div.content select,
+div.window_inactive div.content select,
+div.window div.content input,
+div.window_inactive div.content input,
+div.window div.content textarea,
+div.window_inactive div.content textarea {
+	border: 1px solid #999999;
+	border-radius: 3px;
+	background-color: #ffffff;
+
+	color: #444444;
+}
+
+div.window div.content textarea.code,
+div.window_inactive div.content textarea.code {
+	direction: ltr !important;
+	font-family: Monospace;
+}
+
+div.window div.content input:focus,
+div.window_inactive div.content input:focus,
+div.window div.content textarea:focus,
+div.window_inactive div.content textarea:focus {
+	border: 1px solid #345DC9;
+	color: #000000;
+}
+
+div.window button,
+div.window_inactive button {
+	display: inline-block;
+	width: 114px;
+
+	margin: 0px;
+	padding: 0px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+
+	border: 0px;
+	background-color: transparent;
+	background-image: url(../images/button_normal.png);
+	background-repeat: no-repeat;
+	background-position: top left;
+
+	color: #000000;
+	font-weight: normal;
+}
+
+div.window button:hover,
+div.window_inactive button:hover {
+	background-image: url(../images/button_hover.png);
+}
+
+div.window button:active,
+div.window_inactive button:active {
+	background-image: url(../images/button_active.png);
+}
+
+div.window div.button_bar,
+div.window_inactive div.button_bar {
+	display: block;
+
+	padding: 5px;
+
+	border: 1px solid #B8B8B8;
+	border-radius: 4px;
+	background-color: #D4D4D4;
+
+	text-align: center;
+}
+
+div.window div.scrollable_list,
+div.window_inactive div.scrollable_list {
+	display: block;
+}
+
+div.window div.scrollable_list div.list_header,
+div.window_inactive div.scrollable_list div.list_header {
+	display: block;
+
+	padding: 3px;
+
+	border: 1px solid #B8B8B8;
+	border-bottom: 0px;
+	border-radius: 4px 4px 0px 0px;
+	background-color: #E5E5E5;
+}
+
+div.window div.scrollable_list .list_content,
+div.window_inactive div.scrollable_list .list_content {
+	display: block;
+	min-height: 100px;
+
+	overflow-y: scroll;
+
+	border: 1px solid #B8B8B8;
+	border-top: 0px;
+	border-radius: 0px 0px 0px 4px;
+	background-color: #FFFFFF;
+}
+
+div.window div.scrollable_list .list_content .list_item,
+div.window_inactive div.scrollable_list .list_content .list_item {
+	display: block;
+
+	padding: 3px;
+}
+
+div.window div.scrollable_list .list_content .list_item:hover,
+div.window_inactive div.scrollable_list .list_content .list_item:hover {
+	background-color: #F5F5F5;
+	cursor: default;
+}
+
+div.window div.scrollable_list .column,
+div.window_inactive div.scrollable_list .column {
+	display: inline-block;
+
+	margin-right: 3px;
+}
+
+div.window div.scrollable_list .column a,
+div.window_inactive div.scrollable_list .column a {
+	display: inline-block;
+
+	padding: 2px;
+	padding-left: 3px;
+	padding-right: 3px;
+
+	border: 1px solid #CCCCCC;
+	border-radius: 3px;
+	background-color: #FFFFFF;
+
+	color: #595959;
+	text-decoration: none;
+}
+
+div.window div.scrollable_list .column a:hover,
+div.window_inactive div.scrollable_list .column a:hover {
+	border-color: #101D7E;
+	background-color: #303FA5;
+
+	color: #FFFFFF;
+}

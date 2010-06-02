@@ -1,0 +1,55 @@
+div#search_Results {
+	display: block;
+	
+	text-align: right; 
+	direction: rtl;
+}
+
+div#search_Results div.result {
+	display: block;
+	margin-bottom: 20px;
+}
+
+div#search_Results div.result span.title, 
+div#search_Results div.result span.description, 
+div#search_Results div.result span.score {
+	display: block;
+	margin-bottom: 5px;
+}
+
+div#search_Results div.result span.score {
+	font-size: 12px;
+	color: rgb(170, 170, 170);
+}
+
+div#search_Results div.result span.title a {
+	color: rgb(235, 133, 0);
+	text-decoration: none;
+	font-weight: bold;
+} 
+
+div#search_Results div.result span.title a:hover {
+	text-decoration: underline;
+}
+
+div#search_Results div.result span.description {
+	font-weight: normal;
+}
+
+div#search_Results div.result span.description span.more {
+	display: block;
+	padding-right: 13px;
+	
+	background-image: url(../images/label_back.gif);
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+
+div#search_Results div.result span.description span.more a {
+	text-decoration: none;
+	color: rgb(0, 102, 204);
+}
+
+div#search_Results div.result span.description a:hover {
+	text-decoration: underline;
+}

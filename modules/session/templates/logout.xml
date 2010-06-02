@@ -1,0 +1,31 @@
+<document>
+	<_var name="_HTML_401"/>
+	<html>
+		<head>
+			<title><_text constant="site_title" /><_raw text=" - "/><_text constant="title" module="backend" /></title>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+			<meta name="keywords" content=""/>
+			<meta name="robot" content="all"/>
+			<meta name="robots" content="noarchive, nofollow, noindex"/>
+			<meta name="GOOGLEBOT" content="noarchive, nofollow, noindex"/>
+			<meta name="classification" content="GENERAL"/>
+			<meta name="revisit-after" content="1 day"/>
+			<meta name="distribution" content="GLOBAL"/>
+			<meta name="rating" content="GENERAL"/>
+			<meta name="copyright" content="RCF Group"/>
+			<link rel="stylesheet" type="text/css" href="modules/backend/include/backend.css"/>
+			<link rel="stylesheet" type="text/css" href="modules/session/include/login.css"/>
+		</head>
+
+		<body>
+			<div id="wrap">
+				<div id="message_window">
+					<_module name="session" action="logout"/>
+				</div>
+			</div>
+			<div id="copyright">
+				<_text constant="copyright"/>
+			</div>
+		</body>
+	</html>
+</document>

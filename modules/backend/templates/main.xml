@@ -1,0 +1,9 @@
+<document>
+	<div id="backend_wrapLeft">
+		<div id="backend_wrapRight">
+			<div id="backend_Menu">
+				<_module name="backend" action="draw_menu" />
+			</div>
+		</div>
+	</div>
+</document>

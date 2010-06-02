@@ -1,0 +1,14 @@
+﻿<document>
+	<language name="עברית" short="heb">
+		<constant name="title" value="ממשק מנהל" />
+		<constant name="save" value="שמור" />
+	</language>
+	<language name="English" short="en">
+		<constant name="title" value="Administration Suite" />
+		<constant name="save" value="Save" />
+	</language>
+	<language name="Srpski" short="sr-lat">
+		<constant name="title" value="Administracioni Interfejs" />
+		<constant name="save" value="Snimanje" />
+	</language>
+</document>

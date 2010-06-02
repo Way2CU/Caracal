@@ -1,0 +1,7 @@
+<document>
+	<section name="backend">
+		<language name="all">
+			<action name="_default" file="templates/main.xml"/>
+		</language>
+	</section>
+</document>

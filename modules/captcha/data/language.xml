@@ -1,0 +1,11 @@
+﻿<document>
+	<language name="English" short="en">
+		<constant name="captcha_message" value="Captcha image (click to refresh)" />
+	</language>
+	<language name="Srpski" short="sr-lat">
+		<constant name="captcha_message" value="Captcha slika (klik na sliku osvežava)" />
+	</language>
+	<language name="Српски" short="sr-cyr">
+		<constant name="captcha_message" value="Captcha слика (клик на слику освежава)" />
+	</language>
+</document>

@@ -1,0 +1,154 @@
+/*
+	Menus Style Sheet
+	Copyright (c) 2009. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+div#backend_wrapLeft {
+	display: block;
+	width: 70%;
+
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 30px;
+
+	background-image: url(../images/main_menu/back_left.png);
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+div#backend_wrapRight {
+	display: block;
+
+	padding-right: 30px;
+
+	background-image: url(../images/main_menu/back_right.png);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+
+div#backend_Menu {
+	display: block;
+	height: 45px;
+
+	background-image: url(../images/main_menu/back.png);
+	background-repeat: repeat-x;
+	background-position: top left;
+}
+
+div#backend_Menu ul#navigation {
+	display: block;
+	height: 27px;
+
+	margin: 0px;
+	padding: 0px;
+
+	list-style-type: none;
+	list-style-image: none;
+}
+
+div#backend_Menu ul#navigation > li {
+	display: inline-block;
+	height: 27px;
+	float: left;
+
+	position: relative;
+
+	margin: 0px;
+	padding: 0px;
+	padding-left: 7px;
+
+	color: #2e2e2e;
+	font-family: Tahoma, Verdana, Helvetica;
+	font-size: 13px;
+}
+
+div#backend_Menu ul#navigation > li > a {
+	display: inline-block;
+	height: 22px;
+
+	padding-top: 5px;
+	padding-right: 7px;
+
+	color: #2e2e2e;
+	text-decoration: none;
+}
+
+div#backend_Menu ul#navigation > li:hover {
+	background-image: url(../images/main_menu/item_hover_back_left.png);
+	background-repeat: no-repeat;
+	background-position: bottom left;
+}
+
+div#backend_Menu ul#navigation > li:hover > a {
+	background-image: url(../images/main_menu/item_hover_back_right.png);
+	background-repeat: no-repeat;
+	background-position: bottom right;
+
+	color: white;
+}
+
+div#backend_Menu ul#navigation > li img {
+	margin-right: 2px;
+
+	vertical-align: middle;
+}
+
+/**
+ * LEVEL 2+
+ */
+div#backend_Menu ul#navigation li > ul {
+	display: block;
+	width: 182px;
+
+	list-style-type: none;
+	list-style-image: none;
+
+	visibility: hidden;
+
+	margin: 0px;
+	padding: 0px;
+	padding-top: 5px;
+	padding-left: 15px;
+	padding-right: 19px;
+	padding-bottom: 19px;
+
+	background-image: url(../images/main_menu/submenu_back.png);
+	background-repeat: no-repeat;
+	background-position: bottom left;
+
+	position: absolute;
+	top: 100%;
+	left: -20px;
+
+	z-index: 1001;
+}
+
+div#backend_Menu ul#navigation li:hover > ul {
+	visibility: visible;
+}
+
+div#backend_Menu ul#navigation li > ul li {
+	display: block;
+}
+
+div#backend_Menu ul#navigation li > ul li a {
+	display: block;
+
+	padding: 5px;
+
+	border: 1px solid transparent;
+
+	color: silver;
+	font-family: Tahoma, Verdana, Helvetica;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+div#backend_Menu ul#navigation li > ul li a:hover {
+	border-radius: 5px;
+	border: 1px solid #4DA3F0;
+	background-color: #267ece;
+
+	color: white;
+}

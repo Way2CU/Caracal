@@ -1,0 +1,11 @@
+<document>
+	<div class="result">
+		<span class="title"><a href="$params['link']" eval="href" title=""><_var name="$params['title']"/></a></span>
+		<span class="description">
+			<_var name="$params['description']"/>
+			<_raw text="&#38;nbsp;"/>
+			<span class="more"><a href="$params['link']" eval="href" title=""><_text constant="read_more" module="search"/></a></span>
+		</span>	
+		<span class="score"><_text constant="score" module="search"/><_raw text=":&#38;nbsp;"/><_var name="$params['score']"/></span>
+	</div>
+</document>

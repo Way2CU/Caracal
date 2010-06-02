@@ -1,0 +1,22 @@
+﻿<document>
+<language name="עברית" short="heb">
+		<constant name="upload" value="העלה באנר" />
+		<constant name="baner_file" value="קובץ הבאנר" />
+		<constant name="options" value="אפשרויות" />
+		<constant name="delete" value="מחק" />
+		<constant name="message_baner_saved" value="באנר נשמק!" />
+		<constant name="message_baner_error" value="טעות בזמן טעינה" />
+		<constant name="message_baner_deleted" value="באנר הוסר!" />
+		<constant name="message_delete_baner" value="למחוק את הבאנר הנבחר?" />
+	</language>
+	<language name="English" short="en">
+		<constant name="upload" value="Upload baner" />
+		<constant name="baner_file" value="Baner file" />
+		<constant name="options" value="Options" />
+		<constant name="delete" value="Delete" />
+		<constant name="message_baner_saved" value="Baner saved!" />
+		<constant name="message_baner_deleted" value="Baner removed!" />
+		<constant name="message_baner_error" value="Error uploading!" />
+		<constant name="message_delete_baner" value="Remove selected baner?" />
+	</language>
+</document>

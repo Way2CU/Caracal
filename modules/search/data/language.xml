@@ -1,0 +1,22 @@
+﻿<document>
+	<language name="עברית" short="heb">
+		<constant name="search_results" value="תוצאות חיפוש" />
+		<constant name="score" value="מספר מופעים בטקסט" />
+		<constant name="read_more" value="קרא עוד" />
+		<constant name="message_no_results" value="לא נמצאו תוצאות תואמות" />
+	</language>
+	<language name="English" short="en">
+		<constant name="search_results" value="Search Results" />
+		<constant name="score" value="Score" />
+		<constant name="read_more" value="Read More" />
+		<constant name="search" value="Search"/>
+		<constant name="message_no_results" value="No results found!"/>
+	</language>
+	<language name="Serbian" short="sr">
+		<constant name="search_results" value="Rezultati Pretrage" />
+		<constant name="score" value="Tačnost" />
+		<constant name="read_more" value="Više" />
+		<constant name="search" value="Traži"/>
+		<constant name="message_no_results" value="Nema rezultata za date kriterijume pretrage!"/>
+	</language>
+</document>

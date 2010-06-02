@@ -1,0 +1,16 @@
+<document>
+	<language name="Srpski" short="sr-lat">
+		<constant name="site_title" value=""/>
+		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+	</language>
+
+	<language name="Српски" short="sr-cyr">
+		<constant name="site_title" value=""/>
+		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+	</language>
+
+	<language name="English" short="en" default="yes">
+		<constant name="site_title" value=""/>
+		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+	</language>
+</document>

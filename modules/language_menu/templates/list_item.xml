@@ -1,0 +1,5 @@
+<document>
+	<li>
+		<a href="$params['url']" eval="href"><_var name="$params['long_name']"/></a>
+	</li>
+</document>

@@ -1,0 +1,4 @@
+<document>
+	<span class="label"><_text constant="fax" module="contact_form" /></span>
+	<input type="text" name="fax" value="" />
+</document>

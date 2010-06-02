@@ -1,0 +1,7 @@
+<document>
+	<tr class="($params['number'] % 2 == 0) ? 'even' : ''" eval="class">
+		<td><_var name="$params['number']"/></td>
+		<td><_var name="$params['baner_id']"/></td>
+		<td><_var name="$params['link_delete']"/></td>
+	</tr>
+</document>

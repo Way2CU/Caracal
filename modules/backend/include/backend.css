@@ -1,0 +1,66 @@
+/*
+	Backend Style Sheet
+	Copyright (c) 2009. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+@import "window.css";
+@import "menus.css";
+
+body {
+	margin: 0px;
+	padding: 0px;
+
+	background-color: #0c2542;
+	background-image: url(../images/back_shade.png);
+	background-repeat: repeat-x;
+	background-position: top left;
+
+	color: #333333;
+	font-family: Tahoma, Arial, Helvetica;
+	font-size: 12px;
+}
+
+div#wrap {
+	display: block;
+	width: 100%;
+	height: 100%;
+
+	position: absolute;
+	top: 0px;
+	left: 0px;
+
+	background-image: url(../images/back_glow.png);
+	background-repeat: no-repeat;
+	background-position: top center;
+}
+
+div#copyright {
+	display: block;
+	margin: 0px;
+	padding: 3px;
+
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+
+	color: #608dc7;
+	font-family: Tahoma, Verdana, Helvetica;
+	font-size: 10px;
+	text-align: right;
+}
+
+div#copyright a {
+	color: #608dc7;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+div#copyright a:hover {
+	color: #ffffff;
+}
+
+.hidden {
+	display: none;
+	visibility: hidden;
+}

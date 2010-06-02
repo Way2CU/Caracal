@@ -1,0 +1,8 @@
+﻿<document>
+	<language name="English" short="en">
+		<constant name="title" value="News" />
+	</language>
+	<language name="Srpski" short="sr-lat">
+		<constant name="title" value="Vesti" />
+	</language>
+</document>

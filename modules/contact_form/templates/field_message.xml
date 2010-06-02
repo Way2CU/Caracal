@@ -1,0 +1,4 @@
+<document>
+	<span class="label"><_text constant="message" module="contact_form" /></span>
+	<textarea name="message"><_raw text=""/></textarea>
+</document>
