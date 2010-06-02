@@ -1,20 +1,19 @@
 <?php
 
 /**
- * BLANK MODULE
+ * YouTube Implmenetation Module
  *
  * @author MeanEYE
- * @copyright RCF Group,2008.
  */
 
-class _blank extends Module {
+class youtube extends Module {
 
 	/**
 	 * Constructor
 	 *
-	 * @return journal
+	 * @return youtube
 	 */
-	function _blank() {
+	function youtube() {
 		$this->file = __FILE__;
 		parent::Module();
 	}
@@ -43,7 +42,17 @@ class _blank extends Module {
 	 * Event triggered upon module initialization
 	 */
 	function onInit() {
-
+		global $db, $db_active;
+		
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `youtube_video` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`video_id` varchar(11) COLLATE utf8_bin NOT NULL,
+				`title` varchar(255) COLLATE utf8_bin NOT NULL,
+				PRIMARY KEY (`id`)
+			) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
@@ -68,6 +77,23 @@ class _blank extends Module {
 		// register backend
 		if ($ModuleHandler->moduleExists('backend')) {
 			$backend = $ModuleHandler->getObjectFromName('backend');
+
+			//$group = new backend_MenuGroup("Blank", "", $this->name);
+			//$group->addItem(new backend_MenuItem("Menu Item", "", "", 1));
+
+			//$backend->addMenu($group);
 		}
 	}
 }
+
+class YouTube_VideoManager extends ItemManager {
+
+	function QuestionManager() {
+		parent::ItemManager('youtube_video');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('video_id', 'varchar');
+		$this->addProperty('title', 'varchar');
+	}
+}
+
