@@ -20,6 +20,9 @@
 			<div id="wrap">
 				<_section_data/>
 			</div>
+			<div id="copyright">
+				<_text constant="copyright"/>
+			</div>
 		</body>
 	</html>
 </document>
