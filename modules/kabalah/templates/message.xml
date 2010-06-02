@@ -1,0 +1,10 @@
+<document>
+		<div style="margin-bottom: 10px;">
+			<_var name="$params['message']"/>
+		</div>
+		<div class="button_bar">
+			<button type="button" onclick="$params['action']" eval="onclick">
+				<_text constant="close" module="kabalah"/>
+			</button>
+		</div>
+</document>

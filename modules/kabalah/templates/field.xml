@@ -1,0 +1,14 @@
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 200px">
+			<_var name="$params['name']"/>
+		</span>
+		<span class="column" style="width: 60px">
+			<_var name="$params['type_text']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['item_change']"/><_raw text=" "/>
+			<_var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>

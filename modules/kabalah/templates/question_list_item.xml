@@ -1,0 +1,3 @@
+<document>
+	<question number="$params['pid']" eval="number"><_var name="utf8_strrev($params['title'])"/></question>
+</document>

@@ -1,0 +1,15 @@
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 40px; text-align: center;">
+			<_var name="$params['pid']"/>
+		</span>
+		<span class="column" style="width: 320px;">
+			<_var name="$params['title']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['item_fields']"/><_raw text=" "/>
+			<_var name="$params['item_change']"/><_raw text=" "/>
+			<_var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>

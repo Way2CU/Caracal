@@ -1,0 +1,8 @@
+<document>
+	<_if condition="$params['selected'] == $params['pid']">
+		<option value="$params['pid']" eval="value" selected="selected"><_var name="$params['title']"/></option>
+	</_if>
+	<_if condition="$params['selected'] != $params['pid']">
+		<option value="$params['pid']" eval="value"><_var name="$params['title']"/></option>
+	</_if>
+</document>

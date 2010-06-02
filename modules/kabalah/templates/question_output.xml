@@ -1,0 +1,10 @@
+<document>
+	<question>
+		<title><_var name="utf8_strrev($params['title'])"/></title>
+		<description><_var name="utf8_strrev($params['description'])"/></description>
+		
+		<fields>
+			<_kabalah_fields template="field_output.xml"/>
+		</fields>
+	</question>
+</document>

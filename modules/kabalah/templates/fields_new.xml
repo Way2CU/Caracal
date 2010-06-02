@@ -1,0 +1,34 @@
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<input type="hidden" name="question" value="$params['question']" eval="value"/>
+		<label>
+			<span><_text constant="label_field_type" module="kabalah"/></span>
+			<select name="type" style="width: 70px;">
+				<_kabalah_field_types/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_field_name" module="kabalah"/></span>
+			<input type="text" name="name" style="width: 270px;" maxlength="30"/>
+		</label>
+		<label>
+			<span><_text constant="label_field_label" module="kabalah"/></span>
+			<input type="text" name="label" style="width: 270px;"/>
+		</label>
+		<label>
+			<span><_text constant="label_field_default" module="kabalah"/></span>
+			<input type="text" name="default" style="width: 270px;"/>
+		</label>
+		<label>
+			<span><_text constant="label_field_order" module="kabalah"/></span>
+			<input type="text" name="order" style="width: 70px;"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save" module="kabalah"/></button>
+			<button type="reset"><_text constant="reset" module="kabalah"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel" module="kabalah"/>
+			</button>
+		</div>
+	</form>
+</document>

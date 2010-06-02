@@ -1,0 +1,7 @@
+<document>
+	<div class="main_menu">
+		<_var name="$params['link_new']"/>
+		<_var name="$params['link_change']"/>
+		<_var name="$params['link_delete']"/>
+	</div>
+</document>

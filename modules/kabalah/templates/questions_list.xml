@@ -1,0 +1,22 @@
+<document>
+	<div class="main_menu">
+		<_var name="$params['link_new']"/>
+	</div>
+
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 40px; text-align: center;">
+				<_text constant="column_question_id" module="kabalah"/>
+			</span>
+			<span class="column" style="width: 320px">
+				<_text constant="column_question_title" module="kabalah"/>
+			</span>
+			<span class="column">
+				<_text constant="column_options" module="kabalah"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 250px">
+			<_kabalah_questions/>
+		</div>
+	</div>
+</document>

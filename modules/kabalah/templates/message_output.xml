@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<message error="1" message="$params['message']" eval="message"/>
+</document>

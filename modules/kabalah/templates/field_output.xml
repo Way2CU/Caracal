@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<field 
+		name="$params['name']" 
+		type="$params['type']" 
+		value="$params['default']" 
+		eval="name,type,value">
+		<_var name="utf8_strrev($params['label'])"/>
+	</field>
+</document>

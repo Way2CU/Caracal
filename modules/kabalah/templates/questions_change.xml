@@ -1,0 +1,26 @@
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<input type="hidden" name="id" value="$params['id']" eval="value"/>
+		<label>
+			<span><_text constant="label_question_id" module="kabalah"/></span>
+			<input type="text" name="pid" value="$params['pid']" eval="value" style="width: 70px;"/>
+		</label>
+		<label>
+			<span><_text constant="label_question_title" module="kabalah"/></span>
+			<input type="text" name="title" value="$params['title']" eval="value" style="width: 270px;"/>
+		</label>
+		<label>
+			<span><_text constant="label_question_description" module="kabalah"/></span>
+			<textarea name="description" style="width: 360px; height: 100px;"><_var name="$params['description']"/></textarea>
+		</label>
+		<label>
+			<span><_text constant="label_question_formula" module="kabalah"/></span>
+			<textarea class="code" name="formula" style="width: 360px; height: 150px;"><_var name="$params['formula']"/></textarea>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save" module="kabalah"/></button>
+			<button type="reset"><_text constant="reset" module="kabalah"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick"><_text constant="cancel" module="kabalah"/></button>
+		</div>
+	</form>
+</document>
