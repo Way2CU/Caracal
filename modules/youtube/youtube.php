@@ -70,8 +70,8 @@ class youtube extends Module {
 		// load module style and scripts
 		if ($ModuleHandler->moduleExists('head_tag')) {
 			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/default_style.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/youtube_controls.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
@@ -82,13 +82,43 @@ class youtube extends Module {
 			//$group->addItem(new backend_MenuItem("Menu Item", "", "", 1));
 
 			//$backend->addMenu($group);
+			
+			// TODO: Finish!
 		}
+	}
+
+	/**
+	 * Show backend video list with options
+	 */
+	function showList() {
+		
+	}
+	
+	/**
+	 * Handler for _video tag which embeds player in page.
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */
+	function tag_Video($level, $params, $children) {
+		$manager = new YouTube_VideoManager();
+		$video_id = isset($params['id']) ? $params['id'] : fix_chars($_REQUEST['video_id']);
+	} 
+
+	/**
+	 * Handler of _video_list tag used to pring list of all videos.
+	 * @param $level
+	 * @param $params
+	 * @param $children
+	 */
+	function tag_VideoList($level, $params, $children) {
+		
 	}
 }
 
 class YouTube_VideoManager extends ItemManager {
 
-	function QuestionManager() {
+	function YouTube_VideoManager() {
 		parent::ItemManager('youtube_video');
 
 		$this->addProperty('id', 'int');
