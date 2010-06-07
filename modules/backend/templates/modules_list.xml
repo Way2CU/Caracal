@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<div class="scrollable_list">
+		<!-- Header -->
+		<div class="list_header">
+			<span class="column" style="width: 200px;">
+				<_text constant="column_module_name" module="backend"/>
+			</span>
+			<span class="column" style="width: 50px;">
+				<_text constant="column_module_order" module="backend"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_module_preload" module="backend"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_module_active" module="backend"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_options" module="backend"/>
+			</span>
+		</div>
+		
+		<!-- List -->
+		<div class="list_content" style="height: 250px">
+			<_module_list/>
+		</div>
+	</div>
+</document>
