@@ -1,5 +1,13 @@
 ﻿<document>
 	<language name="English" short="en">
 		<constant name="title" value="YouTube" />
+		
+		<!-- Menu Items -->
+		<constant name="menu_youtube" value="YouTube"/>
+		<constant name="menu_video_list" value="Show video list"/>
+		
+		<!-- Window Titles -->
+		
+		<!-- Column Names -->
 	</language>
 </document>

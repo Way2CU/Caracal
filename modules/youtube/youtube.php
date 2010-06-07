@@ -78,12 +78,25 @@ class youtube extends Module {
 		if ($ModuleHandler->moduleExists('backend')) {
 			$backend = $ModuleHandler->getObjectFromName('backend');
 
-			//$group = new backend_MenuGroup("Blank", "", $this->name);
-			//$group->addItem(new backend_MenuItem("Menu Item", "", "", 1));
-
-			//$backend->addMenu($group);
-			
-			// TODO: Finish!
+			$youtube_menu = new backend_MenuItem(
+								$this->getLanguageConstant('menu_youtube'), 
+								url_GetFromFilePath($this->path.'images/icon.png'), 
+								'javascript:void(0);',	
+								$level=10
+							);
+							
+			$youtube_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_modules'),
+								url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
+								window_Open( // on click open window
+											'system_modules',
+											600, 
+											$this->getLanguageConstant('title_modules'),
+											true, false, // disallow minimize, safety feature 
+											backend_UrlMake($this->name, 'modules')
+										),	
+								$level=10
+							));							
 		}
 	}
 
