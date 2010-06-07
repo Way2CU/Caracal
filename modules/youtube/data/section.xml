@@ -1,0 +1,7 @@
+<document>
+	<section name="youtube">
+		<language name="all">
+			<action name="_default" file="templates/section_default.xml"/>
+		</language>
+	</section>
+</document>

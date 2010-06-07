@@ -1,14 +1,30 @@
 ﻿<document>
-	<language name="עברית" short="heb">
-		<constant name="title" value="ממשק מנהל" />
-		<constant name="save" value="שמור" />
-	</language>
 	<language name="English" short="en">
 		<constant name="title" value="Administration Suite" />
-		<constant name="save" value="Save" />
+		
+		<!-- Menu Items -->
+		<constant name="menu_system" value="System"/>
+		<constant name="menu_modules" value="Active modules"/>
+		<constant name="menu_users" value="User management"/>
+		
+		<!-- Window Titles -->
+		<constant name="title_modules" value="Active Modules"/>
+		
+		<!-- Column Names -->
+		<constant name="column_options" value="Options"/>
+
+		<constant name="column_module_name" value="Name"/>
+		<constant name="column_module_order" value="Order"/>
+		<constant name="column_module_preload" value="Preload"/>
+		<constant name="column_module_active" value="Active"/>
 	</language>
+
 	<language name="Srpski" short="sr-lat">
 		<constant name="title" value="Administracioni Interfejs" />
-		<constant name="save" value="Snimanje" />
 	</language>
+	
+	<language name="עברית" short="heb">
+		<constant name="title" value="ממשק מנהל" />
+	</language>
+	
 </document>
