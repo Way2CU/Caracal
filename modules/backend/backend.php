@@ -288,7 +288,44 @@ class backend extends Module {
 	 * @param integer $level
 	 */
 	function disableModule($level) {
-		print __FUNCTION__;
+		global $ModuleHandler;
+		
+		$module_name = fix_chars($_REQUEST['module_name']);
+		
+		if (!in_array($module_name, $this->protected_modules)) {
+			// module is not protected
+			$manager = new System_ModuleManager();
+			$max_order = $manager->getItemValue(
+										"MAX(`order`)", 
+										array('preload' => 0)
+									);
+			
+			if (is_null($max_order)) $max_order = -1;
+			
+			$manager->deleteData(array('name' => $module_name));
+			
+			if ($ModuleHandler->moduleExists($module_name))
+				$module = $ModuleHandler->getObjectFromName($module_name); else
+				$module = $ModuleHandler->loadModule($module_name);
+				
+			$module->onDisable();
+			$message = $this->getLanguageConstant('message_module_disabled');
+							
+		} else {
+			$message = $this->getLanguageConstant('message_module_protected');
+		}
+					
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $message,
+					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 	
 	/**
