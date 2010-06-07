@@ -17,15 +17,9 @@
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
 		<constant name="message_module_deactivated">Module is no longer active.</constant>
-		<constant name="message_module_initialise">
-			The following module will be initialised. After this operation is completed
-			module will have access to your database and files. Are you sure? 
-		</constant>
-		<constant name="message_module_initialised">Module is now initialised.</constant>
-		<constant name="message_module_disable">
-			The following module will be disabled. This operation will remove all module
-			specific settings. Are you sure?
-		</constant>
+		<constant name="message_module_initialise">The following module will be initialised. After this operation is completed module will have access to your database and files. Are you sure?</constant>
+		<constant name="message_module_initialised">Module is now initialised and activated.</constant>
+		<constant name="message_module_disable">The following module will be disabled. This operation will remove all module specific settings. Are you sure?</constant>
 		<constant name="message_module_disabled">Module has been disabled.</constant>
 		<constant name="message_module_protected">This module is protected. You are not allowed to change it.</constant>
 		
@@ -43,6 +37,7 @@
 		<constant name="initialise">Initialise</constant>
 		<constant name="disable">Disable</constant>
 		<constant name="close">Close</constant>
+		<constant name="cancel">Cancel</constant>
 	</language>
 
 	<language name="Srpski" short="sr-lat">

@@ -91,8 +91,16 @@ class backend extends Module {
 					$this->initialiseModule($level);
 					break;
 
+				case 'module_initialise_commit':
+					$this->initialiseModule_Commit($level);
+					break;
+
 				case 'module_disable':
 					$this->disableModule($level);
+					break;
+					
+				case 'module_disable_commit':
+					$this->disableModule_Commit($level);
 					break;
 					
 				case 'users':
@@ -236,10 +244,43 @@ class backend extends Module {
 	}
 	
 	/**
-	 * Initialise and activate module
+	 * Print confirmation form before initialising module
 	 * @param integer $level
 	 */
 	function initialiseModule($level) {
+		$module_name = fix_chars($_REQUEST['module_name']);
+		
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_module_initialise'),
+					'name'			=> $module_name,
+					'yes_action'	=> window_LoadContent(
+											$this->name.'_module_dialog',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'module_initialise_commit'),
+												array('module_name', $module_name)
+											)
+										),
+					'yes_text'		=> $this->getLanguageConstant("initialise"),		
+					'no_action'		=> window_Close($this->name.'_module_dialog'),
+					'no_text'		=> $this->getLanguageConstant("cancel"),		
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Initialise and activate module
+	 * @param integer $level
+	 */
+	function initialiseModule_Commit($level) {
 		global $ModuleHandler;
 		
 		$module_name = fix_chars($_REQUEST['module_name']);
@@ -284,10 +325,43 @@ class backend extends Module {
 	}
 	
 	/**
-	 * Disable specified module and remove it's settings
+	 * Print confirmation dialog before disabling module
 	 * @param integer $level
 	 */
 	function disableModule($level) {
+		$module_name = fix_chars($_REQUEST['module_name']);
+		
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_module_disable'),
+					'name'			=> $module_name,
+					'yes_action'	=> window_LoadContent(
+											$this->name.'_module_dialog',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'module_disable_commit'),
+												array('module_name', $module_name)
+											)
+										),
+					'yes_text'		=> $this->getLanguageConstant("disable"),		
+					'no_action'		=> window_Close($this->name.'_module_dialog'),
+					'no_text'		=> $this->getLanguageConstant("cancel"),		
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);		
+	}
+	
+	/**
+	 * Disable specified module and remove it's settings
+	 * @param integer $level
+	 */
+	function disableModule_Commit($level) {
 		global $ModuleHandler;
 		
 		$module_name = fix_chars($_REQUEST['module_name']);
