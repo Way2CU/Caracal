@@ -6,7 +6,7 @@
  * @author MeanEYE[rcf]
  */
 
-//define('_BACKEND_SECTION_', 'backend_module');
+define('_BACKEND_SECTION_', 'backend_module');
 require_once('units/menu_item.php');
 
 class backend extends Module {
@@ -15,6 +15,12 @@ class backend extends Module {
 	 * @var array
 	 */
 	var $menus = array();
+	
+	/**
+	 * List of protected modules who can't be disabled or deactivated
+	 * @var array
+	 */
+	var $protected_modules = array('backend', 'head_tag', 'session', 'captcha');
 
 	/**
 	 * Constructor
@@ -44,36 +50,54 @@ class backend extends Module {
 			unset($params['action']);
 		}
 		
-		switch ($params['action']) {
-			case 'draw_menu':
-				$this->drawCompleteMenu($level);
-				break;
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'draw_menu':
+					$this->drawCompleteMenu($level);
+					break;
+	
+				case 'transfer_control':
+					// fix input parameters
+					foreach($_REQUEST as $key => $value)
+						$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
+	
+					// transfer control
+					$action = fix_chars($_REQUEST['backend_action']);
+					$module_name = fix_chars($_REQUEST['module']);
+					$params['backend_action'] = $action;
+	
+					if ($ModuleHandler->moduleExists($module_name)) {
+						$module = $ModuleHandler->getObjectFromName($module_name);
+						$module->transferControl($level, $params, $children);
+					}
+					break;
+			}
 
-			case 'transfer_control':
-				// fix input parameters
-				foreach($_REQUEST as $key => $value)
-					$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
+		if (isset($params['backend_action']))
+			switch ($params['backend_action']) {
+				case 'modules':
+					$this->showModules($level);
+					break;
+					
+				case 'module_activate':
+					$this->activateModule($level);
+					break;
 
-				// transfer control
-				$action = fix_chars($_REQUEST['backend_action']);
-				$module_name = fix_chars($_REQUEST['module']);
-				$params['backend_action'] = $action;
+				case 'module_deactivate':
+					$this->deactivateModule($level);
+					break;
 
-				if ($ModuleHandler->moduleExists($module_name)) {
-					$module = $ModuleHandler->getObjectFromName($module_name);
-					$module->transferControl($level, $params, $children);
-				}
-				break;
-		}
+				case 'module_initialise':
+					$this->initialiseModule($level);
+					break;
 
-		switch ($params['backend_action']) {
-			case 'modules':
-				$this->showModules($level);
-				break;
-				
-			case 'users':
-				break;
-		}
+				case 'module_disable':
+					$this->disableModule($level);
+					break;
+					
+				case 'users':
+					break;
+			}
 	}
 
 	/**
@@ -112,7 +136,7 @@ class backend extends Module {
 								url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
 								window_Open( // on click open window
 											'system_modules',
-											600, 
+											610, 
 											$this->getLanguageConstant('title_modules'),
 											true, false, // disallow minimize, safety feature 
 											backend_UrlMake($this->name, 'modules')
@@ -146,33 +170,173 @@ class backend extends Module {
 	}
 	
 	/**
+	 * Activates specified module
+	 * @param integer $level
+	 */
+	function activateModule($level) {
+		$module_name = fix_chars($_REQUEST['module_name']);
+		
+		if (!in_array($module_name, $this->protected_modules)) {
+			// module is not protected
+			$manager = new System_ModuleManager();
+			$manager->updateData(
+							array('active' => 1),
+							array('name' => $module_name)
+						);
+			$message = $this->getLanguageConstant('message_module_activated');
+			 
+		} else {
+			$message = $this->getLanguageConstant('message_module_protected');
+		}
+					
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $message,
+					'action'	=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Deactivates specified module
+	 * @param integer $level
+	 */
+	function deactivateModule($level) {
+		$module_name = fix_chars($_REQUEST['module_name']);
+		
+		if (!in_array($module_name, $this->protected_modules)) {
+			// module is not protected
+			$manager = new System_ModuleManager();
+			$manager->updateData(
+							array('active' => 0),
+							array('name' => $module_name)
+						);
+			$message = $this->getLanguageConstant('message_module_deactivated');
+			 
+		} else {
+			$message = $this->getLanguageConstant('message_module_protected');
+		}
+					
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $message,
+					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Initialise and activate module
+	 * @param integer $level
+	 */
+	function initialiseModule($level) {
+		global $ModuleHandler;
+		
+		$module_name = fix_chars($_REQUEST['module_name']);
+		
+		if (!in_array($module_name, $this->protected_modules)) {
+			// module is not protected
+			$manager = new System_ModuleManager();
+			$max_order = $manager->getItemValue(
+										"MAX(`order`)", 
+										array('preload' => 0)
+									);
+			
+			if (is_null($max_order)) $max_order = -1;
+			
+			$manager->insertData(
+							array(
+								'order'		=> $max_order + 1,
+								'name'		=> $module_name,
+								'preload'	=> 0,
+								'active'	=> 1								
+							));
+
+			$module = $ModuleHandler->loadModule($module_name);
+			$module->onInit();
+			$message = $this->getLanguageConstant('message_module_initialised');
+							
+		} else {
+			$message = $this->getLanguageConstant('message_module_protected');
+		}
+					
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $message,
+					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Disable specified module and remove it's settings
+	 * @param integer $level
+	 */
+	function disableModule($level) {
+		print __FUNCTION__;
+	}
+	
+	/**
 	 * Handle tag _module_list used to display list of all modules on the system
 	 * @param $level
 	 * @param $params
 	 * @param $children
 	 */
 	function tag_ModuleList($level, $params, $children) {
-		$list = $this->getModuleList();
+		$list = array();
+		$raw_list = $this->getModuleList();
 		$manager = new System_ModuleManager();
 		
 		$modules_in_use = $manager->getItems(
 											array('id', 'order', 'name', 'preload', 'active'),
 											array(),
-											array('order')
+											array('preload', 'order')
 										);
 
-		// TODO: Finish
+		// add modules from database
 		foreach($modules_in_use as $module) {
-			if (array_key_exists($module->name, $list)) {
+			if (in_array($module->name, $raw_list)) {
 				// module in database exists on disk
-				
+				if ($module->active) {
+					$list[$module->name] = array('status' 	=> 'active');
+				} else {
+					$list[$module->name] = array('status'	=> 'inactive');
+				}
+										
 			} else {
 				// module does not exist on disk
-				$list[$module->name] = array(
-											'status'	=> 'missing',
-											'object'	=> $module 
-										);
+				$list[$module->name] = array('status'	=> 'missing');
 			}
+			
+			$list[$module->name]['active'] = $module->active;
+			$list[$module->name]['preload'] = $module->preload;
+			$list[$module->name]['order'] = $module->order;
+		}
+		
+		// add missing modules available on drive
+		foreach($raw_list as $module_name) {
+			if (!array_key_exists($module_name, $list))
+				$list[$module_name] = array(
+										'status'	=> 'not_initialized',
+										'active'	=> 0,
+										'preload'	=> 0,
+										'order'		=> ''
+									);
 		}
 		
 		$template = new TemplateHandler(
@@ -183,9 +347,80 @@ class backend extends Module {
 		$template->setMappedModule($this->name);		
 						
 		foreach($list as $name => $definition) {
-			
-			$params = array();
-			
+			$params = array(
+							'name'				=> $name,
+							'status'			=> $definition['status'],
+							'active'			=> $definition['active'],
+							'active_symbol'		=> $definition['active'] ? '✔' : '',
+							'preload'			=> $definition['preload'],
+							'preload_symbol'	=> $definition['preload'] ? '✔' : '',
+							'order'				=> $definition['order'],
+							'item_activate'		=> url_MakeHyperlink(
+													$this->getLanguageConstant('activate'),
+													window_Open(
+														$this->name.'_module_dialog',	// window id
+														300,							// width
+														$this->getLanguageConstant('title_module_activate'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'module_activate'),
+															array('module_name', $name)
+														)
+													)
+												),
+							'item_deactivate'		=> url_MakeHyperlink(
+													$this->getLanguageConstant('deactivate'),
+													window_Open(
+														$this->name.'_module_dialog',	// window id
+														300,							// width
+														$this->getLanguageConstant('title_module_deactivate'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'module_deactivate'),
+															array('module_name', $name)
+														)
+													)
+												),
+							'item_initialise'		=> url_MakeHyperlink(
+													$this->getLanguageConstant('initialise'),
+													window_Open(
+														$this->name.'_module_dialog',	// window id
+														300,							// width
+														$this->getLanguageConstant('title_module_initialise'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'module_initialise'),
+															array('module_name', $name)
+														)
+													)
+												),
+							'item_disable'		=> url_MakeHyperlink(
+													$this->getLanguageConstant('disable'),
+													window_Open(
+														$this->name.'_module_dialog',	// window id
+														300,							// width
+														$this->getLanguageConstant('title_module_disable'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'module_disable'),
+															array('module_name', $name)
+														)
+													)
+												),
+						);
+		
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse($level);
@@ -194,10 +429,22 @@ class backend extends Module {
 	
 	/**
 	 * Get list of modules available on the system
+	 * 
 	 * @return array
 	 */
 	function getModuleList() {
+		global $module_path;
 		
+		$result = array();
+		$directory = dir($module_path);
+		
+		while (false !== ($entry = $directory->read())) 
+			if (is_dir($directory->path.DIRECTORY_SEPARATOR.$entry) && $entry[0] != '.' && $entry[0] != '_')
+				$result[] = $entry;
+				
+		$directory->close();
+				
+		return $result;
 	}
 	
 	/**

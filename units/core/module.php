@@ -80,7 +80,7 @@ class Module {
 	/**
 	 * Event called upon module removal
 	 */
-	function onDeInit() {
+	function onDisable() {
 	}
 
 	/**
@@ -96,8 +96,8 @@ class Module {
 			$settings = $db->get_results("SELECT `variable`, `value` FROM `system_settings` WHERE `module` = '$this->name' ORDER BY `variable` ASC");
 
 			if ($db->num_rows > 0)
-			foreach ($settings as $setting)
-				$result[$setting->variable] = $setting->value;
+				foreach ($settings as $setting)
+					$result[$setting->variable] = $setting->value;
 		}
 		return $result;
 	}
@@ -111,6 +111,7 @@ class Module {
 	function saveSetting($var, $value) {
 		global $db;
 
+		// TODO: Make usage of Item Manager
 		$select_query = "SELECT count(`id`) FROM `system_settings` WHERE
 						`module` = '{$this->name}' AND `variable` = '{$var}'";
 

@@ -1,30 +1,56 @@
 ﻿<document>
 	<language name="English" short="en">
-		<constant name="title" value="Administration Suite" />
+		<constant name="title">Administration Suite</constant>
 		
 		<!-- Menu Items -->
-		<constant name="menu_system" value="System"/>
-		<constant name="menu_modules" value="Active modules"/>
-		<constant name="menu_users" value="User management"/>
+		<constant name="menu_system">System</constant>
+		<constant name="menu_modules">Modules</constant>
+		<constant name="menu_users">User management</constant>
 		
 		<!-- Window Titles -->
-		<constant name="title_modules" value="Active Modules"/>
+		<constant name="title_modules">Modules</constant>
+		<constant name="title_module_activate">Activate Module</constant>
+		<constant name="title_module_deactivate">Deactivate Module</constant>
+		<constant name="title_module_initialise">Initialise Module</constant>
+		<constant name="title_module_disable">Disable Module</constant>
+		
+		<!-- Messages -->
+		<constant name="message_module_activated">Module is now active.</constant>
+		<constant name="message_module_deactivated">Module is no longer active.</constant>
+		<constant name="message_module_initialise">
+			The following module will be initialised. After this operation is completed
+			module will have access to your database and files. Are you sure? 
+		</constant>
+		<constant name="message_module_initialised">Module is now initialised.</constant>
+		<constant name="message_module_disable">
+			The following module will be disabled. This operation will remove all module
+			specific settings. Are you sure?
+		</constant>
+		<constant name="message_module_disabled">Module has been disabled.</constant>
+		<constant name="message_module_protected">This module is protected. You are not allowed to change it.</constant>
 		
 		<!-- Column Names -->
-		<constant name="column_options" value="Options"/>
+		<constant name="column_options">Options</constant>
 
-		<constant name="column_module_name" value="Name"/>
-		<constant name="column_module_order" value="Order"/>
-		<constant name="column_module_preload" value="Preload"/>
-		<constant name="column_module_active" value="Active"/>
+		<constant name="column_module_name">Name</constant>
+		<constant name="column_module_order">Order</constant>
+		<constant name="column_module_preload">Preload</constant>
+		<constant name="column_module_active">Active</constant>
+		
+		<!-- General -->
+		<constant name="activate">Activate</constant>
+		<constant name="deactivate">Deactivate</constant>
+		<constant name="initialise">Initialise</constant>
+		<constant name="disable">Disable</constant>
+		<constant name="close">Close</constant>
 	</language>
 
 	<language name="Srpski" short="sr-lat">
-		<constant name="title" value="Administracioni Interfejs" />
+		<constant name="title">Administracioni Interfejs</constant>
 	</language>
 	
 	<language name="עברית" short="heb">
-		<constant name="title" value="ממשק מנהל" />
+		<constant name="title">ממשק מנהל</constant>
 	</language>
 	
 </document>

@@ -143,18 +143,6 @@ class kabalah extends Module {
 	}
 
 	/**
-	 * Event triggered upon module initialization
-	 */
-	function onInit() {
-	}
-
-	/**
-	 * Event triggered upon module deinitialization
-	 */
-	function onDeInit() {
-	}
-
-	/**
 	 * Event called upon module registration
 	 */
 	function onRegister() {

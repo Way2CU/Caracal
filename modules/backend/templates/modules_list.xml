@@ -6,16 +6,16 @@
 			<span class="column" style="width: 200px;">
 				<_text constant="column_module_name" module="backend"/>
 			</span>
-			<span class="column" style="width: 50px;">
+			<span class="column" style="width: 50px; text-align: center;">
 				<_text constant="column_module_order" module="backend"/>
 			</span>
-			<span class="column" style="width: 70px;">
+			<span class="column" style="width: 60px; text-align: center;">
 				<_text constant="column_module_preload" module="backend"/>
 			</span>
-			<span class="column" style="width: 70px;">
+			<span class="column" style="width: 50px; text-align: center;">
 				<_text constant="column_module_active" module="backend"/>
 			</span>
-			<span class="column" style="width: 70px;">
+			<span class="column">
 				<_text constant="column_options" module="backend"/>
 			</span>
 		</div>

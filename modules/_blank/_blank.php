@@ -49,7 +49,7 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDeInit() {
+	function onDisable() {
 	}
 
 	/**

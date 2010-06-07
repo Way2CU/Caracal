@@ -155,6 +155,27 @@ class ItemManager {
 
 		return $result;
 	}
+	
+	/**
+	 * Return value of single column for single item.
+	 * @param string $item
+	 * @param array $conditionals
+	 * @return variable
+	 */
+	function getItemValue($item, $conditionals=array()) {
+		global $db, $db_active;
+
+		$result = null;
+		if ($db_active == 1) {
+			$query = "SELECT {$item} FROM {$this->table_name}";
+			if (!empty($conditionals))
+				$query .= " WHERE ".$this->getDelimitedData($conditionals, ' AND ');
+			
+			$result = $db->get_var($query);
+		}
+		
+		return $result;
+	}
 
 	/**
 	 * Forms database query for specified command

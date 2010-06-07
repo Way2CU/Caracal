@@ -64,12 +64,30 @@ class ModuleHandler {
 	 * Loads module from file and returns object
 	 *
 	 * @param string $filename
+	 * @return resource
 	 */
 	function loadModuleFromFile($filename) {
+		if (!file_exists($filename)) return null; 
+		
 		include_once($filename);
 		
 		$class = basename($filename, '.php');
 		$module = new $class;
+		
+		return $module;
+	}
+	
+	/**
+	 * Load module by its name
+	 * 
+	 * @param string $name
+	 * @return resource
+	 */
+	function loadModule($name) {
+		global $module_path;
+		
+		$module_file = $module_path.$name.DIRECTORY_SEPARATOR.$name.".php";
+		return $this->loadModuleFromFile($module_file);
 	}
 	
 	/**
@@ -85,8 +103,7 @@ class ModuleHandler {
 		$module_list = $db->get_results("SELECT `name` FROM `system_modules` WHERE `preload` = 0 AND `active` = 1 ORDER BY `order` ASC");
 		if (count($module_list) > 0)
 		foreach ($module_list as $module) 
-			if (file_exists($module_path.$module->name.'/'.$module->name.'.php')) 
-				$this->loadModuleFromFile($module_path.$module->name.'/'.$module->name.'.php');
+			$this->loadModuleFromFile($module_path.$module->name.DIRECTORY_SEPARATOR.$module->name.'.php');
 	}
 	
 	/**
@@ -102,29 +119,7 @@ class ModuleHandler {
 		$module_list = $db->get_results("SELECT `name` FROM `system_modules` WHERE `preload` = 1 AND `active` = 1 ORDER BY `order` ASC");
 		if (count($module_list) > 0)
 		foreach ($module_list as $module) 
-			if (file_exists($module_path.$module->name.'/'.$module->name.'.php')) 
-				$this->loadModuleFromFile($module_path.$module->name.'/'.$module->name.'.php');
-	}
-	
-
-	/**
-	 * Initialises modules that are not in database
-	 */
-	function initModules() {
-		global $module_path, $db, $db_active, $ModuleHandler;
-		
-		if ($db_active !== 1 || !is_dir($module_path)) return ;
-		
-		$module_list = $this->__getModuleList($module_path);
-		
-		// check if each module from the directory is activated
-		foreach ($module_list as $module_name)
-			if ($db->get_var("SELECT count(*) FROM `system_modules` WHERE `name` = '$module_name'") == 0)
-				// activate the module
-				if ($ModuleHandler->moduleExists($module_name)) {
-					$module = $ModuleHandler->getObjectFromName($module_name);
-					$module->onInit();
-				}
+			$this->loadModuleFromFile($module_path.$module->name.DIRECTORY_SEPARATOR.$module->name.'.php');
 	}
 	
 	/**

@@ -58,7 +58,11 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDeInit() {
+	function onDisable() {
+		global $db, $db_active;
+		
+		$sql = "DROP TABLE IF EXISTS `youtube_video`;";
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
