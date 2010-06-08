@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<_video id="$params['video_id']" eval="id"/>
+	<div class="button_bar">
+		<button type="button" onclick="$params['action']" eval="onclick">
+			<_var name="$params['button']"/>
+		</button>
+	</div>
+</document>

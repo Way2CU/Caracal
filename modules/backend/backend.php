@@ -7,6 +7,7 @@
  */
 
 define('_BACKEND_SECTION_', 'backend_module');
+define('_BACKEND_PATH_', dirname(__FILE__));
 require_once('units/menu_item.php');
 
 class backend extends Module {

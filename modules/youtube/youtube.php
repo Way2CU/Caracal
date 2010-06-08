@@ -4,13 +4,14 @@
  * YouTube Implmenetation Module
  *
  * @author MeanEYE
+ * @todo Add playlist support
  */
 
 class youtube extends Module {
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @return youtube
 	 */
 	function youtube() {
@@ -33,6 +34,32 @@ class youtube extends Module {
 
 		// global control actions
 		switch ($params['backend_action']) {
+			case 'video_list':
+				$this->showList($level);
+				break;
+				
+			case 'video_add':
+				$this->addVideo($level);
+				break;
+				
+			case 'video_change':
+				$this->changeVideo($level);
+				break;
+				
+			case 'video_save':
+				$this->saveVideo($level);
+				break;
+				
+			case 'video_delete':
+				break;
+				
+			case 'video_delete_commit':
+				break;
+				
+			case 'video_preview':
+				$this->previewVideo($level);
+				break;
+			
 			default:
 				break;
 		}
@@ -90,25 +117,161 @@ class youtube extends Module {
 							);
 							
 			$youtube_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_modules'),
-								url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
+								$this->getLanguageConstant('menu_video_list'),
+								url_GetFromFilePath($this->path.'images/list.png'),
 								window_Open( // on click open window
-											'system_modules',
-											600, 
-											$this->getLanguageConstant('title_modules'),
+											$this->name.'_video_list',
+											650, 
+											$this->getLanguageConstant('title_video_list'),
 											true, false, // disallow minimize, safety feature 
-											backend_UrlMake($this->name, 'modules')
+											backend_UrlMake($this->name, 'video_list')
 										),	
 								$level=10
-							));							
+							));		
+
+			$backend->addMenu($this->name, $youtube_menu);
 		}
 	}
 
 	/**
 	 * Show backend video list with options
 	 */
-	function showList() {
+	function showList($level) {
+		$template = new TemplateHandler('video_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'	=> backend_WindowHyperlink(
+										$this->getLanguageConstant('add'),
+										$this->name.'_video_add', 400,
+										$this->getLanguageConstant('title_video_add'),
+										true, false,
+										$this->name,
+										'video_add'
+									)		
+					);
+				
+		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Add video form
+	 * @param integer $level
+	 */
+	function addVideo($level) {
+		$manager = new YouTube_VideoManager();
+
+		$template = new TemplateHandler('video_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
+					'cancel_action'	=> window_Close($this->name.'_video_add')
+				);
+				
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Change video data form
+	 * @param integer $level
+	 */
+	function changeVideo($level) {
+		$manager = new YouTube_VideoManager();
+
+		$template = new TemplateHandler('video_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
+					'cancel_action'	=> window_Close($this->name.'_video_add')
+				);
+				
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Save modified or new video data
+	 * @param integer $level
+	 */
+	function saveVideo($level) {
+		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
+		$video_id = fix_chars($_REQUEST['video_id']);
+		$title = fix_chars($_REQUEST['title']);
 		
+		$manager = new YouTube_VideoManager();
+		
+		$data = array(
+					'video_id'	=> $video_id,
+					'title' 	=> $title
+				);
+		
+		if (is_null($id))
+			$manager->insertData($data); else
+			$manager->updateData($data, array('id' => $id));
+
+			
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$window_name = $this->name.(is_null($id) ? '_video_add' : '_video_change');
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_video_saved"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close($window_name)
+				);
+				
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+	
+	/**
+	 * Play video in backend window
+	 * @param integer $level
+	 */
+	function previewVideo($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new YouTube_VideoManager();
+		
+		$video = $manager->getSingleItem('video_id', array('id' => $id));
+		
+		if (is_object($video)) {
+			$template = new TemplateHandler('video_preview.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'video_id'	=> $video->video_id,
+						'button'	=> $this->getLanguageConstant("close"),
+						'action'	=> window_Close($this->name.'_video_preview')
+					);
+				
+			$template->registerTagHandler('_video', &$this, 'tag_Video');
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		} else {
+			// show error message
+			$template = new TemplateHandler('message.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+	
+			$params = array(
+						'message'	=> $this->getLanguageConstant("message_video_error"),
+						'button'	=> $this->getLanguageConstant("close"),
+						'action'	=> window_Close($this->name.'_video_preview')
+					);
+					
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 	
 	/**
@@ -123,13 +286,86 @@ class youtube extends Module {
 	} 
 
 	/**
-	 * Handler of _video_list tag used to pring list of all videos.
+	 * Handler of _video_list tag used to print list of all videos.
 	 * @param $level
 	 * @param $params
 	 * @param $children
 	 */
 	function tag_VideoList($level, $params, $children) {
+		$manager = new YouTube_VideoManager();
 		
+		$items = $manager->getItems(
+								array('id', 'video_id', 'title'),
+								array(),
+								array('id')
+							);
+
+		$template = new TemplateHandler(
+								isset($params['template']) ? $params['template'] : 'video_item.xml', 
+								$this->path.'templates/'
+							);
+		$template->setMappedModule($this->name);
+							
+		if (count($items) > 0)
+		foreach ($items as $item) {
+			$params = array(
+							'id'			=> $item->id,
+							'video_id'		=> $item->video_id,
+							'title'			=> $item->title,
+							'item_change'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('change'),
+													window_Open(
+														$this->name.'_video_change', 	// window id
+														400,							// width
+														$this->getLanguageConstant('title_video_change'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'video_change'),
+															array('id', $item->id)
+														)
+													)
+												),
+							'item_delete'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('delete'),
+													window_Open(
+														$this->name.'_video_delete', 	// window id
+														300,							// width
+														$this->getLanguageConstant('title_video_delete'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'video_delete'),
+															array('id', $item->id)
+														)
+													)
+												),
+							'item_preview'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('preview'),
+													window_Open(
+														$this->name.'_video_preview', 	// window id
+														400,							// width
+														$item->title, // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'video_preview'),
+															array('id', $item->id)
+														)
+													)
+												),
+						);
+			
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);			
+		}
 	}
 }
 

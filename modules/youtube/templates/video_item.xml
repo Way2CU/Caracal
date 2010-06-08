@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 100px;">
+			<_var name="$params['video_id']"/>
+		</span>
+		<span class="column" style="width: 300px">
+			<_var name="$params['title']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['item_change']"/><_raw text=" "/>
+			<_var name="$params['item_delete']"/><_raw text=" "/>
+			<_var name="$params['item_preview']"/>
+		</span>
+	</div>
+</document>

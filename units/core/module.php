@@ -60,8 +60,15 @@ class Module {
 	 * @return string
 	 */
 	function getLanguageConstant($constant, $language="") {
-		$language_to_use = empty($language) ? $_SESSION['language'] : $language;
-		return $this->language->getText($constant, $language_to_use);
+		global $LanguageHandler;
+		
+		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
+		$result = $this->language->getText($constant, $language_in_use); 
+		
+		if (empty($result))
+			$result = $LanguageHandler->getText($constant, $language_in_use);
+			
+		return $result;
 	}
 
 	/**

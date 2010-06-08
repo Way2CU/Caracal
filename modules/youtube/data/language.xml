@@ -3,11 +3,27 @@
 		<constant name="title" value="YouTube" />
 		
 		<!-- Menu Items -->
-		<constant name="menu_youtube" value="YouTube"/>
-		<constant name="menu_video_list" value="Show video list"/>
+		<constant name="menu_youtube">YouTube</constant>
+		<constant name="menu_video_list">Video list</constant>
 		
 		<!-- Window Titles -->
+		<constant name="title_video_list">Video List</constant>
+		<constant name="title_video_add">Add Video</constant>
+		
+		<!-- Messages -->
+		<constant name="message_video_saved">Video data saved.</constant>
+		<constant name="message_video_error">There was an error while trying to process your request.</constant>
 		
 		<!-- Column Names -->
+		<constant name="column_id">ID</constant>
+		<constant name="column_title">Title</constant>
+		
+		<!-- Form Labels -->
+		<constant name="label_id">ID:</constant>
+		<constant name="label_title">Title:</constant>
+		
+		<!-- Other -->
+		<constant name="add">Add video</constant>
+		<constant name="preview">Preview</constant>
 	</language>
 </document>

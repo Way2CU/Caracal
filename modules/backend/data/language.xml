@@ -24,8 +24,6 @@
 		<constant name="message_module_protected">This module is protected. You are not allowed to change it.</constant>
 		
 		<!-- Column Names -->
-		<constant name="column_options">Options</constant>
-
 		<constant name="column_module_name">Name</constant>
 		<constant name="column_module_order">Order</constant>
 		<constant name="column_module_preload">Preload</constant>
