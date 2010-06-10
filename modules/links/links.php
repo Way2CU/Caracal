@@ -39,6 +39,10 @@ class links extends Module {
 				$this->showList($level);
 				break;
 
+			case 'links_add':
+				$this->addLink($level);
+				break;
+
 			default:
 				break;
 		}
@@ -106,7 +110,7 @@ class links extends Module {
 								$this->getLanguageConstant('menu_links_manage'),
 								url_GetFromFilePath($this->path.'images/manage.png'),
 								window_Open( // on click open window
-											$this->name.'_manage',
+											'links_manage',
 											650,
 											$this->getLanguageConstant('title_links_manage'),
 											true, true,
@@ -119,7 +123,7 @@ class links extends Module {
 								$this->getLanguageConstant('menu_links_groups'),
 								url_GetFromFilePath($this->path.'images/groups.png'),
 								window_Open( // on click open window
-											$this->name.'_groups',
+											'links_groups',
 											650,
 											$this->getLanguageConstant('title_links_groups'),
 											true, true,
@@ -132,7 +136,7 @@ class links extends Module {
 								$this->getLanguageConstant('menu_links_overview'),
 								url_GetFromFilePath($this->path.'images/overview.png'),
 								window_Open( // on click open window
-											$this->name.'_overview',
+											'links_overview',
 											650,
 											$this->getLanguageConstant('title_links_overview'),
 											true, true,
@@ -157,28 +161,30 @@ class links extends Module {
 		$params = array(
 					'link_new'		=> backend_WindowHyperlink(
 										$this->getLanguageConstant('add'),
-										$this->name.'_video_add', 400,
-										$this->getLanguageConstant('title_video_add'),
+										'links_add', 400,
+										$this->getLanguageConstant('title_links_add'),
 										true, false,
 										$this->name,
-										'video_add'
+										'links_add'
 									),
-					'link_groups'	=> backend_WindowHyperlink(
+					'link_groups'	=> url_MakeHyperlink(
 										$this->getLanguageConstant('groups'),
-										$this->name.'_video_add', 400,
-										$this->getLanguageConstant('title_video_add'),
-										true, false,
-										$this->name,
-										'video_add'
+										window_Open( // on click open window
+											'links_groups',
+											650,
+											$this->getLanguageConstant('title_links_groups'),
+											true, true,
+											backend_UrlMake($this->name, 'links_groups')
+										)
 									),
 					'link_overview'	=> url_MakeHyperlink(
 										$this->getLanguageConstant('overview'),
 										window_Open( // on click open window
-											$this->name.'_overview',
+											'links_overview',
 											650,
 											$this->getLanguageConstant('title_links_overview'),
 											true, true,
-											backend_UrlMake($this->name, 'links_groups')
+											backend_UrlMake($this->name, 'links_overview')
 										)
 									)
 					);
@@ -195,7 +201,17 @@ class links extends Module {
 	 * @param integer $level
 	 */
 	function addLink($level) {
+		$template = new TemplateHandler('links_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
 
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
+					'cancel_action'	=> window_Close($this->name.'_video_add')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
 	/**

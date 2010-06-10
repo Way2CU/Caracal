@@ -11,7 +11,7 @@ class youtube extends Module {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @return youtube
 	 */
 	function youtube() {
@@ -37,29 +37,29 @@ class youtube extends Module {
 			case 'video_list':
 				$this->showList($level);
 				break;
-				
+
 			case 'video_add':
 				$this->addVideo($level);
 				break;
-				
+
 			case 'video_change':
 				$this->changeVideo($level);
 				break;
-				
+
 			case 'video_save':
 				$this->saveVideo($level);
 				break;
-				
+
 			case 'video_delete':
 				break;
-				
+
 			case 'video_delete_commit':
 				break;
-				
+
 			case 'video_preview':
 				$this->previewVideo($level);
 				break;
-			
+
 			default:
 				break;
 		}
@@ -70,7 +70,7 @@ class youtube extends Module {
 	 */
 	function onInit() {
 		global $db, $db_active;
-		
+
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `youtube_video` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -78,7 +78,7 @@ class youtube extends Module {
 				`title` varchar(255) COLLATE utf8_bin NOT NULL,
 				PRIMARY KEY (`id`)
 			) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		
+
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -87,7 +87,7 @@ class youtube extends Module {
 	 */
 	function onDisable() {
 		global $db, $db_active;
-		
+
 		$sql = "DROP TABLE IF EXISTS `youtube_video`;";
 		if ($db_active == 1) $db->query($sql);
 	}
@@ -110,24 +110,24 @@ class youtube extends Module {
 			$backend = $ModuleHandler->getObjectFromName('backend');
 
 			$youtube_menu = new backend_MenuItem(
-								$this->getLanguageConstant('menu_youtube'), 
-								url_GetFromFilePath($this->path.'images/icon.png'), 
-								'javascript:void(0);',	
+								$this->getLanguageConstant('menu_youtube'),
+								url_GetFromFilePath($this->path.'images/icon.png'),
+								'javascript:void(0);',
 								$level=10
 							);
-							
+
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_video_list'),
 								url_GetFromFilePath($this->path.'images/list.png'),
 								window_Open( // on click open window
 											$this->name.'_video_list',
-											650, 
+											650,
 											$this->getLanguageConstant('title_video_list'),
-											true, true, 
+											true, true,
 											backend_UrlMake($this->name, 'video_list')
-										),	
+										),
 								$level=5
-							));		
+							));
 
 			$backend->addMenu($this->name, $youtube_menu);
 		}
@@ -148,22 +148,20 @@ class youtube extends Module {
 										true, false,
 										$this->name,
 										'video_add'
-									)		
+									)
 					);
-				
+
 		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Add video form
 	 * @param integer $level
 	 */
 	function addVideo($level) {
-		$manager = new YouTube_VideoManager();
-
 		$template = new TemplateHandler('video_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -171,12 +169,12 @@ class youtube extends Module {
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
 					'cancel_action'	=> window_Close($this->name.'_video_add')
 				);
-				
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Change video data form
 	 * @param integer $level
@@ -184,7 +182,7 @@ class youtube extends Module {
 	function changeVideo($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new YouTube_VideoManager();
-		
+
 		$video = $manager->getSingleItem(array('id', 'video_id', 'title'), array('id' => $id));
 
 		$template = new TemplateHandler('video_change.xml', $this->path.'templates/');
@@ -197,12 +195,12 @@ class youtube extends Module {
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
 					'cancel_action'	=> window_Close($this->name.'_video_change')
 				);
-				
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Save modified or new video data
 	 * @param integer $level
@@ -211,19 +209,19 @@ class youtube extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$video_id = fix_chars($_REQUEST['video_id']);
 		$title = fix_chars($_REQUEST['title']);
-		
+
 		$manager = new YouTube_VideoManager();
-		
+
 		$data = array(
 					'video_id'	=> $video_id,
 					'title' 	=> $title
 				);
-		
+
 		if (is_null($id))
 			$manager->insertData($data); else
 			$manager->updateData($data, array('id' => $id));
 
-			
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -233,20 +231,20 @@ class youtube extends Module {
 					'button'	=> $this->getLanguageConstant("close"),
 					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_video_list')
 				);
-				
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	function deleteVideo($level) {
-		
+
 	}
-	
+
 	function deleteVideo_Commit($level) {
-		
+
 	}
-	
+
 	/**
 	 * Play video in backend window
 	 * @param integer $level
@@ -254,9 +252,9 @@ class youtube extends Module {
 	function previewVideo($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new YouTube_VideoManager();
-		
+
 		$video_id = $manager->getItemValue('video_id', array('id' => $id));
-		
+
 		if ($video_id) {
 			$template = new TemplateHandler('video_preview.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
@@ -266,7 +264,7 @@ class youtube extends Module {
 						'button'	=> $this->getLanguageConstant("close"),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
-				
+
 			$template->registerTagHandler('_video', &$this, 'tag_Video');
 			$template->restoreXML();
 			$template->setLocalParams($params);
@@ -275,13 +273,13 @@ class youtube extends Module {
 			// show error message
 			$template = new TemplateHandler('message.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
-	
+
 			$params = array(
 						'message'	=> $this->getLanguageConstant("message_video_error"),
 						'button'	=> $this->getLanguageConstant("close"),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
-					
+
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse($level);
@@ -289,13 +287,13 @@ class youtube extends Module {
 	}
 
 	function tag_Thumbnail($level, $params, $children) {
-		
+
 	}
 
 	function tag_ThumbnailList($level, $params, $children) {
-		
+
 	}
-	
+
 	/**
 	 * Handler for _video tag which embeds player in page.
 	 * @param integer $level
@@ -304,18 +302,18 @@ class youtube extends Module {
 	 */
 	function tag_Video($level, $params, $children) {
 		global $ModuleHandler;
-		
+
 		$video_id = isset($params['id']) ? $params['id'] : fix_chars($_REQUEST['video_id']);
-		
+
 		if ($ModuleHandler->moduleExists('swfobject')) {
 			$module = $ModuleHandler->getObjectFromName('swfobject');
-			
+
 			if (isset($params['embed']) && $params['embed'] == '1')
 				$module->embedSWF(
 								$level,
-								$this->getEmbedURL($video_id), 
-								$params['target'], 
-								isset($params['width']) ? $params['width'] : 320, 
+								$this->getEmbedURL($video_id),
+								$params['target'],
+								isset($params['width']) ? $params['width'] : 320,
 								isset($params['height']) ? $params['height'] : 240
 							);
 		}
@@ -329,7 +327,7 @@ class youtube extends Module {
 	 */
 	function tag_VideoList($level, $params, $children) {
 		$manager = new YouTube_VideoManager();
-		
+
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								array(),
@@ -337,11 +335,11 @@ class youtube extends Module {
 							);
 
 		$template = new TemplateHandler(
-								isset($params['template']) ? $params['template'] : 'video_item.xml', 
+								isset($params['template']) ? $params['template'] : 'video_item.xml',
 								$this->path.'templates/'
 							);
 		$template->setMappedModule($this->name);
-							
+
 		if (count($items) > 0)
 		foreach ($items as $item) {
 			$params = array(
@@ -397,16 +395,16 @@ class youtube extends Module {
 													)
 												),
 						);
-			
+
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);			
+			$template->parse($level);
 		}
 	}
-	
+
 	/**
 	 * Simple function that provides thumbnail image URL based on video ID
-	 *  
+	 *
 	 * @param string[11] $video_id
 	 * @param integer $number 1-3
 	 * @return string
@@ -414,17 +412,17 @@ class youtube extends Module {
 	function getThumbnailURL($video_id, $number=2) {
 		return "http://img.youtube.com/vi/{$video_id}/{$number}.jpg";
 	}
-	
+
 	/**
 	 * Get URL for embeded video player for specified video ID
-	 * 
+	 *
 	 * @param string[11] $video_id
 	 * @return string
 	 */
 	function getEmbedURL($video_id) {
 		return "http://www.youtube.com/v/{$video_id}?enablejsapi=1&version=3";
 	}
-	
+
 }
 
 class YouTube_VideoManager extends ItemManager {
