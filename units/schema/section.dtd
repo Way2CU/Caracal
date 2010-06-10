@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Section File Specification
+	Copyright (c) 2010. by RCF Group
+	
+	Author: MeanEYE.rcf
+-->
+<!ELEMENT document (section*)>
+
+<!ELEMENT section (language+)>
+<!ATTLIST section name CDATA #REQUIRED>
+<!ATTLIST section module CDATA #IMPLIED>
+
+<!ELEMENT language (action*)>
+<!ATTLIST language name CDATA #REQUIRED>
+<!ATTLIST language file CDATA #IMPLIED>
+
+<!ELEMENT action EMPTY>
+<!ATTLIST action name CDATA #REQUIRED>
+<!ATTLIST action file CDATA #REQUIRED>

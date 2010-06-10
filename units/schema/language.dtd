@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Language File Specification
+	Copyright (c) 2010. by RCF Group
+	
+	Author: MeanEYE.rcf
+-->
+<!ELEMENT document (language*)>
+
+<!ELEMENT language (constant*)>
+<!ATTLIST language name CDATA #IMPLIED>
+<!ATTLIST language short CDATA #REQUIRED>
+<!ATTLIST language default (yes|no) "no">
+<!ATTLIST language rtl (yes|no) "no">
+
+<!ELEMENT constant ANY>
+<!ATTLIST constant name CDATA #REQUIRED>
+<!ATTLIST constant value CDATA #IMPLIED>

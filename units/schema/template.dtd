@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Template File Specification
+	Copyright (c) 2010. by RCF Group
+	
+	Author: MeanEYE.rcf
+-->
+<!ELEMENT document ANY>
+<!ATTLIST document minimum_level CDATA #IMPLIED>
