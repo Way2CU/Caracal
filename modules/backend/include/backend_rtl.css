@@ -16,3 +16,8 @@ div#backend_Menu ul#navigation li > ul {
 	left: auto;
 	right: -20px;
 }
+
+div.window div.content input[type=checkbox],
+div.window_inactive div.content input[type=checkbox] {
+	float: right;
+}

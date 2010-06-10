@@ -236,6 +236,10 @@ div.window div.content input,
 div.window_inactive div.content input,
 div.window div.content textarea,
 div.window_inactive div.content textarea {
+	padding: 2px;
+	padding-left: 3px;
+	padding-right: 3px;
+	
 	border: 1px solid #999999;
 	border-radius: 3px;
 	background-color: #ffffff;
@@ -243,10 +247,26 @@ div.window_inactive div.content textarea {
 	color: #444444;
 }
 
+div.window div.content input[type=checkbox],
+div.window_inactive div.content input[type=checkbox] {
+	padding: 0px;
+	
+	float: left;
+	clear: both;
+}
+
+div.window div.content label.checkbox span,
+div.window_inactive div.content label.checkbox span {
+	display: inline-block;
+	
+	padding-top: 1px;
+}
+
+
 div.window div.content textarea.code,
 div.window_inactive div.content textarea.code {
 	direction: ltr !important;
-	font-family: Monospace;
+	font-family: monospace;
 }
 
 div.window div.content input:focus,
