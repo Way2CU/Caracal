@@ -8,6 +8,10 @@
 
 define('_BACKEND_SECTION_', 'backend_module');
 define('_BACKEND_PATH_', dirname(__FILE__));
+
+define('CHAR_CHECKED', '✔');
+define('CHAR_UNCHECKED', '');
+
 require_once('units/menu_item.php');
 
 class backend extends Module {
@@ -463,9 +467,9 @@ class backend extends Module {
 							'name'				=> $name,
 							'status'			=> $definition['status'],
 							'active'			=> $definition['active'],
-							'active_symbol'		=> $definition['active'] ? '✔' : '',
+							'active_symbol'		=> $definition['active'] ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'preload'			=> $definition['preload'],
-							'preload_symbol'	=> $definition['preload'] ? '✔' : '',
+							'preload_symbol'	=> $definition['preload'] ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'order'				=> $definition['order'],
 							'item_activate'		=> url_MakeHyperlink(
 													$this->getLanguageConstant('activate'),
