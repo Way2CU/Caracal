@@ -182,14 +182,20 @@ class youtube extends Module {
 	 * @param integer $level
 	 */
 	function changeVideo($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new YouTube_VideoManager();
+		
+		$video = $manager->getSingleItem(array('id', 'video_id', 'title'), array('id' => $id));
 
-		$template = new TemplateHandler('video_add.xml', $this->path.'templates/');
+		$template = new TemplateHandler('video_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
+					'id'			=> $video->id,
+					'video_id'		=> unfix_chars($video->video_id),
+					'title'			=> unfix_chars($video->title),
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
-					'cancel_action'	=> window_Close($this->name.'_video_add')
+					'cancel_action'	=> window_Close($this->name.'_video_change')
 				);
 				
 		$template->restoreXML();
@@ -225,12 +231,20 @@ class youtube extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant("message_video_saved"),
 					'button'	=> $this->getLanguageConstant("close"),
-					'action'	=> window_Close($window_name)
+					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_video_list')
 				);
 				
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
+	}
+	
+	function deleteVideo($level) {
+		
+	}
+	
+	function deleteVideo_Commit($level) {
+		
 	}
 	
 	/**
@@ -241,14 +255,14 @@ class youtube extends Module {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new YouTube_VideoManager();
 		
-		$video = $manager->getSingleItem('video_id', array('id' => $id));
+		$video_id = $manager->getItemValue('video_id', array('id' => $id));
 		
-		if (is_object($video)) {
+		if ($video_id) {
 			$template = new TemplateHandler('video_preview.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
 			$params = array(
-						'video_id'	=> $video->video_id,
+						'video_id'	=> $video_id,
 						'button'	=> $this->getLanguageConstant("close"),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
@@ -273,6 +287,14 @@ class youtube extends Module {
 			$template->parse($level);
 		}
 	}
+
+	function tag_Thumbnail($level, $params, $children) {
+		
+	}
+
+	function tag_ThumbnailList($level, $params, $children) {
+		
+	}
 	
 	/**
 	 * Handler for _video tag which embeds player in page.
@@ -281,9 +303,23 @@ class youtube extends Module {
 	 * @param array $children
 	 */
 	function tag_Video($level, $params, $children) {
-		$manager = new YouTube_VideoManager();
+		global $ModuleHandler;
+		
 		$video_id = isset($params['id']) ? $params['id'] : fix_chars($_REQUEST['video_id']);
-	} 
+		
+		if ($ModuleHandler->moduleExists('swfobject')) {
+			$module = $ModuleHandler->getObjectFromName('swfobject');
+			
+			if (isset($params['embed']) && $params['embed'] == '1')
+				$module->embedSWF(
+								$level,
+								$this->getEmbedURL($video_id), 
+								$params['target'], 
+								isset($params['width']) ? $params['width'] : 320, 
+								isset($params['height']) ? $params['height'] : 240
+							);
+		}
+	}
 
 	/**
 	 * Handler of _video_list tag used to print list of all videos.
@@ -349,7 +385,7 @@ class youtube extends Module {
 													window_Open(
 														$this->name.'_video_preview', 	// window id
 														400,							// width
-														$item->title, // title
+														$item->title, 					// title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -367,6 +403,28 @@ class youtube extends Module {
 			$template->parse($level);			
 		}
 	}
+	
+	/**
+	 * Simple function that provides thumbnail image URL based on video ID
+	 *  
+	 * @param string[11] $video_id
+	 * @param integer $number 1-3
+	 * @return string
+	 */
+	function getThumbnailURL($video_id, $number=2) {
+		return "http://img.youtube.com/vi/{$video_id}/{$number}.jpg";
+	}
+	
+	/**
+	 * Get URL for embeded video player for specified video ID
+	 * 
+	 * @param string[11] $video_id
+	 * @return string
+	 */
+	function getEmbedURL($video_id) {
+		return "http://www.youtube.com/v/{$video_id}?enablejsapi=1&version=3";
+	}
+	
 }
 
 class YouTube_VideoManager extends ItemManager {

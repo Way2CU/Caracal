@@ -12,7 +12,8 @@ function onYouTubePlayerReady(playerId) {
 }
 
 YouTube_Controls = {
-	player = null,
+	player: null,
+	playlist: [],
 	
 	/**
 	 * Initialize event listeners and controls for
@@ -26,6 +27,13 @@ YouTube_Controls = {
 		player.addEventListener("onError", this.onPlayerError);
 	},
 
+	/**
+	 * TODO: Finish YouTube embed player 
+	 */
+	addToPlaylist: function(video_id) {
+		this.playlist.push(video_id);
+	},
+	
 	/**
 	 * Event fired when player state is changed
 	 * @param integer state

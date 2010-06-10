@@ -303,6 +303,15 @@ function window_ProcessResult(request, wnd) {
 
 			// reset loading class
 			wnd._content.className = 'content';
+			
+			// execute scripts if there are any
+			var script_list = wnd._content.getElementsByTagName('script');
+			
+			for (var i=0; i<script_list.length; i++) {
+				var script = script_list[i];
+				if (script.type == 'text/javascript')
+					eval(script.innerHTML);
+			}
 		} else {
 			// error loading data
 			error_log = window.open("", "error_log", "width=640px, height=480px, scrollbars");

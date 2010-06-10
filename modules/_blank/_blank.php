@@ -12,7 +12,7 @@ class _blank extends Module {
 	/**
 	 * Constructor
 	 *
-	 * @return journal
+	 * @return _blank
 	 */
 	function _blank() {
 		$this->file = __FILE__;

@@ -9,6 +9,7 @@
 		<!-- Window Titles -->
 		<constant name="title_video_list">Video List</constant>
 		<constant name="title_video_add">Add Video</constant>
+		<constant name="title_video_change">Change Video</constant>
 		
 		<!-- Messages -->
 		<constant name="message_video_saved">Video data saved.</constant>
