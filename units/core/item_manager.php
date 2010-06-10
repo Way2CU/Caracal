@@ -275,5 +275,14 @@ class ItemManager {
 		unset($tmp);
 		return $result;
 	}
+	
+	/**
+	 * Return list of all defined fields
+	 * 
+	 * @return array
+	 */
+	function getFieldNames() {
+		return array_keys($this->fields);
+	}
 }
 ?>
