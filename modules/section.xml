@@ -1,3 +1,4 @@
+<!DOCTYPE document SYSTEM "../units/schema/section.dtd">
 <document>
 	<section name="backend" module="backend">
 		<language name="all" file="backend.xml" />

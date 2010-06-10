@@ -1,4 +1,5 @@
-﻿<document>
+﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
 	<language name="English" short="en">
 		<constant name="captcha_message" value="Captcha image (click to refresh)" />
 	</language>

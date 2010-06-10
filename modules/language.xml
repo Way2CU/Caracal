@@ -1,3 +1,4 @@
+<!DOCTYPE document SYSTEM "../units/schema/language.dtd">
 <document>
 	<language name="Srpski" short="sr-lat">
 		<constant name="site_title" value="Engine"/>

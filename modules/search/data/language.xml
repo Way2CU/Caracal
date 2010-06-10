@@ -1,4 +1,5 @@
-﻿<document>
+﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
 	<language name="עברית" short="heb">
 		<constant name="search_results" value="תוצאות חיפוש" />
 		<constant name="score" value="מספר מופעים בטקסט" />

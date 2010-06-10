@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="youtube_preview_player"></div>
 	<_video id="$params['video_id']" width="369" height="277" embed="1" target="youtube_preview_player" eval="id"/>

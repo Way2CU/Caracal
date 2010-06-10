@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<_if condition="$params['selected'] == $params['number']">
 		<option value="$params['number']" eval="value" selected="selected"><_var name="$params['title']"/></option>

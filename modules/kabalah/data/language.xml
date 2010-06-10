@@ -1,4 +1,5 @@
-﻿<document>
+﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
 	<language name="English" short="en">
 		<constant name="menu_title" value="Kabalah"/>
 		<constant name="menu_questions" value="Edit questions" />

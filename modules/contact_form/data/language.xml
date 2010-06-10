@@ -1,4 +1,5 @@
-﻿<document>
+﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
 	<language name="עברית" short="heb">
 		<constant name="firstname" value="שם" />
 		<constant name="lastname" value="שם משפחה" />

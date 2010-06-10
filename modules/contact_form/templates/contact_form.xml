@@ -1,4 +1,6 @@
-﻿<document>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
 	<form class="contact" method="post">
 		<input type="hidden" name="section" value="contact" class="hidden"/>
 		<input type="hidden" name="action" value="send_message" class="hidden"/>

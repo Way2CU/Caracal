@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<li>
-		<a href="$params['url']" eval="href"><_var name="$params['long_name']"/></a>
-	</li>
+	<li><a href="$params['url']" eval="href"><_var name="$params['long_name']"/></a></li>
 </document>

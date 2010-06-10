@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<answer debug="$params['debug']" eval="debug">
 		<title><_var name="utf8_strrev($params['title'])"/></title>

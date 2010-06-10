@@ -1,4 +1,4 @@
-﻿<document>
-	<language name="English" short="en">
-	</language>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
 </document>
