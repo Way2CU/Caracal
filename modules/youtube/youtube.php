@@ -123,10 +123,10 @@ class youtube extends Module {
 											$this->name.'_video_list',
 											650, 
 											$this->getLanguageConstant('title_video_list'),
-											true, false, // disallow minimize, safety feature 
+											true, true, 
 											backend_UrlMake($this->name, 'video_list')
 										),	
-								$level=10
+								$level=5
 							));		
 
 			$backend->addMenu($this->name, $youtube_menu);
@@ -331,7 +331,7 @@ class youtube extends Module {
 		$manager = new YouTube_VideoManager();
 		
 		$items = $manager->getItems(
-								array('id', 'video_id', 'title'),
+								$manager->getFieldNames(),
 								array(),
 								array('id')
 							);
