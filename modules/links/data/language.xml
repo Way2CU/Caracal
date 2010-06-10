@@ -1,0 +1,25 @@
+﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language name="English" short="en">
+		<!-- Menu Items -->
+		<constant name="menu_links">Links</constant>
+		<constant name="menu_links_groups">Link groups</constant>
+		<constant name="menu_links_manage">Manage links</constant>
+		<constant name="menu_links_overview">Sponsored overview</constant>
+		
+		<!-- Window Titles -->
+		<constant name="title_links_manage">Manage Links</constant>
+		<constant name="title_links_groups">Link Groups</constant>
+		<constant name="title_links_overview">Sponsored Links Overview</constant>
+		
+		<!-- Column Names -->
+		<constant name="column_text">Text</constant>
+		<constant name="column_sponsored">Sponsored</constant>
+		<constant name="column_total_clicks">Total clicks</constant>
+		
+		<!-- Other -->
+		<constant name="add">Add new link</constant>
+		<constant name="groups">Manage groups</constant>
+		<constant name="overview">Overview</constant>
+	</language>
+</document>

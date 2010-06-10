@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<_var name="$params['link_new']"/>
+		<_var name="$params['link_groups']"/>
+		<_var name="$params['link_overview']"/>
+	</div>
+
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 250px;">
+				<_text constant="column_text" module="links"/>
+			</span>
+			<span class="column" style="width: 90px">
+				<_text constant="column_sponsored" module="links"/>
+			</span>
+			<span class="column" style="width: 90px">
+				<_text constant="column_total_clicks" module="links"/>
+			</span>
+			<span class="column">
+				<_text constant="column_options"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 400px">
+			<_link_list/>
+		</div>
+	</div>
+</document>
