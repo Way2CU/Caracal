@@ -43,7 +43,7 @@
 		<constant name="title">Administracioni Interfejs</constant>
 	</language>
 	
-	<language name="עברית" short="heb">
+	<language name="עברית" short="he">
 		<constant name="title">ממשק מנהל</constant>
 	</language>
 	

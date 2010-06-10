@@ -270,6 +270,16 @@ class links extends Module {
 		if (count($items) > 0)
 		foreach ($items as $item) {
 			$params = array(
+						'id'				=> $item->id,
+						'text'				=> $item->text,
+						'description'		=> $item->description,
+						'url'				=> $item->url,
+						'external'			=> $item->external,
+						'sponsored'			=> $item->sponsored,
+						'sponsored_character' => ($item->sponsored == 1) ? CHAR_CHECKED : CHAR_UNCHECKED,
+						'display_limit'		=> $item->display_limit,
+						'sponsored_clicks'	=> $item->sponsored_clicks,
+						'total_clicks'		=> $item->total_clicks
 						);
 
 			$template->registerTagHandler('_link', &$this, 'tag_Link');

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="עברית" short="heb">
+	<language name="עברית" short="he">
 		<constant name="username" value="שם משתמש" />
 		<constant name="password" value="סיסמא" />
 		<constant name="captcha" value="Captcha" />

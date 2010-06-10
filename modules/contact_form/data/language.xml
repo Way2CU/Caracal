@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="עברית" short="heb">
+	<language name="עברית" short="he">
 		<constant name="firstname" value="שם" />
 		<constant name="lastname" value="שם משפחה" />
 		<constant name="company" value="חברה" />
@@ -42,7 +42,7 @@
 		<constant name="backend_message_saved" value="Saved new data!" />
 		<constant name="backend_save" value="Save" />
 	</language>
-	<language name="Srpski" short="sr">
+	<language name="Srpski" short="sr-lat">
 		<constant name="firstname" value="Ime" />
 		<constant name="lastname" value="Prezime" />
 		<constant name="company" value="Kompanija" />

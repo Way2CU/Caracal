@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="עברית" short="heb">
+	<language name="עברית" short="he">
 		<constant name="search_results" value="תוצאות חיפוש" />
 		<constant name="score" value="מספר מופעים בטקסט" />
 		<constant name="read_more" value="קרא עוד" />
@@ -13,7 +13,7 @@
 		<constant name="search" value="Search"/>
 		<constant name="message_no_results" value="No results found!"/>
 	</language>
-	<language name="Serbian" short="sr">
+	<language name="Serbian" short="sr-lat">
 		<constant name="search_results" value="Rezultati Pretrage" />
 		<constant name="score" value="Tačnost" />
 		<constant name="read_more" value="Više" />

@@ -19,7 +19,7 @@
 		
 		<!-- Other -->
 		<constant name="add">Add new link</constant>
-		<constant name="groups">Manage groups</constant>
-		<constant name="overview">Overview</constant>
+		<constant name="groups">Link groups</constant>
+		<constant name="overview">Sponsored links</constant>
 	</language>
 </document>

@@ -14,10 +14,10 @@
 			<span class="column" style="width: 250px;">
 				<_text constant="column_text" module="links"/>
 			</span>
-			<span class="column" style="width: 90px">
+			<span class="column" style="width: 70px; text-align: center;">
 				<_text constant="column_sponsored" module="links"/>
 			</span>
-			<span class="column" style="width: 90px">
+			<span class="column" style="width: 90px; text-align: center;">
 				<_text constant="column_total_clicks" module="links"/>
 			</span>
 			<span class="column">

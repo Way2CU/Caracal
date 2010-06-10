@@ -5,11 +5,15 @@
 	
 	Author: MeanEYE.rcf
 -->
+
+<!-- Allowed languages, extend if necessary -->
+<!ENTITY % def.lang "en|he|sr-lat|sr-cyr">
+
 <!ELEMENT document (language*)>
 
 <!ELEMENT language (constant*)>
 <!ATTLIST language name CDATA #IMPLIED>
-<!ATTLIST language short CDATA #REQUIRED>
+<!ATTLIST language short (%def.lang;) #REQUIRED>
 <!ATTLIST language default (yes|no) "no">
 <!ATTLIST language rtl (yes|no) "no">
 

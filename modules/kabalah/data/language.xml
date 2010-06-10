@@ -67,7 +67,7 @@
 		<constant name="column_answer_question" value="Question"/>
 		<constant name="column_options" value="Options"/>
 	</language>
-	<language name="Hebrew" short="heb">
+	<language name="Hebrew" short="he">
 		<constant name="menu_title" value="קבלה" />
 		<constant name="menu_questions" value="ערוך שאלות" />
 		<constant name="menu_answers" value="ערוך תשובות לשאלה" />
