@@ -43,6 +43,14 @@ class links extends Module {
 				$this->addLink($level);
 				break;
 
+			case 'links_change':
+				$this->changeLink($level);
+				break;
+
+			case 'links_save':
+				$this->saveLink($level);
+				break;
+
 			default:
 				break;
 		}
@@ -110,8 +118,8 @@ class links extends Module {
 								$this->getLanguageConstant('menu_links_manage'),
 								url_GetFromFilePath($this->path.'images/manage.png'),
 								window_Open( // on click open window
-											'links_manage',
-											650,
+											'links_list',
+											730,
 											$this->getLanguageConstant('title_links_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'links_list')
@@ -206,7 +214,7 @@ class links extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
-					'cancel_action'	=> window_Close($this->name.'_video_add')
+					'cancel_action'	=> window_Close('links_add')
 				);
 
 		$template->restoreXML();
@@ -220,7 +228,30 @@ class links extends Module {
 	 * @param integer $level
 	 */
 	function changeLink($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new LinksManager();
 
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$template = new TemplateHandler('links_change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'id'			=> $item->id,
+					'text'			=> unfix_chars($item->text),
+					'description'	=> unfix_chars($item->description),
+					'url'			=> unfix_chars($item->url),
+					'external'		=> $item->external,
+					'sponsored'		=> $item->sponsored,
+					'display_limit'	=> $item->display_limit,
+					'sponsored_clicks' => $item->sponsored_clicks,
+					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
+					'cancel_action'	=> window_Close('links_change')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
 	/**
@@ -229,7 +260,40 @@ class links extends Module {
 	 * @param integer $level
 	 */
 	function saveLink($level) {
+		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
+		$data = array(
+			'text' 			=> fix_chars($_REQUEST['text']),
+			'description' 	=> fix_chars($_REQUEST['description']),
+			'url' 			=> fix_chars($_REQUEST['url']),
+			'external' 		=> fix_id(fix_chars($_REQUEST['external'])),
+			'sponsored' 	=> fix_id(fix_chars($_REQUEST['sponsored'])),
+			'display_limit'	=> fix_id(fix_chars($_REQUEST['display_limit'])),
+		);
+
+		$manager = new LinksManager();
+
+		if (!is_null($id)) {
+			$data['id'] = id;
+			$manager->updateData($data, array('id' => $id));
+			$window_name = 'links_change';
+		} else {
+			$manager->insertData($data);
+			$window_name = 'links_add';
+		}
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_link_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window_name).";".window_ReloadContent('links_list')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
 	/**
@@ -291,12 +355,51 @@ class links extends Module {
 						'description'		=> $item->description,
 						'url'				=> $item->url,
 						'external'			=> $item->external,
+						'external_character' => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'sponsored'			=> $item->sponsored,
-						'sponsored_character' => ($item->sponsored == 1) ? CHAR_CHECKED : CHAR_UNCHECKED,
+						'sponsored_character' => ($item->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'display_limit'		=> $item->display_limit,
 						'sponsored_clicks'	=> $item->sponsored_clicks,
-						'total_clicks'		=> $item->total_clicks
-						);
+						'total_clicks'		=> $item->total_clicks,
+						'item_change'		=> url_MakeHyperlink(
+												$this->getLanguageConstant('change'),
+												window_Open(
+													'links_change', 	// window id
+													400,				// width
+													$this->getLanguageConstant('title_links_change'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'links_change'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete'		=> url_MakeHyperlink(
+												$this->getLanguageConstant('delete'),
+												window_Open(
+													'links_delete', 	// window id
+													400,				// width
+													$this->getLanguageConstant('title_links_delete'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'links_delete'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_open'			=> url_MakeHyperlink(
+												$this->getLanguageConstant('open'),
+												$item->url,
+												'', '',
+												'_blank'
+											),
+					);
 
 			$template->registerTagHandler('_link', &$this, 'tag_Link');
 			$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');

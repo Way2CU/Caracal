@@ -6,6 +6,9 @@
 			<_var name="$params['text']"/>
 		</span>
 		<span class="column" style="width: 70px; text-align: center;">
+			<_var name="$params['external_character']"/>
+		</span>
+		<span class="column" style="width: 70px; text-align: center;">
 			<_var name="$params['sponsored_character']"/>
 		</span>
 		<span class="column" style="width: 90px; text-align: center;">
@@ -13,7 +16,8 @@
 		</span>
 		<span class="column">
 			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<_var name="$params['item_delete']"/><_raw text=" "/>
+			<_var name="$params['item_open']"/>
 		</span>
 	</div>
 </document>

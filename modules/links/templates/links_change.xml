@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<input type="hidden" name="id" value="$params['id']" eval="value"/>
+		<label>
+			<span><_text constant="label_text" module="links"/></span>
+			<input type="text" name="text" value="$params['text']" style="width: 270px;" maxlength="50" eval="value"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="links"/></span>
+			<textarea name="description" style="width: 360px; height: 100px;"><_var name="$params['description']"/></textarea>
+		</label>
+		<label>
+			<span><_text constant="label_url" module="links"/></span>
+			<input type="text" name="url" value="$params['url']" style="width: 360px;" maxlength="255" eval="value"/>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_external" module="links"/></span>
+			<_if condition="$params['external'] == 1">
+				<input type="checkbox" name="external" checked="checked"/>
+			</_if>
+			<_if condition="$params['external'] == 0">
+				<input type="checkbox" name="external"/>
+			</_if>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_sponsored" module="links"/></span>
+			<_if condition="$params['sponsored'] == 1">
+				<input type="checkbox" name="sponsored" checked="checked"/>
+			</_if>
+			<_if condition="$params['sponsored'] == 0">
+				<input type="checkbox" name="sponsored"/>
+			</_if>
+		</label>
+		<label>
+			<span><_text constant="label_display_limit" module="links"/></span>
+			<input type="text" name="display_limit" value="$params['display_limit']" style="width: 50px;" maxlength="30" eval="value"/>
+		</label>
+		
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

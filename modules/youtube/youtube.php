@@ -183,7 +183,7 @@ class youtube extends Module {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new YouTube_VideoManager();
 
-		$video = $manager->getSingleItem(array('id', 'video_id', 'title'), array('id' => $id));
+		$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		$template = new TemplateHandler('video_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);

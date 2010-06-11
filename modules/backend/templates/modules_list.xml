@@ -20,7 +20,7 @@
 				<_text constant="column_options"/>
 			</span>
 		</div>
-		
+
 		<!-- List -->
 		<div class="list_content" style="height: 250px">
 			<_module_list/>

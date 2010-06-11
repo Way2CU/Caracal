@@ -13,9 +13,14 @@
 		<constant name="title_links_groups">Link Groups</constant>
 		<constant name="title_links_overview">Sponsored Links Overview</constant>
 		<constant name="title_links_add">Add new link</constant>
+		<constant name="title_links_change">Change link</constant>
+		
+		<!-- Messages -->
+		<constant name="message_link_saved">Link data saved.</constant>
 		
 		<!-- Column Names -->
 		<constant name="column_text">Text</constant>
+		<constant name="column_external">External</constant>
 		<constant name="column_sponsored">Sponsored</constant>
 		<constant name="column_total_clicks">Total clicks</constant>
 		
