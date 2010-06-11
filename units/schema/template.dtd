@@ -6,4 +6,36 @@
 	Author: MeanEYE.rcf
 -->
 <!ELEMENT document ANY>
-<!ATTLIST document minimum_level CDATA #IMPLIED>
+<!ATTLIST document 
+	minimum_level CDATA #IMPLIED
+>
+
+<!ELEMENT _template EMPTY>
+<!ATTLIST _template 
+	file CDATA #REQUIRED
+	path CDATA #IMPLIED
+>
+
+<!ELEMENT _text ANY>
+<!ATTLIST _text
+	constant CDATA #REQUIRED
+	module CDATA #IMPLIED
+>
+
+<!ELEMENT _section_data EMPTY>
+
+<!ELEMENT _if ANY>
+<!ATTLIST _if 
+	condition CDATA #REQUIRED
+>
+
+<!ELEMENT _var EMPTY>
+<!ATTLIST _var 
+	name CDATA #REQUIRED
+>
+
+<!ELEMENT _raw ANY>
+<!ATTLIST _raw 
+	text CDATA #IMPLIED
+	file CDATA #IMPLIED
+>

@@ -7,16 +7,22 @@
 -->
 
 <!-- Allowed languages, extend if necessary -->
-<!ENTITY % def.lang "en|he|sr-lat|sr-cyr">
+<!ENTITY 
+	% def.lang "en|he|sr-lat|sr-cyr"
+>
 
 <!ELEMENT document (language*)>
 
 <!ELEMENT language (constant*)>
-<!ATTLIST language name CDATA #IMPLIED>
-<!ATTLIST language short (%def.lang;) #REQUIRED>
-<!ATTLIST language default (yes|no) "no">
-<!ATTLIST language rtl (yes|no) "no">
+<!ATTLIST language 
+	name CDATA #IMPLIED
+	short (%def.lang;) #REQUIRED
+	default (yes|no) "no"
+	rtl (yes|no) "no"
+>
 
 <!ELEMENT constant ANY>
-<!ATTLIST constant name CDATA #REQUIRED>
-<!ATTLIST constant value CDATA #IMPLIED>
+<!ATTLIST constant 
+	name CDATA #REQUIRED
+	value CDATA #IMPLIED
+>
