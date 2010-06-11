@@ -262,7 +262,18 @@ function window_SubmitContent(wnd, form) {
 
 		for (var j=0; j<node_list.length; j++) {
 			var node = node_list[j];
-			params.push(node.name + '=' + escape(node.value.replace(/\+/g, '%2B')));
+			var value = '';
+			
+			switch(node.type) {
+				case 'checkbox':
+					value = node.checked ? 1 : 0;
+					break;
+						
+				default:
+					value = escape(node.value.replace(/\+/g, '%2B'));
+					break;
+			}
+			params.push(node.name + '=' + value);
 		}
 	}
 
