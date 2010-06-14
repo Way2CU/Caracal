@@ -12,10 +12,13 @@
 		<constant name="title_video_list">Video List</constant>
 		<constant name="title_video_add">Add Video</constant>
 		<constant name="title_video_change">Change Video</constant>
+		<constant name="title_video_delete">Delete Video</constant>
 		
 		<!-- Messages -->
 		<constant name="message_video_saved">Video data saved.</constant>
 		<constant name="message_video_error">There was an error while trying to process your request.</constant>
+		<constant name="message_video_delete">You are about to remove the following video. Are you sure?</constant>
+		<constant name="message_video_deleted">Specified video was removed.</constant>
 		
 		<!-- Column Names -->
 		<constant name="column_id">ID</constant>

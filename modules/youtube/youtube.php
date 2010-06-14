@@ -51,9 +51,11 @@ class youtube extends Module {
 				break;
 
 			case 'video_delete':
+				$this->deleteVideo($level);
 				break;
 
 			case 'video_delete_commit':
+				$this->deleteVideo_Commit($level);
 				break;
 
 			case 'video_preview':
@@ -237,12 +239,67 @@ class youtube extends Module {
 		$template->parse($level);
 	}
 
+	/**
+	 * Display confirmation dialog before removing specified video
+	 *
+	 * @param integer $level
+	 */
 	function deleteVideo($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new YouTube_VideoManager();
 
+		$video = $manager->getSingleItem(array('title'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_video_delete"),
+					'name'			=> $video->title,
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											$this->name.'_video_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'video_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close($this->name.'_video_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
+	/**
+	 * Actually delete specified video from database
+	 *
+	 * @param integer $level
+	 */
 	function deleteVideo_Commit($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new YouTube_VideoManager();
 
+		$manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$window_name = $this->name.'_video_delete';
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_video_deleted"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_video_list')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
 	/**
