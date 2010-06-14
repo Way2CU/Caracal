@@ -4,27 +4,40 @@
 	<language name="English" short="en">
 		<!-- Menu Items -->
 		<constant name="menu_links">Links</constant>
-		<constant name="menu_links_groups">Link groups</constant>
+		<constant name="menu_links_groups">Manage groups</constant>
 		<constant name="menu_links_manage">Manage links</constant>
 		<constant name="menu_links_overview">Sponsored overview</constant>
 		
 		<!-- Window Titles -->
 		<constant name="title_links_manage">Manage Links</constant>
-		<constant name="title_links_groups">Link Groups</constant>
 		<constant name="title_links_overview">Sponsored Links Overview</constant>
 		<constant name="title_links_add">Add new link</constant>
 		<constant name="title_links_change">Change link</constant>
+		<constant name="title_links_delete">Delete link</constant>
+		<constant name="title_groups_manage">Manage Groups</constant>
+		<constant name="title_groups_create">Create new group</constant>
+		<constant name="title_groups_change">Change group name</constant>
+		<constant name="title_groups_delete">Delete group</constant>
+		<constant name="title_groups_links">Group links</constant>
 		
 		<!-- Messages -->
 		<constant name="message_link_saved">Link data saved.</constant>
+		<constant name="message_link_delete">You are about to remove the following link. Are you sure?</constant>
+		<constant name="message_link_deleted">Specified link was removed.</constant>
+		<constant name="message_group_created">New group was created.</constant>
+		<constant name="message_group_renamed">Group renamed.</constant>
+		<constant name="message_group_delete">You are about to remove the following group. Links contained within a group will *NOT* be removed! Are you sure?</constant>
+		<constant name="message_group_deleted">Specified group and link references was removed.</constant>
 		
 		<!-- Column Names -->
+		<constant name="column_name">Name</constant>
 		<constant name="column_text">Text</constant>
 		<constant name="column_external">External</constant>
 		<constant name="column_sponsored">Sponsored</constant>
 		<constant name="column_total_clicks">Total clicks</constant>
 		
 		<!-- Form Labels -->
+		<constant name="label_name">Name:</constant>
 		<constant name="label_text">Text:</constant>
 		<constant name="label_description">Description:</constant>
 		<constant name="label_url">URL:</constant>
@@ -35,7 +48,9 @@
 		<constant name="label_total_clicks">Total clicks:</constant>
 		
 		<!-- Other -->
+		<constant name="links">Links</constant>
 		<constant name="add">Add new link</constant>
+		<constant name="create_group">Create new group</constant>
 		<constant name="groups">Link groups</constant>
 		<constant name="overview">Sponsored links</constant>
 	</language>
