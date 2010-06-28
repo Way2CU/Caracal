@@ -40,10 +40,11 @@ class captcha extends Module {
 		}
 
 		// global control actions
-		switch ($params['backend_action']) {
-			default:
-				break;
-		}
+		if (isset($params['backend_action']))
+			switch ($params['backend_action']) {
+				default:
+					break;
+			}
 	}
 
 	/**
