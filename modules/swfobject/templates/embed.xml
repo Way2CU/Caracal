@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<script type="text/javascript">
-		<_raw>swfobject.embedSWF(</_raw>
-			<_var name="$params['url']"/><_raw>,</_raw>
-			<_var name="$params['id']"/><_raw>,</_raw>
-			<_var name="$params['width']"/><_raw>,</_raw>
-			<_var name="$params['height']"/><_raw>,</_raw>
-			<_var name="$params['version']"/>
-		<_raw>);</_raw>
-	</script>
+	<script type="text/javascript"><_var name="$params['script']"/></script>
 </document>
