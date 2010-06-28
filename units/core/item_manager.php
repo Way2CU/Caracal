@@ -155,7 +155,7 @@ class ItemManager {
 
 		return $result;
 	}
-	
+
 	/**
 	 * Return value of single column for single item.
 	 * @param string $item
@@ -170,10 +170,10 @@ class ItemManager {
 			$query = "SELECT {$item} FROM {$this->table_name}";
 			if (!empty($conditionals))
 				$query .= " WHERE ".$this->getDelimitedData($conditionals, ' AND ');
-			
+
 			$result = $db->get_var($query);
 		}
-		
+
 		return $result;
 	}
 
@@ -267,7 +267,12 @@ class ItemManager {
 
 		foreach($data as $field_name => $field_value) {
 			$is_string = in_array($this->fields[$field_name], $this->string_fields);
-			$tmp[] = ('`'.$field_name.'` = ').(($is_string) ? "'".$field_value."'" : $field_value);
+
+			if (is_array($field_value)) {
+				$tmp[] = "`{$field_name}` IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
+			} else {
+				$tmp[] = "`{$field_name}` = ".($is_string ? "'{$field_value}'" : $field_value);
+			}
 		}
 
 		$result = implode($delimiter, $tmp);
@@ -275,10 +280,10 @@ class ItemManager {
 		unset($tmp);
 		return $result;
 	}
-	
+
 	/**
 	 * Return list of all defined fields
-	 * 
+	 *
 	 * @return array
 	 */
 	function getFieldNames() {

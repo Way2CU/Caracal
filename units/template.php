@@ -166,6 +166,7 @@ class TemplateHandler {
 					if (!empty($this->mapped_module) && $ModuleHandler->moduleExists($this->mapped_module)) {
 						$module = $ModuleHandler->getObjectFromName($this->mapped_module);
 						$path = preg_replace('/^%module%/i', $module->path, $path);
+						$path = preg_replace('/^%templates%/i', $template_path, $path);
 					}
 
 					$new = new TemplateHandler($file, $path);
