@@ -29,11 +29,16 @@ class links extends Module {
 	function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
+			case 'show_group':
+				$this->showGroup($level, $params);
+				break;
+
 			default:
 				break;
 		}
 
 		// global control actions
+		if (isset($params['backend_action']))
 		switch ($params['backend_action']) {
 			case 'links_list':
 				$this->showList($level);
@@ -325,7 +330,6 @@ class links extends Module {
 		$manager = new LinksManager();
 
 		if (!is_null($id)) {
-			$data['id'] = id;
 			$manager->updateData($data, array('id' => $id));
 			$window_name = 'links_change';
 		} else {
@@ -489,7 +493,6 @@ class links extends Module {
 		$manager = new LinkGroupsManager();
 
 		if (!is_null($id)) {
-			$data['id'] = id;
 			$manager->updateData($data, array('id' => $id));
 			$window_name = 'groups_change';
 			$message = $this->getLanguageConstant('message_group_renamed');
@@ -549,6 +552,10 @@ class links extends Module {
 		$template->parse($level);
 	}
 
+	/**
+	 * Delete group from the system
+	 * @param integer $level
+	 */
 	function deleteGroup_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new LinkGroupsManager();
@@ -572,6 +579,30 @@ class links extends Module {
 	}
 
 	/**
+	 * Show specific group of links
+	 * @param $level
+	 * @param $group
+	 */
+	function showGroup($level, $params) {
+
+		if (isset($params['template']))
+			$template = new TemplateHandler($params['template']); else
+			$template = new TemplateHandler("show_group.xml", $this->path.'templates/');
+
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'group'	=> isset($params['group']) ? $params['group'] : 'sponsored',
+				);
+
+		$template->registerTagHandler('_link', &$this, 'tag_Link');
+		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
 	 * Print a form containing all the links within a group
 	 * @param $level
 	 */
@@ -587,7 +618,7 @@ class links extends Module {
 					'cancel_action'	=> window_Close('groups_links_save')
 				);
 
-		$template->registerTagHandler('_group_links', &$this, 'tag_GroupLinks');
+		$template->registerTagHandler('_link_list', &$this, 'tag_GroupLinks');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
@@ -633,10 +664,26 @@ class links extends Module {
 	 */
 	function tag_LinkList($level, $params, $children) {
 		$manager = new LinksManager();
+		$membership_manager = new LinkMembershipManager();
 		$conditions = array();
 
-		if (isset($params['sponsored']) && $params['sponsored'] == '1')
+		if ((isset($params['sponsored']) && $params['sponsored'] == '1') ||
+		(isset($params['group']) && $params['group'] == 'sponsored' ))
 			$conditions['sponsored'] = 1;
+
+		if (isset($params['group']) && $params['group'] != 'sponsored') {
+			$group = $params['group'];
+			$items = $membership_manager->getItems(
+												array('link'),
+												array('group' => $group)
+											);
+
+			$item_list = array();
+			foreach($items as $item)
+				$item_list[] = $item->link;
+
+			$conditions['id'] = $item_list;
+		}
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
@@ -644,11 +691,13 @@ class links extends Module {
 								array('id')
 							);
 
-		$template = new TemplateHandler(
-								isset($params['template']) ? $params['template'] : 'links_item.xml',
-								$this->path.'templates/'
-							);
+		if (isset($params['template']))
+			$template = new TemplateHandler($params['template']); else
+			$template = new TemplateHandler('links_item.xml', $this->path.'templates/');
+
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_link', &$this, 'tag_Link');
+		$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');
 
 		if (count($items) > 0)
 		foreach ($items as $item) {
@@ -704,8 +753,6 @@ class links extends Module {
 											),
 					);
 
-			$template->registerTagHandler('_link', &$this, 'tag_Link');
-			$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse($level);
@@ -737,6 +784,8 @@ class links extends Module {
 								$this->path.'templates/'
 							);
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_link', &$this, 'tag_Link');
+		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
 
 		if (count($items) > 0)
 		foreach ($items as $item) {
@@ -793,8 +842,6 @@ class links extends Module {
 											),
 					);
 
-			$template->registerTagHandler('_link', &$this, 'tag_Link');
-			$template->registerTagHandler('_link_list', &$this, 'tag_LinkGroupList');
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse($level);
