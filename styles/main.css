@@ -1,0 +1,36 @@
+/**
+ * Baby Page
+ * Main Style Sheet
+ *
+ * Copyright (c) 2010. by way2cu
+ * Author: MeanEYE.rcf
+ */
+@charset "UTF-8";
+
+/*
+@import "header.css";
+@import "content.css";
+@import "footer.css";
+*/
+
+body {
+	margin: 0px;
+	padding: 0px;
+
+	background-color: white;
+
+	color: #1A1A1A;
+	font-size: 14px;
+	font-family: Tahoma, sans-serif;
+	text-align: center;
+}
+
+div#wrap {
+	display: block;
+	width: 970px;
+
+	margin-left: auto;
+	margin-right: auto;
+
+	text-align: left;
+}
