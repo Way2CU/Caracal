@@ -90,7 +90,7 @@ class SectionHandler {
 				$params = array('action' => $action);
 				
 				// transfer control to module
-				$module->transterControl(0, $params, array());
+				$module->transferControl(0, $params, array());
 				return;
 			}		
 		} else if (is_array($file)) {

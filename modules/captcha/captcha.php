@@ -175,6 +175,7 @@ class captcha extends Module {
 		header('Content-type: image/png');
 		imagepng($image);
 		imagedestroy($image);
+		die();
 	}
 
 	/**
@@ -268,7 +269,7 @@ class captcha extends Module {
 	 * @return string
 	 */
 	function __getImageURL() {
-		$result = url_Make('', 'captcha');
+		$result = url_Make('print_image', $this->name);
 		return $result;
 	}
 

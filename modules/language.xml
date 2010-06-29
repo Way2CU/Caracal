@@ -1,12 +1,12 @@
 <!DOCTYPE document SYSTEM "../units/schema/language.dtd">
 <document>
 	<language name="Srpski" short="sr-lat">
-		<constant name="site_title" value="Baby Page"/>
+		<constant name="site_title" value="iLoopStudio"/>
 		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
-		
+
 		<!-- Column Names -->
 		<constant name="column_options">Opcije</constant>
-		
+
 		<!-- Buttons -->
 		<constant name="add">Unos</constant>
 		<constant name="new">Novo</constant>
@@ -21,7 +21,7 @@
 	</language>
 
 	<language name="Српски" short="sr-cyr">
-		<constant name="site_title" value="Baby Page"/>
+		<constant name="site_title" value="iLoopStudio"/>
 		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
 
 		<!-- Column Names -->
@@ -41,8 +41,17 @@
 	</language>
 
 	<language name="English" short="en" default="yes">
-		<constant name="site_title" value="Baby Page"/>
+		<constant name="site_title" value="iLoopStudio"/>
 		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+
+		<constant name="title_overview">Overview</constant>
+		<constant name="title_contact">Contact us</constant>
+
+		<constant name="message_search">Type in password to loop a project</constant>
+
+		<constant name="menu_home">Home</constant>
+		<constant name="menu_overview">Overview</constant>
+		<constant name="menu_contact">Contact</constant>
 
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
@@ -59,9 +68,9 @@
 		<constant name="close">Close</constant>
 		<constant name="reset">Reset</constant>
 	</language>
-	
+
 	<language name="Hebrew" short="he" rtl="yes" default="yes">
-		<constant name="site_title" value="Baby Page"/>
+		<constant name="site_title" value="iLoopStudio"/>
 		<constant name="copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
 
 		<!-- Column Names -->
