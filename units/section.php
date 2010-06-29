@@ -83,22 +83,22 @@ class MainSectionHandler {
 	 * @var resource
 	 */
 	var $section_system = null;
-	
+
 	/**
 	 * Per-site section definitions
 	 * @var resource
 	 */
 	var $section_local = null;
-	
+
 	function __construct() {
 		global $data_path;
-		
+
 		$this->section_system = new SectionHandler();
-		
+
 		if (file_exists($data_path."section.xml"))
 			$this->section_local = new SectionHandler($data_path."section.xml");
 	}
-	
+
 	/**
 	 * Retrieves file for parsing
 	 *
@@ -109,18 +109,18 @@ class MainSectionHandler {
 	 */
 	function getFile($section, $action, $language='') {
 		$file = "";
-		
+
 		// check for site specific section definition
 		if (!is_null($this->section_local))
 			$file = $this->section_local->getFile($section, $action, $language);
-		
+
 		// in case local section definition does not exist, try system
-		if (empty($file))  
+		if (empty($file))
 			$file = $this->section_system->getFile($section, $action, $language);
-			
+
 		return $file;
 	}
-	
+
 	/**
 	 * Transfers control to preconfigured template
 	 *
@@ -130,19 +130,19 @@ class MainSectionHandler {
 	 */
 	function transferControl($section, $action, $language='') {
 		global $ModuleHandler;
-		
+
 		$file = $this->getFile($section, $action, $language);
-		
-		if (!empty($file)) {  
+
+		if (empty($file)) {
 			// if no section is defined, check for module with the same name
 			if ($ModuleHandler->moduleExists($section)) {
 				$module = $ModuleHandler->getObjectFromName($section);
 				$params = array('action' => $action);
-				
+
 				// transfer control to module
 				$module->transferControl(0, $params, array());
 			}
-			
+
 		} else {
 			// section file is defined, load and parse it
 			if (is_array($file)) {
@@ -151,7 +151,7 @@ class MainSectionHandler {
 			} else {
 				$template = new TemplateHandler($file);
 			}
-			
+
 			// check if login is required
 			if (isset($template->engine->document->tagAttrs['minimum_level']) &&
 			($template->engine->document->tagAttrs['minimum_level'] > $_SESSION['level'])) {
@@ -170,10 +170,10 @@ class MainSectionHandler {
 			} else {
 				$template->parse(0);
 			}
-			
-		}		
+
+		}
 	}
-	
+
 }
 
 ?>
