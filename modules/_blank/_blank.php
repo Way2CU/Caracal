@@ -42,13 +42,22 @@ class _blank extends Module {
 	 * Event triggered upon module initialization
 	 */
 	function onInit() {
+		global $db_active, $db;
 
+		$sql = "";
+		
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	function onDisable() {
+		global $db_active, $db;
+
+		$sql = "";
+		
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
