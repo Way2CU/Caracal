@@ -1,6 +1,8 @@
 <!DOCTYPE document SYSTEM "../units/schema/language.dtd">
 <document>
 	<language name="Srpski" short="sr-lat">
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+
 		<!-- Column Names -->
 		<constant name="column_options">Opcije</constant>
 
@@ -18,6 +20,8 @@
 	</language>
 
 	<language name="Српски" short="sr-cyr">
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+
 		<!-- Column Names -->
 		<constant name="column_options">Опције</constant>
 
@@ -35,6 +39,8 @@
 	</language>
 
 	<language name="English" short="en" default="yes">
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
 
@@ -52,6 +58,8 @@
 	</language>
 
 	<language name="Hebrew" short="he" rtl="yes" default="yes">
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
 

@@ -23,7 +23,7 @@
 				<_section_data/>
 			</div>
 			<div id="copyright">
-				<_text constant="copyright"/>
+				<_text constant="backend_copyright"/>
 			</div>
 		</body>
 	</html>
