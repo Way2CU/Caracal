@@ -108,7 +108,7 @@ class MainSectionHandler {
 	 * @return string
 	 */
 	function getFile($section, $action, $language='') {
-		$files = "";
+		$file = "";
 		
 		// check for site specific section definition
 		if (!is_null($this->section_local))
