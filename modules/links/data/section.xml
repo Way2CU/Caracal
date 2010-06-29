@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/section.dtd">
 <document>
+	<section name="links">
+		<language name="all">
+			<action name="redirect" file="templates/redirect.xml"/>
+		</language>
+	</section>
 </document>

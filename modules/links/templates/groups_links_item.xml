@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 250px;">
+			<label>
+				<_if condition="$params['in_group'] == 1">
+					<input type="checkbox" name="'link_id_'.$params['id']" eval="name" value="1" checked="checked"/>
+				</_if>
+				<_if condition="$params['in_group'] == 0">
+					<input type="checkbox" name="'link_id_'.$params['id']" eval="name" value="1"/>
+				</_if>
+				<_var name="$params['text']"/>
+			</label>
+		</span>
+		<span class="column" style="width: 70px; text-align: center;">
+			<_var name="$params['sponsored_character']"/>
+		</span>
+	</div>
+</document>

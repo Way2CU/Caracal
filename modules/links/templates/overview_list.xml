@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 300px;">
+				<_text constant="column_name" module="links"/>
+			</span>
+			<span class="column" style="width: 100px;">
+				<_text constant="column_progress" module="links"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_clicks" module="links"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_options" module="links"/>
+			</span>
+		</div>
+
+		<div class="list_content" style="height: 300px">
+			<_link_list sponsored="1" template="overview_list_item.xml" local="1"/>
+		</div>
+	</div>
+</document>

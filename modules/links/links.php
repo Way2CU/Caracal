@@ -33,6 +33,10 @@ class links extends Module {
 				$this->showGroup($level, $params);
 				break;
 
+			case 'redirect':
+				$this->redirectLink($level);
+				break;
+
 			default:
 				break;
 		}
@@ -92,6 +96,16 @@ class links extends Module {
 
 			case 'groups_links':
 				$this->groupLinks($level);
+				break;
+
+			case 'groups_links_save':
+				$this->groupLinksSave($level);
+				break;
+
+			// ----
+
+			case 'overview':
+				$this->showOverview($level);
 				break;
 
 			default:
@@ -208,7 +222,7 @@ class links extends Module {
 											650,
 											$this->getLanguageConstant('title_links_overview'),
 											true, true,
-											backend_UrlMake($this->name, 'links_groups')
+											backend_UrlMake($this->name, 'overview')
 										),
 								$level=6
 							));
@@ -343,7 +357,9 @@ class links extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_link_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close($window_name).";".window_ReloadContent('links_list')
+					'action'	=> window_Close($window_name).";".
+									window_ReloadContent('links_list').";".
+									window_ReloadContent('links_overview')
 				);
 
 		$template->restoreXML();
@@ -394,8 +410,10 @@ class links extends Module {
 	function deleteLink_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new LinksManager();
+		$membership_manager = new LinkMembershipManager();
 
 		$manager->deleteData(array('id' => $id));
+		$membership_manager->deleteData(array('link' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -604,7 +622,7 @@ class links extends Module {
 
 	/**
 	 * Print a form containing all the links within a group
-	 * @param $level
+	 * @param integer $level
 	 */
 	function groupLinks($level) {
 		$group_id = fix_id(fix_chars($_REQUEST['id']));
@@ -615,13 +633,97 @@ class links extends Module {
 		$params = array(
 					'group'			=> $group_id,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_links_save'),
-					'cancel_action'	=> window_Close('groups_links_save')
+					'cancel_action'	=> window_Close('groups_links')
 				);
 
-		$template->registerTagHandler('_link_list', &$this, 'tag_GroupLinks');
+		$template->registerTagHandler('_group_links', &$this, 'tag_GroupLinks');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
+	}
+
+	/**
+	 * Save link group memberships
+	 * @param integer level
+	 */
+	function groupLinksSave($level) {
+		$group = fix_id(fix_chars($_REQUEST['group']));
+		$membership_manager = new LinkMembershipManager();
+
+		// fetch all ids being set to specific group
+		$link_ids = array();
+		foreach ($_REQUEST as $key => $value) {
+			if (substr($key, 0, 8) == 'link_id_' && $value == 1)
+				$link_ids[] = fix_id(substr($key, 8));
+		}
+
+		// remove old memberships
+		$membership_manager->deleteData(array('group' => $group));
+
+		// save new memberships
+		foreach ($link_ids as $id)
+			$membership_manager->insertData(array(
+											'link'	=> $id,
+											'group'	=> $group
+										));
+
+		// display message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_group_links_updated"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close('groups_links')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Show sponsored link overview
+	 *
+	 * @param integer $level
+	 */
+	function showOverview($level) {
+		// display message
+		$template = new TemplateHandler('overview_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+
+		$params = array(
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Record click cound and redirect to given page
+	 *
+	 * @param integer $level
+	 */
+	function redirectLink($level) {
+		$link_id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new LinksManager();
+
+		$link = $manager->getSingleItem($manager->getFieldNames(), array('id' => $link_id));
+
+		if (is_object($link)) {
+			$url = $link->url;
+			$data = array();
+
+			$data['total_clicks'] = $link->total_clicks + 1;
+			if ($link->sponsored == 1)
+				$data['sponsored_clicks'] = $link->sponsored_clicks + 1;
+
+			$manager->updateData($data, array('id' => $link_id));
+
+			url_SetRefresh($url, 0);
+		}
 	}
 
 	/**
@@ -632,15 +734,43 @@ class links extends Module {
 	 * @param array $children
 	 */
 	function tag_GroupLinks($level, $params, $children) {
-		$group_id = isset($params['group']) ? $params['group'] : fix_id(fix_chars($_REQUEST['id']));
+		$group = isset($params['group']) ? $params['group'] : fix_id(fix_chars($_REQUEST['id']));
 		$link_manager = new LinksManager();
-		$group_manager = new LinkGroupsManager();
 		$membership_manager = new LinkMembershipManager();
 
-		$links = $link_manager->getItems($link_manager->getFieldNames(), array(), array('id'));
+		$memberships = $membership_manager->getItems(
+												array('link'),
+												array('group' => $group)
+											);
+
+		$link_ids = array();
+		if (count($memberships) > 0)
+			foreach($memberships as $membership)
+				$link_ids[] = $membership->link;
+
+		$links = $link_manager->getItems($link_manager->getFieldNames(), array());
+
+		$template = new TemplateHandler('groups_links_item.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
 
 		foreach($links as $link) {
+			$params = array(
+							'id'				=> $link->id,
+							'in_group'			=> in_array($link->id, $link_ids) ? 1 : 0,
+							'text'				=> $link->text,
+							'description'		=> $link->description,
+							'url'				=> $link->url,
+							'external'			=> $link->external,
+							'sponsored'			=> $link->sponsored,
+							'sponsored_character' => ($link->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+							'display_limit'		=> $link->display_limit,
+							'sponsored_clicks'	=> $link->sponsored_clicks,
+							'total_clicks'		=> $link->total_clicks,
+						);
 
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
 		}
 	}
 
@@ -691,26 +821,44 @@ class links extends Module {
 								array('id')
 							);
 
-		if (isset($params['template']))
-			$template = new TemplateHandler($params['template']); else
+		if (isset($params['template'])) {
+			if (isset($params['local']) && $params['local'] == 1)
+				$template = new TemplateHandler($params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($params['template']);
+		} else {
 			$template = new TemplateHandler('links_item.xml', $this->path.'templates/');
+		}
 
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_link', &$this, 'tag_Link');
 		$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');
 
+		// give the ability to limit number of links to display
+		if (isset($params['limit']))
+			$items = array_slice($items, 0, $params['limit'], true);
+
 		if (count($items) > 0)
 		foreach ($items as $item) {
+			// calculate display progress
+			if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
+				$percent = 100;
+			} else {
+				$percent = round(($item->sponsored_clicks / $item->display_limit) * 100, 0);
+				if ($percent > 100) $percent = 100;
+			}
+
 			$params = array(
 						'id'				=> $item->id,
 						'text'				=> $item->text,
 						'description'		=> $item->description,
 						'url'				=> $item->url,
+						'redirect_url'		=> url_Make('redirect', $this->name, array('id', $item->id)),
 						'external'			=> $item->external,
 						'external_character' => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'sponsored'			=> $item->sponsored,
 						'sponsored_character' => ($item->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'display_limit'		=> $item->display_limit,
+						'display_percent'	=> $percent,
 						'sponsored_clicks'	=> $item->sponsored_clicks,
 						'total_clicks'		=> $item->total_clicks,
 						'item_change'		=> url_MakeHyperlink(
