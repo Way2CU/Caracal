@@ -48,8 +48,8 @@ session_start();
 
 // create main handlers
 $ModuleHandler = new ModuleHandler();
-$LanguageHandler = new LanguageHandler();
-$SectionHandler = new SectionHandler();
+$LanguageHandler = new MainLanguageHandler();
+$SectionHandler = new MainSectionHandler();
 
 // load primary variables
 $default_language = $LanguageHandler->getDefaultLanguage();

@@ -20,10 +20,10 @@ class LanguageHandler {
 	 * @return LanguageHandler
 	 */
 	function LanguageHandler($file="") {
-		global $site_path;
+		global $data_path;
 
 		$this->active = false;
-		$file = (empty($file)) ? $site_path.'language.xml' : $file;
+		$file = (empty($file)) ? $data_path.'system_language.xml' : $file;
 
 		if (file_exists($file)) {
 			$this->engine = new XMLParser(@file_get_contents($file), $file);
@@ -42,8 +42,10 @@ class LanguageHandler {
 	function getText($constant, $language='') {
 		global $default_language;
 
-		if (!$this->active) return '';
 		$result = '';
+		
+		if (!$this->active) return $result;
+		
 		$language = (empty($language)) ? $default_language : $language;
 
 		foreach ($this->engine->document->language as $xml_language)
@@ -64,10 +66,8 @@ class LanguageHandler {
 	 * @param string $language
 	 */
 	function drawText($constant, $pre_text='', $language='') {
-		if (!$this->active) return;
-
-		$text = $this->getText($constant, $language);
-		echo $text;
+		if (!$this->active) return "";
+		echo $this->getText($constant, $language);
 	}
 
 	/**
@@ -95,11 +95,13 @@ class LanguageHandler {
 	 */
 	function getDefaultLanguage() {
 		$result = 'en';
+		
 		foreach ($this->engine->document->language as $xml_language)
 			if (key_exists('default', $xml_language->tagAttrs)) {
 				$result = $xml_language->tagAttrs['short'];
 				break;
 			}
+			
 		return $result;
 	}
 
@@ -119,6 +121,97 @@ class LanguageHandler {
 				break;
 			}
 
+		return $result;
+	}
+}
+
+class MainLanguageHandler {
+	/**
+	 * Core system language definitions
+	 * @var resource
+	 */
+	var $language_system = null;
+	
+	/**
+	 * Per-site language definitions
+	 * @var resource
+	 */
+	var $language_local = null;
+	
+	function __construct() {
+		global $data_path;
+		
+		$this->language_system = new LanguageHandler();
+		
+		if (file_exists($data_path."language.xml"))
+			$this->language_local = new LanguageHandler($data_path."language.xml");
+	}
+	
+	/**
+	 * Returns localised text for given constant
+	 *
+	 * @param string $constant
+	 * @param string $language
+	 * @return string
+	 */
+	function getText($constant, $language='') {
+		$result = "";
+		
+		if (!is_null($this->language_local))
+			$result = $this->language_local->getText($constant, $language);
+			
+		if (empty($result))
+			$result = $this->language_system->getText($constant, $language);
+		
+		return $result;
+	}
+	
+	/**
+	 * Draws localised text for given constant
+	 *
+	 * @param string $constant
+	 * @param string $language
+	 */
+	function drawText($constant, $pre_text='', $language='') {
+		echo $this->getText($constant, $language);
+	}
+
+	/**
+	 * Returns list of languages available
+	 *
+	 * @param boolean $printable What list should contain, printable text or language code
+	 */
+	function getLanguages($printable = true) {
+		if (!is_null($this->language_local))
+			$result = $this->language_local->getLanguages($printable); else
+			$result = $this->language_system->getLanguages($printable);
+			
+		return $result;
+	}
+	
+	/**
+	 * Returns default language
+	 *
+	 * @return string
+	 */
+	function getDefaultLanguage() {
+		if (!is_null($this->language_local))
+			$result = $this->language_local->getDefaultLanguage(); else
+			$result = $this->language_system->getDefaultLanguage();
+			
+		return $result;
+	}
+	
+	/**
+	 * Check if current language is RTL (right-to-left)
+	 *
+	 * @return boolean
+	 */
+	function isRTL() {
+		if (!is_null($this->language_local))
+			$result = $this->language_local->isRTL(); else
+			$result = $this->language_system->isRTL();
+			
 		return $result;
 	}
 }

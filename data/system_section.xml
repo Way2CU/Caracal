@@ -1,10 +1,5 @@
 <!DOCTYPE document SYSTEM "../units/schema/section.dtd">
 <document>
-	<section name="home">
-		<language name="all">
-			<action name="_default" file="home.xml"/>
-		</language>
-	</section>
 	<section name="backend" module="backend">
 		<language name="all" file="backend.xml" />
 	</section>

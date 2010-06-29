@@ -20,9 +20,9 @@ class SectionHandler {
 	 * @return SectionHandler
 	 */
 	function SectionHandler($file="") {
-		global $site_path;
+		global $data_path;
 
-		$file = (empty($file)) ? $site_path.'section.xml' : $file;
+		$file = (empty($file)) ? $data_path.'system_section.xml' : $file;
 
 		if (file_exists($file)) {
 			$this->engine = new XMLParser(@file_get_contents($file), $file);
@@ -69,7 +69,58 @@ class SectionHandler {
 			}
 		return $result;
 	}
+}
 
+/**
+ * This manager is used only in index file. Sole purpose of this
+ * object is to provide a separate section files.
+ * @author MeanEYE.rcf
+ *
+ */
+class MainSectionHandler {
+	/**
+	 * System default section definitions
+	 * @var resource
+	 */
+	var $section_system = null;
+	
+	/**
+	 * Per-site section definitions
+	 * @var resource
+	 */
+	var $section_local = null;
+	
+	function __construct() {
+		global $data_path;
+		
+		$this->section_system = new SectionHandler();
+		
+		if (file_exists($data_path."section.xml"))
+			$this->section_local = new SectionHandler($data."section.xml");
+	}
+	
+	/**
+	 * Retrieves file for parsing
+	 *
+	 * @param string $section
+	 * @param string $action
+	 * @param string $language
+	 * @return string
+	 */
+	function getFile($section, $action, $language='') {
+		$files = "";
+		
+		// check for site specific section definition
+		if (!is_null($this->section_local))
+			$file = $this->section_local->getFile($section, $action, $language);
+		
+		// in case local section definition does not exist, try system
+		if (empty($file))  
+			$file = $this->section_system->getFile($section, $action, $language);
+			
+		return $file;
+	}
+	
 	/**
 	 * Transfers control to preconfigured template
 	 *
@@ -78,12 +129,11 @@ class SectionHandler {
 	 * @param string $language
 	 */
 	function transferControl($section, $action, $language='') {
-		global $TemplateHandler, $ModuleHandler;
-
-		if (!$this->active) return;
-
+		global $ModuleHandler;
+		
 		$file = $this->getFile($section, $action, $language);
-		if (empty($file)) {  
+		
+		if (!empty($file)) {  
 			// if no section is defined, check for module with the same name
 			if ($ModuleHandler->moduleExists($section)) {
 				$module = $ModuleHandler->getObjectFromName($section);
@@ -91,18 +141,20 @@ class SectionHandler {
 				
 				// transfer control to module
 				$module->transferControl(0, $params, array());
-				return;
-			}		
-		} else if (is_array($file)) {
-			$template = new TemplateHandler($file[0]);
-			$template->setMappedModule($file[1]);
+			}
+			
 		} else {
-			$template = new TemplateHandler($file);
-		}
-
-		// check if login is required
-		if (isset($template->engine->document->tagAttrs['minimum_level']))
-			if ($template->engine->document->tagAttrs['minimum_level'] > $_SESSION['level'])
+			// section file is defined, load and parse it
+			if (is_array($file)) {
+				$template = new TemplateHandler($file[0]);
+				$template->setMappedModule($file[1]);
+			} else {
+				$template = new TemplateHandler($file);
+			}
+			
+			// check if login is required
+			if (isset($template->engine->document->tagAttrs['minimum_level']) &&
+			($template->engine->document->tagAttrs['minimum_level'] > $_SESSION['level'])) {
 				if ($ModuleHandler->moduleExists('session')) {
 					$_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
 					$module = $ModuleHandler->getObjectFromName('session');
@@ -112,10 +164,16 @@ class SectionHandler {
 					$new = new TemplateHandler(basename($file), dirname($file).'/');
 					$new->setMappedModule($module->name);
 					$new->parse(0);
-					return ;
+				} else {
+					print "You may not access this section. Login is required!";
 				}
-
-		$template->parse(0);
+			} else {
+				$template->parse(0);
+			}
+			
+		}		
 	}
+	
 }
+
 ?>

@@ -19,8 +19,6 @@ class ModuleHandler {
 	 * @return ModuleHandler
 	 */
 	function ModuleHandler() {
-		global $site_path;
-		
 		$this->modules = array();
 	}
 	

@@ -11,7 +11,7 @@
 if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
 
 $module_path = 'modules/';
-$site_path = 'modules/';
+$data_path = 'data/';
 $template_path = 'site/';
 
 // database
