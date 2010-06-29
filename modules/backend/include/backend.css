@@ -64,3 +64,23 @@ div#copyright a:hover {
 	display: none;
 	visibility: hidden;
 }
+
+div.progress_bar {
+	display: inline-block;
+	min-width: 70px;
+
+	padding: 1px;
+
+	border: 1px solid #BFBFBF;
+	background-color: #FFFFFF;
+}
+
+div.progress_bar div.gauge {
+	display: block;
+	height: 8px;
+
+	background-color: #7F7F7F;
+
+	font-size: 0px;
+}
+
