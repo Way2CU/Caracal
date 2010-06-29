@@ -1,4 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
+	<language short="en">
+		<!-- Menu Items -->	
+		<constant name="menu_articles">Articles</constant>
+		<constant name="menu_articles_new">Write new article</constant>
+
+		<!-- Titles --><constant name="title_articles_new">Write new article</constant>
+	</language>
 </document>

@@ -43,13 +43,43 @@ class articles extends Module {
 	 * Event triggered upon module initialization
 	 */
 	function onInit() {
-
+		global $db_active, $db;
+		
+		$sql = "
+			CREATE TABLE `articles` (
+				`id` INT NOT NULL AUTO_INCREMENT ,
+				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+				`title` VARCHAR( 255 ) NOT NULL ,
+				`content` TEXT NOT NULL ,
+				`author` INT NOT NULL ,
+				`visible` BOOLEAN NOT NULL DEFAULT '0',
+				PRIMARY KEY ( `id` ),
+				INDEX ( `author` ) 
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		
+		if ($db_active == 1) $db->query($sql);
+		
+		$sql = "
+			CREATE TABLE `article_rating` (
+				`id` INT NOT NULL AUTO_INCREMENT ,
+				`article` INT NOT NULL ,
+				`votes_up` INT NOT NULL DEFAULT '0',
+				`votes_down` INT NOT NULL DEFAULT '0',
+				PRIMARY KEY ( `id` ) ,
+				INDEX ( `article` ) 
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	function onDisable() {
+		global $db, $db_active;
+
+		$sql = "DROP TABLE IF EXISTS `articles`, `article_rating`;";
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
@@ -68,6 +98,29 @@ class articles extends Module {
 		// register backend
 		if ($ModuleHandler->moduleExists('backend')) {
 			$backend = $ModuleHandler->getObjectFromName('backend');
+			
+			$articles_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_articles'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					$level=5
+				);	
+
+			$articles_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_articles_new'),
+								url_GetFromFilePath($this->path.'images/new_article.png'),
+								
+								window_Open( // on click open window
+											'links_list',
+											730,
+											$this->getLanguageConstant('title_articles_new'),
+											true, true,
+											backend_UrlMake($this->name, 'articles_new')
+										),
+								$level=5
+							));
+											
+			$backend->addMenu($this->name, $articles_menu);
 		}
 	}
 }
