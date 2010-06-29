@@ -12,7 +12,7 @@ if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to t
 
 class SectionHandler {
 	var $engine;
-	var $active;
+	var $active = false;
 
 	/**
 	 * Constructor
@@ -22,7 +22,6 @@ class SectionHandler {
 	function SectionHandler($file="") {
 		global $site_path;
 
-		$this->active = false;
 		$file = (empty($file)) ? $site_path.'section.xml' : $file;
 
 		if (file_exists($file)) {
@@ -84,7 +83,17 @@ class SectionHandler {
 		if (!$this->active) return;
 
 		$file = $this->getFile($section, $action, $language);
-		if (is_array($file)) {
+		if (empty($file)) {  
+			// if no section is defined, check for module with the same name
+			if ($ModuleHandler->moduleExists($section)) {
+				$module = $ModuleHandler->getObjectFromName($section);
+				$params = array('action' => $action);
+				
+				// transfer control to module
+				$module->transterControl(0, $params, array());
+				return;
+			}		
+		} else if (is_array($file)) {
 			$template = new TemplateHandler($file[0]);
 			$template->setMappedModule($file[1]);
 		} else {
