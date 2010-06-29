@@ -5,6 +5,9 @@
 			<action name="_default" file="home.xml"/>
 		</language>
 	</section>
+	<section name="links" module="links">
+		<language name="all" file="transfer.xml" />
+	</section>
 	<section name="backend" module="backend">
 		<language name="all" file="backend.xml" />
 	</section>
