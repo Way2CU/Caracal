@@ -96,7 +96,7 @@ class MainSectionHandler {
 		$this->section_system = new SectionHandler();
 		
 		if (file_exists($data_path."section.xml"))
-			$this->section_local = new SectionHandler($data."section.xml");
+			$this->section_local = new SectionHandler($data_path."section.xml");
 	}
 	
 	/**
