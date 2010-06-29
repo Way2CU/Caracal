@@ -1,7 +1,9 @@
 <!DOCTYPE document SYSTEM "../units/schema/section.dtd">
 <document>
 	<section name="home">
-		<language name="all" file="home.xml"></language>
+		<language name="all">
+			<action name="_default" file="home.xml"/>
+		</language>
 	</section>
 	<section name="links" module="links">
 		<language name="all" file="transfer.xml" />
