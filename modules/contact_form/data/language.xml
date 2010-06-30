@@ -1,4 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
+	<language short="en">
+		<constant name="message_sent">Data was successfuly sent!</constant>
+		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
+	</language>
 </document>
