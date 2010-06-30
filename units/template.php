@@ -281,12 +281,19 @@ class TemplateHandler {
 						// default tag handler
 						if (in_array($tag->tagName, $this->block_tags)) {
 							// if tag is block
-							echo $tag_space."<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">\n";
+							$break = !(empty($tag->tagChildren) && empty($tag->tagData));
+							
+							echo $tag_space."<".
+								$tag->tagName.$this->getTagParams($tag->tagAttrs).
+								">".($break ? "\n" : "");
 
-							if (count($tag->tagChildren) > 0) $this->parse($level+1, $tag->tagChildren, true);
-							if (!empty($tag->tagData)) echo $tag->tagData."\n";
+							if (!empty($tag->tagChildren))
+								$this->parse($level+1, $tag->tagChildren, true);
+								
+							if (!empty($tag->tagData)) 
+								echo $tag->tagData."\n";
 
-							echo $tag_space."</{$tag->tagName}>\n";
+							echo ($break ? $tag_space : "")."</{$tag->tagName}>\n";
 						} else {
 							// if tag is not block, then strip formatting
 							echo $tag_space."<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
