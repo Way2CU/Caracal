@@ -60,17 +60,6 @@ class LanguageHandler {
 	}
 
 	/**
-	 * Draws localised text for given constant
-	 *
-	 * @param string $constant
-	 * @param string $language
-	 */
-	function drawText($constant, $pre_text='', $language='') {
-		if (!$this->active) return "";
-		echo $this->getText($constant, $language);
-	}
-
-	/**
 	 * Returns list of languages available
 	 *
 	 * @param boolean $printable What list should contain, printable text or language code
@@ -164,16 +153,6 @@ class MainLanguageHandler {
 			$result = $this->language_system->getText($constant, $language);
 		
 		return $result;
-	}
-	
-	/**
-	 * Draws localised text for given constant
-	 *
-	 * @param string $constant
-	 * @param string $language
-	 */
-	function drawText($constant, $pre_text='', $language='') {
-		echo $this->getText($constant, $language);
 	}
 
 	/**

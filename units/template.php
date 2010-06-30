@@ -45,8 +45,11 @@ class TemplateHandler {
 	 * Tags that need to be formated as block
 	 * @var array
 	 */
-	var $block_tags = array('div', 'ol', 'ul', 'li', 'object', 'table','thead', 'tbody', 'tr', 'td', 'th',
-							'head', 'body', 'html', 'form', 'fieldset', 'select', 'style', 'script');
+	var $block_tags = array(
+						'div', 'ol', 'ul', 'li', 'object', 'table','thead', 'tbody', 
+						'tr', 'td', 'th', 'head', 'body', 'html', 'form', 'fieldset', 
+						'select', 'style', 'script', 'label', 'p'
+						);
 
 	/**
 	 * Custom tag handlers
@@ -110,7 +113,7 @@ class TemplateHandler {
 	 * @param integer $level Current level of parsing
 	 * @param array $tags Leave blank, used for recursion
 	 */
-	function parse($level, $tags=array()) {
+	function parse($level, $tags=array(), $parent_block=true) {
 		global $LanguageHandler, $ModuleHandler, $section, $action, $language, $template_path;
 
 		if ((!$this->active) && empty($tags)) return;
@@ -198,18 +201,23 @@ class TemplateHandler {
 				case '_text':
 					$constant = $tag->tagAttrs['constant'];
 					$language = (key_exists('language', $tag->tagAttrs)) ? $tag->tagAttrs['language'] : $language;
+					$text = "";
 
 					// check if constant is module based
 					if (key_exists('module', $tag->tagAttrs)) {
 						// call the apropriate module
 						if ($ModuleHandler->moduleExists($tag->tagAttrs['module'])) {
 							$module = $ModuleHandler->getObjectFromName($tag->tagAttrs['module']);
-							echo $module->getLanguageConstant($constant, $language);
+							$text = $module->getLanguageConstant($constant, $language);
 						}
 					} else {
 						// use default language handler
-						$LanguageHandler->drawText($constant, $tag_space, $language);
+						$text = $LanguageHandler->getText($constant, $language);
 					}
+					
+					if ($parent_block)
+						echo "{$tag_space}{$text}\n"; else
+						echo $text;
 					break;
 
 				// call section specific data
@@ -275,8 +283,8 @@ class TemplateHandler {
 							// if tag is block
 							echo $tag_space."<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">\n";
 
-							if (count($tag->tagChildren) > 0) $this->parse($level+1, $tag->tagChildren);
-							if (!empty($tag->tagData)) echo $tag->tagData;
+							if (count($tag->tagChildren) > 0) $this->parse($level+1, $tag->tagChildren, true);
+							if (!empty($tag->tagData)) echo $tag->tagData."\n";
 
 							echo $tag_space."</{$tag->tagName}>\n";
 						} else {
@@ -284,7 +292,7 @@ class TemplateHandler {
 							echo $tag_space."<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
 
 							if (count($tag->tagChildren) > 0 || !empty($tag->tagData)) {
-								if (count($tag->tagChildren) > 0) $this->parse($level+1, $tag->tagChildren);
+								if (count($tag->tagChildren) > 0) $this->parse($level+1, $tag->tagChildren, false);
 								if (!empty($tag->tagData)) echo $tag->tagData;
 								echo "</{$tag->tagName}>\n";
 							} else echo "\n";
