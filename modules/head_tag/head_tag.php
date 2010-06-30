@@ -47,7 +47,8 @@ class head_tag extends Module {
 		
 		sort($this->tags);
 		foreach ($this->tags as $tag) 
-			echo "$pretext<".$tag[0].$this->getTagParams($tag[1]).">".(in_array($tag[0], $this->closeable_tags) ? "</".$tag[0].">" : "")."\n";
+			echo $pretext."<".$tag[0].$this->getTagParams($tag[1]).">".
+				(in_array($tag[0], $this->closeable_tags) ? "</".$tag[0].">" : "")."\n";
 	}
 	
 	/**
