@@ -13,6 +13,7 @@
 		<constant name="delete">Brisanje</constant>
 		<constant name="save">Snimi</constant>
 		<constant name="submit">Pošalji</constant>
+		<constant name="send">Pošalji</constant>
 		<constant name="cancel">Otkaži</constant>
 		<constant name="open">Otvori</constant>
 		<constant name="close">Zatvori</constant>
@@ -32,6 +33,7 @@
 		<constant name="delete">Брисање</constant>
 		<constant name="save">Сними</constant>
 		<constant name="submit">Пошаљи</constant>
+		<constant name="send">Пошаљи</constant>
 		<constant name="cancel">Откажи</constant>
 		<constant name="open">Отвори</constant>
 		<constant name="close">Затвори</constant>
@@ -51,6 +53,7 @@
 		<constant name="delete">Delete</constant>
 		<constant name="save">Save</constant>
 		<constant name="submit">Submit</constant>
+		<constant name="send">Send</constant>
 		<constant name="cancel">Cancel</constant>
 		<constant name="open">Open</constant>
 		<constant name="close">Close</constant>
@@ -70,6 +73,7 @@
 		<constant name="delete">Delete</constant>
 		<constant name="save">Save</constant>
 		<constant name="submit">Submit</constant>
+		<constant name="send">Send</constant>
 		<constant name="cancel">Cancel</constant>
 		<constant name="open">Open</constant>
 		<constant name="close">Close</constant>
