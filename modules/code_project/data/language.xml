@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_codes">Projects</constant>
+		<constant name="menu_codes_manage">Manage project codes</constant>
+		
+		<constant name="title_codes_manage">Manage project codes</constant>
+		<constant name="title_codes_add">Add new project code</constant>
+		<constant name="title_codes_change">Change project code</constant>
+		<constant name="title_codes_delete">Delete project code</constant>
+		
+		<constant name="column_code">Code</constant>
+		
+		<constant name="label_code">Code:</constant>
+		<constant name="label_url">URL:</constant>
+		
+		<constant name="message_code_saved">Code data is saved!</constant>
+		<constant name="message_code_delete">Are you sure about removing the following code?</constant>
+		<constant name="message_code_deleted">Specified code was removed.</constant>
+	</language>
+</document>
