@@ -184,17 +184,20 @@ class TemplateHandler {
 						$file = $tag->tagAttrs['file'];
 						$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : $template_path;
 
-						$data = file_get_contents($path.$file);
-						echo $data;
+						$text= file_get_contents($path.$file);
 
 					} elseif (key_exists('text', $tag->tagAttrs)) {
 						// if text attribute is specified
-						echo $tag->tagAttrs['text'];
+						$text = $tag->tagAttrs['text'];
 
 					} else {
 						// in any other case we display data inside tag
-						echo $tag->tagData;
+						$text = $tag->tagData;
 					}
+					
+					if ($parent_block)
+						echo "{$tag_space}{$text}\n"; else
+						echo $text;
 					break;
 
 				// multi language constants
@@ -291,7 +294,7 @@ class TemplateHandler {
 								$this->parse($level+1, $tag->tagChildren, true);
 								
 							if (!empty($tag->tagData)) 
-								echo ($break ? $tag_space : "").$tag->tagData."\n";
+								echo ($break ? $tag_space."\t" : "").$tag->tagData."\n";
 
 							echo ($break ? $tag_space : "")."</{$tag->tagName}>\n";
 						} else {
