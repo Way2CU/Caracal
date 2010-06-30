@@ -3,18 +3,15 @@
 /**
  * BLANK MODULE
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * @author MeanEYE.rcf
  */
 
 class _blank extends Module {
 
 	/**
 	 * Constructor
-	 *
-	 * @return _blank
 	 */
-	function _blank() {
+	function __construct() {
 		$this->file = __FILE__;
 		parent::Module();
 	}
@@ -27,29 +24,40 @@ class _blank extends Module {
 	 */
 	function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
-		switch ($params['action']) {
-			default:
-				break;
-		}
+		if (isset($params['action']))
+			switch ($params['action']) {
+				default:
+					break;
+			}
 
 		// global control actions
-		switch ($params['backend_action']) {
-			default:
-				break;
-		}
+		if (isset($params['backend_action']))
+			switch ($params['backend_action']) {
+				default:
+					break;
+			}
 	}
 
 	/**
 	 * Event triggered upon module initialization
 	 */
 	function onInit() {
+		global $db_active, $db;
 
+		$sql = "";
+		
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	function onDisable() {
+		global $db_active, $db;
+
+		$sql = "";
+		
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
@@ -71,3 +79,13 @@ class _blank extends Module {
 		}
 	}
 }
+
+/*
+class SomeManager extends ItemManager {
+	function __construct() {
+		parent::ItemManager();
+		
+		$this->addProperty('id', 'int');
+	}
+}
+*/
