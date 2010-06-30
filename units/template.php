@@ -79,7 +79,7 @@ class TemplateHandler {
 
 
 	/**
-	 * Restores XML to original stat
+	 * Restores XML to original state
 	 */
 	function restoreXML() {
 		if (isset($this->engine))
@@ -113,7 +113,7 @@ class TemplateHandler {
 	function parse($level, $tags=array()) {
 		global $LanguageHandler, $ModuleHandler, $section, $action, $language, $template_path;
 
-		if (!$this->active) return ;
+		if ((!$this->active) && empty($tags)) return;
 
 		// take the tag list for parsing
 		$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
