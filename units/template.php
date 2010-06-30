@@ -291,7 +291,7 @@ class TemplateHandler {
 								$this->parse($level+1, $tag->tagChildren, true);
 								
 							if (!empty($tag->tagData)) 
-								echo $tag->tagData."\n";
+								echo ($break ? $tag_space : "").$tag->tagData."\n";
 
 							echo ($break ? $tag_space : "")."</{$tag->tagName}>\n";
 						} else {
