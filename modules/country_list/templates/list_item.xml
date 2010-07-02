@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 150px;">
+			<!-- Column 1 -->
+		</span>
+		<span class="column" style="width: 90px; text-align: center;">
+			<!-- Column 2 -->
+		</span>
+		<span class="column">
+			<_var name="$params['item_change']"/><_raw text=" "/>
+			<_var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>
