@@ -2,7 +2,20 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<_group_links group="$params['group']" eval="group"/>
+		<div class="scrollable_list">
+			<input type="hidden" name="group" value="$params['group'];" eval="value"/>
+			<div class="list_header">
+				<span class="column" style="width: 250px;">
+					<_text constant="column_text" module="links"/>
+				</span>
+				<span class="column" style="width: 70px; text-align: center;">
+					<_text constant="column_sponsored" module="links"/>
+				</span>
+			</div>
+			<div class="list_content" style="height: 300px">
+				<_group_links group="$params['group']" eval="group"/>
+			</div>
+		</div>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
@@ -11,4 +24,5 @@
 			</button>
 		</div>
 	</form>
+
 </document>
