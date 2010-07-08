@@ -57,5 +57,6 @@
 		<constant name="create_group">Create new group</constant>
 		<constant name="groups">Link groups</constant>
 		<constant name="overview">Sponsored links</constant>
+		<constant name="sponsored">Sponsored</constant>
 	</language>
 </document>

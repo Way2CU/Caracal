@@ -33,6 +33,10 @@ class links extends Module {
 				$this->showGroup($level, $params);
 				break;
 
+			case 'show_group_list':
+				$this->showGroupList($level, $params);
+				break;
+
 			case 'redirect':
 				$this->redirectLink($level);
 				break;
@@ -598,10 +602,21 @@ class links extends Module {
 
 	/**
 	 * Show specific group of links
-	 * @param $level
-	 * @param $group
+	 * @param integer $level
+	 * @param array $group
 	 */
 	function showGroup($level, $params) {
+
+		if (isset($params['group']) && $params['group'] != 'sponsored') {
+			$manager = new LinkGroupsManager();
+			$group = $manager->getSingleItem($manager->getFieldNames(), array('id' => $params['group']));
+
+			$group_id = $group->id;
+			$group_name = $group->name;
+		} else {
+			$group_id = 'sponsored';
+			$group_name = $this->getLanguageConstant("sponsored");
+		}
 
 		if (isset($params['template']))
 			$template = new TemplateHandler($params['template']); else
@@ -610,7 +625,8 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'group'	=> isset($params['group']) ? $params['group'] : 'sponsored',
+					'group'	=> $group_id,
+					'name'	=> $group_name
 				);
 
 		$template->registerTagHandler('_link', &$this, 'tag_Link');
@@ -618,6 +634,41 @@ class links extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
+	}
+
+	/**
+	 * Show list of all or specified groups
+	 * @param integer $level
+	 * @param array $group
+	 */
+	function showGroupList($level, $params) {
+		$manager = new LinkGroupsManager();
+
+		$groups = $manager->getItems(
+								$manager->getFieldNames(),
+								array(),
+								array('name')
+							);
+
+		if (isset($params['template']))
+			$template = new TemplateHandler($params['template']); else
+			$template = new TemplateHandler("show_group.xml", $this->path.'templates/');
+
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_link', &$this, 'tag_Link');
+		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+
+		if (count($groups) > 0)
+			foreach ($groups as $group) {
+				$params = array(
+							'group'	=> $group->id,
+							'name'	=> $group->name
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);
+			}
 	}
 
 	/**
