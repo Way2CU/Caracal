@@ -782,7 +782,48 @@ class links extends Module {
 	 * @param array $children
 	 */
 	function tag_Link($level, $params, $children) {
+		$id = isset($params['id']) ? $params['id'] : fix_id(fix_chars($_REQUEST['id']));
+		$manager = new LinksManager();
 
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (isset($params['template'])) {
+			if (isset($params['local']) && $params['local'] == 1)
+				$template = new TemplateHandler($params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($params['template']);
+		} else {
+			$template = new TemplateHandler('links_item.xml', $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+
+		// calculate display progress
+		if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
+			$percent = 100;
+		} else {
+			$percent = round(($item->sponsored_clicks / $item->display_limit) * 100, 0);
+			if ($percent > 100) $percent = 100;
+		}
+
+		$params = array(
+					'id'				=> $item->id,
+					'text'				=> $item->text,
+					'description'		=> $item->description,
+					'url'				=> $item->url,
+					'redirect_url'		=> url_Make('redirect', $this->name, array('id', $item->id)),
+					'external'			=> $item->external,
+					'external_character' => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+					'sponsored'			=> $item->sponsored,
+					'sponsored_character' => ($item->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+					'display_limit'		=> $item->display_limit,
+					'display_percent'	=> $percent,
+					'sponsored_clicks'	=> $item->sponsored_clicks,
+					'total_clicks'		=> $item->total_clicks,
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
 	/**
