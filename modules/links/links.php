@@ -174,13 +174,6 @@ class links extends Module {
 	function onRegister() {
 		global $ModuleHandler;
 
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/links.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/links.js'), 'type'=>'text/javascript'));
-		}
-
 		// register backend
 		if ($ModuleHandler->moduleExists('backend')) {
 			$backend = $ModuleHandler->getObjectFromName('backend');

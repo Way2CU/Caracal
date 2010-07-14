@@ -12,8 +12,7 @@ if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to t
  * @author MeanEYE
  */
 function fix_chars($string, $strip_tags=true) {
-	if ($strip_tags)
-		$string = strip_tags($string, '<b><small><big><i><u><tt><pre>');
+	$string = strip_tags($string, '<b><small><big><i><u><tt><pre>');
     $string = str_replace("*","&#42;", $string);
     $string = str_replace(chr(92).chr(34),"&#34;", $string);
     $string = str_replace("\r\n","\n", $string);
@@ -23,6 +22,8 @@ function fix_chars($string, $strip_tags=true) {
     $string = str_replace("<", "&lt;", $string);
     $string = str_replace(">", "&gt;", $string);
     $string = str_replace("\n", "<br>", $string);
+	$string = preg_replace('/\[link\s*=\s*([^\]]+)\](.+)\[\/link\]/i', '<a href="$1">$2</a>', $string);
+	$string = preg_replace('/\[image\s*=\s*([^\]]+)\](.+)\[\/image\]/i', '<img src="$1" alt="$2">', $string);
     $string = str_replace("[b]", "<b>", $string);
     $string = str_replace("[/b]", "</b>", $string);
     $string = str_replace("[small]", "<small>", $string);
@@ -74,6 +75,8 @@ function unfix_chars($string) {
     $string = str_replace("&lt;", "<", $string);
     $string = str_replace("&gt;", ">", $string);
     $string = str_replace("<br>", "\n", $string);
+	$string = preg_replace('/<a[\s]+href=[\'\"]([^\'\"]+)[\'\"]>(.+)<\/a>/i', '[link=$1]$2[/link]', $string);
+	$string = preg_replace('/<img[\s]+src=[\'\"]([^\'\"]+)[\'\"][\s]+alt=[\'\"](.+)[\'\"]>/i', '[image=$1]$2[/image]', $string);
     $string = str_replace("<b>", "[b]", $string);
     $string = str_replace("</b>", "[/b]", $string);
     $string = str_replace("<small>", "[small]", $string);
@@ -84,10 +87,10 @@ function unfix_chars($string) {
     $string = str_replace("</i>", "[/i]", $string);
     $string = str_replace("<u>", "[u]", $string);
     $string = str_replace("</u>", "[/u]", $string);
-    $string = str_replace("<pre>", "[pre]", $string);
-    $string = str_replace("</pre>", "[/pre]", $string);
     $string = str_replace("<tt>", "[tt]", $string);
     $string = str_replace("</tt>", "[/tt]", $string);
+    $string = str_replace("<pre>", "[pre]", $string);
+    $string = str_replace("</pre>", "[/pre]", $string);
     return $string;
 }
 
@@ -158,5 +161,26 @@ function utf8_strrev($str, $reverse_numbers=false) {
 		}
 		return implode('', $temp);
 	}
+}
+
+/**
+ * Simple function that provides Google generated QR codes
+ * Refer to:
+ * 		http://code.google.com/apis/chart/types.html#qrcodes
+ * 		http://code.google.com/p/zxing/wiki/BarcodeContents
+ *
+ * @param string $url
+ * @param integer $size
+ * @return string
+ */
+function get_qr_image($uri, $size=100, $error_correction="L") {
+	$url = urlencode($uri);
+	$result = "http://chart.apis.google.com/chart?".
+				"chld={$error_correction}|1&amp;".
+				"chs={$size}x{$size}&amp;".
+				"cht=qr&amp;chl={$url}&amp;".
+				"choe=UTF-8";
+
+	return $result;
 }
 ?>

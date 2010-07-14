@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE country_list SYSTEM "state_list.dtd">
 <state_list>
 	<state short="AL">Alabama</state>
 	<state short="AK">Alaska</state>

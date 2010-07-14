@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	State List Specification
+	Copyright (c) 2010. by RCF Group
+	
+	Author: MeanEYE.rcf
+-->
+
+<!ELEMENT state_list (state*)>
+
+<!ELEMENT state ANY>
+<!ATTLIST state short CDATA #REQUIRED>

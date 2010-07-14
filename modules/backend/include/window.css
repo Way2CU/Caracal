@@ -239,7 +239,7 @@ div.window_inactive div.content textarea {
 	padding: 2px;
 	padding-left: 3px;
 	padding-right: 3px;
-	
+
 	border: 1px solid #999999;
 	border-radius: 3px;
 	background-color: #ffffff;
@@ -250,7 +250,7 @@ div.window_inactive div.content textarea {
 div.window div.content input[type=checkbox],
 div.window_inactive div.content input[type=checkbox] {
 	padding: 0px;
-	
+
 	float: left;
 	clear: both;
 }
@@ -258,7 +258,7 @@ div.window_inactive div.content input[type=checkbox] {
 div.window div.content label.checkbox span,
 div.window_inactive div.content label.checkbox span {
 	display: inline-block;
-	
+
 	padding-top: 1px;
 }
 

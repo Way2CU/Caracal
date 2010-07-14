@@ -124,6 +124,32 @@ function window_ReloadContent(id) {
 }
 
 /**
+ * Set window content
+ *
+ * @param object wnd
+ * @param string content
+ */
+function window_SetContent(wnd, content) {
+	// data vas retrieved correctly, handle
+	original_size = window_GetSize(wnd);
+	wnd._content.innerHTML = content;
+	new_size = window_GetSize(wnd);
+
+	// implement newly received objects
+	window_ImplementContentEvents(wnd);
+	window_MoveBy(wnd, (original_size[0] - new_size[0]) / 2, (original_size[1] - new_size[1]) / 2);
+
+	// execute scripts if there are any
+	var script_list = wnd._content.getElementsByTagName('script');
+
+	for (var i=0; i<script_list.length; i++) {
+		var script = script_list[i];
+		if (script.type == 'text/javascript')
+			eval(script.innerHTML);
+	}
+}
+
+/**
  * Adds window to window list and prepares window for usage
  * @param id Main tag ID
  */
@@ -239,11 +265,11 @@ function window_Exists(id) {
  * @param string id
  * @param integer width
  */
-function window_Resize(id, width) {
-	var wnd = document.getElementById(id);
+function window_Resize(id, new_width) {
+	var $wnd = $('#'+id);
 
-	if (wnd != undefined)
-		wnd.style.width = width + 'px';
+	if ($wnd != undefined)
+		$wnd.animate({width: new_width}, 500);
 }
 
 /**
@@ -263,12 +289,12 @@ function window_SubmitContent(wnd, form) {
 		for (var j=0; j<node_list.length; j++) {
 			var node = node_list[j];
 			var value = '';
-			
+
 			switch(node.type) {
 				case 'checkbox':
 					value = node.checked ? 1 : 0;
 					break;
-						
+
 				default:
 					value = escape(node.value.replace(/\+/g, '%2B'));
 					break;
@@ -303,26 +329,10 @@ function window_SubmitContent(wnd, form) {
 function window_ProcessResult(request, wnd) {
 	if (request.readyState == 4)
 		if (request.status == 200) {
-			// data vas retrieved correctly, handle
-			original_size = window_GetSize(wnd);
-			wnd._content.innerHTML = request.responseText;
-			new_size = window_GetSize(wnd);
-
-			// implement newly received objects
-			window_ImplementContentEvents(wnd);
-			window_MoveBy(wnd, (original_size[0] - new_size[0]) / 2, (original_size[1] - new_size[1]) / 2);
+			window_SetContent(wnd, request.responseText);
 
 			// reset loading class
 			wnd._content.className = 'content';
-			
-			// execute scripts if there are any
-			var script_list = wnd._content.getElementsByTagName('script');
-			
-			for (var i=0; i<script_list.length; i++) {
-				var script = script_list[i];
-				if (script.type == 'text/javascript')
-					eval(script.innerHTML);
-			}
 		} else {
 			// error loading data
 			error_log = window.open("", "error_log", "width=640px, height=480px, scrollbars");

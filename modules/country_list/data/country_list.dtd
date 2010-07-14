@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Language File Specification
+	Copyright (c) 2010. by RCF Group
+	
+	Author: MeanEYE.rcf
+-->
+
+<!ELEMENT country_list (country*)>
+
+<!ELEMENT country ANY>
+<!ATTLIST country short CDATA #REQUIRED>

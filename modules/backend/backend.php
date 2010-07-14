@@ -20,7 +20,7 @@ class backend extends Module {
 	 * @var array
 	 */
 	var $menus = array();
-	
+
 	/**
 	 * List of protected modules who can't be disabled or deactivated
 	 * @var array
@@ -47,30 +47,30 @@ class backend extends Module {
 		global $ModuleHandler;
 
 		// dead lock protection for backend module
-		if (isset($params['action']) &&	isset($_REQUEST['module']) && 
+		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
 		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
 			$params['backend_action'] = fix_chars($_REQUEST['backend_action']);
 
 			unset($_REQUEST['module']);
 			unset($params['action']);
 		}
-		
+
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'draw_menu':
 					$this->drawCompleteMenu($level);
 					break;
-	
+
 				case 'transfer_control':
 					// fix input parameters
 					foreach($_REQUEST as $key => $value)
 						$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
-	
+
 					// transfer control
 					$action = fix_chars($_REQUEST['backend_action']);
 					$module_name = fix_chars($_REQUEST['module']);
 					$params['backend_action'] = $action;
-	
+
 					if ($ModuleHandler->moduleExists($module_name)) {
 						$module = $ModuleHandler->getObjectFromName($module_name);
 						$module->transferControl($level, $params, $children);
@@ -83,7 +83,7 @@ class backend extends Module {
 				case 'modules':
 					$this->showModules($level);
 					break;
-					
+
 				case 'module_activate':
 					$this->activateModule($level);
 					break;
@@ -103,11 +103,11 @@ class backend extends Module {
 				case 'module_disable':
 					$this->disableModule($level);
 					break;
-					
+
 				case 'module_disable_commit':
 					$this->disableModule_Commit($level);
 					break;
-					
+
 				case 'users':
 					break;
 			}
@@ -130,44 +130,44 @@ class backend extends Module {
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/xmlhttp.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window.js'), 'type'=>'text/javascript'));
-			
-			// legacy stuff
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/page.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/tree_text.js'), 'type'=>'text/javascript'));
+
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.iframe-post-form.js'), 'type'=>'text/javascript'));
 		}
-		
+
 		// add admin level menus
 		$system_menu = new backend_MenuItem(
-								$this->getLanguageConstant('menu_system'), 
-								url_GetFromFilePath($this->path.'images/icons/16/system.png'), 
-								'javascript:void(0);',	
+								$this->getLanguageConstant('menu_system'),
+								url_GetFromFilePath($this->path.'images/icons/16/system.png'),
+								'javascript:void(0);',
 								$level=10
 							);
-							
+
 		$system_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_modules'),
 								url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
 								window_Open( // on click open window
 											'system_modules',
-											610, 
+											610,
 											$this->getLanguageConstant('title_modules'),
-											true, false, // disallow minimize, safety feature 
+											true, false, // disallow minimize, safety feature
 											backend_UrlMake($this->name, 'modules')
-										),	
+										),
 								$level=10
 							));
 		$system_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_users'),
 								url_GetFromFilePath($this->path.'images/icons/16/users.png'),
-								'javascript:void(0)',	
+								'javascript:void(0)',
 								$level=10
 							));
-		
+
 		$this->addMenu($this->name, $system_menu);
 	}
 
 	/**
-	 * Display 
+	 * Display
 	 * @param unknown_type $level
 	 */
 	function showModules($level) {
@@ -175,20 +175,20 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array();
-				
+
 		$template->registerTagHandler('_module_list', &$this, 'tag_ModuleList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Activates specified module
 	 * @param integer $level
 	 */
 	function activateModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
-		
+
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = new System_ModuleManager();
@@ -197,11 +197,11 @@ class backend extends Module {
 							array('name' => $module_name)
 						);
 			$message = $this->getLanguageConstant('message_module_activated');
-			 
+
 		} else {
 			$message = $this->getLanguageConstant('message_module_protected');
 		}
-					
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -214,14 +214,14 @@ class backend extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Deactivates specified module
 	 * @param integer $level
 	 */
 	function deactivateModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
-		
+
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = new System_ModuleManager();
@@ -230,11 +230,11 @@ class backend extends Module {
 							array('name' => $module_name)
 						);
 			$message = $this->getLanguageConstant('message_module_deactivated');
-			 
+
 		} else {
 			$message = $this->getLanguageConstant('message_module_protected');
 		}
-					
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -247,14 +247,14 @@ class backend extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Print confirmation form before initialising module
 	 * @param integer $level
 	 */
 	function initialiseModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
-		
+
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -271,51 +271,51 @@ class backend extends Module {
 												array('module_name', $module_name)
 											)
 										),
-					'yes_text'		=> $this->getLanguageConstant("initialise"),		
+					'yes_text'		=> $this->getLanguageConstant("initialise"),
 					'no_action'		=> window_Close($this->name.'_module_dialog'),
-					'no_text'		=> $this->getLanguageConstant("cancel"),		
+					'no_text'		=> $this->getLanguageConstant("cancel"),
 				);
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Initialise and activate module
 	 * @param integer $level
 	 */
 	function initialiseModule_Commit($level) {
 		global $ModuleHandler;
-		
+
 		$module_name = fix_chars($_REQUEST['module_name']);
-		
+
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = new System_ModuleManager();
 			$max_order = $manager->getItemValue(
-										"MAX(`order`)", 
+										"MAX(`order`)",
 										array('preload' => 0)
 									);
-			
+
 			if (is_null($max_order)) $max_order = -1;
-			
+
 			$manager->insertData(
 							array(
 								'order'		=> $max_order + 1,
 								'name'		=> $module_name,
 								'preload'	=> 0,
-								'active'	=> 1								
+								'active'	=> 1
 							));
 
 			$module = $ModuleHandler->loadModule($module_name);
 			$module->onInit();
 			$message = $this->getLanguageConstant('message_module_initialised');
-							
+
 		} else {
 			$message = $this->getLanguageConstant('message_module_protected');
 		}
-					
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -328,14 +328,14 @@ class backend extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Print confirmation dialog before disabling module
 	 * @param integer $level
 	 */
 	function disableModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
-		
+
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -352,48 +352,48 @@ class backend extends Module {
 												array('module_name', $module_name)
 											)
 										),
-					'yes_text'		=> $this->getLanguageConstant("disable"),		
+					'yes_text'		=> $this->getLanguageConstant("disable"),
 					'no_action'		=> window_Close($this->name.'_module_dialog'),
-					'no_text'		=> $this->getLanguageConstant("cancel"),		
+					'no_text'		=> $this->getLanguageConstant("cancel"),
 				);
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);		
+		$template->parse($level);
 	}
-	
+
 	/**
 	 * Disable specified module and remove it's settings
 	 * @param integer $level
 	 */
 	function disableModule_Commit($level) {
 		global $ModuleHandler;
-		
+
 		$module_name = fix_chars($_REQUEST['module_name']);
-		
+
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = new System_ModuleManager();
 			$max_order = $manager->getItemValue(
-										"MAX(`order`)", 
+										"MAX(`order`)",
 										array('preload' => 0)
 									);
-			
+
 			if (is_null($max_order)) $max_order = -1;
-			
+
 			$manager->deleteData(array('name' => $module_name));
-			
+
 			if ($ModuleHandler->moduleExists($module_name))
 				$module = $ModuleHandler->getObjectFromName($module_name); else
 				$module = $ModuleHandler->loadModule($module_name);
-				
+
 			$module->onDisable();
 			$message = $this->getLanguageConstant('message_module_disabled');
-							
+
 		} else {
 			$message = $this->getLanguageConstant('message_module_protected');
 		}
-					
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -406,7 +406,7 @@ class backend extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Handle tag _module_list used to display list of all modules on the system
 	 * @param $level
@@ -417,7 +417,7 @@ class backend extends Module {
 		$list = array();
 		$raw_list = $this->getModuleList();
 		$manager = new System_ModuleManager();
-		
+
 		$modules_in_use = $manager->getItems(
 											array('id', 'order', 'name', 'preload', 'active'),
 											array(),
@@ -433,17 +433,17 @@ class backend extends Module {
 				} else {
 					$list[$module->name] = array('status'	=> 'inactive');
 				}
-										
+
 			} else {
 				// module does not exist on disk
 				$list[$module->name] = array('status'	=> 'missing');
 			}
-			
+
 			$list[$module->name]['active'] = $module->active;
 			$list[$module->name]['preload'] = $module->preload;
 			$list[$module->name]['order'] = $module->order;
 		}
-		
+
 		// add missing modules available on drive
 		foreach($raw_list as $module_name) {
 			if (!array_key_exists($module_name, $list))
@@ -454,14 +454,14 @@ class backend extends Module {
 										'order'		=> ''
 									);
 		}
-		
+
 		$template = new TemplateHandler(
 							isset($params['template']) ? $params['template'] : 'module.xml',
 							$this->path.'templates/'
 						);
 
-		$template->setMappedModule($this->name);		
-						
+		$template->setMappedModule($this->name);
+
 		foreach($list as $name => $definition) {
 			$params = array(
 							'name'				=> $name,
@@ -536,33 +536,33 @@ class backend extends Module {
 													)
 												),
 						);
-		
+
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse($level);
 		}
 	}
-	
+
 	/**
 	 * Get list of modules available on the system
-	 * 
+	 *
 	 * @return array
 	 */
 	function getModuleList() {
 		global $module_path;
-		
+
 		$result = array();
 		$directory = dir($module_path);
-		
-		while (false !== ($entry = $directory->read())) 
+
+		while (false !== ($entry = $directory->read()))
 			if (is_dir($directory->path.DIRECTORY_SEPARATOR.$entry) && $entry[0] != '.' && $entry[0] != '_')
 				$result[] = $entry;
-				
+
 		$directory->close();
-				
+
 		return $result;
 	}
-	
+
 	/**
 	 * Draws all menus for current level
 	 *

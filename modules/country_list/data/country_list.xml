@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE country_list SYSTEM "country_list.dtd">
 <country_list>
 	<country short="US">United States</country>
 	<country short="CA">Canada</country>
