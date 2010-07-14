@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form id="image_upload_form" action="$params['form_action']" eval="action" method="POST" enctype="multipart/form-data" onsubmit="">
+		<label>
+			<span><_text constant="label_title" module="gallery"/></span>
+			<input type="text" name="title" style="width: 270px;" maxlength="255"/>
+		</label>
+		<label>
+			<span><_text constant="label_group" module="gallery"/></span>
+			<select name="group" style="width: 270px;">
+				<_group_list template="groups_option.xml"/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_file" module="gallery"/></span>
+			<input type="hidden" name="MAX_FILE_SIZE" value="3000000" />
+			<input type="file" name="image"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="gallery"/></span>
+			<textarea name="description" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_visible" module="gallery"/></span>
+			<input type="checkbox" name="visible" checked="checked"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="upload"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$('#image_upload_form').iframePostForm({
+			complete: function(response) {
+				window_SetContent(window_GetById('gallery_images_upload'), response);
+			}
+		});
+	</script>
+
+</document>

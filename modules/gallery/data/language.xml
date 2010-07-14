@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_gallery">Gallery</constant>
+		<constant name="menu_images">Manage images</constant>
+		<constant name="menu_groups">Manage groups</constant>
+
+		<constant name="title_image_options">Gallery: Image Options</constant>
+		<constant name="title_images">Gallery: Images</constant>
+		<constant name="title_images_upload">Gallery: Upload Image</constant>
+		<constant name="title_images_change">Gallery: Change Image Data</constant>
+		<constant name="title_images_delete">Gallery: Delete Image</constant>
+		<constant name="title_groups">Gallery: Groups</constant>
+		<constant name="title_groups_create">Gallery: Create Group</constant>
+		<constant name="title_groups_change">Gallery: Change Group</constant>
+		<constant name="title_groups_delete">Gallery: Delete Group</constant>
+
+		<constant name="message_image_invalid_type">Invalid file type. Please contact system administrator.</constant>
+		<constant name="message_image_save_error">There was an error saving your image. Check directory permissions.</constant>
+		<constant name="message_image_upload_error">There was an error uploading your image.</constant>
+		<constant name="message_image_uploaded">New image was uploaded.</constant>
+		<constant name="message_image_saved">Image data was saved.</constant>
+		<constant name="message_image_delete">You are about to remove the following image. Are you sure?</constant>
+		<constant name="message_image_deleted">Specified image was removed.</constant>
+		<constant name="message_group_renamed">Specified group was renamed.</constant>
+		<constant name="message_group_created">New gallery group was created.</constant>
+		<constant name="message_group_delete">You are about to remove the following group and all images within that group. Are you sure?</constant>
+		<constant name="message_group_deleted">Specified group and images were removed.</constant>
+
+		<constant name="label_name">Name:</constant>
+		<constant name="label_title">Title:</constant>
+		<constant name="label_group">Group:</constant>
+		<constant name="label_file">File:</constant>
+		<constant name="label_description">Description (optional):</constant>
+		<constant name="label_visible">Image visible</constant>
+
+		<constant name="column_group_name">Name:</constant>
+		<constant name="column_image_list">Images&lt;small style="padding-left: 5px; color: #7F7F7F;"&gt;(click for more options)&lt;/small&gt;</constant>
+
+		<constant name="upload_images">Upload image</constant>
+		<constant name="create_group">Create group</constant>
+		<constant name="groups">Image groups</constant>
+	</language>
+</document>

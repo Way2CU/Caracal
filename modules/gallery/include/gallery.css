@@ -1,0 +1,80 @@
+/*
+	Gallery Style Sheet
+	Copyright (c) 2010. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+div.list_content.thumbnails div.list_item {
+	display: block;
+	width: 102px;
+	height: 125px;
+
+	float: left;
+	margin: 5px;
+	padding: 5px;
+
+	position: relative;
+	overflow: hidden;
+
+	border: 1px solid #EBEBEB;
+	background-color: #F5F5F5;
+}
+
+div.list_content.thumbnails div.list_item:hover {
+	background-color: #EBEBEB !important;
+}
+
+div.list_content.thumbnails div.list_item div.options {
+	display: none;
+	width: 90px;
+	height: 90px;
+
+	padding: 5px;
+
+	position: absolute;
+	top: 4px;
+	left: 4px;
+
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+div.list_content.thumbnails div.list_item div.options a {
+	display: block;
+
+	padding: 1px;
+	padding-left: 4px;
+	padding-right: 4px;
+
+	border-radius: 3px;
+
+	color: #2E67AA;
+	text-decoration: none;
+}
+
+div.list_content.thumbnails div.list_item div.options a:hover {
+	background-color: #2E67AA;
+
+	color: white;
+	text-decoration: none;
+}
+
+div.list_content.thumbnails div.list_item div.image_holder {
+	display: table-cell;
+	width: 100px;
+	height: 100px;
+
+	border: 1px solid #EBEBEB;
+	background-color: white;
+
+	font-size: 0px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+div.list_content.thumbnails div.list_item span.title {
+	display: block;
+	padding-top: 2px;
+
+	font-size: 10px;
+	text-align: center;
+}

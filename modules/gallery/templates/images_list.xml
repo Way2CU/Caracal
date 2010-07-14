@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<_var name="$params['link_new']"/>
+		<_var name="$params['link_groups']"/>
+	</div>
+
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column">
+				<_text constant="column_image_list" module="gallery"/>
+			</span>
+		</div>
+		<div class="list_content thumbnails" style="height: 400px">
+			<!-- List Content -->
+			<_image_list/>
+		</div>
+		<script type="text/javascript">
+
+			$('#gallery_images div.list_content').children('div.list_item').each(function() {
+
+				// on click display options
+				$(this).one('click', function() {
+					$(this).children('div.options').css({display: 'block', opacity: 0}).animate({opacity: 1}, 300);
+				});
+
+				// on mouse out hide options
+				$(this).mouseleave(function () {
+					$(this).one('click', function() {
+						$(this).children('div.options').css({display: 'block', opacity: 0}).animate({opacity: 1}, 300);
+					});
+
+					$(this).children('div.options').animate(
+						{opacity: 0}, 300,
+						function () {
+							$(this).css({display: 'none'});
+						});
+				});
+			});
+		</script>
+	</div>
+</document>

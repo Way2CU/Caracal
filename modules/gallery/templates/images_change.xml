@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_title" module="gallery"/></span>
+			<input type="text" name="title" style="width: 270px;" maxlength="255" value="$params['title']" eval="value"/>
+		</label>
+		<label>
+			<span><_text constant="label_group" module="gallery"/></span>
+			<select name="group" style="width: 270px;">
+				<_group_list template="groups_option.xml" selected="$params['group']" eval="selected"/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_file" module="gallery"/></span>
+			<div><_var name="$params['filename']"/></div>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="gallery"/></span>
+			<textarea name="description" style="width: 360px; height: 150px;"><_var name="$params['description']"/></textarea>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_visible" module="gallery"/></span>
+			<input type="checkbox" name="visible" checked="checked"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+
+		<div class="options">
+			<_var name="$params['item_change']"/>
+			<_var name="$params['item_delete']"/>
+		</div>
+
+		<div class="image_holder">
+			<img src="$params['thumbnail']" alt="$params['title']" eval="src,alt"/>
+		</div>
+
+		<span class="title">
+			<_var name="$params['title']"/>
+		</span>
+	</div>
+</document>
