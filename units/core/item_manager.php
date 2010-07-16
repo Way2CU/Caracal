@@ -178,6 +178,22 @@ class ItemManager {
 	}
 
 	/**
+	 * Returns single value of SQL query
+	 * @param string $sql
+	 * @return value
+	 */
+	function sqlResult($sql) {
+		global $db, $db_active;
+
+		$result = null;
+		if ($db_active == 1) {
+			$result = $db->get_var($query);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Forms database query for specified command
 	 *
 	 * @param integer $command
