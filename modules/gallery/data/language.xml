@@ -35,7 +35,7 @@
 		<constant name="label_description">Description (optional):</constant>
 		<constant name="label_visible">Image visible</constant>
 
-		<constant name="column_group_name">Name:</constant>
+		<constant name="column_group_name">Name</constant>
 		<constant name="column_image_list">Images&lt;small style="padding-left: 5px; color: #7F7F7F;"&gt;(click for more options)&lt;/small&gt;</constant>
 
 		<constant name="upload_images">Upload image</constant>

@@ -115,7 +115,7 @@ class youtube extends Module {
 								$this->getLanguageConstant('menu_youtube'),
 								url_GetFromFilePath($this->path.'images/icon.png'),
 								'javascript:void(0);',
-								$level=10
+								$level=5
 							);
 
 			$youtube_menu->addChild('', new backend_MenuItem(
