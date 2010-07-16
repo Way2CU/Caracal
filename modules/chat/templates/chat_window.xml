@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<_var name="$params['link_settings']"/>
+	</div>
+
+	<!-- Chat Log -->
+	<label>
+		<div style="width: 454px; float: left; margin-right: 5px;">
+			<span><_text constant="label_chat_log" module="chat"/></span>
+			<div class="chat_log">
+			</div>
+		</div>
+		<div style="width: 180px; float: left;">
+			<span><_text constant="label_online_users" module="chat"/></span>
+			<div class="user_list">
+			</div>
+		</div>
+		<div style="clear: both;"/>
+	</label>
+
+	<!-- Channel List -->
+	<label style="padding-top: 5px; margin-bottom: 5px;">
+		<span style="display: inline-block; width: 80px; text-align: right;"><_text constant="label_channel" module="chat"/></span>
+		<select name="channels" style="width: 200px;">
+			<option>Some channel</option>
+			<option>Different stuff</option>
+			<option>Flirt</option>
+		</select>
+	</label>
+
+	<!-- Input Control -->
+	<label style="margin: 0px;">
+		<span style="display: inline-block; width: 80px; text-align: right;"><_text constant="label_message" module="chat"/></span>
+		<input type="text" name="message" style="width: 358px;"/>
+	</label>
+
+	<script type="text/javascript">
+		// change channel event handler
+		$('#chat select[name=channels]').bind('change', function() {
+			alert('channel changed');
+		});
+
+		$('#chat input[name=message]').keypress(function(event) {
+			if (event.keyCode == 13) {
+				event.preventDefault();
+				alert('enter!');
+			}
+		});
+	</script>
+</document>

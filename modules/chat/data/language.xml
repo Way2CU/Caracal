@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_chat">Chat</constant>
+		<constant name="menu_join_chat">Join chat</constant>
+		<constant name="menu_settings">Settings</constant>
+
+		<constant name="title_chat">Chat</constant>
+		<constant name="title_chat_settings">Chat: Settings</constant>
+		<constant name="title_channel_add">Chat: Add Channel</constant>
+
+		<constant name="column_channel">Channel</constant>
+		<constant name="column_users">Users</constant>
+
+		<constant name="label_channel">Channel:</constant>
+		<constant name="label_chat_log">Chat log:</constant>
+		<constant name="label_online_users">Users online:</constant>
+		<constant name="label_message">Message:</constant>
+
+		<constant name="add_channel">Add channel</constant>
+	</language>
+</document>

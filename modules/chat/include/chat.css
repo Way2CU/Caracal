@@ -1,0 +1,30 @@
+/*
+
+	Chat Style Sheet
+	Copyright (c) 2010. by way2CU, http://www.way2cu.com
+
+	Author: MeanEYE[rcf], http://rcf-group.com
+
+*/
+
+div.chat_log {
+	display: block;
+	min-height: 250px;
+
+	overflow-y: scroll;
+
+	border: 1px solid #B8B8B8;
+	border-radius: 4px 0px 0px 4px;
+	background-color: #FFFFFF;
+}
+
+div.user_list {
+	display: block;
+	min-height: 250px;
+
+	overflow-y: scroll;
+
+	border: 1px solid #B8B8B8;
+	border-radius: 4px 0px 0px 4px;
+	background-color: #FFFFFF;
+}
