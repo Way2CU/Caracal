@@ -84,7 +84,9 @@ $time_end = split(" ", microtime());
 $time_end = $time_end[0] + $time_end[1];
 $time = round($time_end - $time_start, 3);
 
-echo "\n<!-- Modular Web Engine (c) ".date('Y').". by RCF Group, www.rcf-group.com -->";
-echo "\n<!-- Page generated in $time second(s) -->";
+if (!defined('_OMIT_STATS')) {
+	echo "\n<!-- Modular Web Engine (c) ".date('Y').". by RCF Group, www.rcf-group.com -->";
+	echo "\n<!-- Page generated in $time second(s) -->";
+}
 
 ?>
