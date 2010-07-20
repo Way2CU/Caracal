@@ -187,7 +187,7 @@ class ItemManager {
 
 		$result = null;
 		if ($db_active == 1) {
-			$result = $db->get_var($query);
+			$result = $db->get_var($sql);
 		}
 
 		return $result;
@@ -285,7 +285,13 @@ class ItemManager {
 			$is_string = in_array($this->fields[$field_name], $this->string_fields);
 
 			if (is_array($field_value)) {
-				$tmp[] = "`{$field_name}` IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
+				if (array_key_exists('operator', $field_value)) {
+					// value is a conditioned
+					$tmp[] = "`{$field_name}` {$field_value['operator']} ".($is_string ? "'{$field_value['value']}'" : $field_value['value']);
+				} else {
+					// condition is a list, treat it that way
+					$tmp[] = "`{$field_name}` IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
+				}
 			} else {
 				$tmp[] = "`{$field_name}` = ".($is_string ? "'{$field_value}'" : $field_value);
 			}

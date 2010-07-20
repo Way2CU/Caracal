@@ -1,7 +1,7 @@
 <!DOCTYPE document SYSTEM "../units/schema/language.dtd">
 <document>
 	<language name="Srpski" short="sr-lat">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
 		<!-- Column Names -->
 		<constant name="column_options">Opcije</constant>
@@ -19,10 +19,17 @@
 		<constant name="open">Otvori</constant>
 		<constant name="close">Zatvori</constant>
 		<constant name="reset">Resetuj</constant>
+
+		<!-- Other language specific data formats -->
+		<constant name="format_date">d.m.Y.</constant>
+		<constant name="format_date_short">d.m.Y.</constant>
+		<constant name="format_time">H:i:s</constant>
+		<constant name="format_time_short">H:i:s</constant>
+
 	</language>
 
 	<language name="Српски" short="sr-cyr">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright">Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_options">Опције</constant>
@@ -40,10 +47,16 @@
 		<constant name="open">Отвори</constant>
 		<constant name="close">Затвори</constant>
 		<constant name="reset">Ресетуј</constant>
+
+		<!-- Other language specific data formats -->
+		<constant name="format_date">d.m.Y.</constant>
+		<constant name="format_date_short">d.m.Y.</constant>
+		<constant name="format_time">H:i:s</constant>
+		<constant name="format_time_short">H:i:s</constant>
 	</language>
 
 	<language name="English" short="en" default="yes">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
@@ -61,10 +74,16 @@
 		<constant name="open">Open</constant>
 		<constant name="close">Close</constant>
 		<constant name="reset">Reset</constant>
+
+		<!-- Other language specific data formats -->
+		<constant name="format_date">m/d/Y</constant>
+		<constant name="format_date_short">m/d/Y</constant>
+		<constant name="format_time">H:i:s</constant>
+		<constant name="format_time_short">H:i:s</constant>
 	</language>
 
 	<language name="Hebrew" short="he" rtl="yes" default="yes">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
@@ -82,5 +101,11 @@
 		<constant name="open">Open</constant>
 		<constant name="close">Close</constant>
 		<constant name="reset">Reset</constant>
+
+		<!-- Other language specific data formats -->
+		<constant name="format_date">d.m.Y.</constant>
+		<constant name="format_date_short">d.m.Y.</constant>
+		<constant name="format_time">H:i:s</constant>
+		<constant name="format_time_short">H:i:s</constant>
 	</language>
 </document>
