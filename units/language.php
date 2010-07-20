@@ -43,9 +43,9 @@ class LanguageHandler {
 		global $default_language;
 
 		$result = '';
-		
+
 		if (!$this->active) return $result;
-		
+
 		$language = (empty($language)) ? $default_language : $language;
 
 		foreach ($this->engine->document->language as $xml_language)
@@ -84,13 +84,13 @@ class LanguageHandler {
 	 */
 	function getDefaultLanguage() {
 		$result = 'en';
-		
+
 		foreach ($this->engine->document->language as $xml_language)
 			if (key_exists('default', $xml_language->tagAttrs)) {
 				$result = $xml_language->tagAttrs['short'];
 				break;
 			}
-			
+
 		return $result;
 	}
 
@@ -120,22 +120,22 @@ class MainLanguageHandler {
 	 * @var resource
 	 */
 	var $language_system = null;
-	
+
 	/**
 	 * Per-site language definitions
 	 * @var resource
 	 */
 	var $language_local = null;
-	
+
 	function __construct() {
 		global $data_path;
-		
+
 		$this->language_system = new LanguageHandler();
-		
+
 		if (file_exists($data_path."language.xml"))
 			$this->language_local = new LanguageHandler($data_path."language.xml");
 	}
-	
+
 	/**
 	 * Returns localised text for given constant
 	 *
@@ -145,13 +145,13 @@ class MainLanguageHandler {
 	 */
 	function getText($constant, $language='') {
 		$result = "";
-		
+
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getText($constant, $language);
-			
+
 		if (empty($result))
 			$result = $this->language_system->getText($constant, $language);
-		
+
 		return $result;
 	}
 
@@ -164,10 +164,10 @@ class MainLanguageHandler {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getLanguages($printable); else
 			$result = $this->language_system->getLanguages($printable);
-			
+
 		return $result;
 	}
-	
+
 	/**
 	 * Returns default language
 	 *
@@ -177,10 +177,10 @@ class MainLanguageHandler {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getDefaultLanguage(); else
 			$result = $this->language_system->getDefaultLanguage();
-			
+
 		return $result;
 	}
-	
+
 	/**
 	 * Check if current language is RTL (right-to-left)
 	 *
@@ -190,7 +190,7 @@ class MainLanguageHandler {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->isRTL(); else
 			$result = $this->language_system->isRTL();
-			
+
 		return $result;
 	}
 }
