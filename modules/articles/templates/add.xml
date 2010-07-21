@@ -2,10 +2,13 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<input type="hidden" name="hidden_field" value="$params['some_value']" eval="value"/>
 		<label>
-			<span><_text constant="label"/></span>
-			<input type="text" name="name" style="width: 270px;" maxlength="30"/>
+			<span><_text constant="label_title" module="articles"/></span>
+			<input type="text" name="title" style="width: 270px;" maxlength="255"/>
+		</label>
+		<label>
+			<span><_text constant="label_content" module="articles"/></span>
+			<textarea name="content" rows="5" cols="40"><_raw text=""/></textarea>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>

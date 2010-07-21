@@ -34,6 +34,10 @@ class articles extends Module {
 
 		// global control actions
 		switch ($params['backend_action']) {
+			case 'articles_new':
+				$this->addArticle($level);
+				break;
+
 			default:
 				break;
 		}
@@ -44,7 +48,7 @@ class articles extends Module {
 	 */
 	function onInit() {
 		global $db_active, $db;
-		
+
 		$sql = "
 			CREATE TABLE `articles` (
 				`id` INT NOT NULL AUTO_INCREMENT ,
@@ -54,11 +58,11 @@ class articles extends Module {
 				`author` INT NOT NULL ,
 				`visible` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
-				INDEX ( `author` ) 
+				INDEX ( `author` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		
+
 		if ($db_active == 1) $db->query($sql);
-		
+
 		$sql = "
 			CREATE TABLE `article_rating` (
 				`id` INT NOT NULL AUTO_INCREMENT ,
@@ -66,9 +70,9 @@ class articles extends Module {
 				`votes_up` INT NOT NULL DEFAULT '0',
 				`votes_down` INT NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ) ,
-				INDEX ( `article` ) 
+				INDEX ( `article` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		
+
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -98,18 +102,18 @@ class articles extends Module {
 		// register backend
 		if ($ModuleHandler->moduleExists('backend')) {
 			$backend = $ModuleHandler->getObjectFromName('backend');
-			
+
 			$articles_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_articles'),
 					url_GetFromFilePath($this->path.'images/icon.png'),
 					'javascript:void(0);',
 					$level=5
-				);	
+				);
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_articles_new'),
 								url_GetFromFilePath($this->path.'images/new_article.png'),
-								
+
 								window_Open( // on click open window
 											'links_list',
 											730,
@@ -119,8 +123,26 @@ class articles extends Module {
 										),
 								$level=5
 							));
-											
+
 			$backend->addMenu($this->name, $articles_menu);
 		}
+	}
+
+	/**
+	 * Print input form for new article
+	 * @param integer $level
+	 */
+	function addArticle($level) {
+		$template = new TemplateHandler('add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
+					'cancel_action'	=> window_Close('articles_new')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 }
