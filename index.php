@@ -39,6 +39,7 @@ require_once('units/language.php');
 require_once('units/template.php');
 require_once('units/section.php');
 require_once('units/XMLParser.php');
+require_once('units/markdown.php');
 
 $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];
