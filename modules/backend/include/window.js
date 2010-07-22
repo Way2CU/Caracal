@@ -72,13 +72,14 @@ function window_Open(id, width, title, can_close, can_minimize, url) {
  * @param string id
  */
 function window_Close(id) {
-	var wnd = window_GetById(id);
+	var $wnd = $('#'+id);
 
-	if (wnd != undefined) {
-		delete window_List[id];
-		wnd.parentNode.removeChild(wnd);
-		window_SetFocus(window_GetTopLevel());
-	}
+	if ($wnd != undefined)
+		$wnd.animate({opacity: 0}, 300, function() {
+			$wnd.remove();
+			delete window_List[id];
+			window_SetFocus(window_GetTopLevel());
+		});
 }
 
 /**
@@ -266,10 +267,14 @@ function window_Exists(id) {
  * @param integer width
  */
 function window_Resize(id, new_width) {
-	var $wnd = $('#'+id);
+	var $wnd = $('#'+id)
+	var new_position = $wnd.position().left + Math.floor(new_width / 2);
 
-	if ($wnd != undefined)
-		$wnd.animate({width: new_width}, 500);
+	$wnd.animate({
+					left: new_position,
+					width: new_width
+				},
+				500);
 }
 
 /**

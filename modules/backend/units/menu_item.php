@@ -243,4 +243,8 @@ function window_ReloadContent($window) {
 	return "javascript: window_ReloadContent('{$window}');";
 }
 
+function window_Resize($window, $size) {
+	return "javascript: window_Resize('{$window}', {$size});";
+}
+
 ?>

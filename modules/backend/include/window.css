@@ -210,6 +210,17 @@ div.window_inactive div.content label span {
 	display: block;
 }
 
+div.window div.content label a,
+div.window_inactive div.content label a {
+	color: #1A60A4;
+	text-decoration: none;
+}
+
+div.window div.content label a:hover,
+div.window_inactive div.content label a:hover {
+	text-decoration: underline;
+}
+
 div.window div.content div.main_menu,
 div.window_inactive div.content div.main_menu,
 div.window div.content div.button_bar,
@@ -241,6 +252,7 @@ div.window_inactive div.content textarea {
 
 	border: 1px solid #999999;
 	border-radius: 3px;
+	outline: 0px;
 	background-color: #ffffff;
 
 	color: #444444;
