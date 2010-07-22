@@ -3,21 +3,17 @@
 /**
  * SESSION MODULE
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * Author: MeanEYE.rcf
  */
-
-if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
-
 
 class session extends Module {
 
 	/**
 	 * Constructor
 	 *
-	 * @return backend
+	 * @return session
 	 */
-	function session() {
+	function __construct() {
 		$this->file = __FILE__;
 		parent::Module();
 	}
@@ -50,11 +46,12 @@ class session extends Module {
 	 * Perfrom credetials check for user
 	 */
 	function performLogin() {
-		global $db, $db_active, $ModuleHandler, $language;
+		global $ModuleHandler, $language;
 
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
 		$captchaValue = fix_chars($_REQUEST['captcha']);
+		$manager = new AdministratorManager();
 
 		$captchaPass = false;
 		if ($ModuleHandler->moduleExists('captcha')) {
@@ -62,9 +59,17 @@ class session extends Module {
 			$captchaPass = $captcha->isCaptchaValid($captchaValue);
 		}
 
-		$user = $db->get_row("SELECT `username`, `fullname`, `level` FROM `system_access` WHERE `username`='$username' AND `password`='$password' LIMIT 1");
-		if ($db->num_rows > 0 && $captchaPass) {
+		$user = $manager->getSingleItem(
+								$manager->getFieldNames(),
+								array(
+									'username'	=> $username,
+									'password'	=> $password
+								)
+							);
+
+		if (is_object($user) && $captchaPass) {
 			// user logged, publish data and redirect
+			$_SESSION['uid'] = $user->id;
 			$_SESSION['logged'] = true;
 			$_SESSION['level'] = $user->level;
 			$_SESSION['username'] = $user->username;
@@ -88,12 +93,6 @@ class session extends Module {
 		}
 	}
 
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-	}
-
     /**
      * Loggs out current user
      */
@@ -109,8 +108,18 @@ class session extends Module {
         echo $this->language->getText('message_logout', $language);
         url_SetRefresh(url_Make('', ''), 2);
     }
-
 }
 
+class AdministratorManager extends ItemManager {
+	function __construct() {
+		parent::ItemManager('system_access');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('username', 'varchar');
+		$this->addProperty('password', 'varchar');
+		$this->addProperty('fullname', 'varchar');
+		$this->addProperty('level', 'int');
+	}
+}
 
 ?>
