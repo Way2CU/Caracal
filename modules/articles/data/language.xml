@@ -29,4 +29,33 @@
 		<constant name="column_author">Author</constant>
 		<constant name="column_rating">Rating</constant>
 	</language>
+
+	<language short="he">
+		<!-- Menu Items -->
+		<constant name="menu_articles">מאמרים</constant>
+		<constant name="menu_articles_new">צור מאמר חדש</constant>
+		<constant name="menu_articles_manage">נהל מאמרים</constant>
+
+		<!-- Titles -->
+		<constant name="title_articles_new">מאמרים: צור חדש</constant>
+		<constant name="title_articles_change">מאמרים: שנה</constant>
+		<constant name="title_articles_delete">מאמרים: מחק</constant>
+		<constant name="title_articles_manage">מאמרים: נהל</constant>
+
+		<!-- Messages -->
+		<constant name="message_article_saved">מאמר נשמר!</constant>
+		<constant name="message_article_delete">אתה עומד למחר את המאמר הבא! אתה בטוח?</constant>
+		<constant name="message_article_deleted">מאמר נמחק!</constant>
+
+		<!-- Labels -->
+		<constant name="label_title">כותרת המסמך:</constant>
+		<constant name="label_content">תוכן המאמר:&lt;small style="float: right; color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;</constant>
+		<constant name="label_visible">המאמר נראה</constant>
+		<constant name="label_text_id">מזהה טקסט המאמר&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(אופציונאלי)&lt;/small&gt;:</constant>
+
+		<!-- Columns -->
+		<constant name="column_title">כותרת</constant>
+		<constant name="column_author">מחבר</constant>
+		<constant name="column_rating">דירוג</constant>
+	</language>
 </document>

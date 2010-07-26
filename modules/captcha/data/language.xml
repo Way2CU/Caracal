@@ -1,4 +1,5 @@
-﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language name="English" short="en">
 		<constant name="captcha_message" value="Captcha image (click to refresh)" />
@@ -8,5 +9,8 @@
 	</language>
 	<language name="Српски" short="sr-cyr">
 		<constant name="captcha_message" value="Captcha слика (клик на слику освежава)" />
+	</language>
+	<language name="Hebrew" short="he">
+		<constant name="captcha_message" value="תמונת קאפצ'ה (לחץ לרענון)" />
 	</language>
 </document>

@@ -5,4 +5,8 @@
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
 	</language>
+	<language short="he">
+		<constant name="message_sent">מידע נשלח בהצלחה!</constant>
+		<constant name="message_error">נוצרה בעיה בשליחת מידע אנא בדוק השדות ונסה שנית!</constant>
+	</language>
 </document>

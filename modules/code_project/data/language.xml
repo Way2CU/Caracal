@@ -19,4 +19,22 @@
 		<constant name="message_code_delete">Are you sure about removing the following code?</constant>
 		<constant name="message_code_deleted">Specified code was removed.</constant>
 	</language>
+	<language short="he">
+		<constant name="menu_codes">פרויקטים</constant>
+		<constant name="menu_codes_manage">נהל קודים של פרויקטים</constant>
+		
+		<constant name="title_codes_manage">נהל קודים של פרויקטים</constant>
+		<constant name="title_codes_add">הוסף קוד פרויקט חדש</constant>
+		<constant name="title_codes_change">שנה קוד פרויקט</constant>
+		<constant name="title_codes_delete">מחק קוד פרויקט</constant>
+		
+		<constant name="column_code">קוד</constant>
+		
+		<constant name="label_code">קוד:</constant>
+		<constant name="label_url">URL:</constant>
+		
+		<constant name="message_code_saved">מידע הקוד נשמר</constant>
+		<constant name="message_code_delete">אתה עומד למחוק קוד - אתה בטוח?</constant>
+		<constant name="message_code_deleted">הקוד הוסר!</constant>
+	</language>
 </document>

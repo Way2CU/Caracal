@@ -59,4 +59,62 @@
 		<constant name="overview">Sponsored links</constant>
 		<constant name="sponsored">Sponsored</constant>
 	</language>
+	<language name="Hebrew" short="he">
+		<!-- Menu Items -->
+		<constant name="menu_links">קישורים</constant>
+		<constant name="menu_links_groups">נהל קבוצות</constant>
+		<constant name="menu_links_manage">נהל קישורים</constant>
+		<constant name="menu_links_overview">סקירת קישורים ממומנים</constant>
+
+		<!-- Window Titles -->
+		<constant name="title_links_manage">נהל קישורים</constant>
+		<constant name="title_links_overview">סקירת קישורים ממומנים</constant>
+		<constant name="title_links_add">הוסף קישור</constant>
+		<constant name="title_links_change">שנה קישור</constant>
+		<constant name="title_links_delete">מחק קישור</constant>
+		<constant name="title_groups_manage">נהל קבוצות</constant>
+		<constant name="title_groups_create">צור קבוצה</constant>
+		<constant name="title_groups_change">שנה שם קבוצה</constant>
+		<constant name="title_groups_delete">מחק קבוצה</constant>
+		<constant name="title_groups_links">קישורים של קבוצה</constant>
+
+		<!-- Messages -->
+		<constant name="message_link_saved">מידע הקישור נשמר</constant>
+		<constant name="message_link_delete">אתה עומד להסיר את הקישור - אתה בטוח?</constant>
+		<constant name="message_link_deleted">הקישור הוסר</constant>
+		<constant name="message_group_links">הקישורים הינם חלק מהקבוצה ויכולים להשתייך לעוד קבוצות</constant>
+		<constant name="message_group_links_updated">שיוך הקישור עודכן.</constant>
+		<constant name="message_group_created">קבוצה חדשה נוצרה.</constant>
+		<constant name="message_group_renamed">שם הקבוצה שונה.</constant>
+		<constant name="message_group_delete">אתה עומד להסיר קבוצה, הקישורים השייכים אליה לא יוסרו - אתה בטוח?</constant>
+		<constant name="message_group_deleted">הקבוצה הוסרה</constant>
+
+		<!-- Column Names -->
+		<constant name="column_name">שם</constant>
+		<constant name="column_text">טקסט</constant>
+		<constant name="column_external">חיצוני</constant>
+		<constant name="column_sponsored">ממומנים</constant>
+		<constant name="column_progress">תהליך</constant>
+		<constant name="column_clicks">קליקים</constant>
+		<constant name="column_total_clicks">סך הקליקים</constant>
+
+		<!-- Form Labels -->
+		<constant name="label_name">שם:</constant>
+		<constant name="label_text">טקסט:</constant>
+		<constant name="label_description">תיאור:</constant>
+		<constant name="label_url">URL:</constant>
+		<constant name="label_external">בטח בחלון חדש</constant>
+		<constant name="label_sponsored">קישור ממומן</constant>
+		<constant name="label_display_limit">הצג מגבלות (0 ללא מגבלות):</constant>
+		<constant name="label_sponsored_clicks">קליקים ממומנים:</constant>
+		<constant name="label_total_clicks">סך קליקים:</constant>
+
+		<!-- Other -->
+		<constant name="links">קישורים</constant>
+		<constant name="add">הוסף קישור</constant>
+		<constant name="create_group">צור קבוצה</constant>
+		<constant name="groups">קבוצות של קישורים</constant>
+		<constant name="overview">קישורים ממומנים</constant>
+		<constant name="sponsored">ממומנים</constant>
+	</language>
 </document>

@@ -20,4 +20,23 @@
 
 		<constant name="add_channel">Add channel</constant>
 	</language>
+	<language short="יק">
+		<constant name="menu_chat">צט</constant>
+		<constant name="menu_join_chat">הצטרף</constant>
+		<constant name="menu_settings">הגדרות</constant>
+
+		<constant name="title_chat">צט</constant>
+		<constant name="title_chat_settings">צט: הגדרות</constant>
+		<constant name="title_channel_add">צט הוסף ערוץ</constant>
+
+		<constant name="column_channel">ערוץ</constant>
+		<constant name="column_users">משתמשים</constant>
+
+		<constant name="label_channel">ערוץ:</constant>
+		<constant name="label_chat_log">צט log:</constant>
+		<constant name="label_online_users">משתמשים עכשיו:</constant>
+		<constant name="label_message">הודעה:</constant>
+
+		<constant name="add_channel">הוסף ערוץ</constant>
+	</language>
 </document>

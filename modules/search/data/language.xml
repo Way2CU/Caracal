@@ -1,4 +1,5 @@
-﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language name="עברית" short="he">
 		<constant name="search_results" value="תוצאות חיפוש" />

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../units/schema/language.dtd">
 <document>
 	<language name="Srpski" short="sr-lat">
@@ -89,18 +90,18 @@
 		<constant name="column_options">Options</constant>
 
 		<!-- Buttons -->
-		<constant name="add">Add</constant>
-		<constant name="new">New</constant>
-		<constant name="change">Change</constant>
-		<constant name="delete">Delete</constant>
-		<constant name="save">Save</constant>
-		<constant name="submit">Submit</constant>
-		<constant name="send">Send</constant>
-		<constant name="upload">Upload</constant>
-		<constant name="cancel">Cancel</constant>
-		<constant name="open">Open</constant>
-		<constant name="close">Close</constant>
-		<constant name="reset">Reset</constant>
+		<constant name="add">הוסף</constant>
+		<constant name="new">חדש</constant>
+		<constant name="change">שנה</constant>
+		<constant name="delete">מחק</constant>
+		<constant name="save">שמור</constant>
+		<constant name="submit">עדכן</constant>
+		<constant name="send">שלח</constant>
+		<constant name="upload">העלה</constant>
+		<constant name="cancel">בטל</constant>
+		<constant name="open">פתח</constant>
+		<constant name="close">סגור</constant>
+		<constant name="reset">אפס</constant>
 
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>

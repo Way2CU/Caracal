@@ -1,4 +1,5 @@
-﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language name="English" short="en">
 		<constant name="menu_title" value="Kabalah"/>
@@ -77,20 +78,20 @@
 		<constant name="title_questions_change" value="ערוך שאלה" />
 		<constant name="title_questions_delete" value="מחק שאלה" />
 		<constant name="title_fields" value="קבלה : שדות" />
-		<constant name="title_fields_new" value="Create field" />
-		<constant name="title_fields_change" value="Change field" />
-		<constant name="title_fields_delete" value="Delete field" />
+		<constant name="title_fields_new" value="צור שדה" />
+		<constant name="title_fields_change" value="שנה שדה" />
+		<constant name="title_fields_delete" value="מחק שדה" />
 		<constant name="title_answers" value="קבלה : תשובות" />
 		<constant name="title_answers_new" value="צור תשובה" />
 		<constant name="title_answers_change" value="ערוך תשובה" />
 		<constant name="title_answers_delete" value="מחק תשובה" />
 
 		<constant name="message_question_saved" value="תוכן השאלה נשמר!"/>
-		<constant name="message_question_delete" value="The following question will be removed from the system. Additionaly all answers and fields related to this question will be removed too! Are you sure?"/>
+		<constant name="message_question_delete" value="השאלה, תשובותיה והשדות הקשורים בה יוסרות האם אתה בטוח?"/>
 		<constant name="message_question_deleted" value="תוכן השאלה הוסר!"/>
-		<constant name="message_field_saved" value="Field data has been saved!"/>
-		<constant name="message_field_delete" value="The following field will be removed from the system. Are you sure?"/>
-		<constant name="message_field_deleted" value="Field data has been deleted!"/>
+		<constant name="message_field_saved" value="מידע השדה נשמר!"/>
+		<constant name="message_field_delete" value="השדה יוסר מהמערכת, האם אתה בטוח?"/>
+		<constant name="message_field_deleted" value="מידע השדה נמחק!"/>
 		<constant name="message_answer_saved" value="תוכן השאלה נשמר בהצלחה!"/>
 		<constant name="message_answer_delete" value="השאלה תוסר מהמערכת, האם אתה בטוח?"/>
 		<constant name="message_answer_deleted" value="תוכן התשובה נמחק!"/>
@@ -98,7 +99,7 @@
 		<constant name="new" value="צור" />
 		<constant name="change" value="ערוך" />
 		<constant name="delete" value="מחק" />
-		<constant name="fields" value="Fields" />
+		<constant name="fields" value="שדות" />
 		<constant name="save" value="שמור" />
 		<constant name="reset" value="אפס" />
 		<constant name="cancel" value="בטל" />
@@ -108,26 +109,26 @@
 		<constant name="label_question_title" value="כותרת:"/>
 		<constant name="label_question_short_description" value="תאור קצר:"/>
 		<constant name="label_question_description" value="תאור:"/>
-		<constant name="label_question_formula" value="Formula &lt;small&gt;(eg.: sum($name) + $last_name[1] / 2)&lt;/small&gt;:"/>
+		<constant name="label_question_formula" value="נוסחא &lt;small&gt;(eg.: sum($name) + $last_name[1] / 2)&lt;/small&gt;:"/>
 		<constant name="label_field_question" value="Question:"/>
-		<constant name="label_field_type" value="Type:"/>
-		<constant name="label_field_name" value="Name:"/>
-		<constant name="label_field_label" value="Label:"/>
-		<constant name="label_field_default" value="Default value:"/>
+		<constant name="label_field_type" value="סוג:"/>
+		<constant name="label_field_name" value="שם:"/>
+		<constant name="label_field_label" value="תווית:"/>
+		<constant name="label_field_default" value="ערך ברירת מחדל:"/>
 		<constant name="label_answer_number" value="תוצאת החישוב:"/>
 		<constant name="label_answer_question" value="שאלה:"/>
 		<constant name="label_answer_title" value="כותרת:"/>
 		<constant name="label_answer_short_description" value="תאור קצר:"/>
 		<constant name="label_answer_description" value="תאור:"/>
 
-		<constant name="field_type_text" value="Text"/>
-		<constant name="field_type_date" value="Date"/>
-		<constant name="field_type_number" value="Number"/>
+		<constant name="field_type_text" value="טקסט"/>
+		<constant name="field_type_date" value="תאריך"/>
+		<constant name="field_type_number" value="מספר"/>
 
 		<constant name="column_question_id" value="מספר"/>
 		<constant name="column_question_title" value="כותרת"/>
-		<constant name="column_field_name" value="Name"/>
-		<constant name="column_field_type" value="Type"/>
+		<constant name="column_field_name" value="שם"/>
+		<constant name="column_field_type" value="סוג"/>
 		<constant name="column_answer_number" value="תוצאה"/>
 		<constant name="column_answer_answer" value="כותרת התשובה"/>
 		<constant name="column_answer_question" value="שאלה"/>

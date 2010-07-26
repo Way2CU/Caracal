@@ -1,20 +1,21 @@
-﻿<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language name="English" short="en">
 		<constant name="title">Administration Suite</constant>
-		
+
 		<!-- Menu Items -->
 		<constant name="menu_system">System</constant>
 		<constant name="menu_modules">Modules</constant>
 		<constant name="menu_users">User management</constant>
-		
+
 		<!-- Window Titles -->
 		<constant name="title_modules">Modules</constant>
 		<constant name="title_module_activate">Activate Module</constant>
 		<constant name="title_module_deactivate">Deactivate Module</constant>
 		<constant name="title_module_initialise">Initialise Module</constant>
 		<constant name="title_module_disable">Disable Module</constant>
-		
+
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
 		<constant name="message_module_deactivated">Module is no longer active.</constant>
@@ -23,13 +24,13 @@
 		<constant name="message_module_disable">The following module will be disabled. This operation will remove all module specific settings. Are you sure?</constant>
 		<constant name="message_module_disabled">Module has been disabled.</constant>
 		<constant name="message_module_protected">This module is protected. You are not allowed to change it.</constant>
-		
+
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>
 		<constant name="column_module_order">Order</constant>
 		<constant name="column_module_preload">Preload</constant>
 		<constant name="column_module_active">Active</constant>
-		
+
 		<!-- General -->
 		<constant name="activate">Activate</constant>
 		<constant name="deactivate">Deactivate</constant>
@@ -39,12 +40,42 @@
 		<constant name="cancel">Cancel</constant>
 	</language>
 
-	<language name="Srpski" short="sr-lat">
-		<constant name="title">Administracioni Interfejs</constant>
-	</language>
-	
-	<language name="עברית" short="he">
+	<language short="he">
 		<constant name="title">ממשק מנהל</constant>
+		<!-- Menu Items -->
+		<constant name="menu_system">מערכת</constant>
+		<constant name="menu_modules">מודולים</constant>
+		<constant name="menu_users">ניהול משתמשים</constant>
+
+		<!-- Window Titles -->
+		<constant name="title_modules">מודולים</constant>
+		<constant name="title_module_activate">הפעל מודול</constant>
+		<constant name="title_module_deactivate">כבה מודול</constant>
+		<constant name="title_module_initialise">אתחל מודול</constant>
+		<constant name="title_module_disable">נטרל מודול</constant>
+
+		<!-- Messages -->
+		<constant name="message_module_activated">המודול פעיל</constant>
+		<constant name="message_module_deactivated">המודול לא פעיל</constant>
+		<constant name="message_module_initialise">המודול יאותחל ויקבל גישה למסד הנתונים ולקבצים, האם אתה בטוח?</constant>
+		<constant name="message_module_initialised">המודול מאותחל ומופעל</constant>
+		<constant name="message_module_disable">המודול הבא יבוטל, הדבר ימחק את הגדרות המודול - האם אתה בטוח?</constant>
+		<constant name="message_module_disabled">המודול נוטרל</constant>
+		<constant name="message_module_protected">המודול מוגן, אינך יכול לשנותו</constant>
+
+		<!-- Column Names -->
+		<constant name="column_module_name">שם</constant>
+		<constant name="column_module_order">הזמן</constant>
+		<constant name="column_module_preload">טען</constant>
+		<constant name="column_module_active">הפעל</constant>
+
+		<!-- General -->
+		<constant name="activate">הפעל</constant>
+		<constant name="deactivate">כבה</constant>
+		<constant name="initialise">אתחל</constant>
+		<constant name="disable">נטרל</constant>
+		<constant name="close">סגור</constant>
+		<constant name="cancel">בטל</constant>
 	</language>
-	
+
 </document>
