@@ -134,6 +134,7 @@ class backend extends Module {
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.iframe-post-form.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.show_html.js'), 'type'=>'text/javascript'));
 		}
 
 		// add admin level menus

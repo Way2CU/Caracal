@@ -131,23 +131,20 @@ function window_ReloadContent(id) {
  * @param string content
  */
 function window_SetContent(wnd, content) {
-	// data vas retrieved correctly, handle
-	original_size = window_GetSize(wnd);
-	wnd._content.innerHTML = content;
-	new_size = window_GetSize(wnd);
+	// set new content
+	$(wnd).setWindowContent(content, 300, function() {
+		// implement AJAX calls
+		window_ImplementContentEvents(wnd);
 
-	// implement newly received objects
-	window_ImplementContentEvents(wnd);
-	window_MoveBy(wnd, (original_size[0] - new_size[0]) / 2, (original_size[1] - new_size[1]) / 2);
+		// execute scripts if there are any
+		var script_list = wnd._content.getElementsByTagName('script');
 
-	// execute scripts if there are any
-	var script_list = wnd._content.getElementsByTagName('script');
-
-	for (var i=0; i<script_list.length; i++) {
-		var script = script_list[i];
-		if (script.type == 'text/javascript')
-			eval(script.innerHTML);
-	}
+		for (var i=0; i<script_list.length; i++) {
+			var script = script_list[i];
+			if (script.type == 'text/javascript')
+				eval(script.innerHTML);
+		}
+	});
 }
 
 /**
@@ -274,7 +271,7 @@ function window_Resize(id, new_width) {
 					left: new_position,
 					width: new_width
 				},
-				500);
+				300);
 }
 
 /**
@@ -308,6 +305,7 @@ function window_SubmitContent(wnd, form) {
 		}
 	}
 
+	$(wnd).setWindowContent('', 300);
 	wnd._content.className = 'content loading';
 
 	var action = form.attributes['action'].value;
