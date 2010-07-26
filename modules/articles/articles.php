@@ -379,30 +379,31 @@ class articles extends Module {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
 
-		$timestamp = strtotime($item->timestamp);
-		$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-		$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+		if (is_object($item)) {
+			$timestamp = strtotime($item->timestamp);
+			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
 
-		$params = array(
-					'id'			=> $item->id,
-					'text_id'		=> $item->text_id,
-					'timestamp'		=> $item->timestamp,
-					'date'			=> $date,
-					'time'			=> $time,
-					'title'			=> $item->title,
-					'content'		=> Markdown($item->content),
-					'author'		=> $item->author,
-					'visible'		=> $item->visible,
-					'views'			=> $item->views,
-					'votes_up'		=> $item->votes_up,
-					'votes_down' 	=> $item->votes_down,
-					'rating'		=> $this->_getArticleRating($item, 10),
-				);
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'timestamp'		=> $item->timestamp,
+						'date'			=> $date,
+						'time'			=> $time,
+						'title'			=> $item->title,
+						'content'		=> Markdown($item->content),
+						'author'		=> $item->author,
+						'visible'		=> $item->visible,
+						'views'			=> $item->views,
+						'votes_up'		=> $item->votes_up,
+						'votes_down' 	=> $item->votes_down,
+						'rating'		=> $this->_getArticleRating($item, 10),
+					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse($level);
-
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 
 	/**

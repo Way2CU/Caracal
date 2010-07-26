@@ -27,44 +27,54 @@ class youtube extends Module {
 	 */
 	function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
-		switch ($params['action']) {
-			default:
-				break;
-		}
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'show':
+					$this->tag_Video($level, $params, $children);
+					break;
+
+				case 'show_thumbnail':
+					$this->tag_Thumbnail($level, $params, $children);
+					break;
+
+				default:
+					break;
+			}
 
 		// global control actions
-		switch ($params['backend_action']) {
-			case 'video_list':
-				$this->showList($level);
-				break;
+		if (isset($params['backend_action']))
+			switch ($params['backend_action']) {
+				case 'video_list':
+					$this->showList($level);
+					break;
 
-			case 'video_add':
-				$this->addVideo($level);
-				break;
+				case 'video_add':
+					$this->addVideo($level);
+					break;
 
-			case 'video_change':
-				$this->changeVideo($level);
-				break;
+				case 'video_change':
+					$this->changeVideo($level);
+					break;
 
-			case 'video_save':
-				$this->saveVideo($level);
-				break;
+				case 'video_save':
+					$this->saveVideo($level);
+					break;
 
-			case 'video_delete':
-				$this->deleteVideo($level);
-				break;
+				case 'video_delete':
+					$this->deleteVideo($level);
+					break;
 
-			case 'video_delete_commit':
-				$this->deleteVideo_Commit($level);
-				break;
+				case 'video_delete_commit':
+					$this->deleteVideo_Commit($level);
+					break;
 
-			case 'video_preview':
-				$this->previewVideo($level);
-				break;
+				case 'video_preview':
+					$this->previewVideo($level);
+					break;
 
-			default:
-				break;
-		}
+				default:
+					break;
+			}
 	}
 
 	/**
