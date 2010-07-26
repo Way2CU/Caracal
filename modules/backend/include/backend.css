@@ -48,6 +48,8 @@ div#copyright {
 	font-family: Tahoma, Verdana, Helvetica;
 	font-size: 10px;
 	text-align: right;
+
+	direction: ltr;
 }
 
 div#copyright a {
