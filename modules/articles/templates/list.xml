@@ -9,11 +9,14 @@
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 150px;">
-				<!-- Column 1 -->
+			<span class="column" style="width: 300px;">
+				<_text constant="column_title" module="articles"/>
 			</span>
-			<span class="column" style="width: 90px; text-align: center;">
-				<!-- Column 2 -->
+			<span class="column" style="width: 100px;">
+				<_text constant="column_author" module="articles"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_rating" module="articles"/>
 			</span>
 			<span class="column">
 				<_text constant="column_options"/>
@@ -21,7 +24,7 @@
 		</div>
 		<div class="list_content" style="height: 250px">
 			<!-- List Content -->
-			<_list/>
+			<_article_list only_visible="0"/>
 		</div>
 	</div>
 </document>

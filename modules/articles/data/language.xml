@@ -2,10 +2,31 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language short="en">
-		<!-- Menu Items -->	
+		<!-- Menu Items -->
 		<constant name="menu_articles">Articles</constant>
 		<constant name="menu_articles_new">Write new article</constant>
+		<constant name="menu_articles_manage">Manage articles</constant>
 
-		<!-- Titles --><constant name="title_articles_new">Write new article</constant>
+		<!-- Titles -->
+		<constant name="title_articles_new">Articles: Write new</constant>
+		<constant name="title_articles_change">Articles: Change</constant>
+		<constant name="title_articles_delete">Articles: Delete</constant>
+		<constant name="title_articles_manage">Articles: Manage</constant>
+
+		<!-- Messages -->
+		<constant name="message_article_saved">Article saved!</constant>
+		<constant name="message_article_delete">You are about to delete the following article! Are you sure?</constant>
+		<constant name="message_article_deleted">Article deleted!</constant>
+
+		<!-- Labels -->
+		<constant name="label_title">Document title:</constant>
+		<constant name="label_content">Article text:&lt;small style="float: right; color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;</constant>
+		<constant name="label_visible">Article is visible</constant>
+		<constant name="label_text_id">Unique article text ID&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
+
+		<!-- Columns -->
+		<constant name="column_title">Title</constant>
+		<constant name="column_author">Author</constant>
+		<constant name="column_rating">Rating</constant>
 	</language>
 </document>

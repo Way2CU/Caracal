@@ -2,15 +2,19 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 150px;">
-			<!-- Column 1 -->
+		<span class="column" style="width: 300px;">
+			<_var name="$params['title']"/>
 		</span>
-		<span class="column" style="width: 90px; text-align: center;">
-			<!-- Column 2 -->
+		<span class="column" style="width: 100px;">
+			<_var name="$params['author']"/>
+		</span>
+		<span class="column" style="width: 70px;">
+			<_var name="round($params['rating'], 1)"/>
 		</span>
 		<span class="column">
 			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<_var name="$params['item_delete']"/><_raw text=" "/>
+			<_var name="$params['item_read']"/>
 		</span>
 	</div>
 </document>

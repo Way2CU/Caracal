@@ -9,4 +9,9 @@
 			<_var name="$params['button']"/>
 		</button>
 	</div>
+	<_if condition="isset($params['on_show'])">
+		<script type="text/javascript">
+			<_var name="$params['on_show']"/>
+		</script>
+	</_if>
 </document>

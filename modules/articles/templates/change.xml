@@ -3,20 +3,25 @@
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
 		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_text_id" module="articles"/></span>
-			<input type="text" name="text_id" style="width: 270px;" maxlength="32"/>
-		</label>
-		<label>
+			<input type="text" name="text_id" value="$params['text_id']" eval="value" style="width: 270px;" maxlength="32"/>
+		</label>		<label>
 			<span><_text constant="label_title" module="articles"/></span>
-			<input type="text" name="title" style="width: 690px;" maxlength="255"/>
+			<input type="text" name="title" value="$params['title']" eval="value" style="width: 690px;" maxlength="255"/>
 		</label>
 		<label>
 			<span><_text constant="label_content" module="articles"/></span>
-			<textarea name="content" rows="5" cols="40" style="width: 690px; height: 350px;"><_raw text=""/></textarea>
+			<textarea name="content" rows="5" cols="40" style="width: 690px; height: 350px;"><_var name="$params['content']"/></textarea>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="articles"/></span>
-			<input type="checkbox" name="visible" checked="checked"/>
+			<_if condition="$params['visible'] == 1">
+				<input type="checkbox" name="visible" checked="checked"/>
+			</_if>
+			<_if condition="$params['visible'] == 0">
+				<input type="checkbox" name="visible"/>
+			</_if>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
