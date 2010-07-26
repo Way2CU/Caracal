@@ -20,7 +20,7 @@
 
 		<!-- Labels -->
 		<constant name="label_title">Document title:</constant>
-		<constant name="label_content">Article text:&lt;small style="float: right; color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;</constant>
+		<constant name="label_content">Article text&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
 		<constant name="label_visible">Article is visible</constant>
 		<constant name="label_text_id">Unique article text ID&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
 
@@ -49,7 +49,7 @@
 
 		<!-- Labels -->
 		<constant name="label_title">כותרת המסמך:</constant>
-		<constant name="label_content">תוכן המאמר:&lt;small style="float: right; color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;</constant>
+		<constant name="label_content">תוכן המאמר&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
 		<constant name="label_visible">המאמר נראה</constant>
 		<constant name="label_text_id">מזהה טקסט המאמר&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(אופציונאלי)&lt;/small&gt;:</constant>
 

@@ -89,6 +89,7 @@ div#backend_Menu ul#navigation > li:hover > a {
 }
 
 div#backend_Menu ul#navigation > li img {
+	margin-left: 2px;
 	margin-right: 2px;
 
 	vertical-align: middle;
