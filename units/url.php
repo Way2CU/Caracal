@@ -13,15 +13,15 @@ if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to t
  * @author MeanEYE
  */
 function url_Make($action, $section) {
-	$res = $_SERVER['PHP_SELF'].'?section='.urlencode($section).'&action='.urlencode($action);
-	
+	$res = $_SERVER['PHP_SELF'].'?section='.urlencode($section);
+	if (!empty($action)) $res .= '&amp;action='.urlencode($action);
+
 	if (func_num_args() > 2)
 		for ($i=2; $i<func_num_args(); $i++) {
 			$arg = func_get_arg($i);
-			$res .= '&'.$arg[0].'='.urlencode($arg[1]);
+			$res .= '&amp;'.$arg[0].'='.urlencode($arg[1]);
 		}
-		
-	$res = str_replace('&', '&amp;', $res);
+
 	return $res;
 }
 
@@ -39,7 +39,7 @@ function url_MakeFromArray($params) {
 }
 
 /**
- * Creates trailing url 
+ * Creates trailing url
  *
  * @param array $args
  * @return string
@@ -47,7 +47,7 @@ function url_MakeFromArray($params) {
  */
 function url_Form($args, $start_separator=true) {
 	$res = "";
-	
+
 	for ($i=0; $i<count($args); $i++) {
 		$arg = $args[$i];
 		$res .= (empty($res) && !$start_separator ? '' : '&').'&'.$arg[0].'='.urlencode($arg[1]);
@@ -71,7 +71,7 @@ function url_MakeHyperlink($content, $link, $title='', $class='', $target='') {
 	if (!empty($title)) $title = ' title="'.$title.'"';
 	if (!empty($class)) $class = ' class="'.$class.'"';
 	if (!empty($target)) $target = ' target="'.$target.'"';
-	
+
 	$res = '<a href="'.$link.'"'.$target.$class.$title.'>'.$content.'</a>';
 	return $res;
 }
@@ -100,7 +100,7 @@ function url_SetRefresh($url='', $seconds=2) {
 function url_GetFromFilePath($path) {
 	$base_url = dirname($_SERVER['PHP_SELF']);
 	$base_url = preg_replace("/\/$/i", "", $base_url);
-	
+
 	$path = str_replace('\\', '/', $path);
 	$result = $base_url.substr($path, strlen(_BASEPATH));
 	return $result;
