@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="article">
-		<h5><_var name="$params['title']"/></h5>
+		<h1><_var name="$params['title']"/></h1>
 		<_var name="$params['content']"/>
 	</div>
 </document>
