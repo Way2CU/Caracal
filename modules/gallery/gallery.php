@@ -220,6 +220,19 @@ class gallery extends Module {
 								$level=5
 							));
 
+			$gallery_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_containers'),
+								url_GetFromFilePath($this->path.'images/containers.png'),
+								window_Open( // on click open window
+											'gallery_groups',
+											450,
+											$this->getLanguageConstant('title_containers'),
+											true, true,
+											backend_UrlMake($this->name, 'containers')
+										),
+								$level=5
+							));
+
 			$backend->addMenu($this->name, $gallery_menu);
 		}
 	}
@@ -1147,5 +1160,27 @@ class GalleryGroupManager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('description', 'text');
+	}
+}
+
+class GalleryContainerManager extends ItemManager {
+
+	function __construct() {
+		parent::ItemManager('gallery_containers');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('name', 'varchar');
+		$this->addProperty('description', 'text');
+	}
+}
+
+class GalleryGroupMembershipManager extends ItemManager {
+
+	function __construct() {
+		parent::ItemManager('gallery_group_memberships');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('group', 'int');
+		$this->addProperty('container', 'int');
 	}
 }

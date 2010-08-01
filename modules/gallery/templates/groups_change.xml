@@ -8,7 +8,7 @@
 			<input type="text" name="name" value="$params['name']" style="width: 360px;" maxlength="50" eval="value"/>
 		</label>
 		<label>
-			<span><_text constant="label_name" module="gallery"/></span>
+			<span><_text constant="label_description" module="gallery"/></span>
 			<textarea name="description" style="width: 360px; height: 150px;"><_var name="$params['description']"/></textarea>
 		</label>
 		<div class="button_bar">

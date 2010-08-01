@@ -3,8 +3,9 @@
 <document>
 	<language short="en">
 		<constant name="menu_gallery">Gallery</constant>
-		<constant name="menu_images">Manage images</constant>
-		<constant name="menu_groups">Manage groups</constant>
+		<constant name="menu_images">All images</constant>
+		<constant name="menu_groups">Image groups</constant>
+		<constant name="menu_containers">Group containers</constant>
 
 		<constant name="title_image_options">Gallery: Image Options</constant>
 		<constant name="title_images">Gallery: Images</constant>
@@ -15,6 +16,7 @@
 		<constant name="title_groups_create">Gallery: Create Group</constant>
 		<constant name="title_groups_change">Gallery: Change Group</constant>
 		<constant name="title_groups_delete">Gallery: Delete Group</constant>
+		<constant name="title_containers">Gallery: Group Containers</constant>
 
 		<constant name="message_image_invalid_type">Invalid file type. Please contact system administrator.</constant>
 		<constant name="message_image_save_error">There was an error saving your image. Check directory permissions.</constant>
@@ -45,9 +47,10 @@
 		<constant name="groups">Image groups</constant>
 	</language>
 	<language short="he">
-		<constant name="menu_gallery">גלריה</constant>
-		<constant name="menu_images">נהל תמונות</constant>
-		<constant name="menu_groups">נהל קבוצות</constant>
+		<constant name="menu_gallery">Gallery</constant>
+		<constant name="menu_images">All images</constant>
+		<constant name="menu_groups">Image groups</constant>
+		<constant name="menu_containers">Group containers</constant>
 
 		<constant name="title_image_options">גלריה: אפשרויות תמונה</constant>
 		<constant name="title_images">גלריה: תמונונת</constant>
