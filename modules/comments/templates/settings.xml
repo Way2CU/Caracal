@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+
+		<div style="margin-bottom: 10px;">
+			<label>
+				<span title="test"><_text constant="label_default_visibility" module="comments"/></span>
+				<select name="default_visibility" style="width: 200px;">
+					<_if condition="$params['default_visibility'] == 0">
+						<option value="0" selected="selected"><_text constant="option_hidden" module="comments"/></option>
+						<option value="1"><_text constant="option_visible" module="comments"/></option>
+					</_if>
+					<_if condition="$params['default_visibility'] == 1">
+						<option value="0"><_text constant="option_hidden" module="comments"/></option>
+						<option value="1" selected="selected"><_text constant="option_visible" module="comments"/></option>
+					</_if>
+				</select>
+			</label>
+			<label>
+				<span title="test"><_text constant="label_repost_time" module="comments"/></span>
+				<input type="text" name="repost_time" value="$params['repost_time']" eval="value" style="width: 250px;"/>
+			</label>
+			<label>
+				<span title="test"><_text constant="label_size_limit" module="comments"/></span>
+				<input type="text" name="size_limit" value="$params['size_limit']" eval="value" style="width: 250px;"/>
+			</label>
+		</div>
+
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+
+	</form>
+</document>

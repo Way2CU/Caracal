@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div style="margin-bottom: 10px;">
+		<_var name="$params['message']"/>
+	</div>
+	<div class="button_bar">
+		<button type="button" onclick="$params['action']" eval="onclick">
+			<_var name="$params['button']"/>
+		</button>
+	</div>
+</document>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_comments">Comments</constant>
+		<constant name="menu_administration">Administration</constant>
+		<constant name="menu_settings">Settings</constant>
+
+		<constant name="title_settings">Comments: Module Settings</constant>
+
+		<constant name="label_default_visibility">Default visibility:</constant>
+		<constant name="label_repost_time">Repost timeout (minutes):</constant>
+		<constant name="label_size_limit">Comment size limit (charcters):</constant>
+		<constant name="label_user">Name:</constant>
+		<constant name="label_email">Mail:</constant>
+		<constant name="label_comment">Comment:</constant>
+
+		<constant name="message_settings_saved">Module settings were saved!</constant>
+		<constant name="message_saved">New commend was posted!</constant>
+		<constant name="message_error_repost_time">You can post only once in %t minutes!</constant>
+		<constant name="message_error">Error saving message data!</constant>
+		<constant name="message_error_data">Error! Wrong data specified!</constant>
+
+		<constant name="option_hidden">Hidden</constant>
+		<constant name="option_visible">Visible</constant>
+
+		<constant name="anonymous">Anonymous</constant>
+	</language>
+</document>

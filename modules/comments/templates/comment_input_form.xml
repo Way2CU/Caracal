@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form id="comment_input" action="$params['form_action']" method="POST" eval="action">
+		<label>
+			<input type="hidden" name="module" value="$params['module']" eval="value"/>
+			<input type="hidden" name="comment_section" value="$params['section']" eval="value"/>
+
+			<span><_text constant="label_user" module="comments"/></span>
+			<input type="text" name="user" maxlength="50"/>
+		</label>
+		<label>
+			<span><_text constant="label_email" module="comments"/></span>
+			<input type="text" name="email" maxlength="50"/>
+		</label>
+		<label>
+			<span><_text constant="label_comment" module="comments"/></span>
+			<textarea name="comment" rows="4" cols="40" maxlength="$params['size_limit']" eval="maxlength"><_raw text=""/></textarea>
+		</label>
+		<button type="submit">
+			<_text constant="save"/>
+		</button>
+	</form>
+
+	<script type="text/javascript">
+		$('#comment_input').submit(function (event) {
+
+		});
+	</script>
+</document>
