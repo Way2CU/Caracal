@@ -26,6 +26,38 @@ class gallery extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'show_image':
+					$this->tag_Image($level, $params, $children);
+					break;
+
+				case 'show_image_list':
+					$this->tag_ImageList($level, $params, $children);
+					break;
+
+				case 'show_group':
+					$this->tag_Group($level, $params, $children);
+					break;
+
+				case 'show_group_list':
+					$this->tag_GroupList($level, $params, $children);
+					break;
+
+				case 'json_image':
+					$this->json_Image();
+					break;
+
+				case 'json_image_list':
+					$this->json_ImageList();
+					break;
+
+				case 'json_group':
+					$this->json_Group();
+					break;
+
+				case 'json_group_list':
+					$this->json_GroupList();
+					break;
+
 				default:
 					break;
 			}
@@ -116,6 +148,7 @@ class gallery extends Module {
 			CREATE TABLE IF NOT EXISTS `gallery_groups` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`name` varchar(50) COLLATE utf8_bin NOT NULL,
+				`description` TEXT NOT NULL ,
 				PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
@@ -489,6 +522,7 @@ class gallery extends Module {
 		$params = array(
 					'id'			=> $item->id,
 					'name'			=> unfix_chars($item->name),
+					'description'	=> unfix_chars($item->description),
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('gallery_groups_change')
 				);
@@ -506,7 +540,8 @@ class gallery extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
-			'name' 	=> fix_chars($_REQUEST['name']),
+			'name' 			=> fix_chars($_REQUEST['name']),
+			'description' 	=> fix_chars($_REQUEST['description']),
 		);
 
 		$manager = new GalleryGroupManager();
@@ -605,12 +640,19 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	function tag_Image($level, $tag_params, $children) {
-		if (!isset($tag_params['id'])) return;
+		if (!isset($tag_params['id']) && !isset($tag_params['group'])) return;
 
-		$id = fix_id($tag_params['id']);
 		$manager = new GalleryManager();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		if (isset($tag_params['id'])) {
+			// get specific image
+			$id = fix_id($tag_params['id']);
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		} else {
+			// get first image from group (useful for group thumbnails)
+			$id = fix_id($tag_params['group']);
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
+		}
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -619,24 +661,26 @@ class gallery extends Module {
 		} else {
 			$template = new TemplateHandler('image.xml', $this->path.'templates/');
 		}
+
 		$template->setMappedModule($this->name);
 
-		$params = array(
-					'id'			=> $item->id,
-					'group'			=> $item->group,
-					'title'			=> $item->title,
-					'description'	=> $item->description,
-					'filename'		=> $item->filename,
-					'timestamp'		=> $item->timestamp,
-					'visible'		=> $item->visible,
-					'image'			=> url_GetFromFilePath($this->path.'images/'.$item->filename),
-					'thumbnail'		=> url_GetFromFilePath($this->path.'thumbnails/'.$item->filename),
-			);
+		if (is_object($item)) {
+			$params = array(
+						'id'			=> $item->id,
+						'group'			=> $item->group,
+						'title'			=> $item->title,
+						'description'	=> $item->description,
+						'filename'		=> $item->filename,
+						'timestamp'		=> $item->timestamp,
+						'visible'		=> $item->visible,
+						'image'			=> url_GetFromFilePath($this->path.'images/'.$item->filename),
+						'thumbnail'		=> url_GetFromFilePath($this->path.'thumbnails/'.$item->filename),
+				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse($level);
-
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 
 	/**
@@ -725,6 +769,45 @@ class gallery extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
+	function tag_Group($level, $tag_params, $children) {
+		if (!isset($tag_params['id'])) return;
+
+		$id = fix_id($tag_params['id']);
+		$manager = new GalleryGroupManager();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('group.xml', $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_image', &$this, 'tag_Image');
+		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
+
+		if (is_object($item)) {
+			$params = array(
+						'id'			=> $item->id,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
+	}
+
+	/**
+	 * Group list tag handler
+	 * @param integer $level
+	 * @param array $tag_params
+	 * @param array $children
+	 */
 	function tag_GroupList($level, $tag_params, $children) {
 		$manager = new GalleryGroupManager();
 
@@ -734,10 +817,14 @@ class gallery extends Module {
 								array('name')
 							);
 
-		$template = new TemplateHandler(
-								isset($tag_params['template']) ? $tag_params['template'] : 'groups_list_item.xml',
-								$this->path.'templates/'
-							);
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('groups_list_item.xml', $this->path.'templates/');
+		}
+
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_image', &$this, 'tag_Image');
 		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
@@ -747,10 +834,11 @@ class gallery extends Module {
 		if (count($items) > 0)
 		foreach ($items as $item) {
 			$params = array(
-						'id'		=> $item->id,
-						'name'		=> $item->name,
-						'selected'	=> $selected,
-						'item_change'		=> url_MakeHyperlink(
+						'id'			=> $item->id,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+						'selected'		=> $selected,
+						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'gallery_groups_change', 	// window id
@@ -766,7 +854,7 @@ class gallery extends Module {
 													)
 												)
 											),
-						'item_delete'		=> url_MakeHyperlink(
+						'item_delete'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'gallery_groups_delete', 	// window id
@@ -789,6 +877,180 @@ class gallery extends Module {
 			$template->parse($level);
 		}
 
+	}
+
+	/**
+	 * This function provides JSON image objects instead of standard
+	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
+	 */
+	function json_Image() {
+		define('_OMIT_STATS', 1);
+
+		if (!isset($_REQUEST['id']) && !isset($_REQUEST['group'])) {
+			// invalid params, print blank JSON object with message
+			$result = array(
+						'error'			=> true,
+						'error_message'	=> $this->getLanguageConstant('message_json_error_params'),
+					);
+
+			print json_encode($result);
+			return;
+		};
+
+		$manager = new GalleryManager();
+
+		if (isset($_REQUEST['id'])) {
+			// get specific image
+			$id = fix_id($_REQUEST['id']);
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		} else {
+			// get first image from group (useful for group thumbnails)
+			$id = fix_id($_REQUEST['group']);
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
+		}
+
+		if (is_object($item)) {
+			$result = array(
+						'error'			=> false,
+						'error_message'	=> '',
+						'id'			=> $item->id,
+						'group'			=> $item->group,
+						'title'			=> $item->title,
+						'description'	=> $item->description,
+						'filename'		=> $item->filename,
+						'timestamp'		=> $item->timestamp,
+						'visible'		=> $item->visible,
+						'image'			=> url_GetFromFilePath($this->path.'images/'.$item->filename),
+						'thumbnail'		=> url_GetFromFilePath($this->path.'thumbnails/'.$item->filename),
+					);
+		} else {
+			$result = array(
+						'error'			=> true,
+						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+					);
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * This function provides list of JSON image objects instead of standard
+	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
+	 */
+	function json_ImageList() {
+		define('_OMIT_STATS', 1);
+
+		$manager = new GalleryManager();
+		$conditions = array();
+
+		if (isset($tag_params['group']))
+			$conditions['group'] = fix_id($tag_params['group']);
+
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		if (count($items) > 0) {
+			foreach ($items as $item) {
+				$result['items'][] = array(
+							'id'			=> $item->id,
+							'group'			=> $item->group,
+							'title'			=> $item->title,
+							'description'	=> $item->description,
+							'filename'		=> $item->filename,
+							'timestamp'		=> $item->timestamp,
+							'visible'		=> $item->visible,
+							'image'			=> url_GetFromFilePath($this->path.'images/'.$item->filename),
+							'thumbnail'		=> url_GetFromFilePath($this->path.'thumbnails/'.$item->filename),
+						);
+			}
+		} else {
+			$result['error'] = true;
+			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * This function provides JSON group objects instead of standard
+	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
+	 */
+	function json_Group() {
+		define('_OMIT_STATS', 1);
+
+		if (!isset($_REQUEST['id'])) {
+			// invalid params, print blank JSON object with message
+			$result = array(
+						'error'			=> true,
+						'error_message'	=> $this->getLanguageConstant('message_json_error_params'),
+					);
+
+			print json_encode($result);
+			return;
+		}
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = new GalleryGroupManager();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			$result = array(
+						'error'			=> false,
+						'error_message'	=> '',
+						'id'			=> $item->id,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+					);
+		} else {
+			$result = array(
+						'error'			=> true,
+						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+					);
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * This function provides JSON image objects instead of standard
+	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
+	 */
+	function json_GroupList() {
+		define('_OMIT_STATS', 1);
+
+		$manager = new GalleryGroupManager();
+
+		$items = $manager->getItems(
+								$manager->getFieldNames(),
+								array(),
+								array('name')
+							);
+
+		$result = array(
+					'error' 			=> false,
+					'error_message'		=> '',
+					'items'				=> array()
+				);
+
+		if (count($items) > 0) {
+			foreach ($items as $item)
+				$result['items'][] = array(
+							'id'			=> $item->id,
+							'name'			=> $item->name,
+							'description'	=> $item->description
+						);
+		} else {
+			$result['error'] = true;
+			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+		}
+
+		print json_encode($result);
 	}
 
 	/**
@@ -884,5 +1146,6 @@ class GalleryGroupManager extends ItemManager {
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
+		$this->addProperty('description', 'text');
 	}
 }

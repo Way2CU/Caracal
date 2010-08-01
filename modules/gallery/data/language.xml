@@ -27,6 +27,8 @@
 		<constant name="message_group_created">New gallery group was created.</constant>
 		<constant name="message_group_delete">You are about to remove the following group and all images within that group. Are you sure?</constant>
 		<constant name="message_group_deleted">Specified group and images were removed.</constant>
+		<constant name="message_json_error_params">Invalid params specified.</constant>
+		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_title">Title:</constant>

@@ -9,7 +9,7 @@
 		<label>
 			<span><_text constant="label_group" module="gallery"/></span>
 			<select name="group" style="width: 270px;">
-				<_group_list template="groups_option.xml"/>
+				<_group_list template="groups_option.xml" local="1"/>
 			</select>
 		</label>
 		<label>

@@ -59,9 +59,11 @@ div.list_content.thumbnails div.list_item div.options a:hover {
 }
 
 div.list_content.thumbnails div.list_item div.image_holder {
-	display: table-cell;
+	display: block;
 	width: 100px;
 	height: 100px;
+
+	overflow: hidden;
 
 	border: 1px solid #EBEBEB;
 	background-color: white;
