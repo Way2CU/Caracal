@@ -14,7 +14,7 @@ class articles extends Module {
 	 *
 	 * @return _blank
 	 */
-	function articles() {
+	function __construct() {
 		$this->file = __FILE__;
 		parent::Module();
 	}
