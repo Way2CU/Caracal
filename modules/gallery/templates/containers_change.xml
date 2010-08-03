@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<input type="hidden" name="id" value="$params['id']" eval="value"/>
+		<label>
+			<span><_text constant="label_name" module="gallery"/></span>
+			<input type="text" name="name" value="$params['name']" style="width: 360px;" maxlength="50" eval="value"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="gallery"/></span>
+			<textarea name="description" style="width: 360px; height: 150px;"><_var name="$params['description']"/></textarea>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

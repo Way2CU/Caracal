@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="container">
+		<h2><_var name="$params['name']"/></h2>
+		<_group_thumbnail id="$params['id']" eval="id"/>
+		<_var name="$params['description']"/>
+	</div>
+</document>

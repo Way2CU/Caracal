@@ -16,7 +16,7 @@
 		</div>
 		<div class="list_content thumbnails" style="height: 400px">
 			<!-- List Content -->
-			<_image_list/>
+			<_image_list show_invisible="1"/>
 		</div>
 		<script type="text/javascript">
 

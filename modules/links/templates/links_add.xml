@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form id="link_add_form" action="$params['form_action']" eval="action" method="POST" enctype="multipart/form-data" onsubmit="">
 		<label>
 			<span><_text constant="label_text" module="links"/></span>
 			<input type="text" name="text" style="width: 270px;" maxlength="50"/>
@@ -26,7 +26,13 @@
 			<span><_text constant="label_display_limit" module="links"/></span>
 			<input type="text" name="display_limit" value="0" style="width: 50px;" maxlength="30"/>
 		</label>
-		
+		<_if condition="$params['with_images'] == true">
+			<label>
+				<span><_text constant="label_image" module="links"/></span>
+				<input type="file" name="image"/>
+			</label>
+		</_if>
+
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
@@ -35,4 +41,14 @@
 			</button>
 		</div>
 	</form>
+
+	<_if condition="$params['with_images'] == true">
+		<script type="text/javascript">
+			$('#link_add_form').iframePostForm({
+				complete: function(response) {
+					window_SetContent(window_GetById('links_add'), response);
+				}
+			});
+		</script>
+	</_if>
 </document>

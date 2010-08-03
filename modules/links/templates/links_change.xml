@@ -37,7 +37,7 @@
 			<span><_text constant="label_display_limit" module="links"/></span>
 			<input type="text" name="display_limit" value="$params['display_limit']" style="width: 50px;" maxlength="30" eval="value"/>
 		</label>
-		
+
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>

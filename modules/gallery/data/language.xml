@@ -17,6 +17,10 @@
 		<constant name="title_groups_change">Gallery: Change Group</constant>
 		<constant name="title_groups_delete">Gallery: Delete Group</constant>
 		<constant name="title_containers">Gallery: Group Containers</constant>
+		<constant name="title_containers_create">Gallery: Create Container</constant>
+		<constant name="title_containers_change">Gallery: Change Container</constant>
+		<constant name="title_containers_delete">Gallery: Delete Container</constant>
+		<constant name="title_containers_groups">Gallery: Groups within container</constant>
 
 		<constant name="message_image_invalid_type">Invalid file type. Please contact system administrator.</constant>
 		<constant name="message_image_save_error">There was an error saving your image. Check directory permissions.</constant>
@@ -25,10 +29,15 @@
 		<constant name="message_image_saved">Image data was saved.</constant>
 		<constant name="message_image_delete">You are about to remove the following image. Are you sure?</constant>
 		<constant name="message_image_deleted">Specified image was removed.</constant>
-		<constant name="message_group_renamed">Specified group was renamed.</constant>
+		<constant name="message_group_changed">Specified group data was changed.</constant>
 		<constant name="message_group_created">New gallery group was created.</constant>
 		<constant name="message_group_delete">You are about to remove the following group and all images within that group. Are you sure?</constant>
 		<constant name="message_group_deleted">Specified group and images were removed.</constant>
+		<constant name="message_container_changed">Specified container data was changed.</constant>
+		<constant name="message_container_created">New group container was created.</constant>
+		<constant name="message_container_delete">You are about to remove the following container and all group relations to it (groups or images will not be removed). Are you sure?</constant>
+		<constant name="message_container_deleted">Specified group container were removed.</constant>
+		<constant name="message_container_groups_updated">Group memberships were updated.</constant>
 		<constant name="message_json_error_params">Invalid params specified.</constant>
 		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
 
@@ -40,11 +49,14 @@
 		<constant name="label_visible">Image visible</constant>
 
 		<constant name="column_group_name">Name</constant>
+		<constant name="column_container_name">Name</constant>
 		<constant name="column_image_list">Images&lt;small style="padding-left: 5px; color: #7F7F7F;"&gt;(click for more options)&lt;/small&gt;</constant>
 
 		<constant name="upload_images">Upload image</constant>
 		<constant name="create_group">Create group</constant>
+		<constant name="create_container">Create container</constant>
 		<constant name="groups">Image groups</constant>
+		<constant name="container_groups">Groups</constant>
 	</language>
 	<language short="he">
 		<constant name="menu_gallery">Gallery</constant>
@@ -61,6 +73,11 @@
 		<constant name="title_groups_create">גלריה: צור קבוצה</constant>
 		<constant name="title_groups_change">גלריה: שנה קבוצה</constant>
 		<constant name="title_groups_delete">גלריה: מחק קבוצה</constant>
+		<constant name="title_containers">Gallery: Group Containers</constant>
+		<constant name="title_containers_create">Gallery: Create Container</constant>
+		<constant name="title_containers_change">Gallery: Change Container</constant>
+		<constant name="title_containers_delete">Gallery: Delete Container</constant>
+		<constant name="title_containers_groups">Gallery: Groups within container</constant>
 
 		<constant name="message_image_invalid_type">סוג קובץ לא נכון, אנא פנה למנהל המערכת</constant>
 		<constant name="message_image_save_error">הייתה בעיה בשמירת התמונה, בדור הרשאות לתקייה</constant>
@@ -69,10 +86,17 @@
 		<constant name="message_image_saved">מידע התמונה נשמר</constant>
 		<constant name="message_image_delete">אתה עומד להסיר תמונה, אתה בטוח?</constant>
 		<constant name="message_image_deleted">התמונה הוסרה</constant>
-		<constant name="message_group_renamed">הקבןצה הוסרה</constant>
+		<constant name="message_group_changed">Specified group data was changed.</constant>
 		<constant name="message_group_created">קבוצה נוצרה בהצלחה</constant>
 		<constant name="message_group_delete">אתה עומד להסיר את הקבוצה והתמונות באותה קבוצה - אתה בטוח?</constant>
 		<constant name="message_group_deleted">הקבוצה והתמונות הוסרו</constant>
+		<constant name="message_container_changed">Specified group data was changed.</constant>
+		<constant name="message_container_created">New gallery group was created.</constant>
+		<constant name="message_container_delete">You are about to remove the following container and all group relations to it (groups or images will not be removed). Are you sure?</constant>
+		<constant name="message_container_deleted">Specified group container were removed.</constant>
+		<constant name="message_container_groups_updated">Group memberships were updated.</constant>
+		<constant name="message_json_error_params">Invalid params specified.</constant>
+		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_title">כותרת:</constant>
@@ -82,10 +106,13 @@
 		<constant name="label_visible">התמונה נראית</constant>
 
 		<constant name="column_group_name">שם</constant>
+		<constant name="column_container_name">Name</constant>
 		<constant name="column_image_list">תמונות&lt;small style="padding-left: 5px; color: #7F7F7F;"&gt;(לחץ לאופציות נוספות)&lt;/small&gt;</constant>
 
 		<constant name="upload_images">העלה תמונה</constant>
 		<constant name="create_group">צור קבוצה</constant>
+		<constant name="create_container">Create container</constant>
 		<constant name="groups">קבוצות של תמונות</constant>
+		<constant name="container_groups">Groups</constant>
 	</language>
 </document>

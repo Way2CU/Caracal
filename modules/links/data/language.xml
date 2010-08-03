@@ -50,6 +50,7 @@
 		<constant name="label_display_limit">Display limit (0 for none):</constant>
 		<constant name="label_sponsored_clicks">Sponsored clicks:</constant>
 		<constant name="label_total_clicks">Total clicks:</constant>
+		<constant name="label_image">Image:</constant>
 
 		<!-- Other -->
 		<constant name="links">Links</constant>
@@ -108,6 +109,7 @@
 		<constant name="label_display_limit">הצג מגבלות (0 ללא מגבלות):</constant>
 		<constant name="label_sponsored_clicks">קליקים ממומנים:</constant>
 		<constant name="label_total_clicks">סך קליקים:</constant>
+		<constant name="label_image">Image:</constant>
 
 		<!-- Other -->
 		<constant name="links">קישורים</constant>

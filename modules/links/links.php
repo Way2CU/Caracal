@@ -134,6 +134,7 @@ class links extends Module {
 				`display_limit` int(11) NOT NULL DEFAULT '0',
 				`sponsored_clicks` int(11) NOT NULL DEFAULT '0',
 				`total_clicks` int(11) NOT NULL DEFAULT '0',
+				`image` int(11),
 				PRIMARY KEY (`id`),
 				KEY `sponsored` (`sponsored`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -156,6 +157,9 @@ class links extends Module {
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
+
+		if (!array_key_exists('thumbnail_size', $this->settings))
+			$this->saveSetting('thumbnail_size', '100');
 	}
 
 	/**
@@ -278,10 +282,13 @@ class links extends Module {
 	 * @param integer $level
 	 */
 	function addLink($level) {
+		global $ModuleHandler;
+
 		$template = new TemplateHandler('links_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
+					'with_images'	=> $ModuleHandler->moduleExists('gallery'),
 					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
 					'cancel_action'	=> window_Close('links_add')
 				);
@@ -327,16 +334,42 @@ class links extends Module {
 	 * @param integer $level
 	 */
 	function saveLink($level) {
+		global $ModuleHandler;
+
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
 			'text' 			=> fix_chars($_REQUEST['text']),
 			'description' 	=> fix_chars($_REQUEST['description']),
 			'url' 			=> fix_chars($_REQUEST['url']),
-			'external' 		=> fix_id(fix_chars($_REQUEST['external'])),
-			'sponsored' 	=> fix_id(fix_chars($_REQUEST['sponsored'])),
+			'external' 		=> isset($_REQUEST['external']) ? 1 : 0,
+			'sponsored' 	=> isset($_REQUEST['sponsored']) ? 1 : 0,
 			'display_limit'	=> fix_id(fix_chars($_REQUEST['display_limit'])),
 		);
+
+		$gallery_addon = '';
+
+		// if images are in use and specified
+		if ($ModuleHandler->moduleExists('gallery') && isset($_FILES['image'])) {
+			$gallery = $ModuleHandler->getObjectFromName('gallery');
+			$gallery_manager = new GalleryManager();
+
+			$result = $gallery->_createImage('image', $this->settings['thumbnail_size']);
+
+			if (!$result['error']) {
+				$image_data = array(
+							'title'			=> $data['text'],
+							'size'			=> $_FILES['image']['size'],
+							'filename'		=> $result['filename'],
+							'visible'		=> 0,
+						);
+
+				$gallery_manager->insertData($image_data);
+
+				$data['image'] = $gallery_manager->getItemValue('id', array('filename' => $result['filename']));
+				$gallery_addon = ";".window_ReloadContent('gallery_images');
+			}
+		}
 
 		$manager = new LinksManager();
 
@@ -356,7 +389,7 @@ class links extends Module {
 					'button'	=> $this->getLanguageConstant('close'),
 					'action'	=> window_Close($window_name).";".
 									window_ReloadContent('links_list').";".
-									window_ReloadContent('links_overview')
+									window_ReloadContent('links_overview').$gallery_addon
 				);
 
 		$template->restoreXML();
@@ -405,9 +438,24 @@ class links extends Module {
 	 * @param integer $level
 	 */
 	function deleteLink_Commit($level) {
+		global $ModuleHandler;
+
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new LinksManager();
 		$membership_manager = new LinkMembershipManager();
+		$gallery_addon = '';
+
+		// if we used image with this, we need to remove that too
+		if ($ModuleHandler->moduleExists('gallery')) {
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+			if (is_object($item) && !empty($item->image)) {
+				$gallery_manager = new GalleryManager();
+				$gallery_manager->deleteData(array('id' => $item->image));
+			}
+
+			$gallery_addon = ";".window_ReloadContent('gallery_images');
+		}
 
 		$manager->deleteData(array('id' => $id));
 		$membership_manager->deleteData(array('link' => $id));
@@ -418,7 +466,7 @@ class links extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant("message_link_deleted"),
 					'button'	=> $this->getLanguageConstant("close"),
-					'action'	=> window_Close('links_delete').";".window_ReloadContent('links_list')
+					'action'	=> window_Close('links_delete').";".window_ReloadContent('links_list').$gallery_addon
 				);
 
 		$template->restoreXML();
@@ -829,6 +877,8 @@ class links extends Module {
 	 * @param array $children
 	 */
 	function tag_Link($level, $params, $children) {
+		global $ModuleHandler;
+
 		$id = isset($params['id']) ? $params['id'] : fix_id(fix_chars($_REQUEST['id']));
 		$manager = new LinksManager();
 
@@ -852,6 +902,25 @@ class links extends Module {
 			if ($percent > 100) $percent = 100;
 		}
 
+		// get thumbnail image if exists
+		$image = null;
+		$thumbnail = null;
+
+		if ($ModuleHandler->moduleExists('gallery')) {
+			$gallery = $ModuleHandler->getObjectFromName('gallery');
+			$gallery_manager = new GalleryManager();
+
+			$image_item = $gallery_manager->getSingleItem(
+												$gallery_manager->getFieldNames(),
+												array('id' => $item->image)
+											);
+
+			if (is_object($image_item)) {
+				$image = $gallery->_getImageURL($image_item);
+				$thumbnail = $gallery->_getThumbnailURL($image_item);
+			}
+		}
+
 		$params = array(
 					'id'				=> $item->id,
 					'text'				=> $item->text,
@@ -866,6 +935,8 @@ class links extends Module {
 					'display_percent'	=> $percent,
 					'sponsored_clicks'	=> $item->sponsored_clicks,
 					'total_clicks'		=> $item->total_clicks,
+					'thumbnail'			=> $thumbnail,
+					'image'				=> $image
 				);
 
 		$template->restoreXML();
@@ -1099,6 +1170,7 @@ class LinksManager extends ItemManager {
 		$this->addProperty('display_limit', 'integer');
 		$this->addProperty('sponsored_clicks', 'integer');
 		$this->addProperty('total_clicks', 'integer');
+		$this->addProperty('image', 'integer');
 	}
 }
 
