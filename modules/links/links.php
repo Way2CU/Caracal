@@ -778,7 +778,9 @@ class links extends Module {
 	 * @param array $children
 	 */
 	function tag_GroupLinks($level, $params, $children) {
-		$group = isset($params['group']) ? $params['group'] : fix_id(fix_chars($_REQUEST['id']));
+		if (!isset($params['group'])) return;
+
+		$group = fix_id($params['group']);
 		$link_manager = new LinksManager();
 		$membership_manager = new LinkMembershipManager();
 
@@ -797,25 +799,26 @@ class links extends Module {
 		$template = new TemplateHandler('groups_links_item.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
-		foreach($links as $link) {
-			$params = array(
-							'id'				=> $link->id,
-							'in_group'			=> in_array($link->id, $link_ids) ? 1 : 0,
-							'text'				=> $link->text,
-							'description'		=> $link->description,
-							'url'				=> $link->url,
-							'external'			=> $link->external,
-							'sponsored'			=> $link->sponsored,
-							'sponsored_character' => ($link->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
-							'display_limit'		=> $link->display_limit,
-							'sponsored_clicks'	=> $link->sponsored_clicks,
-							'total_clicks'		=> $link->total_clicks,
-						);
+		if (count($links) > 0)
+			foreach($links as $link) {
+				$params = array(
+								'id'				=> $link->id,
+								'in_group'			=> in_array($link->id, $link_ids) ? 1 : 0,
+								'text'				=> $link->text,
+								'description'		=> $link->description,
+								'url'				=> $link->url,
+								'external'			=> $link->external,
+								'sponsored'			=> $link->sponsored,
+								'sponsored_character' => ($link->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+								'display_limit'		=> $link->display_limit,
+								'sponsored_clicks'	=> $link->sponsored_clicks,
+								'total_clicks'		=> $link->total_clicks,
+							);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse($level);
-		}
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);
+			}
 	}
 
 	/**
