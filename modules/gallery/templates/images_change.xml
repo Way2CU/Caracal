@@ -24,7 +24,12 @@
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="gallery"/></span>
-			<input type="checkbox" name="visible" checked="checked"/>
+			<_if condition="$params['visible'] == 1">
+				<input type="checkbox" name="visible" checked="checked"/>
+			</_if>
+			<_if condition="$params['visible'] != 1">
+				<input type="checkbox" name="visible"/>
+			</_if>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>

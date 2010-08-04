@@ -87,7 +87,7 @@
 		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
 		<!-- Column Names -->
-		<constant name="column_options">Options</constant>
+		<constant name="column_options">אפשרויות</constant>
 
 		<!-- Buttons -->
 		<constant name="add">הוסף</constant>

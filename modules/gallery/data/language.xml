@@ -59,25 +59,25 @@
 		<constant name="container_groups">Groups</constant>
 	</language>
 	<language short="he">
-		<constant name="menu_gallery">Gallery</constant>
-		<constant name="menu_images">All images</constant>
-		<constant name="menu_groups">Image groups</constant>
-		<constant name="menu_containers">Group containers</constant>
+		<constant name="menu_gallery">גלריה</constant>
+		<constant name="menu_images">כל התמונות</constant>
+		<constant name="menu_groups">קבוצות תמונות</constant>
+		<constant name="menu_containers">קטגוריות של קבוצות</constant>
 
 		<constant name="title_image_options">גלריה: אפשרויות תמונה</constant>
 		<constant name="title_images">גלריה: תמונונת</constant>
 		<constant name="title_images_upload">גלריה: העלה תמונה</constant>
 		<constant name="title_images_change">גלריה: שנה מידע תמונה</constant>
 		<constant name="title_images_delete">גלריה: מחק תמונה</constant>
-		<constant name="title_groups">Gallery: קבוצות</constant>
+		<constant name="title_groups">גלריה: קבוצות</constant>
 		<constant name="title_groups_create">גלריה: צור קבוצה</constant>
 		<constant name="title_groups_change">גלריה: שנה קבוצה</constant>
 		<constant name="title_groups_delete">גלריה: מחק קבוצה</constant>
-		<constant name="title_containers">Gallery: Group Containers</constant>
-		<constant name="title_containers_create">Gallery: Create Container</constant>
-		<constant name="title_containers_change">Gallery: Change Container</constant>
-		<constant name="title_containers_delete">Gallery: Delete Container</constant>
-		<constant name="title_containers_groups">Gallery: Groups within container</constant>
+		<constant name="title_containers">גלריה: קטגוריות</constant>
+		<constant name="title_containers_create">גלריה: צור קטגוריה</constant>
+		<constant name="title_containers_change">גלריה: שנה קטגוריה</constant>
+		<constant name="title_containers_delete">גלריה: מחק קטגוריה Container</constant>
+		<constant name="title_containers_groups">גלריה: קבוצות בתוך קטגוקיות</constant>
 
 		<constant name="message_image_invalid_type">סוג קובץ לא נכון, אנא פנה למנהל המערכת</constant>
 		<constant name="message_image_save_error">הייתה בעיה בשמירת התמונה, בדור הרשאות לתקייה</constant>
@@ -86,17 +86,17 @@
 		<constant name="message_image_saved">מידע התמונה נשמר</constant>
 		<constant name="message_image_delete">אתה עומד להסיר תמונה, אתה בטוח?</constant>
 		<constant name="message_image_deleted">התמונה הוסרה</constant>
-		<constant name="message_group_changed">Specified group data was changed.</constant>
+		<constant name="message_group_changed">מידע הקבוצה שונה.</constant>
 		<constant name="message_group_created">קבוצה נוצרה בהצלחה</constant>
 		<constant name="message_group_delete">אתה עומד להסיר את הקבוצה והתמונות באותה קבוצה - אתה בטוח?</constant>
 		<constant name="message_group_deleted">הקבוצה והתמונות הוסרו</constant>
-		<constant name="message_container_changed">Specified group data was changed.</constant>
-		<constant name="message_container_created">New gallery group was created.</constant>
-		<constant name="message_container_delete">You are about to remove the following container and all group relations to it (groups or images will not be removed). Are you sure?</constant>
-		<constant name="message_container_deleted">Specified group container were removed.</constant>
-		<constant name="message_container_groups_updated">Group memberships were updated.</constant>
+		<constant name="message_container_changed">מידע התמונות שונה=.</constant>
+		<constant name="message_container_created">קבוצה חדשה נוצרה</constant>
+		<constant name="message_container_delete">אתה עומד למחוק קטגוקיהת השיוכים לתמונות וקבוצות ימחקו - התמונות והקבוצות יישארו - האם אתה בטוח?</constant>
+		<constant name="message_container_deleted">קטגוריה נמחקה</constant>
+		<constant name="message_container_groups_updated">שיוך לקבוצה עודכן</constant>
 		<constant name="message_json_error_params">Invalid params specified.</constant>
-		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
+		<constant name="message_json_error_object">האובייקט לא נמנצא</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_title">כותרת:</constant>
@@ -111,8 +111,8 @@
 
 		<constant name="upload_images">העלה תמונה</constant>
 		<constant name="create_group">צור קבוצה</constant>
-		<constant name="create_container">Create container</constant>
+		<constant name="create_container">צור קטגוריה</constant>
 		<constant name="groups">קבוצות של תמונות</constant>
-		<constant name="container_groups">Groups</constant>
+		<constant name="container_groups">קבוצות</constant>
 	</language>
 </document>

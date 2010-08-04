@@ -443,7 +443,7 @@ class gallery extends Module {
 		$title = fix_chars($_REQUEST['title']);
 		$group = empty($_REQUEST['group']) ? 'null' : fix_id($_REQUEST['group']);
 		$description = fix_chars($_REQUEST['description']);
-		$visible = $_REQUEST['visible'] == 'on' ? 1 : 0;
+		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 
 		$data = array(
 					'title'			=> $title,
@@ -1087,13 +1087,7 @@ class gallery extends Module {
 		}
 
 		$manager = new GalleryGroupManager();
-		$item = $manager->getSingleItem(
-								$manager->getFieldNames(),
-								array(
-									'id' 		=> $id,
-									'visible'	=> 1
-								)
-							);
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
