@@ -86,9 +86,11 @@ class youtube extends Module {
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `youtube_video` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`text_id` VARCHAR (32) NULL ,
 				`video_id` varchar(11) COLLATE utf8_bin NOT NULL,
 				`title` varchar(255) COLLATE utf8_bin NOT NULL,
-				PRIMARY KEY (`id`)
+				PRIMARY KEY (`id`),
+				INDEX (`text_id`)
 			) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 
 		if ($db_active == 1) $db->query($sql);
@@ -202,6 +204,7 @@ class youtube extends Module {
 
 		$params = array(
 					'id'			=> $video->id,
+					'text_id'		=> unfix_chars($video->text_id),
 					'video_id'		=> unfix_chars($video->video_id),
 					'title'			=> unfix_chars($video->title),
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
@@ -219,12 +222,14 @@ class youtube extends Module {
 	 */
 	function saveVideo($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
+		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
 		$title = fix_chars($_REQUEST['title']);
 
 		$manager = new YouTube_VideoManager();
 
 		$data = array(
+					'text_id'	=> $text_id,
 					'video_id'	=> $video_id,
 					'title' 	=> $title
 				);
@@ -370,7 +375,20 @@ class youtube extends Module {
 	function tag_Video($level, $params, $children) {
 		global $ModuleHandler;
 
-		$video_id = isset($params['id']) ? $params['id'] : fix_chars($_REQUEST['video_id']);
+		$video = null;
+		$manager = new YouTube_VideoManager();
+
+		if (isset($params['id'])) {
+			// video is was specified
+			$video = $manager->getSingleItem($manager->getFieldNames(), array('video_id' => $params['id']));
+
+		} else if (isset($params['text_id'])) {
+			// text id was specified
+			$video = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $params['text_id']));
+		}
+
+		// no id was specified
+		if (!is_object($video)) return;
 
 		if ($ModuleHandler->moduleExists('swfobject')) {
 			$module = $ModuleHandler->getObjectFromName('swfobject');
@@ -378,7 +396,7 @@ class youtube extends Module {
 			if (isset($params['embed']) && $params['embed'] == '1')
 				$module->embedSWF(
 								$level,
-								$this->getEmbedURL($video_id),
+								$this->getEmbedURL($video->video_id),
 								$params['target'],
 								isset($params['width']) ? $params['width'] : 320,
 								isset($params['height']) ? $params['height'] : 240
@@ -498,6 +516,7 @@ class YouTube_VideoManager extends ItemManager {
 		parent::ItemManager('youtube_video');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('video_id', 'varchar');
 		$this->addProperty('title', 'varchar');
 	}

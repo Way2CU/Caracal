@@ -4,6 +4,10 @@
 	<form action="$params['form_action']" eval="action" method="POST">
 		<input type="hidden" name="id" value="$params['id']" eval="value"/>
 		<label>
+			<span><_text constant="label_text_id" module="youtube"/></span>
+			<input type="text" name="text_id" style="width: 100px;" maxlength="32" value="$params['text_id']" eval="value"/>
+		</label>
+		<label>
 			<span><_text constant="label_id" module="youtube"/></span>
 			<input type="text" name="video_id" style="width: 100px;" maxlength="11" value="$params['video_id']" eval="value"/>
 		</label>
