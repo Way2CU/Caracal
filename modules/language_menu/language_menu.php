@@ -77,9 +77,15 @@ class language_menu extends Module {
 		$template = new TemplateHandler($template_file, $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
+		$link_params = array();
+		foreach($_GET as $key => $value)
+			if ($key != 'language')
+				$link_params[$key] = escape_chars($value);
+
 		if (count($list) > 0)
 			foreach ($list as $short=>$long) {
-				$link = url_Make($action, $section, array('language', $short));
+				$link_params['language'] = $short;
+				$link = url_MakeFromArray($link_params);
 
 				$params = array(
 					'short_name'	=> $short,

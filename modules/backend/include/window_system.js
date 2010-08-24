@@ -179,12 +179,14 @@ function Window(id, width, title, can_close, url) {
 			var type = field_types[index];
 
 			$(form).find(type).each(function() {
-				data[$(this).attr('name')] = $(this).val();
+				if ($(this).attr('type') != 'checkbox')
+					data[$(this).attr('name')] = $(this).val(); else
+					data[$(this).attr('name')] = this.checked ? 1 : 0;
 			});
 		}
 
 		// send data to server
- 		$.ajax({
+		$.ajax({
 			cache: false,
 			context: this,
 			dataType: 'html',
@@ -230,9 +232,32 @@ function Window(id, width, title, can_close, url) {
 
 
 		// attach events
-		self.$content.delegate('form', 'submit', function(event) {
-			event.preventDefault();
-			self.submitForm(this);
+		self.$content.find('form').each(function() {
+			if ($(this).find('input:file').length == 0) {
+				// normal case submission without file uploads
+				$(this).submit(function(event) {
+					event.preventDefault();
+					self.submitForm(this);
+				});
+
+			} else {
+				// submission with file uploads
+				self.$container.addClass('loading');
+
+				var $iframe = self.getUploaderFrame();
+				$(this).attr('target', $iframe.attr('id'));
+
+				// handle frame load event
+				$iframe.one('load', function() {
+					var content = $iframe.contents().find('body');
+
+					// trigger original form event
+					self.contentLoaded(content.html());
+
+					// reset frame content in order to prevent errors with other events
+					content.html('');
+				});
+			}
 		});
 
 		// remove loading indicator
@@ -269,6 +294,29 @@ function Window(id, width, title, can_close, url) {
 
 		// remove loading indicator
 		self.$container.removeClass('loading');
+	}
+
+	/**
+	 * Return jQuery object of uploader frame. If frame doesn't exists, we crate it
+	 *
+	 * @return resource
+	 */
+	this.getUploaderFrame = function() {
+		var $result = $('iframe#file_upload_frame');
+
+		if ($result.length == 0) {
+			// element does not exist, create it
+			$result = $('<iframe>');
+
+			$result
+				.attr('name', 'file_upload_frame')
+				.attr('id', 'file_upload_frame')
+				.css({display: 'none'});
+
+			$('body').append($result);
+		}
+
+		return $result;
 	}
 }
 

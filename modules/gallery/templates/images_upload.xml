@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form id="image_upload_form" action="$params['form_action']" eval="action" method="POST" enctype="multipart/form-data" onsubmit="">
+	<form id="image_upload_form" action="$params['form_action']" eval="action" method="POST" enctype="multipart/form-data">
 		<label>
 			<span><_text constant="label_title" module="gallery"/></span>
-			<input type="text" name="title" style="width: 270px;" maxlength="255"/>
+			<input type="text" name="title" class="multi-language" style="width: 270px;" maxlength="255"/>
 		</label>
 		<label>
 			<span><_text constant="label_group" module="gallery"/></span>
@@ -19,7 +19,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="gallery"/></span>
-			<textarea name="description" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="gallery"/></span>
@@ -33,11 +33,6 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		$('#image_upload_form').iframePostForm({
-			complete: function(response) {
-				window_SetContent(window_GetById('gallery_images_upload'), response);
-			}
-		});
+		new LanguageSelector('image_upload_form');
 	</script>
-
 </document>

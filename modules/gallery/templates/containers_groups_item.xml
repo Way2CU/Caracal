@@ -10,7 +10,7 @@
 				<_if condition="$params['in_group'] == 0">
 					<input type="checkbox" name="'group_id_'.$params['id']" eval="name" value="1"/>
 				</_if>
-				<_var name="$params['name']"/>
+				<_var name="$params['name'][$language]"/>
 			</label>
 		</span>
 	</div>

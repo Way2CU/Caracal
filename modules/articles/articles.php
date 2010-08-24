@@ -33,6 +33,18 @@ class articles extends Module {
 					$this->tag_Article($level, $params, $children);
 					break;
 
+				case 'show_list':
+					$this->tag_ArticleList($level, $params, $children);
+					break;
+
+				case 'show_group':
+					$this->tag_Group($level, $params, $children);
+					break;
+
+				case 'show_group_list':
+					$this->tag_GroupList($level, $params, $children);
+					break;
+
 				case 'show_rating_image':
 					$this->tag_ArticleRatingImage($level, $params, $children);
 					break;
@@ -659,10 +671,18 @@ class articles extends Module {
 		$manager = new ArticleManager();
 		$admin_manager = new AdministratorManager();  // session module is pre-load required module
 
-		$only_visible = isset($tag_params['only_visible']) ? $tag_params['only_visible'] == 1 : false;
 		$conditions = array();
+		$only_visible = isset($tag_params['only_visible']) ? $tag_params['only_visible'] == 1 : false;
+
+		if (isset($tag_params['group'])) {
+			$group_manager = new ArticleGroupManager();
+			$group = $group_manager->getItemValue('id', array('text_id' => escape_chars($tag_params['group'])));
+		} else {
+			$group = null;
+		}
 
 		if ($only_visible) $conditions['visible'] = 1;
+		if (!is_null($group)) $conditions['group'] = $group;
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 

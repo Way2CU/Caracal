@@ -176,15 +176,22 @@ class gallery extends Module {
 	 * Event triggered upon module initialization
 	 */
 	function onInit() {
-		global $db_active, $db;
+		global $LanguageHandler, $db_active, $db;
+
+		$list = $LanguageHandler->getLanguages(false);
 
 		$sql = "
 			CREATE TABLE `gallery` (
 				`id` int(11) NOT NULL AUTO_INCREMENT ,
-				`group` int(11) DEFAULT NULL ,
-				`title` VARCHAR( 255 ) NOT NULL ,
-				`description` TEXT NOT NULL ,
-				`size` BIGINT NOT NULL ,
+				`group` int(11) DEFAULT NULL ,";
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+
+		foreach($list as $language)
+			$sql .= "`description_{$language}` TEXT NOT NULL ,";
+
+		$sql .= "`size` BIGINT NOT NULL ,
 				`filename` VARCHAR( 40 ) NOT NULL ,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
@@ -196,18 +203,30 @@ class gallery extends Module {
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `gallery_groups` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`name` varchar(50) COLLATE utf8_bin NOT NULL,
-				`description` TEXT NOT NULL ,
-				PRIMARY KEY (`id`)
+				`text_id` varchar(32) COLLATE utf8_bin NULL,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`description_{$language}` TEXT NOT NULL,";
+
+		$sql .= "PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `gallery_containers` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`name` varchar(50) COLLATE utf8_bin NOT NULL,
-				`description` TEXT NOT NULL ,
-				PRIMARY KEY (`id`)
+				`text_id` varchar(32) COLLATE utf8_bin NULL,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`description_{$language}` TEXT NOT NULL,";
+
+		$sql .= "PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
@@ -366,9 +385,9 @@ class gallery extends Module {
 	function uploadImage_Save($level) {
 		$manager = new GalleryManager();
 
-		$title = fix_chars($_REQUEST['title']);
+		$title = fix_chars($this->getMultilanguageField('title'));
 		$group = fix_id($_REQUEST['group']);
-		$description = fix_chars($_REQUEST['description']);
+		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) ? 1 : 0;
 
 		$result = $this->_createImage('image', $this->settings['thumbnail_size']);
@@ -418,7 +437,7 @@ class gallery extends Module {
 					'id'			=> $item->id,
 					'group'			=> $item->group,
 					'title'			=> unfix_chars($item->title),
-					'description'	=> unfix_chars($item->description),
+					'description'	=> $item->description,
 					'size'			=> $item->size,
 					'filename'		=> $item->filename,
 					'timestamp'		=> $item->timestamp,
@@ -440,9 +459,9 @@ class gallery extends Module {
 		$manager = new GalleryManager();
 
 		$id = fix_id($_REQUEST['id']);
-		$title = fix_chars($_REQUEST['title']);
+		$title = fix_chars($this->getMultilanguageField('title'));
 		$group = empty($_REQUEST['group']) ? 'null' : fix_id($_REQUEST['group']);
-		$description = fix_chars($_REQUEST['description']);
+		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 
 		$data = array(
@@ -474,6 +493,8 @@ class gallery extends Module {
 	 * @param integer $level
 	 */
 	function deleteImage($level) {
+		global $language;
+
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new GalleryManager();
 
@@ -484,7 +505,7 @@ class gallery extends Module {
 
 		$params = array(
 					'message'		=> $this->getLanguageConstant("message_image_delete"),
-					'name'			=> $item->title,
+					'name'			=> $item->title[$language],
 					'yes_text'		=> $this->getLanguageConstant("delete"),
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
@@ -584,8 +605,9 @@ class gallery extends Module {
 
 		$params = array(
 					'id'			=> $item->id,
+					'text_id'		=> unfix_chars($item->text_id),
 					'name'			=> unfix_chars($item->name),
-					'description'	=> unfix_chars($item->description),
+					'description'	=> $item->description,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('gallery_groups_change')
 				);
@@ -603,8 +625,9 @@ class gallery extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
-			'name' 			=> fix_chars($_REQUEST['name']),
-			'description' 	=> fix_chars($_REQUEST['description']),
+			'text_id'		=> fix_chars($_REQUEST['text_id']),
+			'name' 			=> fix_chars($this->getMultilanguageField('name')),
+			'description' 	=> escape_chars($this->getMultilanguageField('description')),
 		);
 
 		$manager = new GalleryGroupManager();
@@ -638,6 +661,8 @@ class gallery extends Module {
 	 * @param integer $level
 	 */
 	function deleteGroup($level) {
+		global $language;
+
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new GalleryGroupManager();
 
@@ -648,7 +673,7 @@ class gallery extends Module {
 
 		$params = array(
 					'message'		=> $this->getLanguageConstant("message_group_delete"),
-					'name'			=> $item->name,
+					'name'			=> $item->name[$language],
 					'yes_text'		=> $this->getLanguageConstant("delete"),
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
@@ -753,8 +778,9 @@ class gallery extends Module {
 
 		$params = array(
 					'id'			=> $item->id,
+					'text_id'		=> unfix_chars($item->text_id),
 					'name'			=> unfix_chars($item->name),
-					'description'	=> unfix_chars($item->description),
+					'description'	=> $item->description,
 					'form_action'	=> backend_UrlMake($this->name, 'containers_save'),
 					'cancel_action'	=> window_Close('gallery_containers_change')
 				);
@@ -772,8 +798,9 @@ class gallery extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
-			'name' 			=> fix_chars($_REQUEST['name']),
-			'description' 	=> fix_chars($_REQUEST['description']),
+			'text_id'		=> fix_chars($_REQUEST['text_id']),
+			'name' 			=> fix_chars($this->getMultilanguageField('name')),
+			'description' 	=> escape_chars($this->getMultilanguageField('description')),
 		);
 
 		$manager = new GalleryContainerManager();
@@ -807,6 +834,8 @@ class gallery extends Module {
 	 * @param integer $level
 	 */
 	function deleteContainer($level) {
+		global $language;
+
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = new GalleryContainerManager();
 
@@ -817,7 +846,7 @@ class gallery extends Module {
 
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_container_delete'),
-					'name'			=> $item->name,
+					'name'			=> $item->name[$language],
 					'yes_text'		=> $this->getLanguageConstant('delete'),
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
@@ -992,8 +1021,15 @@ class gallery extends Module {
 		if (!isset($tag_params['show_invisible']))
 			$conditions['visible'] = 1;
 
-		if (isset($tag_params['group']))
-			$conditions['group'] = fix_id($tag_params['group']);
+		if (isset($tag_params['group_id']))
+			$conditions['group'] = $tag_params['group_id'];
+
+		if (isset($tag_params['group'])) {
+			$group_manager = new GalleryGroupManager();
+
+			$group_id = $group_manager->getItemValue('id', array('text_id' => $tag_params['group']));
+			$conditions['group'] = $group_id;
+		}
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
@@ -1104,6 +1140,7 @@ class gallery extends Module {
 		if (is_object($item)) {
 			$params = array(
 						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 					);
@@ -1121,6 +1158,8 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	function tag_GroupList($level, $tag_params, $children) {
+		global $language;
+
 		$manager = new GalleryGroupManager();
 
 		$conditions = array();
@@ -1147,7 +1186,7 @@ class gallery extends Module {
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								$conditions,
-								array('name')
+								array('name_'.$language)
 							);
 
 		if (isset($tag_params['template'])) {
@@ -1168,6 +1207,7 @@ class gallery extends Module {
 			foreach ($items as $item) {
 				$params = array(
 							'id'			=> $item->id,
+							'text_id'		=> $item->text_id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
 							'selected'		=> $selected,
@@ -1243,6 +1283,7 @@ class gallery extends Module {
 		if (is_object($item)) {
 			$params = array(
 						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 					);
@@ -1260,12 +1301,14 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	function tag_ContainerList($level, $tag_params, $children) {
+		global $language;
+
 		$manager = new GalleryContainerManager();
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								array(),
-								array('name')
+								array('name_'.$language)
 							);
 
 		if (isset($tag_params['template'])) {
@@ -1288,6 +1331,7 @@ class gallery extends Module {
 		foreach ($items as $item) {
 			$params = array(
 						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 						'selected'		=> $selected,
@@ -1355,6 +1399,8 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	function tag_ContainerGroups($level, $tag_params, $children) {
+		global $language;
+
 		if (!isset($tag_params['container'])) return;
 
 		$container = fix_id($tag_params['container']);
@@ -1371,7 +1417,7 @@ class gallery extends Module {
 			foreach($memberships as $membership)
 				$gallery_ids[] = $membership->group;
 
-		$items = $manager->getItems($manager->getFieldNames(), array(), array('name'));
+		$items = $manager->getItems($manager->getFieldNames(), array(), array('name_'.$language));
 
 		$template = new TemplateHandler('containers_groups_item.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1794,8 +1840,8 @@ class GalleryManager extends ItemManager {
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('group', 'int');
-		$this->addProperty('title', 'varchar');
-		$this->addProperty('description', 'text');
+		$this->addProperty('title', 'ml_varchar');
+		$this->addProperty('description', 'ml_text');
 		$this->addProperty('size', 'bigint');
 		$this->addProperty('filename', 'varchar');
 		$this->addProperty('timestamp', 'timestamp');
@@ -1827,8 +1873,9 @@ class GalleryGroupManager extends ItemManager {
 		parent::__construct('gallery_groups');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('description', 'text');
+		$this->addProperty('text_id', 'varchar');
+		$this->addProperty('name', 'ml_varchar');
+		$this->addProperty('description', 'ml_text');
 	}
 }
 
@@ -1838,8 +1885,9 @@ class GalleryContainerManager extends ItemManager {
 		parent::__construct('gallery_containers');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('description', 'text');
+		$this->addProperty('text_id', 'varchar');
+		$this->addProperty('name', 'ml_varchar');
+		$this->addProperty('description', 'ml_text');
 	}
 }
 

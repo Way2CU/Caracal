@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" eval="action" method="POST" id="image_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_title" module="gallery"/></span>
-			<input type="text" name="title" style="width: 270px;" maxlength="255" value="$params['title']" eval="value"/>
+			<input type="text" name="title" class="multi-language" style="width: 270px;" maxlength="255"/>
+			<_language_data param="title"/>
 		</label>
 		<label>
 			<span><_text constant="label_group" module="gallery"/></span>
@@ -20,7 +21,8 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="gallery"/></span>
-			<textarea name="description" style="width: 360px; height: 150px;"><_var name="$params['description']"/></textarea>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+			<_language_data param="description"/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="gallery"/></span>
@@ -38,4 +40,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		new LanguageSelector('image_change_form');
+	</script>
 </document>

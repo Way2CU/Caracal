@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" eval="action" method="POST" id="group_change_form">
 		<input type="hidden" name="id" value="$params['id']" eval="value"/>
 		<label>
+			<span><_text constant="label_text_id" module="gallery"/></span>
+			<input type="text" name="text_id" value="$params['text_id']" style="width: 360px;" maxlength="50" eval="value"/>
+		</label>
+		<label>
 			<span><_text constant="label_name" module="gallery"/></span>
-			<input type="text" name="name" value="$params['name']" style="width: 360px;" maxlength="50" eval="value"/>
+			<input type="text" name="name" class="multi-language" style="width: 360px;" maxlength="50"/>
+			<_language_data param="name"/>
 		</label>
 		<label>
 			<span><_text constant="label_description" module="gallery"/></span>
-			<textarea name="description" style="width: 360px; height: 150px;"><_var name="$params['description']"/></textarea>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+			<_language_data param="description"/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
@@ -19,4 +25,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		new LanguageSelector('group_change_form');
+	</script>
 </document>

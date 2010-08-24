@@ -2,8 +2,8 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="container">
-		<h2><_var name="$params['name']"/></h2>
+		<h2><_var name="$params['name'][$language]"/></h2>
 		<_group_thumbnail id="$params['id']" eval="id"/>
-		<_var name="$params['description']"/>
+		<_var name="$params['description'][$language]"/>
 	</div>
 </document>

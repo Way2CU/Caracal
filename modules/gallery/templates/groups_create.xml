@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" eval="action" method="POST" id="group_create_form">
+		<label>
+			<span><_text constant="label_text_id" module="gallery"/></span>
+			<input type="text" name="text_id" style="width: 360px;" maxlength="50"/>
+		</label>
 		<label>
 			<span><_text constant="label_name" module="gallery"/></span>
-			<input type="text" name="name" style="width: 360px;" maxlength="50"/>
+			<input type="text" name="name" class="multi-language" style="width: 360px;" maxlength="50"/>
 		</label>
 		<label>
 			<span><_text constant="label_description" module="gallery"/></span>
-			<textarea name="description" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
@@ -18,4 +22,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		new LanguageSelector('group_create_form');
+	</script>
 </document>

@@ -47,6 +47,7 @@
 		<constant name="label_file">File:</constant>
 		<constant name="label_description">Description (optional):</constant>
 		<constant name="label_visible">Image visible</constant>
+		<constant name="label_text_id">Text ID:</constant>
 
 		<constant name="column_group_name">Name</constant>
 		<constant name="column_container_name">Name</constant>
@@ -104,6 +105,7 @@
 		<constant name="label_file">קובץ:</constant>
 		<constant name="label_description">תאור (אופציונאלי):</constant>
 		<constant name="label_visible">התמונה נראית</constant>
+		<constant name="label_text_id">Text ID:</constant>
 
 		<constant name="column_group_name">שם</constant>
 		<constant name="column_container_name">Name</constant>

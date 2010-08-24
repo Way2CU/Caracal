@@ -3,7 +3,7 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 250px;">
-			<_var name="$params['name']"/>
+			<_var name="$params['name'][$language]"/>
 		</span>
 
 		<span class="column">

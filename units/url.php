@@ -33,9 +33,12 @@ function url_Make($action, $section) {
  * @author MeanEYE
  */
 function url_MakeFromArray($params) {
-	$res = $_SERVER['PHP_SELF'].'?'.url_Form($params);
-	$res = str_replace('&', '&amp;', $res);
-	return $res;
+	$temp = array();
+
+	foreach($params as $key => $value)
+		$temp[] = "{$key}={$value}";
+
+	return $_SERVER['PHP_SELF']."?".join('&amp;', $temp);
 }
 
 /**

@@ -129,7 +129,6 @@ class backend extends Module {
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.iframe-post-form.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
 		}

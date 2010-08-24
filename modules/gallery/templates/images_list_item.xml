@@ -9,11 +9,11 @@
 		</div>
 
 		<div class="image_holder">
-			<img src="$params['thumbnail']" alt="$params['title']" eval="src,alt"/>
+			<img src="$params['thumbnail']" alt="$params['title'][$language]" eval="src,alt"/>
 		</div>
 
 		<span class="title">
-			<_var name="$params['title']"/>
+			<_var name="$params['title'][$language]"/>
 		</span>
 	</div>
 </document>
