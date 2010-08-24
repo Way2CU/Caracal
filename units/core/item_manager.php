@@ -15,7 +15,13 @@ class ItemManager {
 	 * List of string based field types
 	 * @var array
 	 */
-	var $string_fields = array('TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP');
+	var $string_fields = array('CHAR', 'TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP', 'ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
+
+	/**
+	 * List of multi-language fields
+	 * @var array
+	 */
+	var $ml_fields = array('ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
 
 	/**
 	 * List of item fields
@@ -24,10 +30,22 @@ class ItemManager {
 	var $fields = array();
 
 	/**
+	 * List of field types
+	 * @var array
+	 */
+	var $field_types = array();
+
+	/**
 	 * Table name
 	 * @var string
 	 */
 	var $table_name;
+
+	/**
+	 * Store languages in local variable
+	 * @var array
+	 */
+	var $languages = array();
 
 	/**
 	 * Constructor
@@ -36,8 +54,13 @@ class ItemManager {
 	 * @param string $table_name
 	 * @return db_item
 	 */
-	function ItemManager($table_name) {
+	function __construct($table_name) {
+		global $LanguageHandler;
+
 		$this->table_name = $table_name;
+		$this->languages = $LanguageHandler->getLanguages(false);
+
+		sort($this->languages, SORT_STRING);
 	}
 
 	/**
@@ -47,7 +70,13 @@ class ItemManager {
 	 * @param string $field_type
 	 */
 	function addProperty($field_name, $field_type) {
-		$this->fields[$field_name] = strtoupper($field_type);
+		$field_type = strtoupper($field_type);
+		$this->fields[] = $field_name;
+		$this->field_types[$field_name] = $field_type;
+
+		if (in_array($field_type, $this->ml_fields))
+			foreach($this->languages as $lang)
+				$this->field_types["{$field_name}_{$lang}"] = strtoupper($field_type);
 	}
 
 	/**
@@ -124,6 +153,20 @@ class ItemManager {
 				$result = $db->get_row($query);
 		}
 
+		// pack multi-language fields
+		$ml_fields = $this->getMultilanguageFields($fields);
+		if (count($ml_fields) > 0)
+			foreach($ml_fields as $field) {
+				$data = array();
+
+				foreach($this->languages as $language) {
+					$data[$language] = $result->{$field.'_'.$language};
+					unset($result->{$field.'_'.$language});
+				}
+
+				$result->$field = $data;
+			}
+
 		return $result;
 	}
 
@@ -146,12 +189,27 @@ class ItemManager {
 
 			if (!empty($order_by)) {
 				$order = $ascending ? ' ASC' : ' DESC';
-				$query .= ' ORDER BY '.$this->getDelimitedFields($order_by).$order;
+				$query .= ' ORDER BY '.$this->getFields($order_by).$order;
 			}
 
 			if (!empty($query))
 				$result = $db->get_results($query);
 		}
+
+		// pack multi-language fields
+		$ml_fields = $this->getMultilanguageFields($fields);
+		if (count($ml_fields) > 0 && count($result) > 0)
+			foreach($result as $item)
+				foreach($ml_fields as $field) {
+					$data = array();
+
+					foreach($this->languages as $language) {
+						$data[$language] = $item->{$field.'_'.$language};
+						unset($item->{$field.'_'.$language});
+					}
+
+					$item->$field = $data;
+				}
 
 		return $result;
 	}
@@ -206,23 +264,70 @@ class ItemManager {
 
 		switch ($command) {
 			case DB_INSERT:
-				$result = 'INSERT INTO `'.$this->table_name.'` ('.$this->getFields($data).') VALUES ('.$this->getData($data).')';
+				$this->expandMultilanguageFields($data);
+				$result = 'INSERT INTO `'.$this->table_name.'` ('.$this->getFields($data, true).') VALUES ('.$this->getData($data).')';
 				break;
 
 			case DB_UPDATE:
+				$this->expandMultilanguageFields($data);
 				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->getDelimitedData($data).' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
 				break;
 
 			case DB_DELETE:
+				$this->expandMultilanguageFields($conditionals);
 				$result = 'DELETE FROM `'.$this->table_name.'` WHERE '.$this->getDelimitedData($conditionals, ' AND ');
 				break;
 
 			case DB_SELECT:
-				$result = 'SELECT '.$this->getDelimitedFields($data).' FROM `'.$this->table_name.'`';
-				if (!empty($conditionals))
-					$result .= ' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
+				$this->expandMultilanguageFields($data, false);
+				$result = 'SELECT '.$this->getFields($data).' FROM `'.$this->table_name.'`';
+				if (!empty($conditionals)) $result .= ' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
 				break;
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Expand multi-language fields to match real ones in table
+	 * @param pointer $fields
+	 * @param boolean $has_keys
+	 * @return array
+	 */
+	function expandMultilanguageFields(&$fields, $has_keys=true) {
+		$temp = $fields;
+
+		if ($has_keys) {
+			foreach ($temp as $field => $data)
+				if (in_array($this->field_types[$field], $this->ml_fields)) {
+					foreach($this->languages as $language)
+						$fields["{$field}_{$language}"] = $data[$language];
+
+					unset($fields[$field]);
+				}
+
+		} else {
+			foreach ($temp as $field)
+				if (in_array($this->field_types[$field], $this->ml_fields)) {
+					foreach($this->languages as $language)
+						$fields[] = "{$field}_{$language}";
+
+					unset($fields[array_search($field, $fields)]);
+				}
+		}
+	}
+
+	/**
+	 * Checks if data contains multi-language fields
+	 * @param array $fields
+	 * @return boolean
+	 */
+	function getMultilanguageFields($fields) {
+		$result = array();
+
+		foreach($fields as $field)
+			if (in_array($this->field_types[$field], $this->ml_fields))
+				$result[] = $field;
 
 		return $result;
 	}
@@ -233,20 +338,14 @@ class ItemManager {
 	 * @param array $data
 	 * @return string
 	 */
-	function getFields($data) {
-		$result = '`'.implode('`, `', array_keys($data)).'`';
+	function getFields($data, $from_keys=false) {
+		$result = array();
+		$fields = $from_keys ? array_keys($data) : $data;
 
-		return $result;
-	}
+		foreach($fields as $field)
+			$result[] = "`{$field}`";
 
-	/**
-	 * Get comma separated fields from array
-	 *
-	 * @param array $data
-	 * @return string
-	 */
-	function getDelimitedFields($data) {
-		return '`'.implode('`, `', $data).'`';
+		return implode(', ', $result);
 	}
 
 	/**
@@ -260,8 +359,8 @@ class ItemManager {
 		$tmp = array();
 
 		foreach($data as $field_name => $field_value) {
-			$is_string = in_array($this->fields[$field_name], $this->string_fields);
-			$tmp[] = ($is_string) ? "'".$field_value."'" : $field_value;
+			$is_string = in_array($this->field_types[$field_name], $this->string_fields);
+			$tmp[] = ($is_string) ? "'{$field_value}'" : $field_value;
 		}
 
 		$result = implode(', ', $tmp);
@@ -282,7 +381,7 @@ class ItemManager {
 		$tmp = array();
 
 		foreach($data as $field_name => $field_value) {
-			$is_string = in_array($this->fields[$field_name], $this->string_fields);
+			$is_string = in_array($this->field_types[$field_name], $this->string_fields);
 
 			if (is_array($field_value)) {
 				if (array_key_exists('operator', $field_value)) {
@@ -309,7 +408,7 @@ class ItemManager {
 	 * @return array
 	 */
 	function getFieldNames() {
-		return array_keys($this->fields);
+		return $this->fields;
 	}
 }
 ?>

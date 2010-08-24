@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../schema/template.dtd">
+<document>
+	<data field="$params['param']" language="$params['language']" style="display: none;" eval="field,language">
+		<_var name="$params['data']"/>
+	</data>
+</document>

@@ -14,9 +14,23 @@ class language_menu extends Module {
 	 *
 	 * @return journal
 	 */
-	function language_menu() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
+	}
+
+	/**
+	 * Event called upon module registration
+	 */
+	function onRegister() {
+		global $ModuleHandler;
+
+		// load CSS and JScript
+		if ($ModuleHandler->moduleExists('head_tag')) {
+			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
+
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
+		}
 	}
 
 	/**
@@ -27,44 +41,19 @@ class language_menu extends Module {
 	 */
 	function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
-		switch ($params['action']) {
-			case 'print':
-				$this->printMenus($level, $params);
-				break;
-			default:
-				break;
-		}
-	}
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'print':
+					$this->printMenus($level, $params);
+					break;
 
-	/**
-	 * Event called upon module initialisation
-	 */
-	function onInit() {
+				case 'json':
+					$this->json_Menu();
+					break;
 
-	}
-
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			//$group = new backend_MenuGroup("Blank", "", $this->name);
-			//$group->addItem(new backend_MenuItem("Menu Item", "", "", 1));
-
-			//$backend->addMenu($group);
-		}
+				default:
+					break;
+			}
 	}
 
 	/**
@@ -73,30 +62,71 @@ class language_menu extends Module {
 	 * @param integer $level
 	 * @param array $global_params
 	 */
-	function printMenus($level, $global_params) {
-		global $LanguageHandler, $action, $section;
-		$list = $LanguageHandler->getLanguages(true);
-		$number = 0;
+	function printMenus($level, $tag_params) {
+		global $ModuleHandler, $LanguageHandler, $action, $section;
 
-		$template_file = (isset($global_params['template'])) ? $global_params['template'] : 'list_item.xml';
+		// check if we were asked to get languages from specific module
+		if (isset($tag_params['from_module']) && $ModuleHandler->moduleExists($tag_params['from_module'])) {
+			$module = $ModuleHandler->getObjectFromName($tag_params['from_module']);
+			$list = $module->language->getLanguages(true);
+		} else {
+			$list = $LanguageHandler->getLanguages(true);
+		}
+
+		$template_file = (isset($tag_params['template'])) ? $tag_params['template'] : 'list_item.xml';
 		$template = new TemplateHandler($template_file, $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		if (count($list) > 0)
-		foreach ($list as $short=>$long) {
-			$link = url_Make($action, $section, array('language', $short));
-			$number++;
-			$params = array(
-				'number'		=> $number,
-				'short_name'	=> $short,
-				'long_name'		=> $long,
-				'url' 			=> $link
-			);
+			foreach ($list as $short=>$long) {
+				$link = url_Make($action, $section, array('language', $short));
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse($level);
+				$params = array(
+					'short_name'	=> $short,
+					'long_name'		=> $long,
+					'url' 			=> $link
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);
+			}
+	}
+
+	function printSelector($level) {
+	}
+
+	/**
+	 * Print JSON object for usage by the backend API
+	 */
+	function json_Menu() {
+		global $ModuleHandler, $LanguageHandler, $action, $section;
+
+		define('_OMIT_STATS', 1);
+
+		// check if we were asked to get languages from specific module
+		if (isset($tag_params['from_module']) && $ModuleHandler->moduleExists($tag_params['from_module'])) {
+			$module = $ModuleHandler->getObjectFromName($tag_params['from_module']);
+			$list = $module->language->getLanguages(true);
+			$default = $module->language->getDefaultLanguage();
+		} else {
+			$list = $LanguageHandler->getLanguages(true);
+			$default = $LanguageHandler->getDefaultLanguage();
 		}
 
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		foreach($list as $short => $long)
+			$result['items'][] = array(
+									'short'		=> $short,
+									'long'		=> $long,
+									'default' 	=> $short == $default
+								);
+
+		print json_encode($result);
 	}
 }

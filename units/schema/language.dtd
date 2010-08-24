@@ -2,19 +2,19 @@
 <!--
 	Language File Specification
 	Copyright (c) 2010. by RCF Group
-	
+
 	Author: MeanEYE.rcf
 -->
 
 <!-- Allowed languages, extend if necessary -->
-<!ENTITY 
-	% def.lang "en|he|sr-lat|sr-cyr"
+<!ENTITY
+	% def.lang "en|he|sr-lat|sr-cyr|ru"
 >
 
 <!ELEMENT document (language*)>
 
 <!ELEMENT language (constant*)>
-<!ATTLIST language 
+<!ATTLIST language
 	name CDATA #IMPLIED
 	short (%def.lang;) #REQUIRED
 	default (yes|no) "no"
@@ -22,7 +22,7 @@
 >
 
 <!ELEMENT constant ANY>
-<!ATTLIST constant 
+<!ATTLIST constant
 	name CDATA #REQUIRED
 	value CDATA #IMPLIED
 >

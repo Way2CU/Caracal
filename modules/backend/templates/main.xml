@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div id="backend_wrapLeft">
-		<div id="backend_wrapRight">
-			<div id="backend_Menu">
-				<_module name="backend" action="draw_menu" />
-			</div>
-		</div>
+	<div id="main_menu">
+		<_module name="backend" action="draw_menu" />
+
+		<ol id="language_menu">
+			<_module name="language_menu" action="print" from_module="backend"/>
+		</ol>
 	</div>
 </document>

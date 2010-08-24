@@ -5,165 +5,84 @@
 */
 
 
-div.window,
-div.window_inactive {
+div.window {
 	display: block;
-
 	position: absolute;
-}
-
-div.window_inactive {
-	opacity: 0.6;
-}
-
-div.window h6 {
-	display: block;
-	height: 17px;
-
-	margin: 0px;
-	padding: 0px;
-	padding-top: 6px;
-
-	color: silver;
-	font-family: Tahoma,Helvetica;
-	font-size: 12px;
-	font-weight: bold;
-	text-align: center;
-
-	cursor: default;
-}
-
-div.window_inactive h6 {
-	display: block;
-	height: 17px;
-
-	margin: 0px;
-	padding: 0px;
-	padding-top: 6px;
-
-	color: gray;
-	font-family: Tahoma,Helvetica;
-	font-size: 12px;
-	font-weight: bold;
-	text-align: center;
-
-	cursor: default;
 }
 
 /**
  * Window Border
  */
-div.window div.title_bar,
-div.window_inactive div.title_bar {
+div.window div.title {
 	display: block;
 
-	padding-left: 15px;
+	padding: 4px;
 
-	background-image: url(../images/window/title_bar_left.png);
+	border: 1px solid #CBCBCB;
+	border-bottom: 0px;
+	border-radius: 7px 7px 0px 0px;
+	-moz-border-radius: 7px 7px 0px 0px;
+	background-color: #1A1A1A;
+
+	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
+
+	color: #BFBFBF;
+	font-weight: bold;
+	text-align: center;
+
+	cursor: default;
+}
+
+div.window.loading div.title {
+	background-image: url(../images/title_animation.gif);
+	background-position: 6px center;
 	background-repeat: no-repeat;
-	background-position: top left;
 }
 
-div.window div.title_bar div.title_bar_right,
-div.window_inactive div.title_bar div.title_bar_right {
+div.window div.title a.close_button {
 	display: block;
+	width: 14px;
+	height: 14px;
 
-	padding-right: 20px;
+	float: right;
 
-	background-image: url(../images/window/title_bar_right.png);
+	border-radius: 2px;
+	background-color: #1A1A1A;
+	background-image: url(../images/close_normal.gif);
+	background-position: center center;
 	background-repeat: no-repeat;
-	background-position: top right;
+
+	text-decoration: none;
+	cursor: pointer;
 }
 
-div.window div.title_bar div.title_bar_right div.title_bar_content,
-div.window_inactive div.title_bar div.title_bar_right div.title_bar_content {
-	display: block;
-	height: 25px;
-
-	padding-top: 6px;
-
-	background-image: url(../images/window/title_bar_back.png);
-	background-repeat: repeat-x;
-	background-position: top left;
+div.window div.title a.close_button:hover {
+	background-color: #4D4D4D;
+	background-image: url(../images/close_active.gif);
 }
 
-div.window div.content_holder,
-div.window_inactive div.content_holder {
-	display: block;
 
-	padding-left: 10px;
-
-	background-image: url(../images/window/content_left.png);
-	background-repeat: repeat-y;
-	background-position: top left;
-}
-
-div.window div.content_holder div.content_holder_right,
-div.window_inactive div.content_holder div.content_holder_right {
-	display: block;
-
-	padding-right: 15px;
-
-	background-image: url(../images/window/content_right.png);
-	background-repeat: repeat-y;
-	background-position: top right;
-}
-
-div.window div.content_holder div.content_holder_right div.content,
-div.window_inactive div.content_holder div.content_holder_right div.content {
+div.window div.content {
 	display: block;
 
 	min-height: 30px;
 
-	padding: 3px;
-	padding-top: 5px;
+	padding: 7px;
 
-	background-color: #eff3f5;
+	border: 1px solid #CBCBCB;
+	border-top: 0px;
+	border-radius: 0px 0px 7px 7px;
+	-moz-border-radius: 0px 0px 7px 7px;
+	background-color: #EFEFEF;
 
-	font-size: 13px;
+	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 }
 
-div.window div.loading,
-div.window_inactive div.loading {
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-image: url(../images/loading.gif);
-}
-
-div.window div.bottom,
-div.window_inactive div.bottom {
-	display: block;
-
-	padding-left: 24px;
-
-	background-image: url(../images/window/bottom_left.png);
-	background-repeat: no-repeat;
-	background-position: top left;
-}
-
-div.window div.bottom div.bottom_right,
-div.window_inactive div.bottom div.bottom_right {
-	display: block;
-
-	padding-right: 22px;
-
-	background-image: url(../images/window/bottom_right.png);
-	background-repeat: no-repeat;
-	background-position: top right;
-}
-
-div.window div.bottom div.bottom_right div.bottom_content,
-div.window_inactive div.bottom div.bottom_right div.bottom_content {
-	display: block;
-	height: 23px;
-
-	background-image: url(../images/window/bottom_back.png);
-	background-repeat: repeat-x;
-	background-position: top left;
-}
-
-div.window div.main_menu,
-div.window_inactive div.main_menu {
+div.window div.main_menu {
 	display: block;
 
 	margin: 0px;
@@ -178,8 +97,7 @@ div.window_inactive div.main_menu {
 	font-weight: normal;
 }
 
-div.window div.main_menu a,
-div.window_inactive div.main_menu a {
+div.window div.main_menu a {
 	display: inline-block;
 
 	padding: 3px;
@@ -190,106 +108,86 @@ div.window_inactive div.main_menu a {
 	text-decoration: none;
 }
 
-div.window div.main_menu a:hover,
-div.window_inactive div.main_menu a:hover {
+div.window div.main_menu a:hover {
 	border-radius: 3px;
 	background-color: #2E3E6A;
 
 	color: white;
 }
 
-div.window div.content label,
-div.window_inactive div.content label {
+div.window div.content label {
 	display: block;
 
 	margin-bottom: 10px;
 }
 
-div.window div.content label span,
-div.window_inactive div.content label span {
+div.window div.content label span {
 	display: block;
 }
 
-div.window div.content label a,
-div.window_inactive div.content label a {
+div.window div.content label a {
 	color: #1A60A4;
 	text-decoration: none;
 }
 
-div.window div.content label a:hover,
-div.window_inactive div.content label a:hover {
+div.window div.content label a:hover {
 	text-decoration: underline;
 }
 
 div.window div.content div.main_menu,
-div.window_inactive div.content div.main_menu,
 div.window div.content div.button_bar,
-div.window_inactive div.content div.button_bar,
-div.window div.content div.scrollable_list,
-div.window_inactive div.content div.scrollable_list {
+div.window div.content div.scrollable_list {
 	margin-bottom: 5px;
 }
 
-div.window div.content div:last-child,
-div.window_inactive div.content div:last-child {
+div.window div.content div:last-child {
 	margin-bottom: 0px;
 }
 
-div.window div.content label:last-child,
-div.window_inactive div.content label:last-child {
+div.window div.content label:last-child {
 	margin-bottom: 0px;
 }
 
 div.window div.content select,
-div.window_inactive div.content select,
 div.window div.content input,
-div.window_inactive div.content input,
-div.window div.content textarea,
-div.window_inactive div.content textarea {
+div.window div.content textarea {
 	padding: 2px;
 	padding-left: 3px;
 	padding-right: 3px;
 
 	border: 1px solid #999999;
-	border-radius: 3px;
 	outline: 0px;
 	background-color: #ffffff;
 
 	color: #444444;
 }
 
-div.window div.content input[type=checkbox],
-div.window_inactive div.content input[type=checkbox] {
+div.window div.content input[type=checkbox] {
 	padding: 0px;
 
 	float: left;
 	clear: both;
 }
 
-div.window div.content label.checkbox span,
-div.window_inactive div.content label.checkbox span {
+div.window div.content label.checkbox span {
 	display: inline-block;
 
 	padding-top: 1px;
 }
 
 
-div.window div.content textarea.code,
-div.window_inactive div.content textarea.code {
+div.window div.content textarea.code {
 	direction: ltr !important;
 	font-family: monospace;
 }
 
 div.window div.content input:focus,
-div.window_inactive div.content input:focus,
-div.window div.content textarea:focus,
-div.window_inactive div.content textarea:focus {
+div.window div.content textarea:focus {
 	border: 1px solid #345DC9;
 	color: #000000;
 }
 
-div.window button,
-div.window_inactive button {
+div.window button {
 	display: inline-block;
 	width: 114px;
 
@@ -308,36 +206,32 @@ div.window_inactive button {
 	font-weight: normal;
 }
 
-div.window button:hover,
-div.window_inactive button:hover {
+div.window button:hover {
 	background-image: url(../images/button_hover.png);
 }
 
-div.window button:active,
-div.window_inactive button:active {
+div.window button:active {
 	background-image: url(../images/button_active.png);
 }
 
-div.window div.button_bar,
-div.window_inactive div.button_bar {
+div.window div.button_bar {
 	display: block;
 
-	padding: 5px;
+	padding: 4px;
 
 	border: 1px solid #B8B8B8;
 	border-radius: 4px;
+	-moz-border-radius: 4px;
 	background-color: #D4D4D4;
 
 	text-align: center;
 }
 
-div.window div.scrollable_list,
-div.window_inactive div.scrollable_list {
+div.window div.scrollable_list {
 	display: block;
 }
 
-div.window div.scrollable_list div.list_header,
-div.window_inactive div.scrollable_list div.list_header {
+div.window div.scrollable_list div.list_header {
 	display: block;
 
 	padding: 3px;
@@ -345,11 +239,11 @@ div.window_inactive div.scrollable_list div.list_header {
 	border: 1px solid #B8B8B8;
 	border-bottom: 0px;
 	border-radius: 4px 4px 0px 0px;
+	-moz-border-radius: 4px 4px 0px 0px;
 	background-color: #E5E5E5;
 }
 
-div.window div.scrollable_list .list_content,
-div.window_inactive div.scrollable_list .list_content {
+div.window div.scrollable_list .list_content {
 	display: block;
 	min-height: 100px;
 
@@ -357,32 +251,28 @@ div.window_inactive div.scrollable_list .list_content {
 
 	border: 1px solid #B8B8B8;
 	border-top: 0px;
-	border-radius: 0px 0px 0px 4px;
+	border-radius: 0px 0px 4px 4px;
 	background-color: #FFFFFF;
 }
 
-div.window div.scrollable_list .list_content .list_item,
-div.window_inactive div.scrollable_list .list_content .list_item {
+div.window div.scrollable_list .list_content .list_item {
 	display: block;
 
 	padding: 3px;
 }
 
-div.window div.scrollable_list .list_content .list_item:hover,
-div.window_inactive div.scrollable_list .list_content .list_item:hover {
+div.window div.scrollable_list .list_content .list_item:hover {
 	background-color: #F5F5F5;
 	cursor: default;
 }
 
-div.window div.scrollable_list .column,
-div.window_inactive div.scrollable_list .column {
+div.window div.scrollable_list .column {
 	display: inline-block;
 
 	margin-right: 3px;
 }
 
-div.window div.scrollable_list .column a,
-div.window_inactive div.scrollable_list .column a {
+div.window div.scrollable_list .column a {
 	display: inline-block;
 
 	padding: 2px;
@@ -397,10 +287,56 @@ div.window_inactive div.scrollable_list .column a {
 	text-decoration: none;
 }
 
-div.window div.scrollable_list .column a:hover,
-div.window_inactive div.scrollable_list .column a:hover {
+div.window div.scrollable_list .column a:hover {
 	border-color: #101D7E;
 	background-color: #303FA5;
 
 	color: #FFFFFF;
+}
+
+/**
+ * Language Selector
+ */
+div.window div.language_selector {
+	display: inline-block;
+	min-width: 20px;
+	min-height: 20px;
+
+	margin-bottom: 10px;
+	padding: 1px;
+
+	border: 1px solid #B8B8B8;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	background-color: #D4D4D4;
+
+	text-align: center;
+}
+
+div.window div.language_selector.loading {
+	background-image: url(../images/title_animation.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+div.window div.language_selector span {
+	display: inline-block;
+
+	margin: 1px;
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+
+	cursor: pointer;
+}
+
+div.window div.language_selector span:hover {
+	background-color: #E6E6E6;
+}
+
+div.window div.language_selector span.active {
+	background-color: white;
 }

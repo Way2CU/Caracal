@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<li><a href="$params['url']" eval="href"><_var name="$params['long_name']"/></a></li>
+	<_if condition="$params['short_name'] == $language">
+		<li class="$params['short_name'].' active'" eval="class">
+			<a href="$params['url']" eval="href"><_var name="$params['long_name']"/></a>
+		</li>
+	</_if>
+	<_if condition="$params['short_name'] != $language">
+		<li class="$params['short_name']" eval="class">
+			<a href="$params['url']" eval="href"><_var name="$params['long_name']"/></a>
+		</li>
+	</_if>
 </document>

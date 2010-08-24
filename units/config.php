@@ -13,6 +13,7 @@ if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to t
 $module_path = 'modules/';
 $data_path = 'data/';
 $template_path = 'site/';
+$system_template_path = 'units/templates/';
 
 // database
 $db = null;

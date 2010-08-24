@@ -13,7 +13,7 @@ class gallery extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -314,7 +314,7 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('upload_images'),
 										'gallery_images_upload', 400,
 										$this->getLanguageConstant('title_images_upload'),
@@ -535,7 +535,7 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('create_group'),
 										'gallery_groups_create', 400,
 										$this->getLanguageConstant('title_groups_create'),
@@ -704,7 +704,7 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('create_container'),
 										'gallery_containers_create', 400,
 										$this->getLanguageConstant('title_containers_create'),
@@ -1790,7 +1790,7 @@ class gallery extends Module {
 class GalleryManager extends ItemManager {
 
 	function __construct() {
-		parent::ItemManager('gallery');
+		parent::__construct('gallery');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('group', 'int');
@@ -1824,7 +1824,7 @@ class GalleryManager extends ItemManager {
 class GalleryGroupManager extends ItemManager {
 
 	function __construct() {
-		parent::ItemManager('gallery_groups');
+		parent::__construct('gallery_groups');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
@@ -1835,7 +1835,7 @@ class GalleryGroupManager extends ItemManager {
 class GalleryContainerManager extends ItemManager {
 
 	function __construct() {
-		parent::ItemManager('gallery_containers');
+		parent::__construct('gallery_containers');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
@@ -1846,7 +1846,7 @@ class GalleryContainerManager extends ItemManager {
 class GalleryGroupMembershipManager extends ItemManager {
 
 	function __construct() {
-		parent::ItemManager('gallery_group_membership');
+		parent::__construct('gallery_group_membership');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('group', 'int');

@@ -18,7 +18,7 @@ class Module {
 	 *
 	 * @return Module
 	 */
-	function Module() {
+	function __construct() {
 		global $ModuleHandler;
 
 		$this->path = dirname($this->file).'/';
@@ -61,13 +61,32 @@ class Module {
 	 */
 	function getLanguageConstant($constant, $language="") {
 		global $LanguageHandler;
-		
+
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
-		$result = $this->language->getText($constant, $language_in_use); 
-		
+		$result = $this->language->getText($constant, $language_in_use);
+
 		if (empty($result))
 			$result = $LanguageHandler->getText($constant, $language_in_use);
-			
+
+		return $result;
+	}
+
+	/**
+	 * Extracts multi-language field data and pack them in array
+	 *
+	 * @param string $name
+	 * @param boolean $fix
+	 * @return array
+	 */
+	function getMultilanguageField($name, $fix=true) {
+		global $LanguageHandler;
+
+		$result = array();
+		$list = $LanguageHandler->getLanguages(false);
+
+		foreach($list as $lang)
+			$result[$lang] = $_REQUEST["{$name}_{$lang}"];
+
 		return $result;
 	}
 

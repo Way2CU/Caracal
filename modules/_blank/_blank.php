@@ -13,7 +13,7 @@ class _blank extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -45,7 +45,7 @@ class _blank extends Module {
 		global $db_active, $db;
 
 		$sql = "";
-		
+
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -56,7 +56,7 @@ class _blank extends Module {
 		global $db_active, $db;
 
 		$sql = "";
-		
+
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -84,7 +84,7 @@ class _blank extends Module {
 class SomeManager extends ItemManager {
 	function __construct() {
 		parent::ItemManager();
-		
+
 		$this->addProperty('id', 'int');
 	}
 }

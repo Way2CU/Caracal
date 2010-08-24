@@ -2,8 +2,8 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="youtube_preview_player"></div>
-	<_video id="$params['video_id']" width="369" height="277" embed="1" target="youtube_preview_player" eval="id"/>
-	
+	<_video id="$params['video_id']" width="384" height="288" embed="1" target="youtube_preview_player" eval="id"/>
+
 	<div class="button_bar">
 		<button type="button" onclick="$params['action']" eval="onclick">
 			<_var name="$params['button']"/>

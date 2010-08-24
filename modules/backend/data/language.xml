@@ -40,7 +40,7 @@
 		<constant name="cancel">Cancel</constant>
 	</language>
 
-	<language short="he">
+	<language name="עברית" short="he" rtl="yes" default="yes">
 		<constant name="title">ממשק מנהל</constant>
 		<!-- Menu Items -->
 		<constant name="menu_system">מערכת</constant>

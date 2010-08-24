@@ -15,9 +15,9 @@ class captcha extends Module {
 	 *
 	 * @return journal
 	 */
-	function captcha() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -28,16 +28,19 @@ class captcha extends Module {
 	 */
 	function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
-		switch ($params['action']) {
-			case 'print_image_tag':
-				$this->__printImageTag($level);
-				break;
-			case 'print_image':
-				$this->__printImage();
-				break;
-			default:
-				break;
-		}
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'print_image_tag':
+					$this->__printImageTag($level);
+					break;
+
+				case 'print_image':
+					$this->__printImage();
+					break;
+
+				default:
+					break;
+			}
 
 		// global control actions
 		if (isset($params['backend_action']))

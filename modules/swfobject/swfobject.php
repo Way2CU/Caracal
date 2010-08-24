@@ -1,10 +1,9 @@
 <?php
 
 /**
- * BLANK MODULE
+ * FLASH INTEGRATION MODULE
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * @author MeanEYE.rcf
  */
 
 class swfobject extends Module {
@@ -19,9 +18,9 @@ class swfobject extends Module {
 	 *
 	 * @return swfobject
 	 */
-	function swfobject() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**

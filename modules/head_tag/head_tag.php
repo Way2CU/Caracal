@@ -8,7 +8,7 @@
  */
 
 class head_tag extends Module {
-	var $tags;
+	var $tags = array();
 	var $closeable_tags = array('script', 'style');
 
 	/**
@@ -16,11 +16,9 @@ class head_tag extends Module {
 	 *
 	 * @return mod_head
 	 */
-	function head_tag() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
-
-		$this->tags = array();
+		parent::__construct();
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 /**
  * Country List Module
- * 
+ *
  * @author MeanEYE.rcf
  */
 
@@ -15,7 +15,7 @@ class country_list extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -31,11 +31,11 @@ class country_list extends Module {
 				case 'show':
 					$this->printCountryList($level, $params);
 					break;
-					
+
 				case 'show_states':
 					$this->printStateList($level, $params);
 					break;
-				
+
 				default:
 					break;
 			}
@@ -43,29 +43,29 @@ class country_list extends Module {
 
 	/**
 	 * Print list of all countries using specified template
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $params
 	 */
 	function printCountryList($level, $params) {
 		if(is_null($this->country_list))
 			$this->_loadCountryList();
-			
-		
+
+
 	}
-	
+
 	/**
 	 * Print a list of United States using specified template
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $params
 	 */
 	function printStateList($level, $params) {
 		if(is_null($this->state_list))
-			$this->_loadStateList(); 
-		
+			$this->_loadStateList();
+
 	}
-	
+
 	/**
 	 * Load list of countries from XML
 	 */
@@ -76,7 +76,7 @@ class country_list extends Module {
 		$this->country_list = new XMLParser($data, $file_name);
 		$this->country_list->Parse();
 	}
-	
+
 	/**
 	 * Load list of states from XML
 	 */

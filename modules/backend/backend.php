@@ -34,7 +34,7 @@ class backend extends Module {
 	 */
 	function backend() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -128,13 +128,10 @@ class backend extends Module {
 			if ($LanguageHandler->isRTL())
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/xmlhttp.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/page.js'), 'type'=>'text/javascript'));
-
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.iframe-post-form.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.show_html.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
 		}
 
 		// add admin level menus
@@ -605,7 +602,7 @@ class backend extends Module {
 class System_ModuleManager extends ItemManager {
 
 	function System_ModuleManager() {
-		parent::ItemManager('system_modules');
+		parent::__construct('system_modules');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('order', 'int');
@@ -618,7 +615,7 @@ class System_ModuleManager extends ItemManager {
 class System_AccessManager extends ItemManager {
 
 	function System_AccessManager() {
-		parent::ItemManager('system_modules');
+		parent::__construct('system_modules');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('username', 'varchar');

@@ -19,7 +19,7 @@ class LanguageHandler {
 	 *
 	 * @return LanguageHandler
 	 */
-	function LanguageHandler($file="") {
+	function __construct($file="") {
 		global $data_path;
 
 		$this->active = false;

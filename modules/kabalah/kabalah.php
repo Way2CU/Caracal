@@ -23,9 +23,9 @@ class kabalah extends Module {
 	 *
 	 * @return kabalah
 	 */
-	function kabalah() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -162,7 +162,7 @@ class kabalah extends Module {
 		if ($ModuleHandler->moduleExists('backend')) {
 			$backend = $ModuleHandler->getObjectFromName('backend');
 
-			$window_questions = backend_Window(
+			$window_questions = window_Open(
 								$this->name.'_questions', 600,
 								$this->getLanguageConstant('title_questions'),
 								true, true,
@@ -170,7 +170,7 @@ class kabalah extends Module {
 								'questions'
 							);
 
-			$window_answers = backend_Window(
+			$window_answers = window_Open(
 								$this->name.'_answers',	630,
 								$this->getLanguageConstant('title_answers'),
 								true, true,
@@ -198,7 +198,7 @@ class kabalah extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-						'link_new'	=> backend_WindowHyperlink(
+						'link_new'	=> window_OpenHyperlink(
 											$this->getLanguageConstant('new'),
 											$this->name.'_questions_new', 400,
 											$this->getLanguageConstant('title_questions_new'),
@@ -463,7 +463,7 @@ class kabalah extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-						'link_new'	=> backend_WindowHyperlink(
+						'link_new'	=> window_OpenHyperlink(
 											$this->getLanguageConstant('new'),
 											$this->name.'_answers_new', 400,
 											$this->getLanguageConstant('title_answers_new'),
@@ -1213,8 +1213,8 @@ class kabalah extends Module {
 
 class QuestionManager extends ItemManager {
 
-	function QuestionManager() {
-		parent::ItemManager('questions');
+	function __construct() {
+		parent::__construct('questions');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('pid', 'int');
@@ -1226,8 +1226,8 @@ class QuestionManager extends ItemManager {
 
 class FieldManager extends ItemManager {
 
-	function FieldManager() {
-		parent::ItemManager('fields');
+	function __construct() {
+		parent::__construct('fields');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('question', 'int');
@@ -1240,8 +1240,8 @@ class FieldManager extends ItemManager {
 
 class AnswerManager extends ItemManager {
 
-	function AnswerManager() {
-		parent::ItemManager('answers');
+	function __construct() {
+		parent::__construct('answers');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('question', 'int');

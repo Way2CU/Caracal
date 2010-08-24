@@ -16,7 +16,7 @@ class articles extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -68,6 +68,32 @@ class articles extends Module {
 					$this->deleteArticle_Commit($level);
 					break;
 
+				// ---
+
+				case 'groups':
+					$this->showGroups($level);
+					break;
+
+				case 'groups_new':
+					$this->addGroup($level);
+					break;
+
+				case 'groups_change':
+					$this->changeGroup($level);
+					break;
+
+				case 'groups_save':
+					$this->saveGroup($level);
+					break;
+
+				case 'groups_delete':
+					$this->deleteGroup($level);
+					break;
+
+				case 'groups_delete_commit':
+					$this->deleteGroup_Commit($level);
+					break;
+
 				default:
 					break;
 			}
@@ -77,25 +103,58 @@ class articles extends Module {
 	 * Event triggered upon module initialization
 	 */
 	function onInit() {
-		global $db_active, $db;
+		global $LanguageHandler, $db_active, $db;
+
+		$list = $LanguageHandler->getLanguages(false);
 
 		$sql = "
 			CREATE TABLE `articles` (
 				`id` INT NOT NULL AUTO_INCREMENT ,
+				`group` int(11) DEFAULT NULL ,
 				`text_id` VARCHAR (32) NULL ,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-				`title` VARCHAR( 255 ) NOT NULL DEFAULT '',
-				`content` TEXT NOT NULL ,
+			";
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+
+		foreach($list as $language)
+			$sql .= "`content_{$language}` TEXT NOT NULL ,";
+
+		$sql .= "
 				`author` INT NOT NULL ,
 				`visible` BOOLEAN NOT NULL DEFAULT '0',
 				`views` INT NOT NULL DEFAULT '0',
 				`votes_up` INT NOT NULL DEFAULT '0',
 				`votes_down` INT NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
-				INDEX ( `author` )
+				INDEX ( `author` ),
+				INDEX ( `group` ),
+				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 
 		if ($db_active == 1) $db->query($sql);
+
+		// article groups
+		$sql = "
+			CREATE TABLE `article_groups` (
+				`id` INT NOT NULL AUTO_INCREMENT ,
+				`text_id` VARCHAR (32) NULL ,
+			";
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+
+		foreach($list as $language)
+			$sql .= "`description_{$language}` TEXT NOT NULL ,";
+
+		$sql .= "
+				PRIMARY KEY ( `id` ),
+				INDEX ( `text_id` )
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+
+		if ($db_active == 1) $db->query($sql);
+
 	}
 
 	/**
@@ -104,7 +163,7 @@ class articles extends Module {
 	function onDisable() {
 		global $db, $db_active;
 
-		$sql = "DROP TABLE IF EXISTS `articles`;";
+		$sql = "DROP TABLE IF EXISTS `articles`, `article_group`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -158,6 +217,19 @@ class articles extends Module {
 										),
 								$level=5
 							));
+			$articles_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_article_groups'),
+								url_GetFromFilePath($this->path.'images/groups.png'),
+
+								window_Open( // on click open window
+											'article_groups',
+											650,
+											$this->getLanguageConstant('title_article_groups'),
+											true, true,
+											backend_UrlMake($this->name, 'groups')
+										),
+								$level=5
+							));
 
 			$backend->addMenu($this->name, $articles_menu);
 		}
@@ -172,7 +244,7 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('new'),
 										'articles_new', 730,
 										$this->getLanguageConstant('title_articles_new'),
@@ -195,6 +267,7 @@ class articles extends Module {
 	function addArticle($level) {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
@@ -218,12 +291,14 @@ class articles extends Module {
 
 		$template = new TemplateHandler('change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 
 		$params = array(
 					'id'			=> $item->id,
 					'text_id'		=> $item->text_id,
+					'group'			=> $item->group,
 					'title'			=> unfix_chars($item->title),
-					'content'		=> unfix_chars($item->content),
+					'content'		=> $item->content,
 					'visible' 		=> $item->visible,
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
 					'cancel_action'	=> window_Close('articles_change')
@@ -242,36 +317,27 @@ class articles extends Module {
 		$manager = new ArticleManager();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$text_id = mysql_real_escape_string(strip_tags($_REQUEST['text_id']));
-		$title = fix_chars($_REQUEST['title']);
-		$content = mysql_real_escape_string(strip_tags($_REQUEST['content']));
+		$text_id = escape_chars($_REQUEST['text_id']);
+		$title = fix_chars($this->getMultilanguageField('title'));
+		$content = escape_chars($this->getMultilanguageField('content'));
 		$visible = fix_id($_REQUEST['visible']);
+		$group = fix_id($_REQUEST['group']);
+
+		$data = array(
+					'text_id'	=> $text_id,
+					'group'		=> $group,
+					'title'		=> $title,
+					'content'	=> $content,
+					'visible'	=> $visible,
+					'author'	=> $_SESSION['uid']
+				);
 
 		if (is_null($id)) {
 			$window = 'articles_new';
-			$manager->insertData(
-								array(
-									'text_id'	=> $text_id,
-									'title'		=> $title,
-									'content'	=> $content,
-									'visible'	=> $visible,
-									'author'	=> $_SESSION['uid']
-								)
-							);
+			$manager->insertData($data);
 		} else {
 			$window = 'articles_change';
-			$manager->updateData(
-								array(
-									'text_id'	=> $text_id,
-									'title'		=> $title,
-									'content'	=> $content,
-									'visible'	=> $visible,
-									'author'	=> $_SESSION['uid']
-								),
-								array(
-									'id'		=> $id
-								)
-							);
+			$manager->updateData($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -349,6 +415,182 @@ class articles extends Module {
 	}
 
 	/**
+	 * Show article groups
+	 * @param integer $level
+	 */
+	function showGroups($level) {
+		$template = new TemplateHandler('group_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'		=> window_OpenHyperlink(
+										$this->getLanguageConstant('new'),
+										'article_groups_new', 400,
+										$this->getLanguageConstant('title_article_groups_new'),
+										true, false,
+										$this->name,
+										'groups_new'
+									),
+					);
+
+		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Print form for adding a new article group
+	 * @param integer $level
+	 */
+	function addGroup($level) {
+		$template = new TemplateHandler('group_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
+					'cancel_action'	=> window_Close('article_groups_new')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Print form for changing article group data
+	 * @param integer $level
+	 */
+	function changeGroup($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new ArticleGroupManager();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$template = new TemplateHandler('group_change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'id'			=> $item->id,
+					'text_id'		=> $item->text_id,
+					'title'			=> unfix_chars($item->title),
+					'description'	=> $item->description,
+					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
+					'cancel_action'	=> window_Close('article_groups_change')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Print confirmation dialog prior to group removal
+	 * @param integer $level
+	 */
+	function deleteGroup($level) {
+		global $language;
+
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new ArticleGroupManager();
+
+		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_group_delete"),
+					'name'			=> $item->title[$language],
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'article_groups_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'groups_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('article_groups_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Perform removal of certain group
+	 * @param integer $level
+	 */
+	function deleteGroup_Commit($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = new ArticleGroupManager();
+		$article_manager = new ArticleManager();
+
+		$manager->deleteData(array('id' => $id));
+		$article_manager->updateData(array('group' => null), array('group' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_group_deleted"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close('article_groups_delete').";"
+									.window_ReloadContent('articles').";"
+									.window_ReloadContent('article_groups')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Save changed group data
+	 * @param integer $level
+	 */
+	function saveGroup($level) {
+		$manager = new ArticleGroupManager();
+
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$text_id = escape_chars($_REQUEST['text_id']);
+		$title = fix_chars($this->getMultilanguageField('title'));
+		$description = escape_chars($this->getMultilanguageField('description'));
+
+		$data = array(
+					'text_id'		=> $text_id,
+					'title'			=> $title,
+					'description'	=> $description,
+				);
+
+		if (is_null($id)) {
+			$window = 'article_groups_new';
+			$manager->insertData($data);
+		} else {
+			$window = 'article_groups_change';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_group_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('article_groups'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
 	 * Tag handler for printing article
 	 *
 	 * @param integer $level
@@ -356,13 +598,13 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	function tag_Article($level, $tag_params, $children) {
-		$manager = new ArticleManager();
-
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
 
 		// we need at least one of IDs in order to display article
 		if (is_null($id) && is_null($text_id)) return;
+
+		$manager = new ArticleManager();
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -391,7 +633,7 @@ class articles extends Module {
 						'date'			=> $date,
 						'time'			=> $time,
 						'title'			=> $item->title,
-						'content'		=> Markdown($item->content),
+						'content'		=> $item->content,
 						'author'		=> $item->author,
 						'visible'		=> $item->visible,
 						'views'			=> $item->views,
@@ -410,7 +652,7 @@ class articles extends Module {
 	 * Tag handler for printing article list
 	 *
 	 * @param integer $level
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
 	function tag_ArticleList($level, $tag_params, $children) {
@@ -453,7 +695,7 @@ class articles extends Module {
 							'date'			=> $date,
 							'time'			=> $time,
 							'title'			=> $item->title,
-							'content'		=> Markdown($item->content),
+							'content'		=> $item->content,
 							'author'		=> $admin_manager->getItemValue('fullname', array('id' => $item->author)),
 							'visible'		=> $item->visible,
 							'views'			=> $item->views,
@@ -505,10 +747,132 @@ class articles extends Module {
 	 * Tag handler for printing article list
 	 *
 	 * @param integer $level
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
 	function tag_ArticleRatingImage($level, $tag_params, $children) {
+	}
+
+	/**
+	 * Tag handler for article group
+	 *
+	 * @param integer $level
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	function tag_Group($level, $tag_params, $children) {
+		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
+		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
+
+		// we need at least one of IDs in order to display article
+		if (is_null($id) && is_null($text_id)) return;
+
+		$manager = new ArticleGroupManager();
+
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('group.xml', $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
+
+		if (!is_null($id))
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
+
+		if (is_object($item)) {
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'title'			=> $item->title,
+						'desciption'	=> $item->description,
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
+	}
+
+	/**
+	 * Tag handler for article group list
+	 *
+	 * @param integer $level
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	function tag_GroupList($level, $tag_params, $children) {
+		$manager = new ArticleGroupManager();
+
+		$items = $manager->getItems($manager->getFieldNames(), array());
+
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('group_list_item.xml', $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
+
+		// give the ability to limit number of links to display
+		if (isset($tag_params['limit']))
+			$items = array_slice($items, 0, $tag_params['limit'], true);
+
+		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
+
+		if (count($items) > 0)
+			foreach($items as $item) {
+				$params = array(
+							'id'			=> $item->id,
+							'text_id'		=> $item->text_id,
+							'title'			=> $item->title,
+							'description'	=> $item->description,
+							'selected'		=> $selected,
+							'item_change'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('change'),
+													window_Open(
+														'article_groups_change', 	// window id
+														400,						// width
+														$this->getLanguageConstant('title_article_groups_change'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'groups_change'),
+															array('id', $item->id)
+														)
+													)
+												),
+							'item_delete'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('delete'),
+													window_Open(
+														'article_groups_delete', 	// window id
+														400,						// width
+														$this->getLanguageConstant('title_article_groups_delete'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'groups_delete'),
+															array('id', $item->id)
+														)
+													)
+												),
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);
+			}
 	}
 
 	/**
@@ -539,17 +903,29 @@ class articles extends Module {
 
 class ArticleManager extends ItemManager {
 	function __construct() {
-		parent::ItemManager('articles');
+		parent::__construct('articles');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('group', 'int');
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('title', 'varchar');
-		$this->addProperty('content', 'text');
+		$this->addProperty('title', 'ml_varchar');
+		$this->addProperty('content', 'ml_text');
 		$this->addProperty('author', 'int');
 		$this->addProperty('visible', 'boolean');
 		$this->addProperty('views', 'int');
 		$this->addProperty('votes_up', 'int');
 		$this->addProperty('votes_down', 'int');
+	}
+}
+
+class ArticleGroupManager extends ItemManager {
+	function __construct() {
+		parent::__construct('article_groups');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('text_id', 'varchar');
+		$this->addProperty('title', 'ml_varchar');
+		$this->addProperty('description', 'ml_text');
 	}
 }

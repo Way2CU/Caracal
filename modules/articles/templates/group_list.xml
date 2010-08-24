@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
+	<!-- Window Menu -->
 	<div class="main_menu">
 		<_var name="$params['link_new']"/>
 	</div>
 
+	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 100px;">
-				<_text constant="column_id" module="youtube"/>
+			<span class="column" style="width: 170px;">
+				<_text constant="column_text_id" module="articles"/>
 			</span>
-			<span class="column" style="width: 300px">
-				<_text constant="column_title" module="youtube"/>
+			<span class="column" style="width: 300px;">
+				<_text constant="column_title" module="articles"/>
 			</span>
 			<span class="column">
 				<_text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_video_list/>
+			<!-- List Content -->
+			<_group_list only_visible="0"/>
 		</div>
 	</div>
-
 </document>

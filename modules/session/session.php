@@ -15,7 +15,7 @@ class session extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -112,7 +112,7 @@ class session extends Module {
 
 class AdministratorManager extends ItemManager {
 	function __construct() {
-		parent::ItemManager('system_access');
+		parent::__construct('system_access');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('username', 'varchar');

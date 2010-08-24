@@ -15,9 +15,9 @@ class links extends Module {
 	 *
 	 * @return links
 	 */
-	function links() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -245,7 +245,7 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('add'),
 										'links_add', 400,
 										$this->getLanguageConstant('title_links_add'),
@@ -487,7 +487,7 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('create_group'),
 										'groups_add', 400,
 										$this->getLanguageConstant('title_groups_create'),
@@ -1223,8 +1223,8 @@ class links extends Module {
 
 class LinksManager extends ItemManager {
 
-	function LinksManager() {
-		parent::ItemManager('links');
+	function __construct() {
+		parent::__construct('links');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('text', 'varchar');
@@ -1241,8 +1241,8 @@ class LinksManager extends ItemManager {
 
 class LinkGroupsManager extends ItemManager {
 
-	function LinkGroupsManager() {
-		parent::ItemManager('link_groups');
+	function __construct() {
+		parent::__construct('link_groups');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
@@ -1251,8 +1251,8 @@ class LinkGroupsManager extends ItemManager {
 
 class LinkMembershipManager extends ItemManager {
 
-	function LinkMembershipManager() {
-		parent::ItemManager('link_membership');
+	function __construct() {
+		parent::__construct('link_membership');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('link', 'int');

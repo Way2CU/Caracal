@@ -2,7 +2,7 @@
 
 /**
  * Code Poject Module
- * 
+ *
  * This module provides simple URL redirection based on supplied code.
  *
  * @author MeanEYE.rcf
@@ -17,7 +17,7 @@ class code_project extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -33,7 +33,7 @@ class code_project extends Module {
 				case 'redirect':
 					$this->redirect($level);
 					break;
-							
+
 				default:
 					break;
 			}
@@ -44,27 +44,27 @@ class code_project extends Module {
 				case 'codes_manage':
 					$this->showCodes($level);
 					break;
-					
+
 				case 'codes_add':
 					$this->addCode($level);
 					break;
-					
+
 				case 'codes_change':
 					$this->changeCode($level);
 					break;
-					
+
 				case 'codes_save':
 					$this->saveCode($level);
 					break;
-					
+
 				case 'codes_delete':
 					$this->deleteCode($level);
 					break;
-					
+
 				case 'codes_delete_commit':
 					$this->deleteCode_Commit($level);
 					break;
-				
+
 				default:
 					break;
 			}
@@ -75,14 +75,14 @@ class code_project extends Module {
 	 */
 	function onInit() {
 		global $db, $db_active;
-		
+
 		$sql = "
 			CREATE TABLE `project_codes` (
 				`id` INT NOT NULL AUTO_INCREMENT ,
 				`code` VARCHAR( 50 ) NOT NULL ,
 				`url` VARCHAR( 255 ) NOT NULL ,
 				PRIMARY KEY ( `id` ) ,
-				INDEX ( `code` ) 
+				INDEX ( `code` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 	}
@@ -120,7 +120,7 @@ class code_project extends Module {
 					'javascript:void(0);',
 					$level=5
 				);
-				
+
 			$codes_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_codes_manage'),
 								url_GetFromFilePath($this->path.'images/manage.png'),
@@ -133,7 +133,7 @@ class code_project extends Module {
 										),
 								$level=5
 							));
-											
+
 			$backend->addMenu($this->name, $codes_menu);
 		}
 	}
@@ -147,7 +147,7 @@ class code_project extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> backend_WindowHyperlink(
+					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('add'),
 										'codes_add', 400,
 										$this->getLanguageConstant('title_codes_add'),
@@ -162,7 +162,7 @@ class code_project extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Show content of a form used for creation of new `code` object
 	 * @param integer $level
@@ -180,7 +180,7 @@ class code_project extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
+
 	/**
 	 * Show content of a form in editing state for sepected `code` object
 	 * @param integer $level
@@ -206,8 +206,8 @@ class code_project extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-	
-	
+
+
 	/**
 	 * Save changes existing (or new) to `code` object and display result
 	 * @param integer $level
@@ -244,7 +244,7 @@ class code_project extends Module {
 		$template->setLocalParams($params);
 		$template->parse($level);
 	}
-		
+
 	/**
 	 * Present user with confirmation dialog before removal of specified `code` object
 	 * @param integer $level
@@ -279,8 +279,8 @@ class code_project extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
-	}	
-	
+	}
+
 	/**
 	 * Remove specified `code` object and inform user about operation status
 	 * @param integer $level
@@ -303,8 +303,8 @@ class code_project extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
-	}	
-	
+	}
+
 	/**
 	 * Redirect user based on specified code
 	 * @param integer $level
@@ -313,9 +313,9 @@ class code_project extends Module {
 		$code = fix_chars($_REQUEST['code']);
 		$manager = new CodeManager();
 		$url = $manager->getItemValue("url", array("code" => $code));
-		
+
 		$_SESSION['request_code'] = $code;
-		
+
 		print url_SetRefresh($url, 0);
 	}
 
@@ -391,17 +391,17 @@ class code_project extends Module {
 			$template->parse($level);
 		}
 	}
-	
+
 }
 
 
 class CodeManager extends ItemManager {
 	function __construct() {
-		parent::ItemManager('project_codes');
-		
+		parent::__construct('project_codes');
+
 		$this->addProperty('id', 'int');
 		$this->addProperty('code', 'varchar');
-		$this->addProperty('url', 'varchar');		
+		$this->addProperty('url', 'varchar');
 	}
 }
 

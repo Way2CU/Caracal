@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" eval="action" method="POST" id="article_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_text_id" module="articles"/></span>
 			<input type="text" name="text_id" value="$params['text_id']" eval="value" style="width: 270px;" maxlength="32"/>
-		</label>		<label>
+		</label>
+		<label>
+			<span><_text constant="label_group" module="articles"/></span>
+			<select name="group" style="width: 270px;">
+				<option></option>
+				<_group_list template="group_option.xml" local="1" selected="$params['group']" eval="selected"/>
+			</select>
+		</label>
+		<label>
 			<span><_text constant="label_title" module="articles"/></span>
-			<input type="text" name="title" value="$params['title']" eval="value" style="width: 690px;" maxlength="255"/>
+			<input type="text" class="multi-language" name="title" style="width: 690px;" maxlength="255"/>
+			<_language_data param="title"/>
 		</label>
 		<label>
 			<span><_text constant="label_content" module="articles"/></span>
-			<textarea name="content" rows="5" cols="40" style="width: 690px; height: 350px;"><_var name="$params['content']"/></textarea>
+			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 300px;"><_raw text=""/></textarea>
+			<_language_data param="content"/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="articles"/></span>
@@ -31,4 +41,8 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		new LanguageSelector('article_change_form');
+	</script>
+
 </document>

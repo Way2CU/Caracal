@@ -14,7 +14,7 @@ class comments extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -400,7 +400,7 @@ class comments extends Module {
 
 class CommentManager extends ItemManager {
 	function __construct() {
-		parent::ItemManager('comments');
+		parent::__construct('comments');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('module', 'varchar');

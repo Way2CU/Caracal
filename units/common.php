@@ -12,33 +12,56 @@ if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to t
  * @author MeanEYE
  */
 function fix_chars($string, $strip_tags=true) {
-	$string = strip_tags($string, '<b><small><big><i><u><tt><pre>');
-    $string = str_replace("*","&#42;", $string);
-    $string = str_replace(chr(92).chr(34),"&#34;", $string);
-    $string = str_replace("\r\n","\n", $string);
-    $string = str_replace("\'","&#39;", $string);
-    $string = str_replace("'","&#39;", $string);
-    $string = str_replace(chr(34),"&#34;", $string);
-    $string = str_replace("<", "&lt;", $string);
-    $string = str_replace(">", "&gt;", $string);
-    $string = str_replace("\n", "<br>", $string);
-	$string = preg_replace('/\[link\s*=\s*([^\]]+)\](.+)\[\/link\]/i', '<a href="$1">$2</a>', $string);
-	$string = preg_replace('/\[image\s*=\s*([^\]]+)\](.+)\[\/image\]/i', '<img src="$1" alt="$2">', $string);
-    $string = str_replace("[b]", "<b>", $string);
-    $string = str_replace("[/b]", "</b>", $string);
-    $string = str_replace("[small]", "<small>", $string);
-    $string = str_replace("[/small]", "</small>", $string);
-    $string = str_replace("[big]", "<big>", $string);
-    $string = str_replace("[/big]", "</big>", $string);
-    $string = str_replace("[i]", "<i>", $string);
-    $string = str_replace("[/i]", "</i>", $string);
-    $string = str_replace("[u]", "<u>", $string);
-    $string = str_replace("[/u]", "</u>", $string);
-    $string = str_replace("[tt]", "<tt>", $string);
-    $string = str_replace("[/tt]", "</tt>", $string);
-    $string = str_replace("[pre]", "<pre>", $string);
-    $string = str_replace("[/pre]", "</pre>", $string);
+	if (!is_array($string)) {
+		$string = strip_tags($string, '<b><small><big><i><u><tt><pre>');
+		$string = str_replace("*","&#42;", $string);
+		$string = str_replace(chr(92).chr(34),"&#34;", $string);
+		$string = str_replace("\r\n","\n", $string);
+		$string = str_replace("\'","&#39;", $string);
+		$string = str_replace("'","&#39;", $string);
+		$string = str_replace(chr(34),"&#34;", $string);
+		$string = str_replace("<", "&lt;", $string);
+		$string = str_replace(">", "&gt;", $string);
+		$string = str_replace("\n", "<br>", $string);
+		$string = preg_replace('/\[link\s*=\s*([^\]]+)\](.+)\[\/link\]/i', '<a href="$1">$2</a>', $string);
+		$string = preg_replace('/\[image\s*=\s*([^\]]+)\](.+)\[\/image\]/i', '<img src="$1" alt="$2">', $string);
+		$string = str_replace("[b]", "<b>", $string);
+		$string = str_replace("[/b]", "</b>", $string);
+		$string = str_replace("[small]", "<small>", $string);
+		$string = str_replace("[/small]", "</small>", $string);
+		$string = str_replace("[big]", "<big>", $string);
+		$string = str_replace("[/big]", "</big>", $string);
+		$string = str_replace("[i]", "<i>", $string);
+		$string = str_replace("[/i]", "</i>", $string);
+		$string = str_replace("[u]", "<u>", $string);
+		$string = str_replace("[/u]", "</u>", $string);
+		$string = str_replace("[tt]", "<tt>", $string);
+		$string = str_replace("[/tt]", "</tt>", $string);
+		$string = str_replace("[pre]", "<pre>", $string);
+		$string = str_replace("[/pre]", "</pre>", $string);
+	} else {
+		foreach($string as $key => $value)
+			$string[$key] = fix_chars($value);
+	}
     return $string;
+}
+
+/**
+ * Strip tags and escape the rest of the string
+ *
+ * @param mixed $string
+ * @return mixed
+ * @author MeanEYE.rcf
+ */
+function escape_chars($string) {
+	if (!is_array($string)) {
+		$string = mysql_real_escape_string(strip_tags($string));
+	} else {
+		foreach($string as $key => $value)
+			$string[$key] = escape_chars($value);
+	}
+
+	return $string;
 }
 
 /**
@@ -68,29 +91,35 @@ function fix_id($string) {
  * @author MeanEYE
  */
 function unfix_chars($string) {
-    $string = str_replace("&#42;", "*", $string);
-    $string = str_replace("&#34;", chr(34), $string);
-    $string = str_replace("&#39;", "'", $string);
-    $string = str_replace("&#39;", "'", $string);
-    $string = str_replace("&lt;", "<", $string);
-    $string = str_replace("&gt;", ">", $string);
-    $string = str_replace("<br>", "\n", $string);
-	$string = preg_replace('/<a[\s]+href=[\'\"]([^\'\"]+)[\'\"]>(.+)<\/a>/i', '[link=$1]$2[/link]', $string);
-	$string = preg_replace('/<img[\s]+src=[\'\"]([^\'\"]+)[\'\"][\s]+alt=[\'\"](.+)[\'\"]>/i', '[image=$1]$2[/image]', $string);
-    $string = str_replace("<b>", "[b]", $string);
-    $string = str_replace("</b>", "[/b]", $string);
-    $string = str_replace("<small>", "[small]", $string);
-    $string = str_replace("</small>", "[/small]", $string);
-    $string = str_replace("<big>", "[big]", $string);
-    $string = str_replace("</big>", "[/big]", $string);
-    $string = str_replace("<i>", "[i]", $string);
-    $string = str_replace("</i>", "[/i]", $string);
-    $string = str_replace("<u>", "[u]", $string);
-    $string = str_replace("</u>", "[/u]", $string);
-    $string = str_replace("<tt>", "[tt]", $string);
-    $string = str_replace("</tt>", "[/tt]", $string);
-    $string = str_replace("<pre>", "[pre]", $string);
-    $string = str_replace("</pre>", "[/pre]", $string);
+	if (!is_array($string)) {
+		$string = str_replace("&#42;", "*", $string);
+		$string = str_replace("&#34;", chr(34), $string);
+		$string = str_replace("&#39;", "'", $string);
+		$string = str_replace("&#39;", "'", $string);
+		$string = str_replace("&lt;", "<", $string);
+		$string = str_replace("&gt;", ">", $string);
+		$string = str_replace("<br>", "\n", $string);
+		$string = preg_replace('/<a[\s]+href=[\'\"]([^\'\"]+)[\'\"]>(.+)<\/a>/i', '[link=$1]$2[/link]', $string);
+		$string = preg_replace('/<img[\s]+src=[\'\"]([^\'\"]+)[\'\"][\s]+alt=[\'\"](.+)[\'\"]>/i', '[image=$1]$2[/image]', $string);
+		$string = str_replace("<b>", "[b]", $string);
+		$string = str_replace("</b>", "[/b]", $string);
+		$string = str_replace("<small>", "[small]", $string);
+		$string = str_replace("</small>", "[/small]", $string);
+		$string = str_replace("<big>", "[big]", $string);
+		$string = str_replace("</big>", "[/big]", $string);
+		$string = str_replace("<i>", "[i]", $string);
+		$string = str_replace("</i>", "[/i]", $string);
+		$string = str_replace("<u>", "[u]", $string);
+		$string = str_replace("</u>", "[/u]", $string);
+		$string = str_replace("<tt>", "[tt]", $string);
+		$string = str_replace("</tt>", "[/tt]", $string);
+		$string = str_replace("<pre>", "[pre]", $string);
+		$string = str_replace("</pre>", "[/pre]", $string);
+	} else {
+		foreach($string as $key => $value)
+			$string[$key] = unfix_chars($value);
+	}
+
     return $string;
 }
 

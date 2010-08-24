@@ -1,44 +1,27 @@
 /*
 	Menus Style Sheet
-	Copyright (c) 2009. by MeanEYE[RCF]
+	Copyright (c) 2010. by MeanEYE[RCF]
 	http://www.rcf-group.com
 */
 
-div#backend_wrapLeft {
+div#main_menu {
 	display: block;
-	width: 70%;
+	height: 30px;
 
-	margin-left: auto;
-	margin-right: auto;
-	padding-left: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
 
-	background-image: url(../images/main_menu/back_left.png);
-	background-repeat: no-repeat;
-	background-position: top left;
-}
-
-div#backend_wrapRight {
-	display: block;
-
-	padding-right: 30px;
-
-	background-image: url(../images/main_menu/back_right.png);
-	background-repeat: no-repeat;
-	background-position: top right;
-}
-
-div#backend_Menu {
-	display: block;
-	height: 45px;
+	position: relative;
 
 	background-image: url(../images/main_menu/back.png);
 	background-repeat: repeat-x;
 	background-position: top left;
+
+	z-index: 1001;
 }
 
-div#backend_Menu ul#navigation {
+div#main_menu ul#navigation {
 	display: block;
-	height: 27px;
 
 	margin: 0px;
 	padding: 0px;
@@ -47,50 +30,39 @@ div#backend_Menu ul#navigation {
 	list-style-image: none;
 }
 
-div#backend_Menu ul#navigation > li {
-	display: inline-block;
-	height: 27px;
+div#main_menu ul#navigation > li {
+	display: block;
 	float: left;
 
 	position: relative;
 
 	margin: 0px;
 	padding: 0px;
-	padding-left: 7px;
-
-	color: #2e2e2e;
-	font-family: Tahoma, Verdana, Helvetica;
-	font-size: 13px;
 }
 
-div#backend_Menu ul#navigation > li > a {
+div#main_menu ul#navigation > li > a {
 	display: inline-block;
-	height: 22px;
+	height: 19px;
 
-	padding-top: 5px;
+	padding: 4px;
+	padding-left: 7px;
 	padding-right: 7px;
+	padding-top: 7px;
 
-	color: #2e2e2e;
+	color: #8DA4CB;
 	text-decoration: none;
 }
 
-div#backend_Menu ul#navigation > li:hover {
-	background-image: url(../images/main_menu/item_hover_back_left.png);
-	background-repeat: no-repeat;
-	background-position: bottom left;
-}
-
-div#backend_Menu ul#navigation > li:hover > a {
-	background-image: url(../images/main_menu/item_hover_back_right.png);
-	background-repeat: no-repeat;
-	background-position: bottom right;
+div#main_menu ul#navigation > li:hover > a,
+div#main_menu ul#navigation > li > a:hover {
+	background-color: #4791eb;
 
 	color: white;
 }
 
-div#backend_Menu ul#navigation > li img {
-	margin-left: 2px;
-	margin-right: 2px;
+div#main_menu ul#navigation > li img {
+	margin-left: 3px;
+	margin-right: 3px;
 
 	border: 0px;
 	vertical-align: middle;
@@ -99,7 +71,7 @@ div#backend_Menu ul#navigation > li img {
 /**
  * LEVEL 2+
  */
-div#backend_Menu ul#navigation li > ul {
+div#main_menu ul#navigation li > ul {
 	display: block;
 	width: 182px;
 
@@ -109,47 +81,42 @@ div#backend_Menu ul#navigation li > ul {
 	visibility: hidden;
 
 	margin: 0px;
-	padding: 0px;
-	padding-top: 5px;
-	padding-left: 15px;
-	padding-right: 19px;
-	padding-bottom: 19px;
-
-	background-image: url(../images/main_menu/submenu_back.png);
-	background-repeat: no-repeat;
-	background-position: bottom left;
+	padding: 3px;
 
 	position: absolute;
 	top: 100%;
-	left: -20px;
+	left: 0px;
 
-	z-index: 1001;
+	border: 1px solid #0d2748;
+	border-radius: 0px 6px 6px 6px;
+	-moz-border-radius: 0px 6px 6px 6px;
+	background-color: rgba(13, 39, 72, 0.9);
+
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
-div#backend_Menu ul#navigation li:hover > ul {
+div#main_menu ul#navigation li:hover > ul {
 	visibility: visible;
 }
 
-div#backend_Menu ul#navigation li > ul li {
+div#main_menu ul#navigation li > ul li {
 	display: block;
 }
 
-div#backend_Menu ul#navigation li > ul li a {
+div#main_menu ul#navigation li > ul li a {
 	display: block;
 
 	padding: 5px;
 
-	border: 1px solid transparent;
-
-	color: silver;
-	font-family: Tahoma, Verdana, Helvetica;
-	font-size: 13px;
+	color: #8DA4CB;
 	text-decoration: none;
 }
 
-div#backend_Menu ul#navigation li > ul li a:hover {
-	border-radius: 5px;
-	border: 1px solid #4DA3F0;
+div#main_menu ul#navigation li > ul li a:hover {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
 	background-color: #267ece;
 
 	color: white;

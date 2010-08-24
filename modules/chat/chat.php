@@ -13,7 +13,7 @@ class chat extends Module {
 	 */
 	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -145,7 +145,7 @@ class chat extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_settings'	=> backend_WindowHyperlink(
+					'link_settings'	=> window_OpenHyperlink(
 										$this->getLanguageConstant('menu_settings'),
 										'chat_settings', 450,
 										$this->getLanguageConstant('title_chat_settings'),
@@ -170,7 +170,7 @@ class chat extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-						'link_new'		=> backend_WindowHyperlink(
+						'link_new'		=> window_OpenHyperlink(
 											$this->getLanguageConstant('add_channel'),
 											'chat_settings_add_channel', 400,
 											$this->getLanguageConstant('title_channel_add'),

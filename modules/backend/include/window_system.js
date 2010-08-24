@@ -1,0 +1,395 @@
+/**
+ * Window Management System
+ *
+ * Copyright (c) 2010. by MeanEYE.rcf
+ * http://rcf-group.com
+ *
+ * This window management system was designed to be used with RCF WebEngine
+ * administration system and has very little use outside of it. Is you are going
+ * to take parts from this file leave credits intact.
+ *
+ * Requires jQuery 1.4.2+
+ */
+
+var window_system = null;
+
+function Window(id, width, title, can_close, url) {
+	var self = this;  // used for nested functions
+
+	this.id = id;
+	this.url = url;
+	this.visible = false;
+	this.zIndex = 1000;
+
+	// create interface
+	this.$parent = null;
+	this.window_system = null;
+
+	this.$container = $('<div id="'+id+'">').hide().addClass('window');
+	this.$title = $('<div>').addClass('title').html(title);
+	this.$content = $('<div>').addClass('content');
+
+	this.$container.append(this.$title);
+	this.$container.append(this.$content);
+
+	if (can_close) {
+		var $close_button = $('<a>').addClass('close_button');
+
+		$close_button.click(function() {
+			self.close();
+		});
+	}
+
+	this.$title.append($close_button);
+
+	// configure interface
+	this.$container.css({
+					width: width
+				});
+
+	this.$container.click(function() {
+		self.window_system.focusWindow(self.id);
+	});
+
+	this.$title.drag(function(event, pos) {
+		self.$container.css({
+					top: pos.offsetY,
+					left: pos.offsetX
+				});
+	});
+
+	/**
+	 * Show window
+	 */
+	this.show = function(center) {
+		if (this.visible) return this;  // don't allow animation of visible window
+
+		var params = {
+			display: 'block',
+			opacity: 0
+		};
+
+		// center if needed
+		if (center != undefined && center) {
+			params.top = Math.floor((this.$parent.height() - this.$container.height()) / 2) - 50;
+			params.left = Math.floor((this.$parent.width() - this.$container.width()) / 2);
+
+			if (params.top < 35)
+				params.top = 35;
+		}
+
+		// apply params and show window
+		this.$container
+			.css(params)
+			.animate({opacity: 1}, 300);
+
+		this.visible = true;
+		this.window_system.focusWindow(this.id);
+		return this;
+	}
+
+	/**
+	 * Close window
+	 */
+	this.close = function() {
+		this.$container.animate({opacity: 0}, 300, function() {
+			this.visible = false;
+			self.window_system.removeWindow(self);
+			self.window_system.focusTopWindow();
+		});
+	}
+
+	/**
+	 * Set focus on self
+	 */
+	this.focus = function() {
+		this.window_system.focusWindow(this.id);
+		return this;  // allow linking
+	}
+
+	/**
+	 * Attach window to specified container
+	 *
+	 * @param object system
+	 */
+	this.attach = function(system, $container) {
+		// attach container to main container
+		system.$container.append(this.$container)
+
+		// save parent for later use
+		this.$parent = system.$container;
+		this.window_system = system;
+	}
+
+	/**
+	 * Event triggered when window gains focus
+	 */
+	this.gainFocus = function() {
+		this.zIndex = 1000;
+		this.$container
+				.css({zIndex: this.zIndex})
+				.animate({opacity: 1}, 300);
+	}
+
+	/**
+	 * Event triggered when window looses focus
+	 */
+	this.looseFocus = function() {
+		this.zIndex--;
+		this.$container
+				.css({zIndex: this.zIndex})
+				.animate({opacity: 0.6}, 300);
+	}
+
+	/**
+	 * Load/reload window content
+	 *
+	 * @param string url
+	 */
+	this.loadContent = function(url) {
+		if (url != undefined) this.url = url;
+
+		this.$container.addClass('loading');
+
+		$.ajax({
+			cache: false,
+			context: this,
+			dataType: 'html',
+			success: this.contentLoaded,
+			error: this.contentError,
+			url: this.url
+		});
+
+		return this;  // allow linking
+	}
+
+	/**
+	 * Submit form content to server and load response
+	 *
+	 * @param object form
+	 */
+	this.submitForm = function(form) {
+		this.$container.addClass('loading');
+
+		var data = {};
+		var field_types = ['input', 'select', 'textarea'];
+
+		// collect data from from
+		for(var index in field_types) {
+			var type = field_types[index];
+
+			$(form).find(type).each(function() {
+				data[$(this).attr('name')] = $(this).val();
+			});
+		}
+
+		// send data to server
+ 		$.ajax({
+			cache: false,
+			context: this,
+			dataType: 'html',
+			type: 'POST',
+			data: data,
+			success: this.contentLoaded,
+			error: this.contentError,
+			url: $(form).attr('action')
+		});
+	}
+
+	/**
+	 * Event fired on when window content has finished loading
+	 *
+	 * @param string response
+	 * @param string status
+	 */
+	this.contentLoaded = function(data) {
+		// animate display
+		var start_params = {
+						top: this.$container.position().top,
+						left: this.$container.position().left,
+						width: this.$container.width(),
+						height: this.$container.height(),
+					};
+
+		self.$content.html(data);
+
+		var end_params = {
+					top: start_params.top + Math.floor((start_params.height - self.$container.height()) / 2),
+					height: self.$container.height()
+				};
+
+		// prevent window from going under menu
+		if (end_params.top < 35)
+			end_params.top = 35;
+
+		// animate
+		self.$container
+				.stop(true, true)
+				.css(start_params)
+				.animate(end_params, 400);
+
+
+		// attach events
+		self.$content.delegate('form', 'submit', function(event) {
+			event.preventDefault();
+			self.submitForm(this);
+		});
+
+		// remove loading indicator
+		self.$container.removeClass('loading');
+	}
+
+	/**
+	 * Event fired when there was an error loading AJAX data
+	 *
+	 * @param object request
+	 * @param string status
+	 * @param string error
+	 */
+	this.contentError = function(request, status, error) {
+		// animate display
+		var start_params = {
+						top: this.$container.position().top,
+						left: this.$container.position().left,
+						width: this.$container.width(),
+						height: this.$container.height(),
+					};
+
+		this.$content.html(status + ': ' + error);
+
+		var end_params = {
+					top: start_params.top + Math.floor((start_params.height - self.$container.height()) / 2),
+					height: self.$container.height()
+				};
+
+		self.$container
+				.stop(true, true)
+				.css(start_params)
+				.animate(end_params, 400);
+
+		// remove loading indicator
+		self.$container.removeClass('loading');
+	}
+}
+
+function WindowSystem($container) {
+	this.$container = $container;
+	this.list = [];
+
+	this.init = function() {
+	}
+
+	/**
+	 * Open new window (or focus existing) and load content from specified URL
+	 *
+	 * @param string id
+	 * @param integer width
+	 * @param string title
+	 * @param boolean can_close
+	 * @param string url
+	 * @return object
+	 */
+	this.openWindow = function(id, width, title, can_close, url) {
+		if (this.windowExists(id)) {
+			// window already exists, reload content and show it
+			this.getWindow(id).focus().loadContent(url);
+
+		} else {
+			// window does not exist, create it
+			var window = new Window(id, width, title, can_close, url);
+
+			this.list[id] = window;
+			window.attach(this);
+			window.show(true);
+			window.loadContent();
+		}
+	},
+
+	/**
+	 * Close window
+	 *
+	 * @param string id
+	 * @return boolean
+	 */
+	this.closeWindow = function(id) {
+		if (this.windowExists(id))
+			this.getWindow(id).close();
+	}
+
+	/**
+	 * Remove window from list and container
+	 *
+	 * @param object window
+	 */
+	this.removeWindow = function(window) {
+		delete this.list[window.id];
+		window.$container.remove();
+	}
+
+	/**
+	 * Load window content from specified URL
+	 *
+	 * @param string id
+	 * @param string url
+	 */
+	this.loadWindowContent = function(id, url) {
+		if (this.windowExists(id)) {
+			this.getWindow(id).loadContent(url);
+		}
+	}
+
+	/**
+	 * Focuses specified window
+	 *
+	 * @param string id
+	 */
+	this.focusWindow = function(id) {
+		if (this.windowExists(id)) {
+			for (var window_id in this.list)
+				if (window_id != id)
+					this.list[window_id].looseFocus(); else
+					this.list[window_id].gainFocus();
+		}
+	}
+
+	/**
+	 * Focuses top level window
+	 */
+	this.focusTopWindow = function() {
+		var highest_id = null;
+		var highest_index = 0;
+
+		for (var window_id in this.list)
+			if (this.list[window_id].zIndex > highest_index) {
+				highest_id = this.list[window_id].id;
+				highest_index = this.list[window_id].zIndex;
+			}
+
+		if (highest_id != null)
+			this.focusWindow(highest_id);
+	}
+
+	/**
+	 * Get window based on text Id
+	 *
+	 * @param string id
+	 * @return object
+	 */
+	this.getWindow = function(id) {
+		return this.list[id];
+	}
+
+	/**
+	 * Check if window exists
+	 *
+	 * @param string id
+	 * @return boolean
+	 */
+	this.windowExists = function(id) {
+		return id in this.list;
+	}
+}
+
+$(document).ready(function() {
+	window_system = new WindowSystem($('#wrap'));
+});

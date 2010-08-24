@@ -14,9 +14,9 @@ class youtube extends Module {
 	 *
 	 * @return youtube
 	 */
-	function youtube() {
+	function __construct() {
 		$this->file = __FILE__;
-		parent::Module();
+		parent::__construct();
 	}
 
 	/**
@@ -155,7 +155,7 @@ class youtube extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'	=> backend_WindowHyperlink(
+					'link_new'	=> window_OpenHyperlink(
 										$this->getLanguageConstant('add'),
 										$this->name.'_video_add', 400,
 										$this->getLanguageConstant('title_video_add'),
@@ -399,7 +399,11 @@ class youtube extends Module {
 								$this->getEmbedURL($video->video_id),
 								$params['target'],
 								isset($params['width']) ? $params['width'] : 320,
-								isset($params['height']) ? $params['height'] : 240
+								isset($params['height']) ? $params['height'] : 240,
+								array(),
+								array(
+									'wmode'	=> 'opaque'
+								)
 							);
 		}
 	}
@@ -512,8 +516,8 @@ class youtube extends Module {
 
 class YouTube_VideoManager extends ItemManager {
 
-	function YouTube_VideoManager() {
-		parent::ItemManager('youtube_video');
+	function __construct() {
+		parent::__construct('youtube_video');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('text_id', 'varchar');

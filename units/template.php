@@ -46,8 +46,8 @@ class TemplateHandler {
 	 * @var array
 	 */
 	var $block_tags = array(
-						'div', 'ol', 'ul', 'li', 'object', 'table','thead', 'tbody', 
-						'tr', 'td', 'th', 'head', 'body', 'html', 'form', 'fieldset', 
+						'div', 'ol', 'ul', 'li', 'object', 'table','thead', 'tbody',
+						'tr', 'td', 'th', 'head', 'body', 'html', 'form', 'fieldset',
 						'select', 'style', 'script', 'label', 'p'
 						);
 
@@ -114,7 +114,7 @@ class TemplateHandler {
 	 * @param array $tags Leave blank, used for recursion
 	 */
 	function parse($level, $tags=array(), $parent_block=true) {
-		global $LanguageHandler, $ModuleHandler, $section, $action, $language, $template_path;
+		global $LanguageHandler, $ModuleHandler, $section, $action, $language, $template_path, $system_template_path;
 
 		if ((!$this->active) && empty($tags)) return;
 
@@ -194,7 +194,7 @@ class TemplateHandler {
 						// in any other case we display data inside tag
 						$text = $tag->tagData;
 					}
-					
+
 					if ($parent_block)
 						echo "{$tag_space}{$text}\n"; else
 						echo $text;
@@ -217,7 +217,7 @@ class TemplateHandler {
 						// use default language handler
 						$text = $LanguageHandler->getText($constant, $language);
 					}
-					
+
 					if ($parent_block)
 						echo "{$tag_space}{$text}\n"; else
 						echo $text;
@@ -237,6 +237,28 @@ class TemplateHandler {
 						// log error
 						print "Mapped module ({$this->mapped_module}) is not loaded!";
 					}
+					break;
+
+				// print milti-language data
+				case '_language_data':
+					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
+
+					if (!isset($this->params[$name]) || !is_array($this->params[$name]) || is_null($name)) break;
+
+					$template = new TemplateHandler('language_data.xml', $system_template_path);
+					$template->setMappedModule($this->mapped_module);
+
+					foreach($this->params[$name] as $lang => $data) {
+						$params = array(
+									'param'		=> $name,
+									'language'	=> $lang,
+									'data'		=> $data,
+								);
+						$template->restoreXML();
+						$template->setLocalParams($params);
+						$template->parse($level);
+					}
+
 					break;
 
 				// conditional tag
@@ -285,15 +307,15 @@ class TemplateHandler {
 						if (in_array($tag->tagName, $this->block_tags)) {
 							// if tag is block
 							$break = !(empty($tag->tagChildren) && empty($tag->tagData));
-							
+
 							echo $tag_space."<".
 								$tag->tagName.$this->getTagParams($tag->tagAttrs).
 								">".($break ? "\n" : "");
 
 							if (!empty($tag->tagChildren))
 								$this->parse($level+1, $tag->tagChildren, true);
-								
-							if (!empty($tag->tagData)) 
+
+							if (!empty($tag->tagData))
 								echo ($break ? $tag_space."\t" : "").$tag->tagData."\n";
 
 							echo ($break ? $tag_space : "")."</{$tag->tagName}>\n";

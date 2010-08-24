@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="article_add_form">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_group_text_id" module="articles"/></span>
+			<input type="text" name="text_id" value="$params['text_id']" eval="value" style="width: 270px;" maxlength="32"/>
+		</label>
+		<label>
+			<span><_text constant="label_group_title" module="articles"/></span>
+			<input type="text" class="multi-language" name="title" style="width: 370px;" maxlength="255"/>
+			<_language_data param="title"/>
+		</label>
+		<label>
+			<span><_text constant="label_group_description" module="articles"/></span>
+			<textarea class="multi-language" name="description" rows="5" cols="40" style="width: 370px; height: 150px;"><_raw text=""/></textarea>
+			<_language_data param="description"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('article_add_form');
+	</script>
+</document>
