@@ -684,7 +684,17 @@ class articles extends Module {
 		if ($only_visible) $conditions['visible'] = 1;
 		if (!is_null($group)) $conditions['group'] = $group;
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		// give the ability to limit number of articles to display
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']); else
+			$limit = null;
+
+		// get items from manager
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, array('id'), true, $limit);
+
+		// randomize if needed
+		if (isset($tag_params['random']) && $tag_params['random'] == 1 && !is_null($items))
+			shuffle($items);
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -697,10 +707,6 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article', &$this, 'tag_Article');
 		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
-
-		// give the ability to limit number of links to display
-		if (isset($tag_params['limit']))
-			$items = array_slice($items, 0, $tag_params['limit'], true);
 
 		if (count($items) > 0)
 			foreach($items as $item) {

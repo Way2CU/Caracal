@@ -39,22 +39,22 @@ class LanguageHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	function getText($constant, $language='') {
-		global $default_language;
+	function getText($constant, $lang='') {
+		global $language;
 
 		$result = '';
 
-		if (!$this->active) return $result;
+		if ($this->active) {
+			if (empty($lang)) $lang = $language;  // use current language
 
-		$language = (empty($language)) ? $default_language : $language;
-
-		foreach ($this->engine->document->language as $xml_language)
-			if ($xml_language->tagAttrs['short'] == $language)
-				foreach ($xml_language->constant as $xml_constant)
-					if ($xml_constant->tagAttrs['name'] == $constant) {
-						$result = empty($xml_constant->tagData) ? $xml_constant->tagAttrs['value'] : $xml_constant->tagData;
-						break;
-					}
+			foreach ($this->engine->document->language as $xml_language)
+				if ($xml_language->tagAttrs['short'] == $lang)
+					foreach ($xml_language->constant as $xml_constant)
+						if ($xml_constant->tagAttrs['name'] == $constant) {
+							$result = empty($xml_constant->tagData) ? $xml_constant->tagAttrs['value'] : $xml_constant->tagData;
+							break;
+						}
+		}
 
 		return $result;
 	}
@@ -145,7 +145,6 @@ class MainLanguageHandler {
 	 */
 	function getText($constant, $language='') {
 		$result = "";
-
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getText($constant, $language);
 
