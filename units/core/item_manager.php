@@ -278,7 +278,7 @@ class ItemManager {
 				$this->expandMultilanguageFields($data, false);
 				$result = 'SELECT '.$this->getFields($data).' FROM `'.$this->table_name.'`';
 				if (!empty($conditionals)) $result .= ' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
-				if (!is_null($order_by)) $result .= ' ORDER BY '.$this->getFields($order_by).($order_asc ? ' ASC' : ' DESC');
+				if (!is_null($order_by) && !empty($order_by)) $result .= ' ORDER BY '.$this->getFields($order_by).($order_asc ? ' ASC' : ' DESC');
 				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 		}

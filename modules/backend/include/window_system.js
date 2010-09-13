@@ -179,9 +179,20 @@ function Window(id, width, title, can_close, url) {
 			var type = field_types[index];
 
 			$(form).find(type).each(function() {
-				if ($(this).attr('type') != 'checkbox')
-					data[$(this).attr('name')] = $(this).val(); else
-					data[$(this).attr('name')] = this.checked ? 1 : 0;
+				if ($(this).hasClass('multi-language')) {
+					// multi-language input field, we need to gather other data
+					var name = $(this).attr('name');
+					var temp_data = $(this).data('language');
+
+					for (var language in temp_data)
+						data[name + '_' + language] = temp_data[language];
+
+				} else {
+					// normal input field or checkbox
+					if ($(this).attr('type') != 'checkbox')
+						data[$(this).attr('name')] = $(this).val(); else
+						data[$(this).attr('name')] = this.checked ? 1 : 0;
+				}
 			});
 		}
 
@@ -243,6 +254,24 @@ function Window(id, width, title, can_close, url) {
 			} else {
 				// submission with file uploads
 				self.$container.addClass('loading');
+
+				// remove standard components and replace them with multi-language data on submit
+				$(this).submit(function() {
+					$(this).find('input.multi-language, textarea.multi-language').each(function() {
+						var name = $(this).attr('name');
+						var data = $(this).data('language');
+
+						for (var language in data) {
+							var $hidden_field = $('<input>');
+
+							$hidden_field
+									.attr('type', 'hidden')
+									.attr('name', name + '_' + language)
+									.val(data[language])
+									.insertAfter($(this));
+						}
+					});
+				});
 
 				var $iframe = self.getUploaderFrame();
 				$(this).attr('target', $iframe.attr('id'));

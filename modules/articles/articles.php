@@ -610,13 +610,22 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	function tag_Article($level, $tag_params, $children) {
+		$manager = new ArticleManager();
+
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
 
-		// we need at least one of IDs in order to display article
-		if (is_null($id) && is_null($text_id)) return;
+		if (is_null($id) && is_null($text_id))
+			if (isset($tag_params['random'])) {
+				$conditions = array();
 
-		$manager = new ArticleManager();
+				$group_manager = new ArticleGroupManager();
+
+			} else {
+				// no id/text_id were specified nor random article was requested
+				return;
+			}
+
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)

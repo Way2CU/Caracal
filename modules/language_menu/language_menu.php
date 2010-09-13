@@ -29,6 +29,7 @@ class language_menu extends Module {
 		if ($ModuleHandler->moduleExists('head_tag')) {
 			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
 
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
 		}
 	}
@@ -49,6 +50,10 @@ class language_menu extends Module {
 
 				case 'json':
 					$this->json_Menu();
+					break;
+
+				case 'json_get_text':
+					$this->json_GetText();
 					break;
 
 				default:
@@ -99,9 +104,6 @@ class language_menu extends Module {
 			}
 	}
 
-	function printSelector($level) {
-	}
-
 	/**
 	 * Print JSON object for usage by the backend API
 	 */
@@ -111,11 +113,14 @@ class language_menu extends Module {
 		define('_OMIT_STATS', 1);
 
 		// check if we were asked to get languages from specific module
-		if (isset($tag_params['from_module']) && $ModuleHandler->moduleExists($tag_params['from_module'])) {
-			$module = $ModuleHandler->getObjectFromName($tag_params['from_module']);
+		if (isset($_REQUEST['from_module']) && $ModuleHandler->moduleExists($_REQUEST['from_module'])) {
+			$module = $ModuleHandler->getObjectFromName($_REQUEST['from_module']);
+
+			$rtl = $module->language->getRTL();
 			$list = $module->language->getLanguages(true);
 			$default = $module->language->getDefaultLanguage();
 		} else {
+			$rtl = $LanguageHandler->getRTL();
 			$list = $LanguageHandler->getLanguages(true);
 			$default = $LanguageHandler->getDefaultLanguage();
 		}
@@ -123,7 +128,8 @@ class language_menu extends Module {
 		$result = array(
 					'error'			=> false,
 					'error_message'	=> '',
-					'items'			=> array()
+					'items'			=> array(),
+					'rtl'			=> $rtl
 				);
 
 		foreach($list as $short => $long)
@@ -132,6 +138,29 @@ class language_menu extends Module {
 									'long'		=> $long,
 									'default' 	=> $short == $default
 								);
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Get language constant from specified module or from global language file
+	 */
+	function json_GetText() {
+		global $ModuleHandler, $LanguageHandler;
+
+		define('_OMIT_STATS', 1);
+
+		// check if we were asked to get languages from specific module
+		if (isset($_REQUEST['from_module']) && $ModuleHandler->moduleExists($_REQUEST['from_module'])) {
+			$module = $ModuleHandler->getObjectFromName(escape_chars($_REQUEST['from_module']));
+			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
+		} else {
+			$text = $LanguageHandler->getText(escape_chars($_REQUEST['constant']));
+		}
+
+		$result = array(
+					'text'	=> $text,
+				);
 
 		print json_encode($result);
 	}

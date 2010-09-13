@@ -268,6 +268,7 @@ class gallery extends Module {
 		if ($ModuleHandler->moduleExists('head_tag')) {
 			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
 			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
