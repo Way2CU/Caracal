@@ -28,13 +28,13 @@
 
 		<!-- Labels -->
 		<constant name="label_title">Document title:</constant>
-		<constant name="label_content">Article text&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
+		<constant name="label_content">Article text&amp;nbsp;&lt;small&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
 		<constant name="label_visible">Article is visible</constant>
-		<constant name="label_text_id">Unique article text ID&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_text_id">Unique article text ID&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
 		<constant name="label_group_title">Title:</constant>
-		<constant name="label_group_description">Description&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group_text_id">Unique group text ID&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group">Group&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group_description">Description&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group_text_id">Unique group text ID&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group">Group&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
 
 		<!-- Columns -->
 		<constant name="column_title">Title</constant>
@@ -48,40 +48,40 @@
 		<constant name="menu_articles">מאמרים</constant>
 		<constant name="menu_articles_new">צור מאמר חדש</constant>
 		<constant name="menu_articles_manage">נהל מאמרים</constant>
-		<constant name="menu_article_groups">Manage groups</constant>
+		<constant name="menu_article_groups">נהל מאמרים</constant>
 
 		<!-- Titles -->
 		<constant name="title_articles_new">מאמרים: צור חדש</constant>
 		<constant name="title_articles_change">מאמרים: שנה</constant>
 		<constant name="title_articles_delete">מאמרים: מחק</constant>
 		<constant name="title_articles_manage">מאמרים: נהל</constant>
-		<constant name="title_article_groups">Article Groups</constant>
-		<constant name="title_article_groups_new">Article Groups: Create new</constant>
-		<constant name="title_article_groups_change">Article Groups: Change data</constant>
-		<constant name="title_article_groups_delete">Article Groups: Delete</constant>
+		<constant name="title_article_groups">קבוצות מאמרים</constant>
+		<constant name="title_article_groups_new">קבוצות מאמרים: חדש</constant>
+		<constant name="title_article_groups_change">קבוצות מאמרים: שנה</constant>
+		<constant name="title_article_groups_delete">קבוצות מאמרים: מחק</constant>
 
 		<!-- Messages -->
 		<constant name="message_article_saved">מאמר נשמר!</constant>
 		<constant name="message_article_delete">אתה עומד למחר את המאמר הבא! אתה בטוח?</constant>
 		<constant name="message_article_deleted">מאמר נמחק!</constant>
-		<constant name="message_group_saved">Group data was saved!</constant>
-		<constant name="message_group_delete">You are about to delete the following group, articles contained within that group will remain intact! Are you sure?</constant>
-		<constant name="message_group_deleted">Group deleted!</constant>
+		<constant name="message_group_saved">קבוצת המידע נשמרה!</constant>
+		<constant name="message_group_delete">אתה עומד למחוק קבוצה, המאמרים ישארו ולא ימחקו - האם אתה בטוח?</constant>
+		<constant name="message_group_deleted">הקבוצה נמחקה!</constant>
 
 		<!-- Labels -->
 		<constant name="label_title">כותרת המסמך:</constant>
-		<constant name="label_content">תוכן המאמר&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
+		<constant name="label_content">תוכן המאמר&amp;nbsp;&lt;small&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
 		<constant name="label_visible">המאמר נראה</constant>
-		<constant name="label_text_id">מזהה טקסט המאמר&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(אופציונאלי)&lt;/small&gt;:</constant>
+		<constant name="label_text_id">מזהה טקסט המאמר&amp;nbsp;&lt;small&gt;(אופציונאלי)&lt;/small&gt;:</constant>
 		<constant name="label_group_title">Title:</constant>
-		<constant name="label_group_description">Description&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group_text_id">Unique group text ID&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group">Group&amp;nbsp;&lt;small style="color: #7F7F7F;"&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group_description">תיאור&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group_text_id">טקסט חד ערכי? ID&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group">Group&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
 
 		<!-- Columns -->
 		<constant name="column_title">כותרת</constant>
 		<constant name="column_author">מחבר</constant>
 		<constant name="column_rating">דירוג</constant>
-		<constant name="column_text_id">Text ID</constant>
+		<constant name="column_text_id">מזה טקסט</constant>
 	</language>
 </document>

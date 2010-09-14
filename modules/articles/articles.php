@@ -610,13 +610,22 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	function tag_Article($level, $tag_params, $children) {
+		$manager = new ArticleManager();
+
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
 
-		// we need at least one of IDs in order to display article
-		if (is_null($id) && is_null($text_id)) return;
+		if (is_null($id) && is_null($text_id))
+			if (isset($tag_params['random'])) {
+				$conditions = array();
 
-		$manager = new ArticleManager();
+				$group_manager = new ArticleGroupManager();
+
+			} else {
+				// no id/text_id were specified nor random article was requested
+				return;
+			}
+
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -684,7 +693,17 @@ class articles extends Module {
 		if ($only_visible) $conditions['visible'] = 1;
 		if (!is_null($group)) $conditions['group'] = $group;
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		// give the ability to limit number of articles to display
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']); else
+			$limit = null;
+
+		// get items from manager
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, array('id'), true, $limit);
+
+		// randomize if needed
+		if (isset($tag_params['random']) && $tag_params['random'] == 1 && !is_null($items))
+			shuffle($items);
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -697,10 +716,6 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article', &$this, 'tag_Article');
 		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
-
-		// give the ability to limit number of links to display
-		if (isset($tag_params['limit']))
-			$items = array_slice($items, 0, $tag_params['limit'], true);
 
 		if (count($items) > 0)
 			foreach($items as $item) {

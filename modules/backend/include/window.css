@@ -1,6 +1,6 @@
 /*
 	WINDOW STYLE SHEET
-	Copyright (c) 2009. by MeanEYE[RCF]
+	Copyright (c) 2010. by MeanEYE[RCF]
 	http://www.rcf-group.com
 */
 
@@ -49,6 +49,7 @@ div.window div.title a.close_button {
 	float: right;
 
 	border-radius: 2px;
+	-moz-border-radius: 2px;
 	background-color: #1A1A1A;
 	background-image: url(../images/close_normal.gif);
 	background-position: center center;
@@ -90,6 +91,7 @@ div.window div.main_menu {
 
 	border: 1px solid #A3ACD8;
 	border-radius: 4px;
+	-moz-border-radius: 4px;
 	background-color: #B8BFE1;
 
 	color: #1A1A1A;
@@ -110,6 +112,7 @@ div.window div.main_menu a {
 
 div.window div.main_menu a:hover {
 	border-radius: 3px;
+	-moz-border-radius: 3px;
 	background-color: #2E3E6A;
 
 	color: white;
@@ -123,6 +126,10 @@ div.window div.content label {
 
 div.window div.content label span {
 	display: block;
+}
+
+div.window div.content label span small {
+	color: #7F7F7F;
 }
 
 div.window div.content label a {
@@ -182,6 +189,7 @@ div.window div.content textarea.code {
 }
 
 div.window div.content input:focus,
+div.window div.content select:focus,
 div.window div.content textarea:focus {
 	border: 1px solid #345DC9;
 	color: #000000;
@@ -252,6 +260,7 @@ div.window div.scrollable_list .list_content {
 	border: 1px solid #B8B8B8;
 	border-top: 0px;
 	border-radius: 0px 0px 4px 4px;
+	-moz-border-radius: 0px 0px 4px 4px;
 	background-color: #FFFFFF;
 }
 
@@ -281,6 +290,7 @@ div.window div.scrollable_list .column a {
 
 	border: 1px solid #CCCCCC;
 	border-radius: 3px;
+	-moz-border-radius: 3px;
 	background-color: #FFFFFF;
 
 	color: #595959;
@@ -288,8 +298,8 @@ div.window div.scrollable_list .column a {
 }
 
 div.window div.scrollable_list .column a:hover {
-	border-color: #101D7E;
-	background-color: #303FA5;
+	border-color: #3E52D6;
+	background-color: #3E52D6;
 
 	color: #FFFFFF;
 }
@@ -339,4 +349,44 @@ div.window div.language_selector span:hover {
 
 div.window div.language_selector span.active {
 	background-color: white;
+}
+
+/**
+ * Component Toolbar
+ */
+div.window div.toolbar {
+	display: block;
+	height: 22px;
+
+	margin: 0px;
+	padding: 2px;
+
+	border: 1px solid #999999;
+	border-bottom: 0px;
+	background-color: white;
+	background-image: url(../images/toolbar_back.png);
+	background-position: top left;
+	background-repeat: repeat-x;
+}
+
+div.window div.toolbar.active {
+	border-color: #345DC9;
+}
+
+div.window div.toolbar a.button {
+	display: block;
+	float: left;
+
+	padding: 3px;
+	font-size: 0px;
+}
+
+div.window div.toolbar a.button:hover {
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	background-color: #3E52D6;
+}
+
+div.window div.toolbar a.button img {
+	border: 0px;
 }

@@ -4,7 +4,8 @@
  * Copyright (c) 2010. by MeanEYE.rcf
  * http://rcf-group.com
  *
- * You need to create new language selector
+ * You need to create new language selector for each window. Id specified in
+ * constructor function is container Id. Window Id can be used as well.
  *
  * Requires jQuery 1.4.2+
  */
@@ -15,6 +16,7 @@ function LanguageSelector(id) {
 	var self = this;  // used internally for events
 
 	this.languages = null;
+	this.rtl_languages = null;
 	this.current_anguage = null;
 	this.$objects = [];
 	this.$parent = $('#'+id);
@@ -30,7 +32,7 @@ function LanguageSelector(id) {
 
 		// retireve languages from server
 		$.ajax({
-			url: window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + window.location.pathname,
+			url: window.location.protocol + '//' + window.location.host + window.location.pathname,
 			type: 'GET',
 			data: {
 				section: 'language_menu',
@@ -47,23 +49,23 @@ function LanguageSelector(id) {
 	 *
 	 * @param object data
 	 */
-	this.processResponse = function(data, status) {
-		// exit if there are no languages (possibly an error)
-		if (data.items.length == 0) return;
+	this.init = function() {
+		this.$parent.prepend(this.$container);
+		this.$container.addClass('loading');
 
 		var field_data = {};
 
 		// create options
-		for(var i in data.items) {
-			var language = data.items[i];
-			var $button = $('<span>').html(language.long).data(language);
+		for(var i in language_handler.languages) {
+			var language = language_handler.languages[i];
+			var $button = $('<span>')
 
-			if (language.default)
-				this.current_language = language.short;
-
-			$button.click(function() {
-				self.setLanguage($(this).data().short);
-			});
+			$button
+				.html(language.long)
+				.data(language)
+				.click(function() {
+					self.setLanguage($(this).data().short);
+				});
 
 			this.$objects[language.short] = $button;
 			this.$container.append($button);
@@ -83,26 +85,23 @@ function LanguageSelector(id) {
 
 		// replace existing and load data along the way
 		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
-			for(var i in data.items) {
-				var name = $(this).attr('name');
-				var language = data.items[i];
+			var name = $(this).attr('name');
+			var data = field_data[name];
 
-				var $new = $(this).clone()
-							.insertAfter($(this))
-							.attr('name', $(this).attr('name') + '_' + language.short)
-							.css({display: 'none'});
+			if (data == undefined) data = {};
+			$(this).data('language', data);
 
-				if (field_data[name] != undefined && field_data[name][language.short] != undefined)
-					$new.val(field_data[name][language.short]);
-			}
+			// upon leaving input element, store data
+			$(this).blur(function() {
+				var data = $(this).data('language');
+				data[self.current_language] = $(this).val()
 
-			$(this).remove();
+				$(this).data('language', data);
+			});
 		});
 
 		// select default language
-		if (this.current_language != null)
-			this.setLanguage(this.current_language); else
-			this.setLanguage(data.items[0].short);
+		this.setLanguage(language_handler.default_language);
 
 		// stop the loading animation
 		this.$container.removeClass('loading');
@@ -114,18 +113,35 @@ function LanguageSelector(id) {
 	 * @param string language
 	 */
 	this.setLanguage = function(language) {
-		this.$objects[this.current_language].removeClass('active');
+		if (self.current_language != null)
+			this.$objects[self.current_language].removeClass('active');
+
 		this.$objects[language].addClass('active');
 
-		this.current_language = language;
-
 		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
-			if ($(this).attr('name').substr(-2) == language)
-				$(this).show(); else
-				$(this).hide();
+			var data = $(this).data('language');
+
+			// store data if current language is not null
+			if (self.current_language != null)
+				data[self.current_language] = $(this).val();
+
+			// get data for new language from storage
+			if (language in data)
+				$(this).val(data[language]); else
+				$(this).val('');
+
+			// save old data once we switched everything
+			$(this).data('language', data);
+
+			// apply proper direction
+			if (!language_handler.isRTL(language))
+				$(this).css('direction', 'ltr'); else
+				$(this).css('direction', 'rtl');
 		});
+
+		this.current_language = language;
 	}
 
 	// load languages and construct selector
-	this.loadLanguages();
+	this.init();
 }

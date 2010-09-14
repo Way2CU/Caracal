@@ -147,25 +147,23 @@ class ItemManager {
 		$result = array();
 
 		if ($db_active == 1) {
-			$query = $this->getQuery(DB_SELECT, $fields, $conditionals);
+			$query = $this->getQuery(DB_SELECT, $fields, $conditionals, null, null, 1);
+			$result = $db->get_row($query);
 
-			if (!empty($query))
-				$result = $db->get_row($query);
-		}
+			// pack multi-language fields
+			$ml_fields = $this->getMultilanguageFields($fields);
+			if (count($ml_fields) > 0)
+				foreach($ml_fields as $field) {
+					$data = array();
 
-		// pack multi-language fields
-		$ml_fields = $this->getMultilanguageFields($fields);
-		if (count($ml_fields) > 0)
-			foreach($ml_fields as $field) {
-				$data = array();
+					foreach($this->languages as $language) {
+						$data[$language] = $result->{$field.'_'.$language};
+						unset($result->{$field.'_'.$language});
+					}
 
-				foreach($this->languages as $language) {
-					$data[$language] = $result->{$field.'_'.$language};
-					unset($result->{$field.'_'.$language});
+					$result->$field = $data;
 				}
-
-				$result->$field = $data;
-			}
+		}
 
 		return $result;
 	}
@@ -179,37 +177,33 @@ class ItemManager {
 	 * @param boolean $ascending
 	 * @return array
 	 */
-	function getItems($fields, $conditionals, $order_by=array(), $ascending=True) {
+	function getItems($fields, $conditionals, $order_by=array(), $ascending=True, $limit=null) {
 		global $db, $db_active;
 
 		$result = array();
 
 		if ($db_active == 1) {
-			$query = $this->getQuery(DB_SELECT, $fields, $conditionals);
-
-			if (!empty($order_by)) {
-				$order = $ascending ? ' ASC' : ' DESC';
-				$query .= ' ORDER BY '.$this->getFields($order_by).$order;
-			}
+			$query = $this->getQuery(DB_SELECT, $fields, $conditionals, $order_by, $ascending, $limit);
 
 			if (!empty($query))
 				$result = $db->get_results($query);
-		}
 
-		// pack multi-language fields
-		$ml_fields = $this->getMultilanguageFields($fields);
-		if (count($ml_fields) > 0 && count($result) > 0)
-			foreach($result as $item)
-				foreach($ml_fields as $field) {
-					$data = array();
+			// pack multi-language fields
+			$ml_fields = $this->getMultilanguageFields($fields);
+			if (count($ml_fields) > 0 && count($result) > 0)
+				foreach($result as $item)
+					foreach($ml_fields as $field) {
+						$data = array();
 
-					foreach($this->languages as $language) {
-						$data[$language] = $item->{$field.'_'.$language};
-						unset($item->{$field.'_'.$language});
+						foreach($this->languages as $language) {
+							$data[$language] = $item->{$field.'_'.$language};
+							unset($item->{$field.'_'.$language});
+						}
+
+						$item->$field = $data;
 					}
 
-					$item->$field = $data;
-				}
+		}
 
 		return $result;
 	}
@@ -259,7 +253,7 @@ class ItemManager {
 	 * @param array $conditionals
 	 * @return string
 	 */
-	function getQuery($command, $data = array(), $conditionals = array()) {
+	function getQuery($command, $data = array(), $conditionals = array(), $order_by=null, $order_asc=null, $limit = null) {
 		$result = '';
 
 		switch ($command) {
@@ -271,17 +265,21 @@ class ItemManager {
 			case DB_UPDATE:
 				$this->expandMultilanguageFields($data);
 				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->getDelimitedData($data).' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
+				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 
 			case DB_DELETE:
 				$this->expandMultilanguageFields($conditionals);
 				$result = 'DELETE FROM `'.$this->table_name.'` WHERE '.$this->getDelimitedData($conditionals, ' AND ');
+				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 
 			case DB_SELECT:
 				$this->expandMultilanguageFields($data, false);
 				$result = 'SELECT '.$this->getFields($data).' FROM `'.$this->table_name.'`';
 				if (!empty($conditionals)) $result .= ' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
+				if (!is_null($order_by) && !empty($order_by)) $result .= ' ORDER BY '.$this->getFields($order_by).($order_asc ? ' ASC' : ' DESC');
+				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 		}
 

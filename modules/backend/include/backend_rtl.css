@@ -56,3 +56,7 @@ ol#language_menu {
 ol#language_menu li {
 	float: right;
 }
+
+div.window div.toolbar a.button {
+	float: right;
+}

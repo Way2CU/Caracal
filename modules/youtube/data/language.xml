@@ -58,7 +58,7 @@
 
 		<!-- Form Labels -->
 		<constant name="label_id">זיהוי:</constant>
-		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_text_id">מזהה טקסט:</constant>
 		<constant name="label_title">כותרת:</constant>
 
 		<!-- Other -->

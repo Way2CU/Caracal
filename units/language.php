@@ -39,22 +39,22 @@ class LanguageHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	function getText($constant, $language='') {
-		global $default_language;
+	function getText($constant, $lang='') {
+		global $language;
 
 		$result = '';
 
-		if (!$this->active) return $result;
+		if ($this->active) {
+			if (empty($lang)) $lang = $language;  // use current language
 
-		$language = (empty($language)) ? $default_language : $language;
-
-		foreach ($this->engine->document->language as $xml_language)
-			if ($xml_language->tagAttrs['short'] == $language)
-				foreach ($xml_language->constant as $xml_constant)
-					if ($xml_constant->tagAttrs['name'] == $constant) {
-						$result = empty($xml_constant->tagData) ? $xml_constant->tagAttrs['value'] : $xml_constant->tagData;
-						break;
-					}
+			foreach ($this->engine->document->language as $xml_language)
+				if ($xml_language->tagAttrs['short'] == $lang)
+					foreach ($xml_language->constant as $xml_constant)
+						if ($xml_constant->tagAttrs['name'] == $constant) {
+							$result = empty($xml_constant->tagData) ? $xml_constant->tagAttrs['value'] : $xml_constant->tagData;
+							break;
+						}
+		}
 
 		return $result;
 	}
@@ -63,6 +63,7 @@ class LanguageHandler {
 	 * Returns list of languages available
 	 *
 	 * @param boolean $printable What list should contain, printable text or language code
+	 * @return array
 	 */
 	function getLanguages($printable = true) {
 		if (!$this->active) return;
@@ -72,6 +73,23 @@ class LanguageHandler {
 		foreach ($this->engine->document->language as $xml_language)
 			if($printable)
 				$result[$xml_language->tagAttrs['short']] = $xml_language->tagAttrs['name']; else
+				$result[] = $xml_language->tagAttrs['short'];
+
+		return $result;
+	}
+
+	/**
+	 * Return only short list of RTL languages
+	 *
+	 * @return array
+	 */
+	function getRTL() {
+		if (!$this->active) return;
+
+		$result = array();
+
+		foreach ($this->engine->document->language as $xml_language)
+			if (isset($xml_language->tagAttrs['rtl']) && $xml_language->tagAttrs['rtl'] == 'yes')
 				$result[] = $xml_language->tagAttrs['short'];
 
 		return $result;
@@ -145,7 +163,6 @@ class MainLanguageHandler {
 	 */
 	function getText($constant, $language='') {
 		$result = "";
-
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getText($constant, $language);
 
@@ -159,11 +176,25 @@ class MainLanguageHandler {
 	 * Returns list of languages available
 	 *
 	 * @param boolean $printable What list should contain, printable text or language code
+	 * @return array
 	 */
 	function getLanguages($printable = true) {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getLanguages($printable); else
 			$result = $this->language_system->getLanguages($printable);
+
+		return $result;
+	}
+
+	/**
+	 * Return short list of RTL languages on the system
+	 *
+	 * @return array
+	 */
+	function getRTL() {
+		if (!is_null($this->language_local))
+			$result = $this->language_local->getRTL(); else
+			$result = $this->language_system->getRTL();
 
 		return $result;
 	}
