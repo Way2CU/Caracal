@@ -20,7 +20,7 @@
 
 		<constant name="add_channel">Add channel</constant>
 	</language>
-	<language short="יק">
+	<language short="he">
 		<constant name="menu_chat">צט</constant>
 		<constant name="menu_join_chat">הצטרף</constant>
 		<constant name="menu_settings">הגדרות</constant>
