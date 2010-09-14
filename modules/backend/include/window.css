@@ -390,3 +390,10 @@ div.window div.toolbar a.button:hover {
 div.window div.toolbar a.button img {
 	border: 0px;
 }
+
+/**
+ * Modal Dialog
+ */
+div#modal_dialog {
+	display: 
+}

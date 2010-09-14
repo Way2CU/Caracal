@@ -86,7 +86,7 @@ function Window(id, width, title, can_close, url) {
 		this.visible = true;
 		this.window_system.focusWindow(this.id);
 		return this;
-	}
+	};
 
 	/**
 	 * Close window
@@ -97,7 +97,7 @@ function Window(id, width, title, can_close, url) {
 			self.window_system.removeWindow(self);
 			self.window_system.focusTopWindow();
 		});
-	}
+	};
 
 	/**
 	 * Set focus on self
@@ -105,7 +105,7 @@ function Window(id, width, title, can_close, url) {
 	this.focus = function() {
 		this.window_system.focusWindow(this.id);
 		return this;  // allow linking
-	}
+	};
 
 	/**
 	 * Attach window to specified container
@@ -114,12 +114,12 @@ function Window(id, width, title, can_close, url) {
 	 */
 	this.attach = function(system, $container) {
 		// attach container to main container
-		system.$container.append(this.$container)
+		system.$container.append(this.$container);
 
 		// save parent for later use
 		this.$parent = system.$container;
 		this.window_system = system;
-	}
+	};
 
 	/**
 	 * Event triggered when window gains focus
@@ -129,7 +129,7 @@ function Window(id, width, title, can_close, url) {
 		this.$container
 				.css({zIndex: this.zIndex})
 				.animate({opacity: 1}, 300);
-	}
+	};
 
 	/**
 	 * Event triggered when window looses focus
@@ -139,7 +139,7 @@ function Window(id, width, title, can_close, url) {
 		this.$container
 				.css({zIndex: this.zIndex})
 				.animate({opacity: 0.6}, 300);
-	}
+	};
 
 	/**
 	 * Load/reload window content
@@ -161,7 +161,7 @@ function Window(id, width, title, can_close, url) {
 		});
 
 		return this;  // allow linking
-	}
+	};
 
 	/**
 	 * Submit form content to server and load response
@@ -194,7 +194,7 @@ function Window(id, width, title, can_close, url) {
 						data[$(this).attr('name')] = this.checked ? 1 : 0;
 				}
 			});
-		}
+		};
 
 		// send data to server
 		$.ajax({
@@ -207,7 +207,7 @@ function Window(id, width, title, can_close, url) {
 			error: this.contentError,
 			url: $(form).attr('action')
 		});
-	}
+	};
 
 	/**
 	 * Event fired on when window content has finished loading
@@ -221,7 +221,7 @@ function Window(id, width, title, can_close, url) {
 						top: this.$container.position().top,
 						left: this.$container.position().left,
 						width: this.$container.width(),
-						height: this.$container.height(),
+						height: this.$container.height()
 					};
 
 		self.$content.html(data);
@@ -291,7 +291,7 @@ function Window(id, width, title, can_close, url) {
 
 		// remove loading indicator
 		self.$container.removeClass('loading');
-	}
+	};
 
 	/**
 	 * Event fired when there was an error loading AJAX data
@@ -306,7 +306,7 @@ function Window(id, width, title, can_close, url) {
 						top: this.$container.position().top,
 						left: this.$container.position().left,
 						width: this.$container.width(),
-						height: this.$container.height(),
+						height: this.$container.height()
 					};
 
 		this.$content.html(status + ': ' + error);
@@ -323,7 +323,7 @@ function Window(id, width, title, can_close, url) {
 
 		// remove loading indicator
 		self.$container.removeClass('loading');
-	}
+	};
 
 	/**
 	 * Return jQuery object of uploader frame. If frame doesn't exists, we crate it
@@ -346,15 +346,26 @@ function Window(id, width, title, can_close, url) {
 		}
 
 		return $result;
-	}
+	};
 }
 
 function WindowSystem($container) {
+	this.$modal_dialog = null;
 	this.$container = $container;
 	this.list = [];
 
+	/**
+	 * Initialize window system.
+	 */
 	this.init = function() {
-	}
+		this.$modal_dialog = $('<div>');
+		
+		this.$modal_dialog
+					.attr('id', 'modal_dialog')
+					.hide();
+		
+		$('body').append(this.$modal_dialog);
+	};
 
 	/**
 	 * Open new window (or focus existing) and load content from specified URL
@@ -380,7 +391,7 @@ function WindowSystem($container) {
 			window.show(true);
 			window.loadContent();
 		}
-	},
+	};
 
 	/**
 	 * Close window
@@ -391,7 +402,7 @@ function WindowSystem($container) {
 	this.closeWindow = function(id) {
 		if (this.windowExists(id))
 			this.getWindow(id).close();
-	}
+	};
 
 	/**
 	 * Remove window from list and container
@@ -401,7 +412,7 @@ function WindowSystem($container) {
 	this.removeWindow = function(window) {
 		delete this.list[window.id];
 		window.$container.remove();
-	}
+	};
 
 	/**
 	 * Load window content from specified URL
@@ -413,7 +424,7 @@ function WindowSystem($container) {
 		if (this.windowExists(id)) {
 			this.getWindow(id).loadContent(url);
 		}
-	}
+	};
 
 	/**
 	 * Focuses specified window
@@ -427,7 +438,7 @@ function WindowSystem($container) {
 					this.list[window_id].looseFocus(); else
 					this.list[window_id].gainFocus();
 		}
-	}
+	};
 
 	/**
 	 * Focuses top level window
@@ -444,7 +455,7 @@ function WindowSystem($container) {
 
 		if (highest_id != null)
 			this.focusWindow(highest_id);
-	}
+	};
 
 	/**
 	 * Get window based on text Id
@@ -454,7 +465,7 @@ function WindowSystem($container) {
 	 */
 	this.getWindow = function(id) {
 		return this.list[id];
-	}
+	};
 
 	/**
 	 * Check if window exists
@@ -464,7 +475,16 @@ function WindowSystem($container) {
 	 */
 	this.windowExists = function(id) {
 		return id in this.list;
-	}
+	};
+	
+	/**
+	 * Block backend, show modal dialog and return container
+	 *  
+	 * @return jquery object
+	 */
+	this.showModalDialog = function() {
+		return this.$modal_dialog.show();
+	};
 }
 
 $(document).ready(function() {

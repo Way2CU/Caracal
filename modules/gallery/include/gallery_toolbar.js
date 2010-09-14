@@ -50,7 +50,12 @@ function ToolbarExtension_Gallery() {
 			.addClass('button')
 			.attr('href', 'javascript: void(0);')
 			.attr('title', language_handler.getText('gallery', 'toolbar_insert_image'))
-			.append($image);
+			.append($image)
+			.click(function() {
+				var $dialog = window_system.showModalDialog();
+				
+				
+			});
 
 		$toolbar.append($button);
 	}
