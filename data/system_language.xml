@@ -21,6 +21,9 @@
 		<constant name="close">Zatvori</constant>
 		<constant name="reset">Resetuj</constant>
 
+		<!-- Messages -->
+		<constant name="message_server_error">Server je naišao na sledeću grešku prilikom obrade podataka:</constant>
+
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>
 		<constant name="format_date_short">d.m.Y.</constant>
@@ -49,6 +52,9 @@
 		<constant name="close">Затвори</constant>
 		<constant name="reset">Ресетуј</constant>
 
+		<!-- Messages -->
+		<constant name="message_server_error">Сервер је наишао на следећу грешку приликом обраде података:</constant>
+
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>
 		<constant name="format_date_short">d.m.Y.</constant>
@@ -76,6 +82,9 @@
 		<constant name="close">Close</constant>
 		<constant name="reset">Reset</constant>
 
+		<!-- Messages -->
+		<constant name="message_server_error">Server experienced the following error:</constant>
+
 		<!-- Other language specific data formats -->
 		<constant name="format_date">m/d/Y</constant>
 		<constant name="format_date_short">m/d/Y</constant>
@@ -102,6 +111,9 @@
 		<constant name="open">פתח</constant>
 		<constant name="close">סגור</constant>
 		<constant name="reset">אפס</constant>
+
+		<!-- Messages -->
+		<constant name="message_server_error">Server experienced the following error:</constant>
 
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>

@@ -21,7 +21,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_content" module="articles"/></span>
-			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 300px;"><_raw text=""/></textarea>
+			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 250px;"><_raw text=""/></textarea>
 			<_language_data param="content"/>
 		</label>
 		<label class="checkbox">
@@ -43,6 +43,11 @@
 	</form>
 	<script type="text/javascript">
 		new LanguageSelector('article_change_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('article_change_form', '[name=content]:input')
+				.addControl('gallery', 'article_image');
 	</script>
 
 </document>

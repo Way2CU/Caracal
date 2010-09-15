@@ -13,6 +13,116 @@
 
 var window_system = null;
 
+function Dialog() {
+	var self = this;  // used internaly for nested functions
+
+	this.$cover = $('<div>');
+	this.$container = $('<div>');
+
+	// configure
+	this.$cover
+			.css('display', 'none')
+			.addClass('dialog');
+	this.$container.addClass('container');
+
+	// pack interface
+	this.$cover.append(this.$container);
+	$('body').append(this.$cover);
+
+	/**
+	 * Show dialog
+	 */
+	this.show = function() {
+		this.$container.css('opacity', 0);
+
+		this.$cover
+				.css({
+					display: 'block',
+					opacity: 0
+				})
+				.animate(
+					{opacity: 1},
+					300,
+					function() {
+						self.adjustPosition();
+						self.$container
+									.delay(200)
+									.animate({opacity: 1}, 300);
+					}
+				);
+	};
+
+	/**
+	 * Hide dialog
+	 */
+	this.hide = function() {
+		this.$cover
+				.css('opacity', 1)
+				.animate(
+					{opacity: 0},
+					300,
+					function() {
+						self.$cover.css('display', 'none');
+						self.$container.html('');
+					}
+				);
+	};
+
+	/**
+	 * Set dialog content and make proper animation
+	 *
+	 * @param mixed content
+	 * @param integer width
+	 * @param integer height
+	 */
+	this.setContent = function(content, width, height) {
+		// create starting parameters for animation
+		var start_params = {
+				width: this.$container.width(),
+				height: this.$container.height()
+			};
+
+		var end_params = {
+				top: Math.round(($(document).height() - height) / 2),
+				left: Math.round(($(document).width() - width) / 2),
+				width: width,
+				height: height
+			};
+
+		// assign content
+		this.$container.html(content);
+
+		this.$container
+				.css(start_params)
+				.animate(end_params, 500);
+	};
+
+	/**
+	 * Set dialog in loading state
+	 */
+	this.setLoadingState = function() {
+		this.$container.addClass('loading');
+	};
+
+	/**
+	 * Set dialog in normal state
+	 */
+	this.setNormalState = function() {
+		this.$container.removeClass('loading');
+	};
+
+	/**
+	 * Adjust position of inner container
+	 */
+	this.adjustPosition = function() {
+		this.$container.css({
+						top: Math.round(($(document).height() - this.$container.height()) / 2),
+						left: Math.round(($(document).width() - this.$container.width()) / 2)
+					});
+
+	};
+}
+
 function Window(id, width, title, can_close, url) {
 	var self = this;  // used for nested functions
 
@@ -350,7 +460,10 @@ function Window(id, width, title, can_close, url) {
 }
 
 function WindowSystem($container) {
+	var self = this;  // used internally for events
+
 	this.$modal_dialog = null;
+	this.$modal_dialog_container = null;
 	this.$container = $container;
 	this.list = [];
 
@@ -358,13 +471,28 @@ function WindowSystem($container) {
 	 * Initialize window system.
 	 */
 	this.init = function() {
+		var $container = $('<div>');
+
 		this.$modal_dialog = $('<div>');
-		
+		this.$modal_dialog_container = $container;
+
 		this.$modal_dialog
 					.attr('id', 'modal_dialog')
-					.hide();
-		
+					.append($container)
+					.css({display: 'none'});
+
+		$container.addClass('container');
+
+		// add dialog to document
 		$('body').append(this.$modal_dialog);
+
+		// create resize event to keep container centered
+		$(window).resize(function() {
+			$container.css({
+						top: Math.round(($(document).height() - $container.height()) / 2),
+						left: Math.round(($(document).width() - $container.width()) / 2)
+					});
+		});
 	};
 
 	/**
@@ -476,15 +604,38 @@ function WindowSystem($container) {
 	this.windowExists = function(id) {
 		return id in this.list;
 	};
-	
+
 	/**
 	 * Block backend, show modal dialog and return container
-	 *  
+	 *
 	 * @return jquery object
 	 */
 	this.showModalDialog = function() {
-		return this.$modal_dialog.show();
+		this.$modal_dialog_container.css({
+						top: Math.round(($(document).height() - this.$modal_dialog_container.height()) / 2),
+						left: Math.round(($(document).width() - this.$modal_dialog_container.width()) / 2)
+					});
+
+		this.$modal_dialog
+					.css({
+						opacity: 0,
+						display: 'block'
+					})
+					.animate({opacity: 1}, 500);
 	};
+
+	/**
+	 * Hide modal dialog and clear its content
+	 */
+	this.hideModalDialog = function() {
+		this.$modal_dialog.animate({opacity: 0}, 500, function() {
+			$(this).css({display: 'none'});
+			self.$modal_dialog_container.html('');
+		});
+	};
+
+	// self init
+	this.init();
 }
 
 $(document).ready(function() {

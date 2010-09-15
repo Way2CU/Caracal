@@ -24,27 +24,6 @@ function LanguageSelector(id) {
 	this.$container = $('<div>').addClass('language_selector');
 
 	/**
-	 * Load languages from server
-	 */
-	this.loadLanguages = function() {
-		this.$parent.prepend(this.$container);
-		this.$container.addClass('loading');
-
-		// retireve languages from server
-		$.ajax({
-			url: window.location.protocol + '//' + window.location.host + window.location.pathname,
-			type: 'GET',
-			data: {
-				section: 'language_menu',
-				action: 'json',
-			},
-			dataType: 'json',
-			context: this,
-			success: this.processResponse
-		});
-	}
-
-	/**
 	 * Process result from server
 	 *
 	 * @param object data

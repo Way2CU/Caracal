@@ -11,6 +11,9 @@
  */
 
 function ToolbarExtension_Gallery() {
+	var self = this;
+
+	this.dialog = new Dialog();
 
 	// register extension to mail API
 	toolbar_api.registerModule('gallery', this);
@@ -28,7 +31,7 @@ function ToolbarExtension_Gallery() {
 				this.control_ArticleImage($toolbar, $component);
 				break;
 		}
-	}
+	};
 
 	/**
 	 * Create button for inserting image into article using markdown
@@ -52,13 +55,82 @@ function ToolbarExtension_Gallery() {
 			.attr('title', language_handler.getText('gallery', 'toolbar_insert_image'))
 			.append($image)
 			.click(function() {
-				var $dialog = window_system.showModalDialog();
-				
-				
+				self.dialog.show();
+				self.dialog.setLoadingState();
+
+				$.ajax({
+					url: self.getURL(),
+					type: 'GET',
+					data: {
+						section: 'gallery',
+						action: 'json_image_list'
+					},
+					dataType: 'json',
+					context: $component,
+					success: self.loaded_ArticleImage
+				})
 			});
 
 		$toolbar.append($button);
-	}
+	};
+
+	/**
+	 * Process loaded image data
+	 * @param json_object data
+	 * @context $component
+	 */
+	this.loaded_ArticleImage = function(data) {
+		var $component = $(this);
+
+		if (!data.error) {
+			var $list = $('<div>');
+
+			// no error, feed data into dialog
+			for (var i in data.items) {
+				var image = data.items[i];
+
+				// create elements
+				var $item = $('<div>');
+				var $container = $('<div>');
+				var $image = $('<img>');
+				var $label = $('<span>');
+
+				// configure elements
+				$container.addClass('image_holder');
+
+				$image
+					.attr('src', image.thumbnail)
+					.attr('alt', image.title[language_handler.current_language]);
+
+				$label
+					.addClass('title')
+					.html(image.title[language_handler.current_language]);
+
+				$item
+					.addClass('thumbnail')
+					.click(function() {
+						$component.insertAtCaret('![' + image.title[language_handler.current_language] + '](' + image.id + ')');
+						self.dialog.hide();
+					});
+
+
+				// pack elements
+				$container.append($image);
+
+				$item.append($container);
+				$item.append($label);
+
+				$list.append($item);
+			}
+
+			self.dialog.setNormalState();
+			self.dialog.setContent($list, 650, 500);
+		} else {
+			// report server-side error
+			self.dialog.hide();
+			alert(language_handler.getText(null, 'message_server_error') + ' ' + data.error_message);
+		}
+	};
 
 	/**
 	 * Form URL based on icon name
@@ -78,7 +150,17 @@ function ToolbarExtension_Gallery() {
 		path.push(icon);
 
 		return window.location.protocol + '//' + window.location.host +	path.join('/')
-	}
+	};
+
+	/**
+	 * Return formed URL
+	 *
+	 * @return string
+	 */
+	this.getURL = function() {
+		return window.location.protocol + '//' + window.location.host + window.location.pathname;
+	};
+
 }
 
 $(document).ready(function() {

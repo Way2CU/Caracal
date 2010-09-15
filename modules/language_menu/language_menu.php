@@ -56,6 +56,10 @@ class language_menu extends Module {
 					$this->json_GetText();
 					break;
 
+				case 'json_get_current_language':
+					$this->json_GetCurrentLanguage();
+					break;
+
 				default:
 					break;
 			}
@@ -163,5 +167,15 @@ class language_menu extends Module {
 				);
 
 		print json_encode($result);
+	}
+
+	/**
+	 * Get current language
+	 */
+	function json_GetCurrentLanguage() {
+		global $language;
+
+		define('_OMIT_STATS', 1);
+		print json_encode($language);
 	}
 }

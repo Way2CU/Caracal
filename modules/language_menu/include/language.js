@@ -16,6 +16,7 @@ function LanguageHandler() {
 	this.languages = null;
 	this.rtl_languages = null;
 	this.default_language = null;
+	this.current_language = null;
 
 	// URL commonly used to comunicate with server
 	this.backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
@@ -30,7 +31,7 @@ function LanguageHandler() {
 	 */
 	this.getLanguages = function() {
 		return this.languages;
-	}
+	};
 
 	/**
 	 * Get RTL language list
@@ -39,7 +40,7 @@ function LanguageHandler() {
 	 */
 	this.getRTL = function() {
 		return this.rtl_languages;
-	}
+	};
 
 	/**
 	 * Check if specified language is RTL
@@ -48,7 +49,7 @@ function LanguageHandler() {
 	 */
 	this.isRTL = function(language) {
 		return !(this.rtl_languages.indexOf(language) == -1);
-	}
+	};
 
 	/**
 	 * Get language constant value for specified module and language
@@ -86,7 +87,27 @@ function LanguageHandler() {
 		}
 
 		return this.cache[id];
-	}
+	};
+
+	/**
+	 * Get current language and store it localy
+	 */
+	this.getCurrentLanguage = function() {
+		$.ajax({
+			url: this.backend_url,
+			type: 'GET',
+			async: false,
+			data: {
+				section: 'language_menu',
+				action: 'json_get_current_language',
+			},
+			dataType: 'json',
+			context: this,
+			success: function(data) {
+				this.current_language = data;
+			}
+		});
+	};
 
 	/**
 	 * Load language list from server
@@ -104,7 +125,7 @@ function LanguageHandler() {
 			context: this,
 			success: this.loadLanguages_Complete
 		});
-	}
+	};
 
 	/**
 	 * Process server response
@@ -124,10 +145,11 @@ function LanguageHandler() {
 				break;
 			}
 		}
-	}
+	};
 
-	// load languages
+	// initialize
 	this.loadLanguages();
+	this.getCurrentLanguage();
 }
 
 $(document).ready(function() {

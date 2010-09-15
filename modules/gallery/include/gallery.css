@@ -80,3 +80,49 @@ div.list_content.thumbnails div.list_item span.title {
 	font-size: 10px;
 	text-align: center;
 }
+
+/**
+ * Dialog Thumbnail
+ */
+div.dialog div.thumbnail {
+	display: block;
+	width: 102px;
+	height: 125px;
+
+	float: left;
+	margin: 5px;
+	padding: 5px;
+
+	position: relative;
+	overflow: hidden;
+
+	border: 1px solid #E3E3E3;
+	background-color: #F5F5F5;
+}
+
+div.dialog div.thumbnail:hover {
+	background-color: #EBEBEB;
+}
+
+div.dialog div.thumbnail div.image_holder {
+	display: block;
+	width: 100px;
+	height: 100px;
+
+	overflow: hidden;
+
+	border: 1px solid #EBEBEB;
+	background-color: white;
+
+	font-size: 0px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+div.dialog div.thumbnail span.title {
+	display: block;
+	padding-top: 2px;
+
+	font-size: 10px;
+	text-align: center;
+}
