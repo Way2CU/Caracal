@@ -5,7 +5,6 @@
  * @author MeanEYE[rcf]
  */
 
-
 class backend_MenuItem {
 	/**
 	 * Menu text
@@ -60,9 +59,18 @@ class backend_MenuItem {
 	 * @param resource $item
 	 */
 	function addChild($name, $item) {
-		if (empty($name))
+		if (empty($name) || is_null($name))
 			$this->children[] = $item; else
 			$this->children[$name] = $item;
+	}
+	
+	/**
+	 * Add separator to child list
+	 * 
+	 * @param integer $level
+	 */
+	function addSeparator($level) {
+		$this->children[] = new backend_MenuSeparator($level);
 	}
 
 	/**
@@ -70,6 +78,8 @@ class backend_MenuItem {
 	 * @param string $module
 	 */
 	function drawItem($level) {
+		if (!$this->isDrawable()) return;
+		
 		$tag_space = str_repeat("\t", $level);
 
 		$icon = "<img src=\"{$this->icon}\" alt=\"{$this->title}\">";
@@ -92,13 +102,47 @@ class backend_MenuItem {
 	}
 
 	/**
-	 * Returns if this item is available to draw for current level
+	 * Check if item id available for current level
 	 *
 	 * @return boolean;
 	 */
 	function isDrawable() {
 		return $_SESSION['level'] >= $this->level;
 	}
+}
+
+class backend_MenuSeparator{
+	/**
+	 * Separator level
+	 * @var integer
+	 */
+	var $level;
+	
+	function __construct($level) {
+		$this->level = $level;
+	}
+	
+	/**
+	 * Draw separator
+	 * 
+	 * @param integer $level
+	 */
+	function drawItem($level) {
+		if (!$this->isDrawable()) return;
+		
+		$tag_space = str_repeat("\t", $level);
+		
+		echo "{$tag_space}<li class=\"separator\"></li>";
+	}
+	
+	/**
+	 * Check if separator is available for current level
+	 *
+	 * @return boolean;
+	 */
+	function isDrawable() {
+		return $_SESSION['level'] >= $this->level;
+	}	
 }
 
 /**

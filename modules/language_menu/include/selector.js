@@ -17,7 +17,7 @@ function LanguageSelector(id) {
 
 	this.languages = null;
 	this.rtl_languages = null;
-	this.current_anguage = null;
+	this.current_language = null;
 	this.$objects = [];
 	this.$parent = $('#'+id);
 
@@ -62,13 +62,15 @@ function LanguageSelector(id) {
 			$(this).remove();
 		});
 
-		// replace existing and load data along the way
+		// set language data and DOM references
 		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
 			var name = $(this).attr('name');
 			var data = field_data[name];
 
 			if (data == undefined) data = {};
+			
 			$(this).data('language', data);
+			$(this).data('selector', self);
 
 			// upon leaving input element, store data
 			$(this).blur(function() {

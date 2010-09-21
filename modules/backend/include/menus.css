@@ -105,6 +105,15 @@ div#main_menu ul#navigation li > ul li {
 	display: block;
 }
 
+div#main_menu ul#navigation li > ul li.separator {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border-bottom: 1px solid #173968;
+	border-bottom: 1px solid rgba(54, 105, 175, 0.3);
+	
+	font-size: 0px;
+}
+
 div#main_menu ul#navigation li > ul li a {
 	display: block;
 

@@ -1,35 +1,45 @@
 <?php
 
 /**
- * FLASH INTEGRATION MODULE
+ * Flash Integration Module
  *
  * @author MeanEYE.rcf
  */
 
 class swfobject extends Module {
-	/**
-	 * Minimum required flash version
-	 * @var string
-	 */
-	var $flash_version = '9.0.0';
+	private static $_instance;
+	private $flash_version = '9.0.0';
 
 	/**
 	 * Constructor
-	 *
-	 * @return swfobject
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
+		
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/swfobject.js'), 'type'=>'text/javascript'));
+		}
+	}
+	
+	/**
+	 * Get single instance of ModuleHandler
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance)) 
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
 			case 'embed':
@@ -53,19 +63,6 @@ class swfobject extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/swfobject.js'), 'type'=>'text/javascript'));
-		}
-	}
-
-	/**
 	 * Embed flash player with specified parameters
 	 *
 	 * @param string $url
@@ -75,7 +72,7 @@ class swfobject extends Module {
 	 * @param array $flash_vars
 	 * @param array $params
 	 */
-	function embedSWF($level, $url, $target_id, $width, $height, $flash_vars=array(), $params=array()) {
+	public function embedSWF($level, $url, $target_id, $width, $height, $flash_vars=array(), $params=array()) {
 		$template = new TemplateHandler('embed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -105,7 +102,7 @@ class swfobject extends Module {
 	 * @param unknown_type $params
 	 * @return string
 	 */
-	function getParams($params) {
+	private function getParams($params) {
 		$result = "";
 
 		foreach($params as $key=>$value) {

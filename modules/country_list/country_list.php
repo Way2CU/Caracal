@@ -7,24 +7,35 @@
  */
 
 class country_list extends Module {
-	var $country_list = null;
-	var $state_list = null;
+	private static $_instance;
+	public $country_list = null;
+	public $state_list = null;
 
 	/**
 	 * Constructor
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
-	 * @param integer $level
+	 * @param intege $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -47,11 +58,9 @@ class country_list extends Module {
 	 * @param integer $level
 	 * @param array $params
 	 */
-	function printCountryList($level, $params) {
+	private function printCountryList($level, $params) {
 		if(is_null($this->country_list))
 			$this->_loadCountryList();
-
-
 	}
 
 	/**
@@ -60,16 +69,15 @@ class country_list extends Module {
 	 * @param integer $level
 	 * @param array $params
 	 */
-	function printStateList($level, $params) {
+	private function printStateList($level, $params) {
 		if(is_null($this->state_list))
 			$this->_loadStateList();
-
 	}
 
 	/**
 	 * Load list of countries from XML
 	 */
-	function _loadCountryList() {
+	private function _loadCountryList() {
 		$file_name = $this->path."data/country_list.xml";
 
 		$data = @file_get_contents($file_name);
@@ -80,7 +88,7 @@ class country_list extends Module {
 	/**
 	 * Load list of states from XML
 	 */
-	function _loadStateList() {
+	private function _loadStateList() {
 		$file_name = $this->path."data/state_list.xml";
 
 		$data = @file_get_contents($file_name);

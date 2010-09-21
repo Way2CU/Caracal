@@ -8,24 +8,69 @@
  */
 
 class youtube extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
-	 *
-	 * @return youtube
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
+		// load module style and scripts
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/default_style.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/youtube_controls.js'), 'type'=>'text/javascript'));
+		}
+
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
+
+			$youtube_menu = new backend_MenuItem(
+								$this->getLanguageConstant('menu_youtube'),
+								url_GetFromFilePath($this->path.'images/icon.png'),
+								'javascript:void(0);',
+								$level=5
+							);
+
+			$youtube_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_video_list'),
+								url_GetFromFilePath($this->path.'images/list.png'),
+								window_Open( // on click open window
+											$this->name.'_video_list',
+											650,
+											$this->getLanguageConstant('title_video_list'),
+											true, true,
+											backend_UrlMake($this->name, 'video_list')
+										),
+								$level=5
+							));
+
+			$backend->addMenu($this->name, $youtube_menu);
+		}
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -80,7 +125,7 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
+	public function onInit() {
 		global $db, $db_active;
 
 		$sql = "
@@ -99,7 +144,7 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db, $db_active;
 
 		$sql = "DROP TABLE IF EXISTS `youtube_video`;";
@@ -107,50 +152,11 @@ class youtube extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/default_style.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/youtube_controls.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			$youtube_menu = new backend_MenuItem(
-								$this->getLanguageConstant('menu_youtube'),
-								url_GetFromFilePath($this->path.'images/icon.png'),
-								'javascript:void(0);',
-								$level=5
-							);
-
-			$youtube_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_video_list'),
-								url_GetFromFilePath($this->path.'images/list.png'),
-								window_Open( // on click open window
-											$this->name.'_video_list',
-											650,
-											$this->getLanguageConstant('title_video_list'),
-											true, true,
-											backend_UrlMake($this->name, 'video_list')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $youtube_menu);
-		}
-	}
-
-	/**
 	 * Show backend video list with options
+	 * 
+	 * @param integer $level
 	 */
-	function showList($level) {
+	private function showList($level) {
 		$template = new TemplateHandler('video_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -173,9 +179,10 @@ class youtube extends Module {
 
 	/**
 	 * Add video form
+	 * 
 	 * @param integer $level
 	 */
-	function addVideo($level) {
+	private function addVideo($level) {
 		$template = new TemplateHandler('video_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -191,11 +198,12 @@ class youtube extends Module {
 
 	/**
 	 * Change video data form
+	 * 
 	 * @param integer $level
 	 */
-	function changeVideo($level) {
+	private function changeVideo($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new YouTube_VideoManager();
+		$manager = YouTube_VideoManager::getInstance();
 
 		$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -218,15 +226,16 @@ class youtube extends Module {
 
 	/**
 	 * Save modified or new video data
+	 * 
 	 * @param integer $level
 	 */
-	function saveVideo($level) {
+	private function saveVideo($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
 		$title = fix_chars($_REQUEST['title']);
 
-		$manager = new YouTube_VideoManager();
+		$manager = YouTube_VideoManager::getInstance();
 
 		$data = array(
 					'text_id'	=> $text_id,
@@ -259,9 +268,9 @@ class youtube extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteVideo($level) {
+	private function deleteVideo($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new YouTube_VideoManager();
+		$manager = YouTube_VideoManager::getInstance();
 
 		$video = $manager->getSingleItem(array('title'), array('id' => $id));
 
@@ -296,9 +305,9 @@ class youtube extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteVideo_Commit($level) {
+	private function deleteVideo_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new YouTube_VideoManager();
+		$manager = YouTube_VideoManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 
@@ -321,9 +330,9 @@ class youtube extends Module {
 	 * Play video in backend window
 	 * @param integer $level
 	 */
-	function previewVideo($level) {
+	private function previewVideo($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new YouTube_VideoManager();
+		$manager = YouTube_VideoManager::getInstance();
 
 		$video_id = $manager->getItemValue('video_id', array('id' => $id));
 
@@ -358,25 +367,38 @@ class youtube extends Module {
 		}
 	}
 
-	function tag_Thumbnail($level, $params, $children) {
+	/**
+	 * Handler for _thumbnail tag
+	 * 
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */	
+	public function tag_Thumbnail($level, $params, $children) {
 
 	}
 
-	function tag_ThumbnailList($level, $params, $children) {
+	/**
+	 * Handler for _thumbnail_list tag
+	 * 
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */	
+	public function tag_ThumbnailList($level, $params, $children) {
 
 	}
 
 	/**
 	 * Handler for _video tag which embeds player in page.
+	 * 
 	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	function tag_Video($level, $params, $children) {
-		global $ModuleHandler;
-
+	public function tag_Video($level, $params, $children) {
 		$video = null;
-		$manager = new YouTube_VideoManager();
+		$manager = YouTube_VideoManager::getInstance();
 
 		if (isset($params['id'])) {
 			// video is was specified
@@ -390,8 +412,8 @@ class youtube extends Module {
 		// no id was specified
 		if (!is_object($video)) return;
 
-		if ($ModuleHandler->moduleExists('swfobject')) {
-			$module = $ModuleHandler->getObjectFromName('swfobject');
+		if (class_exists('swfobject')) {
+			$module = swfobject::getInstance();
 
 			if (isset($params['embed']) && $params['embed'] == '1')
 				$module->embedSWF(
@@ -410,12 +432,13 @@ class youtube extends Module {
 
 	/**
 	 * Handler of _video_list tag used to print list of all videos.
+	 * 
 	 * @param $level
 	 * @param $params
 	 * @param $children
 	 */
-	function tag_VideoList($level, $params, $children) {
-		$manager = new YouTube_VideoManager();
+	public function tag_VideoList($level, $params, $children) {
+		$manager = YouTube_VideoManager::getInstance();
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
@@ -498,7 +521,7 @@ class youtube extends Module {
 	 * @param integer $number 1-3
 	 * @return string
 	 */
-	function getThumbnailURL($video_id, $number=2) {
+	public function getThumbnailURL($video_id, $number=2) {
 		return "http://img.youtube.com/vi/{$video_id}/{$number}.jpg";
 	}
 
@@ -508,21 +531,36 @@ class youtube extends Module {
 	 * @param string[11] $video_id
 	 * @return string
 	 */
-	function getEmbedURL($video_id) {
+	public function getEmbedURL($video_id) {
 		return "http://www.youtube.com/v/{$video_id}?enablejsapi=1&version=3";
 	}
 
 }
 
-class YouTube_VideoManager extends ItemManager {
 
-	function __construct() {
+class YouTube_VideoManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('youtube_video');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('video_id', 'varchar');
 		$this->addProperty('title', 'varchar');
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 }
 

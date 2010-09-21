@@ -8,39 +8,41 @@
  */
 
 class language_menu extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
-	 *
-	 * @return journal
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
-	}
-
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
+	protected function __construct() {
+		parent::__construct(__FILE__);
+		
 		// load CSS and JScript
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
-		}
+		}		
 	}
 
 	/**
-	 * Transfers control to module functions
-	 *
-	 * @param string $action
-	 * @param integer $level
+	 * Public function that creates a single instance
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
+	/**
+	 * Transfers control to module functions
+	 * 
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -71,21 +73,26 @@ class language_menu extends Module {
 	 * @param integer $level
 	 * @param array $global_params
 	 */
-	function printMenus($level, $tag_params) {
-		global $ModuleHandler, $LanguageHandler, $action, $section;
+	private function printMenus($level, $tag_params) {
+		global $action, $section;
 
 		// check if we were asked to get languages from specific module
-		if (isset($tag_params['from_module']) && $ModuleHandler->moduleExists($tag_params['from_module'])) {
-			$module = $ModuleHandler->getObjectFromName($tag_params['from_module']);
+		if (isset($tag_params['from_module']) && class_exists($tag_params['from_module'])) {
+			$module = call_user_func(array($tag_params['from_module'], 'getInstance'));
 			$list = $module->language->getLanguages(true);
 		} else {
-			$list = $LanguageHandler->getLanguages(true);
+			$list = MainLanguageHandler::getInstance()->getLanguages(true);
 		}
 
-		$template_file = (isset($tag_params['template'])) ? $tag_params['template'] : 'list_item.xml';
-		$template = new TemplateHandler($template_file, $this->path.'templates/');
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
+		}
 		$template->setMappedModule($this->name);
-
+		
 		$link_params = array();
 		foreach($_GET as $key => $value)
 			if ($key != 'language')
@@ -111,36 +118,38 @@ class language_menu extends Module {
 	/**
 	 * Print JSON object for usage by the backend API
 	 */
-	function json_Menu() {
-		global $ModuleHandler, $LanguageHandler, $action, $section;
+	private function json_Menu() {
+		global $action, $section;
 
 		define('_OMIT_STATS', 1);
 
 		// check if we were asked to get languages from specific module
-		if (isset($_REQUEST['from_module']) && $ModuleHandler->moduleExists($_REQUEST['from_module'])) {
-			$module = $ModuleHandler->getObjectFromName($_REQUEST['from_module']);
+		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 
 			$rtl = $module->language->getRTL();
 			$list = $module->language->getLanguages(true);
 			$default = $module->language->getDefaultLanguage();
 		} else {
-			$rtl = $LanguageHandler->getRTL();
-			$list = $LanguageHandler->getLanguages(true);
-			$default = $LanguageHandler->getDefaultLanguage();
+			$language_handler = MainLanguageHandler::getInstance();
+			
+			$rtl = $language_handler->getRTL();
+			$list = $language_handler->getLanguages(true);
+			$default = $language_handler->getDefaultLanguage();
 		}
 
 		$result = array(
-					'error'			=> false,
-					'error_message'	=> '',
-					'items'			=> array(),
-					'rtl'			=> $rtl
+					'error'				=> false,
+					'error_message'		=> '',
+					'items'				=> array(),
+					'rtl'				=> $rtl,
+					'default_language'	=> $default
 				);
 
 		foreach($list as $short => $long)
 			$result['items'][] = array(
-									'short'		=> $short,
-									'long'		=> $long,
-									'default' 	=> $short == $default
+									'short'			=> $short,
+									'long'			=> $long,
 								);
 
 		print json_encode($result);
@@ -149,17 +158,15 @@ class language_menu extends Module {
 	/**
 	 * Get language constant from specified module or from global language file
 	 */
-	function json_GetText() {
-		global $ModuleHandler, $LanguageHandler;
-
+	private function json_GetText() {
 		define('_OMIT_STATS', 1);
 
 		// check if we were asked to get languages from specific module
-		if (isset($_REQUEST['from_module']) && $ModuleHandler->moduleExists($_REQUEST['from_module'])) {
-			$module = $ModuleHandler->getObjectFromName(escape_chars($_REQUEST['from_module']));
+		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
 		} else {
-			$text = $LanguageHandler->getText(escape_chars($_REQUEST['constant']));
+			$text = MainLanguageHandler::getInstance()->getText(escape_chars($_REQUEST['constant']));
 		}
 
 		$result = array(
@@ -172,7 +179,7 @@ class language_menu extends Module {
 	/**
 	 * Get current language
 	 */
-	function json_GetCurrentLanguage() {
+	private function json_GetCurrentLanguage() {
 		global $language;
 
 		define('_OMIT_STATS', 1);

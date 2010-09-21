@@ -1,18 +1,17 @@
 <?php
 
 /**
- * KABALAH MODULE
+ * Kabalah Module
  *
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  * @copyright RCF Group, 2010.
  */
 
+require_once($this->path.'units/shared_functions.php');
+
 class kabalah extends Module {
-	/**
-	 * Field types
-	 * @var array
-	 */
-	var $field_types = array(
+	private static $_instance;
+	private $field_types = array(
 							'0'	=> 'field_type_text',
 							'1'	=> 'field_type_date',
 							'2'	=> 'field_type_number'
@@ -20,21 +19,59 @@ class kabalah extends Module {
 
 	/**
 	 * Constructor
-	 *
-	 * @return kabalah
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
+
+			$window_questions = window_Open(
+								$this->name.'_questions', 600,
+								$this->getLanguageConstant('title_questions'),
+								true, true,
+								$this->name,
+								'questions'
+							);
+
+			$window_answers = window_Open(
+								$this->name.'_answers',	630,
+								$this->getLanguageConstant('title_answers'),
+								true, true,
+								$this->name,
+								'answers'
+							);
+
+			$menu = new backend_MenuItem($this->getLanguageConstant('menu_title'), '', $window_questions,	$level=0);
+
+			$menu->addChild('', new backend_MenuItem($this->getLanguageConstant('menu_questions'), '', $window_questions, $level=0));
+			$menu->addChild('', new backend_MenuItem($this->getLanguageConstant('menu_answers'), '', $window_answers, $level=0));
+
+			$backend->addMenu($this->name, $menu);
+		}
 	}
 
 	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
+	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
 			case 'view':
@@ -143,57 +180,11 @@ class kabalah extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// include functions file
-		require_once($this->path.'units/shared_functions.php');
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/kabalah.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/kabalah.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			$window_questions = window_Open(
-								$this->name.'_questions', 600,
-								$this->getLanguageConstant('title_questions'),
-								true, true,
-								$this->name,
-								'questions'
-							);
-
-			$window_answers = window_Open(
-								$this->name.'_answers',	630,
-								$this->getLanguageConstant('title_answers'),
-								true, true,
-								$this->name,
-								'answers'
-							);
-
-			$menu = new backend_MenuItem($this->getLanguageConstant('menu_title'), '', $window_questions,	$level=0);
-
-			$menu->addChild('', new backend_MenuItem($this->getLanguageConstant('menu_questions'), '', $window_questions, $level=0));
-			$menu->addChild('', new backend_MenuItem($this->getLanguageConstant('menu_answers'), '', $window_answers, $level=0));
-
-			$backend->addMenu($this->name, $menu);
-		}
-
-	}
-
-	/**
 	 * Display list of qestions
 	 *
 	 * @param integer $level
 	 */
-	function printQuestionsForm($level) {
+	private function printQuestionsForm($level) {
 		$template = new TemplateHandler('questions_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -221,8 +212,8 @@ class kabalah extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function printQuestions($level, $params, $children) {
-		$manager = new QuestionManager();
+	private function printQuestions($level, $params, $children) {
+		$manager = QuestionManager::getInstance();
 		$results = $manager->getItems(
 								array('id', 'pid', 'title'),
 								array(),
@@ -304,7 +295,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function newQuestion($level) {
+	private function newQuestion($level) {
 		$template = new TemplateHandler('questions_new.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -323,9 +314,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function changeQuestion($level) {
+	private function changeQuestion($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new QuestionManager();
+		$obj = QuestionManager::getInstance();
 
 		$question = $obj->getSingleItem(array('id', 'pid', 'title', 'description', 'formula'), array('id' => $id));
 
@@ -352,14 +343,14 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function saveQuestion($level) {
+	private function saveQuestion($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$pid = fix_id(fix_chars($_REQUEST['pid']));
 		$title = fix_chars($_REQUEST['title']);
 		$description = fix_chars($_REQUEST['description']);
 		$formula = ($_REQUEST['formula']);
 
-		$obj = new QuestionManager();
+		$obj = QuestionManager::getInstance();
 		$data = array(
 					'pid'			=> $pid,
 					'title'			=> $title,
@@ -390,9 +381,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteQuestion($level) {
+	private function deleteQuestion($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new QuestionManager();
+		$obj = QuestionManager::getInstance();
 
 		$question = $obj->getSingleItem(array('title'), array('id' => $id));
 
@@ -424,11 +415,11 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteQuestionCommit($level) {
+	private function deleteQuestionCommit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new QuestionManager();
-		$answers = new AnswerManager();
-		$fields = new FieldManager();
+		$obj = QuestionManager::getInstance();
+		$answers = AnswerManager::getInstance();
+		$fields = FieldManager::getInstance();
 
 		$question = $obj->getSingleItem(array('pid'), array('id' => $id));
 		$pid = $question->pid;
@@ -458,7 +449,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function printAnswersForm($level) {
+	private function printAnswersForm($level) {
 		$template = new TemplateHandler('answers_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -486,8 +477,8 @@ class kabalah extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function printAnswers($level, $params, $children) {
-		$manager = new AnswerManager();
+	public function printAnswers($level, $params, $children) {
+		$manager = AnswerManager::getInstance();
 		$results = $manager->getItems(
 								array(
 									'id', 'question', 'number', 'title',
@@ -557,7 +548,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function newAnswer($level) {
+	private function newAnswer($level) {
 		$template = new TemplateHandler('answers_new.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -577,9 +568,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function changeAnswer($level) {
+	private function changeAnswer($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new AnswerManager();
+		$obj = AnswerManager::getInstance();
 
 		$answer = $obj->getSingleItem(
 								array('id', 'number', 'question', 'title', 'short_description', 'description'),
@@ -611,7 +602,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function saveAnswer($level) {
+	private function saveAnswer($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$number = fix_id(fix_chars($_REQUEST['number']));
 		$question = fix_id(fix_chars($_REQUEST['question']));
@@ -619,7 +610,7 @@ class kabalah extends Module {
 		$short_description = fix_chars($_REQUEST['short_description']);
 		$description = fix_chars($_REQUEST['description']);
 
-		$obj = new AnswerManager();
+		$obj = AnswerManager::getInstance();
 		$data = array(
 					'number'			=> $number,
 					'question'			=> $question,
@@ -651,9 +642,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteAnswer($level) {
+	private function deleteAnswer($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new AnswerManager();
+		$obj = AnswerManager::getInstance();
 
 		$answer = $obj->getSingleItem(array('title'), array('id' => $id));
 
@@ -685,9 +676,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteAnswerCommit($level) {
+	private function deleteAnswerCommit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new AnswerManager();
+		$obj = AnswerManager::getInstance();
 
 		$obj->deleteData(array('id'	=> $id));
 
@@ -710,7 +701,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function printFieldsForm($level) {
+	private function printFieldsForm($level) {
 		$question = fix_id(fix_chars($_REQUEST['id']));
 
 		$template = new TemplateHandler('fields_list.xml', $this->path.'templates/');
@@ -747,13 +738,13 @@ class kabalah extends Module {
 	 * Custom tag handler
 	 *
 	 * @param integer $level
-	 * @param array $param
+	 * @param array $params
 	 * @param array $children
 	 */
-	function printFields($level, $params, $children) {
+	public function printFields($level, $params, $children) {
 		$question = fix_id(fix_chars($_REQUEST['id']));
 
-		$manager = new FieldManager();
+		$manager = FieldManager::getInstance();
 		$results = $manager->getItems(
 									array('id', 'question', 'type', 'name', 'label', 'default', 'order'),
 									array('question' => $question),
@@ -830,7 +821,7 @@ class kabalah extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function printFieldTypes($level, $params, $children) {
+	public function printFieldTypes($level, $params, $children) {
 		$template = new TemplateHandler(isset($params['template']) ? $params['template'] : 'field_type.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -851,7 +842,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function newField($level) {
+	private function newField($level) {
 		$question = fix_id(fix_chars($_REQUEST['question']));
 
 		$template = new TemplateHandler('fields_new.xml', $this->path.'templates/');
@@ -874,9 +865,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function changeField($level) {
+	private function changeField($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new FieldManager();
+		$obj = FieldManager::getInstance();
 
 		$answer = $obj->getSingleItem(
 								array('id', 'question', 'type', 'name', 'label', 'default', 'order'),
@@ -909,7 +900,7 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function saveField($level) {
+	private function saveField($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$question = fix_id(fix_chars($_REQUEST['question']));
 		$type = fix_id(fix_chars($_REQUEST['type']));
@@ -918,7 +909,7 @@ class kabalah extends Module {
 		$default = fix_chars($_REQUEST['default']);
 		$order = isset($_REQUEST['order']) ? fix_id(fix_chars($_REQUEST['order'])) : 0;
 
-		$obj = new FieldManager();
+		$obj = FieldManager::getInstance();
 		$data = array(
 					'question'			=> $question,
 					'type'				=> $type,
@@ -951,9 +942,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteField($level) {
+	private function deleteField($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new FieldManager();
+		$obj = FieldManager::getInstance();
 
 		$field = $obj->getSingleItem(array('name'), array('id' => $id));
 
@@ -985,9 +976,9 @@ class kabalah extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function deleteFieldCommit($level) {
+	private function deleteFieldCommit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$obj = new FieldManager();
+		$obj = FieldManager::getInstance();
 
 		$obj->deleteData(array('id'	=> $id));
 
@@ -1008,7 +999,7 @@ class kabalah extends Module {
 	/**
 	 * Generate and print out XML for specified question
 	 */
-	function generateQuestionXML() {
+	private function generateQuestionXML() {
 		$question = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		// no question was specified, print error XML and return
@@ -1017,7 +1008,7 @@ class kabalah extends Module {
 			return;
 		}
 
-		$manager = new QuestionManager();
+		$manager = QuestionManager::getInstance();
 		$question = $manager->getSingleItem(
 									array('title', 'description'),
 									array('pid' => $question)
@@ -1040,7 +1031,7 @@ class kabalah extends Module {
 	/**
 	 * Generate list of questions.
 	 */
-	function generateQuestionListXML() {
+	private function generateQuestionListXML() {
 		$template = new TemplateHandler('question_list_output.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -1055,10 +1046,10 @@ class kabalah extends Module {
 	/**
 	 * Calculate and generate XML based on short answer description
 	 */
-	function generateAnswerXML() {
+	private function generateAnswerXML() {
 		$question = fix_id(fix_chars($_REQUEST['question']));
-		$field_manager = new FieldManager();
-		$answer_manager = new AnswerManager();
+		$field_manager = FieldManager::getInstance();
+		$answer_manager = AnswerManager::getInstance();
 
 		// get raw data from flash in XML
 		$parser = new XMLParser(file_get_contents("php://input"), "");
@@ -1135,11 +1126,11 @@ class kabalah extends Module {
 	/**
 	 * Generates HTML page containing answer.
 	 */
-	function generateAnswerHTML() {
+	private function generateAnswerHTML() {
 		$question = fix_id(fix_chars($_REQUEST['question']));
 		$answer_number = fix_id(fix_chars($_REQUEST['answer']));
 
-		$answer_manager = new AnswerManager();
+		$answer_manager = AnswerManager::getInstance();
 		$answer = $answer_manager->getSingleItem(
 											array('id', 'title', 'description'),
 											array(
@@ -1172,8 +1163,10 @@ class kabalah extends Module {
 
 	/**
 	 * Generates XML that provides error message to the flash application
+	 * 
+	 * @param string $message
 	 */
-	function generateErrorXML($message="") {
+	private function generateErrorXML($message="") {
 		$template = new TemplateHandler('message_output.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -1193,10 +1186,10 @@ class kabalah extends Module {
 	 * @param $field_data
 	 * @return integer
 	 */
-	function calculateAnswer($question_number, $field_data) {
+	private function calculateAnswer($question_number, $field_data) {
 		$result = 0;
 
-		$manager = new QuestionManager();
+		$manager = QuestionManager::getInstance();
 		$question = $manager->getSingleItem(array('formula'), array('pid' => $question_number));
 
 		$data = $question->formula;
@@ -1211,9 +1204,14 @@ class kabalah extends Module {
 	}
 }
 
-class QuestionManager extends ItemManager {
 
-	function __construct() {
+class QuestionManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('questions');
 
 		$this->addProperty('id', 'int');
@@ -1222,11 +1220,26 @@ class QuestionManager extends ItemManager {
 		$this->addProperty('description', 'text');
 		$this->addProperty('formula', 'text');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
 }
 
-class FieldManager extends ItemManager {
 
-	function __construct() {
+class FieldManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('fields');
 
 		$this->addProperty('id', 'int');
@@ -1236,11 +1249,26 @@ class FieldManager extends ItemManager {
 		$this->addProperty('label', 'text');
 		$this->addProperty('default', 'varchar');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
 }
 
-class AnswerManager extends ItemManager {
 
-	function __construct() {
+class AnswerManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('answers');
 
 		$this->addProperty('id', 'int');
@@ -1249,5 +1277,15 @@ class AnswerManager extends ItemManager {
 		$this->addProperty('title', 'varchar');
 		$this->addProperty('short_description', 'text');
 		$this->addProperty('description', 'text');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 }

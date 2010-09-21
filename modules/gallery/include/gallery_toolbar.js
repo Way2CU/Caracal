@@ -81,6 +81,7 @@ function ToolbarExtension_Gallery() {
 	 */
 	this.loaded_ArticleImage = function(data) {
 		var $component = $(this);
+		var language_selector = $component.data('selector');
 
 		if (!data.error) {
 			var $list = $('<div>');
@@ -100,16 +101,16 @@ function ToolbarExtension_Gallery() {
 
 				$image
 					.attr('src', image.thumbnail)
-					.attr('alt', image.title[language_handler.current_language]);
+					.attr('alt', image.title[language_selector.current_language]);
 
 				$label
 					.addClass('title')
-					.html(image.title[language_handler.current_language]);
+					.html(image.title[language_selector.current_language]);
 
 				$item
 					.addClass('thumbnail')
 					.click(function() {
-						$component.insertAtCaret('![' + image.title[language_handler.current_language] + '](' + image.id + ')');
+						$component.insertAtCaret('![' + image.title[language_selector.current_language] + '](' + image.id + ')');
 						self.dialog.hide();
 					});
 
@@ -122,6 +123,9 @@ function ToolbarExtension_Gallery() {
 
 				$list.append($item);
 			}
+
+			// fix float
+			$list.append($('<div>').css('clear', 'both'));
 
 			self.dialog.setNormalState();
 			self.dialog.setContent($list, 650, 500);

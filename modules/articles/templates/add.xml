@@ -39,6 +39,7 @@
 		// create toolbar
 		toolbar_api
 				.createToolbar('article_add_form', '[name=content]:input')
+				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image');
 	</script>
 </document>

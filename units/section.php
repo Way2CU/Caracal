@@ -1,25 +1,19 @@
 <?php
 
 /**
- * SECTION HANDLER
+ * Section Handler
  *
- * @version 1.0
- * @author MeanEYE
- * @copyright RCF Group, 2008.
+ * @author MeanEYE.rcf
  */
 
-if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
-
 class SectionHandler {
-	var $engine;
-	var $active = false;
+	public $engine;
+	public $active = false;
 
 	/**
 	 * Constructor
-	 *
-	 * @return SectionHandler
 	 */
-	function SectionHandler($file="") {
+	public function __construct($file="") {
 		global $data_path;
 
 		$file = (empty($file)) ? $data_path.'system_section.xml' : $file;
@@ -30,7 +24,7 @@ class SectionHandler {
 			$this->active = true;
 		}
 	}
-
+	
 	/**
 	 * Retrieves file for parsing
 	 *
@@ -39,8 +33,8 @@ class SectionHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	function getFile($section, $action, $language='') {
-		global $ModuleHandler, $default_language;
+	public function getFile($section, $action, $language='') {
+		global $default_language;
 
 		$result = "";
 
@@ -74,23 +68,18 @@ class SectionHandler {
 /**
  * This manager is used only in index file. Sole purpose of this
  * object is to provide a separate section files.
+ * 
  * @author MeanEYE.rcf
- *
  */
 class MainSectionHandler {
-	/**
-	 * System default section definitions
-	 * @var resource
-	 */
-	var $section_system = null;
+	private static $_instance;
+	private $section_system = null;
+	private $section_local = null;
 
 	/**
-	 * Per-site section definitions
-	 * @var resource
+	 * Constructor
 	 */
-	var $section_local = null;
-
-	function __construct() {
+	protected function __construct() {
 		global $data_path;
 
 		$this->section_system = new SectionHandler();
@@ -100,6 +89,16 @@ class MainSectionHandler {
 	}
 
 	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
+	/**
 	 * Retrieves file for parsing
 	 *
 	 * @param string $section
@@ -107,7 +106,7 @@ class MainSectionHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	function getFile($section, $action, $language='') {
+	public function getFile($section, $action, $language='') {
 		$file = "";
 
 		// check for site specific section definition
@@ -128,15 +127,13 @@ class MainSectionHandler {
 	 * @param string $action
 	 * @param string $language
 	 */
-	function transferControl($section, $action, $language='') {
-		global $ModuleHandler;
-
+	public function transferControl($section, $action, $language='') {
 		$file = $this->getFile($section, $action, $language);
 
 		if (empty($file)) {
 			// if no section is defined, check for module with the same name
-			if ($ModuleHandler->moduleExists($section)) {
-				$module = $ModuleHandler->getObjectFromName($section);
+			if (class_exists($section)) {
+				$module = call_user_func(array(escape_chars($section), 'getInstance'));
 				$params = array('action' => $action);
 
 				// transfer control to module
@@ -155,9 +152,9 @@ class MainSectionHandler {
 			// check if login is required
 			if (isset($template->engine->document->tagAttrs['minimum_level']) &&
 			($template->engine->document->tagAttrs['minimum_level'] > $_SESSION['level'])) {
-				if ($ModuleHandler->moduleExists('session')) {
+				if (class_exists('session')) {
 					$_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
-					$module = $ModuleHandler->getObjectFromName('session');
+					$module = call_user_func(array('session', 'getInstance'));
 
 					$file = $module->getSectionFile($module->name, '', $language);
 

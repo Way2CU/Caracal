@@ -221,11 +221,9 @@ class Markdown_Parser {
 	#
 	# Constructor function. Initialize appropriate member variables.
 	#
-		global $ModuleHandler;
-
-		if ($ModuleHandler->moduleExists('gallery')) {
-			$this->gallery_module = $ModuleHandler->getObjectFromName('gallery');
-			$this->gallery_manager = new GalleryManager();
+		if (class_exists('gallery')) {
+			$this->gallery_module = call_user_func(array('gallery', 'getInstance'));
+			$this->gallery_manager = GalleryManager::getInstance();
 		}
 
 		$this->_initDetab();

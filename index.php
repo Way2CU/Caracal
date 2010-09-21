@@ -2,7 +2,7 @@
 
 /**
  * RCF Group - WebEngine
- * Modular Core Engine Copyright (c) 2009. by MeanEYE
+ * Modular Core Engine Copyright (c) 2010. by MeanEYE
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,8 +32,9 @@ define('_HTML_5', '<!DOCTYPE html>'."\n");
 require_once('units/config.php');
 require_once('units/rcf_db/rcf_sql_core.php');
 require_once('units/rcf_db/rcf_sql_mysql.php');
-require_once('units/core/module.php');
 require_once('units/core/item_manager.php');
+require_once('units/system_managers.php');
+require_once('units/core/module.php');
 require_once('units/module_handler.php');
 require_once('units/url.php');
 require_once('units/common.php');
@@ -50,9 +51,9 @@ $time_start = $time_start[0] + $time_start[1];
 session_start();
 
 // create main handlers
-$ModuleHandler = new ModuleHandler();
-$LanguageHandler = new MainLanguageHandler();
-$SectionHandler = new MainSectionHandler();
+$ModuleHandler = ModuleHandler::getInstance();
+$LanguageHandler = MainLanguageHandler::getInstance();
+$SectionHandler = MainSectionHandler::getInstance();
 
 // load primary variables
 $default_language = $LanguageHandler->getDefaultLanguage();
@@ -76,7 +77,6 @@ if ($db_use) {
 }
 
 // load all the modules and start parsing the page
-$ModuleHandler->loadPriorityModules();
 $ModuleHandler->loadModules();
 
 // transfer display control to others

@@ -10,14 +10,24 @@
  */
 
 class contact_form extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 
 	/**
 	 * Transfers control to module functions
@@ -25,7 +35,7 @@ class contact_form extends Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -48,7 +58,7 @@ class contact_form extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
+	public function onInit() {
 		global $db_active, $db;
 
 		$sql = "";
@@ -59,31 +69,12 @@ class contact_form extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db_active, $db;
 
 		$sql = "";
 
 		if ($db_active == 1) $db->query($sql);
-	}
-
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-		}
 	}
 
 	/**
@@ -93,7 +84,7 @@ class contact_form extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function sendFromXML($level, $params, $children) {
+	private function sendFromXML($level, $params, $children) {
 		$to = "";
 		$subject = "";
 		$fields = array();
@@ -164,14 +155,15 @@ class contact_form extends Module {
 	}
 
 	/**
-	 * Actually send email
+	 * Perform send email
+	 * 
 	 * @param string $to
 	 * @param string $subject
 	 * @param array $headers
 	 * @param array $fields
 	 * @return boolean
 	 */
-	function _sendMail($to, $subject, $headers, $fields) {
+	private function _sendMail($to, $subject, $headers, $fields) {
 		$body = $this->_makeBody($fields);
 		$headers_string = $this->_makeHeaders($headers);
 
@@ -180,10 +172,11 @@ class contact_form extends Module {
 
 	/**
 	 * Create header string from specified array
+	 * 
 	 * @param array $headers
 	 * @return string
 	 */
-	function _makeHeaders($headers) {
+	private function _makeHeaders($headers) {
 		$result = array();
 
 		foreach ($headers as $key => $value)
@@ -194,10 +187,11 @@ class contact_form extends Module {
 
 	/**
 	 * Create message body from fields
+	 * 
 	 * @param array $fields
 	 * @return string
 	 */
-	function _makeBody($fields) {
+	private function _makeBody($fields) {
 		$result = "";
 		$max_length = 0;
 

@@ -7,22 +7,45 @@
  */
 
 class _blank extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
+		
+		// load module style and scripts
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
+			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
+		}
+
+		// register backend
+		if (class_exists('backend')) {
+			$backend = backend::getInstance();
+		}		
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -41,7 +64,7 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
+	public function onInit() {
 		global $db_active, $db;
 
 		$sql = "";
@@ -52,40 +75,35 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db_active, $db;
 
 		$sql = "";
 
 		if ($db_active == 1) $db->query($sql);
 	}
-
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-		}
-	}
 }
 
-/*
+
 class SomeManager extends ItemManager {
-	function __construct() {
-		parent::ItemManager();
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::ItemManager('table_name');
 
 		$this->addProperty('id', 'int');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 }
-*/

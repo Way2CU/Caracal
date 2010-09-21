@@ -1,30 +1,40 @@
 <?php
 
 /**
- * SESSION MODULE
+ * Session Module
  *
- * Author: MeanEYE.rcf
+ * @author MeanEYE.rcf
+ * @todo Merge with backend module
  */
 
 class session extends Module {
-
+	private static $_instance;
+	
 	/**
 	 * Constructor
-	 *
-	 * @return session
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
 	}
 
 	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
+	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children=array()) {
+	public function transferControl($level, $params = array(), $children=array()) {
 		switch ($params['action']) {
 			case 'print_login':
 				$template = new TemplateHandler('login.xml', $this->path.'templates/');
@@ -45,17 +55,17 @@ class session extends Module {
 	/**
 	 * Perfrom credetials check for user
 	 */
-	function performLogin() {
-		global $ModuleHandler, $language;
+	private function performLogin() {
+		global $language;
 
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
 		$captchaValue = fix_chars($_REQUEST['captcha']);
-		$manager = new AdministratorManager();
+		$manager = AdministratorManager::getInstance();
 
 		$captchaPass = false;
-		if ($ModuleHandler->moduleExists('captcha')) {
-			$captcha = $ModuleHandler->getObjectFromName('captcha');
+		if (class_exists('captcha')) {
+			$captcha = captcha::getInstance();
 			$captchaPass = $captcha->isCaptchaValid($captchaValue);
 		}
 
@@ -96,7 +106,7 @@ class session extends Module {
     /**
      * Loggs out current user
      */
-    function performLogout() {
+    private function performLogout() {
         global $language;
 
         unset($_SESSION['username']);
@@ -108,18 +118,6 @@ class session extends Module {
         echo $this->language->getText('message_logout', $language);
         url_SetRefresh(url_Make('', ''), 2);
     }
-}
-
-class AdministratorManager extends ItemManager {
-	function __construct() {
-		parent::__construct('system_access');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('username', 'varchar');
-		$this->addProperty('password', 'varchar');
-		$this->addProperty('fullname', 'varchar');
-		$this->addProperty('level', 'int');
-	}
 }
 
 ?>

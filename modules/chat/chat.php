@@ -7,83 +7,19 @@
  */
 
 class chat extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
-	}
-
-	/**
-	 * Transfers control to module functions
-	 *
-	 * @param string $action
-	 * @param integer $level
-	 */
-	function transferControl($level, $params = array(), $children = array()) {
-		// global control actions
-		if (isset($params['action']))
-			switch ($params['action']) {
-				default:
-					break;
-			}
-
-		// global control actions
-		if (isset($params['backend_action']))
-			switch ($params['backend_action']) {
-				case 'chat':
-					$this->chatInterface($level);
-					break;
-
-				case 'chat_settings':
-					$this->chatSettings($level);
-					break;
-
-				case 'chat_channel_add':
-					$this->addChannel($level);
-					break;
-
-				default:
-					break;
-			}
-	}
-
-	/**
-	 * Event triggered upon module initialization
-	 */
-	function onInit() {
-		global $db_active, $db;
-
-		$sql = "";
-
-		if ($db_active == 1) $db->query($sql);
-
-		if (!array_key_exists('update_interval', $this->settings))
-			$this->saveSetting('update_interval', 2000);
-	}
-
-	/**
-	 * Event triggered upon module deinitialization
-	 */
-	function onDisable() {
-		global $db_active, $db;
-
-		$sql = "";
-
-		if ($db_active == 1) $db->query($sql);
-	}
-
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
 		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
 			$head_tag->addTag(
 							'link',
 							array(
@@ -97,8 +33,8 @@ class chat extends Module {
 		}
 
 		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
 
 			$chat_menu = new backend_MenuItem(
 								$this->getLanguageConstant('menu_chat'),
@@ -133,14 +69,84 @@ class chat extends Module {
 							));
 
 			$backend->addMenu($this->name, $chat_menu);
-		}
+		}		
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
+	/**
+	 * Transfers control to module functions
+	 *
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */
+	public function transferControl($level, $params = array(), $children = array()) {
+		// global control actions
+		if (isset($params['action']))
+			switch ($params['action']) {
+				default:
+					break;
+			}
+
+		// global control actions
+		if (isset($params['backend_action']))
+			switch ($params['backend_action']) {
+				case 'chat':
+					$this->chatInterface($level);
+					break;
+
+				case 'chat_settings':
+					$this->chatSettings($level);
+					break;
+
+				case 'chat_channel_add':
+					$this->addChannel($level);
+					break;
+
+				default:
+					break;
+			}
+	}
+
+	/**
+	 * Event triggered upon module initialization
+	 */
+	public function onInit() {
+		global $db_active, $db;
+
+		$sql = "";
+
+		if ($db_active == 1) $db->query($sql);
+
+		if (!array_key_exists('update_interval', $this->settings))
+			$this->saveSetting('update_interval', 2000);
+	}
+
+	/**
+	 * Event triggered upon module deinitialization
+	 */
+	public function onDisable() {
+		global $db_active, $db;
+
+		$sql = "";
+
+		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
 	 * Create chat interface
 	 * @param integer $level
 	 */
-	function chatInterface($level) {
+	private function chatInterface($level) {
 		$template = new TemplateHandler('chat_window.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -165,7 +171,7 @@ class chat extends Module {
 	 * Display channel management form
 	 * @param integer $level
 	 */
-	function chatSettings($level) {
+	private function chatSettings($level) {
 		$template = new TemplateHandler('channel_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -190,7 +196,7 @@ class chat extends Module {
 	 * Input form for new channel
 	 * @param intger $level
 	 */
-	function addChannel($level) {
+	private function addChannel($level) {
 		$template = new TemplateHandler('channel_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -211,16 +217,6 @@ class chat extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function tag_ChannelList($level, $params, $children) {
+	public function tag_ChannelList($level, $params, $children) {
 	}
 }
-
-/*
-class SomeManager extends ItemManager {
-	function __construct() {
-		parent::ItemManager();
-
-		$this->addProperty('id', 'int');
-	}
-}
-*/

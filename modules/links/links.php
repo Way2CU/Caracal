@@ -1,7 +1,8 @@
 <?php
 
 /**
- * SITE LINKS MODULE
+ * Links Module
+ * 
  * This module provides a number of useful ways of printing and organising
  * links on your web site.
  *
@@ -9,24 +10,88 @@
  */
 
 class links extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
-	 *
-	 * @return links
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
+
+			$links_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_links'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					$level=5
+				);
+
+			$links_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_links_manage'),
+								url_GetFromFilePath($this->path.'images/manage.png'),
+								window_Open( // on click open window
+											'links_list',
+											730,
+											$this->getLanguageConstant('title_links_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'links_list')
+										),
+								$level=5
+							));
+
+			$links_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_links_groups'),
+								url_GetFromFilePath($this->path.'images/groups.png'),
+								window_Open( // on click open window
+											'groups_list',
+											500,
+											$this->getLanguageConstant('title_groups_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'groups_list')
+										),
+								$level=5
+							));
+
+			$links_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_links_overview'),
+								url_GetFromFilePath($this->path.'images/overview.png'),
+								window_Open( // on click open window
+											'links_overview',
+											650,
+											$this->getLanguageConstant('title_links_overview'),
+											true, true,
+											backend_UrlMake($this->name, 'overview')
+										),
+								$level=6
+							));
+
+			$backend->addMenu($this->name, $links_menu);
+		}
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
 			case 'show_link_list':
@@ -124,7 +189,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
+	public function onInit() {
 		global $db_active, $db;
 
 		$sql = "
@@ -169,7 +234,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db, $db_active;
 
 		$sql = "DROP TABLE IF EXISTS `links`, `link_groups`, `link_membership`;";
@@ -177,70 +242,10 @@ class links extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			$links_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_links'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_manage'),
-								url_GetFromFilePath($this->path.'images/manage.png'),
-								window_Open( // on click open window
-											'links_list',
-											730,
-											$this->getLanguageConstant('title_links_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'links_list')
-										),
-								$level=5
-							));
-
-			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_groups'),
-								url_GetFromFilePath($this->path.'images/groups.png'),
-								window_Open( // on click open window
-											'groups_list',
-											500,
-											$this->getLanguageConstant('title_groups_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'groups_list')
-										),
-								$level=5
-							));
-
-			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_overview'),
-								url_GetFromFilePath($this->path.'images/overview.png'),
-								window_Open( // on click open window
-											'links_overview',
-											650,
-											$this->getLanguageConstant('title_links_overview'),
-											true, true,
-											backend_UrlMake($this->name, 'overview')
-										),
-								$level=6
-							));
-
-			$backend->addMenu($this->name, $links_menu);
-		}
-	}
-
-	/**
 	 * Show links window
 	 * @param integer $level
 	 */
-	function showList($level) {
+	private function showList($level) {
 		$template = new TemplateHandler('links_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -283,16 +288,15 @@ class links extends Module {
 
 	/**
 	 * Show content of a form used for creation of new `link` object
+	 * 
 	 * @param integer $level
 	 */
-	function addLink($level) {
-		global $ModuleHandler;
-
+	private function addLink($level) {
 		$template = new TemplateHandler('links_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'with_images'	=> $ModuleHandler->moduleExists('gallery'),
+					'with_images'	=> class_exists('gallery'),
 					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
 					'cancel_action'	=> window_Close('links_add')
 				);
@@ -304,11 +308,12 @@ class links extends Module {
 
 	/**
 	 * Show content of a form in editing state for sepected `link` object
+	 * 
 	 * @param integer $level
 	 */
-	function changeLink($level) {
+	private function changeLink($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinksManager();
+		$manager = LinksManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -335,11 +340,10 @@ class links extends Module {
 
 	/**
 	 * Save changes existing (or new) to `link` object and display result
+	 * 
 	 * @param integer $level
 	 */
-	function saveLink($level) {
-		global $ModuleHandler;
-
+	private function saveLink($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -354,9 +358,9 @@ class links extends Module {
 		$gallery_addon = '';
 
 		// if images are in use and specified
-		if ($ModuleHandler->moduleExists('gallery') && isset($_FILES['image'])) {
-			$gallery = $ModuleHandler->getObjectFromName('gallery');
-			$gallery_manager = new GalleryManager();
+		if (class_exists('gallery') && isset($_FILES['image'])) {
+			$gallery = gallery::getInstance();
+			$gallery_manager = GalleryManager::getInstance();
 
 			$result = $gallery->_createImage('image', $this->settings['thumbnail_size']);
 
@@ -375,7 +379,7 @@ class links extends Module {
 			}
 		}
 
-		$manager = new LinksManager();
+		$manager = LinksManager::getInstance();
 
 		if (!is_null($id)) {
 			$manager->updateData($data, array('id' => $id));
@@ -403,11 +407,12 @@ class links extends Module {
 
 	/**
 	 * Present user with confirmation dialog before removal of specified `link` object
+	 * 
 	 * @param integer $level
 	 */
-	function deleteLink($level) {
+	private function deleteLink($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinksManager();
+		$manager = LinksManager::getInstance();
 
 		$item = $manager->getSingleItem(array('text'), array('id' => $id));
 
@@ -439,22 +444,21 @@ class links extends Module {
 
 	/**
 	 * Remove specified `link` object and inform user about operation status
+	 * 
 	 * @param integer $level
 	 */
-	function deleteLink_Commit($level) {
-		global $ModuleHandler;
-
+	private function deleteLink_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinksManager();
-		$membership_manager = new LinkMembershipManager();
+		$manager = LinksManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
 		$gallery_addon = '';
 
 		// if we used image with this, we need to remove that too
-		if ($ModuleHandler->moduleExists('gallery')) {
+		if (class_exists('gallery')) {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 			if (is_object($item) && !empty($item->image)) {
-				$gallery_manager = new GalleryManager();
+				$gallery_manager = GalleryManager::getInstance();
 				$gallery_manager->deleteData(array('id' => $item->image));
 			}
 
@@ -480,9 +484,10 @@ class links extends Module {
 
 	/**
 	 * Show link groups management window
+	 * 
 	 * @param integer $level
 	 */
-	function showGroups($level) {
+	private function showGroups($level) {
 		$template = new TemplateHandler('groups_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -505,9 +510,10 @@ class links extends Module {
 
 	/**
 	 * Create new group form
+	 * 
 	 * @param integer $level
 	 */
-	function addGroup($level) {
+	private function addGroup($level) {
 		$template = new TemplateHandler('groups_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -523,11 +529,12 @@ class links extends Module {
 
 	/**
 	 * Group rename form
+	 * 
 	 * @param integer $level
 	 */
-	function changeGroup($level) {
+	private function changeGroup($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinkGroupsManager();
+		$manager = LinkGroupsManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -548,16 +555,17 @@ class links extends Module {
 
 	/**
 	 * Insert or save group data
+	 * 
 	 * @param integer $level
 	 */
-	function saveGroup($level) {
+	private function saveGroup($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
 			'name' 	=> fix_chars($_REQUEST['name']),
 		);
 
-		$manager = new LinkGroupsManager();
+		$manager = LinkGroupsManager::getInstance();
 
 		if (!is_null($id)) {
 			$manager->updateData($data, array('id' => $id));
@@ -585,11 +593,12 @@ class links extends Module {
 
 	/**
 	 * Delete group confirmation dialog
+	 * 
 	 * @param integer $level
 	 */
-	function deleteGroup($level) {
+	private function deleteGroup($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinkGroupsManager();
+		$manager = LinkGroupsManager::getInstance();
 
 		$item = $manager->getSingleItem(array('name'), array('id' => $id));
 
@@ -621,12 +630,13 @@ class links extends Module {
 
 	/**
 	 * Delete group from the system
+	 * 
 	 * @param integer $level
 	 */
-	function deleteGroup_Commit($level) {
+	private function deleteGroup_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinkGroupsManager();
-		$membership_manager = new LinkMembershipManager();
+		$manager = LinkGroupsManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 		$membership_manager->deleteData(array('group' => $id));
@@ -647,9 +657,10 @@ class links extends Module {
 
 	/**
 	 * Print a form containing all the links within a group
+	 * 
 	 * @param integer $level
 	 */
-	function groupLinks($level) {
+	private function groupLinks($level) {
 		$group_id = fix_id(fix_chars($_REQUEST['id']));
 
 		$template = new TemplateHandler('groups_links.xml', $this->path.'templates/');
@@ -669,11 +680,12 @@ class links extends Module {
 
 	/**
 	 * Save link group memberships
+	 * 
 	 * @param integer level
 	 */
-	function groupLinksSave($level) {
+	private function groupLinksSave($level) {
 		$group = fix_id(fix_chars($_REQUEST['group']));
-		$membership_manager = new LinkMembershipManager();
+		$membership_manager = LinkMembershipManager::getInstance();
 
 		// fetch all ids being set to specific group
 		$link_ids = array();
@@ -712,7 +724,7 @@ class links extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function showOverview($level) {
+	private function showOverview($level) {
 		// display message
 		$template = new TemplateHandler('overview_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -731,9 +743,9 @@ class links extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function redirectLink($level) {
+	private function redirectLink($level) {
 		$link_id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinksManager();
+		$manager = LinksManager::getInstance();
 
 		$link = $manager->getSingleItem($manager->getFieldNames(), array('id' => $link_id));
 
@@ -758,12 +770,12 @@ class links extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function tag_GroupLinks($level, $params, $children) {
+	public function tag_GroupLinks($level, $params, $children) {
 		if (!isset($params['group'])) return;
 
 		$group = fix_id($params['group']);
-		$link_manager = new LinksManager();
-		$membership_manager = new LinkMembershipManager();
+		$link_manager = LinksManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
 
 		$memberships = $membership_manager->getItems(
 												array('link'),
@@ -809,11 +821,9 @@ class links extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function tag_Link($level, $params, $children) {
-		global $ModuleHandler;
-
+	public function tag_Link($level, $params, $children) {
 		$id = isset($params['id']) ? $params['id'] : fix_id(fix_chars($_REQUEST['id']));
-		$manager = new LinksManager();
+		$manager = LinksManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -839,9 +849,9 @@ class links extends Module {
 		$image = null;
 		$thumbnail = null;
 
-		if ($ModuleHandler->moduleExists('gallery')) {
-			$gallery = $ModuleHandler->getObjectFromName('gallery');
-			$gallery_manager = new GalleryManager();
+		if (class_exists('gallery')) {
+			$gallery = gallery::getInstance();
+			$gallery_manager = GalleryManager::getInstance();
 
 			$image_item = $gallery_manager->getSingleItem(
 												$gallery_manager->getFieldNames(),
@@ -884,22 +894,19 @@ class links extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_LinkList($level, $tag_params, $children) {
-		global $ModuleHandler;
-
-		$manager = new LinksManager();
-		$membership_manager = new LinkMembershipManager();
+	public function tag_LinkList($level, $tag_params, $children) {
+		$manager = LinksManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
 		$conditions = array();
 
 		// save some CPU time by getting this early
-		if ($ModuleHandler->moduleExists('gallery')) {
+		if (class_exists('gallery')) {
 			$use_images = true;
-			$gallery = $ModuleHandler->getObjectFromName('gallery');
-			$gallery_manager = new GalleryManager();
+			$gallery = gallery::getInstance();
+			$gallery_manager = GalleryManager::getInstance();
 		} else {
 			$use_images = false;
 		}
-
 
 		if ((isset($tag_params['sponsored']) && $tag_params['sponsored'] == '1') ||
 		(isset($tag_params['group']) && $tag_params['group'] == 'sponsored' ))
@@ -1032,25 +1039,23 @@ class links extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_Group($level, $tag_params, $children) {
-		global $ModuleHandler;
-
+	public function tag_Group($level, $tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
 		$id = $tag_params['id'];
 
 		// save some CPU time by getting this early
-		if ($ModuleHandler->moduleExists('gallery')) {
+		if (class_exists('gallery')) {
 			$use_images = true;
-			$gallery = $ModuleHandler->getObjectFromName('gallery');
-			$gallery_manager = new GalleryManager();
+			$gallery = gallery::getInstance();
+			$gallery_manager = GalleryManager::getInstance();
 		} else {
 			$use_images = false;
 		}
 
-		$manager = new LinkGroupsManager();
-		$link_manager = new LinksManager();
-		$membership_manager = new LinkMembershipManager();
+		$manager = LinkGroupsManager::getInstance();
+		$link_manager = LinksManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -1102,18 +1107,16 @@ class links extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_GroupList($level, $tag_params, $children) {
-		global $ModuleHandler;
-
-		$manager = new LinkGroupsManager();
-		$link_manager = new LinksManager();
-		$membership_manager = new LinkMembershipManager();
+	public function tag_GroupList($level, $tag_params, $children) {
+		$manager = LinkGroupsManager::getInstance();
+		$link_manager = LinksManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
 
 		// save some CPU time by getting this early
-		if ($ModuleHandler->moduleExists('gallery')) {
+		if (class_exists('gallery')) {
 			$use_images = true;
-			$gallery = $ModuleHandler->getObjectFromName('gallery');
-			$gallery_manager = new GalleryManager();
+			$gallery = gallery::getInstance();
+			$gallery_manager = GalleryManager::getInstance();
 		} else {
 			$use_images = false;
 		}
@@ -1221,9 +1224,14 @@ class links extends Module {
 	}
 }
 
-class LinksManager extends ItemManager {
 
-	function __construct() {
+class LinksManager extends ItemManager {
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('links');
 
 		$this->addProperty('id', 'int');
@@ -1237,25 +1245,63 @@ class LinksManager extends ItemManager {
 		$this->addProperty('total_clicks', 'integer');
 		$this->addProperty('image', 'integer');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 }
 
 class LinkGroupsManager extends ItemManager {
-
-	function __construct() {
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('link_groups');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
 }
 
 class LinkMembershipManager extends ItemManager {
-
-	function __construct() {
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('link_membership');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('link', 'int');
 		$this->addProperty('group', 'int');
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 }

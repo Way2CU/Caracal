@@ -20,6 +20,7 @@
 <!ATTLIST _text
 	constant CDATA #REQUIRED
 	module CDATA #IMPLIED
+	eval CDATA #IMPLIED
 >
 
 <!ELEMENT _section_data EMPTY>
@@ -39,3 +40,4 @@
 	text CDATA #IMPLIED
 	file CDATA #IMPLIED
 >
+

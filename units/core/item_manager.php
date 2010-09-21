@@ -2,7 +2,8 @@
 
 /**
  * Database Item Base Class
- * @author MeanEYE[rcf]
+ *
+ * @author MeanEYE.rcf
  */
 
 define('DB_INSERT', 0);
@@ -15,37 +16,40 @@ class ItemManager {
 	 * List of string based field types
 	 * @var array
 	 */
-	var $string_fields = array('CHAR', 'TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP', 'ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
+	protected $string_fields = array(
+							'CHAR', 'TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP',
+							'ML_VARCHAR', 'ML_TEXT', 'ML_CHAR'
+						);
 
 	/**
 	 * List of multi-language fields
 	 * @var array
 	 */
-	var $ml_fields = array('ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
+	protected $ml_fields = array('ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
 
 	/**
 	 * List of item fields
 	 * @var array
 	 */
-	var $fields = array();
+	protected $fields = array();
 
 	/**
 	 * List of field types
 	 * @var array
 	 */
-	var $field_types = array();
+	protected $field_types = array();
 
 	/**
 	 * Table name
 	 * @var string
 	 */
-	var $table_name;
+	protected $table_name;
 
 	/**
 	 * Store languages in local variable
 	 * @var array
 	 */
-	var $languages = array();
+	protected $languages = array();
 
 	/**
 	 * Constructor
@@ -54,11 +58,9 @@ class ItemManager {
 	 * @param string $table_name
 	 * @return db_item
 	 */
-	function __construct($table_name) {
-		global $LanguageHandler;
-
+	protected function __construct($table_name) {
 		$this->table_name = $table_name;
-		$this->languages = $LanguageHandler->getLanguages(false);
+		$this->languages = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		sort($this->languages, SORT_STRING);
 	}
@@ -69,7 +71,7 @@ class ItemManager {
 	 * @param string $field_name
 	 * @param string $field_type
 	 */
-	function addProperty($field_name, $field_type) {
+	public function addProperty($field_name, $field_type) {
 		$field_type = strtoupper($field_type);
 		$this->fields[] = $field_name;
 		$this->field_types[$field_name] = $field_type;
@@ -86,11 +88,11 @@ class ItemManager {
 	 * @global boolean $db_active
 	 * @param array $data
 	 */
-	function insertData($data) {
+	public function insertData($data) {
 		global $db, $db_active;
 
 		if ($db_active == 1) {
-			$query = $this->getQuery(DB_INSERT, $data);
+			$query = $this->_getQuery(DB_INSERT, $data);
 
 			if (!empty($query))
 				$db->query($query);
@@ -105,11 +107,11 @@ class ItemManager {
 	 * @param array $data
 	 * @param array $conditionals
 	 */
-	function updateData($data, $conditionals) {
+	public function updateData($data, $conditionals) {
 		global $db, $db_active;
 
 		if ($db_active == 1) {
-			$query = $this->getQuery(DB_UPDATE, $data, $conditionals);
+			$query = $this->_getQuery(DB_UPDATE, $data, $conditionals);
 
 			if (!empty($query))
 				$db->query($query);
@@ -123,11 +125,11 @@ class ItemManager {
 	 * @global boolean $db_active
 	 * @param array $conditionals
 	 */
-	function deleteData($conditionals) {
+	public function deleteData($conditionals, $limit=null) {
 		global $db, $db_active;
 
 		if ($db_active == 1) {
-			$query = $this->getQuery(DB_DELETE, array(), $conditionals);
+			$query = $this->_getQuery(DB_DELETE, array(), $conditionals, null, null, $limit);
 
 			if (!empty($query))
 				$db->query($query);
@@ -139,31 +141,13 @@ class ItemManager {
 	 *
 	 * @param array $fields
 	 * @param array $conditionals
+	 * @param array $order_by
+	 * @param boolean $ascending
 	 * @return array
 	 */
-	function getSingleItem($fields, $conditionals) {
-		global $db, $db_active;
-
-		$result = array();
-
-		if ($db_active == 1) {
-			$query = $this->getQuery(DB_SELECT, $fields, $conditionals, null, null, 1);
-			$result = $db->get_row($query);
-
-			// pack multi-language fields
-			$ml_fields = $this->getMultilanguageFields($fields);
-			if (count($ml_fields) > 0)
-				foreach($ml_fields as $field) {
-					$data = array();
-
-					foreach($this->languages as $language) {
-						$data[$language] = $result->{$field.'_'.$language};
-						unset($result->{$field.'_'.$language});
-					}
-
-					$result->$field = $data;
-				}
-		}
+	public function getSingleItem($fields, $conditionals, $order_by=array(), $ascending=True) {
+		$items = $this->getItems($fields, $conditionals, $order_by, $ascending, 1);
+		$result = count($items) > 0 ? $items[0] : null;
 
 		return $result;
 	}
@@ -177,19 +161,19 @@ class ItemManager {
 	 * @param boolean $ascending
 	 * @return array
 	 */
-	function getItems($fields, $conditionals, $order_by=array(), $ascending=True, $limit=null) {
+	public function getItems($fields, $conditionals, $order_by=array(), $ascending=True, $limit=null) {
 		global $db, $db_active;
 
 		$result = array();
 
 		if ($db_active == 1) {
-			$query = $this->getQuery(DB_SELECT, $fields, $conditionals, $order_by, $ascending, $limit);
+			$query = $this->_getQuery(DB_SELECT, $fields, $conditionals, $order_by, $ascending, $limit);
 
 			if (!empty($query))
 				$result = $db->get_results($query);
 
 			// pack multi-language fields
-			$ml_fields = $this->getMultilanguageFields($fields);
+			$ml_fields = $this->_getMultilanguageFields($fields);
 			if (count($ml_fields) > 0 && count($result) > 0)
 				foreach($result as $item)
 					foreach($ml_fields as $field) {
@@ -214,14 +198,14 @@ class ItemManager {
 	 * @param array $conditionals
 	 * @return variable
 	 */
-	function getItemValue($item, $conditionals=array()) {
+	public function getItemValue($item, $conditionals=array()) {
 		global $db, $db_active;
 
 		$result = null;
 		if ($db_active == 1) {
 			$query = "SELECT {$item} FROM {$this->table_name}";
 			if (!empty($conditionals))
-				$query .= " WHERE ".$this->getDelimitedData($conditionals, ' AND ');
+				$query .= " WHERE ".$this->_getDelimitedData($conditionals, ' AND ');
 
 			$result = $db->get_var($query);
 		}
@@ -234,7 +218,7 @@ class ItemManager {
 	 * @param string $sql
 	 * @return value
 	 */
-	function sqlResult($sql) {
+	public function sqlResult($sql) {
 		global $db, $db_active;
 
 		$result = null;
@@ -246,6 +230,15 @@ class ItemManager {
 	}
 
 	/**
+	 * Return list of all defined fields
+	 *
+	 * @return array
+	 */
+	public function getFieldNames() {
+		return $this->fields;
+	}
+
+	/**
 	 * Forms database query for specified command
 	 *
 	 * @param integer $command
@@ -253,32 +246,32 @@ class ItemManager {
 	 * @param array $conditionals
 	 * @return string
 	 */
-	function getQuery($command, $data = array(), $conditionals = array(), $order_by=null, $order_asc=null, $limit = null) {
+	private function _getQuery($command, $data=array(), $conditionals=array(), $order_by=null, $order_asc=null, $limit = null) {
 		$result = '';
 
 		switch ($command) {
 			case DB_INSERT:
-				$this->expandMultilanguageFields($data);
-				$result = 'INSERT INTO `'.$this->table_name.'` ('.$this->getFields($data, true).') VALUES ('.$this->getData($data).')';
+				$this->_expandMultilanguageFields($data);
+				$result = 'INSERT INTO `'.$this->table_name.'` ('.$this->_getFields($data, true).') VALUES ('.$this->_getData($data).')';
 				break;
 
 			case DB_UPDATE:
-				$this->expandMultilanguageFields($data);
-				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->getDelimitedData($data).' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
+				$this->_expandMultilanguageFields($data);
+				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->_getDelimitedData($data).' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
 				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 
 			case DB_DELETE:
-				$this->expandMultilanguageFields($conditionals);
-				$result = 'DELETE FROM `'.$this->table_name.'` WHERE '.$this->getDelimitedData($conditionals, ' AND ');
+				$this->_expandMultilanguageFields($conditionals);
+				$result = 'DELETE FROM `'.$this->table_name.'` WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
 				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 
 			case DB_SELECT:
-				$this->expandMultilanguageFields($data, false);
-				$result = 'SELECT '.$this->getFields($data).' FROM `'.$this->table_name.'`';
-				if (!empty($conditionals)) $result .= ' WHERE '.$this->getDelimitedData($conditionals, ' AND ');
-				if (!is_null($order_by) && !empty($order_by)) $result .= ' ORDER BY '.$this->getFields($order_by).($order_asc ? ' ASC' : ' DESC');
+				$this->_expandMultilanguageFields($data, false);
+				$result = 'SELECT '.$this->_getFields($data).' FROM `'.$this->table_name.'`';
+				if (!empty($conditionals)) $result .= ' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
+				if (!is_null($order_by) && !empty($order_by)) $result .= ' ORDER BY '.$this->_getFields($order_by).($order_asc ? ' ASC' : ' DESC');
 				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 		}
@@ -292,7 +285,7 @@ class ItemManager {
 	 * @param boolean $has_keys
 	 * @return array
 	 */
-	function expandMultilanguageFields(&$fields, $has_keys=true) {
+	private function _expandMultilanguageFields(&$fields, $has_keys=true) {
 		$temp = $fields;
 
 		if ($has_keys) {
@@ -320,7 +313,7 @@ class ItemManager {
 	 * @param array $fields
 	 * @return boolean
 	 */
-	function getMultilanguageFields($fields) {
+	private function _getMultilanguageFields($fields) {
 		$result = array();
 
 		foreach($fields as $field)
@@ -336,7 +329,7 @@ class ItemManager {
 	 * @param array $data
 	 * @return string
 	 */
-	function getFields($data, $from_keys=false) {
+	private function _getFields($data, $from_keys=false) {
 		$result = array();
 		$fields = $from_keys ? array_keys($data) : $data;
 
@@ -352,7 +345,7 @@ class ItemManager {
 	 * @param array $data
 	 * @return string
 	 */
-	function getData($data) {
+	private function _getData($data) {
 		$result = '';
 		$tmp = array();
 
@@ -374,7 +367,7 @@ class ItemManager {
 	 * @param string $delimiter
 	 * @return string
 	 */
-	function getDelimitedData($data, $delimiter = ', ') {
+	private function _getDelimitedData($data, $delimiter = ', ') {
 		$result = '';
 		$tmp = array();
 
@@ -398,15 +391,6 @@ class ItemManager {
 
 		unset($tmp);
 		return $result;
-	}
-
-	/**
-	 * Return list of all defined fields
-	 *
-	 * @return array
-	 */
-	function getFieldNames() {
-		return $this->fields;
 	}
 }
 ?>

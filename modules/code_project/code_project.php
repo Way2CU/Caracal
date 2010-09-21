@@ -9,24 +9,62 @@
  */
 
 class code_project extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
-	 *
-	 * @return code_project
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
-	}
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
 
+			$codes_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_codes'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					$level=5
+				);
+
+			$codes_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_codes_manage'),
+								url_GetFromFilePath($this->path.'images/manage.png'),
+								window_Open( // on click open window
+											'codes_manage',
+											450,
+											$this->getLanguageConstant('title_codes_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'codes_manage')
+										),
+								$level=5
+							));
+
+			$backend->addMenu($this->name, $codes_menu);
+		}
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -73,7 +111,7 @@ class code_project extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
+	public function onInit() {
 		global $db, $db_active;
 
 		$sql = "
@@ -90,7 +128,7 @@ class code_project extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db, $db_active;
 
 		$sql = "DROP TABLE IF EXISTS `project_codes`;";
@@ -98,51 +136,11 @@ class code_project extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			$codes_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_codes'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$codes_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_codes_manage'),
-								url_GetFromFilePath($this->path.'images/manage.png'),
-								window_Open( // on click open window
-											'codes_manage',
-											450,
-											$this->getLanguageConstant('title_codes_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'codes_manage')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $codes_menu);
-		}
-	}
-
-	/**
 	 * Show code management window
+	 * 
 	 * @param integer $level
 	 */
-	function showCodes($level) {
+	private function showCodes($level) {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -165,9 +163,10 @@ class code_project extends Module {
 
 	/**
 	 * Show content of a form used for creation of new `code` object
+	 * 
 	 * @param integer $level
 	 */
-	function addCode($level) {
+	private function addCode($level) {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -183,11 +182,12 @@ class code_project extends Module {
 
 	/**
 	 * Show content of a form in editing state for sepected `code` object
+	 * 
 	 * @param integer $level
 	 */
-	function changeCode($level) {
+	private function changeCode($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new CodeManager();
+		$manager = CodeManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -210,9 +210,10 @@ class code_project extends Module {
 
 	/**
 	 * Save changes existing (or new) to `code` object and display result
+	 * 
 	 * @param integer $level
 	 */
-	function saveCode($level) {
+	private function saveCode($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -220,7 +221,7 @@ class code_project extends Module {
 			'url' 			=> fix_chars($_REQUEST['url']),
 		);
 
-		$manager = new CodeManager();
+		$manager = CodeManager::getInstance();
 
 		if (!is_null($id)) {
 			$manager->updateData($data, array('id' => $id));
@@ -247,11 +248,12 @@ class code_project extends Module {
 
 	/**
 	 * Present user with confirmation dialog before removal of specified `code` object
+	 * 
 	 * @param integer $level
 	 */
-	function deleteCode($level) {
+	private function deleteCode($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new CodeManager();
+		$manager = CodeManager::getInstance();
 
 		$item = $manager->getSingleItem(array('code'), array('id' => $id));
 
@@ -283,11 +285,12 @@ class code_project extends Module {
 
 	/**
 	 * Remove specified `code` object and inform user about operation status
+	 * 
 	 * @param integer $level
 	 */
-	function deleteCode_Commit($level) {
+	private function deleteCode_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new CodeManager();
+		$manager = CodeManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 
@@ -307,11 +310,14 @@ class code_project extends Module {
 
 	/**
 	 * Redirect user based on specified code
+	 * 
 	 * @param integer $level
 	 */
-	function redirect($level) {
+	private function redirect($level) {
+		define('_OMIT_STATS', 1);
+		
 		$code = fix_chars($_REQUEST['code']);
-		$manager = new CodeManager();
+		$manager = CodeManager::getInstance();
 		$url = $manager->getItemValue("url", array("code" => $code));
 
 		$_SESSION['request_code'] = $code;
@@ -326,8 +332,8 @@ class code_project extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function tag_CodeList($level, $params, $children) {
-		$manager = new CodeManager();
+	public function tag_CodeList($level, $params, $children) {
+		$manager = CodeManager::getInstance();
 		$conditions = array();
 
 		$items = $manager->getItems(
@@ -396,12 +402,27 @@ class code_project extends Module {
 
 
 class CodeManager extends ItemManager {
-	function __construct() {
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('project_codes');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('code', 'varchar');
 		$this->addProperty('url', 'varchar');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 }
 

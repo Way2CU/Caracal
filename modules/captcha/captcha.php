@@ -1,32 +1,46 @@
 <?php
 
 /**
- * BLANK MODULE
+ * Captcha
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * @author MeanEYE.rcf
  */
 
 class captcha extends Module {
-	var $options = array ("numbers", "lower", "upper", "numbers-lower", "upper-lower");
+	private static $_instance;
+	private $options = array(
+						'numbers', 
+						'lower', 
+						'upper', 
+						'numbers-lower', 
+						'upper-lower'
+					);
 
 	/**
 	 * Constructor
-	 *
-	 * @return journal
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 
 	/**
 	 * Transfers control to module functions
-	 *
-	 * @param string $action
+	 * 
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -56,7 +70,7 @@ class captcha extends Module {
 	 * @param string $value
 	 * @return boolean
 	 */
-	function isCaptchaValid($value) {
+	public function isCaptchaValid($value) {
 		$result = false;
 
 		if (!isset($_SESSION['captcha'])) return $result;
@@ -71,14 +85,14 @@ class captcha extends Module {
 	 * Removes captcha value from session data
 	 * in order to prevent multiple tries
 	 */
-	function resetCaptcha() {
+	public function resetCaptcha() {
 		unset($_SESSION['captcha']);
 	}
 
 	/**
 	 * Event called upon module initialisation
 	 */
-	function onInit() {
+	public function onInit() {
 		$this->saveSetting("char_count", 4);
 		$this->saveSetting("char_type", "numbers");
 		$this->saveSetting("arc_count", 15);
@@ -90,33 +104,9 @@ class captcha extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			//$group = new backend_MenuGroup("Blank", "", $this->name);
-			//$group->addItem(new backend_MenuItem("Menu Item", "", "", 1));
-
-			//$backend->addMenu($group);
-		}
-	}
-
-	/**
 	 * Prints captcha image
 	 */
-	function __printImage() {
+	private function __printImage() {
 		// check if referer is in allowed list
 		$value = $this->__generateValue();
 		$referer = dirname($_SERVER['HTTP_REFERER']);
@@ -186,7 +176,7 @@ class captcha extends Module {
 	 *
 	 * @return array
 	 */
-	function __getFonts() {
+	private function __getFonts() {
 		$path = $this->settings['font_path'];
 		$result = array();
 
@@ -210,7 +200,7 @@ class captcha extends Module {
 	 * @param string $ext
 	 * @return boolean
 	 */
-	function __checkExtension($filename, $ext) {
+	private function __checkExtension($filename, $ext) {
 		$result = false;
 		$test_string = "\.".$ext."$";
 
@@ -224,7 +214,7 @@ class captcha extends Module {
 	 * @param resource $image
 	 * @return array
 	 */
-	function __getColors($image) {
+	private function __getColors($image) {
 		$result = array();
 		$colors = explode(',', $this->settings['colors']);
 
@@ -242,7 +232,7 @@ class captcha extends Module {
 	 * @param string $rex
 	 * @return array
 	 */
-	function __colorHEXtoRGB($hex) {
+	private function __colorHEXtoRGB($hex) {
 		if ($hex[0] != '#')
 			$result = array(0,0,0); else
 			$result = array(
@@ -262,7 +252,7 @@ class captcha extends Module {
 	 * @param integer $blue
 	 * @return string
 	 */
-	function __colorRGBtoHEX($red, $green, $blue) {
+	private function __colorRGBtoHEX($red, $green, $blue) {
 		$result = '#'.dechex($red).dechex($green).dechex($blue);
 		return $result;
 	}
@@ -271,7 +261,7 @@ class captcha extends Module {
 	 * Returns absolute image URL
 	 * @return string
 	 */
-	function __getImageURL() {
+	private function __getImageURL() {
 		$result = url_Make('print_image', $this->name);
 		return $result;
 	}
@@ -281,7 +271,7 @@ class captcha extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function __printImageTag($level) {
+	private function __printImageTag($level) {
 		$url = $this->__getImageURL();
 		$tag_space = str_repeat("\t", $level);
 
@@ -295,7 +285,7 @@ class captcha extends Module {
 	 * @param string $char_mode
 	 * @return string
 	 */
-	function __getRandomChar($char_mode) {
+	private function __getRandomChar($char_mode) {
 		switch ($char_mode) {
 			case 'numbers': 			$chartype = 1; break;
 			case 'lower': 				$chartype = 2; break;
@@ -322,7 +312,7 @@ class captcha extends Module {
 	 *
 	 * @return string
 	 */
-	function __generateValue() {
+	private function __generateValue() {
 		$value = '';
 
 		for($i=0; $i < $this->settings['char_count']; $i++) {
@@ -337,12 +327,12 @@ class captcha extends Module {
 	/**
 	 * Converts points to pixels based on DPI
 	 *
-	 * @param integer $point
+	 * @param integer $points
 	 * @param integer $ptpi points per inch
 	 * @param integer $pxpi pixels per inch
 	 * @return integer
 	 */
-	function __convertPTtoPX($points, $ptpi = 72, $pxpi = 96) {
+	private function __convertPTtoPX($points, $ptpi = 72, $pxpi = 96) {
 		return round( ($points * $pxpi / $ptpi), 0 );
 	}
 
@@ -354,7 +344,7 @@ class captcha extends Module {
 	 * @param integer $pxpi pixels per inch
 	 * @return integer
 	 */
-	function __convertPXtoPT($pixels, $ptpi = 72, $pxpi = 96) {
+	private function __convertPXtoPT($pixels, $ptpi = 72, $pxpi = 96) {
 		return round( ($pixels * $ptpi / $pxpi), 0 );
 	}
 }

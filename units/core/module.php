@@ -2,32 +2,30 @@
 
 /**
  * Base Module Class
- * @author MeanEYE[rcf]
+ * 
+ * @author MeanEYE.rcf
  */
 
 class Module {
-	var $name;
-	var $path;
-	var $language;
-	var $sections;
-	var $file;
-	var $settings;
+	protected $language;
+	protected $sections;
+	protected $file;
+	public $name;
+	public $path;
+	public $settings;
 
 	/**
 	 * Constructor
 	 *
 	 * @return Module
 	 */
-	function __construct() {
-		global $ModuleHandler;
-
-		$this->path = dirname($this->file).'/';
+	protected function __construct($file) {
+		$this->path = dirname($file).'/';
 		$this->name = get_class($this);
 		$this->language = new LanguageHandler($this->path.'/data/language.xml');
 		$this->sections = new SectionHandler($this->path.'/data/section.xml');
 
 		$this->settings = $this->getSettings();
-		$ModuleHandler->registerModule($this->file, $this);
 	}
 
 	/**
@@ -36,7 +34,7 @@ class Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	function transferControl($level, $params = array(), $children=array()) {
+	public function transferControl($level, $params = array(), $children=array()) {
 
 	}
 
@@ -48,7 +46,7 @@ class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	function getSectionFile($section, $action, $language="") {
+	public function getSectionFile($section, $action, $language="") {
 		return $this->path.$this->sections->getFile($section, $action, $language);
 	}
 
@@ -59,7 +57,7 @@ class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	function getLanguageConstant($constant, $language="") {
+	public function getLanguageConstant($constant, $language="") {
 		global $LanguageHandler;
 
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
@@ -93,20 +91,13 @@ class Module {
 	/**
 	 * Event called upon module initialisation
 	 */
-	function onInit() {
-
-	}
-	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-
+	public function onInit() {
 	}
 
 	/**
 	 * Event called upon module removal
 	 */
-	function onDisable() {
+	public function onDisable() {
 	}
 
 	/**
@@ -114,7 +105,7 @@ class Module {
 	 *
 	 * @return array
 	 */
-	function getSettings() {
+	protected function getSettings() {
 		global $db, $db_active;
 		$result = array();
 
@@ -134,7 +125,7 @@ class Module {
 	 * @param string $var
 	 * @param string $value
 	 */
-	function saveSetting($var, $value) {
+	protected function saveSetting($var, $value) {
 		global $db;
 
 		// TODO: Make usage of Item Manager

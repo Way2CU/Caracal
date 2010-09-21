@@ -11,15 +11,15 @@
 if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
 
 class LanguageHandler {
-	var $engine;
-	var $active;
+	private $engine;
+	private $active;
 
 	/**
 	 * Constructor
 	 *
 	 * @return LanguageHandler
 	 */
-	function __construct($file="") {
+	public function __construct($file="") {
 		global $data_path;
 
 		$this->active = false;
@@ -39,7 +39,7 @@ class LanguageHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	function getText($constant, $lang='') {
+	public function getText($constant, $lang='') {
 		global $language;
 
 		$result = '';
@@ -65,7 +65,7 @@ class LanguageHandler {
 	 * @param boolean $printable What list should contain, printable text or language code
 	 * @return array
 	 */
-	function getLanguages($printable = true) {
+	public function getLanguages($printable = true) {
 		if (!$this->active) return;
 
 		$result = array();
@@ -83,7 +83,7 @@ class LanguageHandler {
 	 *
 	 * @return array
 	 */
-	function getRTL() {
+	public function getRTL() {
 		if (!$this->active) return;
 
 		$result = array();
@@ -100,7 +100,7 @@ class LanguageHandler {
 	 *
 	 * @return string
 	 */
-	function getDefaultLanguage() {
+	public function getDefaultLanguage() {
 		$result = 'en';
 
 		foreach ($this->engine->document->language as $xml_language)
@@ -117,7 +117,7 @@ class LanguageHandler {
 	 *
 	 * @return boolean
 	 */
-	function isRTL() {
+	public function isRTL() {
 		global $language;
 
 		$result = false;
@@ -133,6 +133,8 @@ class LanguageHandler {
 }
 
 class MainLanguageHandler {
+	private static $_instance;
+	
 	/**
 	 * Core system language definitions
 	 * @var resource
@@ -145,7 +147,7 @@ class MainLanguageHandler {
 	 */
 	var $language_local = null;
 
-	function __construct() {
+	private function __construct() {
 		global $data_path;
 
 		$this->language_system = new LanguageHandler();
@@ -153,6 +155,16 @@ class MainLanguageHandler {
 		if (file_exists($data_path."language.xml"))
 			$this->language_local = new LanguageHandler($data_path."language.xml");
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 
 	/**
 	 * Returns localised text for given constant
@@ -161,7 +173,7 @@ class MainLanguageHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	function getText($constant, $language='') {
+	public function getText($constant, $language='') {
 		$result = "";
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getText($constant, $language);
@@ -178,7 +190,7 @@ class MainLanguageHandler {
 	 * @param boolean $printable What list should contain, printable text or language code
 	 * @return array
 	 */
-	function getLanguages($printable = true) {
+	public function getLanguages($printable = true) {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getLanguages($printable); else
 			$result = $this->language_system->getLanguages($printable);
@@ -191,7 +203,7 @@ class MainLanguageHandler {
 	 *
 	 * @return array
 	 */
-	function getRTL() {
+	public function getRTL() {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getRTL(); else
 			$result = $this->language_system->getRTL();
@@ -204,7 +216,7 @@ class MainLanguageHandler {
 	 *
 	 * @return string
 	 */
-	function getDefaultLanguage() {
+	public function getDefaultLanguage() {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->getDefaultLanguage(); else
 			$result = $this->language_system->getDefaultLanguage();
@@ -217,7 +229,7 @@ class MainLanguageHandler {
 	 *
 	 * @return boolean
 	 */
-	function isRTL() {
+	public function isRTL() {
 		if (!is_null($this->language_local))
 			$result = $this->language_local->isRTL(); else
 			$result = $this->language_system->isRTL();

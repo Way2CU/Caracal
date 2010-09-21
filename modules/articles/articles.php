@@ -1,22 +1,87 @@
 <?php
 
 /**
- * BLANK MODULE
+ * Articles Module
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * @author MeanEYE.rcf
  */
 
 class articles extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
-	 *
-	 * @return _blank
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
+
+			$articles_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_articles'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					$level=5
+				);
+
+			$articles_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_articles_new'),
+								url_GetFromFilePath($this->path.'images/new_article.png'),
+
+								window_Open( // on click open window
+											'articles_new',
+											730,
+											$this->getLanguageConstant('title_articles_new'),
+											true, true,
+											backend_UrlMake($this->name, 'articles_new')
+										),
+								$level=5
+							));
+			$articles_menu->addSeparator(5);
+			
+			$articles_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_articles_manage'),
+								url_GetFromFilePath($this->path.'images/manage.png'),
+
+								window_Open( // on click open window
+											'articles',
+											720,
+											$this->getLanguageConstant('title_articles_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'articles')
+										),
+								$level=5
+							));
+			$articles_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_article_groups'),
+								url_GetFromFilePath($this->path.'images/groups.png'),
+
+								window_Open( // on click open window
+											'article_groups',
+											650,
+											$this->getLanguageConstant('title_article_groups'),
+											true, true,
+											backend_UrlMake($this->name, 'groups')
+										),
+								$level=5
+							));
+
+			$backend->addMenu($this->name, $articles_menu);
+		}		
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 
 	/**
@@ -25,7 +90,7 @@ class articles extends Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -114,10 +179,10 @@ class articles extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
-		global $LanguageHandler, $db_active, $db;
+	public function onInit() {
+		global $db, $db_active;
 
-		$list = $LanguageHandler->getLanguages(false);
+		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		$sql = "
 			CREATE TABLE `articles` (
@@ -172,7 +237,7 @@ class articles extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db, $db_active;
 
 		$sql = "DROP TABLE IF EXISTS `articles`, `article_group`;";
@@ -180,78 +245,10 @@ class articles extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			$articles_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_articles'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_articles_new'),
-								url_GetFromFilePath($this->path.'images/new_article.png'),
-
-								window_Open( // on click open window
-											'articles_new',
-											730,
-											$this->getLanguageConstant('title_articles_new'),
-											true, true,
-											backend_UrlMake($this->name, 'articles_new')
-										),
-								$level=5
-							));
-			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_articles_manage'),
-								url_GetFromFilePath($this->path.'images/manage.png'),
-
-								window_Open( // on click open window
-											'articles',
-											720,
-											$this->getLanguageConstant('title_articles_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'articles')
-										),
-								$level=5
-							));
-			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_article_groups'),
-								url_GetFromFilePath($this->path.'images/groups.png'),
-
-								window_Open( // on click open window
-											'article_groups',
-											650,
-											$this->getLanguageConstant('title_article_groups'),
-											true, true,
-											backend_UrlMake($this->name, 'groups')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $articles_menu);
-		}
-	}
-
-	/**
 	 * Show administration form for articles
 	 * @param integer $level
 	 */
-	function showArticles($level) {
+	private function showArticles($level) {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -276,7 +273,7 @@ class articles extends Module {
 	 * Print input form for new article
 	 * @param integer $level
 	 */
-	function addArticle($level) {
+	private function addArticle($level) {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
@@ -295,9 +292,9 @@ class articles extends Module {
 	 * Display article for modification
 	 * @param integer $level
 	 */
-	function changeArticle($level) {
+	private function changeArticle($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new ArticleManager();
+		$manager = ArticleManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -325,8 +322,8 @@ class articles extends Module {
 	 * Save article data
 	 * @param integer $level
 	 */
-	function saveArticle($level) {
-		$manager = new ArticleManager();
+	private function saveArticle($level) {
+		$manager = ArticleManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
@@ -370,9 +367,9 @@ class articles extends Module {
 	 * Print confirmation dialog before deleting article
 	 * @param integer $level
 	 */
-	function deleteArticle($level) {
+	private function deleteArticle($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new ArticleManager();
+		$manager = ArticleManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
 
@@ -406,9 +403,9 @@ class articles extends Module {
 	 * Delete article and print result message
 	 * @param integer $level
 	 */
-	function deleteArticle_Commit($level) {
+	private function deleteArticle_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new ArticleManager();
+		$manager = ArticleManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 
@@ -430,7 +427,7 @@ class articles extends Module {
 	 * Show article groups
 	 * @param integer $level
 	 */
-	function showGroups($level) {
+	private function showGroups($level) {
 		$template = new TemplateHandler('group_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -455,7 +452,7 @@ class articles extends Module {
 	 * Print form for adding a new article group
 	 * @param integer $level
 	 */
-	function addGroup($level) {
+	private function addGroup($level) {
 		$template = new TemplateHandler('group_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -473,9 +470,9 @@ class articles extends Module {
 	 * Print form for changing article group data
 	 * @param integer $level
 	 */
-	function changeGroup($level) {
+	private function changeGroup($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new ArticleGroupManager();
+		$manager = ArticleGroupManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -500,11 +497,11 @@ class articles extends Module {
 	 * Print confirmation dialog prior to group removal
 	 * @param integer $level
 	 */
-	function deleteGroup($level) {
+	private function deleteGroup($level) {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new ArticleGroupManager();
+		$manager = ArticleGroupManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
 
@@ -538,10 +535,10 @@ class articles extends Module {
 	 * Perform removal of certain group
 	 * @param integer $level
 	 */
-	function deleteGroup_Commit($level) {
+	private function deleteGroup_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = new ArticleGroupManager();
-		$article_manager = new ArticleManager();
+		$manager = ArticleGroupManager::getInstance();
+		$article_manager = ArticleManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 		$article_manager->updateData(array('group' => null), array('group' => $id));
@@ -566,8 +563,8 @@ class articles extends Module {
 	 * Save changed group data
 	 * @param integer $level
 	 */
-	function saveGroup($level) {
-		$manager = new ArticleGroupManager();
+	private function saveGroup($level) {
+		$manager = ArticleGroupManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
@@ -609,18 +606,35 @@ class articles extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	function tag_Article($level, $tag_params, $children) {
-		$manager = new ArticleManager();
-
+	public function tag_Article($level, $tag_params, $children) {
+		$manager = ArticleManager::getInstance();
+		$admin_manager = AdministratorManager::getInstance();
+		
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
 
 		if (is_null($id) && is_null($text_id))
 			if (isset($tag_params['random'])) {
 				$conditions = array();
+				$group_manager = ArticleGroupManager::getInstance();
+				
+				if (isset($tag_params['group'])) {
+					$group_id = $group_manager->getItemValue(
+									'id', 
+									array(
+										'text_id' => escape_chars($tag_params['group'])
+									)
+								);
+				}
 
-				$group_manager = new ArticleGroupManager();
+				$id_list = $manager->getItems(array('id'), $conditions);
 
+				if (count($id_list) > 0) {
+					shuffle($id_list);
+					$id = $id_list[0]->id;
+				} else {
+					return;
+				}
 			} else {
 				// no id/text_id were specified nor random article was requested
 				return;
@@ -655,12 +669,15 @@ class articles extends Module {
 						'time'			=> $time,
 						'title'			=> $item->title,
 						'content'		=> $item->content,
-						'author'		=> $item->author,
+						'author'		=> $admin_manager->getItemValue(
+																'fullname', 
+																array('id' => $item->author)
+															),
 						'visible'		=> $item->visible,
 						'views'			=> $item->views,
 						'votes_up'		=> $item->votes_up,
 						'votes_down' 	=> $item->votes_down,
-						'rating'		=> $this->_getArticleRating($item, 10),
+						'rating'		=> $this->getArticleRating($item, 10),
 					);
 
 			$template->restoreXML();
@@ -676,15 +693,15 @@ class articles extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_ArticleList($level, $tag_params, $children) {
-		$manager = new ArticleManager();
-		$admin_manager = new AdministratorManager();  // session module is pre-load required module
+	public function tag_ArticleList($level, $tag_params, $children) {
+		$manager = ArticleManager::getInstance();
+		$admin_manager = AdministratorManager::getInstance();
 
 		$conditions = array();
 		$only_visible = isset($tag_params['only_visible']) ? $tag_params['only_visible'] == 1 : false;
 
 		if (isset($tag_params['group'])) {
-			$group_manager = new ArticleGroupManager();
+			$group_manager = ArticleGroupManager::getInstance();
 			$group = $group_manager->getItemValue('id', array('text_id' => escape_chars($tag_params['group'])));
 		} else {
 			$group = null;
@@ -731,12 +748,15 @@ class articles extends Module {
 							'time'			=> $time,
 							'title'			=> $item->title,
 							'content'		=> $item->content,
-							'author'		=> $admin_manager->getItemValue('fullname', array('id' => $item->author)),
+							'author'		=> $admin_manager->getItemValue(
+																'fullname', 
+																array('id' => $item->author)
+															),
 							'visible'		=> $item->visible,
 							'views'			=> $item->views,
 							'votes_up'		=> $item->votes_up,
 							'votes_down' 	=> $item->votes_down,
-							'rating'		=> $this->_getArticleRating($item, 10),
+							'rating'		=> $this->getArticleRating($item, 10),
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -785,7 +805,7 @@ class articles extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_ArticleRatingImage($level, $tag_params, $children) {
+	public function tag_ArticleRatingImage($level, $tag_params, $children) {
 	}
 
 	/**
@@ -795,14 +815,14 @@ class articles extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_Group($level, $tag_params, $children) {
+	public function tag_Group($level, $tag_params, $children) {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
-		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
+		$text_id = isset($tag_params['text_id']) ? escape_chars($tag_params['text_id']) : null;
 
 		// we need at least one of IDs in order to display article
 		if (is_null($id) && is_null($text_id)) return;
 
-		$manager = new ArticleGroupManager();
+		$manager = ArticleGroupManager::getInstance();
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -840,8 +860,8 @@ class articles extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	function tag_GroupList($level, $tag_params, $children) {
-		$manager = new ArticleGroupManager();
+	public function tag_GroupList($level, $tag_params, $children) {
+		$manager = ArticleGroupManager::getInstance();
 
 		$items = $manager->getItems($manager->getFieldNames(), array());
 
@@ -917,7 +937,7 @@ class articles extends Module {
 	 * @param integer $max
 	 * @return integer
 	 */
-	function _getArticleRating($article, $max) {
+	public function getArticleRating($article, $max) {
 		$total = $article->votes_up + $article->votes_down;
 
 		if ($total == 0) {
@@ -936,8 +956,14 @@ class articles extends Module {
 	}
 }
 
+
 class ArticleManager extends ItemManager {
-	function __construct() {
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('articles');
 
 		$this->addProperty('id', 'int');
@@ -952,15 +978,41 @@ class ArticleManager extends ItemManager {
 		$this->addProperty('votes_up', 'int');
 		$this->addProperty('votes_down', 'int');
 	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 }
 
+
 class ArticleGroupManager extends ItemManager {
-	function __construct() {
+	private static $_instance;
+	
+	/**
+	 * Constructor 
+	 */
+	protected function __construct() {
 		parent::__construct('article_groups');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('title', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 }

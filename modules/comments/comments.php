@@ -5,25 +5,79 @@
  * This module is designed to be easily implementable anywhere.
  *
  * @author MeanEYE.rcf
+ * @todo Module is not finished.
  */
 
 class comments extends Module {
+	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		global $section;
+		
+		parent::__construct(__FILE__);
+		
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
+
+			$comments_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_comments'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					$level=5
+				);
+
+			$comments_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_administration'),
+								url_GetFromFilePath($this->path.'images/administration.png'),
+								window_Open( // on click open window
+											'links_list',
+											730,
+											$this->getLanguageConstant('title_links_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'links_list')
+										),
+								$level=5
+							));
+
+			$comments_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_settings'),
+								url_GetFromFilePath($this->path.'images/settings.png'),
+								window_Open( // on click open window
+											'comments_settings',
+											400,
+											$this->getLanguageConstant('title_settings'),
+											true, true,
+											backend_UrlMake($this->name, 'settings')
+										),
+								$level=5
+							));
+
+			$backend->addMenu($this->name, $comments_menu);
+		}		
 	}
 
 	/**
-	 * Transfers control to module functions
-	 *
-	 * @param string $action
-	 * @param integer $level
+	 * Public function that creates a single instance
 	 */
-	function transferControl($level, $params = array(), $children = array()) {
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}
+	
+	/**
+	 * Transfers control to module functions
+	 * 
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */
+	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -69,7 +123,7 @@ class comments extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	function onInit() {
+	public function onInit() {
 		global $db_active, $db;
 
 		$sql = "
@@ -102,7 +156,7 @@ class comments extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	function onDisable() {
+	public function onDisable() {
 		global $db_active, $db;
 
 		$sql = "DROP TABLE IF EXISTS `comments`;";
@@ -111,70 +165,22 @@ class comments extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
-	 */
-	function onRegister() {
-		global $ModuleHandler;
-
-		// load module style and scripts
-		if ($ModuleHandler->moduleExists('head_tag')) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if ($ModuleHandler->moduleExists('backend')) {
-			$backend = $ModuleHandler->getObjectFromName('backend');
-
-			$comments_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_comments'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
-					'javascript:void(0);',
-					$level=5
-				);
-
-			$comments_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_administration'),
-								url_GetFromFilePath($this->path.'images/administration.png'),
-								window_Open( // on click open window
-											'links_list',
-											730,
-											$this->getLanguageConstant('title_links_manage'),
-											true, true,
-											backend_UrlMake($this->name, 'links_list')
-										),
-								$level=5
-							));
-
-			$comments_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.png'),
-								window_Open( // on click open window
-											'comments_settings',
-											400,
-											$this->getLanguageConstant('title_settings'),
-											true, true,
-											backend_UrlMake($this->name, 'settings')
-										),
-								$level=5
-							));
-
-			$backend->addMenu($this->name, $comments_menu);
-		}
-	}
-
-	function showComments($level) {
+	 * Show comments management form
+	 * 
+	 * @param integer $level
+	 */	
+	private function showComments($level) {
 		$comments_module = isset($_REQUEST['comments_module']) ? fix_chars($_REQUEST['comments_module']) : null;
 		$comments_section = isset($_REQUEST['comments_section']) ? fix_chars($_REQUEST['comments_section']) : null;
-		$manager = new CommentManager();
+		$manager = CommentManager::getInstance();
 	}
 
 	/**
 	 * Show module settings form
+	 * 
 	 * @param integer $level
 	 */
-	function moduleSettings($level) {
+	private function moduleSettings($level) {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -182,6 +188,7 @@ class comments extends Module {
 					'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 					'cancel_action'	=> window_Close('comments_settings')
 				);
+				
 		$params = array_merge($params, $this->settings);
 
 		$template->restoreXML();
@@ -191,9 +198,10 @@ class comments extends Module {
 
 	/**
 	 * Save module settings
+	 * 
 	 * @param integer $level
 	 */
-	function moduleSettings_Save($level) {
+	private function moduleSettings_Save($level) {
 		$repost_time = isset($_REQUEST['repost_time']) ? fix_id($_REQUEST['repost_time']) : 15;
 		$default_visibility = isset($_REQUEST['default_visibility']) ? fix_id($_REQUEST['default_visibility']) : 1;
 		$size_limit = isset($_REQUEST['size_limit']) ? fix_id($_REQUEST['size_limit']) : 200;
@@ -219,10 +227,11 @@ class comments extends Module {
 
 	/**
 	 * Display comment input form
+	 * 
 	 * @param integer $level
 	 * @param array $tag_params
 	 */
-	function showInputForm($level, $tag_params) {
+	private function showInputForm($level, $tag_params) {
 		$module = isset($tag_params['module']) ? fix_chars($tag_params['module']) : null;
 		$section = isset($tag_params['section']) ? fix_chars($tag_params['section']) : null;
 
@@ -251,9 +260,10 @@ class comments extends Module {
 
 	/**
 	 * Save comment data and send response as JSON Object
+	 * 
 	 * @param integer $level
 	 */
-	function saveCommentData($level) {
+	private function saveCommentData($level) {
 		if ($this->_canPostComment()) {
 			$module = (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) ? fix_chars($_REQUEST['module']) : null;
 			$comment_section = (isset($_REQUEST['comment_section']) && !empty($_REQUEST['comment_section'])) ? fix_chars($_REQUEST['comment_section']) : null;
@@ -277,7 +287,7 @@ class comments extends Module {
 							'visible'	=> $this->settings['default_visibility']
 						);
 
-				$manager = new CommentManager();
+				$manager = CommentManager::getInstance();
 				$manager->insertData($data);
 
 				$response_message = $this->getLanguageConstant('message_saved');
@@ -311,9 +321,10 @@ class comments extends Module {
 
 	/**
 	 * Print JSON object containing all the comments
+	 * 
 	 * @param boolean $only_visible
 	 */
-	function printCommentData($only_visible = true) {
+	private function printCommentData($only_visible = true) {
 		$module = (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) ? fix_chars($_REQUEST['module']) : null;
 		$comment_section = (isset($_REQUEST['comment_section']) && !empty($_REQUEST['comment_section'])) ? fix_chars($_REQUEST['comment_section']) : null;
 
@@ -325,7 +336,7 @@ class comments extends Module {
 
 			$starting_with = isset($_REQUEST['starting_with']) ? fix_id($_REQUEST['starting_with']) : null;
 
-			$manager = new CommentManager();
+			$manager = CommentManager::getInstance();
 			$conditions = array(
 							'module'	=> $module,
 							'section'	=> $comment_section,
@@ -373,13 +384,14 @@ class comments extends Module {
 
 	/**
 	 * Check if user can post comment. Users who are not logged are allowed one comment in specified period of time.
+	 * 
 	 * @return boolean
 	 */
-	function _canPostComment() {
+	private function _canPostComment() {
 		if (isset($_SECTION['logged']) && $_SECTION['logged']) {
 			$result = true;
 		} else {
-			$manager = new CommentManager();
+			$manager = CommentManager::getInstance();
 			$time = date('Y-m-d H:i:s', time() - (intval($this->settings['repost_time']) * 60));
 
 			$count = $manager->sqlResult("
@@ -399,7 +411,12 @@ class comments extends Module {
 
 
 class CommentManager extends ItemManager {
-	function __construct() {
+	private static $_instance;
+	
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
 		parent::__construct('comments');
 
 		$this->addProperty('id', 'int');
@@ -412,5 +429,15 @@ class CommentManager extends ItemManager {
 		$this->addProperty('timestamp', 'timestamp');
 		$this->addProperty('visible', 'boolean');
 	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
+	}	
 }
 

@@ -136,15 +136,7 @@ function LanguageHandler() {
 	this.loadLanguages_Complete = function(data, status) {
 		this.languages = data.items;
 		this.rtl_languages = data.rtl;
-
-		for(var i in data.items) {
-			var language = data.items[i];
-
-			if (language.default) {
-				this.default_language = language.short;
-				break;
-			}
-		}
+		this.default_language = data.default_language;
 	};
 
 	// initialize

@@ -15,6 +15,8 @@ define('CHAR_UNCHECKED', '');
 require_once('units/menu_item.php');
 
 class backend extends Module {
+	private static $_instance;
+
 	/**
 	 * Menu list
 	 * @var array
@@ -32,20 +34,77 @@ class backend extends Module {
 	 *
 	 * @return backend
 	 */
-	function backend() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		global $section;
+
+		parent::__construct(__FILE__);
+
+		// load CSS and JScript
+		if ($section == $this->name && class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
+
+			// load style based on current language
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			if (MainLanguageHandler::getInstance()->isRTL())
+				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
+		}
+
+		// add admin level menus
+		if ($section == 'backend') {
+			$system_menu = new backend_MenuItem(
+									$this->getLanguageConstant('menu_system'),
+									url_GetFromFilePath($this->path.'images/icons/16/system.png'),
+									'javascript:void(0);',
+									$level=10
+								);
+
+			$system_menu->addChild(null, new backend_MenuItem(
+									$this->getLanguageConstant('menu_modules'),
+									url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
+									window_Open( // on click open window
+												'system_modules',
+												610,
+												$this->getLanguageConstant('title_modules'),
+												true, false, // disallow minimize, safety feature
+												backend_UrlMake($this->name, 'modules')
+											),
+									$level=10
+								));
+			$system_menu->addChild(null, new backend_MenuItem(
+									$this->getLanguageConstant('menu_users'),
+									url_GetFromFilePath($this->path.'images/icons/16/users.png'),
+									'javascript:void(0)',
+									$level=10
+								));
+
+			$this->addMenu($this->name, $system_menu);
+		}
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
 	}
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children=array()) {
-		global $ModuleHandler;
-
+	public function transferControl($level, $params = array(), $children=array()) {
 		// dead lock protection for backend module
 		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
 		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
@@ -71,8 +130,8 @@ class backend extends Module {
 					$module_name = fix_chars($_REQUEST['module']);
 					$params['backend_action'] = $action;
 
-					if ($ModuleHandler->moduleExists($module_name)) {
-						$module = $ModuleHandler->getObjectFromName($module_name);
+					if (class_exists($module_name)) {
+						$module = call_user_func(array($module_name, 'getInstance'));
 						$module->transferControl($level, $params, $children);
 					}
 					break;
@@ -114,62 +173,20 @@ class backend extends Module {
 	}
 
 	/**
-	 * Event called upon module registration
+	 * Adds menu to draw list
+	 *
+	 * @param string $module
+	 * @param resource $menu
 	 */
-	function onRegister() {
-		global $ModuleHandler, $LanguageHandler, $section;
-
-		// load CSS and JScript
-		if ($ModuleHandler->moduleExists('head_tag') && $section == $this->name) {
-			$head_tag = $ModuleHandler->getObjectFromName('head_tag');
-
-			// load style based on current language
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			if ($LanguageHandler->isRTL())
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
-		}
-
-		// add admin level menus
-		$system_menu = new backend_MenuItem(
-								$this->getLanguageConstant('menu_system'),
-								url_GetFromFilePath($this->path.'images/icons/16/system.png'),
-								'javascript:void(0);',
-								$level=10
-							);
-
-		$system_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_modules'),
-								url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
-								window_Open( // on click open window
-											'system_modules',
-											610,
-											$this->getLanguageConstant('title_modules'),
-											true, false, // disallow minimize, safety feature
-											backend_UrlMake($this->name, 'modules')
-										),
-								$level=10
-							));
-		$system_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_users'),
-								url_GetFromFilePath($this->path.'images/icons/16/users.png'),
-								'javascript:void(0)',
-								$level=10
-							));
-
-		$this->addMenu($this->name, $system_menu);
+	public function addMenu($module, $menu) {
+		$this->menus[$module] = $menu;
 	}
 
 	/**
 	 * Display
-	 * @param unknown_type $level
+	 * @param integer $level
 	 */
-	function showModules($level) {
+	private function showModules($level) {
 		$template = new TemplateHandler('modules_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -185,12 +202,12 @@ class backend extends Module {
 	 * Activates specified module
 	 * @param integer $level
 	 */
-	function activateModule($level) {
+	private function activateModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = new System_ModuleManager();
+			$manager = ModuleManager::getInstance();
 			$manager->updateData(
 							array('active' => 1),
 							array('name' => $module_name)
@@ -218,19 +235,19 @@ class backend extends Module {
 	 * Deactivates specified module
 	 * @param integer $level
 	 */
-	function deactivateModule($level) {
+	private function deactivateModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = new System_ModuleManager();
+			$manager = ModuleManager::getInstance();
 			$manager->updateData(
 							array('active' => 0),
 							array('name' => $module_name)
 						);
 			$message = $this->getLanguageConstant('message_module_deactivated');
-
 		} else {
+			// protected module
 			$message = $this->getLanguageConstant('message_module_protected');
 		}
 
@@ -251,7 +268,7 @@ class backend extends Module {
 	 * Print confirmation form before initialising module
 	 * @param integer $level
 	 */
-	function initialiseModule($level) {
+	private function initialiseModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
@@ -284,14 +301,14 @@ class backend extends Module {
 	 * Initialise and activate module
 	 * @param integer $level
 	 */
-	function initialiseModule_Commit($level) {
+	private function initialiseModule_Commit($level) {
 		global $ModuleHandler;
 
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = new System_ModuleManager();
+			$manager = ModuleManager::getInstance();
 			$max_order = $manager->getItemValue(
 										"MAX(`order`)",
 										array('preload' => 0)
@@ -332,7 +349,7 @@ class backend extends Module {
 	 * Print confirmation dialog before disabling module
 	 * @param integer $level
 	 */
-	function disableModule($level) {
+	private function disableModule($level) {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
@@ -365,14 +382,14 @@ class backend extends Module {
 	 * Disable specified module and remove it's settings
 	 * @param integer $level
 	 */
-	function disableModule_Commit($level) {
+	private function disableModule_Commit($level) {
 		global $ModuleHandler;
 
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = new System_ModuleManager();
+			$manager = ModuleManager::getInstance();
 			$max_order = $manager->getItemValue(
 										"MAX(`order`)",
 										array('preload' => 0)
@@ -408,14 +425,15 @@ class backend extends Module {
 
 	/**
 	 * Handle tag _module_list used to display list of all modules on the system
-	 * @param $level
-	 * @param $params
-	 * @param $children
+	 *
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function tag_ModuleList($level, $params, $children) {
+	public function tag_ModuleList($level, $params, $children) {
 		$list = array();
 		$raw_list = $this->getModuleList();
-		$manager = new System_ModuleManager();
+		$manager = ModuleManager::getInstance();
 
 		$modules_in_use = $manager->getItems(
 											array('id', 'order', 'name', 'preload', 'active'),
@@ -427,11 +445,9 @@ class backend extends Module {
 		foreach($modules_in_use as $module) {
 			if (in_array($module->name, $raw_list)) {
 				// module in database exists on disk
-				if ($module->active) {
-					$list[$module->name] = array('status' 	=> 'active');
-				} else {
+				if ($module->active)
+					$list[$module->name] = array('status' 	=> 'active'); else
 					$list[$module->name] = array('status'	=> 'inactive');
-				}
 
 			} else {
 				// module does not exist on disk
@@ -547,7 +563,7 @@ class backend extends Module {
 	 *
 	 * @return array
 	 */
-	function getModuleList() {
+	private function getModuleList() {
 		global $module_path;
 
 		$result = array();
@@ -567,7 +583,7 @@ class backend extends Module {
 	 *
 	 * @param integer $level
 	 */
-	function drawCompleteMenu($level) {
+	private function drawCompleteMenu($level) {
 		$tag_space = str_repeat("\t", $level);
 
 		echo "$tag_space<ul id=\"navigation\">\n";
@@ -579,50 +595,14 @@ class backend extends Module {
 	}
 
 	/**
-	 * Adds menu to draw list
-	 *
-	 * @param string $module
-	 * @param resource $menu
-	 */
-	function addMenu($module, $menu) {
-		$this->menus[$module] = $menu;
-	}
-
-	/**
 	 * This function decodes characters encoded by JavaScript
 	 *
 	 * @param string $str
 	 * @return string
 	 */
-	function utf8_urldecode($str) {
+	private function utf8_urldecode($str) {
 		$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
 		return html_entity_decode($str, null, 'UTF-8');;
-	}
-}
-
-class System_ModuleManager extends ItemManager {
-
-	function System_ModuleManager() {
-		parent::__construct('system_modules');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('order', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('preload', 'smallint');
-		$this->addProperty('active', 'smallint');
-	}
-}
-
-class System_AccessManager extends ItemManager {
-
-	function System_AccessManager() {
-		parent::__construct('system_modules');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('username', 'varchar');
-		$this->addProperty('password', 'varchar');
-		$this->addProperty('fullname', 'varchar');
-		$this->addProperty('level', 'smallint');
 	}
 }
 

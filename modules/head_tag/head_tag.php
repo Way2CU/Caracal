@@ -1,33 +1,41 @@
 <?php
 
 /**
- * HEAD MODULE
+ * Head Tag Module
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * @author MeanEYE.rcf
  */
 
 class head_tag extends Module {
-	var $tags = array();
-	var $closeable_tags = array('script', 'style');
+	private static $_instance;
+	private $tags = array();
+	private $closeable_tags = array('script', 'style');
 
 	/**
 	 * Constructor
-	 *
-	 * @return mod_head
 	 */
-	function __construct() {
-		$this->file = __FILE__;
-		parent::__construct();
+	protected function __construct() {
+		parent::__construct(__FILE__);
+	}
+	
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+			
+		return self::$_instance;
 	}
 
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
 	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	function transferControl($level, $params = array(), $children=array()) {
+	public function transferControl($level, $params = array(), $children=array()) {
 		switch ($params['action']) {
 			case 'print_tag':
 				$this->printTags($level);
@@ -36,11 +44,21 @@ class head_tag extends Module {
 	}
 
 	/**
+	 * Adds head tag to the list
+	 *
+	 * @param string $name
+	 * @param array $params
+	 */
+	public function addTag($name, $params) {
+		$this->tags[] = array($name, $params);
+	}
+	
+	/**
 	 * Print previously added tags
 	 *
 	 * @param integer $level
 	 */
-	function printTags($level) {
+	private function printTags($level) {
 		$pretext = str_repeat("\t", $level);
 
 		foreach ($this->tags as $tag)
@@ -49,21 +67,11 @@ class head_tag extends Module {
 	}
 
 	/**
-	 * Adds head tag to the list
-	 *
-	 * @param string $name
-	 * @param array $params
-	 */
-	function addTag($name, $params) {
-		$this->tags[] = array($name, $params);
-	}
-
-	/**
 	 * Return formated parameter tags
 	 *
 	 * @param resource $params
 	 */
-	function getTagParams($params) {
+	private function getTagParams($params) {
 		$result = "";
 
 		if (count($params))
