@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<!-- Menus -->
+		<constant name="menu_news">News</constant>
+		<constant name="menu_add_news">Add news item</constant>
+		<constant name="menu_manage_news">Manage news</constant>
+		<constant name="menu_manage_groups">Manage groups</constant>
+		<constant name="menu_news_feeds">News feeds</constant>
+		
+		<!-- Titles -->
+		<constant name="title_add_news">News: Add new item</constant>
+		<constant name="title_manage_news">News: Manage items</constant>
+		<constant name="title_manage_groups">News: Manage groups</constant>
+		<constant name="title_manage_feeds">News: Manage feeds</constant>
+		
+		<!-- Labels -->
+		<constant name="label_title">Title:</constant>
+		<constant name="label_content">News content:</constant>
+		<constant name="label_visible">News is visible</constant>
+		
+		<!-- Messages -->
+		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
+		
+		<!-- Other -->
+		<constant name="add_news">Add news item</constant>
+		<constant name="groups">News groups</constant>
+	</language>
+</document>
