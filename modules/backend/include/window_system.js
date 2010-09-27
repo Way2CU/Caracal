@@ -17,23 +17,45 @@ function Dialog() {
 	var self = this;  // used internaly for nested functions
 
 	this.$cover = $('<div>');
+	this.$dialog = $('<div>');
+	this.$title = $('<div>');
+	this.$title_bar = $('<div>');
+	this.$close_button = $('<a>');
 	this.$container = $('<div>');
 
 	// configure
 	this.$cover
 			.css('display', 'none')
-			.addClass('dialog');
-	this.$container.addClass('container');
+			.addClass('dialog')
+			.append(this.$dialog);
+	
+	this.$dialog
+			.addClass('container')
+			.append(this.$title_bar)
+			.append(this.$container);
+	
+	this.$title_bar
+			.addClass('title_bar')
+			.append(this.$close_button)
+			.append(this.$title);
+	
+	this.$title.addClass('title');
+	this.$container.addClass('content');
+	
+	this.$close_button
+			.addClass('close_button')
+			.click(function() {
+				self.hide();
+			});
 
-	// pack interface
-	this.$cover.append(this.$container);
+	// add dialog to body
 	$('body').append(this.$cover);
 
 	/**
 	 * Show dialog
 	 */
 	this.show = function() {
-		this.$container.css('opacity', 0);
+		this.$dialog.css('opacity', 0);
 
 		this.$cover
 				.css({
@@ -45,9 +67,9 @@ function Dialog() {
 					300,
 					function() {
 						self.adjustPosition();
-						self.$container
-									.delay(200)
-									.animate({opacity: 1}, 300);
+						self.$dialog
+								.delay(200)
+								.animate({opacity: 1}, 300);
 					}
 				);
 	};
@@ -78,8 +100,8 @@ function Dialog() {
 	this.setContent = function(content, width, height) {
 		// create starting parameters for animation
 		var start_params = {
-				width: this.$container.width(),
-				height: this.$container.height()
+				width: this.$dialog.width(),
+				height: this.$dialog.height()
 			};
 
 		var end_params = {
@@ -92,32 +114,41 @@ function Dialog() {
 		// assign content
 		this.$container.html(content);
 
-		this.$container
+		this.$dialog
 				.css(start_params)
 				.animate(end_params, 500);
 	};
+	
+	/**
+	 * Set dialog title
+	 * 
+	 * @param string title
+	 */
+	this.setTitle = function(title) {
+		this.$title.html(title)
+	}
 
 	/**
 	 * Set dialog in loading state
 	 */
 	this.setLoadingState = function() {
-		this.$container.addClass('loading');
+		this.$dialog.addClass('loading');
 	};
 
 	/**
 	 * Set dialog in normal state
 	 */
 	this.setNormalState = function() {
-		this.$container.removeClass('loading');
+		this.$dialog.removeClass('loading');
 	};
 
 	/**
 	 * Adjust position of inner container
 	 */
 	this.adjustPosition = function() {
-		this.$container.css({
-						top: Math.round(($(document).height() - this.$container.height()) / 2),
-						left: Math.round(($(document).width() - this.$container.width()) / 2)
+		this.$dialog.css({
+						top: Math.round(($(document).height() - this.$dialog.height()) / 2),
+						left: Math.round(($(document).width() - this.$dialog.width()) / 2)
 					});
 
 	};

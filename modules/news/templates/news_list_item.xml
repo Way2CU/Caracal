@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 250px; vertical-align: top;">
+			<_var name="$params['title'][$language]"/>
+		</span>
+		<span class="column" style="width: 100px;">
+			<_var name="$params['time']"/>
+			<_raw text=" "/>
+			<_var name="$params['date']"/>
+		</span>
+		<span class="column" style="vertical-align: top;">
+			<_var name="$params['item_change']"/><_raw text=" "/>
+			<_var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>

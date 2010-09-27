@@ -14,6 +14,7 @@ function ToolbarExtension_Gallery() {
 	var self = this;
 
 	this.dialog = new Dialog();
+	this.dialog.setTitle(language_handler.getText('gallery', 'title_insert_image'));
 
 	// register extension to mail API
 	toolbar_api.registerModule('gallery', this);
@@ -66,7 +67,7 @@ function ToolbarExtension_Gallery() {
 						action: 'json_image_list'
 					},
 					dataType: 'json',
-					context: $component,
+					context: $component.get(0),
 					success: self.loaded_ArticleImage
 				})
 			});
@@ -109,8 +110,15 @@ function ToolbarExtension_Gallery() {
 
 				$item
 					.addClass('thumbnail')
+					.data('image', image)
 					.click(function() {
-						$component.insertAtCaret('![' + image.title[language_selector.current_language] + '](' + image.id + ')');
+						var image = $(this).data('image');
+						
+						$component.insertAtCaret(
+									'![' + image.title[language_selector.current_language] +
+									'](' + image.id + ')'
+								);
+						
 						self.dialog.hide();
 					});
 

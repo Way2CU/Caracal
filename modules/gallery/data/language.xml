@@ -21,6 +21,7 @@
 		<constant name="title_containers_change">Gallery: Change Container</constant>
 		<constant name="title_containers_delete">Gallery: Delete Container</constant>
 		<constant name="title_containers_groups">Gallery: Groups within container</constant>
+		<constant name="title_insert_image">Gallery: Insert image</constant>
 
 		<constant name="message_image_invalid_type">Invalid file type. Please contact system administrator.</constant>
 		<constant name="message_image_save_error">There was an error saving your image. Check directory permissions.</constant>
@@ -81,6 +82,7 @@
 		<constant name="title_containers_change">גלריה: שנה קטגוריה</constant>
 		<constant name="title_containers_delete">גלריה: מחק קטגוריה Container</constant>
 		<constant name="title_containers_groups">גלריה: קבוצות בתוך קטגוקיות</constant>
+		<constant name="title_insert_image">Gallery: Insert image</constant>
 
 		<constant name="message_image_invalid_type">סוג קובץ לא נכון, אנא פנה למנהל המערכת</constant>
 		<constant name="message_image_save_error">הייתה בעיה בשמירת התמונה, בדור הרשאות לתקייה</constant>

@@ -215,6 +215,7 @@ class ItemManager {
 
 	/**
 	 * Returns single value of SQL query
+	 * 
 	 * @param string $sql
 	 * @return value
 	 */

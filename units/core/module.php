@@ -58,13 +58,11 @@ class Module {
 	 * @return string
 	 */
 	public function getLanguageConstant($constant, $language="") {
-		global $LanguageHandler;
-
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
 		$result = $this->language->getText($constant, $language_in_use);
 
 		if (empty($result))
-			$result = $LanguageHandler->getText($constant, $language_in_use);
+			$result = MainLanguageHandler::getInstance()->getText($constant, $language_in_use);
 
 		return $result;
 	}
@@ -73,14 +71,11 @@ class Module {
 	 * Extracts multi-language field data and pack them in array
 	 *
 	 * @param string $name
-	 * @param boolean $fix
 	 * @return array
 	 */
-	function getMultilanguageField($name, $fix=true) {
-		global $LanguageHandler;
-
+	function getMultilanguageField($name) {
 		$result = array();
-		$list = $LanguageHandler->getLanguages(false);
+		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		foreach($list as $lang)
 			$result[$lang] = $_REQUEST["{$name}_{$lang}"];

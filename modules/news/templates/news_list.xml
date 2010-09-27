@@ -11,7 +11,10 @@
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 250px;">
-				<_text constant="column_group_name" module="gallery"/>
+				<_text constant="column_title" module="news"/>
+			</span>
+			<span class="column" style="width: 100px;">
+				<_text constant="column_time" module="news"/>
 			</span>
 			<span class="column">
 				<_text constant="column_options"/>

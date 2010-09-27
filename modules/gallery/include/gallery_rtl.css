@@ -1,0 +1,15 @@
+/*
+	Gallery Style Sheet (RTL Modifications)
+	Copyright (c) 2010. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+@CHARSET "UTF-8";
+
+div.list_content.thumbnails div.list_item {
+	float: right;
+}
+
+div.dialog div.thumbnail {
+	float: right;
+}

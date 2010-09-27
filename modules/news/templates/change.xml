@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="news_add_form">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_title" module="news"/></span>
+			<input type="text" name="title" class="multi-language" style="width: 460px;" maxlength="255"/>
+			<_language_data param="title"/>
+		</label>
+		<label>
+			<span><_text constant="label_content" module="news"/></span>
+			<textarea name="content" class="multi-language" style="width: 460px; height: 150px;"><_raw text=""/></textarea>
+			<_language_data param="content"/>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_visible" module="news"/></span>
+			<_if condition="$params['visible'] == 1">
+				<input type="checkbox" name="visible" checked="checked"/>
+			</_if>
+			<_if condition="$params['visible'] == 0">
+				<input type="checkbox" name="visible"/>
+			</_if>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('news_add_form');
+		
+		// create toolbar
+		toolbar_api
+				.createToolbar('news_add_form', '[name=content]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image');		
+	</script>	
+</document>

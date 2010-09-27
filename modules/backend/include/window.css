@@ -1,9 +1,8 @@
 /*
-	WINDOW STYLE SHEET
+	Window Style Sheet
 	Copyright (c) 2010. by MeanEYE[RCF]
 	http://www.rcf-group.com
 */
-
 
 div.window {
 	display: block;
@@ -412,7 +411,6 @@ div.dialog div.container {
 	min-width: 16px;
 	min-height: 16px;
 
-	padding: 5px;
 	position: absolute;
 
 	border-radius: 5px;
@@ -427,4 +425,53 @@ div.dialog div.container.loading {
 	background-image: url(../images/title_animation.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+
+div.dialog div.container div.title_bar {
+	display: block;
+	
+	padding: 3px;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	background-color: #1A1A1A;
+}
+
+div.dialog div.container div.title_bar div.title {
+	display: block;
+
+	padding-left: 2px;
+	padding-right: 2px;
+	
+	color: #BFBFBF;
+	font-weight: normal;
+}
+
+div.dialog div.container div.title_bar a.close_button {
+	display: block;
+	width: 14px;
+	height: 14px;
+
+	float: right;
+
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	background-color: #1A1A1A;
+	background-image: url(../images/close_normal.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+
+	text-decoration: none;
+	cursor: pointer;
+}
+
+div.dialog div.container div.title_bar a.close_button:hover {
+	background-color: #4D4D4D;
+	background-image: url(../images/close_active.gif);
+}
+
+div.dialog div.container div.content {
+	display: block;
+	
+	padding: 5px;
 }

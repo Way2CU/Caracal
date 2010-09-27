@@ -46,6 +46,7 @@ div.list_content.thumbnails div.list_item div.options a {
 	padding-right: 4px;
 
 	border-radius: 3px;
+	-moz-border-radius: 3px;
 
 	color: #2E67AA;
 	text-decoration: none;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="news">
+		<span class="date">
+			<_var name="$params['time']"/>
+			<_var name="$params['date']"/>
+		</span>
+		<span class="title">
+			<_var name="$params['title'][$language]"/>
+		</span>
+		<span class="content">
+			<_var name="Markdown($params['content'][$language])"/>
+		</span>
+	</div>
+</document>

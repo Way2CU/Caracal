@@ -1,0 +1,45 @@
+/*
+	Window Style Sheet (RTL modifications)
+	Copyright (c) 2010. by MeanEYE[RCF]
+	http://www.rcf-group.com
+*/
+
+@charset "UTF-8";
+
+div.window div.content input[type=checkbox],
+div.window_inactive div.content input[type=checkbox] {
+	float: right;
+}
+
+div.window div.title {
+	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+}
+
+div.window.loading div.title {
+	background-position: 25px center;
+}
+
+div.window div.title a.close_button {
+	float: left;
+}
+
+div.window div.content {
+	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+}
+
+div.window div.toolbar a.button {
+	float: right;
+}
+
+div.dialog div.container div.title_bar div.title {
+	direction: rtl;
+	text-align: right;
+}
+
+div.dialog div.container div.title_bar a.close_button {
+	float: left;
+}
