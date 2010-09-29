@@ -6,9 +6,11 @@
 			<_var name="$params['title'][$language]"/>
 		</span>
 		<span class="column" style="width: 100px;">
-			<_var name="$params['time']"/>
-			<_raw text=" "/>
-			<_var name="$params['date']"/>
+			<small>
+				<_var name="$params['time']"/>
+				<br/>
+				<_var name="$params['date']"/>
+			</small>
 		</span>
 		<span class="column" style="vertical-align: top;">
 			<_var name="$params['item_change']"/><_raw text=" "/>

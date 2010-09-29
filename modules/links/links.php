@@ -787,7 +787,7 @@ class links extends Module {
 			foreach($memberships as $membership)
 				$link_ids[] = $membership->link;
 
-		$links = $link_manager->getItems($link_manager->getFieldNames(), array());
+		$links = $link_manager->getItems(array('id', 'text', 'sponsored'), array());
 
 		$template = new TemplateHandler('groups_links_item.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -798,14 +798,7 @@ class links extends Module {
 								'id'				=> $link->id,
 								'in_group'			=> in_array($link->id, $link_ids) ? 1 : 0,
 								'text'				=> $link->text,
-								'description'		=> $link->description,
-								'url'				=> $link->url,
-								'external'			=> $link->external,
-								'sponsored'			=> $link->sponsored,
 								'sponsored_character' => ($link->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
-								'display_limit'		=> $link->display_limit,
-								'sponsored_clicks'	=> $link->sponsored_clicks,
-								'total_clicks'		=> $link->total_clicks,
 							);
 
 				$template->restoreXML();

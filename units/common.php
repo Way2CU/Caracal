@@ -151,16 +151,14 @@ function is_browser_ok() {
  * @return string
  * @author MeanEYE
  */
-function limit_words($str, $limit = 100, $end_char = '&#8230;') {
-    if (trim($str) == '')
-        return $str;
-
-    preg_match('/\s*(?:\S*\s*){'. (int) $limit .'}/', $str, $matches);
-
-    if (strlen($matches[0]) == strlen($str))
-        $end_char = '';
-
-    return rtrim($matches[0]) . $end_char;
+function limit_words($text, $limit = 100, $end_char = '&#8230;') {
+	$result = $text;
+	$encoding = mb_detect_encoding($text);
+	
+	if (mb_strlen($text, $encoding) > $limit)
+		$result = mb_substr($text, 0, $limit, $encoding).$end_char;
+	
+	return $result;
 }
 
 /**

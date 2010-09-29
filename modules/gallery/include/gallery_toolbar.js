@@ -176,5 +176,6 @@ function ToolbarExtension_Gallery() {
 }
 
 $(document).ready(function() {
-	new ToolbarExtension_Gallery();
+	if (typeof(toolbar_api) != 'undefined')
+		new ToolbarExtension_Gallery();
 });

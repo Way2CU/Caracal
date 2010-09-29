@@ -78,7 +78,7 @@ class Module {
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		foreach($list as $lang)
-			$result[$lang] = $_REQUEST["{$name}_{$lang}"];
+			$result[$lang] = isset($_REQUEST["{$name}_{$lang}"]) ? $_REQUEST["{$name}_{$lang}"] : '';
 
 		return $result;
 	}

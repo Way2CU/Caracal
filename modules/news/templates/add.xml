@@ -3,6 +3,13 @@
 <document>
 	<form action="$params['form_action']" eval="action" method="POST" id="news_add_form">
 		<label>
+			<span><_text constant="label_group" module="news"/></span>
+			<select name="group" style="width: 250px;">
+				<option></option>
+				<_group_list template="group_select.xml" local="1"/>
+			</select>
+		</label>
+		<label>
 			<span><_text constant="label_title" module="news"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 460px;" maxlength="255"/>
 		</label>

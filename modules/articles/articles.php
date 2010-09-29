@@ -617,7 +617,8 @@ class articles extends Module {
 			if (isset($tag_params['random'])) {
 				$conditions = array();
 				$group_manager = ArticleGroupManager::getInstance();
-				
+
+				// if random article is to be picked from specified group
 				if (isset($tag_params['group'])) {
 					$group_id = $group_manager->getItemValue(
 									'id', 
@@ -626,9 +627,17 @@ class articles extends Module {
 									)
 								);
 				}
+				
+				$id_list = $manager->getItems(array('id', 'text_id'), $conditions);
 
-				$id_list = $manager->getItems(array('id'), $conditions);
-
+				// if exclude parameter is set
+				if (isset($tag_params['exclude'])) {
+					$exclude_list = explode(',', fix_chars($tag_params['exclude']));
+					for($i=0; $i < count($id_list); $i++)
+						if (in_array($id_list[$i]->text_id, $exclude_list))
+							unset($id_list[$i]);
+				}
+								
 				if (count($id_list) > 0) {
 					shuffle($id_list);
 					$id = $id_list[0]->id;

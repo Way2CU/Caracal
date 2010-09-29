@@ -16,12 +16,14 @@
 		<constant name="title_news_group_add">News: Create new group</constant>
 		<constant name="title_news_group_change">News: Change group</constant>
 		<constant name="title_news_group_delete">News: Delete group</constant>
+		<constant name="title_news_group_items">News: Group items</constant>
 		<constant name="title_manage_news">News: Manage items</constant>
 		<constant name="title_manage_groups">News: Manage groups</constant>
 		<constant name="title_manage_feeds">News: Manage feeds</constant>
 		
 		<!-- Labels -->
 		<constant name="label_title">Title:</constant>
+		<constant name="label_group"><![CDATA[Group <small>(optional)</small>:]]></constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_content">News content:</constant>
 		<constant name="label_visible">News is visible</constant>
@@ -38,6 +40,7 @@
 		<constant name="message_group_saved">Group data was saved.</constant>
 		<constant name="message_group_delete">You are about to remove the following group (items will not be removed). Are you sure?</constant>
 		<constant name="message_group_deleted">News group was removed.</constant>
+		<constant name="message_group_items_updated">Group item membership was updated.</constant>
 		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
 		
 		<!-- Other -->

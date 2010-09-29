@@ -238,6 +238,10 @@ class ItemManager {
 	public function getFieldNames() {
 		return $this->fields;
 	}
+	
+	public function getInsertedID() {
+		return $this->sqlResult('SELECT LAST_INSERT_ID()');
+	}
 
 	/**
 	 * Forms database query for specified command
