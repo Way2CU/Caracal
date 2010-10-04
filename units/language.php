@@ -134,7 +134,7 @@ class LanguageHandler {
 
 class MainLanguageHandler {
 	private static $_instance;
-	
+
 	/**
 	 * Core system language definitions
 	 * @var resource
@@ -155,16 +155,16 @@ class MainLanguageHandler {
 		if (file_exists($data_path."language.xml"))
 			$this->language_local = new LanguageHandler($data_path."language.xml");
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 
 	/**
 	 * Returns localised text for given constant

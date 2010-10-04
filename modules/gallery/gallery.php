@@ -14,16 +14,16 @@ class gallery extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
-		
+
 		// load module style and scripts
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
-			
+
 			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 'type'=>'text/javascript'));
-			
+
 			if (MainLanguageHandler::getInstance()->isRTL())
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 		}
@@ -81,14 +81,14 @@ class gallery extends Module {
 			$backend->addMenu($this->name, $gallery_menu);
 		}
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 
@@ -337,7 +337,7 @@ class gallery extends Module {
 
 	/**
 	 * Show images management form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function showImages($level) {
@@ -373,7 +373,7 @@ class gallery extends Module {
 
 	/**
 	 * Provides a form for uploading multiple images
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function uploadImage($level) {
@@ -393,7 +393,7 @@ class gallery extends Module {
 
 	/**
 	 * Save uploaded images
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function uploadImage_Save($level) {
@@ -435,7 +435,7 @@ class gallery extends Module {
 
 	/**
 	 * Pring image data editing form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function changeImage($level) {
@@ -468,7 +468,7 @@ class gallery extends Module {
 
 	/**
 	 * Save changed image data
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function saveImage($level) {
@@ -476,7 +476,7 @@ class gallery extends Module {
 
 		$id = fix_id($_REQUEST['id']);
 		$title = fix_chars($this->getMultilanguageField('title'));
-		$group = empty($_REQUEST['group']) ? 'null' : fix_id($_REQUEST['group']);
+		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 
@@ -506,7 +506,7 @@ class gallery extends Module {
 
 	/**
 	 * Print confirmation dialog
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteImage($level) {
@@ -545,7 +545,7 @@ class gallery extends Module {
 
 	/**
 	 * Complete removal of specified image
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteImage_Commit($level) {
@@ -571,7 +571,7 @@ class gallery extends Module {
 
 	/**
 	 * Show group management form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function showGroups($level) {
@@ -597,7 +597,7 @@ class gallery extends Module {
 
 	/**
 	 * Input form for creating new group
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function createGroup($level) {
@@ -616,7 +616,7 @@ class gallery extends Module {
 
 	/**
 	 * Group change form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function changeGroup($level) {
@@ -644,7 +644,7 @@ class gallery extends Module {
 
 	/**
 	 * Save new or changed group data
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function saveGroup($level) {
@@ -684,7 +684,7 @@ class gallery extends Module {
 
 	/**
 	 * Delete group confirmation dialog
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteGroup($level) {
@@ -723,7 +723,7 @@ class gallery extends Module {
 
 	/**
 	 * Delete group from the system
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteGroup_Commit($level) {
@@ -750,7 +750,7 @@ class gallery extends Module {
 
 	/**
 	 * Show container management form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function showContainers($level) {
@@ -776,7 +776,7 @@ class gallery extends Module {
 
 	/**
 	 * Input form for creating new group container
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function createContainer($level) {
@@ -795,7 +795,7 @@ class gallery extends Module {
 
 	/**
 	 * Container change form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function changeContainer($level) {
@@ -823,7 +823,7 @@ class gallery extends Module {
 
 	/**
 	 * Save new or changed group container data
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function saveContainer($level) {
@@ -863,7 +863,7 @@ class gallery extends Module {
 
 	/**
 	 * Delete container confirmation dialog
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteContainer($level) {
@@ -902,7 +902,7 @@ class gallery extends Module {
 
 	/**
 	 * Delete container from the system
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteContainer_Commit($level) {
@@ -929,7 +929,7 @@ class gallery extends Module {
 
 	/**
 	 * Print a form containing all the links within a group
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function containerGroups($level) {
@@ -952,7 +952,7 @@ class gallery extends Module {
 
 	/**
 	 * Save container group memberships
-	 * 
+	 *
 	 * @param integer level
 	 */
 	private function containerGroups_Save($level) {
@@ -1045,7 +1045,7 @@ class gallery extends Module {
 
 	/**
 	 * Image list tag handler
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
@@ -1137,7 +1137,7 @@ class gallery extends Module {
 
 	/**
 	 * Group list tag handler
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
@@ -1148,7 +1148,7 @@ class gallery extends Module {
 		if (isset($tag_params['id'])) {
 			// display a specific group
 			$id = fix_id($tag_params['id']);
-			
+
 		} else if (isset($tag_params['container'])) {
 			// display first group in specific container
 			$container = fix_id($tag_params['container']);
@@ -1192,7 +1192,7 @@ class gallery extends Module {
 
 	/**
 	 * Group list tag handler
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
@@ -1294,7 +1294,7 @@ class gallery extends Module {
 
 	/**
 	 * Container tag handler
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
@@ -1337,7 +1337,7 @@ class gallery extends Module {
 
 	/**
 	 * Container list tag handler
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
@@ -1436,7 +1436,7 @@ class gallery extends Module {
 
 	/**
 	 * Container groups list tag handler
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
@@ -1755,7 +1755,7 @@ class gallery extends Module {
 
 	/**
 	 * Returns hash based filename
-	 * 
+	 *
 	 * @param $filename
 	 */
 	private function _getFileName($filename) {
@@ -1837,7 +1837,7 @@ class gallery extends Module {
 
 	/**
 	 * Create thumbnail from specified image
-	 * 
+	 *
 	 * @param string $filename
 	 */
 	private function _createThumbnail($filename, $thumb_size) {
@@ -1915,14 +1915,14 @@ class GalleryManager extends ItemManager {
 
 		parent::deleteData($conditionals);
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }
@@ -1941,14 +1941,14 @@ class GalleryGroupManager extends ItemManager {
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }
@@ -1967,14 +1967,14 @@ class GalleryContainerManager extends ItemManager {
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }
@@ -1992,14 +1992,14 @@ class GalleryGroupMembershipManager extends ItemManager {
 		$this->addProperty('group', 'int');
 		$this->addProperty('container', 'int');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 }

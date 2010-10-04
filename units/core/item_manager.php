@@ -161,7 +161,7 @@ class ItemManager {
 	 * @param boolean $ascending
 	 * @return array
 	 */
-	public function getItems($fields, $conditionals, $order_by=array(), $ascending=True, $limit=null) {
+	public function getItems($fields, $conditionals, $order_by=array(), $ascending=true, $limit=null) {
 		global $db, $db_active;
 
 		$result = array();
@@ -215,7 +215,7 @@ class ItemManager {
 
 	/**
 	 * Returns single value of SQL query
-	 * 
+	 *
 	 * @param string $sql
 	 * @return value
 	 */
@@ -238,7 +238,7 @@ class ItemManager {
 	public function getFieldNames() {
 		return $this->fields;
 	}
-	
+
 	public function getInsertedID() {
 		return $this->sqlResult('SELECT LAST_INSERT_ID()');
 	}
@@ -274,6 +274,7 @@ class ItemManager {
 
 			case DB_SELECT:
 				$this->_expandMultilanguageFields($data, false);
+				$this->_expandMultilanguageFields($order_by, false, true);
 				$result = 'SELECT '.$this->_getFields($data).' FROM `'.$this->table_name.'`';
 				if (!empty($conditionals)) $result .= ' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
 				if (!is_null($order_by) && !empty($order_by)) $result .= ' ORDER BY '.$this->_getFields($order_by).($order_asc ? ' ASC' : ' DESC');
@@ -286,27 +287,45 @@ class ItemManager {
 
 	/**
 	 * Expand multi-language fields to match real ones in table
+	 *
 	 * @param pointer $fields
 	 * @param boolean $has_keys
+	 * @param boolean $only_current
 	 * @return array
 	 */
-	private function _expandMultilanguageFields(&$fields, $has_keys=true) {
+	private function _expandMultilanguageFields(&$fields, $has_keys=true, $only_current=false) {
 		$temp = $fields;
+		$current_language = $_SESSION['language'];
 
 		if ($has_keys) {
 			foreach ($temp as $field => $data)
-				if (in_array($this->field_types[$field], $this->ml_fields)) {
-					foreach($this->languages as $language)
-						$fields["{$field}_{$language}"] = $data[$language];
+				if (in_array($field, $this->fields) && in_array($this->field_types[$field], $this->ml_fields)) {
+
+					if (!$only_current) {
+						// expand multi-language field to all languages
+						foreach($this->languages as $language)
+							$fields["{$field}_{$language}"] = $data[$language];
+
+					} else {
+							$fields["{$field}_{$current_language}"] = $data[$current_language];
+					}
 
 					unset($fields[$field]);
 				}
 
 		} else {
 			foreach ($temp as $field)
-				if (in_array($this->field_types[$field], $this->ml_fields)) {
-					foreach($this->languages as $language)
-						$fields[] = "{$field}_{$language}";
+				if (in_array($field, $this->fields) && in_array($this->field_types[$field], $this->ml_fields)) {
+
+					if (!$only_current) {
+						// expand multi-language field to all languages
+						foreach($this->languages as $language)
+							$fields[] = "{$field}_{$language}";
+
+					} else {
+						// expand multi-language field only to current language
+						$fields[] = "{$field}_{$current_language}";
+					}
 
 					unset($fields[array_search($field, $fields)]);
 				}
@@ -339,7 +358,9 @@ class ItemManager {
 		$fields = $from_keys ? array_keys($data) : $data;
 
 		foreach($fields as $field)
-			$result[] = "`{$field}`";
+			if (in_array($field, $this->fields))
+				$result[] = "`{$field}`"; else
+				$result[] = "{$field}";
 
 		return implode(', ', $result);
 	}

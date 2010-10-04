@@ -19,6 +19,7 @@
 		<constant name="title_news_group_items">News: Group items</constant>
 		<constant name="title_news_feed_add">News: Add new feed</constant>
 		<constant name="title_news_feed_change">News: Change feed data</constant>
+		<constant name="title_news_feed_delete">News: Delete feed</constant>
 		<constant name="title_manage_news">News: Manage items</constant>
 		<constant name="title_manage_groups">News: Manage groups</constant>
 		<constant name="title_manage_feeds">News: Manage feeds</constant>
@@ -49,6 +50,8 @@
 		<constant name="message_group_delete">You are about to remove the following group and associated feeds (items will not be removed). Are you sure?</constant>
 		<constant name="message_group_deleted">News group was removed.</constant>
 		<constant name="message_group_items_updated">Group item membership was updated.</constant>
+		<constant name="message_feed_delete">You are about to remove the following news feed. Associated group and items will not be removed. Are you sure?</constant>
+		<constant name="message_feed_deleted">News feed was removed.</constant>
 		<constant name="message_feed_saved">Feed data was saved.</constant>
 		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
 

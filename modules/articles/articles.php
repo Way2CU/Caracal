@@ -14,9 +14,9 @@ class articles extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
-		
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -42,7 +42,7 @@ class articles extends Module {
 								$level=5
 							));
 			$articles_menu->addSeparator(5);
-			
+
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_articles_manage'),
 								url_GetFromFilePath($this->path.'images/manage.png'),
@@ -71,16 +71,16 @@ class articles extends Module {
 							));
 
 			$backend->addMenu($this->name, $articles_menu);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 
@@ -330,7 +330,7 @@ class articles extends Module {
 		$title = fix_chars($this->getMultilanguageField('title'));
 		$content = escape_chars($this->getMultilanguageField('content'));
 		$visible = fix_id($_REQUEST['visible']);
-		$group = fix_id($_REQUEST['group']);
+		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 
 		$data = array(
 					'text_id'	=> $text_id,
@@ -609,46 +609,24 @@ class articles extends Module {
 	public function tag_Article($level, $tag_params, $children) {
 		$manager = ArticleManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
-		
+
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
-		$text_id = isset($tag_params['text_id']) ? mysql_real_escape_string(strip_tags($tag_params['text_id'])) : null;
 
-		if (is_null($id) && is_null($text_id))
-			if (isset($tag_params['random'])) {
-				$conditions = array();
-				$group_manager = ArticleGroupManager::getInstance();
+		if (is_null($id)) {
+			$id_list = array();
+			$group_list = array();
 
-				// if random article is to be picked from specified group
-				if (isset($tag_params['group'])) {
-					$group_id = $group_manager->getItemValue(
-									'id', 
-									array(
-										'text_id' => escape_chars($tag_params['group'])
-									)
-								);
-				}
-				
-				$id_list = $manager->getItems(array('id', 'text_id'), $conditions);
+			if (isset($tag_params['text_id']))
+				$id_list = explode(',', $tag_params['text_id']);
 
-				// if exclude parameter is set
-				if (isset($tag_params['exclude'])) {
-					$exclude_list = explode(',', fix_chars($tag_params['exclude']));
-					for($i=0; $i < count($id_list); $i++)
-						if (in_array($id_list[$i]->text_id, $exclude_list))
-							unset($id_list[$i]);
-				}
-								
-				if (count($id_list) > 0) {
-					shuffle($id_list);
-					$id = $id_list[0]->id;
-				} else {
-					return;
-				}
-			} else {
-				// no id/text_id were specified nor random article was requested
-				return;
-			}
+			if (isset($tag_params['group']))
+				$group_list = explode(',', $tag_params['group']);
 
+			$list = $this->getArticleList(isset($tag_params['random']), 1, $id_list, $group_list);
+
+			if (empty($list)) return;  // no ids returned
+			$id = $list[0];
+		}
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -661,9 +639,7 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
 
-		if (!is_null($id))
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
@@ -679,7 +655,7 @@ class articles extends Module {
 						'title'			=> $item->title,
 						'content'		=> $item->content,
 						'author'		=> $admin_manager->getItemValue(
-																'fullname', 
+																'fullname',
 																array('id' => $item->author)
 															),
 						'visible'		=> $item->visible,
@@ -707,17 +683,24 @@ class articles extends Module {
 		$admin_manager = AdministratorManager::getInstance();
 
 		$conditions = array();
-		$only_visible = isset($tag_params['only_visible']) ? $tag_params['only_visible'] == 1 : false;
 
 		if (isset($tag_params['group'])) {
-			$group_manager = ArticleGroupManager::getInstance();
-			$group = $group_manager->getItemValue('id', array('text_id' => escape_chars($tag_params['group'])));
-		} else {
-			$group = null;
+			$group_list = explode(',', $tag_params['group']);
+
+			$id_list = $this->getArticleList(
+									isset($tag_params['random']) && $tag_params['random'] == 1,
+									isset($tag_params['limit']) ? $tag_params['limit'] : null,
+									array(),
+									$group_list
+								);
+
+			if (empty($id_list)) return;  // specified groups didn't contain any articles
+
+			$conditions['id'] = $id_list;
 		}
 
-		if ($only_visible) $conditions['visible'] = 1;
-		if (!is_null($group)) $conditions['group'] = $group;
+		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 1)
+			$conditions['visible'] = 1;
 
 		// give the ability to limit number of articles to display
 		if (isset($tag_params['limit']))
@@ -726,10 +709,6 @@ class articles extends Module {
 
 		// get items from manager
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, array('id'), true, $limit);
-
-		// randomize if needed
-		if (isset($tag_params['random']) && $tag_params['random'] == 1 && !is_null($items))
-			shuffle($items);
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -758,7 +737,7 @@ class articles extends Module {
 							'title'			=> $item->title,
 							'content'		=> $item->content,
 							'author'		=> $admin_manager->getItemValue(
-																'fullname', 
+																'fullname',
 																array('id' => $item->author)
 															),
 							'visible'		=> $item->visible,
@@ -963,12 +942,56 @@ class articles extends Module {
 
 		return $result;
 	}
+
+	/**
+	 * Function used to retrieve Id list (or single Id) from database based on parameters
+	 *
+	 * @param boolean $random Randomly order results
+	 * @param integer $limit Limit results to this number
+	 * @param array $id_list Array of text_id's
+	 * @param array $group_list Array of group text_id's
+	 * @return array
+	 */
+	private function getArticleList($random=true, $limit=null, $id_list=array(), $group_list=array()) {
+		$result = array();
+		$order_by = $random ? 'RAND()' : 'id';
+		$conditions = array();
+
+		$manager = ArticleManager::getInstance();
+
+		if (!empty($id_list))
+			$conditions['text_id'] = $id_list;
+
+		if (!empty($group_list)) {
+			$group_id_list = array();
+			$group_manager = ArticleGroupManager::getInstance();
+
+			$items = $group_manager->getItems(array('id'), array('text_id' => $group_list));
+
+			// no items were found in specified groups and id_list is empty
+			if (empty($id_list) && empty($items)) return array();
+
+			if (count($items) > 0)
+				foreach($items as $item)
+					$group_id_list[] = $item->id;
+
+			$conditions['group'] = $group_id_list;
+		}
+
+		$items = $manager->getItems(array('id'), $conditions, array($order_by), true, $limit);
+
+		if (count($items) > 0)
+			foreach($items as $item)
+				$result[] = $item->id;
+
+		return $result;
+	}
 }
 
 
 class ArticleManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -994,17 +1017,17 @@ class ArticleManager extends ItemManager {
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 }
 
 
 class ArticleGroupManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
-	 * Constructor 
+	 * Constructor
 	 */
 	protected function __construct() {
 		parent::__construct('article_groups');
@@ -1014,14 +1037,14 @@ class ArticleGroupManager extends ItemManager {
 		$this->addProperty('title', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }

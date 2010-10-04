@@ -17,6 +17,12 @@ class news extends Module {
 
 		parent::__construct(__FILE__);
 
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
+
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
+		}
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -877,10 +883,69 @@ class news extends Module {
 		$template->parse($level);
 	}
 
+	/**
+	 * Feed removal confirmation form
+	 *
+	 * @param integer $level
+	 */
 	private function deleteFeed($level) {
+		global $language;
+
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = NewsFeedManager::getInstance();
+
+		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_feed_delete"),
+					'name'			=> $item->title[$language],
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'news_feeds_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'feed_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('news_feeds_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
+	/**
+	 * Perform feed removal
+	 *
+	 * @param integer $level
+	 */
 	private function deleteFeed_Commit($level) {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = NewsFeedManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_news_deleted"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close('news_feeds_delete').";"
+									.window_ReloadContent('news')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
 	}
 
 	/**
