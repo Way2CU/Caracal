@@ -5,7 +5,7 @@
  * http://rcf-group.com
  *
  * You need to create new language selector for each window. Id specified in
- * constructor function is container Id. Window Id can be used as well.
+ * constructor function is forum Id.
  *
  * Requires jQuery 1.4.2+
  */
@@ -137,7 +137,7 @@ function LanguageSelector(id) {
 	}
 
 	/**
-	 * Externaly called function on form reset event
+	 * Function used to restore original language data on form reset event
 	 */
 	this.resetFields = function() {
 		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
