@@ -75,7 +75,7 @@ class news extends Module {
 					url_GetFromFilePath($this->path.'images/rss.png'),
 					window_Open( // on click open window
 								'news_feeds',
-								490,
+								700,
 								$this->getLanguageConstant('title_manage_feeds'),
 								true, true,
 								backend_UrlMake($this->name, 'feeds')
@@ -84,6 +84,10 @@ class news extends Module {
 				));
 
 			$backend->addMenu($this->name, $news_menu);
+
+		} else {
+			// if we are not in backend section, create feed links
+
 		}
 	}
 
@@ -180,13 +184,39 @@ class news extends Module {
 				case 'group_delete_commit':
 					$this->deleteGroup_Commit($level);
 					break;
-					
+
 				case 'group_items':
 					$this->groupItems($level);
 					break;
-					
+
 				case 'group_items_save':
 					$this->groupItems_Save($level);
+					break;
+
+				// ---
+
+				case 'feeds':
+					$this->showFeeds($level);
+					break;
+
+				case 'feed_add':
+					$this->addFeed($level);
+					break;
+
+				case 'feed_change':
+					$this->changeFeed($level);
+					break;
+
+				case 'feed_save':
+					$this->saveFeed($level);
+					break;
+
+				case 'feed_delete':
+					$this->deleteFeed($level);
+					break;
+
+				case 'feed_delete_commit':
+					$this->deleteFeed_Commit($level);
 					break;
 
 				default:
@@ -458,8 +488,10 @@ class news extends Module {
 	private function deleteNews_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = NewsManager::getInstance();
+		$membership_manager = NewsMembershipManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
+		$membership_manager->deleteData(array('news' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -639,8 +671,12 @@ class news extends Module {
 
 		$id = fix_chars($_REQUEST['id']);
 		$manager = NewsGroupManager::getInstance();
+		$membership_manager = NewsMembershipManager::getInstance();
+		$feed_manager = NewsFeedManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
+		$membership_manager->deleteData(array('group' => $id));
+		$feed_manager->deleteData(array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -659,7 +695,7 @@ class news extends Module {
 
 	/**
 	 * Show group items edit form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function groupItems($level) {
@@ -682,7 +718,7 @@ class news extends Module {
 
 	/**
 	 * Save group items
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function groupItems_Save($level) {
@@ -719,6 +755,132 @@ class news extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
+	}
+
+	/**
+	 * Show news feed management form
+	 *
+	 * @param integer $level
+	 */
+	private function showFeeds($level) {
+		$template = new TemplateHandler('feed_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'		=> url_MakeHyperlink(
+										$this->getLanguageConstant('add_feed'),
+										window_Open( // on click open window
+											'news_feeds_add',
+											390,
+											$this->getLanguageConstant('title_news_feed_add'),
+											true, true,
+											backend_UrlMake($this->name, 'feed_add')
+										)
+									),
+					);
+
+		$template->registerTagHandler('_feed_list', &$this, 'tag_FeedList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Add new feed
+	 *
+	 * @param integer $level
+	 */
+	private function addFeed($level) {
+		$template = new TemplateHandler('feed_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'feed_save'),
+					'cancel_action'	=> window_Close('news_feeds_add')
+				);
+
+		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Change feed data
+	 *
+	 * @param integer $level
+	 */
+	private function changeFeed($level) {
+		if (!isset($_REQUEST['id'])) return;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = NewsFeedManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$template = new TemplateHandler('feed_change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'id'			=> $item->id,
+					'group'			=> $item->group,
+					'news_count'	=> $item->news_count,
+					'title'			=> $item->title,
+					'description'	=> $item->description,
+					'active'		=> $item->active,
+					'form_action'	=> backend_UrlMake($this->name, 'feed_save'),
+					'cancel_action'	=> window_Close('news_feeds_change')
+				);
+
+		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Save feed data
+	 *
+	 * @param integer $level
+	 */
+	private function saveFeed($level) {
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$manager = NewsFeedManager::getInstance();
+
+		$data = array(
+					'group'			=> fix_id($_REQUEST['group']),
+					'news_count'	=> empty($_REQUEST['news_count']) ? 10 : fix_id($_REQUEST['news_count']),
+					'title'			=> escape_chars($this->getMultilanguageField('title')),
+					'description'	=> escape_chars($this->getMultilanguageField('description')),
+					'active'		=> fix_id($_REQUEST['active'])
+				);
+
+		if (is_null($id)) {
+			$manager->insertData($data);
+			$window = 'news_feeds_add';
+		} else {
+			$manager->updateData($data, array('id' => $id));
+			$window = 'news_feeds_change';
+		}
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_feed_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('news_feeds'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	private function deleteFeed($level) {
+	}
+
+	private function deleteFeed_Commit($level) {
 	}
 
 	/**
@@ -958,6 +1120,7 @@ class news extends Module {
 							'id'			=> $item->id,
 							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
+							'selected'		=> isset($tag_params['selected']) ? $tag_params['selected'] : null,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -1013,10 +1176,10 @@ class news extends Module {
 				$template->parse($level);
 			}
 	}
-	
+
 	/**
 	 * Tag handler used to display items within a certain group
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
@@ -1050,6 +1213,75 @@ class news extends Module {
 								'in_group'	=> in_array($item->id, $news_ids) ? 1 : 0,
 								'title'		=> $item->title,
 							);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);
+			}
+	}
+
+	/**
+	 * Tag handler for feed list
+	 *
+	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
+	 */
+	public function tag_FeedList($level, $params, $children) {
+		$manager = NewsFeedManager::getInstance();
+		$group_manager = NewsGroupManager::getInstance();
+
+		$items = $manager->getItems($manager->getFieldNames(), array());
+
+		$template = new TemplateHandler('feed_list_item.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		if (count($items) > 0)
+			foreach($items as $item) {
+				$group = $group_manager->getSingleItem(array('title'), array('id' => $item->group));
+
+				$params = array(
+							'id'			=> $item->id,
+							'group'			=> $item->group,
+							'news_count'	=> $item->news_count,
+							'title'			=> $item->title,
+							'group_title'	=> $group->title,
+							'description'	=> $item->description,
+							'active'		=> $item->active,
+							'active_char'	=> $item->active ? CHAR_CHECKED : CHAR_UNCHECKED,
+							'item_change'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('change'),
+													window_Open(
+														'news_feeds_change', 	// window id
+														390,					// width
+														$this->getLanguageConstant('title_news_feed_change'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'feed_change'),
+															array('id', $item->id)
+														)
+													)
+												),
+							'item_delete'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('delete'),
+													window_Open(
+														'news_feeds_delete', 	// window id
+														390,					// width
+														$this->getLanguageConstant('title_news_feed_delete'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'feed_delete'),
+															array('id', $item->id)
+														)
+													)
+												)
+						);
 
 				$template->restoreXML();
 				$template->setLocalParams($params);

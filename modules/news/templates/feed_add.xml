@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="news_feed_add_form">
+		<label>
+			<span><_text constant="label_feed_group" module="news"/></span>
+			<select name="group" style="width: 250px;">
+				<_group_list template="group_select.xml" local="1"/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_news_count" module="news"/></span>
+			<input type="text" name="news_count" value="10" style="width: 100px;" maxlength="2"/>
+		</label>
+		<label>
+			<span><_text constant="label_title" module="news"/></span>
+			<input type="text" name="title" class="multi-language" style="width: 360px;" maxlength="255"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="news"/></span>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_active" module="news"/></span>
+			<input type="checkbox" name="active" checked="checked"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('news_feed_add_form');
+	</script>
+</document>

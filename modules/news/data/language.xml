@@ -8,7 +8,7 @@
 		<constant name="menu_manage_news">Manage news</constant>
 		<constant name="menu_manage_groups">Manage groups</constant>
 		<constant name="menu_news_feeds">News feeds</constant>
-		
+
 		<!-- Titles -->
 		<constant name="title_news_add">News: Add new item</constant>
 		<constant name="title_news_change">News: Change item</constant>
@@ -17,35 +17,45 @@
 		<constant name="title_news_group_change">News: Change group</constant>
 		<constant name="title_news_group_delete">News: Delete group</constant>
 		<constant name="title_news_group_items">News: Group items</constant>
+		<constant name="title_news_feed_add">News: Add new feed</constant>
+		<constant name="title_news_feed_change">News: Change feed data</constant>
 		<constant name="title_manage_news">News: Manage items</constant>
 		<constant name="title_manage_groups">News: Manage groups</constant>
 		<constant name="title_manage_feeds">News: Manage feeds</constant>
-		
+
 		<!-- Labels -->
 		<constant name="label_title">Title:</constant>
 		<constant name="label_group"><![CDATA[Group <small>(optional)</small>:]]></constant>
+		<constant name="label_feed_group">Group:</constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_content">News content:</constant>
 		<constant name="label_visible">News is visible</constant>
-		
+		<constant name="label_news_count">News count:</constant>
+		<constant name="label_active">Feed is active</constant>
+		<constant name="label_description">Feed description:</constant>
+
 		<!-- Columns -->
 		<constant name="column_title">Title</constant>
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_time">Timestamp</constant>
-		
+		<constant name="column_group">Group</constant>
+		<constant name="column_active">Active</constant>
+
 		<!-- Messages -->
 		<constant name="message_news_saved">News data was saved.</constant>
 		<constant name="message_news_delete">You are about to remove the following item. Are you sure?</constant>
 		<constant name="message_news_deleted">News data was removed.</constant>
 		<constant name="message_group_saved">Group data was saved.</constant>
-		<constant name="message_group_delete">You are about to remove the following group (items will not be removed). Are you sure?</constant>
+		<constant name="message_group_delete">You are about to remove the following group and associated feeds (items will not be removed). Are you sure?</constant>
 		<constant name="message_group_deleted">News group was removed.</constant>
 		<constant name="message_group_items_updated">Group item membership was updated.</constant>
+		<constant name="message_feed_saved">Feed data was saved.</constant>
 		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
-		
+
 		<!-- Other -->
 		<constant name="add_news">Add news item</constant>
 		<constant name="add_group">Create new group</constant>
+		<constant name="add_feed">Add news feed</constant>
 		<constant name="groups">News groups</constant>
 		<constant name="items">Items</constant>
 	</language>

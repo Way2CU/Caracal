@@ -50,6 +50,16 @@ function LanguageSelector(id) {
 			this.$container.append($button);
 		}
 
+		// attach reset event if parent is form
+		if (this.$parent.get(0).nodeName == 'FORM') {
+			this.$parent.find(':reset').eq(0).click(function(event) {
+				event.preventDefault();
+
+				self.$parent.get(0).reset();
+				self.resetFields(event);
+			});
+		}
+
 		// collect multi-language data
 		this.$parent.find('data').each(function() {
 			var field = $(this).attr('field');
@@ -68,8 +78,11 @@ function LanguageSelector(id) {
 			var data = field_data[name];
 
 			if (data == undefined) data = {};
-			
+
+			var original_data = $.extend({}, data);
+
 			$(this).data('language', data);
+			$(this).data('original_data', original_data);
 			$(this).data('selector', self);
 
 			// upon leaving input element, store data
@@ -94,7 +107,7 @@ function LanguageSelector(id) {
 	 * @param string language
 	 */
 	this.setLanguage = function(language) {
-		if (self.current_language != null)
+		if (this.current_language != null)
 			this.$objects[self.current_language].removeClass('active');
 
 		this.$objects[language].addClass('active');
@@ -121,6 +134,21 @@ function LanguageSelector(id) {
 		});
 
 		this.current_language = language;
+	}
+
+	/**
+	 * Externaly called function on form reset event
+	 */
+	this.resetFields = function() {
+		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
+			var data = $.extend({}, $(this).data('original_data'));
+			$(this).data('language', data);
+
+			// get data for language from storage
+			if (self.current_language in data)
+				$(this).val(data[self.current_language]); else
+				$(this).val('');
+		});
 	}
 
 	// load languages and construct selector
