@@ -45,7 +45,7 @@ class backend extends Module {
 
 			// load style based on current language
 			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			
+
 			if (MainLanguageHandler::getInstance()->isRTL()) {
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
@@ -327,7 +327,7 @@ class backend extends Module {
 								'active'	=> 1
 							));
 
-			$module = $ModuleHandler->loadModule($module_name);
+			$module = $ModuleHandler->_loadModule($module_name);
 			$module->onInit();
 			$message = $this->getLanguageConstant('message_module_initialised');
 
@@ -402,9 +402,8 @@ class backend extends Module {
 
 			$manager->deleteData(array('name' => $module_name));
 
-			if ($ModuleHandler->moduleExists($module_name))
-				$module = $ModuleHandler->getObjectFromName($module_name); else
-				$module = $ModuleHandler->loadModule($module_name);
+			if (class_exists($module_name))
+				$module = call_user_func($module_name, 'getInstance');
 
 			$module->onDisable();
 			$message = $this->getLanguageConstant('message_module_disabled');
