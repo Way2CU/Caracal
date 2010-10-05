@@ -1161,7 +1161,7 @@ class gallery extends Module {
 			return;
 		}
 
-		$manager = new GalleryGroupManager();
+		$manager = GalleryGroupManager::getInstance();
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		if (isset($tag_params['template'])) {

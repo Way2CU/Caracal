@@ -358,7 +358,7 @@ class ItemManager {
 		$fields = $from_keys ? array_keys($data) : $data;
 
 		foreach($fields as $field)
-			if (in_array($field, $this->fields))
+			if (in_array($field, array_keys($this->field_types)))
 				$result[] = "`{$field}`"; else
 				$result[] = "{$field}";
 

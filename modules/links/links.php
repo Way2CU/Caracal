@@ -2,7 +2,7 @@
 
 /**
  * Links Module
- * 
+ *
  * This module provides a number of useful ways of printing and organising
  * links on your web site.
  *
@@ -17,9 +17,9 @@ class links extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
-		
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -73,16 +73,16 @@ class links extends Module {
 			$backend->addMenu($this->name, $links_menu);
 		}
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 
 	/**
 	 * Transfers control to module functions
@@ -288,7 +288,7 @@ class links extends Module {
 
 	/**
 	 * Show content of a form used for creation of new `link` object
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function addLink($level) {
@@ -308,7 +308,7 @@ class links extends Module {
 
 	/**
 	 * Show content of a form in editing state for sepected `link` object
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function changeLink($level) {
@@ -340,7 +340,7 @@ class links extends Module {
 
 	/**
 	 * Save changes existing (or new) to `link` object and display result
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function saveLink($level) {
@@ -407,7 +407,7 @@ class links extends Module {
 
 	/**
 	 * Present user with confirmation dialog before removal of specified `link` object
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteLink($level) {
@@ -444,7 +444,7 @@ class links extends Module {
 
 	/**
 	 * Remove specified `link` object and inform user about operation status
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteLink_Commit($level) {
@@ -484,7 +484,7 @@ class links extends Module {
 
 	/**
 	 * Show link groups management window
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function showGroups($level) {
@@ -510,7 +510,7 @@ class links extends Module {
 
 	/**
 	 * Create new group form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function addGroup($level) {
@@ -529,7 +529,7 @@ class links extends Module {
 
 	/**
 	 * Group rename form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function changeGroup($level) {
@@ -555,7 +555,7 @@ class links extends Module {
 
 	/**
 	 * Insert or save group data
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function saveGroup($level) {
@@ -593,7 +593,7 @@ class links extends Module {
 
 	/**
 	 * Delete group confirmation dialog
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteGroup($level) {
@@ -630,7 +630,7 @@ class links extends Module {
 
 	/**
 	 * Delete group from the system
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function deleteGroup_Commit($level) {
@@ -657,7 +657,7 @@ class links extends Module {
 
 	/**
 	 * Print a form containing all the links within a group
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function groupLinks($level) {
@@ -680,7 +680,7 @@ class links extends Module {
 
 	/**
 	 * Save link group memberships
-	 * 
+	 *
 	 * @param integer level
 	 */
 	private function groupLinksSave($level) {
@@ -954,7 +954,7 @@ class links extends Module {
 			// if gallery is loaded
 			$image = '';
 			$thumbnail = '';
-			if ($use_images) {
+			if ($use_images && !empty($item->image)) {
 				$image_item = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $item->image));
 
 				if (is_object($image_item)) {
@@ -1220,7 +1220,7 @@ class links extends Module {
 
 class LinksManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -1238,21 +1238,21 @@ class LinksManager extends ItemManager {
 		$this->addProperty('total_clicks', 'integer');
 		$this->addProperty('image', 'integer');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 }
 
 class LinkGroupsManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -1262,21 +1262,21 @@ class LinkGroupsManager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }
 
 class LinkMembershipManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -1287,14 +1287,14 @@ class LinkMembershipManager extends ItemManager {
 		$this->addProperty('link', 'int');
 		$this->addProperty('group', 'int');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }
