@@ -1182,6 +1182,7 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
+						'image'			=> $this->_getGroupImage($item)
 					);
 
 			$template->restoreXML();
@@ -1250,6 +1251,7 @@ class gallery extends Module {
 							'text_id'		=> $item->text_id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
+							'image'			=> $this->_getGroupImage($item),
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
@@ -1327,6 +1329,7 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
+						'image'			=> $this->_getContainerImage($item)
 					);
 
 			$template->restoreXML();
@@ -1376,6 +1379,7 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
+						'image'			=> $this->_getContainerImage($item),
 						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
@@ -1789,8 +1793,52 @@ class gallery extends Module {
 	 * @return integer
 	 */
 	public function _getImageIdByFileName($filename) {
-		$manager = new GalleryManager();
+		$manager = GalleryManager::getInstance();
 		return $manager->getItemValue('id', array('filename' => $filename));
+	}
+
+	/**
+	 * Get group image
+	 *
+	 * @param resource/integer $group
+	 * @return string
+	 */
+	private function _getGroupImage($group) {
+		$result = '';
+		$manager = GalleryManager::getInstance();
+
+		$image = $manager->getSingleItem(
+										array('filename'),
+										array('group' => is_numeric($group) ? $group : $group->id)
+									);
+
+		if (is_object($image))
+			$result = $this->_getThumbnailURL($image);
+
+		return $result;
+	}
+
+	/**
+	 * Get container image
+	 *
+	 * @param resource $container
+	 * @return string
+	 */
+	private function _getContainerImage($container) {
+		$result = '';
+		$group_manager = GalleryGroupManager::getInstance();
+		$membership_manager = GalleryGroupMembershipManager::getInstance();
+
+		$item = $membership_manager->getSingleItem(
+												array('group'),
+												array('container' => $container->id),
+												array('RAND()')
+											);
+
+		if (is_object($item))
+			$result = $this->_getGroupImage($item->group);
+
+		return $result;
 	}
 
 	/**
