@@ -3,6 +3,6 @@
 <document>
 	<div class="article">
 		<h1><_var name="$params['title'][$language]"/></h1>
-		<_var name="Markdown($params['content'][$language])"/>
+		<_var name="Markdown(stripslashes($params['content'][$language]))"/>
 	</div>
 </document>
