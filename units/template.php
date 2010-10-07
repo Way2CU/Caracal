@@ -8,6 +8,11 @@
 
 class TemplateHandler {
 	/**
+	 * Used for debugging
+	 * @var string
+	 */
+	public $file;
+	/**
 	 * XML parser
 	 * @var resource
 	 */
@@ -62,6 +67,7 @@ class TemplateHandler {
 	public function __construct($file = "", $path = "") {
 		global $template_path;
 
+		$this->file = $path.$file;
 		$this->active = false;
 		$this->params = array();
 		$this->module = null;
@@ -268,7 +274,7 @@ class TemplateHandler {
 					$to_eval = $tag->tagAttrs['condition'];
 					if (eval('global $section, $action, $language; return '.$to_eval.';'))
 						$this->parse($level, $tag->tagChildren);
-						
+
 					break;
 
 				// variable

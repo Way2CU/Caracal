@@ -4,6 +4,7 @@
 	<section name="backend">
 		<language name="all">
 			<action name="_default" file="templates/main.xml"/>
+			<action name="transfer_control" file="templates/main.xml"/>
 		</language>
 	</section>
 </document>

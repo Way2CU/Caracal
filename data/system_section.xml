@@ -7,7 +7,4 @@
 	<section name="backend_module" module="backend">
 		<language name="all" file="backend_module.xml" />
 	</section>
-	<section name="session" module="session">
-		<language name="all" file="transfer.xml" />
-	</section>
 </document>

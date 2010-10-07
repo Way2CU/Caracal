@@ -24,7 +24,7 @@ class SectionHandler {
 			$this->active = true;
 		}
 	}
-	
+
 	/**
 	 * Retrieves file for parsing
 	 *
@@ -68,7 +68,7 @@ class SectionHandler {
 /**
  * This manager is used only in index file. Sole purpose of this
  * object is to provide a separate section files.
- * 
+ *
  * @author MeanEYE.rcf
  */
 class MainSectionHandler {
@@ -94,10 +94,10 @@ class MainSectionHandler {
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
-	
+
 	/**
 	 * Retrieves file for parsing
 	 *
@@ -149,25 +149,7 @@ class MainSectionHandler {
 				$template = new TemplateHandler($file);
 			}
 
-			// check if login is required
-			if (isset($template->engine->document->tagAttrs['minimum_level']) &&
-			($template->engine->document->tagAttrs['minimum_level'] > $_SESSION['level'])) {
-				if (class_exists('session')) {
-					$_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
-					$module = call_user_func(array('session', 'getInstance'));
-
-					$file = $module->getSectionFile($module->name, '', $language);
-
-					$new = new TemplateHandler(basename($file), dirname($file).'/');
-					$new->setMappedModule($module->name);
-					$new->parse(0);
-				} else {
-					print "You may not access this section. Login is required!";
-				}
-			} else {
-				$template->parse(0);
-			}
-
+			$template->parse(0);
 		}
 	}
 
