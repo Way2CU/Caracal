@@ -3,9 +3,12 @@
 <document>
 	<div style="margin-bottom: 10px;">
 		<_var name="$params['message']"/>
-		<div style="padding: 10px; font-weight: bold;">
-			<_var name="$params['name']"/>
-		</div>
+
+		<_if condition="!empty($param['name'])">
+			<div style="padding: 10px; font-weight: bold;">
+				<_var name="$params['name']"/>
+			</div>
+		</_if>
 	</div>
 	<div class="button_bar">
 		<button type="button" onclick="$params['yes_action']" eval="onclick">

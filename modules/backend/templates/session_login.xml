@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$_SERVER['PHP_SELF']" method="POST" eval="action">
+		<div style="margin-bottom: 15px;">
+			<div class="icon">
+				<img src="$params['image']" alt="" eval="src"/>
+			</div>
+
+			<div class="controls">
+				<div class="message">
+					<input type="hidden" name="section" value="backend_module"/>
+					<input type="hidden" name="action" value="login_commit"/>
+					<_text constant="message_login" module="backend"/>
+				</div>
+				<div class="input_controls">
+					<label style="clear: both;">
+						<span><_text constant="username" module="backend"/></span>
+						<input type="text" name="username" value="$params['username']" eval="value" style="width: 160px;"/>
+					</label>
+					<label>
+						<span><_text constant="password" module="backend"/></span>
+						<input type="password" name="password" value="" style="width: 160px;"/>
+					</label>
+					<_if condition="$params['show_captcha']">
+						<label class="captcha">
+							<span><_text constant="captcha" module="backend"/></span>
+							<_module name="captcha" action="print_image_tag"/>
+							<input type="text" name="captcha" value=""/>
+						</label>
+					</_if>
+				</div>
+			</div>
+			<div style="clear: both;"/>
+		</div>
+		<_if condition="!empty($params['message'])">
+			<div class="error_message">
+				<_var name="$params['message']"/>
+			</div>
+		</_if>
+		<div class="button_bar">
+			<button type="submit"><_text constant="login" module="backend"/></button>
+		</div>
+	</form>
+</document>

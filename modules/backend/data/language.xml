@@ -8,6 +8,7 @@
 		<constant name="menu_system">System</constant>
 		<constant name="menu_modules">Modules</constant>
 		<constant name="menu_users">User management</constant>
+		<constant name="menu_logout">Logout</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">Modules</constant>
@@ -38,6 +39,20 @@
 		<constant name="disable">Disable</constant>
 		<constant name="close">Close</constant>
 		<constant name="cancel">Cancel</constant>
+
+		<!-- Login Related -->
+		<constant name="title_login">System Login</constant>
+		<constant name="title_logout">System Logout</constant>
+		<constant name="username">Username:</constant>
+		<constant name="password">Password:</constant>
+		<constant name="captcha">Captcha:</constant>
+		<constant name="login">Login</constant>
+		<constant name="logout">Logout</constant>
+		<constant name="message_login">In order to access administration area for this site you need to enter correct username and password. System is case sensitive!</constant>
+		<constant name="message_login_ok">You were successfully logged in. Please wait while being redirected!</constant>
+		<constant name="message_login_error">Invalid username and/or password.</constant>
+		<constant name="message_logout">You are about to logout from the system. Are you sure?</constant>
+		<constant name="message_logout_ok">Logout successful!</constant>
 	</language>
 
 	<language name="עברית" short="he" rtl="yes" default="yes">
@@ -46,6 +61,7 @@
 		<constant name="menu_system">מערכת</constant>
 		<constant name="menu_modules">מודולים</constant>
 		<constant name="menu_users">ניהול משתמשים</constant>
+		<constant name="menu_logout">Logout</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">מודולים</constant>
@@ -76,6 +92,20 @@
 		<constant name="disable">נטרל</constant>
 		<constant name="close">סגור</constant>
 		<constant name="cancel">בטל</constant>
+
+		<!-- Login Related -->
+		<constant name="title_login">System Login</constant>
+		<constant name="title_logout">System Logout</constant>
+		<constant name="username">שם משתמש:</constant>
+		<constant name="password">סיסמא:</constant>
+		<constant name="captcha">Captcha</constant>
+		<constant name="login">התחבר</constant>
+		<constant name="logout">התנתק</constant>
+		<constant name="message_login">In order to access administration area for this site you need to enter correct username and password. System is case sensitive!</constant>
+		<constant name="message_login_ok">כניסתך לממשק המנהל אושרה, אנא המתן להעברתך</constant>
+		<constant name="message_login_error">שם משתמש או סיסמא לא תקינים</constant>
+		<constant name="message_logout">You are about to logout from the system. Are you sure?</constant>
+		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
 	</language>
 
 </document>

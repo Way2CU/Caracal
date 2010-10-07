@@ -429,7 +429,7 @@ div.dialog div.container.loading {
 
 div.dialog div.container div.title_bar {
 	display: block;
-	
+
 	padding: 3px;
 
 	border-radius: 3px;
@@ -442,7 +442,7 @@ div.dialog div.container div.title_bar div.title {
 
 	padding-left: 2px;
 	padding-right: 2px;
-	
+
 	color: #BFBFBF;
 	font-weight: normal;
 }
@@ -472,6 +472,71 @@ div.dialog div.container div.title_bar a.close_button:hover {
 
 div.dialog div.container div.content {
 	display: block;
-	
+
 	padding: 5px;
+}
+
+/**
+ * Login Window
+ */
+
+div#login_window {
+	display: none;
+}
+
+div#login_window div.message {
+	display: block;
+
+	margin-bottom: 15px;
+}
+
+div#login_window div.error_message {
+	display: block;
+
+	margin-bottom: 15px;
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	background-color: #CC5858;
+
+	color: yellow;
+}
+
+div#login_window div.icon {
+	display: block;
+	width: 50px;
+
+	padding-right: 5px;
+	float: left;
+
+	text-align: center;
+}
+
+div#login_window div.controls {
+	display: block;
+	width: 270px;
+
+	float: left;
+}
+
+div#login_window div.input_controls {
+	display: block;
+
+	padding-left: 25px;
+}
+
+div#login_window div.input_controls input {
+	direction: ltr;
+}
+
+div#login_window div.input_controls label.captcha input {
+	display: block;
+	width: 116px;
+}
+
+div#login_window div.input_controls label.captcha img {
+	border: 1px solid #999999;
 }

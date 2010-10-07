@@ -282,6 +282,7 @@ class ItemManager {
 				break;
 		}
 
+		if (defined('SQL_DEBUG')) trigger_error($result);
 		return $result;
 	}
 

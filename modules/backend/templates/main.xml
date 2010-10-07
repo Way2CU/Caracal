@@ -2,10 +2,26 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="main_menu">
-		<_module name="backend" action="draw_menu" />
+		<_if condition="isset($_SESSION['logged']) and $_SESSION['logged']">
+			<_module name="backend" action="draw_menu" />
+		</_if>
 
 		<ol id="language_menu">
 			<_module name="language_menu" action="print" from_module="backend"/>
 		</ol>
 	</div>
+
+	<_if condition="!isset($_SESSION['logged']) or !$_SESSION['logged']">
+		<div id="login_window" class="window">
+			<div class="title"><_text constant="title_login" module="backend"/></div>
+			<div class="content">
+				<_module name="backend" action="login"/>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				window_system.attachToStructure('login_window', 350, false);
+			});
+		</script>
+	</_if>
 </document>

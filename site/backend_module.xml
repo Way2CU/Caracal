@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../units/schema/template.dtd">
-<document minimum_level="1">
+<document>
 	<_module name="backend" action="transfer_control"/>
 </document>

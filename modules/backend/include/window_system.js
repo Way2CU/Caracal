@@ -13,6 +13,9 @@
 
 var window_system = null;
 
+/**
+ * Dialog Constructor
+ */
 function Dialog() {
 	var self = this;  // used internaly for nested functions
 
@@ -28,20 +31,20 @@ function Dialog() {
 			.css('display', 'none')
 			.addClass('dialog')
 			.append(this.$dialog);
-	
+
 	this.$dialog
 			.addClass('container')
 			.append(this.$title_bar)
 			.append(this.$container);
-	
+
 	this.$title_bar
 			.addClass('title_bar')
 			.append(this.$close_button)
 			.append(this.$title);
-	
+
 	this.$title.addClass('title');
 	this.$container.addClass('content');
-	
+
 	this.$close_button
 			.addClass('close_button')
 			.click(function() {
@@ -118,10 +121,10 @@ function Dialog() {
 				.css(start_params)
 				.animate(end_params, 500);
 	};
-	
+
 	/**
 	 * Set dialog title
-	 * 
+	 *
 	 * @param string title
 	 */
 	this.setTitle = function(title) {
@@ -154,7 +157,17 @@ function Dialog() {
 	};
 }
 
-function Window(id, width, title, can_close, url) {
+/**
+ * Window Constructor
+ *
+ * @param string id
+ * @param integer width
+ * @param string title
+ * @param boolean can_close
+ * @param string url
+ * @param boolean existing_structure Allow creating window from existing structure
+ */
+function Window(id, width, title, can_close, url, existing_structure) {
 	var self = this;  // used for nested functions
 
 	this.id = id;
@@ -166,12 +179,21 @@ function Window(id, width, title, can_close, url) {
 	this.$parent = null;
 	this.window_system = null;
 
-	this.$container = $('<div id="'+id+'">').hide().addClass('window');
-	this.$title = $('<div>').addClass('title').html(title);
-	this.$content = $('<div>').addClass('content');
+	if (!existing_structure) {
+		// create new window structure
+		this.$container = $('<div id="'+id+'">').hide().addClass('window');
+		this.$title = $('<div>').addClass('title').html(title);
+		this.$content = $('<div>').addClass('content');
 
-	this.$container.append(this.$title);
-	this.$container.append(this.$content);
+		this.$container.append(this.$title);
+		this.$container.append(this.$content);
+
+	} else {
+		// inherit existing structure and configure it
+		this.$container = $('#' + id);
+		this.$title = this.$container.children('div.title').eq(0);
+		this.$content = this.$container.children('div.content').eq(0);
+	}
 
 	if (can_close) {
 		var $close_button = $('<a>').addClass('close_button');
@@ -288,6 +310,7 @@ function Window(id, width, title, can_close, url) {
 	 * @param string url
 	 */
 	this.loadContent = function(url) {
+		if (this.url == null) return;
 		if (url != undefined) this.url = url;
 
 		this.$container.addClass('loading');
@@ -384,6 +407,16 @@ function Window(id, width, title, can_close, url) {
 
 
 		// attach events
+		self.attachEvents()
+
+		// remove loading indicator
+		self.$container.removeClass('loading');
+	};
+
+	/**
+	 * Attach events to window content
+	 */
+	this.attachEvents = function() {
 		self.$content.find('form').each(function() {
 			if ($(this).find('input:file').length == 0) {
 				// normal case submission without file uploads
@@ -429,10 +462,7 @@ function Window(id, width, title, can_close, url) {
 				});
 			}
 		});
-
-		// remove loading indicator
-		self.$container.removeClass('loading');
-	};
+	}
 
 	/**
 	 * Event fired when there was an error loading AJAX data
@@ -543,12 +573,35 @@ function WindowSystem($container) {
 
 		} else {
 			// window does not exist, create it
-			var window = new Window(id, width, title, can_close, url);
+			var window = new Window(id, width, title, can_close, url, false);
 
 			this.list[id] = window;
 			window.attach(this);
 			window.show(true);
 			window.loadContent();
+		}
+	};
+
+	/**
+	 * Attach window class to existing structure
+	 *
+	 * @param string id
+	 * @param integer width
+	 * @param boolean can_close
+	 */
+	this.attachToStructure = function(id, width, can_close) {
+		if (this.windowExists(id)) {
+			// window already exists, reload content and show it
+			this.getWindow(id).focus()
+
+		} else {
+			// window does not exist, create it
+			var window = new Window(id, width, null, can_close, null, true);
+
+			this.list[id] = window;
+			window.attach(this);
+			window.attachEvents();
+			window.show(true);
 		}
 	};
 
