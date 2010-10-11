@@ -1059,7 +1059,9 @@ class news extends Module {
 
 		if (!is_null($group)) {
 			// group is set, get item ids and feed them to conditions list
-			$group_id = $group_manager->getItemValue('id', array('text_id' => $group));
+			if (!is_numeric($group))
+				$group_id = $group_manager->getItemValue('id', array('text_id' => $group)); else
+				$group_id = $group;
 
 			$item_list = $membership_manager->getItems(
 												array('news'),
@@ -1353,14 +1355,15 @@ class news extends Module {
 
 			// get build date
 			$membership_manager = NewsMembershipManager::getInstance();
-			$membership_list = $membership_manager->getItems(array('id'), array('group' => $item->group));
+			$membership_list = $membership_manager->getItems(array('news'), array('group' => $item->group));
+
 
 			// get guild date only if there are news items in group
 			if (count($membership_list) > 0) {
 				$id_list = array();
 
 				foreach($membership_list as $membership)
-					$id_list[] = $membership->id;
+					$id_list[] = $membership->news;
 
 				$news_manager = NewsManager::getInstance();
 				$news = $news_manager->getSingleItem(
