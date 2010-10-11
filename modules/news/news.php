@@ -93,7 +93,7 @@ class news extends Module {
 
 		} else {
 			// if we are not in backend section, create feed links
-
+			$this->createFeedLinks();
 		}
 	}
 
@@ -946,6 +946,36 @@ class news extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse($level);
+	}
+
+	/**
+	 * Add feed links to site head tag
+	 */
+	private function createFeedLinks() {
+		if (!class_exists('head_tag')) return;
+
+		$manager = NewsFeedManager::getInstance();
+
+		$items = $manager->getItems(
+							$manager->getFieldNames(),
+							array('active' => 1)
+						);
+
+		$head = call_user_func(head_tag, 'getInstance');
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$url = url_Make('show_feed', $this->name, array('id' => $item->id));
+
+				$head->addTag(
+							'link',
+							array(
+								'href'	=> $url,
+								'rel'	=> 'alternate',
+								'type'	=> 'application/rss+xml'
+							)
+						);
+			}
 	}
 
 	/**
