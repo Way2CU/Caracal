@@ -21,7 +21,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_news_list/>
+			<_news_list show_invisible="1"/>
 		</div>
 	</div>
 

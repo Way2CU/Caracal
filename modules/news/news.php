@@ -134,6 +134,10 @@ class news extends Module {
 					$this->tag_GroupList($level, $params, $children);
 					break;
 
+				case 'show_feed':
+					$this->tag_Feed($level, $params, $children);
+					break;
+
 				default:
 					break;
 			}
@@ -952,8 +956,11 @@ class news extends Module {
 	 * Add feed links to site head tag
 	 */
 	private function createFeedLinks() {
+		global $language;
+
 		if (!class_exists('head_tag')) return;
 
+		$head = head_tag::getInstance();
 		$manager = NewsFeedManager::getInstance();
 
 		$items = $manager->getItems(
@@ -961,16 +968,20 @@ class news extends Module {
 							array('active' => 1)
 						);
 
-		$head = call_user_func(head_tag, 'getInstance');
-
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				$url = url_Make('show_feed', $this->name, array('id' => $item->id));
+				$url = url_Make(
+							'show_feed',
+							$this->name,
+							array('id', $item->id),
+							array('language', $language)
+						);
 
 				$head->addTag(
 							'link',
 							array(
 								'href'	=> $url,
+								'title'	=> $item->title[$language],
 								'rel'	=> 'alternate',
 								'type'	=> 'application/rss+xml'
 							)
@@ -1038,6 +1049,9 @@ class news extends Module {
 		$group = isset($tag_params['group']) ? escape_chars($tag_params['group']) : null;
 		$conditions = array();
 
+		if (!isset($tag_params['show_invisible']))
+			$conditions['visible'] = 1;
+
 		$manager = NewsManager::getInstance();
 		$membership_manager = NewsMembershipManager::getInstance();
 		$group_manager = NewsGroupManager::getInstance();
@@ -1089,6 +1103,7 @@ class news extends Module {
 							'id'			=> $item->id,
 							'time'			=> $time,
 							'date'			=> $date,
+							'timestamp'		=> $timestamp,
 							'author'		=> $admin_manager->getItemValue(
 																'fullname',
 																array('id' => $item->author)
@@ -1313,6 +1328,69 @@ class news extends Module {
 				$template->setLocalParams($params);
 				$template->parse($level);
 			}
+	}
+
+	/**
+	 * Tag handler for feed tag
+	 *
+	 * @param integer $level
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Feed($level, $tag_params, $children) {
+		$id = isset($tag_params['id']) ? $tag_params['id'] : null;
+		if (is_null($id)) $id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		if (is_null($id)) return;
+
+		$manager = NewsFeedManager::getInstance();
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			if (!$item->active) return;  // if item is not active, just exit
+
+			$template = new TemplateHandler('feed_base.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			// get build date
+			$membership_manager = NewsMembershipManager::getInstance();
+			$membership_list = $membership_manager->getItems(array('id'), array('group' => $item->group));
+
+			// get guild date only if there are news items in group
+			if (count($membership_list) > 0) {
+				$id_list = array();
+
+				foreach($membership_list as $membership)
+					$id_list[] = $membership->id;
+
+				$news_manager = NewsManager::getInstance();
+				$news = $news_manager->getSingleItem(
+													array('timestamp'),
+													array('id' => $id_list),
+													array('timestamp'),
+													false
+												);
+
+				if (is_object($news))
+					$build_date = strtotime($news->timestamp);
+			} else {
+				// drop to default build date, 1970 ^^
+				$build_date = 0;
+			}
+
+			// prepare params
+			$params = array(
+						'title'			=> $item->title,
+						'description'	=> $item->description,
+						'group'			=> $item->group,
+						'news_count'	=> $item->news_count,
+						'build_date'	=> $build_date
+					);
+
+			$template->registerTagHandler('_news_list', &$this, 'tag_NewsList');
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 
 	/**
