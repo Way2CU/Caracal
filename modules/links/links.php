@@ -892,6 +892,7 @@ class links extends Module {
 		$membership_manager = LinkMembershipManager::getInstance();
 		$conditions = array();
 
+		define('SQL_DEBUG', 1);
 		// save some CPU time by getting this early
 		if (class_exists('gallery')) {
 			$use_images = true;
@@ -913,8 +914,13 @@ class links extends Module {
 											);
 
 			$item_list = array();
-			foreach($items as $item)
-				$item_list[] = $item->link;
+
+			if (count($items) > 0) {
+				foreach($items as $item)
+					$item_list[] = $item->link;
+			} else {
+				return;  // no items were found in group, nothing to show
+			}
 
 			$conditions['id'] = $item_list;
 		}
