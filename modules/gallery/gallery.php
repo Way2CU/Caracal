@@ -1809,7 +1809,8 @@ class gallery extends Module {
 
 		$image = $manager->getSingleItem(
 										array('filename'),
-										array('group' => is_numeric($group) ? $group : $group->id)
+										array('group' => is_array($group) ? $group : $group->id),
+										array('RAND()')
 									);
 
 		if (is_object($image))
@@ -1829,14 +1830,20 @@ class gallery extends Module {
 		$group_manager = GalleryGroupManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 
-		$item = $membership_manager->getSingleItem(
-												array('group'),
-												array('container' => $container->id),
-												array('RAND()')
-											);
+		$items = $membership_manager->getItems(
+											array('group'),
+											array('container' => $container->id),
+											array('RAND()')
+										);
 
-		if (is_object($item))
-			$result = $this->_getGroupImage($item->group);
+		if (count($items) > 0) {
+			$groups = array();
+
+			foreach($items as $item)
+				$groups[] = $item->group;
+
+			$result = $this->_getGroupImage($groups);
+		}
 
 		return $result;
 	}
