@@ -892,7 +892,6 @@ class links extends Module {
 		$membership_manager = LinkMembershipManager::getInstance();
 		$conditions = array();
 
-		define('SQL_DEBUG', 1);
 		// save some CPU time by getting this early
 		if (class_exists('gallery')) {
 			$use_images = true;
