@@ -21,7 +21,9 @@ div.window div.title {
 	border-bottom: 0px;
 	border-radius: 7px 7px 0px 0px;
 	-moz-border-radius: 7px 7px 0px 0px;
+
 	background-color: #1A1A1A;
+	-webkit-background-clip: padding-box;
 
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
@@ -166,6 +168,7 @@ div.window div.content textarea {
 	background-color: #ffffff;
 
 	color: #444444;
+	font-family: Ubuntu, sans-serif, Arial, Tahoma;
 }
 
 div.window div.content input[type=checkbox] {
@@ -210,6 +213,7 @@ div.window button {
 	background-position: top left;
 
 	color: #000000;
+	font-family: Ubuntu, sans-serif, Arial, Tahoma;
 	font-weight: normal;
 }
 

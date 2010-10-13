@@ -4,6 +4,7 @@
 	http://www.rcf-group.com
 */
 
+@import "fonts.css";
 @import "window.css";
 @import "menus.css";
 
@@ -17,7 +18,7 @@ body {
 	background-position: top left;
 
 	color: #333333;
-	font-family: sans-serif;
+	font-family: Ubuntu, sans-serif, Arial, Tahoma;
 	font-size: 12px;
 }
 
@@ -47,7 +48,6 @@ div#copyright {
 	bottom: 0px;
 
 	color: #608dc7;
-	font-family: Tahoma, Verdana, Helvetica;
 	font-size: 10px;
 	text-align: right;
 
