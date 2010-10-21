@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_username" module="chat"/></span>
+			<input type="text" name="username" value="$params['username']" eval="value" style="width: 270px;" maxlength="45"/>
+		</label>
+		<label>
+			<span><_text constant="label_display_name" module="chat"/></span>
+			<input type="text" name="display_name" value="$params['display_name']" eval="value" style="width: 270px;" maxlength="45"/>
+		</label>
+		<label>
+			<span><_text constant="label_change_password" module="chat"/></span>
+			<input type="text" name="password" style="width: 270px;" maxlength="45"/>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_temp" module="chat"/></span>
+			<_if condition="$params['temp'] == 1">
+				<input type="checkbox" name="temp" checked="checked"/>
+			</_if>
+			<_if condition="$params['temp'] != 1">
+				<input type="checkbox" name="temp"/>
+			</_if>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

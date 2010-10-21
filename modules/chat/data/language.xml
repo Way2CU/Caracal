@@ -4,33 +4,70 @@
 	<language short="en">
 		<constant name="menu_chat">Chat</constant>
 		<constant name="menu_join_chat">Join chat</constant>
+		<constant name="menu_users">Manage users</constant>
+		<constant name="menu_rooms">Manage chat rooms</constant>
+		<constant name="menu_admins">Administrators</constant>
 		<constant name="menu_settings">Settings</constant>
 
 		<constant name="title_chat">Chat</constant>
 		<constant name="title_chat_settings">Chat: Settings</constant>
 		<constant name="title_channel_add">Chat: Add Channel</constant>
+		<constant name="title_chat_users">Chat: Manage users</constant>
+		<constant name="title_chat_users_new">Chat: Add new user</constant>
+		<constant name="title_chat_users_change">Chat: Change user data</constant>
+		<constant name="title_chat_users_delete">Chat: Delete user</constant>
+		<constant name="title_chat_rooms">Chat: Manage rooms</constant>
+		<constant name="title_chat_rooms_new">Chat: Add new room</constant>
+
+		<constant name="message_chat_user_saved">User data was saved.</constant>
+		<constant name="message_chat_user_delete">You are about to remove the following user. Are you sure?</constant>
+		<constant name="message_chat_user_deleted">User was successfully removed.</constant>
+		<constant name="message_chat_room_saved">Chat room data was saved.</constant>
 
 		<constant name="column_channel">Channel</constant>
 		<constant name="column_users">Users</constant>
+		<constant name="column_username">Username</constant>
+		<constant name="column_display_name">Display name</constant>
+		<constant name="column_temp">Temp</constant>
+		<constant name="column_name">Name</constant>
+		<constant name="column_limit">Limit</constant>
+		<constant name="column_protected">Prot.</constant>
 
 		<constant name="label_channel">Channel:</constant>
 		<constant name="label_chat_log">Chat log:</constant>
 		<constant name="label_online_users">Users online:</constant>
 		<constant name="label_message">Message:</constant>
+		<constant name="label_username">Username:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_room_password"><![CDATA[Password <small>(optional)</small>:]]></constant>
+		<constant name="label_change_password"><![CDATA[Change password <small>(otherwise, leave blank)</small>:]]></constant>
+		<constant name="label_display_name">Display name:</constant>
+		<constant name="label_temp">This user is temporary</constant>
+		<constant name="label_room_name">Room name:</constant>
+		<constant name="label_description">Description:</constant>
+		<constant name="label_limit">Limit:</constant>
 
 		<constant name="add_channel">Add channel</constant>
 	</language>
 	<language short="he">
 		<constant name="menu_chat">צט</constant>
 		<constant name="menu_join_chat">הצטרף</constant>
+		<constant name="menu_users">Manage users</constant>
+		<constant name="menu_rooms">Manage chat rooms</constant>
+		<constant name="menu_admins">Administrators</constant>
 		<constant name="menu_settings">הגדרות</constant>
 
 		<constant name="title_chat">צט</constant>
 		<constant name="title_chat_settings">צט: הגדרות</constant>
 		<constant name="title_channel_add">צט הוסף ערוץ</constant>
+		<constant name="title_chat_users">Chat: Manage users</constant>
+		<constant name="title_chat_users_new">Chat: Add new user</constant>
 
 		<constant name="column_channel">ערוץ</constant>
 		<constant name="column_users">משתמשים</constant>
+		<constant name="column_username">Username</constant>
+		<constant name="column_display_name">Display name</constant>
+		<constant name="column_temp">Temp</constant>
 
 		<constant name="label_channel">ערוץ:</constant>
 		<constant name="label_chat_log">צט log:</constant>

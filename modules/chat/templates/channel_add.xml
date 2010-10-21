@@ -2,8 +2,8 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<input type="hidden" name="hidden_field" value="$params['some_value']" eval="value"/>
 		<label>
+			<input type="hidden" name="hidden_field" value="$params['some_value']" eval="value"/>
 			<span><_text constant="label"/></span>
 			<input type="text" name="name" style="width: 270px;" maxlength="30"/>
 		</label>

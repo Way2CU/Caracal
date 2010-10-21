@@ -433,10 +433,12 @@ class backend extends Module {
 			$manager->deleteData(array('name' => $module_name));
 
 			if (class_exists($module_name)) {
-				$module = call_user_func($module_name, 'getInstance');
+				$module = call_user_func(array($module_name, 'getInstance'));
 				$module->onDisable();
 
 				$message = $this->getLanguageConstant('message_module_disabled');
+			} else {
+				$message = $this->getLanguageConstant('message_module_not_active');
 			}
 
 		} else {

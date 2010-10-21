@@ -25,6 +25,7 @@
 		<constant name="message_module_disable">The following module will be disabled. This operation will remove all module specific settings. Are you sure?</constant>
 		<constant name="message_module_disabled">Module has been disabled.</constant>
 		<constant name="message_module_protected">This module is protected. You are not allowed to change it.</constant>
+		<constant name="message_module_not_active">Module is not active. You can't disable inactive module!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>
@@ -78,6 +79,7 @@
 		<constant name="message_module_disable">המודול הבא יבוטל, הדבר ימחק את הגדרות המודול - האם אתה בטוח?</constant>
 		<constant name="message_module_disabled">המודול נוטרל</constant>
 		<constant name="message_module_protected">המודול מוגן, אינך יכול לשנותו</constant>
+		<constant name="message_module_not_active">Module is not active. You can't disable inactive module!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">שם</constant>

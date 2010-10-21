@@ -15,9 +15,9 @@ class youtube extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
-		
+
 		// load module style and scripts
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
@@ -52,14 +52,14 @@ class youtube extends Module {
 			$backend->addMenu($this->name, $youtube_menu);
 		}
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 
@@ -76,6 +76,10 @@ class youtube extends Module {
 			switch ($params['action']) {
 				case 'show':
 					$this->tag_Video($level, $params, $children);
+					break;
+
+				case 'show_list':
+					$this->tag_VideoList($level, $params, $children);
 					break;
 
 				case 'show_thumbnail':
@@ -128,15 +132,21 @@ class youtube extends Module {
 	public function onInit() {
 		global $db, $db_active;
 
+		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `youtube_video` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`text_id` VARCHAR (32) NULL ,
 				`video_id` varchar(11) COLLATE utf8_bin NOT NULL,
-				`title` varchar(255) COLLATE utf8_bin NOT NULL,
-				PRIMARY KEY (`id`),
+			";
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` varchar(255) COLLATE utf8_bin NOT NULL,";
+
+		$sql .= "PRIMARY KEY (`id`),
 				INDEX (`text_id`)
-			) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 
 		if ($db_active == 1) $db->query($sql);
 	}
@@ -153,7 +163,7 @@ class youtube extends Module {
 
 	/**
 	 * Show backend video list with options
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function showList($level) {
@@ -179,7 +189,7 @@ class youtube extends Module {
 
 	/**
 	 * Add video form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function addVideo($level) {
@@ -198,7 +208,7 @@ class youtube extends Module {
 
 	/**
 	 * Change video data form
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function changeVideo($level) {
@@ -226,14 +236,14 @@ class youtube extends Module {
 
 	/**
 	 * Save modified or new video data
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	private function saveVideo($level) {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
-		$title = fix_chars($_REQUEST['title']);
+		$title = fix_chars($this->getMultilanguageField('title'));
 
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -368,30 +378,8 @@ class youtube extends Module {
 	}
 
 	/**
-	 * Handler for _thumbnail tag
-	 * 
-	 * @param integer $level
-	 * @param array $params
-	 * @param array $children
-	 */	
-	public function tag_Thumbnail($level, $params, $children) {
-
-	}
-
-	/**
-	 * Handler for _thumbnail_list tag
-	 * 
-	 * @param integer $level
-	 * @param array $params
-	 * @param array $children
-	 */	
-	public function tag_ThumbnailList($level, $params, $children) {
-
-	}
-
-	/**
 	 * Handler for _video tag which embeds player in page.
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
@@ -432,12 +420,14 @@ class youtube extends Module {
 
 	/**
 	 * Handler of _video_list tag used to print list of all videos.
-	 * 
+	 *
 	 * @param $level
-	 * @param $params
+	 * @param $tag_params
 	 * @param $children
 	 */
-	public function tag_VideoList($level, $params, $children) {
+	public function tag_VideoList($level, $tag_params, $children) {
+		global $language;
+
 		$manager = YouTube_VideoManager::getInstance();
 
 		$items = $manager->getItems(
@@ -446,10 +436,14 @@ class youtube extends Module {
 								array('id')
 							);
 
-		$template = new TemplateHandler(
-								isset($params['template']) ? $params['template'] : 'video_item.xml',
-								$this->path.'templates/'
-							);
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('video_item.xml', $this->path.'templates/');
+		}
+
 		$template->setMappedModule($this->name);
 
 		if (count($items) > 0)
@@ -458,6 +452,7 @@ class youtube extends Module {
 							'id'			=> $item->id,
 							'video_id'		=> $item->video_id,
 							'title'			=> $item->title,
+							'thumbnail'		=> $this->getThumbnailURL($item->video_id),
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -495,7 +490,7 @@ class youtube extends Module {
 													window_Open(
 														$this->name.'_video_preview', 	// window id
 														400,							// width
-														$item->title, 					// title
+														$item->title[$language], 		// title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -550,16 +545,16 @@ class YouTube_VideoManager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('video_id', 'varchar');
-		$this->addProperty('title', 'varchar');
+		$this->addProperty('title', 'ml_varchar');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 }

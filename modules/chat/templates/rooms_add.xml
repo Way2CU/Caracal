@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="chat_room_add_form">
+		<label>
+			<span><_text constant="label_room_name" module="chat"/></span>
+			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="45"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="chat"/></span>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 100px;"><_raw text=""/></textarea>
+		</label>
+		<label>
+			<span><_text constant="label_limit" module="chat"/></span>
+			<input type="text" name="limit" value="0" style="width: 70px;" maxlength="5"/>
+		</label>
+		<label>
+			<span><_text constant="label_room_password" module="chat"/></span>
+			<input type="text" name="password" style="width: 120px;"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('chat_room_add_form');
+	</script>
+</document>

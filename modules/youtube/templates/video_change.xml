@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" eval="action" method="POST" id="video_change_form">
 		<input type="hidden" name="id" value="$params['id']" eval="value"/>
 		<label>
 			<span><_text constant="label_text_id" module="youtube"/></span>
@@ -13,7 +13,8 @@
 		</label>
 		<label>
 			<span><_text constant="label_title" module="youtube"/></span>
-			<input type="text" name="title" style="width: 330px;" maxlength="255" value="$params['title']" eval="value"/>
+			<input type="text" name="title" class="multi-language" style="width: 330px;" maxlength="255"/>
+			<_language_data param="title"/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
@@ -23,4 +24,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		new LanguageSelector('video_change_form');
+	</script>
 </document>

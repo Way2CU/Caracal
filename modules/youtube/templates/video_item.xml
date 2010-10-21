@@ -6,7 +6,7 @@
 			<_var name="$params['video_id']"/>
 		</span>
 		<span class="column" style="width: 300px">
-			<_var name="$params['title']"/>
+			<_var name="$params['title'][$language]"/>
 		</span>
 		<span class="column">
 			<_var name="$params['item_change']"/><_raw text=" "/>

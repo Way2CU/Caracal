@@ -3,6 +3,9 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
+		<_var name="$params['link_users']"/>
+		<_var name="$params['link_rooms']"/>
+		<_var name="$params['link_admins']"/>
 		<_var name="$params['link_settings']"/>
 	</div>
 
