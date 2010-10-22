@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="chat_room_add_form">
+		<label>
+			<span><_text constant="label_username" module="chat"/></span>
+			<select name="user" style="width: 270px;">
+				<_module name="chat" action="show_user_list" template="users_option.xml" local="1"/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_room_name" module="chat"/></span>
+			<select name="room" style="width: 270px;">
+				<_module name="chat" action="show_room_list" template="rooms_option.xml" local="1"/>
+			</select>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

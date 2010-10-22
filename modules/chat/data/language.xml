@@ -18,11 +18,21 @@
 		<constant name="title_chat_users_delete">Chat: Delete user</constant>
 		<constant name="title_chat_rooms">Chat: Manage rooms</constant>
 		<constant name="title_chat_rooms_new">Chat: Add new room</constant>
+		<constant name="title_chat_rooms_change">Chat: Change room data</constant>
+		<constant name="title_chat_rooms_delete">Chat: Delete room</constant>
+		<constant name="title_chat_admins">Chat: Room administrators</constant>
+		<constant name="title_chat_admins_new">Chat: Create new administrator</constant>
+		<constant name="title_chat_admins_delete">Chat: Delete administrator</constant>
 
 		<constant name="message_chat_user_saved">User data was saved.</constant>
-		<constant name="message_chat_user_delete">You are about to remove the following user. Are you sure?</constant>
+		<constant name="message_chat_user_delete">You are about to remove the following user along with any granted administration rights. Are you sure?</constant>
 		<constant name="message_chat_user_deleted">User was successfully removed.</constant>
 		<constant name="message_chat_room_saved">Chat room data was saved.</constant>
+		<constant name="message_chat_room_delete">You are about to remove the following chat room. Are you sure?</constant>
+		<constant name="message_chat_room_deleted">Chat room was successfully removed.</constant>
+		<constant name="message_chat_admin_saved">Administrator access was granted.</constant>
+		<constant name="message_chat_admin_delete">You are about to revoke the administrator rights for the following user / room. Are you sure?</constant>
+		<constant name="message_chat_admin_deleted">Administration access was revoked.</constant>
 
 		<constant name="column_channel">Channel</constant>
 		<constant name="column_users">Users</constant>
@@ -46,6 +56,7 @@
 		<constant name="label_room_name">Room name:</constant>
 		<constant name="label_description">Description:</constant>
 		<constant name="label_limit">Limit:</constant>
+		<constant name="label_text_id">Text ID:</constant>
 
 		<constant name="add_channel">Add channel</constant>
 	</language>

@@ -92,6 +92,7 @@ class chat extends Module {
 										),
 								$level=5
 							));
+/*
 			$chat_menu->addSeparator(5);
 			$chat_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
@@ -105,6 +106,7 @@ class chat extends Module {
 										),
 								$level=5
 							));
+*/
 
 			$backend->addMenu($this->name, $chat_menu);
 		}
@@ -131,6 +133,18 @@ class chat extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'show_user_list':
+					$this->tag_UserList($level, $params, $children);
+					break;
+
+				case 'show_room_list':
+					$this->tag_RoomList($level, $params, $children);
+					break;
+
+				case 'show_admin_list':
+					$this->tag_AdminList($level, $params, $children);
+					break;
+
 				default:
 					break;
 			}
@@ -190,6 +204,36 @@ class chat extends Module {
 					$this->saveRoom($level);
 					break;
 
+				case 'rooms_delete':
+					$this->deleteRoom($level);
+					break;
+
+				case 'rooms_delete_commit':
+					$this->deleteRoom_Commit($level);
+					break;
+
+				// ---
+
+				case 'admins':
+					$this->showAdmins($level);
+					break;
+
+				case 'admins_new':
+					$this->addAdmin($level);
+					break;
+
+				case 'admins_save':
+					$this->saveAdmin($level);
+					break;
+
+				case 'admins_delete':
+					$this->deleteAdmin($level);
+					break;
+
+				case 'admins_delete_commit':
+					$this->deleteAdmin_Commit($level);
+					break;
+
 				default:
 					break;
 			}
@@ -220,7 +264,8 @@ class chat extends Module {
 		if ($db_active == 1) $db->query($sql);
 
 		$sql = "CREATE TABLE `chat_rooms` (
-					`id` INT NOT NULL AUTO_INCREMENT ,";
+					`id` INT NOT NULL AUTO_INCREMENT ,
+					`text_id` VARCHAR(45) NOT NULL DEFAULT '',";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR(45) NOT NULL ,";
@@ -340,18 +385,20 @@ class chat extends Module {
 		$template = new TemplateHandler('users_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
-		$params = array(
-					'id'			=> $item->id,
-					'username'		=> unfix_chars($item->username),
-					'display_name'	=> unfix_chars($item->display_name),
-					'temp'			=> $item->temp,
-					'form_action'	=> backend_UrlMake($this->name, 'users_save'),
-					'cancel_action'	=> window_Close('chat_users_change')
-				);
+		if (is_object($item)) {
+			$params = array(
+						'id'			=> $item->id,
+						'username'		=> unfix_chars($item->username),
+						'display_name'	=> unfix_chars($item->display_name),
+						'temp'			=> $item->temp,
+						'form_action'	=> backend_UrlMake($this->name, 'users_save'),
+						'cancel_action'	=> window_Close('chat_users_change')
+					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse($level);
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 
 	/**
@@ -441,8 +488,10 @@ class chat extends Module {
 	private function deleteUser_Commit($level) {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ChatUserManager::getInstance();
+		$admin_manager = ChatAdminManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
+		$admin_manager->deleteData(array('user' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -509,6 +558,30 @@ class chat extends Module {
 	 * @param integer $level
 	 */
 	private function changeRoom($level) {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ChatRoomManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$template = new TemplateHandler('rooms_change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		if (is_object($item)) {
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'name'			=> unfix_chars($item->name),
+						'description'	=> $item->description,
+						'limit'			=> $item->limit,
+						'password'		=> $item->password,
+						'form_action'	=> backend_UrlMake($this->name, 'rooms_save'),
+						'cancel_action'	=> window_Close('chat_rooms_change')
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 
 	/**
@@ -521,6 +594,7 @@ class chat extends Module {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
+					'text_id'		=> escape_chars($_REQUEST['text_id']),
 					'name'			=> fix_chars($this->getMultilanguageField('name')),
 					'description'	=> escape_chars($this->getMultilanguageField('description')),
 					'limit'			=> fix_id($_REQUEST['limit'])
@@ -546,6 +620,215 @@ class chat extends Module {
 					'message'	=> $this->getLanguageConstant('message_chat_room_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('chat_rooms'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Print confirmation dialog before removing room
+	 *
+	 * @param integer $level
+	 */
+	private function deleteRoom($level) {
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = ChatRoomManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_chat_room_delete"),
+					'name'			=> $item->name[$language],
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'chat_rooms_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'rooms_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('chat_rooms_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Remove room and it's admins
+	 *
+	 * @param integer $level
+	 */
+	private function deleteRoom_Commit($level) {
+		$id = fix_chars($_REQUEST['id']);
+		$manager = ChatRoomManager::getInstance();
+		$admin_manager = ChatAdminManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+		$admin_manager->deleteData(array('room' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_chat_room_deleted"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close('chat_rooms_delete').";".window_ReloadContent('chat_rooms')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Show admin management form
+	 *
+	 * @param integer $level
+	 */
+	private function showAdmins($level) {
+		$template = new TemplateHandler('admins_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'		=> window_OpenHyperlink(
+										$this->getLanguageConstant('new'),
+										'chat_admins_new', 400,
+										$this->getLanguageConstant('title_chat_admins_new'),
+										true, false,
+										$this->name,
+										'admins_new'
+									),
+					);
+
+		$template->registerTagHandler('_admin_list', &$this, 'tag_AdminList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Create admin form
+	 *
+	 * @param integer $level
+	 */
+	private function addAdmin($level) {
+		$template = new TemplateHandler('admins_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'admins_save'),
+					'cancel_action'	=> window_Close('chat_admins_new')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Save new admin data
+	 *
+	 * @param integer $level
+	 */
+	private function saveAdmin($level) {
+		$manager = ChatAdminManager::getInstance();
+
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$data = array(
+					'user'	=> fix_id($_REQUEST['user']),
+					'room'	=> fix_id($_REQUEST['room'])
+				);
+
+		$manager->insertData($data);
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_chat_admin_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('chat_admins_new').";".window_ReloadContent('chat_admins'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Delete admin access
+	 *
+	 * @param integer $level
+	 */
+	private function deleteAdmin($level) {
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = ChatAdminManager::getInstance();
+		$user_manager = ChatUserManager::getInstance();
+		$room_manager = ChatRoomManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$user = $user_manager->getItemValue('display_name', array('id' => $item->user));
+		$room = $room_manager->getItemValue('name', array('id' => $item->room));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_chat_admin_delete"),
+					'name'			=> "{$user} / {$room}",
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'chat_admins_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'admins_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('chat_admins_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse($level);
+	}
+
+	/**
+	 * Remove administrator
+	 *
+	 * @param integer $level
+	 */
+	private function deleteAdmin_Commit($level) {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ChatAdminManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_chat_admin_deleted"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close('chat_admins_delete').";".window_ReloadContent('chat_admins')
 				);
 
 		$template->restoreXML();
@@ -701,10 +984,10 @@ class chat extends Module {
 	 * Tag handler for room lists
 	 *
 	 * @param integer $level
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_RoomList($level, $params, $children) {
+	public function tag_RoomList($level, $tag_params, $children) {
 		$manager = ChatRoomManager::getInstance();
 
 		$items = $manager->getItems($manager->getFieldNames(), array(), array('name'));
@@ -732,7 +1015,7 @@ class chat extends Module {
 													window_Open(
 														'chat_rooms_change', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_chat_room_change'), // title
+														$this->getLanguageConstant('title_chat_rooms_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -748,7 +1031,7 @@ class chat extends Module {
 													window_Open(
 														'chat_rooms_delete', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_chat_room_delete'), // title
+														$this->getLanguageConstant('title_chat_rooms_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -767,6 +1050,77 @@ class chat extends Module {
 			}
 	}
 
+	/**
+	 * Tag handler for admin lists
+	 *
+	 * @param integer $level
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_AdminList($level, $tag_params, $children) {
+		$manager = ChatAdminManager::getInstance();
+		$user_manager = ChatUserManager::getInstance();
+		$room_manager = ChatRoomManager::getInstance();
+		$conditions = array();
+
+		// if room was specified, print only admins for that room
+		if (isset($tag_params['room']) && !empty($tag_params['room'])) {
+			$room = escape_chars($tag_params['room']);
+
+			if (is_numeric($room))
+				$room_id = $room; else
+				$room_id = $room_manger->getItemValue('id', array('text_id' => $room));
+
+			$conditions['room'] = $room_id;
+		}
+
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, array('user', 'room'));
+
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('admins_list_item.xml', $this->path.'templates/');
+		}
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$user = $user_manager->getSingleItem(array('display_name'), array('id' => $item->user));
+				$room = $room_manager->getSingleItem(array('name'), array('id' => $item->room));
+				$params = array(
+							'id'			=> $item->id,
+							'user'			=> $item->user,
+							'room'			=> $item->room,
+							'display_name'	=> $user->display_name,
+							'room_name'		=> $room->name,
+							'item_delete'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('delete'),
+													window_Open(
+														'chat_admins_delete', 	// window id
+														400,				// width
+														$this->getLanguageConstant('title_chat_admins_delete'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'admins_delete'),
+															array('id', $item->id)
+														)
+													)
+												),
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);
+			}
+	}
+
+	/**
+	 * Ajax handler fro checking if username exists
+	 */
 	private function ajax_CheckUsername() {
 		$manager = ChatUserManager::getInstance();
 
@@ -816,6 +1170,7 @@ class ChatRoomManager extends ItemManager {
 		parent::__construct('chat_rooms');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
 		$this->addProperty('limit', 'smallint');

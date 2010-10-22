@@ -3,13 +3,12 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 150px;">
-			<!-- Column 1 -->
+			<_var name="$params['display_name']"/>
 		</span>
-		<span class="column" style="width: 90px; text-align: center;">
-			<!-- Column 2 -->
+		<span class="column" style="width: 150px;">
+			<_var name="$params['room_name'][$language]"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
 			<_var name="$params['item_delete']"/>
 		</span>
 	</div>

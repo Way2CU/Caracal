@@ -3,24 +3,27 @@
 <document>
 	<form action="$params['form_action']" eval="action" method="POST" id="chat_room_add_form">
 		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_text_id" module="chat"/></span>
-			<input type="text" name="text_id" style="width: 270px;" maxlength="45"/>
+			<input type="text" name="text_id" value="$params['text_id']" eval="value" style="width: 270px;" maxlength="45"/>
 		</label>
 		<label>
 			<span><_text constant="label_room_name" module="chat"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="45"/>
+			<_language_data param="name"/>
 		</label>
 		<label>
 			<span><_text constant="label_description" module="chat"/></span>
 			<textarea name="description" class="multi-language" style="width: 360px; height: 100px;"><_raw text=""/></textarea>
+			<_language_data param="description"/>
 		</label>
 		<label>
 			<span><_text constant="label_limit" module="chat"/></span>
-			<input type="text" name="limit" value="0" style="width: 70px;" maxlength="5"/>
+			<input type="text" name="limit" value="$params['limit']" eval="value" style="width: 70px;" maxlength="5"/>
 		</label>
 		<label>
 			<span><_text constant="label_room_password" module="chat"/></span>
-			<input type="text" name="password" style="width: 120px;"/>
+			<input type="text" name="password" value="$params['password']" eval="value" style="width: 120px;"/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
