@@ -14,7 +14,7 @@ class _blank extends Module {
 	 */
 	protected function __construct() {
 		parent::__construct(__FILE__);
-		
+
 		// load module style and scripts
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
@@ -25,18 +25,18 @@ class _blank extends Module {
 		// register backend
 		if (class_exists('backend')) {
 			$backend = backend::getInstance();
-		}		
+		}
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 
 	/**
 	 * Transfers control to module functions
@@ -87,23 +87,23 @@ class _blank extends Module {
 
 class SomeManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::ItemManager('table_name');
+		parent::__construct('table_name');
 
 		$this->addProperty('id', 'int');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 }

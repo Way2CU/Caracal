@@ -298,24 +298,26 @@ class articles extends Module {
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
-		$template = new TemplateHandler('change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		if (is_object($item)) {
+			$template = new TemplateHandler('change.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+			$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 
-		$params = array(
-					'id'			=> $item->id,
-					'text_id'		=> $item->text_id,
-					'group'			=> $item->group,
-					'title'			=> unfix_chars($item->title),
-					'content'		=> $item->content,
-					'visible' 		=> $item->visible,
-					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
-					'cancel_action'	=> window_Close('articles_change')
-				);
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'group'			=> $item->group,
+						'title'			=> unfix_chars($item->title),
+						'content'		=> $item->content,
+						'visible' 		=> $item->visible,
+						'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
+						'cancel_action'	=> window_Close('articles_change')
+					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse($level);
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse($level);
+		}
 	}
 
 	/**

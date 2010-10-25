@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_tips">Tips</constant>
+		<constant name="menu_tips_manage">Edit tips</constant>
+
+		<constant name="title_tips_manage">Tips</constant>
+		<constant name="title_tips_new">Tips: Create new</constant>
+		<constant name="title_tips_change">Tips: Change tip data</constant>
+		<constant name="title_tips_delete">Tips: Delete tip</constant>
+
+		<constant name="message_tip_saved">Tip data was saved.</constant>
+		<constant name="message_tip_delete">You are about to remove the following tip. Are you sure?</constant>
+		<constant name="message_tip_deleted">Specified tip was removed from the system.</constant>
+
+		<constant name="column_tip">Tip</constant>
+
+		<constant name="label_content">Content:</constant>
+		<constant name="label_visible">This tip is visible</constant>
+	</language>
+</document>

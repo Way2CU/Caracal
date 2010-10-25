@@ -201,7 +201,7 @@ class ItemManager {
 	public function getItemValue($item, $conditionals=array()) {
 		global $db, $db_active, $language;
 
-		if (in_array($this->field_types[$item], $this->ml_fields))
+		if (in_array($item, $this->field_types) && in_array($this->field_types[$item], $this->ml_fields))
 			$item = "{$item}_{$language}";
 
 		$result = null;
