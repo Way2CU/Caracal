@@ -350,7 +350,7 @@ class tips extends Module {
 				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
 				$template = new TemplateHandler($tag_params['template']);
 		} else {
-			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
+			$template = new TemplateHandler('tip.xml', $this->path.'templates/');
 		}
 		$template->setMappedModule($this->name);
 

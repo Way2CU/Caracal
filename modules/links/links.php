@@ -358,7 +358,7 @@ class links extends Module {
 		$gallery_addon = '';
 
 		// if images are in use and specified
-		if (class_exists('gallery') && isset($_FILES['image'])) {
+		if (class_exists('gallery') && isset($_FILES['image']) && !empty($_FILES['images'])) {
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
 
@@ -901,11 +901,10 @@ class links extends Module {
 			$use_images = false;
 		}
 
-		if ((isset($tag_params['sponsored']) && $tag_params['sponsored'] == '1') ||
-		(isset($tag_params['group']) && $tag_params['group'] == 'sponsored' ))
+		if (isset($tag_params['sponsored']) && $tag_params['sponsored'] == '1')
 			$conditions['sponsored'] = 1;
 
-		if (isset($tag_params['group']) && $tag_params['group'] != 'sponsored') {
+		if (isset($tag_params['group'])) {
 			$group = $tag_params['group'];
 			$items = $membership_manager->getItems(
 												array('link'),
@@ -943,7 +942,7 @@ class links extends Module {
 		$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');
 
 		// give the ability to limit number of links to display
-		if (isset($tag_params['limit']))
+		if (isset($tag_params['limit']) && !is_null($items))
 			$items = array_slice($items, 0, $tag_params['limit'], true);
 
 		if (count($items) > 0)
