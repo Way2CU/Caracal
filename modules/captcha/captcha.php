@@ -107,6 +107,8 @@ class captcha extends Module {
 	 * Prints captcha image
 	 */
 	private function __printImage() {
+		define('_OMIT_STATS', 1);
+		
 		// check if referer is in allowed list
 		$value = $this->__generateValue();
 		$referer = dirname($_SERVER['HTTP_REFERER']);
@@ -168,7 +170,6 @@ class captcha extends Module {
 		header('Content-type: image/png');
 		imagepng($image);
 		imagedestroy($image);
-		die();
 	}
 
 	/**

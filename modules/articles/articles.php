@@ -110,6 +110,7 @@ class articles extends Module {
 					$this->tag_GroupList($level, $params, $children);
 					break;
 
+				case 'get_rating_image':
 				case 'show_rating_image':
 					$this->tag_ArticleRatingImage($level, $params, $children);
 					break;
@@ -796,6 +797,87 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_ArticleRatingImage($level, $tag_params, $children) {
+		if (isset($tag_params['id'])) {
+			// print image tag with specified URL
+			$id = fix_id($tag_params['id']);
+			$type = isset($tag_params['type']) ? $tag_params['type'] : ImageType::Stars;
+			$manager = ArticleManager::getInstance();
+			
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			
+			$template = new TemplateHandler('rating_image.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			if (is_object($item)) {
+				$url = url_Make(
+							'get_rating_image', 
+							$this->name, 
+							array('type', $type),
+							array('id', $id)
+						);
+						
+				$params = array(
+							'url'		=> $url,
+							'rating'	=> round($this->getArticleRating($item, 5), 2)
+						);
+						
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse($level);			
+			}
+					
+		} else if (isset($_REQUEST['id'])) {
+			// print image itself
+			define('_OMIT_STATS', 1);
+			
+			$id = fix_id($_REQUEST['id']);
+			$type = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : ImageType::Stars;
+			$manager = ArticleManager::getInstance();
+			
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			
+			switch ($type) {
+				case ImageType::Stars:
+					$background_image = 'stars_bg.png';
+					$foreground_image = 'stars.png';
+					break;
+				
+				case ImageType::Circles:
+					$background_image = 'circles_bg.png';
+					$foreground_image = 'circles.png';
+					break;
+					
+				default:
+					$background_image = 'stars_bg.png';
+					$foreground_image = 'stars.png';
+					break;
+			}
+			
+			$img_bg = imagecreatefrompng($this->path.'images/'.$background_image);
+			$img_fg = imagecreatefrompng($this->path.'images/'.$foreground_image);
+
+			// get rating based on image width
+			if (is_object($item))
+				$rating = $this->getArticleRating($item, imagesx($img_bg)); else
+				$rating = 0;
+				
+			$img = imagecreatetruecolor(imagesx($img_bg), imagesy($img_bg));
+			imagesavealpha($img, true);
+			
+			// make image transparent
+			$transparent_color = imagecolorallocatealpha($img, 0, 0, 0, 127);
+			imagefill($img, 0, 0, $transparent_color);
+
+			// draw background image
+			imagecopy($img, $img_bg, 0, 0, 0, 0, imagesx($img_bg), imagesy($img_bg));
+			
+			// draw foreground images
+			imagecopy($img, $img_fg, 0, 0, 0, 0, $rating, imagesy($img_bg));
+
+			header('Content-type: image/png');
+			imagepng($img);
+			imagedestroy($img);
+		}
 	}
 
 	/**
@@ -919,6 +1001,13 @@ class articles extends Module {
 				$template->parse($level);
 			}
 	}
+	
+	/**
+	 * Function to record vote from AJAX call
+	 */
+	private function json_Vote() {
+		
+	}
 
 	/**
 	 * Get article rating value based on max value specified
@@ -930,17 +1019,9 @@ class articles extends Module {
 	public function getArticleRating($article, $max) {
 		$total = $article->votes_up + $article->votes_down;
 
-		if ($total == 0) {
-			// no votes recorder, return 0
-			$result = 0;
-
-		} else {
-			// we have some votes recorder
-			$current = $article->votes_up - $article->votes_down;
-			if ($current < 0) $current = 0;
-
-			$result = ($current * $max) / $total;
-		}
+		if ($total == 0)
+			$result = 0; else 
+			$result = ($article->votes_up * $max) / $total;
 
 		return $result;
 	}
@@ -1048,5 +1129,14 @@ class ArticleGroupManager extends ItemManager {
 			self::$_instance = new self();
 
 		return self::$_instance;
+	}
+}
+
+
+class ImageType {
+	const Stars = 1;
+	const Circles = 2;
+	
+	private function __construct() {
 	}
 }

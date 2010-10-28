@@ -1119,9 +1119,41 @@ class chat extends Module {
 	}
 
 	/**
-	 * Ajax handler fro checking if username exists
+	 * Get JSON shaped response for external JavaScript chat
 	 */
-	private function ajax_CheckUsername() {
+	private function json_ChatLog() {
+		define('_OMIT_STATS', 1);
+
+		$last_id = isset($_REQUEST['last_message_id']) ? fix_id($_REQUEST['last_message_id']) : null;
+		$chat_room = isset($_REQUEST['chat_room']) ? fix_id($_REQUEST['chat_room']) : null;
+		$manager = ChatLogManager::getInstance();
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		if (is_null($chat_room)) {
+			// we need to have chat room specified
+			$result['error'] = true;
+			$result['error_message'] = $this->getLanguageConstant('error_invalid_request');
+		} else {
+			if (is_null($last_id)) {
+				// no last message id was specified, get all the logs for specified time
+
+			} else {
+
+			}
+		}
+
+		print json_encode($result);
+	}
+			
+	/**
+	 * Ajax handler for checking if username exists
+	 */
+	private function json_CheckUsername() {
 		$manager = ChatUserManager::getInstance();
 
 		$count = $manager->getItems(

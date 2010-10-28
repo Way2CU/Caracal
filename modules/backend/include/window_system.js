@@ -297,7 +297,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	/**
 	 * Event triggered when window looses focus
 	 */
-	this.looseFocus = function() {
+	this.loseFocus = function() {
 		this.zIndex--;
 		this.$container
 				.css({zIndex: this.zIndex})
@@ -529,34 +529,6 @@ function WindowSystem($container) {
 	this.list = [];
 
 	/**
-	 * Initialize window system.
-	 */
-	this.init = function() {
-		var $container = $('<div>');
-
-		this.$modal_dialog = $('<div>');
-		this.$modal_dialog_container = $container;
-
-		this.$modal_dialog
-					.attr('id', 'modal_dialog')
-					.append($container)
-					.css({display: 'none'});
-
-		$container.addClass('container');
-
-		// add dialog to document
-		$('body').append(this.$modal_dialog);
-
-		// create resize event to keep container centered
-		$(window).resize(function() {
-			$container.css({
-						top: Math.round(($(document).height() - $container.height()) / 2),
-						left: Math.round(($(document).width() - $container.width()) / 2)
-					});
-		});
-	};
-
-	/**
 	 * Open new window (or focus existing) and load content from specified URL
 	 *
 	 * @param string id
@@ -647,7 +619,7 @@ function WindowSystem($container) {
 		if (this.windowExists(id)) {
 			for (var window_id in this.list)
 				if (window_id != id)
-					this.list[window_id].looseFocus(); else
+					this.list[window_id].loseFocus(); else
 					this.list[window_id].gainFocus();
 		}
 	};
@@ -717,9 +689,6 @@ function WindowSystem($container) {
 			self.$modal_dialog_container.html('');
 		});
 	};
-
-	// self init
-	this.init();
 }
 
 $(document).ready(function() {

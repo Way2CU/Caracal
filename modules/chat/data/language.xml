@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language short="en">
@@ -33,6 +33,8 @@
 		<constant name="message_chat_admin_saved">Administrator access was granted.</constant>
 		<constant name="message_chat_admin_delete">You are about to revoke the administrator rights for the following user / room. Are you sure?</constant>
 		<constant name="message_chat_admin_deleted">Administration access was revoked.</constant>
+
+		<constant name="error_invalid_request">Invalid request. Make sure all the parameters were specified!</constant>
 
 		<constant name="column_channel">Channel</constant>
 		<constant name="column_users">Users</constant>
