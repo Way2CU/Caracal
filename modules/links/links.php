@@ -36,7 +36,7 @@ class links extends Module {
 								url_GetFromFilePath($this->path.'images/manage.png'),
 								window_Open( // on click open window
 											'links_list',
-											730,
+											720,
 											$this->getLanguageConstant('title_links_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'links_list')
@@ -94,6 +94,10 @@ class links extends Module {
 	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
+			case 'show':
+				$this->tag_Link($level, $params, $children);
+				break;
+				
 			case 'show_link_list':
 				$this->tag_LinkList($level, $params, $children);
 				break;
@@ -252,7 +256,7 @@ class links extends Module {
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('add'),
-										'links_add', 400,
+										'links_add', 600,
 										$this->getLanguageConstant('title_links_add'),
 										true, false,
 										$this->name,
@@ -348,10 +352,10 @@ class links extends Module {
 
 		$data = array(
 			'text' 			=> fix_chars($_REQUEST['text']),
-			'description' 	=> fix_chars($_REQUEST['description']),
+			'description' 	=> escape_chars($_REQUEST['description']),
 			'url' 			=> fix_chars($_REQUEST['url']),
-			'external' 		=> isset($_REQUEST['external']) ? 1 : 0,
-			'sponsored' 	=> isset($_REQUEST['sponsored']) ? 1 : 0,
+			'external' 		=> fix_id($_REQUEST['external']),
+			'sponsored' 	=> fix_id($_REQUEST['sponsored']),
 			'display_limit'	=> fix_id(fix_chars($_REQUEST['display_limit'])),
 		);
 
@@ -987,7 +991,7 @@ class links extends Module {
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'links_change', 	// window id
-													400,				// width
+													600,				// width
 													$this->getLanguageConstant('title_links_change'), // title
 													false, false,
 													url_Make(

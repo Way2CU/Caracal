@@ -344,7 +344,7 @@ class youtube extends Module {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_VideoManager::getInstance();
 
-		$video_id = $manager->getItemValue('video_id', array('id' => $id));
+		$video_id = $manager->getItemValue('id', array('id' => $id));
 
 		if ($video_id) {
 			$template = new TemplateHandler('video_preview.xml', $this->path.'templates/');
@@ -390,7 +390,7 @@ class youtube extends Module {
 
 		if (isset($params['id'])) {
 			// video is was specified
-			$video = $manager->getSingleItem($manager->getFieldNames(), array('video_id' => $params['id']));
+			$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $params['id']));
 
 		} else if (isset($params['text_id'])) {
 			// text id was specified

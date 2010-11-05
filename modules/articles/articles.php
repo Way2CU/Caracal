@@ -115,6 +115,10 @@ class articles extends Module {
 					$this->tag_ArticleRatingImage($level, $params, $children);
 					break;
 
+				case 'json_vote':
+					$this->json_Vote();
+					break;
+
 				default:
 					break;
 			}
@@ -233,6 +237,14 @@ class articles extends Module {
 
 		if ($db_active == 1) $db->query($sql);
 
+		$sql = "CREATE TABLE `article_votes` (
+					`id` INT NOT NULL AUTO_INCREMENT ,
+					`address` VARCHAR( 15 ) NOT NULL ,
+					`article` INT NOT NULL ,
+				PRIMARY KEY (  `id` ),
+				INDEX ( `address`, `article` )
+				) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+
 	}
 
 	/**
@@ -241,7 +253,7 @@ class articles extends Module {
 	public function onDisable() {
 		global $db, $db_active;
 
-		$sql = "DROP TABLE IF EXISTS `articles`, `article_group`;";
+		$sql = "DROP TABLE IF EXISTS `articles`, `article_group`, `article_votes`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -665,7 +677,7 @@ class articles extends Module {
 						'views'			=> $item->views,
 						'votes_up'		=> $item->votes_up,
 						'votes_down' 	=> $item->votes_down,
-						'rating'		=> $this->getArticleRating($item, 10),
+						'rating'		=> $this->getArticleRating($item, 5),
 					);
 
 			$template->restoreXML();
@@ -802,57 +814,57 @@ class articles extends Module {
 			$id = fix_id($tag_params['id']);
 			$type = isset($tag_params['type']) ? $tag_params['type'] : ImageType::Stars;
 			$manager = ArticleManager::getInstance();
-			
+
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-			
+
 			$template = new TemplateHandler('rating_image.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
 			if (is_object($item)) {
 				$url = url_Make(
-							'get_rating_image', 
-							$this->name, 
+							'get_rating_image',
+							$this->name,
 							array('type', $type),
 							array('id', $id)
 						);
-						
+
 				$params = array(
 							'url'		=> $url,
 							'rating'	=> round($this->getArticleRating($item, 5), 2)
 						);
-						
+
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);			
+				$template->parse($level);
 			}
-					
+
 		} else if (isset($_REQUEST['id'])) {
 			// print image itself
 			define('_OMIT_STATS', 1);
-			
+
 			$id = fix_id($_REQUEST['id']);
 			$type = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : ImageType::Stars;
 			$manager = ArticleManager::getInstance();
-			
+
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-			
+
 			switch ($type) {
 				case ImageType::Stars:
 					$background_image = 'stars_bg.png';
 					$foreground_image = 'stars.png';
 					break;
-				
+
 				case ImageType::Circles:
 					$background_image = 'circles_bg.png';
 					$foreground_image = 'circles.png';
 					break;
-					
+
 				default:
 					$background_image = 'stars_bg.png';
 					$foreground_image = 'stars.png';
 					break;
 			}
-			
+
 			$img_bg = imagecreatefrompng($this->path.'images/'.$background_image);
 			$img_fg = imagecreatefrompng($this->path.'images/'.$foreground_image);
 
@@ -860,17 +872,17 @@ class articles extends Module {
 			if (is_object($item))
 				$rating = $this->getArticleRating($item, imagesx($img_bg)); else
 				$rating = 0;
-				
+
 			$img = imagecreatetruecolor(imagesx($img_bg), imagesy($img_bg));
 			imagesavealpha($img, true);
-			
+
 			// make image transparent
 			$transparent_color = imagecolorallocatealpha($img, 0, 0, 0, 127);
 			imagefill($img, 0, 0, $transparent_color);
 
 			// draw background image
 			imagecopy($img, $img_bg, 0, 0, 0, 0, imagesx($img_bg), imagesy($img_bg));
-			
+
 			// draw foreground images
 			imagecopy($img, $img_fg, 0, 0, 0, 0, $rating, imagesy($img_bg));
 
@@ -1001,12 +1013,68 @@ class articles extends Module {
 				$template->parse($level);
 			}
 	}
-	
+
 	/**
 	 * Function to record vote from AJAX call
 	 */
 	private function json_Vote() {
+		define('_OMIT_STATS', 1);
+
+		$id = fix_id($_REQUEST['id']);
+		$value = $_REQUEST['value'];
+		$manager = ArticleManager::getInstance();
+		$vote_manager = ArticleVoteManager::getInstance();
 		
+		$vote = $vote_manager->getSingleItem(
+									array('id'), 
+									array(
+										'article'	=> $id,
+										'address'	=> $_SERVER['REMOTE_ADDR']
+										)
+									);
+									
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> ''
+				);
+				
+		if (is_object($vote)) {
+			// that address already voted
+			$result['error'] = true;
+			$result['error_message'] = $this->getLanguageConstant('message_vote_already');
+			
+		} else {
+			// stupid but we need to make sure article exists
+			$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
+			
+			trigger_error(print_r($_REQUEST, true));
+			if (is_object($article)) {
+				$vote_manager->insertData(array(
+										'article'	=> $article->id,
+										'address'	=> $_SERVER['REMOTE_ADDR']
+									));
+				
+				if (is_numeric($value)) {
+					$data = array(
+								'votes_up'		=> $article->votes_up,
+								'votes_down'	=> $article->votes_down
+							);
+							
+					if ($value == -1)
+						$data['votes_down']++;
+						
+					if ($value == 1)
+						$data['votes_up']++;
+						
+					$manager->updateData($data, array('id' => $article->id));
+				}
+			} else {
+				$result['error'] = true;
+				$result['error_message'] = $this->getLanguageConstant('message_vote_error');
+			}
+		}
+
+		print json_encode($result);
 	}
 
 	/**
@@ -1020,7 +1088,7 @@ class articles extends Module {
 		$total = $article->votes_up + $article->votes_down;
 
 		if ($total == 0)
-			$result = 0; else 
+			$result = 0; else
 			$result = ($article->votes_up * $max) / $total;
 
 		return $result;
@@ -1132,11 +1200,36 @@ class ArticleGroupManager extends ItemManager {
 	}
 }
 
+class ArticleVoteManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('article_votes');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('address', 'varchar');
+		$this->addProperty('article', 'int');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
+	}
+}
+
 
 class ImageType {
 	const Stars = 1;
 	const Circles = 2;
-	
+
 	private function __construct() {
 	}
 }

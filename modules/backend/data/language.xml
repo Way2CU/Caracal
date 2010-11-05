@@ -62,7 +62,7 @@
 		<constant name="menu_system">מערכת</constant>
 		<constant name="menu_modules">מודולים</constant>
 		<constant name="menu_users">ניהול משתמשים</constant>
-		<constant name="menu_logout">Logout</constant>
+		<constant name="menu_logout">התנתק</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">מודולים</constant>
@@ -79,7 +79,7 @@
 		<constant name="message_module_disable">המודול הבא יבוטל, הדבר ימחק את הגדרות המודול - האם אתה בטוח?</constant>
 		<constant name="message_module_disabled">המודול נוטרל</constant>
 		<constant name="message_module_protected">המודול מוגן, אינך יכול לשנותו</constant>
-		<constant name="message_module_not_active">Module is not active. You can't disable inactive module!</constant>
+		<constant name="message_module_not_active">המודול לא פעיל ולכן אין טעם לבטלו</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">שם</constant>
@@ -96,17 +96,17 @@
 		<constant name="cancel">בטל</constant>
 
 		<!-- Login Related -->
-		<constant name="title_login">System Login</constant>
-		<constant name="title_logout">System Logout</constant>
+		<constant name="title_login">כניסה למערכת</constant>
+		<constant name="title_logout">יציאה מהמערכת</constant>
 		<constant name="username">שם משתמש:</constant>
 		<constant name="password">סיסמא:</constant>
 		<constant name="captcha">Captcha</constant>
 		<constant name="login">התחבר</constant>
 		<constant name="logout">התנתק</constant>
-		<constant name="message_login">In order to access administration area for this site you need to enter correct username and password. System is case sensitive!</constant>
+		<constant name="message_login">להיכנס את צריך שם משתמש וסיסמא</constant>
 		<constant name="message_login_ok">כניסתך לממשק המנהל אושרה, אנא המתן להעברתך</constant>
 		<constant name="message_login_error">שם משתמש או סיסמא לא תקינים</constant>
-		<constant name="message_logout">You are about to logout from the system. Are you sure?</constant>
+		<constant name="message_logout">אתה עומד להתנתקת האם אתה בטוח</constant>
 		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
 	</language>
 

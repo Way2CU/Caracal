@@ -8,7 +8,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="links"/></span>
-			<textarea name="description" style="width: 360px; height: 100px;"><_raw/></textarea>
+			<textarea name="description" style="width: 575px; height: 200px;"><_raw/></textarea>
 		</label>
 		<label>
 			<span><_text constant="label_url" module="links"/></span>

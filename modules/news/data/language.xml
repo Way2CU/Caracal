@@ -62,4 +62,65 @@
 		<constant name="groups">News groups</constant>
 		<constant name="items">Items</constant>
 	</language>
+	<language short="he">
+		<!-- Menus -->
+		<constant name="menu_news">חדשות</constant>
+		<constant name="menu_add_news">הוסף חדשה</constant>
+		<constant name="menu_manage_news">נהל חדשות</constant>
+		<constant name="menu_manage_groups">נהל קבוצות</constant>
+		<constant name="menu_news_feeds">נהל עדכונים</constant>
+
+		<!-- Titles -->
+		<constant name="title_news_add">חדשות: הוסף חדשה</constant>
+		<constant name="title_news_change">חדשות: ערוך חדשה</constant>
+		<constant name="title_news_delete">חדשות: מחק חדשה</constant>
+		<constant name="title_news_group_add">חדשות: צור קבוצה חדשה</constant>
+		<constant name="title_news_group_change">חדשות: ערוך קבוצה</constant>
+		<constant name="title_news_group_delete">חדשות: מחק קבוצה</constant>
+		<constant name="title_news_group_items">חדשות: פרטי הקבוצה</constant>
+		<constant name="title_news_feed_add">חדשות: הוסף עדכון RSS</constant>
+		<constant name="title_news_feed_change">חדשות: ערוך תוכן עדכון</constant>
+		<constant name="title_news_feed_delete">חדשות: מחק עדכון</constant>
+		<constant name="title_manage_news">חדשות: נהל חדשות</constant>
+		<constant name="title_manage_groups">חדשות: נהל קבוצות</constant>
+		<constant name="title_manage_feeds">חדשות: נהל עדכונים</constant>
+
+		<!-- Labels -->
+		<constant name="label_title">כותרת:</constant>
+		<constant name="label_group"><![CDATA[Group <small>(אופציונאלי)</small>:]]></constant>
+		<constant name="label_feed_group">קבוצה:</constant>
+		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_content">תוכן החדשה:</constant>
+		<constant name="label_visible">החדשה מוצגת</constant>
+		<constant name="label_news_count">סופר חדשות:</constant>
+		<constant name="label_active">עדכון RSS פעיל</constant>
+		<constant name="label_description">תאור העדכון:</constant>
+
+		<!-- Columns -->
+		<constant name="column_title">כותרת</constant>
+		<constant name="column_text_id">Text ID</constant>
+		<constant name="column_time">חותמת זמן</constant>
+		<constant name="column_group">קבוצה</constant>
+		<constant name="column_active">פעיל</constant>
+
+		<!-- Messages -->
+		<constant name="message_news_saved">תוכן החדשה נשמר.</constant>
+		<constant name="message_news_delete">אתה עומד למחוק חדשה, אתה בטוח?</constant>
+		<constant name="message_news_deleted">תוכן החדשה הוסר</constant>
+		<constant name="message_group_saved">תוכן הקבוצה נשמר</constant>
+		<constant name="message_group_delete">אתה עומד להסיר קבוצה ,החדשות עצמן לא ימחקו, האם אתה בטוח? </constant>
+		<constant name="message_group_deleted">קבוצת החדשות נשמרה.</constant>
+		<constant name="message_group_items_updated">שיוך קבוצה לחדשה עודכן.</constant>
+		<constant name="message_feed_delete">אתה עומד להסיר עדכון RSS הקבוצות והחדשות בתוכו ישמרו, האם אתה בטוח</constant>
+		<constant name="message_feed_deleted">עדכון החדשות הוסר.</constant>
+		<constant name="message_feed_saved">תוכן העדכון נשמר.</constant>
+		<constant name="message_json_error_object">לא קיים</constant>
+
+		<!-- Other -->
+		<constant name="add_news">הוסך חדשה</constant>
+		<constant name="add_group">צור קבוצה חדשה</constant>
+		<constant name="add_feed">הוסף עדכון RSS</constant>
+		<constant name="groups">קבוצות חדשות</constant>
+		<constant name="items">חדשה</constant>
+	</language>
 </document>

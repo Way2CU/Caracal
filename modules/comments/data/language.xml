@@ -26,4 +26,29 @@
 
 		<constant name="anonymous">Anonymous</constant>
 	</language>
+	<language short="he">
+		<constant name="menu_comments">הערות</constant>
+		<constant name="menu_administration">ניהול</constant>
+		<constant name="menu_settings">הדגרות</constant>
+
+		<constant name="title_settings">הערות: הגדרת המודול</constant>
+
+		<constant name="label_default_visibility">Default visibility:</constant>
+		<constant name="label_repost_time">Repost timeout (minutes):</constant>
+		<constant name="label_size_limit">גודל תגובה מקסימאלי:</constant>
+		<constant name="label_user">שם:</constant>
+		<constant name="label_email">דואל:</constant>
+		<constant name="label_comment">הערה:</constant>
+
+		<constant name="message_settings_saved">הגדרות נשמרו!</constant>
+		<constant name="message_saved">פורסמה תגובה!</constant>
+		<constant name="message_error_repost_time">אתה יכול לפרסם כל %t דקות!</constant>
+		<constant name="message_error">לא נשמרה ההודעה!</constant>
+		<constant name="message_error_data">סופק מידע לא נכון</constant>
+
+		<constant name="option_hidden">מוחבא</constant>
+		<constant name="option_visible">מוצג</constant>
+
+		<constant name="anonymous">אנונימי</constant>
+	</language>
 </document>

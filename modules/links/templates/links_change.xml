@@ -9,7 +9,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="links"/></span>
-			<textarea name="description" style="width: 360px; height: 100px;"><_var name="$params['description']"/></textarea>
+			<textarea name="description" style="width: 575px; height: 200px;"><_var name="$params['description']"/></textarea>
 		</label>
 		<label>
 			<span><_text constant="label_url" module="links"/></span>

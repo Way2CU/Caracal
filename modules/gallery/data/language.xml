@@ -100,7 +100,7 @@
 		<constant name="message_container_delete">אתה עומד למחוק קטגוקיהת השיוכים לתמונות וקבוצות ימחקו - התמונות והקבוצות יישארו - האם אתה בטוח?</constant>
 		<constant name="message_container_deleted">קטגוריה נמחקה</constant>
 		<constant name="message_container_groups_updated">שיוך לקבוצה עודכן</constant>
-		<constant name="message_json_error_params">Invalid params specified.</constant>
+		<constant name="message_json_error_params">משתנים לא מתאימים.</constant>
 		<constant name="message_json_error_object">האובייקט לא נמנצא</constant>
 
 		<constant name="label_name">שם:</constant>
@@ -111,10 +111,10 @@
 		<constant name="label_visible">התמונה נראית</constant>
 		<constant name="label_text_id">Text ID:</constant>
 
-		<constant name="toolbar_insert_image">Insert image</constant>
+		<constant name="toolbar_insert_image">הוסף תמונה</constant>
 
-		<constant name="column_group_name">שם</constant>
-		<constant name="column_container_name">Name</constant>
+		<constant name="column_group_name">שם קבוצה</constant>
+		<constant name="column_container_name">שם קטגוריה</constant>
 		<constant name="column_image_list">תמונות&lt;small style="padding-left: 5px; color: #7F7F7F;"&gt;(לחץ לאופציות נוספות)&lt;/small&gt;</constant>
 
 		<constant name="upload_images">העלה תמונה</constant>

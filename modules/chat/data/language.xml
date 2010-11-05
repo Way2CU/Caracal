@@ -64,28 +64,62 @@
 	</language>
 	<language short="he">
 		<constant name="menu_chat">צט</constant>
-		<constant name="menu_join_chat">הצטרף</constant>
-		<constant name="menu_users">Manage users</constant>
-		<constant name="menu_rooms">Manage chat rooms</constant>
-		<constant name="menu_admins">Administrators</constant>
+		<constant name="menu_join_chat">צירוף לצט</constant>
+		<constant name="menu_users">נהל משתמשים</constant>
+		<constant name="menu_rooms">נהל חדרי צט</constant>
+		<constant name="menu_admins">מנהדים</constant>
 		<constant name="menu_settings">הגדרות</constant>
 
 		<constant name="title_chat">צט</constant>
 		<constant name="title_chat_settings">צט: הגדרות</constant>
-		<constant name="title_channel_add">צט הוסף ערוץ</constant>
-		<constant name="title_chat_users">Chat: Manage users</constant>
-		<constant name="title_chat_users_new">Chat: Add new user</constant>
+		<constant name="title_channel_add">צט: הוסף ערוץ</constant>
+		<constant name="title_chat_users">צט: נהל משתמשים</constant>
+		<constant name="title_chat_users_new">צט: משתמש חדש</constant>
+		<constant name="title_chat_users_change">צט: ערוך מידע</constant>
+		<constant name="title_chat_users_delete">צט: מחק משתמש</constant>
+		<constant name="title_chat_rooms">צט: ניהול חדרים</constant>
+		<constant name="title_chat_rooms_new">צט: הוסף חדר</constant>
+		<constant name="title_chat_rooms_change">צט: ערוך תוכן החדר</constant>
+		<constant name="title_chat_rooms_delete">צט: מחק חדר</constant>
+		<constant name="title_chat_admins">צט: מנהלי חדרים</constant>
+		<constant name="title_chat_admins_new">צט: צור מנהל חדש</constant>
+		<constant name="title_chat_admins_delete">צט: מחק מנהל</constant>
+
+		<constant name="message_chat_user_saved">מידע משתמש נשמר.</constant>
+		<constant name="message_chat_user_delete">אתה עומד להסיר משתמש ואת זכויותיו כמנהל, האם אתה בטוח?</constant>
+		<constant name="message_chat_user_deleted">המשתמש הוסר בהצלחה.</constant>
+		<constant name="message_chat_room_saved">תוכן החדר נשמר.</constant>
+		<constant name="message_chat_room_delete">אתה עומד להסיר את החדר, אתה בטוח??</constant>
+		<constant name="message_chat_room_deleted">החדר הוסר בהצלחה</constant>
+		<constant name="message_chat_admin_saved">אושרה כניסת מנהל.</constant>
+		<constant name="message_chat_admin_delete">את עומד להסיר את זכויות המנהל מהמשתמש הנל האם אתה בטוח??</constant>
+		<constant name="message_chat_admin_deleted">הוסרו זכויות המנהל.</constant>
+
+		<constant name="error_invalid_request">בקשה לא חוקית, וודא את תקינות המשתנים!</constant>
 
 		<constant name="column_channel">ערוץ</constant>
 		<constant name="column_users">משתמשים</constant>
-		<constant name="column_username">Username</constant>
-		<constant name="column_display_name">Display name</constant>
-		<constant name="column_temp">Temp</constant>
+		<constant name="column_username">שם משתמש</constant>
+		<constant name="column_display_name">שם מוצג</constant>
+		<constant name="column_temp">זמני</constant>
+		<constant name="column_name">שם</constant>
+		<constant name="column_limit">הגבלה</constant>
+		<constant name="column_protected">המקור.</constant>
 
 		<constant name="label_channel">ערוץ:</constant>
-		<constant name="label_chat_log">צט log:</constant>
-		<constant name="label_online_users">משתמשים עכשיו:</constant>
+		<constant name="label_chat_log">Chat log:</constant>
+		<constant name="label_online_users">משתמשים מקוונים:</constant>
 		<constant name="label_message">הודעה:</constant>
+		<constant name="label_username">שם משתמש:</constant>
+		<constant name="label_password">סיסמא:</constant>
+		<constant name="label_room_password"><![CDATA[Password <small>(optional)</small>:]]></constant>
+		<constant name="label_change_password"><![CDATA[Change password <small>(אחרת, השאחר ריק)</small>:]]></constant>
+		<constant name="label_display_name">הצג שם:</constant>
+		<constant name="label_temp">המשתמש זמני</constant>
+		<constant name="label_room_name">שם החדר:</constant>
+		<constant name="label_description">תיאור:</constant>
+		<constant name="label_limit">הגבלה:</constant>
+		<constant name="label_text_id">Text ID:</constant>
 
 		<constant name="add_channel">הוסף ערוץ</constant>
 	</language>
