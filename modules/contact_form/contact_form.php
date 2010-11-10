@@ -42,6 +42,10 @@ class contact_form extends Module {
 				case 'send_from_xml':
 					$this->sendFromXML($level, $params, $children);
 					break;
+					
+				case 'send_from_ajax':
+					$this->sendFromAJAX();
+					break;
 
 				default:
 					break;
@@ -97,7 +101,7 @@ class contact_form extends Module {
 			switch ($param->tagName) {
 				case 'to':
 					$to = $param->tagData;
-					$params['_to'] = $to;
+					$template_params['_to'] = $to;
 					break;
 
 				case 'subject':
@@ -134,6 +138,12 @@ class contact_form extends Module {
 			}
 
 		$headers['X-Mailer'] = "RCF-CMS/1.0";
+		
+		// if address is not specified by the XML, check for system setting
+		if (empty($to) && isset($this->settings['default_address'])) {
+			$to = $this->settings['default_address'];
+			$template_params['_to'] = $to;
+		}
 
 		if ($this->_sendMail($to, $subject, $headers, $fields)) {
 			// message successfuly sent
@@ -152,6 +162,44 @@ class contact_form extends Module {
 				$template->parse($level, $message_error);
 			}
 		}
+	}
+	
+	/**
+	 * Send contact form data using AJAX request
+	 */
+	private function sendFromAJAX() {
+		define('_OMIT_STATS', 1);
+		
+		$result = array(
+					'error'		=> false,
+					'message'	=> ''
+				);
+				
+		if (isset($this->settings['default_address'])) {
+			$to = $this->settings['default_address'];
+			$subject = $this->settings['default_subject'];
+			$fields = array();
+			$headers = array(
+							'X-Mailer'	=> "RCF-CMS/1.0"
+						);
+						
+			foreach($_REQUEST as $key => $value)
+				$fields[$key] = fix_chars($value);
+
+			if ($this->_sendMail($to, $subject, $headers, $fields)) {
+				// message successfuly sent
+				$result['message'] = $this->getLanguageConstant('message_sent');
+			} else {
+				// error sending
+				$result['error'] = true;
+				$result['message'] = $this->getLanguageConstant('message_error');
+			}
+		} else {
+			$result['error'] = true;
+			$result['message'] = $this->getLanguageConstant('message_error_no_address');
+		}
+				
+		print json_encode($result);
 	}
 
 	/**
