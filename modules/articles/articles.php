@@ -622,6 +622,7 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_Article($level, $tag_params, $children) {
+		$item = null;
 		$manager = ArticleManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 
@@ -637,10 +638,19 @@ class articles extends Module {
 			if (isset($tag_params['group']))
 				$group_list = explode(',', $tag_params['group']);
 
-			$list = $this->getArticleList(isset($tag_params['random']), 1, $id_list, $group_list);
+			// get item from specified parameters
+			$list = $this->getArticleList(
+									$manager->getFieldNames(),
+									array('text_id' => $id_list),
+									isset($tag_params['random']) && ($tag_params['random'] == 1),
+									1,
+									$group_list
+								);
 
-			if (empty($list)) return;  // no ids returned
-			$id = $list[0];
+			if (count($list) > 0)
+				$item = $list[0];
+		} else {
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		}
 
 		if (isset($tag_params['template'])) {
@@ -653,8 +663,6 @@ class articles extends Module {
 
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
-
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
@@ -698,21 +706,10 @@ class articles extends Module {
 		$admin_manager = AdministratorManager::getInstance();
 
 		$conditions = array();
+		$group_list = array();
 
-		if (isset($tag_params['group'])) {
+		if (isset($tag_params['group']))
 			$group_list = explode(',', $tag_params['group']);
-
-			$id_list = $this->getArticleList(
-									isset($tag_params['random']) && $tag_params['random'] == 1,
-									isset($tag_params['limit']) ? $tag_params['limit'] : null,
-									array(),
-									$group_list
-								);
-
-			if (empty($id_list)) return;  // specified groups didn't contain any articles
-
-			$conditions['id'] = $id_list;
-		}
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 1)
 			$conditions['visible'] = 1;
@@ -723,7 +720,13 @@ class articles extends Module {
 			$limit = null;
 
 		// get items from manager
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, array('id'), true, $limit);
+		$items = $this->getArticleList(
+								$manager->getFieldNames(),
+								$conditions,
+								isset($tag_params['random']) && $tag_params['random'] == 1,
+								$limit,
+								$group_list
+							);
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -1024,48 +1027,48 @@ class articles extends Module {
 		$value = $_REQUEST['value'];
 		$manager = ArticleManager::getInstance();
 		$vote_manager = ArticleVoteManager::getInstance();
-		
+
 		$vote = $vote_manager->getSingleItem(
-									array('id'), 
+									array('id'),
 									array(
 										'article'	=> $id,
 										'address'	=> $_SERVER['REMOTE_ADDR']
 										)
 									);
-									
+
 		$result = array(
 					'error'			=> false,
 					'error_message'	=> ''
 				);
-				
+
 		if (is_object($vote)) {
 			// that address already voted
 			$result['error'] = true;
 			$result['error_message'] = $this->getLanguageConstant('message_vote_already');
-			
+
 		} else {
 			// stupid but we need to make sure article exists
 			$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
-			
+
 			trigger_error(print_r($_REQUEST, true));
 			if (is_object($article)) {
 				$vote_manager->insertData(array(
 										'article'	=> $article->id,
 										'address'	=> $_SERVER['REMOTE_ADDR']
 									));
-				
+
 				if (is_numeric($value)) {
 					$data = array(
 								'votes_up'		=> $article->votes_up,
 								'votes_down'	=> $article->votes_down
 							);
-							
+
 					if ($value == -1)
 						$data['votes_down']++;
-						
+
 					if ($value == 1)
 						$data['votes_up']++;
-						
+
 					$manager->updateData($data, array('id' => $article->id));
 				}
 			} else {
@@ -1097,21 +1100,16 @@ class articles extends Module {
 	/**
 	 * Function used to retrieve Id list (or single Id) from database based on parameters
 	 *
-	 * @param boolean $random Randomly order results
-	 * @param integer $limit Limit results to this number
-	 * @param array $id_list Array of text_id's
-	 * @param array $group_list Array of group text_id's
+	 * @param array $fields Specify field selection
+	 * @param array $conditions Initial conditions for query
+	 * @param boolean $random Should items be selected randomly
+	 * @param integer $limit Limit results
+	 * @param array $group_list If item should be member of any of specified group text_id's
 	 * @return array
 	 */
-	private function getArticleList($random=true, $limit=null, $id_list=array(), $group_list=array()) {
-		$result = array();
+	private function getArticleList($fields=array(), $conditions=array(), $random=true, $limit=null, $group_list=array()) {
 		$order_by = $random ? 'RAND()' : 'id';
-		$conditions = array();
-
 		$manager = ArticleManager::getInstance();
-
-		if (!empty($id_list))
-			$conditions['text_id'] = $id_list;
 
 		if (!empty($group_list)) {
 			$group_id_list = array();
@@ -1129,13 +1127,9 @@ class articles extends Module {
 			$conditions['group'] = $group_id_list;
 		}
 
-		$items = $manager->getItems(array('id'), $conditions, array($order_by), true, $limit);
+		$items = $manager->getItems($fields, $conditions, array($order_by), false, $limit);
 
-		if (count($items) > 0)
-			foreach($items as $item)
-				$result[] = $item->id;
-
-		return $result;
+		return $items;
 	}
 }
 

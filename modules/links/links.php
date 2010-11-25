@@ -97,7 +97,7 @@ class links extends Module {
 			case 'show':
 				$this->tag_Link($level, $params, $children);
 				break;
-				
+
 			case 'show_link_list':
 				$this->tag_LinkList($level, $params, $children);
 				break;
@@ -850,14 +850,16 @@ class links extends Module {
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
 
-			$image_item = $gallery_manager->getSingleItem(
-												$gallery_manager->getFieldNames(),
-												array('id' => $item->image)
-											);
+			if (is_numeric($item->image)) {
+				$image_item = $gallery_manager->getSingleItem(
+													$gallery_manager->getFieldNames(),
+													array('id' => $item->image)
+												);
 
-			if (is_object($image_item)) {
-				$image = $gallery->_getImageURL($image_item);
-				$thumbnail = $gallery->_getThumbnailURL($image_item);
+				if (is_object($image_item)) {
+					$image = $gallery->_getImageURL($image_item);
+					$thumbnail = $gallery->_getThumbnailURL($image_item);
+				}
 			}
 		}
 
