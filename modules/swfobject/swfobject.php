@@ -15,20 +15,20 @@ class swfobject extends Module {
 	 */
 	protected function __construct() {
 		parent::__construct(__FILE__);
-		
+
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/swfobject.js'), 'type'=>'text/javascript'));
 		}
 	}
-	
+
 	/**
 	 * Get single instance of ModuleHandler
 	 */
 	public static function getInstance() {
-		if (!isset(self::$_instance)) 
+		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 
@@ -41,25 +41,27 @@ class swfobject extends Module {
 	 */
 	public function transferControl($level, $params = array(), $children = array()) {
 		// global control actions
-		switch ($params['action']) {
-			case 'embed':
-				$flash_params = array(
-									'wmode'		=> 'transparent',
-									'menu'		=> false,
-								);
-				$this->embedSWF($level, $params['url'], $params['id'],
-								$params['width'], $params['height'], array(), $flash_params);
-				break;
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'embed':
+					$flash_params = array(
+										'wmode'		=> 'transparent',
+										'menu'		=> false,
+									);
+					$this->embedSWF($level, $params['url'], $params['id'],
+									$params['width'], $params['height'], array(), $flash_params);
+					break;
 
-			default:
-				break;
-		}
+				default:
+					break;
+			}
 
 		// global control actions
-		switch ($params['backend_action']) {
-			default:
-				break;
-		}
+		if (isset($params['backend_action']))
+			switch ($params['backend_action']) {
+				default:
+					break;
+			}
 	}
 
 	/**
