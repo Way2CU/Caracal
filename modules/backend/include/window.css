@@ -478,6 +478,7 @@ div.dialog div.container div.content {
 	display: block;
 
 	padding: 5px;
+	overflow-y: auto;
 }
 
 /**
