@@ -40,22 +40,25 @@ class backend extends Module {
 		parent::__construct(__FILE__);
 
 		// load CSS and JScript
-		if ($section == $this->name && class_exists('head_tag')) {
+		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
-			// load style based on current language
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-
-			if (MainLanguageHandler::getInstance()->isRTL()) {
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			}
-
+			// always load jquery
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
+
+			if ($section == $this->name) {
+				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+
+				if (MainLanguageHandler::getInstance()->isRTL()) {
+					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				}
+
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
+			}
 		}
 
 		// add admin level menus
