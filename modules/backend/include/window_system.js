@@ -107,7 +107,7 @@ function Dialog() {
 			};
 
 		var c_start_params = {
-				height: this.$container.height()
+				height: 0
 			};
 
 		var end_params = {
