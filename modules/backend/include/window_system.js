@@ -102,6 +102,8 @@ function Dialog() {
 	 */
 	this.setContent = function(content, width, height) {
 		// create starting parameters for animation
+		var $container = this.$container;
+
 		var start_params = {
 				width: this.$dialog.width(),
 			};
@@ -123,17 +125,22 @@ function Dialog() {
 		// assign content
 		this.$dialog
 				.css(start_params)
-				.animate(end_params, 500);
-
-		this.$container
-				.css(c_start_params)
 				.animate(
-					c_end_params,
+					end_params,
 					500,
 					function() {
-						$(this).html(content);
+						$container
+							.css(c_start_params)
+							.animate(
+								c_end_params,
+								500,
+								function() {
+									$container.html(content);
+								}
+							);
 					}
 				);
+
 	};
 
 	/**
