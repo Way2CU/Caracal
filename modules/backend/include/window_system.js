@@ -105,7 +105,7 @@ function Dialog() {
 		var $container = this.$container;
 
 		var start_params = {
-				width: this.$dialog.width(),
+				width: 0,
 			};
 
 		var c_start_params = {
