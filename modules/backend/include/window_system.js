@@ -125,15 +125,15 @@ function Dialog() {
 			};
 
 		// assign content
+		$container.css(c_start_params);
+
 		this.$dialog
 				.css(start_params)
 				.animate(
 					end_params,
 					500,
 					function() {
-						$container
-							.css(c_start_params)
-							.animate(
+						$container.animate(
 								c_end_params,
 								500,
 								function() {
