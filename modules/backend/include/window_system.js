@@ -104,22 +104,33 @@ function Dialog() {
 		// create starting parameters for animation
 		var start_params = {
 				width: this.$dialog.width(),
-				height: this.$dialog.height()
+			};
+
+		var c_start_params = {
+				height: this.$container.height()
 			};
 
 		var end_params = {
 				top: Math.round(($(document).height() - height) / 2),
 				left: Math.round(($(document).width() - width) / 2),
 				width: width,
+			};
+
+		var c_end_params = {
 				height: height
 			};
 
 		// assign content
-		this.$container.html(content);
+		this.$container
+				.css(c_start_params)
+				.html(content);
 
 		this.$dialog
 				.css(start_params)
 				.animate(end_params, 500);
+
+		this.$container
+				.animate(c_end_params, 500);
 	};
 
 	/**
