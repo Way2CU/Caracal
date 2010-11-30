@@ -88,7 +88,8 @@ function ToolbarExtension_Gallery() {
 			var $list = $('<div>');
 
 			// no error, feed data into dialog
-			for (var i in data.items) {
+			var i = data.items.length;
+			while (i--) {
 				var image = data.items[i];
 
 				// create elements
@@ -113,12 +114,12 @@ function ToolbarExtension_Gallery() {
 					.data('image', image)
 					.click(function() {
 						var image = $(this).data('image');
-						
+
 						$component.insertAtCaret(
 									'![' + image.title[language_selector.current_language] +
 									'](' + image.id + ')'
 								);
-						
+
 						self.dialog.hide();
 					});
 
