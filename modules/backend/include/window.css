@@ -449,6 +449,8 @@ div.dialog div.container div.title_bar div.title {
 
 	color: #BFBFBF;
 	font-weight: normal;
+
+	overflow: hidden;
 }
 
 div.dialog div.container div.title_bar a.close_button {
