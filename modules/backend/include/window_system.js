@@ -105,6 +105,8 @@ function Dialog() {
 		var $container = this.$container;
 
 		var start_params = {
+				top: Math.round($(document).height() / 2),
+				left: Math.round($(document).width() / 2),
 				width: 0,
 			};
 
