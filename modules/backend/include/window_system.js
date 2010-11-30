@@ -107,7 +107,7 @@ function Dialog() {
 			};
 
 		var c_start_params = {
-				height: 0
+				height: 0,
 			};
 
 		var end_params = {
@@ -121,16 +121,19 @@ function Dialog() {
 			};
 
 		// assign content
-		this.$container
-				.css(c_start_params)
-				.html(content);
-
 		this.$dialog
 				.css(start_params)
 				.animate(end_params, 500);
 
 		this.$container
-				.animate(c_end_params, 500);
+				.css(c_start_params)
+				.animate(
+					c_end_params,
+					500,
+					function() {
+						$(this).html(content);
+					}
+				);
 	};
 
 	/**
