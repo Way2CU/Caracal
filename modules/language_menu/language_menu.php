@@ -14,15 +14,19 @@ class language_menu extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $section;
+
 		parent::__construct(__FILE__);
-		
+
 		// load CSS and JScript
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
-		}		
+
+			if ($section == 'backend')
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
+		}
 	}
 
 	/**
@@ -31,13 +35,13 @@ class language_menu extends Module {
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
-	
+
 	/**
 	 * Transfers control to module functions
-	 * 
+	 *
 	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
@@ -92,7 +96,7 @@ class language_menu extends Module {
 			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
 		}
 		$template->setMappedModule($this->name);
-		
+
 		$link_params = array();
 		foreach($_GET as $key => $value)
 			if ($key != 'language')
@@ -132,7 +136,7 @@ class language_menu extends Module {
 			$default = $module->language->getDefaultLanguage();
 		} else {
 			$language_handler = MainLanguageHandler::getInstance();
-			
+
 			$rtl = $language_handler->getRTL();
 			$list = $language_handler->getLanguages(true);
 			$default = $language_handler->getDefaultLanguage();
