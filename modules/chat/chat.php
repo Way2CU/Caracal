@@ -18,7 +18,7 @@ class chat extends Module {
 		parent::__construct(__FILE__);
 
 		// load module style and scripts
-		if (class_exists('head_tag')) {
+		if ($section == 'backend' && class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 			$head_tag->addTag(
 							'link',
@@ -1149,7 +1149,7 @@ class chat extends Module {
 
 		print json_encode($result);
 	}
-			
+
 	/**
 	 * Ajax handler for checking if username exists
 	 */
