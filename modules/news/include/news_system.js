@@ -12,8 +12,8 @@
  */
 
 function FadingNews($container, transition_time) {
-	this.transition_time = transition_time;
 	this.$container = $container;
+	this.transition_time = transition_time;
 
 	/**
 	 * Show news container
@@ -44,6 +44,7 @@ function FadingNews($container, transition_time) {
 
 function ScrollingNews($container, transition_time) {
 	this.$container = $container;
+	this.transition_time = transition_time;
 
 	/**
 	 * Show news container
@@ -70,7 +71,7 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 	this.$container = $('#'+container_id);
 
 	// get constructor method name
-	switch(animation_type) {
+	switch (animation_type) {
 		case 0:
 			var News = FadingNews;
 			break;
@@ -112,5 +113,6 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 		this.news_list[this.active_item].show();
 
 	// activate interval
-	setInterval(function() { self.changeActiveItem(); }, self.display_time);
+	if (this.news_list.length > 1)
+		setInterval(function() { self.changeActiveItem(); }, self.display_time);
 }
