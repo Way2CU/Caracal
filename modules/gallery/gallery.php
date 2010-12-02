@@ -21,11 +21,16 @@ class gallery extends Module {
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/slideshow.js'), 'type'=>'text/javascript'));
 
-			if (MainLanguageHandler::getInstance()->isRTL())
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			// load backend files if needed
+			if ($section == 'backend') {
+				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 'type'=>'text/javascript'));
+
+				if (MainLanguageHandler::getInstance()->isRTL())
+					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			}
 		}
 
 		// register backend
@@ -1548,8 +1553,17 @@ class gallery extends Module {
 		$manager = GalleryManager::getInstance();
 		$conditions = array('visible' => 1);
 
-		if (isset($_REQUEST['group']))
-			$conditions['group'] = fix_id($_REQUEST['group']);
+		// raw group id was specified
+		if (isset($_REQUEST['group_id']))
+			$conditions['group'] = fix_id($_REQUEST['group_id']);
+
+		// group text_id was specified, get group ID
+		if (isset($_REQUEST['group'])) {
+			$group_manager = GalleryGroupManager::getInstance();
+
+			$group_id = $group_manager->getItemValue('id', array('text_id' => $_REQUEST['group']));
+			$conditions['group'] = $group_id;
+		}
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
