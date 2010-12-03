@@ -82,7 +82,7 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 
 		default:
 			var News = FadingNews
-	}
+	};
 
 	// create news objects
 	this.$container.find('.news').each(function() {
@@ -100,13 +100,13 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 		this.news_list[this.active_item].hide(this.news_list[next_item]);
 
 		this.active_item = next_item;
-	}
+	};
 
 	// stop animation interval
 	this.stopNews = function() {
 		if (this.interval_id != null)
 			clearInterval(this.interval_id);
-	}
+	};
 
 	// show first news
 	if (this.news_list.length > 0)
