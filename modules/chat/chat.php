@@ -783,7 +783,7 @@ class chat extends Module {
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		$user = $user_manager->getItemValue('display_name', array('id' => $item->user));
-		$room = $room_manager->getItemValue('name', array('id' => $item->room));
+		$room = $room_manager->getItemValue('name_'.$language, array('id' => $item->room));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
