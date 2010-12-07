@@ -230,6 +230,7 @@ class articles extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .= "
+				`visible` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
 				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -948,8 +949,12 @@ class articles extends Module {
 	 */
 	public function tag_GroupList($level, $tag_params, $children) {
 		$manager = ArticleGroupManager::getInstance();
+		$conditions = array()
 
-		$items = $manager->getItems($manager->getFieldNames(), array());
+		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 'yes')
+			$conditions['visible'] = 1;
+
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -1180,6 +1185,7 @@ class ArticleGroupManager extends ItemManager {
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('title', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
+		$this->addProperty('visible', 'boolean');
 	}
 
 	/**
