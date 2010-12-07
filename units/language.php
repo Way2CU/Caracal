@@ -3,9 +3,7 @@
 /**
  * LANGUAGE HANDLER
  *
- * @version 1.0
  * @author MeanEYE
- * @copyright RCF Group, 2008.
  */
 
 if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');

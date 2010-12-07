@@ -214,7 +214,6 @@ class articles extends Module {
 				INDEX ( `group` ),
 				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
 		if ($db_active == 1) $db->query($sql);
 
 		// article groups
@@ -234,7 +233,6 @@ class articles extends Module {
 				PRIMARY KEY ( `id` ),
 				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
 		if ($db_active == 1) $db->query($sql);
 
 		$sql = "CREATE TABLE `article_votes` (
@@ -244,6 +242,7 @@ class articles extends Module {
 				PRIMARY KEY (  `id` ),
 				INDEX ( `address`, `article` )
 				) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
 
 	}
 
