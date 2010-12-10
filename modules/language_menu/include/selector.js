@@ -61,7 +61,7 @@ function LanguageSelector(id) {
 		}
 
 		// collect multi-language data
-		this.$parent.find('data').each(function() {
+		this.$parent.parent().find('data').each(function() {
 			var field = $(this).attr('field');
 			var language = $(this).attr('language');
 
