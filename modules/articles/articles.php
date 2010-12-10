@@ -630,9 +630,10 @@ class articles extends Module {
 		if (is_null($id)) {
 			$id_list = array();
 			$group_list = array();
+			$conditions = array();
 
 			if (isset($tag_params['text_id']))
-				$id_list = explode(',', $tag_params['text_id']);
+				$conditions['text_id'] = explode(',', $tag_params['text_id']);
 
 			if (isset($tag_params['group']))
 				$group_list = explode(',', $tag_params['group']);
@@ -640,7 +641,7 @@ class articles extends Module {
 			// get item from specified parameters
 			$list = $this->getArticleList(
 									$manager->getFieldNames(),
-									array('text_id' => $id_list),
+									$conditions,
 									isset($tag_params['random']) && ($tag_params['random'] == 1),
 									1,
 									$group_list
