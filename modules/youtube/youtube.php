@@ -429,11 +429,16 @@ class youtube extends Module {
 		global $language;
 
 		$manager = YouTube_VideoManager::getInstance();
+		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
+		$order_by = isset($tag_params['order_by']) ? split(fix_chars($tag_params['order_by'])) : array('id');
+		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								array(),
-								array('id')
+								$order_by,
+								$order_asc,
+								$limit
 							);
 
 		if (isset($tag_params['template'])) {
