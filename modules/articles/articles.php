@@ -230,7 +230,7 @@ class articles extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .= "
-				`visible` BOOLEAN NOT NULL DEFAULT '0',
+				`visible` BOOLEAN NOT NULL DEFAULT '1',
 				PRIMARY KEY ( `id` ),
 				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -950,7 +950,7 @@ class articles extends Module {
 	 */
 	public function tag_GroupList($level, $tag_params, $children) {
 		$manager = ArticleGroupManager::getInstance();
-		$conditions = array()
+		$conditions = array();
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
