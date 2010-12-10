@@ -69,8 +69,9 @@ function SlidingImage(image, transition_time) {
  * @param integer display_time
  * @param integer transition_time
  * @param string gallery_group
+ * @param boolean scale_images
  */
-function Slideshow(container_id, animation_type, display_time, transition_time, gallery_group) {
+function Slideshow(container_id, animation_type, display_time, transition_time, gallery_group, scale_images) {
 	var self = this;  // used internally for nested functions
 
 	this.interval_id = null;
@@ -80,6 +81,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 	this.active_item = 0;
 	this.group_name = gallery_group;
 	this.animation_type = animation_type;
+	this.scale_images = scale_images;
 
 	this.$container = $('#' + container_id);
 
@@ -134,16 +136,50 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 			while (i--) {
 				var item = data.items[i];
 				var image = new Image();
+				var container_width = this.$container.width();
+				var container_height = this.$container.height();
 
+				if (this.scale_images) image.src = '';  // ensure image is not cashed
 				image.src = item.image;
 				image.alt = item.title[language];
 
 				$(image)
 					.css({
 						display: 'none',
-						position: 'absolute'
+						position: 'absolute',
+						top: '0px',
+						left: '0px'
 					})
 					.appendTo(this.$container);
+
+				if (this.scale_images)
+					$(image).load(function() {
+						var rate = 1;
+						var image_width = this.width;
+						var image_height = this.height;
+
+						if (image_width > image_height) {
+							rate = container_width / image_width;
+						} else {
+							if (image_width < image_height) {
+								rate = container_height / image_height;
+							} else {
+								// image is square, so we fit in smaller dimension
+								var size = container_height > container_width ? container_width : container_height;
+								rate = size / image_width;
+							}
+						}
+
+						image_width = Math.round(image_width * rate);
+						image_height = Math.round(image_height * rate);
+
+						$(this).css({
+							top: Math.round((container_height - image_height) / 2),
+							left: Math.round((container_width - image_width) / 2),
+							width: image_width,
+							height: image_height
+						});
+					});
 
 				// create new slide using image and push it to the list
 				this.image_list.push(new Slide(image, this.transition_time));
@@ -151,8 +187,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 
 			// show first image
 			if (this.image_list.length > 0)
-				this.image_list[this.active_item].show(); else
-				alert('njak');
+				this.image_list[this.active_item].show();
 
 			// start animation
 			if (this.image_list.length > 1)

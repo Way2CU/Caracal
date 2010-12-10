@@ -1562,7 +1562,10 @@ class gallery extends Module {
 			$group_manager = GalleryGroupManager::getInstance();
 
 			$group_id = $group_manager->getItemValue('id', array('text_id' => $_REQUEST['group']));
-			$conditions['group'] = $group_id;
+
+			if (!empty($group_id))
+				$conditions['group'] = $group_id; else
+				$conditions['group'] = -1;
 		}
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
