@@ -1881,7 +1881,7 @@ class gallery extends Module {
 		if (is_uploaded_file($_FILES[$field_name]['tmp_name'])) {
 			if (in_array(
 					pathinfo(strtolower($_FILES[$field_name]['name']), PATHINFO_EXTENSION),
-					split(',', $this->settings['image_extensions'])
+					explode(',', $this->settings['image_extensions'])
 				)) {
 
 				// try moving file to new destination

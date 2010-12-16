@@ -25,7 +25,7 @@ function FadingImage(image, transition_time) {
 						display: 'block'
 					})
 					.animate({opacity: 1}, this.transition_time);
-	}
+	};
 
 	/**
 	 * Hide image
@@ -39,7 +39,7 @@ function FadingImage(image, transition_time) {
 						function() {
 							$(this).css('display', 'none');
 						});
-	}
+	};
 }
 
 function SlidingImage(image, transition_time) {
@@ -50,13 +50,13 @@ function SlidingImage(image, transition_time) {
 	 * Show image
 	 */
 	this.show = function() {
-	}
+	};
 
 	/**
 	 * Hide image
 	 */
 	this.hide = function(next_slide) {
-	}
+	};
 }
 
 /**

@@ -84,7 +84,7 @@ $ModuleHandler->loadModules();
 $SectionHandler->transferControl($section, $action, $language);
 
 // print out copyright and timing
-$time_end = split(" ", microtime());
+$time_end = explode(" ", microtime());
 $time_end = $time_end[0] + $time_end[1];
 $time = round($time_end - $time_start, 3);
 
