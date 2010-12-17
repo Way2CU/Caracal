@@ -17,14 +17,14 @@ class head_tag extends Module {
 	protected function __construct() {
 		parent::__construct(__FILE__);
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 
@@ -52,7 +52,7 @@ class head_tag extends Module {
 	public function addTag($name, $params) {
 		$this->tags[] = array($name, $params);
 	}
-	
+
 	/**
 	 * Print previously added tags
 	 *

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="English" short="en">
+	<language short="en">
 		<constant name="menu_title" value="Kabalah"/>
 		<constant name="menu_questions" value="Edit questions" />
 		<constant name="menu_answers" value="Edit answers" />
@@ -68,7 +68,7 @@
 		<constant name="column_answer_question" value="Question"/>
 		<constant name="column_options" value="Options"/>
 	</language>
-	<language name="Hebrew" short="he">
+	<language short="iw">
 		<constant name="menu_title" value="קבלה" />
 		<constant name="menu_questions" value="ערוך שאלות" />
 		<constant name="menu_answers" value="ערוך תשובות לשאלה" />

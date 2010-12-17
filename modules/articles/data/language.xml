@@ -49,7 +49,7 @@
 		<constant name="column_text_id">Text ID</constant>
 	</language>
 
-	<language short="he">
+	<language short="iw">
 		<!-- Menu Items -->
 		<constant name="menu_articles">מאמרים</constant>
 		<constant name="menu_articles_new">צור מאמר חדש</constant>

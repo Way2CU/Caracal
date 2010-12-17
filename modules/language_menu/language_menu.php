@@ -26,6 +26,14 @@ class language_menu extends Module {
 
 			if ($section == 'backend')
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
+
+			// add language meta tag
+			$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
+			$head_tag->addTag('meta',
+						array(
+							'http-equiv'	=> 'Content-Language',
+							'content'		=> join(', ', $language_list)
+						));
 		}
 	}
 

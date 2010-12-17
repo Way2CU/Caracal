@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="עברית" short="he">
-		<constant name="search_results" value="תוצאות חיפוש" />
-		<constant name="score" value="מספר מופעים בטקסט" />
-		<constant name="read_more" value="קרא עוד" />
-		<constant name="message_no_results" value="לא נמצאו תוצאות תואמות" />
-	</language>
-	<language name="English" short="en">
+	<language short="en">
 		<constant name="search_results" value="Search Results" />
 		<constant name="score" value="Score" />
 		<constant name="read_more" value="Read More" />
 		<constant name="search" value="Search"/>
 		<constant name="message_no_results" value="No results found!"/>
 	</language>
-	<language name="Serbian" short="sr-lat">
+	<language short="iw">
+		<constant name="search_results" value="תוצאות חיפוש" />
+		<constant name="score" value="מספר מופעים בטקסט" />
+		<constant name="read_more" value="קרא עוד" />
+		<constant name="message_no_results" value="לא נמצאו תוצאות תואמות" />
+	</language>
+	<language short="sr-lat">
 		<constant name="search_results" value="Rezultati Pretrage" />
 		<constant name="score" value="Tačnost" />
 		<constant name="read_more" value="Više" />

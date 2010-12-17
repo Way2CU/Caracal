@@ -56,7 +56,7 @@
 		<constant name="message_logout_ok">Logout successful!</constant>
 	</language>
 
-	<language name="עברית" short="he" rtl="yes" default="yes">
+	<language name="עברית" short="iw" rtl="yes" default="yes">
 		<constant name="title">ממשק מנהל</constant>
 		<!-- Menu Items -->
 		<constant name="menu_system">מערכת</constant>

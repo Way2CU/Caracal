@@ -26,7 +26,7 @@
 
 		<constant name="anonymous">Anonymous</constant>
 	</language>
-	<language short="he">
+	<language short="iw">
 		<constant name="menu_comments">הערות</constant>
 		<constant name="menu_administration">ניהול</constant>
 		<constant name="menu_settings">הדגרות</constant>

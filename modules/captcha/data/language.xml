@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="English" short="en">
+	<language short="en">
 		<constant name="captcha_message" value="Captcha image (click to refresh)" />
 	</language>
-	<language name="Srpski" short="sr-lat">
+	<language short="sr-lat">
 		<constant name="captcha_message" value="Captcha slika (klik na sliku osvežava)" />
 	</language>
-	<language name="Српски" short="sr-cyr">
+	<language short="sr-cyr">
 		<constant name="captcha_message" value="Captcha слика (клик на слику освежава)" />
 	</language>
-	<language name="Hebrew" short="he">
+	<language short="iw">
 		<constant name="captcha_message" value="תמונת קאפצ'ה (לחץ לרענון)" />
 	</language>
 </document>

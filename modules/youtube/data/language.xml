@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
-	<language name="English" short="en">
+	<language short="en">
 		<constant name="title" value="YouTube" />
 
 		<!-- Menu Items -->
@@ -33,7 +33,7 @@
 		<constant name="add">Add video</constant>
 		<constant name="preview">Preview</constant>
 	</language>
-	<language short="he">
+	<language short="iw">
 		<constant name="title" value="YouTube" />
 
 		<!-- Menu Items -->

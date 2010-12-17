@@ -62,7 +62,7 @@
 		<constant name="groups">News groups</constant>
 		<constant name="items">Items</constant>
 	</language>
-	<language short="he">
+	<language short="iw">
 		<!-- Menus -->
 		<constant name="menu_news">חדשות</constant>
 		<constant name="menu_add_news">הוסף חדשה</constant>
