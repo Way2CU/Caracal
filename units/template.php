@@ -122,16 +122,13 @@ class TemplateHandler {
 	 * @param array $tags Leave blank, used for recursion
 	 * @param boolean $parent_block If parent tag is block element
 	 */
-	public function parse($level, $tags=array(), $parent_block=true) {
+	public function parse($tags=array()) {
 		global $section, $action, $language, $template_path, $system_template_path;
 
 		if ((!$this->active) && empty($tags)) return;
 
 		// take the tag list for parsing
 		$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
-
-		// used for nicer output
-		$tag_space = str_repeat("\t", $level);
 
 		// start parsing tags
 		$count = count($tag_array);
@@ -163,7 +160,7 @@ class TemplateHandler {
 				case '_module':
 					if (class_exists($tag->tagAttrs['name'])) {
 						$module = call_user_func(array($tag->tagAttrs['name'], 'getInstance'));
-						$module->transferControl($level, $tag->tagAttrs, $tag->tagChildren);
+						$module->transferControl($tag->tagAttrs, $tag->tagChildren);
 					}
 					break;
 
@@ -179,7 +176,7 @@ class TemplateHandler {
 
 					$new = new TemplateHandler($file, $path);
 					$new->setLocalParams($this->params);
-					$new->parse($level);
+					$new->parse();
 					break;
 
 				// raw text copy
@@ -200,9 +197,7 @@ class TemplateHandler {
 						$text = $tag->tagData;
 					}
 
-					if ($parent_block)
-						echo "{$tag_space}{$text}\n"; else
-						echo $text;
+					echo $text;
 					break;
 
 				// multi language constants
@@ -222,9 +217,7 @@ class TemplateHandler {
 						$text = MainLanguageHandler::getInstance()->getText($constant, $language);
 					}
 
-					if ($parent_block)
-						echo "{$tag_space}{$text}\n"; else
-						echo $text;
+					echo $text;
 					break;
 
 				// call section specific data
@@ -235,14 +228,14 @@ class TemplateHandler {
 						$new = new TemplateHandler(basename($file), dirname($file).'/');
 						$new->setLocalParams($this->params);
 						$new->setMappedModule($this->module);
-						$new->parse($level);
+						$new->parse();
 					} else {
 						// log error
 						print "Mapped module is not loaded!";
 					}
 					break;
 
-				// print milti-language data
+				// print multilanguage data
 				case '_language_data':
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
 
@@ -259,10 +252,22 @@ class TemplateHandler {
 								);
 						$template->restoreXML();
 						$template->setLocalParams($params);
-						$template->parse($level);
+						$template->parse();
 					}
 
 					break;
+					
+				// replace tag data string with matching params
+				case '_replace':
+					$pool = isset($tag->tagAttrs['param']) ? $this->params[$tag->tagAttrs['param']] : $this->params;
+					
+					$keys = array_keys($pool);
+					$values = array_values($pool);
+					
+					foreach($keys as $i => $value)
+						$keys[$i] = "%{$value}%";
+					
+					echo str_replace($keys, $values, $tag->tagData);
 
 				// conditional tag
 				case '_if':
@@ -273,7 +278,7 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs['condition'];
 					if (eval('global $section, $action, $language; return '.$to_eval.';'))
-						$this->parse($level, $tag->tagChildren);
+						$this->parse($tag->tagChildren);
 
 					break;
 
@@ -296,34 +301,33 @@ class TemplateHandler {
 						$obj = $handle['object'];
 						$function = $handle['function'];
 
-						$obj->$function($level, $tag->tagAttrs, $tag->tagChildren);
+						$obj->$function($tag->tagAttrs, $tag->tagChildren);
 
 					} else {
 						// default tag handler
 						if (in_array($tag->tagName, $this->block_tags)) {
-							// if tag is block
-							$break = !(empty($tag->tagChildren) && empty($tag->tagData));
-
-							echo $tag_space."<".
-								$tag->tagName.$this->getTagParams($tag->tagAttrs).
-								">".($break ? "\n" : "");
+							// block tag
+							echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
 
 							if (!empty($tag->tagChildren))
-								$this->parse($level+1, $tag->tagChildren, true);
+								$this->parse($tag->tagChildren);
 
 							if (!empty($tag->tagData))
-								echo ($break ? $tag_space."\t" : "").$tag->tagData."\n";
+								echo $tag->tagData;
 
-							echo ($break ? $tag_space : "")."</{$tag->tagName}>\n";
+							echo "</{$tag->tagName}>";
 						} else {
 							// if tag is not block, then strip formatting
-							echo $tag_space."<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
+							echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
 
 							if (count($tag->tagChildren) > 0 || !empty($tag->tagData)) {
-								if (count($tag->tagChildren) > 0) $this->parse($level+1, $tag->tagChildren, false);
+								if (count($tag->tagChildren) > 0) 
+									$this->parse($tag->tagChildren);
+									
 								if (!empty($tag->tagData)) echo $tag->tagData;
-								echo "</{$tag->tagName}>\n";
-							} else echo "\n";
+								
+								echo "</{$tag->tagName}>";
+							}
 						}
 
 					}

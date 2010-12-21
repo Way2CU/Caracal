@@ -125,24 +125,23 @@ class chat extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show_user_list':
-					$this->tag_UserList($level, $params, $children);
+					$this->tag_UserList($params, $children);
 					break;
 
 				case 'show_room_list':
-					$this->tag_RoomList($level, $params, $children);
+					$this->tag_RoomList($params, $children);
 					break;
 
 				case 'show_admin_list':
-					$this->tag_AdminList($level, $params, $children);
+					$this->tag_AdminList($params, $children);
 					break;
 
 				default:
@@ -153,85 +152,85 @@ class chat extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'chat':
-					$this->chatInterface($level);
+					$this->chatInterface();
 					break;
 
 				case 'chat_settings':
-					$this->chatSettings($level);
+					$this->chatSettings();
 					break;
 
 				// ---
 
 				case 'users':
-					$this->showUsers($level);
+					$this->showUsers();
 					break;
 
 				case 'users_new':
-					$this->addUser($level);
+					$this->addUser();
 					break;
 
 				case 'users_change':
-					$this->changeUser($level);
+					$this->changeUser();
 					break;
 
 				case 'users_save':
-					$this->saveUser($level);
+					$this->saveUser();
 					break;
 
 				case 'users_delete':
-					$this->deleteUser($level);
+					$this->deleteUser();
 					break;
 
 				case 'users_delete_commit':
-					$this->deleteUser_Commit($level);
+					$this->deleteUser_Commit();
 					break;
 
 				// ---
 
 				case 'rooms':
-					$this->showRooms($level);
+					$this->showRooms();
 					break;
 
 				case 'rooms_new':
-					$this->addRoom($level);
+					$this->addRoom();
 					break;
 
 				case 'rooms_change':
-					$this->changeRoom($level);
+					$this->changeRoom();
 					break;
 
 				case 'rooms_save':
-					$this->saveRoom($level);
+					$this->saveRoom();
 					break;
 
 				case 'rooms_delete':
-					$this->deleteRoom($level);
+					$this->deleteRoom();
 					break;
 
 				case 'rooms_delete_commit':
-					$this->deleteRoom_Commit($level);
+					$this->deleteRoom_Commit();
 					break;
 
 				// ---
 
 				case 'admins':
-					$this->showAdmins($level);
+					$this->showAdmins();
 					break;
 
 				case 'admins_new':
-					$this->addAdmin($level);
+					$this->addAdmin();
 					break;
 
 				case 'admins_save':
-					$this->saveAdmin($level);
+					$this->saveAdmin();
 					break;
 
 				case 'admins_delete':
-					$this->deleteAdmin($level);
+					$this->deleteAdmin();
 					break;
 
 				case 'admins_delete_commit':
-					$this->deleteAdmin_Commit($level);
+					$this->deleteAdmin_Commit();
 					break;
 
 				default:
@@ -328,10 +327,8 @@ class chat extends Module {
 
 	/**
 	 * Show users administration form
-	 *
-	 * @param integer $level
 	 */
-	private function showUsers($level) {
+	private function showUsers() {
 		$template = new TemplateHandler('users_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -349,15 +346,13 @@ class chat extends Module {
 		$template->registerTagHandler('_user_list', &$this, 'tag_UserList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show user entry form
-	 *
-	 * @param integre $level
 	 */
-	private function addUser($level) {
+	private function addUser() {
 		$template = new TemplateHandler('users_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -368,15 +363,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show user change form
-	 *
-	 * @param integer $level
 	 */
-	private function changeUser($level) {
+	private function changeUser() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ChatUserManager::getInstance();
 
@@ -397,16 +390,14 @@ class chat extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Save changed or new user data
-	 *
-	 * @param integer $level
 	 */
-	private function saveUser($level) {
+	private function saveUser() {
 		$manager = ChatUserManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
@@ -440,15 +431,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print delete user confirmation dialog
-	 *
-	 * @param integer $level
 	 */
-	private function deleteUser($level) {
+	private function deleteUser() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ChatUserManager::getInstance();
 
@@ -477,15 +466,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete user from database
-	 *
-	 * @param integer $level
 	 */
-	private function deleteUser_Commit($level) {
+	private function deleteUser_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ChatUserManager::getInstance();
 		$admin_manager = ChatAdminManager::getInstance();
@@ -504,15 +491,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show rooms management from
-	 *
-	 * @param integre $level
 	 */
-	private function showRooms($level) {
+	private function showRooms() {
 		$template = new TemplateHandler('rooms_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -530,15 +515,13 @@ class chat extends Module {
 		$template->registerTagHandler('_room_list', &$this, 'tag_RoomList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Create new room form
-	 *
-	 * @param integer $level
 	 */
-	private function addRoom($level) {
+	private function addRoom() {
 		$template = new TemplateHandler('rooms_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -549,15 +532,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Change room data
-	 *
-	 * @param integer $level
 	 */
-	private function changeRoom($level) {
+	private function changeRoom() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ChatRoomManager::getInstance();
 
@@ -580,16 +561,14 @@ class chat extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Save changed or new room data
-	 *
-	 * @param integer $level
 	 */
-	private function saveRoom($level) {
+	private function saveRoom() {
 		$manager = ChatRoomManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
@@ -624,15 +603,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print confirmation dialog before removing room
-	 *
-	 * @param integer $level
 	 */
-	private function deleteRoom($level) {
+	private function deleteRoom() {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
@@ -663,15 +640,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Remove room and it's admins
-	 *
-	 * @param integer $level
 	 */
-	private function deleteRoom_Commit($level) {
+	private function deleteRoom_Commit() {
 		$id = fix_chars($_REQUEST['id']);
 		$manager = ChatRoomManager::getInstance();
 		$admin_manager = ChatAdminManager::getInstance();
@@ -690,15 +665,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show admin management form
-	 *
-	 * @param integer $level
 	 */
-	private function showAdmins($level) {
+	private function showAdmins() {
 		$template = new TemplateHandler('admins_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -716,15 +689,13 @@ class chat extends Module {
 		$template->registerTagHandler('_admin_list', &$this, 'tag_AdminList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Create admin form
-	 *
-	 * @param integer $level
 	 */
-	private function addAdmin($level) {
+	private function addAdmin() {
 		$template = new TemplateHandler('admins_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -735,15 +706,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save new admin data
-	 *
-	 * @param integer $level
 	 */
-	private function saveAdmin($level) {
+	private function saveAdmin() {
 		$manager = ChatAdminManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
@@ -765,15 +734,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete admin access
-	 *
-	 * @param integer $level
 	 */
-	private function deleteAdmin($level) {
+	private function deleteAdmin() {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
@@ -808,15 +775,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Remove administrator
-	 *
-	 * @param integer $level
 	 */
-	private function deleteAdmin_Commit($level) {
+	private function deleteAdmin_Commit() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ChatAdminManager::getInstance();
 
@@ -833,14 +798,13 @@ class chat extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Create chat interface
-	 * @param integer $level
 	 */
-	private function chatInterface($level) {
+	private function chatInterface() {
 		$template = new TemplateHandler('chat_window.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -882,14 +846,13 @@ class chat extends Module {
 		$template->registerTagHandler('_channel_list', &$this, 'tag_ChannelList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display channel management form
-	 * @param integer $level
 	 */
-	private function chatSettings($level) {
+	private function chatSettings() {
 		$template = new TemplateHandler('channel_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -907,17 +870,16 @@ class chat extends Module {
 		$template->registerTagHandler('_channel_list', &$this, 'tag_ChannelList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Tag handler for user list
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_UserList($level, $tag_params, $children) {
+	public function tag_UserList($tag_params, $children) {
 		$manager = ChatUserManager::getInstance();
 
 		$items = $manager->getItems($manager->getFieldNames(), array(), array('username'));
@@ -976,18 +938,17 @@ class chat extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * Tag handler for room lists
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_RoomList($level, $tag_params, $children) {
+	public function tag_RoomList($tag_params, $children) {
 		$manager = ChatRoomManager::getInstance();
 
 		$items = $manager->getItems($manager->getFieldNames(), array(), array('name'));
@@ -1046,18 +1007,17 @@ class chat extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * Tag handler for admin lists
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_AdminList($level, $tag_params, $children) {
+	public function tag_AdminList($tag_params, $children) {
 		$manager = ChatAdminManager::getInstance();
 		$user_manager = ChatUserManager::getInstance();
 		$room_manager = ChatRoomManager::getInstance();
@@ -1114,7 +1074,7 @@ class chat extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 

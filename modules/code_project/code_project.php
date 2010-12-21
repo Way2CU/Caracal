@@ -60,16 +60,15 @@ class code_project extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'redirect':
-					$this->redirect($level);
+					$this->redirect();
 					break;
 
 				default:
@@ -80,27 +79,27 @@ class code_project extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'codes_manage':
-					$this->showCodes($level);
+					$this->showCodes();
 					break;
 
 				case 'codes_add':
-					$this->addCode($level);
+					$this->addCode();
 					break;
 
 				case 'codes_change':
-					$this->changeCode($level);
+					$this->changeCode();
 					break;
 
 				case 'codes_save':
-					$this->saveCode($level);
+					$this->saveCode();
 					break;
 
 				case 'codes_delete':
-					$this->deleteCode($level);
+					$this->deleteCode();
 					break;
 
 				case 'codes_delete_commit':
-					$this->deleteCode_Commit($level);
+					$this->deleteCode_Commit();
 					break;
 
 				default:
@@ -137,10 +136,8 @@ class code_project extends Module {
 
 	/**
 	 * Show code management window
-	 * 
-	 * @param integer $level
 	 */
-	private function showCodes($level) {
+	private function showCodes() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -158,15 +155,13 @@ class code_project extends Module {
 		$template->registerTagHandler('_code_list', &$this, 'tag_CodeList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show content of a form used for creation of new `code` object
-	 * 
-	 * @param integer $level
 	 */
-	private function addCode($level) {
+	private function addCode() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -177,15 +172,13 @@ class code_project extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show content of a form in editing state for sepected `code` object
-	 * 
-	 * @param integer $level
 	 */
-	private function changeCode($level) {
+	private function changeCode() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = CodeManager::getInstance();
 
@@ -204,16 +197,14 @@ class code_project extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 
 	/**
 	 * Save changes existing (or new) to `code` object and display result
-	 * 
-	 * @param integer $level
 	 */
-	private function saveCode($level) {
+	private function saveCode() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -243,15 +234,13 @@ class code_project extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Present user with confirmation dialog before removal of specified `code` object
-	 * 
-	 * @param integer $level
 	 */
-	private function deleteCode($level) {
+	private function deleteCode() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = CodeManager::getInstance();
 
@@ -280,15 +269,13 @@ class code_project extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Remove specified `code` object and inform user about operation status
-	 * 
-	 * @param integer $level
 	 */
-	private function deleteCode_Commit($level) {
+	private function deleteCode_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = CodeManager::getInstance();
 
@@ -305,15 +292,13 @@ class code_project extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Redirect user based on specified code
-	 * 
-	 * @param integer $level
 	 */
-	private function redirect($level) {
+	private function redirect() {
 		define('_OMIT_STATS', 1);
 		
 		$code = fix_chars($_REQUEST['code']);
@@ -328,11 +313,10 @@ class code_project extends Module {
 	/**
 	 * Tag handler for printing code lists
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_CodeList($level, $params, $children) {
+	public function tag_CodeList($params, $children) {
 		$manager = CodeManager::getInstance();
 		$conditions = array();
 
@@ -394,7 +378,7 @@ class code_project extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 

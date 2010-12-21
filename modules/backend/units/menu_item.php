@@ -10,30 +10,30 @@ class backend_MenuItem {
 	 * Menu text
 	 * @var string
 	 */
-	var $title;
+	private $title;
 
 	/**
 	 * Url to menu icon
 	 * @var string
 	 */
-	var $icon;
+	private $icon;
 
 	/**
 	 * Action URL
 	 * @var string
 	 */
-	var $action;
+	private $action;
 
 	/**
 	 * Access level
 	 */
-	var $level;
+	private $level;
 
 	/**
 	 * Submenu items
 	 * @var array
 	 */
-	var $children = array();
+	private $children = array();
 
 	/**
 	 * Constructor
@@ -65,6 +65,16 @@ class backend_MenuItem {
 	}
 	
 	/**
+	 * Insert item to child list on specified location
+	 * 
+	 * @param resource $item
+	 * @param integer $position
+	 */
+	function insertChild($item, $position=0) {
+		array_splice($this->children, $position, 0, array($item));
+	}
+	
+	/**
 	 * Add separator to child list
 	 * 
 	 * @param integer $level
@@ -75,30 +85,26 @@ class backend_MenuItem {
 
 	/**
 	 * Draws item on screen
-	 * @param string $module
 	 */
-	function drawItem($level) {
+	function drawItem() {
 		if (!$this->isDrawable()) return;
 		
-		$tag_space = str_repeat("\t", $level);
-
 		$icon = "<img src=\"{$this->icon}\" alt=\"{$this->title}\">";
 		$link = (!empty($this->action)) ? "<a href=\"javascript:void(0);\" onclick=\"{$this->action}\">{$icon}{$this->title}</a>" : $icon.$this->title;
 		$class = (count($this->children) > 0) ? ' class="sub_menu"' : '';
 
-		echo $tag_space."<li{$class}>\n";
-		echo $tag_space."\t{$link}\n";
+		echo "<li{$class}>{$link}";
 
 		if (count($this->children) > 0) {
-			echo $tag_space."\t<ul>\n";
+			echo "<ul>";
 
 			foreach ($this->children as $child)
-				$child->drawItem($level+2);
+				$child->drawItem();
 
-			echo $tag_space."\t</ul>\n";
+			echo "</ul>";
 		}
 
-		echo $tag_space."</li>\n";
+		echo "</li>";
 	}
 
 	/**
@@ -127,12 +133,9 @@ class backend_MenuSeparator{
 	 * 
 	 * @param integer $level
 	 */
-	function drawItem($level) {
+	function drawItem() {
 		if (!$this->isDrawable()) return;
-		
-		$tag_space = str_repeat("\t", $level);
-		
-		echo "{$tag_space}<li class=\"separator\"></li>";
+		echo '<li class="separator"></li>';
 	}
 	
 	/**

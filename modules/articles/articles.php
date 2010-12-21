@@ -90,29 +90,29 @@ class articles extends Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->tag_Article($level, $params, $children);
+					$this->tag_Article($params, $children);
 					break;
 
 				case 'show_list':
-					$this->tag_ArticleList($level, $params, $children);
+					$this->tag_ArticleList($params, $children);
 					break;
 
 				case 'show_group':
-					$this->tag_Group($level, $params, $children);
+					$this->tag_Group($params, $children);
 					break;
 
 				case 'show_group_list':
-					$this->tag_GroupList($level, $params, $children);
+					$this->tag_GroupList($params, $children);
 					break;
 
 				case 'get_rating_image':
 				case 'show_rating_image':
-					$this->tag_ArticleRatingImage($level, $params, $children);
+					$this->tag_ArticleRatingImage($params, $children);
 					break;
 
 				case 'json_vote':
@@ -127,53 +127,53 @@ class articles extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'articles':
-					$this->showArticles($level);
+					$this->showArticles();
 					break;
 
 				case 'articles_new':
-					$this->addArticle($level);
+					$this->addArticle();
 					break;
 
 				case 'articles_change':
-					$this->changeArticle($level);
+					$this->changeArticle();
 					break;
 
 				case 'articles_save':
-					$this->saveArticle($level);
+					$this->saveArticle();
 					break;
 
 				case 'articles_delete':
-					$this->deleteArticle($level);
+					$this->deleteArticle();
 					break;
 
 				case 'articles_delete_commit':
-					$this->deleteArticle_Commit($level);
+					$this->deleteArticle_Commit();
 					break;
 
 				// ---
 
 				case 'groups':
-					$this->showGroups($level);
+					$this->showGroups();
 					break;
 
 				case 'groups_new':
-					$this->addGroup($level);
+					$this->addGroup();
 					break;
 
 				case 'groups_change':
-					$this->changeGroup($level);
+					$this->changeGroup();
 					break;
 
 				case 'groups_save':
-					$this->saveGroup($level);
+					$this->saveGroup();
 					break;
 
 				case 'groups_delete':
-					$this->deleteGroup($level);
+					$this->deleteGroup();
 					break;
 
 				case 'groups_delete_commit':
-					$this->deleteGroup_Commit($level);
+					$this->deleteGroup_Commit();
 					break;
 
 				default:
@@ -259,9 +259,8 @@ class articles extends Module {
 
 	/**
 	 * Show administration form for articles
-	 * @param integer $level
 	 */
-	private function showArticles($level) {
+	private function showArticles() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -279,14 +278,13 @@ class articles extends Module {
 		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print input form for new article
-	 * @param integer $level
 	 */
-	private function addArticle($level) {
+	private function addArticle() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
@@ -298,14 +296,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display article for modification
-	 * @param integer $level
 	 */
-	private function changeArticle($level) {
+	private function changeArticle() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ArticleManager::getInstance();
 
@@ -329,15 +326,14 @@ class articles extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Save article data
-	 * @param integer $level
 	 */
-	private function saveArticle($level) {
+	private function saveArticle() {
 		$manager = ArticleManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
@@ -375,14 +371,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print confirmation dialog before deleting article
-	 * @param integer $level
 	 */
-	private function deleteArticle($level) {
+	private function deleteArticle() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ArticleManager::getInstance();
 
@@ -411,14 +406,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete article and print result message
-	 * @param integer $level
 	 */
-	private function deleteArticle_Commit($level) {
+	private function deleteArticle_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ArticleManager::getInstance();
 
@@ -435,14 +429,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show article groups
-	 * @param integer $level
 	 */
-	private function showGroups($level) {
+	private function showGroups() {
 		$template = new TemplateHandler('group_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -460,14 +453,13 @@ class articles extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print form for adding a new article group
-	 * @param integer $level
 	 */
-	private function addGroup($level) {
+	private function addGroup() {
 		$template = new TemplateHandler('group_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -478,14 +470,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print form for changing article group data
-	 * @param integer $level
 	 */
-	private function changeGroup($level) {
+	private function changeGroup() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ArticleGroupManager::getInstance();
 
@@ -505,14 +496,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print confirmation dialog prior to group removal
-	 * @param integer $level
 	 */
-	private function deleteGroup($level) {
+	private function deleteGroup() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -543,14 +533,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Perform removal of certain group
-	 * @param integer $level
 	 */
-	private function deleteGroup_Commit($level) {
+	private function deleteGroup_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = ArticleGroupManager::getInstance();
 		$article_manager = ArticleManager::getInstance();
@@ -571,14 +560,13 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save changed group data
-	 * @param integer $level
 	 */
-	private function saveGroup($level) {
+	private function saveGroup() {
 		$manager = ArticleGroupManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
@@ -611,17 +599,16 @@ class articles extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Tag handler for printing article
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_Article($level, $tag_params, $children) {
+	public function tag_Article($tag_params, $children) {
 		$item = null;
 		$manager = ArticleManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
@@ -691,18 +678,17 @@ class articles extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Tag handler for printing article list
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_ArticleList($level, $tag_params, $children) {
+	public function tag_ArticleList($tag_params, $children) {
 		$manager = ArticleManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 
@@ -801,18 +787,17 @@ class articles extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * Tag handler for printing article list
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_ArticleRatingImage($level, $tag_params, $children) {
+	public function tag_ArticleRatingImage($tag_params, $children) {
 		if (isset($tag_params['id'])) {
 			// print image tag with specified URL
 			$id = fix_id($tag_params['id']);
@@ -839,7 +824,7 @@ class articles extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 
 		} else if (isset($_REQUEST['id'])) {
@@ -899,11 +884,10 @@ class articles extends Module {
 	/**
 	 * Tag handler for article group
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Group($level, $tag_params, $children) {
+	public function tag_Group($tag_params, $children) {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$text_id = isset($tag_params['text_id']) ? escape_chars($tag_params['text_id']) : null;
 
@@ -937,18 +921,17 @@ class articles extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Tag handler for article group list
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_GroupList($level, $tag_params, $children) {
+	public function tag_GroupList($tag_params, $children) {
 		$manager = ArticleGroupManager::getInstance();
 		$conditions = array();
 
@@ -1018,7 +1001,7 @@ class articles extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 

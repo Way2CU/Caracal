@@ -87,31 +87,30 @@ class links extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
 			case 'show':
-				$this->tag_Link($level, $params, $children);
+				$this->tag_Link($params, $children);
 				break;
 
 			case 'show_link_list':
-				$this->tag_LinkList($level, $params, $children);
+				$this->tag_LinkList($params, $children);
 				break;
 
 			case 'show_group':
-				$this->tag_Group($level, $params, $children);
+				$this->tag_Group($params, $children);
 				break;
 
 			case 'show_group_list':
-				$this->tag_GroupList($level, $params, $children);
+				$this->tag_GroupList($params, $children);
 				break;
 
 			case 'redirect':
-				$this->redirectLink($level);
+				$this->redirectLink();
 				break;
 
 			default:
@@ -122,67 +121,67 @@ class links extends Module {
 		if (isset($params['backend_action']))
 		switch ($params['backend_action']) {
 			case 'links_list':
-				$this->showList($level);
+				$this->showList();
 				break;
 
 			case 'links_add':
-				$this->addLink($level);
+				$this->addLink();
 				break;
 
 			case 'links_change':
-				$this->changeLink($level);
+				$this->changeLink();
 				break;
 
 			case 'links_save':
-				$this->saveLink($level);
+				$this->saveLink();
 				break;
 
 			case 'links_delete':
-				$this->deleteLink($level);
+				$this->deleteLink();
 				break;
 
 			case 'links_delete_commit':
-				$this->deleteLink_Commit($level);
+				$this->deleteLink_Commit();
 				break;
 
 			// ----
 
 			case 'groups_list':
-				$this->showGroups($level);
+				$this->showGroups();
 				break;
 
 			case 'groups_add':
-				$this->addGroup($level);
+				$this->addGroup();
 				break;
 
 			case 'groups_change':
-				$this->changeGroup($level);
+				$this->changeGroup();
 				break;
 
 			case 'groups_save':
-				$this->saveGroup($level);
+				$this->saveGroup();
 				break;
 
 			case 'groups_delete':
-				$this->deleteGroup($level);
+				$this->deleteGroup();
 				break;
 
 			case 'groups_delete_commit':
-				$this->deleteGroup_Commit($level);
+				$this->deleteGroup_Commit();
 				break;
 
 			case 'groups_links':
-				$this->groupLinks($level);
+				$this->groupLinks();
 				break;
 
 			case 'groups_links_save':
-				$this->groupLinksSave($level);
+				$this->groupLinksSave();
 				break;
 
 			// ----
 
 			case 'overview':
-				$this->showOverview($level);
+				$this->showOverview();
 				break;
 
 			default:
@@ -247,9 +246,8 @@ class links extends Module {
 
 	/**
 	 * Show links window
-	 * @param integer $level
 	 */
-	private function showList($level) {
+	private function showList() {
 		$template = new TemplateHandler('links_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -287,15 +285,13 @@ class links extends Module {
 		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show content of a form used for creation of new `link` object
-	 *
-	 * @param integer $level
 	 */
-	private function addLink($level) {
+	private function addLink() {
 		$template = new TemplateHandler('links_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -307,15 +303,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show content of a form in editing state for sepected `link` object
-	 *
-	 * @param integer $level
 	 */
-	private function changeLink($level) {
+	private function changeLink() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinksManager::getInstance();
 
@@ -339,15 +333,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save changes existing (or new) to `link` object and display result
-	 *
-	 * @param integer $level
 	 */
-	private function saveLink($level) {
+	private function saveLink() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -406,15 +398,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Present user with confirmation dialog before removal of specified `link` object
-	 *
-	 * @param integer $level
 	 */
-	private function deleteLink($level) {
+	private function deleteLink() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinksManager::getInstance();
 
@@ -443,15 +433,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Remove specified `link` object and inform user about operation status
-	 *
-	 * @param integer $level
 	 */
-	private function deleteLink_Commit($level) {
+	private function deleteLink_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinksManager::getInstance();
 		$membership_manager = LinkMembershipManager::getInstance();
@@ -483,15 +471,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show link groups management window
-	 *
-	 * @param integer $level
 	 */
-	private function showGroups($level) {
+	private function showGroups() {
 		$template = new TemplateHandler('groups_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -509,15 +495,13 @@ class links extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Create new group form
-	 *
-	 * @param integer $level
 	 */
-	private function addGroup($level) {
+	private function addGroup() {
 		$template = new TemplateHandler('groups_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -528,15 +512,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Group rename form
-	 *
-	 * @param integer $level
 	 */
-	private function changeGroup($level) {
+	private function changeGroup() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinkGroupsManager::getInstance();
 
@@ -554,15 +536,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Insert or save group data
-	 *
-	 * @param integer $level
 	 */
-	private function saveGroup($level) {
+	private function saveGroup() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -592,15 +572,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete group confirmation dialog
-	 *
-	 * @param integer $level
 	 */
-	private function deleteGroup($level) {
+	private function deleteGroup() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinkGroupsManager::getInstance();
 
@@ -629,15 +607,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete group from the system
-	 *
-	 * @param integer $level
 	 */
-	private function deleteGroup_Commit($level) {
+	private function deleteGroup_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinkGroupsManager::getInstance();
 		$membership_manager = LinkMembershipManager::getInstance();
@@ -656,15 +632,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print a form containing all the links within a group
-	 *
-	 * @param integer $level
 	 */
-	private function groupLinks($level) {
+	private function groupLinks() {
 		$group_id = fix_id(fix_chars($_REQUEST['id']));
 
 		$template = new TemplateHandler('groups_links.xml', $this->path.'templates/');
@@ -679,15 +653,13 @@ class links extends Module {
 		$template->registerTagHandler('_group_links', &$this, 'tag_GroupLinks');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save link group memberships
-	 *
-	 * @param integer level
 	 */
-	private function groupLinksSave($level) {
+	private function groupLinksSave() {
 		$group = fix_id(fix_chars($_REQUEST['group']));
 		$membership_manager = LinkMembershipManager::getInstance();
 
@@ -720,15 +692,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show sponsored link overview
-	 *
-	 * @param integer $level
 	 */
-	private function showOverview($level) {
+	private function showOverview() {
 		// display message
 		$template = new TemplateHandler('overview_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -739,15 +709,13 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Record click cound and redirect to given page
-	 *
-	 * @param integer $level
 	 */
-	private function redirectLink($level) {
+	private function redirectLink() {
 		$link_id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinksManager::getInstance();
 
@@ -770,11 +738,10 @@ class links extends Module {
 	/**
 	 * Tag handler for links in group editor mode
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_GroupLinks($level, $params, $children) {
+	public function tag_GroupLinks($params, $children) {
 		if (!isset($params['group'])) return;
 
 		$group = fix_id($params['group']);
@@ -807,18 +774,17 @@ class links extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * Tag handler for `link` object
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_Link($level, $params, $children) {
+	public function tag_Link($params, $children) {
 		$id = isset($params['id']) ? $params['id'] : fix_id(fix_chars($_REQUEST['id']));
 		$manager = LinksManager::getInstance();
 
@@ -883,17 +849,16 @@ class links extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Tag handler for printing link lists
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_LinkList($level, $tag_params, $children) {
+	public function tag_LinkList($tag_params, $children) {
 		$manager = LinksManager::getInstance();
 		$membership_manager = LinkMembershipManager::getInstance();
 		$conditions = array();
@@ -1031,18 +996,17 @@ class links extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Tag handler for printing link group
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Group($level, $tag_params, $children) {
+	public function tag_Group($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
 		$id = $tag_params['id'];
@@ -1099,18 +1063,17 @@ class links extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Tag handler for printing link groups
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_GroupList($level, $tag_params, $children) {
+	public function tag_GroupList($tag_params, $children) {
 		$manager = LinkGroupsManager::getInstance();
 		$link_manager = LinksManager::getInstance();
 		$membership_manager = LinkMembershipManager::getInstance();
@@ -1222,7 +1185,7 @@ class links extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 }

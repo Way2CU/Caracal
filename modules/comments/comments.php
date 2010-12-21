@@ -73,20 +73,19 @@ class comments extends Module {
 	/**
 	 * Transfers control to module functions
 	 * 
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show_input_form':
-					$this->showInputForm($level, $params);
+					$this->showInputForm($params);
 					break;
 
 				case 'save_data':
-					$this->saveCommentData($level);
+					$this->saveCommentData();
 					break;
 
 				case 'get_data':
@@ -104,15 +103,15 @@ class comments extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'settings':
-					$this->moduleSettings($level);
+					$this->moduleSettings();
 					break;
 
 				case 'settings_save':
-					$this->moduleSettings_Save($level);
+					$this->moduleSettings_Save();
 					break;
 
 				case 'comments':
-					$this->showComments($level);
+					$this->showComments();
 					break;
 
 				default:
@@ -166,10 +165,8 @@ class comments extends Module {
 
 	/**
 	 * Show comments management form
-	 * 
-	 * @param integer $level
 	 */	
-	private function showComments($level) {
+	private function showComments() {
 		$comments_module = isset($_REQUEST['comments_module']) ? fix_chars($_REQUEST['comments_module']) : null;
 		$comments_section = isset($_REQUEST['comments_section']) ? fix_chars($_REQUEST['comments_section']) : null;
 		$manager = CommentManager::getInstance();
@@ -177,10 +174,8 @@ class comments extends Module {
 
 	/**
 	 * Show module settings form
-	 * 
-	 * @param integer $level
 	 */
-	private function moduleSettings($level) {
+	private function moduleSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -193,15 +188,13 @@ class comments extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save module settings
-	 * 
-	 * @param integer $level
 	 */
-	private function moduleSettings_Save($level) {
+	private function moduleSettings_Save() {
 		$repost_time = isset($_REQUEST['repost_time']) ? fix_id($_REQUEST['repost_time']) : 15;
 		$default_visibility = isset($_REQUEST['default_visibility']) ? fix_id($_REQUEST['default_visibility']) : 1;
 		$size_limit = isset($_REQUEST['size_limit']) ? fix_id($_REQUEST['size_limit']) : 200;
@@ -222,16 +215,15 @@ class comments extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display comment input form
 	 * 
-	 * @param integer $level
 	 * @param array $tag_params
 	 */
-	private function showInputForm($level, $tag_params) {
+	private function showInputForm($tag_params) {
 		$module = isset($tag_params['module']) ? fix_chars($tag_params['module']) : null;
 		$section = isset($tag_params['section']) ? fix_chars($tag_params['section']) : null;
 
@@ -255,15 +247,13 @@ class comments extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save comment data and send response as JSON Object
-	 * 
-	 * @param integer $level
 	 */
-	private function saveCommentData($level) {
+	private function saveCommentData() {
 		if ($this->_canPostComment()) {
 			$module = (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) ? fix_chars($_REQUEST['module']) : null;
 			$comment_section = (isset($_REQUEST['comment_section']) && !empty($_REQUEST['comment_section'])) ? fix_chars($_REQUEST['comment_section']) : null;
@@ -315,7 +305,7 @@ class comments extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 
 	}
 

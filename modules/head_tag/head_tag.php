@@ -9,7 +9,11 @@
 class head_tag extends Module {
 	private static $_instance;
 	private $tags = array();
+	private $meta_tags = array();
+	private $link_tags = array();
+	private $script_tags = array();
 	private $closeable_tags = array('script', 'style');
+	private $analytics = null;
 
 	/**
 	 * Constructor
@@ -31,16 +35,16 @@ class head_tag extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children=array()) {
-		switch ($params['action']) {
-			case 'print_tag':
-				$this->printTags($level);
-				break;
-		}
+	public function transferControl($params = array(), $children=array()) {
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'print_tag':
+					$this->printTags();
+					break;
+			}
 	}
 
 	/**
@@ -50,20 +54,59 @@ class head_tag extends Module {
 	 * @param array $params
 	 */
 	public function addTag($name, $params) {
-		$this->tags[] = array($name, $params);
+		$name = strtolower($name);
+		$data = array($name, $params);
+		
+		switch ($name) {
+			case 'meta':
+				$this->meta_tags[] = $data;
+				break;
+				
+			case 'link':
+				$this->link_tags[] = $data;
+				break;
+				
+			case 'script':
+				$this->script_tags[] = $data;
+				break;
+			
+			default:
+				$this->tags[] = array($name, $params);
+				break;
+		}
+	}
+	
+	/**
+	 * Add Google Analytics script to the page
+	 *  
+	 * @param string $code
+	 */
+	public function addGoogleAnalytics($code) {
+		$this->analytics = $code;
 	}
 
 	/**
 	 * Print previously added tags
-	 *
-	 * @param integer $level
 	 */
-	private function printTags($level) {
-		$pretext = str_repeat("\t", $level);
+	private function printTags() {
+		$tags = array_merge($this->meta_tags, $this->link_tags, $this->script_tags, $this->tags);
+		
+		foreach ($tags as $tag)
+			echo "<".$tag[0].$this->getTagParams($tag[1]).">".
+				(in_array($tag[0], $this->closeable_tags) ? "</".$tag[0].">" : "");
 
-		foreach ($this->tags as $tag)
-			echo $pretext."<".$tag[0].$this->getTagParams($tag[1]).">".
-				(in_array($tag[0], $this->closeable_tags) ? "</".$tag[0].">" : "")."\n";
+		if (!is_null($this->analytics)) {
+			$template = new TemplateHandler('google_analytics.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+	
+			$params = array(
+							'code'	=> $this->analytics
+						);
+	
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();		
+		}
 	}
 
 	/**

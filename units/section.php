@@ -137,7 +137,7 @@ class MainSectionHandler {
 				$params = array('action' => $action);
 
 				// transfer control to module
-				$module->transferControl(0, $params, array());
+				$module->transferControl($params, array());
 			}
 
 		} else {

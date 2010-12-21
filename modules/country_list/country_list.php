@@ -31,20 +31,19 @@ class country_list extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param intege $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->printCountryList($level, $params);
+					$this->printCountryList($params);
 					break;
 
 				case 'show_states':
-					$this->printStateList($level, $params);
+					$this->printStateList($params);
 					break;
 
 				default:
@@ -55,10 +54,9 @@ class country_list extends Module {
 	/**
 	 * Print list of all countries using specified template
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 */
-	private function printCountryList($level, $params) {
+	private function printCountryList($params) {
 		if(is_null($this->country_list))
 			$this->_loadCountryList();
 	}
@@ -66,10 +64,9 @@ class country_list extends Module {
 	/**
 	 * Print a list of United States using specified template
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 */
-	private function printStateList($level, $params) {
+	private function printStateList($params) {
 		if(is_null($this->state_list))
 			$this->_loadStateList();
 	}

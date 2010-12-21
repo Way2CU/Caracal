@@ -35,11 +35,10 @@ class swfobject extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -48,7 +47,7 @@ class swfobject extends Module {
 										'wmode'		=> 'transparent',
 										'menu'		=> false,
 									);
-					$this->embedSWF($level, $params['url'], $params['id'],
+					$this->embedSWF($params['url'], $params['id'],
 									$params['width'], $params['height'], array(), $flash_params);
 					break;
 
@@ -74,7 +73,7 @@ class swfobject extends Module {
 	 * @param array $flash_vars
 	 * @param array $params
 	 */
-	public function embedSWF($level, $url, $target_id, $width, $height, $flash_vars=array(), $params=array()) {
+	public function embedSWF($url, $target_id, $width, $height, $flash_vars=array(), $params=array()) {
 		$template = new TemplateHandler('embed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -95,7 +94,7 @@ class swfobject extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**

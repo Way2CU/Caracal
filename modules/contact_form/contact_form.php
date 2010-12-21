@@ -32,15 +32,15 @@ class contact_form extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
-	 * @param integer $level
+	 * @param array $params
+	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'send_from_xml':
-					$this->sendFromXML($level, $params, $children);
+					$this->sendFromXML($params, $children);
 					break;
 					
 				case 'send_from_ajax':
@@ -84,11 +84,10 @@ class contact_form extends Module {
 	/**
 	 * Process mail sending request issued by template parser
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	private function sendFromXML($level, $params, $children) {
+	private function sendFromXML($params, $children) {
 		$to = "";
 		$subject = "";
 		$fields = array();
@@ -151,7 +150,7 @@ class contact_form extends Module {
 				$template = new TemplateHandler();
 				$template->setMappedModule($this->name);
 				$template->setLocalParams($template_params);
-				$template->parse($level, $message_success);
+				$template->parse($message_success);
 			}
 		} else {
 			// error sending
@@ -159,7 +158,7 @@ class contact_form extends Module {
 				$template = new TemplateHandler();
 				$template->setMappedModule($this->name);
 				$template->setLocalParams($template_params);
-				$template->parse($level, $message_error);
+				$template->parse($message_error);
 			}
 		}
 	}

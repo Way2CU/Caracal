@@ -110,32 +110,31 @@ class news extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->tag_News($level, $params, $children);
+					$this->tag_News($params, $children);
 					break;
 
 				case 'show_list':
-					$this->tag_NewsList($level, $params, $children);
+					$this->tag_NewsList($params, $children);
 					break;
 
 				case 'show_group':
-					$this->tag_Group($level, $params, $children);
+					$this->tag_Group($params, $children);
 					break;
 
 				case 'show_group_list':
-					$this->tag_GroupList($level, $params, $children);
+					$this->tag_GroupList($params, $children);
 					break;
 
 				case 'show_feed':
-					$this->tag_Feed($level, $params, $children);
+					$this->tag_Feed($params, $children);
 					break;
 
 				default:
@@ -146,87 +145,87 @@ class news extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'news':
-					$this->showNews($level);
+					$this->showNews();
 					break;
 
 				case 'news_add':
-					$this->addNews($level);
+					$this->addNews();
 					break;
 
 				case 'news_change':
-					$this->changeNews($level);
+					$this->changeNews();
 					break;
 
 				case 'news_save':
-					$this->saveNews($level);
+					$this->saveNews();
 					break;
 
 				case 'news_delete':
-					$this->deleteNews($level);
+					$this->deleteNews();
 					break;
 
 				case 'news_delete_commit':
-					$this->deleteNews_Commit($level);
+					$this->deleteNews_Commit();
 					break;
 
 				// ---
 
 				case 'groups':
-					$this->showGroups($level);
+					$this->showGroups();
 					break;
 
 				case 'group_add':
-					$this->addGroup($level);
+					$this->addGroup();
 					break;
 
 				case 'group_change':
-					$this->changeGroup($level);
+					$this->changeGroup();
 					break;
 
 				case 'group_save':
-					$this->saveGroup($level);
+					$this->saveGroup();
 					break;
 
 				case 'group_delete':
-					$this->deleteGroup($level);
+					$this->deleteGroup();
 					break;
 
 				case 'group_delete_commit':
-					$this->deleteGroup_Commit($level);
+					$this->deleteGroup_Commit();
 					break;
 
 				case 'group_items':
-					$this->groupItems($level);
+					$this->groupItems();
 					break;
 
 				case 'group_items_save':
-					$this->groupItems_Save($level);
+					$this->groupItems_Save();
 					break;
 
 				// ---
 
 				case 'feeds':
-					$this->showFeeds($level);
+					$this->showFeeds();
 					break;
 
 				case 'feed_add':
-					$this->addFeed($level);
+					$this->addFeed();
 					break;
 
 				case 'feed_change':
-					$this->changeFeed($level);
+					$this->changeFeed();
 					break;
 
 				case 'feed_save':
-					$this->saveFeed($level);
+					$this->saveFeed();
 					break;
 
 				case 'feed_delete':
-					$this->deleteFeed($level);
+					$this->deleteFeed();
 					break;
 
 				case 'feed_delete_commit':
-					$this->deleteFeed_Commit($level);
+					$this->deleteFeed_Commit();
 					break;
 
 				default:
@@ -320,9 +319,8 @@ class news extends Module {
 
 	/**
 	 * Show news management form
-	 * @param integer $level
 	 */
-	private function showNews($level) {
+	private function showNews() {
 		$template = new TemplateHandler('news_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -352,15 +350,13 @@ class news extends Module {
 		$template->registerTagHandler('_news_list', &$this, 'tag_NewsList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show form for adding news item
-	 *
-	 * @param integer $level
 	 */
-	private function addNews($level) {
+	private function addNews() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -372,10 +368,13 @@ class news extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
-	private function changeNews($level) {
+	/**
+	 * Change news
+	 */
+	private function changeNews() {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
@@ -397,15 +396,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save changed or new data
-
-	 * @param integer $level
 	 */
-	private function saveNews($level) {
+	private function saveNews() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = NewsManager::getInstance();
 
@@ -448,15 +445,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print news confirmation dialog before deleting
-	 *
-	 * @param integer $level
 	 */
-	private function deleteNews($level) {
+	private function deleteNews() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -487,15 +482,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete news from database
-	 *
-	 * @param integer $level
 	 */
-	private function deleteNews_Commit($level) {
+	private function deleteNews_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = NewsManager::getInstance();
 		$membership_manager = NewsMembershipManager::getInstance();
@@ -515,15 +508,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show group list
-	 *
-	 * @param integer $level
 	 */
-	private function showGroups($level) {
+	private function showGroups() {
 		$template = new TemplateHandler('group_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -543,15 +534,13 @@ class news extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Add new news group
-	 *
-	 * @param integer $level
 	 */
-	private function addGroup($level) {
+	private function addGroup() {
 		$template = new TemplateHandler('group_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -562,15 +551,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Change group data
-	 *
-	 * @param integer $level
 	 */
-	private function changeGroup($level) {
+	private function changeGroup() {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
@@ -592,16 +579,14 @@ class news extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Save group data
-	 *
-	 * @param integer $level
 	 */
-	private function saveGroup($level) {
+	private function saveGroup() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = NewsGroupManager::getInstance();
 
@@ -629,15 +614,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Group removal confirmation dialog
-	 *
-	 * @param integer $level
 	 */
-	private function deleteGroup($level) {
+	private function deleteGroup() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -668,15 +651,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Remove group from database
-	 *
-	 * @param integer $level
 	 */
-	private function deleteGroup_Commit($level) {
+	private function deleteGroup_Commit() {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_chars($_REQUEST['id']);
@@ -700,15 +681,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show group items edit form
-	 *
-	 * @param integer $level
 	 */
-	private function groupItems($level) {
+	private function groupItems() {
 		$group_id = fix_id(fix_chars($_REQUEST['id']));
 
 		$template = new TemplateHandler('group_news.xml', $this->path.'templates/');
@@ -723,15 +702,13 @@ class news extends Module {
 		$template->registerTagHandler('_group_items', &$this, 'tag_GroupItems');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save group items
-	 *
-	 * @param integer $level
 	 */
-	private function groupItems_Save($level) {
+	private function groupItems_Save() {
 		$group = fix_id(fix_chars($_REQUEST['group']));
 		$membership_manager = NewsMembershipManager::getInstance();
 
@@ -764,15 +741,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show news feed management form
-	 *
-	 * @param integer $level
 	 */
-	private function showFeeds($level) {
+	private function showFeeds() {
 		$template = new TemplateHandler('feed_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -792,15 +767,13 @@ class news extends Module {
 		$template->registerTagHandler('_feed_list', &$this, 'tag_FeedList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Add new feed
-	 *
-	 * @param integer $level
 	 */
-	private function addFeed($level) {
+	private function addFeed() {
 		$template = new TemplateHandler('feed_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -812,15 +785,13 @@ class news extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Change feed data
-	 *
-	 * @param integer $level
 	 */
-	private function changeFeed($level) {
+	private function changeFeed() {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
@@ -845,15 +816,13 @@ class news extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save feed data
-	 *
-	 * @param integer $level
 	 */
-	private function saveFeed($level) {
+	private function saveFeed() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = NewsFeedManager::getInstance();
 
@@ -884,15 +853,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Feed removal confirmation form
-	 *
-	 * @param integer $level
 	 */
-	private function deleteFeed($level) {
+	private function deleteFeed() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -923,15 +890,13 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Perform feed removal
-	 *
-	 * @param integer $level
 	 */
-	private function deleteFeed_Commit($level) {
+	private function deleteFeed_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = NewsFeedManager::getInstance();
 
@@ -949,7 +914,7 @@ class news extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
@@ -992,11 +957,10 @@ class news extends Module {
 	/**
 	 * News tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_News($level, $tag_params, $children) {
+	public function tag_News($tag_params, $children) {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$manager = NewsManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
@@ -1033,18 +997,17 @@ class news extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * News list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_NewsList($level, $tag_params, $children) {
+	public function tag_NewsList($tag_params, $children) {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$group = isset($tag_params['group']) ? escape_chars($tag_params['group']) : null;
 		$conditions = array();
@@ -1149,18 +1112,17 @@ class news extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * News group tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Group($level, $tag_params, $children) {
+	public function tag_Group($tag_params, $children) {
 		$manager = NewsGroupManager::getInstance();
 
 		if (isset($_REQUEST['id'])) {
@@ -1192,18 +1154,17 @@ class news extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * News group list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_GroupList($level, $tag_params, $children) {
+	public function tag_GroupList($tag_params, $children) {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$manager = NewsGroupManager::getInstance();
 
@@ -1285,18 +1246,17 @@ class news extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * Tag handler used to display items within a certain group
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_GroupItems($level, $params, $children) {
+	public function tag_GroupItems($params, $children) {
 		if (!isset($params['group'])) return;
 
 		$group = fix_id($params['group']);
@@ -1328,18 +1288,17 @@ class news extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 
 	/**
 	 * Tag handler for feed tag
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Feed($level, $tag_params, $children) {
+	public function tag_Feed($tag_params, $children) {
 		$id = isset($tag_params['id']) ? $tag_params['id'] : null;
 		if (is_null($id)) $id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		if (is_null($id)) return;
@@ -1392,18 +1351,17 @@ class news extends Module {
 			$template->registerTagHandler('_news_list', &$this, 'tag_NewsList');
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Tag handler for feed list
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_FeedList($level, $params, $children) {
+	public function tag_FeedList($params, $children) {
 		$manager = NewsFeedManager::getInstance();
 		$group_manager = NewsGroupManager::getInstance();
 
@@ -1461,7 +1419,7 @@ class news extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 

@@ -13,6 +13,8 @@ class _blank extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $section;
+		
 		parent::__construct(__FILE__);
 
 		// load module style and scripts
@@ -41,11 +43,10 @@ class _blank extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

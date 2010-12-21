@@ -64,20 +64,19 @@ class tips extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->tag_Tip($level, $params, $children);
+					$this->tag_Tip($params, $children);
 					break;
 
 				case 'show_list':
-					$this->tag_TipList($level, $params, $children);
+					$this->tag_TipList($params, $children);
 					break;
 
 				default:
@@ -88,27 +87,27 @@ class tips extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'tips':
-					$this->showTips($level);
+					$this->showTips();
 					break;
 
 				case 'tips_new':
-					$this->addTip($level);
+					$this->addTip();
 					break;
 
 				case 'tips_change':
-					$this->changeTip($level);
+					$this->changeTip();
 					break;
 
 				case 'tips_save':
-					$this->saveTip($level);
+					$this->saveTip();
 					break;
 
 				case 'tips_delete':
-					$this->deleteTip($level);
+					$this->deleteTip();
 					break;
 
 				case 'tips_delete_commit':
-					$this->deleteTip_Commit($level);
+					$this->deleteTip_Commit();
 					break;
 
 				default:
@@ -152,10 +151,8 @@ class tips extends Module {
 
 	/**
 	 * Show tips management form
-	 *
-	 * @param integer $level
 	 */
-	private function showTips($level) {
+	private function showTips() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -173,15 +170,13 @@ class tips extends Module {
 		$template->registerTagHandler('_tip_list', &$this, 'tag_TipList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print form for adding new tip to the system
-	 *
-	 * @param integer $level
 	 */
-	private function addTip($level) {
+	private function addTip() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -192,15 +187,13 @@ class tips extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Change tip form
-	 *
-	 * @param integer $level
 	 */
-	private function changeTip($level) {
+	private function changeTip() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = TipManager::getInstance();
 
@@ -220,16 +213,14 @@ class tips extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Save changed or new data
-	 *
-	 * @param integer $level
 	 */
-	private function saveTip($level) {
+	private function saveTip() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = TipManager::getInstance();
 		$data = array(
@@ -256,15 +247,13 @@ class tips extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show confirmation dialog before removing tip
-	 *
-	 * @param integer $level
 	 */
-	private function deleteTip($level) {
+	private function deleteTip() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -295,15 +284,13 @@ class tips extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Perform tip removal
-	 *
-	 * @param integer $level
 	 */
-	private function deleteTip_Commit($level) {
+	private function deleteTip_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = TipManager::getInstance();
 
@@ -320,17 +307,16 @@ class tips extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Tip tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Tip($level, $tag_params, $children) {
+	public function tag_Tip($tag_params, $children) {
 		$manager = TipManager::getInstance();
 		$order_by = array();
 		$conditions = array();
@@ -363,18 +349,17 @@ class tips extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Tag handler for tip list
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_TipList($level, $tag_params, $children) {
+	public function tag_TipList($tag_params, $children) {
 		$manager = TipManager::getInstance();
 		$conditions = array();
 
@@ -437,7 +422,7 @@ class tips extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 }

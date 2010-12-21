@@ -67,11 +67,10 @@ class kabalah extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		switch ($params['action']) {
 			case 'view':
@@ -86,27 +85,27 @@ class kabalah extends Module {
 		// global control actions
 		switch ($params['backend_action']) {
 			case 'questions':
-				$this->printQuestionsForm($level);
+				$this->printQuestionsForm();
 				break;
 
 			case 'questions_new':
-				$this->newQuestion($level);
+				$this->newQuestion();
 				break;
 
 			case 'questions_change':
-				$this->changeQuestion($level);
+				$this->changeQuestion();
 				break;
 
 			case 'questions_save':
-				$this->saveQuestion($level);
+				$this->saveQuestion();
 				break;
 
 			case 'questions_delete':
-				$this->deleteQuestion($level);
+				$this->deleteQuestion();
 				break;
 
 			case 'questions_delete_commit':
-				$this->deleteQuestionCommit($level);
+				$this->deleteQuestionCommit();
 				break;
 
 			case 'question_xml':
@@ -120,53 +119,53 @@ class kabalah extends Module {
 			// ------
 
 			case 'fields':
-				$this->printFieldsForm($level);
+				$this->printFieldsForm();
 				break;
 
 			case 'fields_new':
-				$this->newField($level);
+				$this->newField();
 				break;
 
 			case 'fields_change':
-				$this->changeField($level);
+				$this->changeField();
 				break;
 
 			case 'fields_save':
-				$this->saveField($level);
+				$this->saveField();
 				break;
 
 			case 'fields_delete':
-				$this->deleteField($level);
+				$this->deleteField();
 				break;
 
 			case 'fields_delete_commit':
-				$this->deleteFieldCommit($level);
+				$this->deleteFieldCommit();
 				break;
 
 			// ------
 
 			case 'answers':
-				$this->printAnswersForm($level);
+				$this->printAnswersForm();
 				break;
 
 			case 'answers_new':
-				$this->newAnswer($level);
+				$this->newAnswer();
 				break;
 
 			case 'answers_change':
-				$this->changeAnswer($level);
+				$this->changeAnswer();
 				break;
 
 			case 'answers_save':
-				$this->saveAnswer($level);
+				$this->saveAnswer();
 				break;
 
 			case 'answers_delete':
-				$this->deleteAnswer($level);
+				$this->deleteAnswer();
 				break;
 
 			case 'answers_delete_commit':
-				$this->deleteAnswerCommit($level);
+				$this->deleteAnswerCommit();
 				break;
 
 			case 'answer_xml':
@@ -181,10 +180,8 @@ class kabalah extends Module {
 
 	/**
 	 * Display list of qestions
-	 *
-	 * @param integer $level
 	 */
-	private function printQuestionsForm($level) {
+	private function printQuestionsForm() {
 		$template = new TemplateHandler('questions_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -202,17 +199,16 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Custom tag handler
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	private function printQuestions($level, $params, $children) {
+	private function printQuestions($params, $children) {
 		$manager = QuestionManager::getInstance();
 		$results = $manager->getItems(
 								array('id', 'pid', 'title'),
@@ -286,16 +282,14 @@ class kabalah extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Display form for creating a new questions
-	 *
-	 * @param integer $level
 	 */
-	private function newQuestion($level) {
+	private function newQuestion() {
 		$template = new TemplateHandler('questions_new.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -306,15 +300,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display form for changing a question
-	 *
-	 * @param integer $level
 	 */
-	private function changeQuestion($level) {
+	private function changeQuestion() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = QuestionManager::getInstance();
 
@@ -335,15 +327,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save modified or newly created question
-	 *
-	 * @param integer $level
 	 */
-	private function saveQuestion($level) {
+	private function saveQuestion() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$pid = fix_id(fix_chars($_REQUEST['pid']));
 		$title = fix_chars($_REQUEST['title']);
@@ -373,15 +363,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete specified question
-	 *
-	 * @param integer $level
 	 */
-	private function deleteQuestion($level) {
+	private function deleteQuestion() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = QuestionManager::getInstance();
 
@@ -407,15 +395,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Actually delete question
-	 *
-	 * @param integer $level
 	 */
-	private function deleteQuestionCommit($level) {
+	private function deleteQuestionCommit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = QuestionManager::getInstance();
 		$answers = AnswerManager::getInstance();
@@ -441,15 +427,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Draw answers list
-	 *
-	 * @param integer $level
 	 */
-	private function printAnswersForm($level) {
+	private function printAnswersForm() {
 		$template = new TemplateHandler('answers_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -467,17 +451,16 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_answers', &$this, 'printAnswers');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Custom tag handler
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function printAnswers($level, $params, $children) {
+	public function printAnswers($params, $children) {
 		$manager = AnswerManager::getInstance();
 		$results = $manager->getItems(
 								array(
@@ -539,16 +522,14 @@ class kabalah extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Display form for creating a new questions
-	 *
-	 * @param integer $level
 	 */
-	private function newAnswer($level) {
+	private function newAnswer() {
 		$template = new TemplateHandler('answers_new.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -560,15 +541,13 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display form for changing answer data
-	 *
-	 * @param integer $level
 	 */
-	private function changeAnswer($level) {
+	private function changeAnswer() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = AnswerManager::getInstance();
 
@@ -594,15 +573,13 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save modified or newly created answer
-	 *
-	 * @param integer $level
 	 */
-	private function saveAnswer($level) {
+	private function saveAnswer() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$number = fix_id(fix_chars($_REQUEST['number']));
 		$question = fix_id(fix_chars($_REQUEST['question']));
@@ -634,15 +611,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete specified answer
-	 *
-	 * @param integer $level
 	 */
-	private function deleteAnswer($level) {
+	private function deleteAnswer() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = AnswerManager::getInstance();
 
@@ -668,15 +643,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Actually delete question
-	 *
-	 * @param integer $level
 	 */
-	private function deleteAnswerCommit($level) {
+	private function deleteAnswerCommit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = AnswerManager::getInstance();
 
@@ -693,15 +666,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display list of fields
-	 *
-	 * @param integer $level
 	 */
-	private function printFieldsForm($level) {
+	private function printFieldsForm() {
 		$question = fix_id(fix_chars($_REQUEST['id']));
 
 		$template = new TemplateHandler('fields_list.xml', $this->path.'templates/');
@@ -731,17 +702,16 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_fields', &$this, 'printFields');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Custom tag handler
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function printFields($level, $params, $children) {
+	public function printFields($params, $children) {
 		$question = fix_id(fix_chars($_REQUEST['id']));
 
 		$manager = FieldManager::getInstance();
@@ -810,18 +780,17 @@ class kabalah extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Handle printing field types
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function printFieldTypes($level, $params, $children) {
+	public function printFieldTypes($params, $children) {
 		$template = new TemplateHandler(isset($params['template']) ? $params['template'] : 'field_type.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -833,16 +802,14 @@ class kabalah extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Display form for creating a new field
-	 *
-	 * @param integer $level
 	 */
-	private function newField($level) {
+	private function newField() {
 		$question = fix_id(fix_chars($_REQUEST['question']));
 
 		$template = new TemplateHandler('fields_new.xml', $this->path.'templates/');
@@ -857,15 +824,13 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_field_types', &$this, 'printFieldTypes');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display form for changing field data
-	 *
-	 * @param integer $level
 	 */
-	private function changeField($level) {
+	private function changeField() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = FieldManager::getInstance();
 
@@ -892,15 +857,13 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_field_types', &$this, 'printFieldTypes');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save modified or newly created field
-	 *
-	 * @param integer $level
 	 */
-	private function saveField($level) {
+	private function saveField() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$question = fix_id(fix_chars($_REQUEST['question']));
 		$type = fix_id(fix_chars($_REQUEST['type']));
@@ -934,15 +897,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete specified field
-	 *
-	 * @param integer $level
 	 */
-	private function deleteField($level) {
+	private function deleteField() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = FieldManager::getInstance();
 
@@ -968,15 +929,13 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Actually delete field
-	 *
-	 * @param integer $level
 	 */
-	private function deleteFieldCommit($level) {
+	private function deleteFieldCommit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$obj = FieldManager::getInstance();
 
@@ -993,7 +952,7 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
@@ -1025,7 +984,7 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_fields', &$this, 'printFields');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse(0);
+		$template->parse();
 	}
 
 	/**
@@ -1040,7 +999,7 @@ class kabalah extends Module {
 		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse(0);
+		$template->parse();
 	}
 
 	/**
@@ -1116,7 +1075,7 @@ class kabalah extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse(0);
+			$template->parse();
 		} else {
 			// handle error with calcultion
 			$this->generateErrorXML("Unhandled result: {$answer_number}");
@@ -1157,7 +1116,7 @@ class kabalah extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse(0);
+			$template->parse();
 		}
 	}
 
@@ -1176,7 +1135,7 @@ class kabalah extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse(0);
+		$template->parse();
 	}
 
 	/**

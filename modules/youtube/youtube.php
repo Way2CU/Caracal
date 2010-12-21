@@ -66,24 +66,23 @@ class youtube extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->tag_Video($level, $params, $children);
+					$this->tag_Video($params, $children);
 					break;
 
 				case 'show_list':
-					$this->tag_VideoList($level, $params, $children);
+					$this->tag_VideoList($params, $children);
 					break;
 
 				case 'show_thumbnail':
-					$this->tag_Thumbnail($level, $params, $children);
+					$this->tag_Thumbnail($params, $children);
 					break;
 
 				default:
@@ -94,31 +93,31 @@ class youtube extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'video_list':
-					$this->showList($level);
+					$this->showList();
 					break;
 
 				case 'video_add':
-					$this->addVideo($level);
+					$this->addVideo();
 					break;
 
 				case 'video_change':
-					$this->changeVideo($level);
+					$this->changeVideo();
 					break;
 
 				case 'video_save':
-					$this->saveVideo($level);
+					$this->saveVideo();
 					break;
 
 				case 'video_delete':
-					$this->deleteVideo($level);
+					$this->deleteVideo();
 					break;
 
 				case 'video_delete_commit':
-					$this->deleteVideo_Commit($level);
+					$this->deleteVideo_Commit();
 					break;
 
 				case 'video_preview':
-					$this->previewVideo($level);
+					$this->previewVideo();
 					break;
 
 				default:
@@ -163,10 +162,8 @@ class youtube extends Module {
 
 	/**
 	 * Show backend video list with options
-	 *
-	 * @param integer $level
 	 */
-	private function showList($level) {
+	private function showList() {
 		$template = new TemplateHandler('video_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -184,15 +181,13 @@ class youtube extends Module {
 		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Add video form
-	 *
-	 * @param integer $level
 	 */
-	private function addVideo($level) {
+	private function addVideo() {
 		$template = new TemplateHandler('video_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -203,15 +198,13 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Change video data form
-	 *
-	 * @param integer $level
 	 */
-	private function changeVideo($level) {
+	private function changeVideo() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -231,15 +224,13 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save modified or new video data
-	 *
-	 * @param integer $level
 	 */
-	private function saveVideo($level) {
+	private function saveVideo() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
@@ -270,15 +261,13 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Display confirmation dialog before removing specified video
-	 *
-	 * @param integer $level
 	 */
-	private function deleteVideo($level) {
+	private function deleteVideo() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -307,15 +296,13 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Actually delete specified video from database
-	 *
-	 * @param integer $level
 	 */
-	private function deleteVideo_Commit($level) {
+	private function deleteVideo_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -333,14 +320,13 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Play video in backend window
-	 * @param integer $level
 	 */
-	private function previewVideo($level) {
+	private function previewVideo() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -359,7 +345,8 @@ class youtube extends Module {
 			$template->registerTagHandler('_video', &$this, 'tag_Video');
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
+			
 		} else {
 			// show error message
 			$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -373,18 +360,17 @@ class youtube extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Handler for _video tag which embeds player in page.
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_Video($level, $params, $children) {
+	public function tag_Video($params, $children) {
 		$video = null;
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -405,7 +391,6 @@ class youtube extends Module {
 
 			if (isset($params['embed']) && $params['embed'] == '1')
 				$module->embedSWF(
-								$level,
 								$this->getEmbedURL($video->video_id),
 								$params['target'],
 								isset($params['width']) ? $params['width'] : 320,
@@ -421,11 +406,10 @@ class youtube extends Module {
 	/**
 	 * Handler of _video_list tag used to print list of all videos.
 	 *
-	 * @param $level
 	 * @param $tag_params
 	 * @param $children
 	 */
-	public function tag_VideoList($level, $tag_params, $children) {
+	public function tag_VideoList($tag_params, $children) {
 		global $language;
 
 		$manager = YouTube_VideoManager::getInstance();
@@ -510,7 +494,7 @@ class youtube extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 

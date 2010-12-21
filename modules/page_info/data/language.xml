@@ -1,4 +1,24 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
+	<language short="en">
+		<constant name="menu_page_info">Page settings</constant>
+		
+		<constant name="title_page_info">Page Settings</constant>
+		
+		<constant name="message_saved">Page settings were saved!</constant>
+		
+		<constant name="label_description">Page description (between 70 and 160 characters):</constant>
+		<constant name="label_analytics">Google analytics ID:</constant>
+	</language>
+	<language short="iw">
+		<constant name="menu_page_info">Page settings</constant>
+
+		<constant name="title_page_info">Page Settings</constant>
+
+		<constant name="message_saved">Page settings were saved!</constant>
+		
+		<constant name="label_description">Page description (between 70 and 160 characters):</constant>
+		<constant name="label_analytics">Google analytics ID:</constant>
+	</language>
 </document>

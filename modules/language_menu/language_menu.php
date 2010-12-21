@@ -26,14 +26,6 @@ class language_menu extends Module {
 
 			if ($section == 'backend')
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
-
-			// add language meta tag
-			$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
-			$head_tag->addTag('meta',
-						array(
-							'http-equiv'	=> 'Content-Language',
-							'content'		=> join(', ', $language_list)
-						));
 		}
 	}
 
@@ -50,16 +42,15 @@ class language_menu extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print':
-					$this->printMenus($level, $params);
+					$this->printMenus($params);
 					break;
 
 				case 'json':
@@ -82,10 +73,9 @@ class language_menu extends Module {
 	/**
 	 * Prints language menu using OL
 	 *
-	 * @param integer $level
 	 * @param array $global_params
 	 */
-	private function printMenus($level, $tag_params) {
+	private function printMenus($tag_params) {
 		global $action, $section;
 
 		// check if we were asked to get languages from specific module
@@ -123,7 +113,7 @@ class language_menu extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse( );
 			}
 	}
 

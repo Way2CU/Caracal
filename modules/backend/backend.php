@@ -21,13 +21,13 @@ class backend extends Module {
 	 * Menu list
 	 * @var array
 	 */
-	var $menus = array();
+	private $menus = array();
 
 	/**
 	 * List of protected modules who can't be disabled or deactivated
 	 * @var array
 	 */
-	var $protected_modules = array('backend', 'head_tag', 'session', 'captcha');
+	private $protected_modules = array('backend', 'head_tag', 'session', 'captcha');
 
 	/**
 	 * Constructor
@@ -119,15 +119,14 @@ class backend extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children=array()) {
+	public function transferControl($params = array(), $children=array()) {
 		// user is not logged, redirect him to a proper place
 		if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
 			$session_manager = new SessionManager($this);
-			$session_manager->transferControl($level);
+			$session_manager->transferControl();
 			return;
 		}
 
@@ -143,7 +142,7 @@ class backend extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'draw_menu':
-					$this->drawCompleteMenu($level);
+					$this->drawCompleteMenu();
 					break;
 
 				case 'transfer_control':
@@ -158,7 +157,7 @@ class backend extends Module {
 
 					if (class_exists($module_name)) {
 						$module = call_user_func(array($module_name, 'getInstance'));
-						$module->transferControl($level, $params, $children);
+						$module->transferControl($params, $children);
 					}
 					break;
 			}
@@ -166,31 +165,31 @@ class backend extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'modules':
-					$this->showModules($level);
+					$this->showModules();
 					break;
 
 				case 'module_activate':
-					$this->activateModule($level);
+					$this->activateModule();
 					break;
 
 				case 'module_deactivate':
-					$this->deactivateModule($level);
+					$this->deactivateModule();
 					break;
 
 				case 'module_initialise':
-					$this->initialiseModule($level);
+					$this->initialiseModule();
 					break;
 
 				case 'module_initialise_commit':
-					$this->initialiseModule_Commit($level);
+					$this->initialiseModule_Commit();
 					break;
 
 				case 'module_disable':
-					$this->disableModule($level);
+					$this->disableModule();
 					break;
 
 				case 'module_disable_commit':
-					$this->disableModule_Commit($level);
+					$this->disableModule_Commit();
 					break;
 
 				// ---
@@ -203,7 +202,7 @@ class backend extends Module {
 				case 'logout':
 				case 'logout_commit':
 					$session_manager = new SessionManager($this);
-					$session_manager->transferControl($level);
+					$session_manager->transferControl();
 					break;
 			}
 	}
@@ -211,18 +210,29 @@ class backend extends Module {
 	/**
 	 * Adds menu to draw list
 	 *
-	 * @param string $module
+	 * @param string $name
 	 * @param resource $menu
 	 */
-	public function addMenu($module, $menu) {
-		$this->menus[$module] = $menu;
+	public function addMenu($name, $menu) {
+		$this->menus[$name] = $menu;
+	}
+	
+	/**
+	 * Get menu assigned to specified name
+	 * @param string $name
+	 */
+	public function getMenu($name) {
+		if (array_key_exists($name, $this->menus))
+			$result = $this->menus[$name]; else
+			$result = null;
+			
+		return $result;
 	}
 
 	/**
 	 * Display
-	 * @param integer $level
 	 */
-	private function showModules($level) {
+	private function showModules() {
 		$template = new TemplateHandler('modules_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -231,14 +241,13 @@ class backend extends Module {
 		$template->registerTagHandler('_module_list', &$this, 'tag_ModuleList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Activates specified module
-	 * @param integer $level
 	 */
-	private function activateModule($level) {
+	private function activateModule() {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
@@ -264,14 +273,13 @@ class backend extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Deactivates specified module
-	 * @param integer $level
 	 */
-	private function deactivateModule($level) {
+	private function deactivateModule() {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
@@ -297,14 +305,13 @@ class backend extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print confirmation form before initialising module
-	 * @param integer $level
 	 */
-	private function initialiseModule($level) {
+	private function initialiseModule() {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
@@ -330,14 +337,13 @@ class backend extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Initialise and activate module
-	 * @param integer $level
 	 */
-	private function initialiseModule_Commit($level) {
+	private function initialiseModule_Commit() {
 		global $ModuleHandler;
 
 		$module_name = fix_chars($_REQUEST['module_name']);
@@ -378,14 +384,13 @@ class backend extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print confirmation dialog before disabling module
-	 * @param integer $level
 	 */
-	private function disableModule($level) {
+	private function disableModule() {
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
@@ -411,14 +416,13 @@ class backend extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Disable specified module and remove it's settings
-	 * @param integer $level
 	 */
-	private function disableModule_Commit($level) {
+	private function disableModule_Commit() {
 		global $ModuleHandler;
 
 		$module_name = fix_chars($_REQUEST['module_name']);
@@ -458,17 +462,16 @@ class backend extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Handle tag _module_list used to display list of all modules on the system
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function tag_ModuleList($level, $params, $children) {
+	public function tag_ModuleList($params, $children) {
 		$list = array();
 		$raw_list = $this->getModuleList();
 		$manager = ModuleManager::getInstance();
@@ -592,7 +595,7 @@ class backend extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
@@ -618,18 +621,14 @@ class backend extends Module {
 
 	/**
 	 * Draws all menus for current level
-	 *
-	 * @param integer $level
 	 */
-	private function drawCompleteMenu($level) {
-		$tag_space = str_repeat("\t", $level);
-
-		echo "$tag_space<ul id=\"navigation\">\n";
+	private function drawCompleteMenu() {
+		echo '<ul id="navigation">';
 
 		foreach ($this->menus as $item)
-			$item->drawItem($level+1);
+			$item->drawItem();
 
-		echo "$tag_space</ul>\n";
+		echo '</ul>';
 	}
 
 	/**
@@ -661,7 +660,7 @@ class SessionManager {
 	/**
 	 * Transfer control to this object
 	 */
-	public function transferControl($level) {
+	public function transferControl() {
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 
 		if (!is_null($action) && $action == 'transfer_control')
@@ -669,20 +668,20 @@ class SessionManager {
 
 		switch($action) {
 			case 'login_commit':
-				$this->login_commit($level);
+				$this->login_commit();
 				break;
 
 			case 'logout':
-				$this->logout($level);
+				$this->logout();
 				break;
 
 			case 'logout_commit':
-				$this->logout_commit($level);
+				$this->logout_commit();
 				break;
 
 			default:
 				$_SESSION['redirect_url'] = $_SERVER['REQUEST_URI']; // grab url for later redirection
-				$this->login($level);
+				$this->login();
 				break;
 		}
 	}
@@ -690,9 +689,9 @@ class SessionManager {
 	/**
 	 * Show login form
 	 *
-	 * @param integer $level
+	 * @param string $message
 	 */
-	private function login($level, $message='') {
+	private function login($message='') {
 		$manager = LoginRetryManager::getInstance();
 		$show_captcha = false;
 
@@ -727,15 +726,13 @@ class SessionManager {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Perform login
-	 *
-	 * @param integer $level
 	 */
-	private function login_commit($level) {
+	private function login_commit() {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
@@ -802,7 +799,7 @@ class SessionManager {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 
 		} else {
 			// user is not logged in properly, increase fail
@@ -825,16 +822,14 @@ class SessionManager {
 			}
 
 			$message = $this->parent->getLanguageConstant('message_login_error');
-			$this->login($level, $message);
+			$this->login($message);
 		}
 	}
 
 	/**
 	 * Present confirmation dialog before logout
-	 *
-	 * @param integer $level
 	 */
-	private function logout($level) {
+	private function logout() {
 		$template = new TemplateHandler('confirmation.xml', $this->parent->path.'templates/');
 		$template->setMappedModule($this->parent->name);
 
@@ -852,15 +847,13 @@ class SessionManager {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Perform logout procedure
-	 *
-	 * @param integer $level
 	 */
-	private function logout_commit($level) {
+	private function logout_commit() {
 		// kill session variables
 		unset($_SESSION['uid']);
 		unset($_SESSION['logged']);
@@ -885,7 +878,7 @@ class SessionManager {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 }
 

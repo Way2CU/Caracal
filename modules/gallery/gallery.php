@@ -100,36 +100,35 @@ class gallery extends Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show_image':
-					$this->tag_Image($level, $params, $children);
+					$this->tag_Image($params, $children);
 					break;
 
 				case 'show_image_list':
-					$this->tag_ImageList($level, $params, $children);
+					$this->tag_ImageList($params, $children);
 					break;
 
 				case 'show_group':
-					$this->tag_Group($level, $params, $children);
+					$this->tag_Group($params, $children);
 					break;
 
 				case 'show_group_list':
-					$this->tag_GroupList($level, $params, $children);
+					$this->tag_GroupList($params, $children);
 					break;
 
 				case 'show_container':
-					$this->tag_Container($level, $params, $children);
+					$this->tag_Container($params, $children);
 					break;
 
 				case 'show_container_list':
-					$this->tag_ContainerList($level, $params, $children);
+					$this->tag_ContainerList($params, $children);
 					break;
 
 				case 'json_image':
@@ -162,91 +161,91 @@ class gallery extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'images':
-					$this->showImages($level);
+					$this->showImages();
 					break;
 
 				case 'images_upload':
-					$this->uploadImage($level);
+					$this->uploadImage();
 					break;
 
 				case 'images_upload_save':
-					$this->uploadImage_Save($level);
+					$this->uploadImage_Save();
 					break;
 
 				case 'images_change':
-					$this->changeImage($level);
+					$this->changeImage();
 					break;
 
 				case 'images_save':
-					$this->saveImage($level);
+					$this->saveImage();
 					break;
 
 				case 'images_delete':
-					$this->deleteImage($level);
+					$this->deleteImage();
 					break;
 
 				case 'images_delete_commit':
-					$this->deleteImage_Commit($level);
+					$this->deleteImage_Commit();
 					break;
 
 				// ---
 
 				case 'groups':
-					$this->showGroups($level);
+					$this->showGroups();
 					break;
 
 				case 'groups_create':
-					$this->createGroup($level);
+					$this->createGroup();
 					break;
 
 				case 'groups_change':
-					$this->changeGroup($level);
+					$this->changeGroup();
 					break;
 
 				case 'groups_save':
-					$this->saveGroup($level);
+					$this->saveGroup();
 					break;
 
 				case 'groups_delete':
-					$this->deleteGroup($level);
+					$this->deleteGroup();
 					break;
 
 				case 'groups_delete_commit':
-					$this->deleteGroup_Commit($level);
+					$this->deleteGroup_Commit();
 					break;
 
 				// ---
 
 				case 'containers':
-					$this->showContainers($level);
+					$this->showContainers();
 					break;
 
 				case 'containers_create':
-					$this->createContainer($level);
+					$this->createContainer();
 					break;
 
 				case 'containers_change':
-					$this->changeContainer($level);
+					$this->changeContainer();
 					break;
 
 				case 'containers_save':
-					$this->saveContainer($level);
+					$this->saveContainer();
 					break;
 
 				case 'containers_delete':
-					$this->deleteContainer($level);
+					$this->deleteContainer();
 					break;
 
 				case 'containers_delete_commit':
-					$this->deleteContainer_Commit($level);
+					$this->deleteContainer_Commit();
 					break;
 
 				case 'containers_groups':
-					$this->containerGroups($level);
+					$this->containerGroups();
 					break;
 
 				case 'containers_groups_save':
-					$this->containerGroups_Save($level);
+					$this->containerGroups_Save();
 					break;
 
 				default:
@@ -342,10 +341,8 @@ class gallery extends Module {
 
 	/**
 	 * Show images management form
-	 *
-	 * @param integer $level
 	 */
-	private function showImages($level) {
+	private function showImages() {
 		$template = new TemplateHandler('images_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -373,15 +370,13 @@ class gallery extends Module {
 		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Provides a form for uploading multiple images
-	 *
-	 * @param integer $level
 	 */
-	private function uploadImage($level) {
+	private function uploadImage() {
 		$template = new TemplateHandler('images_upload.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -393,15 +388,13 @@ class gallery extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save uploaded images
-	 *
-	 * @param integer $level
 	 */
-	private function uploadImage_Save($level) {
+	private function uploadImage_Save() {
 		$manager = GalleryManager::getInstance();
 
 		$title = fix_chars($this->getMultilanguageField('title'));
@@ -435,15 +428,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Pring image data editing form
-	 *
-	 * @param integer $level
 	 */
-	private function changeImage($level) {
+	private function changeImage() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = GalleryManager::getInstance();
 
@@ -468,15 +459,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save changed image data
-	 *
-	 * @param integer $level
 	 */
-	private function saveImage($level) {
+	private function saveImage() {
 		$manager = GalleryManager::getInstance();
 
 		$id = fix_id($_REQUEST['id']);
@@ -505,16 +494,14 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 
 	}
 
 	/**
 	 * Print confirmation dialog
-	 *
-	 * @param integer $level
 	 */
-	private function deleteImage($level) {
+	private function deleteImage() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -545,15 +532,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Complete removal of specified image
-	 *
-	 * @param integer $level
 	 */
-	private function deleteImage_Commit($level) {
+	private function deleteImage_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 
 		$manager = GalleryManager::getInstance();
@@ -571,15 +556,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show group management form
-	 *
-	 * @param integer $level
 	 */
-	private function showGroups($level) {
+	private function showGroups() {
 		$template = new TemplateHandler('groups_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -597,15 +580,13 @@ class gallery extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Input form for creating new group
-	 *
-	 * @param integer $level
 	 */
-	private function createGroup($level) {
+	private function createGroup() {
 		$template = new TemplateHandler('groups_create.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -616,15 +597,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Group change form
-	 *
-	 * @param integer $level
 	 */
-	private function changeGroup($level) {
+	private function changeGroup() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = GalleryGroupManager::getInstance();
 
@@ -644,15 +623,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save new or changed group data
-	 *
-	 * @param integer $level
 	 */
-	private function saveGroup($level) {
+	private function saveGroup() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -684,15 +661,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete group confirmation dialog
-	 *
-	 * @param integer $level
 	 */
-	private function deleteGroup($level) {
+	private function deleteGroup() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -723,15 +698,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete group from the system
-	 *
-	 * @param integer $level
 	 */
-	private function deleteGroup_Commit($level) {
+	private function deleteGroup_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = GalleryManager::getInstance();
 		$group_manager = GalleryGroupManager::getInstance();
@@ -750,15 +723,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Show container management form
-	 *
-	 * @param integer $level
 	 */
-	private function showContainers($level) {
+	private function showContainers() {
 		$template = new TemplateHandler('containers_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -776,15 +747,13 @@ class gallery extends Module {
 		$template->registerTagHandler('_container_list', &$this, 'tag_ContainerList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Input form for creating new group container
-	 *
-	 * @param integer $level
 	 */
-	private function createContainer($level) {
+	private function createContainer() {
 		$template = new TemplateHandler('containers_create.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -795,15 +764,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Container change form
-	 *
-	 * @param integer $level
 	 */
-	private function changeContainer($level) {
+	private function changeContainer() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = GalleryContainerManager::getInstance();
 
@@ -823,15 +790,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save new or changed group container data
-	 *
-	 * @param integer $level
 	 */
-	private function saveContainer($level) {
+	private function saveContainer() {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
@@ -863,15 +828,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete container confirmation dialog
-	 *
-	 * @param integer $level
 	 */
-	private function deleteContainer($level) {
+	private function deleteContainer() {
 		global $language;
 
 		$id = fix_id(fix_chars($_REQUEST['id']));
@@ -902,15 +865,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Delete container from the system
-	 *
-	 * @param integer $level
 	 */
-	private function deleteContainer_Commit($level) {
+	private function deleteContainer_Commit() {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = GalleryContainerManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
@@ -929,15 +890,13 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Print a form containing all the links within a group
-	 *
-	 * @param integer $level
 	 */
-	private function containerGroups($level) {
+	private function containerGroups() {
 		$container_id = fix_id(fix_chars($_REQUEST['id']));
 
 		$template = new TemplateHandler('containers_groups.xml', $this->path.'templates/');
@@ -952,15 +911,13 @@ class gallery extends Module {
 		$template->registerTagHandler('_container_groups', &$this, 'tag_ContainerGroups');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 	/**
 	 * Save container group memberships
-	 *
-	 * @param integer level
 	 */
-	private function containerGroups_Save($level) {
+	private function containerGroups_Save() {
 		$container = fix_id(fix_chars($_REQUEST['container']));
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 
@@ -993,18 +950,17 @@ class gallery extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse($level);
+		$template->parse();
 	}
 
 
 	/**
 	 * Image tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Image($level, $tag_params, $children) {
+	public function tag_Image($tag_params, $children) {
 		if (!isset($tag_params['id']) && !isset($tag_params['group'])) return;
 
 		$manager = GalleryManager::getInstance();
@@ -1044,18 +1000,17 @@ class gallery extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Image list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_ImageList($level, $tag_params, $children) {
+	public function tag_ImageList($tag_params, $children) {
 		$manager = GalleryManager::getInstance();
 
 		$conditions = array();
@@ -1136,18 +1091,17 @@ class gallery extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Group list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Group($level, $tag_params, $children) {
+	public function tag_Group($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
 		if (isset($tag_params['id'])) {
@@ -1192,18 +1146,17 @@ class gallery extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Group list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_GroupList($level, $tag_params, $children) {
+	public function tag_GroupList($tag_params, $children) {
 		global $language;
 
 		$manager = GalleryGroupManager::getInstance();
@@ -1294,7 +1247,7 @@ class gallery extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 
 	}
@@ -1302,11 +1255,10 @@ class gallery extends Module {
 	/**
 	 * Container tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Container($level, $tag_params, $children) {
+	public function tag_Container($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
 		$id = fix_id($tag_params['id']);
@@ -1339,18 +1291,17 @@ class gallery extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 	}
 
 	/**
 	 * Container list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_ContainerList($level, $tag_params, $children) {
+	public function tag_ContainerList($tag_params, $children) {
 		global $language;
 
 		$manager = GalleryContainerManager::getInstance();
@@ -1438,7 +1389,7 @@ class gallery extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse($level);
+			$template->parse();
 		}
 
 	}
@@ -1446,11 +1397,10 @@ class gallery extends Module {
 	/**
 	 * Container groups list tag handler
 	 *
-	 * @param integer $level
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_ContainerGroups($level, $tag_params, $children) {
+	public function tag_ContainerGroups($tag_params, $children) {
 		global $language;
 
 		if (!isset($tag_params['container'])) return;
@@ -1485,7 +1435,7 @@ class gallery extends Module {
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
-				$template->parse($level);
+				$template->parse();
 			}
 	}
 

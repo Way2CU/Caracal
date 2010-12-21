@@ -36,16 +36,15 @@ class captcha extends Module {
 	/**
 	 * Transfers control to module functions
 	 * 
-	 * @param integer $level
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($level, $params = array(), $children = array()) {
+	public function transferControl($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_image_tag':
-					$this->__printImageTag($level);
+					$this->__printImageTag();
 					break;
 
 				case 'print_image':
@@ -269,15 +268,11 @@ class captcha extends Module {
 
 	/**
 	 * Prints fully formed IMG tag
-	 *
-	 * @param integer $level
 	 */
-	private function __printImageTag($level) {
+	private function __printImageTag() {
 		$url = $this->__getImageURL();
-		$tag_space = str_repeat("\t", $level);
-
-		echo $tag_space.'<img src="'.$url.'" alt="'.$this->language->getText('captcha_message').'" '.
-				'onClick="javascript:this.src=\''.$url.'&amp;\'+(new Date()).getTime().toString();">';
+		echo '<img src="'.$url.'" alt="'.$this->language->getText('captcha_message').'" '.
+			'onClick="javascript:this.src=\''.$url.'&amp;\'+(new Date()).getTime().toString();">';
 	}
 
 	/**
