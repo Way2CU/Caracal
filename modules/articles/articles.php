@@ -115,6 +115,23 @@ class articles extends Module {
 					$this->tag_ArticleRatingImage($params, $children);
 					break;
 
+				case 'json_article':
+					$this->json_Article();
+					break;
+
+				case 'json_article_list':
+					$this->json_ArticleList();
+					break;
+
+				case 'json_group':
+					break;
+
+				case 'json_group_list':
+					break;
+
+				case 'json_rating_image':
+					break;
+
 				case 'json_vote':
 					$this->json_Vote();
 					break;
@@ -1003,6 +1020,154 @@ class articles extends Module {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+	}
+
+	/**
+	 * Generate JSON object for specified article
+	 */
+	private function json_Article() {
+		global $language;
+
+		define('_OMIT_STATS', 1);
+
+		$id = fix_id($_REQUEST['id']);
+		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ImageType::Stars;
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+
+		$manager = ArticleManager::getInstance();
+		$admin_manager = AdministratorManager::getInstance();
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> ''
+				);
+
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$rating_image_url = url_Make(
+					'get_rating_image',
+					$this->name,
+					array('type', $type),
+					array('id', $id)
+				);
+
+		if (is_object($item)) {
+			$timestamp = strtotime($item->timestamp);
+			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+			$result['item'] = array(
+								'id'			=> $item->id,
+								'text_id'		=> $item->text_id,
+								'timestamp'		=> $item->timestamp,
+								'date'			=> $date,
+								'time'			=> $time,
+								'title'			=> $all_languages ? $item->title : $item->title[$language],
+								'content'		=> $all_languages ? $item->content : Markdown($item->content[$language]),
+								'author'		=> $admin_manager->getItemValue(
+																	'fullname',
+																	array('id' => $item->author)
+																),
+								'visible'		=> $item->visible,
+								'views'			=> $item->views,
+								'votes_up'		=> $item->votes_up,
+								'votes_down' 	=> $item->votes_down,
+								'rating'		=> $this->getArticleRating($item, 10),
+								'rating_image'	=> $rating_image_url
+							);
+		} else {
+			// no item was found
+			$result['error'] = true;
+			$result['error_message'] = $this->getLanguageConstant('message_json_article_not_found');
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Generate JSON object list for specified parameters
+	 */
+	private function json_ArticleList() {
+		global $language;
+
+		define('_OMIT_STATS', 1);
+
+		$manager = ArticleManager::getInstance();
+		$admin_manager = AdministratorManager::getInstance();
+
+		$conditions = array();
+		$group_list = array();
+
+		if (isset($_REQUEST['group']))
+			$group_list = explode(',', $_REQUEST['group']);
+
+		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 1)
+			$conditions['visible'] = 1;
+
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+
+		$rating_image_type = isset($_REQUEST['rating_image_type']) ? $_REQUEST['rating_image_type'] : ImageType::Stars;
+
+		// give the ability to limit number of articles to display
+		if (isset($_REQUEST['limit']))
+			$limit = fix_id($_REQUEST['limit']); else
+			$limit = null;
+
+		// get items from manager
+		$items = $this->getArticleList(
+								$manager->getFieldNames(),
+								$conditions,
+								isset($_REQUEST['random']) && $_REQUEST['random'] == 1,
+								$limit,
+								$group_list
+							);
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		if (count($items) > 0) {
+			foreach($items as $item) {
+				$timestamp = strtotime($item->timestamp);
+				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+				$rating_image_url = url_Make(
+							'get_rating_image',
+							$this->name,
+							array('type', $rating_image_type),
+							array('id', $item->id)
+						);
+
+				$result['items'][] = array(
+									'id'			=> $item->id,
+									'text_id'		=> $item->text_id,
+									'timestamp'		=> $item->timestamp,
+									'date'			=> $date,
+									'time'			=> $time,
+									'title'			=> $all_languages ? $item->title : $item->title[$language],
+									'author'		=> $admin_manager->getItemValue(
+																		'fullname',
+																		array('id' => $item->author)
+																	),
+									'visible'		=> $item->visible,
+									'views'			=> $item->views,
+									'votes_up'		=> $item->votes_up,
+									'votes_down' 	=> $item->votes_down,
+									'rating'		=> $this->getArticleRating($item, 10),
+									'rating_image'	=> $rating_image_url
+								);
+			}
+
+		} else {
+			// no articles were found for specified cirteria
+			$result['error'] = true;
+			$result['error_message'] = $this->getLanguageConstant('message_json_articles_not_found');
+		}
+
+		print json_encode($result);
 	}
 
 	/**

@@ -109,6 +109,15 @@ class links extends Module {
 				$this->tag_GroupList($params, $children);
 				break;
 
+			case 'json_link':
+				break;
+
+			case 'json_link_list':
+				break;
+
+			case 'json_link_group_list':
+				break;
+
 			case 'redirect':
 				$this->redirectLink();
 				break;
@@ -1187,6 +1196,18 @@ class links extends Module {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+	}
+
+	private function json_Link() {
+	}
+
+	private function json_LinkList() {
+		define('_OMIT_STATS', 1);
+
+		$grouped = isset($_REQUEST['grouped']) && $_REQUEST['grouped'] == 'yes' ? true : false;
+
+
+		$manager = LinksManager::getInstance();
 	}
 }
 

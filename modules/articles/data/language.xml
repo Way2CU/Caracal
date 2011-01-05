@@ -29,6 +29,8 @@
 		<constant name="message_vote_ok">Thank you!</constant>
 		<constant name="message_vote_already">Already voted!</constant>
 		<constant name="message_vote_error">Error!</constant>
+		<constant name="message_json_article_not_found">Specified article was not found!</constant>
+		<constant name="message_json_articles_not_found">No articles were found for specified cirteria.</constant>
 
 		<!-- Labels -->
 		<constant name="label_title">Document title:</constant>
@@ -77,7 +79,8 @@
 		<constant name="message_vote_ok">תודה רבה!</constant>
 		<constant name="message_vote_already">הצביע כבר!</constant>
 		<constant name="message_vote_error">טעות!</constant>
-
+		<constant name="message_json_article_not_found">Specified article was not found!</constant>
+		<constant name="message_json_articles_not_found">No articles were found for specified cirteria.</constant>
 
 		<!-- Labels -->
 		<constant name="label_title">כותרת המסמך:</constant>
