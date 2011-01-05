@@ -46,7 +46,11 @@ class page_info extends Module {
 
 				// google webmasters tools
 				if (!empty($this->settings['wm_tools']))
-					$head_tag->addTag('meta', array('name' => 'verify-v1', 'content' => $this->settings['wm_tools']));
+					$head_tag->addTag('meta',
+								array(
+									'name' 		=> 'google-site-verification',
+									'content' 	=> $this->settings['wm_tools']
+								));
 			}
 
 			// page description
