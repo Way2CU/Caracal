@@ -14,7 +14,7 @@ class page_info extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// load module style and scripts
@@ -38,22 +38,24 @@ class page_info extends Module {
 			$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 			$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
 			$head_tag->addTag('meta', array('name' => 'rating', 'content' => 'general'));
-			
-			// google analytics
-			if (
-				$section != 'backend' && 
-				$section != 'backend_module' && 
-				!empty($this->settings['analytics'])
-			)
-				$head_tag->addGoogleAnalytics($this->settings['analytics']);
-				
+
+			if ($section != 'backend' && $section != 'backend_module') {
+				// google analytics
+				if (!empty($this->settings['analytics']))
+					$head_tag->addGoogleAnalytics($this->settings['analytics']);
+
+				// google webmasters tools
+				if (!empty($this->settings['wm_tools']))
+					$head_tag->addTag('meta', array('name' => 'verify-v1', 'content' => $this->settings['wm_tools']));
+			}
+
 			// page description
 			$head_tag->addTag('meta',
 						array(
 							'name'		=> 'description',
 							'content'	=> $this->settings['description']
 						));
-						
+
 			// copyright
 			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
 			$copyright = strip_tags($copyright);
@@ -62,28 +64,28 @@ class page_info extends Module {
 							'name'		=> 'copyright',
 							'content'	=> $copyright
 						));
-				
+
 			// favicon
 			if (file_exists(_BASEPATH.'/images/favicon.png'))
 				$icon_file = _BASEPATH.'/images/favicon.png'; else
 				$icon_file = _BASEPATH.'/images/default_icon.png';
-				
+
 			$head_tag->addTag('link',
 						array(
 							'rel'	=> "icon",
 							'type'	=> "image/png",
 							'href'	=> url_GetFromFilePath($icon_file)
 						));
-						
+
 			//
 		}
 
 		// register backend
 		if (class_exists('backend')) {
 			$backend = backend::getInstance();
-			
+
 			$menu = $backend->getMenu($backend->name);
-			
+
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->getLanguageConstant('menu_page_info'),
@@ -96,7 +98,7 @@ class page_info extends Module {
 													backend_UrlMake($this->name, 'show')
 												),
 										$level=5
-									), 1);			
+									), 1);
 		}
 	}
 
@@ -123,11 +125,11 @@ class page_info extends Module {
 				case 'show':
 					$this->showSettings();
 					break;
-					
+
 				case 'save':
 					$this->saveSettings();
 					break;
-					
+
 				default:
 					break;
 			}
@@ -139,11 +141,14 @@ class page_info extends Module {
 	public function onInit() {
 		if (!isset($this->settings['description']))
 			$this->saveSetting('description', '');
-			
+
 		if (!isset($this->settings['analytics']))
 			$this->saveSetting('analytics', '');
+
+		if (!isset($this->settings['wm_tools']))
+			$this->saveSetting('wm_tools', '');
 	}
-	
+
 	/**
 	 * Show settings form
 	 */
@@ -158,19 +163,21 @@ class page_info extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
 	 * Save settings
 	 */
 	private function saveSettings() {
 		$description = fix_chars($_REQUEST['description']);
 		$analytics = fix_chars($_REQUEST['analytics']);
-		
+		$wm_tools = fix_chars($_REQUEST['wm_tools']);
+
 		$this->saveSetting('description', $description);
 		$this->saveSetting('analytics', $analytics);
-		
+		$this->saveSetting('wm_tools', $wm_tools);
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -182,6 +189,6 @@ class page_info extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 }
