@@ -85,6 +85,14 @@ class youtube extends Module {
 					$this->tag_Thumbnail($params, $children);
 					break;
 
+				case 'json_video':
+					$this->json_Video();
+					break;
+
+				case 'json_video_list':
+					$this->json_VideoList();
+					break;
+
 				default:
 					break;
 			}
@@ -346,7 +354,7 @@ class youtube extends Module {
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
-			
+
 		} else {
 			// show error message
 			$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -496,6 +504,82 @@ class youtube extends Module {
 			$template->setLocalParams($params);
 			$template->parse();
 		}
+	}
+
+	/**
+	 * Generate JSON object for specified video
+	 */
+	private function json_Video() {
+		global $language;
+
+		define('_OMIT_STATS', 1);
+
+		$id = fix_id($_REQUEST['id']);
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+
+		$manager = YouTube_VideoManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'item'			=> array()
+				);
+
+		if (is_object($item)) {
+			$result['item']['id'] = $item->id;
+			$result['item']['video_id'] = $item->video_id;
+			$result['item']['title'] = $all_languages ? $item->title : $item->title[$language];
+			$result['item']['thumbnail'] = $this->getThumbnailURL($item->video_id);
+			$result['item']['embed_url'] = $this->getEmbedURL($item->video_id);
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Generate list of videos in for of a JSON object
+	 */
+	private function json_VideoList() {
+		global $language;
+
+		define('_OMIT_STATS', 1);
+
+		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
+		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
+		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+
+		$manager = YouTube_VideoManager::getInstance();
+
+		$items = $manager->getItems(
+								$manager->getFieldNames(),
+								array(),
+								$order_by,
+								$order_asc,
+								$limit
+							);
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		if (count($items) > 0) {
+			foreach ($items as $item)
+				$result['items'][] = array(
+							'id'			=> $item->id,
+							'video_id'		=> $item->video_id,
+							'title'			=> $all_languages ? $item->title : $item->title[$language],
+							'thumbnail'		=> $this->getThumbnailURL($item->video_id),
+						);
+		} else {
+
+		}
+
+		print json_encode($result);
 	}
 
 	/**
