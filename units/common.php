@@ -73,12 +73,18 @@ function escape_chars($string) {
  * @author MeanEYE
  */
 function fix_id($string) {
-        $res = explode(' ', $string);
-        $res = preg_replace('/[^\d]*/i', '', $res[0]);
+	if (is_array($string)) {
+		foreach ($string as $key => $value)
+			$res[$key] = fix_id($value);
 
-        if (!is_numeric($res)) $res = 0;
+	} else {
+		$res = explode(' ', $string);
+		$res = preg_replace('/[^\d]*/i', '', $res[0]);
 
-        return $res;
+		if (!is_numeric($res)) $res = 0;
+	}
+
+	return $res;
 }
 
 /**
@@ -154,10 +160,10 @@ function is_browser_ok() {
 function limit_words($text, $limit = 100, $end_char = '&#8230;') {
 	$result = $text;
 	$encoding = mb_detect_encoding($text);
-	
+
 	if (mb_strlen($text, $encoding) > $limit)
 		$result = mb_substr($text, 0, $limit, $encoding).$end_char;
-	
+
 	return $result;
 }
 
