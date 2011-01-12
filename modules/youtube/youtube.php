@@ -515,7 +515,7 @@ class youtube extends Module {
 		define('_OMIT_STATS', 1);
 
 		$id = fix_id($_REQUEST['id']);
-		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
 
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -549,7 +549,7 @@ class youtube extends Module {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
 		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
-		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
 
 		$manager = YouTube_VideoManager::getInstance();
 

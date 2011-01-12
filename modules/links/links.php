@@ -110,12 +110,15 @@ class links extends Module {
 				break;
 
 			case 'json_link':
+				$this->json_Link();
 				break;
 
 			case 'json_link_list':
+				$this->json_LinkList();
 				break;
 
-			case 'json_link_group_list':
+			case 'json_group_list':
+				$this->json_GroupList();
 				break;
 
 			case 'redirect':
@@ -1199,15 +1202,172 @@ class links extends Module {
 	}
 
 	private function json_Link() {
+		define('_OMIT_STATS', 1);
+		
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		
+		$item = null;
+		$manager = LinksManager::getInstance();
+		
+		if (!is_null($id))
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); 
+		
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'item'			=> array()
+				);
+				
+		if (is_object($item)) {
+			$result['item'] = array(
+								'id'				=> $item->id,
+								'text'				=> $item->text,
+								'description'		=> Markdown($item->description),			
+								'url'				=> $item->url,
+								'redirect_url'		=> url_Make('redirect', $this->name, array('id', $item->id)),
+								'external'			=> $item->external,
+								'sponsored'			=> $item->sponsored,
+								'display_limit'		=> $item->display_limit,
+								'sponsored_clicks'	=> $item->sponsored_clicks,
+								'total_clicks'		=> $item->total_clicks,
+								'image'				=> null
+							);
+		} else {
+			
+		}
+				
+		print json_encode($result);
 	}
 
+	/**
+	 * Create JSON object containing links with specified characteristics
+	 */
 	private function json_LinkList() {
 		define('_OMIT_STATS', 1);
 
+		$groups = array();
+		$conditions = array();
+
+		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
+		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
+		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
 		$grouped = isset($_REQUEST['grouped']) && $_REQUEST['grouped'] == 'yes' ? true : false;
 
-
 		$manager = LinksManager::getInstance();
+		$group_manager = LinkGroupsManager::getInstance();
+		$membership_manager = LinkMembershipManager::getInstance();
+
+		if (isset($_REQUEST['group'])) {
+			$group_list = explode(',', fix_chars($_REQUEST['group']));
+
+			$list = $group_manager->getItems(array('id'), array('name' => $group_list));
+
+			if (count($list) > 0)
+				foreach ($list as $list_item)
+					$groups[] = $list_item->id;
+		}
+
+		if (isset($_REQUEST['group_id']))
+			$groups = array_merge($groups, fix_id(explode(',', $_REQUEST['group_id'])));
+			
+		if (isset($_REQUEST['sponsored'])) {
+			$sponsored = $_REQUEST['sponsored'] == 'yes' ? 1 : 0;
+			$conditions['sponsored'] = $sponsored;
+		}
+
+		// fetch ids for specified groups
+		if (!empty($groups)) {
+			$list = $membership_manager->getItems(array('link'), array('group' => $groups));
+
+			$id_list = array();
+			if (count($list) > 0) {
+				foreach ($list as $list_item)
+					$id_list[] = $list_item->link;
+
+			} else {
+				// in case no members of specified group were found, ensure no items are retrieved
+				$id_list = '-1';
+			}
+
+			$conditions['id'] = $id_list;
+		}
+
+		// save some CPU time by getting this early
+		if (class_exists('gallery')) {
+			$use_images = true;
+			$gallery = gallery::getInstance();
+			$gallery_manager = GalleryManager::getInstance();
+		} else {
+			$use_images = false;
+		}
+
+		$items = $manager->getItems(
+							$manager->getFieldNames(),
+							$conditions,
+							$order_by,
+							$order_asc,
+							$limit
+						);
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		if (count($items) > 0) {
+			foreach ($items as $item)
+				$result['items'][] = array(
+									'id'				=> $item->id,
+									'text'				=> $item->text,
+									'url'				=> $item->url,
+									'redirect_url'		=> url_Make('redirect', $this->name, array('id', $item->id)),
+									'external'			=> $item->external,
+									'sponsored'			=> $item->sponsored,
+									'display_limit'		=> $item->display_limit,
+									'sponsored_clicks'	=> $item->sponsored_clicks,
+									'total_clicks'		=> $item->total_clicks,
+									'image'				=> null
+								);
+		} else {
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Create JSON object containing group items
+	 */
+	private function json_GroupList() {
+		define('_OMIT_STATS', 1);
+
+		$groups = array();
+		$conditions = array();
+
+		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
+		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
+		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
+
+		$manager = LinkGroupsManager::getInstance();
+
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'items'			=> array()
+				);
+
+		if (count($items) > 0) {
+			foreach ($items as $item)
+				$result['items'][] = array(
+									'id'		=> $item->id,
+									'name'		=> $item->name
+								);
+		} else {
+		}
+
+		print json_encode($result);
 	}
 }
 

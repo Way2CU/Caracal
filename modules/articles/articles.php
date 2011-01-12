@@ -1224,6 +1224,9 @@ class articles extends Module {
 
 					$manager->updateData($data, array('id' => $article->id));
 				}
+				
+				$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
+				$result['rating'] = $this->getArticleRating($article, 10);
 			} else {
 				$result['error'] = true;
 				$result['error_message'] = $this->getLanguageConstant('message_vote_error');

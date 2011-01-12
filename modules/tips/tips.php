@@ -78,6 +78,10 @@ class tips extends Module {
 				case 'show_list':
 					$this->tag_TipList($params, $children);
 					break;
+					
+				case 'json_tip':
+					$this->json_Tip();
+					break;
 
 				default:
 					break;
@@ -424,6 +428,53 @@ class tips extends Module {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+	}
+	
+	/**
+	 * Generate JSON object for specified tip
+	 */
+	private function json_Tip() {
+		global $language;
+		
+		define('_OMIT_STATS', 1);
+
+		$conditions = array();
+		$order_by = isset($_REQUEST['random']) && $_REQUEST['random'] == 'yes' ? 'RAND()' : 'id';
+		$order_asc = isset($_REQUEST['order_asc']) && $_REQUEST['order_asc'] == 'yes';
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
+		
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id(explode(',', $_REQUEST['id']));
+			
+		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 'yes')
+			$conditions['visible'] = 1;
+			
+		$manager = TipManager::getInstance();
+		
+		$item = $manager->getSingleItem(
+								$manager->getFieldNames(), 
+								$conditions, 
+								array($order_by), 
+								$order_asc
+							);
+
+		$result = array(
+					'error'			=> false,
+					'error_message'	=> '',
+					'item'			=> array()
+				);
+
+		if (is_object($item)) {
+			$result['item'] = array(
+							'id'		=> $item->id,
+							'content'	=> $all_languages ? $item->content : $item->content[$language],
+							'visible'	=> $item->visible
+						);
+		} else {
+			
+		}
+		
+		print json_encode($result);
 	}
 }
 
