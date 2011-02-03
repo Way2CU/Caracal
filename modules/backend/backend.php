@@ -99,7 +99,7 @@ class backend extends Module {
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'logout')
 											),
-									$level=5
+									$level=1
 								));
 
 			$this->addMenu($this->name, $system_menu);
@@ -472,6 +472,8 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function tag_ModuleList($params, $children) {
+		global $module_path;
+		
 		$list = array();
 		$raw_list = $this->getModuleList();
 		$manager = ModuleManager::getInstance();
@@ -519,8 +521,15 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		foreach($list as $name => $definition) {
+			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.png';
+			
+			if (file_exists($icon_file))
+				$icon = url_GetFromFilePath($icon_file); else
+				$icon = url_GetFromFilePath($this->path.'images/icons/16/modules.png');
+				
 			$params = array(
 							'name'				=> $name,
+							'icon'				=> $icon,
 							'status'			=> $definition['status'],
 							'active'			=> $definition['active'],
 							'active_symbol'		=> $definition['active'] ? CHAR_CHECKED : CHAR_UNCHECKED,
@@ -604,7 +613,7 @@ class backend extends Module {
 	 *
 	 * @return array
 	 */
-	private function getModuleList() {
+	public function getModuleList() {
 		global $module_path;
 
 		$result = array();

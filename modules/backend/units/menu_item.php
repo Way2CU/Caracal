@@ -90,7 +90,8 @@ class backend_MenuItem {
 		if (!$this->isDrawable()) return;
 		
 		$icon = "<img src=\"{$this->icon}\" alt=\"{$this->title}\">";
-		$link = (!empty($this->action)) ? "<a href=\"javascript:void(0);\" onclick=\"{$this->action}\">{$icon}{$this->title}</a>" : $icon.$this->title;
+		$title = $_SESSION['level'] >= 10 ? "{$this->title} ({$this->level})" : "";
+		$link = (!empty($this->action)) ? "<a href=\"javascript:void(0);\" onclick=\"{$this->action}\" title=\"{$title}\">{$icon}{$this->title}</a>" : $icon.$this->title;
 		$class = (count($this->children) > 0) ? ' class="sub_menu"' : '';
 
 		echo "<li{$class}>{$link}";

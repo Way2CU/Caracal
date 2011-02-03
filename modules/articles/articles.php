@@ -622,7 +622,7 @@ class articles extends Module {
 	/**
 	 * Tag handler for printing article
 	 *
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_Article($tag_params, $children) {

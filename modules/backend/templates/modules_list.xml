@@ -4,6 +4,9 @@
 	<div class="scrollable_list">
 		<!-- Header -->
 		<div class="list_header">
+			<span class="column" style="width: 18px;">
+				<_raw text=""/>
+			</span>
 			<span class="column" style="width: 200px;">
 				<_text constant="column_module_name" module="backend"/>
 			</span>

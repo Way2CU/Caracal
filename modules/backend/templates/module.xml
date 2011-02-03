@@ -2,6 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
+			<span class="column" style="width: 18px; text-align: left; vertical-align: middle;">
+				<img src="$params['icon']" alt="$params['name']" eval="src,alt"/>
+			</span>
 			<span class="column" style="'width: 200px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" eval="style">
 				<_var name="$params['name']"/>
 			</span>
@@ -19,19 +22,19 @@
 					<!-- Module is NOT initialised -->
 					<_var name="$params['item_initialise']"/>
 				</_if>
-				
+
 				<_if condition="$params['status'] != 'not_initialized'">
 					<!-- Module is initialised -->
 					<_if condition="$params['status'] == 'active'">
 						<_var name="$params['item_deactivate']"/><_raw text=" "/>
 					</_if>
-					
+
 					<_if condition="$params['status'] == 'inactive'">
 						<_var name="$params['item_activate']"/><_raw text=" "/>
 					</_if>
-					
+
 					<_var name="$params['item_disable']"/><_raw text=" "/>
 				</_if>
-			</span>	
+			</span>
 	</div>
 </document>
