@@ -47,6 +47,7 @@ class backend extends Module {
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/animation_chain.js'), 'type'=>'text/javascript'));
 
 			if ($section == $this->name) {
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
@@ -216,7 +217,7 @@ class backend extends Module {
 	public function addMenu($name, $menu) {
 		$this->menus[$name] = $menu;
 	}
-	
+
 	/**
 	 * Get menu assigned to specified name
 	 * @param string $name
@@ -225,7 +226,7 @@ class backend extends Module {
 		if (array_key_exists($name, $this->menus))
 			$result = $this->menus[$name]; else
 			$result = null;
-			
+
 		return $result;
 	}
 
@@ -473,7 +474,7 @@ class backend extends Module {
 	 */
 	public function tag_ModuleList($params, $children) {
 		global $module_path;
-		
+
 		$list = array();
 		$raw_list = $this->getModuleList();
 		$manager = ModuleManager::getInstance();
@@ -522,11 +523,11 @@ class backend extends Module {
 
 		foreach($list as $name => $definition) {
 			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.png';
-			
+
 			if (file_exists($icon_file))
 				$icon = url_GetFromFilePath($icon_file); else
 				$icon = url_GetFromFilePath($this->path.'images/icons/16/modules.png');
-				
+
 			$params = array(
 							'name'				=> $name,
 							'icon'				=> $icon,
