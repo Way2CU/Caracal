@@ -129,6 +129,9 @@ function LightBox(selector, show_title, show_description) {
 	 * @param object image
 	 */
 	this.showImage = function(image) {
+		var image_width = image.width;
+		var image_height = image.height;
+
 		// add image to container
 		this._content.html(image);
 
@@ -146,12 +149,12 @@ function LightBox(selector, show_title, show_description) {
 		// calculate animation params
 		var vertical_space = this._container.height() - this._content.height();
 		var end_params = {
-						width: image.width,
-						height: image.height
+						width: image_width,
+						height: image_height
 					};
 		var end_position = {
-						top: Math.round(($(window).height() - image.height - vertical_space) / 2),
-						left: Math.round(($(window).width() - image.width) / 2),
+						top: Math.round(($(window).height() - image_height - vertical_space) / 2),
+						left: Math.round(($(window).width() - image_width) / 2),
 					};
 
 		// create animation chain for images
