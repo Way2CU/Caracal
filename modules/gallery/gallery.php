@@ -22,6 +22,8 @@ class gallery extends Module {
 			$head_tag = head_tag::getInstance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/slideshow.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/lightbox.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/lightbox.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 
 			// load backend files if needed
 			if ($section == 'backend') {
