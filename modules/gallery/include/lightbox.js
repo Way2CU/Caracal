@@ -34,6 +34,10 @@ function LightBox(selector, show_title, show_description) {
 	this._visible = false;
 	this._image_to_show = null;  // used when image loads faster than animation
 
+	// original image sizes
+	this._original_image_width = null;
+	this._original_image_height = null;
+
 	// create objects we'll use later
 	this._images = null;
 	this._background = $('<div>');
@@ -129,11 +133,14 @@ function LightBox(selector, show_title, show_description) {
 	 * @param object image
 	 */
 	this.showImage = function(image) {
-		var spacing = 100;
 		var image_width = image.width;
 		var image_height = image.height;
 		var window_width = $(window).width();
 		var window_height = $(window).height();
+
+		// set original image sizes
+		this._original_image_width = image_width;
+		this._original_image_height = image_height;
 
 		// set title
 		if (this._title != null)
@@ -146,31 +153,10 @@ function LightBox(selector, show_title, show_description) {
 		// calculate vertical space taken by title and description
 		var vertical_space = this._container.height() - this._content.height();
 
-		// maximum alowable image dimensions
-		var max_width = window_width - spacing;
-		var max_height = window_height - vertical_spacing - spacing;
-
-		// check if image fits in current window
-		if ((image_width > max_width) || (image_height > max_height)) {
-			if (image_width > image_height) {
-				// landscape image
-				var ratio = image_height / image_width;
-				image_width = max_width;
-				image_height = Math.round(image_width * ratio);
-
-			} else if (image_width < image_height) {
-				// portrait image
-				var ratio = image_width / image_heigth;
-				image_height = max_height;
-				image_width = image_height * ratio;
-
-			} else {
-				// square image
-				var size = (max_width > max_height) ? max_heigth : max_width;
-				image_width = size;
-				image_height = size;
-			}
-		}
+		// resize image if needed
+		var new_size = this.getImageSize(image_width, image_height, vertical_space);
+		image_width = new_size[0];
+		image_height = new_size[1];
 
 		// add image to container
 		this._content.html(image);
@@ -367,6 +353,43 @@ function LightBox(selector, show_title, show_description) {
 	};
 
 	/**
+	 * Calculate image size to fit the screen
+	 *
+	 * @param integer width
+	 * @param integer height
+	 * @param integer vertical_space
+	 */
+	this.getImageSize = function(width, height, vertical_space) {
+		var image_width = width;
+		var image_height = height;
+		var window_width = $(window).width();
+		var window_height = $(window).height();
+
+		// maximum alowable image dimensions
+		var max_width = window_width - 100;
+		var max_height = window_height - vertical_space - 100;
+
+		// check if image fits in current window
+		if ((image_width > max_width) || (image_height > max_height)) {
+			// calculate ratio
+			var image_ratio = image_height / image_width;
+			var container_ratio = max_height / max_width;
+
+			// calculate scale
+			var scale = 1;
+			if (image_ratio < container_ratio)
+				scale = max_width / image_width; else
+				scale = max_height / image_height;
+
+			// modify values
+			image_width = image_width * scale;
+			image_height = image_height * scale;
+		}
+
+		return [image_width, image_height];
+	};
+
+	/**
 	 * Handle thumbnail click
 	 * @param object event
 	 */
@@ -405,6 +428,28 @@ function LightBox(selector, show_title, show_description) {
 	 * @param object event
 	 */
 	this.onWindowResize = function(event) {
+		// calculate vertical space taken by title and description
+		var vertical_space = self._container.height() - self._content.height();
+
+		// calculate new size
+		var new_size = self.getImageSize(
+								self._original_image_width,
+								self._original_image_height,
+								vertical_space
+							);
+
+		// resize image and container
+		self._content
+				.css({
+					width: new_size[0],
+					height: new_size[1]
+				})
+				.children('img').css({
+					width: new_size[0],
+					height: new_size[1]
+				});
+
+		self.adjustSize();
 		self.adjustPosition();
 	};
 
