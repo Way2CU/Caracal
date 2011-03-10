@@ -129,14 +129,11 @@ function LightBox(selector, show_title, show_description) {
 	 * @param object image
 	 */
 	this.showImage = function(image) {
+		var spacing = 100;
 		var image_width = image.width;
 		var image_height = image.height;
-
-		// add image to container
-		this._content.html(image);
-
-		// set image visibility
-		$(image).css('opacity', 0);
+		var window_width = $(window).width();
+		var window_height = $(window).height();
 
 		// set title
 		if (this._title != null)
@@ -146,15 +143,53 @@ function LightBox(selector, show_title, show_description) {
 		if (this._description != null)
 			this._description.html($(image).data('description'));
 
-		// calculate animation params
+		// calculate vertical space taken by title and description
 		var vertical_space = this._container.height() - this._content.height();
+
+		// maximum alowable image dimensions
+		var max_width = window_width - spacing;
+		var max_height = window_height - vertical_spacing - spacing;
+
+		// check if image fits in current window
+		if ((image_width > max_width) || (image_height > max_height)) {
+			if (image_width > image_height) {
+				// landscape image
+				var ratio = image_height / image_width;
+				image_width = max_width;
+				image_height = Math.round(image_width * ratio);
+
+			} else if (image_width < image_height) {
+				// portrait image
+				var ratio = image_width / image_heigth;
+				image_height = max_height;
+				image_width = image_height * ratio;
+
+			} else {
+				// square image
+				var size = (max_width > max_height) ? max_heigth : max_width;
+				image_width = size;
+				image_height = size;
+			}
+		}
+
+		// add image to container
+		this._content.html(image);
+
+		// set image visibility
+		$(image).css({
+				opacity: 0,
+				width: image_width,
+				height: image_height
+			});
+
+		// calculate animation params
 		var end_params = {
 						width: image_width,
 						height: image_height
 					};
 		var end_position = {
-						top: Math.round(($(window).height() - image_height - vertical_space) / 2),
-						left: Math.round(($(window).width() - image_width) / 2),
+						top: Math.round((window_height - image_height - vertical_space) / 2),
+						left: Math.round((window_width - image_width) / 2),
 					};
 
 		// create animation chain for images
