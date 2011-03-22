@@ -89,15 +89,19 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 	 * Initialize slideshow
 	 */
 	this.init = function() {
+		var data = {
+					section: 'gallery',
+					action: 'json_image_list'
+				};
+
+		if (this.group_name != undefined && this.group_name != null)
+			data['group'] = this.group_name;
+
 		// load images from server
 		$.ajax({
 			url: this.getURL(),
 			type: 'GET',
-			data: {
-					section: 'gallery',
-					action: 'json_image_list',
-					group: this.group_name
-				},
+			data: data,
 			dataType: 'json',
 			context: this,
 			success: this.loadImages
