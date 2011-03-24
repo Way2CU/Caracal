@@ -37,7 +37,12 @@ $fp_arcnum = 15;
 $fp_fontsize = 25;
 $fp_chartype = 'numbers';
 $fp_fontdir = "./";
-$fp_accepted_hosts = array($_SERVER['HTTP_HOST'], 'http://'.$_SERVER['HTTP_HOST']);
 $fp_err_image = '../images/captcha_err.png';
+
+if (array_key_exists('HTTP_HOST', $_SERVER))
+	$fp_accepted_hosts = array(
+					$_SERVER['HTTP_HOST'],
+					'http://'.$_SERVER['HTTP_HOST']
+				);
 
 ?>

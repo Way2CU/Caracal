@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 200px;">
+			<_var name="$params['payer']"/>
+		</span>
+		<span class="column" style="width: 100px;">
+			<_var name="$params['date']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['gross']"/>
+		</span>
+		<div class="details">
+		</div>
+	</div>
+</document>

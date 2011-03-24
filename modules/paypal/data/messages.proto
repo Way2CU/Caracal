@@ -1,0 +1,11 @@
+message SubscriptionCheck_Request {
+	required string license = 1;
+	required string custom = 2;
+	required string item = 3;
+}
+
+message SubscriptionCheck_Response {
+	required int32 valid_until = 1;
+	required bool error = 2 [default=false];
+	optional string error_message = 3;
+}
