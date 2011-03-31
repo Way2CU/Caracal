@@ -57,7 +57,7 @@ class paypal extends Module {
 
 								window_Open( // on click open window
 											'paypal_transactions',
-											450,
+											550,
 											$this->getLanguageConstant('title_transactions'),
 											true, true,
 											backend_UrlMake($this->name, 'transactions')
@@ -272,10 +272,42 @@ class paypal extends Module {
 			$result = fgets($socket);
 
 			if (strcmp($result, 'VERIFIED') && isset($_POST['txn_type'])) {
+				// record payment
+				$this->recordTransaction();
+
 				// source data verified, now we can process them
 				switch (strtolower($_POST['txn_type'])) {
 					case 'subscr_payment':
-						// subscription payment,
+						// subscription payment
+						$custom = fix_chars($_REQUEST['custom']);
+						$item_code = fix_chars($_REQUEST['item_number']);
+						$manager = PayPal_SubscriptionManager::getInstance();
+
+						$item = $manager->getSingleItem(
+													array('id'),
+													array(
+														'custom'	=> $custom,
+														'item_code'	=> $item_code
+													));
+
+						// prepare data for insertion
+						$time = new DateTime();
+						$time->modify('next month');
+
+						$data = array(
+								'custom'		=> $custom,
+								'item_code'		=> $item_code,
+								'valid_until'	=> $time->format('Y-m-d H:m:s')
+							);
+
+						if (is_object($item)) {
+							// transaction already exists, we only need to update the time
+							$manager->updateData($data, array('id' => $item->id));
+
+						} else {
+							// no transaction found, create new
+							$manager->insertData($data);
+						}
 				}
 
 			} else if (strcmp($result, 'INVALID')) {
@@ -344,6 +376,48 @@ class paypal extends Module {
 		header('Content-Length: ' . strlen($data), true);
 
 		print $data;
+	}
+
+	/**
+	 * Create a transaction record from POST/GET parameters
+	 */
+	private function recordTransaction() {
+		$data = array(
+				'transaction_id'	=> fix_chars($_REQUEST['txn_id']),
+				'transaction_type'	=> fix_chars($_REQUEST['txn_type']),
+				'custom'			=> fix_chars($_REQUEST['custom']),
+
+				'payer_first_name'	=> fix_chars($_REQUEST['first_name']),
+				'payer_last_name'	=> fix_chars($_REQUEST['last_name']),
+				'payer_email'		=> fix_chars($_REQUEST['payer_email']),
+				'payer_id'			=> fix_chars($_REQUEST['payer_id']),
+
+				'address_name'		=> fix_chars($_REQUEST['address_name']),
+				'address_street'	=> fix_chars($_REQUEST['address_street']),
+				'address_city'		=> fix_chars($_REQUEST['address_city']),
+				'address_zip'		=> fix_chars($_REQUEST['address_zip']),
+				'address_state'		=> fix_chars($_REQUEST['address_state']),
+				'address_country'	=> fix_chars($_REQUEST['address_country']),
+
+				'currency'			=> fix_chars($_REQUEST['mc_currency']),
+				'shipping'			=> fix_chars($_REQUEST['shipping']),
+				'fee'				=> fix_chars($_REQUEST['mc_fee']),
+				'tax'				=> fix_chars($_REQUEST['tax']),
+				'gross'				=> fix_chars($_REQUEST['mc_gross']),
+			);
+		$manager = PayPal_TransactionManager::getInstance();
+
+		// check if transaction already exists
+		$item = $manager->getSingleItem(array('id'), array('transaction_id' => $data['transaction_id']));
+
+		if (is_object($item)) {
+			// transaction already exists, update data
+			$manager->updateData($data, array('id' => $item->id));
+
+		} else {
+			// transaction doesn't exist, insert new data
+			$manager->insertData($data);
+		}
 	}
 }
 

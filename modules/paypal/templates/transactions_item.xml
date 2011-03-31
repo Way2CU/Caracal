@@ -8,8 +8,11 @@
 		<span class="column" style="width: 100px;">
 			<_var name="$params['date']"/>
 		</span>
-		<span class="column">
+		<span class="column" style="widget: 70px;">
 			<_var name="$params['gross']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['type']"/>
 		</span>
 		<div class="details">
 		</div>

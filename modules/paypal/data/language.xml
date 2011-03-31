@@ -13,5 +13,6 @@
 		<constant name="column_payer">Payer</constant>
 		<constant name="column_date">Date</constant>
 		<constant name="column_gross">Gross</constant>
+		<constant name="column_type">Type</constant>
 	</language>
 </document>
