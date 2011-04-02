@@ -59,6 +59,14 @@ function ScrollingNews($container, transition_time) {
 	}
 }
 
+/**
+ * News System constructor function
+ *
+ * @param string container_id		id of element containing news items
+ * @param integer animation_type	how new items are animated
+ * @param integer display_time		time news item is displayed
+ * @param integer transition_time	time required for transition between news
+ */
 function NewsSystem(container_id, animation_type, display_time, transition_time) {
 	var self = this;  // internally used
 
