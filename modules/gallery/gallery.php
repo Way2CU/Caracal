@@ -1164,6 +1164,12 @@ class gallery extends Module {
 		$manager = GalleryGroupManager::getInstance();
 
 		$conditions = array();
+		$order_by = array();
+
+		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
+			$order_by[] = fix_chars($tag_params['order_by']); else
+			$order_by[] = 'name_'.$language;
+
 		if (isset($tag_params['container'])) {
 			$container = fix_id($tag_params['container']);
 			$membership_manager = GalleryGroupMembershipManager::getInstance();
@@ -1187,7 +1193,7 @@ class gallery extends Module {
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								$conditions,
-								array('name_'.$language)
+								$order_by
 							);
 
 		if (isset($tag_params['template'])) {
