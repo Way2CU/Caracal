@@ -42,7 +42,7 @@ require_once('units/common.php');
 require_once('units/language.php');
 require_once('units/template.php');
 require_once('units/section.php');
-require_once('units/XMLParser.php');
+require_once('units/xml_parser.php');
 require_once('units/markdown.php');
 
 $time_start = explode(" ", microtime());
@@ -80,7 +80,7 @@ if ($db_use) {
 // load all the modules and start parsing the page
 $ModuleHandler->loadModules();
 
-// transfer display control to others
+// transfer display control
 $SectionHandler->transferControl($section, $action, $language);
 
 // print out copyright and timing
