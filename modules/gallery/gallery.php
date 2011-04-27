@@ -1654,7 +1654,8 @@ class gallery extends Module {
 				$result['items'][] = array(
 							'id'			=> $item->id,
 							'name'			=> $item->name,
-							'description'	=> $item->description
+							'description'	=> $item->description,
+							'image'			=> $this->_getGroupImage($item)
 						);
 		} else {
 			$result['error'] = true;
