@@ -402,18 +402,16 @@ function LightBox(selector, show_title, show_description) {
 		var description = $(this).find('span.description').html();
 
 		// if title is empty, try to find it elsewere
-		if (this._title != null) {
-			if (title == '') {
-				var tmp = $(this).find('img');
-				if (tmp.length > 0)
-					title = tmp.eq(0).attr('alt');
-			}
+		if (title == '') {
+			var tmp = $(this).find('img');
+			if (tmp.length > 0)
+				title = tmp.eq(0).attr('alt');
+		}
 
-			if (title == '') {
-				var tmp = $(this).find('span.title');
-				if (tmp.length > 0)
-					title = tmp.eq(0).html();
-			}
+		if (title == '') {
+			var tmp = $(this).find('span.title');
+			if (tmp.length > 0)
+				title = tmp.eq(0).html();
 		}
 
 		// show container
