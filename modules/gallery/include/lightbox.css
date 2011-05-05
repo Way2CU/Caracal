@@ -71,8 +71,8 @@ div#lightbox div.title {
 	padding-left: 5px;
 	padding-right: 5px;
 
-	border-radius: 5px;
 	-moz-border-radius: 5px;
+	border-radius: 5px;
 	background-color: white;
 
 	color: #333333;
@@ -87,8 +87,8 @@ div#lightbox div.content {
 	padding: 5px;
 	margin-bottom: 5px;
 
-	border-radius: 5px;
 	-moz-border-radius: 5px;
+	border-radius: 5px;
 	background-color: white;
 
 	overflow: hidden;
@@ -105,8 +105,8 @@ div#lightbox div.description {
 
 	padding: 5px;
 
-	border-radius: 5px;
 	-moz-border-radius: 5px;
+	border-radius: 5px;
 	background-color: white;
 
 	color: #555555;
@@ -116,11 +116,12 @@ div#lightbox div.description {
 
 div#lightbox a.button {
 	display: block;
-	width: 30px;
-	height: 35px;
+	width: 35px;
+	height: 80px;
 
 	position: absolute;
-	top: 50px;
+	top: 50%;
+	margin-top: -40px;
 
 	background-color: white;
 	background-position: center center;
@@ -130,13 +131,15 @@ div#lightbox a.button {
 }
 
 div#lightbox a.button.next {
-	right: -30px;
+	right: -35px;
+	-moz-border-radius: 0px 7px 7px 0px;
 	border-radius: 0px 7px 7px 0px;
 	background-image: url(../images/next.png);
 }
 
 div#lightbox a.button.previous {
-	left: -30px;
+	left: -35px;
+	-moz-border-radius: 7px 0px 0px 7px;
 	border-radius: 7px 0px 0px 7px;
 	background-image: url(../images/previous.png);
 }

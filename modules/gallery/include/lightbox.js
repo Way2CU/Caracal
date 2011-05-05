@@ -25,14 +25,16 @@
  * LightBox constructor function
  *
  * @param string selector			jQuery selector for links containing images
- * @param boolean show_title		optionally show image title
- * @param bollean show_description	optionally show image description
+ * @param boolean show_title		show image title
+ * @param bollean show_description	show image description
+ * @param boolean show_controls		show previous/next controls
  */
-function LightBox(selector, show_title, show_description) {
+function LightBox(selector, show_title, show_description, show_controls) {
 	var self = this;  // used internally for nested functions
 	this._selector = selector;
 	this._visible = false;
 	this._image_to_show = null;  // used when image loads faster than animation
+	this._current_index = null;  // represents index of currently displaying image
 
 	// original image sizes
 	this._original_image_width = null;
@@ -47,6 +49,8 @@ function LightBox(selector, show_title, show_description) {
 	this._title = show_title ? $('<div>') : null;
 	this._description = show_description ? $('<div>') : null;
 	this._close_button = $('<a>');
+	this._next_button = show_controls ? $('<a>') : null;
+	this._previous_button = show_controls ? $('<a>') : null;
 
 	/**
 	 * Initialize object
@@ -95,11 +99,37 @@ function LightBox(selector, show_title, show_description) {
 				.addClass('content')
 				.appendTo(this._container);
 
+		// configure controls
+		if (this._next_button != null) {
+			this._next_button
+					.addClass('button')
+					.addClass('next')
+					.appendTo(this._container)
+					.click(function() {
+							// we need delayed reaction to avoid racing
+							// condition with language handler
+							if (!language_handler.isRTL())
+								self.nextImage(); else
+								self.previousImage();
+						});
+
+			this._previous_button
+					.addClass('button')
+					.addClass('previous')
+					.appendTo(this._container)
+					.click(function() {
+							// we need delayed reaction to avoid racing
+							// condition with language handler
+							if (!language_handler.isRTL())
+								self.previousImage(); else
+								self.nextImage();
+						});
+		}
+
 		// configure image description
 		if (this._description != null)
 			this._description
 				.addClass('description')
-				.html("Well, @NPRussell will look into it. Thing is, VR isn't interested in something unstable... The people on the hero want a stable ROM to use on their primary phone, pretty much. Froyd 1.7.2 does that for most people. While I agree it would be really nice to put GB onto it, I wouldn't do it at expense of performance or functionality or stability. But it's something that is potentially on the cards... We just need to keep an eye on developments upstream etc...")
 				.appendTo(this._container);
 
 		// attach events
@@ -181,6 +211,7 @@ function LightBox(selector, show_title, show_description) {
 		// create animation chain for images
 		var content_chain = new AnimationChain();
 		var details_chain = new AnimationChain();
+		var control_chain = new AnimationChain(null, true);
 
 		content_chain
 				.addAnimation(
@@ -203,6 +234,7 @@ function LightBox(selector, show_title, show_description) {
 
 					// start animation
 					details_chain.start();
+					control_chain.start();
 				});
 
 		// add title to animation chain
@@ -221,6 +253,12 @@ function LightBox(selector, show_title, show_description) {
 
 			// add object to chain
 			details_chain.addAnimation(this._description, {opacity: 1}, 200);
+		}
+
+		// add controls to animation chain
+		if (this._next_button != null) {
+			control_chain.addAnimation(this._next_button, {opacity: 1}, 200);
+			control_chain.addAnimation(this._previous_button, {opacity: 1}, 200);
 		}
 
 		// animate containers
@@ -280,6 +318,11 @@ function LightBox(selector, show_title, show_description) {
 		if (this._description != null)
 			this._description.css('opacity', 0).html('');
 
+		if (this._next_button != null) {
+			this._next_button.css('opacity', 0);
+			this._previous_button.css('opacity', 0);
+		}
+
 		this.adjustSize();
 		this.adjustPosition();
 
@@ -315,8 +358,41 @@ function LightBox(selector, show_title, show_description) {
 				self._visible = false;
 			});
 
+		// clear current index
+		self._current_index = null;
+
 		// start animation
 		chain.start();
+	};
+
+	/**
+	 * Show next image in list
+	 */
+	this.nextImage = function() {
+		// get next image in line
+		var next_index = self._current_index + 1;
+
+		// make sure we don't run out of bounds
+		if (next_index > self._images.length -1)
+			next_index = 0;
+
+		// start loading image
+		self.startLoading(next_index);
+	};
+
+	/**
+	 * Show previouse image in list
+	 */
+	this.previousImage = function() {
+		// get previous image in line
+		var previous_index = self._current_index - 1;
+
+		// make sure we don't run out of bounds
+		if (previous_index < 0)
+			previous_index = self._images.length - 1;
+
+		// start loading image
+		self.startLoading(previous_index);
 	};
 
 	/**
@@ -390,6 +466,66 @@ function LightBox(selector, show_title, show_description) {
 	};
 
 	/**
+	 * Start loading image with specified index number
+	 * @param integer index
+	 */
+	this.startLoading = function(index) {
+		// store current index
+		this._current_index = index
+
+		// get image
+		var image = this._images.eq(index);
+
+		// get image variables
+		var url = image.attr('href');
+		var title = image.attr('title');
+		var description = image.find('span.description').html();
+
+		// if title is empty, try to find it elsewere
+		if (title == '') {
+			var tmp = image.find('img');
+			if (tmp.length > 0)
+				title = tmp.eq(0).attr('alt');
+		}
+
+		if (title == '') {
+			var tmp = image.find('span.title');
+			if (tmp.length > 0)
+				title = tmp.eq(0).html();
+		}
+
+		if (this._visible) {
+			// container is visible, we need to hide details
+			var chain = new AnimationChain();
+
+			// hide image
+			chain.addAnimation(this._content.find('img'), {opacity: 0}, 200);
+
+			// add title to animation chain
+			if (this._title != null)
+				chain.addAnimation(this._title, {opacity: 0}, 200);
+
+			// add description to animation chain
+			if (this._description != null)
+				chain.addAnimation(this._description, {opacity: 0}, 200);
+
+			chain.callback(function() {
+					// delayed load image
+					self.loadImage(url, title, description);
+				});
+
+			chain.start();
+
+		} else {
+			// container is not visible
+			this.showContainer();
+
+			// load image
+			this.loadImage(url, title, description);
+		}
+	};
+
+	/**
 	 * Handle thumbnail click
 	 * @param object event
 	 */
@@ -397,28 +533,11 @@ function LightBox(selector, show_title, show_description) {
 		// stop default action
 		event.preventDefault();
 
-		var url = $(this).attr('href');
-		var title = $(this).attr('title');
-		var description = $(this).find('span.description').html();
+		// store current image index
+		index = self._images.index(this);
 
-		// if title is empty, try to find it elsewere
-		if (title == '') {
-			var tmp = $(this).find('img');
-			if (tmp.length > 0)
-				title = tmp.eq(0).attr('alt');
-		}
-
-		if (title == '') {
-			var tmp = $(this).find('span.title');
-			if (tmp.length > 0)
-				title = tmp.eq(0).html();
-		}
-
-		// show container
-		self.showContainer();
-
-		// load image
-		self.loadImage(url, title, description);
+		// start loading image
+		self.startLoading(index);
 	};
 
 	/**
