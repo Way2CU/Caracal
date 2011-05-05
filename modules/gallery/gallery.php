@@ -1510,6 +1510,9 @@ class gallery extends Module {
 
 		$manager = GalleryManager::getInstance();
 		$conditions = array('visible' => 1);
+		$order_by = null;
+		$order_asc = null;
+		$limit = null;
 
 		// raw group id was specified
 		if (isset($_REQUEST['group_id']))
@@ -1526,7 +1529,12 @@ class gallery extends Module {
 				$conditions['group'] = -1;
 		}
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		// check for items limit
+		if (isset($_REQUEST['limit']))
+			$limit = fix_id($_REQUEST['limit']);
+
+		// get items
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $oder_asc, $limit);
 
 		$result = array(
 					'error'			=> false,
