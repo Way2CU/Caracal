@@ -27,6 +27,12 @@ div#lightbox div.title_bar {
 	display: block;
 	min-height: 20px;
 	margin-bottom: 5px;
+
+	text-align: left;
+}
+
+body.rtl div#lightbox div.title_bar {
+	text-align: right;
 }
 
 div#lightbox a.close_button {
@@ -76,6 +82,8 @@ div#lightbox div.title {
 div#lightbox div.content {
 	display: block;
 
+	position: relative;
+
 	padding: 5px;
 	margin-bottom: 5px;
 
@@ -104,4 +112,31 @@ div#lightbox div.description {
 	color: #555555;
 	font-weight: normal;
 	overflow-y: auto;
+}
+
+div#lightbox a.button {
+	display: block;
+	width: 30px;
+	height: 35px;
+
+	position: absolute;
+	top: 50px;
+
+	background-color: white;
+	background-position: center center;
+	background-repeat: no-repeat;
+
+	cursor: pointer;
+}
+
+div#lightbox a.button.next {
+	right: -30px;
+	border-radius: 0px 7px 7px 0px;
+	background-image: url(../images/next.png);
+}
+
+div#lightbox a.button.previous {
+	left: -30px;
+	border-radius: 7px 0px 0px 7px;
+	background-image: url(../images/previous.png);
 }
