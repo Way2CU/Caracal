@@ -94,6 +94,11 @@ div#lightbox div.content {
 	overflow: hidden;
 }
 
+div#lightbox div.content img {
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
 div#lightbox div.content.loading {
 	background-image: url(../../backend/images/loading.gif);
 	background-repeat: no-repeat;
