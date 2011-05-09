@@ -1,0 +1,20 @@
+/**
+ * Common Style Sheet
+ *
+ * Copyright (c) 2011. by way2cu
+ * Author: MeanEYE.rcf
+ */
+@charset "UTF-8";
+
+body {
+	margin: 0px;
+	padding: 0px;
+
+	font-size: 12px;
+	font-family: Tahoma, sans-serif;
+	direction: ltr;
+}
+
+body.rtl {
+	direction: rtl;
+}
