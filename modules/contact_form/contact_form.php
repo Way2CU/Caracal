@@ -293,7 +293,7 @@ class contact_form extends Module {
 	 * @return string
 	 */
 	private function _makeHtmlBody($fields) {
-		$result = '<table width="100%" cellspacing="0" cellpadding="0" border="1" frame="box" rules="rows">';
+		$result = '<table width="100%" cellspacing="0" cellpadding="5" border="1" frame="box" rules="rows">';
 
 		foreach($fields as $name => $value)
 			$result .= '<tr><td valign="top"><b>'.$name.'</b></td><td valign="top">'.$value.'</td></tr>';
