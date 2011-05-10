@@ -18,16 +18,16 @@ class contact_form extends Module {
 	protected function __construct() {
 		parent::__construct(__FILE__);
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 
 	/**
 	 * Transfers control to module functions
@@ -42,7 +42,7 @@ class contact_form extends Module {
 				case 'send_from_xml':
 					$this->sendFromXML($params, $children);
 					break;
-					
+
 				case 'send_from_ajax':
 					$this->sendFromAJAX();
 					break;
@@ -137,7 +137,7 @@ class contact_form extends Module {
 			}
 
 		$headers['X-Mailer'] = "RCF-CMS/1.0";
-		
+
 		// if address is not specified by the XML, check for system setting
 		if (empty($to) && isset($this->settings['default_address'])) {
 			$to = $this->settings['default_address'];
@@ -162,18 +162,18 @@ class contact_form extends Module {
 			}
 		}
 	}
-	
+
 	/**
 	 * Send contact form data using AJAX request
 	 */
 	private function sendFromAJAX() {
 		define('_OMIT_STATS', 1);
-		
+
 		$result = array(
 					'error'		=> false,
 					'message'	=> ''
 				);
-				
+
 		if (isset($this->settings['default_address'])) {
 			$to = $this->settings['default_address'];
 			$subject = $this->settings['default_subject'];
@@ -181,7 +181,7 @@ class contact_form extends Module {
 			$headers = array(
 							'X-Mailer'	=> "RCF-CMS/1.0"
 						);
-						
+
 			foreach($_REQUEST as $key => $value)
 				$fields[$key] = fix_chars($value);
 
@@ -197,13 +197,13 @@ class contact_form extends Module {
 			$result['error'] = true;
 			$result['message'] = $this->getLanguageConstant('message_error_no_address');
 		}
-				
+
 		print json_encode($result);
 	}
 
 	/**
 	 * Perform send email
-	 * 
+	 *
 	 * @param string $to
 	 * @param string $subject
 	 * @param array $headers
@@ -211,7 +211,14 @@ class contact_form extends Module {
 	 * @return boolean
 	 */
 	private function _sendMail($to, $subject, $headers, $fields) {
-		$body = $this->_makeBody($fields);
+		// generate boundary string
+		$boundary = md5(time().'--cms--'.(rand() * 10000));
+
+		// add content type to headers
+		$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}";
+
+		// make body and headers
+		$body = $this->_makeBody($fields, $boundary);
 		$headers_string = $this->_makeHeaders($headers);
 
 		return mail($to, $subject, $body, $headers_string);
@@ -219,7 +226,7 @@ class contact_form extends Module {
 
 	/**
 	 * Create header string from specified array
-	 * 
+	 *
 	 * @param array $headers
 	 * @return string
 	 */
@@ -234,11 +241,39 @@ class contact_form extends Module {
 
 	/**
 	 * Create message body from fields
-	 * 
+	 *
+	 * @param array $fields
+	 * @param string $boundary
+	 * @return string
+	 */
+	private function _makeBody($fields, $boundary) {
+		$result = "";
+
+		// make plain text body
+		$result .= "--{$boundary}\n";
+		$result .= "Content-Type: text/plain; charset=UTF-8\n";
+		$result .= "Content-Transfer-Encoding: base64\n\n";
+		$result .= base64_encode($this->_makePlainBody($fields))."\n";
+
+		// make html body
+		$result .= "--{$boundary}\n";
+		$result .= "Content-Type: text/html; charset=UTF-8\n";
+		$result .= "Content-Transfer-Encoding: base64\n\n";
+		$result .= base64_encode($this->_makeHtmlBody($fields))."\n";
+
+		// make ending boundary
+		$result .= "--{$boundary}--\n";
+
+		return $result;
+	}
+
+	/**
+	 * Generate plain text message body
+	 *
 	 * @param array $fields
 	 * @return string
 	 */
-	private function _makeBody($fields) {
+	private function _makePlainBody($fields) {
 		$result = "";
 		$max_length = 0;
 
@@ -247,6 +282,23 @@ class contact_form extends Module {
 
 		foreach($fields as $name => $value)
 			$result .= $name.str_repeat(" ", $max_length-strlen($name)).": {$value}\n";
+
+		return $result;
+	}
+
+	/**
+	 * Generate HTML message body
+	 *
+	 * @param array $fields
+	 * @return string
+	 */
+	private function _makeHtmlBody($fields) {
+		$result = '<table width="100%" cellspacing="0" cellpadding="0" border="1" frame="box" rules="rows">';
+
+		foreach($fields as $name => $value)
+			$result .= '<tr><td valign="top"><b>'.$name.'</b></td><td valign="top">'.$value.'</td></tr>';
+
+		$result .= '</table>';
 
 		return $result;
 	}
