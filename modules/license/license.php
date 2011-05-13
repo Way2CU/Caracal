@@ -153,22 +153,30 @@ class license extends Module {
 	 */
 	public function isLicenseValid($module_name, $license) {
 		$result = false;
-		$referer = isset($_SERVER['HTTP_REFERER']) ? isset($_SERVER['HTTP_REFERER']) : null;
+		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 
 		if (!is_null($referer)) {
-			// we need referer URL to validate license
-			$manager = LicenseManager::getInstance();
-			$manager_modules = LicenseModulesManager::getInstance();
+			$url = parse_url($referer, PHP_URL_HOST);
 
-			$license = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array(
-											'license' 	=> $license,
-											'active'	=> true
-										));
+			if (!is_null($url) && $url == $_SERVER['HTTP_HOST']) {
+				// local api, just return true
+				$result = true;
 
-			// set result
-			$result = is_object($license) && $license->referer = $referer;
+			} else {
+				// API requesting verification is not local
+				$manager = LicenseManager::getInstance();
+				$manager_modules = LicenseModulesManager::getInstance();
+
+				$license = $manager->getSingleItem(
+											$manager->getFieldNames(),
+											array(
+												'license' 	=> $license,
+												'active'	=> true
+											));
+
+				// set result
+				$result = is_object($license) && $license->referer = $referer;
+			}
 		}
 
 		return $result;
