@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_downloads">Downloads</constant>
+		<constant name="menu_upload_file">Upload file</constant>
+		<constant name="menu_manage">Manage uploads</constant>
+
+		<constant name="title_upload_file">Upload File</constant>
+		<constant name="title_manage">Manage Downloads</constant>
+		<constant name="title_change">Change Download</constant>
+		<constant name="title_delete">Delete Download</constant>
+
+		<constant name="label_name">Name:</constant>
+		<constant name="label_description">Description:</constant>
+		<constant name="label_file">File:</constant>
+		<constant name="label_visible">File is visible to users</constant>
+
+		<constant name="column_name">Name</constant>
+		<constant name="column_size">Size</constant>
+		<constant name="column_downloads">Downloads</constant>
+		<constant name="column_filename">File name</constant>
+
+		<constant name="message_file_uploaded">New file was uploaded.</constant>
+		<constant name="message_file_save_error">There was an error saving your file. Check directory permissions.</constant>
+		<constant name="message_file_upload_error">There was an error uploading your file.</constant>
+		<constant name="message_file_saved">Download data was saved.</constant>
+		<constant name="message_file_delete">You are about to remove the following download. Are you sure?</constant>
+		<constant name="message_file_deleted">Specified download was removed.</constant>
+
+		<constant name="toolbar_add_download">Add download link</constant>
+	</language>
+</document>
