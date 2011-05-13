@@ -378,7 +378,24 @@ class downloads extends Module {
 	 * Record download count and redirect to existing file
 	 */
 	private function redirectDownload() {
+		define('_OMIT_STATS', 1);
+
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$manager = DownloadsManager::getInstance();
+
+		if (!is_null($id)) {
+			$item = $manager->getSingleItem(array('count', 'filename'), array('id' => $id));
+
+			// update count
+			$manager->updateData(array('count' => $item->count + 1), array('id' => $id));
+
+			// redirect
+			$url = $this->_getDownloadURL($item);
+			header("Location: {$url}");
+
+		} else {
+			die('Invalid download ID!');
+		}
 	}
 
 	/**
