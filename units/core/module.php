@@ -89,7 +89,7 @@ class Module {
 	 * @param string $license
 	 * @return boolean
 	 */
-	private function checkLicense($license) {
+	protected function checkLicense($license) {
 		$result = false;
 
 		if (class_exists('license')) {
