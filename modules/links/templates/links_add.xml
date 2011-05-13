@@ -41,14 +41,4 @@
 			</button>
 		</div>
 	</form>
-
-	<_if condition="$params['with_images'] == true">
-		<script type="text/javascript">
-			$('#link_add_form').iframePostForm({
-				complete: function(response) {
-					window_SetContent(window_GetById('links_add'), response);
-				}
-			});
-		</script>
-	</_if>
 </document>

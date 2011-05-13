@@ -359,18 +359,18 @@ class links extends Module {
 			'description' 	=> escape_chars($_REQUEST['description']),
 			'url' 			=> fix_chars($_REQUEST['url']),
 			'external' 		=> fix_id($_REQUEST['external']),
-			'sponsored' 	=> fix_id($_REQUEST['sponsored']),
+			'sponsored' 	=> isset($_REQUEST['sponsored']) && ($_REQUEST['sponsored'] == 'on' || $_REQUEST['sponsored'] == '1') ? 1 : 0,
 			'display_limit'	=> fix_id(fix_chars($_REQUEST['display_limit'])),
 		);
 
 		$gallery_addon = '';
 
 		// if images are in use and specified
-		if (class_exists('gallery') && isset($_FILES['image']) && !empty($_FILES['images'])) {
+		if (class_exists('gallery') && isset($_FILES['image'])) {
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
 
-			$result = $gallery->_createImage('image', $this->settings['thumbnail_size']);
+			$result = $gallery->createImage('image', $this->settings['thumbnail_size']);
 
 			if (!$result['error']) {
 				$image_data = array(
@@ -378,6 +378,7 @@ class links extends Module {
 							'size'			=> $_FILES['image']['size'],
 							'filename'		=> $result['filename'],
 							'visible'		=> 0,
+							'protected'		=> 1
 						);
 
 				$gallery_manager->insertData($image_data);
@@ -835,8 +836,8 @@ class links extends Module {
 												);
 
 				if (is_object($image_item)) {
-					$image = $gallery->_getImageURL($image_item);
-					$thumbnail = $gallery->_getThumbnailURL($image_item);
+					$image = $gallery->getImageURL($image_item);
+					$thumbnail = $gallery->getThumbnailURL($image_item);
 				}
 			}
 		}
@@ -945,8 +946,8 @@ class links extends Module {
 				$image_item = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $item->image));
 
 				if (is_object($image_item)) {
-					$image = $gallery->_getImageURL($image_item);
-					$thumbnail = $gallery->_getThumbnailURL($image_item);
+					$image = $gallery->getImageURL($image_item);
+					$thumbnail = $gallery->getThumbnailURL($image_item);
 				}
 			}
 
@@ -1062,7 +1063,7 @@ class links extends Module {
 
 					if (!empty($image_id)) {
 						$image = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $image_id));
-						$thumbnail = $gallery->_getThumbnailURL($image);
+						$thumbnail = $gallery->getThumbnailURL($image);
 					}
 				}
 			}
@@ -1136,7 +1137,7 @@ class links extends Module {
 
 						if (!empty($image_id)) {
 							$image = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $image_id));
-							$thumbnail = $gallery->_getThumbnailURL($image);
+							$thumbnail = $gallery->getThumbnailURL($image);
 						}
 					}
 				}
@@ -1203,26 +1204,26 @@ class links extends Module {
 
 	private function json_Link() {
 		define('_OMIT_STATS', 1);
-		
+
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		
+
 		$item = null;
 		$manager = LinksManager::getInstance();
-		
+
 		if (!is_null($id))
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); 
-		
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
 		$result = array(
 					'error'			=> false,
 					'error_message'	=> '',
 					'item'			=> array()
 				);
-				
+
 		if (is_object($item)) {
 			$result['item'] = array(
 								'id'				=> $item->id,
 								'text'				=> $item->text,
-								'description'		=> Markdown($item->description),			
+								'description'		=> Markdown($item->description),
 								'url'				=> $item->url,
 								'redirect_url'		=> url_Make('redirect', $this->name, array('id', $item->id)),
 								'external'			=> $item->external,
@@ -1233,9 +1234,9 @@ class links extends Module {
 								'image'				=> null
 							);
 		} else {
-			
+
 		}
-				
+
 		print json_encode($result);
 	}
 
@@ -1269,7 +1270,7 @@ class links extends Module {
 
 		if (isset($_REQUEST['group_id']))
 			$groups = array_merge($groups, fix_id(explode(',', $_REQUEST['group_id'])));
-			
+
 		if (isset($_REQUEST['sponsored'])) {
 			$sponsored = $_REQUEST['sponsored'] == 'yes' ? 1 : 0;
 			$conditions['sponsored'] = $sponsored;
