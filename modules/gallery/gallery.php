@@ -278,6 +278,7 @@ class gallery extends Module {
 				`filename` VARCHAR( 40 ) NOT NULL ,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
+				`protected` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -404,7 +405,7 @@ class gallery extends Module {
 		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) ? 1 : 0;
 
-		$result = $this->_createImage('image', $this->settings['thumbnail_size']);
+		$result = $this->createImage('image', $this->settings['thumbnail_size']);
 
 		if (!$result['error']) {
 			$data = array(
@@ -996,8 +997,8 @@ class gallery extends Module {
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
-						'image'			=> $this->_getImageURL($item),
-						'thumbnail'		=> $this->_getThumbnailURL($item),
+						'image'			=> $this->getImageURL($item),
+						'thumbnail'		=> $this->getThumbnailURL($item),
 				);
 
 			$template->restoreXML();
@@ -1019,6 +1020,9 @@ class gallery extends Module {
 
 		if (!isset($tag_params['show_invisible']))
 			$conditions['visible'] = 1;
+
+		if (!isset($tag_params['show_protected']))
+			$conditions['protected'] = 0;
 
 		if (isset($tag_params['group_id']))
 			$conditions['group'] = $tag_params['group_id'];
@@ -1055,8 +1059,8 @@ class gallery extends Module {
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
-						'image'			=> $this->_getImageURL($item),
-						'thumbnail'		=> $this->_getThumbnailURL($item),
+						'image'			=> $this->getImageURL($item),
+						'thumbnail'		=> $this->getThumbnailURL($item),
 						'item_change'		=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
@@ -1488,8 +1492,8 @@ class gallery extends Module {
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
-						'image'			=> $this->_getImageURL($item),
-						'thumbnail'		=> $this->_getThumbnailURL($item),
+						'image'			=> $this->getImageURL($item),
+						'thumbnail'		=> $this->getThumbnailURL($item),
 					);
 		} else {
 			$result = array(
@@ -1552,8 +1556,8 @@ class gallery extends Module {
 							'filename'		=> $item->filename,
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
-							'image'			=> $this->_getImageURL($item),
-							'thumbnail'		=> $this->_getThumbnailURL($item),
+							'image'			=> $this->getImageURL($item),
+							'thumbnail'		=> $this->getThumbnailURL($item),
 						);
 			}
 		} else {
@@ -1756,7 +1760,7 @@ class gallery extends Module {
 	 * @param resource $item
 	 * @return string
 	 */
-	public function _getImageURL($item) {
+	public function getImageURL($item) {
 		return url_GetFromFilePath($this->path.'images/'.$item->filename);
 	}
 
@@ -1766,7 +1770,7 @@ class gallery extends Module {
 	 * @param resource $item
 	 * @return string
 	 */
-	public function _getThumbnailURL($item) {
+	public function getThumbnailURL($item) {
 		return url_GetFromFilePath($this->path.'thumbnails/'.$item->filename);
 	}
 
@@ -1793,12 +1797,15 @@ class gallery extends Module {
 
 		$image = $manager->getSingleItem(
 										array('filename'),
-										array('group' => is_array($group) ? $group : $group->id),
+										array(
+											'group' 	=> is_array($group) ? $group : $group->id,
+											'protected'	=> 0
+										),
 										array('RAND()')
 									);
 
 		if (is_object($image))
-			$result = $this->_getThumbnailURL($image);
+			$result = $this->getThumbnailURL($image);
 
 		return $result;
 	}
@@ -1838,7 +1845,7 @@ class gallery extends Module {
 	 * @param string $field_name
 	 * @return array
 	 */
-	private function _createImage($field_name, $thumb_size) {
+	public function createImage($field_name, $thumb_size) {
 		$result = array(
 					'error'		=> false,
 					'message'	=> '',
@@ -1935,6 +1942,7 @@ class GalleryManager extends ItemManager {
 		$this->addProperty('filename', 'varchar');
 		$this->addProperty('timestamp', 'timestamp');
 		$this->addProperty('visible', 'boolean');
+		$this->addProperty('protected', 'boolean');
 	}
 
 	/**
