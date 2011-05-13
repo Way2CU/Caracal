@@ -85,12 +85,11 @@ class Module {
 
 	/**
 	 * Check license for current module
-	 *
-	 * @param string $license
 	 * @return boolean
 	 */
-	protected function checkLicense($license) {
+	protected function checkLicense() {
 		$result = false;
+		$license = isset($_REQUEST['key']) ? fix_chars($_REQUEST['key']) : null;
 
 		if (class_exists('license')) {
 			$license = license::getInstance();
