@@ -35,6 +35,12 @@ div.window div.toolbar a.button {
 	float: right;
 }
 
+div.dialog div.scrollable_list .column,
+div.window div.scrollable_list .column {
+	margin-left: 3px;
+	margin-right: 0px;
+}
+
 /**
  * Dialog
  */

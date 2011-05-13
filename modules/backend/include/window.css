@@ -238,10 +238,12 @@ div.window div.button_bar {
 	text-align: center;
 }
 
+div.dialog div.scrollable_list,
 div.window div.scrollable_list {
 	display: block;
 }
 
+div.dialog div.scrollable_list div.list_header,
 div.window div.scrollable_list div.list_header {
 	display: block;
 
@@ -254,6 +256,7 @@ div.window div.scrollable_list div.list_header {
 	background-color: #E5E5E5;
 }
 
+div.dialog div.scrollable_list .list_content,
 div.window div.scrollable_list .list_content {
 	display: block;
 	min-height: 100px;
@@ -265,32 +268,38 @@ div.window div.scrollable_list .list_content {
 	background-color: #FFFFFF;
 }
 
+div.dialog div.scrollable_list .list_content .list_item,
 div.window div.scrollable_list .list_content .list_item {
 	display: block;
 
 	padding: 3px;
 }
 
+div.dialog div.scrollable_list .list_content .list_item .details,
 div.window div.scrollable_list .list_content .list_item .details {
 	display: none;
 	padding: 5px;
 }
 
+div.dialog div.scrollable_list .list_content .list_item .details.visible,
 div.window div.scrollable_list .list_content .list_item .details.visible {
 	display: block;
 }
 
+div.dialog div.scrollable_list .list_content .list_item:hover,
 div.window div.scrollable_list .list_content .list_item:hover {
 	background-color: #F5F5F5;
 	cursor: default;
 }
 
+div.dialog div.scrollable_list .column,
 div.window div.scrollable_list .column {
 	display: inline-block;
 
 	margin-right: 3px;
 }
 
+div.dialog div.scrollable_list .column a,
 div.window div.scrollable_list .column a {
 	display: inline-block;
 
@@ -307,6 +316,7 @@ div.window div.scrollable_list .column a {
 	text-decoration: none;
 }
 
+div.dialog div.scrollable_list .column a:hover,
 div.window div.scrollable_list .column a:hover {
 	border-color: #3E52D6;
 	background-color: #3E52D6;
@@ -419,8 +429,8 @@ div.dialog {
 
 div.dialog div.container {
 	display: block;
-	min-width: 16px;
-	min-height: 16px;
+	min-width: 50px;
+	min-height: 30px;
 
 	position: absolute;
 
