@@ -47,7 +47,9 @@
 		// create toolbar
 		toolbar_api
 				.createToolbar('article_change_form', '[name=content]:input')
-				.addControl('gallery', 'article_image');
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
 	</script>
 
 </document>
