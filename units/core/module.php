@@ -73,7 +73,7 @@ class Module {
 	 * @param string $name
 	 * @return array
 	 */
-	private function getMultilanguageField($name) {
+	protected function getMultilanguageField($name) {
 		$result = array();
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
