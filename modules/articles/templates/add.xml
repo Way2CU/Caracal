@@ -40,6 +40,7 @@
 		toolbar_api
 				.createToolbar('article_add_form', '[name=content]:input')
 				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image');
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
 	</script>
 </document>
