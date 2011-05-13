@@ -2,7 +2,7 @@
 
 /**
  * Base Module Class
- * 
+ *
  * @author MeanEYE.rcf
  */
 
@@ -73,12 +73,29 @@ class Module {
 	 * @param string $name
 	 * @return array
 	 */
-	function getMultilanguageField($name) {
+	private function getMultilanguageField($name) {
 		$result = array();
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		foreach($list as $lang)
 			$result[$lang] = isset($_REQUEST["{$name}_{$lang}"]) ? $_REQUEST["{$name}_{$lang}"] : '';
+
+		return $result;
+	}
+
+	/**
+	 * Check license for current module
+	 *
+	 * @param string $license
+	 * @return boolean
+	 */
+	private function checkLicense($license) {
+		$result = false;
+
+		if (class_exists('license')) {
+			$license = license::getInstance();
+			$result = $license->isLicenseValid($this->name, $license);
+		}
 
 		return $result;
 	}
