@@ -1629,12 +1629,27 @@ class gallery extends Module {
 		$manager = GalleryGroupManager::getInstance();
 		$conditions = array();
 
-		if (isset($_REQUEST['contanier'])) {
-			$container = fix_id($_REQUEST['container']);
+		if (isset($_REQUEST['container']) || isset($_REQUEST['container_id'])) {
+			$container_id = isset($_REQUEST['container_id']) ? fix_id($_REQUEST['container_id']) : null;
 			$membership_manager = GalleryGroupMembershipManager::getInstance();
 
+			// in case text_id was suplied, get id
+			if (is_null($container_id)) {
+				$container_text_id = fix_chars($_REQUEST['container']);
+				$container_manager = GalleryContainerManager::getInstance();
+				$container = $container_manager->getSingleItem(
+														array('id'),
+														array('text_id' => $container_text_id)
+													);
+
+				if (is_object($container))
+					$container_id = $container->id;
+			}
+
 			// grab all groups for specified container
-			$memberships = $membership_manager->getItems(array('group'), array('container' => $container));
+			$memberships = array();
+			if (!is_null($container_id))
+				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
 
 			// extract object values
 			$list = array();
@@ -1642,7 +1657,6 @@ class gallery extends Module {
 				foreach($memberships as $membership)
 					$list[] = $membership->group;
 
-			// add array as condition value (will be parsed as SQL list)
 			// add array as condition value (will be parsed as SQL list)
 			if (!empty($list))
 				$conditions['id'] = $list; else
