@@ -848,7 +848,7 @@ class Markdown_Parser {
 			// support for internal gallery image IDs
 			if (is_numeric($url) && !is_null($this->gallery_manager)) {
 				$image = $this->gallery_manager->getSingleItem(array('filename'), array('id' => $url));
-				$url = $this->gallery_module->_getImageURL($image);
+				$url = $this->gallery_module->getImageURL($image);
 			}
 
 			$result = "<img src=\"$url\" alt=\"$alt_text\"";
@@ -879,7 +879,7 @@ class Markdown_Parser {
 		// support for internal gallery image IDs
 		if (is_numeric($url) && !is_null($this->gallery_manager)) {
 			$image = $this->gallery_manager->getSingleItem(array('filename'), array('id' => $url));
-			$url = $this->gallery_module->_getImageURL($image);
+			$url = $this->gallery_module->getImageURL($image);
 		}
 
 		$result = "<img src=\"$url\" alt=\"$alt_text\"";
