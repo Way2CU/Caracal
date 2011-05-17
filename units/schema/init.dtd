@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Module Init File Specification
+	Copyright (c) 2011. by RCF Group
+
+	Author: MeanEYE.rcf
+-->
+
+<!ELEMENT document (module*,user*)>
+
+<!ELEMENT module EMPTY>
+<!ATTLIST module
+	name CDATA #REQUIRED
+	order CDATA #IMPLIED
+	preload (yes|no) "no"
+>
+
+<!ELEMENT user EMPTY>
+<!ATTLIST user
+	username CDATA #REQUIRED
+	password CDATA #REQUIRED
+	fullname CDATA #REQUIRED
+	level CDATA #REQUIRED
+>
+
