@@ -9,10 +9,10 @@
 class captcha extends Module {
 	private static $_instance;
 	private $options = array(
-						'numbers', 
-						'lower', 
-						'upper', 
-						'numbers-lower', 
+						'numbers',
+						'lower',
+						'upper',
+						'numbers-lower',
 						'upper-lower'
 					);
 
@@ -22,20 +22,20 @@ class captcha extends Module {
 	protected function __construct() {
 		parent::__construct(__FILE__);
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 
 	/**
 	 * Transfers control to module functions
-	 * 
+	 *
 	 * @param array $params
 	 * @param array $children
 	 */
@@ -95,10 +95,8 @@ class captcha extends Module {
 		$this->saveSetting("char_count", 4);
 		$this->saveSetting("char_type", "numbers");
 		$this->saveSetting("arc_count", 15);
-		$this->saveSetting("font_size", 26);
-		$this->saveSetting("font_path", $this->path."include/");
-		$this->saveSetting("error_image", $this->path."images/error_image.png");
-		$this->saveSetting("accepted_hosts", dirname($_SERVER['HTTP_REFERER']));
+		$this->saveSetting("font_size", 28);
+		$this->saveSetting("accepted_hosts", $_SERVER['HTTP_HOST']);
 		$this->saveSetting("colors", "#555555,#777777,#999999,#bbbbbb,#dddddd");
 	}
 
@@ -107,12 +105,11 @@ class captcha extends Module {
 	 */
 	private function __printImage() {
 		define('_OMIT_STATS', 1);
-		
+
 		// check if referer is in allowed list
 		$value = $this->__generateValue();
 		$referer = dirname($_SERVER['HTTP_REFERER']);
 		$accepted_hosts = explode(',', $this->settings['accepted_hosts']);
-		$valid_host = in_array($referer, $accepted_hosts);
 		$arc_count = $this->settings['arc_count'];
 		$char_count = $this->settings['char_count'];
 		$font_size = $this->__convertPXtoPT($this->settings['font_size']);
@@ -120,9 +117,9 @@ class captcha extends Module {
 		$width = (10 + $this->settings['char_count'] * $this->settings['font_size']);
 		$height = $font_size_px + 10;
 
-		if (!$valid_host) {
+		if (!in_array(parse_url($referer, PHP_URL_HOST), $accepted_hosts)) {
 			// load error image
-			$image = imagecreatefrompng($this->settings['error_image']);
+			$image = imagecreatefrompng($this->path.'images/error_image.png');
 
 		} else {
 			// create image
@@ -177,7 +174,7 @@ class captcha extends Module {
 	 * @return array
 	 */
 	private function __getFonts() {
-		$path = $this->settings['font_path'];
+		$path = $this->path.'include/';
 		$result = array();
 
 		if (is_dir($path)) {
