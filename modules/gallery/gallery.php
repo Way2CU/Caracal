@@ -1624,10 +1624,13 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_GroupList() {
+		global $language;
 		define('_OMIT_STATS', 1);
 
 		$manager = GalleryGroupManager::getInstance();
 		$conditions = array();
+		$order_by = array();
+		$order_asc = true;
 
 		if (isset($_REQUEST['container']) || isset($_REQUEST['container_id'])) {
 			$container_id = isset($_REQUEST['container_id']) ? fix_id($_REQUEST['container_id']) : null;
@@ -1663,10 +1666,19 @@ class gallery extends Module {
 				$conditions['id'] = -1;  // ensure no groups are selected
 		}
 
+		if (isset($_REQUEST['order_by'])) {
+			$order_by = split(',', fix_chars($_REQUEST['order_by']));
+		} else {
+			$order_by = array('name_'.$language);
+		}
+
+		if (isset($_REQUEST['order_asc']));
+
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								$conditions,
-								array('name')
+								$order_by,
+								$order_asc
 							);
 
 		$result = array(
