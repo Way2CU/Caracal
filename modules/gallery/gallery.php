@@ -21,17 +21,44 @@ class gallery extends Module {
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/slideshow.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/lightbox.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/lightbox.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', 
+						array(
+							'src'	=> url_GetFromFilePath($this->path.'include/slideshow.js'), 
+							'type'	=> 'text/javascript'
+						));
+			$head_tag->addTag('script', 
+						array(
+							'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'), 
+							'type'	=> 'text/javascript'
+						));
+			$head_tag->addTag('link', 
+						array(
+							'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'), 
+							'rel'	=> 'stylesheet', 
+							'type'	=> 'text/css'
+						));
 
 			// load backend files if needed
 			if ($section == 'backend') {
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('link', 
+						array(
+							'href'	=> url_GetFromFilePath($this->path.'include/gallery.css'), 
+							'rel'	=> 'stylesheet', 
+							'type'	=> 'text/css'
+						));
+				$head_tag->addTag('script', 
+						array(
+							'src'	=> url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 
+							'type'	=> 'text/javascript'
+						));
 
 				if (MainLanguageHandler::getInstance()->isRTL())
-					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/gallery_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+					$head_tag->addTag('link', 
+						array(
+							'href'	=> url_GetFromFilePath($this->path.'include/gallery_rtl.css'), 
+							'rel'	=> 'stylesheet', 
+							'type'	=> 'text/css'
+						));
 			}
 		}
 
@@ -295,7 +322,8 @@ class gallery extends Module {
 		foreach($list as $language)
 			$sql .= "`description_{$language}` TEXT NOT NULL,";
 
-		$sql .= "PRIMARY KEY (`id`)
+		$sql .= "`thumbnail` int(11) NULL,
+				PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
@@ -620,10 +648,12 @@ class gallery extends Module {
 					'text_id'		=> unfix_chars($item->text_id),
 					'name'			=> unfix_chars($item->name),
 					'description'	=> $item->description,
+					'thumbnail'		=> $item->thumbnail,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('gallery_groups_change')
 				);
 
+		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -640,6 +670,9 @@ class gallery extends Module {
 			'name' 			=> fix_chars($this->getMultilanguageField('name')),
 			'description' 	=> escape_chars($this->getMultilanguageField('description')),
 		);
+
+		if (isset($_REQUEST['thumbnail'])) 
+			$data['thumbnail'] = isset($_REQUEST['thumbnail']) ? fix_id($_REQUEST['thumbnail']) : null; 
 
 		$manager = GalleryGroupManager::getInstance();
 
@@ -1061,7 +1094,8 @@ class gallery extends Module {
 						'visible'		=> $item->visible,
 						'image'			=> $this->getImageURL($item),
 						'thumbnail'		=> $this->getThumbnailURL($item),
-						'item_change'		=> url_MakeHyperlink(
+						'selected'		=> $selected,
+						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'gallery_images_change', 	// window id
@@ -1077,7 +1111,7 @@ class gallery extends Module {
 													)
 												)
 											),
-						'item_delete'		=> url_MakeHyperlink(
+						'item_delete'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'gallery_images_delete', 	// window id
@@ -1254,7 +1288,7 @@ class gallery extends Module {
 															array('id', $item->id)
 														)
 													)
-												),
+												)
 						);
 
 				$template->restoreXML();
@@ -1821,7 +1855,9 @@ class gallery extends Module {
 		$result = '';
 		$manager = GalleryManager::getInstance();
 
-		$image = $manager->getSingleItem(
+		if ($group->thumbnail == 0) {
+			// group doesn't have specified thumbnail, get random
+			$image = $manager->getSingleItem(
 										array('filename'),
 										array(
 											'group' 	=> is_array($group) ? $group : $group->id,
@@ -1829,6 +1865,10 @@ class gallery extends Module {
 										),
 										array('RAND()')
 									);
+		} else {
+			// group has specified thumbnail
+			$image = $manager->getSingleItem(array('filename'), array('id' => $group->thumbnail));
+		}
 
 		if (is_object($image))
 			$result = $this->getThumbnailURL($image);
@@ -2013,6 +2053,7 @@ class GalleryGroupManager extends ItemManager {
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
+		$this->addProperty('thumbnail', 'int');
 	}
 
 	/**

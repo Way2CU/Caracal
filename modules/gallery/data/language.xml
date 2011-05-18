@@ -41,6 +41,7 @@
 		<constant name="message_container_groups_updated">Group memberships were updated.</constant>
 		<constant name="message_json_error_params">Invalid params specified.</constant>
 		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
+		<constant name="message_thumbnail_changed">Thumbnail was successfully changed.</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_title">Title:</constant>
@@ -49,6 +50,7 @@
 		<constant name="label_description">Description (optional):</constant>
 		<constant name="label_visible">Image visible</constant>
 		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_thumbnail">Thumbnail:</constant>
 
 		<constant name="toolbar_insert_image">Insert image</constant>
 
@@ -102,6 +104,7 @@
 		<constant name="message_container_groups_updated">שיוך לקבוצה עודכן</constant>
 		<constant name="message_json_error_params">משתנים לא מתאימים.</constant>
 		<constant name="message_json_error_object">האובייקט לא נמנצא</constant>
+		<constant name="message_thumbnail_changed">Thumbnail was successfully changed.</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_title">כותרת:</constant>
