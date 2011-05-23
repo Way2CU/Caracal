@@ -1063,8 +1063,14 @@ class gallery extends Module {
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
 
-			$group_id = $group_manager->getItemValue('id', array('text_id' => $tag_params['group']));
-			$conditions['group'] = $group_id;
+			$group_id = $group_manager->getItemValue(
+												'id', 
+												array('text_id' => $tag_params['group'])
+											);
+											
+			if (!empty($group_id))
+				$conditions['group'] = $group_id; else
+				$conditions['group'] = -1;
 		}
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -1547,10 +1553,16 @@ class gallery extends Module {
 		define('_OMIT_STATS', 1);
 
 		$manager = GalleryManager::getInstance();
-		$conditions = array('visible' => 1);
-		$order_by = null;
-		$order_asc = null;
+		$conditions = array();
+		$order_by = array();
+		$order_asc = true;
 		$limit = null;
+
+		if (!isset($tag_params['show_invisible']))
+			$conditions['visible'] = 1;
+
+		if (!isset($tag_params['show_protected']))
+			$conditions['protected'] = 0;
 
 		// raw group id was specified
 		if (isset($_REQUEST['group_id']))
@@ -1560,11 +1572,21 @@ class gallery extends Module {
 		if (isset($_REQUEST['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
 
-			$group_id = $group_manager->getItemValue('id', array('text_id' => $_REQUEST['group']));
+			$group_id = $group_manager->getItemValue(
+												'id', 
+												array('text_id' => $_REQUEST['group'])
+											);
 
 			if (!empty($group_id))
 				$conditions['group'] = $group_id; else
 				$conditions['group'] = -1;
+		}
+		
+		if (isset($_REQUEST['order_by'])) {
+			$order_by = fix_chars(split($_REQUEST['prder_by']));
+		} else {
+			// default sorting column
+			$order_by[] = 'title';
 		}
 
 		// check for items limit
@@ -1572,7 +1594,8 @@ class gallery extends Module {
 			$limit = fix_id($_REQUEST['limit']);
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $oder_asc, $limit);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		trigger_error(print_r($items, true));
 
 		$result = array(
 					'error'			=> false,
@@ -1848,7 +1871,7 @@ class gallery extends Module {
 	/**
 	 * Get group image
 	 *
-	 * @param resource/integer $group
+	 * @param resource $group
 	 * @return string
 	 */
 	private function _getGroupImage($group) {
@@ -1894,12 +1917,13 @@ class gallery extends Module {
 										);
 
 		if (count($items) > 0) {
-			$groups = array();
+			$membership = $items[array_rand($items)];
+			$id = $membership->group;
 
-			foreach($items as $item)
-				$groups[] = $item->group;
+			$group = $group_manager->getSingleItem(array('id', 'thumbnail'), array('id' => $id));
 
-			$result = $this->_getGroupImage($groups);
+			if (is_object($group))
+				$result = $this->_getGroupImage($group);
 		}
 
 		return $result;
