@@ -13,10 +13,10 @@ var language_handler = null;
 
 function LanguageHandler() {
 	// language containers
-	this.languages = null;
-	this.rtl_languages = null;
-	this.default_language = null;
-	this.current_language = null;
+	this.languages = [];
+	this.rtl_languages = [];
+	this.default_language = 'en';
+	this.current_language = 'en';
 
 	// URL commonly used to comunicate with server
 	this.backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
