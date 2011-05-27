@@ -200,7 +200,8 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 
 		} else {
 			// server side error occured, report back to user
-			alert(data.error_message);
+			if (console)
+				console.log(data.error_message);
 		}
 	};
 
