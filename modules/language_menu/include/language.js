@@ -75,7 +75,6 @@ function LanguageHandler() {
 		if (module != null)
 			data.from_module = module;
 
-
 		// check local cache first
 		if (this.cache[id] == undefined) {
 			$.ajax({

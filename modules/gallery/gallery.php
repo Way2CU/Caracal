@@ -21,42 +21,42 @@ class gallery extends Module {
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
-			$head_tag->addTag('script', 
+			$head_tag->addTag('script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/slideshow.js'), 
+							'src'	=> url_GetFromFilePath($this->path.'include/slideshow.js'),
 							'type'	=> 'text/javascript'
 						));
-			$head_tag->addTag('script', 
+			$head_tag->addTag('script',
 						array(
-							'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'), 
+							'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'),
 							'type'	=> 'text/javascript'
 						));
-			$head_tag->addTag('link', 
+			$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'), 
-							'rel'	=> 'stylesheet', 
+							'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'),
+							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
 
 			// load backend files if needed
 			if ($section == 'backend') {
-				$head_tag->addTag('link', 
+				$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/gallery.css'), 
-							'rel'	=> 'stylesheet', 
+							'href'	=> url_GetFromFilePath($this->path.'include/gallery.css'),
+							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
-				$head_tag->addTag('script', 
+				$head_tag->addTag('script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/gallery_toolbar.js'), 
+							'src'	=> url_GetFromFilePath($this->path.'include/gallery_toolbar.js'),
 							'type'	=> 'text/javascript'
 						));
 
 				if (MainLanguageHandler::getInstance()->isRTL())
-					$head_tag->addTag('link', 
+					$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/gallery_rtl.css'), 
-							'rel'	=> 'stylesheet', 
+							'href'	=> url_GetFromFilePath($this->path.'include/gallery_rtl.css'),
+							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
 			}
@@ -306,6 +306,7 @@ class gallery extends Module {
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
 				`protected` BOOLEAN NOT NULL DEFAULT '0',
+				`slideshow` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -432,6 +433,7 @@ class gallery extends Module {
 		$group = fix_id($_REQUEST['group']);
 		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) ? 1 : 0;
+		$slideshow = isset($_REQUEST['slideshow']) ? 1 : 0;
 
 		$result = $this->createImage('image', $this->settings['thumbnail_size']);
 
@@ -443,6 +445,7 @@ class gallery extends Module {
 						'size'			=> $_FILES['image']['size'],
 						'filename'		=> $result['filename'],
 						'visible'		=> $visible,
+						'slideshow'		=> $slideshow,
 					);
 
 			$manager->insertData($data);
@@ -504,12 +507,14 @@ class gallery extends Module {
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
+		$slideshow = isset($_REQUEST['slideshow']) && ($_REQUEST['slideshow'] == 'on' || $_REQUEST['slideshow'] == '1') ? 1 : 0;
 
 		$data = array(
 					'title'			=> $title,
 					'group'			=> $group,
 					'description'	=> $description,
 					'visible'		=> $visible
+					'slideshow'		=> $slideshow
 				);
 
 		$manager->updateData($data, array('id' => $id));
@@ -671,8 +676,8 @@ class gallery extends Module {
 			'description' 	=> escape_chars($this->getMultilanguageField('description')),
 		);
 
-		if (isset($_REQUEST['thumbnail'])) 
-			$data['thumbnail'] = isset($_REQUEST['thumbnail']) ? fix_id($_REQUEST['thumbnail']) : null; 
+		if (isset($_REQUEST['thumbnail']))
+			$data['thumbnail'] = isset($_REQUEST['thumbnail']) ? fix_id($_REQUEST['thumbnail']) : null;
 
 		$manager = GalleryGroupManager::getInstance();
 
@@ -1030,6 +1035,7 @@ class gallery extends Module {
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
+						'slideshow'		=> $item->slideshow,
 						'image'			=> $this->getImageURL($item),
 						'thumbnail'		=> $this->getThumbnailURL($item),
 				);
@@ -1057,6 +1063,9 @@ class gallery extends Module {
 		if (!isset($tag_params['show_protected']))
 			$conditions['protected'] = 0;
 
+		if (isset($tag_params['slideshow']))
+			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
+
 		if (isset($tag_params['group_id']))
 			$conditions['group'] = $tag_params['group_id'];
 
@@ -1064,10 +1073,10 @@ class gallery extends Module {
 			$group_manager = GalleryGroupManager::getInstance();
 
 			$group_id = $group_manager->getItemValue(
-												'id', 
+												'id',
 												array('text_id' => $tag_params['group'])
 											);
-											
+
 			if (!empty($group_id))
 				$conditions['group'] = $group_id; else
 				$conditions['group'] = -1;
@@ -1532,6 +1541,7 @@ class gallery extends Module {
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
+						'slideshow'		=> $item->slideshow,
 						'image'			=> $this->getImageURL($item),
 						'thumbnail'		=> $this->getThumbnailURL($item),
 					);
@@ -1558,11 +1568,14 @@ class gallery extends Module {
 		$order_asc = true;
 		$limit = null;
 
-		if (!isset($tag_params['show_invisible']))
+		if (!isset($_REQUEST['show_invisible']))
 			$conditions['visible'] = 1;
 
-		if (!isset($tag_params['show_protected']))
+		if (!isset($_REQUEST['show_protected']))
 			$conditions['protected'] = 0;
+
+		if (isset($_REQUEST['slideshow']))
+			$conditions['slideshow'] = fix_id($_REQUEST['slideshow']);
 
 		// raw group id was specified
 		if (isset($_REQUEST['group_id']))
@@ -1573,7 +1586,7 @@ class gallery extends Module {
 			$group_manager = GalleryGroupManager::getInstance();
 
 			$group_id = $group_manager->getItemValue(
-												'id', 
+												'id',
 												array('text_id' => $_REQUEST['group'])
 											);
 
@@ -1581,7 +1594,7 @@ class gallery extends Module {
 				$conditions['group'] = $group_id; else
 				$conditions['group'] = -1;
 		}
-		
+
 		if (isset($_REQUEST['order_by'])) {
 			$order_by = fix_chars(split($_REQUEST['prder_by']));
 		} else {
@@ -2033,6 +2046,7 @@ class GalleryManager extends ItemManager {
 		$this->addProperty('timestamp', 'timestamp');
 		$this->addProperty('visible', 'boolean');
 		$this->addProperty('protected', 'boolean');
+		$this->addProperty('slideshow', 'boolean');
 	}
 
 	/**

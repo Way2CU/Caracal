@@ -26,6 +26,10 @@
 			<span><_text constant="label_visible" module="gallery"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
 		</label>
+		<label class="checkbox">
+			<span><_text constant="label_slideshow" module="gallery"/></span>
+			<input type="checkbox" name="slideshow"/>
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="upload"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">
