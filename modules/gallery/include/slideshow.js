@@ -91,7 +91,8 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 	this.init = function() {
 		var data = {
 					section: 'gallery',
-					action: 'json_image_list'
+					action: 'json_image_list',
+					slideshow: 1
 				};
 
 		if (this.group_name != undefined && this.group_name != null)

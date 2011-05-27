@@ -49,7 +49,7 @@
 		<constant name="label_file">File:</constant>
 		<constant name="label_description">Description (optional):</constant>
 		<constant name="label_visible">Image visible</constant>
-		<constant name="label_slideshow">Image is part of slideshow</constant>
+		<constant name="label_slideshow">Include image in slideshow</constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_thumbnail">Thumbnail:</constant>
 
@@ -113,7 +113,7 @@
 		<constant name="label_file">קובץ:</constant>
 		<constant name="label_description">תאור (אופציונאלי):</constant>
 		<constant name="label_visible">התמונה נראית</constant>
-		<constant name="label_slideshow">Image is part of slideshow</constant>
+		<constant name="label_slideshow">Include image in slideshow</constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_thumbnail">Thumbnail:</constant>
 
