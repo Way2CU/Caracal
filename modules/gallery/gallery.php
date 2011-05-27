@@ -513,7 +513,7 @@ class gallery extends Module {
 					'title'			=> $title,
 					'group'			=> $group,
 					'description'	=> $description,
-					'visible'		=> $visible
+					'visible'		=> $visible,
 					'slideshow'		=> $slideshow
 				);
 
