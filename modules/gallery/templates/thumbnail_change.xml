@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="group_thumbnail_change_form">
+		<input type="hidden" name="id" value="$params['id']" eval="value"/>
+		<label>
+			<span><_text constant="label_name" module="gallery"/></span>
+			<input type="text" name="name" value="$params['name'][$language]" eval="$params" readonly="readonly"/>
+		</label>
+		<label>
+			<span><_text constant="label_thumbnail" module="gallery"/></span>
+			<select name="thumbnail">
+				<_image_list template="thumbnail_change_item.xml" local="1"/>
+			</select>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
