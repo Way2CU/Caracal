@@ -1608,7 +1608,6 @@ class gallery extends Module {
 
 		// get items
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
-		trigger_error(print_r($items, true));
 
 		$result = array(
 					'error'			=> false,
