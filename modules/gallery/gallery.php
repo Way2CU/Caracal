@@ -1902,6 +1902,12 @@ class gallery extends Module {
 									);
 		} else {
 			// group has specified thumbnail
+			if (is_array($group)) {
+				$group_id = array_rand($group);
+				$group_manager = GalleryGroupManager::getInstance();
+
+				$group = $group_manager->getSingleItem(array('thumbnail'), array('id' => $group_id));
+			}
 			$image = $manager->getSingleItem(array('filename'), array('id' => $group->thumbnail));
 		}
 
