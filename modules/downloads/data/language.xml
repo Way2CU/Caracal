@@ -30,4 +30,34 @@
 
 		<constant name="toolbar_add_download">Add download link</constant>
 	</language>
+	
+	<language short="iw">
+		<constant name="menu_downloads">הורדות</constant>
+		<constant name="menu_upload_file">העלה קובץ</constant>
+		<constant name="menu_manage">נהל העלאות</constant>
+
+		<constant name="title_upload_file">העלה קובץ</constant>
+		<constant name="title_manage">נהל הורדות</constant>
+		<constant name="title_change">שנה הורדה</constant>
+		<constant name="title_delete">מחק הורדה</constant>
+
+		<constant name="label_name">שם:</constant>
+		<constant name="label_description">תיאור:</constant>
+		<constant name="label_file">קובץ:</constant>
+		<constant name="label_visible">קובץ נראה למשתמש</constant>
+
+		<constant name="column_name">שם</constant>
+		<constant name="column_size">גודל</constant>
+		<constant name="column_downloads">הורדות</constant>
+		<constant name="column_filename">שם קובץ</constant>
+
+		<constant name="message_file_uploaded">קובץ חדש הועלה.</constant>
+		<constant name="message_file_save_error">הייתה טעות בהעלאת הקובץ. בדוק הרשאות</constant>
+		<constant name="message_file_upload_error">הייתה טעות בהעלאת הקובץ.</constant>
+		<constant name="message_file_saved">מידע ההורדה נשמר.</constant>
+		<constant name="message_file_delete">אתה עומד למחוק את ההורדה. האם אתה בטוח?</constant>
+		<constant name="message_file_deleted">ההורדה הוסרה.</constant>
+
+		<constant name="toolbar_add_download">הוסף קישור להורדה</constant>
+	</language>
 </document>
