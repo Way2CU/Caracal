@@ -1223,23 +1223,42 @@ class gallery extends Module {
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
 
-		if (isset($tag_params['container'])) {
-			$container = fix_id($tag_params['container']);
+		if (isset($tag_params['container']) || isset($tag_params['container_id'])) {
+			$container_manager = GalleryContainerManager::getInstance();
 			$membership_manager = GalleryGroupMembershipManager::getInstance();
+			$container_id = null;
+
+			if (isset($tag_params['container_id'])) {
+				// container ID was specified
+				$container_id = fix_id($tag_params['container_id']);
+
+			} else {
+				// container text_id was specified, get ID
+				$container = $container_manager->getSingleItem(
+													array('id'),
+													array('text_id' => fix_chars($tag_params['container']))
+												);
+
+				if (is_object($container))
+					$container_id = $container->id;
+			}
+
 
 			// grab all groups for specified container
-			$memberships = $membership_manager->getItems(array('group'), array('container' => $container));
+			if (!is_null($container_id)) {
+				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
 
-			// extract object values
-			$list = array();
-			if (count($memberships) > 0)
-				foreach($memberships as $membership)
-					$list[] = $membership->group;
+				// extract object values
+				$list = array();
+				if (count($memberships) > 0)
+					foreach($memberships as $membership)
+						$list[] = $membership->group;
 
-			// add array as condition value (will be parsed as SQL list)
-			if (!empty($list))
-				$conditions['id'] = $list; else
-				$conditions['id'] = -1;  // ensure no groups are selected
+				// add array as condition value (will be parsed as SQL list)
+				if (!empty($list))
+					$conditions['id'] = $list; else
+					$conditions['id'] = -1;  // ensure no groups are selected
+			}
 		}
 
 		// get groups
