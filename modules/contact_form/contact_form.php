@@ -11,6 +11,10 @@
 
 class contact_form extends Module {
 	private static $_instance;
+	private $_invalid_params = array(
+						'section', 'action', 'PHPSESSID', '__utmz', '__utma',
+						'__utmc', '__utmb'
+					);
 
 	/**
 	 * Constructor
@@ -183,7 +187,8 @@ class contact_form extends Module {
 						);
 
 			foreach($_REQUEST as $key => $value)
-				$fields[$key] = fix_chars($value);
+				if (!in_array($key, $this->_invalid_params))
+					$fields[$key] = fix_chars($value);
 
 			if ($this->_sendMail($to, $subject, $headers, $fields)) {
 				// message successfuly sent
