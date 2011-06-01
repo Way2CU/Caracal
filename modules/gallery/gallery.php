@@ -1067,14 +1067,14 @@ class gallery extends Module {
 			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
 
 		if (isset($tag_params['group_id']))
-			$conditions['group'] = $tag_params['group_id'];
+			$conditions['group'] = fix_id($tag_params['group_id']);
 
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
 
 			$group_id = $group_manager->getItemValue(
 												'id',
-												array('text_id' => $tag_params['group'])
+												array('text_id' => fix_chars($tag_params['group']))
 											);
 
 			if (!empty($group_id))
