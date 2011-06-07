@@ -340,7 +340,7 @@ class news extends Module {
 										window_Open( // on click open window
 											'news_groups',
 											580,
-											$this->getLanguageConstant('title_groups'),
+											$this->getLanguageConstant('title_manage_news'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										)
