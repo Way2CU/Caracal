@@ -487,6 +487,7 @@ class gallery extends Module {
 					'filename'		=> $item->filename,
 					'timestamp'		=> $item->timestamp,
 					'visible'		=> $item->visible,
+					'slideshow'		=> $item->slideshow,
 					'form_action'	=> backend_UrlMake($this->name, 'images_save'),
 					'cancel_action'	=> window_Close('gallery_images_change')
 				);
