@@ -238,6 +238,12 @@ div.window div.button_bar {
 	text-align: center;
 }
 
+div.window hr,
+div.dialog hr {
+	border: 0px;
+	border-bottom: 1px solid #dadada;
+}
+
 div.dialog div.scrollable_list,
 div.window div.scrollable_list {
 	display: block;
