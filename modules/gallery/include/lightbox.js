@@ -151,6 +151,10 @@ function LightBox(selector, show_title, show_description, show_controls) {
 		// connect events and load image
 		var image = $('<img>');
 
+		// make sure we have title and description defined
+		if (title == undefined) title = '';
+		if (description == undefined) description = '';
+
 		image
 			.data('title', title)
 			.data('description', description)
