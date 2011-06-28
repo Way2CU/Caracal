@@ -9,6 +9,7 @@
 		<constant name="menu_modules">Modules</constant>
 		<constant name="menu_users">User management</constant>
 		<constant name="menu_logout">Logout</constant>
+		<constant name="menu_change_password">Change password</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">Modules</constant>
@@ -16,6 +17,7 @@
 		<constant name="title_module_deactivate">Deactivate Module</constant>
 		<constant name="title_module_initialise">Initialise Module</constant>
 		<constant name="title_module_disable">Disable Module</constant>
+		<constant name="title_change_password">Change Password</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
@@ -26,12 +28,24 @@
 		<constant name="message_module_disabled">Module has been disabled.</constant>
 		<constant name="message_module_protected">This module is protected. You are not allowed to change it.</constant>
 		<constant name="message_module_not_active">Module is not active. You can't disable inactive module!</constant>
+		<constant name="message_password_change">You need to enter your old password to ensure the right person is changing it. Please note that new password must be at least 6 characters long. Passwords are case sensitive!</constant>
+		<constant name="message_password_changed">Your password was changed!</constant>
+		<constant name="message_login">In order to access administration area for this site you need to enter correct username and password. System is case sensitive!</constant>
+		<constant name="message_login_ok">You were successfully logged in. Please wait while being redirected!</constant>
+		<constant name="message_login_error">Invalid username and/or password.</constant>
+		<constant name="message_logout">You are about to logout from the system. Are you sure?</constant>
+		<constant name="message_logout_ok">Logout successful!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>
 		<constant name="column_module_order">Order</constant>
 		<constant name="column_module_preload">Preload</constant>
 		<constant name="column_module_active">Active</constant>
+
+		<!-- Labels -->
+		<constant name="label_old_password">Old password:</constant>
+		<constant name="label_new_password">New password:</constant>
+		<constant name="label_repeat_password">Repeat new password:</constant>
 
 		<!-- General -->
 		<constant name="activate">Activate</constant>
@@ -49,11 +63,6 @@
 		<constant name="captcha">Captcha:</constant>
 		<constant name="login">Login</constant>
 		<constant name="logout">Logout</constant>
-		<constant name="message_login">In order to access administration area for this site you need to enter correct username and password. System is case sensitive!</constant>
-		<constant name="message_login_ok">You were successfully logged in. Please wait while being redirected!</constant>
-		<constant name="message_login_error">Invalid username and/or password.</constant>
-		<constant name="message_logout">You are about to logout from the system. Are you sure?</constant>
-		<constant name="message_logout_ok">Logout successful!</constant>
 	</language>
 
 	<language name="עברית" short="iw" rtl="yes" default="yes">
@@ -80,6 +89,11 @@
 		<constant name="message_module_disabled">המודול נוטרל</constant>
 		<constant name="message_module_protected">המודול מוגן, אינך יכול לשנותו</constant>
 		<constant name="message_module_not_active">המודול לא פעיל ולכן אין טעם לבטלו</constant>
+		<constant name="message_login">להיכנס את צריך שם משתמש וסיסמא</constant>
+		<constant name="message_login_ok">כניסתך לממשק המנהל אושרה, אנא המתן להעברתך</constant>
+		<constant name="message_login_error">שם משתמש או סיסמא לא תקינים</constant>
+		<constant name="message_logout">אתה עומד להתנתקת האם אתה בטוח</constant>
+		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">שם</constant>
@@ -103,11 +117,6 @@
 		<constant name="captcha">Captcha</constant>
 		<constant name="login">התחבר</constant>
 		<constant name="logout">התנתק</constant>
-		<constant name="message_login">להיכנס את צריך שם משתמש וסיסמא</constant>
-		<constant name="message_login_ok">כניסתך לממשק המנהל אושרה, אנא המתן להעברתך</constant>
-		<constant name="message_login_error">שם משתמש או סיסמא לא תקינים</constant>
-		<constant name="message_logout">אתה עומד להתנתקת האם אתה בטוח</constant>
-		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
 	</language>
 
 </document>

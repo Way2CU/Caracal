@@ -91,6 +91,18 @@ class backend extends Module {
 								));
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
+									$this->getLanguageConstant('menu_change_password'),
+									url_GetFromFilePath($this->path.'images/icons/16/change_password.png'),
+									window_Open( // on click open window
+												'change_password_window',
+												350,
+												$this->getLanguageConstant('title_change_password'),
+												true, false, // disallow minimize, safety feature
+												backend_UrlMake($this->name, 'change_password')
+											),
+									$level=1
+								));
+			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_logout'),
 									url_GetFromFilePath($this->path.'images/icons/16/logout.png'),
 									window_Open( // on click open window
@@ -199,9 +211,10 @@ class backend extends Module {
 					break;
 
 				// ---
-
 				case 'logout':
 				case 'logout_commit':
+				case 'change_password':
+				case 'save_password':
 					$session_manager = new SessionManager($this);
 					$session_manager->transferControl();
 					break;
@@ -654,6 +667,8 @@ class backend extends Module {
 }
 
 class SessionManager {
+	private static $SALT = '_web_engine: SALT1.618: ';
+
 	/**
 	 * Parent module (backend)
 	 * @var resource
@@ -687,6 +702,14 @@ class SessionManager {
 
 			case 'logout_commit':
 				$this->logout_commit();
+				break;
+
+			case 'change_password':
+				$this->changePassword();
+				break;
+
+			case 'save_password':
+				$this->savePassword();
 				break;
 
 			default:
@@ -889,6 +912,31 @@ class SessionManager {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Show dialog for changing password
+	 */
+	private function changePassword() {
+		$template = new TemplateHandler('change_password.xml', $this->parent->path.'templates/');
+		$template->setMappedModule($this->parent->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->parent->name, 'save_password'),
+					'cancel_action'	=> window_Close('change_password_window')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Salt and save password
+	 */
+	private function savePassword() {
+		$old_password = md5(SessionManager::SALT.$_REQUEST['old_password']);
+		$new_password = md5(SessionManager::SALE.$_REQUEST['new_password']);
 	}
 }
 
