@@ -1,0 +1,10 @@
+syntax: glob
+!_*
+.*
+
+syntax: regexp
+^images/.*
+^site/.*
+^styles/.*
+^scripts/.*
+^data/.*
