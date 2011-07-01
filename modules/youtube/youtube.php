@@ -69,7 +69,7 @@ class youtube extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transferControl($params=array(), $children=array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -384,11 +384,27 @@ class youtube extends Module {
 
 		if (isset($params['id'])) {
 			// video is was specified
-			$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $params['id']));
+			$video = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array(
+										'id' => $params['id']
+									));
 
 		} else if (isset($params['text_id'])) {
 			// text id was specified
-			$video = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $params['text_id']));
+			$video = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array(
+										'text_id' => $params['text_id']
+									));
+
+		} else if (isset($params['random'])) {
+			// get random video
+			$video = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array(),
+									array('RAND()')
+								);
 		}
 
 		// no id was specified
