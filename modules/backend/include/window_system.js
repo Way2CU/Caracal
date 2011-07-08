@@ -151,8 +151,8 @@ function Dialog() {
 	 * @param string title
 	 */
 	this.setTitle = function(title) {
-		this.$title.html(title)
-	}
+		this.$title.html(title);
+	};
 
 	/**
 	 * Set dialog in loading state
@@ -430,7 +430,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 
 		// attach events
-		self.attachEvents()
+		self.attachEvents();
 
 		// remove loading indicator
 		self.$container.removeClass('loading');
@@ -485,7 +485,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 				});
 			}
 		});
-	}
+	};
 
 	/**
 	 * Event fired when there was an error loading AJAX data
@@ -587,7 +587,7 @@ function WindowSystem($container) {
 	this.attachToStructure = function(id, width, can_close) {
 		if (this.windowExists(id)) {
 			// window already exists, reload content and show it
-			this.getWindow(id).focus()
+			this.getWindow(id).focus();
 
 		} else {
 			// window does not exist, create it
