@@ -1,12 +1,12 @@
 <?php
 
 /**
- * BLANK MODULE
+ * User Page Module
  *
  * @author MeanEYE.rcf
  */
 
-class _blank extends Module {
+class user_page extends Module {
 	private static $_instance;
 
 	/**
@@ -14,7 +14,7 @@ class _blank extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// load module style and scripts
@@ -68,8 +68,25 @@ class _blank extends Module {
 	public function onInit() {
 		global $db_active, $db;
 
-		$sql = "";
+		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
+		// User pages
+		$sql = "
+			CREATE TABLE `user_pages` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`author` int(11) NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+
+		foreach($list as $language)
+			$sql .= "`content_{$language}` TEXT NOT NULL ,";
+
+		$sql .= "`visible` BOOLEAN NOT NULL DEFAULT '1',
+				PRIMARY KEY ( `id` ),
+				KEY `author` (`author`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -86,16 +103,22 @@ class _blank extends Module {
 }
 
 
-class SomeManager extends ItemManager {
+class UserPageManager extends ItemManager {
 	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('table_name');
+		parent::__construct('user_pages');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('title', 'ml_varchar');
+		$this->addProperty('user', 'varchar');
+		$this->addProperty('article', 'int');
+		$this->addProperty('gallery', 'int');
+		$this->addProperty('editable', 'boolean');
+		$this->addProperty('private', 'boolean');
 	}
 
 	/**
