@@ -62,7 +62,7 @@ function Toolbar(parent_id, component) {
 			module.addControl(this.$toolbar, this.$component, control);
 
 		return this;
-	}
+	};
 }
 
 /**
@@ -81,7 +81,7 @@ function ToolbarAPI() {
 		if (name in this.module_list) return;
 
 		this.module_list[name] = object;
-	}
+	};
 
 	/**
 	 * Check if specified module exists
@@ -90,7 +90,7 @@ function ToolbarAPI() {
 	 */
 	this.moduleExists = function(module) {
 		return module in this.module_list;
-	}
+	};
 
 	/**
 	 * Get module object based on its name
@@ -105,7 +105,7 @@ function ToolbarAPI() {
 			result = null;
 
 		return result;
-	}
+	};
 
 	/**
 	 * Create toolbar for specified componend in current window.
@@ -115,7 +115,7 @@ function ToolbarAPI() {
 	 */
 	this.createToolbar = function(parent_id, component) {
 		return new Toolbar(parent_id, component);
-	}
+	};
 }
 
 
