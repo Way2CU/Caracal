@@ -82,27 +82,29 @@ class page_info extends Module {
 						));
 
 			// add default styles and script if they exists
-			$head_tag->addTag('link',
-					array(
-						'rel'	=> 'stylesheet',
-						'type'	=> 'text/css',
-						'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/common.css')
-					));
-
-			if (file_exists(_BASEPATH.'/styles/main.css'))
+			if ($section != 'backend') {
 				$head_tag->addTag('link',
 						array(
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/main.css')
+							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/common.css')
 						));
-
-			if (file_exists(_BASEPATH.'/scripts/main.js'))
-				$head_tag->addTag('script',
-						array(
-							'type'	=> 'text/javascript',
-							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
-						));
+	
+				if (file_exists(_BASEPATH.'/styles/main.css'))
+					$head_tag->addTag('link',
+							array(
+								'rel'	=> 'stylesheet',
+								'type'	=> 'text/css',
+								'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/main.css')
+							));
+	
+				if (file_exists(_BASEPATH.'/scripts/main.js'))
+					$head_tag->addTag('script',
+							array(
+								'type'	=> 'text/javascript',
+								'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
+							));
+			}
 		}
 
 		// register backend
