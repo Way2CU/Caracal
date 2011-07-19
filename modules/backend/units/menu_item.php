@@ -155,13 +155,25 @@ class backend_MenuSeparator{
  * @param string $action
  * @return string
  */
-function backend_UrlMake($module, $action) {
-	return url_Make(
+function backend_UrlMake($module, $action, $sub_action=null) {
+	if (is_null($sub_action)) {
+		$result = url_Make(
 				'transfer_control',
 				'backend_module',
 				array('backend_action', $action),
 				array('module', $module)
 			);
+	} else {
+		$result = url_Make(
+				'transfer_control',
+				'backend_module',
+				array('backend_action', $action),
+				array('sub_action', $sub_action),
+				array('module', $module)
+			);
+	}
+	
+	return $result;
 }
 
 
