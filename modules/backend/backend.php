@@ -167,11 +167,16 @@ class backend extends Module {
 					$action = fix_chars($_REQUEST['backend_action']);
 					$module_name = fix_chars($_REQUEST['module']);
 					$params['backend_action'] = $action;
+					
+					// add sub-action if specified
+					if (isset($_REQUEST['sub_action']))
+						$params['sub_action'] = fix_chars($_REQUEST['sub_action']);
 
 					if (class_exists($module_name)) {
 						$module = call_user_func(array($module_name, 'getInstance'));
 						$module->transferControl($params, $children);
 					}
+					
 					break;
 			}
 
