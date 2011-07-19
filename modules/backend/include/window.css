@@ -125,6 +125,11 @@ div.window div.content label {
 	margin-bottom: 10px;
 }
 
+div.window div.content label.horizontal {
+	float: left;
+	margin-right: 20px;
+}
+
 div.window div.content label span {
 	display: block;
 }

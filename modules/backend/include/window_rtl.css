@@ -71,3 +71,13 @@ div#login_window div.input_controls {
 	padding-left: 0px;
 	padding-right: 25px;
 }
+
+/**
+ * Controls
+ */
+div.window div.content label.horizontal {
+	float: right;
+	margin-left: 20px;
+	margin-right: 0px;
+}
+ 
