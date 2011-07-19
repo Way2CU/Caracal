@@ -54,4 +54,4 @@ YouTube_Controls = {
 	 */
 	onPlayerError: function(code) {
 	}
-}
+};
