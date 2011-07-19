@@ -4,16 +4,20 @@
 	<!-- Window Menu -->
 	<div class="main_menu">
 		<_var name="$params['link_new']"/>
+		<_var name="$params['link_categories']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 150px;">
-				<!-- Column 1 -->
+			<span class="column" style="width: 250px;">
+				<_text constant="column_name" module="shop"/>
 			</span>
-			<span class="column" style="width: 90px; text-align: center;">
-				<!-- Column 2 -->
+			<span class="column" style="width: 60px;">
+				<_text constant="column_price" module="shop"/>
+			</span>
+			<span class="column" style="width: 50px;">
+				<_text constant="column_rating" module="shop"/>
 			</span>
 			<span class="column">
 				<_text constant="column_options"/>
@@ -21,7 +25,7 @@
 		</div>
 		<div class="list_content" style="height: 250px">
 			<!-- List Content -->
-			<_item_list/>
+			<_list/>
 		</div>
 	</div>
 </document>

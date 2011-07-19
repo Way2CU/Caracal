@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="item_add_form">
+		<label>
+			<span><_text constant="label_name" module="shop"/></span>
+			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="shop"/></span>
+			<textarea name="description" class="multi-language" style="width: 460px; height: 150px;"><_raw text=""/></textarea>
+		</label>
+		<div>
+			<label class="horizontal">
+				<span><_text constant="label_price" module="shop"/></span>
+				<input type="text" name="price" style="width: 100px;" maxlength="30"/>
+			</label>
+			<label class="horizontal">
+				<span><_text constant="label_currency" module="shop"/></span>
+				<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+			</label>
+			<div style="clear:both;"/>
+		</div>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('item_add_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('item_add_form', '[name=description]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
+	</script>	
+</document>

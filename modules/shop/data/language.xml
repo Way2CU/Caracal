@@ -1,4 +1,31 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
+	<language short="en">
+		<constant name="menu_shop">Shop</constant>
+		<constant name="menu_items">Manage items</constant>
+		<constant name="menu_categories">Manage categories</constant>
+		<constant name="menu_payment_methods">Payment methods</constant>
+		<constant name="menu_purchases">Purchases</constant>
+		<constant name="menu_stocks">Stocks</constant>
+		<constant name="menu_special_offers">Special offers</constant>
+		<constant name="menu_currencies">Currencies</constant>
+
+		<constant name="title_manage_items">Shop: Manage items</constant>
+		<constant name="title_manage_categories">Shop: Manage categories</constant>
+		<constant name="title_item_add">Shop: Add new item</constant>
+		<constant name="title_currencies">Shop: Available currencies</constant>
+		
+		<constant name="column_name">Name</constant>
+		<constant name="column_price">Price</constant>
+		<constant name="column_rating">Rating</constant>
+		
+		<constant name="label_name">Name:</constant>
+		<constant name="label_description">Description:</constant>
+		<constant name="label_price">Price:</constant>
+		<constant name="label_currency">Currency:</constant>
+
+		<constant name="add_item">Add new item</constant>
+		<constant name="manage_categories">Manage categories</constant>
+	</language>
 </document>

@@ -7,6 +7,7 @@
  */
 
 require_once('units/shop_item_manager.php');
+require_once('units/shop_item_handler.php');
 
 
 class shop extends Module {
@@ -17,7 +18,7 @@ class shop extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// load module style and scripts
@@ -30,6 +31,106 @@ class shop extends Module {
 		// register backend
 		if (class_exists('backend')) {
 			$backend = backend::getInstance();
+
+			$shop_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_shop'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					5  // level
+				);
+
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_items'),
+								url_GetFromFilePath($this->path.'images/items.png'),
+								window_Open( // on click open window
+											'shop_items',
+											490,
+											$this->getLanguageConstant('title_manage_items'),
+											true, true,
+											backend_UrlMake($this->name, 'items')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_categories'),
+								url_GetFromFilePath($this->path.'images/categories.png'),
+								window_Open( // on click open window
+											'shop_categories',
+											490,
+											$this->getLanguageConstant('title_manage_categories'),
+											true, true,
+											backend_UrlMake($this->name, 'categories')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_special_offers'),
+								url_GetFromFilePath($this->path.'images/special_offers.png'),
+								window_Open( // on click open window
+											'shop_special_offers',
+											490,
+											$this->getLanguageConstant('title_special_offers'),
+											true, true,
+											backend_UrlMake($this->name, 'special_offers')
+										),
+								5  // level
+							));
+
+			$shop_menu->addSeparator(5);
+
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_payment_methods'),
+								url_GetFromFilePath($this->path.'images/payment_methods.png'),
+								window_Open( // on click open window
+											'shop_payment_methods',
+											490,
+											$this->getLanguageConstant('title_payment_methods'),
+											true, true,
+											backend_UrlMake($this->name, 'payment_methods')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_currencies'),
+								url_GetFromFilePath($this->path.'images/currencies.png'),
+								window_Open( // on click open window
+											'shop_currencies',
+											490,
+											$this->getLanguageConstant('title_currencies'),
+											true, true,
+											backend_UrlMake($this->name, 'currencies')
+										),
+								5  // level
+							));
+
+			$shop_menu->addSeparator(5);
+
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_purchases'),
+								url_GetFromFilePath($this->path.'images/purchase.png'),
+								window_Open( // on click open window
+											'shop_purchases',
+											490,
+											$this->getLanguageConstant('title_purchases'),
+											true, true,
+											backend_UrlMake($this->name, 'purchases')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_stocks'),
+								url_GetFromFilePath($this->path.'images/stock.png'),
+								window_Open( // on click open window
+											'shop_stocks',
+											490,
+											$this->getLanguageConstant('title_stocks'),
+											true, true,
+											backend_UrlMake($this->name, 'stocks')
+										),
+								5  // level
+							));
+
+			$backend->addMenu($this->name, $shop_menu);
 		}
 	}
 
@@ -58,11 +159,34 @@ class shop extends Module {
 			}
 
 		// global control actions
-		if (isset($params['backend_action']))
-			switch ($params['backend_action']) {
+		if (isset($params['backend_action'])) {
+			$action = $params['backend_action'];
+			 
+			switch ($action) {
+				case 'items':
+					$handler = ShopItemHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
+
+				case 'currencies':
+					$handler = ShopCurrenciesHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
+					
+				case 'categories':
+
+				case 'special_offers':
+
+				case 'purchases':
+
+				case 'stocks':
+
+				case 'payment_methods':
+					
 				default:
 					break;
 			}
+		}
 	}
 
 	/**
