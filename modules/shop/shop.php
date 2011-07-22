@@ -8,7 +8,8 @@
 
 require_once('units/shop_item_manager.php');
 require_once('units/shop_item_handler.php');
-
+require_once('units/shop_currencies_handler.php');
+require_once('units/shop_currencies_manager.php');
 
 class shop extends Module {
 	private static $_instance;
@@ -32,6 +33,9 @@ class shop extends Module {
 		if (class_exists('backend')) {
 			$backend = backend::getInstance();
 
+			if (class_exists('head_tag'))
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
+			
 			$shop_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_shop'),
 					url_GetFromFilePath($this->path.'images/icon.png'),
@@ -95,7 +99,7 @@ class shop extends Module {
 								url_GetFromFilePath($this->path.'images/currencies.png'),
 								window_Open( // on click open window
 											'shop_currencies',
-											490,
+											350,
 											$this->getLanguageConstant('title_currencies'),
 											true, true,
 											backend_UrlMake($this->name, 'currencies')
@@ -195,8 +199,38 @@ class shop extends Module {
 	public function onInit() {
 		global $db_active, $db;
 
-		$sql = "";
+		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
+		// create shop items table
+		$sql = "
+			CREATE TABLE `shop_items` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`uid` VARCHAR(40) NOT NULL,"; 
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+
+		foreach($list as $language)
+			$sql .= "`description_{$language}` TEXT NOT NULL ,";
+
+		$sql .= "
+				`gallery` INT(11) NOT NULL,
+				`author` INT(11) NOT NULL,
+				`views` INT(11) NOT NULL,
+				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`visible` BOOLEAN NOT NULL DEFAULT '1',
+				PRIMARY KEY ( `id` ),
+				KEY `visible` (`visible`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop currencies table
+		$sql = "
+			CREATE TABLE `shop_currencies` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`currency` VARCHAR(5) NOT NULL, 
+				PRIMARY KEY ( `id` )
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 	}
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 150px;">
+			<_var name="$params['currency']"/>
+		</span>
+		<span class="column" style="width: 90px;">
+			<_var name="$params['alphabetic_code']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>

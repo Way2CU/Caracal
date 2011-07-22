@@ -15,17 +15,28 @@
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
 		<constant name="title_item_add">Shop: Add new item</constant>
 		<constant name="title_currencies">Shop: Available currencies</constant>
-		
+		<constant name="title_currencies_add">Shop: Add currency</constant>
+		<constant name="title_currencies_update">Shop: Update currencies</constant>
+		<constant name="title_currencies_delete">Shop: Delete currency</constant>
+
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
 		<constant name="column_rating">Rating</constant>
-		
+		<constant name="column_currency">Currency</constant>
+		<constant name="column_name">Name</constant>
+
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
 		<constant name="label_price">Price:</constant>
 		<constant name="label_currency">Currency:</constant>
 
+		<constant name="message_currency_saved">Selected currency was added.</constant>
+		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
+		<constant name="message_currency_deleted">Currency was deleted!</constant>
+
 		<constant name="add_item">Add new item</constant>
 		<constant name="manage_categories">Manage categories</constant>
+		<constant name="add_currency">Add currency</constant>
+		<constant name="update_currencies">Update currency list</constant>
 	</language>
 </document>

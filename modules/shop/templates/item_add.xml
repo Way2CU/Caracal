@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="item_add_form">
+	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_add_form">
 		<label>
 			<span><_text constant="label_name" module="shop"/></span>
 			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
@@ -21,6 +21,11 @@
 			</label>
 			<div style="clear:both;"/>
 		</div>
+		<label>
+			<span><_text constant="label_images" module="shop"/></span>
+			<div id="shop_item_add_images">
+			</div>
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
@@ -30,13 +35,16 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('item_add_form');
+		var selector = new LanguageSelector('shop_item_add_form');
 
 		// create toolbar
 		toolbar_api
-				.createToolbar('item_add_form', '[name=description]:input')
+				.createToolbar('shop_item_add_form', '[name=description]:input')
 				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image')
 				.addControl('downloads', 'link');
+				
+		// create multiple image uploader
+		var uploader = new MultipleImagesUpload('shop_item_add_images');
 	</script>	
 </document>
