@@ -33,6 +33,7 @@
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
 		<constant name="message_currency_deleted">Currency was deleted!</constant>
+		<constant name="message_currency_list_updated">ISO list of currencies was updated!</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="manage_categories">Manage categories</constant>

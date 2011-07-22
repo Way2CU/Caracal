@@ -28,7 +28,9 @@ class ShopCurrenciesHandler {
 	/**
 	 * Update currency cache
 	 */
-	private function __update_cache() {
+	private function __update_cache($force=False) {
+		if (!is_null($this->_cache) && !$force) return;
+
 		$filename = $this->path.'data/iso_currencies.xml';
 
 		if (file_exists($filename)) {
@@ -101,6 +103,10 @@ class ShopCurrenciesHandler {
 				$this->deleteCurrency_Commit();
 				break;
 
+			case 'update':
+				$this->updateCurrencyList();
+				break;
+
 			default:
 				$this->showCurrencies();
 				break;
@@ -129,7 +135,7 @@ class ShopCurrenciesHandler {
 										$this->_parent->getLanguageConstant('update_currencies'),
 										window_Open( // on click open window
 											'shop_currencies_update',
-											580,
+											270,
 											$this->_parent->getLanguageConstant('title_currencies_update'),
 											true, true,
 											backend_UrlMake($this->name, 'currencies', 'update')
@@ -241,6 +247,33 @@ class ShopCurrenciesHandler {
 					'button'	=> $this->_parent->getLanguageConstant("close"),
 					'action'	=> window_Close('shop_currencies_delete').";"
 									.window_ReloadContent('shop_currencies')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Update currency list from ISO web site
+	 */
+	private function updateCurrencyList() {
+		$data = file_get_contents($this->update_url);
+		$filename = $this->path.'data/iso_currencies.xml';
+
+		// store new data
+		file_put_contents($filename, $data);
+
+		// update cache
+		$this->__update_cache(True);
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->_parent->getLanguageConstant("message_currency_list_updated"),
+					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'action'	=> window_Close('shop_currencies_update')
 				);
 
 		$template->restoreXML();
