@@ -162,7 +162,7 @@ div.window div.content label:last-child {
 }
 
 div.window div.content select,
-div.window div.content input:not([type="file"]),
+div.window div.content input,
 div.window div.content textarea {
 	padding: 2px;
 	padding-left: 3px;
