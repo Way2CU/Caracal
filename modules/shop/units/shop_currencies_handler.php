@@ -300,7 +300,7 @@ class ShopCurrenciesHandler {
 		} else {
 			$template = new TemplateHandler('currency_list_item.xml', $this->path.'templates/');
 		}
-
+		
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				$params = $this->getCurrencyForCode($item->currency);

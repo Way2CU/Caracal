@@ -17,7 +17,12 @@
 			</label>
 			<label class="horizontal">
 				<span><_text constant="label_currency" module="shop"/></span>
-				<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+				<select	name="currency" style="width: 200px">
+					<_currency_list
+						template="item_list_currency_option.xml" 
+						local="1"
+					/>
+				</select>
 			</label>
 			<div style="clear:both;"/>
 		</div>
@@ -45,6 +50,6 @@
 				.addControl('downloads', 'link');
 				
 		// create multiple image uploader
-		var uploader = new MultipleImagesUpload('shop_item_add_images');
+		var uploader = new MultipleImagesUpload('shop_item_add_images', 'images');
 	</script>	
 </document>
