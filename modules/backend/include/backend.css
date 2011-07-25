@@ -153,3 +153,18 @@ ol#language_menu li.active a:hover {
 ::-webkit-scrollbar-thumb:hover {
 	background-color: rgb(100, 100, 100);
 }
+
+/**
+ * Default element behavior
+ */
+*:not(input):not(textarea) {
+	-moz-user-drag: none;
+	-webkit-user-drag: none;
+	user-drag: none;
+	
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	
+	cursor: default !important;
+}
