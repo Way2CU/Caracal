@@ -25,34 +25,60 @@ class ModuleHandler {
 	 * @param string $path
 	 */
 	function loadModules() {
-		$manager = ModuleManager::getInstance();
+		global $db_use, $data_path;
 
-		// get priority module list
-		$preload_list = $manager->getItems(
-								$manager->getFieldNames(),
-								array(
-									'active' 	=> 1,
-									'preload'	=> 1
-								),
-								array('order')
-							);
+		$module_list = array();
 
-		// get normal module list
-		$normal_list = $manager->getItems(
-								$manager->getFieldNames(),
-								array(
-									'active' 	=> 1,
-									'preload'	=> 0
-								),
-								array('order')
-							);
+		if ($db_use) {
+			// database available, form module list from database entries
+			$manager = ModuleManager::getInstance();
 
-		$module_list = array_merge($preload_list, $normal_list);
+			// get priority module list
+			$preload_list = $manager->getItems(
+									$manager->getFieldNames(),
+									array(
+										'active' 	=> 1,
+										'preload'	=> 1
+									),
+									array('order')
+								);
+
+			// get normal module list
+			$normal_list = $manager->getItems(
+									$manager->getFieldNames(),
+									array(
+										'active' 	=> 1,
+										'preload'	=> 0
+									),
+									array('order')
+								);
+
+			// add each of preload items to list
+			foreach ($preload_list as $module)
+				$module_list[] = $module->name;
+
+			// add each of normal items to list
+			foreach ($normal_list as $module)
+				$module_list[] = $module->name;
+
+		} else {
+			// no database available try to load from XML file
+			$file = $data_path.'modules.xml';
+
+			if (file_exists($file)) {
+				$xml = new XMLParser(@file_get_contents($file), $file);
+				$xml->Parse();
+
+				foreach ($xml->document->module as $xml_module) {
+					$module_list[] = $xml_module->tagAttrs['name'];
+				}
+			}
+		}
 
 		// load modules
 		if (count($module_list) > 0)
-			foreach($module_list as $module)
-				$this->_loadModule($module->name);
+			foreach($module_list as $module_name)
+				$this->_loadModule($module_name);
 	}
 
 	/**
