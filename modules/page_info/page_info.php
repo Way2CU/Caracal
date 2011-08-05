@@ -13,7 +13,7 @@ class page_info extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $section;
+		global $section, $db_use;
 
 		parent::__construct(__FILE__);
 
@@ -39,7 +39,7 @@ class page_info extends Module {
 			$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
 			$head_tag->addTag('meta', array('name' => 'rating', 'content' => 'general'));
 
-			if ($section != 'backend' && $section != 'backend_module') {
+			if ($section != 'backend' && $section != 'backend_module' && $db_use) {
 				// google analytics
 				if (!empty($this->settings['analytics']))
 					$head_tag->addGoogleAnalytics($this->settings['analytics']);
@@ -54,11 +54,12 @@ class page_info extends Module {
 			}
 
 			// page description
-			$head_tag->addTag('meta',
-						array(
-							'name'		=> 'description',
-							'content'	=> $this->settings['description']
-						));
+			if ($db_use) 
+				$head_tag->addTag('meta',
+							array(
+								'name'		=> 'description',
+								'content'	=> $this->settings['description']
+							));
 
 			// copyright
 			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
