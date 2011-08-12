@@ -173,7 +173,7 @@ div.window div.content textarea {
 	background-color: #ffffff;
 
 	color: #444444;
-	font-family: Ubuntu, sans-serif, Arial, Tahoma;
+	font-family: sans-serif, Arial, Tahoma;
 }
 
 div.window div.content input[type=checkbox] {
@@ -218,7 +218,7 @@ div.window button {
 	background-position: top left;
 
 	color: #000000;
-	font-family: Ubuntu, sans-serif, Arial, Tahoma;
+	font-family: sans-serif, Arial, Tahoma;
 	font-weight: normal;
 }
 
