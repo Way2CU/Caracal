@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="video_add_form">
 		<label>
 			<span><_text constant="label_text_id" module="youtube"/></span>
-			<input type="text" name="text_id" style="width: 100px;" maxlength="32"/>
+			<input type="text" name="text_id" class="code" style="width: 100px;" maxlength="32"/>
 		</label>
 		<label>
 			<span><_text constant="label_id" module="youtube"/></span>
