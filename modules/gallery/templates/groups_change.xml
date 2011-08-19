@@ -5,31 +5,32 @@
 		<input type="hidden" name="id" value="$params['id']" eval="value"/>
 		<label>
 			<span><_text constant="label_text_id" module="gallery"/></span>
-			<input 
-				type="text" 
-				name="text_id" 
-				value="$params['text_id']" 
-				style="width: 360px;" 
-				maxlength="50" 
+			<input
+				type="text"
+				name="text_id"
+				value="$params['text_id']"
+				style="width: 360px;"
+				maxlength="50"
 				eval="value"
+				class="code"
 			/>
 		</label>
 		<label>
 			<span><_text constant="label_name" module="gallery"/></span>
-			<input 
-				type="text" 
-				name="name" 
-				class="multi-language" 
-				style="width: 360px;" 
+			<input
+				type="text"
+				name="name"
+				class="multi-language"
+				style="width: 360px;"
 				maxlength="50"
 			/>
 			<_language_data param="name"/>
 		</label>
 		<label>
 			<span><_text constant="label_description" module="gallery"/></span>
-			<textarea 
-				name="description" 
-				class="multi-language" 
+			<textarea
+				name="description"
+				class="multi-language"
 				style="width: 360px; height: 150px;"
 			>
 				<_raw text=""/>
@@ -40,8 +41,8 @@
 			<span><_text constant="label_thumbnail" module="gallery"/></span>
 			<select name="thumbnail">
 				<option/>
-				<_image_list 
-					selected="$params['thumbnail']" 
+				<_image_list
+					selected="$params['thumbnail']"
 					group_id="$params['id']"
 					template="thumbnail_change_item.xml"
 					local="1"

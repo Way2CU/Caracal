@@ -69,7 +69,7 @@ function ToolbarExtension_Gallery() {
 					dataType: 'json',
 					context: $component.get(0),
 					success: self.loaded_ArticleImage
-				})
+				});
 			});
 
 		$toolbar.append($button);
@@ -162,7 +162,7 @@ function ToolbarExtension_Gallery() {
 		path.push('modules/gallery/images');
 		path.push(icon);
 
-		return window.location.protocol + '//' + window.location.host +	path.join('/')
+		return window.location.protocol + '//' + window.location.host +	path.join('/');
 	};
 
 	/**

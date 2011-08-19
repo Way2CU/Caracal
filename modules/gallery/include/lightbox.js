@@ -475,7 +475,7 @@ function LightBox(selector, show_title, show_description, show_controls) {
 	 */
 	this.startLoading = function(index) {
 		// store current index
-		this._current_index = index
+		this._current_index = index;
 
 		// get image
 		var image = this._images.eq(index);

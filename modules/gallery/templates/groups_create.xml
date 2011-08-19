@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="group_create_form">
 		<label>
 			<span><_text constant="label_text_id" module="gallery"/></span>
-			<input type="text" name="text_id" style="width: 360px;" maxlength="50"/>
+			<input type="text" name="text_id" class="code" style="width: 360px;" maxlength="50"/>
 		</label>
 		<label>
 			<span><_text constant="label_name" module="gallery"/></span>
