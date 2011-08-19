@@ -357,7 +357,7 @@ class articles extends Module {
 		$text_id = escape_chars($_REQUEST['text_id']);
 		$title = fix_chars($this->getMultilanguageField('title'));
 		$content = escape_chars($this->getMultilanguageField('content'));
-		$visible = fix_id($_REQUEST['visible']);
+		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 
 		$data = array(
