@@ -69,7 +69,7 @@ function ToolbarExtension_Downloads() {
 					dataType: 'json',
 					context: component.get(0),
 					success: self.loaded_DownloadsList
-				})
+				});
 			});
 
 		toolbar.append(button);
@@ -214,7 +214,7 @@ function ToolbarExtension_Downloads() {
 		path.push('modules/downloads/images');
 		path.push(icon);
 
-		return window.location.protocol + '//' + window.location.host +	path.join('/')
+		return window.location.protocol + '//' + window.location.host +	path.join('/');
 	};
 
 	/**
