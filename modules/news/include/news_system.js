@@ -25,7 +25,7 @@ function FadingNews($container, transition_time) {
 						opacity: 0
 					})
 					.animate({opacity: 1}, this.transition_time);
-	}
+	};
 
 	/**
 	 * Hide news container
@@ -39,7 +39,7 @@ function FadingNews($container, transition_time) {
 						function() {
 							$(this).css('display', 'none');
 						});
-	}
+	};
 }
 
 function ScrollingNews($container, transition_time) {
@@ -50,13 +50,13 @@ function ScrollingNews($container, transition_time) {
 	 * Show news container
 	 */
 	this.show = function() {
-	}
+	};
 
 	/**
 	 * Hide news container
 	 */
 	this.hide = function(next_news) {
-	}
+	};
 }
 
 /**
@@ -89,7 +89,7 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 			break;
 
 		default:
-			var News = FadingNews
+			var News = FadingNews;
 	};
 
 	// create news objects

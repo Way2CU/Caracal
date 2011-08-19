@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="news_group_add_form">
 		<label>
 			<span><_text constant="label_text_id" module="news"/></span>
-			<input type="text" name="text_id" style="width: 250px;" maxlength="32"/>
+			<input type="text" name="text_id" class="code" style="width: 250px;" maxlength="32"/>
 		</label>
 		<label>
 			<span><_text constant="label_title" module="news"/></span>
@@ -20,5 +20,5 @@
 	</form>
 	<script type="text/javascript">
 		new LanguageSelector('news_group_add_form');
-	</script>	
+	</script>
 </document>
