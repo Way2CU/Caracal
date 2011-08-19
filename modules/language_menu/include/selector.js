@@ -37,7 +37,7 @@ function LanguageSelector(id) {
 		// create options
 		for(var i in language_handler.languages) {
 			var language = language_handler.languages[i];
-			var $button = $('<span>')
+			var $button = $('<span>');
 
 			$button
 				.html(language.long)
@@ -88,7 +88,7 @@ function LanguageSelector(id) {
 			// upon leaving input element, store data
 			$(this).blur(function() {
 				var data = $(this).data('language');
-				data[self.current_language] = $(this).val()
+				data[self.current_language] = $(this).val();
 
 				$(this).data('language', data);
 			});
@@ -99,7 +99,7 @@ function LanguageSelector(id) {
 
 		// stop the loading animation
 		this.$container.removeClass('loading');
-	}
+	};
 
 	/**
 	 * Set active language
@@ -134,7 +134,7 @@ function LanguageSelector(id) {
 		});
 
 		this.current_language = language;
-	}
+	};
 
 	/**
 	 * Function used to restore original language data on form reset event
@@ -149,7 +149,7 @@ function LanguageSelector(id) {
 				$(this).val(data[self.current_language]); else
 				$(this).val('');
 		});
-	}
+	};
 
 	// load languages and construct selector
 	this.init();
