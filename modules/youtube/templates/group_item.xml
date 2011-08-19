@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 300px;">
+			<_var name="$params['name'][$language]"/>
+		</span>
+		<span class="column" style="width: 60px; text-align: center;">
+			<_var name="$params['visible_char']"/>
+		</span>
+		<span class="column">
+			<_var name="$params['item_change']"/><_raw text=" "/>
+			<_var name="$params['item_delete']"/><_raw text=" "/>
+			<_var name="$params['item_videos']"/>
+		</span>
+	</div>
+</document>

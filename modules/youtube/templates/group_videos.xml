@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<div class="scrollable_list">
+			<input type="hidden" name="group" value="$params['group'];" eval="value"/>
+			<div class="list_header">
+				<span class="column" style="width: 250px;">
+					<_text constant="column_video" module="youtube"/>
+				</span>
+			</div>
+			<div class="list_content" style="height: 300px">
+				<_group_videos group="$params['group']" eval="group"/>
+			</div>
+		</div>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

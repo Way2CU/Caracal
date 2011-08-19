@@ -164,23 +164,28 @@ div.window div.content label:last-child {
 div.window div.content select,
 div.window div.content input,
 div.window div.content textarea {
-	padding: 2px;
-	padding-left: 3px;
-	padding-right: 3px;
+	margin: 0px;
+	padding: 3px;
 
 	border: 1px solid #999999;
 	outline: 0px;
 	background-color: #ffffff;
 
 	color: #444444;
+	font-size: 12px;
 	font-family: sans-serif, Arial, Tahoma;
 }
 
 div.window div.content input[type=checkbox] {
+	margin-right: 3px;
 	padding: 0px;
 
 	float: left;
 	clear: both;
+}
+
+div.window div.content textarea {
+	resize: vertical;
 }
 
 div.window div.content label.checkbox span {
@@ -190,6 +195,7 @@ div.window div.content label.checkbox span {
 }
 
 
+div.window div.content input.code,
 div.window div.content textarea.code {
 	direction: ltr !important;
 	font-family: monospace;
@@ -204,12 +210,12 @@ div.window div.content textarea:focus {
 
 div.window button {
 	display: inline-block;
-	width: 114px;
+	width: 112px;
 
 	margin: 0px;
 	padding: 0px;
-	padding-top: 12px;
-	padding-bottom: 12px;
+	padding-top: 13px;
+	padding-bottom: 13px;
 
 	border: 0px;
 	background-color: transparent;
@@ -217,8 +223,9 @@ div.window button {
 	background-repeat: no-repeat;
 	background-position: top left;
 
-	color: #000000;
+	color: #444444;
 	font-family: sans-serif, Arial, Tahoma;
+	font-size: 13px;
 	font-weight: normal;
 }
 

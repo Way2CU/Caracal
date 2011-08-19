@@ -8,6 +8,8 @@
 
 div.window div.content input[type=checkbox],
 div.window_inactive div.content input[type=checkbox] {
+	margin-left: 3px;
+	margin-right: 0px;
 	float: right;
 }
 

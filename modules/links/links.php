@@ -358,7 +358,7 @@ class links extends Module {
 			'text' 			=> fix_chars($_REQUEST['text']),
 			'description' 	=> escape_chars($_REQUEST['description']),
 			'url' 			=> fix_chars($_REQUEST['url']),
-			'external' 		=> fix_id($_REQUEST['external']),
+			'external' 		=> isset($_REQUEST['external']) && ($_REQUEST['external'] == 'on' || $_REQUEST['external'] == '1') ? 1 : 0,
 			'sponsored' 	=> isset($_REQUEST['sponsored']) && ($_REQUEST['sponsored'] == 'on' || $_REQUEST['sponsored'] == '1') ? 1 : 0,
 			'display_limit'	=> fix_id(fix_chars($_REQUEST['display_limit'])),
 		);

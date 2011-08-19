@@ -332,7 +332,7 @@ class articles extends Module {
 
 			$params = array(
 						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
+						'text_id'		=> unfix_chars($item->text_id),
 						'group'			=> $item->group,
 						'title'			=> unfix_chars($item->title),
 						'content'		=> $item->content,

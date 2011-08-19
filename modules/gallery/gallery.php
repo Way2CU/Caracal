@@ -960,7 +960,7 @@ class gallery extends Module {
 	 * Save container group memberships
 	 */
 	private function containerGroups_Save() {
-		$container = fix_id(fix_chars($_REQUEST['container']));
+		$container = fix_id($_REQUEST['container']);
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 
 		// fetch all ids being set to specific group

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="group_create_form">
+		<label>
+			<span><_text constant="label_text_id" module="youtube"/></span>
+			<input type="text" name="text_id" class="code" style="width: 200px;" maxlength="32"/>
+		</label>
+		<label>
+			<span><_text constant="label_name" module="youtube"/></span>
+			<input type="text" name="name" class="multi-language" style="width: 375px;"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="youtube"/></span>
+			<textarea 
+				name="description" 
+				class="multi-language" 
+				rows="4" 
+				cols="50"
+				style="width: 375px; height: 130px;"><_raw text=""/></textarea>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_visible" module="youtube"/></span>
+			<input type="checkbox" name="visible" checked="checked"/>
+		</label>		
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('group_create_form');
+	</script>
+</document>
