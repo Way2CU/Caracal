@@ -101,6 +101,14 @@ class youtube extends Module {
 				case 'show_thumbnail':
 					$this->tag_Thumbnail($params, $children);
 					break;
+					
+				case 'show_group':
+					$this->tag_Group($params, $children);
+					break;
+					
+				case 'show_group_list':
+					$this->tag_GroupList($params, $children);
+					break;
 
 				case 'json_video':
 					$this->json_Video();
@@ -901,6 +909,65 @@ class youtube extends Module {
 			$template->setLocalParams($params);
 			$template->parse();
 		}
+	}
+	
+	/**
+	 * Handle displaying video thumbnail
+	 * 
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Thumbnail($tag_params, $children) {
+		$manager = YouTube_VideoManager::getInstance();
+		$video = null;
+		$image_list = 2;
+		
+		// get parameters
+		if (isset($tag_params['id'])) {
+			// get video based on id
+			$video_id = fix_id($tag_params['id']);
+			$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $video_id));
+			
+		} else if (isset($tag_params['text_id'])) {
+			// get video based on textual id
+			$video_id = fix_chars($tag_params['text_id']);
+			$video = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $video_id));
+		}
+		
+		if (isset($tag_params['image_number']))
+			$image_list = fix_id(explode(',', $tag_params['image_number']));
+		
+		// make sure image number is within valid range
+		if (count($image_list) == 0 || min($image_list) < 1 || max($image_list) > 3)
+			$image_number = array(2);
+		
+		// create template
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+			$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+			$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('video_thumbnail.xml', $this->path.'templates/');
+		}
+		
+		$template->setMappedModule($this->name);
+		
+		// parse template
+		if (!is_null($video))
+			foreach($image_list as $image_number) {
+				$image_url = $this->getThumbnailURL($video->video_id, $image_number);
+				
+				$params = array(
+								'id'		=> $video->id,
+								'video_id'	=> $video->video_id,
+								'title'		=> $video->title,
+								'thumbnail'	=> $image_url
+							);
+				
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 	
 	/**
