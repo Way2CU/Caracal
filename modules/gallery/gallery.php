@@ -1056,6 +1056,9 @@ class gallery extends Module {
 	public function tag_ImageList($tag_params, $children) {
 		$manager = GalleryManager::getInstance();
 
+		$limit = null;
+		$order_by = array();
+		$order_asc = true;
 		$conditions = array();
 
 		if (!isset($tag_params['show_invisible']))
@@ -1069,6 +1072,9 @@ class gallery extends Module {
 
 		if (isset($tag_params['group_id']))
 			$conditions['group'] = fix_id($tag_params['group_id']);
+		
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']);
 
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
@@ -1083,8 +1089,14 @@ class gallery extends Module {
 				$conditions['group'] = -1;
 		}
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
-
+		$items = $manager->getItems(
+							$manager->getFieldNames(), 
+							$conditions, 
+							$order_by, 
+							$order_asc, 
+							$limit
+						);
+		
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
 				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
