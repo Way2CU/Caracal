@@ -8,11 +8,10 @@
 function Dialog() {
 	var self = this;
 	
-	this._visible = false;
-	
 	this._background = $('<div>');
 	this._container = $('<div>');
-	this._title = $('<span>');
+	this._title = $('<div>');
+	this._title_text = $('<span>');
 	this._close_button = $('<a>');
 	this._content = $('<div>');
 	
@@ -23,22 +22,37 @@ function Dialog() {
 		// configure background
 		this._background
 				.addClass('dialog-background')
-				.appendTo($(body));
+				.appendTo($('body'));
 		
 		// configure container
 		this._container
 				.addClass('dialog')
-				.appendTo($(body));
+				.appendTo($('body'));
 		
 		// configure title
 		this._title
 				.addClass('title')
 				.appendTo(this._container);
 		
+		this._title_text
+				.appendTo(this._title);
+		
+		this._close_button
+				.addClass('close')
+				.attr('title', language_handler.getText(null, 'close'))
+				.attr('href', 'javascript: void(0);')
+				.click(this.__handle_close_click)
+				.appendTo(this._title);
+		
+		this._title.append($('<div>').css('clear', 'both'));
+		
 		// configure content
 		this._content
 				.addClass('content')
-				.appendto(this._container);
+				.appendTo(this._container);
+		
+		// connect events
+		$(window).bind('resize', this.__handle_window_resize);
 	};
 	
 	/**
@@ -71,27 +85,132 @@ function Dialog() {
 	 * @param integer height
 	 */
 	this.setSize = function(width, height) {
+		// set dialog size
+		this._content.css({
+					width: width,
+					height: height
+				});
+		
+		// update dialog position
+		this._update_position();
 	};
 	
 	/**
 	 * Set dialog title
+	 * @param string title
 	 */
 	this.setTitle = function(title) {
-		this._title.html(title);
+		this._title_text.html(title);
+	};
+	
+	/**
+	 * Set scrollbar visibility
+	 * @param string show_scrollbar
+	 */
+	this.setScroll = function(show_scrollbar) {
+		if (show_scrollbar)
+			this._content.addClass('scroll'); else
+			this._content.removeClass('scroll');
 	};
 	
 	/**
 	 * Show dialog
 	 */
 	this.show = function() {
+		var chain = new AnimationChain();
 		
+		// configure containers
+		this._background.css({
+					display: 'block',
+					opacity: 0
+				});
+		
+		this._container.css({
+					display: 'block',
+					opacity: 0
+				});
+		
+		// create animation chain
+		chain
+			.addAnimation(
+					this._background, 
+					{opacity: 0.5}, 
+					300
+				)
+			.addAnimation(
+					this._container,
+					{opacity: 1},
+					300
+				)
+			.callback(function() {
+				self._visible = true;
+				console.log('visible');
+			});
+		
+		// start animation chain
+		chain.start();
 	};
 	
 	/**
 	 * Hide dialog
 	 */
 	this.hide = function() {
+		var chain = new AnimationChain();
 		
+		// create animation chain
+		chain
+			.addAnimation(
+					this._container, 
+					{opacity: 0}, 
+					200
+				)
+			.addAnimation(
+					this._background,
+					{opacity: 0},
+					200
+				)
+			.callback(function() {
+				self._visible = false;
+				
+				self._container.css('display', 'none');
+				self._background.css('display', 'none');
+				self._content.html('');
+			});
+			
+		// start animation chain
+		chain.start();
+	};
+	
+	/**
+	 * Update dialog position based on size
+	 */
+	this._update_position = function() {
+		var window_width = $(window).width();
+		var window_height = $(window).height();
+		var width = this._container.width();
+		var height = this._container.height();
+		
+		this._container.css({
+					left: Math.round((window_width - width) / 2),
+					top: Math.round((window_height - height) / 2)
+				});
+	};
+	
+	/**
+	 * Handle clicking on close button
+	 * @param object event
+	 */
+	this.__handle_close_click = function(event) {
+		self.hide();
+		event.preventDefault();
+	};
+	
+	/**
+	 * Handle browser window resize
+	 * @param object event
+	 */
+	this.__handle_window_resize = function(event) {
+		self._update_position();
 	};
 	
 	// finish object initialization
