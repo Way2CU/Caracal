@@ -1,7 +1,7 @@
 /**
  * Common Style Sheet
  *
- * Copyright (c) 2011. by way2cu
+ * Copyright (c) 2011. by Way2CU
  * Author: MeanEYE.rcf
  */
 @charset "UTF-8";
@@ -17,4 +17,67 @@ body {
 
 body.rtl {
 	direction: rtl;
+}
+
+div.dialog-background {
+	display: none;
+	width: 100%;
+	height: 100%;
+	
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	
+	background-color: black;
+}
+
+div.dialog {
+	display: none;
+	
+	position: fixed;
+	
+	border-radius: 5px;
+	border: 1px solid white;
+	background-color: white;
+}
+
+div.dialog div.title {
+	display: block;
+	
+	margin-bottom: 1px;
+	padding: 3px;
+	
+	border-radius: 4px;
+	background-color: #505050;
+	
+	color: white;
+	font-size: 13px;
+	overflow: hidden;
+}
+
+div.dialog div.title a.close {
+	display: block;
+	width: 16px;
+	height: 16px;
+	
+	float: right;
+	
+	border-radius: 3px;
+	background-color: #ffffff;
+	background-image: url(../modules/backend/images/close_normal.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+div.dialog div.title a.close:hover {
+	background-color: #909090;
+	background-image: url(../modules/backend/images/close_active.gif);
+}
+
+div.dialog div.content {
+	display: block;
+}
+
+div.dialog div.content.scroll {
+	overflow-y: auto;
 }
