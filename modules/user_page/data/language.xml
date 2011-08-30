@@ -1,4 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
+	<language short="en">
+		<constant name="menu_user_pages">User pages</constant>
+		<constant name="menu_create_page">Create new page</constant>
+		<constant name="menu_manage_pages">Manage pages</constant>
+		
+		<constant name="title_create_page">User pages: Create</constant>
+		<constant name="title_manage_pages">Manage User Pages</constant>
+		
+		<constant name="column_title">Title</constant>
+		<constant name="column_owner">Owner</constant>
+		
+		<constant name="create">Create new page</constant>
+	</language>
 </document>
