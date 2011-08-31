@@ -29,14 +29,14 @@ class user_page extends Module {
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
-			
+
 			$user_page_menu = new backend_MenuItem(
 								$this->getLanguageConstant('menu_user_pages'),
 								url_GetFromFilePath($this->path.'images/icon.png'),
 								'javascript:void(0);',
 								$level=5
 							);
-			
+
 			$user_page_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_create_page'),
 								url_GetFromFilePath($this->path.'images/create.png'),
@@ -61,7 +61,7 @@ class user_page extends Module {
 										),
 								$level=5
 							));
-						
+
 			$backend->addMenu($this->name, $user_page_menu);
 		}
 	}
@@ -100,7 +100,7 @@ class user_page extends Module {
 				case 'pages':
 					$this->showPages();
 					break;
-					
+
 				case 'create_page':
 				case 'edit_page':
 				case 'save_page':
@@ -150,26 +150,100 @@ class user_page extends Module {
 		$sql = "DROP TABLE IF EXISTS `user_pages`;";
 		if ($db_active == 1) $db->query($sql);
 	}
-	
+
+	/**
+	 * Show user pages list
+	 */
 	private function showPages() {
 		$template = new TemplateHandler('page_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-	
+
 		$params = array(
 				'link_new'	=> window_OpenHyperlink(
-										$this->getLanguageConstant('create'), 
-										'user_pages_create', 
-										570, 
-										$this->getLanguageConstant('title_create_page'), 
-										true, true, 
-										$this->name, 
+										$this->getLanguageConstant('create'),
+										'user_pages_create',
+										570,
+										$this->getLanguageConstant('title_create_page'),
+										true, true,
+										$this->name,
 										'create_page'
 									)
 			);
-	
-// 		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
+
+ 		$template->registerTagHandler('_page_list', &$this, 'tag_PageList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
-	}	
+	}
+
+	/**
+	 * Handle tag for displaying user page
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function tag_Page($tag_params, $children) {
+		$manager = UserPageManager::getInstance();
+		$admin_manager = AdministratorManager::getInstance();
+		$conditions = array();
+
+		// get item from database
+		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
+
+		if (!is_null($id)
+			$page = $manager->getSingleItem($manager->getFieldNames(), $conditions); else
+			$page = null;
+
+		// create template
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('page.xml', $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+
+		// parse object
+		if (is_object($page)) {
+			$timestamp = strtotime($page->timestamp);
+			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+			$params = array(
+						'id'			=> $page->id,
+						'text_id'		=> $page->text_id,
+						'timestamp'		=> $page->timestamp,
+						'date'			=> $date,
+						'time'			=> $time,
+						'title'			=> $page->title,
+						'content'		=> $page->content,
+						'author'		=> $admin_manager->getItemValue(
+																'fullname',
+																array('id' => $page->author)
+															),
+						'owner'			=> $admin_manager->getItemValue(
+																'fullname',
+																array('id' => $page->owner)
+															),
+						'visible'		=> $page->visible,
+						'editable'		=> $page->editable,
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Handle tag for displaying user page list
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function tag_PageList($tag_params, $children) {
+
+	}
 }
