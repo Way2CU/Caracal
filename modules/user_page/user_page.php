@@ -42,7 +42,7 @@ class user_page extends Module {
 								url_GetFromFilePath($this->path.'images/create.png'),
 								window_Open( // on click open window
 											'user_pages_create',
-											570,
+											730,
 											$this->getLanguageConstant('title_create_page'),
 											true, true,
 											backend_UrlMake($this->name, 'create_page')
@@ -87,6 +87,13 @@ class user_page extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
+					$this->tag_Page($params, $children);
+					break;
+
+				case 'show_list':
+					$this->tag_PageList($params, $children);
+					break;
+
 				case 'show_video':
 				case 'show_gallery':
 				case 'show_download':
@@ -102,10 +109,25 @@ class user_page extends Module {
 					break;
 
 				case 'create_page':
+					$this->createPage();
+					break;
+
 				case 'edit_page':
+					$this->editPage();
+					break;
+
 				case 'save_page':
+					$this->savePage();
+					break;
+
 				case 'delete_page':
+					$this->deletePage();
+					break;
+
 				case 'delete_page_commit':
+					$this->deletePage_Commit();
+					break;
+
 				default:
 					break;
 			}
@@ -177,22 +199,150 @@ class user_page extends Module {
 	}
 
 	/**
+	 * Show form for creating pages
+	 */
+	private function createPage() {
+		$template = new TemplateHandler('create_page.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		// add tag handler from user manager
+		$user_manager = UserManager::getInstance();
+		$template->registerTagHandler('_user_list', &$user_manager, 'tag_UserList');
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'save_page'),
+					'cancel_action'	=> window_Close('user_pages_create')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for editing pages
+	 */
+	private function editPage() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = UserPageManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			$template = new TemplateHandler('edit_page.xml', $this->path.'templates/');
+
+			// add tag handler from user manager
+			$user_manager = UserManager::getInstance();
+			$template->registerTagHandler('_user_list', &$user_manager, 'tag_UserList');
+
+			$params = array(
+						'id'			=> $item->id,
+						'owner'			=> $item->owner,
+						'title'			=> unfix_chars($item->title),
+						'content'		=> $item->content,
+						'editable' 		=> $item->editable,
+						'visible' 		=> $item->visible,
+						'form_action'	=> backend_UrlMake($this->name, 'save_page'),
+						'cancel_action'	=> window_Close('user_pages_edit')
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Save new or changed page data
+	 */
+	private function savePage() {
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$title = fix_chars($this->getMultilanguageField('title'));
+		$content = escape_chars($this->getMultilanguageField('content'));
+		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
+
+		if (isset($_REQUEST['owner']))
+			$owner = fix_id($_REQUEST['owner']); else
+			$owner = null;
+
+		if (isset($_REQUEST['editable']))
+			$editable = ($_REQUEST['editable'] == 'on' || $_REQUEST['editable'] == '1') ? 1 : 0; else
+			$editable = null;
+
+		$data = array(
+				'title'		=> $title,
+				'content'	=> $content,
+				'visible'	=> $visible,
+			);
+
+		if (!is_null($owner))
+			$data['owner'] = $owner;
+
+		if (!is_null($editable))
+			$data['editable'] = $editable;
+
+		// store data
+		$manager = UserPageManager::getInstance();
+
+		if (is_null($id)) {
+			$data['author'] = $_SESSION['uid'];
+			$window = 'user_pages_create';
+
+			$manager->insertData($data);
+
+		} else {
+			$window = 'user_pages_edit';
+
+			$manager->updateData($data, array('id' => $id));
+		}
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_page_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('user_pages'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show confirmation dialog for page removal
+	 */
+	private function deletePage() {
+	}
+
+	/**
+	 * Perform page removal
+	 */
+	private function deletePage_Commit() {
+	}
+
+	/**
 	 * Handle tag for displaying user page
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function tag_Page($tag_params, $children) {
+	public function tag_Page($tag_params, $children) {
 		$manager = UserPageManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 		$conditions = array();
 
-		// get item from database
-		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
+		// prepare query parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
 
-		if (!is_null($id)
-			$page = $manager->getSingleItem($manager->getFieldNames(), $conditions); else
-			$page = null;
+		if (isset($tag_params['owner']))
+			$conditions['owner'] = fix_id($tag_params['owner']);
+
+		// get item from database
+		$page = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// create template
 		if (isset($tag_params['template'])) {
@@ -243,7 +393,87 @@ class user_page extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function tag_PageList($tag_params, $children) {
+	public function tag_PageList($tag_params, $children) {
+		$manager = UserPageManager::getInstance();
+		$admin_manager = AdministratorManager::getInstance();
+		$conditions = array();
 
+		// get items from database
+		$pages = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// create template
+		if (isset($tag_params['template'])) {
+			if (isset($tag_params['local']) && $tag_params['local'] == 1)
+				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
+				$template = new TemplateHandler($tag_params['template']);
+		} else {
+			$template = new TemplateHandler('page_list_item.xml', $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+
+		// parse object
+		if (count($pages) > 0)
+			foreach ($pages as $page) {
+				$timestamp = strtotime($page->timestamp);
+				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+				$params = array(
+							'id'			=> $page->id,
+							'timestamp'		=> $page->timestamp,
+							'date'			=> $date,
+							'time'			=> $time,
+							'title'			=> $page->title,
+							'content'		=> $page->content,
+							'author'		=> $admin_manager->getItemValue(
+																	'fullname',
+																	array('id' => $page->author)
+																),
+							'owner'			=> $admin_manager->getItemValue(
+																	'fullname',
+																	array('id' => $page->owner)
+																),
+							'visible'		=> $page->visible,
+							'editable'		=> $page->editable,
+							'item_change'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('change'),
+													window_Open(
+														'user_pages_edit', 	// window id
+														730,				// width
+														$this->getLanguageConstant('title_edit_page'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'edit_page'),
+															array('id', $page->id)
+														)
+													)
+												),
+							'item_delete'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('delete'),
+													window_Open(
+														'user_pages_delete', // window id
+														400,				// width
+														$this->getLanguageConstant('title_delete_page'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'delete_page'),
+															array('id', $page->id)
+														)
+													)
+												),
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
+
 }

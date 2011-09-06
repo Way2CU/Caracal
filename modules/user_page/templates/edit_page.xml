@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="user_page_edit_form">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_title" module="user_page"/></span>
+			<input type="text" class="multi-language" name="title" style="width: 690px;" maxlength="255"/>
+			<_language_data param="title"/>
+		</label>
+		<label>
+			<span><_text constant="label_content" module="user_page"/></span>
+			<textarea
+				class="multi-language"
+				name="content"
+				rows="5" cols="40"
+				style="width: 690px; height: 250px;"
+			/>
+			<_language_data param="content"/>
+		</label>
+		<_if condition="$_SESSION['level'] >= 5">
+			<label>
+				<span><_text constant="label_owner" module="user_page"/></span>
+				<select name="owner" style="width: 270px;">
+					<_user_list selected="$params['owner']" template="users_option.xml" local="1"/>
+				</select>
+			</label>
+			<label class="checkbox">
+				<span><_text constant="label_editable" module="user_page"/></span>
+				<_if condition="$params['editable'] == 1">
+					<input type="checkbox" name="editable" checked="checked"/>
+				</_if>
+				<_if condition="$params['editable'] == 0">
+					<input type="checkbox" name="editable"/>
+				</_if>
+			</label>
+		</_if>
+		<label class="checkbox">
+			<span><_text constant="label_visible" module="user_page"/></span>
+			<_if condition="$params['visible'] == 1">
+				<input type="checkbox" name="visible" checked="checked"/>
+			</_if>
+			<_if condition="$params['visible'] == 0">
+				<input type="checkbox" name="visible"/>
+			</_if>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('user_page_edit_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('user_page_edit_form', '[name=content]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
+	</script>
+</document>
