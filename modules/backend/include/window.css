@@ -229,6 +229,10 @@ div.window button {
 	font-weight: normal;
 }
 
+div.window button:focus {
+	outline: none;
+}
+
 div.window button:hover {
 	background-image: url(../images/button_hover.png);
 }
