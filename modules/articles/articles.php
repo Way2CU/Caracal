@@ -320,7 +320,7 @@ class articles extends Module {
 	 * Display article for modification
 	 */
 	private function changeArticle() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -1224,7 +1224,7 @@ class articles extends Module {
 
 					$manager->updateData($data, array('id' => $article->id));
 				}
-				
+
 				$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
 				$result['rating'] = $this->getArticleRating($article, 10);
 			} else {
