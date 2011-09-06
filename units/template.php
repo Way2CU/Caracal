@@ -140,8 +140,10 @@ class TemplateHandler {
 					$to_eval = $tag->tagAttrs[$param];
 
 					$tag->tagAttrs[$param] = eval('global $section, $action, $language; return '.$to_eval.';');
-					unset($result);
 				}
+
+				// unset eval param
+				unset($tag->tagAttrs['eval']);
 			}
 
 			// now parse the tag
@@ -221,7 +223,7 @@ class TemplateHandler {
 						$new->parse();
 					} else {
 						// log error
-						print "Mapped module is not loaded!";
+						trigger_error('Mapped module is not loaded!', E_USER_WARNING);
 					}
 					break;
 
