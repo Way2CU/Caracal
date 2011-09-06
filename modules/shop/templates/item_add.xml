@@ -8,7 +8,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="shop"/></span>
-			<textarea name="description" class="multi-language" style="width: 460px; height: 150px;"><_raw text=""/></textarea>
+			<textarea name="description" class="multi-language" style="width: 460px; height: 150px;"/>
 		</label>
 		<div>
 			<label class="horizontal">
@@ -19,7 +19,7 @@
 				<span><_text constant="label_currency" module="shop"/></span>
 				<select	name="currency" style="width: 200px">
 					<_currency_list
-						template="item_list_currency_option.xml" 
+						template="item_list_currency_option.xml"
 						local="1"
 					/>
 				</select>
@@ -48,8 +48,8 @@
 				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image')
 				.addControl('downloads', 'link');
-				
+
 		// create multiple image uploader
 		var uploader = new MultipleImagesUpload('shop_item_add_images', 'images');
-	</script>	
+	</script>
 </document>
