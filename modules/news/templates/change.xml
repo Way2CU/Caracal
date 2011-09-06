@@ -10,7 +10,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_content" module="news"/></span>
-			<textarea name="content" class="multi-language" style="width: 460px; height: 150px;"><_raw text=""/></textarea>
+			<textarea name="content" class="multi-language" style="width: 460px; height: 150px;"/>
 			<_language_data param="content"/>
 		</label>
 		<label class="checkbox">

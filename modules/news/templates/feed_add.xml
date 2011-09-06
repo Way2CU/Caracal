@@ -18,7 +18,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="news"/></span>
-			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_active" module="news"/></span>
