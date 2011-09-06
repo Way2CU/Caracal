@@ -4,7 +4,7 @@
 	<div style="margin-bottom: 10px;">
 		<_var name="$params['message']"/>
 
-		<_if condition="!empty($param['name'])">
+		<_if condition="!empty($params['name'])">
 			<div style="padding: 10px; font-weight: bold;">
 				<_var name="$params['name']"/>
 			</div>

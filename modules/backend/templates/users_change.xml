@@ -3,21 +3,22 @@
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
 		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_fullname" module="backend"/></span>
-			<input type="text" name="fullname" style="width: 330px;" maxlength="100"/>
+			<input type="text" name="fullname" value="$params['fullname']" eval="value" style="width: 330px;" maxlength="100"/>
 		</label>
 		<label>
 			<span><_text constant="label_username" module="backend"/></span>
-			<input type="text" name="username" style="width: 200px;" maxlength="50"/>
+			<input type="text" name="username" value="$params['username']" eval="value" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_password" module="backend"/></span>
-			<input type="text" name="password" style="width: 200px;" maxlength="50"/>
+			<span><_text constant="label_new_password" module="backend"/></span>
+			<input type="text" name="new_password" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
 			<span><_text constant="label_level" module="backend"/></span>
 			<select name="level" style="width: 100px;">
-				<_level/>
+				<_level selected="$params['level']" eval="selected"/>
 			</select>
 		</label>
 		<div class="button_bar">

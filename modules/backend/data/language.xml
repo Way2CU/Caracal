@@ -19,7 +19,9 @@
 		<constant name="title_module_disable">Disable Module</constant>
 		<constant name="title_change_password">Change Password</constant>
 		<constant name="title_users_manager">Manage Users</constant>
-		<constant name="title_users_create">Users: Create</constant>
+		<constant name="title_users_create">Users: Create new</constant>
+		<constant name="title_users_change">Users: Change user data</constant>
+		<constant name="title_users_delete">Users: Delete account</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
@@ -37,6 +39,11 @@
 		<constant name="message_login_error">Invalid username and/or password.</constant>
 		<constant name="message_logout">You are about to logout from the system. Are you sure?</constant>
 		<constant name="message_logout_ok">Logout successful!</constant>
+		<constant name="message_users_error_level_too_high">Error saving user data. You can not assign level higher than your own.</constant>
+		<constant name="message_users_error_user_level_higher">Error saving user data. Specified user has higher access than you.</constant>
+		<constant name="message_users_data_saved">User data was saved!</constant>
+		<constant name="message_users_delete">You are about to remove the following user from the system. User will loose all data associated with this account. Are you sure?</constant>
+		<constant name="message_users_deleted">Specified user was removed!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>

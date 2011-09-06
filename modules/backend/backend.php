@@ -71,7 +71,7 @@ class backend extends Module {
 									$this->getLanguageConstant('menu_system'),
 									url_GetFromFilePath($this->path.'images/icons/16/system.png'),
 									'javascript:void(0);',
-									$level=5
+									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
