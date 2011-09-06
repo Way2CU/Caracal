@@ -12,7 +12,7 @@
 				name="description"
 				class="multi-language"
 				style="width: 360px; height: 100px;"
-			><_raw text=""/></textarea>
+			/>
 		</label>
 		<label>
 			<span><_text constant="label_file" module="downloads"/></span>

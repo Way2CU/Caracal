@@ -14,7 +14,7 @@
 				name="description"
 				class="multi-language"
 				style="width: 360px; height: 100px;"
-			><_raw text=""/></textarea>
+			/>
 			<_language_data param="description"/>
 		</label>
 		<label>
