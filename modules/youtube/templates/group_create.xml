@@ -12,17 +12,18 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="youtube"/></span>
-			<textarea 
-				name="description" 
-				class="multi-language" 
-				rows="4" 
+			<textarea
+				name="description"
+				class="multi-language"
+				rows="4"
 				cols="50"
-				style="width: 375px; height: 130px;"><_raw text=""/></textarea>
+				style="width: 375px; height: 130px;"
+			/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="youtube"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
-		</label>		
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>

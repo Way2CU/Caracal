@@ -5,11 +5,11 @@
 		<label>
 			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_text_id" module="youtube"/></span>
-			<input 
-				type="text" 
-				name="text_id" 
-				class="code" 
-				style="width: 200px;" 
+			<input
+				type="text"
+				name="text_id"
+				class="code"
+				style="width: 200px;"
 				maxlength="32"
 				value="$params['text_id']"
 				eval="value"
@@ -22,12 +22,13 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="youtube"/></span>
-			<textarea 
-				name="description" 
-				class="multi-language" 
-				rows="4" 
+			<textarea
+				name="description"
+				class="multi-language"
+				rows="4"
 				cols="50"
-				style="width: 375px; height: 130px;"><_raw text=""/></textarea>
+				style="width: 375px; height: 130px;"
+			/>
 			<_language_data param="description"/>
 		</label>
 		<label class="checkbox">
@@ -38,7 +39,7 @@
 			<_if condition="$params['visible'] == 0">
 				<input type="checkbox" name="visible"/>
 			</_if>
-		</label>		
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
