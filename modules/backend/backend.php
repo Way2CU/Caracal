@@ -3,7 +3,7 @@
 /**
  * Main backend framework class
  *
- * @author MeanEYE[rcf]
+ * @author MeanEYE.rcf
  */
 
 define('_BACKEND_SECTION_', 'backend_module');
@@ -13,6 +13,9 @@ define('CHAR_CHECKED', '✔');
 define('CHAR_UNCHECKED', '');
 
 require_once('units/menu_item.php');
+require_once('units/session_manager.php');
+require_once('units/user_manager.php');
+
 
 class backend extends Module {
 	private static $_instance;
@@ -86,7 +89,13 @@ class backend extends Module {
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_users'),
 									url_GetFromFilePath($this->path.'images/icons/16/users.png'),
-									'javascript:void(0)',
+									window_Open( // on click open window
+												'system_users',
+												610,
+												$this->getLanguageConstant('title_users_manager'),
+												true, false, // disallow minimize, safety feature
+												backend_UrlMake($this->name, 'users')
+											),
 									$level=10
 								));
 			$system_menu->addSeparator(10);
@@ -167,7 +176,7 @@ class backend extends Module {
 					$action = fix_chars($_REQUEST['backend_action']);
 					$module_name = fix_chars($_REQUEST['module']);
 					$params['backend_action'] = $action;
-					
+
 					// add sub-action if specified
 					if (isset($_REQUEST['sub_action']))
 						$params['sub_action'] = fix_chars($_REQUEST['sub_action']);
@@ -176,7 +185,7 @@ class backend extends Module {
 						$module = call_user_func(array($module_name, 'getInstance'));
 						$module->transferControl($params, $children);
 					}
-					
+
 					break;
 			}
 
@@ -211,15 +220,21 @@ class backend extends Module {
 					break;
 
 				// ---
-
 				case 'users':
+				case 'users_create':
+				case 'users_change':
+				case 'users_save':
+				case 'users_delete':
+				case 'users_delete_commit':
+				case 'change_password':
+				case 'save_password':
+					$user_manager = UserManager::getInstance();
+					$user_manager->transferControl();
 					break;
 
 				// ---
 				case 'logout':
 				case 'logout_commit':
-				case 'change_password':
-				case 'save_password':
 					$session_manager = new SessionManager($this);
 					$session_manager->transferControl();
 					break;
@@ -668,280 +683,6 @@ class backend extends Module {
 	private function utf8_urldecode($str) {
 		$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
 		return html_entity_decode($str, null, 'UTF-8');;
-	}
-}
-
-class SessionManager {
-	private static $SALT = '_web_engine: SALT1.618: ';
-
-	/**
-	 * Parent module (backend)
-	 * @var resource
-	 */
-	var $parent;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct($parent) {
-		$this->parent = $parent;
-	}
-
-	/**
-	 * Transfer control to this object
-	 */
-	public function transferControl() {
-		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
-
-		if (!is_null($action) && $action == 'transfer_control')
-			$action = $_REQUEST['backend_action'];
-
-		switch($action) {
-			case 'login_commit':
-				$this->login_commit();
-				break;
-
-			case 'logout':
-				$this->logout();
-				break;
-
-			case 'logout_commit':
-				$this->logout_commit();
-				break;
-
-			case 'change_password':
-				$this->changePassword();
-				break;
-
-			case 'save_password':
-				$this->savePassword();
-				break;
-
-			default:
-				$_SESSION['redirect_url'] = $_SERVER['REQUEST_URI']; // grab url for later redirection
-				$this->login();
-				break;
-		}
-	}
-
-	/**
-	 * Show login form
-	 *
-	 * @param string $message
-	 */
-	private function login($message='') {
-		$manager = LoginRetryManager::getInstance();
-		$show_captcha = false;
-
-		// remove old logs
-		$manager->deleteData(array(
-								'day'	=> array(
-											'operator'	=> '<>',
-											'value'		=> date('j')
-										)
-								));
-
-		// try to get retries log
-		$retry_log = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array('address' => $_SERVER['REMOTE_ADDR'])
-									);
-
-		// check if user has more than 3 failed atempts
-		if (is_object($retry_log))
-			$show_captcha = $retry_log->count > 3;
-
-		// create template and show login form
-		$template = new TemplateHandler('session_login.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
-
-		$params = array(
-					'show_captcha'	=> $show_captcha,
-					'username'		=> isset($_REQUEST['username']) ? fix_chars($_REQUEST['username']) : '',
-					'image'			=> url_GetFromFilePath($this->parent->path.'images/icons/login.png'),
-					'message'		=> $message
-				);
-
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse();
-	}
-
-	/**
-	 * Perform login
-	 */
-	private function login_commit() {
-		$captcha_ok = false;
-		$username = fix_chars($_REQUEST['username']);
-		$password = fix_chars($_REQUEST['password']);
-		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
-
-		$manager = AdministratorManager::getInstance();
-		$retry_manager = LoginRetryManager::getInstance();
-
-		$user = $manager->getSingleItem(
-									$manager->getFieldNames(),
-									array(
-										'username'	=> $username,
-										'password'	=> $password
-									));
-
-		$retry_log = $retry_manager->getSingleItem(
-									$retry_manager->getFieldNames(),
-									array(
-										'address' 	=> $_SERVER['REMOTE_ADDR']
-									));
-
-		// check captcha
-		if (is_object($retry_log) && $retry_log->count > 3) {
-			// on purpose we make a separate condition, if captcha
-			// module is not loaded, block IP address for one day
-			if (class_exists('captcha')) {
-				$captcha_module = captcha::getInstance();
-
-				$captcha_ok = $captcha_module->isCaptchaValid($captcha);
-				$captcha_module->resetCaptcha();
-			}
-		} else {
-			$captcha_ok = true;
-		}
-
-		// check user data
-		if (is_object($user) && $captcha_ok) {
-			// remove login retries
-			$retry_manager->deleteData(array('address' => $_SERVER['REMOTE_ADDR']));
-
-			// set session variables
-			$_SESSION['uid'] = $user->id;
-			$_SESSION['logged'] = true;
-			$_SESSION['level'] = $user->level;
-			$_SESSION['username'] = $user->username;
-			$_SESSION['fullname'] = $user->fullname;
-
-			// check if we need to make redirect URL
-			if (isset($_SESSION['redirect_url']))
-				$url = url_SetRefresh($_SESSION['redirect_url'], 4); else
-				$url = url_SetRefresh(url_Make('', $this->parent->name), 4);
-
-			// get message
-			$message = $this->parent->getLanguageConstant('message_login_ok');
-
-			// create template and show login form
-			$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');
-			$template->setMappedModule($this->parent->name);
-
-			$params = array(
-						'message'		=> $message,
-						'redirect_url'	=> $url
-					);
-
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
-
-		} else {
-			// user is not logged in properly, increase fail
-			// counter and present login window with message
-			if (is_object($retry_log)) {
-				// don't allow counter to go over 10
-				$count = ($retry_log->count < 10) ? $retry_log->count+1 : 10;
-
-				$retry_manager->updateData(
-									array('count' => $count),
-									array('id' => $retry_log->id)
-								);
-
-			} else {
-				$retry_manager->insertData(array(
-										'day'		=> date('j'),
-										'address'	=> $_SERVER['REMOTE_ADDR'],
-										'count'		=> 1
-									));
-			}
-
-			$message = $this->parent->getLanguageConstant('message_login_error');
-			$this->login($message);
-		}
-	}
-
-	/**
-	 * Present confirmation dialog before logout
-	 */
-	private function logout() {
-		$template = new TemplateHandler('confirmation.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
-
-		$params = array(
-					'message'		=> $this->parent->getLanguageConstant('message_logout'),
-					'name'			=> '',
-					'yes_text'		=> $this->parent->getLanguageConstant('logout'),
-					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
-					'yes_action'	=> window_LoadContent(
-											'logout_window',
-											backend_UrlMake($this->parent->name, 'logout_commit')
-										),
-					'no_action'		=> window_Close('logout_window')
-				);
-
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse();
-	}
-
-	/**
-	 * Perform logout procedure
-	 */
-	private function logout_commit() {
-		// kill session variables
-		unset($_SESSION['uid']);
-		unset($_SESSION['logged']);
-		unset($_SESSION['level']);
-		unset($_SESSION['username']);
-		unset($_SESSION['fullname']);
-
-		// get message
-		$message = $this->parent->getLanguageConstant('message_logout_ok');
-
-		// get url
-		$url = url_SetRefresh(url_Make('', $this->parent->name), 2);
-
-		// load template and show the message
-		$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
-
-		$params = array(
-					'message'		=> $message,
-					'redirect_url'	=> $url
-				);
-
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse();
-	}
-
-	/**
-	 * Show dialog for changing password
-	 */
-	private function changePassword() {
-		$template = new TemplateHandler('change_password.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
-
-		$params = array(
-					'form_action'	=> backend_UrlMake($this->parent->name, 'save_password'),
-					'cancel_action'	=> window_Close('change_password_window')
-				);
-
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse();
-	}
-
-	/**
-	 * Salt and save password
-	 */
-	private function savePassword() {
-		$old_password = md5(SessionManager::SALT.$_REQUEST['old_password']);
-		$new_password = md5(SessionManager::SALE.$_REQUEST['new_password']);
 	}
 }
 

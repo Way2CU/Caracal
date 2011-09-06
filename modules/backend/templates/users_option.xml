@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<option value="$params['id']" eval="value"><_var name="$params['fullname']"/></option>
+</document>

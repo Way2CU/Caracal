@@ -18,6 +18,8 @@
 		<constant name="title_module_initialise">Initialise Module</constant>
 		<constant name="title_module_disable">Disable Module</constant>
 		<constant name="title_change_password">Change Password</constant>
+		<constant name="title_users_manager">Manage Users</constant>
+		<constant name="title_users_create">Users: Create</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
@@ -41,11 +43,18 @@
 		<constant name="column_module_order">Order</constant>
 		<constant name="column_module_preload">Preload</constant>
 		<constant name="column_module_active">Active</constant>
+		<constant name="column_users_fullname">Full name</constant>
+		<constant name="column_users_username">Username</constant>
+		<constant name="column_users_level">Level</constant>
 
 		<!-- Labels -->
 		<constant name="label_old_password">Old password:</constant>
 		<constant name="label_new_password">New password:</constant>
 		<constant name="label_repeat_password">Repeat new password:</constant>
+		<constant name="label_fullname">Full name:</constant>
+		<constant name="label_username">Username:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_level">Level:</constant>
 
 		<!-- General -->
 		<constant name="activate">Activate</constant>
@@ -54,6 +63,13 @@
 		<constant name="disable">Disable</constant>
 		<constant name="close">Close</constant>
 		<constant name="cancel">Cancel</constant>
+
+		<!-- User Manager Related -->
+		<constant name="create_user">Create user</constant>
+		<constant name="group_guests">Guests</constant>
+		<constant name="group_users">Users</constant>
+		<constant name="group_admins">Administrators</constant>
+		<constant name="group_root">Unlimited</constant>
 
 		<!-- Login Related -->
 		<constant name="title_login">System Login</constant>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><_text constant="label_fullname" module="backend"/></span>
+			<input type="text" name="fullname" style="width: 330px;" maxlength="100"/>
+		</label>
+		<label>
+			<span><_text constant="label_username" module="backend"/></span>
+			<input type="text" name="username" style="width: 200px;" maxlength="50"/>
+		</label>
+		<label>
+			<span><_text constant="label_password" module="backend"/></span>
+			<input type="text" name="password" style="width: 200px;" maxlength="50"/>
+		</label>
+		<label>
+			<span><_text constant="label_level" module="backend"/></span>
+			<select name="level" style="width: 100px;">
+				<optgroup label="backend::getInstance()->getLanguageConstant('group_guests')" eval="label">
+					<option value="0">0</option>
+				</optgroup>
+				<optgroup label="backend::getInstance()->getLanguageConstant('group_users')" eval="label">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</optgroup>
+				<optgroup label="backend::getInstance()->getLanguageConstant('group_admins')" eval="label">
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+				</optgroup>
+				<optgroup label="backend::getInstance()->getLanguageConstant('group_root')" eval="label">
+					<option value="10">10</option>
+				</optgroup>
+			</select>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
