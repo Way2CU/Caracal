@@ -15,7 +15,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_comment" module="comments"/></span>
-			<textarea name="comment" rows="4" cols="40" maxlength="$params['size_limit']" eval="maxlength"><_raw text=""/></textarea>
+			<textarea name="comment" rows="4" cols="40" maxlength="$params['size_limit']" eval="maxlength"/>
 		</label>
 		<button type="submit">
 			<_text constant="save"/>
