@@ -14,7 +14,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_description" module="gallery"/></span>
-			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"><_raw text=""/></textarea>
+			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
 			<_language_data param="description"/>
 		</label>
 		<div class="button_bar">
