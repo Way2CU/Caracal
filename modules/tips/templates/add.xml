@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="tips_add_form">
 		<label>
 			<span><_text constant="label_content" module="tips"/></span>
-			<textarea name="content" class="multi-language" style="width: 370px; height: 100px;"><_raw text=""/></textarea>
+			<textarea name="content" class="multi-language" style="width: 370px; height: 100px;"/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="tips"/></span>
