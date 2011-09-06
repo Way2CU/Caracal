@@ -270,7 +270,10 @@ function Window(id, width, title, can_close, url, existing_structure) {
 			.animate({opacity: 1}, 300);
 
 		this.visible = true;
+
+		// set window to be top level
 		this.window_system.focusWindow(this.id);
+
 		return this;
 	};
 
@@ -311,10 +314,14 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 * Event triggered when window gains focus
 	 */
 	this.gainFocus = function() {
+		// set level
 		this.zIndex = 1000;
 		this.$container
 				.css({zIndex: this.zIndex})
 				.animate({opacity: 1}, 300);
+
+		// focus first input element
+		this.focusInputElement();
 	};
 
 	/**
@@ -434,6 +441,20 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 		// remove loading indicator
 		self.$container.removeClass('loading');
+
+		// if display level is right, focus first element
+		if (self.zIndex == 1000)
+			self.focusInputElement();
+	};
+
+	/**
+	 * Focus first input element if it exists
+	 */
+	this.focusInputElement = function() {
+		var elements = this.$content.find('input,select,textarea,button');
+
+		if (elements.length > 0)
+			elements.eq(0).focus();
 	};
 
 	/**
