@@ -21,7 +21,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_content" module="articles"/></span>
-			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 250px;"><_raw text=""/></textarea>
+			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 250px;"/>
 			<_language_data param="content"/>
 		</label>
 		<label class="checkbox">
