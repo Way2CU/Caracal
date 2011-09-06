@@ -43,16 +43,6 @@ class TemplateHandler {
 	public $module;
 
 	/**
-	 * Tags that need to be formated as block
-	 * @var array
-	 */
-	private $block_tags = array(
-						'div', 'ol', 'ul', 'li', 'object', 'table','thead', 'tbody',
-						'tr', 'td', 'th', 'head', 'body', 'html', 'form', 'fieldset',
-						'select', 'style', 'script', 'label', 'p'
-						);
-
-	/**
 	 * Custom tag handlers
 	 * @var array
 	 */
@@ -256,17 +246,17 @@ class TemplateHandler {
 					}
 
 					break;
-					
+
 				// replace tag data string with matching params
 				case '_replace':
 					$pool = isset($tag->tagAttrs['param']) ? $this->params[$tag->tagAttrs['param']] : $this->params;
-					
+
 					$keys = array_keys($pool);
 					$values = array_values($pool);
-					
+
 					foreach($keys as $i => $value)
 						$keys[$i] = "%{$value}%";
-					
+
 					echo str_replace($keys, $values, $tag->tagData);
 
 				// conditional tag
@@ -305,30 +295,15 @@ class TemplateHandler {
 
 					} else {
 						// default tag handler
-						if (in_array($tag->tagName, $this->block_tags)) {
-							// block tag
-							echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
+						echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
 
-							if (!empty($tag->tagChildren))
-								$this->parse($tag->tagChildren);
+						if (count($tag->tagChildren) > 0)
+							$this->parse($tag->tagChildren);
 
-							if (!empty($tag->tagData))
-								echo $tag->tagData;
+						if (count($tag->tagData) > 0)
+							echo $tag->tagData;
 
-							echo "</{$tag->tagName}>";
-						} else {
-							// if tag is not block, then strip formatting
-							echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
-
-							if (count($tag->tagChildren) > 0 || !empty($tag->tagData)) {
-								if (count($tag->tagChildren) > 0) 
-									$this->parse($tag->tagChildren);
-									
-								if (!empty($tag->tagData)) echo $tag->tagData;
-								
-								echo "</{$tag->tagName}>";
-							}
-						}
+						echo "</{$tag->tagName}>";
 
 					}
 					break;
