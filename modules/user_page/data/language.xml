@@ -9,11 +9,25 @@
 		<constant name="title_create_page">User pages: Create</constant>
 		<constant name="title_edit_page">User pages: Edit</constant>
 		<constant name="title_manage_pages">Manage User Pages</constant>
+		<constant name="title_delete_page">User pages: Delete</constant>
+		<constant name="title_page_items">Page items</constant>
+		<constant name="title_page_items_add_video">Page items: Add video</constant>
+		<constant name="title_page_items_add_gallery">Page items: Add gallery</constant>
 
 		<constant name="message_page_saved">Page data was saved!</constant>
+		<constant name="message_page_delete">You are about to remove the following page. Are you sure?</constant>
+		<constant name="message_page_deleted">User page was removed.</constant>
+		<constant name="message_video_added">Selected video was added to specified page.</constant>
+		<constant name="message_gallery_added">Selected gallery was added to specified page.</constant>
+		<constant name="message_page_item_delete">You are about to remove the following item from specified page. Item itself will NOT be removed. Are you sure?</constant>
+		<constant name="message_page_item_deleted">Specified page item was removed!</constant>
 
 		<constant name="column_title">Title</constant>
 		<constant name="column_owner">Owner</constant>
+		<constant name="column_items"><![CDATA[Assigned items for page:&nbsp;]]></constant>
+
+		<constant name="group_video">YouTube Videos</constant>
+		<constant name="group_gallery">Image Galleries</constant>
 
 		<constant name="label_owner">Owner:</constant>
 		<constant name="label_title">Title:</constant>
@@ -22,5 +36,8 @@
 		<constant name="label_visible">Page is visible</constant>
 
 		<constant name="create">Create new page</constant>
+		<constant name="items">Items</constant>
+		<constant name="add_video">Add video</constant>
+		<constant name="add_gallery">Add gallery</constant>
 	</language>
 </document>

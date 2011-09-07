@@ -7,9 +7,13 @@
  */
 
 require_once('units/userpage_manager.php');
+require_once('units/userpage_items_manager.php');
 
 class user_page extends Module {
 	private static $_instance;
+
+	const VIDEO = 0;
+	const GALLERY = 1;
 
 	/**
 	 * Constructor
@@ -128,6 +132,30 @@ class user_page extends Module {
 					$this->deletePage_Commit();
 					break;
 
+				case 'page_items':
+					$this->pageItems();
+					break;
+
+				case 'page_items_add_video':
+					$this->pageItems_AddVideo();
+					break;
+
+				case 'page_items_add_gallery':
+					$this->pageItems_AddGallery();
+					break;
+
+				case 'page_items_save':
+					$this->pageItems_Save();
+					break;
+
+				case 'page_items_delete':
+					$this->pageItems_Delete();
+					break;
+
+				case 'page_items_delete_commit':
+					$this->pageItems_Delete_Commit();
+					break;
+
 				default:
 					break;
 			}
@@ -141,7 +169,7 @@ class user_page extends Module {
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
-		// User pages
+		// user pages
 		$sql = "
 			CREATE TABLE `user_pages` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -161,6 +189,19 @@ class user_page extends Module {
 				KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
+
+		// user page items
+		$sql = "
+			CREATE TABLE `user_page_items` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`page` int(11) NOT NULL,
+				`type` int(11) NOT NULL,
+				`item` int(11) NOT NULL,
+				PRIMARY KEY ( `id` ),
+				KEY `page` (`page`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
 	}
 
 	/**
@@ -169,7 +210,7 @@ class user_page extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "DROP TABLE IF EXISTS `user_pages`;";
+		$sql = "DROP TABLE IF EXISTS `user_pages`, `user_page_items`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -184,7 +225,7 @@ class user_page extends Module {
 				'link_new'	=> window_OpenHyperlink(
 										$this->getLanguageConstant('create'),
 										'user_pages_create',
-										570,
+										730,
 										$this->getLanguageConstant('title_create_page'),
 										true, true,
 										$this->name,
@@ -315,12 +356,293 @@ class user_page extends Module {
 	 * Show confirmation dialog for page removal
 	 */
 	private function deletePage() {
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = UserPageManager::getInstance();
+
+		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_page_delete'),
+					'name'			=> $item->title[$language],
+					'yes_text'		=> $this->getLanguageConstant('delete'),
+					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_action'	=> window_LoadContent(
+											'user_pages_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'delete_page_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('user_pages_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
 	 * Perform page removal
 	 */
 	private function deletePage_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = UserPageManager::getInstance();
+		$item_manager = UserPageItemsManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+		$item_manager->deleteData(array('page' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_page_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('user_pages_delete').';'.window_ReloadContent('user_pages')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Print a form containing all the links within a group
+	 */
+	private function pageItems() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = UserPageManager::getInstance();
+
+		// get selected item from database
+		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+
+		$template = new TemplateHandler('page_items.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'title'				=> $item->title,
+					'cancel_action'		=> window_Close('user_pages_items'),
+					'link_add_video'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('add_video'),
+											window_Open(
+												'user_pages_add_video', 	// window id
+												300,				// width
+												$this->getLanguageConstant('title_page_items_add_video'), // title
+												true, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'page_items_add_video'),
+													array('page', $id)
+												)
+											)
+										),
+					'link_add_gallery'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('add_gallery'),
+											window_Open(
+												'user_pages_add_gallery', 	// window id
+												300,				// width
+												$this->getLanguageConstant('title_page_items_add_gallery'), // title
+												true, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'page_items_add_gallery'),
+													array('page', $id)
+												)
+											)
+										)
+				);
+
+		// register tag handlers
+		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
+		$template->registerTagHandler('_gallery_list', &$this, 'tag_GalleryList');
+
+		// draw template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for adding new video to specified page
+	 */
+	private function pageItems_AddVideo() {
+		$page_id = fix_id($_REQUEST['page']);
+
+		$template = new TemplateHandler('page_add_video.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		// add tag handler from youtube
+		if (class_exists('youtube')) {
+			$module = youtube::getInstance();
+			$template->registerTagHandler('_video_list', &$module, 'tag_VideoList');
+		}
+
+		$params = array(
+					'page'			=> $page_id,
+					'form_action'	=> backend_UrlMake($this->name, 'page_items_save'),
+					'cancel_action'	=> window_Close('user_pages_add_video')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for adding new gallery to specified page
+	 */
+	private function pageItems_AddGallery() {
+		$page_id = fix_id($_REQUEST['page']);
+
+		$template = new TemplateHandler('page_add_gallery.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		// add tag handler from gallery
+		if (class_exists('gallery')) {
+			$module = gallery::getInstance();
+			$template->registerTagHandler('_gallery_list', &$module, 'tag_GroupList');
+		}
+
+		$params = array(
+					'page'			=> $page_id,
+					'form_action'	=> backend_UrlMake($this->name, 'page_items_save'),
+					'cancel_action'	=> window_Close('user_pages_add_gallery')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Save new page item
+	 */
+	private function pageItems_Save() {
+		$page = fix_id($_REQUEST['page']);
+		$type = fix_id($_REQUEST['type']);
+		$item = fix_id($_REQUEST['item']);
+
+		// prepare messages
+		if ($type == user_page::VIDEO) {
+			// video
+			$window = 'user_pages_add_video';
+			$message = $this->getLanguageConstant('message_video_added');
+
+		} else {
+			// gallery
+			$window = 'user_pages_add_gallery';
+			$message = $this->getLanguageConstant('message_gallery_added');
+		}
+
+		// store data
+		$manager = UserPageItemsManager::getInstance();
+		$manager->insertData(array(
+						'page'	=> $page,
+						'type'	=> $type,
+						'item'	=> $item
+					));
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $message,
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('user_pages_items'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show confirmation form before removing item from page
+	 */
+	private function pageItems_Delete() {
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = UserPageItemsManager::getInstance();
+
+		// grab item from database
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if ($item->type == user_page::VIDEO) {
+			// get video title
+			$video_manager = YouTube_VideoManager::getInstance();
+			$name = $video_manager->getItemValue('title', array('id' => $item->item));
+
+		} else {
+			// get gallery title
+			$gallery_manager = GalleryGroupManager::getInstance();
+			$name = $gallery_manager->getItemValue('name', array('id' => $item->item));
+		}
+
+		// create template
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		// parse template
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_page_item_delete'),
+					'name'			=> $name,
+					'yes_text'		=> $this->getLanguageConstant('delete'),
+					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_action'	=> window_LoadContent(
+											'user_pages_items_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'page_items_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('user_pages_items_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Perform item removal from specified page
+	 */
+	private function pageItems_Delete_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = UserPageItemsManager::getInstance();
+
+		// remove item from database
+		$manager->deleteData(array('id' => $id));
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_page_item_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('user_pages_items_delete').';'.window_ReloadContent('user_pages_items')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -345,15 +667,7 @@ class user_page extends Module {
 		$page = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// create template
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('page.xml', $this->path.'templates/');
-		}
-
-		$template->setMappedModule($this->name);
+		$template = $this->loadTemplate($tag_params, 'page.xml');
 
 		// parse object
 		if (is_object($page)) {
@@ -394,6 +708,8 @@ class user_page extends Module {
 	 * @param array $children
 	 */
 	public function tag_PageList($tag_params, $children) {
+		global $language;
+
 		$manager = UserPageManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 		$conditions = array();
@@ -402,15 +718,7 @@ class user_page extends Module {
 		$pages = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		// create template
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('page_list_item.xml', $this->path.'templates/');
-		}
-
-		$template->setMappedModule($this->name);
+		$template = $this->loadTemplate($tag_params, 'page_list_item.xml');
 
 		// parse object
 		if (count($pages) > 0)
@@ -468,6 +776,22 @@ class user_page extends Module {
 														)
 													)
 												),
+							'item_items'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('items'),
+													window_Open(
+														'user_pages_items', // window id
+														400,				// width
+														$page->title[$language].': '.$this->getLanguageConstant('title_page_items'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'page_items'),
+															array('id', $page->id)
+														)
+													)
+												),
 						);
 
 				$template->restoreXML();
@@ -476,4 +800,95 @@ class user_page extends Module {
 			}
 	}
 
+	/**
+	 * Display list of items associated with page and of specified type
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ItemList($tag_params, $children, $type) {
+		$manager = UserPageItemsManager::getInstance();
+
+		$page_id = isset($tag_params['page']) ? fix_id($tag_params['page']) : null;
+
+		// create query conditions
+		$conditions = array();
+
+		if (!is_null($page_id))
+			$conditions['page'] = $page_id;
+
+		$conditions['type'] = $type;
+
+		// get items from database
+		$items = $manager->getItems(array('id', 'item'), $conditions);
+
+		if ($type == user_page::VIDEO) {
+			// create template
+			$template = $this->loadTemplate($tag_params, 'page_items_video.xml');
+
+			// connect tag handlers
+			if (class_exists('youtube')) {
+				$module = youtube::getInstance();
+				$template->registerTagHandler('_video', &$module, 'tag_Video');
+			}
+
+		} else {
+			// create template
+			$template = $this->loadTemplate($tag_params, 'page_items_gallery.xml');
+
+			// connect tag handlers
+			if (class_exists('gallery')) {
+				$module = gallery::getInstance();
+				$template->registerTagHandler('_gallery', &$module, 'tag_Group');
+			}
+		}
+
+		// parse items
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+							'item'			=> $item->item,
+							'item_delete'	=> url_MakeHyperlink(
+													$this->getLanguageConstant('delete'),
+													window_Open(
+														'user_pages_items_delete', // window id
+														400,				// width
+														$this->getLanguageConstant('title_delete_page'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'page_items_delete'),
+															array('id', $item->id)
+														)
+													)
+												),
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Display list of videos associated with page
+	 *
+	 * @param array $tag_childern
+	 * @param array $children
+	 */
+	public function tag_VideoList($tag_params, $children) {
+		$this->tag_ItemList($tag_params, $children, user_page::VIDEO);
+	}
+
+	/**
+	 * Display list of galleries associated with page
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_GalleryList($tag_params, $children) {
+		$this->tag_ItemList($tag_params, $children, user_page::GALLERY);
+	}
 }

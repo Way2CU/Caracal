@@ -22,7 +22,7 @@
 			<label>
 				<span><_text constant="label_owner" module="user_page"/></span>
 				<select name="owner" style="width: 270px;">
-					<_user_list selected="$params['owner']" template="users_option.xml" local="1"/>
+					<_user_list selected="$params['owner']" template="users_option.xml" local="1" eval="selected"/>
 				</select>
 			</label>
 			<label class="checkbox">

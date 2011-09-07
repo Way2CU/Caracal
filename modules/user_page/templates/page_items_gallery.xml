@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 300px;">
+			<label>
+				<_gallery
+					id="$params['item']"
+					template="title_gallery.xml"
+					template_path="user_page::getInstance()->path.'templates/'"
+					eval="template_path,id"
+				/>
+			</label>
+		</span>
+		<span class="column">
+			<_var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>

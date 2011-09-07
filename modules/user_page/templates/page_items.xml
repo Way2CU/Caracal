@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="main_menu">
+		<_var name="$params['link_add_video']"/>
+		<_var name="$params['link_add_gallery']"/>
+	</div>
+
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 300px;">
+				<_text constant="column_title" module="user_page"/>
+			</span>
+			<span class="column">
+				<_text constant="column_options"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 300px">
+			<div class="list_item group_title">
+				<_text constant="group_video" module="user_page"/>
+			</div>
+			<_video_list/>
+
+			<div class="list_item group_title">
+				<_text constant="group_gallery" module="user_page"/>
+			</div>
+			<_gallery_list/>
+		</div>
+	</div>
+	<div class="button_bar">
+		<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<_text constant="close"/>
+		</button>
+	</div>
+</document>
