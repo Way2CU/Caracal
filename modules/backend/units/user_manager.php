@@ -332,6 +332,7 @@ class UserManager {
 							'fullname'	=> $user->fullname,
 							'username'	=> $user->username,
 							'level'		=> $user->level,
+							'selected'	=> isset($tag_params['selected']) && ($tag_params['selected'] == $user->id),
 							'item_change'	=> url_MakeHyperlink(
 													$this->parent->getLanguageConstant('change'),
 													window_Open(
