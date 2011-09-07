@@ -52,7 +52,7 @@ class youtube extends Module {
 										),
 								$level=5
 							));
-			
+
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_video_groups'),
 								url_GetFromFilePath($this->path.'images/groups.png'),
@@ -101,11 +101,11 @@ class youtube extends Module {
 				case 'show_thumbnail':
 					$this->tag_Thumbnail($params, $children);
 					break;
-					
+
 				case 'show_group':
 					$this->tag_Group($params, $children);
 					break;
-					
+
 				case 'show_group_list':
 					$this->tag_GroupList($params, $children);
 					break;
@@ -125,7 +125,7 @@ class youtube extends Module {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
-				// videos 
+				// videos
 				case 'video_list':
 					$this->showList();
 					break;
@@ -153,36 +153,36 @@ class youtube extends Module {
 				case 'video_preview':
 					$this->previewVideo();
 					break;
-					
+
 				// video groups
 				case 'group_list':
 					$this->showGroups();
 					break;
-					
+
 				case 'group_create':
 					$this->createGroup();
 					break;
-					
+
 				case 'group_change':
 					$this->changeGroup();
 					break;
-					
+
 				case 'group_save':
 					$this->saveGroup();
 					break;
-					
+
 				case 'group_delete':
 					$this->deleteGroup();
 					break;
-					
+
 				case 'group_delete_commit':
 					$this->deleteGroup_Commit();
 					break;
-					
+
 				case 'group_videos':
 					$this->groupVideos();
 					break;
-					
+
 				case 'group_videos_save':
 					$this->groupVideos_Save();
 					break;
@@ -216,7 +216,7 @@ class youtube extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 
 		if ($db_active == 1) $db->query($sql);
-		
+
 		// create groups table
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `youtube_groups` (
@@ -229,7 +229,7 @@ class youtube extends Module {
 
 		foreach($list as $language)
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-		
+
 		$sql .= "
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
 				PRIMARY KEY (`id`),
@@ -370,7 +370,7 @@ class youtube extends Module {
 	 */
 	private function deleteVideo() {
 		global $language;
-		
+
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -488,11 +488,11 @@ class youtube extends Module {
 		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
-	 * Show group create form 
+	 * Show group create form
 	 */
 	private function createGroup() {
 		$template = new TemplateHandler('group_create.xml', $this->path.'templates/');
@@ -505,9 +505,9 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		 
+		$template->parse();
 	}
-	
+
 	/**
 	 * Show group changing form
 	 */
@@ -532,9 +532,9 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
 	 * Save new or changed group data
 	 */
@@ -547,7 +547,7 @@ class youtube extends Module {
 		$name = fix_chars($this->getMultilanguageField('name'));
 		$description = escape_chars($this->getMultilanguageField('description'));
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
-		
+
 		if (is_null($id)) {
 			// store new record
 			$manager->insertData(array(
@@ -556,9 +556,9 @@ class youtube extends Module {
 							'description'	=> $description,
 							'visible'		=> $visible
 						));
-			
+
 			$window = $this->name.'_group_create';
-			
+
 		} else {
 			// change existing record
 			$manager->updateData(
@@ -567,15 +567,15 @@ class youtube extends Module {
 								'name'			=> $name,
 								'description'	=> $description,
 								'visible'		=> $visible
-							), 
+							),
 							array(
 								'id' => $id
 							)
 						);
-			
+
 			$window = $this->name.'_group_change';
 		}
-		
+
 		// display message to the user
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -588,15 +588,15 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
 	 * Show confirmation dialog for group removal
 	 */
 	private function deleteGroup() {
 		global $language;
-		
+
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = YouTube_GroupManager::getInstance();
 
@@ -625,9 +625,9 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
 	 * Actually remove group and tell user about the result
 	 */
@@ -651,15 +651,15 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
-	 * Show video selection form 
+	 * Show video selection form
 	 */
 	private function groupVideos() {
 		$id = fix_id($_REQUEST['id']);
-		
+
 		$template = new TemplateHandler('group_videos.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -672,7 +672,7 @@ class youtube extends Module {
 		$template->registerTagHandler('_group_videos', &$this, 'tag_GroupVideos');
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -711,36 +711,36 @@ class youtube extends Module {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
 	 * Handler for _video tag which embeds player in page.
 	 *
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Video($params, $children) {
+	public function tag_Video($tag_params, $children) {
 		$video = null;
 		$manager = YouTube_VideoManager::getInstance();
-		
-		if (isset($params['id'])) {
+
+		if (isset($tag_params['id'])) {
 			// video is was specified
 			$video = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
-										'id' => $params['id']
+										'id' => $tag_params['id']
 									));
 
-		} else if (isset($params['text_id'])) {
+		} else if (isset($tag_params['text_id'])) {
 			// text id was specified
 			$video = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
-										'text_id' => $params['text_id']
+										'text_id' => $tag_params['text_id']
 									));
 
-		} else if (isset($params['random'])) {
+		} else if (isset($tag_params['random'])) {
 			// get random video
 			$video = $manager->getSingleItem(
 									$manager->getFieldNames(),
@@ -750,23 +750,35 @@ class youtube extends Module {
 		}
 
 		// no id was specified
-		if (!is_object($video)) return;
-		
-		if (class_exists('swfobject')) {
-			$module = swfobject::getInstance();
-
-			if (isset($params['embed']) && $params['embed'] == '1')
+		if (is_object($video))
+			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1') && class_exists('swfobject')) {
+				// embed video player
+				$module = swfobject::getInstance();
 				$module->embedSWF(
 								$this->getEmbedURL($video->video_id),
-								$params['target'],
-								isset($params['width']) ? $params['width'] : 320,
-								isset($params['height']) ? $params['height'] : 240,
+								$tag_params['target'],
+								isset($tag_params['width']) ? $tag_params['width'] : 320,
+								isset($tag_params['height']) ? $tag_params['height'] : 240,
 								array(),
 								array(
 									'wmode'	=> 'opaque'
 								)
 							);
-		}
+			} else {
+				// parse specified template
+				$template = $this->loadTemplate($tag_params, 'video.xml');
+
+				$params = array(
+								'id'			=> $video->id,
+								'video_id'		=> $video->video_id,
+								'title'			=> $video->title,
+								'thumbnail'		=> $this->getThumbnailURL($video->video_id)
+							);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 
 	/**
@@ -783,52 +795,52 @@ class youtube extends Module {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
 		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
-		
+
 		// grab parameters
 		if (isset($tag_params['group_id']) || isset($tag_params['group_text_id'])) {
 			$group_id = null;
 			$membership_manager = YouTube_MembershipManager::getInstance();
-			
+
 			if (isset($tag_params['group_text_id'])) {
 				// group text id was specified
 				$group_manager = YouTube_GroupManager::getInstance();
 
 				$group_item = $group_manager->getSingleItem(
-												array('id'), 
+												array('id'),
 												array(
 													'text_id' => fix_chars($tag_params['group_text_id'])
 												)
 											);
-				
+
 				if (is_object($group_item))
-					$group_id = $group_item->id; 
-					
+					$group_id = $group_item->id;
+
 			} else {
 				// group id number was specified
 				$group_id = fix_id($tag_params['group_id']);
 			}
-			
-			
+
+
 			$item_ids = $membership_manager->getItems(
 											array('video'),
 											array('group' => $group_id)
 										);
-			
+
 			// prepare list of items
 			$item_list = array();
-			
+
 			if (count($membership_items) > 0)
 				foreach($membership_items as $item)
 					$item_list[] = $item->video;
-			
+
 			// make sure nothing is selected if groupd doesn't contain any videos
 			if (count($item_list) == 0)
 				$item_list[] = -1;
-			
+
 			// add item list to conditions
 			$conditions['id'] = $item_list;
 		}
-		
+
 		// get items from database
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
@@ -838,16 +850,10 @@ class youtube extends Module {
 								$limit
 							);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('video_item.xml', $this->path.'templates/');
-		}
+		// create template
+		$template = $this->loadTemplate($tag_params, 'video_item.xml');
 
-		$template->setMappedModule($this->name);
-
+		// parse template
 		if (count($items) > 0)
 		foreach ($items as $item) {
 			$params = array(
@@ -910,10 +916,10 @@ class youtube extends Module {
 			$template->parse();
 		}
 	}
-	
+
 	/**
 	 * Handle displaying video thumbnail
-	 * 
+	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
@@ -921,26 +927,26 @@ class youtube extends Module {
 		$manager = YouTube_VideoManager::getInstance();
 		$video = null;
 		$image_list = 2;
-		
+
 		// get parameters
 		if (isset($tag_params['id'])) {
 			// get video based on id
 			$video_id = fix_id($tag_params['id']);
 			$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $video_id));
-			
+
 		} else if (isset($tag_params['text_id'])) {
 			// get video based on textual id
 			$video_id = fix_chars($tag_params['text_id']);
 			$video = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $video_id));
 		}
-		
+
 		if (isset($tag_params['image_number']))
 			$image_list = fix_id(explode(',', $tag_params['image_number']));
-		
+
 		// make sure image number is within valid range
 		if (count($image_list) == 0 || min($image_list) < 1 || max($image_list) > 3)
 			$image_number = array(2);
-		
+
 		// create template
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -949,57 +955,57 @@ class youtube extends Module {
 		} else {
 			$template = new TemplateHandler('video_thumbnail.xml', $this->path.'templates/');
 		}
-		
+
 		$template->setMappedModule($this->name);
-		
+
 		// parse template
 		if (!is_null($video))
 			foreach($image_list as $image_number) {
 				$image_url = $this->getThumbnailURL($video->video_id, $image_number);
-				
+
 				$params = array(
 								'id'		=> $video->id,
 								'video_id'	=> $video->video_id,
 								'title'		=> $video->title,
 								'thumbnail'	=> $image_url
 							);
-				
+
 				$template->restoreXML();
 				$template->setLocalParams($params);
 				$template->parse();
 			}
 	}
-	
+
 	/**
 	 * Handle group parsing
-	 * 
+	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_Group($tag_params, $children) {
 		$conditions = array();
-		
+
 		if (isset($tag_params['text_id']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 	}
-	
+
 	/**
 	 * Handle group list tag parsing
-	 * 
+	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_GroupList($tag_params, $children) {
 		$manager = YouTube_GroupManager::getInstance();
 		$conditions = array();
-		
+
 		// gather all the parameters
 		if (isset($tag_params['visible_only']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
-		
+
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
-		
+
 		// create template handler
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -1009,8 +1015,8 @@ class youtube extends Module {
 			$template = new TemplateHandler('group_item.xml', $this->path.'templates/');
 		}
 		$template->setMappedModule($this);
-		
-		if (count($items) > 0) 
+
+		if (count($items) > 0)
 			foreach ($items as $item) {
 				$params = array(
 								'id'			=> $item->id,
@@ -1067,16 +1073,16 @@ class youtube extends Module {
 														)
 													),
 							);
-	
+
 				$template->restoreXML();
 				$template->setLocalParams($params);
 				$template->parse();
 			}
 	}
-	
+
 	/**
 	 * Handle displaying group memberships
-	 * 
+	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
@@ -1117,7 +1123,7 @@ class youtube extends Module {
 				$template->restoreXML();
 				$template->setLocalParams($params);
 				$template->parse();
-			}		
+			}
 	}
 
 	/**
