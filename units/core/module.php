@@ -131,6 +131,37 @@ class Module {
 	}
 
 	/**
+	 * Create TemplateHandler object from specified tag params
+	 *
+	 * @param array $params
+	 * @param string $default_file
+	 * @return TemplateHandler
+	 */
+	protected function loadTemplate($params, $default_file) {
+		if (isset($params['template'])) {
+			if (isset($params['local']) && $params['local'] == 1) {
+				// load local template
+				$template = new TemplateHandler($params['template'], $this->path.'templates/');
+
+			} else if (isset($params['template_path'])) {
+				// load template from specified path
+				$template = new TemplateHandler($params['template'], $params['template_path']);
+
+			} else {
+				// load template from absolute path
+				$template = new TemplateHandler($params['template']);
+			}
+		} else {
+			// load template from module path
+			$template = new TemplateHandler($default_file, $this->path.'templates/');
+		}
+
+		$template->setMappedModule($this->name);
+
+		return $template;
+	}
+
+	/**
 	 * Updates or creates new variable in module settings
 	 *
 	 * @param string $var
