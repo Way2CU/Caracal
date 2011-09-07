@@ -319,9 +319,6 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		this.$container
 				.css({zIndex: this.zIndex})
 				.animate({opacity: 1}, 300);
-
-		// focus first input element
-		this.focusInputElement();
 	};
 
 	/**
