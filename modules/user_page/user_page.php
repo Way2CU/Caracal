@@ -98,9 +98,6 @@ class user_page extends Module {
 					$this->tag_PageList($params, $children);
 					break;
 
-				case 'show_video':
-				case 'show_gallery':
-				case 'show_download':
 				default:
 					break;
 			}
@@ -669,6 +666,9 @@ class user_page extends Module {
 		// create template
 		$template = $this->loadTemplate($tag_params, 'page.xml');
 
+		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
+		$template->registerTagHandler('_gallery_list', &$this, 'tag_GalleryList');
+
 		// parse object
 		if (is_object($page)) {
 			$timestamp = strtotime($page->timestamp);
@@ -677,7 +677,6 @@ class user_page extends Module {
 
 			$params = array(
 						'id'			=> $page->id,
-						'text_id'		=> $page->text_id,
 						'timestamp'		=> $page->timestamp,
 						'date'			=> $date,
 						'time'			=> $time,
