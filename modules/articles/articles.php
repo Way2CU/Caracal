@@ -395,7 +395,7 @@ class articles extends Module {
 	 * Print confirmation dialog before deleting article
 	 */
 	private function deleteArticle() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -430,7 +430,7 @@ class articles extends Module {
 	 * Delete article and print result message
 	 */
 	private function deleteArticle_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
