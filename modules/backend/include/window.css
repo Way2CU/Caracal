@@ -297,6 +297,17 @@ div.window div.scrollable_list .list_content .list_item {
 	padding: 3px;
 }
 
+div.dialog div.scrollable_list .list_content .list_item.group_title,
+div.window div.scrollable_list .list_content .list_item.group_title {
+	margin-top: 5px;
+	padding: 4px;
+
+	border-bottom: 1px solid #F0F0F0;
+
+	color: #C0C0C0;
+	text-align: center
+}
+
 div.dialog div.scrollable_list .list_content .list_item .details,
 div.window div.scrollable_list .list_content .list_item .details {
 	display: none;
