@@ -939,7 +939,7 @@ class gallery extends Module {
 	 * Print a form containing all the links within a group
 	 */
 	private function containerGroups() {
-		$container_id = fix_id(fix_chars($_REQUEST['id']));
+		$container_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('containers_groups.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1072,7 +1072,7 @@ class gallery extends Module {
 
 		if (isset($tag_params['group_id']))
 			$conditions['group'] = fix_id($tag_params['group_id']);
-		
+
 		if (isset($tag_params['limit']))
 			$limit = fix_id($tag_params['limit']);
 
@@ -1090,13 +1090,13 @@ class gallery extends Module {
 		}
 
 		$items = $manager->getItems(
-							$manager->getFieldNames(), 
-							$conditions, 
-							$order_by, 
-							$order_asc, 
+							$manager->getFieldNames(),
+							$conditions,
+							$order_by,
+							$order_asc,
 							$limit
 						);
-		
+
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
 				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
@@ -1191,18 +1191,13 @@ class gallery extends Module {
 		$manager = GalleryGroupManager::getInstance();
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('group.xml', $this->path.'templates/');
-		}
+		// create template
+		$template = $this->loadTemplate($tag_params, 'group.xml');
 
-		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_image', &$this, 'tag_Image');
 		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
 
+		// parse template
 		if (is_object($item)) {
 			$params = array(
 						'id'			=> $item->id,
@@ -1281,15 +1276,9 @@ class gallery extends Module {
 								$order_by
 							);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('groups_list_item.xml', $this->path.'templates/');
-		}
+		// create template
+		$template = $this->loadTemplate($tag_params, 'groups_list_item.xml');
 
-		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_image', &$this, 'tag_Image');
 		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
 
