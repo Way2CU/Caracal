@@ -332,8 +332,9 @@ class TemplateHandler {
 	/**
 	 * Registers handler function for specified tag
 	 *
-	 * @param string $tag_name
-	 * @param pointer $handler
+	 * @param string $tag_name Name of a tag to be handled
+	 * @param pointer $object Object with specified public method
+	 * @param string $function_name Public tag handler method
 	 * @example function tagHandler($level, $params, $children)
 	 */
 	public function registerTagHandler($tag_name, &$object, $function_name) {
