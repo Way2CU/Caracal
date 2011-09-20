@@ -73,7 +73,7 @@ class Module {
 	 * @param string $name
 	 * @return array
 	 */
-	protected function getMultilanguageField($name) {
+	public function getMultilanguageField($name) {
 		$result = array();
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -137,7 +137,7 @@ class Module {
 	 * @param string $default_file
 	 * @return TemplateHandler
 	 */
-	protected function loadTemplate($params, $default_file) {
+	public function loadTemplate($params, $default_file) {
 		if (isset($params['template'])) {
 			if (isset($params['local']) && $params['local'] == 1) {
 				// load local template
