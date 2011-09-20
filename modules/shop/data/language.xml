@@ -18,23 +18,33 @@
 		<constant name="title_currencies_add">Shop: Add currency</constant>
 		<constant name="title_currencies_update">Shop: Update currencies</constant>
 		<constant name="title_currencies_delete">Shop: Delete currency</constant>
+		<constant name="title_category_add">Shop: Add category</constant>
+		<constant name="title_category_edit">Shop: Edit category</constant>
+		<constant name="title_category_delete">Shop: Delete category</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
 		<constant name="column_rating">Rating</constant>
 		<constant name="column_currency">Currency</constant>
 		<constant name="column_name">Name</constant>
+		<constant name="column_title">Title</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
 		<constant name="label_price">Price:</constant>
 		<constant name="label_currency">Currency:</constant>
 		<constant name="label_images">Item images:</constant>
+		<constant name="label_title">Title:</constant>
+		<constant name="label_category_parent">Parent category:</constant>
+		<constant name="label_category_image">Category image:</constant>
 
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
 		<constant name="message_currency_deleted">Currency was deleted!</constant>
 		<constant name="message_currency_list_updated">ISO list of currencies was updated!</constant>
+		<constant name="message_category_saved">Category data was saved.</constant>
+		<constant name="message_category_delete">You are about to delete the following category. Items contained in specified category will not be removed! Are you sure?</constant>
+		<constant name="message_category_deleted">Category was deleted!</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="manage_categories">Manage categories</constant>
@@ -42,5 +52,7 @@
 		<constant name="update_currencies">Update currency list</constant>
 		<constant name="add_another">Add another</constant>
 		<constant name="remove">Remove</constant>
+		<constant name="add_category">Add category</constant>
+		<constant name="no_parent_category">No parent category</constant>
 	</language>
 </document>

@@ -3,7 +3,7 @@
 /**
 * Shop Item Manager
 *
-* Manager used to manipulet shop item categories. 
+* Manager used to manipulate shop item categories.
 *
 * @author MeanEYE.rcf
 */
@@ -18,6 +18,10 @@ class ShopCategoryManager extends ItemManager {
 		parent::__construct('shop_categories');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('parent', 'int');
+		$this->addProperty('image', 'int');
+		$this->addProperty('title', 'ml_varchar');
+		$this->addProperty('description', 'ml_text');
 	}
 
 	/**

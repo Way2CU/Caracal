@@ -6,8 +6,10 @@
  * @author MeanEYE.rcf
  */
 
-require_once('units/shop_item_manager.php');
 require_once('units/shop_item_handler.php');
+require_once('units/shop_item_manager.php');
+require_once('units/shop_category_handler.php');
+require_once('units/shop_category_manager.php');
 require_once('units/shop_currencies_handler.php');
 require_once('units/shop_currencies_manager.php');
 
@@ -35,7 +37,7 @@ class shop extends Module {
 
 			if (class_exists('head_tag'))
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
-			
+
 			$shop_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_shop'),
 					url_GetFromFilePath($this->path.'images/icon.png'),
@@ -165,7 +167,7 @@ class shop extends Module {
 		// global control actions
 		if (isset($params['backend_action'])) {
 			$action = $params['backend_action'];
-			 
+
 			switch ($action) {
 				case 'items':
 					$handler = ShopItemHandler::getInstance($this);
@@ -176,8 +178,11 @@ class shop extends Module {
 					$handler = ShopCurrenciesHandler::getInstance($this);
 					$handler->transferControl($params, $children);
 					break;
-					
+
 				case 'categories':
+					$handler = ShopCategoryHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
 
 				case 'special_offers':
 
@@ -186,7 +191,7 @@ class shop extends Module {
 				case 'stocks':
 
 				case 'payment_methods':
-					
+
 				default:
 					break;
 			}
@@ -205,7 +210,7 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_items` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`uid` VARCHAR(40) NOT NULL,"; 
+				`uid` VARCHAR(40) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
@@ -228,8 +233,27 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_currencies` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`currency` VARCHAR(5) NOT NULL, 
+				`currency` VARCHAR(5) NOT NULL,
 				PRIMARY KEY ( `id` )
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop categories table
+		$sql = "
+			CREATE TABLE `shop_categories` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`parent` INT(11) NOT NULL DEFAULT '0',
+				`image` INT(11),";
+
+		foreach($list as $language)
+			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+
+		foreach($list as $language)
+			$sql .= "`description_{$language}` TEXT NOT NULL ,";
+
+		$sql .="
+				PRIMARY KEY ( `id` ),
+				KEY `parent` (`parent`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 	}

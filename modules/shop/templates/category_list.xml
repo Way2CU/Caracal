@@ -4,24 +4,21 @@
 	<!-- Window Menu -->
 	<div class="main_menu">
 		<_var name="$params['link_new']"/>
-		<_var name="$params['link_update']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 150px;">
-				<_text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 90px;">
-				<_text constant="column_currency" module="shop"/>
+			<span class="column" style="width: 300px;">
+				<_text constant="column_title" module="shop"/>
 			</span>
 			<span class="column">
 				<_text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_currency_list level="0"/>
+			<!-- List Content -->
+			<_category_list/>
 		</div>
 	</div>
 </document>

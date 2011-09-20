@@ -198,19 +198,19 @@ class ShopCurrenciesHandler {
 	 * Show confirmation dialog before deleting currency
 	 */
 	private function deleteCurrency() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCurrenciesManager::getInstance();
 
-		$item = $manager->getSingleItem(array('currency'), array('id' => $id));
+		$currency = $manager->getItemValue('currency', array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_currency_delete"),
-					'name'			=> $item->currency,
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'message'		=> $this->_parent->getLanguageConstant('message_currency_delete'),
+					'name'			=> $currency,
+					'yes_text'		=> $this->_parent->getLanguageConstant('delete'),
+					'no_text'		=> $this->_parent->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_currencies_delete',
 											url_Make(
@@ -234,7 +234,7 @@ class ShopCurrenciesHandler {
 	 * Delete specified currency
 	 */
 	private function deleteCurrency_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCurrenciesManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
@@ -243,8 +243,8 @@ class ShopCurrenciesHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_currency_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->getLanguageConstant('message_currency_deleted'),
+					'button'	=> $this->_parent->getLanguageConstant('close'),
 					'action'	=> window_Close('shop_currencies_delete').";"
 									.window_ReloadContent('shop_currencies')
 				);
@@ -300,7 +300,7 @@ class ShopCurrenciesHandler {
 		} else {
 			$template = new TemplateHandler('currency_list_item.xml', $this->path.'templates/');
 		}
-		
+
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				$params = $this->getCurrencyForCode($item->currency);
@@ -355,7 +355,7 @@ class ShopCurrenciesHandler {
 
 		foreach ($this->_cache as $currency_data) {
 			if ($only_unique && in_array($currency_data['numeric_code'], $displayed)) continue;
-			
+
 			// store displayed currency
 			$displayed[] = $currency_data['numeric_code'];
 
