@@ -47,6 +47,12 @@ class TemplateHandler {
 	 * @var array
 	 */
 	private $handlers = array();
+	
+	/**
+	 * List of session variables that we protect from setting
+	 * @var array
+	 */
+	private $protected_variables = array('uid', 'logged', 'level', 'username', 'fullname', 'captcha');
 
 	/**
 	 * Constructor
@@ -148,6 +154,14 @@ class TemplateHandler {
 
 			// now parse the tag
 			switch ($tag->tagName) {
+				// handle tag used for setting session variable
+				case '_session':
+					$name = $tag->tagAttrs['name'];
+					
+					if (!in_array($name, $this->protected_variables)) {
+						$_SESSION[$name] = $tag->tagAttrs['value'];
+					}
+				
 				// transfer control to module
 				case '_module':
 					if (class_exists($tag->tagAttrs['name'])) {
