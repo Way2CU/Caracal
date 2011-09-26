@@ -25,6 +25,11 @@
 
 <!ELEMENT _section_data EMPTY>
 
+<!ELEMENT _language_data EMPTY>
+<!ATTLIST _language_data
+	param CDATA #REQUIRED
+>
+
 <!ELEMENT _if ANY>
 <!ATTLIST _if 
 	condition CDATA #REQUIRED
@@ -41,3 +46,9 @@
 	file CDATA #IMPLIED
 >
 
+<!ELEMENT _session EMPTY>
+<!ATTLIST _session
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED
+	eval CDATA #IMPLIED
+>
