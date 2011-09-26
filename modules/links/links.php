@@ -375,15 +375,13 @@ class links extends Module {
 			if (!$result['error']) {
 				$image_data = array(
 							'title'			=> $data['text'],
-							'size'			=> $_FILES['image']['size'],
-							'filename'		=> $result['filename'],
 							'visible'		=> 0,
 							'protected'		=> 1
 						);
 
-				$gallery_manager->insertData($image_data);
+				$gallery_manager->updateData($image_data, array('id' => $result['id']));
 
-				$data['image'] = $gallery_manager->getItemValue('id', array('filename' => $result['filename']));
+				$data['image'] = $result['id'];
 				$gallery_addon = ";".window_ReloadContent('gallery_images');
 			}
 		}
