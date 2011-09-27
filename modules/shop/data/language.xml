@@ -19,7 +19,7 @@
 		<constant name="title_currencies_update">Shop: Update currencies</constant>
 		<constant name="title_currencies_delete">Shop: Delete currency</constant>
 		<constant name="title_category_add">Shop: Add category</constant>
-		<constant name="title_category_edit">Shop: Edit category</constant>
+		<constant name="title_category_change">Shop: Edit category</constant>
 		<constant name="title_category_delete">Shop: Delete category</constant>
 
 		<constant name="column_name">Name</constant>
@@ -28,6 +28,7 @@
 		<constant name="column_currency">Currency</constant>
 		<constant name="column_name">Name</constant>
 		<constant name="column_title">Title</constant>
+		<constant name="column_views">Views</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
