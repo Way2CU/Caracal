@@ -16,6 +16,9 @@
 			<span class="column" style="width: 60px;">
 				<_text constant="column_price" module="shop"/>
 			</span>
+			<span class="column" style="width: 60px;">
+				<_text constant="column_views" module="shop"/>
+			</span>
 			<span class="column" style="width: 50px;">
 				<_text constant="column_rating" module="shop"/>
 			</span>

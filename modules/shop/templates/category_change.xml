@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="shop_category_add_form">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_category_parent" module="shop"/></span>
+			<select name="parent" style="width: 375px;">
+				<_if condition="$params['parent'] == 0">
+					<option value="0">
+						<_text constant="no_parent_category" module="shop"/>
+					</option>
+				</_if>
+				<_if condition="$params['parent'] > 0">
+					<option value="0" selected="selected">
+						<_text constant="no_parent_category" module="shop"/>
+					</option>
+				</_if>
+				<_category_list
+					show_all="1"
+					template="category_option.xml"
+					local="1"
+					exclude="$params['id']"
+					selected="$params['parent']"
+					eval="selected,exclude"
+				/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_title" module="shop"/></span>
+			<input type="text" name="title" class="multi-language" style="width: 375px;" maxlength="255"/>
+			<_language_data param="title"/>
+		</label>
+		<label>
+			<span><_text constant="label_description" module="shop"/></span>
+			<textarea name="description" class="multi-language" style="width: 375px; height: 170px;"/>
+			<_language_data param="description"/>
+		</label>
+		<_if condition="class_exists('gallery')">
+			<label>
+				<span><_text constant="label_category_image" module="shop"/></span>
+				<select name="image" style="width: 300px;">
+					<_image_list selected="$params['image']" eval="selected"/>
+				</select>
+			</label>
+		</_if>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('shop_category_add_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('shop_category_add_form', '[name=description]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
+	</script>
+</document>
