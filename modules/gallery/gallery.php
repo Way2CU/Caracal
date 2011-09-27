@@ -6,6 +6,11 @@
  * @author MeanEYE.rcf
  */
 
+require_once('units/gallery_manager.php');
+require_once('units/gallery_group_manager.php');
+require_once('units/gallery_container_manager.php');
+require_once('units/gallery_group_membership_manager.php');
+
 class gallery extends Module {
 	private static $_instance;
 
@@ -442,13 +447,11 @@ class gallery extends Module {
 						'group'			=> $group,
 						'title'			=> $title,
 						'description'	=> $description,
-						'size'			=> $_FILES['image']['size'],
-						'filename'		=> $result['filename'],
 						'visible'		=> $visible,
 						'slideshow'		=> $slideshow,
 					);
 
-			$manager->insertData($data);
+			$manager->updateData($data, array('id' => $result['id']));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -1972,14 +1975,22 @@ class gallery extends Module {
 	 * Saves image from specified field name and return error code
 	 *
 	 * @param string $field_name
+	 * @param integer $thumb_size
 	 * @return array
 	 */
-	public function createImage($field_name, $thumb_size) {
+	public function createImage($field_name, $thumb_size=null, $protected=0) {
 		$result = array(
 					'error'		=> false,
 					'message'	=> '',
+					'id'		=> null
 				);
+		
+		// get unique file name for this image to be stored
 		$filename = $this->_getFileName($_FILES[$field_name]['name']);
+		
+		// make sure we have the right thumbnail size
+		if (is_null($thumb_size))
+			$thumb_size = $this->settings['thumbnail_size'];
 
 		if (is_uploaded_file($_FILES[$field_name]['tmp_name'])) {
 			if (in_array(
@@ -1990,13 +2001,29 @@ class gallery extends Module {
 				// try moving file to new destination
 				if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->path.'images/'.$filename) &&
 				$this->_createThumbnail($this->path.'images/'.$filename, $thumb_size)) {
-
+					// store empty data in database
+					$manager = GalleryManager::getInstance();
+					$data = array(
+								'group'			=> null,
+								'size'			=> $_FILES[$field_name]['size'],
+								'filename'		=> $filename,
+								'visible'		=> 1,
+								'slideshow'		=> 0,
+								'protected'		=> $protected
+							);
+		
+					$manager->insertData($data);
+					$id = $manager->getInsertedID();
+					
 					$result['filename'] = $filename;
 					$result['message'] = $this->getLanguageConstant('message_image_uploaded');
+					$result['id'] = $id;
+					
 				} else {
 					$result['error'] = true;
 					$result['message'] = $this->getLanguageConstant('message_image_save_error');
 				}
+				
 			} else {
 				$result['error'] = true;
 				$result['message'] = $this->getLanguageConstant('message_image_invalid_type');
@@ -2007,6 +2034,33 @@ class gallery extends Module {
 			$result['message'] = $this->getLanguageConstant('message_image_upload_error');
 		}
 
+		return $result;
+	}
+
+	/**
+	 * Create gallery from specified uploaded field names
+	 *
+	 * @param array $name Multi-language name for newly created gallery
+	 * @param array $field_names List of field names containing image files
+	 * @param integer $thumb_size Size of thumbnail
+	 * @param boolean $protected Should images be stored as protected
+	 * @return integer Newly created gallery Id
+	 */
+	public function createGallery($name, $field_names, $thumb_size=null, $potected=false) {
+		$image_manager = GalleryManager::getInstance();
+		$gallery_manager = GalleryGroupManager::getInstance();
+		
+		// create gallery
+		$gallery_mananger->insertData(array('name' => $name));
+		$result = $gallery_manager->getInsertedID();
+		
+		foreach ($field_names as $field) {
+			$data = $this->createImage($field_name, $thumb_size);
+			
+			if (!$data['error'])
+				$image_manager->updateData(array('group' => $result), array('id' => $data['id']));
+		}
+		
 		return $result;
 	}
 
@@ -2053,131 +2107,4 @@ class gallery extends Module {
 	}
 }
 
-
-class GalleryManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('gallery');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('size', 'bigint');
-		$this->addProperty('filename', 'varchar');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('visible', 'boolean');
-		$this->addProperty('protected', 'boolean');
-		$this->addProperty('slideshow', 'boolean');
-	}
-
-	/**
-	 * Override function in order to remove required files along with database data
-	 * @param array $conditionals
-	 */
-	function deleteData($conditionals) {
-		$items = $this->getItems(array('filename'), $conditionals);
-
-		$path = dirname(__FILE__).'/';
-
-		if (count($items) > 0)
-		foreach ($items as $item) {
-			unlink($path.'images/'.$item->filename);
-			unlink($path.'thumbnails/'.$item->filename);
-		}
-
-		parent::deleteData($conditionals);
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-class GalleryGroupManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('gallery_groups');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('thumbnail', 'int');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-class GalleryContainerManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('gallery_containers');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-class GalleryGroupMembershipManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('gallery_group_membership');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('container', 'int');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
+?>
