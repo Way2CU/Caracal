@@ -56,6 +56,11 @@ class gallery extends Module {
 							'src'	=> url_GetFromFilePath($this->path.'include/gallery_toolbar.js'),
 							'type'	=> 'text/javascript'
 						));
+				$head_tag->addTag('script',
+						array(
+							'src'	=> url_GetFromFilePath($this->path.'include/backend.js'),
+							'type'	=> 'text/javascript'
+						));
 
 				if (MainLanguageHandler::getInstance()->isRTL())
 					$head_tag->addTag('link',
@@ -405,6 +410,7 @@ class gallery extends Module {
 					);
 
 		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
+		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -1073,7 +1079,7 @@ class gallery extends Module {
 		if (isset($tag_params['slideshow']))
 			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
 
-		if (isset($tag_params['group_id']))
+		if (isset($tag_params['group_id']) && !($tag_params['group_id'] == 0))
 			$conditions['group'] = fix_id($tag_params['group_id']);
 
 		if (isset($tag_params['limit']))

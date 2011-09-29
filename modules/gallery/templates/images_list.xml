@@ -5,6 +5,20 @@
 	<div class="main_menu">
 		<_var name="$params['link_new']"/>
 		<_var name="$params['link_groups']"/>
+		
+		<div class="floated">
+			<_text constant="group" module="gallery"/>
+			<select onchange="javascript: gallery_update_image_list();" id="gallery_images_group">
+				<option value="0"><_text constant="all_images" module="gallery"/></option>
+				<_group_list
+					selected="isset($_REQUEST['group']) ? fix_chars($_REQUEST['group']) : 0"
+					template="groups_option.xml"
+					local="1"
+					eval="selected"
+				/>
+			</select>
+		</div>
+		<div style="clear: both;"/>
 	</div>
 
 	<!-- Header -->
@@ -16,7 +30,11 @@
 		</div>
 		<div class="list_content thumbnails" style="height: 400px">
 			<!-- List Content -->
-			<_image_list show_invisible="1"/>
+			<_image_list 
+				show_invisible="1"
+				group_id="isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0"
+				eval="group_id"
+			/>
 		</div>
 		<script type="text/javascript">
 

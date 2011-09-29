@@ -63,6 +63,8 @@
 		<constant name="create_group">Create group</constant>
 		<constant name="create_container">Create container</constant>
 		<constant name="groups">Image groups</constant>
+		<constant name="group">Group:</constant>
+		<constant name="all_images">All images</constant>
 		<constant name="container_groups">Groups</constant>
 	</language>
 	<language short="iw">
