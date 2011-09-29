@@ -2004,7 +2004,6 @@ class gallery extends Module {
 					// store empty data in database
 					$manager = GalleryManager::getInstance();
 					$data = array(
-								'group'			=> null,
 								'size'			=> $_FILES[$field_name]['size'],
 								'filename'		=> $filename,
 								'visible'		=> 1,
@@ -2051,15 +2050,31 @@ class gallery extends Module {
 		$gallery_manager = GalleryGroupManager::getInstance();
 		
 		// create gallery
-		$gallery_mananger->insertData(array('name' => $name));
+		$gallery_manager->insertData(array('name' => $name));
 		$result = $gallery_manager->getInsertedID();
 		
 		foreach ($field_names as $field) {
-			$data = $this->createImage($field_name, $thumb_size);
+			$data = $this->createImage($field, $thumb_size);
 			
 			if (!$data['error'])
 				$image_manager->updateData(array('group' => $result), array('id' => $data['id']));
 		}
+		
+		return $result;
+	}
+	
+	/**
+	 * Create empty gallery
+	 * 
+	 * @param array $name Multi-language name
+	 * @return integer Id of newly created gallery
+	 */
+	public function createEmptyGallery($name) {
+		$gallery_manager = GalleryGroupManager::getInstance();
+
+		// create gallery
+		$gallery_manager->insertData(array('name' => $name));
+		$result = $gallery_manager->getInsertedID();
 		
 		return $result;
 	}
