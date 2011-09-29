@@ -43,6 +43,11 @@ div.window div.scrollable_list .column {
 	margin-right: 0px;
 }
 
+div.window div.main_menu div.floated {
+	display: block;
+	float: left;
+}
+
 /**
  * Dialog
  */
