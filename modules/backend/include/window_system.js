@@ -670,14 +670,7 @@ function WindowSystem($container) {
 	 * Focuses top level window
 	 */
 	this.focusTopWindow = function() {
-		var highest_id = null;
-		var highest_index = 0;
-
-		for (var window_id in this.list)
-			if (this.list[window_id].zIndex > highest_index) {
-				highest_id = this.list[window_id].id;
-				highest_index = this.list[window_id].zIndex;
-			}
+		var highest_id = this.getTopWindowId();
 
 		if (highest_id != null)
 			this.focusWindow(highest_id);
@@ -691,6 +684,33 @@ function WindowSystem($container) {
 	 */
 	this.getWindow = function(id) {
 		return this.list[id];
+	};
+	
+	/**
+	 * Get top window object
+	 * 
+	 * @return object
+	 */
+	this.getTopWindow = function() {
+		return this.getWindow(this.getTopWindowId());
+	};
+	
+	/**
+	 * Get top window Id
+	 * 
+	 * @return string
+	 */
+	this.getTopWindowId = function() {
+		var highest_id = null;
+		var highest_index = 0;
+
+		for (var window_id in this.list)
+			if (this.list[window_id].zIndex > highest_index) {
+				highest_id = this.list[window_id].id;
+				highest_index = this.list[window_id].zIndex;
+			}
+
+		return highest_id;
 	};
 
 	/**

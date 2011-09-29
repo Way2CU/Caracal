@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
+	<script type="text/javascript">
+		<![CDATA[
+			if (window_system != undefined) {
+				var top_window = window_system.getTopWindow();
+
+				if (top_window != null && top_window.id != 'login_window') {
+					window.location.reload();
+				}
+			}
+		]]>
+	</script>
 	<form action="$_SERVER['PHP_SELF']" method="POST" eval="action">
 		<div style="margin-bottom: 15px;">
 			<div class="icon">
