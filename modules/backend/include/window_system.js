@@ -224,9 +224,10 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		$close_button.click(function() {
 			self.close();
 		});
+		
+		this.$title.append($close_button);
 	}
 
-	this.$title.append($close_button);
 
 	// configure interface
 	this.$container.css({
