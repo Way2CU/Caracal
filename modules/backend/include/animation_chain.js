@@ -30,11 +30,12 @@
 /**
  * Constructor function
  *
- * @param function callback		Optional user defined callback
- * @param boolean async			Asynchronous chain starts all animation at the same time
+ * @param function callback		Optional user defined callback.
+ * @param boolean async			Asynchronous chain starts all animation at the same time. Default false
+ * @param integer repeat		Number of times to repeat animation. Default 0
  * @return AnimationChain
  */
-function AnimationChain(callback, async) {
+function AnimationChain(callback, async, repeat) {
 	var self = this;  // used internally for nested functions
 
 	this.callback = callback;
@@ -42,6 +43,8 @@ function AnimationChain(callback, async) {
 	this.playing = false;
 	this.can_continue = true;
 	this.async = async;
+	this.repeat = (repeat != undefined) ? repeat : 1;
+	this.current_cycle = this.repeat;
 
 	this.objects = [];
 	this.params = [];
@@ -59,9 +62,19 @@ function AnimationChain(callback, async) {
 
 		// exit animation loop and execute callback if set
 		if (step > self.objects.length - 1) {
-			self.current_step = -1;
-			if (self.callback != undefined || self.callback != null) self.callback();
-			return;
+			// modify variables
+			self.current_step = 0;
+			self.current_cycle--;
+
+			// reset current index
+			step = 0;
+
+			// exit only if target number of cycles is reached
+			if (self.current_cycle == 0) {
+				self.current_cycle = self.repeat;
+				if (self.callback != undefined || self.callback != null) self.callback();
+				return;
+			}
 		}
 
 		// delay animation if specified
