@@ -22,7 +22,7 @@ function LanguageHandler() {
 	this.backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 
 	// local language constant cache
-	this.cache = [];
+	this.cache = {};
 
 	/**
 	 * Get language list
@@ -50,7 +50,7 @@ function LanguageHandler() {
 	this.isRTL = function(language) {
 		// in case language is not specified use current
 		if (!language)
-			var language = this.current_language;
+			language = this.current_language;
 
 		// return boolean result
 		return !(this.rtl_languages.indexOf(language) == -1);
