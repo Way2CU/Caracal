@@ -388,15 +388,27 @@ class gallery extends Module {
 		$template = new TemplateHandler('images_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
+		$url_new = url_Make(
+						'transfer_control', 
+						_BACKEND_SECTION_, 
+						array('backend_action', 'images_upload'), 
+						array('module', $this->name),
+						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
+					);
+		
+		$link_new = url_MakeHyperlink(
+					$this->getLanguageConstant('upload_images'),		
+					window_Open(
+						'gallery_images_upload', 
+						400, 
+						$this->getLanguageConstant('title_images_upload'), 
+						true, false, 
+						$url_new
+					)
+				);
+		
 		$params = array(
-					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('upload_images'),
-										'gallery_images_upload', 400,
-										$this->getLanguageConstant('title_images_upload'),
-										true, false,
-										$this->name,
-										'images_upload'
-									),
+					'link_new'		=> $link_new,
 					'link_groups'	=> url_MakeHyperlink(
 										$this->getLanguageConstant('groups'),
 										window_Open( // on click open window
@@ -2046,25 +2058,15 @@ class gallery extends Module {
 	 * Create gallery from specified uploaded field names
 	 *
 	 * @param array $name Multi-language name for newly created gallery
-	 * @param array $field_names List of field names containing image files
-	 * @param integer $thumb_size Size of thumbnail
-	 * @param boolean $protected Should images be stored as protected
 	 * @return integer Newly created gallery Id
 	 */
-	public function createGallery($name, $field_names, $thumb_size=null, $potected=false) {
+	public function createGallery($name) {
 		$image_manager = GalleryManager::getInstance();
 		$gallery_manager = GalleryGroupManager::getInstance();
 		
 		// create gallery
 		$gallery_manager->insertData(array('name' => $name));
 		$result = $gallery_manager->getInsertedID();
-		
-		foreach ($field_names as $field) {
-			$data = $this->createImage($field, $thumb_size);
-			
-			if (!$data['error'])
-				$image_manager->updateData(array('group' => $result), array('id' => $data['id']));
-		}
 		
 		return $result;
 	}
