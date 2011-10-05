@@ -46,6 +46,9 @@
 		<constant name="message_category_saved">Category data was saved.</constant>
 		<constant name="message_category_delete">You are about to delete the following category. Items contained in specified category will not be removed! Are you sure?</constant>
 		<constant name="message_category_deleted">Category was deleted!</constant>
+		<constant name="message_item_saved">Shop item data was saved.</constant>
+		<constant name="message_images_upload">Once saved system will automatically create new gallery and assign it to this item. If, later, you wish to add or remove images for this shop item you will need to use gallery module.</constant>
+		<constant name="message_clear_cart">You are about to remove all items from shopping cart. Are you sure about that?</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="manage_categories">Manage categories</constant>
@@ -55,5 +58,12 @@
 		<constant name="remove">Remove</constant>
 		<constant name="add_category">Add category</constant>
 		<constant name="no_parent_category">No parent category</constant>
+		<constant name="show_shopping_cart">Show shopping cart</constant>
+		<constant name="hide_shopping_cart">Hide shopping cart</constant>
+		<constant name="clear">Clear</constant>
+		<constant name="checkout">Checkout</constant>
+		<constant name="empty_shopping_cart">There are no items in shopping cart.</constant>
+		<constant name="total_amount"><![CDATA[Total: <span><b>%sum</b> %currency</span> in <b>%count</b> item(s)]]></constant>
+
 	</language>
 </document>

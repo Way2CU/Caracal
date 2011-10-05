@@ -2,9 +2,6 @@
 
 /**
  * Currency converter and manager
- *
- * http://www.google.com/ig/calculator?hl=en&q=100EUR%3D%3Frsd
- *
  */
 
 class ShopCurrenciesHandler {
@@ -15,6 +12,7 @@ class ShopCurrenciesHandler {
 	private $path;
 
 	private $update_url = 'http://www.currency-iso.org/dl_iso_table_a1.xml';
+	private $convert_url = 'http://www.google.com/ig/calculator?q={amount}{from}%3D%3F{to}';
 
 	/**
 	* Constructor

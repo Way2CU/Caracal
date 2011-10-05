@@ -27,9 +27,7 @@
 			<div style="clear:both;"/>
 		</div>
 		<label>
-			<span><_text constant="label_images" module="shop"/></span>
-			<div id="shop_item_add_images">
-			</div>
+			<_text constant="message_images_upload" module="shop"/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
@@ -48,8 +46,5 @@
 				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image')
 				.addControl('downloads', 'link');
-
-		// create multiple image uploader
-		var uploader = new MultipleImagesUpload('shop_item_add_images', 'images');
 	</script>
 </document>

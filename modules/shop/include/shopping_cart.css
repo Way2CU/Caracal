@@ -1,0 +1,200 @@
+/**
+ * Shopping Cart Style Sheet
+ *
+ * Copyright (c) 2011. by Way2CU
+ * Author: Mladen Mijatov
+ */
+@CHARSET "UTF-8";
+
+div#shopping_cart {
+	display: block;
+	width: 250px;
+	height: 100%;
+
+	position: fixed;
+	top: 0px;
+	right: -250px;
+
+	color: white;
+}
+
+div#shopping_cart *:not(input):not(select) {
+	-moz-user-drag: none;
+	-webkit-user-drag: none;
+	user-drag: none;
+
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+
+	cursor: default;
+}
+
+div#shopping_cart div.container {
+	display: block;
+	width: 230px;
+
+	padding: 10px;
+
+	position: relative;
+
+	background-color: #30607F;
+	background-color: rgba(48, 96, 127, 0.7);
+}
+
+div#shopping_cart div.container a.toggle_button {
+	display: block;
+	width: 40px;
+	height: 40px;
+
+	position: absolute;
+	top: 0px;
+	left: -40px;
+
+	border-radius: 0px 0px 0px 10px;
+	background-color: #30607F;
+	background-color: rgba(48, 96, 127, 0.7);
+	background-image: url(../images/shopping_cart.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+div#shopping_cart div.container span.item_count {
+	display: block;
+	width: 20px;
+
+	padding: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+
+	position: absolute;
+	top: 45px;
+	left: -30px;
+
+	border-radius: 5px 0px 0px 5px;
+	background-color: #30607F;
+	background-color: rgba(48, 96, 127, 0.7);
+
+	color: white;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+}
+
+div#shopping_cart div.container div.top_menu {
+	display: block;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+
+	border-bottom: 1px solid white;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+	text-align: right;
+}
+
+div#shopping_cart div.container div.top_menu a {
+	display: inline-block;
+
+	margin-left: 5px;
+	padding: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+
+	border: 1px solid #487896;
+	border-right: 1px solid #1F3E52;
+	border-bottom: 1px solid #1F3E52;
+	border-radius: 1px;
+	background-color: #30607F;
+
+	color: white;
+	font-size: 14px;
+}
+
+div#shopping_cart div.container div.top_menu a:active {
+	border: 1px solid #1F3E52;
+	border-right: 1px solid #487896;
+	border-bottom: 1px solid #487896;
+}
+
+div#shopping_cart div.container div.top_menu a.checkout {
+	padding-left: 30px;
+
+	background-image: url(../images/checkout.png);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}
+
+div#shopping_cart div.container div.content {
+	display: block;
+	min-height: 30px;
+	max-height: 90%;
+
+	overflow-y: auto;
+}
+
+div#shopping_cart div.container div.content::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+div#shopping_cart div.container div.content::-webkit-scrollbar-track {
+	padding-top: 2px;
+}
+
+div#shopping_cart div.container div.content::-webkit-scrollbar-thumb {
+	padding: 2px;
+	border-radius: 5px;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+div#shopping_cart div.container div.content::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(255, 255, 255);
+}
+
+div#shopping_cart div.container div.content div.empty{
+	display: block;
+	padding: 5px;
+
+	color: white;
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 13px;
+	font-style: italic;
+	text-align: center;
+}
+
+div#shopping_cart div.container div.content div.item {
+	display: block;
+
+	position: relative;
+	overflow: hidden;
+
+	color: white;
+}
+
+div#shopping_cart div.container div.content div.item.loading {
+	background-image: url(../images/loading.gif);
+	background-position: right top;
+	background-repeat: no-repeat;
+}
+
+
+div#shopping_cart div.container div.content div.item div.name {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+div#shopping_cart div.container div.summary {
+	display: block;
+	margin-top: 5px;
+	padding-top: 3px;
+
+	border-top: 1px solid white;
+	border-top: 1px solid rgba(255, 255, 255, 0.3);
+
+	font-size: 12px;
+	text-align: right;
+}
+
+div#shopping_cart div.container div.summary span {
+	font-size: 14px;
+}

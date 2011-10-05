@@ -15,6 +15,7 @@ require_once('units/shop_currencies_manager.php');
 
 class shop extends Module {
 	private static $_instance;
+	private $_payment_providers;
 
 	/**
 	 * Constructor
@@ -24,15 +25,19 @@ class shop extends Module {
 
 		parent::__construct(__FILE__);
 
+		// create payment providers container
+		$this->_payment_providers = array();
+
+
 		// load module style and scripts
-		if (class_exists('head_tag')) {
+		if (class_exists('head_tag') && $section != 'backend') {
 			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
-		if (class_exists('backend')) {
+		if (class_exists('backend') && $section == 'backend') {
 			$backend = backend::getInstance();
 
 			if (class_exists('head_tag'))
@@ -50,7 +55,7 @@ class shop extends Module {
 								url_GetFromFilePath($this->path.'images/items.png'),
 								window_Open( // on click open window
 											'shop_items',
-											490,
+											560,
 											$this->getLanguageConstant('title_manage_items'),
 											true, true,
 											backend_UrlMake($this->name, 'items')
@@ -160,6 +165,14 @@ class shop extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'json_get_item':
+					$handler = ShopItemHandler::getInstance($this);
+					$handler->json_GetItem();
+					break;
+
+				case 'json_get_currency':
+					break;
+
 				default:
 					break;
 			}
@@ -210,10 +223,10 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_items` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`uid` VARCHAR(40) NOT NULL,";
+				`uid` VARCHAR(13) NOT NULL,";
 
 		foreach($list as $language)
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+			$sql .= "`name_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
 
 		foreach($list as $language)
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
@@ -222,10 +235,17 @@ class shop extends Module {
 				`gallery` INT(11) NOT NULL,
 				`author` INT(11) NOT NULL,
 				`views` INT(11) NOT NULL,
+				`price` DECIMAL(8,2) NOT NULL,
+				`votes_up` INT(11) NOT NULL,
+				`votes_down` INT(11) NOT NULL,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
+				`deleted` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
-				KEY `visible` (`visible`)
+				KEY `visible` (`visible`),
+				KEY `deleted` (`deleted`),
+				KEY `uid` (`uid`),
+				KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
@@ -264,8 +284,16 @@ class shop extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "";
-
+		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`;";
 		if ($db_active == 1) $db->query($sql);
+	}
+
+	/**
+	 * Method used by payment providers to register them selfs
+	 *
+	 * @param string $name
+	 * @param object $module
+	 */
+	public function registerPaymentMethod($name, $module) {
 	}
 }

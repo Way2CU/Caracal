@@ -46,8 +46,8 @@ class ShopCategoryHandler {
 				$this->addCategory();
 				break;
 
-			case 'edit':
-				$this->editCategory();
+			case 'change':
+				$this->changeCategory();
 				break;
 
 			case 'save':
@@ -123,9 +123,9 @@ class ShopCategoryHandler {
 	}
 
 	/**
-	 * Show for for editing existing category
+	 * Show for for changing existing category
 	 */
-	private function editCategory() {
+	private function changeCategory() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCategoryManager::getInstance();
 
@@ -133,7 +133,7 @@ class ShopCategoryHandler {
 
 		if (is_object($item)) {
 			// create template
-			$template = new TemplateHandler('category_edit.xml', $this->path.'templates/');
+			$template = new TemplateHandler('category_change.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
 			// register tag handlers
@@ -147,7 +147,7 @@ class ShopCategoryHandler {
 						'title'			=> unfix_chars($item->title),
 						'description'	=> $item->description,
 						'form_action'	=> backend_UrlMake($this->name, 'categories', 'save'),
-						'cancel_action'	=> window_Close('shop_category_edit')
+						'cancel_action'	=> window_Close('shop_category_change')
 					);
 
 			// parse template
@@ -184,7 +184,7 @@ class ShopCategoryHandler {
 			// update existing data
 			$manager->updateData($data, array('id' => $id));
 
-			$window = 'shop_category_edit';
+			$window = 'shop_category_change';
 		}
 
 		// show message
@@ -383,16 +383,16 @@ class ShopCategoryHandler {
 							'item_change'	=> url_MakeHyperlink(
 										$this->_parent->getLanguageConstant('change'),
 										window_Open(
-											'shop_category_edit', 	// window id
+											'shop_category_change', 	// window id
 											400,			// width
-											$this->_parent->getLanguageConstant('title_category_edit'), // title
+											$this->_parent->getLanguageConstant('title_category_change'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
 												'backend_module',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
-												array('sub_action', 'edit'),
+												array('sub_action', 'change'),
 												array('id', $item->id)
 											)
 										)

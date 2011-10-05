@@ -21,13 +21,17 @@ class ShopItemManager extends ItemManager {
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('uid', 'varchar');
-		$this->addProperty('title', 'ml_varchar');
+		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
 		$this->addProperty('gallery', 'int');
 		$this->addProperty('author', 'int');
 		$this->addProperty('views', 'int');
+		$this->addProperty('price', 'decimal');
+		$this->addProperty('votes_up', 'int');
+		$this->addProperty('votes_down', 'int');
 		$this->addProperty('timestamp', 'timestamp');
 		$this->addProperty('visible', 'boolean');
+		$this->addProperty('deleted', 'boolean');
 	}
 
 	/**

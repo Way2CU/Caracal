@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 250px;">
+			<_var name="$params['name'][$language]"/>
+		</span>
+		<span class="column" style="width: 60px;">
+			<_var name="$params['price']"/>
+		</span>
+		<span class="column" style="width: 60px;">
+			<_var name="$params['views']"/>
+		</span>
+		<span class="column" style="width: 50px;">
+			<_var name="$params['rating']"/>
+		</span>
+		<span class="column">
+			<_text constant="column_options"/>
+		</span>
+	</div>
+</document>
