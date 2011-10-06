@@ -15,8 +15,6 @@ div.window_inactive div.content input[type=checkbox] {
 
 div.window div.title {
 	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
 }
 
 div.window.loading div.title {
@@ -29,8 +27,6 @@ div.window div.title a.close_button {
 
 div.window div.content {
 	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
 }
 
 div.window div.toolbar a.button {

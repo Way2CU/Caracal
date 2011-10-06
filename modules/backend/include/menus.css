@@ -89,12 +89,9 @@ div#main_menu ul#navigation li > ul {
 
 	border: 1px solid #0d2748;
 	border-radius: 0px 6px 6px 6px;
-	-moz-border-radius: 0px 6px 6px 6px;
 	background-color: rgba(13, 39, 72, 0.9);
 
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 div#main_menu ul#navigation li:hover > ul {
@@ -125,7 +122,6 @@ div#main_menu ul#navigation li > ul li a {
 
 div#main_menu ul#navigation li > ul li a:hover {
 	border-radius: 3px;
-	-moz-border-radius: 3px;
 	background-color: #267ece;
 
 	color: white;

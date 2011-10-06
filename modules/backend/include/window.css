@@ -20,14 +20,9 @@ div.window div.title {
 	border: 1px solid #CBCBCB;
 	border-bottom: 0px;
 	border-radius: 7px 7px 0px 0px;
-	-moz-border-radius: 7px 7px 0px 0px;
 
 	background-color: #1A1A1A;
-	-webkit-background-clip: padding-box;
-
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 
 	color: #BFBFBF;
 	font-weight: bold;
@@ -50,7 +45,6 @@ div.window div.title a.close_button {
 	float: right;
 
 	border-radius: 2px;
-	-moz-border-radius: 2px;
 	background-color: #1A1A1A;
 	background-image: url(../images/close_normal.gif);
 	background-position: center center;
@@ -76,12 +70,9 @@ div.window div.content {
 	border: 1px solid #CBCBCB;
 	border-top: 0px;
 	border-radius: 0px 0px 7px 7px;
-	-moz-border-radius: 0px 0px 7px 7px;
 	background-color: #EFEFEF;
 
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 }
 
 div.window div.main_menu {
@@ -92,7 +83,6 @@ div.window div.main_menu {
 
 	border: 1px solid #A3ACD8;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
 	background-color: #B8BFE1;
 
 	color: #1A1A1A;
@@ -113,7 +103,6 @@ div.window div.main_menu a {
 
 div.window div.main_menu a:hover {
 	border-radius: 3px;
-	-moz-border-radius: 3px;
 	background-color: #2E3E6A;
 
 	color: white;
@@ -131,7 +120,6 @@ div.window div.main_menu div.floated input {
 	
 	border: 1px solid #A3A9C7;
 	border-radius: 1px;
-	-moz-border-radius: 1px;
 	background-color: #C8D0F5;
 	
 	color: black;
@@ -266,7 +254,6 @@ div.window div.button_bar {
 
 	border: 1px solid #B8B8B8;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
 	background-color: #D4D4D4;
 
 	text-align: center;
@@ -292,7 +279,6 @@ div.window div.scrollable_list div.list_header {
 	border: 1px solid #B8B8B8;
 	border-bottom: 0px;
 	border-radius: 4px 4px 0px 0px;
-	-moz-border-radius: 4px 4px 0px 0px;
 	background-color: #E5E5E5;
 }
 
@@ -360,7 +346,6 @@ div.window div.scrollable_list .column a {
 
 	border: 1px solid #CCCCCC;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
 	background-color: #FFFFFF;
 
 	color: #595959;
@@ -388,7 +373,6 @@ div.window div.language_selector {
 
 	border: 1px solid #B8B8B8;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
 	background-color: #D4D4D4;
 
 	text-align: center;
@@ -409,7 +393,6 @@ div.window div.language_selector span {
 	padding-right: 5px;
 
 	border-radius: 3px;
-	-moz-border-radius: 3px;
 
 	cursor: pointer;
 }
@@ -454,7 +437,6 @@ div.window div.toolbar a.button {
 
 div.window div.toolbar a.button:hover {
 	border-radius: 2px;
-	-moz-border-radius: 2px;
 	background-color: #3E52D6;
 }
 
@@ -486,7 +468,6 @@ div.dialog div.container {
 	position: absolute;
 
 	border-radius: 5px;
-	-moz-border-radius: 5px;
 	border: 1px solid white;
 	background-color: #EFEFEF;
 
@@ -505,7 +486,6 @@ div.dialog div.container div.title_bar {
 	padding: 3px;
 
 	border-radius: 3px;
-	-moz-border-radius: 3px;
 	background-color: #1A1A1A;
 }
 
@@ -529,7 +509,6 @@ div.dialog div.container div.title_bar a.close_button {
 	float: right;
 
 	border-radius: 2px;
-	-moz-border-radius: 2px;
 	background-color: #1A1A1A;
 	background-image: url(../images/close_normal.gif);
 	background-position: center center;
@@ -574,7 +553,6 @@ div#login_window div.error_message {
 	padding-right: 5px;
 
 	border-radius: 5px;
-	-moz-border-radius: 5px;
 	background-color: #CC5858;
 
 	color: yellow;

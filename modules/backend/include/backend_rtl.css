@@ -17,11 +17,7 @@ div#main_menu ul#navigation li > ul {
 	right: 0px;
 
 	border-radius: 6px 0px 6px 6px;
-	-moz-border-radius: 6px 0px 6px 6px;
-
 	box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 ol#language_menu {
