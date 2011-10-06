@@ -6,8 +6,6 @@
  * @author MeanEYE
  */
 
-if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
-
 class LanguageHandler {
 	private $engine;
 	private $active;

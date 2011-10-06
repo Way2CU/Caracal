@@ -22,7 +22,6 @@
  * @author Mladen Mijatov <meaneye.rcf@gmail.com>
  */
 
-define('_DOMAIN', 'RCF_WebEngine');
 define('_BASEPATH', dirname(__FILE__));
 
 require_once('units/doctypes.php');

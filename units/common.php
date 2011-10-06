@@ -1,7 +1,5 @@
 <?php
 
-if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
-
 /**
  * Remove illegal characters and tags from input strings to avoid XSS.
  * It also replaces few tags such as [b] [small] [big] [i] [u] [tt] into

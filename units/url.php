@@ -1,7 +1,5 @@
 <?php
 
-if (!defined('_DOMAIN') || _DOMAIN !== 'RCF_WebEngine') die ('Direct access to this file is not allowed!');
-
 /**
  * Make URL from specified parameters. If you need more parameters than default
  * action and section add them as array pair of param and value.
