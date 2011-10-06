@@ -1,8 +1,8 @@
 <?php
 
 /**
- * RCF Group - WebEngine
- * Modular Core Engine Copyright (c) 2010. by MeanEYE
+ * Modular Web Engine
+ * Copyright (c) 2011. by Mladen Mijatov
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
- * @copyright RCF Group
- * @author MeanEYE
+ * @author Mladen Mijatov <meaneye.rcf@gmail.com>
  */
 
 define('_DOMAIN', 'RCF_WebEngine');
 define('_BASEPATH', dirname(__FILE__));
 
-define('_HTML_401', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'."\n");
-define('_HTML_5', '<!DOCTYPE html>'."\n");
-define('_XML_1', '<?xml version="1.0" encoding="UTF-8"?>'."\n");
-
+require_once('units/doctypes.php');
 require_once('units/config.php');
 require_once('units/rcf_db/rcf_sql_core.php');
 require_once('units/rcf_db/rcf_sql_mysql.php');
