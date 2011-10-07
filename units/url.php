@@ -11,16 +11,21 @@
  * @author MeanEYE
  */
 function url_Make($action, $section) {
-	$res = $_SERVER['PHP_SELF'].'?section='.urlencode($section);
-	if (!empty($action)) $res .= '&amp;action='.urlencode($action);
+	$result = $_SERVER['PHP_SELF'];
+
+	if (!empty($section) && $section != 'home')
+		$result .= '?section='.urlencode($section);
+	
+	if (!empty($action) &&  $action != '_default') 
+		$result .= '&amp;action='.urlencode($action);
 
 	if (func_num_args() > 2)
 		for ($i=2; $i<func_num_args(); $i++) {
 			$arg = func_get_arg($i);
-			$res .= '&amp;'.$arg[0].'='.urlencode($arg[1]);
+			$result .= '&amp;'.$arg[0].'='.urlencode($arg[1]);
 		}
 
-	return $res;
+	return $result;
 }
 
 /**
