@@ -38,6 +38,7 @@ class shop extends Module {
 
 		// register backend
 		if (class_exists('backend') && $section == 'backend') {
+			$head_tag = head_tag::getInstance();
 			$backend = backend::getInstance();
 
 			if (class_exists('head_tag'))
