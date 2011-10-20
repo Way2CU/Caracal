@@ -2,13 +2,36 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language short="en">
+		<constant name="menu_contact">Contact form</constant>
+		<constant name="menu_settings">Configure defaults</constant>
+	
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
 		<constant name="message_error_no_address">Error sending data! No default recipient was specified by the system.</constant>
+		<constant name="message_default">This data will be used for sending and/or receiving emails depending on how your site is configured. </constant>
+		<constant name="message_saved">Configuration was saved!</constant>
+		
+		<constant name="title_settings">Contact form: Settings</constant>
+		
+		<constant name="label_default_name">Name:</constant>
+		<constant name="label_default_address">Email address:</constant>
+		<constant name="label_default_subject">Subject:</constant>
 	</language>
 	<language short="iw">
+		<constant name="menu_contact">Contact form</constant>
+		<constant name="menu_settings">Configure defaults</constant>
+
 		<constant name="message_sent">מידע נשלח בהצלחה!</constant>
 		<constant name="message_error">נוצרה בעיה בשליחת מידע אנא בדוק השדות ונסה שנית!</constant>
 		<constant name="message_error_no_address">Error sending data! No default recipient was specified by the system.</constant>
+
+		<constant name="message_default">This data will be used for sending and/or receiving emails depending on how your site is configured. </constant>
+		<constant name="message_saved">Configuration was saved!</constant>
+		
+		<constant name="title_settings">Contact form: Settings</constant>
+		
+		<constant name="label_default_name">Name:</constant>
+		<constant name="label_default_address">Email address:</constant>
+		<constant name="label_default_subject">Subject:</constant>
 	</language>
 </document>

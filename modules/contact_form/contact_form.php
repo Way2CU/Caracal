@@ -20,7 +20,37 @@ class contact_form extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $section;
+		
 		parent::__construct(__FILE__);
+		
+		// register backend
+		if ($section == 'backend' && class_exists('backend')) {
+			$backend = backend::getInstance();
+
+			$contact_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_contact'),
+					url_GetFromFilePath($this->path.'images/icon.png'),
+					'javascript:void(0);',
+					$level=5
+				);
+			
+			$contact_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_settings'),
+								url_GetFromFilePath($this->path.'images/settings.png'),
+
+								window_Open( // on click open window
+											'contact_form_settings',
+											400,
+											$this->getLanguageConstant('title_settings'),
+											true, true,
+											backend_UrlMake($this->name, 'settings_show')
+										),
+								$level=5
+							));	
+
+			$backend->addMenu($this->name, $contact_menu);
+		}		
 	}
 
 	/**
@@ -50,7 +80,7 @@ class contact_form extends Module {
 				case 'send_from_ajax':
 					$this->sendFromAJAX();
 					break;
-
+					
 				default:
 					break;
 			}
@@ -58,6 +88,14 @@ class contact_form extends Module {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
+				case 'settings_show':
+					$this->showSettings();
+					break;
+
+				case 'settings_save':
+					$this->saveSettings();
+					break;
+					
 				default:
 					break;
 			}
@@ -68,10 +106,10 @@ class contact_form extends Module {
 	 */
 	public function onInit() {
 		global $db_active, $db;
-
-		$sql = "";
-
-		if ($db_active == 1) $db->query($sql);
+		
+		// $this->settings['default_address']
+		// $this->settings['default_subject']
+		// $this->settings['default_name']
 	}
 
 	/**
@@ -79,10 +117,6 @@ class contact_form extends Module {
 	 */
 	public function onDisable() {
 		global $db_active, $db;
-
-		$sql = "";
-
-		if ($db_active == 1) $db->query($sql);
 	}
 
 	/**
@@ -205,6 +239,61 @@ class contact_form extends Module {
 
 		print json_encode($result);
 	}
+	
+	/**
+	 * Send mail from different module with specified parameters
+	 * 
+	 * @param string $to
+	 * @param string $subject
+	 * @param string $text_body
+	 * @param string $html_body
+	 */
+	public function sendFromModule($to, $subject, $text_body, $html_body) {
+		$headers = array();
+		$headers['X-Mailer'] = "RCF-CMS/1.0";
+		
+		// prepare subject
+		if ($subject == '' or is_null($subject))
+			$subject = $this->settings['default_subject'];
+		
+		$subject = "=?utf-8?B?".base64_encode($subject)."?=";
+		
+		// prepare sender
+		$name = "=?utf-8?B?".base64_encode($this->settings['default_name'])."?=";
+		$address = $this->settings['default_address'];
+		$headers['From'] = "{$name} <{$address}>";
+		
+		// create boundary string
+		$boundary = md5(time().'--cms--'.(rand() * 10000));
+		$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}";
+		
+		// create mail body
+		if (!empty($html_body)) {
+			// make plain text body
+			$body .= "--{$boundary}\n";
+			$body .= "Content-Type: text/plain; charset=UTF-8\n";
+			$body .= "Content-Transfer-Encoding: base64\n\n";
+			$body .= base64_encode($text_body)."\n";
+	
+			// make html body
+			$body .= "--{$boundary}\n";
+			$body .= "Content-Type: text/html; charset=UTF-8\n";
+			$body .= "Content-Transfer-Encoding: base64\n\n";
+			$body .= base64_encode($html_body)."\n";
+	
+			// make ending boundary
+			$body .= "--{$boundary}--\n";
+			
+		} else {
+			// no HTML specified, use plain text
+			$body = $text_body;
+		}		
+		
+		// get headers string
+		$headers_string = $this->_makeHeaders($headers);
+		
+		return mail($to, $subject, $body, $headers_string);
+	}
 
 	/**
 	 * Perform send email
@@ -306,5 +395,49 @@ class contact_form extends Module {
 		$result .= '</table>';
 
 		return $result;
+	}
+	
+	/**
+	 * Show settings form
+	 */
+	private function showSettings() {
+		trigger_error('came');
+		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
+						'cancel_action'	=> window_Close('contact_form_settings')
+					);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Save settings
+	 */
+	private function saveSettings() {
+		$default_name = fix_chars($_REQUEST['name']);
+		$default_address = fix_chars($_REQUEST['address']);
+		$default_subject = fix_chars($_REQUEST['subject']);
+
+		$this->saveSetting('default_name', $default_name);
+		$this->saveSetting('default_address', $default_address);
+		$this->saveSetting('default_subject', $default_subject);
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('contact_form_settings')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 }
