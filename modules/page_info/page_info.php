@@ -109,7 +109,7 @@ class page_info extends Module {
 		}
 
 		// register backend
-		if (class_exists('backend')) {
+		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
 
 			$menu = $backend->getMenu($backend->name);
