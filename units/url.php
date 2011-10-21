@@ -104,7 +104,7 @@ function url_SetRefresh($url='', $seconds=2) {
  * @return string
  */
 function url_GetFromFilePath($path) {
-	$base_url = dirname($_SERVER['PHP_SELF']);
+	$base_url = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 	$base_url = preg_replace("/\/$/i", "", $base_url);
 
 	$path = str_replace('\\', '/', $path);
