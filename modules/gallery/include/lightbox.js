@@ -486,13 +486,13 @@ function LightBox(selector, show_title, show_description, show_controls) {
 		var description = image.find('span.description').html();
 
 		// if title is empty, try to find it elsewere
-		if (title == '') {
+		if (title == '' || title == undefined) {
 			var tmp = image.find('img');
 			if (tmp.length > 0)
 				title = tmp.eq(0).attr('alt');
 		}
 
-		if (title == '') {
+		if (title == '' || title == undefined) {
 			var tmp = image.find('span.title');
 			if (tmp.length > 0)
 				title = tmp.eq(0).html();
