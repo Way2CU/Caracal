@@ -531,6 +531,22 @@ div.dialog div.container div.content {
 }
 
 /**
+ * Floated boxes
+ */
+div.window div.box {
+	display: block;
+}
+
+div.window div.box.left {
+	float: left;
+	margin-right: 7px;
+}
+
+div.window div.box.right {
+	float: left;
+}
+
+/**
  * Login Window
  */
 

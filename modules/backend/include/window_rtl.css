@@ -84,3 +84,16 @@ div.window div.content label.horizontal {
 	margin-right: 0px;
 }
  
+/**
+ * Floated boxes
+ */
+
+div.window div.box.left {
+	float: right;
+	margin-right: 0px;
+	margin-left: 7px;
+}
+
+div.window div.box.right {
+	float: right;
+}
