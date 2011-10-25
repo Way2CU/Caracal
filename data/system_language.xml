@@ -20,6 +20,7 @@
 		<constant name="open">Otvori</constant>
 		<constant name="close">Zatvori</constant>
 		<constant name="reset">Resetuj</constant>
+		<constant name="filter">Filtriraj</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server je naišao na sledeću grešku prilikom obrade podataka:</constant>
@@ -52,6 +53,7 @@
 		<constant name="open">Отвори</constant>
 		<constant name="close">Затвори</constant>
 		<constant name="reset">Ресетуј</constant>
+		<constant name="filter">Филтрирај</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Сервер је наишао на следећу грешку приликом обраде података:</constant>
@@ -83,6 +85,7 @@
 		<constant name="open">Open</constant>
 		<constant name="close">Close</constant>
 		<constant name="reset">Reset</constant>
+		<constant name="filter">Filter</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
@@ -114,6 +117,7 @@
 		<constant name="open">פתח</constant>
 		<constant name="close">סגור</constant>
 		<constant name="reset">אפס</constant>
+		<constant name="filter">לסנן</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
