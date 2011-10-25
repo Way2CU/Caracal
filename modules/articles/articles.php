@@ -658,14 +658,7 @@ class articles extends Module {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		}
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('article.xml', $this->path.'templates/');
-		}
-
+		$template = $this->loadTemplate($tag_params, 'article.xml');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
 
@@ -732,14 +725,8 @@ class articles extends Module {
 								$group_list
 							);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
-		}
-
+		// load template
+		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article', &$this, 'tag_Article');
 		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
@@ -913,14 +900,8 @@ class articles extends Module {
 
 		$manager = ArticleGroupManager::getInstance();
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('group.xml', $this->path.'templates/');
-		}
-
+		// load template
+		$template = $this->loadTemplate($tag_params, 'group.xml');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
 
@@ -957,14 +938,8 @@ class articles extends Module {
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('group_list_item.xml', $this->path.'templates/');
-		}
-
+		// load template
+		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
 
