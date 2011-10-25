@@ -38,7 +38,7 @@ class backend extends Module {
 	 * @return backend
 	 */
 	protected function __construct() {
-		global $section;
+		global $section, $language;
 
 		parent::__construct(__FILE__);
 
