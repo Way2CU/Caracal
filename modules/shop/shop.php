@@ -272,6 +272,18 @@ class shop extends Module {
 
 		// create shop currencies table
 		$sql = "
+			CREATE TABLE `shop_item_membership` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`category` INT(11) NOT NULL,
+				`item` INT(11) NOT NULL,
+				PRIMARY KEY ( `id` ),
+				KEY `category` (`category`),
+				KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop currencies table
+		$sql = "
 			CREATE TABLE `shop_currencies` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`currency` VARCHAR(5) NOT NULL,
@@ -305,7 +317,7 @@ class shop extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`;";
+		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`, `shop_item_membership`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
