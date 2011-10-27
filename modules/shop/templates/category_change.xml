@@ -40,7 +40,13 @@
 			<label>
 				<span><_text constant="label_category_image" module="shop"/></span>
 				<select name="image" style="width: 300px;">
-					<_image_list selected="$params['image']" eval="selected"/>
+					<option></option>
+					<_image_list 
+						selected="$params['image']" 
+						eval="selected"
+						template="image_option.xml"
+						local="1"
+					/>
 				</select>
 			</label>
 		</_if>
