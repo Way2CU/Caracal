@@ -38,6 +38,8 @@
 		<constant name="label_title">Title:</constant>
 		<constant name="label_category_parent">Parent category:</constant>
 		<constant name="label_category_image">Category image:</constant>
+		<constant name="label_category">Category:</constant>
+		<constant name="label_categories">Categories:</constant>
 
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
