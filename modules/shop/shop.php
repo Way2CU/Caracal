@@ -8,6 +8,7 @@
 
 require_once('units/shop_item_handler.php');
 require_once('units/shop_item_manager.php');
+require_once('units/shop_item_membership_manager.php');
 require_once('units/shop_category_handler.php');
 require_once('units/shop_category_manager.php');
 require_once('units/shop_currencies_handler.php');
