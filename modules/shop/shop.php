@@ -166,6 +166,26 @@ class shop extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'show_item':
+					$handler = ShopItemHandler::getInstance($this);
+					$hander->tag_Item($params, $children);
+					break;
+
+				case 'show_item_list':
+					$handler = ShopItemHandler::getInstance($this);
+					$handler->tag_ItemList($params, $children);
+					break;
+					
+				case 'show_category':
+					$handler = ShopCategoryHandler::getInstance($this);
+					$handler->tag_Category($params, $children);
+					break;
+					
+				case 'show_category_list':
+					$handler = ShopCategoryHandler::getInstance($this);
+					$handler->tag_CategoryList($params, $children);
+					break;
+					
 				case 'json_get_item':
 					$handler = ShopItemHandler::getInstance($this);
 					$handler->json_GetItem();
