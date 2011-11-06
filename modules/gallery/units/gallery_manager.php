@@ -28,7 +28,7 @@ class GalleryManager extends ItemManager {
 	function deleteData($conditionals) {
 		$items = $this->getItems(array('filename'), $conditionals);
 
-		$path = dirname(__FILE__).'/';
+		$path = dirname(__FILE__).'/../';
 
 		if (count($items) > 0)
 		foreach ($items as $item) {
