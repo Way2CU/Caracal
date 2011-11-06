@@ -169,7 +169,7 @@ class shop extends Module {
 			switch ($params['action']) {
 				case 'show_item':
 					$handler = ShopItemHandler::getInstance($this);
-					$hander->tag_Item($params, $children);
+					$handler->tag_Item($params, $children);
 					break;
 
 				case 'show_item_list':
@@ -185,6 +185,9 @@ class shop extends Module {
 				case 'show_category_list':
 					$handler = ShopCategoryHandler::getInstance($this);
 					$handler->tag_CategoryList($params, $children);
+					break;
+					
+				case 'show_item_sizes':
 					break;
 					
 				case 'json_get_item':
@@ -291,6 +294,17 @@ class shop extends Module {
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
+		
+		// create shop item sizes table
+		$sql = "
+			CREATE TABLE `shop_item_sizes` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`item` int(11) NOT NULL,
+				`size` VARCHAR(20) NOT NULL,
+				PRIMARY KEY ( `id` ),
+				KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
 
 		// create shop categories table
 		$sql = "
@@ -318,7 +332,7 @@ class shop extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`, `shop_item_membership`;";
+		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`, `shop_item_membership`, `shop_item_sizes`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 

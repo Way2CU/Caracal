@@ -139,6 +139,11 @@ class ShopCategoryHandler {
 			// register tag handlers
 			$template->registerTagHandler('_category_list', &$this, 'tag_CategoryList');
 
+			if (class_exists('gallery')) {
+				$gallery = gallery::getInstance();
+				$template->registerTagHandler('_image_list', &$gallery, 'tag_ImageList');
+			}
+
 			// prepare parameters
 			$params = array(
 						'id'			=> $item->id,
@@ -327,6 +332,7 @@ class ShopCategoryHandler {
 	public function tag_CategoryList($tag_params, $children) {
 		$manager = ShopCategoryManager::getInstance();
 		$conditions = array();
+		$item_category_ids = array();
 
 		// create conditions
 		if (isset($tag_params['parent']))
@@ -341,6 +347,18 @@ class ShopCategoryHandler {
 		if (isset($tag_params['exclude'])) {
 			$list = fix_id(explode(',', $tag_params['exclude']));
 			$conditions['id'] = array('operator' => 'NOT IN', 'value' => $list);
+		}
+		
+		if (isset($tag_params['item_id'])) {
+			$membership_manager = ShopItemMembershipManager::getInstance();
+			$membership_items = $membership_manager->getItems(
+												array('category'), 
+												array('item' => fix_id($tag_params['item_id']))
+											);
+											
+			if (count($membership_items) > 0) 
+				foreach($membership_items as $membership)
+					$item_category_ids[] = $membership->category;
 		}
 
 		// get items from database
@@ -379,6 +397,7 @@ class ShopCategoryHandler {
 							'title'			=> $item->title,
 							'description'	=> $item->description,
 							'level'			=> $level,
+							'in_category'	=> in_array($item->id, $item_category_ids) ? 1 : 0,
 							'selected'		=> isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
 							'item_change'	=> url_MakeHyperlink(
 										$this->_parent->getLanguageConstant('change'),

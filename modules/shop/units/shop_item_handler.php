@@ -70,7 +70,7 @@ class ShopItemHandler {
 										$this->_parent->getLanguageConstant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
-											490,
+											700,
 											$this->_parent->getLanguageConstant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, 'items', 'add')
@@ -108,8 +108,8 @@ class ShopItemHandler {
 					'cancel_action'	=> window_Close('shop_item_add')
 				);
 
-		$currency_module = ShopCurrenciesHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_currency_list', &$currency_module, 'tag_CurrencyList');
+		$category_handler = ShopCategoryHandler::getInstance($this->_parent);
+		$template->registerTagHandler('_category_list', &$category_handler, 'tag_CategoryList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -154,6 +154,7 @@ class ShopItemHandler {
 	private function saveItem() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = ShopItemManager::getInstance();
+		$membership_manager = ShopItemMembershipManager::getInstance();
 		$open_editor = "";
 
 		$data = array(
@@ -188,23 +189,39 @@ class ShopItemHandler {
 								);
 			}
 
+			// remove membership data, we'll update those in a moment
+			$membership_manager->deleteData(array('item' => $id));
 		}
-
-		if (isset($_REQUEST['category'])) {
-			// update default category
-		}
-
+		
 		// store item data
 		if (is_null($id)) {
 			// store new data
 			$manager->insertData($data);
 			$window = 'shop_item_add';
+			$id = $manager->getInsertedID();
 
 		} else {
 			// update existing data
 			$manager->updateData($data, array('id' => $id));
 			$window = 'shop_item_change';
 		}
+		
+		// update categories
+		$category_ids = array();
+		$category_template = 'category_id';
+		
+		foreach ($_REQUEST as $key => $value) {
+			if (substr($key, 0, strlen($category_template)) == $category_template && $value == 1) 
+				$category_ids[] = fix_id(substr($key, strlen($category_template)-1));
+		}
+		
+		if (count($category_ids) > 0)
+			foreach ($category_ids as $category_id) {
+				$membership_manager->insertData(array(
+										'category'	=> $category_id,
+										'item'		=> $id
+									));
+			}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -242,6 +259,60 @@ class ShopItemHandler {
 
 		return $uid;
 	}
+	
+	/**
+	 * Handle drawing shop item
+	 * 
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Item($tag_params, $children) {
+		$manager = ShopItemManager::getInstance();
+		$gallery = null;
+		$conditions = array();
+
+		if (class_exists('gallery'))
+			$gallery = gallery::getInstance();
+		
+		// prepare conditions
+		$conditions['id'] = fix_id($tag_params['id']);
+		
+		// get item from database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		
+		// create template handler
+		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
+		$template->setMappedModule($this->name);
+		
+		if (!is_null($gallery)) 
+			$template->registerTagHandler('_image_list', &$gallery, 'tag_ImageList');
+			
+		// parse template
+		if (is_object($item)) {
+			$rating = 0;
+			
+			$params = array(
+						'id'			=> $item->id,
+						'uid'			=> $item->uid,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+						'gallery'		=> $item->gallery,
+						'author'		=> $item->author,
+						'views'			=> $item->views,
+						'price'			=> $item->price,
+						'votes_up'		=> $item->votes_up,
+						'votes_down'	=> $item->votes_down,
+						'rating'		=> $rating,
+						'timestamp'		=> $item->timestamp,
+						'visible'		=> $item->visible,
+						'deleted'		=> $item->deleted,
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
 
 	/**
 	 * Handle drawing item list
@@ -255,6 +326,20 @@ class ShopItemHandler {
 
 		// create conditions
 		if (isset($tag_params['category'])) {
+			$membership_manager = ShopItemMembershipManager::getInstance();
+			$membership_items = $membership_manager->getItems(
+												array('item'), 
+												array('category' => fix_id($tag_params['category']))
+											);
+				
+			$item_ids = array();							
+			if (count($membership_items) > 0)
+				foreach($membership_items as $membership)
+					$item_ids[] = $membership->item;
+					
+			if (count($item_ids) > 0)
+				$conditions['id'] = $item_ids; else
+				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
 		}
 
 		// get items
@@ -264,15 +349,24 @@ class ShopItemHandler {
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
 		$template->setMappedModule($this->name);
 
-		if (count($items) > 0)
+		if (count($items) > 0) {
+			$gallery = null;
+			if (class_exists('gallery'))
+				$gallery = gallery::getInstance();
+			
 			foreach ($items as $item) {
+				if (!is_null($gallery))
+					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); else
+					$thumbnail_url = '';
 				$rating = 0;
+				
 				$params = array(
 							'id'			=> $item->id,
 							'uid'			=> $item->uid,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
 							'gallery'		=> $item->gallery,
+							'thumbnail'		=> $thumbnail_url,
 							'author'		=> $item->author,
 							'views'			=> $item->views,
 							'price'			=> $item->price,
@@ -290,6 +384,7 @@ class ShopItemHandler {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+		}
 	}
 
 	/**
@@ -318,6 +413,7 @@ class ShopItemHandler {
 
 			if (is_object($item)) {
 				// item was found, prepare result
+				$rating = 0;
 				$result['item'] = array(
 								'id'			=> $item->id,
 								'uid'			=> $item->uid,

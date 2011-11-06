@@ -2,33 +2,39 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_add_form">
-		<label>
-			<span><_text constant="label_name" module="shop"/></span>
-			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
-		</label>
-		<label>
-			<span><_text constant="label_description" module="shop"/></span>
-			<textarea name="description" class="multi-language" style="width: 460px; height: 150px;"/>
-		</label>
-		<div>
-			<label class="horizontal">
+		<div/>
+
+		<div class="box left scrollable_list" style="width: 200px; margin-right: 10px;">
+			<div class="list_header">
+				<_text constant="label_categories" module="shop"/>
+			</div>
+			<div class="list_content" style="height: 280px">
+				<_category_list
+					template="category_checkbox_list_item.xml" 
+					local="1"
+				/>
+			</div>
+		</div>
+
+		<div class="box right" style="width: 470px;">
+			<label>
+				<span><_text constant="label_name" module="shop"/></span>
+				<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+			</label>
+			<label>
+				<span><_text constant="label_description" module="shop"/></span>
+				<textarea name="description" class="multi-language" style="width: 460px; height: 155px;"/>
+			</label>
+			<label>
 				<span><_text constant="label_price" module="shop"/></span>
 				<input type="text" name="price" style="width: 100px;" maxlength="30"/>
 			</label>
-			<label class="horizontal">
-				<span><_text constant="label_currency" module="shop"/></span>
-				<select	name="currency" style="width: 200px">
-					<_currency_list
-						template="item_list_currency_option.xml"
-						local="1"
-					/>
-				</select>
-			</label>
-			<div style="clear:both;"/>
 		</div>
-		<label>
+
+		<div style="clear: both; padding: 5px;">
 			<_text constant="message_images_upload" module="shop"/>
-		</label>
+		</div>
+		
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
