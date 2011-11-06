@@ -1910,6 +1910,23 @@ class gallery extends Module {
 	public function getThumbnailURL($item) {
 		return url_GetFromFilePath($this->path.'thumbnails/'.$item->filename);
 	}
+	
+	/**
+	 * Get gallery group thumbnail based on gallery id 
+	 * 
+	 * @param integer $group_id
+	 * @return string
+	 */
+	public function getGroupThumbnailURL($group_id) {
+		$manager = GalleryGroupManager::getInstance();
+		$group = $manager->getSingleItem(array('thumbnail', 'id'), array('id' => $group_id));
+		
+		$result = '';
+		if (is_object($group))
+			$result = $this->_getGroupImage($group);
+		
+		return $result;
+	}
 
 	/**
 	 * Get image ID by filename
@@ -1932,16 +1949,17 @@ class gallery extends Module {
 		$result = '';
 		$manager = GalleryManager::getInstance();
 
-		if ($group->thumbnail == 0) {
+		if (empty($group->thumbnail)) {
 			// group doesn't have specified thumbnail, get random
 			$image = $manager->getSingleItem(
 										array('filename'),
 										array(
-											'group' 	=> is_array($group) ? $group : $group->id,
+											'group' 	=> $group->id,
 											'protected'	=> 0
 										),
 										array('RAND()')
 									);
+
 		} else {
 			// group has specified thumbnail
 			if (is_array($group)) {
