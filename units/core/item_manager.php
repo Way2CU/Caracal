@@ -362,7 +362,7 @@ class ItemManager {
 		$fields = $from_keys ? array_keys($data) : $data;
 
 		foreach($fields as $field)
-			if (in_array($field, array_keys($this->field_types)))
+			if (array_key_exists($field, $this->field_types))
 				$result[] = "`{$field}`"; else
 				$result[] = "{$field}";
 
@@ -403,21 +403,22 @@ class ItemManager {
 
 		foreach($data as $field_name => $field_value) {
 			$is_string = in_array($this->field_types[$field_name], $this->string_fields);
+			$field = array_key_exists($field_name, $this->field_types) ? "`{$field_name}`" : $field_name;
 
 			if (is_array($field_value)) {
 				if (array_key_exists('operator', $field_value)) {
 					// value is a conditioned
 					if (!is_array($field_value['value'])) {
-						$tmp[] = "`{$field_name}` {$field_value['operator']} ".($is_string ? "'{$field_value['value']}'" : $field_value['value']);
+						$tmp[] = "{$field} {$field_value['operator']} ".($is_string ? "'{$field_value['value']}'" : $field_value['value']);
 					} else {
-						$tmp[] = "`{$field_name}` {$field_value['operator']} (".($is_string ? "'".implode("', '", $field_value['value'])."'" : implode(', ', $field_value['value'])).")";
+						$tmp[] = "{$field} {$field_value['operator']} (".($is_string ? "'".implode("', '", $field_value['value'])."'" : implode(', ', $field_value['value'])).")";
 					}
 				} else {
 					// condition is a list, treat it that way
-					$tmp[] = "`{$field_name}` IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
+					$tmp[] = "{$field} IN (".($is_string ? "'".implode("', '", $field_value)."'" : implode(', ', $field_value)).")";
 				}
 			} else {
-				$tmp[] = "`{$field_name}` = ".($is_string ? "'{$field_value}'" : $field_value);
+				$tmp[] = "{$field} = ".($is_string ? "'{$field_value}'" : $field_value);
 			}
 		}
 
