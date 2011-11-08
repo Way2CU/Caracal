@@ -1,16 +1,17 @@
 <?php
 
-class ShopItemSizesManager extends ItemManager {
+class ShopItemSizeValuesManager extends ItemManager {
 	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('shop_item_sizes');
+		parent::__construct('shop_item_size_values');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
+		$this->addProperty('definition', 'int');
+		$this->addProperty('value', 'ml_varchar');
 	}
 
 	/**

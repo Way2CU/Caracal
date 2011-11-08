@@ -10,6 +10,7 @@
 		<constant name="menu_stocks">Stocks</constant>
 		<constant name="menu_special_offers">Special offers</constant>
 		<constant name="menu_currencies">Currencies</constant>
+		<constant name="menu_item_sizes">Manage item sizes</constant>
 
 		<constant name="title_manage_items">Shop: Manage items</constant>
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
@@ -21,6 +22,13 @@
 		<constant name="title_category_add">Shop: Add category</constant>
 		<constant name="title_category_change">Shop: Edit category</constant>
 		<constant name="title_category_delete">Shop: Delete category</constant>
+		<constant name="title_manage_item_sizes">Shop: Manage item sizes</constant>
+		<constant name="title_size_add">Shop: Add item size definition</constant>
+		<constant name="title_size_values">Shop: Size values</constant>
+		<constant name="title_size_value_add">Shop: Add size value</constant>
+		<constant name="title_size_value_change">Shop: Change size value</constant>
+		<constant name="title_size_value_delete">Shop: Delete size value</constant>
+		<constant name="title_size_delete">Shop: Delete item size definition</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -29,6 +37,7 @@
 		<constant name="column_name">Name</constant>
 		<constant name="column_title">Title</constant>
 		<constant name="column_views">Views</constant>
+		<constant name="column_value">Value</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
@@ -40,6 +49,8 @@
 		<constant name="label_category_image">Category image:</constant>
 		<constant name="label_category">Category:</constant>
 		<constant name="label_categories">Categories:</constant>
+		<constant name="label_value">Value:</constant>
+		<constant name="label_size_definition">Size definition:</constant>
 
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
@@ -51,8 +62,16 @@
 		<constant name="message_item_saved">Shop item data was saved.</constant>
 		<constant name="message_images_upload">Once saved system will automatically create new gallery and assign it to this item. If, later, you wish to add or remove images for this shop item you will need to use gallery module.</constant>
 		<constant name="message_clear_cart">You are about to remove all items from shopping cart. Are you sure about that?</constant>
+		<constant name="message_item_size_saved">Size definition data was saved!</constant>
+		<constant name="message_item_size_value_saved">Value data for specified definiton was saved!</constant>
+		<constant name="message_size_value_delete">You are about to delete the following size value. Are you sure?</constant>
+		<constant name="message_size_value_deleted">Size value was deleted!</constant>
+		<constant name="message_size_delete">You are about to remove the following size definition. Are you sure?</constant>
+		<constant name="message_size_deleted">Size definition was deleted!</constant>
 
 		<constant name="add_item">Add new item</constant>
+		<constant name="add_size_definition">Add size definition</constant>
+		<constant name="add_size_value">Add size value</constant>
 		<constant name="manage_categories">Manage categories</constant>
 		<constant name="add_currency">Add currency</constant>
 		<constant name="update_currencies">Update currency list</constant>
@@ -66,6 +85,6 @@
 		<constant name="checkout">Checkout</constant>
 		<constant name="empty_shopping_cart">There are no items in shopping cart.</constant>
 		<constant name="total_amount"><![CDATA[Total: <span><b>%sum</b> %currency</span> in <b>%count</b> item(s)]]></constant>
-
+		<constant name="values">Values</constant>
 	</language>
 </document>

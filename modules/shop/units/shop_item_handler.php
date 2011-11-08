@@ -1,5 +1,9 @@
 <?php
 
+require_once('shop_item_manager.php');
+require_once('shop_item_membership_manager.php');
+require_once('shop_category_manager.php');
+
 class ShopItemHandler {
 	private static $_instance;
 	private $_parent;
@@ -35,6 +39,27 @@ class ShopItemHandler {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
+			// item sizes
+			case 'sizes':
+				$this->showItemSizes();
+				break;
+				
+			case 'size_add':
+				break;
+				
+			case 'size_change':
+				break;
+				
+			case 'size_save':
+				break;
+				
+			case 'size_delete':
+				break;
+				
+			case 'size_delete_commit':
+				break;
+
+			// items
 			case 'add':
 				$this->addItem();
 				break;
@@ -51,7 +76,7 @@ class ShopItemHandler {
 
 			case 'delete_commit':
 				break;
-
+				
 			default:
 				$this->showItems();
 				break;
@@ -108,8 +133,12 @@ class ShopItemHandler {
 					'cancel_action'	=> window_Close('shop_item_add')
 				);
 
+		// register external tag handlers
 		$category_handler = ShopCategoryHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_category_list', &$category_handler, 'tag_CategoryList');
+		
+		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
+		$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -158,10 +187,13 @@ class ShopItemHandler {
 		$open_editor = "";
 
 		$data = array(
-				'name'			=> $this->_parent->getMultilanguageField('name'),
-				'description'	=> $this->_parent->getMultilanguageField('description'),
-				'price'			=> isset($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
+				'name'				=> $this->_parent->getMultilanguageField('name'),
+				'description'		=> $this->_parent->getMultilanguageField('description'),
+				'price'				=> isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
+				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null
 			);
+		
+		define('SQL_DEBUG', 1);
 
 		if (is_null($id)) {
 			// add elements first time

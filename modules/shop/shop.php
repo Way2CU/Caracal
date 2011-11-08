@@ -7,12 +7,9 @@
  */
 
 require_once('units/shop_item_handler.php');
-require_once('units/shop_item_manager.php');
-require_once('units/shop_item_membership_manager.php');
 require_once('units/shop_category_handler.php');
-require_once('units/shop_category_manager.php');
 require_once('units/shop_currencies_handler.php');
-require_once('units/shop_currencies_manager.php');
+require_once('units/shop_item_sizes_handler.php');
 
 class shop extends Module {
 	private static $_instance;
@@ -76,6 +73,21 @@ class shop extends Module {
 										),
 								5  // level
 							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_item_sizes'),
+								url_GetFromFilePath($this->path.'images/item_sizes.png'),
+								window_Open( // on click open window
+											'shop_item_sizes',
+											400,
+											$this->getLanguageConstant('title_manage_item_sizes'),
+											true, true,
+											backend_UrlMake($this->name, 'sizes')
+										),
+								5  // level
+							));
+							
+			$shop_menu->addSeparator(5);
+						
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_special_offers'),
 								url_GetFromFilePath($this->path.'images/special_offers.png'),
@@ -221,6 +233,11 @@ class shop extends Module {
 					$handler = ShopCategoryHandler::getInstance($this);
 					$handler->transferControl($params, $children);
 					break;
+					
+				case 'sizes':
+					$handler = ShopItemSizesHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
 
 				case 'special_offers':
 
@@ -258,6 +275,7 @@ class shop extends Module {
 
 		$sql .= "
 				`gallery` INT(11) NOT NULL,
+				`size_definition` INT(11) NULL,
 				`author` INT(11) NOT NULL,
 				`views` INT(11) NOT NULL,
 				`price` DECIMAL(8,2) NOT NULL,
@@ -299,10 +317,22 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_item_sizes` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`item` int(11) NOT NULL,
-				`size` VARCHAR(20) NOT NULL,
-				PRIMARY KEY ( `id` ),
-				KEY `item` (`item`)
+				`name` VARCHAR(25) NOT NULL,
+				PRIMARY KEY ( `id` )
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+		
+		// create shop item size values table
+		$sql = "
+			CREATE TABLE `shop_item_size_values` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`definition` int(11) NOT NULL,";
+				
+		foreach($list as $language)
+			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
+			
+		$sql .= "PRIMARY KEY ( `id` ),
+				KEY `definition` (`definition`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
@@ -332,7 +362,7 @@ class shop extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`, `shop_item_membership`, `shop_item_sizes`;";
+		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`, `shop_item_membership`, `shop_item_sizes`, `shop_item_size_values`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 

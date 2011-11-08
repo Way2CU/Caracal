@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_size_value_add_form">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="definition" value="$params['definition']" eval="value"/>
+			<span><_text constant="label_value" module="shop"/></span>
+			<input type="text" class="multi-language" name="value" style="width: 340px;" maxlength="25"/>
+			<_language_data param="value"/>
+		</label>
+
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		var selector = new LanguageSelector('shop_item_size_value_add_form');
+	</script>
+</document>
