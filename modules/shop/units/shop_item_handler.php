@@ -39,32 +39,12 @@ class ShopItemHandler {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
-			// item sizes
-			case 'sizes':
-				$this->showItemSizes();
-				break;
-				
-			case 'size_add':
-				break;
-				
-			case 'size_change':
-				break;
-				
-			case 'size_save':
-				break;
-				
-			case 'size_delete':
-				break;
-				
-			case 'size_delete_commit':
-				break;
-
-			// items
 			case 'add':
 				$this->addItem();
 				break;
 
 			case 'change':
+				$this->changeItem();
 				break;
 
 			case 'save':
@@ -72,9 +52,11 @@ class ShopItemHandler {
 				break;
 
 			case 'delete':
+				$this->deleteItem();
 				break;
 
 			case 'delete_commit':
+				$this->deleteItem_Commit();
 				break;
 				
 			default:
@@ -160,14 +142,30 @@ class ShopItemHandler {
 			$template->setMappedModule($this->name);
 
 			// register tag handlers
-			$template->registerTagHandler('_category_list', &$this, 'tag_CategoryList');
+			$category_handler = ShopCategoryHandler::getInstance($this->_parent);
+			$template->registerTagHandler('_category_list', &$category_handler, 'tag_CategoryList');
+			
+			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
+			$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
 			// prepare parameters
 			$params = array(
 						'id'			=> $item->id,
-
-						'form_action'	=> backend_UrlMake($this->name, 'categories', 'save'),
-						'cancel_action'	=> window_Close('shop_category_change')
+						'uid'			=> $item->uid,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+						'gallery'		=> $item->gallery,
+						'size_definition'=> $item->size_definition,
+						'author'		=> $item->author,
+						'views'			=> $item->views,
+						'price'			=> $item->price,
+						'votes_up'		=> $item->votes_up,
+						'votes_down'	=> $item->votes_down,
+						'timestamp'		=> $item->timestamp,
+						'visible'		=> $item->visible,
+						'deleted'		=> $item->deleted,
+						'form_action'	=> backend_UrlMake($this->name, 'items', 'save'),
+						'cancel_action'	=> window_Close('shop_item_change')
 					);
 
 			// parse template
@@ -268,6 +266,70 @@ class ShopItemHandler {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+	
+	/**
+	 * Show confirmation form before removing item
+	 */
+	private function deleteItem() {
+		global $language;
+		
+		$id = fix_id($_REQUEST['id']);
+		$manager = ShopItemManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->_parent->name);
+
+		$params = array(
+					'message'		=> $this->_parent->getLanguageConstant("message_item_delete"),
+					'name'			=> $item->name[$language],
+					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
+					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'shop_item_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'items'),
+												array('sub_action', 'delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('shop_item_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();		
+	}
+	
+	/**
+	 * Mark item as deleted. We don't remove items in order
+	 * to preserve valid shopping logs.
+	 */
+	private function deleteItem_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ShopItemManager::getInstance();
+		$membership_manager = ShopItemMembershipManager::getInstance();
+
+		$manager->updateData(array('deleted' => 1), array('id' => $id));
+		$membership_manager->deleteData(array('item' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->_parent->name);
+
+		$params = array(
+					'message'	=> $this->_parent->getLanguageConstant("message_size_deleted"),
+					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'action'	=> window_Close('shop_item_delete').";".window_ReloadContent('shop_items')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();		
 	}
 
 	/**
@@ -373,6 +435,10 @@ class ShopItemHandler {
 				$conditions['id'] = $item_ids; else
 				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
 		}
+		
+		if (!(isset($tag_params['show_deleted']) && $tag_params['show_deleted'] == 1)) {
+			$conditions['deleted'] = 0;
+		}
 
 		// get items
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -398,6 +464,7 @@ class ShopItemHandler {
 							'name'			=> $item->name,
 							'description'	=> $item->description,
 							'gallery'		=> $item->gallery,
+							'size_definition'=> $item->size_definition,
 							'thumbnail'		=> $thumbnail_url,
 							'author'		=> $item->author,
 							'views'			=> $item->views,
@@ -408,8 +475,40 @@ class ShopItemHandler {
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
 							'deleted'		=> $item->deleted,
-							'item_change'	=> '',
-							'item_delete'	=> ''
+							'item_change'	=> url_MakeHyperlink(
+													$this->_parent->getLanguageConstant('change'),
+													window_Open(
+														'shop_item_change', 	// window id
+														700,				// width
+														$this->_parent->getLanguageConstant('title_item_change'), // title
+														true, true,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'items'),
+															array('sub_action', 'change'),
+															array('id', $item->id)
+														)
+													)
+												),
+							'item_delete'	=> url_MakeHyperlink(
+													$this->_parent->getLanguageConstant('delete'),
+													window_Open(
+														'shop_item_delete', 	// window id
+														400,				// width
+														$this->_parent->getLanguageConstant('title_item_delete'), // title
+														false, false,
+														url_Make(
+															'transfer_control',
+															'backend_module',
+															array('module', $this->name),
+															array('backend_action', 'items'),
+															array('sub_action', 'delete'),
+															array('id', $item->id)
+														)
+													)
+												)
 						);
 
 				$template->restoreXML();

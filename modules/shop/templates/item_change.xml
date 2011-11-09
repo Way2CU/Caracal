@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_add_form">
+		<div/>
+
+		<div class="box left scrollable_list" style="width: 200px; margin-right: 10px;">
+			<div class="list_header">
+				<_text constant="label_categories" module="shop"/>
+			</div>
+			<div class="list_content" style="height: 280px">
+				<_category_list
+					template="category_checkbox_list_item.xml" 
+					local="1"
+				/>
+			</div>
+		</div>
+
+		<div class="box right" style="width: 470px;">
+			<label>
+				<input type="hidden" name="id" value="$params['id']" eval="value"/>
+				<span><_text constant="label_name" module="shop"/></span>
+				<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+				<_language_data param="name"/>
+			</label>
+			<label>
+				<span><_text constant="label_description" module="shop"/></span>
+				<textarea name="description" class="multi-language" style="width: 460px; height: 155px;"/>
+				<_language_data param="description"/>
+			</label>
+			<div class="box left" style="width: 120px;">
+				<label>
+					<span><_text constant="label_price" module="shop"/></span>
+					<input 
+						type="text" 
+						name="price" 
+						value="$params['price']"
+						eval="value"
+						style="width: 100px;" 
+						maxlength="30"
+					/>
+				</label>
+			</div>
+			<div class="box left" style="width: 120px;">
+				<label>
+					<span><_text constant="label_size_definition" module="shop"/></span>
+					<select name="size_definition" style="width: 200px;">
+						<option></option>
+						<_size_list 
+							template="size_option.xml"
+							local="1"
+							selected="$params['size_definition']"
+							eval="selected"
+						/>
+					</select>
+				</label>
+			</div>
+		</div>
+
+		<div style="clear: both; padding: 5px;">
+			<_text constant="message_images_upload" module="shop"/>
+		</div>
+		
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		var selector = new LanguageSelector('shop_item_add_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('shop_item_add_form', '[name=description]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
+	</script>
+</document>

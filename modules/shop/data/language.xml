@@ -15,6 +15,8 @@
 		<constant name="title_manage_items">Shop: Manage items</constant>
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
 		<constant name="title_item_add">Shop: Add new item</constant>
+		<constant name="title_item_change">Shop: Change item data</constant>
+		<constant name="title_item_delete">Shop: Delete item</constant>
 		<constant name="title_currencies">Shop: Available currencies</constant>
 		<constant name="title_currencies_add">Shop: Add currency</constant>
 		<constant name="title_currencies_update">Shop: Update currencies</constant>
@@ -60,6 +62,7 @@
 		<constant name="message_category_delete">You are about to delete the following category. Items contained in specified category will not be removed! Are you sure?</constant>
 		<constant name="message_category_deleted">Category was deleted!</constant>
 		<constant name="message_item_saved">Shop item data was saved.</constant>
+		<constant name="message_item_delete">You are about to mark selected item as deleted and remove memberships from all categories. Images and gallery are not automatically removed. Are you sure you want to this?</constant>
 		<constant name="message_images_upload">Once saved system will automatically create new gallery and assign it to this item. If, later, you wish to add or remove images for this shop item you will need to use gallery module.</constant>
 		<constant name="message_clear_cart">You are about to remove all items from shopping cart. Are you sure about that?</constant>
 		<constant name="message_item_size_saved">Size definition data was saved!</constant>

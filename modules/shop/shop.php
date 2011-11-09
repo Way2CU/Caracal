@@ -54,7 +54,7 @@ class shop extends Module {
 								url_GetFromFilePath($this->path.'images/items.png'),
 								window_Open( // on click open window
 											'shop_items',
-											560,
+											580,
 											$this->getLanguageConstant('title_manage_items'),
 											true, true,
 											backend_UrlMake($this->name, 'items')

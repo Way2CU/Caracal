@@ -442,6 +442,8 @@ class ShopItemSizesHandler {
 	public function tag_SizeList($tag_params, $children) {
 		$manager = ShopItemSizesManager::getInstance();
 		$conditions = array();
+		
+		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
 		// get items
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -456,6 +458,7 @@ class ShopItemSizesHandler {
 				$params = array(
 							'id'			=> $item->id,
 							'name'			=> $item->name,
+							'selected'		=> $selected,
 							'item_delete'	=> url_MakeHyperlink(
 													$this->_parent->getLanguageConstant('delete'),
 													window_Open(
