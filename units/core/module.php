@@ -31,10 +31,10 @@ abstract class Module {
 	/**
 	 * Transfers control to module functions
 	 *
-	 * @param string $action
-	 * @param integer $level
+	 * @param array $tag_params
+	 * @param array $children
 	 */
-	abstract public function transferControl($level, $params = array(), $children=array());
+	abstract public function transferControl($params, $children);
 
 	/**
 	 * Returns module mapped section file relative to module path
