@@ -63,6 +63,12 @@ class swfobject extends Module {
 			}
 	}
 
+	public function onInit() {
+	}
+
+	public function onDisable() {
+	}
+
 	/**
 	 * Embed flash player with specified parameters
 	 *
