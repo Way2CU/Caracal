@@ -177,6 +177,9 @@ class page_info extends Module {
 			$this->saveSetting('wm_tools', '');
 	}
 
+	public function onDisable() {
+	}
+
 	/**
 	 * Show settings form
 	 */
