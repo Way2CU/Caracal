@@ -100,6 +100,9 @@ class captcha extends Module {
 		$this->saveSetting("colors", "#555555,#777777,#999999,#bbbbbb,#dddddd");
 	}
 
+	public function onDisable() {
+	}
+
 	/**
 	 * Prints captcha image
 	 */
