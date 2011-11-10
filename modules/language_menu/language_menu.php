@@ -70,6 +70,12 @@ class language_menu extends Module {
 			}
 	}
 
+	public function onInit() {
+	}
+
+	public function onDisable() {
+	}
+
 	/**
 	 * Prints language menu using OL
 	 *
