@@ -48,6 +48,15 @@ class head_tag extends Module {
 	}
 
 	/**
+	 * Redefine abstract methods
+	 */
+	public function onInit() {
+	}
+
+	public function onDisable() {
+	}
+
+	/**
 	 * Adds head tag to the list
 	 *
 	 * @param string $name
