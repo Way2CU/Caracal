@@ -1036,9 +1036,11 @@ class news extends Module {
 
 				foreach($item_list as $item)
 					$conditions['id'][] = $item->news;
+			} else {
+				$conditions['id'] = '-1';
 			}
 		}
-
+		
 		// get items from database
 		$items = $manager->getItems(
 							$manager->getFieldNames(),
