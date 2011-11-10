@@ -240,6 +240,15 @@ class backend extends Module {
 					break;
 			}
 	}
+	
+	/**
+	 * Redefine abstract methods
+	 */
+	public function onInit() {
+	}
+
+	public function onDisable() {
+	}
 
 	/**
 	 * Adds menu to draw list
