@@ -948,14 +948,7 @@ class youtube extends Module {
 			$image_number = array(2);
 
 		// create template
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-			$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-			$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('video_thumbnail.xml', $this->path.'templates/');
-		}
-
+		$template = $this->loadTemplate($tag_params, 'video_thumbnail.xml');
 		$template->setMappedModule($this->name);
 
 		// parse template
