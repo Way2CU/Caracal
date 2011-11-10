@@ -1040,7 +1040,7 @@ class news extends Module {
 				$conditions['id'] = '-1';
 			}
 		}
-		
+
 		// get items from database
 		$items = $manager->getItems(
 							$manager->getFieldNames(),
@@ -1051,13 +1051,8 @@ class news extends Module {
 						);
 
 		// create template
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('news_list_item.xml', $this->path.'templates/');
-		}
+		$template = $this->loadTemplate($tag_params, 'news_list_item.xml');
+		$template->setMappedModule($this->name);
 
 		// parse items
 		if (count($items) > 0)
@@ -1139,13 +1134,8 @@ class news extends Module {
 		}
 
 		// create template
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('group.xml', $this->path.'templates/');
-		}
+		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template->setMappedModule($this->name);
 
 		if (is_object($item)) {
 			$params = array(
