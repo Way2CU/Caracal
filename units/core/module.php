@@ -6,7 +6,7 @@
  * @author MeanEYE.rcf
  */
 
-class Module {
+abstract class Module {
 	protected $language;
 	protected $sections;
 	protected $file;
@@ -34,9 +34,7 @@ class Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	public function transferControl($level, $params = array(), $children=array()) {
-
-	}
+	abstract public function transferControl($level, $params = array(), $children=array());
 
 	/**
 	 * Returns module mapped section file relative to module path
@@ -102,14 +100,12 @@ class Module {
 	/**
 	 * Event called upon module initialisation
 	 */
-	public function onInit() {
-	}
+	abstract public function onInit();
 
 	/**
 	 * Event called upon module removal
 	 */
-	public function onDisable() {
-	}
+	abstract public function onDisable();
 
 	/**
 	 * Returns module defined variables
