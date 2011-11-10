@@ -8,7 +8,7 @@
 		<span class="column" style="width: 100px;">
 			<small>
 				<_var name="$params['time']"/>
-				<br/>
+				<_raw><![CDATA[<br>]]></_raw>
 				<_var name="$params['date']"/>
 			</small>
 		</span>
