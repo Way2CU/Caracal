@@ -102,6 +102,10 @@ div#main_menu ul#navigation li > ul li {
 	display: block;
 }
 
+div#main_menu ul#navigation li > ul li.sub_menu {
+	position: relative;
+}
+
 div#main_menu ul#navigation li > ul li.separator {
 	margin-top: 4px;
 	margin-bottom: 4px;
@@ -126,3 +130,65 @@ div#main_menu ul#navigation li > ul li a:hover {
 
 	color: white;
 }
+
+div#main_menu ul#navigation li li.sub_menu > a {
+	background-image: url(../images/submenu_arrow.gif);
+	background-repeat: no-repeat;
+	background-position: 95% center;
+}
+
+/**
+ * LEVEL 3+
+ */
+div#main_menu ul#navigation li > ul ul {
+	position: absolute;
+	top: 0px;
+	left: 100%;
+}
+
+/**
+ * Language Menu
+ */
+ol#language_menu {
+	display: block;
+	float: right;
+
+	margin: 0px;
+	margin-top: 5px;
+	padding: 0px;
+
+	list-style-type: none;
+	list-style-image: none;
+}
+
+ol#language_menu li {
+	display: block;
+	float: left;
+
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+ol#language_menu li a {
+	display: block;
+
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+
+	border-radius: 3px;
+
+	color: #8DA4CB;
+	text-decoration: none;
+}
+
+ol#language_menu li.active a {
+	background-color: rgba(40, 131, 214, 0.15);
+}
+
+ol#language_menu li a:hover,
+ol#language_menu li.active a:hover {
+	background-color: #2883d6;
+	color: white;
+}
+
