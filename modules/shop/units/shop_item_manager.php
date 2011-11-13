@@ -28,6 +28,8 @@ class ShopItemManager extends ItemManager {
 		$this->addProperty('author', 'int');
 		$this->addProperty('views', 'int');
 		$this->addProperty('price', 'decimal');
+		$this->addProperty('tax', 'decimal');
+		$this->addProperty('weight', 'decimal');
 		$this->addProperty('votes_up', 'int');
 		$this->addProperty('votes_down', 'int');
 		$this->addProperty('timestamp', 'timestamp');

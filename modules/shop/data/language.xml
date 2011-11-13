@@ -53,6 +53,8 @@
 		<constant name="label_categories">Categories:</constant>
 		<constant name="label_value">Value:</constant>
 		<constant name="label_size_definition">Size definition:</constant>
+		<constant name="label_tax">Tax (%):</constant>
+		<constant name="label_weight">Weight (kg):</constant>
 
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>

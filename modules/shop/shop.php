@@ -11,6 +11,7 @@ require_once('units/shop_category_handler.php');
 require_once('units/shop_currencies_handler.php');
 require_once('units/shop_item_sizes_handler.php');
 
+
 class shop extends Module {
 	private static $_instance;
 	private $_payment_providers;
@@ -103,7 +104,16 @@ class shop extends Module {
 
 			$shop_menu->addSeparator(5);
 
-			$shop_menu->addChild(null, new backend_MenuItem(
+			// payment methods menu
+			$methods_menu = new backend_MenuItem(
+								$this->getLanguageConstant('menu_payment_methods'),
+								url_GetFromFilePath($this->path.'images/payment_methods.png'),
+								'javascript: void(0);', 5
+							);
+
+			$shop_menu->addChild('shop_payment_methods', $methods_menu);
+
+			$methods_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_payment_methods'),
 								url_GetFromFilePath($this->path.'images/payment_methods.png'),
 								window_Open( // on click open window
@@ -115,6 +125,8 @@ class shop extends Module {
 										),
 								5  // level
 							));
+			$methods_menu->addSeparator(5);
+
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_currencies'),
 								url_GetFromFilePath($this->path.'images/currencies.png'),
@@ -279,6 +291,8 @@ class shop extends Module {
 				`author` INT(11) NOT NULL,
 				`views` INT(11) NOT NULL,
 				`price` DECIMAL(8,2) NOT NULL,
+				`tax` DECIMAL(3,2) NOT NULL,
+				`weight` DECIMAL(8,2) NOT NULL,
 				`votes_up` INT(11) NOT NULL,
 				`votes_down` INT(11) NOT NULL,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -354,6 +368,76 @@ class shop extends Module {
 				KEY `parent` (`parent`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
+		
+		// create shop buyers table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyers` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `first_name` varchar(30) NOT NULL,
+				  `last_name` varchar(30) NOT NULL,
+				  `email` varchar(50) NOT NULL,
+				  `uid` varchar(50) NOT NULL,
+				  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+		
+		// create shop buyer addresses table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyer_addresses` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `buyer` int(11) NOT NULL,
+				  `name` varchar(60) NOT NULL,
+				  `street` varchar(100) NOT NULL,
+				  `city` varchar(40) NOT NULL,
+				  `zip` varchar(10) NOT NULL,
+				  `state` varchar(30) NOT NULL,
+				  `country` varchar(40) NOT NULL,
+				  PRIMARY KEY (`id`),
+				  KEY `buyer` (`buyer`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+		
+		// create shop transactions table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `buyer` int(11) NOT NULL,
+				  `address` int(11) NOT NULL,
+				  `uid` varchar(20) NOT NULL,
+				  `type` varchar(20) NOT NULL,
+				  `custom` varchar(200) NOT NULL,
+				  `currency` int(11) NOT NULL,
+				  `shipping` decimal(8,2) NOT NULL,
+				  `fee` decimal(8,2) NOT NULL,
+				  `tax` decimal(8,2) NOT NULL,
+				  `gross` decimal(8,2) NOT NULL,
+				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				  PRIMARY KEY (`id`),
+				  KEY `buyer` (`buyer`),
+				  KEY `address` (`address`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";		
+		if ($db_active == 1) $db->query($sql);
+		
+		// create shop transaction items table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_items` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `transaction` int(11) NOT NULL,
+				  `item` int(11) NOT NULL,
+				  `price` float NOT NULL,
+				  PRIMARY KEY (`id`),
+				  KEY `transaction` (`transaction`),
+				  KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+		
+		// create shop stock table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_stock` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `item` int(11) NOT NULL,
+				  `size` int(11) DEFAULT NULL,
+				  `amount` int(11) NOT NULL,
+				  PRIMARY KEY (`id`),
+				  KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+		
 	}
 
 	/**
@@ -362,7 +446,21 @@ class shop extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "DROP TABLE IF EXISTS `shop_items`, `shop_currencies`, `shop_categories`, `shop_item_membership`, `shop_item_sizes`, `shop_item_size_values`;";
+		$tables = array(
+					'shop_items',
+					'shop_currencies',
+					'shop_categories',
+					'shop_item_membership',
+					'shop_item_sizes',
+					'shop_item_size_values',
+					'shop_buyers',
+					'shop_buyer_addresses',
+					'shop_transactions',
+					'shop_transaction_items',
+					'shop_stock'
+				);
+		
+		$sql = "DROP TABLE IF EXISTS `".join('`, `', $tables)."`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -373,5 +471,12 @@ class shop extends Module {
 	 * @param object $module
 	 */
 	public function registerPaymentMethod($name, $module) {
+	}
+
+	/**
+	 * Show checkout confirmation form
+	 */
+	public function show_checkout() {
+		
 	}
 }

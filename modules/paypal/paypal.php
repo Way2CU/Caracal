@@ -30,6 +30,7 @@ class paypal extends Module {
 		// register backend
 		if (class_exists('backend')) {
 			$backend = backend::getInstance();
+			$method_menu = $backend->getMenu(
 
 			$paypal_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_paypal'),

@@ -8,7 +8,7 @@
 			<div class="list_header">
 				<_text constant="label_categories" module="shop"/>
 			</div>
-			<div class="list_content" style="height: 280px">
+			<div class="list_content" style="height: 350px">
 				<_category_list
 					template="category_checkbox_list_item.xml" 
 					local="1"
@@ -42,6 +42,20 @@
 						/>
 					</select>
 				</label>
+			</div>
+			<div style="clear: both; padding-top: 10px;">
+				<div class="box left" style="width: 120px;">
+					<label>
+						<span><_text constant="label_tax" module="shop"/></span>
+						<input name="tax" style="width: 100px;"/>
+					</label>
+				</div>
+				<div class="box left">
+					<label>
+						<span><_text constant="label_weight" module="shop"/></span>
+						<input name="weight" style="width: 100px;"/>
+					</label>
+				</div>
 			</div>
 		</div>
 
