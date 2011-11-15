@@ -6,6 +6,7 @@
  * @author MeanEYE.rcf
  */
 
+require_once('units/payment_method.php');
 require_once('units/shop_item_handler.php');
 require_once('units/shop_category_handler.php');
 require_once('units/shop_currencies_handler.php');
@@ -14,7 +15,7 @@ require_once('units/shop_item_sizes_handler.php');
 
 class shop extends Module {
 	private static $_instance;
-	private $_payment_providers;
+	private $payment_methods;
 
 	/**
 	 * Constructor
@@ -25,7 +26,7 @@ class shop extends Module {
 		parent::__construct(__FILE__);
 
 		// create payment providers container
-		$this->_payment_providers = array();
+		$this->payment_methods = array();
 
 
 		// load module style and scripts
@@ -112,20 +113,6 @@ class shop extends Module {
 							);
 
 			$shop_menu->addChild('shop_payment_methods', $methods_menu);
-
-			$methods_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_payment_methods'),
-								url_GetFromFilePath($this->path.'images/payment_methods.png'),
-								window_Open( // on click open window
-											'shop_payment_methods',
-											490,
-											$this->getLanguageConstant('title_payment_methods'),
-											true, true,
-											backend_UrlMake($this->name, 'payment_methods')
-										),
-								5  // level
-							));
-			$methods_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_currencies'),
@@ -220,6 +207,27 @@ class shop extends Module {
 					break;
 
 				case 'json_get_currency':
+					$this->json_GetCurrency();
+					break;
+
+				case 'json_get_payment_methods':
+					$this->json_GetPaymentMethods();
+					break;
+
+				case 'json_add_item_to_shopping_cart':
+					$this->json_AddItemToCart();
+					break;
+
+				case 'json_remove_item_from_shopping_cart':
+					$this->json_RemoveItemFromCart();
+					break;
+
+				case 'json_clear_shopping_cart':
+					$this->json_ClearCart();
+					break;
+
+				case 'json_get_shopping_cart':
+					$this->json_ShowCart();
 					break;
 
 				default:
@@ -471,6 +479,7 @@ class shop extends Module {
 	 * @param object $module
 	 */
 	public function registerPaymentMethod($name, $module) {
+		$this->payment_methods[$name] = $module;
 	}
 
 	/**
@@ -478,5 +487,135 @@ class shop extends Module {
 	 */
 	public function show_checkout() {
 		
+	}
+	
+	/**
+	 * Return default currency using JSON object
+	 */
+	private function json_GetCurrency() {
+		define('_OMIT_STATS', 1);
+
+		print json_encode($this->getDefaultCurrency());
+	}
+
+	/**
+	 * Show shopping card in form of JSON object
+	 */
+	private function json_ShowCart() {
+		// prevent stats from displaying
+		define('_OMIT_STATS', 1);
+
+		// get shopping cart from session
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		
+		print json_encode($cart);
+	}
+
+	/**
+	 * Clear shopping cart and return result in form of JSON object
+	 */
+	private function json_ClearCart() {
+		// prevent stats from displaying
+		define('_OMIT_STATS', 1);
+
+		$_SESSION['shopping_cart'] = array();
+
+		print json_encode(true);
+	}
+
+	/**
+	 * Add item to shopping cart using JSON request
+	 */
+	private function json_AddItemToCart() {
+		$uid = fix_chars($_REQUEST['uid']);
+		$quantity = fix_id($_REQUEST['quantity']);
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+
+		// try to get item from database
+		$manager = ShopItemManager::getInstance();
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $uid));
+
+		// default result is false
+		$result = false;
+
+		if (is_object($item)) {
+			if (array_key_exists($uid, $cart)) {
+				// update existing item count
+				$cart[$uid]['quantity'] += $quantity;
+
+			} else {
+				// add new item to shopping cart
+				$cart[$uid] = array(
+							'uid'		=> $uid,
+							'quantity'	=> $quantity,
+							'price'		=> $item->price,
+						);
+			}
+
+			// set result
+			$result = true;
+
+			// update shopping cart
+			$_SESSION['shopping_cart'] = $cart;
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Remove item from shopping cart using JSON request
+	 */
+	private function json_RemoveItemFromCart() {
+		$uid = fix_chars($_REQUEST['uid']);
+		$quantity = fix_id($_REQUEST['quantity']);
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$result = false;
+
+		if (array_key_exists($uid, $cart)) {
+			if ($cart[$uid]['quantity'] > $quantity)
+				$cart[$uid]['quantity'] -= $quantity; else
+				unset($cart[$uid]);
+
+			$result = true; 
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Retrieve list of payment methods
+	 */
+	private function json_GetPaymentMethods() {
+		$result = array();
+
+		// prepare data for printing
+		foreach ($this->payment_methods as $payment_method)	
+			$result[] = array(
+					'name'	=> $payment_method->get_name(),
+					'title'	=> $payment_method->get_title(),
+					'icon'	=> $payment_method->get_icon()
+				);
+
+		// prevent statistics from showing
+		define('_OMIT_STATS', '1');
+
+		// print data
+		print json_encode($result);
+	}
+
+	/**
+	 * Save default currency to module settings
+	 * @param string $currency
+	 */
+	public function saveDefaultCurrency($currency) {
+		$this->saveSetting('default_currency', $currency);
+	}
+
+	/**
+	 * Return default currency
+	 * @return string
+	 */
+	public function getDefaultCurrency() {
+		return $this->settings['default_currency'];
 	}
 }
