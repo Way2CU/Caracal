@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<_text constant="message_default" module="contact_form"/>
+	<hr/>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><_text constant="label_default_name" module="contact_form"/></span>
+			<input 
+				type="text" 
+				name="name" 
+				value="$settings['default_name']" 
+				eval="value"
+				style="width: 360px;"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_default_address" module="contact_form"/></span>
+			<input 
+				type="text" 
+				name="address" 
+				value="$settings['default_address']" 
+				eval="value"
+				style="width: 360px;"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_default_subject" module="contact_form"/></span>
+			<input 
+				type="text" 
+				name="subject" 
+				value="$settings['default_subject']" 
+				eval="value"
+				style="width: 360px;"
+			/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

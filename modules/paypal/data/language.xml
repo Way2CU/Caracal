@@ -3,16 +3,8 @@
 <document>
 	<language short="en">
 		<constant name="menu_paypal">PayPal</constant>
-		<constant name="menu_subscriptions">Subscriptions</constant>
-		<constant name="menu_bridges">Bridges</constant>
-		<constant name="menu_items">Items</constant>
-		<constant name="menu_transactions">Transactions</constant>
 
-		<constant name="title_transactions">Transactions</constant>
-
-		<constant name="column_payer">Payer</constant>
-		<constant name="column_date">Date</constant>
-		<constant name="column_gross">Gross</constant>
-		<constant name="column_type">Type</constant>
+		<constant name="title_settings">Transactions</constant>
+		<constant name="payment_method_title">PayPal</constant>
 	</language>
 </document>
