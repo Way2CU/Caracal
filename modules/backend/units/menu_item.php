@@ -59,9 +59,15 @@ class backend_MenuItem {
 	 * @param resource $item
 	 */
 	function addChild($name, $item) {
-		if (empty($name) || is_null($name))
+		if (is_null($name) || empty($name))
 			$this->children[] = $item; else
 			$this->children[$name] = $item;
+
+		// register named item in backend
+		if (!is_null($name)) {
+			$backend = backend::getInstance();
+			$backend->registerNamedItem($name, $item);
+		}
 	}
 	
 	/**
