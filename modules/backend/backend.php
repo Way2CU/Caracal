@@ -27,6 +27,12 @@ class backend extends Module {
 	private $menus = array();
 
 	/**
+	 * Index of named menu items for faster access
+	 * @var array
+	 */
+	private $named_items = array();
+
+	/**
 	 * List of protected modules who can't be disabled or deactivated
 	 * @var array
 	 */
@@ -258,6 +264,19 @@ class backend extends Module {
 	 */
 	public function addMenu($name, $menu) {
 		$this->menus[$name] = $menu;
+
+		if (!is_null($name))
+			$this->registerNamedItem($name, $menu);
+	}
+	
+	/**
+	 * Register named item for easier retrieval later
+	 *
+	 * @param string $name
+	 * @param object $menu
+	 */
+	public function registerNamedItem($name, $menu) {
+		$this->named_items[$name] = $menu;
 	}
 
 	/**
@@ -265,8 +284,8 @@ class backend extends Module {
 	 * @param string $name
 	 */
 	public function getMenu($name) {
-		if (array_key_exists($name, $this->menus))
-			$result = $this->menus[$name]; else
+		if (array_key_exists($name, $this->named_items))
+			$result = $this->named_items[$name]; else
 			$result = null;
 
 		return $result;
