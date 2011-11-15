@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><_text constant="label_currency" module="shop"/></span>
+			<select name="currency" style="width: 270px;">
+				<_currency_list
+					selected="$params['default']"
+					template="currency_option.xml"
+					local="1"
+					eval="selected"
+				/>
+			</select>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

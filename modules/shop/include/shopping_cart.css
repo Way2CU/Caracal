@@ -39,7 +39,7 @@ div#shopping_cart div.container {
 	position: relative;
 
 	background-color: #30607F;
-	background-color: rgba(48, 96, 127, 0.7);
+	background-color: rgba(48, 96, 127, 0.9);
 }
 
 div#shopping_cart div.container a.toggle_button {
@@ -53,7 +53,7 @@ div#shopping_cart div.container a.toggle_button {
 
 	border-radius: 0px 0px 0px 10px;
 	background-color: #30607F;
-	background-color: rgba(48, 96, 127, 0.7);
+	background-color: rgba(48, 96, 127, 0.9);
 	background-image: url(../images/shopping_cart.png);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -73,7 +73,7 @@ div#shopping_cart div.container span.item_count {
 
 	border-radius: 5px 0px 0px 5px;
 	background-color: #30607F;
-	background-color: rgba(48, 96, 127, 0.7);
+	background-color: rgba(48, 96, 127, 0.9);
 
 	color: white;
 	font-size: 13px;

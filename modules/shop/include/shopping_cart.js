@@ -40,6 +40,7 @@ function ShoppingCart() {
 	this._items = {};
 	this._item_count = 0;
 	this._default_currency = 'EUR';
+	this._payment_methods = {};
 	this._backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 
 	/**
@@ -90,10 +91,7 @@ function ShoppingCart() {
 		// configure content container
 		this.content
 				.addClass('content')
-				.append(this.empty_cart)
-				.click(function() {
-					self.addItem('4e846c2b057e0');
-				});
+				.append(this.empty_cart);
 
 		this.empty_cart
 				.addClass('empty')
@@ -111,6 +109,8 @@ function ShoppingCart() {
 
 		// load cart items from cookies
 		this._loadContent();
+		this._loadDefaultCurrency();
+		this._loadPaymentMethods();
 		this._updateSummary();
 
 		// manually call event handler to
@@ -246,10 +246,72 @@ function ShoppingCart() {
 	};
 
 	/**
-	 * Load cart content from cookies
+	 * Load cart content from server
 	 */
 	this._loadContent = function() {
+		// prepare data
+		var data = {
+					section: 'shop',
+					action: 'json_get_shopping_cart',
+				};
 
+		// check local cache first
+		$.ajax({
+			url: this._getBackendURL(),
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: this.__handleContentLoad,
+			error: this.__handleContentLoadError
+		});
+	};
+
+	/**
+	 * Load default currency from server
+	 */
+	this._loadDefaultCurrency = function() {
+		// prepare data
+		var data = {
+					section: 'shop',
+					action: 'json_get_currency',
+				};
+
+		// check local cache first
+		$.ajax({
+			url: this._getBackendURL(),
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: this.__handleCurrencyLoad,
+			error: this.__handleCurrencyLoadError
+		});
+	};
+	
+	/**
+	 * Load payment methods from server
+	 */
+	this._loadPaymentMethods = function() {
+		// prepare data
+		var data = {
+					section: 'shop',
+					action: 'json_get_payment_methods',
+				};
+
+		// check local cache first
+		$.ajax({
+			url: this._getBackendURL(),
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: this.__handlePaymentMethodsLoad,
+			error: this.__handlePaymentMethodsLoadError
+		});
 	};
 
 	/**
@@ -353,6 +415,69 @@ function ShoppingCart() {
 		self.content.css('max-height', content_height);
 	};
 
+	/**
+	 * Handle shopping cart content
+	 * 
+	 * @param object data
+	 */
+	this.__handleContentLoad = function(data) {
+		self._items = {}
+		self._item_count = 0;
+
+		console.log(data);
+		self._updateSummary();
+	};
+
+	/**
+	 * Handle error from content loading procedure
+	 *
+	 * @param object xhr
+	 * @param string status
+	 * @param string error
+	 */
+	this.__handleContentLoadError = function(xhr, status, error) {
+		alert('There was a problem while trying to load items in your shopping cart. Try refreshing page. If problem persists, please contact us.');
+	};
+	
+	/**
+	 * Load default currency from backend
+	 *
+	 * @param string data
+	 */
+	this.__handleCurrencyLoad = function(data) {
+		self._default_currency = data;
+		self._updateSummary();
+	};
+
+	/**
+	 * Handle error from currency loading procedure
+	 * 
+	 * @param object xhr
+	 * @param string status
+	 * @param string error
+	 */
+	this.__handleCurrencyLoadError = function(xhr, status, error) {
+	};
+
+	/**
+	 * Load payment methods from server
+	 * 
+	 * @param object data
+	 */
+	this.__handlePaymentMethodsLoad = function(data) {
+		self._payment_methods = data;
+	};
+
+	/**
+	 * Handle error from payment methods load procedure
+	 *
+	 * @param object xhr
+	 * @param string status
+	 * @param string error
+	 */
+	this.__handlePaymentMethodsLoadError = function(xhr, status, error) {
+	};
+
 	// initialize object
 	this.init();
 }
@@ -360,7 +485,7 @@ function ShoppingCart() {
 /**
  * Shop Item
  *
- * Shopping cart will creat and add items automatically. This class
+ * Shopping cart will create and add items automatically. This class
  * shouldn't be used by anyone except shopping cart.
  *
  * @param string uid	Shop item unique id

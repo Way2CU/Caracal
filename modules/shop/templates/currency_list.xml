@@ -5,6 +5,7 @@
 	<div class="main_menu">
 		<_var name="$params['link_new']"/>
 		<_var name="$params['link_update']"/>
+		<_var name="$params['link_default']"/>
 	</div>
 
 	<!-- Header -->

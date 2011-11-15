@@ -31,6 +31,7 @@
 		<constant name="title_size_value_change">Shop: Change size value</constant>
 		<constant name="title_size_value_delete">Shop: Delete size value</constant>
 		<constant name="title_size_delete">Shop: Delete item size definition</constant>
+		<constant name="title_currencies_set_default">Shop: Set default currency</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -56,6 +57,7 @@
 		<constant name="label_tax">Tax (%):</constant>
 		<constant name="label_weight">Weight (kg):</constant>
 
+		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
 		<constant name="message_currency_deleted">Currency was deleted!</constant>
@@ -80,6 +82,7 @@
 		<constant name="manage_categories">Manage categories</constant>
 		<constant name="add_currency">Add currency</constant>
 		<constant name="update_currencies">Update currency list</constant>
+		<constant name="set_default_currency">Set default</constant>
 		<constant name="add_another">Add another</constant>
 		<constant name="remove">Remove</constant>
 		<constant name="add_category">Add category</constant>

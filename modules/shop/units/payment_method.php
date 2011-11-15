@@ -16,7 +16,10 @@ abstract class PaymentMethod {
 	 * Register payment method with main shop module
 	 */
 	protected function registerPaymentMethod() {
-		$this->parent->registerPaymentMethod($this->name, &$this);
+		if (class_exists('shop')) {
+			$shop = shop::getInstance();
+			$shop->registerPaymentMethod($this->name, &$this);
+		}
 	}
 	
 	/**
@@ -26,6 +29,30 @@ abstract class PaymentMethod {
 	 * @return boolean
 	 */
 	abstract public function can_handle($data);
+
+	/**
+	 * Get URL to be used in checkout form.
+	 * @return string
+	 */
+	abstract public function get_url();
+
+	/**
+	 * Get name of payment method
+	 * @return string
+	 */
+	abstract public function get_name();
+
+	/**
+	 * Get display name of payment method
+	 * @return string
+	 */
+	abstract public function get_title();
+
+	/**
+	 * Get icon URL for payment method
+	 * @return string
+	 */
+	abstract public function get_icon_url();
 	
 	/**
 	 * Make new payment form with specified items and return
