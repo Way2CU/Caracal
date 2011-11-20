@@ -488,6 +488,32 @@ class shop extends Module {
 	}
 
 	/**
+	 * Show checkout form
+	 */
+	public function showCheckout() {
+		$method = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
+
+		// try finding a correct payment method if it's not specified
+		if (is_null($method)) {
+		}
+
+		// parse checkout template
+		if (!is_null($method)) {
+			$template = new TemplateHandler('checkout.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array();
+
+			// register tag handler
+			$template->registerTagHandler('_checkout_item_list', &$this, 'tag_CheckoutItemList');
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
 	 * Return default currency using JSON object
 	 */
 	private function json_GetCurrency() {
