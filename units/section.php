@@ -42,25 +42,30 @@ class SectionHandler {
 		$action = (empty($action)) ? '_default' : $action;
 		$language = (empty($language)) ? $default_language : $language;
 
+		$xml_languages = null;
+		$xml_actions = null;
+
 		// cycle through xml file and find the apropriate action
 		foreach ($this->engine->document->section as $xml_section)
 			if ($xml_section->tagAttrs['name'] == $section) {
-				// check if section is mapped to a module
-				if (key_exists('module', $xml_section->tagAttrs)) {
-					foreach ($xml_section->language as $xml_language)
-						if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == "all") {
-							$result = array($xml_language->tagAttrs['file'], $xml_section->tagAttrs['module']);
-							break;
-						}
-				} else {
-					// if section is not module mapped continue checking
-					foreach ($xml_section->language as $xml_language)
-						if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == "all")
-							foreach ($xml_language->action as $xml_action)
-								if ($xml_action->tagAttrs['name'] == $action)
-									$result = $xml_action->tagAttrs['file'];
-				}
+				$xml_languages = $xml_section->language;
+				break;
 			}
+
+		if (!is_null($xml_languages) && count($xml_languages) > 0)
+			foreach ($xml_languages as $xml_language)
+				if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == "all") {
+					$xml_actions = $xml_language->action;
+					break;
+				}
+
+		if (!is_null($xml_actions) && count($xml_actions) > 0)
+			foreach ($xml_actions as $xml_action)
+				if ($xml_action->tagAttrs['name'] == $action) {
+					$result = $xml_action->tagAttrs['file'];
+					break;
+				}
+
 		return $result;
 	}
 }
@@ -142,14 +147,8 @@ class MainSectionHandler {
 
 		} else {
 			// section file is defined, load and parse it
-			if (is_array($file)) {
-				$template = new TemplateHandler($file[0]);
-				$template->setMappedModule($file[1]);
-			} else {
-				$template = new TemplateHandler($file);
-			}
-
-			$template->parse(0);
+			$template = new TemplateHandler($file);
+			$template->parse();
 		}
 	}
 
