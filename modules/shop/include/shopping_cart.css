@@ -38,8 +38,8 @@ div#shopping_cart div.container {
 
 	position: relative;
 
-	background-color: #30607F;
-	background-color: rgba(48, 96, 127, 0.9);
+	background-color: #303030;
+	background-color: rgba(48, 48, 48, 0.9);
 }
 
 div#shopping_cart div.container a.toggle_button {
@@ -52,8 +52,8 @@ div#shopping_cart div.container a.toggle_button {
 	left: -40px;
 
 	border-radius: 0px 0px 0px 10px;
-	background-color: #30607F;
-	background-color: rgba(48, 96, 127, 0.9);
+	background-color: #303030;
+	background-color: rgba(48, 48, 48, 0.9);
 	background-image: url(../images/shopping_cart.png);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -72,8 +72,8 @@ div#shopping_cart div.container span.item_count {
 	left: -30px;
 
 	border-radius: 5px 0px 0px 5px;
-	background-color: #30607F;
-	background-color: rgba(48, 96, 127, 0.9);
+	background-color: #303030;
+	background-color: rgba(48, 48, 48, 0.9);
 
 	color: white;
 	font-size: 13px;
@@ -103,7 +103,7 @@ div#shopping_cart div.container div.top_menu a {
 	border: 1px solid #487896;
 	border-right: 1px solid #1F3E52;
 	border-bottom: 1px solid #1F3E52;
-	border-radius: 1px;
+	border-radius: 3px;
 	background-color: #30607F;
 
 	color: white;
@@ -154,6 +154,8 @@ div#shopping_cart div.container div.content::-webkit-scrollbar-thumb:hover {
 div#shopping_cart div.container div.content div.empty{
 	display: block;
 	padding: 5px;
+	padding-top: 7px;
+	padding-bottom: 7px;
 
 	color: white;
 	color: rgba(255, 255, 255, 0.7);
@@ -164,11 +166,20 @@ div#shopping_cart div.container div.content div.empty{
 
 div#shopping_cart div.container div.content div.item {
 	display: block;
+	padding: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 
 	position: relative;
 	overflow: hidden;
 
 	color: white;
+}
+
+div#shopping_cart div.container div.content div.item:nth-child(odd) {
+	background-color: #244153;
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 2px;
 }
 
 div#shopping_cart div.container div.content div.item.loading {
@@ -179,8 +190,49 @@ div#shopping_cart div.container div.content div.item.loading {
 
 
 div#shopping_cart div.container div.content div.item div.name {
+	padding-bottom: 4px;
+
 	font-size: 14px;
 	font-weight: bold;
+}
+
+div#shopping_cart div.container div.content div.item div.price,
+div#shopping_cart div.container div.content div.item div.count {
+	font-size: 12px;
+}
+
+div#shopping_cart div.container div.content div.item div.price span,
+div#shopping_cart div.container div.content div.item div.count span {
+	display: inline-block;
+	width: 30%;
+}
+
+div#shopping_cart div.container div.content div.item a.edit,
+div#shopping_cart div.container div.content div.item a.delete {
+	display: block;
+	width: 16px;
+	height: 16px;
+
+	position: absolute;
+	bottom: 3px;
+	right: 3px;
+
+	background-image: url(../images/item_delete.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	
+	text-decoration: none;
+	opacity: 0.7;
+}
+
+div#shopping_cart div.container div.content div.item a.edit:hover,
+div#shopping_cart div.container div.content div.item a.delete:hover {
+	opacity: 1;
+}
+
+div#shopping_cart div.container div.content div.item a.edit {	
+	right: 22px;
+	background-image: url(../images/item_edit.png);
 }
 
 div#shopping_cart div.container div.summary {
@@ -195,6 +247,56 @@ div#shopping_cart div.container div.summary {
 	text-align: right;
 }
 
-div#shopping_cart div.container div.summary span {
+div#shopping_cart div.container div.summary div.total {
+	display: block;
+	margin-top: 5px;
+	padding-top: 3px;
+	
+	border-top: 1px solid white;
+	border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+div#shopping_cart div.container div.summary span.value {
+	display: inline-block;
+	width: 40%;
+
 	font-size: 14px;
+}
+
+/**
+ * Checkout Menu
+ */
+div#shopping_cart div.container ul.checkout {
+	display: none;
+	width: 180px;
+
+	margin: 0px;
+	padding: 2px;
+
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	z-index: 1000;
+
+	list-item-type: none;
+	list-item-style: none;
+
+	border: 1px solid #487896;
+	border-radius: 2px;
+	background-color: #30607F;
+	box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+div#shopping_cart div.container ul.checkout li {
+	display: block;
+
+	padding: 5px;
+	padding-left: 20px;
+
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}
+
+div#shopping_cart div.container ul.checkout li:hover {
+	background-color: #487896;
 }

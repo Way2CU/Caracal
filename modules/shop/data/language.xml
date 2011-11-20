@@ -54,8 +54,10 @@
 		<constant name="label_categories">Categories:</constant>
 		<constant name="label_value">Value:</constant>
 		<constant name="label_size_definition">Size definition:</constant>
+		<constant name="label_size">Size:</constant>
 		<constant name="label_tax">Tax (%):</constant>
 		<constant name="label_weight">Weight (kg):</constant>
+		<constant name="label_count">Quantity:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -75,6 +77,9 @@
 		<constant name="message_size_value_deleted">Size value was deleted!</constant>
 		<constant name="message_size_delete">You are about to remove the following size definition. Are you sure?</constant>
 		<constant name="message_size_deleted">Size definition was deleted!</constant>
+		<constant name="message_remove_item_from_cart">Are you sure about removing this item?</constant>
+		<constant name="message_edit_item_in_cart">Please enter new quantity for selected item.</constant>
+		<constant name="message_no_items_in_cart">There are no items in your shopping cart.</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
@@ -92,7 +97,12 @@
 		<constant name="clear">Clear</constant>
 		<constant name="checkout">Checkout</constant>
 		<constant name="empty_shopping_cart">There are no items in shopping cart.</constant>
-		<constant name="total_amount"><![CDATA[Total: <span><b>%sum</b> %currency</span> in <b>%count</b> item(s)]]></constant>
+		<constant name="total_amount">Total:</constant>
+		<constant name="subtotal_amount">Sub-total:</constant>
+		<constant name="tax">Tax:</constant>
+		<constant name="shipping">Shipping:</constant>
 		<constant name="values">Values</constant>
+		<constant name="edit_item">Edit item quantity</constant>
+		<constant name="delete_item">Remove item from shopping cart</constant>
 	</language>
 </document>

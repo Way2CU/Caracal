@@ -11,6 +11,7 @@ require_once('units/shop_item_handler.php');
 require_once('units/shop_category_handler.php');
 require_once('units/shop_currencies_handler.php');
 require_once('units/shop_item_sizes_handler.php');
+require_once('units/shop_item_size_values_manager.php');
 
 
 class shop extends Module {
@@ -220,6 +221,10 @@ class shop extends Module {
 
 				case 'json_remove_item_from_shopping_cart':
 					$this->json_RemoveItemFromCart();
+					break;
+
+				case 'json_change_item_quantity':
+					$this->json_ChangeItemQuantity();
 					break;
 
 				case 'json_clear_shopping_cart':
@@ -483,13 +488,6 @@ class shop extends Module {
 	}
 
 	/**
-	 * Show checkout confirmation form
-	 */
-	public function show_checkout() {
-		
-	}
-	
-	/**
 	 * Return default currency using JSON object
 	 */
 	private function json_GetCurrency() {
@@ -502,13 +500,49 @@ class shop extends Module {
 	 * Show shopping card in form of JSON object
 	 */
 	private function json_ShowCart() {
+		$manager = ShopItemManager::getInstance();
+		$values_manager = ShopItemSizeValuesManager::getInstance();
+		$gallery = class_exists('gallery') ? gallery::getInstance() : null;
+
+		$result = array();
+
+		// get shopping cart from session
+		$result['cart'] = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$result['size_values'] = array();
+		$result['count'] = count($result['cart']);
+
+		// colect ids from session
+		$ids = array_keys($result['cart']);
+
+		// get items from database and prepare result
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+		$values = $values_manager->getItems($values_manager->getFieldNames(), array());
+
+		if (count($items) > 0) 
+			foreach ($items as $item) {
+				// get item image url
+				$thumbnail_url = !is_null($gallery) ? $gallery->getGroupThumbnailURL($item->gallery) : '';
+
+				$uid = $item->uid;
+				$result['cart'][$uid]['name'] = $item->name;
+				$result['cart'][$uid]['weight'] = $item->weight;
+				$result['cart'][$uid]['price'] = $item->price;
+				$result['cart'][$uid]['tax'] = $item->tax;
+				$result['cart'][$uid]['image'] = $thumbnail_url;
+			}
+		
+		if (count($values) > 0) 
+			foreach ($values as $value) {
+				$result['size_values'][$value->id] = array(
+											'definition'	=> $value->definition,
+											'value'			=> $value->value
+										);
+			}
+			
 		// prevent stats from displaying
 		define('_OMIT_STATS', 1);
 
-		// get shopping cart from session
-		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
-		
-		print json_encode($cart);
+		print json_encode($result);
 	}
 
 	/**
@@ -528,7 +562,7 @@ class shop extends Module {
 	 */
 	private function json_AddItemToCart() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$quantity = fix_id($_REQUEST['quantity']);
+		$size = isset($_REQUEST['size']) ? fix_id($_REQUEST['size']) : null;
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 
 		// try to get item from database
@@ -536,29 +570,52 @@ class shop extends Module {
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $uid));
 
 		// default result is false
-		$result = false;
+		$result = null;
 
 		if (is_object($item)) {
 			if (array_key_exists($uid, $cart)) {
 				// update existing item count
-				$cart[$uid]['quantity'] += $quantity;
+				$cart[$uid]['quantity']++;
 
 			} else {
 				// add new item to shopping cart
 				$cart[$uid] = array(
 							'uid'		=> $uid,
-							'quantity'	=> $quantity,
-							'price'		=> $item->price,
+							'quantity'	=> 1,
+							'sizes'		=> array()
 						);
 			}
 
-			// set result
-			$result = true;
+			if (!is_null($size)) 
+				if (array_key_exists($size, $cart[$uid]['sizes'])) {
+					// increase existing size quantity
+					$cart[$uid]['sizes'][$size]++;
+
+				} else {
+					// create new size quantity
+					$cart[$uid]['sizes'][$size] = 1;
+				}
+
+			// get item image url
+			$thumbnail_url = null;
+			if (class_exists('gallery')) {
+				$gallery = gallery::getInstance();
+				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+			}
+
+			// prepare result
+			$result = $cart[$uid];
+			$result['name'] = $item->name;
+			$result['weight'] = $item->weight;
+			$result['price'] = $item->price;
+			$result['tax'] = $item->tax;
+			$result['image'] = $thumbnail_url;
 
 			// update shopping cart
 			$_SESSION['shopping_cart'] = $cart;
 		}
 
+		define('_OMIT_STATS', 1);
 		print json_encode($result);
 	}
 
@@ -567,18 +624,56 @@ class shop extends Module {
 	 */
 	private function json_RemoveItemFromCart() {
 		$uid = fix_chars($_REQUEST['uid']);
+		$size = isset($_REQUEST['size']) ? fix_id($_REQUEST['size']) : null;
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$result = false;
+
+		if (array_key_exists($uid, $cart)) {
+			if (is_null($size)) {
+				// remove item without size
+				unset($cart[$uid]);
+
+			} else {
+				// remove specified size
+				if (array_key_exists($size, $cart[$uid]['sizes']))
+					unset($cart[$uid]['sizes'][$size]);
+
+				$cart[$uid]['quantity'] = array_sum($cart[$uid]['sizes']);
+			}
+
+			$_SESSION['shopping_cart'] = $cart;
+			$result = true;
+		}
+
+		define('_OMIT_STATS', 1);
+		print json_encode($result);
+	}
+
+	private function json_ChangeItemQuantity() {
+		$uid = fix_chars($_REQUEST['uid']);
+		$size = isset($_REQUEST['size']) ? fix_id($_REQUEST['size']) : null;
 		$quantity = fix_id($_REQUEST['quantity']);
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$result = false;
 
 		if (array_key_exists($uid, $cart)) {
-			if ($cart[$uid]['quantity'] > $quantity)
-				$cart[$uid]['quantity'] -= $quantity; else
-				unset($cart[$uid]);
+			if (is_null($size)) {
+				// update quanity for item without sizes
+				$cart[$uid]['quantity'] = $quantity;
 
-			$result = true; 
+			} else {
+				// update quantity for item size
+				if (array_key_exists($size, $cart[$uid]['sizes']))
+					$cart[$uid]['sizes'][$size] = $quantity;
+				
+				$cart[$uid]['quantity'] = array_sum($cart[$uid]['sizes']);
+			}
+
+			$_SESSION['shopping_cart'] = $cart;
+			$result = true;
 		}
 
+		define('_OMIT_STATS', 1);
 		print json_encode($result);
 	}
 
@@ -593,7 +688,7 @@ class shop extends Module {
 			$result[] = array(
 					'name'	=> $payment_method->get_name(),
 					'title'	=> $payment_method->get_title(),
-					'icon'	=> $payment_method->get_icon()
+					'icon'	=> $payment_method->get_icon_url()
 				);
 
 		// prevent statistics from showing

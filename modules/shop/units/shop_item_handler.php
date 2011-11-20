@@ -382,8 +382,12 @@ class ShopItemHandler {
 		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
 		$template->setMappedModule($this->name);
 		
+		// register tag handlers
 		if (!is_null($gallery)) 
 			$template->registerTagHandler('_image_list', &$gallery, 'tag_ImageList');
+
+		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
+		$template->registerTagHandler('_value_list', &$size_handler, 'tag_ValueList');
 			
 		// parse template
 		if (is_object($item)) {
@@ -395,6 +399,7 @@ class ShopItemHandler {
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 						'gallery'		=> $item->gallery,
+						'size_definition' => $item->size_definition,
 						'author'		=> $item->author,
 						'views'			=> $item->views,
 						'price'			=> $item->price,
@@ -551,8 +556,15 @@ class ShopItemHandler {
 			$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 			if (is_object($item)) {
-				// item was found, prepare result
+				// get item image url
+				$thumbnail_url = null;
+				if (class_exists('gallery')) {
+					$gallery = gallery::getInstance();
+					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+				}
+
 				$rating = 0;
+
 				$result['item'] = array(
 								'id'			=> $item->id,
 								'uid'			=> $item->uid,
@@ -561,10 +573,13 @@ class ShopItemHandler {
 								'gallery'		=> $item->gallery,
 								'views'			=> $item->views,
 								'price'			=> $item->price,
+								'tax'			=> $item->tax,
+								'weight'		=> $item->weight,
 								'votes_up'		=> $item->votes_up,
 								'votes_down'	=> $item->votes_down,
 								'rating'		=> $rating,
 								'timestamp'		=> $item->timestamp,
+								'thumbnail'		=> $thumbnail_url
 							);
 			} else {
 				// there was a problem with reading item from database
