@@ -8,7 +8,6 @@
 
 abstract class Module {
 	protected $language;
-	protected $sections;
 	protected $file;
 	public $name;
 	public $path;
@@ -22,9 +21,11 @@ abstract class Module {
 	protected function __construct($file) {
 		$this->path = dirname($file).'/';
 		$this->name = get_class($this);
-		$this->language = new LanguageHandler($this->path.'/data/language.xml');
-		$this->sections = new SectionHandler($this->path.'/data/section.xml');
 
+		// load language file if present
+		$this->language = new LanguageHandler($this->path.'/data/language.xml');
+
+		// load settings from database
 		$this->settings = $this->getSettings();
 	}
 
@@ -35,18 +36,6 @@ abstract class Module {
 	 * @param array $children
 	 */
 	abstract public function transferControl($params, $children);
-
-	/**
-	 * Returns module mapped section file relative to module path
-	 *
-	 * @param string $section
-	 * @param string $action
-	 * @param string $language
-	 * @return string
-	 */
-	public function getSectionFile($section, $action, $language="") {
-		return $this->path.$this->sections->getFile($section, $action, $language);
-	}
 
 	/**
 	 * Returns text for given module specific constant
