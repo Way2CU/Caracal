@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<tr>
+		<td>
+			<_var name="$params['name'][$language]"/>
+			<_if condition="!empty($params['size'])">
+				<small>
+					<_text constant="label_size" module="shop"/>
+					<_raw text=" "/>
+					<_var name="$params['size']"/>
+				</small>
+			</_if>
+		</td>
+		<td><_var name="$params['quantity']"/></td>
+		<td><_var name="$params['price']"/></td>
+		<td><_var name="$params['tax']"/></td>
+		<td><_var name="$params['weight']"/></td>
+		<td><_var name="$params['total']"/></td>
+	</tr>
+</document>

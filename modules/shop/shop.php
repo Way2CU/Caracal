@@ -29,10 +29,10 @@ class shop extends Module {
 		// create payment providers container
 		$this->payment_methods = array();
 
-
 		// load module style and scripts
 		if (class_exists('head_tag') && $section != 'backend') {
 			$head_tag = head_tag::getInstance();
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/checkout.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
 		}
@@ -199,7 +199,16 @@ class shop extends Module {
 					$handler->tag_CategoryList($params, $children);
 					break;
 					
-				case 'show_item_sizes':
+				case 'checkout':
+					$this->showCheckout();
+					break;
+
+				case 'checkout_completed':
+					$this->showCheckoutCompleted();
+					break;
+
+				case 'checkout_canceled':
+					$this->showCheckoutCanceled();
 					break;
 					
 				case 'json_get_item':
@@ -502,15 +511,48 @@ class shop extends Module {
 			$template = new TemplateHandler('checkout.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
-			$params = array();
+			$params = array(
+					);
 
 			// register tag handler
-			$template->registerTagHandler('_checkout_item_list', &$this, 'tag_CheckoutItemList');
+			$template->registerTagHandler('_checkout_form', &$this, 'tag_CheckoutForm');
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
 		}
+	}
+
+	/**
+	 * Show message for completed checkout and empty shopping cart
+	 */
+	private function showCheckoutCompleted() {
+		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_completed_message', &$this, 'tag_CompletedMessage');
+
+		$params = array(
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show message for canceled checkout
+	 */
+	private function showCheckoutCanceled() {
+		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_canceled_message', &$this, 'tag_CanceledMessage');
+
+		$params = array(
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -738,5 +780,222 @@ class shop extends Module {
 	 */
 	public function getDefaultCurrency() {
 		return $this->settings['default_currency'];
+	}
+
+	/**
+	 * Handle drawing checkout form
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CheckoutForm($tag_params, $children) {
+		$manager = ShopItemManager::getInstance();
+		$method = null;
+
+		// try to get specified payment method
+		if (isset($tag_params['method']) && array_key_exists($tag_params['method'], $this->payment_methods))
+			$method = $this->payment_methods[fix_chars($tag_params['method'])];
+
+		// try to get fallback method
+		if (is_null($method) && count($this->payment_methods) > 0) {
+			$keys = array_keys($this->payment_methods);
+			$method = $this->payment_methods[$keys[0]];
+		}
+
+		// we didn't manage to get any payment method, bail out
+		if (is_null($method))
+			return;
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
+		$template->setMappedModule($this->name);
+
+		$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
+
+		// colect ids from session
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$ids = array_keys($cart);
+
+		// get items from database and prepare result
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+
+		// prepare params
+		$shipping = 0;
+		$total_money = 0;
+		$total_weight = 0;
+		$items_for_checkout = array();
+
+		foreach ($items as $item) {
+			// include item data in summary
+			$tax = $item->tax;
+			$price = $item->price;
+			$uid = $item->uid;
+			
+			$total_money += ($price * (1 + ($tax / 100))) * $cart[$uid]['quantity']; 
+			$total_weight += $item->weight * $cart[$uid]['quantity'];
+
+			// add item to array for payment method
+			$db_item = array(
+					'name'		=> $item->name,
+					'price'		=> $item->price,
+					'tax'		=> $item->tax,
+					'weight'	=> $item->weight
+				);
+			$items_for_checkout[] = array_merge($db_item, $cart[$uid]);
+		}
+
+		// get fields from payment method
+		$base_url = 'http://'.$_SERVER['HTTP_HOST'];
+		$return_url = $base_url.url_Make('checkout_completed', 'shop');
+		$cancel_url = $base_url.url_Make('checkout_canceled', 'shop');
+
+		$checkout_fields = $method->new_payment(
+									$items_for_checkout,
+									$this->getDefaultCurrency(),
+									$return_url,
+									$cancel_url
+								);
+
+		// parse template
+		$params = array(
+					'checkout_url'		=> $method->get_url(),
+					'checkout_fields'	=> $checkout_fields,
+					'checkout_name'		=> $method->get_title(),
+					'sub-total'			=> number_format($total_money, 2),
+					'shipping'			=> number_format($shipping, 2),
+					'total_weight'		=> number_format($total_weight, 2),
+					'total'				=> number_format($total_money + $shipping, 2),
+					'currency'			=> $this->getDefaultCurrency()
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Handle drawing checkout items
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CheckoutItems($tag_params, $children) {
+		global $language;
+
+		$manager = ShopItemManager::getInstance();
+		$value_manager = ShopItemSizeValuesManager::getInstance();
+
+		// colect ids from session
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$ids = array_keys($cart);
+
+		// get items from database
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+		$values = $value_manager->getItems($value_manager->getFieldNames(), array());
+
+		// prepare sizes cache
+		$size_values = array();
+		
+		if (count($values) > 0)
+			foreach ($values as $value)
+				$size_values[$value->id] = $value->value;
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
+		$template->setMappedModule($this->name);
+
+		// parse template
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$cart_item = $cart[$item->uid];
+
+				if (count($cart_item['sizes'])) {
+					// process more item sizes for same item
+					foreach ($cart_item['sizes'] as $size_definition => $quantity) {
+						$total = ($item->price * (1 + ($item->tax / 100))) * $quantity;
+						$size_value = $size_values[$size_definition][$language];
+
+						$params = array(
+									'name'		=> $item->name,
+									'size'		=> $size_value,
+									'quantity'	=> $quantity,
+									'price'		=> number_format($item->price, 2),
+									'tax'		=> number_format($item->tax, 2),
+									'weight'	=> number_format($item->weight, 2),
+									'total'		=> number_format($total, 2)
+								);
+
+						$template->restoreXML();
+						$template->setLocalParams($params);
+						$template->parse();
+					}
+
+				} else {
+					// process only one item size
+					$quantity = $cart[$item->uid]['quantity'];
+					$total = ($item->price * (1 + ($item->tax / 100))) * $quantity;
+
+					$params = array(
+								'name'		=> $item->name,
+								'size'		=> '',
+								'quantity'	=> $quantity,
+								'price'		=> number_format($item->price, 2),
+								'tax'		=> number_format($item->tax, 2),
+								'weight'	=> number_format($item->weight, 2),
+								'total'		=> number_format($total, 2)
+							);
+
+					$template->restoreXML();
+					$template->setLocalParams($params);
+					$template->parse();
+				}
+			}
+	}
+
+	/**
+	 * Show message for completed checkout operation
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CompletedMessage($tag_params, $children) {
+		// kill shopping cart
+		$_SESSION['shopping_cart'] = array();
+
+		// show message
+		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
+		$template->setMappedModule($this->name);
+		
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_checkout_completed'),
+					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+					'button_action'	=> url_Make('', 'home')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show message for canceled checkout operation
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CanceledMessage($tag_params, $children) {
+		// show message
+		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
+		$template->setMappedModule($this->name);
+		
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_checkout_canceled'),
+					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+					'button_action'	=> url_Make('', 'home')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 }

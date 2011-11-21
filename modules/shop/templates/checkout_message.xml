@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="checkout_message">
+		<h3><_text constant="title_checkout_message" module="shop"/></h3>
+		<p>
+			<_var name="$params['message']"/>
+		</p>
+	</div>
+
+	<div class="checkout_controls for_message">
+		<button type="button" onclick="'javascript: window.location=\''.$params['button_action'].'\';'" eval="onclick">
+			<_var name="$params['button_text']"/>
+		</button>
+	</div>
+</document>

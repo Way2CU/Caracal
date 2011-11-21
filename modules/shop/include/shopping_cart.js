@@ -162,6 +162,10 @@ function ShoppingCart() {
 		this.label_shipping.html(language_handler.getText('shop', 'shipping'));
 		this.label_total.html(language_handler.getText('shop', 'total_amount'));
 
+		// cache language constants
+		language_handler.getText('shop', 'edit_item');
+		language_handler.getText('shop', 'delete_item')
+
 		// connect events
 		$(window).resize(this.__handleWindowResize);
 
@@ -299,8 +303,6 @@ function ShoppingCart() {
 	this.addItem = function(uid, size, data, skip_notify, skip_update) {
 		var key = size ? uid + '_' + size : uid;
 
-		console.log('add_item: ', key, uid, size);
-
 		if (key in this._items) {
 			// increase number of existing items
 			var item = this._items[key];
@@ -352,8 +354,6 @@ function ShoppingCart() {
 
 		if (!key in this._items)
 			return;
-
-		console.log('remove item:', uid, size, key in this._items);
 
 		var text = language_handler.getText('shop', 'message_remove_item_from_cart');
 		var item_object = this._items[key].getContainer();
@@ -413,6 +413,19 @@ function ShoppingCart() {
 		var method_name = $(this).data('name');
 
 		if (self._item_count > 0) {
+			var url = self._getBackendURL();
+			var params = {
+					section: 'shop',
+					action: 'checkout',
+					method: method_name
+				}
+
+			// append additional parameters to base URL
+			url += '?' + $.param(params);
+
+			// navigate to checkout
+			window.location = url;
+
 		} else {
 			// show warning to user
 			alert(language_handler.getText('shop', 'message_no_items_in_cart'));
@@ -632,8 +645,6 @@ function ShoppingCart() {
 		var total_items = data.count;
 		var items_added = 0;
 
-		console.log('content load: ', data);
-
 		self._size_values = data.size_values;
 
 		for (var key in items) {
@@ -645,12 +656,9 @@ function ShoppingCart() {
 			// try adding item from sizes list
 			items_added = 0;
 			for (var i in item.sizes) {
-				console.log(key, i);
 				self.addItem(key, i, item, true, current_item < total_items);
 				items_added++;
 			}
-
-			console.log('created items: ', items_added);
 
 			// add single size item to shopping cart
 			if (items_added == 0)
@@ -764,8 +772,6 @@ function ShopItem(uid, size, cart, data) {
 	this._tax = 0;
 	this._name = '';
 	this._image_url = '';
-
-	console.log('create_item', this._uid, this._size, data);
 
 	/**
 	 * Complete object initialization

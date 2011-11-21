@@ -32,6 +32,7 @@
 		<constant name="title_size_value_delete">Shop: Delete size value</constant>
 		<constant name="title_size_delete">Shop: Delete item size definition</constant>
 		<constant name="title_currencies_set_default">Shop: Set default currency</constant>
+		<constant name="title_checkout_message">Checkout</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -41,6 +42,14 @@
 		<constant name="column_title">Title</constant>
 		<constant name="column_views">Views</constant>
 		<constant name="column_value">Value</constant>
+		<constant name="column_tax">Tax</constant>
+		<constant name="column_quantity">Quantity</constant>
+		<constant name="column_weight">Weight</constant>
+		<constant name="column_item_total">Item total</constant>
+		<constant name="column_subtotal">Sub-total:</constant>
+		<constant name="column_shipping">Shipping:</constant>
+		<constant name="column_total_weight">Total weight:</constant>
+		<constant name="column_total">Total:</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
@@ -80,6 +89,8 @@
 		<constant name="message_remove_item_from_cart">Are you sure about removing this item?</constant>
 		<constant name="message_edit_item_in_cart">Please enter new quantity for selected item.</constant>
 		<constant name="message_no_items_in_cart">There are no items in your shopping cart.</constant>
+		<constant name="message_checkout_completed">Checkout is now completed. You should receive email from us soon confirming your purchase. If you experience any problems, please let us know. Thank you for using our online services.</constant>
+		<constant name="message_checkout_canceled">Your checkout was canceled. Shopping cart was not cleared in case you want to continue shopping and checkout later. If you canceled because of problem on our part, please let us know.</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
@@ -104,5 +115,7 @@
 		<constant name="values">Values</constant>
 		<constant name="edit_item">Edit item quantity</constant>
 		<constant name="delete_item">Remove item from shopping cart</constant>
+		<constant name="with">with</constant>
+		<constant name="button_take_me_back">Go to front page</constant>
 	</language>
 </document>

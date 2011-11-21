@@ -59,9 +59,12 @@ abstract class PaymentMethod {
 	 * boolean stating the success of initial payment process.
 	 * 
 	 * @param array $items
+	 * @param string $currency
+	 * @param string $return_url
+	 * @param string $cancel_url
 	 * @return string
 	 */
-	abstract public function new_payment($items, $currency);
+	abstract public function new_payment($items, $currency, $return_url, $cancel_url);
 	
 	/**
 	 * Handle verification received from payment gateway

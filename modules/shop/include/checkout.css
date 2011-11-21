@@ -1,0 +1,228 @@
+/**
+ * Checkout Style Sheet
+ *
+ * Copyright (c) 2011. by Way2CU
+ * Author: Mladen Mijatov
+ */
+@CHARSET "UTF-8";
+
+div#checkout {
+	display: block;
+	width: 980px;
+
+	margin-top: 50px;
+	margin-left: auto;
+	margin-right: auto;
+
+	position: relative;
+}
+
+table.checkout_details {
+	width: 100%;
+
+	border: 1px solid white;
+	border-radius: 8px 8px 0px 0px;
+	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+
+	color: #333333;
+	font-size: 13px;
+}
+
+/**
+ * Header
+ */
+table.checkout_details thead td {
+	padding: 5px;
+	padding-left: 7px;
+	padding-right: 7px;
+
+	border-right: 1px solid white;
+	background-color: #333333;
+
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+table.checkout_details thead td:first-child {
+	border-radius: 7px 0px 0px; 0px;
+}
+
+table.checkout_details thead td:last-child {
+	border-right: 0px;
+	border-radius: 0px 7px 0px 0px;
+}
+
+/**
+ * Body
+ */
+table.checkout_details tbody td {
+	padding: 5px;
+	padding-left: 7px;
+	padding-right: 7px; 
+
+	font-size: 14px;
+}
+
+table.checkout_details tbody td small {
+	display: block;
+
+	color: #909090;
+	font-size: 12px;
+}
+
+table.checkout_details tbody tr td:last-child {
+	background-color: #F5F5F5;
+}
+
+table.checkout_details tbody tr:nth-child(even) td {
+	background-color: #F5F5F5;
+}
+
+table.checkout_details tbody tr:nth-child(even) td:last-child {
+	background-color: #E7E7E7;
+}
+/**
+ * Footer
+ */
+table.checkout_details tfoot td {
+	padding: 4px;
+
+	font-size: 14px;
+}
+
+table.checkout_details tfoot tr.first td {
+	border-top: 1px solid #333333;
+}
+
+table.checkout_details tfoot td.subtotal-label {
+	text-align: right;
+}
+
+table.checkout_details tfoot td.subtotal-value {
+	font-weight: bold;
+}
+
+table.checkout_details tfoot td.total-value,
+table.checkout_details tfoot td.total-label {
+	padding-top: 6px;
+	border-top: 1px solid #333333;
+	background-color: #F0F0F0;
+
+	font-size: 16px;
+}
+
+table.checkout_details tfoot td.total-label {
+	text-align: right;
+}	
+
+table.checkout_details tfoot td.total-value {
+	font-weight: bold;
+}
+
+table.checkout_details tfoot td.total-value,
+table.checkout_details tfoot td.subtotal-value { 
+	padding-left: 7px;
+	padding-right: 7px;
+}
+
+/**
+ * Controls
+ */
+div.checkout_controls {
+	display: block;
+	margin-top: 40px;
+
+	text-align: right;
+}
+
+div.checkout_controls button {
+	padding: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+
+	border: 1px solid #0b63ce;
+	border-radius: 5px;
+
+	background-color: #0b6fd4;
+	background-image: url(../images/checkout_button_back.png);
+	background-repeat: repeat-x;
+	background-positiont: left top;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
+				inset 0 1px rgba(255, 255, 255, 0.3),
+				inset 0 10px rgba(255, 255, 255, 0.2),
+    			inset 0 10px 20px rgba(255, 255, 255, 0.25),
+    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+
+	color: white;
+	font-size: 16px;
+	font-weight: bold;
+	text-shadow: -1px -1px 0px #0b63ce;
+}
+
+div.checkout_controls button:hover {
+	background-color: #0d9ed5;
+	background-image: url(../images/checkout_button_back_hover.png);
+}
+
+div.checkout_controls button:active {
+	background-color: #47a0f3;
+	background-image: url(../images/checkout_button_back_active.png);
+
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
+    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+}
+
+div.checkout_controls button small {
+	display: block;
+
+	font-size: 12px;
+	font-weight: normal;
+}
+
+div.checkout_controls.for_message {
+	width: 450px;
+
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/**
+ * Checkout Message
+ */
+div.checkout_message {
+	display: block;
+	width: 450px;
+
+	position: relative;
+
+	margin-left: auto;
+	margin-right: auto;
+
+	border: 1px solid white;
+	border-radius: 8px 8px 0px 0px;
+	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+
+	color: #333333;
+	font-size: 13px;
+}
+
+div.checkout_message h3 {
+	margin: 0px;
+	padding: 5px;
+
+	border-radius: 7px 7px 0px 0px;
+	background-color: #333333;
+
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+}
+
+div.checkout_message p {
+	display: block;
+	margin: 0px;
+	padding: 10px;
+}
+
