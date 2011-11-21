@@ -237,7 +237,7 @@ class TemplateHandler {
 						$new->parse();
 					} else {
 						// log error
-						trigger_error('Mapped module is not loaded!', E_USER_WARNING);
+						trigger_error('Mapped module is not loaded! File: '.$this->file, E_USER_WARNING);
 					}
 					break;
 
