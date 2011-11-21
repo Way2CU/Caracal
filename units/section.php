@@ -55,11 +55,14 @@ class SectionHandler {
 		if (!is_null($xml_languages) && count($xml_languages) > 0)
 			foreach ($xml_languages as $xml_language)
 				if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == "all") {
-					$xml_actions = $xml_language->action;
+					if (array_key_exists('file', $xml_language->tagAttrs)) 
+						$result = $xml_language->tagAttrs['file']; else
+						$xml_actions = $xml_language->action;
+
 					break;
 				}
 
-		if (!is_null($xml_actions) && count($xml_actions) > 0)
+		if (empty($result) && !is_null($xml_actions) && count($xml_actions) > 0)
 			foreach ($xml_actions as $xml_action)
 				if ($xml_action->tagAttrs['name'] == $action) {
 					$result = $xml_action->tagAttrs['file'];
