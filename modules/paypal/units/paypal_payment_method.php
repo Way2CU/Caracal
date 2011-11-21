@@ -3,7 +3,7 @@
 
 class PayPal_PaymentMethod extends PaymentMethod {
 	private static $_instance;
-	private static $url = 'https://www.paypal.com/cgi-bin/webscr';
+	private $url = 'https://www.paypal.com/cgi-bin/webscr';
 
 	/**
 	 * Constructor
@@ -75,10 +75,17 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 * boolean stating the success of initial payment process.
 	 * 
 	 * @param array $items
+	 * @param string $currency
+	 * @param string $return_url
+	 * @param string $cancel_url
 	 * @return string
 	 */
-	public function new_payment($items, $currency) {
-		$account = $this->parent->settings['account'];
+	public function new_payment($items, $currency, $return_url, $cancel_url) {
+		global $language;
+
+		if (array_key_exists('account', $this->parent->settings))
+			$account = $this->parent->settings['account']; else
+			$account = 'hanan.avzuk@gmail.com';
 
 		// prepare basic parameters
 		$params = array(
@@ -86,22 +93,29 @@ class PayPal_PaymentMethod extends PaymentMethod {
 				'upload'		=> '1',
 				'business'		=> $account,  // paypal merchant account email
 				'currency_code'	=> $currency,
-				'weight_unit'	=> 'kgs'
+				'weight_unit'	=> 'kgs',
+				'lc'			=> $language,
+				'return'		=> $return_url,
+				'cancel_return'	=> $cancel_url
 			);
 
 		// prepare items for checkout
-		for ($i = 1; $i <= count($items); $i++) {
-			$item = $items[$i];
+		$item_count = count($items);
+		for ($i = 1; $i <= $item_count; $i++) {
+			$item = array_shift($items);
 
-			$params["item_name_{$i}"] = $item['name'];
+			$params["item_name_{$i}"] = $item['name'][$language];
 			$params["amount_{$i}"] = $item['price'];
 			$params["quantity_{$i}"] = $item['quantity'];
-			$params["tax_{$i}"] = $item['tax'];
+			$params["tax_{$i}"] = $item['price'] * ($item['tax'] / 100);
 			$params["weight_{$i}"] = $item['weight'];
 		}
 
 		// create HTML form
+		$result = '';
 
+		foreach ($params as $key => $value)
+			$result .= "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\">";
 
 		return $result;
 	}
