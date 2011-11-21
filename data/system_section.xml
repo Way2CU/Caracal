@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../units/schema/section.dtd">
 <document>
-	<section name="backend" module="backend">
-		<language name="all" file="backend.xml" />
-	</section>
 	<section name="backend_module" module="backend">
 		<language name="all" file="backend_module.xml" />
 	</section>
