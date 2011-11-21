@@ -151,13 +151,8 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function transferControl($params = array(), $children=array()) {
-		// user is not logged, redirect him to a proper place
-		if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
-			$session_manager = new SessionManager($this);
-			$session_manager->transferControl();
-			return;
-		}
-
+		/*
+		TODO: Get rid of this!
 		// dead lock protection for backend module
 		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
 		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
@@ -166,14 +161,38 @@ class backend extends Module {
 			unset($_REQUEST['module']);
 			unset($params['action']);
 		}
+		*/
 
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'login':
+					// if user is not logged, redirect him to a proper place
+					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
+						$session_manager = new SessionManager($this);
+						$session_manager->transferControl();
+						return;
+					}
+					break;
+
+				case 'login_commit':
+				case 'logout':
+				case 'logout_commit':
+					$session_manager = new SessionManager($this);
+					$session_manager->transferControl();
+					break;
+
 				case 'draw_menu':
 					$this->drawCompleteMenu();
 					break;
 
 				case 'transfer_control':
+					// if user is not logged, redirect him to a proper place
+					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
+						$session_manager = new SessionManager($this);
+						$session_manager->transferControl();
+						return;
+					}
+
 					// fix input parameters
 					foreach($_REQUEST as $key => $value)
 						$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
@@ -192,6 +211,11 @@ class backend extends Module {
 						$module->transferControl($params, $children);
 					}
 
+					break;
+
+				default: 
+					// draw main backend as default
+					$this->showBackend();
 					break;
 			}
 
@@ -254,6 +278,18 @@ class backend extends Module {
 	}
 
 	public function onDisable() {
+	}
+
+	private function showBackend() {
+		$template = new TemplateHandler('main.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('_main_menu', &$this, 'tag_MainMenu');
+
+		$params = array();
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -693,7 +729,7 @@ class backend extends Module {
 	/**
 	 * Draws all menus for current level
 	 */
-	private function drawCompleteMenu() {
+	public function tag_MainMenu($tag_params, $children) {
 		echo '<ul id="navigation">';
 
 		foreach ($this->menus as $item)
