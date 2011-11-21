@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div id="main_menu">
-		<_if condition="isset($_SESSION['logged']) and $_SESSION['logged']">
-			<_module name="backend" action="draw_menu" />
-		</_if>
+	<_var name="_HTML_401"/>
+	<html>
+		<head>
+			<title><_text constant="site_title" /><_raw text=" - "/><_text constant="title" module="backend" /></title>
+			<_module name="head_tag" action="print_tag"/>
+		</head>
 
-		<ol id="language_menu">
-			<_module name="language_menu" action="print" from_module="backend"/>
-		</ol>
-	</div>
+		<body>
+			<div id="wrap">
+				<div id="main_menu">
+					<_if condition="isset($_SESSION['logged']) and $_SESSION['logged']">
+						<_main_menu/>
+					</_if>
 
-	<_if condition="!isset($_SESSION['logged']) or !$_SESSION['logged']">
-		<div id="login_window" class="window">
-			<div class="title"><_text constant="title_login" module="backend"/></div>
-			<div class="content">
-				<_module name="backend" action="login"/>
+					<ol id="language_menu">
+						<_module name="language_menu" action="print" from_module="backend"/>
+					</ol>
+				</div>
+
+				<_if condition="!isset($_SESSION['logged']) or !$_SESSION['logged']">
+					<div id="login_window" class="window">
+						<div class="title"><_text constant="title_login" module="backend"/></div>
+						<div class="content">
+							<_module name="backend" action="login"/>
+						</div>
+					</div>
+					<script type="text/javascript">
+						$(document).ready(function() {
+							window_system.attachToStructure('login_window', 350, false);
+						});
+					</script>
+				</_if>
 			</div>
-		</div>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				window_system.attachToStructure('login_window', 350, false);
-			});
-		</script>
-	</_if>
+			<div id="copyright">
+				<_text constant="backend_copyright"/>
+			</div>
+		</body>
+	</html>
 </document>
