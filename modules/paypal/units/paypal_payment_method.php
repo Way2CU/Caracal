@@ -105,6 +105,8 @@ class PayPal_PaymentMethod extends PaymentMethod {
 			$item = array_shift($items);
 
 			$params["item_name_{$i}"] = $item['name'][$language];
+			$params["item_number_{$i}"] = $item['uid'];
+			$params["item_description_{$i}"] = 'njaaaa';
 			$params["amount_{$i}"] = $item['price'];
 			$params["quantity_{$i}"] = $item['quantity'];
 			$params["tax_{$i}"] = $item['price'] * ($item['tax'] / 100);
