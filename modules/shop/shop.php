@@ -198,6 +198,14 @@ class shop extends Module {
 					$handler = ShopCategoryHandler::getInstance($this);
 					$handler->tag_CategoryList($params, $children);
 					break;
+
+				case 'show_completed_message':
+					$this->tag_CompletedMessage($params, $children);
+					break;
+
+				case 'show_canceled_message':
+					$this->tag_CanceledMessage($params, $children);
+					break;
 					
 				case 'checkout':
 					$this->showCheckout();
@@ -578,6 +586,7 @@ class shop extends Module {
 		$result['cart'] = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$result['size_values'] = array();
 		$result['count'] = count($result['cart']);
+		$result['currency'] = $this->getDefaultCurrency();
 
 		// colect ids from session
 		$ids = array_keys($result['cart']);
