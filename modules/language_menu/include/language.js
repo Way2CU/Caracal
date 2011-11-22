@@ -24,6 +24,10 @@ function LanguageHandler() {
 	// local language constant cache
 	this.cache = {};
 
+	this.init = function() {
+		this.loadLanguages();
+	};
+
 	/**
 	 * Get language list
 	 *
@@ -94,6 +98,160 @@ function LanguageHandler() {
 	};
 
 	/**
+	 * Get language constant and call specified function
+	 *
+	 * @param string module
+	 * @param string constant
+	 * @param object callback
+	 */
+	this.getTextAsync = function(module, constant, callback) {
+		var id = (module == null ? '_global' : module) + '.' + constant;
+		var data = {
+					section: 'language_menu',
+					action: 'json_get_text',
+					constant: constant
+				};
+
+		if (module != null)
+			data.from_module = module;
+
+		// check local cache first
+		if (this.cache[id] == undefined) {
+			$.ajax({
+				url: this.backend_url,
+				type: 'GET',
+				async: true,
+				data: data,
+				dataType: 'json',
+				context: this,
+				success: function(data) {
+					this.cache[id] = data.text;
+					callback(constant, data.text);
+				}
+			});
+
+		} else {
+			// we have local cache, send that
+			callback(constant, this.cache[id]);
+		}
+	};
+
+	/**
+	 * Get array of language constants from server
+	 *
+	 * @param string module
+	 * @param array constants
+	 * @return array
+	 */
+	this.getTextArray = function(module, constants) {
+		var id = (module == null ? '_global' : module) + '.';
+		var data = {
+					section: 'language_menu',
+					action: 'json_get_text_array',
+				};
+		var result = {};
+		var request = [];
+
+		if (module != null)
+			data.from_module = module;
+
+		// check for all constants if we have cache
+		for (var i=0; i < constants.length; i++) {
+			var key = id + constants[i];
+
+			if (key in this.cache) {
+				// add cached value to result
+				result[constants[i]] = this.cache[key];
+
+			} else {
+				// add constant to requested list
+				request.push(constants[i]);
+			}
+		}
+
+		// check local cache first
+		if (request.length > 0) {
+			data.constants = request;
+
+			$.ajax({
+				url: this.backend_url,
+				type: 'POST',
+				async: false,
+				data: data,
+				dataType: 'json',
+				context: this,
+				success: function(data) {
+					for (var key in data.text) {
+						this.cache[id + key] = data.text[key];
+						result[key] = data.text[key];
+					}
+				}
+			});
+		}
+
+		return result;
+	};
+
+	/**
+	 * Get array of language constants and call specified function when completed
+	 *
+	 * @param string module
+	 * @param array constants
+	 * @param object callback
+	 */
+	this.getTextArrayAsync = function(module, constants, callback) {
+		var id = (module == null ? '_global' : module) + '.';
+		var data = {
+					section: 'language_menu',
+					action: 'json_get_text_array',
+				};
+		var result = {};
+		var request = [];
+
+		if (module != null)
+			data.from_module = module;
+
+		// check for all constants if we have cache
+		for (var i=0; i < constants.length; i++) {
+			var key = id + constants[i];
+
+			if (key in this.cache) {
+				// add cached value to result
+				result[constants[i]] = this.cache[key];
+
+			} else {
+				// add constant to requested list
+				request.push(constants[i]);
+			}
+		}
+
+		// check local cache first
+		if (request.length > 0) {
+			data.constants = request;
+
+			$.ajax({
+				url: this.backend_url,
+				type: 'POST',
+				async: false,
+				data: data,
+				dataType: 'json',
+				context: this,
+				success: function(data) {
+					for (var key in data.text) {
+						this.cache[id + key] = data.text[key];
+						result[key] = data.text[key];
+					}
+
+					callback(result);
+				}
+			});
+		} else {
+			// we have all the data cached, send them right away
+			callback(result);
+		}
+	};
+
+	/**
 	 * Get current language and store it localy
 	 */
 	this.getCurrentLanguage = function() {
@@ -141,11 +299,11 @@ function LanguageHandler() {
 		this.languages = data.items;
 		this.rtl_languages = data.rtl;
 		this.default_language = data.default_language;
+		this.current_language = data.current_language;
 	};
 
 	// initialize
-	this.loadLanguages();
-	this.getCurrentLanguage();
+	this.init();
 }
 
 $(document).ready(function() {
