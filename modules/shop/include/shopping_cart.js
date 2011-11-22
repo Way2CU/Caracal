@@ -66,6 +66,22 @@ function ShoppingCart() {
 	 * Finish object initialization
 	 */
 	this.init = function() {
+		var constants = [
+					'show_shopping_cart',
+					'hide_shopping_cart',
+					'empty_shopping_cart',
+					'subtotal_amount',
+					'checkout',
+					'clear',
+					'tax',
+					'shipping',
+					'total_amount',
+					'edit_item',
+					'delete_item'
+				];
+
+		console.log(language_handler.getTextArray('shop', constants));
+
 		// configure main container
 		this.main_container
 				.attr('id', 'shopping_cart')
@@ -161,10 +177,6 @@ function ShoppingCart() {
 		this.label_tax.html(language_handler.getText('shop', 'tax'));
 		this.label_shipping.html(language_handler.getText('shop', 'shipping'));
 		this.label_total.html(language_handler.getText('shop', 'total_amount'));
-
-		// cache language constants
-		language_handler.getText('shop', 'edit_item');
-		language_handler.getText('shop', 'delete_item')
 
 		// connect events
 		$(window).resize(this.__handleWindowResize);
@@ -676,6 +688,7 @@ function ShoppingCart() {
 	 * @param string error
 	 */
 	this.__handleContentLoadError = function(xhr, status, error) {
+		console.log(status, error);
 		alert('There was a problem while trying to load items in your shopping cart. Try refreshing page. If problem persists, please contact us.');
 	};
 	
@@ -697,6 +710,7 @@ function ShoppingCart() {
 	 * @param string error
 	 */
 	this.__handleCurrencyLoadError = function(xhr, status, error) {
+		console.log(status, error);
 		alert('There was a problem while trying to load default currency.');
 	};
 
