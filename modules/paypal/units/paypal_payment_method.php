@@ -3,7 +3,27 @@
 
 class PayPal_PaymentMethod extends PaymentMethod {
 	private static $_instance;
-	private $url = 'https://www.paypal.com/cgi-bin/webscr';
+
+	//private $url = 'https://www.paypal.com/cgi-bin/webscr';
+	private $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+
+	/**
+	 * Transaction type
+	 * @var array
+	 */
+	private $type = array(
+				'cart'	=> TransactionType::SHOPPING_CART,
+			);
+
+	/**
+	 * Transaction status
+	 * @var array
+	 */
+	private $status = array(
+				'Pending'	=> TransactionStatus::PENDING,
+				'Completed'	=> TransactionStatus::COMPLETED,
+				'Denied'	=> TransactionStatus::DENIED,
+			);
 
 	/**
 	 * Constructor
@@ -29,21 +49,24 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	}
 	
 	/**
-	 * Test if payment method can handle data
-	 * 
-	 * @param mixed $data
-	 * @return boolean
-	 */
-	public function can_handle($data) { 
-
-	}
-
-	/**
 	 * Return URL for checkout form
 	 * @return string
 	 */
 	public function get_url() {
 		return $this->url;
+	}
+
+	/**
+	 * Get account from parent
+	 *
+	 * @return string
+	 */
+	private function _getAccount() {
+		if (array_key_exists('account', $this->parent->settings))
+			$account = $this->parent->settings['account']; else
+			$account = 'seller_1322054168_biz@gmail.com';
+
+		return $account;
 	}
 
 	/**
@@ -83,9 +106,7 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	public function new_payment($items, $currency, $return_url, $cancel_url) {
 		global $language;
 
-		if (array_key_exists('account', $this->parent->settings))
-			$account = $this->parent->settings['account']; else
-			$account = 'hanan.avzuk@gmail.com';
+		$account = $this->_getAccount();
 
 		// prepare basic parameters
 		$params = array(
@@ -96,7 +117,7 @@ class PayPal_PaymentMethod extends PaymentMethod {
 				'weight_unit'	=> 'kgs',
 				'lc'			=> $language,
 				'return'		=> $return_url,
-				'cancel_return'	=> $cancel_url
+				'cancel_return'	=> $cancel_url,
 			);
 
 		// prepare items for checkout
@@ -126,13 +147,13 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 * Handle verification received from payment gateway
 	 * and return boolean denoting success of complete payment.
 	 * 
-	 * @param string $id
 	 * @return boolean
 	 */
-	public function verify_payment($id) {
+	public function verify_payment() {
 		define('_OMIT_STATS', 1);
 
-		trigger_error(print_r($_REQUEST, true));
+		$result = false;
+
 		// prepare response data
 		$strip = get_magic_quotes_gpc();
 		$response = "cmd=_notify-validate";
@@ -155,94 +176,99 @@ class PayPal_PaymentMethod extends PaymentMethod {
 			fputs($socket, $header.$response);
 
 			// get response from server
-			$result = fgets($socket);
+			$response = fgets($socket);
 
-			if (strcmp($result, 'VERIFIED') && isset($_POST['txn_type'])) {
-				// record payment
-				$this->recordTransaction();
-
-				// source data verified, now we can process them
-				switch (strtolower($_POST['txn_type'])) {
-					case 'subscr_payment':
-						// subscription payment
-						$custom = fix_chars($_REQUEST['custom']);
-						$item_code = fix_chars($_REQUEST['item_number']);
-						$manager = PayPal_SubscriptionManager::getInstance();
-
-						$item = $manager->getSingleItem(
-													array('id'),
-													array(
-														'custom'	=> $custom,
-														'item_code'	=> $item_code
-													));
-
-						// prepare data for insertion
-						$time = new DateTime();
-						$time->modify('next month');
-
-						$data = array(
-								'custom'		=> $custom,
-								'item_code'		=> $item_code,
-								'valid_until'	=> $time->format('Y-m-d H:m:s')
-							);
-
-						if (is_object($item)) {
-							// transaction already exists, we only need to update the time
-							$manager->updateData($data, array('id' => $item->id));
-
-						} else {
-							// no transaction found, create new
-							$manager->insertData($data);
-						}
-				}
-
-			} else if (strcmp($result, 'INVALID')) {
-				// data did not came from paypal.com
-
-			}
-		} else {
-
+			// set result
+			$result = ($_POST['receiver_email'] == $this->_getAccount()) && strcmp($response, 'VERIFIED');
 		}
+
+		return $result;
 	}
 	
 	/**
 	 * Get items from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	public function get_items($data) {
-		
+	public function get_items() {
+		$result = array();
+		$item_count = fix_id($_POST['num_cart_items']);
+
+		trigger_error(print_r($item_count, true));
+
+		for ($i = 1; $i < $item_count + 1; $i++) {
+			$result[] = array(
+					'uid'		=> fix_chars($_POST["item_number{$i}"]),
+					'quantity'	=> fix_id($_POST["quantity{$i}"]),
+					'price'		=> escape_chars($_POST["mc_gross_{$i}"]),
+					'tax'		=> 0
+				);
+		}
+
+		return $result;
 	}
 	
 	/**
 	 * Get buyer information from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	public function get_buyer_info($data) {
-		
+	public function get_buyer_info() {
+		$address = array(
+				'name'		=> fix_chars($_POST['address_name']),
+				'street'	=> fix_chars($_POST['address_street']),
+				'city'		=> fix_chars($_POST['address_city']),
+				'zip'		=> fix_chars($_POST['address_zip']),
+				'state'		=> fix_chars($_POST['address_state']),
+				'country'	=> fix_chars($_POST['address_country']),
+			);
+
+		$result = array(
+				'first_name'	=> fix_chars($_POST['first_name']),
+				'last_name'		=> fix_chars($_POST['last_name']),
+				'email'			=> fix_chars($_POST['payer_email']),
+				'uid'			=> fix_chars($_POST['payer_id']),
+				'address'		=> $address,
+			);
+
+		return $result;
 	}
 	
 	/**
 	 * Get transaction information from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	public function get_transaction_info($data) {
+	public function get_transaction_info() {
+		$type = array_key_exists($_POST['txn_type'], $this->type) ? $this->type[$_POST['txn_type']] : TransactionType::SHOPPING_CART;
+		$status = array_key_exists($_POST['payment_status'], $this->status) ? $this->status[$_POST['payment_status']] : TransactionStatus::DENIED;
+
+		$result = array(
+				'id'		=> fix_chars($_POST['txn_id']),
+				'type'		=> $type,
+				'status'	=> $status,
+				'custom'	=> isset($_POST['custom']) ? fix_chars($_POST['custom']) : ''
+			);
 		
+		return $result;
 	}
 	
 	/**
 	 * Get payment infromation from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	public function get_payment_info($data) {
-		
+	public function get_payment_info() {
+		$result = array(
+				'tax'		=> escape_chars($_POST['tax']),
+				'fee'		=> escape_chars($_POST['mc_fee']),
+				'gross'		=> escape_chars($_POST['mc_gross']),
+				'handling'	=> escape_chars($_POST['mc_handling']),
+				'shipping'	=> escape_chars($_POST['mc_shipping']),
+				'currency'	=> escape_chars($_POST['mc_currency'])
+			);
+
+		return $result;
 	}
 	
 }
