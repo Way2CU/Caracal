@@ -19,9 +19,11 @@ class ShopTransactionsManager extends ItemManager {
 		$this->addProperty('buyer', 'int');
 		$this->addProperty('address', 'int');
 		$this->addProperty('uid', 'varchar');
-		$this->addProperty('type', 'varchar');
+		$this->addProperty('type', 'smallint');
+		$this->addProperty('status', 'smallint');
 		$this->addProperty('custom', 'varchar');
 		$this->addProperty('currency', 'int');
+		$this->addProperty('handling', 'decimal');
 		$this->addProperty('shipping', 'decimal');
 		$this->addProperty('fee', 'decimal');
 		$this->addProperty('tax', 'decimal');

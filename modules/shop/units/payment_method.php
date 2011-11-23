@@ -23,14 +23,6 @@ abstract class PaymentMethod {
 	}
 	
 	/**
-	 * Test if payment method can handle data
-	 * 
-	 * @param mixed $data
-	 * @return boolean
-	 */
-	abstract public function can_handle($data);
-
-	/**
 	 * Get URL to be used in checkout form.
 	 * @return string
 	 */
@@ -74,37 +66,33 @@ abstract class PaymentMethod {
 	 * @param string $currency	
 	 * @return boolean
 	 */
-	abstract public function verify_payment($id);
+	abstract public function verify_payment();
 	
 	/**
 	 * Get items from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	abstract public function get_items($data);
+	abstract public function get_items();
 	
 	/**
 	 * Get buyer information from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	abstract public function get_buyer_info($data);
+	abstract public function get_buyer_info();
 	
 	/**
 	 * Get transaction information from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	abstract public function get_transaction_info($data);
+	abstract public function get_transaction_info();
 	
 	/**
 	 * Get payment infromation from data
 	 * 
-	 * @param mixed $data
 	 * @return array
 	 */
-	abstract public function get_payment_info($data);
+	abstract public function get_payment_info();
 }

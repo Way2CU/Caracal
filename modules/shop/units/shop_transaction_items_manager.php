@@ -18,7 +18,9 @@ class ShopTransactionItemsManager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('transaction', 'int');
 		$this->addProperty('item', 'int');
-		$this->addProperty('price', 'float');
+		$this->addProperty('price', 'decimal');
+		$this->addProperty('tax', 'decimal');
+		$this->addProperty('amount', 'int');
 	}
 
 	/**

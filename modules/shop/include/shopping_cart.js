@@ -80,8 +80,6 @@ function ShoppingCart() {
 					'delete_item'
 				];
 
-		console.log(language_handler.getTextArray('shop', constants));
-
 		// configure main container
 		this.main_container
 				.attr('id', 'shopping_cart')
@@ -186,7 +184,6 @@ function ShoppingCart() {
 
 		// load cart items from cookies
 		this._loadContent();
-		this._loadDefaultCurrency();
 		this._loadPaymentMethods();
 
 		// manually call event handler to
@@ -688,8 +685,6 @@ function ShoppingCart() {
 	 * @param string error
 	 */
 	this.__handleContentLoadError = function(xhr, status, error) {
-		console.log(status, error);
-		alert('There was a problem while trying to load items in your shopping cart. Try refreshing page. If problem persists, please contact us.');
 	};
 	
 	/**
@@ -710,8 +705,6 @@ function ShoppingCart() {
 	 * @param string error
 	 */
 	this.__handleCurrencyLoadError = function(xhr, status, error) {
-		console.log(status, error);
-		alert('There was a problem while trying to load default currency.');
 	};
 
 	/**

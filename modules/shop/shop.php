@@ -12,6 +12,24 @@ require_once('units/shop_category_handler.php');
 require_once('units/shop_currencies_handler.php');
 require_once('units/shop_item_sizes_handler.php');
 require_once('units/shop_item_size_values_manager.php');
+require_once('units/shop_transactions_manager.php');
+require_once('units/shop_transaction_items_manager.php');
+require_once('units/shop_buyers_manager.php');
+require_once('units/shop_buyer_addresses_manager.php');
+
+
+class TransactionType {
+	const SUBSCRIPTION = 0;
+	const SHOPPING_CART = 1;
+	const DONATION = 2;
+}
+
+
+class TransactionStatus {
+	const PENDING = 0;
+	const DENIED = 1;
+	const COMPLETED = 2;
+}
 
 
 class shop extends Module {
@@ -218,6 +236,10 @@ class shop extends Module {
 				case 'checkout_canceled':
 					$this->showCheckoutCanceled();
 					break;
+
+				case 'handle_payment':
+					$this->handlePayment();
+					break;
 					
 				case 'json_get_item':
 					$handler = ShopItemHandler::getInstance($this);
@@ -402,9 +424,9 @@ class shop extends Module {
 		// create shop buyers table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyers` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
-				  `first_name` varchar(30) NOT NULL,
-				  `last_name` varchar(30) NOT NULL,
-				  `email` varchar(50) NOT NULL,
+				  `first_name` varchar(64) NOT NULL,
+				  `last_name` varchar(64) NOT NULL,
+				  `email` varchar(127) NOT NULL,
 				  `uid` varchar(50) NOT NULL,
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
@@ -414,12 +436,12 @@ class shop extends Module {
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyer_addresses` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `buyer` int(11) NOT NULL,
-				  `name` varchar(60) NOT NULL,
-				  `street` varchar(100) NOT NULL,
+				  `name` varchar(128) NOT NULL,
+				  `street` varchar(200) NOT NULL,
 				  `city` varchar(40) NOT NULL,
-				  `zip` varchar(10) NOT NULL,
-				  `state` varchar(30) NOT NULL,
-				  `country` varchar(40) NOT NULL,
+				  `zip` varchar(20) NOT NULL,
+				  `state` varchar(40) NOT NULL,
+				  `country` varchar(64) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
@@ -431,9 +453,11 @@ class shop extends Module {
 				  `buyer` int(11) NOT NULL,
 				  `address` int(11) NOT NULL,
 				  `uid` varchar(20) NOT NULL,
-				  `type` varchar(20) NOT NULL,
+				  `type` smallint(6) NOT NULL,
+				  `status` smallint(6) NOT NULL,
 				  `custom` varchar(200) NOT NULL,
 				  `currency` int(11) NOT NULL,
+				  `handling` decimal(8,2) NOT NULL,
 				  `shipping` decimal(8,2) NOT NULL,
 				  `fee` decimal(8,2) NOT NULL,
 				  `tax` decimal(8,2) NOT NULL,
@@ -450,7 +474,9 @@ class shop extends Module {
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `transaction` int(11) NOT NULL,
 				  `item` int(11) NOT NULL,
-				  `price` float NOT NULL,
+				  `price` DECIMAL(8,2) NOT NULL,
+				  `tax` DECIMAL(8,2) NOT NULL,
+				  `amount` int(11) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `transaction` (`transaction`),
 				  KEY `item` (`item`)
@@ -561,6 +587,137 @@ class shop extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Handle payment notification
+	 */
+	private function handlePayment() {
+		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
+
+		// return if no payment method is specified
+		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods))
+			return;
+
+		// verify payment
+		$method = $this->payment_methods[$method_name];
+		if ($method->verify_payment()) {
+			// get data from payment method
+			$payment_info = $method->get_payment_info();
+			$transaction_info = $method->get_transaction_info();
+			$buyer_info = $method->get_buyer_info();
+			$items_info = $method->get_items();
+
+			// get managers
+			$items_manager = ShopItemManager::getInstance();
+			$transactions_manager = ShopTransactionsManager::getInstance();
+			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+			$buyers_manager = ShopBuyersManager::getInstance();
+			$buyer_addresses_manager = ShopBuyerAddressesManager::getInstance();
+			$currencies_manager = ShopCurrenciesManager::getInstance();
+
+			// try to get existing transaction
+			$transaction = $transactions_manager->getSingleItem(
+											array('id'),
+											array('uid' => $transaction_info['id'])
+										);
+
+			if (is_object($transaction)) {
+				// transaction already exists, we need to update status only
+				$transactions_manager->updateData(
+											array('status'	=> $transaction_info['status']),
+											array('id'		=> $transaction->id)
+										);
+
+			} else {
+				// transaction doesn't exist, try to get a buyer
+				$buyer = $buyers_manager->getSingleItem(
+												array('id'), 
+												array('email' => $buyer_info['email'])
+											);
+
+				if (is_object($buyer)) {
+					// buyer already exists in database
+					$buyer_id = $buyer->id;
+
+				} else {
+					// new buyer, record data
+					$data = $buyer_info;
+					unset($data['address']);
+
+					$buyers_manager->insertData($data);
+					$buyer_id = $buyers_manager->getInsertedID();
+				}
+
+				// check if specified address for this buyer already exists
+				$address = $buyer_addresses_manager->getSingleItem(
+												array('id'),
+												array(
+													'buyer'	=> $buyer_id,
+													'name'	=> $buyer_info['address']['name']
+												)
+											);
+
+				if (is_object($address)) {
+					// address is known to us, use it
+					$address_id = $address->id;
+
+				} else {
+					// new address, record data
+					$data = $buyer_info['address'];
+					$data['buyer'] = $buyer_id;
+
+					$buyer_addresses_manager->insertData($data);
+					$address_id = $buyer_addresses_manager->getInsertedID();
+				}
+
+				// get currency based on code
+				$currency = $currencies_manager->getSingleItem(
+												array('id'),
+												array('currency' => $payment_info['currency'])
+											);
+
+				if (is_object($currency))
+					$currency_id = $currency->id; else
+					$currency_id = 0;
+
+				// record transaction and its items
+				$data = array_merge($payment_info, $transaction_info);
+				
+				unset($data['id']);
+				$data['address'] = $address_id;
+				$data['buyer'] = $buyer_id;
+				$data['currency'] = $currency_id;
+				$data['uid'] = $transaction_info['id'];
+
+				define('SQL_DEBUG', 1);
+				$transactions_manager->insertData($data);
+				$transaction_id = $transactions_manager->getInsertedID();
+
+				
+				trigger_error(print_r($items_info, true));
+
+				// store items
+				foreach ($items_info as $item_info) {
+					$item = $items_manager->getSingleItem(
+												array('id'), 
+												array('uid' => $item_info['uid'])
+											);
+
+					// only record items that are valid
+					if (is_object($item)) {
+						$data = array(
+								'transaction'	=> $transaction_id,
+								'item'			=> $item->id,
+								'price'			=> $item_info['price'],
+								'tax'			=> $item_info['tax'],
+								'amount'		=> $item_info['quantity']
+							);
+						$transaction_items_manager->insertData($data);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -855,8 +1012,8 @@ class shop extends Module {
 
 		// get fields from payment method
 		$base_url = 'http://'.$_SERVER['HTTP_HOST'];
-		$return_url = $base_url.url_Make('checkout_completed', 'shop');
-		$cancel_url = $base_url.url_Make('checkout_canceled', 'shop');
+		$return_url = urlencode($base_url.url_Make('checkout_completed', 'shop'));
+		$cancel_url = urlencode($base_url.url_Make('checkout_canceled', 'shop'));
 
 		$checkout_fields = $method->new_payment(
 									$items_for_checkout,
