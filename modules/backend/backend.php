@@ -151,8 +151,6 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function transferControl($params = array(), $children=array()) {
-		/*
-		TODO: Get rid of this!
 		// dead lock protection for backend module
 		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
 		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
@@ -161,7 +159,6 @@ class backend extends Module {
 			unset($_REQUEST['module']);
 			unset($params['action']);
 		}
-		*/
 
 		if (isset($params['action']))
 			switch ($params['action']) {
