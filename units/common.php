@@ -55,6 +55,7 @@ function escape_chars($string) {
 	if (!is_array($string)) {
 		if (get_magic_quotes_gpc()) $string = stripcslashes($string);
 		$string = mysql_real_escape_string(strip_tags($string));
+
 	} else {
 		foreach($string as $key => $value)
 			$string[$key] = escape_chars($value);
