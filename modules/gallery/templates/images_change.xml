@@ -4,6 +4,10 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="image_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_text_id" module="gallery"/></span>
+			<input type="text" name="text_id" value="$params['text_id']" style="width: 270px;" maxlength="32" eval="value"/>
+		</label>
+		<label>
 			<span><_text constant="label_title" module="gallery"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 270px;" maxlength="255"/>
 			<_language_data param="title"/>

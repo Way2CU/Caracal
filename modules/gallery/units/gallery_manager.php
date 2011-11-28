@@ -10,6 +10,7 @@ class GalleryManager extends ItemManager {
 		parent::__construct('gallery');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('group', 'int');
 		$this->addProperty('title', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
