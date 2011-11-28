@@ -303,6 +303,7 @@ class gallery extends Module {
 		$sql = "
 			CREATE TABLE `gallery` (
 				`id` int(11) NOT NULL AUTO_INCREMENT ,
+				`text_id` VARCHAR( 32 ) NOT NULL,
 				`group` int(11) DEFAULT NULL ,";
 
 		foreach($list as $language)
@@ -318,6 +319,7 @@ class gallery extends Module {
 				`protected` BOOLEAN NOT NULL DEFAULT '0',
 				`slideshow` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
+				KEY `text_id` (`text_id`),
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
@@ -452,6 +454,7 @@ class gallery extends Module {
 	private function uploadImage_Save() {
 		$manager = GalleryManager::getInstance();
 
+		$text_id = fix_chars($_REQUEST['text_id']);
 		$title = fix_chars($this->getMultilanguageField('title'));
 		$group = fix_id($_REQUEST['group']);
 		$description = escape_chars($this->getMultilanguageField('description'));
@@ -463,6 +466,7 @@ class gallery extends Module {
 		if (!$result['error']) {
 			$data = array(
 						'group'			=> $group,
+						'text_id'		=> $text_id,
 						'title'			=> $title,
 						'description'	=> $description,
 						'visible'		=> $visible,
@@ -502,6 +506,7 @@ class gallery extends Module {
 		$params = array(
 					'id'			=> $item->id,
 					'group'			=> $item->group,
+					'text_id'		=> $item->text_id,
 					'title'			=> unfix_chars($item->title),
 					'description'	=> $item->description,
 					'size'			=> $item->size,
@@ -525,6 +530,7 @@ class gallery extends Module {
 		$manager = GalleryManager::getInstance();
 
 		$id = fix_id($_REQUEST['id']);
+		$text_id = fix_chars($_REQUEST['text_id']);
 		$title = fix_chars($this->getMultilanguageField('title'));
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 		$description = escape_chars($this->getMultilanguageField('description'));
@@ -532,6 +538,7 @@ class gallery extends Module {
 		$slideshow = isset($_REQUEST['slideshow']) && ($_REQUEST['slideshow'] == 'on' || $_REQUEST['slideshow'] == '1') ? 1 : 0;
 
 		$data = array(
+					'text_id'		=> $text_id,
 					'title'			=> $title,
 					'group'			=> $group,
 					'description'	=> $description,
@@ -1024,33 +1031,31 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Image($tag_params, $children) {
-		if (!isset($tag_params['id']) && !isset($tag_params['group'])) return;
-
 		$manager = GalleryManager::getInstance();
 
 		if (isset($tag_params['id'])) {
 			// get specific image
 			$id = fix_id($tag_params['id']);
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		} else if (isset($tag_params['text_id'])) {
+			// get image using specified text_id
+			$text_id = fix_chars($tag_params['text_id']);
+			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
+
 		} else {
 			// get first image from group (useful for group thumbnails)
 			$id = fix_id($tag_params['group']);
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
 		}
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('image.xml', $this->path.'templates/');
-		}
-
+		$template = $this->loadTemplate($tag_params, 'image.xml');
 		$template->setMappedModule($this->name);
 
 		if (is_object($item)) {
 			$params = array(
 						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
 						'group'			=> $item->group,
 						'title'			=> $item->title,
 						'description'	=> $item->description,
@@ -1118,14 +1123,7 @@ class gallery extends Module {
 							$limit
 						);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('images_list_item.xml', $this->path.'templates/');
-		}
-
+		$template = $this->loadTemplate($tag_params, 'images_list_item.xml');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_image', &$this, 'tag_Image');
 
@@ -1135,6 +1133,7 @@ class gallery extends Module {
 		foreach ($items as $item) {
 			$params = array(
 						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
 						'group'			=> $item->group,
 						'title'			=> $item->title,
 						'description'	=> $item->description,
