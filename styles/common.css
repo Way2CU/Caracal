@@ -29,6 +29,7 @@ div.dialog-background {
 	left: 0px;
 	
 	background-color: black;
+	z-index: 10000;
 }
 
 div.dialog {
@@ -39,6 +40,7 @@ div.dialog {
 	border-radius: 5px;
 	border: 1px solid white;
 	background-color: white;
+	z-index: 10001;
 }
 
 div.dialog div.title {
