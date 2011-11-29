@@ -40,7 +40,14 @@ div.dialog {
 	border-radius: 5px;
 	border: 1px solid white;
 	background-color: white;
+	box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
 	z-index: 10001;
+
+	color: #333333;
+}
+
+body.rtl div.dialog {
+	box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.4);
 }
 
 div.dialog div.title {
@@ -54,6 +61,7 @@ div.dialog div.title {
 	
 	color: white;
 	font-size: 13px;
+	font-weight: bold;
 	overflow: hidden;
 }
 
@@ -69,6 +77,10 @@ div.dialog div.title a.close {
 	background-image: url(../modules/backend/images/close_normal.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+
+body.rtl div.dialog div.title a.close {
+	float: left;
 }
 
 div.dialog div.title a.close:hover {
