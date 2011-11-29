@@ -79,8 +79,8 @@
 		<constant name="message_vote_ok">תודה רבה!</constant>
 		<constant name="message_vote_already">הצביע כבר!</constant>
 		<constant name="message_vote_error">טעות!</constant>
-		<constant name="message_json_article_not_found">Specified article was not found!</constant>
-		<constant name="message_json_articles_not_found">No articles were found for specified cirteria.</constant>
+		<constant name="message_json_article_not_found">מאמר לא נמצא!</constant>
+		<constant name="message_json_articles_not_found">לא נמצאו מאמרים!</constant>
 
 		<!-- Labels -->
 		<constant name="label_title">כותרת המסמך:</constant>
