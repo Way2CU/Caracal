@@ -58,6 +58,7 @@ function ShoppingCart() {
 	this._item_count = 0;
 	this._default_currency = 'EUR';
 	this._payment_methods = {};
+	this._default_method = null;
 	this._backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	this._checkout_menu_visible = false;
 	this._size_values = {};
@@ -85,6 +86,15 @@ function ShoppingCart() {
 				.attr('id', 'shopping_cart')
 				.append(this.container)
 				.appendTo($('body'));
+
+		// parse initial options
+		if (shop_init_options != undefined) {
+			if ('visible' in shop_init_options)
+				this.main_container.css('display', shop_init_options.visible ? 'block' : 'none');
+	
+			if ('default_method' in shop_init_options)
+				this._default_method = shop_init_options.default_method;
+		}
 
 		// configure container
 		this.container
@@ -420,6 +430,10 @@ function ShoppingCart() {
 	 */
 	this.checkout = function() {
 		var method_name = $(this).data('name');
+
+		// use default payment method if specified
+		if (!method_name && self._default_method)
+			method_name = self._default_method;
 
 		if (self._item_count > 0) {
 			var url = self._getBackendURL();
