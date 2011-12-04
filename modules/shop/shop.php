@@ -274,6 +274,10 @@ class shop extends Module {
 					$this->json_ShowCart();
 					break;
 
+				case 'set_cart_from_template':
+					$this->setCartFromTemplate($params, $children);
+					break;
+
 				default:
 					break;
 			}
@@ -528,6 +532,36 @@ class shop extends Module {
 	 */
 	public function registerPaymentMethod($name, $module) {
 		$this->payment_methods[$name] = $module;
+	}
+
+	/**
+	 * Set content of a shopping cart from template
+	 *
+	 * @param 
+	 */
+	private function setCartFromTemplate($params, $children) {
+		if (count($children) > 0) {
+			$cart = array();
+			$manager = ShopItemManager::getInstance();
+
+			foreach ($children as $data) {
+				$uid = array_key_exists('uid', $data->tagAttrs) ? fix_chars($data->tagAttrs['uid']) : null;
+				$amount = array_key_exists('amount', $data->tagAttrs) ? fix_id($data->tagAttrs['amount']) : 0;
+				$item = null;
+
+				if (!is_null($uid))
+					$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+
+				// make sure item actually exists in database to avoid poluting
+				if (is_object($item) && $amount > 0)
+					$cart[$uid] = array(
+								'uid'		=> $uid,
+								'quantity'	=> $amount
+							);
+			}
+
+			$_SESSION['shopping_cart'] = $cart;
+		}
 	}
 
 	/**
