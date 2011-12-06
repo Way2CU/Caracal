@@ -49,6 +49,18 @@ class TemplateHandler {
 	private $handlers = array();
 	
 	/**
+	 * List of tags that shouldn't be closed
+	 * @var array
+	 */
+	private $tags_without_end = array('br', 'img');
+	
+	/**
+	 * If we should close all tags
+	 * @var boolean
+	 */
+	private $close_all_tags = false;
+	
+	/**
 	 * List of session variables that we protect from setting
 	 * @var array
 	 */
@@ -319,8 +331,10 @@ class TemplateHandler {
 						if (count($tag->tagData) > 0)
 							echo $tag->tagData;
 
-						echo "</{$tag->tagName}>";
-
+						$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
+						
+						if ($close_tag)
+							echo "</{$tag->tagName}>";
 					}
 					break;
 			}
