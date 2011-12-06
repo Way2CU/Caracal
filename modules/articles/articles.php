@@ -90,7 +90,7 @@ class articles extends Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transferControl($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

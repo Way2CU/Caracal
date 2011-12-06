@@ -146,7 +146,7 @@ class page_info extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transferControl($params, $children) {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {

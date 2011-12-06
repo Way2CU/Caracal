@@ -39,7 +39,7 @@ class captcha extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transferControl($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

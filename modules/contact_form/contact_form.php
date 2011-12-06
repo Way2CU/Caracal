@@ -69,7 +69,7 @@ class contact_form extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transferControl($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -401,7 +401,6 @@ class contact_form extends Module {
 	 * Show settings form
 	 */
 	private function showSettings() {
-		trigger_error('came');
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
