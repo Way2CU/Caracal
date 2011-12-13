@@ -61,15 +61,6 @@ class page_info extends Module {
 								'content'	=> $this->settings['description']
 							));
 
-			// copyright
-			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
-			$copyright = strip_tags($copyright);
-			$head_tag->addTag('meta',
-						array(
-							'name'		=> 'copyright',
-							'content'	=> $copyright
-						));
-
 			// favicon
 			if (file_exists(_BASEPATH.'/images/favicon.png'))
 				$icon_file = _BASEPATH.'/images/favicon.png'; else
