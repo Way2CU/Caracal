@@ -8,6 +8,7 @@
 
 class page_info extends Module {
 	private static $_instance;
+	private $omit_elements;
 
 	/**
 	 * Constructor
@@ -16,88 +17,6 @@ class page_info extends Module {
 		global $section, $db_use;
 
 		parent::__construct(__FILE__);
-
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-
-			// content meta tags
-			$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
-			$head_tag->addTag('meta',
-						array(
-							'http-equiv'	=> 'Content-Type',
-							'content'		=> 'text/html; charset=UTF-8'
-						));
-			$head_tag->addTag('meta',
-						array(
-							'http-equiv'	=> 'Content-Language',
-							'content'		=> join(', ', $language_list)
-						));
-
-			// robot tags
-			$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
-			$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
-			$head_tag->addTag('meta', array('name' => 'rating', 'content' => 'general'));
-
-			if ($section != 'backend' && $section != 'backend_module' && $db_use) {
-				// google analytics
-				if (!empty($this->settings['analytics']))
-					$head_tag->addGoogleAnalytics($this->settings['analytics']);
-
-				// google webmasters tools
-				if (!empty($this->settings['wm_tools']))
-					$head_tag->addTag('meta',
-								array(
-									'name' 		=> 'google-site-verification',
-									'content' 	=> $this->settings['wm_tools']
-								));
-			}
-
-			// page description
-			if ($db_use) 
-				$head_tag->addTag('meta',
-							array(
-								'name'		=> 'description',
-								'content'	=> $this->settings['description']
-							));
-
-			// favicon
-			if (file_exists(_BASEPATH.'/images/favicon.png'))
-				$icon_file = _BASEPATH.'/images/favicon.png'; else
-				$icon_file = _BASEPATH.'/images/default_icon.png';
-
-			$head_tag->addTag('link',
-						array(
-							'rel'	=> 'icon',
-							'type'	=> 'image/png',
-							'href'	=> url_GetFromFilePath($icon_file)
-						));
-
-			// add default styles and script if they exists
-			if ($section != 'backend') {
-				$head_tag->addTag('link',
-						array(
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/common.css')
-						));
-	
-				if (file_exists(_BASEPATH.'/styles/main.css'))
-					$head_tag->addTag('link',
-							array(
-								'rel'	=> 'stylesheet',
-								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/main.css')
-							));
-	
-				if (file_exists(_BASEPATH.'/scripts/main.js'))
-					$head_tag->addTag('script',
-							array(
-								'type'	=> 'text/javascript',
-								'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
-							));
-			}
-		}
 
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
@@ -139,6 +58,17 @@ class page_info extends Module {
 	 */
 	public function transferControl($params, $children) {
 		// global control actions
+		if (isset($params['action']))
+			switch ($params['action']) { 
+				case 'set_omit_elements':
+					$this->omit_elements = fix_chars(split(',', $params['elements']));
+					break;
+
+				default:
+					break;
+			}
+
+		// backend control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'show':
@@ -212,5 +142,106 @@ class page_info extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/** 
+	 * Method called by the page module to add elements before printing
+	 */
+	public function addElements() {
+		global $section, $db_use;
+
+		$head_tag = head_tag::getInstance();
+
+		// content meta tags
+		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
+
+		if (!in_array('content_type', $this->omit_elements))
+			$head_tag->addTag('meta',
+						array(
+							'http-equiv'	=> 'Content-Type',
+							'content'		=> 'text/html; charset=UTF-8'
+						));
+
+		if (!in_array('language', $this->omit_elements))
+			$head_tag->addTag('meta',
+						array(
+							'http-equiv'	=> 'Content-Language',
+							'content'		=> join(', ', $language_list)
+						));
+
+		// robot tags
+		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
+		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
+		$head_tag->addTag('meta', array('name' => 'rating', 'content' => 'general'));
+
+		if ($section != 'backend' && $section != 'backend_module' && $db_use) {
+			// google analytics
+			if (!empty($this->settings['analytics']))
+				$head_tag->addGoogleAnalytics($this->settings['analytics']);
+
+			// google webmasters tools
+			if (!empty($this->settings['wm_tools']))
+				$head_tag->addTag('meta',
+							array(
+								'name' 		=> 'google-site-verification',
+								'content' 	=> $this->settings['wm_tools']
+							));
+
+			// page description
+			if ($db_use) 
+				$head_tag->addTag('meta',
+							array(
+								'name'		=> 'description',
+								'content'	=> $this->settings['description']
+							));
+		}
+
+  		// copyright
+		if (!in_array('copyright', $this->omit_elements)) {
+			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
+			$copyright = strip_tags($copyright);
+			$head_tag->addTag('meta',
+						array(
+							'name'		=> 'copyright',
+							'content'	=> $copyright
+						));
+		}				
+
+		// favicon
+		if (file_exists(_BASEPATH.'/images/favicon.png'))
+			$icon_file = _BASEPATH.'/images/favicon.png'; else
+			$icon_file = _BASEPATH.'/images/default_icon.png';
+
+		$head_tag->addTag('link',
+					array(
+						'rel'	=> 'icon',
+						'type'	=> 'image/png',
+						'href'	=> url_GetFromFilePath($icon_file)
+					));
+
+		// add default styles and script if they exists
+		if ($section != 'backend') {
+			$head_tag->addTag('link',
+					array(
+						'rel'	=> 'stylesheet',
+						'type'	=> 'text/css',
+						'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/common.css')
+					));
+
+			if (file_exists(_BASEPATH.'/styles/main.css'))
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/main.css')
+						));
+
+			if (file_exists(_BASEPATH.'/scripts/main.js'))
+				$head_tag->addTag('script',
+						array(
+							'type'	=> 'text/javascript',
+							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
+						));
+		}
 	}
 }
