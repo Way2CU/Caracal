@@ -8,7 +8,7 @@
 
 <!-- Allowed languages, extend if necessary -->
 <!ENTITY
-	% def.lang "en|iw|sr-lat|sr-cyr|ru"
+	% def.lang "en|iw|sr-lat|sr-cyr|ru|es"
 >
 
 <!ELEMENT document (language*)>
