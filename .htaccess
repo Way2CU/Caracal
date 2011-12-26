@@ -6,7 +6,8 @@
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	# take whole URI and give it to main index file
-	RewriteRule r/(.*) index.php?_rewrite=$1 [QSA,L]
+	RewriteRule page/(.*) index.php?_rewrite=$1 [QSA,L]
+	RewriteRule data/(.*) index.php?_rewrite=$1 [QSA,L]
 
 	# make sure we point to the same content
 	RewriteCond %{HTTP_HOST} !^localhost$
