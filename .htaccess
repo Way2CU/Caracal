@@ -3,6 +3,7 @@
 
 	RewriteCond %{HTTP_HOST} !^www\.
 	RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+	RewriteRule ^r/(.*)$ index.php?_rewrite=$1 [NC,L]
 </IfModule>
 
 <FilesMatch "\.(xml)$">
