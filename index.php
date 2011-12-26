@@ -70,6 +70,10 @@ if (isset($_REQUEST['language']))
 
 $language = $_SESSION['language'];
 
+// turn off URL rewrite for backend
+if ($section == 'backend')
+	$url_rewrite = false;
+
 // start database engine
 if ($db_use) {
 	$db = new rcfDB_mysql();
