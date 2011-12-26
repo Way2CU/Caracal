@@ -20,8 +20,9 @@ $db_pass = 'matrix';
 $db_name = 'web_engine';
 
 // various
-$default_language = 'en';
 $url_rewrite = true;
+$url_add_extension = true;
+$default_language = 'en';
 $per_page = 10;
 $max_pages = 15;
 $max_file_size = 1000000;
