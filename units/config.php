@@ -1,13 +1,10 @@
 <?php
 
 /**
- * MAIN CONFIG FILE
- *
- * @version 1.0
- * @author MeanEYE
- * @copyright RCF Group, 2009.
+ * Web Engine Configuration
  */
 
+// paths
 $module_path = 'modules/';
 $data_path = 'data/';
 $template_path = 'site/';
@@ -24,6 +21,7 @@ $db_name = 'web_engine';
 
 // various
 $default_language = 'en';
+$url_rewrite = true;
 $per_page = 10;
 $max_pages = 15;
 $max_file_size = 1000000;
