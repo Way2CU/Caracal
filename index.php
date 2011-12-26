@@ -51,6 +51,10 @@ $ModuleHandler = ModuleHandler::getInstance();
 $LanguageHandler = MainLanguageHandler::getInstance();
 $SectionHandler = MainSectionHandler::getInstance();
 
+// unpack parameters if needed
+if ($url_rewrite)
+	url_UnpackValues();
+
 // load primary variables
 $default_language = $LanguageHandler->getDefaultLanguage();
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
