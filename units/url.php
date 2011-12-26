@@ -21,7 +21,7 @@ function url_UnpackValues() {
 		$raw = split('/', $data);
 
 		// get language
-		if (count($raw) > 0) 
+		if (count($raw) > 0 && strlen($raw[0]) == 2) 
 			$result['language'] = array_shift($raw);
 
 		// get section
@@ -109,22 +109,21 @@ function url_Make($action, $section) {
 		// should we include section in URL
 		if ($section != 'home') { 
 			$include_section = true;
-			$include_language = true;
 		}
 
 		// should we include action in URL
 		if ($action != '_default' || count($arguments) > 0) {
 			$include_action = true;
 			$include_section = true;
-			$include_language = true;
 		}
 
-		if ($include_language) {
+		if ($include_section) {
 			// form URL
-			$result = '/r';
+			$result = '/page';
 
 			// add language
-			$result .= '/'.$_lang;	
+			if ($include_language)
+				$result .= '/'.$_lang;	
 
 			// add section
 			if ($include_section)
@@ -147,7 +146,7 @@ function url_Make($action, $section) {
 		$result = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']) . $result;
 
 		// add extension in the end
-		if ($url_add_extension && $include_language)
+		if ($url_add_extension && $include_section)
 			$result .= '.html';
 
 	} else {
