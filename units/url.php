@@ -4,6 +4,56 @@
  * Unpack values from URL rewrite
  */
 function url_UnpackValues() {
+	global $url_add_extension;
+
+	// resulting array to be implemented
+	// in global variables
+	$result = array();
+
+	if (isset($_REQUEST['_rewrite'])) {
+		$data = $_REQUEST['_rewrite'];
+
+		// remove extensions if needed
+		if ($url_add_extension && substr($data, -5) == '.html')
+			$data = substr($data, 0, -5);
+			
+		// split data
+		$raw = split('/', $data);
+
+		// get language
+		if (count($raw) > 0) 
+			$result['language'] = array_shift($raw);
+
+		// get section
+		if (count($raw) > 0)
+			$result['section'] = array_shift($raw);
+
+		// get action
+		if (count($raw) > 0)
+			$result['action'] = array_shift($raw);
+
+		// restore rest of the arguments
+		if (count($raw) > 0)
+			while (count($raw) > 0) {
+				$key = array_shift($raw);
+				$value = array_shift($raw);
+
+				$result[$key] = $value;
+			}
+
+		// modify global variables
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'GET':
+				$_GET = $result;
+				$_REQUEST = $result;
+				break;
+
+			case 'POST':
+				$_POST = $result;
+				$_REQUEST = $result;
+				break;
+		}
+	}
 }
 
 /**
@@ -17,19 +67,103 @@ function url_UnpackValues() {
  * @author MeanEYE
  */
 function url_Make($action, $section) {
-	$result = $_SERVER['PHP_SELF'];
+	global $url_rewrite, $url_add_extension, $language;
 
-	if (!empty($section) && $section != 'home')
-		$result .= '?section='.urlencode($section);
-	
-	if (!empty($action) &&  $action != '_default') 
-		$result .= '&amp;action='.urlencode($action);
+	// make sure we have all parameters
+	if (!isset($section) || empty($section))
+		$section = 'home';
 
-	if (func_num_args() > 2)
-		for ($i=2; $i<func_num_args(); $i++) {
-			$arg = func_get_arg($i);
-			$result .= '&amp;'.$arg[0].'='.urlencode($arg[1]);
+	if (!isset($action) || empty($action))
+		$action = '_default';
+
+	// get additional arguments
+	$arguments = array();
+	if (func_num_args() > 2) {
+		$tmp = array_slice(func_get_args(), 2);
+
+		foreach ($tmp as $tmp_item)
+			if (is_array($tmp_item))
+				$arguments[$tmp_item[0]] = $tmp_item[1];
+	}
+
+	if ($url_rewrite) {
+		// form URL with rewrite engine on mind
+		$result = '';
+		$param_count = 0;
+		$include_language = false;
+		$include_section = false;
+		$include_action = false;
+
+		// should we include language in URL
+		if (in_array('language', $arguments)) {
+			// include language in URL
+			$_lang = $arguments['language'];
+			unset($arguments['language']);
+			$include_language = true;
+
+		} else {
+			// use default language
+			$_lang = $language;
 		}
+
+		// should we include section in URL
+		if ($section != 'home') { 
+			$include_section = true;
+			$include_language = true;
+		}
+
+		// should we include action in URL
+		if ($action != '_default' || count($arguments) > 0) {
+			$include_action = true;
+			$include_section = true;
+			$include_language = true;
+		}
+
+		if ($include_language) {
+			// form URL
+			$result = '/r';
+
+			// add language
+			$result .= '/'.$_lang;	
+
+			// add section
+			if ($include_section)
+				$result .= '/'.$section;	
+
+			// add action
+			if ($include_action)
+				$result .= '/'.$action;	
+
+			if (count($arguments) > 0)
+				foreach ($arguments as $key => $value)
+					$result .= '/'.$key.'/'.$value;
+
+		} else {
+			// rare cases where we only need home page
+			$result = '/';
+		}
+		
+		// add relative path and domain
+		$result = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']) . $result;
+
+		// add extension in the end
+		if ($url_add_extension && $include_language)
+			$result .= '.html';
+
+	} else {
+		// form normal URL
+		$result = $_SERVER['PHP_SELF'];
+
+		if ($section != 'home')
+			$result .= '?section='.urlencode($section);
+		
+		if ($action != '_default') 
+			$result .= '&amp;action='.urlencode($action);
+
+		if (count($arguments) > 0)
+			foreach ($arguments as $key => $value)
+				$result .= '&amp;'.$key.'='.urlencode($value);
+	}
 
 	return $result;
 }
