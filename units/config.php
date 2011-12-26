@@ -22,6 +22,7 @@ $db_name = 'web_engine';
 // various
 $url_rewrite = true;
 $url_add_extension = true;
+$url_language_optional = true;
 $default_language = 'en';
 $per_page = 10;
 $max_pages = 15;

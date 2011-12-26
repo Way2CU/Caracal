@@ -67,7 +67,7 @@ function url_UnpackValues() {
  * @author MeanEYE
  */
 function url_Make($action, $section) {
-	global $url_rewrite, $url_add_extension, $language;
+	global $url_rewrite, $url_add_extension, $url_language_optional, $language;
 
 	// make sure we have all parameters
 	if (!isset($section) || empty($section))
@@ -109,12 +109,18 @@ function url_Make($action, $section) {
 		// should we include section in URL
 		if ($section != 'home') { 
 			$include_section = true;
+
+			if (!$url_language_optional)
+				$include_language = true;
 		}
 
 		// should we include action in URL
 		if ($action != '_default' || count($arguments) > 0) {
 			$include_action = true;
 			$include_section = true;
+
+			if (!$url_language_optional)
+				$include_language = true;
 		}
 
 		if ($include_section) {
