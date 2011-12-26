@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Unpack values from URL rewrite
+ */
+function url_UnpackValues() {
+}
+
+/**
  * Make URL from specified parameters. If you need more parameters than default
  * action and section add them as array pair of param and value.
  *
