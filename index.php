@@ -71,7 +71,7 @@ if (isset($_REQUEST['language']))
 $language = $_SESSION['language'];
 
 // turn off URL rewrite for backend
-if ($section == 'backend')
+if ($section == 'backend' || $section == 'backend_module')
 	$url_rewrite = false;
 
 // start database engine
