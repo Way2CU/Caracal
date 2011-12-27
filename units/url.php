@@ -125,7 +125,7 @@ function url_Make($action, $section) {
 
 		if ($include_section) {
 			// form URL
-			$result = '/page';
+			$result = '';
 
 			// add language
 			if ($include_language)
