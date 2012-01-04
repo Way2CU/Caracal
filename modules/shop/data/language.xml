@@ -12,6 +12,9 @@
 		<constant name="menu_currencies">Currencies</constant>
 		<constant name="menu_item_sizes">Manage item sizes</constant>
 
+		<constant name="tab_item">Item data</constant>
+		<constant name="tab_category">Categories</constant>
+
 		<constant name="title_manage_items">Shop: Manage items</constant>
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
 		<constant name="title_item_add">Shop: Add new item</constant>
