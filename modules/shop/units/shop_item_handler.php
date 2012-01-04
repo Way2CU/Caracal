@@ -77,7 +77,7 @@ class ShopItemHandler {
 										$this->_parent->getLanguageConstant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
-											700,
+											505,
 											$this->_parent->getLanguageConstant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, 'items', 'add')
