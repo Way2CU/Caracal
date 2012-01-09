@@ -8,7 +8,7 @@
 
 class page_info extends Module {
 	private static $_instance;
-	private $omit_elements;
+	private $omit_elements = array();
 
 	/**
 	 * Constructor
