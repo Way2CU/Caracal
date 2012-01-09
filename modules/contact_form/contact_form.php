@@ -125,7 +125,7 @@ class contact_form extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	private function sendFromXML($params, $children) {
+	public function sendFromXML($params, $children) {
 		$to = "";
 		$subject = "";
 		$fields = array();
@@ -204,7 +204,7 @@ class contact_form extends Module {
 	/**
 	 * Send contact form data using AJAX request
 	 */
-	private function sendFromAJAX() {
+	public function sendFromAJAX($skip_message=False) {
 		define('_OMIT_STATS', 1);
 
 		$result = array(
@@ -237,7 +237,8 @@ class contact_form extends Module {
 			$result['message'] = $this->getLanguageConstant('message_error_no_address');
 		}
 
-		print json_encode($result);
+		if (!$skip_message)
+			print json_encode($result);
 	}
 	
 	/**
@@ -260,7 +261,8 @@ class contact_form extends Module {
 		
 		// prepare sender
 		$name = "=?utf-8?B?".base64_encode($this->settings['default_name'])."?=";
-		$address = $this->settings['default_address'];
+		$addresses = split(',', $this->settings['default_address']);
+		$address = count($addresses) > 0 ? $addresses[0] : '';
 		$headers['From'] = "{$name} <{$address}>";
 		
 		// create boundary string
