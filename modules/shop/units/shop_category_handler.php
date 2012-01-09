@@ -333,6 +333,7 @@ class ShopCategoryHandler {
 		$manager = ShopCategoryManager::getInstance();
 		$conditions = array();
 		$item_category_ids = array();
+		$item_id = isset($tag_params['item_id']) ? fix_id($tag_params['item_id']) : null;
 
 		// create conditions
 		if (isset($tag_params['parent']))
@@ -349,11 +350,11 @@ class ShopCategoryHandler {
 			$conditions['id'] = array('operator' => 'NOT IN', 'value' => $list);
 		}
 		
-		if (isset($tag_params['item_id'])) {
+		if (!is_null($item_id)) {
 			$membership_manager = ShopItemMembershipManager::getInstance();
 			$membership_items = $membership_manager->getItems(
 												array('category'), 
-												array('item' => fix_id($tag_params['item_id']))
+												array('item' => $item_id)
 											);
 											
 			if (count($membership_items) > 0) 
@@ -390,6 +391,7 @@ class ShopCategoryHandler {
 
 				$params = array(
 							'id'			=> $item->id,
+							'item_id'		=> $item_id,
 							'parent'		=> $item->parent,
 							'image_id'		=> $item->image,
 							'image'			=> $image_url,
