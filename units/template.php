@@ -286,6 +286,7 @@ class TemplateHandler {
 						$keys[$i] = "%{$value}%";
 
 					echo str_replace($keys, $values, $tag->tagData);
+					break;
 
 				// conditional tag
 				case '_if':
@@ -294,6 +295,10 @@ class TemplateHandler {
 						$settings = $this->module->settings;
 
 					$params = $this->params;
+
+					if (!array_key_exists('condition', $tag->tagAttrs)) 
+						trigger_error('Missing required attribute "condition" in: '.$this->file);
+
 					$to_eval = $tag->tagAttrs['condition'];
 					if (eval('global $section, $action, $language; return '.$to_eval.';'))
 						$this->parse($tag->tagChildren);
