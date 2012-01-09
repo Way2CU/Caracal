@@ -492,7 +492,7 @@ class ShopItemHandler {
 													$this->_parent->getLanguageConstant('change'),
 													window_Open(
 														'shop_item_change', 	// window id
-														700,				// width
+														505,				// width
 														$this->_parent->getLanguageConstant('title_item_change'), // title
 														true, true,
 														url_Make(
