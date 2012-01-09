@@ -48,18 +48,19 @@
 					<_text constant="message_images_upload" module="shop"/>
 				</div>
 			</div>
-
 			<div class="scrollable_list">
-				<div class="list_header">
-					<_text constant="label_categories" module="shop"/>
-				</div>
-				<div class="list_content" style="height: 350px">
-					<_category_list
-						template="category_checkbox_list_item.xml" 
-						local="1"
-					/>
-				</div>
+			<div class="list_header">
+				<_text constant="label_categories" module="shop"/>
 			</div>
+			<div class="list_content" style="height: 350px">
+				<_category_list
+					template="category_checkbox_list_item.xml" 
+					local="1"
+				/>
+			</div>
+		</div>
+
+
 		</div>
 		
 		<div class="button_bar">
@@ -73,7 +74,6 @@
 	<script type="text/javascript">
 		var selector = new LanguageSelector('shop_item_add_form');
 		var notebook = new Notebook('shop_add_item_notebook');
-
 		notebook
 			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
 			.setPageTitle(1, language_handler.getText('shop', 'tab_category'));
