@@ -88,7 +88,7 @@ function ShoppingCart() {
 				.appendTo($('body'));
 
 		// parse initial options
-		if (shop_init_options != undefined) {
+		if (typeof shop_init_options !== 'undefined') {
 			if ('visible' in shop_init_options)
 				this.main_container.css('display', shop_init_options.visible ? 'block' : 'none');
 	
