@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Database item manager for survey entries.
+ * Database item manager for survey entry data.
  *
  * @author: Mladen Mijatov
  */
 
-class SurveyEntriesManager extends ItemManager {
+class SurveyEntryDataManager extends ItemManager {
 	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('survey_entries');
+		parent::__construct('survey_entry_data');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('timestamp', 'timestamp');
+		$this->addProperty('entry', 'int');
+		$this->addProperty('name', 'varchar');
+		$this->addProperty('value', 'varchar');
 	}
 
 	/**

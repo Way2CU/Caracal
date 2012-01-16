@@ -10,6 +10,7 @@
  */
 
 require_once('units/entries_manager.php');
+require_once('units/entry_data_manager.php');
 
 class survey extends Module {
 	private static $_instance;
@@ -86,8 +87,14 @@ class survey extends Module {
 					`address` varchar(50) NOT NULL,
 					`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 					PRIMARY KEY (`id`)
-				) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+		if ($db_active == 1) $db->query($sql);
 
+		$sql = "CREATE TABLE IF NOT EXISTS `survey_entry_data` (
+					`entry` int(11) NOT NULL,
+					`name` varchar(30) NOT NULL,
+					`value` varchar(255) NOT NULL
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -97,7 +104,7 @@ class survey extends Module {
 	public function onDisable() {
 		global $db_active, $db;
 
-		$sql = "DROP TABLE IF EXISTS `survey_entries`;";
+		$sql = "DROP TABLE IF EXISTS `survey_entries`, `survey_entry_data`;";
 		if ($db_active == 1) $db->query($sql);
 	}
 
@@ -108,7 +115,27 @@ class survey extends Module {
 	 * @param array $children
 	 */
 	private function saveFromXML($tag_params, $children) {
-		
+		$manager = SurveyEntriesManager::getInstance();
+		$data_manager = SurveyEntryDataManager::getInstance();
+
+		// get existing entry from database 
+		$entry = $manager->getSingleItem(
+								$manager->getFieldNames(),
+								array('address' => $_SERVER['REMOTE_ADDR'])
+							);
+
+		// if entry doesn't exist, create new one
+		if (!is_object($entry)) {
+			$manager->insertData(array(
+							'address'	=> $_SERVER['REMOTE_ADDR']
+						));
+			$id = $manager->getInsertedID();
+			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		}
+
+		// parse children and see what we need to save
+		foreach ($children as $child) {
+		}
 	}
 
 	private function saveFromAJAX() {
