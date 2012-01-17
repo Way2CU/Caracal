@@ -52,7 +52,7 @@ class survey extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transferControl($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -138,6 +138,41 @@ class survey extends Module {
 		}
 	}
 
+	/**
+	 * Save data from AJAX request
+	 */
 	private function saveFromAJAX() {
+		$manager = SurveyEntriesManager::getInstance();
+		$data_manager = SurveyEntryDataManager::getInstance();
+
+		// get existing entry from database 
+		$entry = $manager->getSingleItem(
+								$manager->getFieldNames(),
+								array('address' => $_SERVER['REMOTE_ADDR'])
+							);
+
+		// if entry doesn't exist, create new one
+		if (!is_object($entry)) {
+			$manager->insertData(array(
+							'address'	=> $_SERVER['REMOTE_ADDR']
+						));
+			$id = $manager->getInsertedID();
+			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		}
+		
+		$data = $_REQUEST;
+		unset($data['section']);
+		unset($data['action']);
+
+		foreach ($data as $key => $value) {
+			$data_manager->insertData(array(
+								'entry'	=> $entry->id,
+								'name'	=> $key,
+								'value'	=> fix_chars($value)
+							));
+		}
+
+		define('_OMIT_STATS', 1);
+		print json_encode(true);
 	}
 }
