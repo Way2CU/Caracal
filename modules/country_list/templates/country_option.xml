@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<_if condition="$params['selected'] == $params['short']">
+		<option 
+			value="$params['short']" 
+			eval="value" 
+			selected="selected"
+		>
+			<_var name="$params['name']"/>
+		</option>
+	</_if>
+	<_if condition="$params['selected'] != $params['short']">
+		<option 
+			value="$params['short']" 
+			eval="value" 
+		>
+			<_var name="$params['name']"/>
+		</option>
+	</_if>
+</document>

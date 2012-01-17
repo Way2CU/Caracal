@@ -39,11 +39,11 @@ class country_list extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->printCountryList($params);
+					$this->printCountryList($params, $children);
 					break;
 
 				case 'show_states':
-					$this->printStateList($params);
+					$this->printStateList($params, $children);
 					break;
 
 				default:
@@ -52,23 +52,119 @@ class country_list extends Module {
 	}
 
 	/**
-	 * Print list of all countries using specified template
-	 *
-	 * @param array $params
+	 * Create table and populate with data on module initialization
 	 */
-	private function printCountryList($params) {
+	public function onInit() {
+		global $db, $db_active;
+
+		// create tables
+		$sql = "CREATE TABLE IF NOT EXISTS `countries` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`name` varchar(35) NOT NULL,
+				`short` char(2) NOT NULL,
+				PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
+		if ($db_active == 1) $db->query($sql);
+
+		$sql = "CREATE TABLE IF NOT EXISTS `country_states` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`name` varchar(30) NOT NULL,
+				`short` char(2) NOT NULL,
+				PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
+		if ($db_active == 1) $db->query($sql);
+
+		// populate table with data
 		if(is_null($this->country_list))
 			$this->_loadCountryList();
+
+		if(is_null($this->state_list))
+			$this->_loadStateList();
+
+		// get managers
+		$country_manager = CountryManager::getInstance();
+		$state_manager = CountryStateManager::getInstance();
+
+		$country_list = $this->country_list->document->tagChildren;
+		$state_list = $this->state_list->document->tagChildren;
+
+		foreach ($country_list as $country)  
+			$country_manager->insertData(array(
+								'name'	=> escape_chars($country->tagData),
+								'short'	=> $country->tagAttrs['short']
+							));
+
+		foreach ($state_list as $state)  
+			$state_manager->insertData(array(
+								'name'	=> $state->tagData,
+								'short'	=> $state->tagAttrs['short']
+							));
+	}
+
+	/**
+	 * Clean up database on module disable
+	 */
+	public function onDisable() {
+		global $db_active, $db;
+
+		$sql = "DROP TABLE IF EXISTS `countries`, `country_states`;";
+		if ($db_active == 1) $db->query($sql);
+	}
+
+	/**
+	 * Print list of all countries using specified template
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function printCountryList($tag_params, $children) {
+		$manager = CountryManager::getInstance();
+
+		// get tag params
+		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
+
+		$template = $this->loadTemplate($tag_params, 'country_option.xml');
+		$country_list = $manager->getItems($manager->getFieldNames(), array());
+
+		foreach ($country_list as $country) { 
+			$params = array(
+						'selected'	=> $selected,
+						'name'		=> $country->name,
+						'short'		=> $country->short
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
 	}
 
 	/**
 	 * Print a list of United States using specified template
 	 *
-	 * @param array $params
+	 * @param array $tag_params
+	 * @param array $children
 	 */
-	private function printStateList($params) {
-		if(is_null($this->state_list))
-			$this->_loadStateList();
+	private function printStateList($tag_params, $children) {
+		$manager = CountryStateManager::getInstance();
+
+		// get tag params
+		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
+
+		$template = $this->loadTemplate($tag_params, 'state_option.xml');
+		$state_list = $manager->getItems($manager->getFieldNames(), array());
+
+		foreach ($state_list as $state) { 
+			$params = array(
+						'selected'	=> $selected,
+						'name'		=> $state->name,
+						'short'		=> $state->short
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
 	}
 
 	/**
@@ -91,5 +187,57 @@ class country_list extends Module {
 		$data = @file_get_contents($file_name);
 		$this->state_list = new XMLParser($data, $file_name);
 		$this->state_list->Parse();
+	}
+}
+
+
+class CountryManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('countries');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('name', 'varchar');
+		$this->addProperty('short', 'char');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
+	}
+}
+
+
+class CountryStateManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('country_states');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('name', 'varchar');
+		$this->addProperty('short', 'char');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
 	}
 }
