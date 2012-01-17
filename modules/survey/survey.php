@@ -93,7 +93,8 @@ class survey extends Module {
 		$sql = "CREATE TABLE IF NOT EXISTS `survey_entry_data` (
 					`entry` int(11) NOT NULL,
 					`name` varchar(30) NOT NULL,
-					`value` varchar(255) NOT NULL
+					`value` varchar(255) NOT NULL,
+					KEY `entry` (`entry`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		if ($db_active == 1) $db->query($sql);
 	}
@@ -117,15 +118,26 @@ class survey extends Module {
 	private function saveFromXML($tag_params, $children) {
 		$manager = SurveyEntriesManager::getInstance();
 		$data_manager = SurveyEntryDataManager::getInstance();
+		$allow_only_one = false;
 
-		// get existing entry from database 
-		$entry = $manager->getSingleItem(
-								$manager->getFieldNames(),
-								array('address' => $_SERVER['REMOTE_ADDR'])
-							);
+		if ($allow_only_one) {
+			// get existing entry from database 
+			$entry = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array('address' => $_SERVER['REMOTE_ADDR'])
+								);
 
-		// if entry doesn't exist, create new one
-		if (!is_object($entry)) {
+			// if entry doesn't exist, create new one
+			if (!is_object($entry)) {
+				$manager->insertData(array(
+								'address'	=> $_SERVER['REMOTE_ADDR']
+							));
+				$id = $manager->getInsertedID();
+				$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			}
+
+		} else {
+			// create new entry anyway
 			$manager->insertData(array(
 							'address'	=> $_SERVER['REMOTE_ADDR']
 						));
@@ -144,15 +156,26 @@ class survey extends Module {
 	private function saveFromAJAX() {
 		$manager = SurveyEntriesManager::getInstance();
 		$data_manager = SurveyEntryDataManager::getInstance();
+		$allow_only_one = false;
 
-		// get existing entry from database 
-		$entry = $manager->getSingleItem(
-								$manager->getFieldNames(),
-								array('address' => $_SERVER['REMOTE_ADDR'])
-							);
+		if ($allow_only_one) {
+			// get existing entry from database 
+			$entry = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array('address' => $_SERVER['REMOTE_ADDR'])
+								);
 
-		// if entry doesn't exist, create new one
-		if (!is_object($entry)) {
+			// if entry doesn't exist, create new one
+			if (!is_object($entry)) {
+				$manager->insertData(array(
+								'address'	=> $_SERVER['REMOTE_ADDR']
+							));
+				$id = $manager->getInsertedID();
+				$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			}
+
+		} else {
+			// create new entry anyway
 			$manager->insertData(array(
 							'address'	=> $_SERVER['REMOTE_ADDR']
 						));
