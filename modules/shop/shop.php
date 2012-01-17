@@ -1008,8 +1008,6 @@ class shop extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
-		$template->setMappedModule($this->name);
-
 		$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
 
 		// colect ids from session
@@ -1102,7 +1100,6 @@ class shop extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
-		$template->setMappedModule($this->name);
 
 		// parse template
 		if (count($items) > 0)
@@ -1164,7 +1161,6 @@ class shop extends Module {
 
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		$template->setMappedModule($this->name);
 		
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_completed'),
@@ -1186,7 +1182,6 @@ class shop extends Module {
 	public function tag_CanceledMessage($tag_params, $children) {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		$template->setMappedModule($this->name);
 		
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_canceled'),
