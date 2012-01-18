@@ -374,7 +374,16 @@ class shop extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
-		// create shop currencies table
+		// create table for related shop items
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `shop_related_items` (
+				`item` int(11) NOT NULL,
+				`related` int(11) NOT NULL,
+				KEY `item` (`item`,`related`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop currencies tableshop_related_items
 		$sql = "
 			CREATE TABLE `shop_currencies` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -517,7 +526,8 @@ class shop extends Module {
 					'shop_buyer_addresses',
 					'shop_transactions',
 					'shop_transaction_items',
-					'shop_stock'
+					'shop_stock',
+					'shop_related_items'
 				);
 		
 		$sql = "DROP TABLE IF EXISTS `".join('`, `', $tables)."`;";
