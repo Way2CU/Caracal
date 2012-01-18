@@ -13,6 +13,11 @@ div.window_inactive div.content input[type=checkbox] {
 	float: right;
 }
 
+div.window div.content label.inline span {
+	margin-right: 0px;
+	margin-left: 5px;
+}
+
 div.window div.title {
 	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
 }
