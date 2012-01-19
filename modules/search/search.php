@@ -6,6 +6,7 @@
 
 class search extends Module {
 	private static $_instance;
+	private $modules = array();
 
 	/**
 	 * Constructor
@@ -81,28 +82,24 @@ class search extends Module {
 
 		if ($db_active == 1) $db->query($sql);
 	}
-}
-
-
-class SomeManager extends ItemManager {
-	private static $_instance;
 
 	/**
-	 * Constructor
+	 * Register module to be included in search
+	 *
+	 * @param string $name
+	 * @param object $module
 	 */
-	protected function __construct() {
-		parent::__construct('table_name');
-
-		$this->addProperty('id', 'int');
+	public function registerModule($name, $module) {
+		$this->modules[$name] = $module;
 	}
 
 	/**
-	 * Public function that creates a single instance
+	 * Handle printing search results
+	 *
+	 * @param array $tag_params
+	 * @param array $children
 	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
+	public function tag_ResultList($tag_params, $children) {
 	}
 }
+
