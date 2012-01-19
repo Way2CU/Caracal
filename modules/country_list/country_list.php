@@ -68,9 +68,11 @@ class country_list extends Module {
 
 		$sql = "CREATE TABLE IF NOT EXISTS `country_states` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`country` char(2) NOT NULL,
 				`name` varchar(30) NOT NULL,
-				`short` char(2) NOT NULL,
-				PRIMARY KEY (`id`)
+				`short` char(5) NOT NULL,
+				PRIMARY KEY (`id`),
+				KEY `country` (`country`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 		if ($db_active == 1) $db->query($sql);
 
@@ -94,11 +96,16 @@ class country_list extends Module {
 								'short'	=> $country->tagAttrs['short']
 							));
 
-		foreach ($state_list as $state)  
-			$state_manager->insertData(array(
-								'name'	=> $state->tagData,
-								'short'	=> $state->tagAttrs['short']
-							));
+		foreach ($state_list as $country) {
+			$country_code = $country->tagAttrs['short'];
+
+			foreach ($country->tagChildren as $state)
+				$state_manager->insertData(array(
+									'country'	=> $country_code,
+									'name'		=> $state->tagData,
+									'short'		=> $state->tagAttrs['short']
+								));
+		}
 	}
 
 	/**
@@ -147,12 +154,22 @@ class country_list extends Module {
 	 */
 	private function printStateList($tag_params, $children) {
 		$manager = CountryStateManager::getInstance();
+		$conditions = array();
 
 		// get tag params
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
+		
+		if (isset($tag_params['country'])) {
+			// country is defined as a part of XML tag
+			$conditions['country'] = fix_chars($tag_params['country']); 
+
+		} else if (isset($_REQUEST['country'])) {
+			// country is defined in query
+			$conditions['country'] = fix_chars($_REQUEST['country']); 
+		}
 
 		$template = $this->loadTemplate($tag_params, 'state_option.xml');
-		$state_list = $manager->getItems($manager->getFieldNames(), array());
+		$state_list = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		foreach ($state_list as $state) { 
 			$params = array(
@@ -227,6 +244,7 @@ class CountryStateManager extends ItemManager {
 		parent::__construct('country_states');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('country', 'char');
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('short', 'char');
 	}
