@@ -16,6 +16,7 @@ require_once('units/shop_transactions_manager.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_buyer_addresses_manager.php');
+require_once('units/shop_related_items_manager.php');
 
 
 class TransactionType {
@@ -352,6 +353,7 @@ class shop extends Module {
 				`votes_up` INT(11) NOT NULL,
 				`votes_down` INT(11) NOT NULL,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`priority` INT(4) NOT NULL DEFAULT '5',
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
 				`deleted` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),

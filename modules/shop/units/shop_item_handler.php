@@ -163,6 +163,7 @@ class ShopItemHandler {
 						'weight'		=> $item->weight,
 						'votes_up'		=> $item->votes_up,
 						'votes_down'	=> $item->votes_down,
+						'priority'		=> $item->priority,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'deleted'		=> $item->deleted,
@@ -192,7 +193,8 @@ class ShopItemHandler {
 				'price'				=> isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
 				'tax'				=> isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
 				'weight'			=> isset($_REQUEST['weight']) && !empty($_REQUEST['weight']) ? fix_chars($_REQUEST['weight']) : 0,
-				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null
+				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
+				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5
 			);
 		
 		define('SQL_DEBUG', 1);
@@ -408,6 +410,7 @@ class ShopItemHandler {
 						'votes_up'		=> $item->votes_up,
 						'votes_down'	=> $item->votes_down,
 						'rating'		=> $rating,
+						'priority'		=> $item->priority,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'deleted'		=> $item->deleted,
@@ -485,6 +488,7 @@ class ShopItemHandler {
 							'votes_up'		=> $item->votes_up,
 							'votes_down'	=> $item->votes_down,
 							'rating'		=> $rating,
+							'priority'		=> $item->priority,
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
 							'deleted'		=> $item->deleted,
@@ -578,6 +582,7 @@ class ShopItemHandler {
 								'votes_up'		=> $item->votes_up,
 								'votes_down'	=> $item->votes_down,
 								'rating'		=> $rating,
+								'priority'		=> $item->priority,
 								'timestamp'		=> $item->timestamp,
 								'thumbnail'		=> $thumbnail_url
 							);

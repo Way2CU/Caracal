@@ -37,10 +37,16 @@
 							<input name="tax" style="width: 100px;"/>
 						</label>
 					</div>
-					<div class="box left">
+					<div class="box left" style="width: 120px;">
 						<label>
 							<span><_text constant="label_weight" module="shop"/></span>
 							<input name="weight" style="width: 100px;"/>
+						</label>
+					</div>
+					<div class="box left">
+						<label>
+							<span><_text constant="label_priority" module="shop"/></span>
+							<input name="priority" value="5" style="width: 60px;"/>
 						</label>
 					</div>
 				</div>
@@ -49,18 +55,42 @@
 				</div>
 			</div>
 			<div class="scrollable_list">
-			<div class="list_header">
-				<_text constant="label_categories" module="shop"/>
+				<div class="list_header">
+					<_text constant="column_categories" module="shop"/>
+				</div>
+				<div class="list_content" style="height: 370px">
+					<_category_list
+						template="category_checkbox_list_item.xml" 
+						local="1"
+					/>
+				</div>
 			</div>
-			<div class="list_content" style="height: 350px">
-				<_category_list
-					template="category_checkbox_list_item.xml" 
-					local="1"
-				/>
+			<div class="scrollable_list">
+				<label class="inline">
+					<span><_text constant="label_quick_add" module="shop"/></span>
+					<input name="quick_add" type="text"/>
+					<button type="button"><_text constant="add"/></button>
+				</label>
+				<div class="list_header">
+					<span class="column" style="width: 250px;">
+						<_text constant="column_name" module="shop"/>
+					</span>
+					<span class="column" style="width: 60px;">
+						<_text constant="column_price" module="shop"/>
+					</span>
+					<span class="column" style="width: 50px;">
+						<_text constant="column_rating" module="shop"/>
+					</span>
+				</div>
+				<div class="list_content" style="height: 340px" id="related_items">
+					<_module
+						name="shop"
+						action="show_item_list"
+						template="item_list_option.xml"
+						local="1"
+					/>
+				</div>
 			</div>
-		</div>
-
-
 		</div>
 		
 		<div class="button_bar">
@@ -76,7 +106,8 @@
 		var notebook = new Notebook('shop_add_item_notebook');
 		notebook
 			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_category'));
+			.setPageTitle(1, language_handler.getText('shop', 'tab_category'))
+			.setPageTitle(2, language_handler.getText('shop', 'tab_related'));
 
 		// create toolbar
 		toolbar_api
