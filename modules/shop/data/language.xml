@@ -37,6 +37,7 @@
 		<constant name="title_size_delete">Shop: Delete item size definition</constant>
 		<constant name="title_currencies_set_default">Shop: Set default currency</constant>
 		<constant name="title_checkout_message">Checkout</constant>
+		<constant name="title_search_results">Search Results</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -72,7 +73,7 @@
 		<constant name="label_tax">Tax (%):</constant>
 		<constant name="label_weight">Weight (kg):</constant>
 		<constant name="label_count">Quantity:</constant>
-		<constant name="label_quick_add">Quick search:</constant>
+		<constant name="label_search_query">Query:</constant>
 		<constant name="label_priority">Priority:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
@@ -161,6 +162,7 @@
 		<constant name="title_size_delete">חנות: מחק הגדרת גודל מוצר</constant>
 		<constant name="title_currencies_set_default">חנות: קבע כמטבע ברירת מחדל</constant>
 		<constant name="title_checkout_message">תשלום</constant>
+		<constant name="title_search_results">Search Results</constant>
 
 		<constant name="column_name">שם</constant>
 		<constant name="column_price">מחיר</constant>
@@ -196,7 +198,7 @@
 		<constant name="label_tax">מעמ (%):</constant>
 		<constant name="label_weight">משקל (קג):</constant>
 		<constant name="label_count">כמות:</constant>
-		<constant name="label_quick_add">חיפוש מהיר:</constant>
+		<constant name="label_search_query">Query:</constant>
 		<constant name="label_priority">Priority:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
