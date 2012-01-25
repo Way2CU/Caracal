@@ -67,9 +67,14 @@
 			</div>
 			<div class="scrollable_list">
 				<label class="inline">
-					<span><_text constant="label_quick_add" module="shop"/></span>
-					<input name="quick_add" type="text"/>
-					<button type="button"><_text constant="add"/></button>
+					<span><_text constant="label_search_query" module="shop"/></span>
+					<input name="search_query" type="text"/>
+					<button 
+						type="button"
+						onclick="javascript: shop_OpenItemSearch();"
+					>
+						<_text constant="search"/>
+					</button>
 				</label>
 				<div class="list_header">
 					<span class="column" style="width: 250px;">
@@ -83,12 +88,6 @@
 					</span>
 				</div>
 				<div class="list_content" style="height: 340px" id="related_items">
-					<_module
-						name="shop"
-						action="show_item_list"
-						template="item_list_option.xml"
-						local="1"
-					/>
 				</div>
 			</div>
 		</div>
@@ -102,6 +101,27 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		function shop_OpenItemSearch() {
+			var value = $('input[name=search_query]').val();
+			var data = {
+					section: 'backend_module',
+					action: 'transfer_control',
+					module: 'shop',
+					backend_action: 'items',
+					sub_action: 'search_results',
+					query: value
+				};
+			var url = backend_url + '?' + $.param(data);
+
+			window_system.openWindow(
+							'shop_search_results',
+							400,
+							language_handler.getText('shop', 'title_search_results'),
+							true, url
+						);
+		}
+
+		var backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 		var selector = new LanguageSelector('shop_item_add_form');
 		var notebook = new Notebook('shop_add_item_notebook');
 		notebook
