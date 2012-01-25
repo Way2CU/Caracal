@@ -115,7 +115,7 @@
 
 			window_system.openWindow(
 							'shop_search_results',
-							400,
+							450,
 							language_handler.getText('shop', 'title_search_results'),
 							true, url
 						);
