@@ -311,7 +311,7 @@ class ItemManager {
 							$fields["{$field}_{$language}"] = $data[$language];
 
 					} else {
-							$fields["{$field}_{$current_language}"] = $data[$current_language];
+						$fields["{$field}_{$current_language}"] = $data[$current_language];
 					}
 
 					unset($fields[$field]);
