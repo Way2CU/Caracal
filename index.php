@@ -63,6 +63,13 @@ if (!isset($_SESSION['language']) || empty($_SESSION['language'])) $_SESSION['la
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
+// if language change is specified
+if (isset($_REQUEST['language']))
+	if (array_key_exists($_REQUEST['language'], $LanguageHandler->getLanguages()))
+		$_SESSION['language'] = fix_chars($_REQUEST['language']);
+
+$language = $_SESSION['language'];
+
 // turn off URL rewrite for backend
 if ($section == 'backend' || $section == 'backend_module')
 	$url_rewrite = false;
@@ -75,23 +82,6 @@ if ($db_use) {
 
 // load all the modules and start parsing the page
 $ModuleHandler->loadModules();
-
-// change language if specified
-if (isset($_REQUEST['language']))
-	if (!($section == 'backend' || $section == 'backend_module')) {
-		// not a backend section, allow only languages defined in language file
-		if (array_key_exists($_REQUEST['language'], $LanguageHandler->getLanguages()))
-			$_SESSION['language'] = fix_chars($_REQUEST['language']);
-
-	} else if (class_exists('backend')) {
-		// allow backend to change to language defined for backend
-		$backend = backend::getInstance();
-
-		if ($backend->languageExists($_REQUEST['language']))
-			$_SESSION['language'] = fix_chars($_REQUEST['language']);
-	}
-
-$language = $_SESSION['language'];
 
 // transfer display control
 $SectionHandler->transferControl($section, $action, $language);
