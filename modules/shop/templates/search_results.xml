@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="scrollable_list">
+		<label class="inline">
+			<span><_text constant="label_search_query" module="shop"/></span>
+			<input name="search_query" value="$params['query']" eval="value" type="text"/>
+			<button 
+				type="button"
+				onclick="javascript: shop_AddRelatedItems();"
+			>
+				<_text constant="search"/>
+			</button>
+		</label>
+		<div class="list_header">
+			<span class="column" style="width: 250px;">
+				<_text constant="column_name" module="shop"/>
+			</span>
+			<span class="column" style="width: 60px;">
+				<_text constant="column_price" module="shop"/>
+			</span>
+			<span class="column" style="width: 50px;">
+				<_text constant="column_rating" module="shop"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 340px" id="result_list">
+			<_module
+				name="shop"
+				action="show_item_list"
+				template="item_list_option.xml"
+				local="1"
+				filter="$params['query']"
+				eval="filter"
+			/>
+		</div>
+		
+		<div class="button_bar">
+			<button type="button"><_text constant="add"/></button>
+			<button 
+				type="button"
+				onclick="javascript: window_system.closeWindow('shop_search_results');"
+			>
+				<_text constant="close"/>
+			</button>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function shop_AddRelatedItems() {
+		}
+
+		window_system.getWindow('shop_search_results').focus();
+	</script>
+</document>
