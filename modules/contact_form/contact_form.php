@@ -389,10 +389,14 @@ class contact_form extends Module {
 	 * @return string
 	 */
 	private function _makeHtmlBody($fields) {
+		$is_rtl = MainLanguageHandler::getInstance()->isRTL();
+		$direction = $is_rtl ? 'direction: rtl;' : 'direction: ltr;';
 		$result = '<table width="100%" cellspacing="0" cellpadding="5" border="1" frame="box" rules="rows">';
 
 		foreach($fields as $name => $value)
-			$result .= '<tr><td valign="top"><b>'.$name.'</b></td><td valign="top">'.$value.'</td></tr>';
+			if ($is_rtl) 
+				$result .= '<tr><td valign="top" style="'.$direction.'">'.$value.'</td><td valign="top" style="'.$direction.'"><b>'.$name.'</b></td></tr>'; else
+				$result .= '<tr><td valign="top" style="'.$direction.'"><b>'.$name.'</b></td><td valign="top" style="'.$direction.'">'.$value.'</td></tr>';
 
 		$result .= '</table>';
 
