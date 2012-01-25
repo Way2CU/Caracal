@@ -161,6 +161,7 @@ class search extends Module {
 					$results = array_merge($results, $module->getSearchResults($query));
 
 		// sort results
+		$results = uasort($results, array($this, 'sortResults'));
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'result.xml');
@@ -172,6 +173,22 @@ class search extends Module {
 				$template->setLocalParams($result);
 				$template->parse();
 			}
+	}
+
+	/**
+	 * Function that compares two results
+	 *
+	 * @param array $item1
+	 * @param array $item2
+	 * @return integer
+	 */
+	private function sortResults($item1, $item1) {
+		$result = 0;
+
+		if ($item1['score'] != $item2['score'])
+			$result = $item1['score'] < $item2['score'] ? -1 : 1;
+
+		return $result;
 	}
 }
 
