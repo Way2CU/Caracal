@@ -35,7 +35,12 @@
 		</div>
 		
 		<div class="button_bar">
-			<button type="button"><_text constant="add"/></button>
+			<button 
+				type="button"
+				onclick="javascript: shop_AddRelatedItems();"
+			>
+				<_text constant="add"/>
+			</button>
 			<button 
 				type="button"
 				onclick="javascript: window_system.closeWindow('shop_search_results');"
@@ -44,10 +49,36 @@
 			</button>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script type="text/javascript"><![CDATA[
 		function shop_AddRelatedItems() {
+			var items = $('#result_list').children('div.list_item');
+			var target = $('#related_items');
+			
+			items.each(function(index) {
+				var checkbox = $(this).find('input');
+
+				if (checkbox.attr('checked') == 'checked') {
+					var new_item = $(this).clone();
+					var name = checkbox.attr('name');
+					
+					new_item
+						.appendTo(target)
+						.append(
+							$('<input>', 
+							{
+								type: 'hidden',
+								name: name,
+								value: 1
+							})
+						)
+						.find('input[type=checkbox]').remove();
+
+					checkbox.removeAttr('checked');
+				}
+			});
 		}
 
 		window_system.getWindow('shop_search_results').focus();
+		]]>
 	</script>
 </document>
