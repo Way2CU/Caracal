@@ -3,6 +3,7 @@
 require_once('shop_item_manager.php');
 require_once('shop_item_membership_manager.php');
 require_once('shop_category_manager.php');
+require_once('shop_related_items_manager.php');
 
 class ShopItemHandler {
 	private static $_instance;
@@ -188,7 +189,10 @@ class ShopItemHandler {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = ShopItemManager::getInstance();
 		$membership_manager = ShopItemMembershipManager::getInstance();
+		$related_items_manager = ShopRelatedItemsManager::getInstance();
 		$open_editor = "";
+
+		$new_item = is_null($id);
 
 		$data = array(
 				'name'				=> $this->_parent->getMultilanguageField('name'),
@@ -200,9 +204,7 @@ class ShopItemHandler {
 				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5
 			);
 		
-		define('SQL_DEBUG', 1);
-
-		if (is_null($id)) {
+		if ($new_item) {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
 			$data['uid'] = $this->generateUID();
@@ -233,7 +235,7 @@ class ShopItemHandler {
 		}
 		
 		// store item data
-		if (is_null($id)) {
+		if ($new_item) {
 			// store new data
 			$manager->insertData($data);
 			$window = 'shop_item_add';
@@ -254,6 +256,7 @@ class ShopItemHandler {
 				$category_ids[] = fix_id(substr($key, strlen($category_template)-1));
 		}
 		
+		// update membership
 		if (count($category_ids) > 0)
 			foreach ($category_ids as $category_id) {
 				$membership_manager->insertData(array(
@@ -261,6 +264,24 @@ class ShopItemHandler {
 										'item'		=> $id
 									));
 			}
+
+		// store related items
+		if ($new_item) {
+			$related = array();
+			$keys = array_keys($_REQUEST);
+
+			foreach($keys as $key)
+				if (substr($key, 0, 7) == 'related')
+					$related[] = substr($key, 8);
+
+			if (count($related) > 0) {
+				foreach($related as $related_id)
+					$related_items_manager->insertData(array(
+											'item'		=> $id,
+											'related'	=> $related_id
+										));
+			}
+		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -480,11 +501,11 @@ class ShopItemHandler {
 			$conditions['deleted'] = 0;
 		}
 
-		if (isset($tag_params['filter'])) {
+		if (isset($tag_params['filter']) && !empty($tag_params['filter'])) {
 			// filter items with name matching
 			$conditions['name_'.$language] = array(
 								'operator'	=> 'LIKE',
-								'value'		=> '\'%'.fix_chars($tag_params['filter']).'%\''
+								'value'		=> '%'.fix_chars($tag_params['filter']).'%'
 							);
 		}
 
