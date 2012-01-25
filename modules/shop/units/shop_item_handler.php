@@ -58,6 +58,10 @@ class ShopItemHandler {
 			case 'delete_commit':
 				$this->deleteItem_Commit();
 				break;
+
+			case 'search_results':
+				$this->showSearchResults();
+				break;
 				
 			default:
 				$this->showItems();
@@ -70,7 +74,6 @@ class ShopItemHandler {
 	 */
 	private function showItems() {
 		$template = new TemplateHandler('item_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
@@ -339,6 +342,26 @@ class ShopItemHandler {
 	}
 
 	/**
+	 * Show search results for various backend tools
+	 */
+	private function showSearchResults() {
+		$query = fix_chars($_REQUEST['query']);
+		$template = new TemplateHandler('search_results.xml', $this->path.'templates/');
+
+		$params = array(
+						'query'	=> $query
+					);
+
+		// register tag handler
+		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+		
+	}
+
+	/**
 	 * Generate unique item Id 13 characters long
 	 *
 	 * @return string
@@ -429,6 +452,8 @@ class ShopItemHandler {
 	 * @param array $chilren
 	 */
 	public function tag_ItemList($tag_params, $children) {
+		global $language; 
+
 		$manager = ShopItemManager::getInstance();
 		$conditions = array();
 
@@ -451,7 +476,16 @@ class ShopItemHandler {
 		}
 		
 		if (!(isset($tag_params['show_deleted']) && $tag_params['show_deleted'] == 1)) {
+			// force hiding deleted items
 			$conditions['deleted'] = 0;
+		}
+
+		if (isset($tag_params['filter'])) {
+			// filter items with name matching
+			$conditions['name_'.$language] = array(
+								'operator'	=> 'LIKE',
+								'value'		=> '\'%'.fix_chars($tag_params['filter']).'%\''
+							);
 		}
 
 		// get items
