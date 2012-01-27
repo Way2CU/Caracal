@@ -7,6 +7,18 @@
 			<span><_text constant="label_name" module="links"/></span>
 			<input type="text" name="name" value="$params['name']" style="width: 360px;" maxlength="50" eval="value"/>
 		</label>
+		<label>
+			<span><_text constant="label_text_id" module="links"/></span>
+			<input
+				type="text"
+				name="text_id"
+				value="$params['text_id']"
+				style="width: 200px;"
+				maxlength="32" 
+				eval="value"
+				class="code"
+			/>
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
