@@ -249,11 +249,23 @@ function url_SetRefresh($url='', $seconds=2) {
  * @return string
  */
 function url_GetFromFilePath($path) {
-	$base_url = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
-	$base_url = preg_replace("/\/$/i", "", $base_url);
+	$base_url = _BASEURL;
 
 	$path = str_replace('\\', '/', $path);
 	$result = $base_url.substr($path, strlen(_BASEPATH));
 	return $result;
 }
+
+/**
+ * Form base URL
+ * 
+ * @return string
+ */
+function url_GetBaseURL() {
+	$result = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
+	$result = preg_replace("/\/$/i", "", $result);
+
+	return $result;
+}
+
 ?>
