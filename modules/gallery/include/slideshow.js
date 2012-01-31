@@ -85,6 +85,10 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 
 	this.$container = $('#' + container_id);
 
+	// commonly used backend URL
+	var base = $('base');
+	this.backend_url = result = base.attr('href') + '/index.php'; 
+
 	/**
 	 * Initialize slideshow
 	 */
@@ -100,7 +104,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 
 		// load images from server
 		$.ajax({
-			url: this.getURL(),
+			url: this.backend_url,
 			type: 'GET',
 			data: data,
 			dataType: 'json',
@@ -215,13 +219,6 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 		this.image_list[this.active_item].hide(this.image_list[next_item]);
 
 		this.active_item = next_item;
-	};
-
-	/**
-	 * Form URL based on current location
-	 */
-	this.getURL = function() {
-		return window.location.protocol + '//' + window.location.host + window.location.pathname;
 	};
 
 	// initialize

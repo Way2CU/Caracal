@@ -16,6 +16,10 @@ function ToolbarExtension_Gallery() {
 	this.dialog = new Dialog();
 	this.dialog.setTitle(language_handler.getText('gallery', 'title_insert_image'));
 
+	// base url for this site
+	var base = $('base');
+	this.backend_url = base.attr('href') + '/index.php';
+
 	// register extension to mail API
 	toolbar_api.registerModule('gallery', this);
 
@@ -60,7 +64,7 @@ function ToolbarExtension_Gallery() {
 				self.dialog.setLoadingState();
 
 				$.ajax({
-					url: self.getURL(),
+					url: self.backend_url,
 					type: 'GET',
 					data: {
 						section: 'gallery',
@@ -152,28 +156,18 @@ function ToolbarExtension_Gallery() {
 	 * @return string
 	 */
 	this.getIconURL = function(icon) {
-		var path = window.location.pathname.split('/');
-
-		// remove index.php
-		if (path[path.length-1] == 'index.php')
-			delete path[path.length-1];
+		var path = [];
 
 		// add icon path
 		path.push('modules/gallery/images');
 		path.push(icon);
 
-		return window.location.protocol + '//' + window.location.host +	path.join('/');
-	};
+		// base url for this site
+		var base = $('base');
+		base_url = base.attr('href') + '/';
 
-	/**
-	 * Return formed URL
-	 *
-	 * @return string
-	 */
-	this.getURL = function() {
-		return window.location.protocol + '//' + window.location.host + window.location.pathname;
+		return base_url + path.join('/');
 	};
-
 }
 
 $(document).ready(function() {
