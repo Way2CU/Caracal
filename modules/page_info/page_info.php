@@ -163,10 +163,12 @@ class page_info extends Module {
 		global $section, $db_use;
 
 		$head_tag = head_tag::getInstance();
-
-		// content meta tags
 		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
 
+		// add base url tag
+		$head_tag->addTag('base', array('href' => _BASEURL));
+
+		// content meta tags
 		if (!in_array('content_type', $this->omit_elements))
 			$head_tag->addTag('meta',
 						array(
