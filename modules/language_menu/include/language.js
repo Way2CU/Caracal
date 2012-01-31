@@ -18,8 +18,9 @@ function LanguageHandler() {
 	this.default_language = 'en';
 	this.current_language = 'en';
 
-	// URL commonly used to comunicate with server
-	this.backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+	// base url for this site
+	var base = $('base');
+	this.backend_url = base.attr('href') + '/index.php'; 
 
 	// local language constant cache
 	this.cache = {};
