@@ -59,9 +59,12 @@ function ShoppingCart() {
 	this._default_currency = 'EUR';
 	this._payment_methods = {};
 	this._default_method = null;
-	this._backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	this._checkout_menu_visible = false;
 	this._size_values = {};
+
+	// base url for this site
+	var base = $('base');
+	this._backend_url = base.attr('href') + '/index.php';
 
 	/**
 	 * Finish object initialization
