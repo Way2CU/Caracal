@@ -22,10 +22,8 @@
  * @author Mladen Mijatov <meaneye.rcf@gmail.com>
  */
 
-define('_BASEPATH', dirname(__FILE__));
-
-require_once('units/doctypes.php');
 require_once('units/config.php');
+require_once('units/doctypes.php');
 require_once('units/rcf_db/rcf_sql_core.php');
 require_once('units/rcf_db/rcf_sql_mysql.php');
 require_once('units/core/item_manager.php');
@@ -39,6 +37,9 @@ require_once('units/template.php');
 require_once('units/section.php');
 require_once('units/xml_parser.php');
 require_once('units/markdown.php');
+
+define('_BASEPATH', dirname(__FILE__));
+define('_BASEURL', url_GetBaseURL());
 
 $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];
