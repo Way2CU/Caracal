@@ -86,7 +86,7 @@ class head_tag extends Module {
 				break;
 			
 			default:
-				$this->tags[] = array($name, $params);
+				$this->tags[] = $data;
 				break;
 		}
 	}
@@ -124,7 +124,7 @@ class head_tag extends Module {
 			page_info::getInstance()->addElements();
 
 		// merge tag lists
-		$tags = array_merge($this->meta_tags, $this->link_tags, $this->script_tags, $this->tags);
+		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 		
 		foreach ($tags as $tag)
 			echo "<".$tag[0].$this->getTagParams($tag[1]).">".
