@@ -2,29 +2,39 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST" id="article_add_form">
-		<label>
-			<span><_text constant="label_text_id" module="articles"/></span>
-			<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
-		</label>
-		<label>
-			<span><_text constant="label_group" module="articles"/></span>
-			<select name="group" style="width: 270px;">
-				<option></option>
-				<_group_list template="group_option.xml" local="1"/>
-			</select>
-		</label>
-		<label>
-			<span><_text constant="label_title" module="articles"/></span>
-			<input type="text" class="multi-language" name="title" style="width: 690px;" maxlength="255"/>
-		</label>
-		<label>
-			<span><_text constant="label_content" module="articles"/></span>
-			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 250px;"/>
-		</label>
-		<label class="checkbox">
-			<span><_text constant="label_visible" module="articles"/></span>
-			<input type="checkbox" name="visible" checked="checked"/>
-		</label>
+		<div id="article_write_notebook">
+			<div>
+				<label>
+					<span><_text constant="label_text_id" module="articles"/></span>
+					<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
+				</label>
+				<label>
+					<span><_text constant="label_group" module="articles"/></span>
+					<select name="group" style="width: 270px;">
+						<option></option>
+						<_group_list template="group_option.xml" local="1"/>
+					</select>
+				</label>
+				<label>
+					<span><_text constant="label_title" module="articles"/></span>
+					<input type="text" class="multi-language" name="title" style="width: 400px;" maxlength="255"/>
+				</label>
+				<label class="checkbox">
+					<span><_text constant="label_visible" module="articles"/></span>
+					<input type="checkbox" name="visible" checked="checked"/>
+				</label>
+			</div>
+			<div>
+				<label>
+					<span><_text constant="label_content" module="articles"/></span>
+					<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 685px; height: 250px;"/>
+				</label>
+				<div style="padding: 7px;"/>
+			</div>
+			<div>
+				<div class="markdown_preview" id="article_preview"/>
+			</div>
+		</div>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
@@ -35,6 +45,20 @@
 	</form>
 	<script type="text/javascript">
 		new LanguageSelector('article_add_form');
+		var converter = new Showdown.converter();
+
+		// create notebook
+		var notebook = new Notebook('article_write_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('articles', 'tab_general'))
+			.setPageTitle(1, language_handler.getText('articles', 'tab_content'))
+			.setPageTitle(2, language_handler.getText('articles', 'tab_preview'));
+
+		// update preview on blur
+		$('div#article_write_notebook textarea[name=content]').blur(function() {
+			var preview = $('div#article_preview');
+			preview.html(converter.makeHtml($(this).val()));
+		});
 
 		// create toolbar
 		toolbar_api
