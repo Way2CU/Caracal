@@ -70,6 +70,7 @@ class backend extends Module {
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/notebook.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/showdown.js'), 'type'=>'text/javascript'));
 			}
 		}
 
