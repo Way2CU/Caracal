@@ -31,7 +31,7 @@ div.notebook div.container div.page.active {
 	display: block;
 }
 
-div.notebook ul {
+div.notebook > ul {
 	display: block;
 
 	margin: 0px;
@@ -45,7 +45,7 @@ div.notebook ul {
 	background-color: #D4D4D4;
 }
 
-div.notebook ul li {
+div.notebook > ul li {
 	display: inline-block;
 
 	margin-right: 4px;
@@ -57,12 +57,12 @@ div.notebook ul li {
 	background-color: #C5C5C5;
 }
 
-body.rtl div.notebook ul li {
+body.rtl div.notebook > ul li {
 	margin-left: 4px;
 	margin-right: 0px;
 }
 
-div.notebook ul li.active {
+div.notebook > ul li.active {
 	background-color: #EFEFEF;
 }
 
