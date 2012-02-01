@@ -49,6 +49,11 @@
 		<constant name="column_author">Author</constant>
 		<constant name="column_rating">Rating</constant>
 		<constant name="column_text_id">Text ID</constant>
+
+		<!-- Tab labels -->
+		<constant name="tab_general">General</constant>
+		<constant name="tab_content">Content</constant>
+		<constant name="tab_preview">Preview</constant>
 	</language>
 
 	<language short="iw">
@@ -99,5 +104,10 @@
 		<constant name="column_author">מחבר</constant>
 		<constant name="column_rating">דירוג</constant>
 		<constant name="column_text_id">מזה טקסט</constant>
+
+		<!-- Tab labels -->
+		<constant name="tab_general">General</constant>
+		<constant name="tab_content">Content</constant>
+		<constant name="tab_preview">Preview</constant>
 	</language>
 </document>
