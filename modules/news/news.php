@@ -969,13 +969,7 @@ class news extends Module {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
 			$item = $manager->getSingleItem($manager->getFieldNames(), array(), array('timestamp'), False);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('news.xml', $this->path.'templates/');
-		}
+		$template = $this->loadTemplate($tag_params, 'news.xml');
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
@@ -1052,7 +1046,6 @@ class news extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'news_list_item.xml');
-		$template->setMappedModule($this->name);
 
 		// parse items
 		if (count($items) > 0)
