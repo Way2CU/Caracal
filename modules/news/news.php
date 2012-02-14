@@ -1128,7 +1128,6 @@ class news extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
-		$template->setMappedModule($this->name);
 
 		if (is_object($item)) {
 			$params = array(
@@ -1163,13 +1162,7 @@ class news extends Module {
 						);
 
 		// create template
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('group_list_item.xml', $this->path.'templates/');
-		}
+		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 
 		// parse items
 		if (count($items) > 0)
@@ -1260,8 +1253,8 @@ class news extends Module {
 
 		$items = $news_manager->getItems(array('id', 'title'), array());
 
+		// create template
 		$template = new TemplateHandler('group_news_item.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -1294,13 +1287,12 @@ class news extends Module {
 		if (is_object($item)) {
 			if (!$item->active) return;  // if item is not active, just exit
 
+			// create template parser
 			$template = new TemplateHandler('feed_base.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
 
 			// get build date
 			$membership_manager = NewsMembershipManager::getInstance();
 			$membership_list = $membership_manager->getItems(array('news'), array('group' => $item->group));
-
 
 			// get guild date only if there are news items in group
 			if (count($membership_list) > 0) {
@@ -1352,8 +1344,8 @@ class news extends Module {
 
 		$items = $manager->getItems($manager->getFieldNames(), array());
 
+		// create template parser
 		$template = new TemplateHandler('feed_list_item.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
