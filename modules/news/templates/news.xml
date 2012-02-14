@@ -4,6 +4,7 @@
 	<div class="news">
 		<span class="date">
 			<_var name="$params['time']"/>
+			<_raw text=" "/>
 			<_var name="$params['date']"/>
 		</span>
 		<span class="title">
