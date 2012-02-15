@@ -1049,8 +1049,8 @@ class gallery extends Module {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
 		}
 
+		// create template parser
 		$template = $this->loadTemplate($tag_params, 'image.xml');
-		$template->setMappedModule($this->name);
 
 		if (is_object($item)) {
 			$params = array(
