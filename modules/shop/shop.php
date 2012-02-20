@@ -421,6 +421,7 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_categories` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`text_id` VARCHAR(32) NOT NULL,
 				`parent` INT(11) NOT NULL DEFAULT '0',
 				`image` INT(11),";
 
@@ -432,7 +433,8 @@ class shop extends Module {
 
 		$sql .="
 				PRIMARY KEY ( `id` ),
-				KEY `parent` (`parent`)
+				KEY `parent` (`parent`),
+				KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
