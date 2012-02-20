@@ -63,7 +63,7 @@ class ShopItemHandler {
 			case 'search_results':
 				$this->showSearchResults();
 				break;
-				
+
 			default:
 				$this->showItems();
 				break;
@@ -412,17 +412,36 @@ class ShopItemHandler {
 	 */
 	public function tag_Item($tag_params, $children) {
 		$manager = ShopItemManager::getInstance();
+		$id = null;
 		$gallery = null;
 		$conditions = array();
 
-		if (class_exists('gallery'))
-			$gallery = gallery::getInstance();
-		
 		// prepare conditions
-		$conditions['id'] = fix_id($tag_params['id']);
-		
+		if (isset($tag_params['id'])) 
+			$id = fix_id($tag_params['id']);
+
+		if (isset($tag_params['random']) && isset($tag_params['category'])) {
+			$category = fix_id($tag_params['category']);
+			$membership_manager = ShopItemMembershipManager::getInstance();
+
+			// get all associated items
+			$id_list = array();
+			$membership_list = $membership_manager->getItems(array('item'), array('category' => $category));
+
+			if (count($raw_ids) > 0)
+				foreach($membership_list as $membership)
+					$id_list[] = $membership->item;
+
+			// get random id from the list
+			if (count($id_list) > 0)
+				$id = array_rand($id_list);
+		}
+
+		if (is_null($id))
+			return;
+
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
@@ -437,6 +456,20 @@ class ShopItemHandler {
 			
 		// parse template
 		if (is_object($item)) {
+			// get gallery module
+			if (class_exists('gallery'))
+				$gallery = gallery::getInstance();
+		
+			// try to get thumbnail and image url
+			if (!is_null($gallery)) {
+				$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
+				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+
+			} else {
+				$image_url = '';
+				$thumbnail_url = '';
+			}
+
 			$rating = 0;
 			
 			$params = array(
@@ -445,6 +478,8 @@ class ShopItemHandler {
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 						'gallery'		=> $item->gallery,
+						'image'			=> $image_url,
+						'thumbnail'		=> $thumbnail_url,
 						'size_definition' => $item->size_definition,
 						'author'		=> $item->author,
 						'views'			=> $item->views,
@@ -523,9 +558,15 @@ class ShopItemHandler {
 				$gallery = gallery::getInstance();
 			
 			foreach ($items as $item) {
-				if (!is_null($gallery))
-					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); else
+				if (!is_null($gallery)) {
+					$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
+					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+
+				} else {
+					$image_url = '';
 					$thumbnail_url = '';
+				}
+
 				$rating = 0;
 				
 				$params = array(
@@ -535,6 +576,7 @@ class ShopItemHandler {
 							'description'	=> $item->description,
 							'gallery'		=> $item->gallery,
 							'size_definition'=> $item->size_definition,
+							'image'			=> $image_url,
 							'thumbnail'		=> $thumbnail_url,
 							'author'		=> $item->author,
 							'views'			=> $item->views,
