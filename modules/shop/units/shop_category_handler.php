@@ -171,6 +171,7 @@ class ShopCategoryHandler {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
 				'parent'		=> fix_id($_REQUEST['parent']),
+				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'title'			=> fix_chars($this->_parent->getMultilanguageField('title')),
 				'description'	=> escape_chars($this->_parent->getMultilanguageField('description'))
 			);
@@ -313,6 +314,7 @@ class ShopCategoryHandler {
 						'image_id'		=> $item->image,
 						'image'			=> $image_url,
 						'thumbnail'		=> $thumbnail_url,
+						'text_id'		=> $item->text_id,
 						'title'			=> $item->title,
 						'description'	=> $item->description
 					);
@@ -336,10 +338,22 @@ class ShopCategoryHandler {
 		$item_id = isset($tag_params['item_id']) ? fix_id($tag_params['item_id']) : null;
 
 		// create conditions
-		if (isset($tag_params['parent']))
-			$conditions['parent'] = fix_id($tag_params['parent']); else
+		if (isset($tag_params['parent_id'])) {
+			// set parent from tag parameter
+			$conditions['parent'] = fix_id($tag_params['parent_id']); 
+
+		} else if (isset($tag_params['parent'])) {
+			// get parent id from specified text id
+			$text_id = fix_chars($tag_params['parent']);
+			$parent = $manager->getSingleItem(array('id'), array('text_id' => $text_id));
+
+			if (is_object($parent)) 
+				$conditions['parent'] = $parent->id;
+
+		} else {
 			if (!isset($tag_params['show_all']))
 				$conditions['parent'] = 0;
+		}
 
 		if (isset($tag_params['level']))
 			$level = fix_id($tag_params['level']); else
@@ -396,6 +410,7 @@ class ShopCategoryHandler {
 							'image_id'		=> $item->image,
 							'image'			=> $image_url,
 							'thumbnail'		=> $thumbnail_url,
+							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
 							'description'	=> $item->description,
 							'level'			=> $level,
