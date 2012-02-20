@@ -26,6 +26,10 @@
 			</_if>
 		</label>
 		<label>
+			<span><_text constant="label_text_id" module="shop"/></span>
+			<input type="text" name="text_id" class="code" style="width: 275px;" maxlength="32"/>
+		</label>
+		<label>
 			<span><_text constant="label_title" module="shop"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 375px;" maxlength="255"/>
 		</label>
