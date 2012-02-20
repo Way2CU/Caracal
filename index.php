@@ -70,6 +70,7 @@ if (isset($_REQUEST['language']))
 		$_SESSION['language'] = fix_chars($_REQUEST['language']);
 
 $language = $_SESSION['language'];
+$language_rtl = $LanguageHandler->isRTL();
 
 // turn off URL rewrite for backend
 if ($section == 'backend' || $section == 'backend_module')
