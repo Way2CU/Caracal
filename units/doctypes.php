@@ -11,16 +11,16 @@ define('_XML_1', '<?xml version="1.0" encoding="UTF-8"?>');
 
 switch (_STANDARD) {
 	case 'html5':
-		define(_DOCTYPE, _HTML_5);
+		define('_DOCTYPE', _HTML_5);
 		break;
 
 	case 'xml':
-		define(_DOCTYPE, _XML_1);
+		define('_DOCTYPE', _XML_1);
 		break;
 
 	case 'html401':
 	default:
-		define(_DOCTYPE, _HTML_401);
+		define('_DOCTYPE', _HTML_401);
 		break;
 }
 
