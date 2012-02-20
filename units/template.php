@@ -157,7 +157,7 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$tag->tagAttrs[$param] = eval('global $section, $action, $language; return '.$to_eval.';');
+					$tag->tagAttrs[$param] = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 				}
 
 				// unset eval param
@@ -300,7 +300,7 @@ class TemplateHandler {
 						trigger_error('Missing required attribute "condition" in: '.$this->file);
 
 					$to_eval = $tag->tagAttrs['condition'];
-					if (eval('global $section, $action, $language; return '.$to_eval.';'))
+					if (eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';'))
 						$this->parse($tag->tagChildren);
 
 					break;
@@ -313,7 +313,7 @@ class TemplateHandler {
 
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs['name'];
-					echo eval('global $section, $action, $language; return '.$to_eval.';');
+					echo eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 					break;
 
 				// default action for parser, draw tag
