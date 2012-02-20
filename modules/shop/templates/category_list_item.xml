@@ -11,11 +11,11 @@
 			<_var name="$params['item_add']"/>
 		</span>
 	</div>
-	<div style="padding-left: 15px;">
+	<div style="($language_rtl ? 'padding-right' : 'padding-left').': 15px;'" eval="style">
 		<_children
-			parent="$params['id']"
+			parent_id="$params['id']"
 			level="$params['level'] + 1"
-			eval="parent,level"
+			eval="parent_id,level"
 		/>
 	</div>
 </document>
