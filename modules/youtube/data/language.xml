@@ -57,43 +57,46 @@
 		<!-- Menu Items -->
 		<constant name="menu_youtube">YouTube</constant>
 		<constant name="menu_video_list">רשימת וידאו</constant>
+		<constant name="menu_video_groups">Manage groups</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_video_list">רשימת וידאו</constant>
 		<constant name="title_video_add">הוסף וידאו</constant>
 		<constant name="title_video_change">שנה וידאו</constant>
 		<constant name="title_video_delete">מחק וידאו</constant>
-		<constant name="title_video_groups">YouTube: Group List</constant>
-		<constant name="title_group_create">YouTube: Create Group</constant>
-		<constant name="title_group_change">YouTube: Change Group</constant>
-		<constant name="title_group_videos">YouTube: Select Group Videos</constant>
-		<constant name="title_group_delete">YouTube: Delete Group</constant>
+		<constant name="title_video_groups">YouTube: רשימת קבוצות</constant>
+		<constant name="title_group_create">YouTube: צור קבוצה</constant>
+		<constant name="title_group_change">YouTube: שנה קבוצה</constant>
+		<constant name="title_group_videos">YouTube: בחר קבוצת וידאו</constant>
+		<constant name="title_group_delete">YouTube: מחק קבוצה</constant>
 
 		<!-- Messages -->
 		<constant name="message_video_saved">מידע וידאו נשמר.</constant>
 		<constant name="message_video_error">היתה בעיה במהלך ביצוע הבקשה.</constant>
 		<constant name="message_video_delete">אתה עומד להסיר את הוידאו - אתה בטחו?</constant>
 		<constant name="message_video_deleted">הוידאו הוסר.</constant>
-		<constant name="message_group_saved">Group data was saved.</constant>
-		<constant name="message_group_delete">You are about to remove the following group. Videos assigned to this group will not be removed. Are you sure?</constant>
+		<constant name="message_group_saved">מידע הקבוצה נשמר</constant>
+		<constant name="message_group_delete">אתה עומר להסיר קבותה, הוידאו השייכים לקבוצה לא ימחקו. האם אתה בטוח?</constant>
+		<constant name="message_group_deleted">Specified group was removed and videos unlinked.</constant>
+		<constant name="message_group_videos_updated">Selected videos were saved for specified group.</constant>
 
 		<!-- Column Names -->
 		<constant name="column_id">זיהוי</constant>
 		<constant name="column_title">כותרת</constant>
-		<constant name="column_name">Name</constant>
-		<constant name="column_visible">Visible</constant>
+		<constant name="column_name">שם</constant>
+		<constant name="column_visible">נראה</constant>
 
 		<!-- Form Labels -->
-		<constant name="label_id">Video ID:</constant>
+		<constant name="label_id">מזהה וידאו:</constant>
 		<constant name="label_text_id">מזהה טקסט:</constant>
 		<constant name="label_title">כותרת:</constant>
-		<constant name="label_visible">Group is visible</constant>
-		<constant name="label_description">Description:</constant>
+		<constant name="label_visible">הקבוצה נראית</constant>
+		<constant name="label_description">תיאור:</constant>
 
 		<!-- Other -->
 		<constant name="add">הוסף וידאו</constant>
-		<constant name="create_group">Create group</constant>
+		<constant name="create_group">צור קבוצה</constant>
 		<constant name="preview">תצוגה מקדימה</constant>
-		<constant name="videos">Videos</constant>
+		<constant name="videos">וידאו</constant>
 	</language>
 </document>
