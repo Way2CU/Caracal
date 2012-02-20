@@ -5,7 +5,7 @@
 		<label>
 			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_text_id" module="gallery"/></span>
-			<input type="text" name="text_id" value="$params['text_id']" style="width: 270px;" maxlength="32" eval="value"/>
+			<input type="text" name="text_id" class="code" value="$params['text_id']" style="width: 270px;" maxlength="32" eval="value"/>
 		</label>
 		<label>
 			<span><_text constant="label_title" module="gallery"/></span>
