@@ -63,6 +63,7 @@
 		<constant name="label_currency">Currency:</constant>
 		<constant name="label_images">Item images:</constant>
 		<constant name="label_title">Title:</constant>
+		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_category_parent">Parent category:</constant>
 		<constant name="label_category_image">Category image:</constant>
 		<constant name="label_category">Category:</constant>
@@ -188,6 +189,7 @@
 		<constant name="label_currency">מטבע:</constant>
 		<constant name="label_images">תמונות המוצר:</constant>
 		<constant name="label_title">כותרת:</constant>
+		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_category_parent">קטגורית אב:</constant>
 		<constant name="label_category_image">תמונת הקטגוריה:</constant>
 		<constant name="label_category">קטגוריה:</constant>
