@@ -1914,15 +1914,16 @@ class gallery extends Module {
 	 * Get gallery group thumbnail based on gallery id 
 	 * 
 	 * @param integer $group_id
+	 * @param boolean $big_image
 	 * @return string
 	 */
-	public function getGroupThumbnailURL($group_id) {
+	public function getGroupThumbnailURL($group_id, $big_image=false) {
 		$manager = GalleryGroupManager::getInstance();
 		$group = $manager->getSingleItem(array('thumbnail', 'id'), array('id' => $group_id));
 		
 		$result = '';
 		if (is_object($group))
-			$result = $this->_getGroupImage($group);
+			$result = $this->_getGroupImage($group, $big_image);
 		
 		return $result;
 	}
@@ -1944,7 +1945,7 @@ class gallery extends Module {
 	 * @param resource $group
 	 * @return string
 	 */
-	private function _getGroupImage($group) {
+	private function _getGroupImage($group, $big_image=false) {
 		$result = '';
 		$manager = GalleryManager::getInstance();
 
@@ -1971,7 +1972,9 @@ class gallery extends Module {
 		}
 
 		if (is_object($image))
-			$result = $this->getThumbnailURL($image);
+			if (!$big_image)
+				$result = $this->getThumbnailURL($image); else
+				$result = $this->getImageURL($image);
 
 		return $result;
 	}
