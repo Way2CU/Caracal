@@ -16,10 +16,10 @@
 	</div>
 	<div style="padding-left: 15px;">
 		<_children
-			parent="$params['id']"
+			parent_id="$params['id']"
 			level="$params['level'] + 1"
 			item_id="$params['item_id']"
-			eval="parent,level,item_id"
+			eval="parent_id,level,item_id"
 			template="category_checkbox_list_item.xml"
 			local="1"
 		/>
