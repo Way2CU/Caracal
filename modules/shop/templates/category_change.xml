@@ -27,6 +27,18 @@
 			</select>
 		</label>
 		<label>
+			<span><_text constant="label_text_id" module="shop"/></span>
+			<input 
+				type="text" 
+				name="text_id" 
+				class="code" 
+				style="width: 275px;" 
+				maxlength="32" 
+				value="$params['text_id']" 
+				eval="value"
+			/>
+		</label>
+		<label>
 			<span><_text constant="label_title" module="shop"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 375px;" maxlength="255"/>
 			<_language_data param="title"/>
