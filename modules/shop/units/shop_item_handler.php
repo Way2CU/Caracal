@@ -516,10 +516,28 @@ class ShopItemHandler {
 
 		// create conditions
 		if (isset($tag_params['category'])) {
+
+			if (is_numeric($tag_params['category'])) {
+				$category_id = fix_id($tag_params['category']);
+
+			} else {
+				// specified id is actually text_id, get real one
+				$category_manager = ShopCategoryManager::getInstance();
+				$category = $category_manager->getSingleItem(
+												array('id'), 
+												array('text_id' => fix_chars($tag_params['category']))
+											);
+
+				if (!is_object($category)) 
+					return;
+
+				$category_id = $category->id;
+			}
+
 			$membership_manager = ShopItemMembershipManager::getInstance();
 			$membership_items = $membership_manager->getItems(
 												array('item'), 
-												array('category' => fix_id($tag_params['category']))
+												array('category' => $category_id)
 											);
 				
 			$item_ids = array();							
