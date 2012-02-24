@@ -235,6 +235,16 @@ div#shopping_cart div.container div.content div.item a.edit {
 	background-image: url(../images/item_edit.png);
 }
 
+body.rtl div#shopping_cart div.container div.content div.item a.delete {
+	right: auto;
+	left: 3px;
+}
+
+body.rtl div#shopping_cart div.container div.content div.item a.edit {
+	right: auto;
+	left: 22px;
+}
+
 div#shopping_cart div.container div.summary {
 	display: block;
 	margin-top: 5px;
@@ -245,6 +255,10 @@ div#shopping_cart div.container div.summary {
 
 	font-size: 12px;
 	text-align: right;
+}
+
+body.rtl div#shopping_cart div.container div.summary {
+	text-align: left;
 }
 
 div#shopping_cart div.container div.summary div.total {
