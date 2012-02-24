@@ -149,7 +149,8 @@ class ShopCategoryHandler {
 						'id'			=> $item->id,
 						'parent'		=> $item->parent,
 						'image'			=> $item->image,
-						'title'			=> unfix_chars($item->title),
+						'title'			=> $item->title,
+						'text_id'		=> $item->text_id,
 						'description'	=> $item->description,
 						'form_action'	=> backend_UrlMake($this->name, 'categories', 'save'),
 						'cancel_action'	=> window_Close('shop_category_change')
@@ -348,7 +349,8 @@ class ShopCategoryHandler {
 			$parent = $manager->getSingleItem(array('id'), array('text_id' => $text_id));
 
 			if (is_object($parent)) 
-				$conditions['parent'] = $parent->id;
+				$conditions['parent'] = $parent->id; else
+				$conditions['parent'] = -1;
 
 		} else {
 			if (!isset($tag_params['show_all']))
