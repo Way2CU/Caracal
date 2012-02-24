@@ -173,6 +173,7 @@ class TemplateHandler {
 					if (!in_array($name, $this->protected_variables)) {
 						$_SESSION[$name] = $tag->tagAttrs['value'];
 					}
+					break;
 				
 				// transfer control to module
 				case '_module':
