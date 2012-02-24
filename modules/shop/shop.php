@@ -738,7 +738,6 @@ class shop extends Module {
 				$data['currency'] = $currency_id;
 				$data['uid'] = $transaction_info['id'];
 
-				define('SQL_DEBUG', 1);
 				$transactions_manager->insertData($data);
 				$transaction_id = $transactions_manager->getInsertedID();
 
