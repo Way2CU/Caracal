@@ -14,7 +14,7 @@
 			</label>
 		</span>
 	</div>
-	<div style="padding-left: 15px;">
+	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" eval="style">
 		<_children
 			parent_id="$params['id']"
 			level="$params['level'] + 1"
