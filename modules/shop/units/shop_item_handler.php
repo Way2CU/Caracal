@@ -421,20 +421,36 @@ class ShopItemHandler {
 			$id = fix_id($tag_params['id']);
 
 		if (isset($tag_params['random']) && isset($tag_params['category'])) {
-			$category = fix_id($tag_params['category']);
+			if (is_numeric($tag_params['category'])) {
+				$category_id = fix_id($tag_params['category']);
+
+			} else {
+				// specified id is actually text_id, get real one
+				$category_manager = ShopCategoryManager::getInstance();
+				$category = $category_manager->getSingleItem(
+												array('id'), 
+												array('text_id' => fix_chars($tag_params['category']))
+											);
+
+				if (!is_object($category)) 
+					return;
+
+				$category_id = $category->id;
+			}
+
 			$membership_manager = ShopItemMembershipManager::getInstance();
 
 			// get all associated items
 			$id_list = array();
-			$membership_list = $membership_manager->getItems(array('item'), array('category' => $category));
+			$membership_list = $membership_manager->getItems(array('item'), array('category' => $category_id));
 
-			if (count($raw_ids) > 0)
+			if (count($membership_list) > 0)
 				foreach($membership_list as $membership)
 					$id_list[] = $membership->item;
 
 			// get random id from the list
 			if (count($id_list) > 0)
-				$id = array_rand($id_list);
+				$id = $id_list[array_rand($id_list)];
 		}
 
 		if (is_null($id))
@@ -548,6 +564,22 @@ class ShopItemHandler {
 			if (count($item_ids) > 0)
 				$conditions['id'] = $item_ids; else
 				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
+		}
+
+		if (isset($tag_params['related'])) {
+			$relation_manager = ShopRelatedItemsManager::getInstance();
+			$item_id = fix_id($tag_params['related']);
+
+			$related_items = $relation_manager->getItems(array('related'), array('item' => $item_id));
+			$related_item_ids = array();
+
+			if (count($related_items) > 0)
+				foreach ($related_items as $relationship)
+					$related_item_ids[] = $relationship->related;
+
+			if (count($related_item_ids) > 0)
+				$conditions['id'] = $related_item_ids; else
+				$conditions['id'] = -1;
 		}
 		
 		if (!(isset($tag_params['show_deleted']) && $tag_params['show_deleted'] == 1)) {
