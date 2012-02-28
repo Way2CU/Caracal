@@ -43,7 +43,6 @@
 				<select name="image" style="width: 300px;">
 					<option></option>
 					<_image_list
-						eval="selected"
 						template="image_option.xml"
 						local="1"
 					/>
