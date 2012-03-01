@@ -333,8 +333,12 @@ class ShopCategoryHandler {
 	 * @param array $children
 	 */
 	public function tag_CategoryList($tag_params, $children) {
+		global $language;
+
 		$manager = ShopCategoryManager::getInstance();
 		$conditions = array();
+		$order_by = array();
+		$order_asc = true;
 		$item_category_ids = array();
 		$item_id = isset($tag_params['item_id']) ? fix_id($tag_params['item_id']) : null;
 
@@ -378,8 +382,16 @@ class ShopCategoryHandler {
 					$item_category_ids[] = $membership->category;
 		}
 
+		// get order list
+		if (isset($tag_params['order_by']))
+			$order_by = fix_chars(split(',', $tag_params['order_by'])); else
+			$order_by = array('title_'.$language);
+
+		if (isset($tag_params['order_ascending']))
+			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes'; else
+
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
