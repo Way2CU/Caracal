@@ -126,6 +126,8 @@ class ShopItemHandler {
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
+		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -151,6 +153,8 @@ class ShopItemHandler {
 			
 			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
+
+			$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
 
 			// prepare parameters
 			$params = array(
