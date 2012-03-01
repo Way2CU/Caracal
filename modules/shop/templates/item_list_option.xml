@@ -3,7 +3,6 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 250px;">
-			<input type="checkbox" name="'related_'.$params['id']" eval="name"/>
 			<_var name="$params['name'][$language]"/>
 		</span>
 		<span class="column" style="width: 60px;">
@@ -11,6 +10,11 @@
 		</span>
 		<span class="column" style="width: 50px;">
 			<_var name="$params['rating']"/>
+		</span>
+		<span class="column">
+			<a href="javascript: void(0);" onclick="javascript: shop_RemoveRelatedItem(this);">
+				<_text constant="delete"/>
+			</a>
 		</span>
 	</div>
 </document>

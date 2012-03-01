@@ -54,6 +54,7 @@
 					<_text constant="message_images_upload" module="shop"/>
 				</div>
 			</div>
+
 			<div class="scrollable_list">
 				<div class="list_header">
 					<_text constant="column_categories" module="shop"/>
@@ -65,6 +66,7 @@
 					/>
 				</div>
 			</div>
+
 			<div class="scrollable_list">
 				<label class="inline">
 					<span><_text constant="label_search_query" module="shop"/></span>
