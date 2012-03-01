@@ -1637,7 +1637,7 @@ class gallery extends Module {
 		}
 
 		if (isset($_REQUEST['order_by'])) {
-			$order_by = fix_chars(split($_REQUEST['prder_by']));
+			$order_by = fix_chars(explode($_REQUEST['order_by']));
 		} else {
 			// default sorting column
 			$order_by[] = 'title';
@@ -1777,12 +1777,13 @@ class gallery extends Module {
 		}
 
 		if (isset($_REQUEST['order_by'])) {
-			$order_by = split(',', fix_chars($_REQUEST['order_by']));
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
 		} else {
 			$order_by = array('name_'.$language);
 		}
 
-		if (isset($_REQUEST['order_asc']));
+		if (isset($_REQUEST['order_asc']))
+			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes';
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
