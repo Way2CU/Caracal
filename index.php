@@ -2,7 +2,7 @@
 
 /**
  * Modular Web Engine
- * Copyright (c) 2011. by Mladen Mijatov
+ * Copyright (c) 2012. by Mladen Mijatov
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,16 +48,16 @@ $time_start = $time_start[0] + $time_start[1];
 session_start();
 
 // create main handlers
-$ModuleHandler = ModuleHandler::getInstance();
-$LanguageHandler = MainLanguageHandler::getInstance();
-$SectionHandler = MainSectionHandler::getInstance();
+$module_handler = ModuleHandler::getInstance();
+$language_handler = MainLanguageHandler::getInstance();
+$section_handler = MainSectionHandler::getInstance();
 
 // unpack parameters if needed
 if ($url_rewrite)
 	url_UnpackValues();
 
 // load primary variables
-$default_language = $LanguageHandler->getDefaultLanguage();
+$default_language = $language_handler->getDefaultLanguage();
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
 if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
 if (!isset($_SESSION['language']) || empty($_SESSION['language'])) $_SESSION['language'] = $default_language;
@@ -66,11 +66,11 @@ $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_defaul
 
 // if language change is specified
 if (isset($_REQUEST['language']))
-	if (array_key_exists($_REQUEST['language'], $LanguageHandler->getLanguages()))
+	if (array_key_exists($_REQUEST['language'], $language_handler->getLanguages()))
 		$_SESSION['language'] = fix_chars($_REQUEST['language']);
 
 $language = $_SESSION['language'];
-$language_rtl = $LanguageHandler->isRTL();
+$language_rtl = $language_handler->isRTL();
 
 // turn off URL rewrite for backend
 if ($section == 'backend' || $section == 'backend_module')
@@ -83,10 +83,10 @@ if ($db_use) {
 }
 
 // load all the modules and start parsing the page
-$ModuleHandler->loadModules();
+$module_handler->loadModules();
 
 // transfer display control
-$SectionHandler->transferControl($section, $action, $language);
+$section_handler->transferControl($section, $action, $language);
 
 // print out copyright and timing
 $time_end = explode(" ", microtime());
