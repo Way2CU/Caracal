@@ -37,9 +37,14 @@ require_once('units/template.php');
 require_once('units/section.php');
 require_once('units/xml_parser.php');
 require_once('units/markdown.php');
+require_once('units/cache/cache.php');
 
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
+define('_AJAX_REQUEST', 
+			!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+		);
 
 $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];
@@ -82,18 +87,31 @@ if ($db_use) {
 	$db_active = $db->quick_connect($db_user, $db_pass, $db_name, $db_host);
 }
 
-// load all the modules and start parsing the page
-$module_handler->loadModules();
-
 // transfer display control
-$section_handler->transferControl($section, $action, $language);
+$cache = CacheHandler::getInstance();
+if ($cache->isCached()) {
+	// only include specified modules
+	$module_handler->loadModules(true);
+
+	// show cached page
+	$cache->printCache();
+
+} else {
+	// load all the modules
+	$module_handler->loadModules();
+
+	// show page and cache it along the way
+	$cache->startCapture();
+	$section_handler->transferControl($section, $action, $language);
+	$cache->endCapture();
+}
 
 // print out copyright and timing
 $time_end = explode(" ", microtime());
 $time_end = $time_end[0] + $time_end[1];
 $time = round($time_end - $time_start, 3);
 
-if (!defined('_OMIT_STATS')) {
+if (!defined('_OMIT_STATS') && !_AJAX_REQUEST) {
 	echo "\n<!-- Modular Web Engine (c) ".date('Y').". by RCF Group, www.rcf-group.com -->";
 	echo "\n<!-- Page generated in $time second(s) -->";
 }
