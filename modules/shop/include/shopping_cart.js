@@ -66,23 +66,31 @@ function ShoppingCart() {
 	var base = $('base');
 	this._backend_url = base.attr('href') + '/index.php';
 
+	var constants = [
+				'checkout',
+				'clear',
+				'delete_item',
+				'edit_item',
+				'empty_shopping_cart',
+				'hide_shopping_cart',
+				'label_count',
+				'label_price',
+				'message_clear_cart',
+				'message_edit_item_in_cart',
+				'message_no_items_in_cart',
+				'message_remove_item_from_cart',
+				'shipping',
+				'show_shopping_cart',
+				'subtotal_amount',
+				'tax',
+				'total_amount',
+			];
+
+
 	/**
 	 * Finish object initialization
 	 */
 	this.init = function() {
-		var constants = [
-					'show_shopping_cart',
-					'hide_shopping_cart',
-					'empty_shopping_cart',
-					'subtotal_amount',
-					'checkout',
-					'clear',
-					'tax',
-					'shipping',
-					'total_amount',
-					'edit_item',
-					'delete_item'
-				];
 
 		// configure main container
 		this.main_container
@@ -756,7 +764,8 @@ function ShoppingCart() {
 	};
 
 	// initialize object
-	this.init();
+	//this.init();
+	language_handler.getTextArrayAsync('shop', constants, function() { self.init(); });
 }
 
 /**
