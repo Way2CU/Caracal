@@ -11,6 +11,7 @@ define('_STANDARD', 'html5');
 $module_path = 'modules/';
 $data_path = 'data/';
 $template_path = 'site/';
+$cache_path = 'cache/';
 $system_template_path = 'units/templates/';
 
 // database
@@ -23,8 +24,9 @@ $db_pass = 'matrix';
 $db_name = 'web_engine';
 
 // various
-$url_rewrite = true;
+$url_rewrite = false;
 $url_add_extension = false;
 $url_language_optional = true;
+$cache_enabled = true;
 
 ?>
