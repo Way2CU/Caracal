@@ -22,19 +22,20 @@ class ModuleHandler {
 	/**
 	 * Load all modules in specified path
 	 *
-	 * @param string $path
+	 * @param boolean $include_only
 	 */
-	function loadModules() {
+	function loadModules($include_only=false) {
 		global $db_use, $data_path;
 
-		$module_list = array();
+		$preload_list = array();
+		$normal_list = array();
 
 		if ($db_use) {
 			// database available, form module list from database entries
 			$manager = ModuleManager::getInstance();
 
 			// get priority module list
-			$preload_list = $manager->getItems(
+			$preload_raw = $manager->getItems(
 									$manager->getFieldNames(),
 									array(
 										'active' 	=> 1,
@@ -44,7 +45,7 @@ class ModuleHandler {
 								);
 
 			// get normal module list
-			$normal_list = $manager->getItems(
+			$normal_raw = $manager->getItems(
 									$manager->getFieldNames(),
 									array(
 										'active' 	=> 1,
@@ -53,13 +54,11 @@ class ModuleHandler {
 									array('order')
 								);
 
-			// add each of preload items to list
-			foreach ($preload_list as $module)
-				$module_list[] = $module->name;
+			foreach ($preload_raw as $preload_item)
+				$preload_list[] = $preload_item->name;
 
-			// add each of normal items to list
-			foreach ($normal_list as $module)
-				$module_list[] = $module->name;
+			foreach ($normal_raw as $normal_item)
+				$normal_list[] = $normal_item->name;
 
 		} else {
 			// no database available try to load from XML file
@@ -76,9 +75,19 @@ class ModuleHandler {
 		}
 
 		// load modules
-		if (count($module_list) > 0)
-			foreach($module_list as $module_name)
+		if (count($preload_list) > 0)
+			foreach ($preload_list as $module_name)
 				$this->_loadModule($module_name);
+
+		if (count($normal_list) > 0)
+			if ($include_only) {
+				foreach($normal_list as $module_name)
+					$this->_includeModule($module_name);
+
+			} else {
+				foreach($normal_list as $module_name)
+					$this->_loadModule($module_name);
+			}
 	}
 
 	/**
@@ -94,13 +103,27 @@ class ModuleHandler {
 		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
 
 		if (file_exists($filename)) {
-			include_once($filename);
+			include($filename);
 
 			$class = basename($filename, '.php');
 			$result = call_user_func(array($class, 'getInstance'));
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Only include module file so it can be used only when needed.
+	 *
+	 * @param string $filename
+	 */
+	public function _includeModule($name) {
+		global $module_path;
+
+		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
+
+		if (file_exists($filename)) 
+			include($filename);
 	}
 }
 
