@@ -12,6 +12,7 @@ class TemplateHandler {
 	 * @var string
 	 */
 	public $file;
+
 	/**
 	 * XML parser
 	 * @var resource
@@ -101,6 +102,19 @@ class TemplateHandler {
 	}
 
 	/**
+	 * Manually set XML
+	 * @param string $data
+	 */
+	public function setXML($data) {
+		if (isset($this->engine))
+			unset($this->engine);
+
+		$this->engine = new XMLParser($data, '');
+		$this->engine->Parse();
+		$this->active = true;
+	}
+
+	/**
 	 * Sets local params
 	 *
 	 * @param array $params
@@ -160,8 +174,30 @@ class TemplateHandler {
 					$tag->tagAttrs[$param] = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 				}
 
-				// unset eval param
+				// unset param
 				unset($tag->tagAttrs['eval']);
+			}
+
+			// check if specified tag shouldn't be cached
+			$skip_cache = false;
+
+			if (isset($tag->tagAttrs['skip_cache'])) {
+				// unset param
+				unset($tag->tagAttrs['skip_cache']);
+
+				// get cache handler
+				$cache = CacheHandler::getInstance();
+
+				// only if current URL is being cached, we start dirty area
+				if ($cache->isCaching()) {
+					$cache->startDirtyArea();
+					$skip_cache = true;
+
+					// reconstruct template for cache,
+					// ugly but we are not doing it a lot
+					$data = $this->getDataForCache($tag);
+					$cache->setCacheForDirtyArea($data);
+				}
 			}
 
 			// now parse the tag
@@ -329,7 +365,7 @@ class TemplateHandler {
 
 					} else {
 						// default tag handler
-						echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
+						echo '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
 
 						if (count($tag->tagChildren) > 0)
 							$this->parse($tag->tagChildren);
@@ -340,10 +376,14 @@ class TemplateHandler {
 						$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
 						
 						if ($close_tag)
-							echo "</{$tag->tagName}>";
+							echo '</'.$tag->tagName.'>';
 					}
 					break;
 			}
+
+			// end cache dirty area if initialized
+			if ($skip_cache)
+				$cache->endDirtyArea();
 		}
 	}
 
@@ -359,6 +399,29 @@ class TemplateHandler {
 			foreach ($params as $param=>$value)
 				if ($param !== 'eval')
 					$result .= ' '.$param.'="'.$value.'"';
+
+		return $result;
+	}
+
+	/**
+	 * Reconstruct template for cache
+	 * 
+	 * @param object $tag
+	 * @return string
+	 */
+	private function getDataForCache($tag) {
+		$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
+		$result = '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
+
+		if (count($tag->tagChildren) > 0)
+			foreach($tag->tagChildren as $child)
+				$result .= $this->getDataForCache($child);
+
+		if (count($tag->tagData) > 0)
+			$result .= $tag->tagData;
+
+		if ($close_tag)
+			$result .= '</'.$tag->tagName.'>';
 
 		return $result;
 	}
