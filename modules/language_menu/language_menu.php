@@ -170,8 +170,6 @@ class language_menu extends Module {
 	 * Get language constant from specified module or from global language file
 	 */
 	private function json_GetText() {
-		define('_OMIT_STATS', 1);
-
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
@@ -191,8 +189,6 @@ class language_menu extends Module {
 	 * Get language constants for specified array
 	 */
 	private function json_GetTextArray() {
-		define('_OMIT_STATS', 1);
-
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
@@ -221,8 +217,6 @@ class language_menu extends Module {
 	 */
 	private function json_GetCurrentLanguage() {
 		global $language;
-
-		define('_OMIT_STATS', 1);
 		print json_encode($language);
 	}
 }
