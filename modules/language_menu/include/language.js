@@ -176,7 +176,7 @@ function LanguageHandler() {
 
 			$.ajax({
 				url: this.backend_url,
-				type: 'POST',
+				type: 'GET',
 				async: false,
 				data: data,
 				dataType: 'json',
@@ -232,8 +232,8 @@ function LanguageHandler() {
 
 			$.ajax({
 				url: this.backend_url,
-				type: 'POST',
-				async: false,
+				type: 'GET',
+				async: true,
 				data: data,
 				dataType: 'json',
 				context: this,
