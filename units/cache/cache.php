@@ -5,8 +5,6 @@
  * Copyright (c) 2012. by Mladen Mijatov
  */
 
-//require_once('manager.php');
-
 
 class CacheHandler {
 	private static $_instance;
@@ -21,6 +19,7 @@ class CacheHandler {
 
 	const TAG_OPEN = '{%{';
 	const TAG_CLOSE = '}%}';
+	const TIMESTAMP_FORMAT = 'Y-m-d H:i:s';
 
 	private function __construct() {
 		global $cache_path, $cache_enabled, $section;
@@ -43,9 +42,72 @@ class CacheHandler {
 	}
 
 	private function storeCache($data) {
+		global $cache_path, $cache_expire_period, $cache_max_pages;
+
+		$expires = date(self::TIMESTAMP_FORMAT, time() + $cache_expire_period);
+
+		// add database entry
+		$manager = CacheManager::getInstance();
+		$manager->insertData(array(
+						'uid'			=> $this->uid,
+						'url'			=> $_SERVER['REQUEST_URI'],
+						'times_used'	=> 0,
+						'times_renewed'	=> 0,
+						'expires'		=> $expires
+					));
+
+		// store content to disk
+		file_put_contents($cache_path.$this->uid, $this->cache);
+
+		// check if we reached maximum number of pages
+		$page_count = $manager->sqlResult('SELECT count(`uid`) FROM `system_cache`');
+		if ($page_count > $cache_max_pages) {
+			$entries_to_drop = $manager->getItems(
+								array('uid'), 
+								array(),
+								array('times_used'),
+								true,
+								10
+							);
+
+			$uid_list = array();
+
+			foreach($entries_to_drop as $entry) {
+				$uid_list[] = $entry->uid;
+				unlink($cache_path.$entry->uid);
+			}
+
+			$manager->deleteData(array('uid' => $uid_list));
+		}
+	}
+
+	/**
+	 * Handle expired cache or update times_used counter
+	 */
+	private function validateCache() {
 		global $cache_path;
 
-		file_put_contents($cache_path.$this->uid, $this->cache);
+		$manager = CacheManager::getInstance();
+		$today = date(self::TIMESTAMP_FORMAT);
+		$entry = $manager->getSingleItem(
+								array('uid'),
+								array(
+										'uid'		=> $this->uid,
+										'expires' 	=> array(
+											'operator'	=> '<',
+											'value'		=> $today
+										)
+								));
+
+		if (is_object($entry)) {
+			// object needs to be expired
+			unlink($cache_path.$this->uid);
+			$manager->deleteData(array('uid' => $this->uid));
+
+		} else {
+			// update times used
+			$manager->updateData(array('times_used' => '`times_used` + 1'), array('uid' => $this->uid));
+		}
 	}
 
 	/**
@@ -72,6 +134,7 @@ class CacheHandler {
 		$filename = $cache_path.$this->uid;
 
 		if (file_exists($filename)) { 
+			// get data from file and prepare for parsing
 			$data = file_get_contents($filename);
 			$template = new TemplateHandler();
 			$pattern = '/'.self::TAG_OPEN.'(.*?)'.self::TAG_CLOSE.'/u';
@@ -95,6 +158,9 @@ class CacheHandler {
 				}
 
 			print $data;
+
+			// validate or expire cache entry
+			$this->validateCache();
 		}
 	}
 
