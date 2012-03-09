@@ -23,10 +23,14 @@ $db_user = 'root';
 $db_pass = 'matrix';
 $db_name = 'web_engine';
 
+// cache
+$cache_enabled = true;
+$cache_expire_period = 86400;
+$cache_max_pages = 200;
+
 // various
 $url_rewrite = false;
 $url_add_extension = false;
 $url_language_optional = true;
-$cache_enabled = true;
 
 ?>
