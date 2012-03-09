@@ -38,6 +38,7 @@ require_once('units/section.php');
 require_once('units/xml_parser.php');
 require_once('units/markdown.php');
 require_once('units/cache/cache.php');
+require_once('units/cache/manager.php');
 
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
