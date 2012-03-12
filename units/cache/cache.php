@@ -25,7 +25,10 @@ class CacheHandler {
 		global $cache_path, $cache_enabled, $section;
 
 		//$manager = CacheManager();
-		$this->should_cache = $cache_enabled && !($section == 'backend' || $section == 'backend_module');
+		$this->should_cache = 
+					$cache_enabled && 
+					!($section == 'backend' || $section == 'backend_module') && 
+					$_SERVER['REQUEST_METHOD'] == 'GET';
 
 		$this->uid = $this->generateUniqueID();
 		$this->is_cached = file_exists($cache_path.$this->uid);
