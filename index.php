@@ -53,10 +53,6 @@ $time_start = $time_start[0] + $time_start[1];
 // start session
 session_start();
 
-// create main handlers
-$module_handler = ModuleHandler::getInstance();
-$language_handler = MainLanguageHandler::getInstance();
-
 // unpack parameters if needed
 if ($url_rewrite)
 	url_UnpackValues();
@@ -68,13 +64,19 @@ $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
 // only get language is it's not present in session
-if (!isset($_SESSION['language']) || empty($_SESSION['language'])) 
-	$_SESSION['language'] = $language_handler->getDefaultLanguage();
+$language_handler = MainLanguageHandler::getInstance();
 
-// if language change is specified
-if (isset($_REQUEST['language']))
+if (!isset($_REQUEST['language'])) {
+	// no language change was specified, check session
+	if (!isset($_SESSION['language']) || empty($_SESSION['language'])) 
+		$_SESSION['language'] = $language_handler->getDefaultLanguage();
+
+} else {
+	// language change was specified, make sure it's valid
 	if (array_key_exists($_REQUEST['language'], $language_handler->getLanguages()))
-		$_SESSION['language'] = fix_chars($_REQUEST['language']);
+		$_SESSION['language'] = fix_chars($_REQUEST['language']); else
+		$_SESSION['language'] = $language_handler->getDefaultLanguage();
+}
 
 $language = $_SESSION['language'];
 $language_rtl = $language_handler->isRTL();
@@ -91,6 +93,8 @@ if ($db_use) {
 
 // transfer display control
 $cache = CacheHandler::getInstance();
+$module_handler = ModuleHandler::getInstance();
+
 if ($cache->isCached()) {
 	// only include specified modules
 	$module_handler->loadModules(true);
