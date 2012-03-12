@@ -56,19 +56,20 @@ session_start();
 // create main handlers
 $module_handler = ModuleHandler::getInstance();
 $language_handler = MainLanguageHandler::getInstance();
-$section_handler = MainSectionHandler::getInstance();
 
 // unpack parameters if needed
 if ($url_rewrite)
 	url_UnpackValues();
 
-// load primary variables
-$default_language = $language_handler->getDefaultLanguage();
+// set default values for variables
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
 if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
-if (!isset($_SESSION['language']) || empty($_SESSION['language'])) $_SESSION['language'] = $default_language;
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
+
+// only get language is it's not present in session
+if (!isset($_SESSION['language']) || empty($_SESSION['language'])) 
+	$_SESSION['language'] = $language_handler->getDefaultLanguage();
 
 // if language change is specified
 if (isset($_REQUEST['language']))
@@ -98,6 +99,9 @@ if ($cache->isCached()) {
 	$cache->printCache();
 
 } else {
+	// get main section handler so we can transfer control
+	$section_handler = MainSectionHandler::getInstance();
+
 	// load all the modules
 	$module_handler->loadModules();
 
