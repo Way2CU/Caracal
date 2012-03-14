@@ -31,7 +31,7 @@ class CacheHandler {
 					$_SERVER['REQUEST_METHOD'] == 'GET';
 
 		$this->uid = $this->generateUniqueID();
-		$this->is_cached = file_exists($cache_path.$this->uid);
+		$this->is_cached = file_exists($cache_path.$this->uid) && $this->should_cache;
 	}
 
 	/**
