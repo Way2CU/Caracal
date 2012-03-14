@@ -442,8 +442,6 @@ class backend extends Module {
 	 * Initialise and activate module
 	 */
 	private function initialiseModule_Commit() {
-		global $ModuleHandler;
-
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
@@ -464,9 +462,13 @@ class backend extends Module {
 								'active'	=> 1
 							));
 
-			$module = $ModuleHandler->_loadModule($module_name);
-			$module->onInit();
-			$message = $this->getLanguageConstant('message_module_initialised');
+			$handler = ModuleHandler::getInstance();
+			$module = $handler->_loadModule($module_name);
+
+			if (!is_null($module)) {
+				$module->onInit();
+				$message = $this->getLanguageConstant('message_module_initialised');
+			}
 
 		} else {
 			$message = $this->getLanguageConstant('message_module_protected');
@@ -521,8 +523,6 @@ class backend extends Module {
 	 * Disable specified module and remove it's settings
 	 */
 	private function disableModule_Commit() {
-		global $ModuleHandler;
-
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
