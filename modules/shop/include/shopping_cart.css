@@ -16,6 +16,8 @@ div#shopping_cart {
 	right: -250px;
 
 	color: white;
+
+	z-index: 100000;
 }
 
 div#shopping_cart *:not(input):not(select) {
