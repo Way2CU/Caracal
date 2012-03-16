@@ -121,8 +121,9 @@ $time_end = $time_end[0] + $time_end[1];
 $time = round($time_end - $time_start, 3);
 
 if (!defined('_OMIT_STATS') && !_AJAX_REQUEST) {
-	echo "\n<!-- Modular Web Engine (c) ".date('Y').". by RCF Group, www.rcf-group.com -->";
-	echo "\n<!-- Page generated in $time second(s) -->";
+	echo "\n<!-- Page generated in $time second(s) -->\n";
+	echo "\n<!--\nCopyright (c) ".date('Y').". by:";
+	echo "\n    RCF Group - http://rcf-group.com\n    Way2CU - http://way2cu.com\n-->";
 }
 
 ?>
