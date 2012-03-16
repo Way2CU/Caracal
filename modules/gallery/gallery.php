@@ -1268,7 +1268,8 @@ class gallery extends Module {
 												);
 
 				if (is_object($container))
-					$container_id = $container->id;
+					$container_id = $container->id; else
+					$container_id = -1;
 			}
 
 
