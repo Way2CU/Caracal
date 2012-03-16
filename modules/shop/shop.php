@@ -176,6 +176,12 @@ class shop extends Module {
 
 			$backend->addMenu($this->name, $shop_menu);
 		}
+
+		// register search
+		if (class_exists('search')) {
+			$search = search::getInstance();
+			$search->registerModule('shop', &$this);
+		}
 	}
 
 	/**
