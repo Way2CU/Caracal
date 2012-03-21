@@ -71,6 +71,7 @@ function LightBox(selector, show_title, show_description, show_controls) {
 		// configure background shade
 		this._background
 				.attr('id', 'lightbox-background')
+				.bind('click', this.hideImage)
 				.appendTo(container);
 
 		// configure container

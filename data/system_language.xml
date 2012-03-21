@@ -21,6 +21,7 @@
 		<constant name="close">Zatvori</constant>
 		<constant name="reset">Resetuj</constant>
 		<constant name="filter">Filtriraj</constant>
+		<constant name="search">Pronađi</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server je naišao na sledeću grešku prilikom obrade podataka:</constant>
@@ -54,6 +55,7 @@
 		<constant name="close">Затвори</constant>
 		<constant name="reset">Ресетуј</constant>
 		<constant name="filter">Филтрирај</constant>
+		<constant name="search">Пронађи</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Сервер је наишао на следећу грешку приликом обраде података:</constant>
@@ -85,6 +87,7 @@
 		<constant name="close">Close</constant>
 		<constant name="reset">Reset</constant>
 		<constant name="filter">Filter</constant>
+		<constant name="search">Search</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
@@ -147,6 +150,7 @@
 		<constant name="close">סגור</constant>
 		<constant name="reset">אפס</constant>
 		<constant name="filter">לסנן</constant>
+		<constant name="search">לחפש</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>

@@ -95,7 +95,7 @@
 		<constant name="menu_modules">מודולים</constant>
 		<constant name="menu_users">ניהול משתמשים</constant>
 		<constant name="menu_logout">התנתק</constant>
-
+		<constant name="menu_change_password">שנה סיסמא</constant>
 		<!-- Window Titles -->
 		<constant name="title_modules">מודולים</constant>
 		<constant name="title_module_activate">הפעל מודול</constant>

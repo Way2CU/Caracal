@@ -16,6 +16,21 @@
 			<span><_text constant="label_wm_tools" module="page_info"/></span>
 			<input type="text" name="wm_tools" value="$settings['wm_tools']" eval="value" style="width: 350px;"/>
 		</label>
+		<div style="padding-bottom: 10px;">
+			<div class="box left">
+				<label>
+					<span><_text constant="label_optimizer" module="page_info"/></span>
+					<input type="text" name="optimizer" value="$settings['optimizer']" eval="value"/>
+				</label>
+			</div>
+			<div class="box left">
+				<label>
+					<span><_text constant="label_optimizer_key" module="page_info"/></span>
+					<input type="text" name="optimizer_key" value="$settings['optimizer_key']" eval="value" style="width: 120px;"/>
+				</label>
+			</div>
+			<div style="clear: both;"/>
+		</div>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>

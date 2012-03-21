@@ -60,6 +60,7 @@ class backend extends Module {
 
 			if ($section == $this->name) {
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/notebook.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 
 				if (MainLanguageHandler::getInstance()->isRTL()) {
 					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
@@ -68,6 +69,8 @@ class backend extends Module {
 
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/notebook.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/showdown.js'), 'type'=>'text/javascript'));
 			}
 		}
 
@@ -439,8 +442,6 @@ class backend extends Module {
 	 * Initialise and activate module
 	 */
 	private function initialiseModule_Commit() {
-		global $ModuleHandler;
-
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
@@ -461,9 +462,13 @@ class backend extends Module {
 								'active'	=> 1
 							));
 
-			$module = $ModuleHandler->_loadModule($module_name);
-			$module->onInit();
-			$message = $this->getLanguageConstant('message_module_initialised');
+			$handler = ModuleHandler::getInstance();
+			$module = $handler->_loadModule($module_name);
+
+			if (!is_null($module)) {
+				$module->onInit();
+				$message = $this->getLanguageConstant('message_module_initialised');
+			}
 
 		} else {
 			$message = $this->getLanguageConstant('message_module_protected');
@@ -518,8 +523,6 @@ class backend extends Module {
 	 * Disable specified module and remove it's settings
 	 */
 	private function disableModule_Commit() {
-		global $ModuleHandler;
-
 		$module_name = fix_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
@@ -744,6 +747,18 @@ class backend extends Module {
 	private function utf8_urldecode($str) {
 		$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
 		return html_entity_decode($str, null, 'UTF-8');;
+	}
+
+	/**
+	 * Check if backend supports specified language
+	 *
+	 * @param string $language
+	 */
+	public function languageExists($language) {
+		$languages = $this->language->getLanguages(false);
+		$result = in_array($language, $languages);
+
+		return $result;
 	}
 }
 

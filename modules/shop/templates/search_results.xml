@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 250px;">
+				<_text constant="column_name" module="shop"/>
+			</span>
+			<span class="column" style="width: 60px;">
+				<_text constant="column_price" module="shop"/>
+			</span>
+			<span class="column" style="width: 50px;">
+				<_text constant="column_rating" module="shop"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 340px" id="result_list">
+			<_item_list
+				template="item_list_search_result.xml"
+				local="1"
+				filter="$params['query']"
+				eval="filter"
+			/>
+		</div>
+		
+		<div class="button_bar">
+			<button 
+				type="button"
+				onclick="javascript: shop_AddRelatedItems();"
+			>
+				<_text constant="add"/>
+			</button>
+			<button 
+				type="button"
+				onclick="javascript: window_system.closeWindow('shop_search_results');"
+			>
+				<_text constant="close"/>
+			</button>
+		</div>
+	</div>
+	<script type="text/javascript"><![CDATA[
+		function shop_AddRelatedItems() {
+			var items = $('#result_list').children('div.list_item');
+			var target = $('#related_items');
+			
+			items.each(function(index) {
+				var checkbox = $(this).find('input');
+
+				if (checkbox.attr('checked') == 'checked') {
+					var new_item = $(this).clone();
+					var name = checkbox.attr('name');
+					
+					new_item
+						.appendTo(target)
+						.append(
+							$('<input>', 
+							{
+								type: 'hidden',
+								name: name,
+								value: 1
+							})
+						)
+						.find('input[type=checkbox]').remove();
+
+					checkbox.removeAttr('checked');
+				}
+			});
+
+			window_system.getWindow('shop_search_results').close();
+		}
+
+		window_system.getWindow('shop_search_results').focus();
+		]]>
+	</script>
+</document>

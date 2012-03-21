@@ -6,7 +6,10 @@
 	Author: MeanEYE.rcf
 -->
 
-<!ELEMENT state_list (state*)>
+<!ELEMENT state_list (country*)>
+
+<!ELEMENT country (state*)>
+<!ATTLIST country short CDATA #REQUIRED>
 
 <!ELEMENT state ANY>
 <!ATTLIST state short CDATA #REQUIRED>

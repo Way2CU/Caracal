@@ -12,6 +12,7 @@ class TemplateHandler {
 	 * @var string
 	 */
 	public $file;
+
 	/**
 	 * XML parser
 	 * @var resource
@@ -52,7 +53,7 @@ class TemplateHandler {
 	 * List of tags that shouldn't be closed
 	 * @var array
 	 */
-	private $tags_without_end = array('br', 'hr', 'img');
+	private $tags_without_end = array('br', 'hr', 'img', 'base', 'input');
 	
 	/**
 	 * If we should close all tags
@@ -98,6 +99,19 @@ class TemplateHandler {
 	public function restoreXML() {
 		if (isset($this->engine))
 			$this->engine->Parse();
+	}
+
+	/**
+	 * Manually set XML
+	 * @param string $data
+	 */
+	public function setXML($data) {
+		if (isset($this->engine))
+			unset($this->engine);
+
+		$this->engine = new XMLParser($data, '');
+		$this->engine->Parse();
+		$this->active = true;
 	}
 
 	/**
@@ -157,11 +171,33 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$tag->tagAttrs[$param] = eval('global $section, $action, $language; return '.$to_eval.';');
+					$tag->tagAttrs[$param] = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 				}
 
-				// unset eval param
+				// unset param
 				unset($tag->tagAttrs['eval']);
+			}
+
+			// check if specified tag shouldn't be cached
+			$skip_cache = false;
+
+			if (isset($tag->tagAttrs['skip_cache'])) {
+				// unset param
+				unset($tag->tagAttrs['skip_cache']);
+
+				// get cache handler
+				$cache = CacheHandler::getInstance();
+
+				// only if current URL is being cached, we start dirty area
+				if ($cache->isCaching()) {
+					$cache->startDirtyArea();
+					$skip_cache = true;
+
+					// reconstruct template for cache,
+					// ugly but we are not doing it a lot
+					$data = $this->getDataForCache($tag);
+					$cache->setCacheForDirtyArea($data);
+				}
 			}
 
 			// now parse the tag
@@ -173,6 +209,7 @@ class TemplateHandler {
 					if (!in_array($name, $this->protected_variables)) {
 						$_SESSION[$name] = $tag->tagAttrs['value'];
 					}
+					break;
 				
 				// transfer control to module
 				case '_module':
@@ -286,6 +323,7 @@ class TemplateHandler {
 						$keys[$i] = "%{$value}%";
 
 					echo str_replace($keys, $values, $tag->tagData);
+					break;
 
 				// conditional tag
 				case '_if':
@@ -294,8 +332,12 @@ class TemplateHandler {
 						$settings = $this->module->settings;
 
 					$params = $this->params;
+
+					if (!array_key_exists('condition', $tag->tagAttrs)) 
+						trigger_error('Missing required attribute "condition" in: '.$this->file);
+
 					$to_eval = $tag->tagAttrs['condition'];
-					if (eval('global $section, $action, $language; return '.$to_eval.';'))
+					if (eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';'))
 						$this->parse($tag->tagChildren);
 
 					break;
@@ -308,7 +350,7 @@ class TemplateHandler {
 
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs['name'];
-					echo eval('global $section, $action, $language; return '.$to_eval.';');
+					echo eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 					break;
 
 				// default action for parser, draw tag
@@ -323,7 +365,7 @@ class TemplateHandler {
 
 					} else {
 						// default tag handler
-						echo "<".$tag->tagName.$this->getTagParams($tag->tagAttrs).">";
+						echo '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
 
 						if (count($tag->tagChildren) > 0)
 							$this->parse($tag->tagChildren);
@@ -334,10 +376,14 @@ class TemplateHandler {
 						$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
 						
 						if ($close_tag)
-							echo "</{$tag->tagName}>";
+							echo '</'.$tag->tagName.'>';
 					}
 					break;
 			}
+
+			// end cache dirty area if initialized
+			if ($skip_cache)
+				$cache->endDirtyArea();
 		}
 	}
 
@@ -353,6 +399,29 @@ class TemplateHandler {
 			foreach ($params as $param=>$value)
 				if ($param !== 'eval')
 					$result .= ' '.$param.'="'.$value.'"';
+
+		return $result;
+	}
+
+	/**
+	 * Reconstruct template for cache
+	 * 
+	 * @param object $tag
+	 * @return string
+	 */
+	private function getDataForCache($tag) {
+		$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
+		$result = '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
+
+		if (count($tag->tagChildren) > 0)
+			foreach($tag->tagChildren as $child)
+				$result .= $this->getDataForCache($child);
+
+		if (count($tag->tagData) > 0)
+			$result .= $tag->tagData;
+
+		if ($close_tag)
+			$result .= '</'.$tag->tagName.'>';
 
 		return $result;
 	}

@@ -1,0 +1,68 @@
+/**
+ * Notebook Control
+ *
+ * Copyright (c) 2012. by Way2CU
+ * Author: Mladen Mijatov
+ */
+
+div.notebook {
+	display: block;
+
+	margin-bottom: 10px;
+
+	border: 1px solid #B8B8B8;
+	border-radius: 4px;
+	background-color: #EFEFEF;
+}
+
+div.notebook div.container {
+	display: block;
+}
+
+div.notebook div.container div.page {
+	display: none;
+
+	margin: 0px;
+	padding: 10px;
+
+}
+
+div.notebook div.container div.page.active {
+	display: block;
+}
+
+div.notebook > ul {
+	display: block;
+
+	margin: 0px;
+	padding: 5px;
+	padding-bottom: 0px;
+
+	list-style-type: none;
+	list-style-image: none;
+
+	border-radius: 3px 3px 0px 0px;
+	background-color: #D4D4D4;
+}
+
+div.notebook > ul li {
+	display: inline-block;
+
+	margin-right: 4px;
+	padding: 7px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	border-radius: 5px 5px 0px 0px;
+	background-color: #C5C5C5;
+}
+
+body.rtl div.notebook > ul li {
+	margin-left: 4px;
+	margin-right: 0px;
+}
+
+div.notebook > ul li.active {
+	background-color: #EFEFEF;
+}
+

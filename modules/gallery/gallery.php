@@ -1049,8 +1049,8 @@ class gallery extends Module {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
 		}
 
+		// create template parser
 		$template = $this->loadTemplate($tag_params, 'image.xml');
-		$template->setMappedModule($this->name);
 
 		if (is_object($item)) {
 			$params = array(
@@ -1268,7 +1268,8 @@ class gallery extends Module {
 												);
 
 				if (is_object($container))
-					$container_id = $container->id;
+					$container_id = $container->id; else
+					$container_id = -1;
 			}
 
 
@@ -1637,7 +1638,7 @@ class gallery extends Module {
 		}
 
 		if (isset($_REQUEST['order_by'])) {
-			$order_by = fix_chars(split($_REQUEST['prder_by']));
+			$order_by = fix_chars(explode($_REQUEST['order_by']));
 		} else {
 			// default sorting column
 			$order_by[] = 'title';
@@ -1777,12 +1778,13 @@ class gallery extends Module {
 		}
 
 		if (isset($_REQUEST['order_by'])) {
-			$order_by = split(',', fix_chars($_REQUEST['order_by']));
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
 		} else {
 			$order_by = array('name_'.$language);
 		}
 
-		if (isset($_REQUEST['order_asc']));
+		if (isset($_REQUEST['order_asc']))
+			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes';
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
@@ -1914,15 +1916,16 @@ class gallery extends Module {
 	 * Get gallery group thumbnail based on gallery id 
 	 * 
 	 * @param integer $group_id
+	 * @param boolean $big_image
 	 * @return string
 	 */
-	public function getGroupThumbnailURL($group_id) {
+	public function getGroupThumbnailURL($group_id, $big_image=false) {
 		$manager = GalleryGroupManager::getInstance();
 		$group = $manager->getSingleItem(array('thumbnail', 'id'), array('id' => $group_id));
 		
 		$result = '';
 		if (is_object($group))
-			$result = $this->_getGroupImage($group);
+			$result = $this->_getGroupImage($group, $big_image);
 		
 		return $result;
 	}
@@ -1944,7 +1947,7 @@ class gallery extends Module {
 	 * @param resource $group
 	 * @return string
 	 */
-	private function _getGroupImage($group) {
+	private function _getGroupImage($group, $big_image=false) {
 		$result = '';
 		$manager = GalleryManager::getInstance();
 
@@ -1971,7 +1974,9 @@ class gallery extends Module {
 		}
 
 		if (is_object($image))
-			$result = $this->getThumbnailURL($image);
+			if (!$big_image)
+				$result = $this->getThumbnailURL($image); else
+				$result = $this->getImageURL($image);
 
 		return $result;
 	}

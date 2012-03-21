@@ -144,7 +144,6 @@ function Dialog() {
 				)
 			.callback(function() {
 				self._visible = true;
-				console.log('visible');
 			});
 		
 		// start animation chain

@@ -8,7 +8,9 @@
 
 class page_info extends Module {
 	private static $_instance;
-	private $omit_elements;
+	private $omit_elements = array();
+	private $optimizer_page = '';
+	private $optimizer_show_control = false;
 
 	/**
 	 * Constructor
@@ -62,6 +64,12 @@ class page_info extends Module {
 			switch ($params['action']) { 
 				case 'set_omit_elements':
 					$this->omit_elements = fix_chars(split(',', $params['elements']));
+					break;
+
+				case 'set_optimizer_page':
+					$this->optimizer_page = fix_chars($params['page']);
+					if (isset($params['show_control']))
+						$this->optimizer_show_control = fix_id($params['show_control']) == 0 ? false : true;
 					break;
 
 				default:
@@ -125,10 +133,14 @@ class page_info extends Module {
 		$description = fix_chars($_REQUEST['description']);
 		$analytics = fix_chars($_REQUEST['analytics']);
 		$wm_tools = fix_chars($_REQUEST['wm_tools']);
+		$optimizer = fix_chars($_REQUEST['optimizer']);
+		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
 
 		$this->saveSetting('description', $description);
 		$this->saveSetting('analytics', $analytics);
 		$this->saveSetting('wm_tools', $wm_tools);
+		$this->saveSetting('optimizer', $optimizer);
+		$this->saveSetting('optimizer_key', $optimizer_key);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -151,10 +163,12 @@ class page_info extends Module {
 		global $section, $db_use;
 
 		$head_tag = head_tag::getInstance();
-
-		// content meta tags
 		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
 
+		// add base url tag
+		$head_tag->addTag('base', array('href' => _BASEURL));
+
+		// content meta tags
 		if (!in_array('content_type', $this->omit_elements))
 			$head_tag->addTag('meta',
 						array(
@@ -178,6 +192,15 @@ class page_info extends Module {
 			// google analytics
 			if (!empty($this->settings['analytics']))
 				$head_tag->addGoogleAnalytics($this->settings['analytics']);
+
+			// google website optimizer
+			if (!empty($this->settings['optimizer']))
+				$head_tag->addGoogleSiteOptimizer(
+										$this->settings['optimizer'],
+										$this->settings['optimizer_key'],
+										$this->optimizer_page,
+										$this->optimizer_show_control
+									);
 
 			// google webmasters tools
 			if (!empty($this->settings['wm_tools']))

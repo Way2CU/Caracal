@@ -2,65 +2,96 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_add_form">
-		<div/>
-
-		<div class="box left scrollable_list" style="width: 200px; margin-right: 10px;">
-			<div class="list_header">
-				<_text constant="label_categories" module="shop"/>
-			</div>
-			<div class="list_content" style="height: 350px">
-				<_category_list
-					template="category_checkbox_list_item.xml" 
-					local="1"
-				/>
-			</div>
-		</div>
-
-		<div class="box right" style="width: 470px;">
-			<label>
-				<span><_text constant="label_name" module="shop"/></span>
-				<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
-			</label>
-			<label>
-				<span><_text constant="label_description" module="shop"/></span>
-				<textarea name="description" class="multi-language" style="width: 460px; height: 155px;"/>
-			</label>
-			<div class="box left" style="width: 120px;">
+		<div id="shop_add_item_notebook">
+			<div>
 				<label>
-					<span><_text constant="label_price" module="shop"/></span>
-					<input type="text" name="price" style="width: 100px;" maxlength="30"/>
+					<span><_text constant="label_name" module="shop"/></span>
+					<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
 				</label>
-			</div>
-			<div class="box left" style="width: 120px;">
 				<label>
-					<span><_text constant="label_size_definition" module="shop"/></span>
-					<select name="size_definition" style="width: 200px;">
-						<option></option>
-						<_size_list 
-							template="size_option.xml"
-							local="1"
-						/>
-					</select>
+					<span><_text constant="label_description" module="shop"/></span>
+					<textarea name="description" class="multi-language" style="width: 460px; height: 155px;"/>
 				</label>
-			</div>
-			<div style="clear: both; padding-top: 10px;">
 				<div class="box left" style="width: 120px;">
 					<label>
-						<span><_text constant="label_tax" module="shop"/></span>
-						<input name="tax" style="width: 100px;"/>
+						<span><_text constant="label_price" module="shop"/></span>
+						<input type="text" name="price" style="width: 100px;" maxlength="30"/>
 					</label>
 				</div>
-				<div class="box left">
+				<div class="box left" style="width: 120px;">
 					<label>
-						<span><_text constant="label_weight" module="shop"/></span>
-						<input name="weight" style="width: 100px;"/>
+						<span><_text constant="label_size_definition" module="shop"/></span>
+						<select name="size_definition" style="width: 200px;">
+							<option></option>
+							<_size_list 
+								template="size_option.xml"
+								local="1"
+							/>
+						</select>
 					</label>
+				</div>
+				<div style="clear: both; padding-top: 10px;">
+					<div class="box left" style="width: 120px;">
+						<label>
+							<span><_text constant="label_tax" module="shop"/></span>
+							<input name="tax" style="width: 100px;"/>
+						</label>
+					</div>
+					<div class="box left" style="width: 120px;">
+						<label>
+							<span><_text constant="label_weight" module="shop"/></span>
+							<input name="weight" style="width: 100px;"/>
+						</label>
+					</div>
+					<div class="box left">
+						<label>
+							<span><_text constant="label_priority" module="shop"/></span>
+							<input name="priority" value="5" style="width: 60px;"/>
+						</label>
+					</div>
+				</div>
+				<div style="clear: both; padding-top: 10px; padding-bottom: 25px;">
+					<_text constant="message_images_upload" module="shop"/>
 				</div>
 			</div>
-		</div>
 
-		<div style="clear: both; padding: 5px;">
-			<_text constant="message_images_upload" module="shop"/>
+			<div class="scrollable_list">
+				<div class="list_header">
+					<_text constant="column_categories" module="shop"/>
+				</div>
+				<div class="list_content" style="height: 370px">
+					<_category_list
+						template="category_checkbox_list_item.xml" 
+						local="1"
+					/>
+				</div>
+			</div>
+
+			<div class="scrollable_list">
+				<label class="inline">
+					<span><_text constant="label_search_query" module="shop"/></span>
+					<input name="search_query" type="text"/>
+					<button 
+						type="button"
+						onclick="javascript: shop_OpenItemSearch();"
+					>
+						<_text constant="search"/>
+					</button>
+				</label>
+				<div class="list_header">
+					<span class="column" style="width: 250px;">
+						<_text constant="column_name" module="shop"/>
+					</span>
+					<span class="column" style="width: 60px;">
+						<_text constant="column_price" module="shop"/>
+					</span>
+					<span class="column" style="width: 50px;">
+						<_text constant="column_rating" module="shop"/>
+					</span>
+				</div>
+				<div class="list_content" style="height: 340px" id="related_items">
+				</div>
+			</div>
 		</div>
 		
 		<div class="button_bar">
@@ -72,7 +103,33 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		function shop_OpenItemSearch() {
+			var value = $('input[name=search_query]').val();
+			var data = {
+					section: 'backend_module',
+					action: 'transfer_control',
+					module: 'shop',
+					backend_action: 'items',
+					sub_action: 'search_results',
+					query: value
+				};
+			var url = backend_url + '?' + $.param(data);
+
+			window_system.openWindow(
+							'shop_search_results',
+							450,
+							language_handler.getText('shop', 'title_search_results'),
+							true, url
+						);
+		}
+
+		var backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 		var selector = new LanguageSelector('shop_item_add_form');
+		var notebook = new Notebook('shop_add_item_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
+			.setPageTitle(1, language_handler.getText('shop', 'tab_category'))
+			.setPageTitle(2, language_handler.getText('shop', 'tab_related'));
 
 		// create toolbar
 		toolbar_api

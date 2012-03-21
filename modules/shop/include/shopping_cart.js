@@ -59,27 +59,38 @@ function ShoppingCart() {
 	this._default_currency = 'EUR';
 	this._payment_methods = {};
 	this._default_method = null;
-	this._backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 	this._checkout_menu_visible = false;
 	this._size_values = {};
+
+	// base url for this site
+	var base = $('base');
+	this._backend_url = base.attr('href') + '/index.php';
+
+	var constants = [
+				'checkout',
+				'clear',
+				'delete_item',
+				'edit_item',
+				'empty_shopping_cart',
+				'hide_shopping_cart',
+				'label_count',
+				'label_price',
+				'message_clear_cart',
+				'message_edit_item_in_cart',
+				'message_no_items_in_cart',
+				'message_remove_item_from_cart',
+				'shipping',
+				'show_shopping_cart',
+				'subtotal_amount',
+				'tax',
+				'total_amount',
+			];
+
 
 	/**
 	 * Finish object initialization
 	 */
 	this.init = function() {
-		var constants = [
-					'show_shopping_cart',
-					'hide_shopping_cart',
-					'empty_shopping_cart',
-					'subtotal_amount',
-					'checkout',
-					'clear',
-					'tax',
-					'shipping',
-					'total_amount',
-					'edit_item',
-					'delete_item'
-				];
 
 		// configure main container
 		this.main_container
@@ -88,7 +99,7 @@ function ShoppingCart() {
 				.appendTo($('body'));
 
 		// parse initial options
-		if (shop_init_options != undefined) {
+		if (typeof shop_init_options !== 'undefined') {
 			if ('visible' in shop_init_options)
 				this.main_container.css('display', shop_init_options.visible ? 'block' : 'none');
 	
@@ -753,7 +764,8 @@ function ShoppingCart() {
 	};
 
 	// initialize object
-	this.init();
+	//this.init();
+	language_handler.getTextArrayAsync('shop', constants, function() { self.init(); });
 }
 
 /**

@@ -8,3 +8,5 @@ syntax: regexp
 ^styles/.*
 ^scripts/.*
 ^data/.*
+^fonts/.*
+^cache/.*

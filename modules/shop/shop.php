@@ -16,6 +16,7 @@ require_once('units/shop_transactions_manager.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_buyer_addresses_manager.php');
+require_once('units/shop_related_items_manager.php');
 
 
 class TransactionType {
@@ -174,6 +175,12 @@ class shop extends Module {
 							));
 
 			$backend->addMenu($this->name, $shop_menu);
+		}
+
+		// register search
+		if (class_exists('search')) {
+			$search = search::getInstance();
+			$search->registerModule('shop', &$this);
 		}
 	}
 
@@ -352,6 +359,7 @@ class shop extends Module {
 				`votes_up` INT(11) NOT NULL,
 				`votes_down` INT(11) NOT NULL,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`priority` INT(4) NOT NULL DEFAULT '5',
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
 				`deleted` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` ),
@@ -374,7 +382,16 @@ class shop extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
-		// create shop currencies table
+		// create table for related shop items
+		$sql = "
+			CREATE TABLE IF NOT EXISTS `shop_related_items` (
+				`item` int(11) NOT NULL,
+				`related` int(11) NOT NULL,
+				KEY `item` (`item`,`related`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop currencies tableshop_related_items
 		$sql = "
 			CREATE TABLE `shop_currencies` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -410,6 +427,7 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_categories` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`text_id` VARCHAR(32) NOT NULL,
 				`parent` INT(11) NOT NULL DEFAULT '0',
 				`image` INT(11),";
 
@@ -421,7 +439,8 @@ class shop extends Module {
 
 		$sql .="
 				PRIMARY KEY ( `id` ),
-				KEY `parent` (`parent`)
+				KEY `parent` (`parent`),
+				KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
@@ -517,7 +536,8 @@ class shop extends Module {
 					'shop_buyer_addresses',
 					'shop_transactions',
 					'shop_transaction_items',
-					'shop_stock'
+					'shop_stock',
+					'shop_related_items'
 				);
 		
 		$sql = "DROP TABLE IF EXISTS `".join('`, `', $tables)."`;";
@@ -724,7 +744,6 @@ class shop extends Module {
 				$data['currency'] = $currency_id;
 				$data['uid'] = $transaction_info['id'];
 
-				define('SQL_DEBUG', 1);
 				$transactions_manager->insertData($data);
 				$transaction_id = $transactions_manager->getInsertedID();
 
@@ -1008,8 +1027,6 @@ class shop extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
-		$template->setMappedModule($this->name);
-
 		$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
 
 		// colect ids from session
@@ -1102,7 +1119,6 @@ class shop extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
-		$template->setMappedModule($this->name);
 
 		// parse template
 		if (count($items) > 0)
@@ -1164,7 +1180,6 @@ class shop extends Module {
 
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		$template->setMappedModule($this->name);
 		
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_completed'),
@@ -1186,7 +1201,6 @@ class shop extends Module {
 	public function tag_CanceledMessage($tag_params, $children) {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		$template->setMappedModule($this->name);
 		
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_canceled'),

@@ -228,7 +228,9 @@ class links extends Module {
 			CREATE TABLE IF NOT EXISTS `link_groups` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`name` varchar(50) COLLATE utf8_bin NOT NULL,
-				PRIMARY KEY (`id`)
+				`text_id` varchar(32) COLLATE utf8_bin NOT NULL,
+				PRIMARY KEY (`id`),
+				INDEX (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 
@@ -540,7 +542,8 @@ class links extends Module {
 
 		$params = array(
 					'id'			=> $item->id,
-					'name'			=> unfix_chars($item->name),
+					'name'			=> $item->name,
+					'text_id'		=> $item->text_id, 
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('groups_change')
 				);
@@ -557,7 +560,8 @@ class links extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 
 		$data = array(
-			'name' 	=> fix_chars($_REQUEST['name']),
+			'name' 		=> fix_chars($_REQUEST['name']),
+			'text_id'	=> fix_chars($_REQUEST['text_id'])
 		);
 
 		$manager = LinkGroupsManager::getInstance();
@@ -871,6 +875,7 @@ class links extends Module {
 	 */
 	public function tag_LinkList($tag_params, $children) {
 		$manager = LinksManager::getInstance();
+		$group_manager = LinkGroupsManager::getInstance();
 		$membership_manager = LinkMembershipManager::getInstance();
 		$conditions = array();
 
@@ -887,7 +892,20 @@ class links extends Module {
 			$conditions['sponsored'] = 1;
 
 		if (isset($tag_params['group'])) {
-			$group = $tag_params['group'];
+			if (is_numeric($tag_params['group'])) {
+				// we already have id of a group
+				$group = fix_id($tag_params['group']);
+
+			} else {
+				// specified group is text id
+				$text_id = fix_chars($tag_params['group']);
+				$raw_group = $group_manager->getSingleItem(array('id'), array('text_id' => $text_id));
+
+				if (is_object($raw_group))
+					$group = $raw_group->id; else
+					return;
+			}
+
 			$items = $membership_manager->getItems(
 												array('link'),
 												array('group' => $group)
@@ -911,15 +929,7 @@ class links extends Module {
 								array('id')
 							);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('links_item.xml', $this->path.'templates/');
-		}
-
-		$template->setMappedModule($this->name);
+		$template = $this->loadTemplate($tag_params, 'links_item.xml');
 		$template->registerTagHandler('_link', &$this, 'tag_Link');
 		$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');
 
@@ -1069,6 +1079,7 @@ class links extends Module {
 			$params = array(
 						'id'		=> $item->id,
 						'name'		=> $item->name,
+						'text_id'	=> $item->text_id,
 						'thumbnail'	=> $thumbnail,
 					);
 
@@ -1143,6 +1154,7 @@ class links extends Module {
 				$params = array(
 							'id'		=> $item->id,
 							'name'		=> $item->name,
+							'text_id'	=> $item->text_id,
 							'thumbnail'	=> $thumbnail,
 							'item_change'		=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
@@ -1414,6 +1426,7 @@ class LinkGroupsManager extends ItemManager {
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'varchar');
+		$this->addProperty('text_id', 'varchar');
 	}
 
 	/**

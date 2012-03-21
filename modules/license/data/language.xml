@@ -22,4 +22,25 @@
 		<constant name="column_referer">Referer URL</constant>
 		<constant name="column_license_key">License key</constant>
 	</language>
+	<language short="iw">
+		<constant name="menu_license">רשיונות</constant>
+
+		<constant name="title_licenses">רשיונות</constant>
+		<constant name="title_licenses_new">רשיונות: צור חדש</constant>
+		<constant name="title_licenses_change">רשיונות: שנה רשיון</constant>
+		<constant name="title_licenses_delete">רשיונות: מחק</constant>
+
+		<constant name="message_license_saved">מידע הרשיון נשמר</constant>
+		<constant name="message_license_delete">אתה עומד למנוע כניסה של URL ספציפי למודולים - האם אתה בטוח?</constant>
+		<constant name="message_license_deleted">הגישה למודול הוסרה</constant>
+		<constant name="message_no_access">אין לך גישה, אנא פנה למהל האתר</constant>
+
+		<constant name="label_referer">Referer URL:</constant>
+		<constant name="label_modules">הענקת רשיון כניסה למודול</constant>
+		<constant name="label_active">רשיון הופעל</constant>
+		<constant name="label_license_key">מפתח רשיון:</constant>
+
+		<constant name="column_referer">URL מצביע</constant>
+		<constant name="column_license_key">מפתח רשיון</constant>
+	</language>
 </document>

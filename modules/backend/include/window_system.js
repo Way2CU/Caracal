@@ -583,7 +583,8 @@ function WindowSystem($container) {
 	this.openWindow = function(id, width, title, can_close, url) {
 		if (this.windowExists(id)) {
 			// window already exists, reload content and show it
-			this.getWindow(id).focus().loadContent(url);
+			var window = this.getWindow(id);
+			window.focus().loadContent(url);
 
 		} else {
 			// window does not exist, create it
@@ -594,6 +595,8 @@ function WindowSystem($container) {
 			window.show(true);
 			window.loadContent();
 		}
+
+		return window;
 	};
 
 	/**

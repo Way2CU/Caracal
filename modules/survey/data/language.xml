@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_survey">Survey</constant>
+		<constant name="menu_results">Results of survey</constant>
+		<constant name="menu_types">Survey types</constant>
+
+		<constant name="title_results">Survey: Results</constant>
+		<constant name="title_types">Survey: Types</constant>
+		<constant name="title_types_new">Survey: New type</constant>
+		<constant name="title_types_change">Survey: Change type</constant>
+		<constant name="title_types_delete">Survey: Delete type</constant>
+
+		<constant name="column_name">Name</constant>
+
+		<constant name="label_name">Name:</constant>
+		<constant name="label_fields">Fields:</constant>
+	</language>
+	<language short="iw">
+		<constant name="menu_survey">Survey</constant>
+		<constant name="menu_results">Results of survey</constant>
+		<constant name="menu_types">Survey types</constant>
+
+		<constant name="title_results">Survey: Results</constant>
+		<constant name="title_types">Survey: Types</constant>
+		<constant name="title_types_new">Survey: New type</constant>
+		<constant name="title_types_change">Survey: Change type</constant>
+		<constant name="title_types_delete">Survey: Delete type</constant>
+
+		<constant name="column_name">Name</constant>
+
+		<constant name="label_name">Name:</constant>
+		<constant name="label_fields">Fields:</constant>
+	</language>
+</document>

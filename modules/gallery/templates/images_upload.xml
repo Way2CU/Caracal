@@ -4,7 +4,7 @@
 	<form id="image_upload_form" action="$params['form_action']" eval="action" method="POST" enctype="multipart/form-data">
 		<label>
 			<span><_text constant="label_text_id" module="gallery"/></span>
-			<input type="text" name="text_id" style="width: 270px;" maxlength="32"/>
+			<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
 		</label>
 		<label>
 			<span><_text constant="label_title" module="gallery"/></span>

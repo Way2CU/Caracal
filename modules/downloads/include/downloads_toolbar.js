@@ -19,6 +19,10 @@ function ToolbarExtension_Downloads() {
 	// register extension to mail API
 	toolbar_api.registerModule('downloads', this);
 
+	// base url for this site
+	var base = $('base');
+	this.backend_url = base.attr('href') + '/index.php'; 
+
 	/**
 	 * Function used to add control on specified toolbar
 	 *
@@ -60,7 +64,7 @@ function ToolbarExtension_Downloads() {
 				self.dialog.setLoadingState();
 
 				$.ajax({
-					url: self.getURL(),
+					url: self.backend_url,
 					type: 'GET',
 					data: {
 						section: 'downloads',
@@ -204,26 +208,17 @@ function ToolbarExtension_Downloads() {
 	 * @return string
 	 */
 	this.getIconURL = function(icon) {
-		var path = window.location.pathname.split('/');
-
-		// remove index.php
-		if (path[path.length-1] == 'index.php')
-			delete path[path.length-1];
+		var path = [];
 
 		// add icon path
 		path.push('modules/downloads/images');
 		path.push(icon);
 
-		return window.location.protocol + '//' + window.location.host +	path.join('/');
-	};
+		// base url for this site
+		var base = $('base');
+		base_url = base.attr('href') + '/'; 
 
-	/**
-	 * Return formed URL
-	 *
-	 * @return string
-	 */
-	this.getURL = function() {
-		return window.location.protocol + '//' + window.location.host + window.location.pathname;
+		return base_url + path.join('/');
 	};
 }
 

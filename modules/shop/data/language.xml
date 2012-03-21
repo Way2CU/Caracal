@@ -12,6 +12,10 @@
 		<constant name="menu_currencies">Currencies</constant>
 		<constant name="menu_item_sizes">Manage item sizes</constant>
 
+		<constant name="tab_item">Item data</constant>
+		<constant name="tab_category">Categories</constant>
+		<constant name="tab_related">Related items</constant>
+
 		<constant name="title_manage_items">Shop: Manage items</constant>
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
 		<constant name="title_item_add">Shop: Add new item</constant>
@@ -33,6 +37,7 @@
 		<constant name="title_size_delete">Shop: Delete item size definition</constant>
 		<constant name="title_currencies_set_default">Shop: Set default currency</constant>
 		<constant name="title_checkout_message">Checkout</constant>
+		<constant name="title_search_results">Search Results</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -50,6 +55,7 @@
 		<constant name="column_shipping">Shipping:</constant>
 		<constant name="column_total_weight">Total weight:</constant>
 		<constant name="column_total">Total:</constant>
+		<constant name="column_categories">Categories item belongs to</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
@@ -57,6 +63,7 @@
 		<constant name="label_currency">Currency:</constant>
 		<constant name="label_images">Item images:</constant>
 		<constant name="label_title">Title:</constant>
+		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_category_parent">Parent category:</constant>
 		<constant name="label_category_image">Category image:</constant>
 		<constant name="label_category">Category:</constant>
@@ -67,6 +74,8 @@
 		<constant name="label_tax">Tax (%):</constant>
 		<constant name="label_weight">Weight (kg):</constant>
 		<constant name="label_count">Quantity:</constant>
+		<constant name="label_search_query">Query:</constant>
+		<constant name="label_priority">Priority:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -117,5 +126,131 @@
 		<constant name="delete_item">Remove item from shopping cart</constant>
 		<constant name="with">with</constant>
 		<constant name="button_take_me_back">Go to front page</constant>
+	</language>
+	<language short="iw">
+		<constant name="menu_shop">חנות</constant>
+		<constant name="menu_items">נהל מוצרים</constant>
+		<constant name="menu_categories">נהל קטגוריות</constant>
+		<constant name="menu_payment_methods">שיטות תשלום</constant>
+		<constant name="menu_purchases">רכישות</constant>
+		<constant name="menu_stocks">מלאי</constant>
+		<constant name="menu_special_offers">מבצעים</constant>
+		<constant name="menu_currencies">מטבעות</constant>
+		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
+
+		<constant name="tab_item">מידע מוצר</constant>
+		<constant name="tab_category">קטגוריות</constant>
+		<constant name="tab_related">אביזרים נלווים</constant>
+
+		<constant name="title_manage_items">חנות:נהל מוצרים</constant>
+		<constant name="title_manage_categories">חנות: נהל קטגוריות</constant>
+		<constant name="title_item_add">חנות: הוסף מוצר</constant>
+		<constant name="title_item_change">חנות: שנה מידע מוצר</constant>
+		<constant name="title_item_delete">חנות: מחק מוצר</constant>
+		<constant name="title_currencies">חנות: מטבעות קיימים</constant>
+		<constant name="title_currencies_add">חנות: הוסף מטבע</constant>
+		<constant name="title_currencies_update">חנות: עדכן מטבעות</constant>
+		<constant name="title_currencies_delete">חנות: מחק מטבע</constant>
+		<constant name="title_category_add">חנות: הוסף קטגוריה</constant>
+		<constant name="title_category_change">חנות: ערוך קטגוריה</constant>
+		<constant name="title_category_delete">חנות: מחק קטגוריה</constant>
+		<constant name="title_manage_item_sizes">חנות: נהל גודל מוצר</constant>
+		<constant name="title_size_add">חנות: הזן הגדרת גודל מוצר</constant>
+		<constant name="title_size_values">חנות: ערכי גודל</constant>
+		<constant name="title_size_value_add">חנות: הוסף ערך גודל</constant>
+		<constant name="title_size_value_change">חנות: שנה ערך גודל</constant>
+		<constant name="title_size_value_delete">חנות: מחק ערך גודל</constant>
+		<constant name="title_size_delete">חנות: מחק הגדרת גודל מוצר</constant>
+		<constant name="title_currencies_set_default">חנות: קבע כמטבע ברירת מחדל</constant>
+		<constant name="title_checkout_message">תשלום</constant>
+		<constant name="title_search_results">Search Results</constant>
+
+		<constant name="column_name">שם</constant>
+		<constant name="column_price">מחיר</constant>
+		<constant name="column_rating">ניקוד</constant>
+		<constant name="column_currency">מטבע</constant>
+		<constant name="column_name">שם</constant>
+		<constant name="column_title">כותרת</constant>
+		<constant name="column_views">צפיות</constant>
+		<constant name="column_value">ערך</constant>
+		<constant name="column_tax">מעמ</constant>
+		<constant name="column_quantity">כמות</constant>
+		<constant name="column_weight">משקל</constant>
+		<constant name="column_item_total">סהכ מוצר</constant>
+		<constant name="column_subtotal">סיכום ביניים:</constant>
+		<constant name="column_shipping">משלוח:</constant>
+		<constant name="column_total_weight">סהכ משקל:</constant>
+		<constant name="column_total">סהכ:</constant>
+		<constant name="column_categories">קטגוריות אליהן שייך המוצר</constant>
+
+		<constant name="label_name">שם:</constant>
+		<constant name="label_description">תיאור:</constant>
+		<constant name="label_price">מחיר:</constant>
+		<constant name="label_currency">מטבע:</constant>
+		<constant name="label_images">תמונות המוצר:</constant>
+		<constant name="label_title">כותרת:</constant>
+		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_category_parent">קטגורית אב:</constant>
+		<constant name="label_category_image">תמונת הקטגוריה:</constant>
+		<constant name="label_category">קטגוריה:</constant>
+		<constant name="label_categories">קטגוריות:</constant>
+		<constant name="label_value">ערך:</constant>
+		<constant name="label_size_definition">הגדרת גודל:</constant>
+		<constant name="label_size">גודל:</constant>
+		<constant name="label_tax">מעמ (%):</constant>
+		<constant name="label_weight">משקל (קג):</constant>
+		<constant name="label_count">כמות:</constant>
+		<constant name="label_search_query">Query:</constant>
+		<constant name="label_priority">Priority:</constant>
+
+		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
+		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
+		<constant name="message_currency_delete">אתה עומד למחוק את המטבע הבא, האם אתה בטוח?</constant>
+		<constant name="message_currency_deleted">המטבע נמחק!</constant>
+		<constant name="message_currency_list_updated">מערכת המטבעות עודכנה</constant>
+		<constant name="message_category_saved">מידע הקטגוריה נשמר</constant>
+		<constant name="message_category_delete">את העומד למחוק קטגוריהת המוצרים באותה קטגוריה לא ימחקו, האם אתה בטוח?</constant>
+		<constant name="message_category_deleted">הקטגוריה נמחקה!</constant>
+		<constant name="message_item_saved">מידע המוצר נשמר לחנות</constant>
+		<constant name="message_item_delete">אתה עומד למחוק מוצר, המוצר ימחק מכל הקטגוריות אליהן הוא מקושר, התמונות בגלריה לא ימחקו </constant>
+		<constant name="message_images_upload">ברגע שתשמור, המערכת תייצר גלרית תמונות מיוחדת למוצר. אם לאחר מכן תרצה להסיר תמונה מהמוצ, אנא עשה זאת דרך מודול הגלריה</constant>
+		<constant name="message_clear_cart">אתה עומד להסיר את כל המוצרים מעגלת הקניות. האם אתה בטוח?</constant>
+		<constant name="message_item_size_saved">מידע הגדרת הגודל נשמר!</constant>
+		<constant name="message_item_size_value_saved">ערך המידע עבור הגדרת הגודל נשמר!</constant>
+		<constant name="message_size_value_delete">אתה עומד למחוק את ערך הגודל הבא. האם אתה בטוח?</constant>
+		<constant name="message_size_value_deleted">ערך הגודל נמחק!</constant>
+		<constant name="message_size_delete">אתה עומד להסיר את הגדרת הגודל הבאה. האם אתה בטוח?</constant>
+		<constant name="message_size_deleted">הגדרת הגודל נמחקה!</constant>
+		<constant name="message_remove_item_from_cart">האם אתה בטוח לגבי הסרת המוצר הנל?</constant>
+		<constant name="message_edit_item_in_cart">אנא הזן כמות חדשה עבור המוצר הנבחר.</constant>
+		<constant name="message_no_items_in_cart">אין מוצרים בעגלת הקניות.</constant>
+		<constant name="message_checkout_completed">תהליך התשלום הושלם!. בקרוב תקבל מייל מאיתנו המאשר את הרכישה. אם נתקלת בבעיה כלשהי, אנא צור עמנו קשר. תודה על שקנית אונליין.</constant>
+		<constant name="message_checkout_canceled">תהליך החיוב בוטל. העגלה לא רוקנה למקרה שתרצה להמשיך ולקנות. באם בטלת בשל בעיה כלשהי שלנו, אנא ידע אותנו.</constant>
+
+		<constant name="add_item">הוסף מוצר חדש</constant>
+		<constant name="add_size_definition">הוסף הגדרת גודל</constant>
+		<constant name="add_size_value">הוסף ערך גודל</constant>
+		<constant name="manage_categories">נהל קטגוריות</constant>
+		<constant name="add_currency">הוסף מטבע</constant>
+		<constant name="update_currencies">עדכן רשימת מטבעות</constant>
+		<constant name="set_default_currency">קבע כברירת מחדל</constant>
+		<constant name="add_another">הוסף נוסף</constant>
+		<constant name="remove">הסר</constant>
+		<constant name="add_category">הוסף קטגוריה</constant>
+		<constant name="no_parent_category">אין קטגורית אב</constant>
+		<constant name="show_shopping_cart">הצג עגלת קניות</constant>
+		<constant name="hide_shopping_cart">הסתר עגלת קניות</constant>
+		<constant name="clear">אפס</constant>
+		<constant name="checkout">תשלום</constant>
+		<constant name="empty_shopping_cart">אין מוצרים בעגלת הקניות.</constant>
+		<constant name="total_amount">סהכ:</constant>
+		<constant name="subtotal_amount">סיכום ביניים:</constant>
+		<constant name="tax">מס:</constant>
+		<constant name="shipping">משלוח:</constant>
+		<constant name="values">ערכים</constant>
+		<constant name="edit_item">ערוך כמות מוצר</constant>
+		<constant name="delete_item">הסר מוצר מעגלת הקניות</constant>
+		<constant name="with">עם</constant>
+		<constant name="button_take_me_back">הצג עמוד קדמי</constant>
 	</language>
 </document>

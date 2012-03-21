@@ -14,4 +14,14 @@
 			</label>
 		</span>
 	</div>
+	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" eval="style">
+		<_children
+			parent_id="$params['id']"
+			level="$params['level'] + 1"
+			item_id="$params['item_id']"
+			eval="parent_id,level,item_id"
+			template="category_checkbox_list_item.xml"
+			local="1"
+		/>
+	</div>
 </document>

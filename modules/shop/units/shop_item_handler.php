@@ -3,6 +3,7 @@
 require_once('shop_item_manager.php');
 require_once('shop_item_membership_manager.php');
 require_once('shop_category_manager.php');
+require_once('shop_related_items_manager.php');
 
 class ShopItemHandler {
 	private static $_instance;
@@ -58,7 +59,11 @@ class ShopItemHandler {
 			case 'delete_commit':
 				$this->deleteItem_Commit();
 				break;
-				
+
+			case 'search_results':
+				$this->showSearchResults();
+				break;
+
 			default:
 				$this->showItems();
 				break;
@@ -70,14 +75,13 @@ class ShopItemHandler {
 	 */
 	private function showItems() {
 		$template = new TemplateHandler('item_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
 										$this->_parent->getLanguageConstant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
-											700,
+											505,
 											$this->_parent->getLanguageConstant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, 'items', 'add')
@@ -122,6 +126,8 @@ class ShopItemHandler {
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
+		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -148,6 +154,8 @@ class ShopItemHandler {
 			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
+			$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+
 			// prepare parameters
 			$params = array(
 						'id'			=> $item->id,
@@ -163,6 +171,7 @@ class ShopItemHandler {
 						'weight'		=> $item->weight,
 						'votes_up'		=> $item->votes_up,
 						'votes_down'	=> $item->votes_down,
+						'priority'		=> $item->priority,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'deleted'		=> $item->deleted,
@@ -184,7 +193,10 @@ class ShopItemHandler {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = ShopItemManager::getInstance();
 		$membership_manager = ShopItemMembershipManager::getInstance();
+		$related_items_manager = ShopRelatedItemsManager::getInstance();
 		$open_editor = "";
+
+		$new_item = is_null($id);
 
 		$data = array(
 				'name'				=> $this->_parent->getMultilanguageField('name'),
@@ -192,12 +204,11 @@ class ShopItemHandler {
 				'price'				=> isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
 				'tax'				=> isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
 				'weight'			=> isset($_REQUEST['weight']) && !empty($_REQUEST['weight']) ? fix_chars($_REQUEST['weight']) : 0,
-				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null
+				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
+				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5
 			);
 		
-		define('SQL_DEBUG', 1);
-
-		if (is_null($id)) {
+		if ($new_item) {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
 			$data['uid'] = $this->generateUID();
@@ -228,7 +239,7 @@ class ShopItemHandler {
 		}
 		
 		// store item data
-		if (is_null($id)) {
+		if ($new_item) {
 			// store new data
 			$manager->insertData($data);
 			$window = 'shop_item_add';
@@ -249,6 +260,7 @@ class ShopItemHandler {
 				$category_ids[] = fix_id(substr($key, strlen($category_template)-1));
 		}
 		
+		// update membership
 		if (count($category_ids) > 0)
 			foreach ($category_ids as $category_id) {
 				$membership_manager->insertData(array(
@@ -256,6 +268,24 @@ class ShopItemHandler {
 										'item'		=> $id
 									));
 			}
+
+		// store related items
+		if ($new_item) {
+			$related = array();
+			$keys = array_keys($_REQUEST);
+
+			foreach($keys as $key)
+				if (substr($key, 0, 7) == 'related')
+					$related[] = substr($key, 8);
+
+			if (count($related) > 0) {
+				foreach($related as $related_id)
+					$related_items_manager->insertData(array(
+											'item'		=> $id,
+											'related'	=> $related_id
+										));
+			}
+		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -337,6 +367,26 @@ class ShopItemHandler {
 	}
 
 	/**
+	 * Show search results for various backend tools
+	 */
+	private function showSearchResults() {
+		$query = fix_chars($_REQUEST['query']);
+		$template = new TemplateHandler('search_results.xml', $this->path.'templates/');
+
+		$params = array(
+						'query'	=> $query
+					);
+
+		// register tag handler
+		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+		
+	}
+
+	/**
 	 * Generate unique item Id 13 characters long
 	 *
 	 * @return string
@@ -366,17 +416,52 @@ class ShopItemHandler {
 	 */
 	public function tag_Item($tag_params, $children) {
 		$manager = ShopItemManager::getInstance();
+		$id = null;
 		$gallery = null;
 		$conditions = array();
 
-		if (class_exists('gallery'))
-			$gallery = gallery::getInstance();
-		
 		// prepare conditions
-		$conditions['id'] = fix_id($tag_params['id']);
-		
+		if (isset($tag_params['id'])) 
+			$id = fix_id($tag_params['id']);
+
+		if (isset($tag_params['random']) && isset($tag_params['category'])) {
+			if (is_numeric($tag_params['category'])) {
+				$category_id = fix_id($tag_params['category']);
+
+			} else {
+				// specified id is actually text_id, get real one
+				$category_manager = ShopCategoryManager::getInstance();
+				$category = $category_manager->getSingleItem(
+												array('id'), 
+												array('text_id' => fix_chars($tag_params['category']))
+											);
+
+				if (!is_object($category)) 
+					return;
+
+				$category_id = $category->id;
+			}
+
+			$membership_manager = ShopItemMembershipManager::getInstance();
+
+			// get all associated items
+			$id_list = array();
+			$membership_list = $membership_manager->getItems(array('item'), array('category' => $category_id));
+
+			if (count($membership_list) > 0)
+				foreach($membership_list as $membership)
+					$id_list[] = $membership->item;
+
+			// get random id from the list
+			if (count($id_list) > 0)
+				$id = $id_list[array_rand($id_list)];
+		}
+
+		if (is_null($id))
+			return;
+
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
@@ -391,6 +476,20 @@ class ShopItemHandler {
 			
 		// parse template
 		if (is_object($item)) {
+			// get gallery module
+			if (class_exists('gallery'))
+				$gallery = gallery::getInstance();
+		
+			// try to get thumbnail and image url
+			if (!is_null($gallery)) {
+				$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
+				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+
+			} else {
+				$image_url = '';
+				$thumbnail_url = '';
+			}
+
 			$rating = 0;
 			
 			$params = array(
@@ -399,15 +498,19 @@ class ShopItemHandler {
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 						'gallery'		=> $item->gallery,
+						'image'			=> $image_url,
+						'thumbnail'		=> $thumbnail_url,
 						'size_definition' => $item->size_definition,
 						'author'		=> $item->author,
 						'views'			=> $item->views,
 						'price'			=> $item->price,
 						'tax'			=> $item->tax,
+						'currency'		=> $this->_parent->settings['default_currency'],
 						'weight'		=> $item->weight,
 						'votes_up'		=> $item->votes_up,
 						'votes_down'	=> $item->votes_down,
 						'rating'		=> $rating,
+						'priority'		=> $item->priority,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'deleted'		=> $item->deleted,
@@ -426,15 +529,35 @@ class ShopItemHandler {
 	 * @param array $chilren
 	 */
 	public function tag_ItemList($tag_params, $children) {
+		global $language; 
+
 		$manager = ShopItemManager::getInstance();
 		$conditions = array();
 
 		// create conditions
 		if (isset($tag_params['category'])) {
+
+			if (is_numeric($tag_params['category'])) {
+				$category_id = fix_id($tag_params['category']);
+
+			} else {
+				// specified id is actually text_id, get real one
+				$category_manager = ShopCategoryManager::getInstance();
+				$category = $category_manager->getSingleItem(
+												array('id'), 
+												array('text_id' => fix_chars($tag_params['category']))
+											);
+
+				if (!is_object($category)) 
+					return;
+
+				$category_id = $category->id;
+			}
+
 			$membership_manager = ShopItemMembershipManager::getInstance();
 			$membership_items = $membership_manager->getItems(
 												array('item'), 
-												array('category' => fix_id($tag_params['category']))
+												array('category' => $category_id)
 											);
 				
 			$item_ids = array();							
@@ -446,9 +569,34 @@ class ShopItemHandler {
 				$conditions['id'] = $item_ids; else
 				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
 		}
+
+		if (isset($tag_params['related'])) {
+			$relation_manager = ShopRelatedItemsManager::getInstance();
+			$item_id = fix_id($tag_params['related']);
+
+			$related_items = $relation_manager->getItems(array('related'), array('item' => $item_id));
+			$related_item_ids = array();
+
+			if (count($related_items) > 0)
+				foreach ($related_items as $relationship)
+					$related_item_ids[] = $relationship->related;
+
+			if (count($related_item_ids) > 0)
+				$conditions['id'] = $related_item_ids; else
+				$conditions['id'] = -1;
+		}
 		
 		if (!(isset($tag_params['show_deleted']) && $tag_params['show_deleted'] == 1)) {
+			// force hiding deleted items
 			$conditions['deleted'] = 0;
+		}
+
+		if (isset($tag_params['filter']) && !empty($tag_params['filter'])) {
+			// filter items with name matching
+			$conditions['name_'.$language] = array(
+								'operator'	=> 'LIKE',
+								'value'		=> '%'.fix_chars($tag_params['filter']).'%'
+							);
 		}
 
 		// get items
@@ -464,9 +612,15 @@ class ShopItemHandler {
 				$gallery = gallery::getInstance();
 			
 			foreach ($items as $item) {
-				if (!is_null($gallery))
-					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); else
+				if (!is_null($gallery)) {
+					$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
+					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+
+				} else {
+					$image_url = '';
 					$thumbnail_url = '';
+				}
+
 				$rating = 0;
 				
 				$params = array(
@@ -476,15 +630,18 @@ class ShopItemHandler {
 							'description'	=> $item->description,
 							'gallery'		=> $item->gallery,
 							'size_definition'=> $item->size_definition,
+							'image'			=> $image_url,
 							'thumbnail'		=> $thumbnail_url,
 							'author'		=> $item->author,
 							'views'			=> $item->views,
 							'price'			=> $item->price,
 							'tax'			=> $item->tax,
+							'currency'		=> $this->_parent->settings['default_currency'],
 							'weight'		=> $item->weight,
 							'votes_up'		=> $item->votes_up,
 							'votes_down'	=> $item->votes_down,
 							'rating'		=> $rating,
+							'priority'		=> $item->priority,
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
 							'deleted'		=> $item->deleted,
@@ -492,7 +649,7 @@ class ShopItemHandler {
 													$this->_parent->getLanguageConstant('change'),
 													window_Open(
 														'shop_item_change', 	// window id
-														700,				// width
+														505,				// width
 														$this->_parent->getLanguageConstant('title_item_change'), // title
 														true, true,
 														url_Make(
@@ -578,6 +735,7 @@ class ShopItemHandler {
 								'votes_up'		=> $item->votes_up,
 								'votes_down'	=> $item->votes_down,
 								'rating'		=> $rating,
+								'priority'		=> $item->priority,
 								'timestamp'		=> $item->timestamp,
 								'thumbnail'		=> $thumbnail_url
 							);

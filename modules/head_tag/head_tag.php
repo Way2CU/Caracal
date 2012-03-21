@@ -13,7 +13,13 @@ class head_tag extends Module {
 	private $link_tags = array();
 	private $script_tags = array();
 	private $closeable_tags = array('script', 'style');
+	
 	private $analytics = null;
+
+	private $optimizer = null;
+	private $optimizer_key = '';
+	private $optimizer_page = '';
+	private $optimizer_show_control = false;
 
 	/**
 	 * Constructor
@@ -80,7 +86,7 @@ class head_tag extends Module {
 				break;
 			
 			default:
-				$this->tags[] = array($name, $params);
+				$this->tags[] = $data;
 				break;
 		}
 	}
@@ -95,6 +101,21 @@ class head_tag extends Module {
 	}
 
 	/**
+	 * Add Google Site optimizer script to the page
+	 *
+	 * @param string $code
+	 * @param string $key
+	 * @param string $page
+	 * @param boolean $show_control
+	 */
+	public function addGoogleSiteOptimizer($code, $key, $page, $show_control) {
+		$this->optimizer = $code;
+		$this->optimizer_key = $key;
+		$this->optimizer_page = $page;
+		$this->optimizer_show_control = $show_control;
+	}
+
+	/**
 	 * Print previously added tags
 	 */
 	private function printTags() {
@@ -103,18 +124,36 @@ class head_tag extends Module {
 			page_info::getInstance()->addElements();
 
 		// merge tag lists
-		$tags = array_merge($this->meta_tags, $this->link_tags, $this->script_tags, $this->tags);
+		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 		
 		foreach ($tags as $tag)
 			echo "<".$tag[0].$this->getTagParams($tag[1]).">".
 				(in_array($tag[0], $this->closeable_tags) ? "</".$tag[0].">" : "");
 
+		// print google analytics code if needed
 		if (!is_null($this->analytics)) {
 			$template = new TemplateHandler('google_analytics.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 	
 			$params = array(
 							'code'	=> $this->analytics
+						);
+	
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();		
+		}
+
+		// print google site optimizer code if needed
+		if (!is_null($this->optimizer)) {
+			$template = new TemplateHandler('google_site_optimizer.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+	
+			$params = array(
+							'code'	=> $this->optimizer,
+							'key'	=> $this->optimizer_key,
+							'page'	=> $this->optimizer_page,
+							'show_control'	=> $this->optimizer_show_control
 						);
 	
 			$template->restoreXML();

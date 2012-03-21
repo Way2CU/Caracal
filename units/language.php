@@ -67,7 +67,7 @@ class LanguageHandler {
 		$result = array();
 
 		foreach ($this->engine->document->language as $xml_language)
-			if($printable)
+			if ($printable)
 				$result[$xml_language->tagAttrs['short']] = $xml_language->tagAttrs['name']; else
 				$result[] = $xml_language->tagAttrs['short'];
 

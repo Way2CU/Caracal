@@ -11,6 +11,8 @@
 		<constant name="label_description">Page description (between 70 and 160 characters):</constant>
 		<constant name="label_analytics">Google analytics ID:</constant>
 		<constant name="label_wm_tools">Google webmasters tools:</constant>
+		<constant name="label_optimizer">Google website optimizer:</constant>
+		<constant name="label_optimizer_key">Key:</constant>
 	</language>
 	<language short="iw">
 		<constant name="menu_page_info">Page settings</constant>
@@ -22,5 +24,7 @@
 		<constant name="label_description">Page description (between 70 and 160 characters):</constant>
 		<constant name="label_analytics">Google analytics ID:</constant>
 		<constant name="label_wm_tools">Google webmasters tools:</constant>
+		<constant name="label_optimizer">Google website optimizer:</constant>
+		<constant name="label_optimizer_key">Key:</constant>
 	</language>
 </document>
