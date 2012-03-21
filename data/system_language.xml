@@ -65,7 +65,6 @@
 		<constant name="format_time">H:i:s</constant>
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
-
 	<language name="English" short="en" default="yes">
 		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
@@ -97,7 +96,37 @@
 		<constant name="format_time">H:i:s</constant>
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
+	<language name="Español" short="es" >
+		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
+		<!-- Column Names -->
+		<constant name="column_options">Options</constant>
+
+		<!-- Buttons -->
+		<constant name="add">Add</constant>
+		<constant name="new">New</constant>
+		<constant name="change">Change</constant>
+		<constant name="delete">Delete</constant>
+		<constant name="save">Save</constant>
+		<constant name="submit">Submit</constant>
+		<constant name="send">Enviar</constant>
+		<constant name="upload">Upload</constant>
+		<constant name="cancel">Cancel</constant>
+		<constant name="open">Open</constant>
+		<constant name="close">Close</constant>
+		<constant name="reset">Borrar</constant>
+		<constant name="filter">Filter</constant>
+
+		<!-- Messages -->
+		<constant name="message_server_error">Server experienced the following error:</constant>
+		<constant name="message_license_error">You are not authorized to use services from this site!</constant>
+
+		<!-- Other language specific data formats -->
+		<constant name="format_date">m/d/Y</constant>
+		<constant name="format_date_short">m/d/Y</constant>
+		<constant name="format_time">H:i:s</constant>
+		<constant name="format_time_short">H:i:s</constant>
+	</language>
 	<language name="עברית" short="iw" rtl="yes">
 		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
 
