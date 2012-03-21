@@ -7,19 +7,21 @@
  */
 
 class PageSwitch {
-	/**
-	 * Template handler
-	 * @var resrouce
-	 */
-	private $template = null;
+	private $param_name = 'page';
+	private $current_page = 1;
+	private $per_page = 10;
 
 	/**
 	 * Constructor
 	 *
-	 * @param array $items
 	 * @param string $param_name
 	 */
-	public function __construct($items=null, $param_name='page') {
+	public function __construct($param_name=null) {
+		if (!is_null($param_name))
+			$this->param_name = $param_name;
+
+		if (isset($_REQUEST[$this->param_name]))
+			$this->current_page = fix_id($_REQUEST[$this->param_name]);
 	}
 
 	/**
@@ -40,34 +42,27 @@ class PageSwitch {
 	}
 
 	/**
-	 * Set template file or handler for displaying page items.
-	 *
-	 * @param object/string $template Template handler object, filename string or full path string
-	 * @param string $path Optional path
-	 */
-	public function setTemplate($template, $path=null) {
-		if (is_string($template)) {
-			// file path was provided, create template handler
-
-			if (is_null($path)) {
-				$path = dirname($path);
-				$template = basename($template);
-			}
-
-			$this->template = new TemplateHandler($template, $path);
-
-		} else if (is_object($template) && get_class($template) == 'TemplateHandler') {
-			// template handler object was provided, just use it
-			$this->template = $template;
-		}
-	}
-
-	/**
 	 * Set number of items per page
 	 *
 	 * @param integer $number
 	 */
-	public function setItemsPerPage($number=10) {
+	public function setItemsPerPage($number) {
+		$this->per_page = $number;
+	}
+
+	/**
+	 * Return filter paramters for item manager
+	 * @return integer/array
+	 */
+	public function getFilterParams() {
+		if ($this->current_page == 1)
+			$result = $this->per_page; else
+			$result = array(
+						($this->current_page - 1) * $this->per_page,
+						$this->per_page
+					);
+
+		return $result;
 	}
 
 	/**
@@ -77,6 +72,6 @@ class PageSwitch {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_PageSwitch($level, $tag_params, $children) {
+	public function tag_Pages($tag_params, $children) {
 	}
 }
