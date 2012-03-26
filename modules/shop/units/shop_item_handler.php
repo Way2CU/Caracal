@@ -533,6 +533,10 @@ class ShopItemHandler {
 
 		$manager = ShopItemManager::getInstance();
 		$conditions = array();
+		$page_switch = null;
+		$order_by = array('id');
+		$order_asc = true;
+		$limit = null;
 
 		// create conditions
 		if (isset($tag_params['category'])) {
@@ -599,12 +603,26 @@ class ShopItemHandler {
 							);
 		}
 
+		if (isset($tag_params['paginate'])) {
+			$per_page = is_numeric($tag_params['paginate']) ? $tag_params['paginate'] : 10;
+			$param = isset($tag_params['page_param']) ? fix_chars($tag_params['page_param']) : null;
+
+			$item_count = $manager->getItemValue('COUNT(id)', $conditions);
+
+			$page_switch = new PageSwitch($param);
+			$page_switch->setCurrentAsBaseURL();
+			$page_switch->setItemsPerPage($per_page);
+			$page_switch->setTotalItems($item_count);
+
+			// get filter params
+			$limit = $page_switch->getFilterParams();
+		}
+
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
-		$template->setMappedModule($this->name);
 
 		if (count($items) > 0) {
 			$gallery = null;
@@ -685,6 +703,19 @@ class ShopItemHandler {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+		}
+
+		// draw page switch if needed
+		if (!is_null($page_switch)) {
+			$params = array();
+			$children = array();
+
+			// pick up parameters from original array
+			foreach ($tag_params as $key => $value)
+				if (substr($key, 0, 12) == 'page_switch_')
+					$params[substr($key, 12)] = $value;
+
+			$page_switch->tag_PageSwitch($params, $children);
 		}
 	}
 
