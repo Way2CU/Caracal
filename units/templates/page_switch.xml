@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../schema/template.dtd">
+<document>
+	<div class="page_switch">
+		<a href="$params['link_first']" class="first" eval="href">
+			<_text constant="page_first"/>
+		</a>
+		<a href="$params['link_previous']" class="previous" eval="href">
+			<_text constant="page_previous"/>
+		</a>
+		<span>
+			<_pages/>
+		</span>
+		<a href="$params['link_next']" class="next" eval="href">
+			<_text constant="page_next"/>
+		</a>
+		<a href="$params['link_last']" class="last" eval="href">
+			<_text constant="page_last"/>
+		</a>
+	</div>
+</document>
