@@ -69,22 +69,54 @@ function url_UnpackValues() {
 function url_Make($action, $section) {
 	global $url_rewrite, $url_add_extension, $url_language_optional, $language;
 
-	// make sure we have all parameters
-	if (!isset($section) || empty($section))
-		$section = 'home';
+	$arguments = array();
 
-	if (!isset($action) || empty($action))
-		$action = '_default';
+	// make sure we have all parameters
+	if (!empty($section))
+		$arguments['section'] = $section; else
+		$arguments['section'] = 'home';
+
+	if (!empty($action))
+		$arguments['action'] = $action; else
+		$arguments['action'] = '_default';
 
 	// get additional arguments
-	$arguments = array();
 	if (func_num_args() > 2) {
 		$tmp = array_slice(func_get_args(), 2);
 
-		foreach ($tmp as $tmp_item)
-			if (is_array($tmp_item))
-				$arguments[$tmp_item[0]] = $tmp_item[1];
+		foreach ($tmp as $param)
+			if (is_array($param))
+				$arguments[$param[0]] = $param[1];
 	}
+
+	$result = url_MakeFromArray($arguments);
+
+	return $result;
+}
+
+/**
+ * Forms URL from single parameter
+ *
+ * @param array $params
+ * @return string
+ * @author MeanEYE
+ */
+function url_MakeFromArray($params) {
+	global $url_rewrite, $url_add_extension, $url_language_optional, $language, $section, $action;
+
+	$arguments = $params;
+
+	// unset parameters we need to control order of
+	if (array_key_exists('section', $arguments)) {
+		$section_argument = $arguments['section'];
+		unset($arguments['section']);
+	}
+
+	if (array_key_exists('action', $arguments)) {
+		$action_argument = $arguments['action'];
+		unset($arguments['action']);
+	}
+
 
 	if ($url_rewrite) {
 		// form URL with rewrite engine on mind
@@ -107,7 +139,7 @@ function url_Make($action, $section) {
 		}
 
 		// should we include section in URL
-		if ($section != 'home') { 
+		if ($section_argument != 'home') { 
 			$include_section = true;
 
 			if (!$url_language_optional)
@@ -115,7 +147,7 @@ function url_Make($action, $section) {
 		}
 
 		// should we include action in URL
-		if ($action != '_default' || count($arguments) > 0) {
+		if ($action_argument != '_default' || count($arguments) > 0) {
 			$include_action = true;
 			$include_section = true;
 
@@ -133,11 +165,11 @@ function url_Make($action, $section) {
 
 			// add section
 			if ($include_section)
-				$result .= '/'.$section;	
+				$result .= '/'.$section_argument;	
 
 			// add action
 			if ($include_action)
-				$result .= '/'.$action;	
+				$result .= '/'.$action_argument;	
 
 			if (count($arguments) > 0)
 				foreach ($arguments as $key => $value)
@@ -159,11 +191,11 @@ function url_Make($action, $section) {
 		// form normal URL
 		$result = $_SERVER['PHP_SELF'];
 
-		if ($section != 'home')
-			$result .= '?section='.urlencode($section);
+		if ($section_argument != 'home')
+			$result .= '?section='.urlencode($section_argument);
 		
-		if ($action != '_default') 
-			$result .= '&amp;action='.urlencode($action);
+		if ($action_argument != '_default') 
+			$result .= '&amp;action='.urlencode($action_argument);
 
 		if (count($arguments) > 0)
 			foreach ($arguments as $key => $value)
@@ -171,22 +203,6 @@ function url_Make($action, $section) {
 	}
 
 	return $result;
-}
-
-/**
- * Forms URL from single parameter
- *
- * @param array $params
- * @return string
- * @author MeanEYE
- */
-function url_MakeFromArray($params) {
-	$temp = array();
-
-	foreach($params as $key => $value)
-		$temp[] = "{$key}={$value}";
-
-	return $_SERVER['PHP_SELF']."?".join('&amp;', $temp);
 }
 
 /**
