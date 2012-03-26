@@ -27,6 +27,12 @@
 		<constant name="message_server_error">Server je naišao na sledeću grešku prilikom obrade podataka:</constant>
 		<constant name="message_license_error">Nije Vam dozvoljena upotreba podataka sa ovog sajta!</constant>
 
+		<!-- Page switch -->
+		<constant name="page_first">First</constant>
+		<constant name="page_previous">Previous</constant>
+		<constant name="page_next">Next</constant>
+		<constant name="page_last">Last</constant>
+
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>
 		<constant name="format_date_short">d.m.Y.</constant>
@@ -61,6 +67,12 @@
 		<constant name="message_server_error">Сервер је наишао на следећу грешку приликом обраде података:</constant>
 		<constant name="message_license_error">Nije Vam dozvoljena upotreba podataka sa ovog sajta!</constant>
 
+		<!-- Page switch -->
+		<constant name="page_first">First</constant>
+		<constant name="page_previous">Previous</constant>
+		<constant name="page_next">Next</constant>
+		<constant name="page_last">Last</constant>
+
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>
 		<constant name="format_date_short">d.m.Y.</constant>
@@ -93,6 +105,12 @@
 		<constant name="message_server_error">Server experienced the following error:</constant>
 		<constant name="message_license_error">You are not authorized to use services from this site!</constant>
 
+		<!-- Page switch -->
+		<constant name="page_first">First</constant>
+		<constant name="page_previous">Previous</constant>
+		<constant name="page_next">Next</constant>
+		<constant name="page_last">Last</constant>
+
 		<!-- Other language specific data formats -->
 		<constant name="format_date">m/d/Y</constant>
 		<constant name="format_date_short">m/d/Y</constant>
@@ -123,6 +141,12 @@
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
 		<constant name="message_license_error">You are not authorized to use services from this site!</constant>
+
+		<!-- Page switch -->
+		<constant name="page_first">First</constant>
+		<constant name="page_previous">Previous</constant>
+		<constant name="page_next">Next</constant>
+		<constant name="page_last">Last</constant>
 
 		<!-- Other language specific data formats -->
 		<constant name="format_date">m/d/Y</constant>
@@ -155,6 +179,12 @@
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
 		<constant name="message_license_error">You are not authorized to use services from this site!</constant>
+
+		<!-- Page switch -->
+		<constant name="page_first">First</constant>
+		<constant name="page_previous">Previous</constant>
+		<constant name="page_next">Next</constant>
+		<constant name="page_last">Last</constant>
 
 		<!-- Other language specific data formats -->
 		<constant name="format_date">d.m.Y.</constant>
