@@ -44,15 +44,15 @@ function url_UnpackValues() {
 		// modify global variables
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
-				$_GET = $result;
-				$_REQUEST = $result;
+				$_GET = array_merge($_GET, $result);
 				break;
 
 			case 'POST':
-				$_POST = $result;
-				$_REQUEST = $result;
+				$_POST = array_merge($_POST, $result);
 				break;
 		}
+
+		$_REQUEST = array_merge($_GET, $_POST, $_COOKIE);
 	}
 }
 
@@ -110,11 +110,15 @@ function url_MakeFromArray($params) {
 	if (array_key_exists('section', $arguments)) {
 		$section_argument = $arguments['section'];
 		unset($arguments['section']);
+	} else {
+		$section_argument = $section;
 	}
 
 	if (array_key_exists('action', $arguments)) {
 		$action_argument = $arguments['action'];
 		unset($arguments['action']);
+	} else {
+		$action_argument = $action;
 	}
 
 
