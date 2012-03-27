@@ -24,7 +24,7 @@ $db_pass = 'matrix';
 $db_name = 'web_engine';
 
 // cache
-$cache_enabled = true;
+$cache_enabled = false;
 $cache_expire_period = 86400;
 $cache_max_pages = 200;
 

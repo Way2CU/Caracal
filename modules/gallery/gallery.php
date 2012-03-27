@@ -1224,7 +1224,8 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
-						'image'			=> $this->_getGroupImage($item)
+						'thumbnail'		=> $this->_getGroupImage($item),
+						'image'			=> $this->_getGroupImage($item, true)
 					);
 
 			$template->restoreXML();
@@ -1312,7 +1313,8 @@ class gallery extends Module {
 							'text_id'		=> $item->text_id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
-							'image'			=> $this->_getGroupImage($item),
+							'thumbnail'		=> $this->_getGroupImage($item),
+							'image'			=> $this->_getGroupImage($item, true),
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
