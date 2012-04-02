@@ -198,10 +198,12 @@ class shop extends Module {
 	 * Get search results when asked by search module
 	 * 
 	 * @param array $query
+	 * @param integer $threshold
 	 * @return array
 	 */
-	public function getSearchResults($query) {
+	public function getSearchResults($query, $threshold) {
 		global $language;
+
 		$manager = ShopItemManager::getInstance();
 		$result = array();
 
@@ -220,8 +222,8 @@ class shop extends Module {
 		// search through items
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				$title = $item->title[$language];
-				$description = $item->description[$language];
+				$title = strtolower($item->name[$language]);
+				$description = strtolower($item->description[$language]);
 
 				// get title score
 				$title_score = levenshtein($query, $title);
@@ -250,17 +252,35 @@ class shop extends Module {
 				}
 
 				// calculate score
-				$title_score = 100 - ((100 * $title_score) / $title_length);
-				$description_score = 100 - ((100 * $description_score) / $description_length);
+				if ($title_length > 0) {
+					$title_score = $title_length - $title_score;
+					if ($title_score < 0) $title_score = 0;
+					$title_score = ((100 * $title_score) / $title_length);
+
+				} else {
+					$title_score = 0;
+				}
+
+				if ($description_length > 0) {
+					$description_score = $description_length - $description_score;
+					if ($description_score < 0) $description_score = 0;
+					$description_score = ((100 * $description_score) / $description_length);
+
+				} else {
+					$description_score = 0;
+				}
 
 				// summarize score for this item
-				$score = ($title_score * 0.7) + ($description_score * 0.3);
+				$score = ($title_score * 0.8) + ($description_score * 0.2);
 
 				// add item to result list
-				$result[] = array(
+				if ($score >= $threshold)
+					$result[] = array(
 							'score'			=> $score,
-							'title'			=> $title,
-							'description'	=> limit_words($description, 200),
+							'title_score'	=> $title_score,
+							'description_score'	=> $description_score,
+							'title'			=> $item->name[$language],
+							'description'	=> limit_words($item->description[$language], 200),
 							'id'			=> $item->id,
 							'type'			=> 'item',
 							'module'		=> $this->name

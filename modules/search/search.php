@@ -121,24 +121,33 @@ class search extends Module {
 	public function tag_ResultList($tag_params, $children) {
 		// get search query
 		$query_string = null;
+		$threshold = 25;
 
+		// get query
 		if (isset($tag_params['query'])) 
-			$query_string = fix_chars($tag_params['query']);
+			$query_string = strtolower(fix_chars($tag_params['query']));
 
 		if (isset($_REQUEST['query']) && is_null($query_string))
-			$query_string = fix_chars($_REQUEST['query']);
+			$query_string = strtolower(fix_chars($_REQUEST['query']));
 
 		if (is_null($query_string))
 			return;
+
+		// get threshold
+		if (isset($tag_params['threshold'])) 
+			$threshold = fix_chars($tag_params['threshold']);
+
+		if (isset($_REQUEST['threshold']) && is_null($threshold))
+			$threshold = fix_chars($_REQUEST['threshold']);
 
 		// get list of modules to search on
 		$module_list = null;
 	
 		if (isset($tag_params['module_list']))
-			$module_list = fix_chars(split($params['module_list']));
+			$module_list = fix_chars(split(',', $tag_params['module_list']));
 
 		if (isset($_REQUEST['module_list']) && is_null($module_list))
-			$module_list = fix_chars(split($_REQUEST['module_list'));
+			$module_list = fix_chars(split(',', $_REQUEST['module_list']));
 
 		if (is_null($module_list))
 			$module_list = array_keys($this->modules);
@@ -149,20 +158,22 @@ class search extends Module {
 
 		// get results from modules
 		$results = array();
-		if (count($this->modules) > 0)
-			foreach ($this->modules as $name => $module) 
-				$results = array_merge($results, $module->getSearchResults($query_string));
+		if (count($module_list) > 0)
+			foreach ($module_list as $name) {
+				$module = $this->modules[$name];
+				$results = array_merge($results, $module->getSearchResults($query_string, $threshold));
+			}
 
 		// sort results
-		$results = uasort($results, array($this, 'sortResults'));
+		usort($results, array($this, 'sortResults'));
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'result.xml');
 
 		// parse results
 		if (count($results) > 0)
-			foreach ($results as $result) {
-				$template->setLocalParams($result);
+			foreach ($results as $params) {
+				$template->setLocalParams($params);
 				$template->restoreXML();
 				$template->parse();
 			}
@@ -175,11 +186,11 @@ class search extends Module {
 	 * @param array $item2
 	 * @return integer
 	 */
-	private function sortResults($item1, $item1) {
+	private function sortResults($item1, $item2) {
 		$result = 0;
 
 		if ($item1['score'] != $item2['score'])
-			$result = $item1['score'] < $item2['score'] ? -1 : 1;
+			$result = $item1['score'] < $item2['score'] ? 1 : -1;
 
 		return $result;
 	}
