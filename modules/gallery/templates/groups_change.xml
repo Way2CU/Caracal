@@ -46,6 +46,7 @@
 					group_id="$params['id']"
 					template="thumbnail_change_item.xml"
 					local="1"
+					show_invisible="1"
 					eval="selected,group_id"
 				/>
 			</select>
