@@ -105,9 +105,10 @@ class search extends Module {
 	 *			array(
 	 * 				'score'			=> 0..100	// score for this result
 	 * 				'title'			=> '',		// title to be shown in list
-	 *				'description	=> '',		// short description, if exists
+	 *				'description'	=> '',		// short description, if exists
 	 *				'id'			=> 0,		// id of containing item
-	 *				'custom'		=> ''		// module or item custom field
+	 *				'type'			=> '',		// type of item
+	 *				'module'		=> ''		// module name
 	 *			),
 	 *			...
 	 * 		);
@@ -118,11 +119,6 @@ class search extends Module {
 	 * @param array $children
 	 */
 	public function tag_ResultList($tag_params, $children) {
-		$query = array(
-				'words'		=> array(),
-				'exclude'	=> array()
-			);
-
 		// get search query
 		$query_string = null;
 
@@ -134,12 +130,6 @@ class search extends Module {
 
 		if (is_null($query_string))
 			return;
-
-		$raw_query = split(' ', $query_string);
-		foreach ($raw_query as $raw)
-			if ($raw[0] != '-')
-				$query['words'][] = $raw; else
-				$query['exclude'][] = substr($raw, 1);
 
 		// get list of modules to search on
 		$module_list = null;
@@ -153,12 +143,15 @@ class search extends Module {
 		if (is_null($module_list))
 			$module_list = array_keys($this->modules);
 
+		// get intersection of available and specified modules
+		$available_modules = array_keys($this->modules);
+		$module_list = array_intersect($available_modules, $module_list);
+
 		// get results from modules
 		$results = array();
 		if (count($this->modules) > 0)
 			foreach ($this->modules as $name => $module) 
-				if ($name in $module_list)
-					$results = array_merge($results, $module->getSearchResults($query));
+				$results = array_merge($results, $module->getSearchResults($query_string));
 
 		// sort results
 		$results = uasort($results, array($this, 'sortResults'));
@@ -169,8 +162,8 @@ class search extends Module {
 		// parse results
 		if (count($results) > 0)
 			foreach ($results as $result) {
-				$template->restoreXML();
 				$template->setLocalParams($result);
+				$template->restoreXML();
 				$template->parse();
 			}
 	}
