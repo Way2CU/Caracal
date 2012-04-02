@@ -195,6 +195,82 @@ class shop extends Module {
 	}
 
 	/**
+	 * Get search results when asked by search module
+	 * 
+	 * @param array $query
+	 * @return array
+	 */
+	public function getSearchResults($query) {
+		global $language;
+		$manager = ShopItemManager::getInstance();
+		$result = array();
+
+		// get all items and process them
+		$items = $manager->getItems(
+								array(
+									'id',
+									'name', 
+									'description'
+								),
+								array(
+									'visible'	=> 1,
+									'deleted'	=> 0,
+								));
+
+		// search through items
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$title = $item->title[$language];
+				$description = $item->description[$language];
+
+				// get title score
+				$title_score = levenshtein($query, $title);
+				$title_length = mb_strlen($title);
+
+				// get description score
+				if (mb_strlen($description) <= 255) {
+					$description_score = levenshtein($query, $description);
+					$description_length = mb_strlen($description);
+
+				} else {
+					// text is bigger than our limit, make it short
+					$chunks = array_chunk(preg_split("//u", $description, -1, PREG_SPLIT_NO_EMPTY), 255);
+					$description_score = 255;
+
+					// measure every chunk of description
+					foreach ($chunks as $chunk) {
+						$chunk_of_description = join('', $chunk);
+						$current_score = levenshtein($query, $chunk_of_description);
+
+						if ($current_score < $description_score) {
+							$description_score = $current_score;
+							$description_length = mb_strlen($chunk_of_description);
+						}
+					}
+				}
+
+				// calculate score
+				$title_score = 100 - ((100 * $title_score) / $title_length);
+				$description_score = 100 - ((100 * $description_score) / $description_length);
+
+				// summarize score for this item
+				$score = ($title_score * 0.7) + ($description_score * 0.3);
+
+				// add item to result list
+				$result[] = array(
+							'score'			=> $score,
+							'title'			=> $title,
+							'description'	=> limit_words($description, 200),
+							'id'			=> $item->id,
+							'type'			=> 'item',
+							'module'		=> $this->name
+						);
+			}
+
+		return $result;
+	}
+
+	/**
 	 * Transfers control to module functions
 	 *
 	 * @param array $params
