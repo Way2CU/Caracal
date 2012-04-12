@@ -109,7 +109,9 @@ function AnimationChain(callback, async, repeat) {
 			if (delay > 0)  // delay if needed
 				object.delay(delay);
 
-			object.animate(params[i], duration);
+			if ((self.callback != undefined || self.callback != null) && i == len-1)
+				object.animate(params[i], duration, self.callback); else
+				object.animate(params[i], duration);
 		}
 
 		this.playing = false;
