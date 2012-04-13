@@ -1,8 +1,8 @@
 /**
  * Universal Dialog Component
  * 
- * Copyright (c) 2011. by Way2CU
- * Author: MeanEYE.rcf
+ * Copyright (c) 2012. by Way2CU
+ * Author: Mladen Mijatov
  */
 
 function Dialog() {
