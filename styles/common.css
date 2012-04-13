@@ -159,3 +159,38 @@ div.page_switch span {
 div.page_switch span a:hover {
 	background-color: #f0f0f0;
 }
+
+/**
+ * Scrollbar
+ */
+div.scrollbar_thumb {
+	display: block;
+	width: 20px;
+	height: 70px;
+
+	position: absolute;
+	right: 0px;
+
+	border-radius: 5px 0px 0px 5px;
+	background-color: #303030;
+	opacity: 0.2;
+
+	transition-property: opacity;
+	transition-duration: 0.3s;
+	-moz-transition-property: opacity;
+	-moz-transition-duration: 0.3s;
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 0.3s;
+}
+
+div.scrollbar_thumb.rtl {
+	right: auto;
+	left: 0px;
+
+	border-radius: 0px 5px 5px 0px;
+}
+
+div.scrollbar_thumb.active,
+div.scrollbar_thumb:hover {
+	opacity: 1;
+}
