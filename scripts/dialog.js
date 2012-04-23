@@ -14,6 +14,8 @@ function Dialog() {
 	this._title_text = $('<span>');
 	this._close_button = $('<a>');
 	this._content = $('<div>');
+	this._inner_content = $('<div>');
+	this._scrollbar = null;
 	
 	/**
 	 * Complete object initialization
@@ -48,11 +50,19 @@ function Dialog() {
 		
 		// configure content
 		this._content
+				.css('position', 'relative')
 				.addClass('content')
 				.appendTo(this._container);
+
+		this._inner_content
+				.addClass('inner_content')
+				.appendTo(this._content);
 		
 		// connect events
 		$(window).bind('resize', this.__handle_window_resize);
+
+		// create scrollbar
+		this._scrollbar = new Scrollbar(this._content, 'div.inner_content');
 	};
 	
 	/**
@@ -61,9 +71,13 @@ function Dialog() {
 	 * @param string url
 	 */
 	this.setContentFromURL = function(url, container) {
+		var callback = function() {
+			self._scrollbar.content_updated();
+		};
+
 		if (container != null)
-			this._content.load(url + ' #' + container); else
-			this._content.load(url);
+			this._inner_content.load(url + ' #' + container, callback); else
+			this._inner_content.load(url, callback);
 	};
 	
 	/**
@@ -75,7 +89,8 @@ function Dialog() {
 		var element = $(selection).eq(0);
 		
 		element.detach();
-		this._content.html(element);
+		this._inner_content.html(element);
+		this._scrollbar.content_updated();
 	};
 	
 	/**
@@ -173,7 +188,7 @@ function Dialog() {
 				
 				self._container.css('display', 'none');
 				self._background.css('display', 'none');
-				self._content.html('');
+				self._inner_content.html('');
 			});
 			
 		// start animation chain
