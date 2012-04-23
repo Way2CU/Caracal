@@ -280,6 +280,7 @@ function LanguageHandler() {
 		$.ajax({
 			url: this.backend_url,
 			type: 'GET',
+			async: false,
 			data: {
 				section: 'language_menu',
 				action: 'json',
