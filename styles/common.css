@@ -103,10 +103,15 @@ div.dialog div.title a.close:hover {
 
 div.dialog div.content {
 	display: block;
+	overflow: hidden;
 }
 
-div.dialog div.content.scroll {
-	overflow-y: auto;
+div.dialog div.content div.scrollbar_thumb {
+	display: none;
+}
+
+div.dialog div.content.scroll div.scrollbar_thumb {
+	display: block;
 }
 
 /**
