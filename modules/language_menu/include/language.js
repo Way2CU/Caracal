@@ -54,8 +54,8 @@ function LanguageHandler() {
 	 */
 	this.isRTL = function(language) {
 		// in case language is not specified use current
-		if (!language)
-			language = this.current_language;
+		if (language == undefined || language == null)
+			var language = this.current_language;
 
 		// return boolean result
 		return !(this.rtl_languages.indexOf(language) == -1);
