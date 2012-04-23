@@ -15,8 +15,13 @@
 function Scrollbar(parent_selector, content_selector, is_rtl) {
 	var self = this;
 
-	this._parents = $(parent_selector)
-	this._is_rtl = (is_rtl != undefined && is_rtl != null) ? is_rtl : language_handler.isRTL();
+	if (typeof(parent_selector) == 'string')
+		this._parents = $(parent_selector); else
+		this._parents = parent_selector;
+
+	if (is_rtl != undefined && is_rtl != null) 
+		this._is_rtl = is_rtl; else
+		this._is_rtl = language_handler.isRTL();
 
 	/**
 	 * Complete object initialization
@@ -156,6 +161,36 @@ function Scrollbar(parent_selector, content_selector, is_rtl) {
 
 		// prevent default behavior
 		event.preventDefault();
+	};
+
+	/**
+	 * Method called by the user when container size or content
+	 * was changed.
+	 */
+	this.content_updated = function(index) {
+		if (index == undefined || index == null)
+			var index = 0;
+
+		var item = this._parents.eq(index);
+		var scroll_thumb = item.data('scroll');
+		var max_position = item.height();
+		var min_position = 0;
+
+		// position thumb and modify variables
+		if (scroll_thumb.css('margin-top') != undefined)
+			min_position += parseInt(scroll_thumb.css('margin-top').replace('px', ''));
+
+		if (scroll_thumb.css('margin-bottom') != undefined)
+			max_position -= parseInt(scroll_thumb.css('margin-bottom').replace('px', ''));
+
+		// reduce max_position by the size of thumb
+		max_position -= scroll_thumb.height();
+
+		// store max and mix values and position element
+		scroll_thumb
+			.css('top', min_position)
+			.data('min', min_position)
+			.data('max', max_position);
 	};
 
 	// initialize object elements
