@@ -1,7 +1,7 @@
 /**
  * News Display System
  *
- * Copyright (c) 2010. by MeanEYE.rcf
+ * Copyright (c) 2012. by MeanEYE.rcf
  * http://rcf-group.com
  *
  * This system provides developers with extensive array of options to display
@@ -11,15 +11,16 @@
  * Requires jQuery 1.4.2+
  */
 
-function FadingNews($container, transition_time) {
-	this.$container = $container;
+function FadingNews(container, parent_container, transition_time) {
+	this.container = container;
 	this.transition_time = transition_time;
+	this.parent_container = parent_container;
 
 	/**
 	 * Show news container
 	 */
 	this.show = function() {
-		this.$container
+		this.container
 					.css({
 						display: 'block',
 						opacity: 0
@@ -33,7 +34,7 @@ function FadingNews($container, transition_time) {
 	this.hide = function(next_news) {
 		next_news.show();
 
-		this.$container.animate(
+		this.container.animate(
 						{opacity: 0},
 						this.transition_time,
 						function() {
@@ -42,20 +43,40 @@ function FadingNews($container, transition_time) {
 	};
 }
 
-function ScrollingNews($container, transition_time) {
-	this.$container = $container;
+function ScrollingNews(container, parent_container, transition_time) {
+	this.container = container;
 	this.transition_time = transition_time;
+	this.parent_container = parent_container;
 
 	/**
 	 * Show news container
 	 */
 	this.show = function() {
+		var height = this.parent_container.height();
+		this.container
+					.css({
+						display: 'block',
+						opacity: 0,
+						top: height
+					})
+					.animate({opacity: 1, top: 0}, this.transition_time);
 	};
 
 	/**
 	 * Hide news container
 	 */
 	this.hide = function(next_news) {
+		next_news.show();
+
+		this.container.animate(
+						{
+							top: -this.container.height(),
+							opacity: 0
+						},
+						this.transition_time,
+						function() {
+							$(this).css('display', 'none');
+						});
 	};
 }
 
@@ -76,7 +97,7 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 	this.news_list = [];
 	this.active_item = 0;
 
-	this.$container = $('#'+container_id);
+	this.container = $('#'+container_id);
 
 	// get constructor method name
 	switch (animation_type) {
@@ -93,9 +114,11 @@ function NewsSystem(container_id, animation_type, display_time, transition_time)
 	};
 
 	// create news objects
-	this.$container.find('.news').each(function() {
+	this.container.find('.news').each(function() {
+		var item = new News($(this), self.container, self.transition_time);
+
 		$(this).addClass('animated');
-		self.news_list.push(new News($(this), self.transition_time));
+		self.news_list.push(item);
 	});
 
 	// callback method used for switching news items
