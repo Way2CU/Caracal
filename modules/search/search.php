@@ -125,10 +125,10 @@ class search extends Module {
 
 		// get query
 		if (isset($tag_params['query'])) 
-			$query_string = strtolower(fix_chars($tag_params['query']));
+			$query_string = mb_strtolower(fix_chars($tag_params['query']));
 
 		if (isset($_REQUEST['query']) && is_null($query_string))
-			$query_string = strtolower(fix_chars($_REQUEST['query']));
+			$query_string = mb_strtolower(fix_chars($_REQUEST['query']));
 
 		if (is_null($query_string))
 			return;
