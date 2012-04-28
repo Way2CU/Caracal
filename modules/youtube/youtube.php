@@ -821,7 +821,7 @@ class youtube extends Module {
 			}
 
 
-			$item_ids = $membership_manager->getItems(
+			$membership_items = $membership_manager->getItems(
 											array('video'),
 											array('group' => $group_id)
 										);
@@ -839,6 +839,10 @@ class youtube extends Module {
 
 			// add item list to conditions
 			$conditions['id'] = $item_list;
+		}
+
+		if (isset($tag_params['random']) && $tag_params['random'] == '1') {
+			$order_by = array('RAND()');
 		}
 
 		// get items from database
