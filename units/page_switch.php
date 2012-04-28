@@ -13,6 +13,7 @@ class PageSwitch {
 	private $per_page = 10;
 	private $total_items = 0;
 	private $url_params = array();
+	private $invalid_params = array('PHPSESSID');
 
 	/**
 	 * Constructor
@@ -35,9 +36,7 @@ class PageSwitch {
 	 */
 	public function setURL($params) {
 		$this->url_params = $params;
-
-		if (array_key_exists($this->param_name, $this->url_params))
-			unset($this->url_params[$this->param_name]);
+		$this->fixParams();
 	}
 
 	/**
@@ -45,9 +44,7 @@ class PageSwitch {
 	 */
 	public function setCurrentAsBaseURL() {
 		$this->url_params = $_REQUEST;
-
-		if (array_key_exists($this->param_name, $this->url_params))
-			unset($this->url_params[$this->param_name]);
+		$this->fixParams();
 	}
 
 	/**
@@ -249,5 +246,23 @@ class PageSwitch {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Remove unneeded params
+	 */
+	private function fixParams() {
+		// remove current page param from the list
+		if (array_key_exists($this->param_name, $this->url_params))
+			unset($this->url_params[$this->param_name]);
+
+		if (array_key_exists('_rewrite', $this->url_params)) 
+			unset($this->url_params['_rewrite']);
+
+		// go through the list of invalid params and remove them
+		foreach ($this->url_params as $key => $value) {
+			if (in_array($key, $this->invalid_params))
+				unset($this->url_params[$key]);
+		}
 	}
 }
