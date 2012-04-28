@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="result">
+		<div class="title">
+			<_var name="$params['title']"/>
+		</div>
+		<div class="score">
+			<_var name="$params['score']"/>
+		</div>
+		<div class="score">
+			<_var name="$params['title_score']"/>
+		</div>
+		<div>
+			<_var name="$params['description_score']"/>
+		</div>
+	</div>
+</document>
