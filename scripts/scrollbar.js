@@ -41,10 +41,7 @@ function Scrollbar(parent_selector, content_selector, is_rtl) {
 				.data('content', content)
 				.addClass('scrollbar_thumb')
 				.drag(self._handle_drag)
-				.mousedown(function(event) {
-					event.preventDefault();
-					$(this).addClass('active');
-				})
+				.mousedown(self._handle_mouse_down);
 
 			$(document).mouseup(function(event) {
 					scroll_thumb.removeClass('active');
@@ -79,6 +76,19 @@ function Scrollbar(parent_selector, content_selector, is_rtl) {
 				.data('min', min_position)
 				.data('max', max_position);
 		});
+	};
+
+	/**
+	 * Handle mouse down event on scroll thumb
+	 */
+	this._handle_mouse_down = function(event) {
+		var item = $(this);
+		
+		// add class to thumb
+		item.addClass('active');
+
+		// prevent default behavior
+		event.preventDefault();
 	};
 
 	/**
