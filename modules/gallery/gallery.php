@@ -1410,22 +1410,27 @@ class gallery extends Module {
 		global $language;
 
 		$manager = GalleryContainerManager::getInstance();
+		$conditions = array();
+		$order_by = array('name_'.$language);
+		$order_asc = true;
+
+		// grab parameters
+		if (isset($tag_params['exclude'])) {
+			$conditions['text_id'] = array(
+									'operator'	=> 'NOT IN',
+									'value'		=> fix_chars(explode(',', $tag_params['exclude']))
+								);
+		}
 
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
-								array(),
-								array('name_'.$language)
+								$conditions,
+								$order_by,
+								$order_asc
 							);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('containers_list_item.xml', $this->path.'templates/');
-		}
+		$template = $this->loadTemplate($tag_params, 'containers_list_item.xml');
 
-		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_image', &$this, 'tag_Image');
 		$template->registerTagHandler('_image_list', &$this, 'tag_ImageList');
 		$template->registerTagHandler('_group', &$this, 'tag_Group');
