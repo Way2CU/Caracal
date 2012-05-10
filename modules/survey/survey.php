@@ -111,11 +111,34 @@ class survey extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'results':
+					$this->showResults();
 					break;
 
 				case 'types':
-				default:
 					$this->showTypes();
+					break;
+
+				case 'types_new':
+					$this->createType();
+					break;
+
+				case 'types_change':
+					$this->changeType();
+					break;
+
+				case 'types_save':
+					$this->saveType();
+					break;
+
+				case 'types_delete':
+					$this->deleteType();
+					break;
+
+				case 'types_delete_commit':
+					$this->deleteType_commit();
+					break;
+
+				default:
 					break;
 			}
 	}
@@ -142,6 +165,7 @@ class survey extends Module {
 					`id` int(11) NOT NULL AUTO_INCREMENT,
 					`name` varchar(30) NOT NULL,
 					`fields` varchar(255) NOT NULL,
+					`unique_address` BOOLEAN NOT NULL DEFAULT '0',
 					PRIMARY KEY (`id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
 		if ($db_active == 1) $db->query($sql);
@@ -166,6 +190,21 @@ class survey extends Module {
 	}
 	
 	/**
+	 * Show survey results
+	 */
+	private function showResults() {
+		$template = new TemplateHandler('list.xml', $this->path.'templates/');
+
+		$params = array();
+
+		$template->registerTagHandler('_results_list', &$this, 'tag_ResultsList');
+		$template->registerTagHandler('_columns_list', &$this, 'tag_ColumnsList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Show survey types form
 	 */
 	private function showTypes() {
@@ -189,6 +228,156 @@ class survey extends Module {
 	}
 
 	/**
+	 * Show form for creating a new survey type
+	 */
+	private function createType() {
+		$template = new TemplateHandler('add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'types_save'),
+					'cancel_action'	=> window_Close($this->name.'_types_new')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Change specified type data
+	 */
+	private function changeType() {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = SurveyTypesManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		$template = new TemplateHandler('change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'id'			=> $item->id,
+					'name'			=> $item->name,
+					'fields'		=> $item->fields,
+					'unique_address' => $item->unique_address,
+					'form_action'	=> backend_UrlMake($this->name, 'types_save'),
+					'cancel_action'	=> window_Close($this->name.'_types_change')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Save new survey type or changes to existing
+	 */
+	private function saveType() {
+		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
+		$name = fix_chars($_REQUEST['name']);
+		$fields = fix_chars($_REQUEST['fields']);
+		$unique_address = isset($_REQUEST['unique_address']) && ($_REQUEST['unique_address'] == 'on' || $_REQUEST['unique_address'] == '1') ? 1 : 0;
+
+		$manager = SurveyTypesManager::getInstance();
+
+		$data = array(
+					'name'		=> $name,
+					'fields'	=> $fields,
+					'unique_address'	=> $unique_address
+				);
+
+		if (is_null($id))
+			$manager->insertData($data); else
+			$manager->updateData($data, array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$window_name = $this->name.(is_null($id) ? '_types_new' : '_types_change');
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_types_saved"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_types')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show removal confirmation for survey type
+	 */
+	private function deleteType() {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$manager = SurveyTypesManager::getInstance();
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_types_delete"),
+					'name'			=> $item->name,
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											$this->name.'_types_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'types_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close($this->name.'_types_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Perform survey type removal
+	 */
+	private function deleteType_commit() {
+		$id = fix_id(fix_chars($_REQUEST['id']));
+		$type_manager = SurveyTypesManager::getInstance();
+		$entries_manager = SurveyEntriesManager::getInstance();
+		$entry_data_manager = SurveyEntryDataManager::getInstance();
+		$entry_ids = array();
+
+		// get list of entries to remove
+		$entries = $entries_manager->getItems(array('id'), array('type' => $id));
+
+		if (count($entries) > 0)
+			foreach ($entries as $entry)
+				$entry_ids[] = $entry->id;
+
+		// perform data removal
+		if (count($entry_ids) > 0)
+			$entry_data_manager->deleteData(array('entry' => $entry_ids));
+		$entries_manager->deleteData(array('type' => $id));
+		$type_manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$window_name = $this->name.'_types_delete';
+		$params = array(
+					'message'	=> $this->getLanguageConstant("message_types_deleted"),
+					'button'	=> $this->getLanguageConstant("close"),
+					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_types')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Save data from $_REQUEST specified by XML tag
 	 *
 	 * @param array $tag_params
@@ -197,19 +386,45 @@ class survey extends Module {
 	private function saveFromXML($tag_params, $children) {
 		$manager = SurveyEntriesManager::getInstance();
 		$data_manager = SurveyEntryDataManager::getInstance();
+		$type_manager = SurveyTypesManager::getInstance();
 		$allow_only_one = false;
+		$fields = array();
+		$type = null;
+		$type_id = null;
+
+		if (isset($tag_params['type'])) {
+			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('name' => fix_chars($tag_params['type'])));
+
+			if (is_object($type))
+				$type_id = $type->id;
+
+		} else if (isset($tag_params['type_id'])) {
+			$type_id = fix_id($tag_params['type_id']);
+			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('id' => $type_id));
+		} 
+
+		// we need a type in order to store data
+		if (is_null($type_id))
+			return;
+
+		// get setting if this type allows only one entry per address
+		$allow_only_one = $type->unique_address == 1;
+		$fields = explode(',', $type->fields);
 
 		if ($allow_only_one) {
 			// get existing entry from database 
 			$entry = $manager->getSingleItem(
 									$manager->getFieldNames(),
-									array('address' => $_SERVER['REMOTE_ADDR'])
+									array(
+										'type'		=> $type_id,
+										'address' 	=> $_SERVER['REMOTE_ADDR']
+									)
 								);
 
 			// if entry doesn't exist, create new one
 			if (!is_object($entry)) {
 				$manager->insertData(array(
-								'type'		=> isset($tag_params['type']) ? fix_id($tag_params['type']) : 0,
+								'type'		=> $type_id,
 								'address'	=> $_SERVER['REMOTE_ADDR']
 							));
 				$id = $manager->getInsertedID();
@@ -219,6 +434,7 @@ class survey extends Module {
 		} else {
 			// create new entry anyway
 			$manager->insertData(array(
+							'type'		=> $type_id,
 							'address'	=> $_SERVER['REMOTE_ADDR']
 						));
 			$id = $manager->getInsertedID();
@@ -236,28 +452,64 @@ class survey extends Module {
 	private function saveFromAJAX() {
 		$manager = SurveyEntriesManager::getInstance();
 		$data_manager = SurveyEntryDataManager::getInstance();
+		$type_manager = SurveyTypesManager::getInstance();
 		$allow_only_one = false;
+		$fields = array();
+		$type = null;
+		$type_id = null;
+
+		if (isset($_REQUEST['type'])) {
+			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('name' => fix_chars($_REQUEST['type'])));
+
+			if (is_object($type))
+				$type_id = $type->id;
+
+		} else if (isset($_REQUEST['type_id'])) {
+			$type_id = fix_id($_REQUEST['type_id']);
+			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('id' => $type_id));
+		} 
+
+		// we need a type in order to store data
+		if (is_null($type_id)) {
+			print json_encode(false);
+			return;
+		}
+
+		// get setting if this type allows only one entry per address
+		$allow_only_one = $type->unique_address == 1;
+		$fields = explode(',', $type->fields);
+
+		trigger_error($allow_only_one);
 
 		if ($allow_only_one) {
 			// get existing entry from database 
 			$entry = $manager->getSingleItem(
 									$manager->getFieldNames(),
-									array('address' => $_SERVER['REMOTE_ADDR'])
+									array(
+										'type'		=> $type_id,
+										'address' 	=> $_SERVER['REMOTE_ADDR']
+									)
 								);
 
 			// if entry doesn't exist, create new one
 			if (!is_object($entry)) {
 				$manager->insertData(array(
-								'type'		=> isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : 0,
+								'type'		=> $type_id,
 								'address'	=> $_SERVER['REMOTE_ADDR']
 							));
 				$id = $manager->getInsertedID();
 				$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+			} else {
+				// entry already exists, we need to get out
+				print json_encode(false);
+				return;
 			}
 
 		} else {
 			// create new entry anyway
 			$manager->insertData(array(
+							'type'		=> $type_id,
 							'address'	=> $_SERVER['REMOTE_ADDR']
 						));
 			$id = $manager->getInsertedID();
@@ -265,15 +517,14 @@ class survey extends Module {
 		}
 		
 		$data = $_REQUEST;
-		unset($data['section']);
-		unset($data['action']);
 
 		foreach ($data as $key => $value) {
-			$data_manager->insertData(array(
-								'entry'	=> $entry->id,
-								'name'	=> $key,
-								'value'	=> fix_chars($value)
-							));
+			if (in_array($key, $fields))
+				$data_manager->insertData(array(
+									'entry'	=> $entry->id,
+									'name'	=> $key,
+									'value'	=> fix_chars($value)
+								));
 		}
 
 		print json_encode(true);
@@ -286,5 +537,148 @@ class survey extends Module {
 	 * @param array $children
 	 */
 	public function tag_TypesList($tag_params, $children) {
+		$manager = SurveyTypesManager::getInstance();
+		$conditions = array();
+
+		// get items from database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'types_list_item.xml');
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+						'id'		=> $item->id,
+						'name'		=> $item->name,
+						'fields'	=> $item->fields,
+						'item_change'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('change'),
+												window_Open(
+													$this->name.'_types_change', 	// window id
+													350,							// width
+													$this->getLanguageConstant('title_types_change'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'types_change'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('delete'),
+												window_Open(
+													$this->name.'_types_delete', 	// window id
+													300,							// width
+													$this->getLanguageConstant('title_types_delete'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'types_delete'),
+														array('id', $item->id)
+													)
+												)
+											),
+					);
+
+				$template->setLocalParams($params);
+				$template->restoreXML();
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Handle drawing results tag
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ResultsList($tag_params, $children) {
+		$manager = SurveyEntriesManager::getInstance();
+		$data_manager = SurveyEntryDataManager::getInstance();
+		$conditions = array();
+		$type_id = null;
+
+		if (isset($tag_params['type'])) {
+			$type_id = fix_id($tag_params['type']);
+
+		} else if (isset($_REQUEST['type'])) {
+			$type_id = fix_id($_REQUEST['type']);
+		}
+
+		if (is_null($type_id))
+			return;
+
+		// add type to the conditions
+		$conditions['type'] = $type_id;
+
+		// get items from database
+		$items = $manager->getItems(array('id'), $conditions);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+
+		if (count($items) > 0) 
+			// prepare list of entries
+			$item_ids = array();
+			$data = array();
+
+			foreach ($items as $item)
+				$item_ids[] = $item->id;
+
+			// get data from database
+			$raw_data = $data_manager->getItems($data_manager->getFieldNames(), array('entry' => $item_ids));
+
+			// pack data 
+			if (count($raw_data) > 0) {
+				foreach ($raw_data as $raw_item_data) {
+					$id = $raw_item_data->entry;
+					$name = $raw_item_data->name;
+
+					if (array_key_exists($id, $data))
+						$data[$id] = array();
+
+					$data[$id][$name] = $raw_item_data->value;
+				}
+
+				// display data
+				foreach ($data as $id => $params) {
+					$template->setLocalParams($params);
+				}
+			}
+	}
+
+	/**
+	 * Handle drawing columns
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ColumnsList($tag_params, $children) {
+		$manager = SurveyTypesManager::getInstance();
+		$id = fix_id($tag_params['id']);
+
+		$type = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($type)) {
+			$template = $this->loadTemplate($tag_params, 'column.xml');
+			$fields = explode(',', $type->fields);
+
+			foreach ($fields as $field) {
+				$params = array(
+						'name'	=> $field,
+						'title'	=> ucwords($field)
+					);
+
+				$template->setLocalParams($params);
+				$template->restoreXML();
+				$template->parse();
+			}
+		}
 	}
 }

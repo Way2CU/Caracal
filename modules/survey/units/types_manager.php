@@ -16,8 +16,9 @@ class SurveyTypesManager extends ItemManager {
 		parent::__construct('survey_types');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'ml_varchar');
+		$this->addProperty('name', 'varchar');
 		$this->addProperty('fields', 'varchar');
+		$this->addProperty('unique_address', 'boolean');
 	}
 
 	/**

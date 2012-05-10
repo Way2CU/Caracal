@@ -12,10 +12,15 @@
 		<constant name="title_types_change">Survey: Change type</constant>
 		<constant name="title_types_delete">Survey: Delete type</constant>
 
+		<constant name="message_types_saved">Survey type data was saved!</constant>
+		<constant name="message_types_delete">You are about to remove the following survey type and all of it's results. Are you sure?</constant>
+		<constant name="message_types_deleted">Specified survey type and its results were removed!</constant>
+
 		<constant name="column_name">Name</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_fields">Fields:</constant>
+		<constant name="label_unique_address">Allow only one entry per IP address</constant>
 	</language>
 	<language short="iw">
 		<constant name="menu_survey">Survey</constant>
@@ -28,9 +33,14 @@
 		<constant name="title_types_change">Survey: Change type</constant>
 		<constant name="title_types_delete">Survey: Delete type</constant>
 
+		<constant name="message_types_saved">Survey type data was saved!</constant>
+		<constant name="message_types_delete">You are about to remove the following survey type and all of it's results. Are you sure?</constant>
+		<constant name="message_types_deleted">Specified survey type and its results were removed!</constant>
+
 		<constant name="column_name">Name</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_fields">Fields:</constant>
+		<constant name="label_unique_address">Allow only one entry per IP address</constant>
 	</language>
 </document>
