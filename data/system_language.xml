@@ -173,8 +173,8 @@
 		<constant name="open">פתח</constant>
 		<constant name="close">סגור</constant>
 		<constant name="reset">אפס</constant>
-		<constant name="filter">סנן</constant>
-		<constant name="search">חפש</constant>
+		<constant name="filter">לסנן</constant>
+		<constant name="search">לחפש</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
