@@ -78,6 +78,8 @@ function Dialog() {
 		if (container != null)
 			this._inner_content.load(url + ' #' + container, callback); else
 			this._inner_content.load(url, callback);
+
+		this._inner_content.css('top', 0);
 	};
 	
 	/**
@@ -89,7 +91,9 @@ function Dialog() {
 		var element = $(selection).eq(0);
 		
 		element.detach();
-		this._inner_content.html(element);
+		this._inner_content
+				.html(element)
+				.css('top', 0);
 		this._scrollbar.content_updated();
 	};
 	
