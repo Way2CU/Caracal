@@ -62,6 +62,17 @@
 		<constant name="label_username">Username:</constant>
 		<constant name="label_password">Password:</constant>
 		<constant name="label_level">Level:</constant>
+		<constant name="label_link">Enter URL:</constant>
+
+		<!-- Toolbar -->
+		<constant name="toolbar_markdown_bold">Bold</constant>
+		<constant name="toolbar_markdown_italic">Italic</constant>
+		<constant name="toolbar_markdown_link">Create hyperlink</constant>
+		<constant name="toolbar_markdown_quote">Quote</constant>
+		<constant name="toolbar_markdown_code">Add code block</constant>
+		<constant name="toolbar_markdown_header">Header</constant>
+		<constant name="toolbar_markdown_ordered_list">Ordered list (numbers)</constant>
+		<constant name="toolbar_markdown_unordered_list">Unordered list (bullets)</constant>
 
 		<!-- General -->
 		<constant name="activate">Activate</constant>
@@ -88,7 +99,7 @@
 		<constant name="logout">Logout</constant>
 	</language>
 
-	<language name="עברית" short="iw" rtl="yes" default="yes">
+	<language name="עברית" short="iw" rtl="yes">
 		<constant name="title">ממשק מנהל</constant>
 		<!-- Menu Items -->
 		<constant name="menu_system">מערכת</constant>
@@ -118,6 +129,26 @@
 		<constant name="message_logout">אתה עומד להתנתקת האם אתה בטוח</constant>
 		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
 
+		<!-- Labels -->
+		<constant name="label_old_password">Old password:</constant>
+		<constant name="label_new_password">New password:</constant>
+		<constant name="label_repeat_password">Repeat new password:</constant>
+		<constant name="label_fullname">Full name:</constant>
+		<constant name="label_username">Username:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_level">Level:</constant>
+		<constant name="label_link">Enter URL:</constant>
+
+		<!-- Toolbar -->
+		<constant name="toolbar_markdown_bold">Bold</constant>
+		<constant name="toolbar_markdown_italic">Italic</constant>
+		<constant name="toolbar_markdown_link">Create hyperlink</constant>
+		<constant name="toolbar_markdown_quote">Quote</constant>
+		<constant name="toolbar_markdown_code">Add code block</constant>
+		<constant name="toolbar_markdown_header">Header</constant>
+		<constant name="toolbar_markdown_ordered_list">Ordered list (numbers)</constant>
+		<constant name="toolbar_markdown_unordered_list">Unordered list (bullets)</constant>
+
 		<!-- Column Names -->
 		<constant name="column_module_name">שם</constant>
 		<constant name="column_module_order">הזמן</constant>
@@ -131,6 +162,13 @@
 		<constant name="disable">נטרל</constant>
 		<constant name="close">סגור</constant>
 		<constant name="cancel">בטל</constant>
+
+		<!-- User Manager Related -->
+		<constant name="create_user">Create user</constant>
+		<constant name="group_guests">Guests</constant>
+		<constant name="group_users">Users</constant>
+		<constant name="group_admins">Administrators</constant>
+		<constant name="group_root">Unlimited</constant>
 
 		<!-- Login Related -->
 		<constant name="title_login">כניסה למערכת</constant>
