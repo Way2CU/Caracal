@@ -130,24 +130,24 @@
 		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
 
 		<!-- Labels -->
-		<constant name="label_old_password">Old password:</constant>
-		<constant name="label_new_password">New password:</constant>
-		<constant name="label_repeat_password">Repeat new password:</constant>
-		<constant name="label_fullname">Full name:</constant>
-		<constant name="label_username">Username:</constant>
-		<constant name="label_password">Password:</constant>
-		<constant name="label_level">Level:</constant>
-		<constant name="label_link">Enter URL:</constant>
+		<constant name="label_old_password">סיסמא ישנה:</constant>
+		<constant name="label_new_password">סיסמא חדשה:</constant>
+		<constant name="label_repeat_password">חזור על סיסמא חדשה:</constant>
+		<constant name="label_fullname">שם מלא:</constant>
+		<constant name="label_username">שם משתמש:</constant>
+		<constant name="label_password">סיסמא:</constant>
+		<constant name="label_level">רמה:</constant>
+		<constant name="label_link">הכנס URL:</constant>
 
 		<!-- Toolbar -->
-		<constant name="toolbar_markdown_bold">Bold</constant>
-		<constant name="toolbar_markdown_italic">Italic</constant>
-		<constant name="toolbar_markdown_link">Create hyperlink</constant>
-		<constant name="toolbar_markdown_quote">Quote</constant>
-		<constant name="toolbar_markdown_code">Add code block</constant>
-		<constant name="toolbar_markdown_header">Header</constant>
-		<constant name="toolbar_markdown_ordered_list">Ordered list (numbers)</constant>
-		<constant name="toolbar_markdown_unordered_list">Unordered list (bullets)</constant>
+		<constant name="toolbar_markdown_bold">הדגש</constant>
+		<constant name="toolbar_markdown_italic">נשען</constant>
+		<constant name="toolbar_markdown_link">צור קישור</constant>
+		<constant name="toolbar_markdown_quote">צטט</constant>
+		<constant name="toolbar_markdown_code">הוסף קטע קוד</constant>
+		<constant name="toolbar_markdown_header">ראש</constant>
+		<constant name="toolbar_markdown_ordered_list">רשימה מסודרת (מספרים)</constant>
+		<constant name="toolbar_markdown_unordered_list">רשימה (תבליטים)</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">שם</constant>
@@ -164,11 +164,11 @@
 		<constant name="cancel">בטל</constant>
 
 		<!-- User Manager Related -->
-		<constant name="create_user">Create user</constant>
-		<constant name="group_guests">Guests</constant>
-		<constant name="group_users">Users</constant>
-		<constant name="group_admins">Administrators</constant>
-		<constant name="group_root">Unlimited</constant>
+		<constant name="create_user">צור משתמש</constant>
+		<constant name="group_guests">אורחים</constant>
+		<constant name="group_users">משתמשים</constant>
+		<constant name="group_admins">מנהלים</constant>
+		<constant name="group_root">לא מוגבל</constant>
 
 		<!-- Login Related -->
 		<constant name="title_login">כניסה למערכת</constant>
