@@ -930,7 +930,7 @@ class youtube extends Module {
 	public function tag_Thumbnail($tag_params, $children) {
 		$manager = YouTube_VideoManager::getInstance();
 		$video = null;
-		$image_list = 2;
+		$image_list = null;
 
 		// get parameters
 		if (isset($tag_params['id'])) {

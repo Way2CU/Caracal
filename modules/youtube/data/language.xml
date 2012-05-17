@@ -41,6 +41,7 @@
 		<constant name="label_id">Video ID:</constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_title">Title:</constant>
+		<constant name="label_name">Name:</constant>
 		<constant name="label_visible">Group is visible</constant>
 		<constant name="label_description">Description:</constant>
 
@@ -90,6 +91,7 @@
 		<constant name="label_id">מזהה וידאו:</constant>
 		<constant name="label_text_id">מזהה טקסט:</constant>
 		<constant name="label_title">כותרת:</constant>
+		<constant name="label_name">Name:</constant>
 		<constant name="label_visible">הקבוצה נראית</constant>
 		<constant name="label_description">תיאור:</constant>
 
