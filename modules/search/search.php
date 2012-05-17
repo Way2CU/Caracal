@@ -53,6 +53,9 @@ class search extends Module {
 					$this->tag_ResultList($params, $children);
 					break;
 
+				case 'configure':
+					break;
+
 				default:
 					break;
 			}
