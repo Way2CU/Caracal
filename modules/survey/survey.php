@@ -16,6 +16,8 @@ require_once('units/types_manager.php');
 class survey extends Module {
 	private static $_instance;
 
+	const COLUMN_COUNT = 4;
+
 	/**
 	 * Constructor
 	 */
@@ -24,16 +26,15 @@ class survey extends Module {
 		
 		parent::__construct(__FILE__);
 
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
 
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
+
+			if (class_exists('head_tag')) {
+				$head_tag = head_tag::getInstance();
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+			}
 
 			$survey_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_survey'),
@@ -199,6 +200,7 @@ class survey extends Module {
 
 		$template->registerTagHandler('_results_list', &$this, 'tag_ResultsList');
 		$template->registerTagHandler('_columns_list', &$this, 'tag_ColumnsList');
+		$template->registerTagHandler('_types_list', &$this, 'tag_TypesList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -539,9 +541,14 @@ class survey extends Module {
 	public function tag_TypesList($tag_params, $children) {
 		$manager = SurveyTypesManager::getInstance();
 		$conditions = array();
+		$selected = -1;
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// get selected item if specified
+		if (isset($tag_params['selected']))
+			$selected = fix_id($tag_params['selected']);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'types_list_item.xml');
@@ -552,6 +559,7 @@ class survey extends Module {
 						'id'		=> $item->id,
 						'name'		=> $item->name,
 						'fields'	=> $item->fields,
+						'selected'	=> $item->id == $selected ? 1 : 0,
 						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
@@ -601,6 +609,7 @@ class survey extends Module {
 	public function tag_ResultsList($tag_params, $children) {
 		$manager = SurveyEntriesManager::getInstance();
 		$data_manager = SurveyEntryDataManager::getInstance();
+		$types_manager = SurveyTypesManager::getInstance();
 		$conditions = array();
 		$type_id = null;
 
@@ -613,6 +622,9 @@ class survey extends Module {
 
 		if (is_null($type_id))
 			return;
+
+		$fields = $types_manager->getItemValue('fields', array('id' => $type_id));
+		$fields = array_slice(explode(',', $fields), 0, survey::COLUMN_COUNT);
 
 		// add type to the conditions
 		$conditions['type'] = $type_id;
@@ -632,7 +644,10 @@ class survey extends Module {
 				$item_ids[] = $item->id;
 
 			// get data from database
-			$raw_data = $data_manager->getItems($data_manager->getFieldNames(), array('entry' => $item_ids));
+			$raw_data = $data_manager->getItems(
+							$data_manager->getFieldNames(), 
+							array('entry' => $item_ids)
+						);
 
 			// pack data 
 			if (count($raw_data) > 0) {
@@ -640,15 +655,20 @@ class survey extends Module {
 					$id = $raw_item_data->entry;
 					$name = $raw_item_data->name;
 
-					if (array_key_exists($id, $data))
+					if (!array_key_exists($id, $data))
 						$data[$id] = array();
 
-					$data[$id][$name] = $raw_item_data->value;
+					if (in_array($name, $fields)) {
+						$number = array_search($name, $fields);
+						$data[$id]["field_{$number}"] = $raw_item_data->value;
+					}
 				}
 
 				// display data
 				foreach ($data as $id => $params) {
 					$template->setLocalParams($params);
+					$template->restoreXML();
+					$template->parse();
 				}
 			}
 	}
@@ -661,13 +681,19 @@ class survey extends Module {
 	 */
 	public function tag_ColumnsList($tag_params, $children) {
 		$manager = SurveyTypesManager::getInstance();
-		$id = fix_id($tag_params['id']);
+		$id = null;
+
+		if (isset($tag_params['type']))
+			$id = fix_id($tag_params['type']);
+
+		if (is_null($id))
+			return;
 
 		$type = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		if (is_object($type)) {
 			$template = $this->loadTemplate($tag_params, 'column.xml');
-			$fields = explode(',', $type->fields);
+			$fields = array_slice(explode(',', $type->fields), 0, survey::COLUMN_COUNT);
 
 			foreach ($fields as $field) {
 				$params = array(

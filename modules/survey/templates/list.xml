@@ -3,14 +3,13 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
-
 		<div class="floated">
 			<_text constant="type" module="survey"/>
 			<select onchange="javascript: survey_update_result_list();" id="survey_type_list">
-				<_group_list
-					selected="isset($_REQUEST['group']) ? fix_chars($_REQUEST['group']) : 0"
-					template="groups_option.xml"
+				<option/>
+				<_types_list
+					selected="isset($_REQUEST['type']) ? fix_chars($_REQUEST['type']) : 0"
+					template="types_option.xml"
 					local="1"
 					eval="selected"
 				/>
@@ -22,19 +21,21 @@
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 150px;">
-				<!-- Column 1 -->
+			<span class="column" style="width: 50px;">
+				<input type="checkbox"/>
 			</span>
-			<span class="column" style="width: 90px; text-align: center;">
-				<!-- Column 2 -->
-			</span>
-			<span class="column">
-				<_text constant="column_options"/>
-			</span>
+			<_columns_list
+				type="isset($_REQUEST['type']) ? $_REQUEST['type'] : -1"
+				eval="type"
+			/>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<!-- List Content -->
-			<_list/>
+			<_if condition="isset($_REQUEST['type'])">
+				<_results_list
+					type="$_REQUEST['type']"
+					eval="type"
+				/>
+			</_if>
 		</div>
 	</div>
 </document>
