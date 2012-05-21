@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<span
+		class="color_preview"
+		style="'display: inline-block; width: 30px; height: 13px; background-color: '.$params['value'].';'"
+		eval="style"
+	><![CDATA[&nbsp;]]></span>
+</document>

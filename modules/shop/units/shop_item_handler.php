@@ -475,6 +475,7 @@ class ShopItemHandler {
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_value_list', &$size_handler, 'tag_ValueList');
+		$template->registerTagHandler('_color_list', &$this, 'tag_ColorList');
 			
 		// parse template
 		if (is_object($item)) {
@@ -626,6 +627,7 @@ class ShopItemHandler {
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
+		$template->registerTagHandler('_color_list', &$this, 'tag_ColorList');
 
 		if (count($items) > 0) {
 			$gallery = null;
@@ -721,6 +723,47 @@ class ShopItemHandler {
 
 			$page_switch->tag_PageSwitch($params, $children);
 		}
+	}
+
+	/**
+	 * Handle printing colors for specified item
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ColorList($tag_params, $children) {
+		$id = null;
+		$manager = ShopItemManager::getInstance();
+
+		if (isset($tag_params['id']))
+			$id = fix_id($tag_params['id']);
+
+		if (is_null($id))
+			return;
+
+		// get specified item
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (!is_object($item))
+			return;
+
+		// load template
+		$template = $this->_parent->loadTemplate($tag_params, 'color_preview.xml');
+
+		$colors = explode(',', $item->colors);
+
+		if (count($colors) > 0)
+			foreach ($colors as $color) {
+				$data = explode(':', $color);
+				$params = array(
+						'name'	=> $data[0],
+						'value'	=> $data[1]
+					);
+
+				$template->setLocalParams($params);
+				$template->restoreXML();
+				$template->parse();
+			}
 	}
 
 	/**
