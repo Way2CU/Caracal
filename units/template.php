@@ -160,9 +160,9 @@ class TemplateHandler {
 			// if tag has eval set
 			if (isset($tag->tagAttrs['eval'])) {
 				// get evaluation values
-				$params = explode(',', $tag->tagAttrs['eval']);
+				$eval_params = explode(',', $tag->tagAttrs['eval']);
 
-				foreach ($params as $param) {
+				foreach ($eval_params as $param) {
 					// prepare module includes for evaluation
 					$settings = array();
 					if (!is_null($this->module))
@@ -319,8 +319,15 @@ class TemplateHandler {
 					$keys = array_keys($pool);
 					$values = array_values($pool);
 
-					foreach($keys as $i => $value)
-						$keys[$i] = "%{$value}%";
+					foreach($keys as $i => $key)
+						$keys[$i] = "%{$key}%";
+
+					// we can't replact string with array, only matching data types
+					foreach($values as $i => $value) 
+						if (is_array($value)) {
+							unset($keys[$i]);
+							unset($values[$i]);
+						}
 
 					echo str_replace($keys, $values, $tag->tagData);
 					break;
