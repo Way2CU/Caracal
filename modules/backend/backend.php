@@ -57,11 +57,13 @@ class backend extends Module {
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.mousewheel.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.mini_colors.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/animation_chain.js'), 'type'=>'text/javascript'));
 
 			if ($section == $this->name) {
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/notebook.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/jquery.mini_colors.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 
 				if (MainLanguageHandler::getInstance()->isRTL()) {
 					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
