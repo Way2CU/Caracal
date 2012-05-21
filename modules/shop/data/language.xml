@@ -13,6 +13,7 @@
 		<constant name="menu_item_sizes">Manage item sizes</constant>
 
 		<constant name="tab_item">Item data</constant>
+		<constant name="tab_colors">Colors</constant>
 		<constant name="tab_category">Categories</constant>
 		<constant name="tab_related">Related items</constant>
 
@@ -56,6 +57,8 @@
 		<constant name="column_total_weight">Total weight:</constant>
 		<constant name="column_total">Total:</constant>
 		<constant name="column_categories">Categories item belongs to</constant>
+		<constant name="column_color_name">Name:</constant>
+		<constant name="column_color_value">Value:</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
@@ -76,6 +79,8 @@
 		<constant name="label_count">Quantity:</constant>
 		<constant name="label_search_query">Query:</constant>
 		<constant name="label_priority">Priority:</constant>
+		<constant name="label_color_value">Value:</constant>
+		<constant name="label_color_name">Name:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -139,6 +144,7 @@
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
+		<constant name="tab_colors">Colors</constant>
 		<constant name="tab_category">קטגוריות</constant>
 		<constant name="tab_related">אביזרים נלווים</constant>
 
@@ -182,6 +188,8 @@
 		<constant name="column_total_weight">סהכ משקל:</constant>
 		<constant name="column_total">סהכ:</constant>
 		<constant name="column_categories">קטגוריות אליהן שייך המוצר</constant>
+		<constant name="column_color_name">Name:</constant>
+		<constant name="column_color_value">Value:</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_description">תיאור:</constant>
@@ -202,6 +210,8 @@
 		<constant name="label_count">כמות:</constant>
 		<constant name="label_search_query">Query:</constant>
 		<constant name="label_priority">Priority:</constant>
+		<constant name="label_color_value">Value:</constant>
+		<constant name="label_color_name">Name:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>

@@ -61,8 +61,10 @@ class shop extends Module {
 			$head_tag = head_tag::getInstance();
 			$backend = backend::getInstance();
 
-			if (class_exists('head_tag'))
+			if (class_exists('head_tag')) {
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+			}
 
 			$shop_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_shop'),
@@ -447,6 +449,7 @@ class shop extends Module {
 		$sql .= "
 				`gallery` INT(11) NOT NULL,
 				`size_definition` INT(11) NULL,
+				`colors` VARCHAR(255) NOT NULL DEFAULT '',
 				`author` INT(11) NOT NULL,
 				`views` INT(11) NOT NULL,
 				`price` DECIMAL(8,2) NOT NULL,

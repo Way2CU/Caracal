@@ -25,6 +25,7 @@ class ShopItemManager extends ItemManager {
 		$this->addProperty('description', 'ml_text');
 		$this->addProperty('gallery', 'int');
 		$this->addProperty('size_definition', 'int');
+		$this->addProperty('colors', 'varchar');
 		$this->addProperty('author', 'int');
 		$this->addProperty('views', 'int');
 		$this->addProperty('price', 'decimal');

@@ -56,6 +56,34 @@
 			</div>
 
 			<div class="scrollable_list">
+				<input name="colors" type="hidden"/>
+				<label class="inline">
+					<span><_text constant="label_color_value" module="shop"/></span>
+					<input name="color_value" class="code" type="text" style="width: 60px"/>
+				</label>
+				<label class="inline">
+					<span><_text constant="label_color_name" module="shop"/></span>
+					<input name="color_name" type="text"/>
+					<button type="button" onclick="javascript: shop_AddColor();">
+						<_text constant="add"/>
+					</button>
+				</label>
+				<div class="list_header">
+					<span class="column" style="width: 250px;">
+						<_text constant="column_color_name" module="shop"/>
+					</span>
+					<span class="column" style="width: 100px;">
+						<_text constant="column_color_value" module="shop"/>
+					</span>
+					<span class="column">
+						<_text constant="column_options"/>
+					</span>
+				</div>
+				<div class="list_content" style="height: 340px" id="color_list">
+				</div>
+			</div>
+
+			<div class="scrollable_list">
 				<div class="list_header">
 					<_text constant="column_categories" module="shop"/>
 				</div>
@@ -103,33 +131,17 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		function shop_OpenItemSearch() {
-			var value = $('input[name=search_query]').val();
-			var data = {
-					section: 'backend_module',
-					action: 'transfer_control',
-					module: 'shop',
-					backend_action: 'items',
-					sub_action: 'search_results',
-					query: value
-				};
-			var url = backend_url + '?' + $.param(data);
-
-			window_system.openWindow(
-							'shop_search_results',
-							450,
-							language_handler.getText('shop', 'title_search_results'),
-							true, url
-						);
-		}
-
 		var backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 		var selector = new LanguageSelector('shop_item_add_form');
 		var notebook = new Notebook('shop_add_item_notebook');
 		notebook
 			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_category'))
-			.setPageTitle(2, language_handler.getText('shop', 'tab_related'));
+			.setPageTitle(1, language_handler.getText('shop', 'tab_colors'))
+			.setPageTitle(2, language_handler.getText('shop', 'tab_category'))
+			.setPageTitle(3, language_handler.getText('shop', 'tab_related'));
+
+		// add colors
+		$('input[name=color_value]').miniColors();
 
 		// create toolbar
 		toolbar_api
