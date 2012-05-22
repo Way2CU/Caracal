@@ -750,6 +750,9 @@ class ShopItemHandler {
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'color_preview.xml');
 
+		if (empty($item->colors))
+			return;
+
 		$colors = explode(',', $item->colors);
 
 		if (count($colors) > 0)

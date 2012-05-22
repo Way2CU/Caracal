@@ -127,6 +127,7 @@ function ShoppingCart() {
 		// configure item count label
 		this.item_count
 				.addClass('item_count')
+				.html('-')
 				.click(this.toggleVisibility)
 
 		// configure top menu
@@ -318,125 +319,6 @@ function ShoppingCart() {
 	};
 
 	/**
-	 * Add item to shopping cart. If cart already
-	 * contains specified item, increase its count.
-	 * Return number of items in shopping cart with
-	 * specified uid.
-	 *
-	 * @param string uid
-	 * @param integer size
-	 * @param object data
-	 * @param boolean skip_notify
-	 * @param boolean skip_update
-	 * @return integer
-	 */
-	this.addItem = function(uid, size, data, skip_notify, skip_update) {
-		var key = size ? uid + '_' + size : uid;
-
-		if (key in this._items) {
-			// increase number of existing items
-			var item = this._items[key];
-			item.addItemToCart();
-
-			// update total count of items
-			if (!skip_update)
-				this._updateSummary();
-
-		} else {
-			// create new item in shopping cart
-			var createShopItem = function() {
-					var item = new ShopItem(uid, size, self, data);
-
-					// hide empty cart message
-					self.empty_cart.css('display', 'none');
-
-					// add new item to the list
-					self._items[key] = item;
-					self._item_count++;
-
-					// update total count of items only if we are
-					// loading new item from the server
-					if (!skip_update)
-						self._updateSummary();
-				};
-
-			if (this._item_count > 0)
-				createShopItem(); else
-				this.empty_cart.animate({opacity: 0}, 200, createShopItem);  // animate hide only once
-		}
-
-		// notify user
-		if (!skip_notify)
-			this.notifyUser();
-	};
-
-	/**
-	 * Remove specified number or all items from
-	 * shopping cart. Return true if specified number
-	 * of items was removed.
-	 *
-	 * @param string uid
-	 * @param integer size
-	 * @return boolean
-	 */
-	this.removeItem = function(uid, size) {
-		var key = size ? uid + '_' + size : uid;
-
-		if (!key in this._items)
-			return;
-
-		var text = language_handler.getText('shop', 'message_remove_item_from_cart');
-		var item_object = this._items[key].getContainer();
-		var result = false;
-
-		if (confirm(text)) {
-			item_object.animate({opacity: 0, height: 0}, 300, function() {
-				// remove item container from list
-				$(this).remove();
-
-				// kill item object
-				self._removeItemObject(uid, size);
-
-				// notify server we removed an item
-				var data = {
-							section: 'shop',
-							action: 'json_remove_item_from_shopping_cart',
-							uid: uid
-						};
-
-				if (size)
-					data['size'] = size;
-
-				$.ajax({
-					url: self._getBackendURL(),
-					type: 'GET',
-					async: true,
-					data: data,
-					dataType: 'json',
-					context: self,
-					success: function(data) {
-								if (!data)
-									alert('There was a problem while removing item from cart.');
-							}
-				});
-
-				// show empty cart message
-				if (self._item_count <= 0)
-					self.empty_cart
-							.css('display', 'block')
-							.css('opacity', 0)
-							.animate({opacity: 1}, 500);
-
-				self._updateSummary();
-			});
-
-			result = true;
-		}
-
-		return result;
-	};
-	
-	/**
 	 * Open checkout page
 	 */
 	this.checkout = function() {
@@ -545,8 +427,22 @@ function ShoppingCart() {
 	};
 
 	/**
+	 * Method called by the shop item after initialization is completed.
+	 * @param object item
+	 */
+	this._addItem = function(item) {
+		var key = item._uid + '.' + item._variation_id;
+
+		this._item_count++;
+		this._items[key] = item;
+
+		if (this._item_count == 1)
+			this._hideEmptyMessage();
+		this._updateSummary();
+	};
+
+	/**
 	 * Add child container to content list
-	 *
 	 * @param object container
 	 */
 	this._addChildContainer = function(container) {
@@ -555,17 +451,71 @@ function ShoppingCart() {
 
 	/**
 	 * Remove child object from local list
-	 *
-	 * @param string uid
+	 * @param object item
 	 */
-	this._removeItemObject = function(uid, size) {
-		var key = size ? uid + '_' + size : uid;
+	this._removeItem = function(item) {
+		var key = item._uid + '.' + item._variation_id;
 
 		if (!key in this._items)
 			return;
 
+		// animate item removal
+		var container = this._items[key].getContainer();
+		container.animate({opacity: 0, height: 0}, 300, function() {
+			$(this).remove();
+		});
+
+		// remove item from the list
 		delete this._items[key];
 		this._item_count--;
+
+		// notify the server about removal
+		var data = {
+					section: 'shop',
+					action: 'json_remove_item_from_shopping_cart',
+					uid: item._uid,
+					variation_id: item._variation_id
+				};
+
+		$.ajax({
+			url: this._getBackendURL(),
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: self,
+			success: function(data) {
+						if (!data)
+							alert('There was a problem while removing item from cart.');
+					}
+		});
+
+		// show messages if needed
+		if (this._item_count <= 0)
+			this._showEmptyMessage();
+
+		// update shopping cart summary
+		this._updateSummary();
+	};
+
+	/**
+	 * Show empty cart message
+	 */
+	this._showEmptyMessage = function() {
+		self.empty_cart
+				.css('display', 'block')
+				.css('opacity', 0)
+				.animate({opacity: 1}, 500);
+	};
+
+	/**
+	 * Hide empty cart message
+	 */
+	this._hideEmptyMessage = function() {
+		self.empty_cart
+				.animate({opacity: 0, height: 0}, 500, function() {
+					$(this).css('display', 'none');
+				});
 	};
 
 	/**
@@ -612,14 +562,8 @@ function ShoppingCart() {
 
 		if (confirm(text)) {
 			// clear shopping cart
-			for (var key in self._items) {
-				var item = self._items[key];
-
-				item.getContainer().slideUp(200, function() {
-					$(this).remove();
-				});
-				delete self._items[key];
-			}
+			for (var key in self._items) 
+				self._removeItem(self._items[key]);
 
 			// let server know we cleared out cart
 			var data = {
@@ -674,29 +618,19 @@ function ShoppingCart() {
 	 * @param object data
 	 */
 	this.__handleContentLoad = function(data) {
-		var current_item = 0;
 		var items = data.cart;
 		var total_items = data.count;
-		var items_added = 0;
 
 		self._size_values = data.size_values;
 
 		for (var key in items) {
-			var item = items[key];
-
-			// increase item counter
-			current_item++;
+			var data = items[key];
+			var uid = data['uid'];
+			var item = new ShopItem(uid, self);
 			
-			// try adding item from sizes list
-			items_added = 0;
-			for (var i in item.sizes) {
-				self.addItem(key, i, item, true, current_item < total_items);
-				items_added++;
-			}
-
-			// add single size item to shopping cart
-			if (items_added == 0)
-				self.addItem(key, null, item, true, current_item < total_items);
+			// set item data
+			item._setData(data);
+			item._updateInterface();
 		}
 
 		self._updateSummary();
@@ -775,11 +709,9 @@ function ShoppingCart() {
  * shouldn't be used by anyone except shopping cart.
  *
  * @param string uid	Shop item unique id
- * @param integer size	Index number of size definition
- * @param integer count	Initial number of items
  * @param object cart	Shopping cart
  */
-function ShopItem(uid, size, cart, data) {
+function ShopItem(uid, cart) {
 	var self = this;  // used internally in nested functions
 
 	// create interface
@@ -798,7 +730,8 @@ function ShopItem(uid, size, cart, data) {
 	// local variables
 	this._parent = cart;
 	this._uid = uid;
-	this._size = size;
+	this._variation_id = null;
+	this._properties = {};
 	this._count = 0;
 	this._total = 0;  // total price
 	this._price = 0;
@@ -859,16 +792,29 @@ function ShopItem(uid, size, cart, data) {
 
 		// show container
 		this._showContainer();
+	};
 
-		// load data 
-		if (data) {
-			// load specified data
-			this.__handleInformationLoad(data);
+	/**
+	 * Completes object initialization and loads data from the server
+	 */
+	this.complete = function() {
+		var data = {
+					section: 'shop',
+					action: 'json_add_item_to_shopping_cart',
+					uid: this._uid,
+					properties: this._properties
+				};
 
-		} else {
-			// load data from server
-			this.addItemToCart();
-		}
+		$.ajax({
+			url: this._parent._getBackendURL(),
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: this.__handleInformationLoad,
+			error: this.__handleInformationLoadError
+		});
 	};
 
 	/**
@@ -882,36 +828,15 @@ function ShopItem(uid, size, cart, data) {
 
 		if (new_count <= 0) {
 			// if number of items is 0, call parent for removal
-			self._parent.removeItem(self._uid); 
+			self._parent._removeItem(self); 
 
 		} else {
 			// change item value
 			if (!isNaN(new_count))
 				self._count = new_count;
 
-			// notify server about quantity change
-			var data = {
-						section: 'shop',
-						action: 'json_change_item_quantity',
-						uid: self._uid,
-						quantity: self._count
-					};
-
-			if (self._size)
-				data['size'] = self._size;
-
-			$.ajax({
-				url: self._parent._getBackendURL(),
-				type: 'GET',
-				async: true,
-				data: data,
-				dataType: 'json',
-				context: self,
-				success: function(data) {
-							if (!data)
-								alert('There was a problem with changing item quantity.');
-						}
-			});
+			// notify server about count change
+			this._notifyCount();
 
 			// update information
 			self._updateInformation();
@@ -930,44 +855,58 @@ function ShopItem(uid, size, cart, data) {
 
 	/**
 	 * Remove item from shopping cart
+	 * @return boolean
 	 */
 	this.remove = function() {
-		return self._parent.removeItem(self._uid, self._size);
+		var text = language_handler.getText('shop', 'message_remove_item_from_cart');
+		var result = false;
+
+		if (confirm(text))
+			result = self._parent._removeItem(self);
+
+		return result;
 	};
 
 	/**
-	 * Show item when parent adds it to the list
+	 * Set item property.
+	 *
+	 * These properties are combined to make a variation on server side
+	 * and are later used when checking out.
+	 *
+	 * @param integer size
 	 */
-	this._showContainer = function() {
-		this.container
-				.show()
-				.css('height', 0)
-				.animate({height: 20}, 300);
+	this.setProperty = function(property, value) {
+		this._properties[property] = value;
 	};
 
 	/**
-	 * Load information from server
+	 * Return item property
+	 *
+	 * @param string property
+	 * @return string
 	 */
-	this.addItemToCart = function() {
-		var data = {
-					section: 'shop',
-					action: 'json_add_item_to_shopping_cart',
-					uid: this._uid
-				};
+	this.getProperty = function(property) {
+		return this._properties[property];
+	};
 
-		if (this._size)
-			data['size'] = this._size;
+	/**
+	 * Method used to set item coun initially
+	 * @param integer count
+	 */
+	this.setCount = function(count) {
+		this._count = count;
+	};
 
-		$.ajax({
-			url: this._parent._getBackendURL(),
-			type: 'GET',
-			async: true,
-			data: data,
-			dataType: 'json',
-			context: this,
-			success: this.__handleInformationLoad,
-			error: this.__handleInformationLoadError
-		});
+	/**
+	 * Increment item count by one.
+	 */
+	this.incrementCount = function() {
+		this._count++;
+		this._notifyCount();
+
+		this._updateInformation();
+		this._parent._updateSummary();
+		this._parent.notifyUser();
 	};
 
 	/**
@@ -982,15 +921,23 @@ function ShopItem(uid, size, cart, data) {
 		// set item name
 		this.name.html(this._name[current_language]); 
 
-		if (this._size) {
+		if ('size' in this._properties) {
 			var size_container = $('<small>');
 
 			size_container
-				.html('&nbsp;(' + this._parent.getSizeValue(this._size) + ')')
+				.html('&nbsp;(' + this._parent.getSizeValue(this._properties['size']) + ')')
 				.appendTo(this.name);
 		}
 
-		this.name.attr('title', this._uid);
+		if ('color' in this._properties) {
+			var color_container = $('<span>');
+
+			color_container
+				.addClass('color')
+				.css('background-color', this._properties['color_value'])
+				.attr('title', this._properties['color'])
+				.prependTo(this.name);
+		}
 
 		// set other fields
 		this.price.html(this._price);
@@ -998,6 +945,57 @@ function ShopItem(uid, size, cart, data) {
 
 		this.count.html(this._count);
 		this.count.prepend(this.label_count);
+	};
+
+	/**
+	 * Update interface after data is loaded
+	 */
+	this._updateInterface = function() {
+		// remove loading animation
+		this.container.removeClass('loading');
+
+		// update labels
+		this._updateInformation();
+
+		// animate labels
+		this._showLabels();
+	};
+	
+	/**
+	 * Notify server about changed item count
+	 */
+	this._notifyCount = function() {
+		// notify server about quantity change
+		var data = {
+					section: 'shop',
+					action: 'json_change_item_quantity',
+					uid: this._uid,
+					variation_id: this._variation_id,
+					count: this._count
+				};
+
+		$.ajax({
+			url: this._parent._getBackendURL(),
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: function(data) {
+						if (!data)
+							alert('There was a problem with changing item quantity.');
+					}
+		});
+	};
+
+	/**
+	 * Show item when parent adds it to the list
+	 */
+	this._showContainer = function() {
+		this.container
+				.show()
+				.css('height', 0)
+				.animate({height: 20}, 300);
 	};
 
 	/**
@@ -1023,35 +1021,43 @@ function ShopItem(uid, size, cart, data) {
 	};
 
 	/**
+	 * Set item data from specified object
+	 * @param object data
+	 */
+	this._setData = function(data) {
+		this._name = data['name'];
+		this._price = parseFloat(data['price']).toFixed(2);
+		this._tax = parseFloat(data['tax']).toFixed(2);
+		this._weight = parseFloat(data['weight']).toFixed(2);
+		this._image_url = data['image'];
+		this._count = data['count'];
+		this._variation_id = data['variation_id'];
+
+		if ('properties' in data)
+			this._properties = data['properties'];
+
+		// add item to parent
+		this._parent._addItem(this);
+	};
+
+	/**
 	 * Function called once information from server
 	 * has been obtained.
 	 *
 	 * @param json data
 	 */
 	this.__handleInformationLoad = function(data) {
-		// remove loading animation
-		this.container.removeClass('loading');
-
 		// assign data
-		this._name = data['name']
-		this._price = parseFloat(data['price']).toFixed(2)
-		this._tax = parseFloat(data['tax']).toFixed(2)
-		this._weight = parseFloat(data['weight']).toFixed(2)
-		this._image_url = data['image']
-		
-		if (this._size)
-			this._count = data['sizes'][this._size]; else
-			this._count = data['quantity'];
+		this._setData(data);
 
-
-		// update labels
-		this._updateInformation();
+		// update interface
+		this._updateInterface();
 
 		// tell parent to update totals
 		this._parent._updateSummary();
 
-		// animate labels
-		this._showLabels();
+		// notify user
+		this._parent.notifyUser();
 	};
 
 	/**

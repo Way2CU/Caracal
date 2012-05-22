@@ -654,6 +654,24 @@ class shop extends Module {
 	}
 
 	/**
+	 * Generate variation Id based on UID and properties.
+	 *
+	 * @param string $uid
+	 * @param array $properties
+	 * @return string
+	 */
+	private function generateVariationId($uid, $properties) {
+		$data = $uid;
+
+		ksort($properties);
+		foreach($properties as $key => $value)
+			$data .= ",{$key}:{$value}";
+
+		$result = md5($data);
+		return $result;
+	}
+
+	/**
 	 * Set content of a shopping cart from template
 	 *
 	 * @param 
@@ -876,8 +894,6 @@ class shop extends Module {
 	 * Return default currency using JSON object
 	 */
 	private function json_GetCurrency() {
-		define('_OMIT_STATS', 1);
-
 		print json_encode($this->getDefaultCurrency());
 	}
 
@@ -888,17 +904,20 @@ class shop extends Module {
 		$manager = ShopItemManager::getInstance();
 		$values_manager = ShopItemSizeValuesManager::getInstance();
 		$gallery = class_exists('gallery') ? gallery::getInstance() : null;
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 
 		$result = array();
 
 		// get shopping cart from session
-		$result['cart'] = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$result['cart'] = array();
 		$result['size_values'] = array();
 		$result['count'] = count($result['cart']);
 		$result['currency'] = $this->getDefaultCurrency();
 
+		// organize shopping cart
+
 		// colect ids from session
-		$ids = array_keys($result['cart']);
+		$ids = array_keys($cart);
 
 		// get items from database and prepare result
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
@@ -910,11 +929,24 @@ class shop extends Module {
 				$thumbnail_url = !is_null($gallery) ? $gallery->getGroupThumbnailURL($item->gallery) : '';
 
 				$uid = $item->uid;
-				$result['cart'][$uid]['name'] = $item->name;
-				$result['cart'][$uid]['weight'] = $item->weight;
-				$result['cart'][$uid]['price'] = $item->price;
-				$result['cart'][$uid]['tax'] = $item->tax;
-				$result['cart'][$uid]['image'] = $thumbnail_url;
+
+				if (array_key_exists($uid, $cart) && count($cart[$uid]['variations']) > 0)
+					foreach ($cart[$uid]['variations'] as $variation_id => $properties) {
+						$new_properties = $properties;
+						unset($new_properties['count']);
+
+						$result['cart'][] = array(
+									'name'			=> $item->name,
+									'weight'		=> $item->weight,
+									'price' 		=> $item->price,
+									'tax'			=> $item->tax,
+									'image'			=> $thumbnail_url,
+									'uid'			=> $item->uid,
+									'variation_id'	=> $variation_id,
+									'count'			=> $properties['count'],
+									'properties'	=> $new_properties
+								);
+					}
 			}
 		
 		if (count($values) > 0) 
@@ -925,9 +957,6 @@ class shop extends Module {
 										);
 			}
 			
-		// prevent stats from displaying
-		define('_OMIT_STATS', 1);
-
 		print json_encode($result);
 	}
 
@@ -935,9 +964,6 @@ class shop extends Module {
 	 * Clear shopping cart and return result in form of JSON object
 	 */
 	private function json_ClearCart() {
-		// prevent stats from displaying
-		define('_OMIT_STATS', 1);
-
 		$_SESSION['shopping_cart'] = array();
 
 		print json_encode(true);
@@ -948,8 +974,9 @@ class shop extends Module {
 	 */
 	private function json_AddItemToCart() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$size = isset($_REQUEST['size']) ? fix_id($_REQUEST['size']) : null;
+		$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$variation_id = $this->generateVariationId($uid, $properties);
 
 		// try to get item from database
 		$manager = ShopItemManager::getInstance();
@@ -966,21 +993,19 @@ class shop extends Module {
 			} else {
 				// add new item to shopping cart
 				$cart[$uid] = array(
-							'uid'		=> $uid,
-							'quantity'	=> 1,
-							'sizes'		=> array()
+							'uid'			=> $uid,
+							'quantity'		=> 1,
+							'variations'	=> array()
 						);
 			}
 
-			if (!is_null($size)) 
-				if (array_key_exists($size, $cart[$uid]['sizes'])) {
-					// increase existing size quantity
-					$cart[$uid]['sizes'][$size]++;
+			if (!array_key_exists($variation_id, $cart[$uid]['variations'])) {
+				$cart[$uid]['variations'][$variation_id] = $properties;
+				$cart[$uid]['variations'][$variation_id]['count'] = 0;
+			}
 
-				} else {
-					// create new size quantity
-					$cart[$uid]['sizes'][$size] = 1;
-				}
+			// increase count in case it already exists
+			$cart[$uid]['variations'][$variation_id]['count'] += 1;
 
 			// get item image url
 			$thumbnail_url = null;
@@ -990,18 +1015,20 @@ class shop extends Module {
 			}
 
 			// prepare result
-			$result = $cart[$uid];
-			$result['name'] = $item->name;
-			$result['weight'] = $item->weight;
-			$result['price'] = $item->price;
-			$result['tax'] = $item->tax;
-			$result['image'] = $thumbnail_url;
+			$result = array(
+					'name' 			=> $item->name,
+					'weight'		=> $item->weight,
+					'price'			=> $item->price,
+					'tax'			=> $item->tax,
+					'image'			=> $thumbnail_url,
+					'count'			=> $cart[$uid]['variations'][$variation_id]['count'],
+					'variation_id'	=> $variation_id
+				);
 
 			// update shopping cart
 			$_SESSION['shopping_cart'] = $cart;
 		}
 
-		define('_OMIT_STATS', 1);
 		print json_encode($result);
 	}
 
@@ -1010,56 +1037,43 @@ class shop extends Module {
 	 */
 	private function json_RemoveItemFromCart() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$size = isset($_REQUEST['size']) ? fix_id($_REQUEST['size']) : null;
+		$variation_id = fix_chars($_REQUEST['variation_id']);
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$result = false;
 
-		if (array_key_exists($uid, $cart)) {
-			if (is_null($size)) {
-				// remove item without size
+		if (array_key_exists($uid, $cart) && array_key_exists($variation_id, $cart[$uid]['variations'])) {
+			$count = $cart[$uid]['variations'][$variation_id]['count'];
+			unset($cart[$uid]['variations'][$variation_id]);
+
+			$cart[$uid]['quantity'] -= $count;
+
+			if (count($cart[$uid]['variations']) == 0)
 				unset($cart[$uid]);
-
-			} else {
-				// remove specified size
-				if (array_key_exists($size, $cart[$uid]['sizes']))
-					unset($cart[$uid]['sizes'][$size]);
-
-				$cart[$uid]['quantity'] = array_sum($cart[$uid]['sizes']);
-			}
 
 			$_SESSION['shopping_cart'] = $cart;
 			$result = true;
 		}
 
-		define('_OMIT_STATS', 1);
 		print json_encode($result);
 	}
 
 	private function json_ChangeItemQuantity() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$size = isset($_REQUEST['size']) ? fix_id($_REQUEST['size']) : null;
-		$quantity = fix_id($_REQUEST['quantity']);
+		$variation_id = fix_chars($_REQUEST['variation_id']);
+		$count = fix_id($_REQUEST['count']);
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$result = false;
 
-		if (array_key_exists($uid, $cart)) {
-			if (is_null($size)) {
-				// update quanity for item without sizes
-				$cart[$uid]['quantity'] = $quantity;
+		if (array_key_exists($uid, $cart) && array_key_exists($variation_id, $cart[$uid]['variations'])) {
+			$old_count = $cart[$uid]['variations'][$variation_id]['count'];
+			$cart[$uid]['variations'][$variation_id]['count'] = $count;
 
-			} else {
-				// update quantity for item size
-				if (array_key_exists($size, $cart[$uid]['sizes']))
-					$cart[$uid]['sizes'][$size] = $quantity;
-				
-				$cart[$uid]['quantity'] = array_sum($cart[$uid]['sizes']);
-			}
+			$cart[$uid]['quantity'] += -$old_count + $count;
 
 			$_SESSION['shopping_cart'] = $cart;
 			$result = true;
 		}
 
-		define('_OMIT_STATS', 1);
 		print json_encode($result);
 	}
 
@@ -1076,9 +1090,6 @@ class shop extends Module {
 					'title'	=> $payment_method->get_title(),
 					'icon'	=> $payment_method->get_icon_url()
 				);
-
-		// prevent statistics from showing
-		define('_OMIT_STATS', '1');
 
 		// print data
 		print json_encode($result);
