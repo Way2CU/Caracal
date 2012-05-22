@@ -836,7 +836,7 @@ function ShopItem(uid, cart) {
 				self._count = new_count;
 
 			// notify server about count change
-			this._notifyCount();
+			self._notifyCount();
 
 			// update information
 			self._updateInformation();
