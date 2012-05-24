@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_tranzila">Tranzila</constant>
+
+		<constant name="title_settings">Tranzila Settings</constant>
+		<constant name="payment_method_title">Tranzila</constant>
+
+		<constant name="label_terminal">Terminal name:</constant>
+		<constant name="label_url_confirm">Confirmation URL:</constant>
+		<constant name="label_url_cancel">Cancel URL:</constant>
+
+		<constant name="message_product_description">Order of %count% items from %site%.</constant>
+		<constant name="message_settings_saved">New settings were saved.</constant>
+	</language>
+	<language short="iw">
+		<constant name="menu_tranzila">Tranzila</constant>
+
+		<constant name="title_settings">Tranzila Settings</constant>
+		<constant name="payment_method_title">Tranzila</constant>
+
+		<constant name="label_terminal">Terminal name:</constant>
+		<constant name="label_url_confirm">Confirmation URL:</constant>
+		<constant name="label_url_cancel">Cancel URL:</constant>
+
+		<constant name="message_product_description">Order of %count% items from %site%.</constant>
+		<constant name="message_settings_saved">New settings were saved.</constant>
+	</language>
+</document>

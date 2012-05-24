@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><_text constant="label_terminal" module="tranzila"/></span>
+			<input 
+				type="text" 
+				class="code"
+				name="terminal" 
+				value="$settings['terminal']" 
+				eval="value"
+				style="width: 260px;"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_url_confirm" module="tranzila"/></span>
+			<input 
+				type="text" 
+				class="code"
+				name="confirm_url" 
+				value="$params['confirm_url']" 
+				eval="value"
+				style="width: 360px;"
+				readonly="readonly"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_url_cancel" module="tranzila"/></span>
+			<input 
+				type="text" 
+				class="code"
+				name="confirm_url" 
+				value="$params['confirm_url']" 
+				eval="value"
+				style="width: 360px;"
+				readonly="readonly"
+			/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
