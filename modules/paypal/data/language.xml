@@ -4,7 +4,13 @@
 	<language short="en">
 		<constant name="menu_paypal">PayPal</constant>
 
-		<constant name="title_settings">Transactions</constant>
+		<constant name="title_settings">Settings</constant>
+		<constant name="payment_method_title">PayPal</constant>
+	</language>
+	<language short="iw">
+		<constant name="menu_paypal">PayPal</constant>
+
+		<constant name="title_settings">Settings</constant>
 		<constant name="payment_method_title">PayPal</constant>
 	</language>
 </document>

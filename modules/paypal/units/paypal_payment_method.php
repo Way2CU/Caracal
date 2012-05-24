@@ -4,8 +4,8 @@
 class PayPal_PaymentMethod extends PaymentMethod {
 	private static $_instance;
 
-	//private $url = 'https://www.paypal.com/cgi-bin/webscr';
-	private $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+	private $url = 'https://www.paypal.com/cgi-bin/webscr';
+	private $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
 	/**
 	 * Transaction type
@@ -127,9 +127,9 @@ class PayPal_PaymentMethod extends PaymentMethod {
 
 			$params["item_name_{$i}"] = $item['name'][$language];
 			$params["item_number_{$i}"] = $item['uid'];
-			$params["item_description_{$i}"] = 'njaaaa';
+			$params["item_description_{$i}"] = $item['description'];
 			$params["amount_{$i}"] = $item['price'];
-			$params["quantity_{$i}"] = $item['quantity'];
+			$params["quantity_{$i}"] = $item['count'];
 			$params["tax_{$i}"] = $item['price'] * ($item['tax'] / 100);
 			$params["weight_{$i}"] = $item['weight'];
 		}
