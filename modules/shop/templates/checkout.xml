@@ -8,9 +8,9 @@
 			<_module name="head_tag" action="print_tag"/>
 		</head>
 
-		<body class="MainLanguageHandler::getInstance()->isRTL() ? 'rtl' : 'ltr'" eval="class">
-			<div id="checkout"> 
-				<_checkout_form/>
+		<body class="$language_rtl ? 'rtl' : 'ltr'" eval="class">
+			<div id="checkout" skip_cache="1"> 
+				<_checkout_form method="$params['method']" eval="method"/>
 			</div>
 		</body>
 	</html>

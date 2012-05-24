@@ -39,6 +39,8 @@
 		<constant name="title_currencies_set_default">Shop: Set default currency</constant>
 		<constant name="title_checkout_message">Checkout</constant>
 		<constant name="title_search_results">Search Results</constant>
+		<constant name="title_buyer_information">Billing information</constant>
+		<constant name="title_shipping_information">Shipping information</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -81,6 +83,15 @@
 		<constant name="label_priority">Priority:</constant>
 		<constant name="label_color_value">Value:</constant>
 		<constant name="label_color_name">Name:</constant>
+		<constant name="label_first_name">First name:</constant>
+		<constant name="label_last_name">Last name:</constant>
+		<constant name="label_email">E-Mail:</constant>
+		<constant name="label_full_name">Full name:</constant>
+		<constant name="label_street">Street:</constant>
+		<constant name="label_city">City:</constant>
+		<constant name="label_zip">ZIP code:</constant>
+		<constant name="label_country">Country:</constant>
+		<constant name="label_state">State:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -105,6 +116,7 @@
 		<constant name="message_no_items_in_cart">There are no items in your shopping cart.</constant>
 		<constant name="message_checkout_completed">Checkout is now completed. You should receive email from us soon confirming your purchase. If you experience any problems, please let us know. Thank you for using our online services.</constant>
 		<constant name="message_checkout_canceled">Your checkout was canceled. Shopping cart was not cleared in case you want to continue shopping and checkout later. If you canceled because of problem on our part, please let us know.</constant>
+		<constant name="message_bad_fields">The following fields are invalid:</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
@@ -170,6 +182,8 @@
 		<constant name="title_currencies_set_default">חנות: קבע כמטבע ברירת מחדל</constant>
 		<constant name="title_checkout_message">תשלום</constant>
 		<constant name="title_search_results">Search Results</constant>
+		<constant name="title_buyer_information">Billing information</constant>
+		<constant name="title_shipping_information">Shipping information</constant>
 
 		<constant name="column_name">שם</constant>
 		<constant name="column_price">מחיר</constant>
@@ -212,6 +226,15 @@
 		<constant name="label_priority">Priority:</constant>
 		<constant name="label_color_value">Value:</constant>
 		<constant name="label_color_name">Name:</constant>
+		<constant name="label_first_name">First name:</constant>
+		<constant name="label_last_name">Last name:</constant>
+		<constant name="label_email">E-Mail:</constant>
+		<constant name="label_full_name">Full name:</constant>
+		<constant name="label_street">Street:</constant>
+		<constant name="label_city">City:</constant>
+		<constant name="label_zip">ZIP code:</constant>
+		<constant name="label_country">Country:</constant>
+		<constant name="label_state">State:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
@@ -236,6 +259,7 @@
 		<constant name="message_no_items_in_cart">אין מוצרים בעגלת הקניות.</constant>
 		<constant name="message_checkout_completed">תהליך התשלום הושלם!. בקרוב תקבל מייל מאיתנו המאשר את הרכישה. אם נתקלת בבעיה כלשהי, אנא צור עמנו קשר. תודה על שקנית אונליין.</constant>
 		<constant name="message_checkout_canceled">תהליך החיוב בוטל. העגלה לא רוקנה למקרה שתרצה להמשיך ולקנות. באם בטלת בשל בעיה כלשהי שלנו, אנא ידע אותנו.</constant>
+		<constant name="message_bad_fields">The following fields are invalid:</constant>
 
 		<constant name="add_item">הוסף מוצר חדש</constant>
 		<constant name="add_size_definition">הוסף הגדרת גודל</constant>

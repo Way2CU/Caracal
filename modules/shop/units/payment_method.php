@@ -11,7 +11,7 @@ abstract class PaymentMethod {
 	protected function __construct($parent) {
 		$this->parent = $parent;
 	}
-	
+
 	/**
 	 * Register payment method with main shop module
 	 */
@@ -21,7 +21,13 @@ abstract class PaymentMethod {
 			$shop->registerPaymentMethod($this->name, &$this);
 		}
 	}
-	
+
+	/**
+	 * Whether this payment method is able to provide user information
+	 * @return boolean
+	 */
+	abstract public function provides_information();
+
 	/**
 	 * Get URL to be used in checkout form.
 	 * @return string
@@ -50,49 +56,39 @@ abstract class PaymentMethod {
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
 	 * 
+	 * @param array $data
 	 * @param array $items
-	 * @param string $currency
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 * @return string
 	 */
-	abstract public function new_payment($items, $currency, $return_url, $cancel_url);
+	abstract public function new_payment($data, $items, $return_url, $cancel_url);
 	
 	/**
-	 * Handle verification received from payment gateway
-	 * and return boolean denoting success of complete payment.
+	 * Verify origin of data and status of
+	 * payment is complete.
 	 * 
-	 * @param string $id	
-	 * @param string $currency	
 	 * @return boolean
 	 */
-	abstract public function verify_payment();
-	
+	abstract public function verify_payment_complete();
+
 	/**
-	 * Get items from data
+	 * Verify origin of data and status of
+	 * payment is canceled.
 	 * 
-	 * @return array
+	 * @return boolean
 	 */
-	abstract public function get_items();
+	abstract public function verify_payment_canceled();
 	
 	/**
 	 * Get buyer information from data
-	 * 
 	 * @return array
 	 */
 	abstract public function get_buyer_info();
 	
 	/**
-	 * Get transaction information from data
-	 * 
-	 * @return array
+	 * Extract custom field from parameters
+	 * @return string
 	 */
-	abstract public function get_transaction_info();
-	
-	/**
-	 * Get payment infromation from data
-	 * 
-	 * @return array
-	 */
-	abstract public function get_payment_info();
+	abstract public function get_transaction_id();
 }

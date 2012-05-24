@@ -37,6 +37,10 @@ class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
 
+	private $excluded_properties = array(
+					'size_value', 'color_value', 'count'
+				);
+
 	/**
 	 * Constructor
 	 */
@@ -577,13 +581,10 @@ class shop extends Module {
 				  `uid` varchar(20) NOT NULL,
 				  `type` smallint(6) NOT NULL,
 				  `status` smallint(6) NOT NULL,
-				  `custom` varchar(200) NOT NULL,
 				  `currency` int(11) NOT NULL,
 				  `handling` decimal(8,2) NOT NULL,
 				  `shipping` decimal(8,2) NOT NULL,
-				  `fee` decimal(8,2) NOT NULL,
-				  `tax` decimal(8,2) NOT NULL,
-				  `gross` decimal(8,2) NOT NULL,
+				  `total` decimal(8,2) NOT NULL,
 				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`),
@@ -683,7 +684,7 @@ class shop extends Module {
 
 			foreach ($children as $data) {
 				$uid = array_key_exists('uid', $data->tagAttrs) ? fix_chars($data->tagAttrs['uid']) : null;
-				$amount = array_key_exists('amount', $data->tagAttrs) ? fix_id($data->tagAttrs['amount']) : 0;
+				$amount = array_key_exists('count', $data->tagAttrs) ? fix_id($data->tagAttrs['count']) : 0;
 				$item = null;
 
 				if (!is_null($uid))
@@ -693,7 +694,7 @@ class shop extends Module {
 				if (is_object($item) && $amount > 0)
 					$cart[$uid] = array(
 								'uid'		=> $uid,
-								'quantity'	=> $amount
+								'count'		=> $amount
 							);
 			}
 
@@ -705,18 +706,102 @@ class shop extends Module {
 	 * Show checkout form
 	 */
 	public function showCheckout() {
-		$method = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
+		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
 
-		// try finding a correct payment method if it's not specified
-		if (is_null($method)) {
+		if (count($this->payment_methods) == 0)
+			return;
+
+		// get a payment method
+		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods)) {
+			$methods = $this->payment_methods;
+			$method = array_shift($methods);
+
+		} else {
+			$method = $this->payment_methods[$method_name];
 		}
 
-		// parse checkout template
-		if (!is_null($method)) {
+		$can_continue = true;
+
+		// get buyer information if method doesn't provide one
+		if (!$method->provides_information() && !isset($_SESSION['buyer'])) {
+			$bad_fields = array();
+			$message = "";
+
+			// grab fields 
+			if (isset($_POST['set_info']) && $_POST['set_info'] == 1) {
+				$buyer = array();
+
+				if (isset($_POST['first_name']) && !empty($_POST['first_name']))
+					$buyer['first_name'] = fix_chars($_POST['first_name']); else
+					$bad_fields[] = 'first_name';
+
+				if (isset($_POST['last_name']) && !empty($_POST['last_name']))
+					$buyer['last_name'] = fix_chars($_POST['last_name']); else
+					$bad_fields[] = 'last_name';
+
+				if (isset($_POST['email']) && !empty($_POST['email']))
+					$buyer['email'] = fix_chars($_POST['email']); else
+					$bad_fields[] = 'email';
+
+				if (isset($_POST['name']) && !empty($_POST['name'])) {
+					$buyer['name'] = fix_chars($_POST['name']); 
+				} else if (isset($buyer['first_name']) && isset($buyer['last_name'])){
+					$buyer['name'] = $buyer['first_name'].' '.$buyer['last_name'];
+					$_POST['name'] = $buyer['name'];
+				}
+
+				if (isset($_POST['street']) && !empty($_POST['street']))
+					$buyer['street'] = fix_chars($_POST['street']); else
+					$bad_fields[] = 'street';
+
+				if (isset($_POST['city']) && !empty($_POST['city']))
+					$buyer['city'] = fix_chars($_POST['city']); else
+					$bad_fields[] = 'city';
+
+				if (isset($_POST['zip']) && !empty($_POST['zip']))
+					$buyer['zip'] = fix_chars($_POST['zip']); else
+					$bad_fields[] = 'zip';
+
+				if (isset($_POST['country']) && !empty($_POST['country']))
+					$buyer['country'] = fix_chars($_POST['country']); else
+					$bad_fields[] = 'country';
+
+				if (
+					isset($buyer['country']) && $buyer['country'] == 'US' 
+					&& (!isset($_POST['state']) || empty($_POST['state']))
+				)
+					$bad_fields[] = 'state'; else
+					$buyer['state'] = fix_chars($_POST['state']); 
+			}
+
+			$can_continue = (count($bad_fields) == 0) && isset($_POST['set_info']);
+
+			// store buyer to session
+			if ($can_continue)
+				$_SESSION['buyer'] = $buyer;
+		}
+
+		if (!$can_continue) {
+			// create template
+			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'message'		=> $message,
+						'bad_fields'	=> $bad_fields
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+
+		} else {
+			// create template
 			$template = new TemplateHandler('checkout.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
 			$params = array(
+						'method'	=> $method->get_name()
 					);
 
 			// register tag handler
@@ -732,12 +817,33 @@ class shop extends Module {
 	 * Show message for completed checkout and empty shopping cart
 	 */
 	private function showCheckoutCompleted() {
+		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
+
+		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods))
+			return;
+
+		// get method and transaction id
+		$method = $this->payment_methods[$method_name];
+		$transactions_manager = ShopTransactionsManager::getInstance();
+
+		$transaction_id = $method->get_transaction_id();
+		$transaction = $transactions_manager->getSingleItem(array('id'), array('uid' => $transaction_id));
+
+		// update transaction state
+		if (is_object($transaction) && $method->verify_payment_complete()) {
+			$transactions_manager->updateData(
+									array('status' => TransactionStatus::COMPLETED),
+									array(
+										'uid' => $transaction_id,
+										'status' => TransactionStatus::PENDING
+									));
+		}
+
 		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_completed_message', &$this, 'tag_CompletedMessage');
 
-		$params = array(
-				);
+		$params = array();
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -748,12 +854,33 @@ class shop extends Module {
 	 * Show message for canceled checkout
 	 */
 	private function showCheckoutCanceled() {
+		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
+
+		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods))
+			return;
+
+		// get method and transaction id
+		$method = $this->payment_methods[$method_name];
+		$transactions_manager = ShopTransactionsManager::getInstance();
+
+		$transaction_id = $method->get_transaction_id();
+		$transaction = $transactions_manager->getSingleItem(array('id'), array('uid' => $transaction_id));
+
+		// update transaction state
+		if (is_object($transaction) && $method->verify_payment_canceled()) {
+			$transactions_manager->updateData(
+									array('status' => TransactionStatus::DENIED),
+									array(
+										'uid' => $transaction_id,
+										'status' => TransactionStatus::PENDING
+									));
+		}
+
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_canceled_message', &$this, 'tag_CanceledMessage');
 
-		$params = array(
-				);
+		$params = array();
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -863,9 +990,6 @@ class shop extends Module {
 
 				$transactions_manager->insertData($data);
 				$transaction_id = $transactions_manager->getInsertedID();
-
-				
-				trigger_error(print_r($items_info, true));
 
 				// store items
 				foreach ($items_info as $item_info) {
@@ -1118,7 +1242,6 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_CheckoutForm($tag_params, $children) {
-		$manager = ShopItemManager::getInstance();
 		$method = null;
 
 		// try to get specified payment method
@@ -1127,61 +1250,174 @@ class shop extends Module {
 
 		// try to get fallback method
 		if (is_null($method) && count($this->payment_methods) > 0) {
-			$keys = array_keys($this->payment_methods);
-			$method = $this->payment_methods[$keys[0]];
+			$methods = $this->payment_methods;
+			$method = array_shift($methods);
 		}
 
 		// we didn't manage to get any payment method, bail out
 		if (is_null($method))
 			return;
 
-		// load template
-		$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
-		$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
-
 		// colect ids from session
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$ids = array_keys($cart);
 
+		if (count($cart) == 0)
+			return;
+
 		// get items from database and prepare result
+		$manager = ShopItemManager::getInstance();
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
 
 		// prepare params
 		$shipping = 0;
+		$handling = 0;
 		$total_money = 0;
 		$total_weight = 0;
+		$items_by_uid = array();
 		$items_for_checkout = array();
 
+		// parse items from database
 		foreach ($items as $item) {
-			// include item data in summary
-			$tax = $item->tax;
-			$price = $item->price;
-			$uid = $item->uid;
-			
-			$total_money += ($price * (1 + ($tax / 100))) * $cart[$uid]['quantity']; 
-			$total_weight += $item->weight * $cart[$uid]['quantity'];
-
-			// add item to array for payment method
 			$db_item = array(
 					'name'		=> $item->name,
 					'price'		=> $item->price,
 					'tax'		=> $item->tax,
 					'weight'	=> $item->weight
 				);
-			$items_for_checkout[] = array_merge($db_item, $cart[$uid]);
+			$items_by_uid[$item->uid] = $db_item;
 		}
 
-		// get fields from payment method
-		$base_url = 'http://'.$_SERVER['HTTP_HOST'];
-		$return_url = urlencode($base_url.url_Make('checkout_completed', 'shop'));
-		$cancel_url = urlencode($base_url.url_Make('checkout_canceled', 'shop'));
+		// prepare items for checkout
+		foreach ($cart as $uid => $item) {
+			if (count($item['variations']) > 0)
+				foreach($item['variations'] as $variation_id => $data) {
+					// add items to checkout list
+					$properties = $data;
 
+					foreach ($this->excluded_properties as $key)
+						if (isset($properties[$key]))
+							unset($properties[$key]);
+
+					$new_item = $items_by_uid[$uid];
+					$new_item['count'] = $data['count'];
+					$new_item['description'] = implode(', ', array_values($properties));
+
+					// add item to the list
+					$items_for_checkout[] = $new_item;
+
+					// include item data in summary
+					$tax = $new_item['tax'];
+					$price = $new_item['price'];
+					$weight = $new_item['weight'];
+					
+					$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
+					$total_weight += $weight * $data['count'];
+				}
+		}
+
+		// get fields for payment method
+		$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $method->get_name())));
+		$cancel_url = urlencode(url_Make('checkout_canceled', 'shop', array('method', $method->get_name())));
+		$transaction_data = array();
+
+		// get currency info
+		$currency = $this->settings['default_currency'];
+		$currency_manager = ShopCurrenciesManager::getInstance();
+
+		$currency_item = $currency_manager->getSingleItem(array('id'), array('currency' => $currency));
+
+		if (is_object($currency_item))
+			$transaction_data['currency'] = $currency_item->id;
+
+		// if payment method doesn't provide us with buyer 
+		// information, we might as well store it now
+		if (!$method->provides_information()) {
+			$data = $_SESSION['buyer'];
+			$buyers_manager = ShopBuyersManager::getInstance();
+			$address_manager = ShopBuyerAddressesManager::getInstance();
+
+			// associate buyer with transaction
+			$buyer = $buyers_manager->getSingleItem(
+								array('id'), 
+								array(
+									'first_name'	=> $data['first_name'],
+									'last_name'		=> $data['last_name'],
+									'email'			=> $data['email']
+								));
+
+			if (is_object($buyer)) {
+				// buyer already exists
+				$transaction_data['buyer'] = $buyer->id;
+
+			} else {
+				// no buyer found, create new one
+				$buyers_manager->insertData(array(
+									'first_name'	=> $data['first_name'],
+									'last_name'		=> $data['last_name'],
+									'email'			=> $data['email']
+								));
+				$transaction_data['buyer'] = $buyers_manager->getInsertedID();
+			}
+
+			// associate address with transaction
+			$address = $address_manager->getSingleItem(
+								array('id'),
+								array(
+									'buyer'		=> $transaction_data['buyer'],
+									'name'		=> $data['name'],
+									'street'	=> $data['street'],
+									'city'		=> $data['city'],
+									'zip'		=> $data['zip'],
+									'state'		=> $data['state'],
+									'country'	=> $data['country'],
+								));
+
+			if (is_object($address)) {
+				// existing address
+				$transaction_data['address'] = $address_manager->getInsertedID();
+
+			} else {
+				// create new address
+				$address_manager->insertData(array(
+									'buyer'		=> $transaction_data['buyer'],
+									'name'		=> $data['name'],
+									'street'	=> $data['street'],
+									'city'		=> $data['city'],
+									'zip'		=> $data['zip'],
+									'state'		=> $data['state'],
+									'country'	=> $data['country'],
+								));
+				$transaction_data['address'] = $address_manager->getInsertedID();
+			}
+		}
+
+		$transaction_data['uid'] = uniqid('', true);
+		$transaction_data['type'] = TransactionType::SHOPPING_CART;
+		$transaction_data['status'] = TransactionStatus::PENDING;
+		$transaction_data['handling'] = $handling;
+		$transaction_data['shipping'] = $shipping;
+		$transaction_data['total'] = $total_money;
+
+		// create new transaction
+		$transactions_manager = ShopTransactionsManager::getInstance();
+		$transactions_manager->insertData($transaction_data);
+
+		// store items
+		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+
+		// create new payment
 		$checkout_fields = $method->new_payment(
+									$transaction_data,
 									$items_for_checkout,
 									$this->getDefaultCurrency(),
 									$return_url,
 									$cancel_url
 								);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
+		$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
 
 		// parse template
 		$params = array(
@@ -1210,71 +1446,58 @@ class shop extends Module {
 		global $language;
 
 		$manager = ShopItemManager::getInstance();
-		$value_manager = ShopItemSizeValuesManager::getInstance();
-
-		// colect ids from session
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$ids = array_keys($cart);
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
-		$values = $value_manager->getItems($value_manager->getFieldNames(), array());
+		$items_by_uid = array();
+		$items_for_checkout = array();
 
-		// prepare sizes cache
-		$size_values = array();
-		
-		if (count($values) > 0)
-			foreach ($values as $value)
-				$size_values[$value->id] = $value->value;
+		// parse items from database
+		foreach ($items as $item) {
+			$db_item = array(
+					'name'		=> $item->name,
+					'price'		=> $item->price,
+					'tax'		=> $item->tax,
+					'weight'	=> $item->weight
+				);
+			$items_by_uid[$item->uid] = $db_item;
+		}
+
+		// prepare items for checkout
+		foreach ($cart as $uid => $item) {
+			if (count($item['variations']) > 0)
+				foreach($item['variations'] as $variation_id => $data) {
+					// add items to checkout list
+					$properties = $data;
+
+					foreach ($this->excluded_properties as $key)
+						if (isset($properties[$key]))
+							unset($properties[$key]);
+
+					$new_item = $items_by_uid[$uid];
+					$new_item['count'] = $data['count'];
+					$new_item['description'] = implode(', ', array_values($properties));
+					$new_item['total'] = number_format(($new_item['price'] * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
+					$new_item['tax'] = number_format($new_item['price'], 2);
+					$new_item['price'] = number_format($new_item['tax'], 2);
+					$new_item['weight'] = number_format($new_item['weight'], 2);
+
+					// add item to the list
+					$items_for_checkout[] = $new_item;
+				}
+		}
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
 
 		// parse template
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				$cart_item = $cart[$item->uid];
-
-				if (count($cart_item['sizes'])) {
-					// process more item sizes for same item
-					foreach ($cart_item['sizes'] as $size_definition => $quantity) {
-						$total = ($item->price * (1 + ($item->tax / 100))) * $quantity;
-						$size_value = $size_values[$size_definition][$language];
-
-						$params = array(
-									'name'		=> $item->name,
-									'size'		=> $size_value,
-									'quantity'	=> $quantity,
-									'price'		=> number_format($item->price, 2),
-									'tax'		=> number_format($item->tax, 2),
-									'weight'	=> number_format($item->weight, 2),
-									'total'		=> number_format($total, 2)
-								);
-
-						$template->restoreXML();
-						$template->setLocalParams($params);
-						$template->parse();
-					}
-
-				} else {
-					// process only one item size
-					$quantity = $cart[$item->uid]['quantity'];
-					$total = ($item->price * (1 + ($item->tax / 100))) * $quantity;
-
-					$params = array(
-								'name'		=> $item->name,
-								'size'		=> '',
-								'quantity'	=> $quantity,
-								'price'		=> number_format($item->price, 2),
-								'tax'		=> number_format($item->tax, 2),
-								'weight'	=> number_format($item->weight, 2),
-								'total'		=> number_format($total, 2)
-							);
-
-					$template->restoreXML();
-					$template->setLocalParams($params);
-					$template->parse();
-				}
+		if (count($items_for_checkout) > 0)
+			foreach ($items_for_checkout as $params) {
+				$template->setLocalParams($params);
+				$template->restoreXML();
+				$template->parse();
 			}
 	}
 

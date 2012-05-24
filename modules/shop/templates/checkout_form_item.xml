@@ -4,15 +4,11 @@
 	<tr>
 		<td>
 			<_var name="$params['name'][$language]"/>
-			<_if condition="!empty($params['size'])">
-				<small>
-					<_text constant="label_size" module="shop"/>
-					<_raw text=" "/>
-					<_var name="$params['size']"/>
-				</small>
+			<_if condition="!empty($params['description'])">
+				<small><_var name="$params['description']"/></small>
 			</_if>
 		</td>
-		<td><_var name="$params['quantity']"/></td>
+		<td><_var name="$params['count']"/></td>
 		<td><_var name="$params['price']"/></td>
 		<td><_var name="$params['tax']"/></td>
 		<td><_var name="$params['weight']"/></td>
