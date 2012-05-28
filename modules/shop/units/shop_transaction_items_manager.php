@@ -21,6 +21,7 @@ class ShopTransactionItemsManager extends ItemManager {
 		$this->addProperty('price', 'decimal');
 		$this->addProperty('tax', 'decimal');
 		$this->addProperty('amount', 'int');
+		$this->addProperty('description', 'varchar');
 	}
 
 	/**
