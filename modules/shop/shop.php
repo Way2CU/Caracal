@@ -600,6 +600,7 @@ class shop extends Module {
 				  `price` DECIMAL(8,2) NOT NULL,
 				  `tax` DECIMAL(8,2) NOT NULL,
 				  `amount` int(11) NOT NULL,
+				  `description` varchar(500) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `transaction` (`transaction`),
 				  KEY `item` (`item`)
@@ -1280,6 +1281,7 @@ class shop extends Module {
 		// parse items from database
 		foreach ($items as $item) {
 			$db_item = array(
+					'id'		=> $item->id,
 					'name'		=> $item->name,
 					'price'		=> $item->price,
 					'tax'		=> $item->tax,
@@ -1375,7 +1377,7 @@ class shop extends Module {
 
 			if (is_object($address)) {
 				// existing address
-				$transaction_data['address'] = $address_manager->getInsertedID();
+				$transaction_data['address'] = $address->id;
 
 			} else {
 				// create new address
@@ -1402,9 +1404,23 @@ class shop extends Module {
 		// create new transaction
 		$transactions_manager = ShopTransactionsManager::getInstance();
 		$transactions_manager->insertData($transaction_data);
+		$transaction_id = $transactions_manager->getInsertedID();
 
 		// store items
-		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+		if (count($items_for_checkout) > 0) {
+			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+
+			foreach($items_for_checkout as $uid => $item) {
+				$transaction_items_manager->insertData(array(
+											'transaction'	=> $transaction_id,
+											'item'			=> $item['id'],
+											'price'			=> $item['price'],
+											'tax'			=> $item['tax'],
+											'amount'		=> $item['count'],
+											'description'	=> $item['description']
+										));
+			}
+		}
 
 		// create new payment
 		$checkout_fields = $method->new_payment(
