@@ -6,6 +6,23 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 	private $url = 'https://direct.tranzila.com/%terminal%/';
 
+	private $currency = array(
+					'ILS'	=> 1,
+					'USD'	=> 2,
+					'GBP'	=> 3,
+					'HKD'	=> 5,
+					'JPY'	=> 6,
+					'EUR'	=> 7
+				);
+
+	private $currency_aliases = array(
+					'₪'	=> 'ILS',
+					'$'	=> 'USD',
+					'£'	=> 'GBP',
+					'¥'	=> 'JPY',
+					'€'	=> 'EUR',
+				);
+
 	/**
 	 * Constructor
 	 */
@@ -91,9 +108,20 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$description = str_replace('%count%', count($items), $description);
 		$description = str_replace('%site%', MainLanguageHandler::getInstance()->getText('site_title'), $description);
 
+		// get proper currency code
+		$shop_module = shop::getInstance();
+		$currency = $shop_module->getDefaultCurrency();
+
+		if (array_key_exists($currency, $this->currency_aliases))
+			$currency = $this->currency_aliases[$currency];
+
+		$currency_code = -1;
+		if (array_key_exists($currency, $this->currency))
+			$currency_code = $this->currency[$currency];
+
 		// prepare basic parameters
 		$params = array(
-				'currency'		=> $currency,
+				'currency'		=> $currency_code,
 				'TranzilaToken'	=> $data['uid'],
 				'sum'			=> $data['total'],
 				'cred_type'		=> 1,
