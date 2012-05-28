@@ -181,12 +181,12 @@
 		<constant name="reset">אפס</constant>
 		<constant name="filter">לסנן</constant>
 		<constant name="search">לחפש</constant>
-		<constant name="next">Next</constant>
-		<constant name="back">Back</constant>
+		<constant name="next">הבא</constant>
+		<constant name="back">הקודם</constant>
 
 		<!-- Messages -->
-		<constant name="message_server_error">Server experienced the following error:</constant>
-		<constant name="message_license_error">You are not authorized to use services from this site!</constant>
+		<constant name="message_server_error">השרת חווה את הבעיה הבאה:</constant>
+		<constant name="message_license_error">אינך מורשה לקבל שירותים מאתר זה</constant>
 
 		<!-- Page switch -->
 		<constant name="page_first">ראשון</constant>
