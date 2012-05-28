@@ -15,16 +15,16 @@
 		<constant name="message_settings_saved">New settings were saved.</constant>
 	</language>
 	<language short="iw">
-		<constant name="menu_tranzila">Tranzila</constant>
+		<constant name="menu_tranzila">טרנזילה</constant>
 
-		<constant name="title_settings">Tranzila Settings</constant>
-		<constant name="payment_method_title">Tranzila</constant>
+		<constant name="title_settings">הגדרות טרנזילה</constant>
+		<constant name="payment_method_title">טרנזילה</constant>
 
-		<constant name="label_terminal">Terminal name:</constant>
-		<constant name="label_url_confirm">Confirmation URL:</constant>
-		<constant name="label_url_cancel">Cancel URL:</constant>
+		<constant name="label_terminal">שם מסוף:</constant>
+		<constant name="label_url_confirm">כתובת אישור:</constant>
+		<constant name="label_url_cancel">כתובת ביטול:</constant>
 
-		<constant name="message_product_description">Order of %count% items from %site%.</constant>
-		<constant name="message_settings_saved">New settings were saved.</constant>
+		<constant name="message_product_description">הזמנה של %count% פריטים מ%site%</constant>
+		<constant name="message_settings_saved">ההגדרות החדשות נשמרו</constant>
 	</language>
 </document>
