@@ -41,6 +41,8 @@ class shop extends Module {
 					'size_value', 'color_value', 'count'
 				);
 
+	private $search_params = array();
+
 	/**
 	 * Constructor
 	 */
@@ -212,6 +214,42 @@ class shop extends Module {
 
 		$manager = ShopItemManager::getInstance();
 		$result = array();
+		$conditions = array(
+						'visible'	=> 1,
+						'deleted'	=> 0,
+					);
+
+		// include pre-configured options
+		if (isset($this->search_params['category'])) {
+			$membership_manager = ShopItemMembershipManager::getInstance();
+			$category = $this->search_params['category'];
+			$item_ids = array();
+
+			if (!is_numeric($category)) {
+				$category_manager = ShopCategoryManager::getInstance();
+				$raw_category = $category_manager->getSingleItem(
+											array('id'),
+											array('text_id' => $category)
+										);
+
+				if (is_object($raw_category))
+					$category = $raw_category->id; else
+					$category = -1;
+			}
+
+			// get list of item ids 
+			$membership_list = $membership_manager->getItems(
+											array('item'), 
+											array('category' => $category)
+										);
+
+			if (count($membership_list) > 0) {
+				foreach($membership_list as $membership)
+					$item_ids[] = $membership->item;
+
+				$conditions['id'] = $item_ids;
+			}
+		}
 
 		// get all items and process them
 		$items = $manager->getItems(
@@ -220,10 +258,8 @@ class shop extends Module {
 									'name', 
 									'description'
 								),
-								array(
-									'visible'	=> 1,
-									'deleted'	=> 0,
-								));
+								$conditions
+							);
 
 		// search through items
 		if (count($items) > 0)
@@ -332,6 +368,10 @@ class shop extends Module {
 
 				case 'show_canceled_message':
 					$this->tag_CanceledMessage($params, $children);
+					break;
+
+				case 'configure_search':
+					$this->configureSearch($params, $children);
 					break;
 					
 				case 'checkout':
@@ -701,6 +741,17 @@ class shop extends Module {
 
 			$_SESSION['shopping_cart'] = $cart;
 		}
+	}
+
+	/**
+	 * Pre-configure search parameters
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function configureSearch($tag_params, $children) {
+		$this->search_params = $tag_params;
+		trigger_error(print_r($this->search_params, true));
 	}
 
 	/**
