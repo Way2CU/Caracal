@@ -31,7 +31,7 @@
 				type="text" 
 				class="code"
 				name="confirm_url" 
-				value="$params['confirm_url']" 
+				value="$params['cancel_url']" 
 				eval="value"
 				style="width: 360px;"
 				readonly="readonly"

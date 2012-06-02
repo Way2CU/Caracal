@@ -104,9 +104,18 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	public function new_payment($data, $items, $return_url, $cancel_url) {
 		global $language;
 
-		$description = $this->parent->getLanguageConstant('message_product_description');
-		$description = str_replace('%count%', count($items), $description);
-		$description = str_replace('%site%', MainLanguageHandler::getInstance()->getText('site_title'), $description);
+		$description = '';
+		$tmp_items = array_slice($items, 0, 5);
+		$tmp_names = array();
+
+		foreach($tmp_items as $item) 
+			$tmp_names[] = $item['name'][$language];
+
+		$description = implode(', ', $tmp_names);
+
+		// add dots if there are more than 5 items
+		if (count($items) > 5)
+			$description .= ', ...';
 
 		// get proper currency code
 		$shop_module = shop::getInstance();
@@ -125,7 +134,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 				'TranzilaToken'	=> $data['uid'],
 				'sum'			=> $data['total'],
 				'cred_type'		=> 1,
-				'pdesc'			=> $description 
+				'pdesc'			=> $description
 			);
 
 		// prepare items for checkout
@@ -149,8 +158,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function verify_payment_complete() {
-		$response_code = isset($_REQUEST['Response']) ? $_REQUEST['Response'] : null;
-		return $response_code == '000';
+		return isset($_REQUEST['Response']) && $_REQUEST['Response'] == '000';
 	}
 
 	/**
@@ -160,8 +168,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function verify_payment_canceled() {
-		$response_code = isset($_REQUEST['Response']) ? $_REQUEST['Response'] : null;
-		return $response_code == '800';
+		return isset($_REQUEST['Response']) && $_REQUEST['Response'] == '800';
 	}
 	
 	/**
