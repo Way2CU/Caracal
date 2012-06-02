@@ -193,7 +193,7 @@ function url_MakeFromArray($params) {
 
 	} else {
 		// form normal URL
-		$result = $_SERVER['PHP_SELF'];
+		$result = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 
 		if ($section_argument != 'home')
 			$result .= '?section='.urlencode($section_argument);
