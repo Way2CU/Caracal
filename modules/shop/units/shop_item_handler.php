@@ -623,7 +623,7 @@ class ShopItemHandler {
 		}
 
 		if (isset($tag_params['order_by']))
-			$order_by = fix_chars($tag_params['order_by']);
+			$order_by = array(fix_chars($tag_params['order_by']));
 
 		// get items
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
