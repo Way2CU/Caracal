@@ -618,7 +618,7 @@ class shop extends Module {
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `buyer` int(11) NOT NULL,
 				  `address` int(11) NOT NULL,
-				  `uid` varchar(20) NOT NULL,
+				  `uid` varchar(30) NOT NULL,
 				  `type` smallint(6) NOT NULL,
 				  `status` smallint(6) NOT NULL,
 				  `currency` int(11) NOT NULL,
@@ -751,7 +751,6 @@ class shop extends Module {
 	 */
 	private function configureSearch($tag_params, $children) {
 		$this->search_params = $tag_params;
-		trigger_error(print_r($this->search_params, true));
 	}
 
 	/**
@@ -877,12 +876,10 @@ class shop extends Module {
 		// get method and transaction id
 		$method = $this->payment_methods[$method_name];
 		$transactions_manager = ShopTransactionsManager::getInstance();
-
 		$transaction_id = $method->get_transaction_id();
-		$transaction = $transactions_manager->getSingleItem(array('id'), array('uid' => $transaction_id));
 
 		// update transaction state
-		if (is_object($transaction) && $method->verify_payment_complete()) {
+		if ($method->verify_payment_complete()) {
 			$transactions_manager->updateData(
 									array('status' => TransactionStatus::COMPLETED),
 									array(
@@ -914,12 +911,10 @@ class shop extends Module {
 		// get method and transaction id
 		$method = $this->payment_methods[$method_name];
 		$transactions_manager = ShopTransactionsManager::getInstance();
-
 		$transaction_id = $method->get_transaction_id();
-		$transaction = $transactions_manager->getSingleItem(array('id'), array('uid' => $transaction_id));
 
 		// update transaction state
-		if (is_object($transaction) && $method->verify_payment_canceled()) {
+		if ($method->verify_payment_canceled()) {
 			$transactions_manager->updateData(
 									array('status' => TransactionStatus::DENIED),
 									array(
