@@ -49,10 +49,16 @@
 							<input name="tax" value="$params['tax']" style="width: 100px;" eval="value"/>
 						</label>
 					</div>
-					<div class="box left">
+					<div class="box left" style="width: 120px;">
 						<label>
 							<span><_text constant="label_weight" module="shop"/></span>
 							<input name="weight" value="$params['weight']" style="width: 100px;" eval="value"/>
+						</label>
+					</div>
+					<div class="box left">
+						<label>
+							<span><_text constant="label_priority" module="shop"/></span>
+							<input name="priority" value="$params['priority']" style="width: 60px;" eval="value"/>
 						</label>
 					</div>
 				</div>
