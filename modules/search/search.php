@@ -122,6 +122,7 @@ class search extends Module {
 		// get search query
 		$query_string = null;
 		$threshold = 25;
+		$limit = 30;
 
 		// get query
 		if (isset($tag_params['query'])) 
@@ -139,6 +140,10 @@ class search extends Module {
 
 		if (isset($_REQUEST['threshold']) && is_null($threshold))
 			$threshold = fix_chars($_REQUEST['threshold']);
+
+		// get limit
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']);
 
 		// get list of modules to search on
 		$module_list = null;
@@ -166,6 +171,10 @@ class search extends Module {
 
 		// sort results
 		usort($results, array($this, 'sortResults'));
+		
+		// apply limit
+		if ($limit > 0) 
+			$results = array_slice($results, 0, $limit);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'result.xml');
