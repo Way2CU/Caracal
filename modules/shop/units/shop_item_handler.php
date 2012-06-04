@@ -236,6 +236,7 @@ class ShopItemHandler {
 								);
 			}
 
+		} else {
 			// remove membership data, we'll update those in a moment
 			$membership_manager->deleteData(array('item' => $id));
 		}
