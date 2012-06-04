@@ -30,6 +30,7 @@ class TransactionStatus {
 	const PENDING = 0;
 	const DENIED = 1;
 	const COMPLETED = 2;
+	const CANCELED = 3;
 }
 
 
@@ -916,7 +917,7 @@ class shop extends Module {
 		// update transaction state
 		if ($method->verify_payment_canceled()) {
 			$transactions_manager->updateData(
-									array('status' => TransactionStatus::DENIED),
+									array('status' => TransactionStatus::CANCELED),
 									array(
 										'uid' => $transaction_id,
 										'status' => TransactionStatus::PENDING
