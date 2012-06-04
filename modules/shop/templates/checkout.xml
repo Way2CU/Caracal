@@ -9,9 +9,7 @@
 		</head>
 
 		<body class="$language_rtl ? 'rtl' : 'ltr'" eval="class">
-			<div id="checkout" skip_cache="1"> 
-				<_checkout_form method="$params['method']" eval="method"/>
-			</div>
+			<_checkout_form/>
 		</body>
 	</html>
 </document>

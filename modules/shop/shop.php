@@ -371,6 +371,10 @@ class shop extends Module {
 					$this->tag_CanceledMessage($params, $children);
 					break;
 
+				case 'show_checkout_form':
+					$this->tag_CheckoutForm($params, $children);
+					break;
+
 				case 'configure_search':
 					$this->configureSearch($params, $children);
 					break;
@@ -755,124 +759,17 @@ class shop extends Module {
 	}
 
 	/**
-	 * Show checkout form
+	 * Update transaction status based on parameters. Returns
+	 * boolean denoting success of update, *not* transaction!
+	 * 
+	 * @return boolean
 	 */
-	public function showCheckout() {
-		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
-
-		if (count($this->payment_methods) == 0)
-			return;
-
-		// get a payment method
-		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods)) {
-			$methods = $this->payment_methods;
-			$method = array_shift($methods);
-
-		} else {
-			$method = $this->payment_methods[$method_name];
-		}
-
-		$can_continue = true;
-
-		// get buyer information if method doesn't provide one
-		if (!$method->provides_information() && !isset($_SESSION['buyer'])) {
-			$bad_fields = array();
-			$message = "";
-
-			// grab fields 
-			if (isset($_POST['set_info']) && $_POST['set_info'] == 1) {
-				$buyer = array();
-
-				if (isset($_POST['first_name']) && !empty($_POST['first_name']))
-					$buyer['first_name'] = fix_chars($_POST['first_name']); else
-					$bad_fields[] = 'first_name';
-
-				if (isset($_POST['last_name']) && !empty($_POST['last_name']))
-					$buyer['last_name'] = fix_chars($_POST['last_name']); else
-					$bad_fields[] = 'last_name';
-
-				if (isset($_POST['email']) && !empty($_POST['email']))
-					$buyer['email'] = fix_chars($_POST['email']); else
-					$bad_fields[] = 'email';
-
-				if (isset($_POST['name']) && !empty($_POST['name'])) {
-					$buyer['name'] = fix_chars($_POST['name']); 
-				} else if (isset($buyer['first_name']) && isset($buyer['last_name'])){
-					$buyer['name'] = $buyer['first_name'].' '.$buyer['last_name'];
-					$_POST['name'] = $buyer['name'];
-				}
-
-				if (isset($_POST['street']) && !empty($_POST['street']))
-					$buyer['street'] = fix_chars($_POST['street']); else
-					$bad_fields[] = 'street';
-
-				if (isset($_POST['city']) && !empty($_POST['city']))
-					$buyer['city'] = fix_chars($_POST['city']); else
-					$bad_fields[] = 'city';
-
-				if (isset($_POST['zip']) && !empty($_POST['zip']))
-					$buyer['zip'] = fix_chars($_POST['zip']); else
-					$bad_fields[] = 'zip';
-
-				if (isset($_POST['country']) && !empty($_POST['country']))
-					$buyer['country'] = fix_chars($_POST['country']); else
-					$bad_fields[] = 'country';
-
-				if (
-					isset($buyer['country']) && $buyer['country'] == 'US' 
-					&& (!isset($_POST['state']) || empty($_POST['state']))
-				)
-					$bad_fields[] = 'state'; else
-					$buyer['state'] = fix_chars($_POST['state']); 
-			}
-
-			$can_continue = (count($bad_fields) == 0) && isset($_POST['set_info']);
-
-			// store buyer to session
-			if ($can_continue)
-				$_SESSION['buyer'] = $buyer;
-		}
-
-		if (!$can_continue) {
-			// create template
-			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
-
-			$params = array(
-						'message'		=> $message,
-						'bad_fields'	=> $bad_fields
-					);
-
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
-
-		} else {
-			// create template
-			$template = new TemplateHandler('checkout.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
-
-			$params = array(
-						'method'	=> $method->get_name()
-					);
-
-			// register tag handler
-			$template->registerTagHandler('_checkout_form', &$this, 'tag_CheckoutForm');
-
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
-		}
-	}
-
-	/**
-	 * Show message for completed checkout and empty shopping cart
-	 */
-	private function showCheckoutCompleted() {
+	private function updateTransactionStatus() {
+		$result = false;
 		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
 
 		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods))
-			return;
+			return $result;
 
 		// get method and transaction id
 		$method = $this->payment_methods[$method_name];
@@ -881,13 +778,54 @@ class shop extends Module {
 
 		// update transaction state
 		if ($method->verify_payment_complete()) {
+			// transaction is completed
 			$transactions_manager->updateData(
 									array('status' => TransactionStatus::COMPLETED),
 									array(
 										'uid' => $transaction_id,
 										'status' => TransactionStatus::PENDING
 									));
+			$result = true;
+
+		} else if ($method->verify_payment_canceled()) {
+			// transaction was canceled
+			$transactions_manager->updateData(
+									array('status' => TransactionStatus::CANCELED),
+									array(
+										'uid' => $transaction_id,
+										'status' => TransactionStatus::PENDING
+									));
+			$result = true;
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Show checkout form
+	 */
+	public function showCheckout() {
+		if (count($this->payment_methods) == 0)
+			return;
+
+		$template = new TemplateHandler('checkout.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array();
+
+		// register tag handler
+		$template->registerTagHandler('_checkout_form', &$this, 'tag_CheckoutForm');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show message for completed checkout and empty shopping cart
+	 */
+	private function showCheckoutCompleted() {
+		$update_successful = $this->updateTransactionStatus();
 
 		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -904,25 +842,7 @@ class shop extends Module {
 	 * Show message for canceled checkout
 	 */
 	private function showCheckoutCanceled() {
-		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
-
-		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods))
-			return;
-
-		// get method and transaction id
-		$method = $this->payment_methods[$method_name];
-		$transactions_manager = ShopTransactionsManager::getInstance();
-		$transaction_id = $method->get_transaction_id();
-
-		// update transaction state
-		if ($method->verify_payment_canceled()) {
-			$transactions_manager->updateData(
-									array('status' => TransactionStatus::CANCELED),
-									array(
-										'uid' => $transaction_id,
-										'status' => TransactionStatus::PENDING
-									));
-		}
+		$update_successful = $this->updateTransactionStatus();
 
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1291,10 +1211,14 @@ class shop extends Module {
 	 */
 	public function tag_CheckoutForm($tag_params, $children) {
 		$method = null;
+		$info_available = true;
 
 		// try to get specified payment method
 		if (isset($tag_params['method']) && array_key_exists($tag_params['method'], $this->payment_methods))
 			$method = $this->payment_methods[fix_chars($tag_params['method'])];
+
+		if (isset($_REQUEST['method']) && array_key_exists($_REQUEST['method'], $this->payment_methods))
+			$method = $this->payment_methods[fix_chars($_REQUEST['method'])];
 
 		// try to get fallback method
 		if (is_null($method) && count($this->payment_methods) > 0) {
@@ -1306,197 +1230,272 @@ class shop extends Module {
 		if (is_null($method))
 			return;
 
-		// colect ids from session
-		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
-		$ids = array_keys($cart);
+		// check if we have all the information we need
+		if (!$method->provides_information() && !isset($_SESSION['buyer'])) {
+			$bad_fields = array();
+			$message = "";
 
-		if (count($cart) == 0)
-			return;
+			// grab fields 
+			if (isset($_POST['set_info']) && $_POST['set_info'] == 1) {
+				$buyer = array();
 
-		// get items from database and prepare result
-		$manager = ShopItemManager::getInstance();
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+				if (isset($_POST['first_name']) && !empty($_POST['first_name']))
+					$buyer['first_name'] = fix_chars($_POST['first_name']); else
+					$bad_fields[] = 'first_name';
 
-		// prepare params
-		$shipping = 0;
-		$handling = 0;
-		$total_money = 0;
-		$total_weight = 0;
-		$items_by_uid = array();
-		$items_for_checkout = array();
+				if (isset($_POST['last_name']) && !empty($_POST['last_name']))
+					$buyer['last_name'] = fix_chars($_POST['last_name']); else
+					$bad_fields[] = 'last_name';
 
-		// parse items from database
-		foreach ($items as $item) {
-			$db_item = array(
-					'id'		=> $item->id,
-					'name'		=> $item->name,
-					'price'		=> $item->price,
-					'tax'		=> $item->tax,
-					'weight'	=> $item->weight
-				);
-			$items_by_uid[$item->uid] = $db_item;
-		}
+				if (isset($_POST['email']) && !empty($_POST['email']))
+					$buyer['email'] = fix_chars($_POST['email']); else
+					$bad_fields[] = 'email';
 
-		// prepare items for checkout
-		foreach ($cart as $uid => $item) {
-			if (count($item['variations']) > 0)
-				foreach($item['variations'] as $variation_id => $data) {
-					// add items to checkout list
-					$properties = $data;
-
-					foreach ($this->excluded_properties as $key)
-						if (isset($properties[$key]))
-							unset($properties[$key]);
-
-					$new_item = $items_by_uid[$uid];
-					$new_item['count'] = $data['count'];
-					$new_item['description'] = implode(', ', array_values($properties));
-
-					// add item to the list
-					$items_for_checkout[] = $new_item;
-
-					// include item data in summary
-					$tax = $new_item['tax'];
-					$price = $new_item['price'];
-					$weight = $new_item['weight'];
-					
-					$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
-					$total_weight += $weight * $data['count'];
+				if (isset($_POST['name']) && !empty($_POST['name'])) {
+					$buyer['name'] = fix_chars($_POST['name']); 
+				} else if (isset($buyer['first_name']) && isset($buyer['last_name'])){
+					$buyer['name'] = $buyer['first_name'].' '.$buyer['last_name'];
+					$_POST['name'] = $buyer['name'];
 				}
-		}
 
-		// get fields for payment method
-		$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $method->get_name())));
-		$cancel_url = urlencode(url_Make('checkout_canceled', 'shop', array('method', $method->get_name())));
-		$transaction_data = array();
+				if (isset($_POST['street']) && !empty($_POST['street']))
+					$buyer['street'] = fix_chars($_POST['street']); else
+					$bad_fields[] = 'street';
 
-		// get currency info
-		$currency = $this->settings['default_currency'];
-		$currency_manager = ShopCurrenciesManager::getInstance();
+				if (isset($_POST['city']) && !empty($_POST['city']))
+					$buyer['city'] = fix_chars($_POST['city']); else
+					$bad_fields[] = 'city';
 
-		$currency_item = $currency_manager->getSingleItem(array('id'), array('currency' => $currency));
+				if (isset($_POST['zip']) && !empty($_POST['zip']))
+					$buyer['zip'] = fix_chars($_POST['zip']); else
+					$bad_fields[] = 'zip';
 
-		if (is_object($currency_item))
-			$transaction_data['currency'] = $currency_item->id;
+				if (isset($_POST['country']) && !empty($_POST['country']))
+					$buyer['country'] = fix_chars($_POST['country']); else
+					$bad_fields[] = 'country';
 
-		// if payment method doesn't provide us with buyer 
-		// information, we might as well store it now
-		if (!$method->provides_information()) {
-			$data = $_SESSION['buyer'];
-			$buyers_manager = ShopBuyersManager::getInstance();
-			$address_manager = ShopBuyerAddressesManager::getInstance();
-
-			// associate buyer with transaction
-			$buyer = $buyers_manager->getSingleItem(
-								array('id'), 
-								array(
-									'first_name'	=> $data['first_name'],
-									'last_name'		=> $data['last_name'],
-									'email'			=> $data['email']
-								));
-
-			if (is_object($buyer)) {
-				// buyer already exists
-				$transaction_data['buyer'] = $buyer->id;
-
-			} else {
-				// no buyer found, create new one
-				$buyers_manager->insertData(array(
-									'first_name'	=> $data['first_name'],
-									'last_name'		=> $data['last_name'],
-									'email'			=> $data['email']
-								));
-				$transaction_data['buyer'] = $buyers_manager->getInsertedID();
+				if (
+					isset($buyer['country']) && $buyer['country'] == 'US' 
+					&& (!isset($_POST['state']) || empty($_POST['state']))
+				)
+					$bad_fields[] = 'state'; else
+					$buyer['state'] = fix_chars($_POST['state']); 
 			}
 
-			// associate address with transaction
-			$address = $address_manager->getSingleItem(
-								array('id'),
-								array(
-									'buyer'		=> $transaction_data['buyer'],
-									'name'		=> $data['name'],
-									'street'	=> $data['street'],
-									'city'		=> $data['city'],
-									'zip'		=> $data['zip'],
-									'state'		=> $data['state'],
-									'country'	=> $data['country'],
-								));
+			$info_available = (count($bad_fields) == 0) && isset($_POST['set_info']);
 
-			if (is_object($address)) {
-				// existing address
-				$transaction_data['address'] = $address->id;
-
-			} else {
-				// create new address
-				$address_manager->insertData(array(
-									'buyer'		=> $transaction_data['buyer'],
-									'name'		=> $data['name'],
-									'street'	=> $data['street'],
-									'city'		=> $data['city'],
-									'zip'		=> $data['zip'],
-									'state'		=> $data['state'],
-									'country'	=> $data['country'],
-								));
-				$transaction_data['address'] = $address_manager->getInsertedID();
-			}
+			// store buyer to session
+			if ($info_available)
+				$_SESSION['buyer'] = $buyer;
 		}
 
-		$transaction_data['uid'] = uniqid('', true);
-		$transaction_data['type'] = TransactionType::SHOPPING_CART;
-		$transaction_data['status'] = TransactionStatus::PENDING;
-		$transaction_data['handling'] = $handling;
-		$transaction_data['shipping'] = $shipping;
-		$transaction_data['total'] = $total_money;
+		if ($info_available) {
+			// colect ids from session
+			$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+			$ids = array_keys($cart);
 
-		// create new transaction
-		$transactions_manager = ShopTransactionsManager::getInstance();
-		$transactions_manager->insertData($transaction_data);
-		$transaction_id = $transactions_manager->getInsertedID();
+			if (count($cart) == 0)
+				return;
 
-		// store items
-		if (count($items_for_checkout) > 0) {
-			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+			// get items from database and prepare result
+			$manager = ShopItemManager::getInstance();
+			$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
 
-			foreach($items_for_checkout as $uid => $item) {
-				$transaction_items_manager->insertData(array(
-											'transaction'	=> $transaction_id,
-											'item'			=> $item['id'],
-											'price'			=> $item['price'],
-											'tax'			=> $item['tax'],
-											'amount'		=> $item['count'],
-											'description'	=> $item['description']
-										));
+			// prepare params
+			$shipping = 0;
+			$handling = 0;
+			$total_money = 0;
+			$total_weight = 0;
+			$items_by_uid = array();
+			$items_for_checkout = array();
+
+			// parse items from database
+			foreach ($items as $item) {
+				$db_item = array(
+						'id'		=> $item->id,
+						'name'		=> $item->name,
+						'price'		=> $item->price,
+						'tax'		=> $item->tax,
+						'weight'	=> $item->weight
+					);
+				$items_by_uid[$item->uid] = $db_item;
 			}
+
+			// prepare items for checkout
+			foreach ($cart as $uid => $item) {
+				if (count($item['variations']) > 0)
+					foreach($item['variations'] as $variation_id => $data) {
+						// add items to checkout list
+						$properties = $data;
+
+						foreach ($this->excluded_properties as $key)
+							if (isset($properties[$key]))
+								unset($properties[$key]);
+
+						$new_item = $items_by_uid[$uid];
+						$new_item['count'] = $data['count'];
+						$new_item['description'] = implode(', ', array_values($properties));
+
+						// add item to the list
+						$items_for_checkout[] = $new_item;
+
+						// include item data in summary
+						$tax = $new_item['tax'];
+						$price = $new_item['price'];
+						$weight = $new_item['weight'];
+						
+						$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
+						$total_weight += $weight * $data['count'];
+					}
+			}
+
+			// get fields for payment method
+			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $method->get_name())));
+			$cancel_url = urlencode(url_Make('checkout_canceled', 'shop', array('method', $method->get_name())));
+			$transaction_data = array();
+
+			// get currency info
+			$currency = $this->settings['default_currency'];
+			$currency_manager = ShopCurrenciesManager::getInstance();
+
+			$currency_item = $currency_manager->getSingleItem(array('id'), array('currency' => $currency));
+
+			if (is_object($currency_item))
+				$transaction_data['currency'] = $currency_item->id;
+
+			// if payment method doesn't provide us with buyer 
+			// information, we might as well store it now
+			if (!$method->provides_information()) {
+				$data = $_SESSION['buyer'];
+				$buyers_manager = ShopBuyersManager::getInstance();
+				$address_manager = ShopBuyerAddressesManager::getInstance();
+
+				// associate buyer with transaction
+				$buyer = $buyers_manager->getSingleItem(
+									array('id'), 
+									array(
+										'first_name'	=> $data['first_name'],
+										'last_name'		=> $data['last_name'],
+										'email'			=> $data['email']
+									));
+
+				if (is_object($buyer)) {
+					// buyer already exists
+					$transaction_data['buyer'] = $buyer->id;
+
+				} else {
+					// no buyer found, create new one
+					$buyers_manager->insertData(array(
+										'first_name'	=> $data['first_name'],
+										'last_name'		=> $data['last_name'],
+										'email'			=> $data['email']
+									));
+					$transaction_data['buyer'] = $buyers_manager->getInsertedID();
+				}
+
+				// associate address with transaction
+				$address = $address_manager->getSingleItem(
+									array('id'),
+									array(
+										'buyer'		=> $transaction_data['buyer'],
+										'name'		=> $data['name'],
+										'street'	=> $data['street'],
+										'city'		=> $data['city'],
+										'zip'		=> $data['zip'],
+										'state'		=> $data['state'],
+										'country'	=> $data['country'],
+									));
+
+				if (is_object($address)) {
+					// existing address
+					$transaction_data['address'] = $address->id;
+
+				} else {
+					// create new address
+					$address_manager->insertData(array(
+										'buyer'		=> $transaction_data['buyer'],
+										'name'		=> $data['name'],
+										'street'	=> $data['street'],
+										'city'		=> $data['city'],
+										'zip'		=> $data['zip'],
+										'state'		=> $data['state'],
+										'country'	=> $data['country'],
+									));
+					$transaction_data['address'] = $address_manager->getInsertedID();
+				}
+			}
+
+			$transaction_data['uid'] = uniqid('', true);
+			$transaction_data['type'] = TransactionType::SHOPPING_CART;
+			$transaction_data['status'] = TransactionStatus::PENDING;
+			$transaction_data['handling'] = $handling;
+			$transaction_data['shipping'] = $shipping;
+			$transaction_data['total'] = $total_money;
+
+			// create new transaction
+			$transactions_manager = ShopTransactionsManager::getInstance();
+			$transactions_manager->insertData($transaction_data);
+			$transaction_id = $transactions_manager->getInsertedID();
+
+			// store items
+			if (count($items_for_checkout) > 0) {
+				$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+
+				foreach($items_for_checkout as $uid => $item) {
+					$transaction_items_manager->insertData(array(
+												'transaction'	=> $transaction_id,
+												'item'			=> $item['id'],
+												'price'			=> $item['price'],
+												'tax'			=> $item['tax'],
+												'amount'		=> $item['count'],
+												'description'	=> $item['description']
+											));
+				}
+			}
+
+			// create new payment
+			$checkout_fields = $method->new_payment(
+										$transaction_data,
+										$items_for_checkout,
+										$this->getDefaultCurrency(),
+										$return_url,
+										$cancel_url
+									);
+
+			// load template
+			$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
+			$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
+
+			// parse template
+			$params = array(
+						'checkout_url'		=> $method->get_url(),
+						'checkout_fields'	=> $checkout_fields,
+						'checkout_name'		=> $method->get_title(),
+						'sub-total'			=> number_format($total_money, 2),
+						'shipping'			=> number_format($shipping, 2),
+						'total_weight'		=> number_format($total_weight, 2),
+						'total'				=> number_format($total_money + $shipping, 2),
+						'currency'			=> $this->getDefaultCurrency()
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+
+		} else {
+			// no information available, show form
+			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'message'		=> $message,
+						'bad_fields'	=> $bad_fields
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
 		}
-
-		// create new payment
-		$checkout_fields = $method->new_payment(
-									$transaction_data,
-									$items_for_checkout,
-									$this->getDefaultCurrency(),
-									$return_url,
-									$cancel_url
-								);
-
-		// load template
-		$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
-		$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
-
-		// parse template
-		$params = array(
-					'checkout_url'		=> $method->get_url(),
-					'checkout_fields'	=> $checkout_fields,
-					'checkout_name'		=> $method->get_title(),
-					'sub-total'			=> number_format($total_money, 2),
-					'shipping'			=> number_format($shipping, 2),
-					'total_weight'		=> number_format($total_weight, 2),
-					'total'				=> number_format($total_money + $shipping, 2),
-					'currency'			=> $this->getDefaultCurrency()
-				);
-
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse();
 	}
 
 	/**

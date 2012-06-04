@@ -1,140 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_text constant="_HTML_401"/>
-	<html>
-		<head>
-			<title><_text constant="site_title" /></title>
-			<_module name="head_tag" action="print_tag"/>
-		</head>
+	<div id="input_details" skip_cache="1"> 
+		<h1><_text constant="title_buyer_information" module="shop"/></h1>
+		<form method="POST">
+			<label>
+				<input type="hidden" name="set_info" value="1"/>
+				<span><_text constant="label_first_name" module="shop"/></span>
+				<input
+					class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
+					eval="class,value"
+					type="text"
+					name="first_name"
+					value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
+					max="64"
+				/>
+			</label>
+			<label>
+				<span><_text constant="label_last_name" module="shop"/></span>
+				<input
+					class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
+					eval="class,value"
+					type="text"
+					name="last_name"
+					value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
+					max="64"
+				/>
+			</label>
+			<label>
+				<span><_text constant="label_email" module="shop"/></span>
+				<input
+					class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class,value" 
+					type="text" 
+					name="email" 
+					value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
+					max="127" 
+					style="width: 270px;"
+				/>
+			</label>
 
-		<body class="$language_rtl ? 'rtl' : 'ltr'" eval="class">
-			<div id="input_details">
-				<h1><_text constant="title_buyer_information" module="shop"/></h1>
-				<form method="POST">
-					<label>
-						<input type="hidden" name="set_info" value="1"/>
-						<span><_text constant="label_first_name" module="shop"/></span>
-						<input
-							class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
-							eval="class,value"
-							type="text"
-							name="first_name"
-							value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
-							max="64"
-						/>
-					</label>
-					<label>
-						<span><_text constant="label_last_name" module="shop"/></span>
-						<input
-							class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
-							eval="class,value"
-							type="text"
-							name="last_name"
-							value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
-							max="64"
-						/>
-					</label>
-					<label>
-						<span><_text constant="label_email" module="shop"/></span>
-						<input
-							class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class,value" 
-							type="text" 
-							name="email" 
-							value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-							max="127" 
-							style="width: 270px;"
-						/>
-					</label>
+			<h2><_text constant="title_shipping_information" module="shop"/></h2>
 
-					<h2><_text constant="title_shipping_information" module="shop"/></h2>
+			<label>
+				<span><_text constant="label_full_name" module="shop"/></span>
+				<input 
+					class="in_array('name', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class,value" 
+					type="text" 
+					name="name" 
+					value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
+					max="128" 
+					style="width: 270px;"
+				/>
+			</label>
+			<label>
+				<span><_text constant="label_street" module="shop"/></span>
+				<input 
+					class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class,value" 
+					type="text" 
+					name="street" 
+					value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
+					max="200" 
+					style="width: 300px;"
+				/>
+			</label>
+			<label>
+				<span><_text constant="label_city" module="shop"/></span>
+				<input 
+					class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class,value" 
+					type="text" 
+					name="city" 
+					value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
+					max="40"
+				/>
+			</label>
+			<label>
+				<span><_text constant="label_zip" module="shop"/></span>
+				<input 
+					class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class,value" 
+					type="text" 
+					name="zip" 
+					value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
+					max="20" 
+					style="width: 120px;"
+				/>
+			</label>
+			<label>
+				<span><_text constant="label_country" module="shop"/></span>
+				<select 
+					name="country"
+					class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class" 
+				>
+					<option/>
+					<_module
+						name="country_list"
+						action="show"
+						selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
+						eval="selected"
+					/>
+				</select>
+			</label>
+			<label>
+				<span><_text constant="label_state" module="shop"/></span>
+				<input 
+					class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
+					eval="class,value" 
+					type="text" 
+					name="state" 
+					value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
+					max="40"
+				/>
+			</label>
 
-					<label>
-						<span><_text constant="label_full_name" module="shop"/></span>
-						<input 
-							class="in_array('name', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class,value" 
-							type="text" 
-							name="name" 
-							value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-							max="128" 
-							style="width: 270px;"
-						/>
-					</label>
-					<label>
-						<span><_text constant="label_street" module="shop"/></span>
-						<input 
-							class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class,value" 
-							type="text" 
-							name="street" 
-							value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-							max="200" 
-							style="width: 300px;"
-						/>
-					</label>
-					<label>
-						<span><_text constant="label_city" module="shop"/></span>
-						<input 
-							class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class,value" 
-							type="text" 
-							name="city" 
-							value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
-							max="40"
-						/>
-					</label>
-					<label>
-						<span><_text constant="label_zip" module="shop"/></span>
-						<input 
-							class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class,value" 
-							type="text" 
-							name="zip" 
-							value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-							max="20" 
-							style="width: 120px;"
-						/>
-					</label>
-					<label>
-						<span><_text constant="label_country" module="shop"/></span>
-						<select 
-							name="country"
-							class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class" 
-						>
-							<option/>
-							<_module
-								name="country_list"
-								action="show"
-								selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-								eval="selected"
-							/>
-						</select>
-					</label>
-					<label>
-						<span><_text constant="label_state" module="shop"/></span>
-						<input 
-							class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
-							eval="class,value" 
-							type="text" 
-							name="state" 
-							value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
-							max="40"
-						/>
-					</label>
+			<_if condition="!empty($params['message'])">
+				<div class="message"><_var name="$params['message']"/></div>
+			</_if>
 
-					<_if condition="!empty($params['message'])">
-						<div class="message"><_var name="$params['message']"/></div>
-					</_if>
-
-					<div class="checkout_controls">
-						<button><_text constant="next"/></button>
-						<button type="reset"><_text constant="reset"/></button>
-					</div>
-				</form>
+			<div class="checkout_controls">
+				<button><_text constant="next"/></button>
+				<button type="reset"><_text constant="reset"/></button>
 			</div>
-		</body>
-	</html>
+		</form>
+	</div>
 </document>

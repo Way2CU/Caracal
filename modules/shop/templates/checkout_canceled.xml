@@ -9,9 +9,7 @@
 		</head>
 
 		<body class="MainLanguageHandler::getInstance()->isRTL() ? 'rtl' : 'ltr'" eval="class">
-			<div id="checkout"> 
-				<_canceled_message/>
-			</div>
+			<_canceled_message/>
 		</body>
 	</html>
 </document>
