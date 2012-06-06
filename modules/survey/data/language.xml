@@ -5,6 +5,7 @@
 		<constant name="menu_survey">Survey</constant>
 		<constant name="menu_results">Results of survey</constant>
 		<constant name="menu_types">Survey types</constant>
+		<constant name="menu_export">Export</constant>
 
 		<constant name="title_results">Survey: Results</constant>
 		<constant name="title_types">Survey: Types</constant>
@@ -26,6 +27,7 @@
 		<constant name="menu_survey">סקר</constant>
 		<constant name="menu_results">תוצאות סקר</constant>
 		<constant name="menu_types">סוגי סקר</constant>
+		<constant name="menu_export">Export</constant>
 
 		<constant name="title_results">סקר: תוצאות</constant>
 		<constant name="title_types">סקר: סוגים</constant>

@@ -15,22 +15,32 @@
 				/>
 			</select>
 		</div>
+		<_if condition="isset($_REQUEST['type']) &amp;&amp; !empty($_REQUEST['type'])">
+			<a 
+				href="url_Make('transfer_control', 'backend_module', array('module', 'survey'), array('backend_action', 'export_data'), array('type', fix_chars($_REQUEST['type'])))"
+				eval="href"
+			>
+				<_text constant="menu_export" module="survey"/>
+			</a>
+		</_if>
 		<div style="clear: both;"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
+			<!--
 			<span class="column" style="width: 50px;">
 				<input type="checkbox"/>
 			</span>
+			-->
 			<_columns_list
 				type="isset($_REQUEST['type']) ? $_REQUEST['type'] : -1"
 				eval="type"
 			/>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_if condition="isset($_REQUEST['type'])">
+			<_if condition="isset($_REQUEST['type']) &amp;&amp; !empty($_REQUEST['type'])">
 				<_results_list
 					type="$_REQUEST['type']"
 					eval="type"

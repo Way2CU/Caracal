@@ -139,6 +139,10 @@ class survey extends Module {
 					$this->deleteType_commit();
 					break;
 
+				case 'export_data':
+					$this->exportResults();
+					break;
+
 				default:
 					break;
 			}
@@ -204,6 +208,80 @@ class survey extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Export data for specified type
+	 */
+	private function exportResults() {
+		$data = '';
+		$type_id = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : null;
+		$types_manager = SurveyTypesManager::getInstance();
+		$entries_manager = SurveyEntriesManager::getInstance();
+		$data_manager = SurveyEntryDataManager::getInstance();
+
+		if (is_null($type_id) || $type_id == 0) 
+			return;
+
+		// get type from database
+		$type = $types_manager->getSingleItem($types_manager->getFieldNames(), array('id' => $type_id));
+
+		// get entries for type
+		if (is_object($type)) {
+			$data = 'id;ip_address;timestamp;'.str_replace(',', ';', $type->fields)."\n";
+			$entries = $entries_manager->getItems($entries_manager->getFieldNames(), array('type' => $type->id));
+			$rows = array();
+
+			if (count($entries) > 0) {
+				// populate rows array
+				foreach($entries as $entry) {
+					$id = $entry->id;
+					$rows[$id] = array(
+								'ip_address'	=> $entry->address,
+								'timestamp'		=> $entry->timestamp
+							);
+				}
+
+				// get data
+				$raw_data = $data_manager->getItems($data_manager->getFieldNames(), array('entry' => array_keys($rows)));
+
+				if (count($raw_data) > 0)
+					foreach($raw_data as $raw) {
+						$id = $raw->entry;
+						$name = $raw->name;
+
+						$rows[$id][$name] = $raw->value;
+					}
+			}
+
+			// compile data
+			$fields = explode(',', $type->fields);
+			foreach ($rows as $id => $entry) {
+				$tmp = array();
+				
+				// add required fields
+				$tmp[] = $id;
+				$tmp[] = $entry['ip_address'];
+				$tmp[] = '"'.$entry['timestamp'].'"';
+
+				foreach ($fields as $field)
+					if (array_key_exists($field, $entry))
+						$tmp[] = '"'.$entry[$field].'"'; else
+						$tmp[] = '';
+
+				$data .= implode(';', $tmp)."\n";
+			}
+		}
+
+		define('_OMIT_STATS', 1);
+
+		// print headers
+    	header('Content-Type: text/csv');
+    	header('Content-Disposition: attachment; filename="survey_export.csv"');
+    	header('Content-Length: '.strlen($data));
+
+    	// print data
+    	print $data;
 	}
 
 	/**
@@ -480,8 +558,6 @@ class survey extends Module {
 		// get setting if this type allows only one entry per address
 		$allow_only_one = $type->unique_address == 1;
 		$fields = explode(',', $type->fields);
-
-		trigger_error($allow_only_one);
 
 		if ($allow_only_one) {
 			// get existing entry from database 
