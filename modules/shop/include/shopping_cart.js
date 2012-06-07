@@ -622,6 +622,7 @@ function ShoppingCart() {
 		var total_items = data.count;
 
 		self._size_values = data.size_values;
+		self._default_currency = data.currency;
 
 		for (var key in items) {
 			var data = items[key];
