@@ -13,6 +13,7 @@ require_once('units/shop_currencies_handler.php');
 require_once('units/shop_item_sizes_handler.php');
 require_once('units/shop_item_size_values_manager.php');
 require_once('units/shop_transactions_manager.php');
+require_once('units/shop_transactions_handler.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_buyer_addresses_manager.php');
@@ -159,14 +160,14 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_purchases'),
-								url_GetFromFilePath($this->path.'images/purchase.png'),
+								$this->getLanguageConstant('menu_transactions'),
+								url_GetFromFilePath($this->path.'images/transactions.png'),
 								window_Open( // on click open window
-											'shop_purchases',
-											490,
-											$this->getLanguageConstant('title_purchases'),
+											'shop_transactions',
+											590,
+											$this->getLanguageConstant('title_transactions'),
 											true, true,
-											backend_UrlMake($this->name, 'purchases')
+											backend_UrlMake($this->name, 'transactions')
 										),
 								5  // level
 							));
@@ -461,9 +462,12 @@ class shop extends Module {
 					$handler->transferControl($params, $children);
 					break;
 
-				case 'special_offers':
+				case 'transactions':
+					$handler = ShopTransactionsHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
 
-				case 'purchases':
+				case 'special_offers':
 
 				case 'stocks':
 
