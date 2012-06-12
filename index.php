@@ -90,6 +90,10 @@ if ($section == 'backend' || $section == 'backend_module')
 if ($db_use) {
 	$db = new rcfDB_mysql();
 	$db_active = $db->quick_connect($db_user, $db_pass, $db_name, $db_host);
+
+	// set default protocol encoding
+	if ($db_active) 
+		$db->query('SET NAMES \'utf8\'');
 }
 
 // transfer display control
