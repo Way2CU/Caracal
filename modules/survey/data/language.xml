@@ -27,7 +27,7 @@
 		<constant name="menu_survey">סקר</constant>
 		<constant name="menu_results">תוצאות סקר</constant>
 		<constant name="menu_types">סוגי סקר</constant>
-		<constant name="menu_export">Export</constant>
+		<constant name="menu_export">יצא</constant>
 
 		<constant name="title_results">סקר: תוצאות</constant>
 		<constant name="title_types">סקר: סוגים</constant>
@@ -42,7 +42,7 @@
 		<constant name="column_name">שם</constant>
 
 		<constant name="label_name">שם:</constant>
-		<constant name="label_fields">דות:</constant>
+		<constant name="label_fields">שדות:</constant>
 		<constant name="label_unique_address">אשר רק כניסה אחת לכל כתובת IP</constant>
 	</language>
 </document>

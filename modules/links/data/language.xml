@@ -111,7 +111,7 @@
 		<constant name="label_display_limit">הצג מגבלות (0 ללא מגבלות):</constant>
 		<constant name="label_sponsored_clicks">קליקים ממומנים:</constant>
 		<constant name="label_total_clicks">סך קליקים:</constant>
-		<constant name="label_image">Image:</constant>
+		<constant name="label_image">תמונה:</constant>
 
 		<!-- Other -->
 		<constant name="links">קישורים</constant>

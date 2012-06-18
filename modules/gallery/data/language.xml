@@ -87,7 +87,7 @@
 		<constant name="title_containers_change">גלריה: שנה קטגוריה</constant>
 		<constant name="title_containers_delete">גלריה: מחק קטגוריה Container</constant>
 		<constant name="title_containers_groups">גלריה: קבוצות בתוך קטגוקיות</constant>
-		<constant name="title_insert_image">Gallery: Insert image</constant>
+		<constant name="title_insert_image">גלריה: הכנס תמונה</constant>
 
 		<constant name="message_image_invalid_type">סוג קובץ לא נכון, אנא פנה למנהל המערכת</constant>
 		<constant name="message_image_save_error">הייתה בעיה בשמירת התמונה, בדור הרשאות לתקייה</constant>
@@ -107,7 +107,7 @@
 		<constant name="message_container_groups_updated">שיוך לקבוצה עודכן</constant>
 		<constant name="message_json_error_params">משתנים לא מתאימים.</constant>
 		<constant name="message_json_error_object">האובייקט לא נמנצא</constant>
-		<constant name="message_thumbnail_changed">Thumbnail was successfully changed.</constant>
+		<constant name="message_thumbnail_changed">תמונה ממוזערת הוחלפה בהצלחה</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_title">כותרת:</constant>
@@ -115,9 +115,9 @@
 		<constant name="label_file">קובץ:</constant>
 		<constant name="label_description">תאור (אופציונאלי):</constant>
 		<constant name="label_visible">התמונה נראית</constant>
-		<constant name="label_slideshow">Include image in slideshow</constant>
+		<constant name="label_slideshow">התמונה מופיעה במצגת תמונות</constant>
 		<constant name="label_text_id">Text ID:</constant>
-		<constant name="label_thumbnail">Thumbnail:</constant>
+		<constant name="label_thumbnail">תמונה ממוזערת:</constant>
 
 		<constant name="toolbar_insert_image">הוסף תמונה</constant>
 

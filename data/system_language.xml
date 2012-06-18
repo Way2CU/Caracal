@@ -24,6 +24,7 @@
 		<constant name="search">Pronađi</constant>
 		<constant name="next">Dalje</constant>
 		<constant name="back">Nazad</constant>
+		<constant name="print">Stampa</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server je naišao na sledeću grešku prilikom obrade podataka:</constant>
@@ -66,6 +67,7 @@
 		<constant name="search">Пронађи</constant>
 		<constant name="next">Dalje</constant>
 		<constant name="back">Nazad</constant>
+		<constant name="print">Stampa</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Сервер је наишао на следећу грешку приликом обраде података:</constant>
@@ -106,6 +108,7 @@
 		<constant name="search">Search</constant>
 		<constant name="next">Next</constant>
 		<constant name="back">Back</constant>
+		<constant name="print">Print</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">Server experienced the following error:</constant>
@@ -183,6 +186,7 @@
 		<constant name="search">לחפש</constant>
 		<constant name="next">הבא</constant>
 		<constant name="back">הקודם</constant>
+		<constant name="print">Print</constant>
 
 		<!-- Messages -->
 		<constant name="message_server_error">השרת חווה את הבעיה הבאה:</constant>

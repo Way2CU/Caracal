@@ -106,8 +106,8 @@
 		<constant name="column_text_id">מזה טקסט</constant>
 
 		<!-- Tab labels -->
-		<constant name="tab_general">General</constant>
-		<constant name="tab_content">Content</constant>
-		<constant name="tab_preview">Preview</constant>
+		<constant name="tab_general">כללי</constant>
+		<constant name="tab_content">תוכן</constant>
+		<constant name="tab_preview">תצוגה מקדימה</constant>
 	</language>
 </document>

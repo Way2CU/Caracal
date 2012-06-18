@@ -153,7 +153,7 @@
 		<constant name="menu_items">נהל מוצרים</constant>
 		<constant name="menu_categories">נהל קטגוריות</constant>
 		<constant name="menu_payment_methods">שיטות תשלום</constant>
-		<constant name="menu_transactions">Transactions</constant>
+		<constant name="menu_transactions">עסקאות</constant>
 		<constant name="menu_stocks">מלאי</constant>
 		<constant name="menu_special_offers">מבצעים</constant>
 		<constant name="menu_currencies">מטבעות</constant>
@@ -188,8 +188,8 @@
 		<constant name="title_search_results">תוצאות חיפוש</constant>
 		<constant name="title_buyer_information">פרטי חשבון</constant>
 		<constant name="title_shipping_information">פרטי משלוח</constant>
-		<constant name="title_transactions">Shop: Transactions</constant>
-		<constant name="title_transaction_details">Shop: Transaction details: </constant>
+		<constant name="title_transactions">חנות: עסקאות</constant>
+		<constant name="title_transaction_details">חנות: פרטי עסקאות </constant>
 
 		<constant name="column_name">שם</constant>
 		<constant name="column_price">מחיר</constant>
@@ -293,6 +293,6 @@
 		<constant name="delete_item">הסר מוצר מעגלת הקניות</constant>
 		<constant name="with">עם</constant>
 		<constant name="button_take_me_back">הצג עמוד קדמי</constant>
-		<constant name="details">Details</constant>
+		<constant name="details">פרטים</constant>
 	</language>
 </document>

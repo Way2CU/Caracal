@@ -58,7 +58,7 @@
 		<!-- Menu Items -->
 		<constant name="menu_youtube">YouTube</constant>
 		<constant name="menu_video_list">רשימת וידאו</constant>
-		<constant name="menu_video_groups">Manage groups</constant>
+		<constant name="menu_video_groups">נהל קבוצות</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_video_list">רשימת וידאו</constant>
@@ -78,8 +78,8 @@
 		<constant name="message_video_deleted">הוידאו הוסר.</constant>
 		<constant name="message_group_saved">מידע הקבוצה נשמר</constant>
 		<constant name="message_group_delete">אתה עומר להסיר קבותה, הוידאו השייכים לקבוצה לא ימחקו. האם אתה בטוח?</constant>
-		<constant name="message_group_deleted">Specified group was removed and videos unlinked.</constant>
-		<constant name="message_group_videos_updated">Selected videos were saved for specified group.</constant>
+		<constant name="message_group_deleted">הקבותה הוסרה והוידאו הותרו ממנה</constant>
+		<constant name="message_group_videos_updated">הוידאו נשמרו לקבוצה</constant>
 
 		<!-- Column Names -->
 		<constant name="column_id">זיהוי</constant>
@@ -91,7 +91,7 @@
 		<constant name="label_id">מזהה וידאו:</constant>
 		<constant name="label_text_id">מזהה טקסט:</constant>
 		<constant name="label_title">כותרת:</constant>
-		<constant name="label_name">Name:</constant>
+		<constant name="label_name">שם:</constant>
 		<constant name="label_visible">הקבוצה נראית</constant>
 		<constant name="label_description">תיאור:</constant>
 
