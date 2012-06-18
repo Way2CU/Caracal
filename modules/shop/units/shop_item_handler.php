@@ -273,21 +273,22 @@ class ShopItemHandler {
 			}
 
 		// store related items
-		if ($new_item) {
-			$related = array();
-			$keys = array_keys($_REQUEST);
+		if (!$new_item) 
+			$related_items_manager->deleteData(array('item' => $id));
 
-			foreach($keys as $key)
-				if (substr($key, 0, 7) == 'related')
-					$related[] = substr($key, 8);
+		$related = array();
+		$keys = array_keys($_REQUEST);
 
-			if (count($related) > 0) {
-				foreach($related as $related_id)
-					$related_items_manager->insertData(array(
-											'item'		=> $id,
-											'related'	=> $related_id
-										));
-			}
+		foreach($keys as $key)
+			if (substr($key, 0, 7) == 'related')
+				$related[] = substr($key, 8);
+
+		if (count($related) > 0) {
+			foreach($related as $related_id)
+				$related_items_manager->insertData(array(
+										'item'		=> $id,
+										'related'	=> $related_id
+									));
 		}
 
 		// show message
