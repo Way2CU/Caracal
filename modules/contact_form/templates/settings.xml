@@ -22,6 +22,7 @@
 				value="$settings['default_address']" 
 				eval="value"
 				style="width: 360px;"
+				class="code"
 			/>
 		</label>
 		<label>
