@@ -1587,7 +1587,7 @@ class gallery extends Module {
 						'error_message'	=> '',
 						'id'			=> $item->id,
 						'group'			=> $item->group,
-						'title'			=> $item->title,
+						'title'			=> $all_languages ? $item->title : $item->title[$language],
 						'description'	=> $all_languages ? $item->description : Markdown($item->description[$language]),
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
@@ -1611,6 +1611,8 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_ImageList() {
+		global $language;
+
 		$manager = GalleryManager::getInstance();
 		$conditions = array();
 		$order_by = array();
@@ -1671,7 +1673,7 @@ class gallery extends Module {
 				$result['items'][] = array(
 							'id'			=> $item->id,
 							'group'			=> $item->group,
-							'title'			=> $item->title,
+							'title'			=> $all_languages ? $item->title : $item->title[$language],
 							'description'	=> $all_languages ? $item->description : Markdown($item->description[$language]),
 							'filename'		=> $item->filename,
 							'timestamp'		=> $item->timestamp,
