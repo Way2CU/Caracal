@@ -1554,7 +1554,9 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_Image() {
-		define('_OMIT_STATS', 1);
+		global $language;
+
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
 
 		if (!isset($_REQUEST['id']) && !isset($_REQUEST['group'])) {
 			// invalid params, print blank JSON object with message
@@ -1586,7 +1588,7 @@ class gallery extends Module {
 						'id'			=> $item->id,
 						'group'			=> $item->group,
 						'title'			=> $item->title,
-						'description'	=> $item->description,
+						'description'	=> $all_languages ? $item->description : Markdown($item->description[$language]),
 						'filename'		=> $item->filename,
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
@@ -1609,8 +1611,6 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_ImageList() {
-		define('_OMIT_STATS', 1);
-
 		$manager = GalleryManager::getInstance();
 		$conditions = array();
 		$order_by = array();
@@ -1629,6 +1629,8 @@ class gallery extends Module {
 		// raw group id was specified
 		if (isset($_REQUEST['group_id']))
 			$conditions['group'] = fix_id($_REQUEST['group_id']);
+
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
 
 		// group text_id was specified, get group ID
 		if (isset($_REQUEST['group'])) {
@@ -1670,7 +1672,7 @@ class gallery extends Module {
 							'id'			=> $item->id,
 							'group'			=> $item->group,
 							'title'			=> $item->title,
-							'description'	=> $item->description,
+							'description'	=> $all_languages ? $item->description : Markdown($item->description[$language]),
 							'filename'		=> $item->filename,
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
@@ -1691,8 +1693,6 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_Group() {
-		define('_OMIT_STATS', 1);
-
 		if (isset($_REQUEST['id'])) {
 			// display a specific group
 			$id = fix_id($_REQUEST['id']);
@@ -1743,7 +1743,6 @@ class gallery extends Module {
 	 */
 	private function json_GroupList() {
 		global $language;
-		define('_OMIT_STATS', 1);
 
 		$manager = GalleryGroupManager::getInstance();
 		$conditions = array();
@@ -1827,8 +1826,6 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_Container() {
-		define('_OMIT_STATS', 1);
-
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
@@ -1859,8 +1856,6 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_ContainerList() {
-		define('_OMIT_STATS', 1);
-
 		$manager = GalleryContainerManager::getInstance();
 
 		$items = $manager->getItems(
