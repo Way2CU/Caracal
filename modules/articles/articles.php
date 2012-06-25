@@ -833,8 +833,6 @@ class articles extends Module {
 
 		} else if (isset($_REQUEST['id'])) {
 			// print image itself
-			define('_OMIT_STATS', 1);
-
 			$id = fix_id($_REQUEST['id']);
 			$type = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : ImageType::Stars;
 			$manager = ArticleManager::getInstance();
@@ -1003,8 +1001,6 @@ class articles extends Module {
 	private function json_Article() {
 		global $language;
 
-		define('_OMIT_STATS', 1);
-
 		$id = fix_id($_REQUEST['id']);
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ImageType::Stars;
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
@@ -1065,8 +1061,6 @@ class articles extends Module {
 	 */
 	private function json_ArticleList() {
 		global $language;
-
-		define('_OMIT_STATS', 1);
 
 		$manager = ArticleManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
@@ -1149,8 +1143,6 @@ class articles extends Module {
 	 * Function to record vote from AJAX call
 	 */
 	private function json_Vote() {
-		define('_OMIT_STATS', 1);
-
 		$id = fix_id($_REQUEST['id']);
 		$value = $_REQUEST['value'];
 		$manager = ArticleManager::getInstance();
