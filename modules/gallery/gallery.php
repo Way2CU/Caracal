@@ -1906,6 +1906,11 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public function getImageURL($item) {
+		if (!is_object($item) && is_numeric($item)) {
+			$manager = GalleryManager::getInstance();
+			$item = $manager->getSingleItem(array('filename'), array('id' => $item));
+		}
+
 		return url_GetFromFilePath($this->path.'images/'.$item->filename);
 	}
 
