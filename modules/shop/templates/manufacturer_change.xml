@@ -29,6 +29,7 @@
 					eval="selected"
 					template="image_option.xml"
 					local="1"
+					protected="1"
 				/>
 			</select>
 		</label>
