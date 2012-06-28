@@ -172,7 +172,7 @@
 		<constant name="menu_special_offers">מבצעים</constant>
 		<constant name="menu_currencies">מטבעות</constant>
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
-		<constant name="menu_manufacturers">Manufacturers</constant>
+		<constant name="menu_manufacturers">יצרנים</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
 		<constant name="tab_colors">צבעים</constant>
@@ -205,10 +205,10 @@
 		<constant name="title_shipping_information">פרטי משלוח</constant>
 		<constant name="title_transactions">חנות: עסקאות</constant>
 		<constant name="title_transaction_details">חנות: פרטי עסקאות </constant>
-		<constant name="title_manufacturers">Shop: Manufacturers</constant>
-		<constant name="title_manufacturer_add">Shop: Add manufacturer</constant>
-		<constant name="title_manufacturer_change">Shop: Change manufacturer</constant>
-		<constant name="title_manufacturer_delete">Shop: Delete manufacturer</constant>
+		<constant name="title_manufacturers">חנות: יצרן</constant>
+		<constant name="title_manufacturer_add">חנות: הוסף יצרן</constant>
+		<constant name="title_manufacturer_change">חנות: שנה יצרן</constant>
+		<constant name="title_manufacturer_delete">חנות: מחק יצרן</constant>
 
 		<constant name="column_name">שם</constant>
 		<constant name="column_price">מחיר</constant>
@@ -230,7 +230,7 @@
 		<constant name="column_categories">קטגוריות אליהן שייך המוצר</constant>
 		<constant name="column_color_name">שם</constant>
 		<constant name="column_color_value">ערך</constant>
-		<constant name="column_manufacturer_name">Name</constant>
+		<constant name="column_manufacturer_name">שם</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_description">תיאור:</constant>
@@ -262,10 +262,10 @@
 		<constant name="label_zip">מיקוד:</constant>
 		<constant name="label_country">ארץ:</constant>
 		<constant name="label_state">מדינה:</constant>
-		<constant name="label_manufacturer_name">Manufacturer name:</constant>
-		<constant name="label_manufacturer">Manufacturer:</constant>
-		<constant name="label_web_site">Web site:</constant>
-		<constant name="label_logo">Logo:</constant>
+		<constant name="label_manufacturer_name">שם יצרן:</constant>
+		<constant name="label_manufacturer">יצרן:</constant>
+		<constant name="label_web_site">אתר:</constant>
+		<constant name="label_logo">לוגו:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
@@ -291,14 +291,14 @@
 		<constant name="message_checkout_completed">תהליך התשלום הושלם!. בקרוב תקבל מייל מאיתנו המאשר את הרכישה. אם נתקלת בבעיה כלשהי, אנא צור עמנו קשר. תודה על שקנית אונליין.</constant>
 		<constant name="message_checkout_canceled">תהליך החיוב בוטל. העגלה לא רוקנה למקרה שתרצה להמשיך ולקנות. באם בטלת בשל בעיה כלשהי שלנו, אנא ידע אותנו.</constant>
 		<constant name="message_bad_fields">השדות הבאים אינם חוקיים:</constant>
-		<constant name="message_manufacturer_saved">Manufacturer data was saved.</constant>
-		<constant name="message_manufacturer_delete">You are about to remove the following manufacturer from the shop. Items connected to this manufacturer will no be removed. Are you sure you want to do this?</constant>
-		<constant name="message_manufacturer_deleted">Manufacturer was deleted!</constant>
+		<constant name="message_manufacturer_saved">מידע אודות יצרן נשמר</constant>
+		<constant name="message_manufacturer_delete">אתה עומד להסיר יצרן, מוצרים המחוברים לאותו יצרן לא יוסר- האם אצה בטוח?</constant>
+		<constant name="message_manufacturer_deleted">היצרן נמחק</constant>
 
 		<constant name="add_item">הוסף מוצר חדש</constant>
 		<constant name="add_size_definition">הוסף הגדרת גודל</constant>
 		<constant name="add_size_value">הוסף ערך גודל</constant>
-		<constant name="add_manufacturer">Add manufacturer</constant>
+		<constant name="add_manufacturer">הוסף יצרן</constant>
 		<constant name="manage_categories">נהל קטגוריות</constant>
 		<constant name="add_currency">הוסף מטבע</constant>
 		<constant name="update_currencies">עדכן רשימת מטבעות</constant>
