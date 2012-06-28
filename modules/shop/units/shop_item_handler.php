@@ -126,6 +126,9 @@ class ShopItemHandler {
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
+		$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
+		$template->registerTagHandler('_manufacturer_list', &$manufacturer_handler, 'tag_ManufacturerList');
+
 		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
 
 		$template->restoreXML();
@@ -154,6 +157,9 @@ class ShopItemHandler {
 			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
 
+			$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
+			$template->registerTagHandler('_manufacturer_list', &$manufacturer_handler, 'tag_ManufacturerList');
+
 			$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
 
 			// prepare parameters
@@ -163,6 +169,7 @@ class ShopItemHandler {
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 						'gallery'		=> $item->gallery,
+						'manufacturer'	=> $item->manufacturer,
 						'size_definition'=> $item->size_definition,
 						'author'		=> $item->author,
 						'views'			=> $item->views,
@@ -207,7 +214,8 @@ class ShopItemHandler {
 				'tax'				=> isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
 				'weight'			=> isset($_REQUEST['weight']) && !empty($_REQUEST['weight']) ? fix_chars($_REQUEST['weight']) : 0,
 				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
-				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5
+				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
+				'manufacturer'		=> isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0
 			);
 		
 		if ($new_item) {
@@ -638,15 +646,33 @@ class ShopItemHandler {
 			$gallery = null;
 			if (class_exists('gallery'))
 				$gallery = gallery::getInstance();
+
+			$manufacturer_manager = ShopManufacturerManager::getInstance();
 			
 			foreach ($items as $item) {
 				if (!is_null($gallery)) {
+					// get manufacturer logo
+					$manufacturer_logo_url = '';
+
+					if ($item->manufacturer != 0) {
+						$manufacturer = $manufacturer_manager->getSingleItem(
+														$manufacturer_manager->getFieldNames(),
+														array('id' => $item->manufacturer)
+													);
+
+						if (is_object($manufacturer)) 
+							$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
+					}
+
+					// get urls for image and thumbnail
 					$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
 					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
 
 				} else {
+					// default values if gallery is not enabled
 					$image_url = '';
 					$thumbnail_url = '';
+					$manufacturer_logo_url = '';
 				}
 
 				$rating = 0;
@@ -661,6 +687,7 @@ class ShopItemHandler {
 							'colors'		=> $item->colors,
 							'image'			=> $image_url,
 							'thumbnail'		=> $thumbnail_url,
+							'manufacturer_logo_url'	=> $manufacturer_logo_url,
 							'author'		=> $item->author,
 							'views'			=> $item->views,
 							'price'			=> $item->price,

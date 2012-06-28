@@ -18,6 +18,7 @@ require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_buyer_addresses_manager.php');
 require_once('units/shop_related_items_manager.php');
+require_once('units/shop_manufacturer_handler.php');
 
 
 class TransactionType {
@@ -114,6 +115,18 @@ class shop extends Module {
 											$this->getLanguageConstant('title_manage_item_sizes'),
 											true, true,
 											backend_UrlMake($this->name, 'sizes')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_manufacturers'),
+								url_GetFromFilePath($this->path.'images/manufacturers.png'),
+								window_Open( // on click open window
+											'shop_manufacturers',
+											400,
+											$this->getLanguageConstant('title_manufacturers'),
+											true, true,
+											backend_UrlMake($this->name, 'manufacturers')
 										),
 								5  // level
 							));
@@ -467,6 +480,11 @@ class shop extends Module {
 					$handler->transferControl($params, $children);
 					break;
 
+				case 'manufacturers':
+					$handler = ShopManufacturerHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
+
 				case 'special_offers':
 
 				case 'stocks':
@@ -501,6 +519,7 @@ class shop extends Module {
 
 		$sql .= "
 				`gallery` INT(11) NOT NULL,
+				`manufacturer` INT(11) NOT NULL,
 				`size_definition` INT(11) NULL,
 				`colors` VARCHAR(255) NOT NULL DEFAULT '',
 				`author` INT(11) NOT NULL,
@@ -604,7 +623,7 @@ class shop extends Module {
 				  `email` varchar(127) NOT NULL,
 				  `uid` varchar(50) NOT NULL,
 				  PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
 		// create shop buyer addresses table
@@ -619,7 +638,7 @@ class shop extends Module {
 				  `country` varchar(64) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
 		// create shop transactions table
@@ -638,7 +657,7 @@ class shop extends Module {
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`),
 				  KEY `address` (`address`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";		
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";		
 		if ($db_active == 1) $db->query($sql);
 		
 		// create shop transaction items table
@@ -653,7 +672,7 @@ class shop extends Module {
 				  PRIMARY KEY (`id`),
 				  KEY `transaction` (`transaction`),
 				  KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
 		// create shop stock table
@@ -664,7 +683,20 @@ class shop extends Module {
 				  `amount` int(11) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop manufacturers table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_manufacturers` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
+
+		$sql .= " `web_site` varchar(255) NOT NULL,
+				  `logo` int(11) NOT NULL,
+			      PRIMARY KEY (`id`),
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
 	}
@@ -687,7 +719,8 @@ class shop extends Module {
 					'shop_transactions',
 					'shop_transaction_items',
 					'shop_stock',
-					'shop_related_items'
+					'shop_related_items',
+					'shop_manufacturers'
 				);
 		
 		$sql = "DROP TABLE IF EXISTS `".join('`, `', $tables)."`;";

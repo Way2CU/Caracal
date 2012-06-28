@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="shop_manufacturer_add_form">
+		<label>
+			<span><_text constant="label_manufacturer_name" module="shop"/></span>
+			<input type="text" name="name" style="width: 270px;" class="multi-language" maxlength="255"/>
+		</label>
+		<label>
+			<span><_text constant="label_web_site" module="shop"/></span>
+			<input type="text" name="web_site" class="code" style="width: 270px;" maxlength="255"/>
+		</label>
+		<label>
+			<span><_text constant="label_logo" module="shop"/></span>
+			<input type="file" name="logo"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		var selector = new LanguageSelector('shop_manufacturer_add_form');
+	</script>
+</document>

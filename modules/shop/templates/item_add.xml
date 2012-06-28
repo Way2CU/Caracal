@@ -4,11 +4,25 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_add_form">
 		<div id="shop_add_item_notebook">
 			<div>
-				<label>
-					<span><_text constant="label_name" module="shop"/></span>
-					<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
-				</label>
-				<label>
+				<div class="box left" style="width: 290px;">
+					<label>
+						<span><_text constant="label_name" module="shop"/></span>
+						<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+					</label>
+				</div>
+				<div class="box left" style="width: 160px;">
+					<label>
+						<span><_text constant="label_manufacturer" module="shop"/></span>
+						<select name="manufacturer" style="width: 160px;">
+							<option/>
+							<_manufacturer_list
+								template="manufacturer_option.xml"
+								local="1"
+							/>
+						</select>
+					</label>
+				</div>
+				<label style="clear: both; padding-top: 10px;">
 					<span><_text constant="label_description" module="shop"/></span>
 					<textarea name="description" class="multi-language" style="width: 460px; height: 155px;"/>
 				</label>

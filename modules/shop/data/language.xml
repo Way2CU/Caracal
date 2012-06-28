@@ -11,6 +11,7 @@
 		<constant name="menu_special_offers">Special offers</constant>
 		<constant name="menu_currencies">Currencies</constant>
 		<constant name="menu_item_sizes">Manage item sizes</constant>
+		<constant name="menu_manufacturers">ManufacturerManufacturers</constant>
 
 		<constant name="tab_item">Item data</constant>
 		<constant name="tab_colors">Colors</constant>
@@ -43,6 +44,10 @@
 		<constant name="title_shipping_information">Shipping information</constant>
 		<constant name="title_transactions">Shop: Transactions</constant>
 		<constant name="title_transaction_details">Shop: Transaction details: </constant>
+		<constant name="title_manufacturers">Shop: Manufacturers</constant>
+		<constant name="title_manufacturer_add">Shop: Add manufacturer</constant>
+		<constant name="title_manufacturer_change">Shop: Change manufacturer</constant>
+		<constant name="title_manufacturer_delete">Shop: Delete manufacturer</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -64,6 +69,7 @@
 		<constant name="column_categories">Categories item belongs to</constant>
 		<constant name="column_color_name">Name</constant>
 		<constant name="column_color_value">Value</constant>
+		<constant name="column_manufacturer_name">Name</constant>
 
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
@@ -95,6 +101,10 @@
 		<constant name="label_zip">ZIP code:</constant>
 		<constant name="label_country">Country:</constant>
 		<constant name="label_state">State:</constant>
+		<constant name="label_manufacturer_name">Manufacturer name:</constant>
+		<constant name="label_manufacturer">Manufacturer:</constant>
+		<constant name="label_web_site">Web site:</constant>
+		<constant name="label_logo">Logo:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -120,10 +130,14 @@
 		<constant name="message_checkout_completed">Checkout is now completed. You should receive email from us soon confirming your purchase. If you experience any problems, please let us know. Thank you for using our online services.</constant>
 		<constant name="message_checkout_canceled">Your checkout was canceled. Shopping cart was not cleared in case you want to continue shopping and checkout later. If you canceled because of problem on our part, please let us know.</constant>
 		<constant name="message_bad_fields">The following fields are invalid:</constant>
+		<constant name="message_manufacturer_saved">Manufacturer data was saved.</constant>
+		<constant name="message_manufacturer_delete">You are about to remove the following manufacturer from the shop. Items connected to this manufacturer will no be removed. Are you sure you want to do this?</constant>
+		<constant name="message_manufacturer_deleted">Manufacturer was deleted!</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
 		<constant name="add_size_value">Add size value</constant>
+		<constant name="add_manufacturer">Add manufacturer</constant>
 		<constant name="manage_categories">Manage categories</constant>
 		<constant name="add_currency">Add currency</constant>
 		<constant name="update_currencies">Update currency list</constant>
@@ -158,6 +172,7 @@
 		<constant name="menu_special_offers">מבצעים</constant>
 		<constant name="menu_currencies">מטבעות</constant>
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
+		<constant name="menu_manufacturers">Manufacturers</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
 		<constant name="tab_colors">צבעים</constant>
@@ -190,6 +205,10 @@
 		<constant name="title_shipping_information">פרטי משלוח</constant>
 		<constant name="title_transactions">חנות: עסקאות</constant>
 		<constant name="title_transaction_details">חנות: פרטי עסקאות </constant>
+		<constant name="title_manufacturers">Shop: Manufacturers</constant>
+		<constant name="title_manufacturer_add">Shop: Add manufacturer</constant>
+		<constant name="title_manufacturer_change">Shop: Change manufacturer</constant>
+		<constant name="title_manufacturer_delete">Shop: Delete manufacturer</constant>
 
 		<constant name="column_name">שם</constant>
 		<constant name="column_price">מחיר</constant>
@@ -211,6 +230,7 @@
 		<constant name="column_categories">קטגוריות אליהן שייך המוצר</constant>
 		<constant name="column_color_name">שם</constant>
 		<constant name="column_color_value">ערך</constant>
+		<constant name="column_manufacturer_name">Name</constant>
 
 		<constant name="label_name">שם:</constant>
 		<constant name="label_description">תיאור:</constant>
@@ -242,6 +262,10 @@
 		<constant name="label_zip">מיקוד:</constant>
 		<constant name="label_country">ארץ:</constant>
 		<constant name="label_state">מדינה:</constant>
+		<constant name="label_manufacturer_name">Manufacturer name:</constant>
+		<constant name="label_manufacturer">Manufacturer:</constant>
+		<constant name="label_web_site">Web site:</constant>
+		<constant name="label_logo">Logo:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
@@ -267,10 +291,14 @@
 		<constant name="message_checkout_completed">תהליך התשלום הושלם!. בקרוב תקבל מייל מאיתנו המאשר את הרכישה. אם נתקלת בבעיה כלשהי, אנא צור עמנו קשר. תודה על שקנית אונליין.</constant>
 		<constant name="message_checkout_canceled">תהליך החיוב בוטל. העגלה לא רוקנה למקרה שתרצה להמשיך ולקנות. באם בטלת בשל בעיה כלשהי שלנו, אנא ידע אותנו.</constant>
 		<constant name="message_bad_fields">השדות הבאים אינם חוקיים:</constant>
+		<constant name="message_manufacturer_saved">Manufacturer data was saved.</constant>
+		<constant name="message_manufacturer_delete">You are about to remove the following manufacturer from the shop. Items connected to this manufacturer will no be removed. Are you sure you want to do this?</constant>
+		<constant name="message_manufacturer_deleted">Manufacturer was deleted!</constant>
 
 		<constant name="add_item">הוסף מוצר חדש</constant>
 		<constant name="add_size_definition">הוסף הגדרת גודל</constant>
 		<constant name="add_size_value">הוסף ערך גודל</constant>
+		<constant name="add_manufacturer">Add manufacturer</constant>
 		<constant name="manage_categories">נהל קטגוריות</constant>
 		<constant name="add_currency">הוסף מטבע</constant>
 		<constant name="update_currencies">עדכן רשימת מטבעות</constant>

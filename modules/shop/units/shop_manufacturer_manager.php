@@ -13,7 +13,7 @@ class ShopManufacturerManager extends ItemManager {
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('shop_items');
+		parent::__construct('shop_manufacturers');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('name', 'ml_varchar');
