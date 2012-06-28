@@ -1093,6 +1093,9 @@ class gallery extends Module {
 		if (!isset($tag_params['show_protected']))
 			$conditions['protected'] = 0;
 
+		if (isset($tag_params['protected']))
+			$conditions['protected'] = fix_id($tag_params['protected']);
+
 		if (isset($tag_params['slideshow']))
 			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
 
