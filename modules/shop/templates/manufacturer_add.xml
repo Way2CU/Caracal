@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="shop_manufacturer_add_form">
+	<form 
+		action="$params['form_action']" 
+		eval="action" 
+		method="POST" 
+		id="shop_manufacturer_add_form" 
+		enctype="multipart/form-data"
+	>
 		<label>
 			<span><_text constant="label_manufacturer_name" module="shop"/></span>
 			<input type="text" name="name" style="width: 270px;" class="multi-language" maxlength="255"/>
