@@ -749,6 +749,10 @@ class youtube extends Module {
 								);
 		}
 
+		if (isset($tag_params['autoplay']))
+			$autoplay = fix_id($tag_params['autoplay']); else
+			$autoplay = 0;
+
 		// no id was specified
 		if (is_object($video))
 			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1') && class_exists('swfobject')) {
@@ -759,9 +763,11 @@ class youtube extends Module {
 								$tag_params['target'],
 								isset($tag_params['width']) ? $tag_params['width'] : 320,
 								isset($tag_params['height']) ? $tag_params['height'] : 240,
-								array(),
 								array(
-									'wmode'	=> 'opaque'
+									'autoplay'	=> $autoplay
+								),
+								array(
+									'wmode'	=> 'opaque',
 								)
 							);
 			} else {
