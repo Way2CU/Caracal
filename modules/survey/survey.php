@@ -228,7 +228,7 @@ class survey extends Module {
 
 		// get entries for type
 		if (is_object($type)) {
-			$data = 'id;ip_address;timestamp;'.str_replace(',', ';', $type->fields)."\n";
+			$data = 'id,ip_address,timestamp;'.$type->fields."\n";
 			$entries = $entries_manager->getItems($entries_manager->getFieldNames(), array('type' => $type->id));
 			$rows = array();
 
@@ -269,14 +269,14 @@ class survey extends Module {
 						$tmp[] = '"'.$entry[$field].'"'; else
 						$tmp[] = '';
 
-				$data .= implode(';', $tmp)."\n";
+				$data .= implode(',', $tmp)."\n";
 			}
 		}
 
 		define('_OMIT_STATS', 1);
 
 		// print headers
-    	header('Content-Type: text/csv');
+    	header('Content-Type: text/csv; charset=utf-8');
     	header('Content-Disposition: attachment; filename="survey_export.csv"');
     	header('Content-Length: '.strlen($data));
 
