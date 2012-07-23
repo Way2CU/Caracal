@@ -41,6 +41,9 @@
 		<constant name="message_logout_ok">Logout successful!</constant>
 		<constant name="message_users_error_level_too_high">Error saving user data. You can not assign level higher than your own.</constant>
 		<constant name="message_users_error_user_level_higher">Error saving user data. Specified user has higher access than you.</constant>
+		<constant name="message_users_error_duplicate">Unable to create new user. Specified username or email already exists.</constant>
+		<constant name="message_users_error_captcha">Invalid captcha value!</constant>
+		<constant name="message_users_created">New user has been created!</constant>
 		<constant name="message_users_data_saved">User data was saved!</constant>
 		<constant name="message_users_delete">You are about to remove the following user from the system. User will loose all data associated with this account. Are you sure?</constant>
 		<constant name="message_users_deleted">Specified user was removed!</constant>
@@ -61,6 +64,7 @@
 		<constant name="label_fullname">Full name:</constant>
 		<constant name="label_username">Username:</constant>
 		<constant name="label_password">Password:</constant>
+		<constant name="label_email">Email:</constant>
 		<constant name="label_level">Level:</constant>
 		<constant name="label_link">Enter URL:</constant>
 
@@ -113,6 +117,11 @@
 		<constant name="title_module_deactivate">כבה מודול</constant>
 		<constant name="title_module_initialise">אתחל מודול</constant>
 		<constant name="title_module_disable">נטרל מודול</constant>
+		<constant name="title_change_password">שנה סיסמא</constant>
+		<constant name="title_users_manager">נהל משתמשים</constant>
+		<constant name="title_users_create">משתמשים: צור חדש</constant>
+		<constant name="title_users_change">משתמשים: שנה מידע</constant>
+		<constant name="title_users_delete">משתמשים: מחק חשבון</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">המודול פעיל</constant>
@@ -128,6 +137,14 @@
 		<constant name="message_login_error">שם משתמש או סיסמא לא תקינים</constant>
 		<constant name="message_logout">אתה עומד להתנתקת האם אתה בטוח</constant>
 		<constant name="message_logout_ok">יציאת מממשק המנהל בהצלחה</constant>
+		<constant name="message_users_error_level_too_high">טעות בשמירת מידע המשתמש, אינך יכול ליצור משתמש בדרגה גבוהה משלך</constant>
+		<constant name="message_users_error_user_level_higher">טעות בשמירת מידע עבור משתמש,כל מה שנאמר</constant>
+		<constant name="message_users_error_duplicate">אין אפשרות ליצור משתמש מאחר ושם המשתמש קיים במערכת</constant>
+		<constant name="message_users_error_captcha">Invalid captcha value!</constant>
+		<constant name="message_users_created">נוצא משתמש חגש</constant>
+		<constant name="message_users_data_saved">מידע עבור המשתמש נשמר.</constant>
+		<constant name="message_users_delete">אתה עומד להסיר את המשתמש, כל המידע המשוייך אליו ימחקהאם אתה בטוח?יאליו</constant>
+		<constant name="message_users_deleted">המשתמש הוסר</constant>
 
 		<!-- Labels -->
 		<constant name="label_old_password">סיסמא ישנה:</constant>
@@ -136,6 +153,7 @@
 		<constant name="label_fullname">שם מלא:</constant>
 		<constant name="label_username">שם משתמש:</constant>
 		<constant name="label_password">סיסמא:</constant>
+		<constant name="label_email">Email:</constant>
 		<constant name="label_level">רמה:</constant>
 		<constant name="label_link">הכנס URL:</constant>
 
@@ -154,6 +172,9 @@
 		<constant name="column_module_order">הזמן</constant>
 		<constant name="column_module_preload">טען</constant>
 		<constant name="column_module_active">הפעל</constant>
+		<constant name="column_users_fullname">Full name</constant>
+		<constant name="column_users_username">Username</constant>
+		<constant name="column_users_level">Level</constant>
 
 		<!-- General -->
 		<constant name="activate">הפעל</constant>
@@ -175,7 +196,7 @@
 		<constant name="title_logout">יציאה מהמערכת</constant>
 		<constant name="username">שם משתמש:</constant>
 		<constant name="password">סיסמא:</constant>
-		<constant name="captcha">Captcha</constant>
+		<constant name="captcha">קוד אבטחה</constant>
 		<constant name="login">התחבר</constant>
 		<constant name="logout">התנתק</constant>
 	</language>
