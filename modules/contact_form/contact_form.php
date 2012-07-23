@@ -254,7 +254,7 @@ class contact_form extends Module {
 		$headers['X-Mailer'] = "RCF-CMS/1.0";
 		
 		// prepare subject
-		if ($subject == '' or is_null($subject))
+		if ($subject == '' || is_null($subject))
 			$subject = $this->settings['default_subject'];
 		
 		$subject = "=?utf-8?B?".base64_encode($subject)."?=";
@@ -288,7 +288,7 @@ class contact_form extends Module {
 			
 		} else {
 			// no HTML specified, use plain text
-			$body = $text_body;
+			$body = "\n".$text_body;
 		}		
 		
 		// get headers string
