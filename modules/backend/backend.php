@@ -36,7 +36,7 @@ class backend extends Module {
 	 * List of protected modules who can't be disabled or deactivated
 	 * @var array
 	 */
-	private $protected_modules = array('backend', 'head_tag', 'captcha');
+	private $protected_modules = array('backend', 'head_tag');
 
 	/**
 	 * Constructor
@@ -169,19 +169,23 @@ class backend extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'login':
-					// if user is not logged, redirect him to a proper place
-					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
-						$session_manager = new SessionManager($this);
-						$session_manager->transferControl();
-						return;
-					}
-					break;
-
 				case 'login_commit':
 				case 'logout':
 				case 'logout_commit':
-					$session_manager = new SessionManager($this);
+				case 'json_login':
+				case 'json_logout':
+					$session_manager = SessionManager::getInstance($this);
 					$session_manager->transferControl();
+					break;
+				
+				case 'save_unpriviledged_user':
+					$user_manager = UserManager::getInstance();
+					$user_manager->saveUnpriviledgedUser($params, $children);
+					break;
+
+				case 'password_recovery':
+					$user_manager = UserManager::getInstance();
+					$user_manager->recoverPasswordByEmail($params, $children);
 					break;
 
 				case 'draw_menu':
@@ -191,7 +195,7 @@ class backend extends Module {
 				case 'transfer_control':
 					// if user is not logged, redirect him to a proper place
 					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
-						$session_manager = new SessionManager($this);
+						$session_manager = SessionManager::getInstance($this);
 						$session_manager->transferControl();
 						return;
 					}
@@ -268,7 +272,7 @@ class backend extends Module {
 				// ---
 				case 'logout':
 				case 'logout_commit':
-					$session_manager = new SessionManager($this);
+					$session_manager = SessionManager::getInstance($this);
 					$session_manager->transferControl();
 					break;
 			}
