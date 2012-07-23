@@ -428,6 +428,7 @@ class ShopItemHandler {
 	 */
 	public function tag_Item($tag_params, $children) {
 		$manager = ShopItemManager::getInstance();
+		$manufacturer_manager = ShopManufacturerManager::getInstance();
 		$id = null;
 		$gallery = null;
 		$conditions = array();
@@ -493,14 +494,29 @@ class ShopItemHandler {
 			if (class_exists('gallery'))
 				$gallery = gallery::getInstance();
 		
-			// try to get thumbnail and image url
 			if (!is_null($gallery)) {
+				// get manufacturer logo
+				$manufacturer_logo_url = '';
+
+				if ($item->manufacturer != 0) {
+					$manufacturer = $manufacturer_manager->getSingleItem(
+													$manufacturer_manager->getFieldNames(),
+													array('id' => $item->manufacturer)
+												);
+
+					if (is_object($manufacturer)) 
+						$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
+				}
+
+				// get urls for image and thumbnail
 				$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
 				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
 
 			} else {
+				// default values if gallery is not enabled
 				$image_url = '';
 				$thumbnail_url = '';
+				$manufacturer_logo_url = '';
 			}
 
 			$rating = 0;
@@ -513,6 +529,7 @@ class ShopItemHandler {
 						'gallery'		=> $item->gallery,
 						'image'			=> $image_url,
 						'thumbnail'		=> $thumbnail_url,
+						'manufacturer_logo_url' => $manufacturer_logo_url,
 						'size_definition' => $item->size_definition,
 						'colors'		=> $item->colors,
 						'author'		=> $item->author,
