@@ -34,34 +34,6 @@ class ModuleManager extends ItemManager {
 }
 
 
-class AccessManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('system_modules');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('username', 'varchar');
-		$this->addProperty('password', 'varchar');
-		$this->addProperty('fullname', 'varchar');
-		$this->addProperty('level', 'smallint');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-
 class AdministratorManager extends ItemManager {
 	private static $_instance;
 
@@ -75,6 +47,7 @@ class AdministratorManager extends ItemManager {
 		$this->addProperty('username', 'varchar');
 		$this->addProperty('password', 'varchar');
 		$this->addProperty('fullname', 'varchar');
+		$this->addProperty('email', 'varchar');
 		$this->addProperty('level', 'int');
 	}
 
