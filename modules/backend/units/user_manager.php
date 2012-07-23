@@ -127,6 +127,7 @@ class UserManager {
 						'id'			=> $item->id,
 						'fullname'		=> $item->fullname,
 						'username'		=> $item->username,
+						'email'			=> $item->email,
 						'level'			=> $item->level,
 						'form_action'	=> backend_UrlMake($this->parent->name, 'users_save'),
 						'cancel_action'	=> window_Close('system_users_change')
@@ -151,6 +152,7 @@ class UserManager {
 		$data = array(
 				'fullname'	=> fix_chars($_REQUEST['fullname']),
 				'username'	=> fix_chars($_REQUEST['username']),
+				'email'		=> fix_chars($_REQUEST['email']),
 				'level'		=> fix_id($_REQUEST['level']),
 			);
 
@@ -211,6 +213,171 @@ class UserManager {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Saves unpriviledged user to the system
+	 */
+	public function saveUnpriviledgedUser($tag_params, $children) {
+		$result = array(
+				'error'		=> false,
+				'message'	=> ''
+			);
+		$manager = AdministratorManager::getInstance();
+
+		// grab new user data
+		if (defined('_AJAX_REQUEST')) 
+			$source = $_REQUEST; else
+			$source = $tag_params;
+
+		$data = array(
+				'fullname'	=> fix_chars($source['fullname']),
+				'username'	=> fix_chars($source['username']),
+				'password'	=> fix_chars($source['password']),
+				'email'		=> fix_chars($source['email']),
+				'level'		=> 0,
+			);
+
+		// check for duplicates
+		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
+		$duplicate_emails = $manager->getItems(array('id'), array('email' => $data['email']));
+
+		if (class_exists('captcha')) {
+			$captcha = captcha::getInstance();
+			if (!$captcha->isCaptchaValid($source['captcha'])) {
+				$result['error'] = true;
+				$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
+			}
+		}
+
+		if (!$result['error'])
+			if (count($duplicate_users) > 0 || count($duplicate_emails) > 0) {
+				// we found a duplicate user
+				$result['error'] = true;
+				$result['message'] = $this->parent->getLanguageConstant('message_users_error_duplicate');
+
+			} else {
+				// insert data
+				$manager->insertData($data);
+				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
+			}
+
+		// show result
+		if (isset($source['show_result']) && $source['show_result'] == 1)
+			if (defined('_AJAX_REQUEST')) {
+				print json_encode($result);
+			} else {
+				// show message
+				$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
+				$template->setMappedModule($this->parent->name);
+
+				$params = array(
+							'message'	=> $result['message'],
+							'button'	=> $this->parent->getLanguageConstant('close'),
+							'action'	=> window_Close($window).";".window_ReloadContent('system_users'),
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Send password to users email
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function recoverPasswordByEmail($tag_params, $children) {
+		$result = false;
+		$captcha_valid = false;
+		$manager = AdministratorManager::getInstance();
+
+		$subject = null;
+		$body = null;
+
+		$message_success = 'Mail sent!';
+		$message_error = 'There was a problem sending email!';
+		$message_bad_captcha = 'Invalid captcha value!';
+
+		foreach ($children as $tag) {
+			switch ($tag->tagName) {
+				case 'subject':
+					$subject = fix_chars($tag->tagData);
+					break;
+
+				case 'body':
+					$body = fix_chars($tag->tagData);
+					break;
+
+				case 'message_success':
+					$message_success = fix_chars($tag->tagData);
+					break;
+
+				case 'message_error':
+					$message_error = fix_chars($tag->tagData);
+					break;
+
+				case 'message_bad_captcha':
+					$message_bad_captcha = fix_chars($tag->tagData);
+					break;
+			}
+		}
+
+		if (class_exists('captcha')) {
+			$captcha = captcha::getInstance();
+			$captcha_valid = $captcha->isCaptchaValid($tag_params['captcha']);
+
+		} else {
+			$captcha_valid = true;
+		}
+
+		// send email
+		if ($captcha_valid && class_exists('contact_form')) {
+			$contact_form = contact_form::getInstance();
+			$conditions = array();
+
+			if (isset($tag_params['username']))
+				$conditions['username'] = fix_chars($tag_params['username']);	
+
+			if (isset($tag_params['email']))
+				$conditions['email'] = fix_chars($tag_params['email']);
+
+			$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+			if (is_object($user)) {
+				$search = array(
+							'%username%',
+							'%password%',
+							'%email%',
+							'%fullname%'
+						);
+
+				$replace = array(
+							$user->username,
+							$user->password,
+							$user->email,
+							$user->fullname
+						);
+
+				// replace string
+				$body = str_replace($search, $replace, $body);
+
+				// send email
+				$result = $contact_form->sendFromModule($user->email, $subject, $body);
+
+				// show result
+				if (isset($tag_params['show_result']))
+					print $result ? $message_success : $message_error;
+			}
+		} else {
+			if (isset($tag_params['show_result']))
+				print $message_bad_captcha;
+		}
+		
+
+		return $result;
 	}
 
 	/**
