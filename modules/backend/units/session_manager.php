@@ -7,6 +7,7 @@
  */
 
 class SessionManager {
+	private static $_instance;
 	private static $SALT = '_web_engine: SALT1.618: ';
 
 	/**
@@ -18,8 +19,18 @@ class SessionManager {
 	/**
 	 * Constructor
 	 */
-	public function __construct($parent) {
+	protected function __construct($parent) {
 		$this->parent = $parent;
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance($parent) {
+		if (!isset(self::$_instance))
+			self::$_instance = new self($parent);
+
+		return self::$_instance;
 	}
 
 	/**
@@ -42,6 +53,14 @@ class SessionManager {
 
 			case 'logout_commit':
 				$this->logout_commit();
+				break;
+
+			case 'json_login':
+				$this->json_Login();
+				break;
+
+			case 'json_logout':
+				$this->json_Logout();
 				break;
 
 			default:
@@ -244,6 +263,136 @@ class SessionManager {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Returns true if captcha needs to be shown
+	 * @return boolean
+	 */
+	public function shouldShowCaptcha() {
+		$manager = LoginRetryManager::getInstance();
+		$show_captcha = false;
+
+		// try to get retries log
+		$retry_log = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array('address' => $_SERVER['REMOTE_ADDR'])
+									);
+
+		// check if user has more than 3 failed atempts
+		if (is_object($retry_log))
+			$show_captcha = $retry_log->count > 3;
+
+		return $show_captcha;
+	}
+
+	/**
+	 * Perform AJAX login
+	 */
+	private function json_Login() {
+		$captcha_ok = false;
+		$username = fix_chars($_REQUEST['username']);
+		$password = fix_chars($_REQUEST['password']);
+		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
+
+		$result = array(
+				'logged_in'		=> false,
+				'show_captcha'	=> false,
+				'message'		=> ''
+			);
+
+		$manager = AdministratorManager::getInstance();
+		$retry_manager = LoginRetryManager::getInstance();
+
+		$user = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array(
+										'username'	=> $username,
+										'password'	=> $password
+									));
+
+		$retry_log = $retry_manager->getSingleItem(
+									$retry_manager->getFieldNames(),
+									array(
+										'address' 	=> $_SERVER['REMOTE_ADDR']
+									));
+
+		// check captcha
+		if (is_object($retry_log) && $retry_log->count > 3) {
+			// on purpose we make a separate condition, if captcha
+			// module is not loaded, block IP address for one day
+			if (class_exists('captcha')) {
+				$captcha_module = captcha::getInstance();
+
+				$captcha_ok = $captcha_module->isCaptchaValid($captcha);
+				$captcha_module->resetCaptcha();
+			}
+		} else {
+			$captcha_ok = true;
+		}
+
+		// check user data
+		if (is_object($user) && $captcha_ok) {
+			// remove login retries
+			$retry_manager->deleteData(array('address' => $_SERVER['REMOTE_ADDR']));
+
+			// set session variables
+			$_SESSION['uid'] = $user->id;
+			$_SESSION['logged'] = true;
+			$_SESSION['level'] = $user->level;
+			$_SESSION['username'] = $user->username;
+			$_SESSION['fullname'] = $user->fullname;
+
+			$result['logged_in'] = true;
+
+		} else {
+			// user is not logged in properly, increase fail
+			// counter and present login window with message
+			$count = 1;
+
+			if (is_object($retry_log)) {
+				// don't allow counter to go over 10
+				$count = ($retry_log->count < 10) ? $retry_log->count+1 : 10;
+
+				$retry_manager->updateData(
+									array('count' => $count),
+									array('id' => $retry_log->id)
+								);
+
+			} else {
+				$retry_manager->insertData(array(
+										'day'		=> date('j'),
+										'address'	=> $_SERVER['REMOTE_ADDR'],
+										'count'		=> $count
+									));
+			}
+
+			$result['message'] = $this->parent->getLanguageConstant('message_login_error');
+			$result['show_captcha'] = $count > 3;
+		}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Perform AJAX logout
+	 */
+	private function json_Logout() {
+		// kill session variables
+		unset($_SESSION['uid']);
+		unset($_SESSION['logged']);
+		unset($_SESSION['level']);
+		unset($_SESSION['username']);
+		unset($_SESSION['fullname']);
+
+		// get message
+		$message = $this->parent->getLanguageConstant('message_logout_ok');
+		$result = array(
+			'logged_in'	=> false,
+			'message'	=> $message
+		);
+
+		print json_encode(result);
 	}
 }
 
