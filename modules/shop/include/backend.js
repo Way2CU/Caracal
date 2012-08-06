@@ -130,3 +130,36 @@ function shop_ParseColors() {
 		shop_AddColorItem(data[0], data[1]);
 	}
 }
+
+function shop_UpdateTransactionStatus(button) {
+	var backend_window = $(button).closest('.window');
+	var select = backend_window.find('select[name=status]').eq(0)
+	var transaction_status = select.val();
+	var transaction_id = backend_window.find('input[name=id]').eq(0).val();
+
+	var data = {
+		section: 'shop',
+		action: 'json_update_transaction_status',
+		id: transaction_id,
+		status: transaction_status
+	};
+
+	// disable button and select
+	$(button).attr('disabled', 'disabled');
+	select.attr('disabled', 'disabled');
+
+	// send data to server
+	$.ajax({
+		url: $('base').attr('href') + '/index.php',
+		cache: false,
+		dataType: 'json',
+		type: 'POST',
+		data: data,
+		async: false,
+		success: function(result) {
+			if (!result) {
+			} else {
+			}
+		}
+	});
+}
