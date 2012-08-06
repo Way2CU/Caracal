@@ -105,6 +105,11 @@
 		<constant name="label_manufacturer">Manufacturer:</constant>
 		<constant name="label_web_site">Web site:</constant>
 		<constant name="label_logo">Logo:</constant>
+		<constant name="label_status">Status:</constant>
+		<constant name="label_handling">Handling:</constant>
+		<constant name="label_shipping">Shipping:</constant>
+		<constant name="label_total">Total amount:</constant>
+		<constant name="label_shipping_address">Shipping address:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -161,6 +166,15 @@
 		<constant name="with">with</constant>
 		<constant name="button_take_me_back">Go to front page</constant>
 		<constant name="details">Details</constant>
+
+		<constant name="status_pending">Pending</constant>
+		<constant name="status_denied">Denied</constant>
+		<constant name="status_completed">Completed</constant>
+		<constant name="status_canceled">Canceled</constant>
+		<constant name="status_shipping">Shipping</constant>
+		<constant name="status_shipped">Shipped</constant>
+		<constant name="status_lost">Lost</constant>
+		<constant name="status_delivered">Delivered</constant>
 	</language>
 	<language short="iw">
 		<constant name="menu_shop">חנות</constant>
@@ -266,6 +280,11 @@
 		<constant name="label_manufacturer">יצרן:</constant>
 		<constant name="label_web_site">אתר:</constant>
 		<constant name="label_logo">לוגו:</constant>
+		<constant name="label_status">Status:</constant>
+		<constant name="label_handling">Handling:</constant>
+		<constant name="label_shipping">Shipping:</constant>
+		<constant name="label_total">Total amount:</constant>
+		<constant name="label_shipping_address">Shipping address:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
@@ -322,5 +341,14 @@
 		<constant name="with">עם</constant>
 		<constant name="button_take_me_back">הצג עמוד קדמי</constant>
 		<constant name="details">פרטים</constant>
+
+		<constant name="status_pending">Pending</constant>
+		<constant name="status_denied">Denied</constant>
+		<constant name="status_completed">Completed</constant>
+		<constant name="status_canceled">Canceled</constant>
+		<constant name="status_shipping">Shipping</constant>
+		<constant name="status_shipped">Shipped</constant>
+		<constant name="status_lost">Lost</constant>
+		<constant name="status_delivered">Delivered</constant>
 	</language>
 </document>
