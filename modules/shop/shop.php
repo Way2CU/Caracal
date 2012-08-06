@@ -33,6 +33,10 @@ class TransactionStatus {
 	const DENIED = 1;
 	const COMPLETED = 2;
 	const CANCELED = 3;
+	const SHIPPING = 4;
+	const SHIPPED = 5;
+	const LOST = 6;
+	const DELIVERED = 7;
 }
 
 
@@ -233,6 +237,8 @@ class shop extends Module {
 						'visible'	=> 1,
 						'deleted'	=> 0,
 					);
+		$query = mb_strtolower($query);
+		$query_words = mb_split("\s", $query);
 
 		// include pre-configured options
 		if (isset($this->search_params['category'])) {
@@ -270,8 +276,7 @@ class shop extends Module {
 		$items = $manager->getItems(
 								array(
 									'id',
-									'name', 
-									'description'
+									'name'
 								),
 								$conditions
 							);
@@ -279,64 +284,18 @@ class shop extends Module {
 		// search through items
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				$title = strtolower($item->name[$language]);
-				$description = strtolower($item->description[$language]);
+				$title = mb_strtolower($item->name[$language]);
+				$score = 0;
 
-				// get title score
-				$title_score = levenshtein($query, $title);
-				$title_length = mb_strlen($title);
-
-				// get description score
-				if (mb_strlen($description) <= 255) {
-					$description_score = levenshtein($query, $description);
-					$description_length = mb_strlen($description);
-
-				} else {
-					// text is bigger than our limit, make it short
-					$chunks = array_chunk(preg_split("//u", $description, -1, PREG_SPLIT_NO_EMPTY), 255);
-					$description_score = 255;
-
-					// measure every chunk of description
-					foreach ($chunks as $chunk) {
-						$chunk_of_description = join('', $chunk);
-						$current_score = levenshtein($query, $chunk_of_description);
-
-						if ($current_score < $description_score) {
-							$description_score = $current_score;
-							$description_length = mb_strlen($chunk_of_description);
-						}
-					}
-				}
-
-				// calculate score
-				if ($title_length > 0) {
-					$title_score = $title_length - $title_score;
-					if ($title_score < 0) $title_score = 0;
-					$title_score = ((100 * $title_score) / $title_length);
-
-				} else {
-					$title_score = 0;
-				}
-
-				if ($description_length > 0) {
-					$description_score = $description_length - $description_score;
-					if ($description_score < 0) $description_score = 0;
-					$description_score = ((100 * $description_score) / $description_length);
-
-				} else {
-					$description_score = 0;
-				}
-
-				// summarize score for this item
-				$score = ($title_score * 0.8) + ($description_score * 0.2);
+				foreach ($query_words as $query_word) 
+					if (is_numeric(mb_strpos($title, $query_word)))
+						$score += 10;
 
 				// add item to result list
 				if ($score >= $threshold)
 					$result[] = array(
 							'score'			=> $score,
-							'title_score'	=> $title_score,
-							'description_score'	=> $description_score,
-							'title'			=> $item->name[$language],
+							'title'			=> $title,
 							'description'	=> limit_words($item->description[$language], 200),
 							'id'			=> $item->id,
 							'type'			=> 'item',
@@ -444,6 +403,11 @@ class shop extends Module {
 
 				case 'set_cart_from_template':
 					$this->setCartFromTemplate($params, $children);
+					break;
+
+				case 'json_update_transaction_status':
+					$handler = ShopTransactionsHandler::getInstance($this);
+					$handler->json_UpdateTransactionStatus();
 					break;
 
 				default:
