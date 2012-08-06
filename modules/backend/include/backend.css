@@ -6,6 +6,7 @@
 
 @import "window.css";
 @import "menus.css";
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:400,700,400italic,700italic);
 
 body {
 	margin: 0px;
@@ -17,7 +18,7 @@ body {
 	background-position: top left;
 
 	color: #333333;
-	font-family: sans-serif, Arial, Tahoma;
+	font-family: 'Ubuntu', sans-serif, Arial, Tahoma;
 	font-size: 12px;
 }
 
