@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="box left" style="width: 300px;">
+		<label>
+			<span><_text constant="label_full_name" module="shop"/></span>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input 
+				type="text" 
+				value="$params['first_name'].' '.$params['last_name']" 
+				eval="value" 
+				readonly="readonly"
+				style="width: 200px;"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_email" module="shop"/></span>
+			<input 
+				type="text" 
+				value="$params['email']" 
+				eval="value" 
+				readonly="readonly"
+				style="width: 200px;"
+			/>
+		</label>
+		<hr/>
+		<label>
+			<span><_text constant="label_status" module="shop"/></span>
+			<select name="status">
+				<_transaction_status active="$params['status']" eval="active"/>
+			</select>
+			<button 
+				type="button"
+				onclick="javascript: shop_UpdateTransactionStatus(this);"
+			>
+				<_text constant="save"/>
+			</button>
+		</label>
+		<hr/>
+		<label>
+			<span><_text constant="label_handling" module="shop"/></span>
+			<input type="text" value="$params['handling']" eval="value" readonly="readonly"/>
+		</label>
+		<label>
+			<span><_text constant="label_shipping" module="shop"/></span>
+			<input type="text" value="$params['shipping']" eval="value" readonly="readonly"/>
+		</label>
+		<label>
+			<span><_text constant="label_total" module="shop"/></span>
+			<input type="text" value="$params['total']" eval="value" readonly="readonly"/>
+		</label>
+		<hr/>
+		<label>
+			<span><_text constant="label_shipping_address" module="shop"/></span>
+			<textarea readonly="readonly" style="width: 270px; height: 150px;">
+				<_var name="$params['full_address']"/>
+			</textarea>
+		</label>
+	</div>
+	<div class="scrollable_list box right" style="width: 475px;">
+		<div class="list_header">
+			<span class="column" style="width: 190px;">
+				<_text constant="column_name" module="shop"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_count" module="shop"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_price" module="shop"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_total" module="shop"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 470px">
+			<_item_list/>
+		</div>
+	</div>
+	<div style="clear: both;"/>
+</document>

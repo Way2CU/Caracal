@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 190px;">
+			<_var name="$params['name'][$language]"/>
+		</span>
+		<span class="column" style="width: 70px;">
+			<_var name="$params['amount']"/>
+		</span>
+		<span class="column" style="width: 70px;">
+			<_var name="$params['price'].' '.$params['currency']"/>
+		</span>
+		<span class="column" style="width: 70px;">
+			<_var name="$params['total'].' '.$params['currency']"/>
+		</span>
+	</div>
+</document>
