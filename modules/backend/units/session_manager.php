@@ -392,7 +392,7 @@ class SessionManager {
 			'message'	=> $message
 		);
 
-		print json_encode(result);
+		print json_encode($result);
 	}
 }
 
