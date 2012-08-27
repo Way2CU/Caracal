@@ -15,7 +15,6 @@ class ShopItemMembershipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_item_membership');
 
-		$this->addProperty('id', 'int');
 		$this->addProperty('category', 'int');
 		$this->addProperty('item', 'int');
 	}

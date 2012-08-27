@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 360px;">
+			<label>
+				<_if condition="$params['selected'] == 1">
+					<input
+						type="radio"
+						name="'delivery_'.$params['method']"
+						eval="name,value"
+						value="$params['id']"
+						checked="checked"
+					/>
+				</_if>
+				<_if condition="$params['selected'] == 0">
+					<input
+						type="radio"
+						name="'delivery_'.$params['method']"
+						eval="name,value"
+						value="$params['id']"
+					/>
+				</_if>
+				<_var name="$params['value']"/>
+			</label>
+		</span>
+	</div>
+</document>

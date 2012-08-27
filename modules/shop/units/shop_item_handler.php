@@ -129,6 +129,9 @@ class ShopItemHandler {
 		$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_manufacturer_list', &$manufacturer_handler, 'tag_ManufacturerList');
 
+		$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
+		$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
+
 		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
 
 		$template->restoreXML();
@@ -159,6 +162,9 @@ class ShopItemHandler {
 
 			$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_manufacturer_list', &$manufacturer_handler, 'tag_ManufacturerList');
+
+			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
+			$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
 
 			$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
 
@@ -202,6 +208,7 @@ class ShopItemHandler {
 		$manager = ShopItemManager::getInstance();
 		$membership_manager = ShopItemMembershipManager::getInstance();
 		$related_items_manager = ShopRelatedItemsManager::getInstance();
+		$delivery_item_relation_manager = ShopDeliveryItemRelationsManager::getInstance();
 		$open_editor = "";
 
 		$new_item = is_null($id);
@@ -247,8 +254,11 @@ class ShopItemHandler {
 		} else {
 			// remove membership data, we'll update those in a moment
 			$membership_manager->deleteData(array('item' => $id));
+
+			// remove delivery methods
+			$delivery_item_relation_manager->deleteData(array('item' => $id));
 		}
-		
+
 		// store item data
 		if ($new_item) {
 			// store new data
@@ -262,15 +272,20 @@ class ShopItemHandler {
 			$window = 'shop_item_change';
 		}
 		
-		// update categories
+		// update categories and delivery method selection
 		$category_ids = array();
 		$category_template = 'category_id';
+		$delivery_ids = array();
+		$delivery_template = 'delivery_';
 		
 		foreach ($_REQUEST as $key => $value) {
 			if (substr($key, 0, strlen($category_template)) == $category_template && $value == 1) 
 				$category_ids[] = fix_id(substr($key, strlen($category_template)-1));
+
+			if (substr($key, 0, strlen($delivery_template)) == $delivery_template)
+				$delivery_ids[] = fix_id($value);
 		}
-		
+
 		// update membership
 		if (count($category_ids) > 0)
 			foreach ($category_ids as $category_id) {
@@ -279,6 +294,16 @@ class ShopItemHandler {
 										'item'		=> $id
 									));
 			}
+
+		// update delivery methods
+		if (count($delivery_ids) > 0)
+			foreach ($delivery_ids as $delivery_id) 
+				if (!empty($delivery_id)) {
+					$delivery_item_relation_manager->insertData(array(
+											'item'		=> $id,
+											'price'		=> $delivery_id
+										));
+				}
 
 		// store related items
 		if (!$new_item) 
@@ -368,7 +393,7 @@ class ShopItemHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_size_deleted"),
+					'message'	=> $this->_parent->getLanguageConstant("message_item_deleted"),
 					'button'	=> $this->_parent->getLanguageConstant("close"),
 					'action'	=> window_Close('shop_item_delete').";".window_ReloadContent('shop_items')
 				);

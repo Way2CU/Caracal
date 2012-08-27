@@ -328,6 +328,127 @@ class ShopTransactionsHandler {
 
 		print json_encode($result);
 	}
+
+	/**
+	 * Send email to client and site owner
+	 * @param string $uid
+	 * @return boolean
+	 */
+	public function sendMail($uid) {
+		global $language;
+
+		$result = false;
+		$html_body = '';
+		$subject = '';
+		$body = '';
+
+		// grab some objects to play with
+		$transaction_manager = ShopTransactionsManager::getInstance();
+		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+		$items_manager = ShopItemManager::getInstance();
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$address_manager = ShopBuyerAddressesManager::getInstance();
+		$language_handler = MainLanguageHandler::getInstance();
+
+		$transaction = $transaction_manager->getSingleItem(
+							$transaction_manager->getFieldNames(),
+							array('uid' => $uid)
+						);
+
+		// get contact module 
+		if (class_exists('contact_form')) {
+			$contact_form = contact_form::getInstance();
+
+		} else {
+			$contact_form = null;
+		}
+
+		// get email body
+		if (class_exists('articles') && isset($this->_parent->settings['email_article'])) { 
+			$article_id = $this->_parent->settings['email_article'];
+			$article_manager = ArticleManager::getInstance();
+			$article = $article_manager->getSingleItem(
+							$article_manager->getFieldNames(),
+							array('id' => $article_id)
+						);
+
+			if (is_object($article)) {
+				$body = $article->content[$language];
+				$subject = $article->title[$language];
+			}
+		}
+
+		// create email bodies
+		if (is_object($transaction) && is_object($contact_form) && !empty($body)) {
+			$items = array();
+
+			// get buyer and address
+			$buyer = $buyer_manager->getSingleItem(
+							$buyer_manager->getFieldNames(),
+							array('id' => $transaction->buyer)
+						);
+			$address = $address_manager->getSingleItem(
+							$address_manager->getFieldNames(),
+							array('id' => $transaction->address)
+						);
+
+			// get transaction items
+			$transaction_items = $transaction_items_manager->getItems(
+							$transaction_items_manager->getFieldNames(),
+							array('transaction' => $transaction->id)
+						);
+
+			foreach ($transaction_items as $item) {
+				$items[$item->item] = array(
+							'price'			=> $item->price,
+							'tax'			=> $item->tax,
+							'amount'		=> $item->amount,
+							'description'	=> $item->description,
+							'uid'			=> '',
+							'name'			=> '',
+						);
+			}
+
+			// get additional information for items
+			$id_list = array_keys($items);
+			$raw_items = $items_manager->getItems(array('id', 'uid', 'name'), array('id' => $id_list));
+
+			foreach ($raw_items as $item) {
+				$id = $item->id;
+
+				$items[$id]['name'] = $item->name;
+				$items[$id]['uid'] = $item->uid;
+			}
+
+			// create HTML version of email
+			$html_body = Markdown($body);
+			$html_body = implode('%items_table_html%', mb_split('%items_table%', $html_body));
+
+			// create email body
+			$params = array(
+					'first_name'		=> $buyer->first_name,
+					'last_name'			=> $buyer->last_name,
+					'email'				=> $buyer->email,
+					'address_name'		=> $address->name,
+					'address_street'	=> $address->street,
+					'address_city'		=> $address->city,
+					'address_zip'		=> $address->zip,
+					'address_state'		=> $address->state,
+					'address_country'	=> $address->country,
+					'items_table'		=> '',
+					'items_table_html'	=> ''
+				);
+
+			foreach ($params as $needle => $replacement) {
+				$body = implode($replacement, mb_split("%{$needle}%", $body));
+				$html_body = implode($replacement, mb_split("%{$needle}%", $html_body));
+			}
+
+			$result = $contact_form->sendFromModule($to, $subject, $body, $html_body);
+		}
+
+		return $result;
+	}
 }
 
 ?>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 360px; font-weight: bold;">
+			<_var name="$params['name'][$language]"/>
+		</span>
+	</div>
+	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" eval="style">
+		<div class="list_item">
+			<span class="column" style="width: 360px;">
+				<label style="opacity: 0.5">
+					<input
+						type="radio"
+						name="'delivery_'.$params['id']"
+						eval="name"
+						value=""
+					/>
+					<_text constant="remove_delivery" module="shop"/>
+				</label>
+			</span>
+		</div>
+
+		<_price_list
+			template="item_delivery_list_item.xml"
+			local="1"
+			item="$params['item']"
+			method="$params['id']"
+			eval="item,method"
+		/>
+	</div>
+</document>

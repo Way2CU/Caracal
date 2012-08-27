@@ -159,6 +159,22 @@
 					/>
 				</div>
 			</div>
+
+			<div class="scrollable_list">
+				<div class="list_header">
+					<span class="column" style="width: 360px;">
+						<_text constant="column_name_and_price" module="shop"/>
+					</span>
+				</div>
+				<div class="list_content" style="height: 370px" id="related_items">
+					<_delivery_methods
+						template="item_delivery_list.xml"
+						local="1"
+						item="$params['id']"
+						eval="item"
+					/>
+				</div>
+			</div>
 		</div>
 		
 		<div class="button_bar">
@@ -178,7 +194,8 @@
 			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
 			.setPageTitle(1, language_handler.getText('shop', 'tab_colors'))
 			.setPageTitle(2, language_handler.getText('shop', 'tab_category'))
-			.setPageTitle(3, language_handler.getText('shop', 'tab_related'));
+			.setPageTitle(3, language_handler.getText('shop', 'tab_related'))
+			.setPageTitle(4, language_handler.getText('shop', 'tab_delivery'));
 
 		// add colors
 		$('input[name=color_value]').miniColors();

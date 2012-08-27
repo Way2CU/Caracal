@@ -19,6 +19,7 @@ require_once('units/shop_buyers_manager.php');
 require_once('units/shop_buyer_addresses_manager.php');
 require_once('units/shop_related_items_manager.php');
 require_once('units/shop_manufacturer_handler.php');
+require_once('units/shop_delivery_methods_handler.php');
 
 
 class TransactionType {
@@ -131,6 +132,18 @@ class shop extends Module {
 											$this->getLanguageConstant('title_manufacturers'),
 											true, true,
 											backend_UrlMake($this->name, 'manufacturers')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_delivery_methods'),
+								url_GetFromFilePath($this->path.'images/delivery.png'),
+								window_Open( // on click open window
+											'shop_delivery_methods',
+											550,
+											$this->getLanguageConstant('title_delivery_methods'),
+											true, true,
+											backend_UrlMake($this->name, 'delivery_methods')
 										),
 								5  // level
 							));
@@ -433,7 +446,7 @@ class shop extends Module {
 					$handler = ShopCategoryHandler::getInstance($this);
 					$handler->transferControl($params, $children);
 					break;
-					
+
 				case 'sizes':
 					$handler = ShopItemSizesHandler::getInstance($this);
 					$handler->transferControl($params, $children);
@@ -453,7 +466,10 @@ class shop extends Module {
 
 				case 'stocks':
 
-				case 'payment_methods':
+				case 'delivery_methods':
+					$handler = ShopDeliveryMethodsHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
 
 				default:
 					break;
@@ -508,7 +524,6 @@ class shop extends Module {
 		// create shop currencies table
 		$sql = "
 			CREATE TABLE `shop_item_membership` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`category` INT(11) NOT NULL,
 				`item` INT(11) NOT NULL,
 				PRIMARY KEY ( `id` ),
@@ -556,6 +571,40 @@ class shop extends Module {
 		$sql .= "PRIMARY KEY ( `id` ),
 				KEY `definition` (`definition`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		// create shop delivery methods
+		$sql = "
+			CREATE TABLE `shop_delivery_methods` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,";
+				
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
+			
+		$sql .= "
+				`international` BOOLEAN NOT NULL DEFAULT '0',
+				`domestic` BOOLEAN NOT NULL DEFAULT '0',
+				PRIMARY KEY ( `id` )
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		$sql = "
+			CREATE TABLE `shop_delivery_method_prices` (
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`method` int(11) NOT NULL,
+				`value` DECIMAL(8,2) NOT NULL,
+				PRIMARY KEY ( `id` ),
+				KEY `method` (`method`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		if ($db_active == 1) $db->query($sql);
+
+		$sql = "
+			CREATE TABLE `shop_delivery_item_relations` (
+				`item` int(11) NOT NULL,
+				`price` int(11) NOT NULL,
+				PRIMARY KEY ( `item` ),
+				KEY `price` (`price`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 		if ($db_active == 1) $db->query($sql);
 
 		// create shop categories table
@@ -659,7 +708,7 @@ class shop extends Module {
 
 		$sql .= " `web_site` varchar(255) NOT NULL,
 				  `logo` int(11) NOT NULL,
-			      PRIMARY KEY (`id`),
+				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		if ($db_active == 1) $db->query($sql);
 		
@@ -684,7 +733,10 @@ class shop extends Module {
 					'shop_transaction_items',
 					'shop_stock',
 					'shop_related_items',
-					'shop_manufacturers'
+					'shop_manufacturers',
+					'shop_delivery_methods',
+					'shop_delivery_method_prices',
+					'shop_delivery_item_relations'
 				);
 		
 		$sql = "DROP TABLE IF EXISTS `".join('`, `', $tables)."`;";
@@ -786,6 +838,11 @@ class shop extends Module {
 										'uid' => $transaction_id,
 										'status' => TransactionStatus::PENDING
 									));
+
+			// send emails
+			$handler = ShopTransactionsHandler::getInstance($this);
+			$handler->sendMail($transaction_id);
+
 			$result = true;
 
 		} else if ($method->verify_payment_canceled()) {
@@ -1031,7 +1088,7 @@ class shop extends Module {
 						$result['cart'][] = array(
 									'name'			=> $item->name,
 									'weight'		=> $item->weight,
-									'price' 		=> $item->price,
+									'price'			=> $item->price,
 									'tax'			=> $item->tax,
 									'image'			=> $thumbnail_url,
 									'uid'			=> $item->uid,
@@ -1109,7 +1166,7 @@ class shop extends Module {
 
 			// prepare result
 			$result = array(
-					'name' 			=> $item->name,
+					'name'			=> $item->name,
 					'weight'		=> $item->weight,
 					'price'			=> $item->price,
 					'tax'			=> $item->tax,
