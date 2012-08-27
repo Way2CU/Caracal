@@ -102,7 +102,7 @@ class ModuleHandler {
 		$result = null;
 		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
 
-		if (file_exists($filename)) {
+		if (file_exists($filename) && $this->_checkDependencies($name)) {
 			include($filename);
 
 			$class = basename($filename, '.php');
@@ -122,8 +122,57 @@ class ModuleHandler {
 
 		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
 
-		if (file_exists($filename)) 
+		if (file_exists($filename) && $this->_checkDependencies($name)) 
 			include($filename);
+	}
+
+	/**
+	 * Check for module dependancies
+	 * @param string $name
+	 */
+	private function _checkDependencies($name) {
+		global $module_path;
+	
+		$result = true;
+		$filename = $module_path.$name.DIRECTORY_SEPARATOR.'depends';
+		$required = array();
+		$optional = array();
+		$mode = 0;
+
+		if (file_exists($filename)) {
+			$data = file_get_contents($filename);
+			$data = explode('\n', $data);
+
+			foreach ($data as $line) {
+				if ($line == 'requires:')
+					$mode = 1;
+
+				if ($line == 'optional:')
+					$mode = 2;
+
+				if (!empty($line) && $mode > 0)
+					switch ($mode) {
+						case 0:
+							$required[] = $line;
+							break;
+
+						case 1:
+							$options[] = $line;
+							break;
+					}
+
+			}
+
+			foreach ($required as $required_module) 
+				if (!class_exists($required_module)) {
+					$result = false;
+					trigger_error("Module '{$name}' requires '{$required_module}' but it's not available!");
+					break;
+				}
+			
+		}
+
+		return $result;
 	}
 }
 
