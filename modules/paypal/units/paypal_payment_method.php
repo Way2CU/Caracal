@@ -194,8 +194,6 @@ class PayPal_PaymentMethod extends PaymentMethod {
 		$result = array();
 		$item_count = fix_id($_POST['num_cart_items']);
 
-		trigger_error(print_r($item_count, true));
-
 		for ($i = 1; $i < $item_count + 1; $i++) {
 			$result[] = array(
 					'uid'		=> fix_chars($_POST["item_number{$i}"]),
