@@ -380,10 +380,21 @@ function Window(id, width, title, can_close, url, existing_structure) {
 						data[name + '_' + language] = temp_data[language];
 
 				} else {
-					// normal input field or checkbox
-					if ($(this).attr('type') != 'checkbox')
-						data[$(this).attr('name')] = $(this).val(); else
+					if ($(this).attr('type') == 'checkbox') {
+						// checkbox
 						data[$(this).attr('name')] = this.checked ? 1 : 0;
+
+					} else if ($(this).attr('type') == 'radio') {
+						// radio button
+						var group_name = $(this).attr('name');
+
+						if (data[group_name] == undefined) 
+							data[group_name] = $(form).find('input:radio[name='+group_name+']:checked').val();
+
+					} else {
+						// all other components
+						data[$(this).attr('name')] = $(this).val(); 
+					}
 				}
 			});
 		};
