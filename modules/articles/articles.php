@@ -1170,7 +1170,6 @@ class articles extends Module {
 			// stupid but we need to make sure article exists
 			$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
 
-			trigger_error(print_r($_REQUEST, true));
 			if (is_object($article)) {
 				$vote_manager->insertData(array(
 										'article'	=> $article->id,
