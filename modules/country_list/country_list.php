@@ -126,24 +126,32 @@ class country_list extends Module {
 	 */
 	private function printCountryList($tag_params, $children) {
 		$manager = CountryManager::getInstance();
+		$conditions = array();
+
+		// filter results if specified
+		if (isset($tag_params['filter']))
+			$conditions['short'] = explode(',', fix_chars($tag_params['filter']));
 
 		// get tag params
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
+		// create template
 		$template = $this->loadTemplate($tag_params, 'country_option.xml');
-		$country_list = $manager->getItems($manager->getFieldNames(), array());
+		$country_list = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		foreach ($country_list as $country) { 
-			$params = array(
-						'selected'	=> $selected,
-						'name'		=> $country->name,
-						'short'		=> $country->short
-					);
+		// parse template
+		if (count($country_list) > 0)
+			foreach ($country_list as $country) { 
+				$params = array(
+							'selected'	=> $selected,
+							'name'		=> $country->name,
+							'short'		=> $country->short
+						);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
-		}
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 
 	/**
