@@ -33,17 +33,17 @@ function ShoppingCart() {
 
 	this.total = $('<div>');
 	this.subtotal = $('<div>');
-	this.tax = $('<div>');
+	this.handling = $('<div>');
 	this.shipping = $('<div>');
 
 	this.label_total = $('<span>');
 	this.label_subtotal = $('<span>');
-	this.label_tax = $('<span>');
+	this.label_handling = $('<span>');
 	this.label_shipping = $('<span>');
 
 	this.value_total = $('<span>');
 	this.value_subtotal = $('<span>');
-	this.value_tax = $('<span>');
+	this.value_handling = $('<span>');
 	this.value_shipping = $('<span>');
 
 	this.checkout_menu = $('<ul>');
@@ -59,8 +59,15 @@ function ShoppingCart() {
 	this._default_currency = 'EUR';
 	this._payment_methods = {};
 	this._default_method = null;
+	this._selected_method = null;
 	this._checkout_menu_visible = false;
 	this._size_values = {};
+	this._shipping = 0;
+	this._handling = 0;
+
+	// get checkout form if it exists
+	this._checkout_form = $('div#checkout form');
+	this._on_checkout_page = this._checkout_form.length > 0;
 
 	// base url for this site
 	var base = $('base');
@@ -82,7 +89,7 @@ function ShoppingCart() {
 				'shipping',
 				'show_shopping_cart',
 				'subtotal_amount',
-				'tax',
+				'handling',
 				'total_amount',
 			];
 
@@ -162,7 +169,7 @@ function ShoppingCart() {
 		this.summary
 				.addClass('summary')
 				.append(this.subtotal)
-				.append(this.tax)
+				.append(this.handling)
 				.append(this.shipping)
 				.append(this.total);
 
@@ -171,10 +178,10 @@ function ShoppingCart() {
 				.append(this.label_subtotal)
 				.append(this.value_subtotal);
 
-		this.tax
-				.addClass('tax')
-				.append(this.label_tax)
-				.append(this.value_tax);
+		this.handling
+				.addClass('handling')
+				.append(this.label_handling)
+				.append(this.value_handling);
 
 		this.shipping
 				.addClass('shipping')
@@ -188,13 +195,13 @@ function ShoppingCart() {
 
 		// configure values
 		this.value_subtotal.addClass('value');
-		this.value_tax.addClass('value');
+		this.value_handling.addClass('value');
 		this.value_shipping.addClass('value');
 		this.value_total.addClass('value');
 
 		// load summary labels
 		this.label_subtotal.html(language_handler.getText('shop', 'subtotal_amount'));
-		this.label_tax.html(language_handler.getText('shop', 'tax'));
+		this.label_handling.html(language_handler.getText('shop', 'handling'));
 		this.label_shipping.html(language_handler.getText('shop', 'shipping'));
 		this.label_total.html(language_handler.getText('shop', 'total_amount'));
 
@@ -328,6 +335,9 @@ function ShoppingCart() {
 		if (!method_name && self._default_method)
 			method_name = self._default_method;
 
+		// store selected payment method
+		self._selected_method = method_name;
+
 		if (self._item_count > 0) {
 			var url = self._getBackendURL();
 			var params = {
@@ -349,6 +359,15 @@ function ShoppingCart() {
 	};
 
 	/**
+	 * Change delivery method and reload the page
+	 *
+	 * @param integer delivery_method
+	 */
+	this.changeDeliveryMethod = function(delivery_method) {
+		this._updateCheckoutForm(false, delivery_method);
+	};
+
+	/**
 	 * Get value for specified size
 	 *
 	 * @param integer size
@@ -364,6 +383,72 @@ function ShoppingCart() {
 	};
 
 	/**
+	 * Update checkout form items
+	 *
+	 * @param boolean update_items
+	 * @param integer delivery_method
+	 */
+	this._updateCheckoutForm = function(update_items, delivery_method) {
+		if (!this._on_checkout_page) 
+			return;
+
+		// load items table
+		if (update_items) {
+			var data = {
+						section: 'shop',
+						action: 'show_checkout_items',
+					};
+
+			$.ajax({
+				url: this._getBackendURL(),
+				type: 'POST',
+				async: true,
+				data: data,
+				dataType: 'html',
+				context: this,
+				success: function(data) {
+					self._checkout_form.find('tbody').html(data);
+				}
+			});
+		}
+
+		// load transaction totals
+		var data = {
+					section: 'shop',
+					action: 'json_get_shopping_cart_summary',
+				};
+
+		if (delivery_method != undefined)
+			data['delivery_method'] = delivery_method;
+
+		$.ajax({
+			url: this._getBackendURL(),
+			type: 'POST',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: function(data) {
+				this._shipping = parseFloat(data.shipping);
+				this._handling = parseFloat(data.handling);
+
+				// update shopping cart
+				this._updateSummary();
+
+				// update checkout form
+				this._checkout_form.find('.subtotal').html(parseFloat(data.total).toFixed(2));
+				this._checkout_form.find('.shipping').html(this._shipping.toFixed(2));
+				this._checkout_form.find('.handling').html(this._handling.toFixed(2));
+				this._checkout_form.find('.weight').html(parseFloat(data.weight).toFixed(2) + ' kg');
+
+				// update total value
+				var total = parseFloat(data.total) + parseFloat(data.shipping) + parseFloat(data.handling);
+				this._checkout_form.find('.total-value').html(total.toFixed(2) + ' ' + this._default_currency);
+			}
+		});
+	};
+
+	/**
 	 * Load cart content from server
 	 */
 	this._loadContent = function() {
@@ -374,7 +459,7 @@ function ShoppingCart() {
 
 		$.ajax({
 			url: this._getBackendURL(),
-			type: 'GET',
+			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
@@ -438,6 +523,7 @@ function ShoppingCart() {
 
 		if (this._item_count == 1)
 			this._hideEmptyMessage();
+
 		this._updateSummary();
 	};
 
@@ -479,7 +565,7 @@ function ShoppingCart() {
 
 		$.ajax({
 			url: this._getBackendURL(),
-			type: 'GET',
+			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
@@ -524,23 +610,20 @@ function ShoppingCart() {
 	this._updateSummary = function() {
 		var text = language_handler.getText('shop', 'total_amount');
 		var amount = 0;
-		var shipping = 0;
-		var tax = 0;
 
 		// calculate total price
 		for (var uid in this._items) {
 			var item = this._items[uid];
 
 			amount += item._total;
-			tax += item._total * (item._tax / 100);
 		}
 
 		// update shopping cart summary
 		this.value_subtotal.html(amount.toFixed(2));
-		this.value_tax.html(tax.toFixed(2));
-		this.value_shipping.html(shipping.toFixed(2));
+		this.value_handling.html(this._handling.toFixed(2));
+		this.value_shipping.html(this._shipping.toFixed(2));
 
-		this.value_total.html((amount + shipping + tax).toFixed(2) + ' ' + this._default_currency);
+		this.value_total.html((amount + this._shipping + this._handling).toFixed(2) + ' ' + this._default_currency);
 
 		// update item count
 		this.item_count.html(this._item_count);
@@ -573,7 +656,7 @@ function ShoppingCart() {
 
 			$.ajax({
 				url: self._getBackendURL(),
-				type: 'GET',
+				type: 'POST',
 				async: true,
 				data: data,
 				dataType: 'json',
@@ -623,6 +706,10 @@ function ShoppingCart() {
 
 		self._size_values = data.size_values;
 		self._default_currency = data.currency;
+		self._shipping = parseFloat(data.shipping);
+		self._handling = parseFloat(data.handling);
+
+		console.log(data);
 
 		for (var key in items) {
 			var data = items[key];
@@ -808,7 +895,7 @@ function ShopItem(uid, cart) {
 
 		$.ajax({
 			url: this._parent._getBackendURL(),
-			type: 'GET',
+			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
@@ -844,6 +931,8 @@ function ShopItem(uid, cart) {
 			self._parent._updateSummary();
 		}
 
+		// if needed update checkout form
+		self._parent._updateCheckoutForm(true);
 	};
 
 	/**
@@ -977,7 +1066,7 @@ function ShopItem(uid, cart) {
 
 		$.ajax({
 			url: this._parent._getBackendURL(),
-			type: 'GET',
+			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',

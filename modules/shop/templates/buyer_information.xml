@@ -91,19 +91,35 @@
 			</label>
 			<label>
 				<span><_text constant="label_country" module="shop"/></span>
-				<select 
-					name="country"
-					class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class" 
-				>
-					<option/>
-					<_module
-						name="country_list"
-						action="show"
-						selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-						eval="selected"
-					/>
-				</select>
+				<_if condition="empty($params['fixed_country'])">
+					<select 
+						name="country"
+						class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+						eval="class" 
+					>
+						<option/>
+						<_module
+							name="country_list"
+							action="show"
+							selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
+							eval="selected"
+						/>
+					</select>
+				</_if>
+				<_if condition="!empty($params['fixed_country'])">
+					<select 
+						name="country"
+						class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+						eval="class" 
+					>
+						<_module
+							name="country_list"
+							action="show"
+							filter="$params['fixed_country']"
+							eval="filter"
+						/>
+					</select>
+				</_if>
 			</label>
 			<label>
 				<span><_text constant="label_state" module="shop"/></span>
@@ -116,6 +132,7 @@
 					max="40"
 				/>
 			</label>
+			
 
 			<_if condition="!empty($params['message'])">
 				<div class="message"><_var name="$params['message']"/></div>

@@ -444,9 +444,13 @@ class ShopDeliveryMethodsHandler {
 		$manager = ShopDeliveryMethodsManager::getInstance();
 		$conditions = array();
 		$item_id = -1;
+		$selected = -1;
 
 		if (isset($tag_params['item']))
 			$item_id = fix_id($tag_params['item']);
+
+		if (isset($tag_params['selected']))
+			$selected = fix_id($tag_params['selected']);
 
 		// get template
 		$template = $this->_parent->loadTemplate($tag_params, 'delivery_methods_list_item.xml');
@@ -465,6 +469,7 @@ class ShopDeliveryMethodsHandler {
 					'domestic'				=> $item->domestic,
 					'domestic_char'			=> $item->domestic ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'item'					=> $item_id,
+					'selected'				=> $selected == $item->id ? 1 : 0,
 					'item_change'	=> url_MakeHyperlink(
 						$this->_parent->getLanguageConstant('change'),
 						window_Open(

@@ -335,7 +335,7 @@ class ShopTransactionsHandler {
 	 * @return boolean
 	 */
 	public function sendMail($uid) {
-		global $language;
+		global $language, $language_rtl;
 
 		$result = false;
 		$html_body = '';
@@ -412,6 +412,7 @@ class ShopTransactionsHandler {
 			// get additional information for items
 			$id_list = array_keys($items);
 			$raw_items = $items_manager->getItems(array('id', 'uid', 'name'), array('id' => $id_list));
+			$subtotal = 0;
 
 			foreach ($raw_items as $item) {
 				$id = $item->id;
@@ -419,6 +420,88 @@ class ShopTransactionsHandler {
 				$items[$id]['name'] = $item->name;
 				$items[$id]['uid'] = $item->uid;
 			}
+
+			// create items table
+			$text_table = str_pad($this->_parent->getLanguageConstant('column_name'), 40);
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_price'), 8);
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_amount'), 6);
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_item_total'), 8);
+			$text_table .= "\n" . str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+
+			$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
+			$html_table .= '<thead><tr>';
+			$html_table .= '<td>'.$this->_parent->getLanguageConstant('column_name').'</td>';
+			$html_table .= '<td>'.$this->_parent->getLanguageConstant('column_price').'</td>';
+			$html_table .= '<td>'.$this->_parent->getLanguageConstant('column_amount').'</td>';
+			$html_table .= '<td>'.$this->_parent->getLanguageConstant('column_item_total').'</td>';
+			$html_table .= '</td></thead><tbody>';
+
+			foreach ($items as $id => $data) {
+				// append item name with description
+				if (empty($data['description']))
+					$line = $data['name'][$language] . ' (' . $data['description'] . ')'; else
+					$line = $data['name'][$language];
+
+				$line = utf8_wordwrap($line, 40, "\n", true);
+				$line = mb_split("\n", $line);
+
+				// append other columns
+				$line[0] = $line[0] . str_pad($data['price'], 8, ' ', STR_PAD_LEFT);
+				$line[0] = $line[0] . str_pad($data['amount'], 6, ' ', STR_PAD_LEFT);
+				$line[0] = $line[0] . str_pad($data['total'], 8, ' ', STR_PAD_LEFT);
+
+				// add this item to text table
+				$text_table .= implode("\n", $line) . "\n\n";
+
+				// form html row
+				$row = '<tr><td>' . $data['name'][$language];
+
+				if (!empty($data['description']))
+					$row .= ' <small>' . $data['description'] . '</small>';
+
+				$row .= '</td><td>' . $data['price'] . '</td>';
+				$row .= '<td>' . $data['amount'] . '</td>';
+				$row .= '<td>' . $data['total'] . '</td></tr>';
+
+				// update subtotal
+				$subtotal += $data['total'];
+			}
+
+			// close text table
+			$text_table .= str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+			$html_table .= '</tbody>';
+
+			// create totals
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_subtotal'), 15);
+			$text_table .= str_pad($subtotal, 10, ' ', STR_PAD_LEFT) . "\n";
+
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_shipping'), 15);
+			$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
+
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_handling'), 15);
+			$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
+
+			$text_table .= str_repeat('-', 25);
+			$text_table .= str_pad($this->_parent->getLanguageConstant('column_total'), 15);
+			$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
+
+			$html_table .= '<tfoot>';
+			$html_table .= '<tr><td colspan="2"></td><td>' . $this->_parent->getLanguageConstant('column_subtotal') . '</td>';
+			$html_table .= '<td>' . $subtotal . '</td></tr>';
+
+			$html_table .= '<tr><td colspan="2"></td><td>' . $this->_parent->getLanguageConstant('column_shipping') . '</td>';
+			$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
+
+			$html_table .= '<tr><td colspan="2"></td><td>' . $this->_parent->getLanguageConstant('column_handling') . '</td>';
+			$html_table .= '<td>' . $transaction->handling . '</td></tr>';
+
+			$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->_parent->getLanguageConstant('column_total') . '</b></td>';
+			$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
+
+			$html_table .= '</tfoot>';
+
+			// close table
+			$html_table .= '</table>';
 
 			// create HTML version of email
 			$html_body = Markdown($body);
@@ -435,8 +518,8 @@ class ShopTransactionsHandler {
 					'address_zip'		=> $address->zip,
 					'address_state'		=> $address->state,
 					'address_country'	=> $address->country,
-					'items_table'		=> '',
-					'items_table_html'	=> ''
+					'items_table'		=> $text_table,
+					'items_table_html'	=> $html_table
 				);
 
 			foreach ($params as $needle => $replacement) {

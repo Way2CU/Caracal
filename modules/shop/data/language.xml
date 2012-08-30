@@ -74,6 +74,7 @@
 		<constant name="column_item_total">Item total</constant>
 		<constant name="column_subtotal">Sub-total</constant>
 		<constant name="column_shipping">Shipping</constant>
+		<constant name="column_handling">Handling</constant>
 		<constant name="column_total_weight">Total weight</constant>
 		<constant name="column_total">Total</constant>
 		<constant name="column_categories">Categories item belongs to</constant>
@@ -124,6 +125,8 @@
 		<constant name="label_shipping_address">Shipping address:</constant>
 		<constant name="label_international">Available for international shipping</constant>
 		<constant name="label_domestic">Available for domestic shipping</constant>
+		<constant name="label_delivery_method">Delivery method:</constant>
+		<constant name="label_remarks">Remarks or special instructions:</constant>
 
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
@@ -182,6 +185,7 @@
 		<constant name="total_amount">Total:</constant>
 		<constant name="subtotal_amount">Sub-total:</constant>
 		<constant name="tax">Tax:</constant>
+		<constant name="handling">Handling:</constant>
 		<constant name="shipping">Shipping:</constant>
 		<constant name="values">Values</constant>
 		<constant name="edit_item">Edit item quantity</constant>
@@ -212,13 +216,13 @@
 		<constant name="menu_currencies">מטבעות</constant>
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
 		<constant name="menu_manufacturers">יצרנים</constant>
-		<constant name="menu_delivery_methods">Delivery methods</constant>
+		<constant name="menu_delivery_methods">שיטות משלוח</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
 		<constant name="tab_colors">צבעים</constant>
 		<constant name="tab_category">קטגוריות</constant>
 		<constant name="tab_related">אביזרים נלווים</constant>
-		<constant name="tab_delivery">Delivery</constant>
+		<constant name="tab_delivery">משלוח</constant>
 
 		<constant name="title_manage_items">חנות:נהל מוצרים</constant>
 		<constant name="title_manage_categories">חנות: נהל קטגוריות</constant>
@@ -250,17 +254,17 @@
 		<constant name="title_manufacturer_add">חנות: הוסף יצרן</constant>
 		<constant name="title_manufacturer_change">חנות: שנה יצרן</constant>
 		<constant name="title_manufacturer_delete">חנות: מחק יצרן</constant>
-		<constant name="title_delivery_methods">Shop: Delivery methods</constant>
-		<constant name="title_delivery_method_add">Shop: Add delivery method</constant>
-		<constant name="title_delivery_method_change">Shop: Change delivery method</constant>
-		<constant name="title_delivery_method_delete">Shop: Delete delivery method</constant>
-		<constant name="title_delivery_method_prices">Shop: Delivery prices</constant>
-		<constant name="title_delivery_method_price_add">Shop: Add delivery price</constant>
-		<constant name="title_delivery_method_price_change">Shop: Change delivery price</constant>
-		<constant name="title_delivery_method_price_delete">Shop: Delete delivery price</constant>
+		<constant name="title_delivery_methods">חנות: שיטות משלוח</constant>
+		<constant name="title_delivery_method_add">חנות: הוסף שיטת משלוח</constant>
+		<constant name="title_delivery_method_change">חנות: שנה שיטת משלוח</constant>
+		<constant name="title_delivery_method_delete">חנות: מחק שיטת משלוח</constant>
+		<constant name="title_delivery_method_prices">חנות: מחירי משלוח</constant>
+		<constant name="title_delivery_method_price_add">חנות: הוסף מחיר משלוח</constant>
+		<constant name="title_delivery_method_price_change">חנות: שנה מחיר משלוח</constant>
+		<constant name="title_delivery_method_price_delete">חנות: מחק מחיר משלוח</constant>
 
 		<constant name="column_name">שם</constant>
-		<constant name="column_name_and_price">Name and price</constant>
+		<constant name="column_name_and_price">שם ומחיר</constant>
 		<constant name="column_price">מחיר</constant>
 		<constant name="column_rating">ניקוד</constant>
 		<constant name="column_currency">מטבע</constant>
@@ -274,6 +278,7 @@
 		<constant name="column_item_total">סהכ מוצר</constant>
 		<constant name="column_subtotal">סיכום ביניים</constant>
 		<constant name="column_shipping">משלוח</constant>
+		<constant name="column_handling">Handling</constant>
 		<constant name="column_total_weight">סהכ משקל</constant>
 		<constant name="column_total">סהכ</constant>
 		<constant name="column_categories">קטגוריות אליהן שייך המוצר</constant>
@@ -317,13 +322,15 @@
 		<constant name="label_manufacturer">יצרן:</constant>
 		<constant name="label_web_site">אתר:</constant>
 		<constant name="label_logo">לוגו:</constant>
-		<constant name="label_status">Status:</constant>
-		<constant name="label_handling">Handling:</constant>
-		<constant name="label_shipping">Shipping:</constant>
-		<constant name="label_total">Total amount:</constant>
-		<constant name="label_shipping_address">Shipping address:</constant>
-		<constant name="label_international">Available for international shipping</constant>
-		<constant name="label_domestic">Available for domestic shipping</constant>
+		<constant name="label_status">סטטוס:</constant>
+		<constant name="label_handling">טיפול:</constant>
+		<constant name="label_shipping">משלוח:</constant>
+		<constant name="label_total">סך הכל:</constant>
+		<constant name="label_shipping_address">כתובת משלוח:</constant>
+		<constant name="label_international">מיועד למשלוח בינלאומי</constant>
+		<constant name="label_domestic">מיועד למשלוח מקומי</constant>
+		<constant name="label_delivery_method">שיטת משלוח:</constant>
+		<constant name="label_remarks">Remarks or special instructions:</constant>
 
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
@@ -335,7 +342,7 @@
 		<constant name="message_category_deleted">הקטגוריה נמחקה!</constant>
 		<constant name="message_item_saved">מידע המוצר נשמר לחנות</constant>
 		<constant name="message_item_delete">אתה עומד למחוק מוצר, המוצר ימחק מכל הקטגוריות אליהן הוא מקושר, התמונות בגלריה לא ימחקו </constant>
-		<constant name="message_item_deleted">Item was delete!</constant>
+		<constant name="message_item_deleted">המוצר נמחק!</constant>
 		<constant name="message_images_upload">ברגע שתשמור, המערכת תייצר גלרית תמונות מיוחדת למוצר. אם לאחר מכן תרצה להסיר תמונה מהמוצ, אנא עשה זאת דרך מודול הגלריה</constant>
 		<constant name="message_clear_cart">אתה עומד להסיר את כל המוצרים מעגלת הקניות. האם אתה בטוח?</constant>
 		<constant name="message_item_size_saved">מידע הגדרת הגודל נשמר!</constant>
@@ -353,19 +360,19 @@
 		<constant name="message_manufacturer_saved">מידע אודות יצרן נשמר</constant>
 		<constant name="message_manufacturer_delete">אתה עומד להסיר יצרן, מוצרים המחוברים לאותו יצרן לא יוסר- האם אצה בטוח?</constant>
 		<constant name="message_manufacturer_deleted">היצרן נמחק</constant>
-		<constant name="message_delivery_method_saved">Delivery method data was saved.</constant>
-		<constant name="message_delivery_method_delete">You are about to remove the following delivery and its prices from the shop. Items connected to this delivery will not be removed. Are you sure you want to do this?</constant>
-		<constant name="message_delivery_method_deleted">Delivery method was deleted!</constant>
-		<constant name="message_delivery_price_saved">Delivery price was saved.</constant>
-		<constant name="message_delivery_price_delete">You are about to remove the following delivery from the shop. Items connected to this delivery will not be removed. Are you sure you want to do this?</constant>
-		<constant name="message_delivery_price_deleted">Delivery price was deleted!</constant>
+		<constant name="message_delivery_method_saved">מידע עבור שיטת משלוח נשמר</constant>
+		<constant name="message_delivery_method_delete">אתה עומד להסיר את שיטת המישלוח ומחיריה, המוצרים הקשורים לא ימחקו - האם אתה בטוח?</constant>
+		<constant name="message_delivery_method_deleted">שיטת המשלוח נמחקה!</constant>
+		<constant name="message_delivery_price_saved">מחיר המשלוח נשמר!</constant>
+		<constant name="message_delivery_price_delete">אתה עומד להסיר מחיר משלוח מהחנות, מוצרים הקשורים לא ימחקו - האם אתה בטוח?</constant>
+		<constant name="message_delivery_price_deleted">מחיר משלוח נמחק!</constant>
 
 		<constant name="add_item">הוסף מוצר חדש</constant>
 		<constant name="add_size_definition">הוסף הגדרת גודל</constant>
 		<constant name="add_size_value">הוסף ערך גודל</constant>
 		<constant name="add_manufacturer">הוסף יצרן</constant>
-		<constant name="add_delivery_method">Add delivery method</constant>
-		<constant name="add_delivery_price">Add delivery price</constant>
+		<constant name="add_delivery_method">הוסף שיטת משלוח</constant>
+		<constant name="add_delivery_price">הוסף מחיר משלוח</constant>
 		<constant name="manage_categories">נהל קטגוריות</constant>
 		<constant name="add_currency">הוסף מטבע</constant>
 		<constant name="update_currencies">עדכן רשימת מטבעות</constant>
@@ -382,6 +389,7 @@
 		<constant name="total_amount">סהכ:</constant>
 		<constant name="subtotal_amount">סיכום ביניים:</constant>
 		<constant name="tax">מס:</constant>
+		<constant name="handling">טיפול:</constant>
 		<constant name="shipping">משלוח:</constant>
 		<constant name="values">ערכים</constant>
 		<constant name="edit_item">ערוך כמות מוצר</constant>
@@ -389,16 +397,16 @@
 		<constant name="with">עם</constant>
 		<constant name="button_take_me_back">הצג עמוד קדמי</constant>
 		<constant name="details">פרטים</constant>
-		<constant name="prices">Prices</constant>
-		<constant name="remove_delivery">Unavailable</constant>
+		<constant name="prices">מחירים</constant>
+		<constant name="remove_delivery">לא נמצא</constant>
 
-		<constant name="status_pending">Pending</constant>
-		<constant name="status_denied">Denied</constant>
-		<constant name="status_completed">Completed</constant>
-		<constant name="status_canceled">Canceled</constant>
-		<constant name="status_shipping">Shipping</constant>
-		<constant name="status_shipped">Shipped</constant>
-		<constant name="status_lost">Lost</constant>
-		<constant name="status_delivered">Delivered</constant>
+		<constant name="status_pending">מחכה</constant>
+		<constant name="status_denied">נכשל</constant>
+		<constant name="status_completed">הושלם</constant>
+		<constant name="status_canceled">בוטל</constant>
+		<constant name="status_shipping">משלוח</constant>
+		<constant name="status_shipped">נשלח</constant>
+		<constant name="status_lost">אבד</constant>
+		<constant name="status_delivered">נמסר</constant>
 	</language>
 </document>

@@ -377,10 +377,18 @@ class shop extends Module {
 					$this->showCheckoutCanceled();
 					break;
 
+				case 'show_checkout_items':
+					$this->tag_CheckoutItems($params, $children);
+					break;
+
 				case 'handle_payment':
 					$this->handlePayment();
 					break;
 					
+				case 'set_cart_from_template':
+					$this->setCartFromTemplate($params, $children);
+					break;
+
 				case 'json_get_item':
 					$handler = ShopItemHandler::getInstance($this);
 					$handler->json_GetItem();
@@ -414,13 +422,13 @@ class shop extends Module {
 					$this->json_ShowCart();
 					break;
 
-				case 'set_cart_from_template':
-					$this->setCartFromTemplate($params, $children);
-					break;
-
 				case 'json_update_transaction_status':
 					$handler = ShopTransactionsHandler::getInstance($this);
 					$handler->json_UpdateTransactionStatus();
+					break;
+
+				case 'json_get_shopping_cart_summary':
+					$this->json_GetShoppingCartSummary();
 					break;
 
 				default:
@@ -1064,7 +1072,14 @@ class shop extends Module {
 		$result['count'] = count($result['cart']);
 		$result['currency'] = $this->getDefaultCurrency();
 
-		// organize shopping cart
+		if (isset($_SESSION['transaction'])) {
+			$result['shipping'] = $_SESSION['transaction']['shipping'];
+			$result['handling'] = $_SESSION['transaction']['handling'];
+
+		} else {
+			$result['shipping'] = 0;
+			$result['handling'] = 0;
+		}
 
 		// colect ids from session
 		$ids = array_keys($cart);
@@ -1246,6 +1261,23 @@ class shop extends Module {
 	}
 
 	/**
+	 * Get shopping cart summary and update delivery method if needed
+	 */
+	private function json_GetShoppingCartSummary() {
+		$result = array();
+
+		if (isset($_REQUEST['delivery_method'])) {
+			$method = fix_id($_REQUEST['delivery_method']);
+			$_SESSION['delivery_method'] = $method;
+		}
+
+		$result = $this->getCartSummary();
+		unset($result['items_for_checkout']);
+
+		print json_encode($result);
+	}
+
+	/**
 	 * Save default currency to module settings
 	 * @param string $currency
 	 */
@@ -1259,6 +1291,139 @@ class shop extends Module {
 	 */
 	public function getDefaultCurrency() {
 		return $this->settings['default_currency'];
+	}
+
+	/**
+	 * Get shopping cart summary
+	 * @return array
+	 */
+	private function getCartSummary() {
+		$result = array();
+
+		// colect ids from session
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$ids = array_keys($cart);
+
+		if (count($cart) == 0)
+			return $result;
+
+		// get managers
+		$manager = ShopItemManager::getInstance();
+		$delivery_manager = ShopDeliveryMethodPricesManager::getInstance();
+		$item_delivery_manager = ShopDeliveryItemRelationsManager::getInstance();
+
+		// get items from database and prepare result
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+
+		// prepare params
+		$shipping = 0;
+		$handling = 0;
+		$total_money = 0;
+		$total_weight = 0;
+		$delivery_method = null;
+		$items_by_uid = array();
+		$items_for_checkout = array();
+		$delivery_prices = array();
+		$map_id_to_uid = array();
+
+		// get prefered method
+		if (isset($_SESSION['delivery_method']))
+			$delivery_method = $_SESSION['delivery_method'];
+
+		// parse items from database
+		foreach ($items as $item) {
+			$db_item = array(
+					'id'		=> $item->id,
+					'name'		=> $item->name,
+					'price'		=> $item->price,
+					'tax'		=> $item->tax,
+					'weight'	=> $item->weight
+				);
+			$items_by_uid[$item->uid] = $db_item;
+			$map_id_to_uid[$item->id] = $item->uid;
+		}
+
+		// get delivery prices
+		$prices = $delivery_manager->getItems($delivery_manager->getFieldNames(), array());
+
+		if (count($prices) > 0)
+			foreach ($prices as $price)
+				$delivery_prices[$price->id] = array(
+									'method'	=> $price->method,
+									'value'		=> $price->value
+								);
+
+		// get item associations with delivery methods
+		$relations = $item_delivery_manager->getItems(
+									$item_delivery_manager->getFieldNames(),
+									array('item' => array_keys($map_id_to_uid))
+								);
+
+		if (count($relations) > 0)
+			foreach ($relations as $relation) {
+				$item_uid = $map_id_to_uid[$relation->item];
+
+				if (!array_key_exists('delivery_methods', $cart[$item_uid]))
+					$cart[$item_uid]['delivery_methods'] = array();
+
+				$method_id = $delivery_prices[$relation->price]['method'];
+				$cart[$item_uid]['delivery_methods'][$method_id] = $relation->price;
+			}
+
+		// prepare items for checkout
+		foreach ($cart as $uid => $item) {
+			// get price for delivery method
+			if (!empty($item['delivery_methods'])) {
+				if (array_key_exists($delivery_method, $item['delivery_methods']))
+					$delivery_price_id = $item['delivery_methods'][$delivery_method]; else
+					$delivery_price_id = array_pop($item['delivery_methods']);
+
+				$delivery_price = $delivery_prices[$delivery_price_id]['value'];
+
+			} else {
+				// no delivery methods defined
+				$delivery_price = 0;
+			}
+
+			// include all item variations in preparation
+			if (count($item['variations']) > 0)
+				foreach($item['variations'] as $variation_id => $data) {
+					// add items to checkout list
+					$properties = $data;
+
+					foreach ($this->excluded_properties as $key)
+						if (isset($properties[$key]))
+							unset($properties[$key]);
+
+					$new_item = $items_by_uid[$uid];
+					$new_item['count'] = $data['count'];
+					$new_item['description'] = implode(', ', array_values($properties));
+
+					// include shipping
+					$shipping += $delivery_price * $data['count'];
+
+					// add item to the list
+					$items_for_checkout[] = $new_item;
+
+					// include item data in summary
+					$tax = $new_item['tax'];
+					$price = $new_item['price'];
+					$weight = $new_item['weight'];
+					
+					$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
+					$total_weight += $weight * $data['count'];
+				}
+		}
+
+		$result = array(
+				'items_for_checkout'	=> $items_for_checkout,
+				'shipping'				=> $shipping,
+				'handling'				=> $handling,
+				'weight'				=> $total_weight,
+				'total'					=> $total_money
+			);
+
+		return $result;
 	}
 
 	/**
@@ -1348,64 +1513,11 @@ class shop extends Module {
 		}
 
 		if ($info_available) {
-			// colect ids from session
-			$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
-			$ids = array_keys($cart);
+			// get shopping cart summary
+			$summary = $this->getCartSummary();
 
-			if (count($cart) == 0)
+			if (empty($summary))
 				return;
-
-			// get items from database and prepare result
-			$manager = ShopItemManager::getInstance();
-			$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
-
-			// prepare params
-			$shipping = 0;
-			$handling = 0;
-			$total_money = 0;
-			$total_weight = 0;
-			$items_by_uid = array();
-			$items_for_checkout = array();
-
-			// parse items from database
-			foreach ($items as $item) {
-				$db_item = array(
-						'id'		=> $item->id,
-						'name'		=> $item->name,
-						'price'		=> $item->price,
-						'tax'		=> $item->tax,
-						'weight'	=> $item->weight
-					);
-				$items_by_uid[$item->uid] = $db_item;
-			}
-
-			// prepare items for checkout
-			foreach ($cart as $uid => $item) {
-				if (count($item['variations']) > 0)
-					foreach($item['variations'] as $variation_id => $data) {
-						// add items to checkout list
-						$properties = $data;
-
-						foreach ($this->excluded_properties as $key)
-							if (isset($properties[$key]))
-								unset($properties[$key]);
-
-						$new_item = $items_by_uid[$uid];
-						$new_item['count'] = $data['count'];
-						$new_item['description'] = implode(', ', array_values($properties));
-
-						// add item to the list
-						$items_for_checkout[] = $new_item;
-
-						// include item data in summary
-						$tax = $new_item['tax'];
-						$price = $new_item['price'];
-						$weight = $new_item['weight'];
-						
-						$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
-						$total_weight += $weight * $data['count'];
-					}
-			}
 
 			// get fields for payment method
 			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $method->get_name())));
@@ -1483,25 +1595,44 @@ class shop extends Module {
 				}
 			}
 
-			$transaction_data['uid'] = uniqid('', true);
-			$transaction_data['type'] = TransactionType::SHOPPING_CART;
-			$transaction_data['status'] = TransactionStatus::PENDING;
-			$transaction_data['handling'] = $handling;
-			$transaction_data['shipping'] = $shipping;
-			$transaction_data['total'] = $total_money;
+			// check if we have existing transaction in our database
+			if (!isset($_SESSION['transaction'])) {
+				$transaction_data['uid'] = uniqid('', true);
+				$transaction_data['type'] = TransactionType::SHOPPING_CART;
+				$transaction_data['status'] = TransactionStatus::PENDING;
+				$transaction_data['handling'] = $summary['handling'];
+				$transaction_data['shipping'] = $summary['shipping'];
+				$transaction_data['total'] = $summary['total'];
 
-			// create new transaction
-			$transactions_manager = ShopTransactionsManager::getInstance();
-			$transactions_manager->insertData($transaction_data);
-			$transaction_id = $transactions_manager->getInsertedID();
+				// create new transaction
+				$transactions_manager = ShopTransactionsManager::getInstance();
+				$transactions_manager->insertData($transaction_data);
+				$transaction_data['id'] = $transactions_manager->getInsertedID();
+
+				// store transaction data to session
+				$_SESSION['transaction'] = $transaction_data;
+
+			} else {
+				// there's already an existing transaction
+				$transaction_data = $_SESSION['transaction'];
+				$transaction_data['handling'] = $summary['handling'];
+				$transaction_data['shipping'] = $summary['shipping'];
+				$transaction_data['total'] = $summary['total'];
+
+				// update session storage with newest data
+				$_SESSION['transaction'] = $transaction_data;
+			}
+
+			// remove items associated with transaction
+			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+
+			$transaction_items_manager->deleteData(array('transaction' => $transaction_data['id']));
 
 			// store items
-			if (count($items_for_checkout) > 0) {
-				$transaction_items_manager = ShopTransactionItemsManager::getInstance();
-
-				foreach($items_for_checkout as $uid => $item) {
+			if (count($summary['items_for_checkout']) > 0) 
+				foreach($summary['items_for_checkout'] as $uid => $item) {
 					$transaction_items_manager->insertData(array(
-												'transaction'	=> $transaction_id,
+												'transaction'	=> $transaction_data['id'],
 												'item'			=> $item['id'],
 												'price'			=> $item['price'],
 												'tax'			=> $item['tax'],
@@ -1509,12 +1640,11 @@ class shop extends Module {
 												'description'	=> $item['description']
 											));
 				}
-			}
 
 			// create new payment
 			$checkout_fields = $method->new_payment(
 										$transaction_data,
-										$items_for_checkout,
+										$summary['items_for_checkout'],
 										$this->getDefaultCurrency(),
 										$return_url,
 										$cancel_url
@@ -1524,15 +1654,19 @@ class shop extends Module {
 			$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
 			$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
 
+			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this);
+			$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
+
 			// parse template
 			$params = array(
 						'checkout_url'		=> $method->get_url(),
 						'checkout_fields'	=> $checkout_fields,
 						'checkout_name'		=> $method->get_title(),
-						'sub-total'			=> number_format($total_money, 2),
-						'shipping'			=> number_format($shipping, 2),
-						'total_weight'		=> number_format($total_weight, 2),
-						'total'				=> number_format($total_money + $shipping, 2),
+						'sub-total'			=> number_format($summary['total'], 2),
+						'shipping'			=> number_format($summary['shipping'], 2),
+						'handling'			=> number_format($summary['handling'], 2),
+						'total_weight'		=> number_format($summary['weight'], 2),
+						'total'				=> number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2),
 						'currency'			=> $this->getDefaultCurrency()
 					);
 
@@ -1545,7 +1679,12 @@ class shop extends Module {
 			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
+			$fixed_country = '';
+			if (isset($this->settings['fixed_country']))
+				$fixed_country = $this->settings['fixed_country'];
+
 			$params = array(
+						'fixed_country'	=> $fixed_country,
 						'message'		=> $message,
 						'bad_fields'	=> $bad_fields
 					);
