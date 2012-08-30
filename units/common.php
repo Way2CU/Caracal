@@ -163,6 +163,32 @@ function utf8_strrev($str, $reverse_numbers=false) {
 }
 
 /**
+ * Hard wrap UTF8 string to specified width.
+ *
+ * @param string $string
+ * @param integer $width
+ * @param string $break
+ * @param boolean $cut
+ * @return string
+ */
+function utf8_wordwrap($string, $width=75, $break="\n", $cut=false) {
+	if ($cut) {
+		// Match anything 1 to $width chars long followed by whitespace or EOS,
+		// otherwise match anything $width chars long
+		$search = '/(.{1,'.$width.'})(?:\s|$)|(.{'.$width.'})/uS';
+		$replace = '$1$2'.$break;
+
+	} else {
+		// Anchor the beginning of the pattern with a lookahead
+		// to avoid crazy backtracking when words are longer than $width
+		$pattern = '/(?=\s)(.{1,'.$width.'})(?:\s|$)/uS';
+		$replace = '$1'.$break;
+	}
+
+	return preg_replace($search, $replace, $string);
+}
+
+/**
  * Simple function that provides Google generated QR codes
  * Refer to:
  * 		http://code.google.com/apis/chart/types.html#qrcodes
