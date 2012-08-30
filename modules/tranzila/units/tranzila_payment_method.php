@@ -132,7 +132,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$params = array(
 				'currency'		=> $currency_code,
 				'TranzilaToken'	=> $data['uid'],
-				'sum'			=> $data['total'],
+				'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
 				'cred_type'		=> 1,
 				'pdesc'			=> $description
 			);
