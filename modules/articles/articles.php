@@ -704,12 +704,16 @@ class articles extends Module {
 
 		$conditions = array();
 		$group_list = array();
+		$selected = -1;
 
 		if (isset($tag_params['group']))
 			$group_list = explode(',', $tag_params['group']);
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 1)
 			$conditions['visible'] = 1;
+
+		if (isset($tag_params['selected']))
+			$selected = fix_id($tag_params['selected']);
 
 		// give the ability to limit number of articles to display
 		if (isset($tag_params['limit']))
@@ -754,6 +758,7 @@ class articles extends Module {
 							'votes_up'		=> $item->votes_up,
 							'votes_down' 	=> $item->votes_down,
 							'rating'		=> $this->getArticleRating($item, 10),
+							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -786,7 +791,6 @@ class articles extends Module {
 														)
 													)
 												),
-							'item_read'		=> '',
 						);
 
 				$template->restoreXML();
