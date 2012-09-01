@@ -13,6 +13,7 @@
 		<constant name="menu_item_sizes">Manage item sizes</constant>
 		<constant name="menu_manufacturers">Manufacturers</constant>
 		<constant name="menu_delivery_methods">Delivery methods</constant>
+		<constant name="menu_settings">Settings</constant>
 
 		<constant name="tab_item">Item data</constant>
 		<constant name="tab_colors">Colors</constant>
@@ -20,6 +21,7 @@
 		<constant name="tab_related">Related items</constant>
 		<constant name="tab_delivery">Delivery</constant>
 
+		<constant name="title_settings">Shop: Settings</constant>
 		<constant name="title_manage_items">Shop: Manage items</constant>
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
 		<constant name="title_item_add">Shop: Add new item</constant>
@@ -127,7 +129,11 @@
 		<constant name="label_domestic">Available for domestic shipping</constant>
 		<constant name="label_delivery_method">Delivery method:</constant>
 		<constant name="label_remarks">Remarks or special instructions:</constant>
+		<constant name="label_email_article">Invoice template:</constant>
+		<constant name="label_fixed_country">Limit delivery to this country:</constant>
+		<constant name="label_shop_location">Location of shop:</constant>
 
+		<constant name="message_settings_saved">Shop settings were saved.</constant>
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
 		<constant name="message_currency_saved">Selected currency was added.</constant>
 		<constant name="message_currency_delete">You are about to delete the following currency. Are you sure?</constant>
@@ -217,6 +223,7 @@
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
 		<constant name="menu_manufacturers">יצרנים</constant>
 		<constant name="menu_delivery_methods">שיטות משלוח</constant>
+		<constant name="menu_settings">Settings</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
 		<constant name="tab_colors">צבעים</constant>
@@ -224,6 +231,7 @@
 		<constant name="tab_related">אביזרים נלווים</constant>
 		<constant name="tab_delivery">משלוח</constant>
 
+		<constant name="title_settings">Shop: Settings</constant>
 		<constant name="title_manage_items">חנות:נהל מוצרים</constant>
 		<constant name="title_manage_categories">חנות: נהל קטגוריות</constant>
 		<constant name="title_item_add">חנות: הוסף מוצר</constant>
@@ -331,7 +339,11 @@
 		<constant name="label_domestic">מיועד למשלוח מקומי</constant>
 		<constant name="label_delivery_method">שיטת משלוח:</constant>
 		<constant name="label_remarks">Remarks or special instructions:</constant>
+		<constant name="label_email_article">Invoice template:</constant>
+		<constant name="label_fixed_country">Limit delivery to this country:</constant>
+		<constant name="label_shop_location">Location of shop:</constant>
 
+		<constant name="message_settings_saved">Shop settings were saved.</constant>
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
 		<constant name="message_currency_delete">אתה עומד למחוק את המטבע הבא, האם אתה בטוח?</constant>

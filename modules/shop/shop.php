@@ -214,6 +214,21 @@ class shop extends Module {
 								5  // level
 							));
 
+			$shop_menu->addSeparator(5);
+			$shop_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_settings'),
+								url_GetFromFilePath($this->path.'images/settings.png'),
+
+								window_Open( // on click open window
+											'shop_settings',
+											400,
+											$this->getLanguageConstant('title_settings'),
+											true, true,
+											backend_UrlMake($this->name, 'settings')
+										),
+								$level=5
+							));	
+
 			$backend->addMenu($this->name, $shop_menu);
 		}
 
@@ -477,6 +492,14 @@ class shop extends Module {
 				case 'delivery_methods':
 					$handler = ShopDeliveryMethodsHandler::getInstance($this);
 					$handler->transferControl($params, $children);
+					break;
+
+				case 'settings':
+					$this->showSettings();
+					break;
+
+				case 'settings_save':
+					$this->saveSettings();
 					break;
 
 				default:
@@ -759,6 +782,51 @@ class shop extends Module {
 	 */
 	public function registerPaymentMethod($name, $module) {
 		$this->payment_methods[$name] = $module;
+	}
+
+	/**
+	 * Show shop configuration form
+	 */
+	private function showSettings() {
+		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
+						'cancel_action'	=> window_Close('shop_settings')
+					);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Save settings
+	 */
+	private function saveSettings() {
+		// save new settings
+		$email_article = fix_id($_REQUEST['email_article']);
+		$shop_location = fix_chars($_REQUEST['shop_location']);
+		$fixed_country = fix_chars($_REQUEST['fixed_country']);
+
+		$this->saveSetting('email_article', $email_article);
+		$this->saveSetting('shop_location', $shop_location);
+		$this->saveSetting('fixed_country', $fixed_country);
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_settings_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('shop_settings')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -1268,7 +1336,10 @@ class shop extends Module {
 
 		if (isset($_REQUEST['delivery_method'])) {
 			$method = fix_id($_REQUEST['delivery_method']);
-			$_SESSION['delivery_method'] = $method;
+
+			if ($method == 0)
+				unset($_SESSION['delivery_method']); else
+				$_SESSION['delivery_method'] = $method;
 		}
 
 		$result = $this->getCartSummary();

@@ -452,6 +452,78 @@ class ShopDeliveryMethodsHandler {
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
+		// delivery method list needs to be filtered by the items in shooping cart
+		if (isset($tag_params['shopping_cart']) && $tag_params['shopping_cart'] == 1) {
+			$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+			$prices_manager = ShopDeliveryMethodPricesManager::getInstance();
+			$items_manager = ShopItemManager::getInstance();
+
+			$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+			$uid_list = array_keys($cart);
+
+			if (count($uid_list) == 0)
+				return;
+
+			// shopping cart contains only UIDs, we need IDs
+			$id_list = array();
+			$items = $items_manager->getItems(array('id'), array('uid' => $uid_list));
+
+			if (count($items) > 0)
+				foreach ($items as $item)
+					$id_list[] = $item->id;
+
+			// get item relations to delivery methods
+			$relations = $relations_manager->getItems(
+								$relations_manager->getFieldNames(), 
+								array('item' => $id_list)
+							);
+
+			$price_list = array();
+
+			if (count($relations) > 0)
+				foreach ($relations as $relation) 
+					$price_list[] = $relation->price;
+
+			$relations = $prices_manager->getItems(array('method'), array('id' => $price_list));
+			$method_count = array();
+
+			if (count($relations) > 0)
+				foreach ($relations as $relation) {
+					$key = $relation->method;
+
+					if (!array_key_exists($key, $method_count))
+						$method_count[$key] = 0;
+
+					$method_count[$key]++;
+				}
+
+			// We compare number of items with method associated with
+			// that item. Methods that have number same as number of items
+			// are supported and we include them in list.
+			$border_count = count($id_list);
+			$valid_methods = array();
+
+			if (count($method_count) > 0)
+				foreach ($method_count as $id => $count) 
+					if ($count == $border_count)
+						$valid_methods[] = $id;
+
+			if (count($valid_methods) > 0) 
+				$conditions['id'] = $valid_methods; else
+				$conditions ['id'] = -1;
+
+			// filter by location
+			$shop_location = isset($this->_parent->settings['shop_location']) ? $this->_parent->settings['shop_location'] : '';
+
+			if (!empty($shop_location)) {
+				$same_country = $shop_location == $_SESSION['buyer']['country'];
+
+				if ($same_country)
+					$conditions['domestic'] = 1; else
+					$conditions['international'] = 1;
+			}
+		}
+
 		// get template
 		$template = $this->_parent->loadTemplate($tag_params, 'delivery_methods_list_item.xml');
 		$template->registerTagHandler('_price_list', &$this, 'tag_DeliveryPricesList');

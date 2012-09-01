@@ -81,14 +81,26 @@
 			<_var name="$params['checkout_fields']"/>
 
 			<div class="checkout_controls">
-				<button type="submit" disabled="disabled">
-					<_text constant="checkout" module="shop"/>
-					<small>
-						<_text constant="with" module="shop"/>
-						<_raw text=" "/>
-						<_var name="$params['checkout_name']"/>
-					</small>
-				</button>
+				<_if condition="!isset($_SESSION['delivery_method'])">
+					<button type="submit" disabled="disabled">
+						<_text constant="checkout" module="shop"/>
+						<small>
+							<_text constant="with" module="shop"/>
+							<_raw text=" "/>
+							<_var name="$params['checkout_name']"/>
+						</small>
+					</button>
+				</_if>
+				<_if condition="isset($_SESSION['delivery_method'])">
+					<button type="submit">
+						<_text constant="checkout" module="shop"/>
+						<small>
+							<_text constant="with" module="shop"/>
+							<_raw text=" "/>
+							<_var name="$params['checkout_name']"/>
+						</small>
+					</button>
+				</_if>
 			</div>
 
 			<div style="clear: both;"/>

@@ -365,6 +365,11 @@ function ShoppingCart() {
 	 */
 	this.changeDeliveryMethod = function(delivery_method) {
 		this._updateCheckoutForm(false, delivery_method);
+
+		// enable or disable submit button on checkout form
+		if (delivery_method > 0)
+			this._checkout_form.find('button[type=submit]').removeAttr('disabled'); else
+			this._checkout_form.find('button[type=submit]').attr('disabled', 'disabled'); 
 	};
 
 	/**
@@ -708,8 +713,6 @@ function ShoppingCart() {
 		self._default_currency = data.currency;
 		self._shipping = parseFloat(data.shipping);
 		self._handling = parseFloat(data.handling);
-
-		console.log(data);
 
 		for (var key in items) {
 			var data = items[key];
