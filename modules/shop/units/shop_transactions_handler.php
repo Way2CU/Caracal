@@ -89,7 +89,9 @@ class ShopTransactionsHandler {
 
 		$full_address = "{$address->name}\n\n{$address->street}\n";
 		$full_address .= "{$address->zip} {$address->city}\n";
-		$full_address .= "{$address->state}, {$address->country}";
+		if (empty($address->state))
+			$full_address .= $address->country; else
+			$full_address .= "{$address->state}, {$address->country}"; 
 
 		$params = array(
 				'id'				=> $transaction->id,
@@ -101,6 +103,8 @@ class ShopTransactionsHandler {
 				'handling'			=> $transaction->handling,
 				'shipping'			=> $transaction->shipping,
 				'timestamp'			=> $transaction->timestamp,
+				'delivery_method'	=> $transaction->delivery_method,
+				'remark'			=> $transaction->remark,
 				'total'				=> $transaction->total,
 				'first_name'		=> $buyer->first_name,
 				'last_name'			=> $buyer->last_name,
@@ -148,20 +152,22 @@ class ShopTransactionsHandler {
 				$window = 'shop_transation_details_'.$item->id;
 
 				$params = array(
-							'buyer'			=> $item->buyer,
-							'address'		=> $item->address,
-							'uid'			=> $item->uid,
-							'type'			=> $item->type,
-							'type_value'	=> '',
-							'status'		=> $item->status,
-							'status_value'	=> '',
-							'currency'		=> $item->currency,
-							'currency_value'=> '',
-							'handling'		=> $item->handling,
-							'shipping'		=> $item->shipping,
-							'total'			=> $item->total,
-							'timestamp'		=> $item->timestamp,
-							'item_details'	=> url_MakeHyperlink(
+							'buyer'				=> $item->buyer,
+							'address'			=> $item->address,
+							'uid'				=> $item->uid,
+							'type'				=> $item->type,
+							'type_value'		=> '',
+							'status'			=> $item->status,
+							'status_value'		=> '',
+							'currency'			=> $item->currency,
+							'currency_value'	=> '',
+							'handling'			=> $item->handling,
+							'shipping'			=> $item->shipping,
+							'total'				=> $item->total,
+							'delivery_method'	=> $item->delivery_method,
+							'remark'			=> $item->remark,
+							'timestamp'			=> $item->timestamp,
+							'item_details'		=> url_MakeHyperlink(
 													$this->_parent->getLanguageConstant('details'),
 													window_Open(
 														$window, 800, $title, true, false,
@@ -215,7 +221,7 @@ class ShopTransactionsHandler {
 
 		if (count($raw_items) > 0) 
 			foreach ($raw_items as $item) {
-				$items[$item->id] = array(
+				$items[$item->item] = array(
 							'id'			=> $item->id,
 							'price'			=> $item->price,
 							'tax'			=> $item->tax,
@@ -223,7 +229,6 @@ class ShopTransactionsHandler {
 							'description'	=> $item->description,
 							'uid' 			=> '',
 							'name'			=> '',
-							'description'	=> '',
 							'gallery'		=> '',
 							'manufacturer'	=> '',
 							'author' 		=> '',
@@ -235,7 +240,7 @@ class ShopTransactionsHandler {
 							'priority' 		=> '',
 							'visible' 		=> '',
 							'deleted' 		=> '',
-							'total'			=> 0,
+							'total'			=> ($item->price + ($item->price * ($item->tax / 100))) * $item->amount,
 							'currency'		=> $currency
 						);
 			}
@@ -249,7 +254,6 @@ class ShopTransactionsHandler {
 				$id = $item->id;
 				$items[$id]['uid'] = $item->uid;
 				$items[$id]['name'] = $item->name;
-				$items[$id]['description'] = $item->description;
 				$items[$id]['gallery'] = $item->gallery;
 				$items[$id]['manufacturer'] = $item->manufacturer;
 				$items[$id]['author'] = $item->author;

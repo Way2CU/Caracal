@@ -211,6 +211,10 @@ function ShoppingCart() {
 		// get container width for later use
 		this._width = this.main_container.width();
 
+		// connect submit button on checkout form to our handler
+		if (this._on_checkout_page)
+			this._checkout_form.find('button[type=submit]').click(this._handleCheckout);
+
 		// load cart items from cookies
 		this._loadContent();
 		this._loadPaymentMethods();
@@ -451,6 +455,45 @@ function ShoppingCart() {
 				this._checkout_form.find('.total-value').html(total.toFixed(2) + ' ' + this._default_currency);
 			}
 		});
+	};
+
+	/**
+	 * Handle checout form submit
+	 *
+	 * @param object event
+	 * @return boolean
+	 */
+	this._handleCheckout = function(event) {
+		var remark = self._checkout_form.find('textarea[name=remarks]');
+
+		// if there's a remark on this form, process that first
+		if (remark.length > 0 && remark.val().length > 0) {
+			// prevent browser from redirecting until we save remark
+			event.preventDefault();
+
+			// gather data and send them to server
+			var data = {
+						section: 'shop',
+						action: 'json_save_remark',
+						remark: remark.val()
+					};
+
+			$.ajax({
+				url: self._getBackendURL(),
+				type: 'POST',
+				async: false,
+				data: data,
+				dataType: 'json',
+				context: self,
+				success: function(data) {
+					// there was an error saving remark
+					if (!data)
+						alert('Error saving remark');
+					
+					self._checkout_form.submit();
+				}
+			});
+		}
 	};
 
 	/**

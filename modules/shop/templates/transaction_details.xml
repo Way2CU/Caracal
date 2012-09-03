@@ -37,23 +37,41 @@
 			</button>
 		</label>
 		<hr/>
-		<label>
-			<span><_text constant="label_handling" module="shop"/></span>
-			<input type="text" value="$params['handling']" eval="value" readonly="readonly"/>
-		</label>
-		<label>
-			<span><_text constant="label_shipping" module="shop"/></span>
-			<input type="text" value="$params['shipping']" eval="value" readonly="readonly"/>
-		</label>
-		<label>
-			<span><_text constant="label_total" module="shop"/></span>
-			<input type="text" value="$params['total']" eval="value" readonly="readonly"/>
-		</label>
+		<table>
+			<tr>
+				<td><_text constant="label_handling" module="shop"/></td>
+				<td><input type="text" value="$params['handling']" eval="value" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td><_text constant="label_shipping" module="shop"/></td>
+				<td><input type="text" value="$params['shipping']" eval="value" readonly="readonly"/></td>
+			</tr>
+			<tr>
+				<td><_text constant="label_total" module="shop"/></td>
+				<td><input type="text" value="$params['total']" eval="value" readonly="readonly"/></td>
+			</tr>
+		</table>
 		<hr/>
 		<label>
 			<span><_text constant="label_shipping_address" module="shop"/></span>
-			<textarea readonly="readonly" style="width: 270px; height: 150px;">
+			<textarea readonly="readonly" style="width: 270px; height: 70px;">
 				<_var name="$params['full_address']"/>
+			</textarea>
+		</label>
+		<label>
+			<span><_text constant="label_delivery_method" module="shop"/></span>
+			<input
+				type="text"
+				value="$params['delivery_method']"
+				eval="value"
+				readonly="readonly"
+				style="width: 270px;"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_remark" module="shop"/></span>
+			<textarea readonly="readonly" style="width: 270px; height: 70px;">
+				<_var name="$params['remark']"/>
 			</textarea>
 		</label>
 	</div>

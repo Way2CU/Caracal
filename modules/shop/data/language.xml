@@ -85,7 +85,9 @@
 		<constant name="column_manufacturer_name">Name</constant>
 		<constant name="column_international">International</constant>
 		<constant name="column_domestic">Domestic</constant>
+		<constant name="column_count">Count</constant>
 
+		<constant name="label_remark">Remark:</constant>
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
 		<constant name="label_price">Price:</constant>
@@ -295,7 +297,9 @@
 		<constant name="column_manufacturer_name">שם</constant>
 		<constant name="column_international">International</constant>
 		<constant name="column_domestic">Domestic</constant>
+		<constant name="column_count">Count</constant>
 
+		<constant name="label_remark">Remark:</constant>
 		<constant name="label_name">שם:</constant>
 		<constant name="label_description">תיאור:</constant>
 		<constant name="label_price">מחיר:</constant>

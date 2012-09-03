@@ -446,6 +446,10 @@ class shop extends Module {
 					$this->json_GetShoppingCartSummary();
 					break;
 
+				case 'json_save_remark':
+					$this->json_SaveRemark();
+					break;
+
 				default:
 					break;
 			}
@@ -696,6 +700,8 @@ class shop extends Module {
 				  `currency` int(11) NOT NULL,
 				  `handling` decimal(8,2) NOT NULL,
 				  `shipping` decimal(8,2) NOT NULL,
+				  `delivery_method` varchar(255) NOT NULL,
+				  `remark` text NOT NULL,
 				  `total` decimal(8,2) NOT NULL,
 				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				  PRIMARY KEY (`id`),
@@ -1333,8 +1339,10 @@ class shop extends Module {
 	 */
 	private function json_GetShoppingCartSummary() {
 		$result = array();
+		$update_delivery_method = isset($_REQUEST['delivery_method']);
 
-		if (isset($_REQUEST['delivery_method'])) {
+		// update session delivery method
+		if ($update_delivery_method) {
 			$method = fix_id($_REQUEST['delivery_method']);
 
 			if ($method == 0)
@@ -1344,6 +1352,42 @@ class shop extends Module {
 
 		$result = $this->getCartSummary();
 		unset($result['items_for_checkout']);
+
+		// if delivery method was changed update transaction details in database
+		if ($update_delivery_method) {
+			$manager = ShopTransactionsManager::getInstance();
+
+			$uid = $_SESSION['transaction']['uid'];
+			$data = array(
+					'handling'			=> $result['handling'],
+					'shipping'			=> $result['shipping'],
+					'delivery_method'	=> $result['delivery_method'],
+					'total'				=> $result['total']
+				);
+
+			$manager->updateData($data, array('uid' => $uid));
+		}	
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Save transaction remark before submitting form
+	 */
+	private function json_SaveRemark() {
+		$result = false;
+
+		if (isset($_SESSION['transaction'])) {
+			$manager = ShopTransactionsManager::getInstance();
+
+			// get data
+			$uid = $_SESSION['transaction']['uid'];
+			$remark = fix_chars($_REQUEST['remark']);
+
+			// store remark
+			$manager->updateData(array('remark' => $remark), array('uid' => $uid));
+			$result = true;
+		}
 
 		print json_encode($result);
 	}
@@ -1370,6 +1414,7 @@ class shop extends Module {
 	 */
 	private function getCartSummary() {
 		$result = array();
+		$default_language = MainLanguageHandler::getInstance()->getDefaultLanguage();
 
 		// colect ids from session
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
@@ -1392,14 +1437,25 @@ class shop extends Module {
 		$total_money = 0;
 		$total_weight = 0;
 		$delivery_method = null;
+		$delivery_method_name = '';
 		$items_by_uid = array();
 		$items_for_checkout = array();
 		$delivery_prices = array();
 		$map_id_to_uid = array();
 
 		// get prefered method
-		if (isset($_SESSION['delivery_method']))
+		if (isset($_SESSION['delivery_method'])) {
 			$delivery_method = $_SESSION['delivery_method'];
+			$delivery_method_manager = ShopDeliveryMethodsManager::getInstance();
+
+			$raw_delivery_mehtod = $delivery_method_manager->getSingleItem(
+											array('name'), 
+											array('id' => $delivery_method)
+										);
+
+			if (is_object($raw_delivery_mehtod))
+				$delivery_method_name = $raw_delivery_mehtod->name[$default_language];
+		}
 
 		// parse items from database
 		foreach ($items as $item) {
@@ -1491,7 +1547,8 @@ class shop extends Module {
 				'shipping'				=> $shipping,
 				'handling'				=> $handling,
 				'weight'				=> $total_weight,
-				'total'					=> $total_money
+				'total'					=> $total_money,
+				'delivery_method'		=> $delivery_method_name
 			);
 
 		return $result;
@@ -1673,6 +1730,7 @@ class shop extends Module {
 				$transaction_data['status'] = TransactionStatus::PENDING;
 				$transaction_data['handling'] = $summary['handling'];
 				$transaction_data['shipping'] = $summary['shipping'];
+				$transaction_data['delivery_method'] = '';
 				$transaction_data['total'] = $summary['total'];
 
 				// create new transaction
