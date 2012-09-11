@@ -248,8 +248,9 @@ class contact_form extends Module {
 	 * @param string $subject
 	 * @param string $text_body
 	 * @param string $html_body
+	 * @param string $bcc
 	 */
-	public function sendFromModule($to, $subject, $text_body, $html_body) {
+	public function sendFromModule($to, $subject, $text_body, $html_body, $bcc=null) {
 		$headers = array();
 		$headers['X-Mailer'] = "RCF-CMS/1.0";
 		
@@ -260,10 +261,16 @@ class contact_form extends Module {
 		$subject = "=?utf-8?B?".base64_encode($subject)."?=";
 		
 		// prepare sender
-		$name = "=?utf-8?B?".base64_encode($this->settings['default_name'])."?=";
-		$addresses = split(',', $this->settings['default_address']);
-		$address = count($addresses) > 0 ? $addresses[0] : '';
-		$headers['From'] = "{$name} <{$address}>";
+		$name = array($this->settings['default_name']);
+		$address = split(',', $this->settings['default_address']);
+		$headers['From'] = $this->generateAddressField($name, $address);
+
+		// add bcc if specified setting bcc = -1 will use from 
+		// field effectively sending copy of email to sender
+		if (!is_null($bcc)) 
+			if (is_numeric($bcc) && $bcc == -1)
+				$headers['Bcc'] = $headers['From']; else
+				$headers['Bcc'] = $bcc;
 		
 		// create boundary string
 		$boundary = md5(time().'--cms--'.(rand() * 10000));
@@ -295,6 +302,40 @@ class contact_form extends Module {
 		$headers_string = $this->_makeHeaders($headers);
 		
 		return mail($to, $subject, $body, $headers_string);
+	}
+
+	/**
+	 * Generate address string
+	 *
+	 * @param array/string $name
+	 * @param array/string $address
+	 * @return string
+	 */
+	public function generateAddressField($name, $address) {
+		$result = '';
+
+		if (is_array($name)) {
+			// generate from multiple addresses
+			$temp = array();
+
+			for ($i = 0; $i < count($address); $i++) {
+				$name_value = isset($name[$i]) ? $name[$i] : '';
+				$temp[] = $this->generateAddressField($name_value, $address[$i]);
+			}
+
+			$result = implode(',', $temp);
+
+		} else {
+			// generate from single address
+			if (!empty($name)) {
+				$name = '=?utf-8?B?' . base64_encode($name) . '?=';
+				$result = "{$name} <{$address}>";
+			} else {
+				$result = $address;
+			}
+		}
+
+		return $result;
 	}
 
 	/**
