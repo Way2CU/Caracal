@@ -126,9 +126,9 @@
 
 	<language short="sr">
 		<!-- Menus -->
-		<constant name="menu_news">Obavestenja</constant>
-		<constant name="menu_add_news">Novo obavestenje</constant>
-		<constant name="menu_manage_news">Upravljanje obavestenjima</constant>
+		<constant name="menu_news">Obaveštenja</constant>
+		<constant name="menu_add_news">Novo obaveštenje</constant>
+		<constant name="menu_manage_news">Upravljanje obaveštenjima</constant>
 		<constant name="menu_manage_groups">Upravljanje grupama</constant>
 		<constant name="menu_news_feeds">Tok obaveštenja</constant>
 
