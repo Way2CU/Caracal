@@ -20,6 +20,8 @@
 		<constant name="tab_category">Categories</constant>
 		<constant name="tab_related">Related items</constant>
 		<constant name="tab_delivery">Delivery</constant>
+		<constant name="tab_general">General</constant>
+		<constant name="tab_shipping">Shipping</constant>
 
 		<constant name="title_settings">Shop: Settings</constant>
 		<constant name="title_manage_items">Shop: Manage items</constant>
@@ -87,6 +89,7 @@
 		<constant name="column_domestic">Domestic</constant>
 		<constant name="column_count">Count</constant>
 
+		<constant name="label_timestamp">Timestamp:</constant>
 		<constant name="label_remark">Remark:</constant>
 		<constant name="label_name">Name:</constant>
 		<constant name="label_description">Description:</constant>
@@ -225,15 +228,17 @@
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
 		<constant name="menu_manufacturers">יצרנים</constant>
 		<constant name="menu_delivery_methods">שיטות משלוח</constant>
-		<constant name="menu_settings">Settings</constant>
+		<constant name="menu_settings">הגדרות</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
 		<constant name="tab_colors">צבעים</constant>
 		<constant name="tab_category">קטגוריות</constant>
 		<constant name="tab_related">אביזרים נלווים</constant>
 		<constant name="tab_delivery">משלוח</constant>
+		<constant name="tab_general">כללי</constant>
+		<constant name="tab_shipping">משלוח</constant>
 
-		<constant name="title_settings">Shop: Settings</constant>
+		<constant name="title_settings">חנות: הגדרות</constant>
 		<constant name="title_manage_items">חנות:נהל מוצרים</constant>
 		<constant name="title_manage_categories">חנות: נהל קטגוריות</constant>
 		<constant name="title_item_add">חנות: הוסף מוצר</constant>
@@ -288,18 +293,19 @@
 		<constant name="column_item_total">סהכ מוצר</constant>
 		<constant name="column_subtotal">סיכום ביניים</constant>
 		<constant name="column_shipping">משלוח</constant>
-		<constant name="column_handling">Handling</constant>
+		<constant name="column_handling">טיפול</constant>
 		<constant name="column_total_weight">סהכ משקל</constant>
 		<constant name="column_total">סהכ</constant>
 		<constant name="column_categories">קטגוריות אליהן שייך המוצר</constant>
 		<constant name="column_color_name">שם</constant>
 		<constant name="column_color_value">ערך</constant>
 		<constant name="column_manufacturer_name">שם</constant>
-		<constant name="column_international">International</constant>
-		<constant name="column_domestic">Domestic</constant>
-		<constant name="column_count">Count</constant>
+		<constant name="column_international">בינלאומי</constant>
+		<constant name="column_domestic">פנים ארצי</constant>
+		<constant name="column_count">כמות</constant>
 
-		<constant name="label_remark">Remark:</constant>
+		<constant name="label_timestamp">תאריך ושעה:</constant>
+		<constant name="label_remark">הערות:</constant>
 		<constant name="label_name">שם:</constant>
 		<constant name="label_description">תיאור:</constant>
 		<constant name="label_price">מחיר:</constant>
@@ -342,12 +348,12 @@
 		<constant name="label_international">מיועד למשלוח בינלאומי</constant>
 		<constant name="label_domestic">מיועד למשלוח מקומי</constant>
 		<constant name="label_delivery_method">שיטת משלוח:</constant>
-		<constant name="label_remarks">Remarks or special instructions:</constant>
-		<constant name="label_email_article">Invoice template:</constant>
-		<constant name="label_fixed_country">Limit delivery to this country:</constant>
-		<constant name="label_shop_location">Location of shop:</constant>
+		<constant name="label_remarks">הערות והארות:</constant>
+		<constant name="label_email_article">שבלונת חשבונית:</constant>
+		<constant name="label_fixed_country">הגסל משלוח למדינה זו:</constant>
+		<constant name="label_shop_location">מיקום החנות:</constant>
 
-		<constant name="message_settings_saved">Shop settings were saved.</constant>
+		<constant name="message_settings_saved">הגדרות החנות נשמרו.</constant>
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
 		<constant name="message_currency_saved">המטבע הנבחר הוסף</constant>
 		<constant name="message_currency_delete">אתה עומד למחוק את המטבע הבא, האם אתה בטוח?</constant>
