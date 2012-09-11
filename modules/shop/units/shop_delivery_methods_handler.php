@@ -238,10 +238,19 @@ class ShopDeliveryMethodsHandler {
 	private function deleteMethod_Commit() {
 		$manager = ShopDeliveryMethodsManager::getInstance();
 		$prices_manager = ShopDeliveryMethodPricesManager::getInstance();
+		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
+
+		$prices = $prices_manager->getItems(array('id'), array('method' => $id));
+		$id_list = array();
+
+		if (count($prices) > 0)
+			foreach ($prices as $price)
+				$id_list[] = $price->id;
 
 		$manager->deleteData(array('id' => $id));
 		$prices_manager->deleteData(array('method' => $id));
+		$relations_manager->deleteData(array('price' => $id_list));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -417,9 +426,11 @@ class ShopDeliveryMethodsHandler {
 	 */
 	private function deletePrice_Commit() {
 		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 
 		$manager->deleteData(array('id' => $id));
+		$relations_manager->deleteData(array('price' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
