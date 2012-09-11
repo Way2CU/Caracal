@@ -34,13 +34,13 @@
 
 		<!-- Labels -->
 		<constant name="label_title">Document title:</constant>
-		<constant name="label_content">Article text&amp;nbsp;&lt;small&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
+		<constant name="label_content">Article text <small>(uses <a target="_blank" href="http://daringfireball.net/projects/markdown/syntax">markdown</a>&amp;nbsp;syntax)</small>:</constant>
 		<constant name="label_visible">Article is visible</constant>
-		<constant name="label_text_id">Unique article text ID&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_text_id">Unique article text ID <small>(optional)</small>:</constant>
 		<constant name="label_group_title">Title:</constant>
-		<constant name="label_group_description">Description&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group_text_id">Unique group text ID&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group">Group&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group_description">Description <small>(optional)</small>:</constant>
+		<constant name="label_group_text_id">Unique group text ID <small>(optional)</small>:</constant>
+		<constant name="label_group">Group <small>(optional)</small>:</constant>
 		<constant name="label_vote_up">Vote Up</constant>
 		<constant name="label_vote_down">Vote Down</constant>
 
@@ -89,13 +89,13 @@
 
 		<!-- Labels -->
 		<constant name="label_title">כותרת המסמך:</constant>
-		<constant name="label_content">תוכן המאמר&amp;nbsp;&lt;small&gt;(uses&amp;nbsp;&lt;a target="_blank" href="http://daringfireball.net/projects/markdown/syntax"&gt;markdown&lt;/a&gt;&amp;nbsp;syntax)&lt;/small&gt;:</constant>
+		<constant name="label_content">תוכן המאמר <small>(uses <a target="_blank" href="http://daringfireball.net/projects/markdown/syntax">markdown</a>&amp;nbsp;syntax)</small>:</constant>
 		<constant name="label_visible">המאמר נראה</constant>
-		<constant name="label_text_id">מזהה טקסט המאמר&amp;nbsp;&lt;small&gt;(אופציונאלי)&lt;/small&gt;:</constant>
+		<constant name="label_text_id">מזהה טקסט המאמר <small>(אופציונאלי)</small>:</constant>
 		<constant name="label_group_title">כותרת:</constant>
-		<constant name="label_group_description">תיאור&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group_text_id">טקסט חד ערכי? ID&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
-		<constant name="label_group">Group&amp;nbsp;&lt;small&gt;(optional)&lt;/small&gt;:</constant>
+		<constant name="label_group_description">תיאור <small>(optional)</small>:</constant>
+		<constant name="label_group_text_id">טקסט חד ערכי? ID <small>(optional)</small>:</constant>
+		<constant name="label_group">Group <small>(optional)</small>:</constant>
 		<constant name="label_vote_up">בעד</constant>
 		<constant name="label_vote_down">נגד</constant>
 
@@ -109,5 +109,60 @@
 		<constant name="tab_general">כללי</constant>
 		<constant name="tab_content">תוכן</constant>
 		<constant name="tab_preview">תצוגה מקדימה</constant>
+	</language>
+
+	<language short="sr">
+		<!-- Menu Items -->
+		<constant name="menu_articles">Tekstovi</constant>
+		<constant name="menu_articles_new">Pisanje novog teksta</constant>
+		<constant name="menu_articles_manage">Upravljanje tekstovima</constant>
+		<constant name="menu_article_groups">Upravljanje grupama</constant>
+
+		<!-- Titles -->
+		<constant name="title_articles_new">Tekstovi: Pisanje novog</constant>
+		<constant name="title_articles_change">Tekstovi: Izmena</constant>
+		<constant name="title_articles_delete">Tekstovi: Brisanje</constant>
+		<constant name="title_articles_manage">Tekstovi: Upravljanje</constant>
+		<constant name="title_article_groups">Grupe Tekstova</constant>
+		<constant name="title_article_groups_new">Grupe Tekstova: Pravljenje nove</constant>
+		<constant name="title_article_groups_change">Grupe Tekstova: Izmena podataka</constant>
+		<constant name="title_article_groups_delete">Grupe Tekstova: Brisanje</constant>
+
+		<!-- Messages -->
+		<constant name="message_article_saved">Novi tekst je snimljen!</constant>
+		<constant name="message_article_delete">Da li ste sigurni da želite da izbrišete odabrani tekst?</constant>
+		<constant name="message_article_deleted">Tekst je izbrisan!</constant>
+		<constant name="message_group_saved">Podaci grupe su snimljeni!</constant>
+		<constant name="message_group_delete">Da li ste sigurni da želite da izbrišete odabranu grupu? Ova akcija nece uticati na tekstove unutar grupe.</constant>
+		<constant name="message_group_deleted">Grupa je izbrisana!</constant>
+		<constant name="message_vote_sending">Molimo sačekajte...</constant>
+		<constant name="message_vote_ok">Hvala!</constant>
+		<constant name="message_vote_already">Već ste glasali!</constant>
+		<constant name="message_vote_error">Greška!</constant>
+		<constant name="message_json_article_not_found">Odabrani tekst ne postoji!</constant>
+		<constant name="message_json_articles_not_found">Nisu pronađeni tekstovi koji odgovaraju kriterijumu.</constant>
+
+		<!-- Labels -->
+		<constant name="label_title">Naslov dokumenta:</constant>
+		<constant name="label_content"><![CDATA[Sadržaj teksta <small>(koristi <a target="_blank" href="http://daringfireball.net/projects/markdown/syntax">markdown</a> sintaksu)</small>:]]></constant>
+		<constant name="label_visible">Dokument je vidljiv</constant>
+		<constant name="label_text_id"><![CDATA[Jedinstveni ID teksta <small>(opciono)</small>:]]></constant>
+		<constant name="label_group_title">Naziv:</constant>
+		<constant name="label_group_description"><![CDATA[Opis grupe <small>(opciono)</small>:]]></constant>
+		<constant name="label_group_text_id"><![CDATA[Jedinstveni ID grupe <small>(opciono)</small>:]]></constant>
+		<constant name="label_group"><![CDATA[Grupa <small>(opciono)</small>:]]></constant>
+		<constant name="label_vote_up">Vote Up</constant>
+		<constant name="label_vote_down">Vote Down</constant>
+
+		<!-- Columns -->
+		<constant name="column_title">Naziv</constant>
+		<constant name="column_author">Autor</constant>
+		<constant name="column_rating">Ocena</constant>
+		<constant name="column_text_id">Jedinstveni ID</constant>
+
+		<!-- Tab labels -->
+		<constant name="tab_general">Uopšteno</constant>
+		<constant name="tab_content">Sadržaj</constant>
+		<constant name="tab_preview">Pregled</constant>
 	</language>
 </document>

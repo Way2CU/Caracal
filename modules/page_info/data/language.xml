@@ -27,4 +27,17 @@
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
 	</language>
+	<language short="sr">
+		<constant name="menu_page_info">Podešavanja stranice</constant>
+
+		<constant name="title_page_info">Podešavanja Stranice</constant>
+
+		<constant name="message_saved">Podešavanja stranice su snimljena!</constant>
+
+		<constant name="label_description">Opis stranice (između 70 i 160 karaktera):</constant>
+		<constant name="label_analytics">Google analytics ID:</constant>
+		<constant name="label_wm_tools">Google webmasters tools:</constant>
+		<constant name="label_optimizer">Google website optimizer:</constant>
+		<constant name="label_optimizer_key">Key:</constant>
+	</language>
 </document>

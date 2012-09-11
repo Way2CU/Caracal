@@ -123,4 +123,66 @@
 		<constant name="groups">קבוצות חדשות</constant>
 		<constant name="items">חדשה</constant>
 	</language>
+
+	<language short="sr">
+		<!-- Menus -->
+		<constant name="menu_news">Obavestenja</constant>
+		<constant name="menu_add_news">Novo obavestenje</constant>
+		<constant name="menu_manage_news">Upravljanje obavestenjima</constant>
+		<constant name="menu_manage_groups">Upravljanje grupama</constant>
+		<constant name="menu_news_feeds">Tok obaveštenja</constant>
+
+		<!-- Titles -->
+		<constant name="title_news_add">Obaveštenja: Novo</constant>
+		<constant name="title_news_change">Obaveštenja: Izmena</constant>
+		<constant name="title_news_delete">Obaveštenja: Brisanje</constant>
+		<constant name="title_news_group_add">Obaveštenja: Nova grupa</constant>
+		<constant name="title_news_group_change">Obaveštenja: Izmena grupe</constant>
+		<constant name="title_news_group_delete">Obaveštenja: Brisanje grupe</constant>
+		<constant name="title_news_group_items">Obaveštenja: Sadržaj grupe</constant>
+		<constant name="title_news_feed_add">Obaveštenja: Novi tok</constant>
+		<constant name="title_news_feed_change">Obaveštenja: Izmena toka vesti</constant>
+		<constant name="title_news_feed_delete">Obaveštenja: Brisanje toka</constant>
+		<constant name="title_manage_news">Obaveštenja: Upravljanje</constant>
+		<constant name="title_manage_groups">Obaveštenja: Upravljanje grupama</constant>
+		<constant name="title_manage_feeds">Obaveštenja: Upravljanje tokovima</constant>
+
+		<!-- Labels -->
+		<constant name="label_title">Naslov:</constant>
+		<constant name="label_group"><![CDATA[Grupa <small>(opciono)</small>:]]></constant>
+		<constant name="label_feed_group">Grupa:</constant>
+		<constant name="label_text_id">Jedinstveni ID:</constant>
+		<constant name="label_content">Sadržaj:</constant>
+		<constant name="label_visible">Obaveštenje je vidljivo</constant>
+		<constant name="label_news_count">Broj obaveštenja:</constant>
+		<constant name="label_active">Tok je aktivan</constant>
+		<constant name="label_description">Opis toka obaveštenja:</constant>
+
+		<!-- Columns -->
+		<constant name="column_title">Naslov</constant>
+		<constant name="column_text_id">ID</constant>
+		<constant name="column_time">Datum</constant>
+		<constant name="column_group">Grupa</constant>
+		<constant name="column_active">Aktivan</constant>
+
+		<!-- Messages -->
+		<constant name="message_news_saved">Novo obaveštenje je snimljeno.</constant>
+		<constant name="message_news_delete">Da li zaista želite da izbrišete odabrano obaveštenje?</constant>
+		<constant name="message_news_deleted">Odabrano obaveštenje je izbrisano.</constant>
+		<constant name="message_group_saved">Podaci grupe su snimljeni.</constant>
+		<constant name="message_group_delete">Da li zaista želite da izbrišete odabranu grupu? Ova operacija nece uticati na obaveštenja vezana za grupu.</constant>
+		<constant name="message_group_deleted">Odabrana grupa je izbrisana.</constant>
+		<constant name="message_group_items_updated">Sadržaj odabrane grupe je snimljen.</constant>
+		<constant name="message_feed_delete">Da li zaista želite da izbrišete odabran tok obaveštenja? Ova operacija nece uticati na grupu i sama obaveštenja.</constant>
+		<constant name="message_feed_deleted">Tok obaveštenja je izbrisan.</constant>
+		<constant name="message_feed_saved">Podaci toka obaveštenja su snimljeni.</constant>
+		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
+
+		<!-- Other -->
+		<constant name="add_news">Novo obaveštenje</constant>
+		<constant name="add_group">Nova grupa</constant>
+		<constant name="add_feed">Novi tok obaveštenja</constant>
+		<constant name="groups">Grupe obaveštenja</constant>
+		<constant name="items">Obaveštenja</constant>
+	</language>
 </document>

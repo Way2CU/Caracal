@@ -131,4 +131,71 @@
 		<constant name="groups">קבוצות של תמונות</constant>
 		<constant name="container_groups">קבוצות</constant>
 	</language>
+
+	<language short="sr">
+		<constant name="menu_gallery">Galerija</constant>
+		<constant name="menu_images">Sve slike</constant>
+		<constant name="menu_groups">Grupe slika</constant>
+		<constant name="menu_containers">Kontejneri grupa</constant>
+
+		<constant name="title_image_options">Galerija: Opcije Slike</constant>
+		<constant name="title_images">Galerija: Slike</constant>
+		<constant name="title_images_upload">Galerija: Dodavanje Slike</constant>
+		<constant name="title_images_change">Galerija: Izmena Podataka Slike</constant>
+		<constant name="title_images_delete">Galerija: Brisanje Slike</constant>
+		<constant name="title_groups">Galerija: Grupe</constant>
+		<constant name="title_groups_create">Galerija: Nova Grupa</constant>
+		<constant name="title_groups_change">Galerija: Izmena Grupe</constant>
+		<constant name="title_groups_delete">Galerija: Brisanje Grupe</constant>
+		<constant name="title_containers">Galerija: Kontejneri Grupa</constant>
+		<constant name="title_containers_create">Galerija: Novi Kontejner</constant>
+		<constant name="title_containers_change">Galerija: Izmena Kontejnera</constant>
+		<constant name="title_containers_delete">Galerija: Brisanje Kontejnera</constant>
+		<constant name="title_containers_groups">Galerija: Grupe Unutar Kontejnera</constant>
+		<constant name="title_insert_image">Galerija: Ubacivanje Slike</constant>
+
+		<constant name="message_image_invalid_type">Pogrešan tip slike. Molimo kontaktirajte administratora.</constant>
+		<constant name="message_image_save_error">Greška prilikom snimanja slike. Proverite prava pristupa.</constant>
+		<constant name="message_image_upload_error">Greška prilikom slanja slike.</constant>
+		<constant name="message_image_uploaded">Nova slika je snimljena.</constant>
+		<constant name="message_image_saved">Podaci slike su snimljeni.</constant>
+		<constant name="message_image_delete">Da li zaista želite da izbrišete odabranu sliku?</constant>
+		<constant name="message_image_deleted">Odabrana slika je izbrisana.</constant>
+		<constant name="message_group_changed">Podaci odabrane grupe su izmenjeni.</constant>
+		<constant name="message_group_created">Nova grupa za slike je napravljena.</constant>
+		<constant name="message_group_delete">Da li zaista želite da izbrišete odabranu grupu i sve slike unutar nje?</constant>
+		<constant name="message_group_deleted">Odabrana grupa i slike unutar nje su izbrisani.</constant>
+		<constant name="message_container_changed">Podaci odabranog kontejnera su izmenjeni.</constant>
+		<constant name="message_container_created">Novi kontejner za grupe je napravljen.</constant>
+		<constant name="message_container_delete">Da li zaista želite da izbrišete odabrani kontejner? Ova operacija neće uticati na grupe i slike unutar njih.</constant>
+		<constant name="message_container_deleted">Odabrani kontejner grupa je izbrisan.</constant>
+		<constant name="message_container_groups_updated">Pripadnost grupa u kontejneru je osvežena.</constant>
+		<constant name="message_json_error_params">Invalid params specified.</constant>
+		<constant name="message_json_error_object">Object with specified ID or within specified group does not exist!</constant>
+		<constant name="message_thumbnail_changed">Thumbnail was successfully changed.</constant>
+
+		<constant name="label_name">Naziv:</constant>
+		<constant name="label_title">Naslov:</constant>
+		<constant name="label_group">Grupa:</constant>
+		<constant name="label_file">Lokacija datoteke:</constant>
+		<constant name="label_description"><![CDATA[Opis <small>(opciono)</small>]]>:</constant>
+		<constant name="label_visible">Slika je vidljiva</constant>
+		<constant name="label_slideshow">Slika je deo animiranog kolaža</constant>
+		<constant name="label_text_id">Jedinstveni ID:</constant>
+		<constant name="label_thumbnail">Umanjena slika:</constant>
+
+		<constant name="toolbar_insert_image">Ubaci sliku</constant>
+
+		<constant name="column_group_name">Naziv</constant>
+		<constant name="column_container_name">Naziv</constant>
+		<constant name="column_image_list"><![CDATA[Slike <small style="padding-left: 5px; color: #7F7F7F;">(click for more options)</small>]]></constant>
+
+		<constant name="upload_images">Dodavanje slike</constant>
+		<constant name="create_group">Nova grupa</constant>
+		<constant name="create_container">Novi kontejner</constant>
+		<constant name="groups">Grupe</constant>
+		<constant name="group">Grupa:</constant>
+		<constant name="all_images">Sve slike</constant>
+		<constant name="container_groups">Grupe</constant>
+	</language>
 </document>

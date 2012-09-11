@@ -17,6 +17,7 @@
 		<constant name="label_default_address">Email address:</constant>
 		<constant name="label_default_subject">Subject:</constant>
 	</language>
+
 	<language short="iw">
 		<constant name="menu_contact">טופס יצירת קשר</constant>
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>
@@ -33,5 +34,22 @@
 		<constant name="label_default_name">שם:</constant>
 		<constant name="label_default_address">דואל:</constant>
 		<constant name="label_default_subject">נושא:</constant>
+	</language>
+
+	<language short="sr">
+		<constant name="menu_contact">Kontakt</constant>
+		<constant name="menu_settings">Podešavanje formulara</constant>
+	
+		<constant name="message_sent">Podaci su uspešno poslati!</constant>
+		<constant name="message_error">Greška prilikom slanja podataka. Proverite sva polja i pokušajte opet.</constant>
+		<constant name="message_error_no_address">Greška prilikom slanja podataka. Sistem nema podešenog podrazumevanog primaoca.</constant>
+		<constant name="message_default"><![CDATA[Ovi podaci će biti korišteni prilikom slanja ili primanja poruka u zavisnosti od toga kako je vas sajt podešen.]]></constant>
+		<constant name="message_saved">Podešavanja su snimljena.</constant>
+		
+		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
+		
+		<constant name="label_default_name">Ime:</constant>
+		<constant name="label_default_address">Email adresa:</constant>
+		<constant name="label_default_subject">Naslov poruke:</constant>
 	</language>
 </document>

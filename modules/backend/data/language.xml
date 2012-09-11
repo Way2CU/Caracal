@@ -201,4 +201,105 @@
 		<constant name="logout">התנתק</constant>
 	</language>
 
+	<language name="Srpski" short="sr">
+		<constant name="title">Administracija</constant>
+
+		<!-- Menu Items -->
+		<constant name="menu_system">Sistem</constant>
+		<constant name="menu_modules">Moduli</constant>
+		<constant name="menu_users">Administracija korisnika</constant>
+		<constant name="menu_logout">Odjava</constant>
+		<constant name="menu_change_password">Promena lozinke</constant>
+
+		<!-- Window Titles -->
+		<constant name="title_modules">Moduli</constant>
+		<constant name="title_module_activate">Aktivacija Modula</constant>
+		<constant name="title_module_deactivate">Deaktivacija Modula</constant>
+		<constant name="title_module_initialise">Inicijalizacija Modula</constant>
+		<constant name="title_module_disable">Isključivanje Modula</constant>
+		<constant name="title_change_password">Promena Lozinke</constant>
+		<constant name="title_users_manager">Administracija Korisnika</constant>
+		<constant name="title_users_create">Korisnici: Dodavanje novog</constant>
+		<constant name="title_users_change">Korisnici: Promena podataka</constant>
+		<constant name="title_users_delete">Korisnici: Brisanje naloga</constant>
+
+		<!-- Messages -->
+		<constant name="message_module_activated">Module je aktiviran.</constant>
+		<constant name="message_module_deactivated">Modul je deaktiviran.</constant>
+		<constant name="message_module_initialise">Odabrani modul će biti aktiviran. Posle ove operacije modul će imati pristup bazi i datotekama. Da li ste sigurni?</constant>
+		<constant name="message_module_initialised">Modul je inicijalizovan i aktiviran.</constant>
+		<constant name="message_module_disable">Odabrani modul će biti isključen. Ova operacija će izbrisati sva podešavanja vezana za ovaj modul. Da li ste sigurni?</constant>
+		<constant name="message_module_disabled">Modul je isključen.</constant>
+		<constant name="message_module_protected">Ovaj modul je zaštićen. Niste u mogućnosti da promenite njegova podešavanja.</constant>
+		<constant name="message_module_not_active">Modul nije aktiviran. Ne možete isključiti neaktivan modul!</constant>
+		<constant name="message_password_change">Potrebno je uneti staru lozinku kako da bi potvrdili svoj identitet. Nova lozinka mora biti dužine bar 6 karaktera. Sistem razlikuje mala i velika slova!</constant>
+		<constant name="message_password_changed">Vaša lozinka je promenjena!</constant>
+		<constant name="message_login">Da bi ste pristupili administraciji ovog sajta potrebno je da unesete odgovarajuće korisničko ime i lozinku. Sistem razlikuje mala i velika slova!</constant>
+		<constant name="message_login_ok">Prijava na sistem je uspešna. Molimo sačekajte dok vas ne preusmerimo!</constant>
+		<constant name="message_login_error">Uneli ste pogresno korisničko ime i/ili lozinku.</constant>
+		<constant name="message_logout"><![CDATA[Da li ste sigurni da želite da se odjavite sa sistema?]]></constant>
+		<constant name="message_logout_ok">Odjava sa sistema uspešna!</constant>
+		<constant name="message_users_error_level_too_high">Grečka prilikom snimaka korisničkih podataka. Ne možete dodeliti nivo pristupa veći od svog.</constant>
+		<constant name="message_users_error_user_level_higher">Greška prilikom snimanja korisničkih podataka. Odabrani korisnik ima veći nivo pristupa od Vas.</constant>
+		<constant name="message_users_error_duplicate">Greška prilikom pravljenja novog korisničkog naloga. Odabrano korisničko ime ili email su vec u upotrebi.</constant>
+		<constant name="message_users_error_captcha">Vrednost brojeva unetih sa slike je pogrešna!</constant>
+		<constant name="message_users_created">Novi korisnički nalog je napravljen!</constant>
+		<constant name="message_users_data_saved">Novi korisnički podaci su snimljeni!</constant>
+		<constant name="message_users_delete">Odabrali se brisanje korisničkog naloga. Korisnik će izgubiti sve podatke vezane za ovaj nalog. Da li ste sigurni?</constant>
+		<constant name="message_users_deleted">Odabrani korisnički nalog je izbrisan!</constant>
+
+		<!-- Column Names -->
+		<constant name="column_module_name">Ime modula</constant>
+		<constant name="column_module_order">Redosled</constant>
+		<constant name="column_module_preload">Preload</constant>
+		<constant name="column_module_active">Aktivan</constant>
+		<constant name="column_users_fullname">Ime i prezime</constant>
+		<constant name="column_users_username">Korisničko ime</constant>
+		<constant name="column_users_level">Nivo</constant>
+
+		<!-- Labels -->
+		<constant name="label_old_password">Stara lozinka:</constant>
+		<constant name="label_new_password">Nova lozinka:</constant>
+		<constant name="label_repeat_password">Potvrda nove lozinke:</constant>
+		<constant name="label_fullname">Ime i prezime:</constant>
+		<constant name="label_username">Korisničko ime:</constant>
+		<constant name="label_password">Lozinka:</constant>
+		<constant name="label_email">Email:</constant>
+		<constant name="label_level">Nivo:</constant>
+		<constant name="label_link">Unesite URL:</constant>
+
+		<!-- Toolbar -->
+		<constant name="toolbar_markdown_bold">Zadebljano</constant>
+		<constant name="toolbar_markdown_italic">Iskošeno</constant>
+		<constant name="toolbar_markdown_link">Napravi hyperlink</constant>
+		<constant name="toolbar_markdown_quote">Citirano</constant>
+		<constant name="toolbar_markdown_code">Dodavanje bloka koda</constant>
+		<constant name="toolbar_markdown_header">Naslov</constant>
+		<constant name="toolbar_markdown_ordered_list">Numerisana lista (brojevi)</constant>
+		<constant name="toolbar_markdown_unordered_list">Nenumerisana lista (bulleti)</constant>
+
+		<!-- General -->
+		<constant name="activate">Aktiviraj</constant>
+		<constant name="deactivate">Deaktiviraj</constant>
+		<constant name="initialise">Inicijalizuj</constant>
+		<constant name="disable">Isključi</constant>
+		<constant name="close">Zatvori</constant>
+		<constant name="cancel">Otkaži</constant>
+
+		<!-- User Manager Related -->
+		<constant name="create_user">Novi korisnik</constant>
+		<constant name="group_guests">Gosti</constant>
+		<constant name="group_users">Korisnici</constant>
+		<constant name="group_admins">Administratori</constant>
+		<constant name="group_root">Unlimited</constant>
+
+		<!-- Login Related -->
+		<constant name="title_login">Prijava Na Sistem</constant>
+		<constant name="title_logout">Odjava Sa Sistema</constant>
+		<constant name="username">Korisničko ime:</constant>
+		<constant name="password">Lozinka:</constant>
+		<constant name="captcha">Captcha:</constant>
+		<constant name="login">Prijava</constant>
+		<constant name="logout">Odjava</constant>
+	</language>
 </document>

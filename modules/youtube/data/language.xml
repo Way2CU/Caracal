@@ -101,4 +101,55 @@
 		<constant name="preview">תצוגה מקדימה</constant>
 		<constant name="videos">וידאו</constant>
 	</language>
+
+	<language short="sr">
+		<constant name="title" value="YouTube" />
+
+		<!-- Menu Items -->
+		<constant name="menu_youtube">YouTube</constant>
+		<constant name="menu_video_list">Lista video zapisa</constant>
+		<constant name="menu_video_groups">Upravljanje grupama</constant>
+
+		<!-- Window Titles -->
+		<constant name="title_video_list">YouTube: Lista Video Zapisa</constant>
+		<constant name="title_video_add">YouTube: Dodavanje Video Zapisa</constant>
+		<constant name="title_video_change">YouTube: Izmena Video Zapisa</constant>
+		<constant name="title_video_delete">YouTube: Brisanje Video Zapisa</constant>
+		<constant name="title_video_groups">YouTube: Grupe</constant>
+		<constant name="title_group_create">YouTube: Nova Grupa</constant>
+		<constant name="title_group_change">YouTube: Izmena Grupe</constant>
+		<constant name="title_group_videos">YouTube: Odabir Video Zapisa</constant>
+		<constant name="title_group_delete">YouTube: Brisanje Grupe</constant>
+
+		<!-- Messages -->
+		<constant name="message_video_saved">Podaci video zapisa su snimljeni.</constant>
+		<constant name="message_video_error">Greška prilikom prosleđivanja vašeg zahteva.</constant>
+		<constant name="message_video_delete">Da li zaista želite da izbrišete odabrani video?</constant>
+		<constant name="message_video_deleted">Odabrani video je izbrisan.</constant>
+		<constant name="message_group_saved">Podaci grupe su snimljeni.</constant>
+		<constant name="message_group_delete">Da li zaista zelite da obrisete odabranu grupu? Videi dodeljeni ovoj grupi nece biti izbrisani.</constant>
+		<constant name="message_group_deleted">Odabrana grupa je izbrisana.</constant>
+		<constant name="message_group_videos_updated">Odabrani video zapisi su povezani sa grupom.</constant>
+
+		<!-- Column Names -->
+		<constant name="column_id">ID</constant>
+		<constant name="column_title">Naslov</constant>
+		<constant name="column_name">Naziv</constant>
+		<constant name="column_visible">Vidljiva</constant>
+		<constant name="column_video">Video</constant>
+
+		<!-- Form Labels -->
+		<constant name="label_id">Video ID:</constant>
+		<constant name="label_text_id">Jedinstveni ID:</constant>
+		<constant name="label_title">Naslov:</constant>
+		<constant name="label_name">Naziv:</constant>
+		<constant name="label_visible">Grupa je vidljiva</constant>
+		<constant name="label_description">Opis:</constant>
+
+		<!-- Other -->
+		<constant name="add">Dodavanje video zapisa</constant>
+		<constant name="create_group">Nova grupa</constant>
+		<constant name="preview">Pregled</constant>
+		<constant name="videos">Video zapisi</constant>
+	</language>
 </document>

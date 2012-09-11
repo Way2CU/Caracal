@@ -60,4 +60,34 @@
 
 		<constant name="toolbar_add_download">הוסף קישור להורדה</constant>
 	</language>
+
+	<language short="sr">
+		<constant name="menu_downloads">Datoteke za preuzimanje</constant>
+		<constant name="menu_upload_file">Postavljanje nove</constant>
+		<constant name="menu_manage">Upravljanje datotekama</constant>
+
+		<constant name="title_upload_file">Postavljanje Datoteke</constant>
+		<constant name="title_manage">Upravljanje Datotekama</constant>
+		<constant name="title_change">Izmena Datoteke</constant>
+		<constant name="title_delete">Brisanje Datoteke</constant>
+
+		<constant name="label_name">Naziv:</constant>
+		<constant name="label_description">Opis:</constant>
+		<constant name="label_file">Lokacija datoteke:</constant>
+		<constant name="label_visible">Datoteka je vidljiva</constant>
+
+		<constant name="column_name">Naziv</constant>
+		<constant name="column_size">Veličina</constant>
+		<constant name="column_downloads">Br. Preuz.</constant>
+		<constant name="column_filename">Ime datoteke</constant>
+
+		<constant name="message_file_uploaded">Nova datoteka je postavljena.</constant>
+		<constant name="message_file_save_error">Greška prilikom snimanja datoteke. Proverite prava pristupa.</constant>
+		<constant name="message_file_upload_error">Greška prilikom postavljanja datoteke.</constant>
+		<constant name="message_file_saved">Podaci datoteke za preuzimanje su snimljeni.</constant>
+		<constant name="message_file_delete">Da li zaista želite da obrišete odabranu datoteku?</constant>
+		<constant name="message_file_deleted">Odabrana datoteka je izbrisana.</constant>
+
+		<constant name="toolbar_add_download">Ubaci datoteku za preuzimanje</constant>
+	</language>
 </document>

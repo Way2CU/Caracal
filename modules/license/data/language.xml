@@ -43,4 +43,25 @@
 		<constant name="column_referer">URL מצביע</constant>
 		<constant name="column_license_key">מפתח רשיון</constant>
 	</language>
+	<language short="sr">
+		<constant name="menu_license">Licence</constant>
+
+		<constant name="title_licenses">Licence</constant>
+		<constant name="title_licenses_new">Licence: Pravljenje nove</constant>
+		<constant name="title_licenses_change">Licence: Promena podataka licence</constant>
+		<constant name="title_licenses_delete">Licence: Brisanje</constant>
+
+		<constant name="message_license_saved">Podaci licence su snimljeni!</constant>
+		<constant name="message_license_delete">Brisanjem odabrane licence zabranićete sledećem URL-u pristup modulima na sajtu. Da li ste sigurni?</constant>
+		<constant name="message_license_deleted">Licenca je izbrisana. Pristup modulima je zabranjen.</constant>
+		<constant name="message_no_access">Nemate pristup ovom interfejsu. Za više informacija kontaktirajte administratora.</constant>
+
+		<constant name="label_referer">Referer URL:</constant>
+		<constant name="label_modules">Dozvoljen pristup selektovanim modulima:</constant>
+		<constant name="label_active">Licenca je aktivna</constant>
+		<constant name="label_license_key">Ključ licence:</constant>
+
+		<constant name="column_referer">Referer URL</constant>
+		<constant name="column_license_key">Ključ licence</constant>
+	</language>
 </document>
