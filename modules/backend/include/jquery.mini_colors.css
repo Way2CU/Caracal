@@ -33,7 +33,7 @@ INPUT.miniColors {
 	left: 5px;
 	width: 150px;
 	height: 150px;
-	background: url(images/colors.png) -40px 0 no-repeat;
+	background: url(../images/mini_colors/colors.png) -40px 0 no-repeat;
 	cursor: crosshair;
 }
 
@@ -47,7 +47,7 @@ INPUT.miniColors {
 	left: 160px;
 	width: 20px;
 	height: 150px;
-	background: url(images/colors.png) 0 0 no-repeat;
+	background: url(../images/mini_colors/colors.png) 0 0 no-repeat;
 	cursor: crosshair;
 }
 
@@ -61,7 +61,7 @@ INPUT.miniColors {
 	left: 5px;
 	width: 20px;
 	height: 150px;
-	background: url(images/colors.png) -20px 0 no-repeat;
+	background: url(../images/mini_colors/colors.png) -20px 0 no-repeat;
 	cursor: crosshair;
 }
 
@@ -106,7 +106,7 @@ INPUT.miniColors {
 }
 
 .miniColors-triggerWrap {
-	background: url(images/trigger.png) -22px 0 no-repeat;
+	background: url(../images/mini_colors/trigger.png) -22px 0 no-repeat;
 }
 
 .miniColors-triggerWrap.disabled {
@@ -117,7 +117,7 @@ INPUT.miniColors {
 .miniColors-trigger {
 	vertical-align: middle;
 	outline: none;
-	background: url(images/trigger.png) 0 0 no-repeat;
+	background: url(../images/mini_colors/trigger.png) 0 0 no-repeat;
 }
 
 .miniColors-triggerWrap.disabled .miniColors-trigger {
