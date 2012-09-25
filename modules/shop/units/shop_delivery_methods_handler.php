@@ -490,12 +490,20 @@ class ShopDeliveryMethodsHandler {
 							);
 
 			$price_list = array();
+			$price_count = array();
 
 			if (count($relations) > 0)
-				foreach ($relations as $relation) 
+				foreach ($relations as $relation) { 
 					$price_list[] = $relation->price;
 
-			$relations = $prices_manager->getItems(array('method'), array('id' => $price_list));
+					if (!array_key_exists($relation->price, $price_count))
+						$price_count[$relation->price] = 0;
+
+					// store number of times price is used
+					$price_count[$relation->price]++;
+				}
+
+			$relations = $prices_manager->getItems(array('id', 'method'), array('id' => $price_list));
 			$method_count = array();
 
 			if (count($relations) > 0)
@@ -505,7 +513,8 @@ class ShopDeliveryMethodsHandler {
 					if (!array_key_exists($key, $method_count))
 						$method_count[$key] = 0;
 
-					$method_count[$key]++;
+					// increase method usage count with number of price usages
+					$method_count[$key] += $price_count[$relation->id];
 				}
 
 			// We compare number of items with method associated with
