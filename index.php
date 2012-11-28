@@ -26,7 +26,7 @@ require_once('units/config.php');
 require_once('units/doctypes.php');
 require_once('units/rcf_db/rcf_sql_core.php');
 require_once('units/rcf_db/rcf_sql_mysql.php');
-require_once('units/core/item_manager.php');
+require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
 require_once('units/core/module.php');
 require_once('units/module_handler.php');
@@ -89,7 +89,11 @@ if ($section == 'backend' || $section == 'backend_module')
 // start database engine
 if ($db_use) {
 	$db = new rcfDB_mysql();
+
 	$db_active = $db->quick_connect($db_user, $db_pass, $db_name, $db_host);
+
+	if (!$db_active)
+		print "Came here!";
 
 	// set default protocol encoding
 	if ($db_active) 
