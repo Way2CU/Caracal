@@ -85,55 +85,46 @@ class ItemManager {
 	 * Inserts data into specified table
 	 *
 	 * @global resource $db
-	 * @global boolean $db_active
 	 * @param array $data
 	 */
 	public function insertData($data) {
-		global $db, $db_active;
+		global $db;
 
-		if ($db_active == 1) {
-			$query = $this->_getQuery(DB_INSERT, $data);
+		$sql = $this->_getQuery(DB_INSERT, $data);
 
-			if (!empty($query))
-				$db->query($query);
-		}
+		if (!empty($sql))
+			$db->query($sql);
 	}
 
 	/**
 	 * Updates data with given conditions
 	 *
 	 * @global resource $db
-	 * @global boolean $db_active
 	 * @param array $data
 	 * @param array $conditionals
 	 */
 	public function updateData($data, $conditionals) {
-		global $db, $db_active;
+		global $db;
 
-		if ($db_active == 1) {
-			$query = $this->_getQuery(DB_UPDATE, $data, $conditionals);
+		$sql = $this->_getQuery(DB_UPDATE, $data, $conditionals);
 
-			if (!empty($query))
-				$db->query($query);
-		}
+		if (!empty($sql))
+			$db->query($sql);
 	}
 
 	/**
 	 * Removes items in table with given conditions
 	 *
 	 * @global resource $db
-	 * @global boolean $db_active
 	 * @param array $conditionals
 	 */
 	public function deleteData($conditionals, $limit=null) {
-		global $db, $db_active;
+		global $db;
 
-		if ($db_active == 1) {
-			$query = $this->_getQuery(DB_DELETE, array(), $conditionals, null, null, $limit);
+		$sql = $this->_getQuery(DB_DELETE, array(), $conditionals, null, null, $limit);
 
-			if (!empty($query))
-				$db->query($query);
-		}
+		if (!empty($sql))
+			$db->query($sql);
 	}
 
 	/**
@@ -162,32 +153,29 @@ class ItemManager {
 	 * @return array
 	 */
 	public function getItems($fields, $conditionals, $order_by=array(), $ascending=true, $limit=null) {
-		global $db, $db_active;
+		global $db;
 
 		$result = array();
 
-		if ($db_active == 1) {
-			$query = $this->_getQuery(DB_SELECT, $fields, $conditionals, $order_by, $ascending, $limit);
+		$sql = $this->_getQuery(DB_SELECT, $fields, $conditionals, $order_by, $ascending, $limit);
 
-			if (!empty($query))
-				$result = $db->get_results($query);
+		if (!empty($sql))
+			$result = $db->get_results($sql);
 
-			// pack multi-language fields
-			$ml_fields = $this->_getMultilanguageFields($fields);
-			if (count($ml_fields) > 0 && count($result) > 0)
-				foreach($result as $item)
-					foreach($ml_fields as $field) {
-						$data = array();
+		// pack multi-language fields
+		$ml_fields = $this->_getMultilanguageFields($fields);
+		if (count($ml_fields) > 0 && count($result) > 0)
+			foreach($result as $item)
+				foreach($ml_fields as $field) {
+					$data = array();
 
-						foreach($this->languages as $language) {
-							$data[$language] = $item->{$field.'_'.$language};
-							unset($item->{$field.'_'.$language});
-						}
-
-						$item->$field = $data;
+					foreach($this->languages as $language) {
+						$data[$language] = $item->{$field.'_'.$language};
+						unset($item->{$field.'_'.$language});
 					}
 
-		}
+					$item->$field = $data;
+				}
 
 		return $result;
 	}
@@ -199,19 +187,16 @@ class ItemManager {
 	 * @return variable
 	 */
 	public function getItemValue($item, $conditionals=array()) {
-		global $db, $db_active, $language;
+		global $db, $language;
 
 		if (array_key_exists($item, $this->field_types) && in_array($this->field_types[$item], $this->ml_fields))
 			$item = "{$item}_{$language}";
 
-		$result = null;
-		if ($db_active == 1) {
-			$query = "SELECT {$item} FROM {$this->table_name}";
-			if (!empty($conditionals))
-				$query .= " WHERE ".$this->_getDelimitedData($conditionals, ' AND ');
+		$sql = "SELECT {$item} FROM {$this->table_name}";
+		if (!empty($conditionals))
+			$sql .= " WHERE ".$this->_getDelimitedData($conditionals, ' AND ');
 
-			$result = $db->get_var($query);
-		}
+		$result = $db->get_var($sql);
 
 		return $result;
 	}
@@ -223,14 +208,8 @@ class ItemManager {
 	 * @return value
 	 */
 	public function sqlResult($sql) {
-		global $db, $db_active;
-
-		$result = null;
-		if ($db_active == 1) {
-			$result = $db->get_var($sql);
-		}
-
-		return $result;
+		global $db;
+		return $db->get_var($sql);
 	}
 
 	/**
