@@ -26,6 +26,7 @@ require_once('units/config.php');
 require_once('units/doctypes.php');
 require_once('units/rcf_db/rcf_sql_core.php');
 require_once('units/rcf_db/rcf_sql_mysql.php');
+require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
 require_once('units/module.php');
@@ -64,7 +65,7 @@ if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
-// only get language is it's not present in session
+// get main language handler instance
 $language_handler = MainLanguageHandler::getInstance();
 
 if (!isset($_REQUEST['language'])) {
@@ -87,18 +88,7 @@ if ($section == 'backend' || $section == 'backend_module')
 	$url_rewrite = false;
 
 // start database engine
-if ($db_use) {
-	$db = new rcfDB_mysql();
-
-	$db_active = $db->quick_connect($db_user, $db_pass, $db_name, $db_host);
-
-	if (!$db_active)
-		print "Came here!";
-
-	// set default protocol encoding
-	if ($db_active) 
-		$db->query('SET NAMES \'utf8\'');
-}
+database_connect();
 
 // transfer display control
 $cache = CacheHandler::getInstance();
