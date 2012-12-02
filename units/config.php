@@ -17,11 +17,12 @@ $system_template_path = 'units/templates/';
 // database
 $db = null;
 $db_use = true;
-$db_active = false;
-$db_host = 'localhost';
-$db_user = 'root';
-$db_pass = 'matrix';
-$db_name = 'web_engine';
+$db_config = array(
+		'host' => 'localhost',
+		'user' => 'root',
+		'pass' => 'matrix',
+		'name' => 'web_engine'
+	);
 
 // cache
 $cache_enabled = false;
