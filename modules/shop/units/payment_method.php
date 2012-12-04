@@ -18,7 +18,7 @@ abstract class PaymentMethod {
 	protected function registerPaymentMethod() {
 		if (class_exists('shop')) {
 			$shop = shop::getInstance();
-			$shop->registerPaymentMethod($this->name, &$this);
+			$shop->registerPaymentMethod($this->name, $this);
 		}
 	}
 

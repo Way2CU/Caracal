@@ -171,7 +171,7 @@ class tips extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_tip_list', &$this, 'tag_TipList');
+		$template->registerTagHandler('_tip_list', $this, 'tag_TipList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

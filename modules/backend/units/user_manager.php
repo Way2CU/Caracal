@@ -86,7 +86,7 @@ class UserManager {
 									)
 			);
 
- 		$template->registerTagHandler('_user_list', &$this, 'tag_UserList');
+ 		$template->registerTagHandler('_user_list', $this, 'tag_UserList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -98,7 +98,7 @@ class UserManager {
 	private function createUser() {
 		$template = new TemplateHandler('users_create.xml', $this->parent->path.'templates/');
 		$template->setMappedModule($this->parent->name);
- 		$template->registerTagHandler('_level', &$this, 'tag_Level');
+ 		$template->registerTagHandler('_level', $this, 'tag_Level');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'users_save'),
@@ -121,7 +121,7 @@ class UserManager {
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('users_change.xml', $this->parent->path.'templates/');
-	 		$template->registerTagHandler('_level', &$this, 'tag_Level');
+	 		$template->registerTagHandler('_level', $this, 'tag_Level');
 
 			$params = array(
 						'id'			=> $item->id,

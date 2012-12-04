@@ -292,7 +292,7 @@ class articles extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
+		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -304,7 +304,7 @@ class articles extends Module {
 	private function addArticle() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
@@ -328,7 +328,7 @@ class articles extends Module {
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
-			$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+			$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 
 			$params = array(
 						'id'			=> $item->id,
@@ -467,7 +467,7 @@ class articles extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -660,7 +660,7 @@ class articles extends Module {
 
 		$template = $this->loadTemplate($tag_params, 'article.xml');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
+		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
@@ -732,8 +732,8 @@ class articles extends Module {
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article', &$this, 'tag_Article');
-		$template->registerTagHandler('_article_rating_image', &$this, 'tag_ArticleRatingImage');
+		$template->registerTagHandler('_article', $this, 'tag_Article');
+		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -905,7 +905,7 @@ class articles extends Module {
 		// load template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
+		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
 
 		if (!is_null($id))
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
@@ -943,7 +943,7 @@ class articles extends Module {
 		// load template
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article_list', &$this, 'tag_ArticleList');
+		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']))

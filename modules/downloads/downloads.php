@@ -199,7 +199,7 @@ class downloads extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_downloads_list', &$this, 'tag_DownloadsList');
+		$template->registerTagHandler('_downloads_list', $this, 'tag_DownloadsList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -432,7 +432,7 @@ class downloads extends Module {
 		}
 
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_download', &$this, 'tag_Download');
+		$template->registerTagHandler('_download', $this, 'tag_Download');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {

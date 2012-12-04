@@ -296,7 +296,7 @@ class links extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+		$template->registerTagHandler('_link_list', $this, 'tag_LinkList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -505,7 +505,7 @@ class links extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -665,7 +665,7 @@ class links extends Module {
 					'cancel_action'	=> window_Close('groups_links')
 				);
 
-		$template->registerTagHandler('_group_links', &$this, 'tag_GroupLinks');
+		$template->registerTagHandler('_group_links', $this, 'tag_GroupLinks');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -717,7 +717,7 @@ class links extends Module {
 		// display message
 		$template = new TemplateHandler('overview_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+		$template->registerTagHandler('_link_list', $this, 'tag_LinkList');
 
 		$params = array(
 				);
@@ -930,8 +930,8 @@ class links extends Module {
 							);
 
 		$template = $this->loadTemplate($tag_params, 'links_item.xml');
-		$template->registerTagHandler('_link', &$this, 'tag_Link');
-		$template->registerTagHandler('_link_group', &$this, 'tag_LinkGroupList');
+		$template->registerTagHandler('_link', $this, 'tag_Link');
+		$template->registerTagHandler('_link_group', $this, 'tag_LinkGroupList');
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']) && !is_null($items))
@@ -1056,8 +1056,8 @@ class links extends Module {
 		}
 
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_link', &$this, 'tag_Link');
-		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+		$template->registerTagHandler('_link', $this, 'tag_Link');
+		$template->registerTagHandler('_link_list', $this, 'tag_LinkList');
 
 		if (is_object($item)) {
 			$thumbnail = '';
@@ -1129,8 +1129,8 @@ class links extends Module {
 		}
 
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_link', &$this, 'tag_Link');
-		$template->registerTagHandler('_link_list', &$this, 'tag_LinkList');
+		$template->registerTagHandler('_link', $this, 'tag_Link');
+		$template->registerTagHandler('_link_list', $this, 'tag_LinkList');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {

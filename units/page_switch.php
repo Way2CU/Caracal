@@ -154,7 +154,7 @@ class PageSwitch {
 	public function tag_PageSwitch($tag_params, $children) {
 		// create template handler
 		$template = $this->loadTemplate($tag_params, 'page_switch.xml');
-		$template->registerTagHandler('_pages', &$this, 'tag_Pages');
+		$template->registerTagHandler('_pages', $this, 'tag_Pages');
 
 		// calculate number of total pages
 		$total_pages = ceil($this->total_items / $this->per_page);

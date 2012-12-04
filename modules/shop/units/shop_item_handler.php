@@ -100,7 +100,7 @@ class ShopItemHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -132,7 +132,7 @@ class ShopItemHandler {
 		$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
 
-		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -166,7 +166,7 @@ class ShopItemHandler {
 			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
 
-			$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+			$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
 
 			// prepare parameters
 			$params = array(
@@ -415,7 +415,7 @@ class ShopItemHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_item_list', &$this, 'tag_ItemList');
+		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -511,7 +511,7 @@ class ShopItemHandler {
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_value_list', &$size_handler, 'tag_ValueList');
-		$template->registerTagHandler('_color_list', &$this, 'tag_ColorList');
+		$template->registerTagHandler('_color_list', $this, 'tag_ColorList');
 			
 		// parse template
 		if (is_object($item)) {
@@ -682,7 +682,7 @@ class ShopItemHandler {
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
-		$template->registerTagHandler('_color_list', &$this, 'tag_ColorList');
+		$template->registerTagHandler('_color_list', $this, 'tag_ColorList');
 
 		if (count($items) > 0) {
 			$gallery = null;

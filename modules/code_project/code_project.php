@@ -152,7 +152,7 @@ class code_project extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_code_list', &$this, 'tag_CodeList');
+		$template->registerTagHandler('_code_list', $this, 'tag_CodeList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

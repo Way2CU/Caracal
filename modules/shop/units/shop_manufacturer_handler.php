@@ -91,7 +91,7 @@ class ShopManufacturerHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_manufacturer_list', &$this, 'tag_ManufacturerList');
+		$template->registerTagHandler('_manufacturer_list', $this, 'tag_ManufacturerList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

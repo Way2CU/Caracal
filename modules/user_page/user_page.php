@@ -230,7 +230,7 @@ class user_page extends Module {
 									)
 			);
 
- 		$template->registerTagHandler('_page_list', &$this, 'tag_PageList');
+ 		$template->registerTagHandler('_page_list', $this, 'tag_PageList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -462,8 +462,8 @@ class user_page extends Module {
 				);
 
 		// register tag handlers
-		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
-		$template->registerTagHandler('_gallery_list', &$this, 'tag_GalleryList');
+		$template->registerTagHandler('_video_list', $this, 'tag_VideoList');
+		$template->registerTagHandler('_gallery_list', $this, 'tag_GalleryList');
 
 		// draw template
 		$template->restoreXML();
@@ -666,8 +666,8 @@ class user_page extends Module {
 		// create template
 		$template = $this->loadTemplate($tag_params, 'page.xml');
 
-		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
-		$template->registerTagHandler('_gallery_list', &$this, 'tag_GalleryList');
+		$template->registerTagHandler('_video_list', $this, 'tag_VideoList');
+		$template->registerTagHandler('_gallery_list', $this, 'tag_GalleryList');
 
 		// parse object
 		if (is_object($page)) {

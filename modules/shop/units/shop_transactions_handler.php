@@ -58,7 +58,7 @@ class ShopTransactionsHandler {
 		$params = array();
 
 		// register tag handler
-		$template->registerTagHandler('_transaction_list', &$this, 'tag_TransactionList');
+		$template->registerTagHandler('_transaction_list', $this, 'tag_TransactionList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -121,8 +121,8 @@ class ShopTransactionsHandler {
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
 
 		// register tag handler
-		$template->registerTagHandler('_item_list', &$this, 'tag_TransactionItemList');
-		$template->registerTagHandler('_transaction_status', &$this, 'tag_TransactionStatus');
+		$template->registerTagHandler('_item_list', $this, 'tag_TransactionItemList');
+		$template->registerTagHandler('_transaction_status', $this, 'tag_TransactionStatus');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

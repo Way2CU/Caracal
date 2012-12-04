@@ -343,7 +343,7 @@ class chat extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_user_list', &$this, 'tag_UserList');
+		$template->registerTagHandler('_user_list', $this, 'tag_UserList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -512,7 +512,7 @@ class chat extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_room_list', &$this, 'tag_RoomList');
+		$template->registerTagHandler('_room_list', $this, 'tag_RoomList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -686,7 +686,7 @@ class chat extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_admin_list', &$this, 'tag_AdminList');
+		$template->registerTagHandler('_admin_list', $this, 'tag_AdminList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -843,7 +843,7 @@ class chat extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_channel_list', &$this, 'tag_ChannelList');
+		$template->registerTagHandler('_channel_list', $this, 'tag_ChannelList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -867,7 +867,7 @@ class chat extends Module {
 										),
 					);
 
-		$template->registerTagHandler('_channel_list', &$this, 'tag_ChannelList');
+		$template->registerTagHandler('_channel_list', $this, 'tag_ChannelList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

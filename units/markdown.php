@@ -356,7 +356,7 @@ class Markdown_Parser {
 							)?	# title is optional
 							(?:\n+|\Z)
 			}xm',
-			array(&$this, '_stripLinkDefinitions_callback'),
+			array($this, '_stripLinkDefinitions_callback'),
 			$text);
 		return $text;
 	}
@@ -501,7 +501,7 @@ class Markdown_Parser {
 
 			)
 			)}Sxmi',
-			array(&$this, '_hashHTMLBlocks_callback'),
+			array($this, '_hashHTMLBlocks_callback'),
 			$text);
 
 		return $text;
@@ -645,7 +645,7 @@ class Markdown_Parser {
 	function doHardBreaks($text) {
 		# Do hard breaks:
 		return preg_replace_callback('/ {2,}\n/',
-			array(&$this, '_doHardBreaks_callback'), $text);
+			array($this, '_doHardBreaks_callback'), $text);
 	}
 	function _doHardBreaks_callback($matches) {
 		return $this->hashPart("<br$this->empty_element_suffix\n");
@@ -676,7 +676,7 @@ class Markdown_Parser {
 			  \]
 			)
 			}xs',
-			array(&$this, '_doAnchors_reference_callback'), $text);
+			array($this, '_doAnchors_reference_callback'), $text);
 
 		#
 		# Next, inline-style links: [link text](url "optional title")
@@ -703,7 +703,7 @@ class Markdown_Parser {
 			  \)
 			)
 			}xs',
-			array(&$this, '_doAnchors_inline_callback'), $text);
+			array($this, '_doAnchors_inline_callback'), $text);
 
 		#
 		# Last, handle reference-style shortcuts: [link text]
@@ -717,7 +717,7 @@ class Markdown_Parser {
 			  \]
 			)
 			}xs',
-			array(&$this, '_doAnchors_reference_callback'), $text);
+			array($this, '_doAnchors_reference_callback'), $text);
 
 		$this->in_anchor = false;
 		return $text;
@@ -799,7 +799,7 @@ class Markdown_Parser {
 
 			)
 			}xs',
-			array(&$this, '_doImages_reference_callback'), $text);
+			array($this, '_doImages_reference_callback'), $text);
 
 		#
 		# Next, handle inline images:  ![alt text](url "optional title")
@@ -828,7 +828,7 @@ class Markdown_Parser {
 			  \)
 			)
 			}xs',
-			array(&$this, '_doImages_inline_callback'), $text);
+			array($this, '_doImages_inline_callback'), $text);
 
 		return $text;
 	}
@@ -902,7 +902,7 @@ class Markdown_Parser {
 		#	  --------
 		#
 		$text = preg_replace_callback('{ ^(.+?)[ ]*\n(=+|-+)[ ]*\n+ }mx',
-			array(&$this, '_doHeaders_callback_setext'), $text);
+			array($this, '_doHeaders_callback_setext'), $text);
 
 		# atx-style headers:
 		#	# Header 1
@@ -919,7 +919,7 @@ class Markdown_Parser {
 				\#*			# optional closing #\'s (not counted)
 				\n+
 			}xm',
-			array(&$this, '_doHeaders_callback_atx'), $text);
+			array($this, '_doHeaders_callback_atx'), $text);
 
 		return $text;
 	}
@@ -992,14 +992,14 @@ class Markdown_Parser {
 						^
 						'.$whole_list_re.'
 					}mx',
-					array(&$this, '_doLists_callback'), $text);
+					array($this, '_doLists_callback'), $text);
 			}
 			else {
 				$text = preg_replace_callback('{
 						(?:(?<=\n)\n|\A\n?) # Must eat the newline
 						'.$whole_list_re.'
 					}mx',
-					array(&$this, '_doLists_callback'), $text);
+					array($this, '_doLists_callback'), $text);
 			}
 		}
 
@@ -1066,7 +1066,7 @@ class Markdown_Parser {
 			(?:(\n+(?=\n))|\n)				# tailing blank line = $5
 			(?= \n* (\z | \2 ('.$marker_any_re.') (?:[ ]+|(?=\n))))
 			}xm',
-			array(&$this, '_processListItems_callback'), $list_str);
+			array($this, '_processListItems_callback'), $list_str);
 
 		$this->list_level--;
 		return $list_str;
@@ -1110,7 +1110,7 @@ class Markdown_Parser {
 				)
 				((?=^[ ]{0,'.$this->tab_width.'}\S)|\Z)	# Lookahead for non-space at line-start, or end of doc
 			}xm',
-			array(&$this, '_doCodeBlocks_callback'), $text);
+			array($this, '_doCodeBlocks_callback'), $text);
 
 		return $text;
 	}
@@ -1310,7 +1310,7 @@ class Markdown_Parser {
 				)+
 			  )
 			/xm',
-			array(&$this, '_doBlockQuotes_callback'), $text);
+			array($this, '_doBlockQuotes_callback'), $text);
 
 		return $text;
 	}
@@ -1324,7 +1324,7 @@ class Markdown_Parser {
 		# These leading spaces cause problem with <pre> content,
 		# so we need to fix that:
 		$bq = preg_replace_callback('{(\s*<pre>.+?</pre>)}sx',
-			array(&$this, '_doBlockQuotes_callback2'), $bq);
+			array($this, '_doBlockQuotes_callback2'), $bq);
 
 		return "\n". $this->hashBlock("<blockquote>\n$bq\n</blockquote>")."\n\n";
 	}
@@ -1439,7 +1439,7 @@ class Markdown_Parser {
 
 	function doAutoLinks($text) {
 		$text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i',
-			array(&$this, '_doAutoLinks_url_callback'), $text);
+			array($this, '_doAutoLinks_url_callback'), $text);
 
 		# Email addresses: <address@domain.foo>
 		$text = preg_replace_callback('{
@@ -1460,7 +1460,7 @@ class Markdown_Parser {
 			)
 			>
 			}xi',
-			array(&$this, '_doAutoLinks_email_callback'), $text);
+			array($this, '_doAutoLinks_email_callback'), $text);
 
 		return $text;
 	}
@@ -1618,7 +1618,7 @@ class Markdown_Parser {
 		# appropriate number of space between each blocks.
 
 		$text = preg_replace_callback('/^.*\t.*$/m',
-			array(&$this, '_detab_callback'), $text);
+			array($this, '_detab_callback'), $text);
 
 		return $text;
 	}
@@ -1658,7 +1658,7 @@ class Markdown_Parser {
 	# Swap back in all the tags hashed by _HashHTMLBlocks.
 	#
 		return preg_replace_callback('/(.)\x1A[0-9]+\1/',
-			array(&$this, '_unhash_callback'), $text);
+			array($this, '_unhash_callback'), $text);
 	}
 	function _unhash_callback($matches) {
 		return $this->html_hashes[$matches[0]];
