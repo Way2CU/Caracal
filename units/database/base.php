@@ -95,15 +95,6 @@ abstract class Database {
 	public abstract function get_row($sql, $index=0);
 
 	/**
-	 * Get a single column from result list.
-	 *
-	 * @param string $sql
-	 * @param integer $index
-	 * @return object
-	 */
-	public abstract function get_column($sql, $index=0);
-
-	/**
 	 * Get value of single varible.
 	 *
 	 * @param string $sql
