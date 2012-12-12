@@ -205,7 +205,7 @@ class links extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `links` (
@@ -222,7 +222,7 @@ class links extends Module {
 				PRIMARY KEY (`id`),
 				KEY `sponsored` (`sponsored`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `link_groups` (
@@ -232,7 +232,7 @@ class links extends Module {
 				PRIMARY KEY (`id`),
 				INDEX (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `link_membership` (
@@ -242,7 +242,7 @@ class links extends Module {
 				PRIMARY KEY (`id`),
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		if (!array_key_exists('thumbnail_size', $this->settings))
 			$this->saveSetting('thumbnail_size', '100');
@@ -252,10 +252,10 @@ class links extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db, $db_active;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `links`, `link_groups`, `link_membership`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('links', 'link_groups', 'link_membership');
+		$db->drop_tables($tables);
 	}
 
 	/**

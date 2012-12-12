@@ -123,7 +123,7 @@ class comments extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$sql = "
 			CREATE TABLE `comments` (
@@ -139,8 +139,7 @@ class comments extends Module {
 				PRIMARY KEY ( `id` ) ,
 				INDEX ( `module` , `section` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		if (!array_key_exists('repost_time', $this->settings))
 			$this->saveSetting('repost_time', 15);
@@ -156,11 +155,10 @@ class comments extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `comments`;";
-
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('comments');
+		$db->drop_tables($tables);
 	}
 
 	/**

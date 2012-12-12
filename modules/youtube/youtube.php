@@ -196,7 +196,7 @@ class youtube extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db, $db_active;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -214,8 +214,7 @@ class youtube extends Module {
 		$sql .= "PRIMARY KEY (`id`),
 				INDEX (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create groups table
 		$sql = "
@@ -235,8 +234,7 @@ class youtube extends Module {
 				PRIMARY KEY (`id`),
 				INDEX (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create group membership table
 		$sql = "
@@ -247,18 +245,17 @@ class youtube extends Module {
 				PRIMARY KEY (`id`),
 				INDEX (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db, $db_active;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `youtube_video`, `youtube_groups`, `youtube_group_membership`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('youtube_video', 'youtube_groups', 'youtube_group_membership');
+		$db->drop_tables($tables);
 	}
 
 	/**

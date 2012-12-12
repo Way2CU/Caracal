@@ -13,8 +13,7 @@
 		</span>
 		<span class="column">
 			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/><_raw text=" "/>
-			<_var name="$params['item_read']"/>
+			<_var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

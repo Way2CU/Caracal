@@ -59,7 +59,7 @@ class Database_MySQL extends Database {
 		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = `{$database}`";
 		$response = $this->handle->query();
 
-		$result = $response->num_rows > 0;
+		$result = $response->num_rows() > 0;
 		$response->free();
 
 		return $result;

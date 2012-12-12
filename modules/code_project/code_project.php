@@ -111,7 +111,7 @@ class code_project extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db, $db_active;
+		global $db;
 
 		$sql = "
 			CREATE TABLE `project_codes` (
@@ -121,17 +121,17 @@ class code_project extends Module {
 				PRIMARY KEY ( `id` ) ,
 				INDEX ( `code` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db, $db_active;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `project_codes`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('project_codes');
+		$db->query($tables);
 	}
 
 	/**

@@ -123,7 +123,7 @@ class tips extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -138,19 +138,17 @@ class tips extends Module {
 				`visible` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `tips`;";
-
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('tips');
+		$db->drop_tables($tables);
 	}
 
 	/**
@@ -421,7 +419,6 @@ class tips extends Module {
 														)
 													)
 												),
-							'item_read'		=> '',
 						);
 
 				$template->restoreXML();

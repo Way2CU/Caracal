@@ -152,7 +152,7 @@ class survey extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -164,7 +164,7 @@ class survey extends Module {
 					PRIMARY KEY (`id`),
 					KEY `type` (`type`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `survey_types` (
 					`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -173,7 +173,7 @@ class survey extends Module {
 					`unique_address` BOOLEAN NOT NULL DEFAULT '0',
 					PRIMARY KEY (`id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `survey_entry_data` (
 					`entry` int(11) NOT NULL,
@@ -181,17 +181,17 @@ class survey extends Module {
 					`value` varchar(255) NOT NULL,
 					KEY `entry` (`entry`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `survey_entries`, `survey_entry_data`, `survey_types`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('survey_entries', 'survey_entry_data', 'survey_types');
+		$db->drop_tables($tables);
 	}
 	
 	/**

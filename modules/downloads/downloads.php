@@ -144,7 +144,7 @@ class downloads extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -165,19 +165,17 @@ class downloads extends Module {
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 				PRIMARY KEY (  `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `downloads`;";
-
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('downloads');
+		$db->drop_tables($tables);
 	}
 
 

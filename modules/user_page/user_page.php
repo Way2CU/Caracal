@@ -162,7 +162,7 @@ class user_page extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -185,7 +185,7 @@ class user_page extends Module {
 				PRIMARY KEY ( `id` ),
 				KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// user page items
 		$sql = "
@@ -197,18 +197,17 @@ class user_page extends Module {
 				PRIMARY KEY ( `id` ),
 				KEY `page` (`page`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
-
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `user_pages`, `user_page_items`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('user_pages', 'user_page_items');
+		$db->drop_tables($tables);
 	}
 
 	/**

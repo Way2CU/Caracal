@@ -55,7 +55,7 @@ class country_list extends Module {
 	 * Create table and populate with data on module initialization
 	 */
 	public function onInit() {
-		global $db, $db_active;
+		global $db;
 
 		// create tables
 		$sql = "CREATE TABLE IF NOT EXISTS `countries` (
@@ -64,7 +64,7 @@ class country_list extends Module {
 				`short` char(2) NOT NULL,
 				PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `country_states` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -74,7 +74,7 @@ class country_list extends Module {
 				PRIMARY KEY (`id`),
 				KEY `country` (`country`)
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// populate table with data
 		if(is_null($this->country_list))
@@ -112,10 +112,10 @@ class country_list extends Module {
 	 * Clean up database on module disable
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `countries`, `country_states`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('countries', 'country_states');
+		$db->drop_tables($tables);
 	}
 
 	/**

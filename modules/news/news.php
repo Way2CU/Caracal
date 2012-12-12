@@ -237,7 +237,7 @@ class news extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -258,7 +258,7 @@ class news extends Module {
 				PRIMARY KEY ( `id` ),
 				KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// News Membership
 		$sql = "
@@ -269,7 +269,7 @@ class news extends Module {
 				PRIMARY KEY (`id`),
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// News Groups
 		$sql = "
@@ -283,7 +283,7 @@ class news extends Module {
 		$sql .= "PRIMARY KEY (`id`),
 				KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// News Feeds
 		$sql = "
@@ -302,7 +302,7 @@ class news extends Module {
 				PRIMARY KEY (`id`),
 				KEY `active` (`active`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 	}
 
@@ -310,11 +310,10 @@ class news extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `news`, `news_membership`, `news_groups`, `news_feeds`;";
-
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('news', 'news_membership', 'news_groups', 'news_feeds');
+		$db->drop_tables($tables);
 	}
 
 	/**

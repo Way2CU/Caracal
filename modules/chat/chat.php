@@ -242,7 +242,7 @@ class chat extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -260,7 +260,7 @@ class chat extends Module {
 				DEFAULT CHARACTER SET = utf8
 				COLLATE = utf8_bin
 				AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE `chat_rooms` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -280,7 +280,7 @@ class chat extends Module {
 				DEFAULT CHARACTER SET = utf8
 				COLLATE = utf8_bin
 				AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE `chat_admins` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -293,7 +293,7 @@ class chat extends Module {
 				DEFAULT CHARACTER SET = utf8
 				COLLATE = utf8_bin
 				AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE `chat_users` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -308,7 +308,7 @@ class chat extends Module {
 				DEFAULT CHARACTER SET = utf8
 				COLLATE = utf8_bin
 				AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		if (!array_key_exists('update_interval', $this->settings))
 			$this->saveSetting('update_interval', 2000);
@@ -318,11 +318,10 @@ class chat extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `chat_log`, `chat_rooms`, `chat_admins`, `chat_users`;";
-
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('chat_log', 'chat_rooms', 'chat_admins', 'chat_users');
+		$db->drop_tables($tables);
 	}
 
 	/**

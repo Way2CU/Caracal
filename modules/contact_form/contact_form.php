@@ -105,7 +105,7 @@ class contact_form extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 		
 		// $this->settings['default_address']
 		// $this->settings['default_subject']
@@ -116,7 +116,7 @@ class contact_form extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 	}
 
 	/**

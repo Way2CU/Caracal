@@ -296,7 +296,7 @@ class gallery extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -322,7 +322,7 @@ class gallery extends Module {
 				KEY `text_id` (`text_id`),
 				KEY `group` (`group`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `gallery_groups` (
@@ -338,7 +338,7 @@ class gallery extends Module {
 		$sql .= "`thumbnail` int(11) NULL,
 				PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `gallery_containers` (
@@ -353,7 +353,7 @@ class gallery extends Module {
 
 		$sql .= "PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `gallery_group_membership` (
@@ -363,7 +363,7 @@ class gallery extends Module {
 				PRIMARY KEY (`id`),
 				KEY `container` (`container`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		if (!array_key_exists('image_extensions', $this->settings))
 			$this->saveSetting('image_extensions', 'jpg,jpeg,png');
@@ -376,11 +376,10 @@ class gallery extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `gallery`, `gallery_groups`, `gallery_containers`, `gallery_group_membership`;";
-
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('gallery', 'gallery_groups', 'gallery_containers', 'gallery_group_membership');
+		$db->drop_tables($tables);
 	}
 
 	/**

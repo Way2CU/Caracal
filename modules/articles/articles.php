@@ -202,7 +202,7 @@ class articles extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db, $db_active;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -231,7 +231,7 @@ class articles extends Module {
 				INDEX ( `group` ),
 				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// article groups
 		$sql = "
@@ -251,7 +251,7 @@ class articles extends Module {
 				PRIMARY KEY ( `id` ),
 				INDEX ( `text_id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "CREATE TABLE `article_votes` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -260,18 +260,17 @@ class articles extends Module {
 				PRIMARY KEY (  `id` ),
 				INDEX ( `address`, `article` )
 				) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
-
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db, $db_active;
+		global $db;
 
-		$sql = "DROP TABLE IF EXISTS `articles`, `article_group`, `article_votes`;";
-		if ($db_active == 1) $db->query($sql);
+		$tables = array('articles', 'article_group', 'article_votes');
+		$db->drop_tables($tables);
 	}
 
 	/**

@@ -516,7 +516,7 @@ class shop extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db_active, $db;
+		global $db;
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
@@ -554,7 +554,7 @@ class shop extends Module {
 				KEY `uid` (`uid`),
 				KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create shop currencies table
 		$sql = "
@@ -565,7 +565,7 @@ class shop extends Module {
 				KEY `category` (`category`),
 				KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create table for related shop items
 		$sql = "
@@ -574,7 +574,7 @@ class shop extends Module {
 				`related` int(11) NOT NULL,
 				KEY `item` (`item`,`related`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create shop currencies tableshop_related_items
 		$sql = "
@@ -583,7 +583,7 @@ class shop extends Module {
 				`currency` VARCHAR(5) NOT NULL,
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop item sizes table
 		$sql = "
@@ -592,7 +592,7 @@ class shop extends Module {
 				`name` VARCHAR(25) NOT NULL,
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop item size values table
 		$sql = "
@@ -606,7 +606,7 @@ class shop extends Module {
 		$sql .= "PRIMARY KEY ( `id` ),
 				KEY `definition` (`definition`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create shop delivery methods
 		$sql = "
@@ -621,7 +621,7 @@ class shop extends Module {
 				`domestic` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE `shop_delivery_method_prices` (
@@ -631,7 +631,7 @@ class shop extends Module {
 				PRIMARY KEY ( `id` ),
 				KEY `method` (`method`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		$sql = "
 			CREATE TABLE `shop_delivery_item_relations` (
@@ -640,7 +640,7 @@ class shop extends Module {
 				PRIMARY KEY ( `item` ),
 				KEY `price` (`price`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create shop categories table
 		$sql = "
@@ -661,7 +661,7 @@ class shop extends Module {
 				KEY `parent` (`parent`),
 				KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop buyers table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyers` (
@@ -672,7 +672,7 @@ class shop extends Module {
 				  `uid` varchar(50) NOT NULL,
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop buyer addresses table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyer_addresses` (
@@ -687,7 +687,7 @@ class shop extends Module {
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop transactions table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
@@ -708,7 +708,7 @@ class shop extends Module {
 				  KEY `buyer` (`buyer`),
 				  KEY `address` (`address`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";		
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop transaction items table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_items` (
@@ -723,7 +723,7 @@ class shop extends Module {
 				  KEY `transaction` (`transaction`),
 				  KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 		
 		// create shop stock table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_stock` (
@@ -734,7 +734,7 @@ class shop extends Module {
 				  PRIMARY KEY (`id`),
 				  KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
+		$db->query($sql);
 
 		// create shop manufacturers table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_manufacturers` (
@@ -747,15 +747,14 @@ class shop extends Module {
 				  `logo` int(11) NOT NULL,
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		if ($db_active == 1) $db->query($sql);
-		
+		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db_active, $db;
+		global $db;
 
 		$tables = array(
 					'shop_items',
@@ -776,8 +775,7 @@ class shop extends Module {
 					'shop_delivery_item_relations'
 				);
 		
-		$sql = "DROP TABLE IF EXISTS `".join('`, `', $tables)."`;";
-		if ($db_active == 1) $db->query($sql);
+		$db->drop_tables($tables);
 	}
 
 	/**
