@@ -103,7 +103,7 @@ class ModuleHandler {
 		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
 
 		if (file_exists($filename) && $this->_checkDependencies($name)) {
-			include($filename);
+			include_once($filename);
 
 			$class = basename($filename, '.php');
 			$result = call_user_func(array($class, 'getInstance'));
@@ -123,7 +123,7 @@ class ModuleHandler {
 		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
 
 		if (file_exists($filename) && $this->_checkDependencies($name)) 
-			include($filename);
+			include_once($filename);
 	}
 
 	/**
