@@ -24,8 +24,6 @@
 
 require_once('units/config.php');
 require_once('units/doctypes.php');
-require_once('units/rcf_db/rcf_sql_core.php');
-require_once('units/rcf_db/rcf_sql_mysql.php');
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
