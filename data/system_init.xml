@@ -4,6 +4,7 @@
 	<module name="head_tag" order="0" preload="yes"/>
 	<module name="page_info" order="1" preload="yes"/>
 	<module name="backend" order="2" preload="yes"/>
+	<module name="language_menu" order="3" preload="yes"/>
 	<module name="captcha" order="0" preload="no"/>
 	
 	<user 
