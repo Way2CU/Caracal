@@ -73,6 +73,7 @@ function database_initialize() {
 	// create database
 	if ($db->create($db_config['name']) && $db->select($db_config['name']) && $db->multi_query($sql)) {
 		$module_manager = ModuleManager::getInstance();
+		$module_handler = ModuleHandler::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 
 		// populate tables
@@ -84,12 +85,20 @@ function database_initialize() {
 		foreach ($data->document->tagChildren as $item) 
 			switch ($item->tagName) {
 				case 'module':
+					// insert data
 					$module_manager->insertData(array(
 									'name'		=> $item->tagAttrs['name'],
 									'order'		=> $item->tagAttrs['order'],
 									'preload'	=> $item->tagAttrs['preload'] == 'yes' ? 1 : 0,
 									'active'	=> 1
 								));
+
+					// initialize module
+					$module = $module_handler->_loadModule($item->tagAttrs['name']);
+
+					if (!is_null($module)) 
+						$module->onInit();
+
 					break;
 
 				case 'user':
