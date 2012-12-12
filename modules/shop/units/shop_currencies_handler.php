@@ -162,7 +162,7 @@ class ShopCurrenciesHandler {
 									)
 				);
 
- 		$template->registerTagHandler('_currency_list', &$this, 'tag_CurrencyList');
+ 		$template->registerTagHandler('_currency_list', $this, 'tag_CurrencyList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -180,7 +180,7 @@ class ShopCurrenciesHandler {
 					'cancel_action'	=> window_Close('shop_currencies_add')
 				);
 
-		$template->registerTagHandler('_currency_list', &$this, 'tag_IsoCurrencyList');
+		$template->registerTagHandler('_currency_list', $this, 'tag_IsoCurrencyList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -313,7 +313,7 @@ class ShopCurrenciesHandler {
 					'cancel_action'	=> window_Close('shop_currencies_set_default')
 				);
 
-		$template->registerTagHandler('_currency_list', &$this, 'tag_CurrencyList');
+		$template->registerTagHandler('_currency_list', $this, 'tag_CurrencyList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

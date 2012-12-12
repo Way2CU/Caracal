@@ -279,7 +279,7 @@ class youtube extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_video_list', &$this, 'tag_VideoList');
+		$template->registerTagHandler('_video_list', $this, 'tag_VideoList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -445,7 +445,7 @@ class youtube extends Module {
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
 
-			$template->registerTagHandler('_video', &$this, 'tag_Video');
+			$template->registerTagHandler('_video', $this, 'tag_Video');
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
@@ -485,7 +485,7 @@ class youtube extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -669,7 +669,7 @@ class youtube extends Module {
 					'cancel_action'	=> window_Close($this->name.'_group_videos')
 				);
 
-		$template->registerTagHandler('_group_videos', &$this, 'tag_GroupVideos');
+		$template->registerTagHandler('_group_videos', $this, 'tag_GroupVideos');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

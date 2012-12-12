@@ -110,7 +110,7 @@ class ShopItemSizesHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_size_list', &$this, 'tag_SizeList');
+		$template->registerTagHandler('_size_list', $this, 'tag_SizeList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -145,7 +145,7 @@ class ShopItemSizesHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_value_list', &$this, 'tag_ValueList');
+		$template->registerTagHandler('_value_list', $this, 'tag_ValueList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

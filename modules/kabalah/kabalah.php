@@ -196,7 +196,7 @@ class kabalah extends Module {
 										)
 									);
 
-		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
+		$template->registerTagHandler('_kabalah_questions', $this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -448,7 +448,7 @@ class kabalah extends Module {
 										)
 									);
 
-		$template->registerTagHandler('_kabalah_answers', &$this, 'printAnswers');
+		$template->registerTagHandler('_kabalah_answers', $this, 'printAnswers');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -538,7 +538,7 @@ class kabalah extends Module {
 					'cancel_action'	=> window_Close($this->name.'_answers_new')
 				);
 
-		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
+		$template->registerTagHandler('_kabalah_questions', $this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -570,7 +570,7 @@ class kabalah extends Module {
 					'cancel_action'		=> window_Close($this->name.'_answers_change')
 				);
 
-		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
+		$template->registerTagHandler('_kabalah_questions', $this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -699,7 +699,7 @@ class kabalah extends Module {
 						'close_action'	=> window_Close($this->name.'_fields')
 					);
 
-		$template->registerTagHandler('_kabalah_fields', &$this, 'printFields');
+		$template->registerTagHandler('_kabalah_fields', $this, 'printFields');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -821,7 +821,7 @@ class kabalah extends Module {
 					'cancel_action'	=> window_Close($this->name.'_fields_new')
 				);
 
-		$template->registerTagHandler('_kabalah_field_types', &$this, 'printFieldTypes');
+		$template->registerTagHandler('_kabalah_field_types', $this, 'printFieldTypes');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -854,7 +854,7 @@ class kabalah extends Module {
 					'cancel_action'		=> window_Close($this->name.'_fields_change')
 				);
 
-		$template->registerTagHandler('_kabalah_field_types', &$this, 'printFieldTypes');
+		$template->registerTagHandler('_kabalah_field_types', $this, 'printFieldTypes');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -981,7 +981,7 @@ class kabalah extends Module {
 					'description'	=> unfix_chars($question->description)
 				);
 
-		$template->registerTagHandler('_kabalah_fields', &$this, 'printFields');
+		$template->registerTagHandler('_kabalah_fields', $this, 'printFields');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -996,7 +996,7 @@ class kabalah extends Module {
 
 		$params = array();
 
-		$template->registerTagHandler('_kabalah_questions', &$this, 'printQuestions');
+		$template->registerTagHandler('_kabalah_questions', $this, 'printQuestions');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

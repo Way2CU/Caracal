@@ -163,7 +163,7 @@ class XMLParser
             $this->document = new XMLTag($name, $attrs);
 
             //And start out the stack with the document tag
-            $this->stack = array(&$this->document);
+            $this->stack = array($this->document);
         }
         //If it isn't root level, use the stack to find the parent
         else

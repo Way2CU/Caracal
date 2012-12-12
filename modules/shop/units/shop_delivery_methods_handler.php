@@ -107,7 +107,7 @@ class ShopDeliveryMethodsHandler {
 				);
 
 		// register tag handler
-		$template->registerTagHandler('_delivery_methods', &$this, 'tag_DeliveryMethodsList');
+		$template->registerTagHandler('_delivery_methods', $this, 'tag_DeliveryMethodsList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -297,7 +297,7 @@ class ShopDeliveryMethodsHandler {
 		$template = new TemplateHandler('delivery_method_prices_list.xml', $this->path.'templates/');
 
 		// register tag handler
-		$template->registerTagHandler('_delivery_prices', &$this, 'tag_DeliveryPricesList');
+		$template->registerTagHandler('_delivery_prices', $this, 'tag_DeliveryPricesList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -546,7 +546,7 @@ class ShopDeliveryMethodsHandler {
 
 		// get template
 		$template = $this->_parent->loadTemplate($tag_params, 'delivery_methods_list_item.xml');
-		$template->registerTagHandler('_price_list', &$this, 'tag_DeliveryPricesList');
+		$template->registerTagHandler('_price_list', $this, 'tag_DeliveryPricesList');
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);

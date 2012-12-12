@@ -235,7 +235,7 @@ class shop extends Module {
 		// register search
 		if (class_exists('search')) {
 			$search = search::getInstance();
-			$search->registerModule('shop', &$this);
+			$search->registerModule('shop', $this);
 		}
 	}
 
@@ -954,7 +954,7 @@ class shop extends Module {
 		$params = array();
 
 		// register tag handler
-		$template->registerTagHandler('_checkout_form', &$this, 'tag_CheckoutForm');
+		$template->registerTagHandler('_checkout_form', $this, 'tag_CheckoutForm');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -969,7 +969,7 @@ class shop extends Module {
 
 		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_completed_message', &$this, 'tag_CompletedMessage');
+		$template->registerTagHandler('_completed_message', $this, 'tag_CompletedMessage');
 
 		$params = array();
 
@@ -986,7 +986,7 @@ class shop extends Module {
 
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_canceled_message', &$this, 'tag_CanceledMessage');
+		$template->registerTagHandler('_canceled_message', $this, 'tag_CanceledMessage');
 
 		$params = array();
 
@@ -1781,7 +1781,7 @@ class shop extends Module {
 
 			// load template
 			$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
-			$template->registerTagHandler('_checkout_items', &$this, 'tag_CheckoutItems');
+			$template->registerTagHandler('_checkout_items', $this, 'tag_CheckoutItems');
 
 			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this);
 			$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');

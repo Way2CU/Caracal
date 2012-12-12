@@ -202,9 +202,9 @@ class survey extends Module {
 
 		$params = array();
 
-		$template->registerTagHandler('_results_list', &$this, 'tag_ResultsList');
-		$template->registerTagHandler('_columns_list', &$this, 'tag_ColumnsList');
-		$template->registerTagHandler('_types_list', &$this, 'tag_TypesList');
+		$template->registerTagHandler('_results_list', $this, 'tag_ResultsList');
+		$template->registerTagHandler('_columns_list', $this, 'tag_ColumnsList');
+		$template->registerTagHandler('_types_list', $this, 'tag_TypesList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -301,7 +301,7 @@ class survey extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_types_list', &$this, 'tag_TypesList');
+		$template->registerTagHandler('_types_list', $this, 'tag_TypesList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

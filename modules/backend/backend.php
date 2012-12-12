@@ -290,7 +290,7 @@ class backend extends Module {
 	private function showBackend() {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_main_menu', &$this, 'tag_MainMenu');
+		$template->registerTagHandler('_main_menu', $this, 'tag_MainMenu');
 
 		$params = array();
 
@@ -343,7 +343,7 @@ class backend extends Module {
 
 		$params = array();
 
-		$template->registerTagHandler('_module_list', &$this, 'tag_ModuleList');
+		$template->registerTagHandler('_module_list', $this, 'tag_ModuleList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();

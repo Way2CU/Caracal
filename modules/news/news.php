@@ -347,7 +347,7 @@ class news extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_news_list', &$this, 'tag_NewsList');
+		$template->registerTagHandler('_news_list', $this, 'tag_NewsList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -365,7 +365,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_add')
 				);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -531,7 +531,7 @@ class news extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -699,7 +699,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_group_items')
 				);
 
-		$template->registerTagHandler('_group_items', &$this, 'tag_GroupItems');
+		$template->registerTagHandler('_group_items', $this, 'tag_GroupItems');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -764,7 +764,7 @@ class news extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_feed_list', &$this, 'tag_FeedList');
+		$template->registerTagHandler('_feed_list', $this, 'tag_FeedList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -782,7 +782,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_feeds_add')
 				);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -813,7 +813,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_feeds_change')
 				);
 
-		$template->registerTagHandler('_group_list', &$this, 'tag_GroupList');
+		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -1325,7 +1325,7 @@ class news extends Module {
 						'build_date'	=> $build_date
 					);
 
-			$template->registerTagHandler('_news_list', &$this, 'tag_NewsList');
+			$template->registerTagHandler('_news_list', $this, 'tag_NewsList');
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
