@@ -93,6 +93,7 @@ class Database_MySQL extends Database {
 	 * Execute query returning boolean value.
 	 *
 	 * @param string $sql
+	 * @return boolean
 	 */
 	public function query($sql) {
 		return $this->handle->query($sql) === true;
@@ -118,6 +119,16 @@ class Database_MySQL extends Database {
 	 * @return array
 	 */
 	public function get_results($sql) {
+		$result = array();
+
+		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
+			while ($row = $db_result->fetch_object())
+				$result[] = $row;
+
+			$db_result->close();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -125,19 +136,20 @@ class Database_MySQL extends Database {
 	 *
 	 * @param string $sql
 	 * @param integer $index
-	 * @return object
+	 * @return array
 	 */
 	public function get_row($sql, $index=0) {
-	}
+		$result = null;
 
-	/**
-	 * Get a single column from result list.
-	 *
-	 * @param string $sql
-	 * @param integer $index
-	 * @return object
-	 */
-	public function get_column($sql, $index=0) {
+		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
+			if (!$db_result->data_seek($index))
+				return;
+
+			$result = $db_result->fetch_array();
+			$db_result->close();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -147,6 +159,18 @@ class Database_MySQL extends Database {
 	 * @return variable
 	 */
 	public function get_var($sql) {
+		$result = null;
+
+		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
+			$row = $db_result->fetch_array(MYSQLI_NUM);
+
+			if (!is_null($row) && count($row) > 0)
+				$result = $row[0];
+
+			$db_result->close();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -155,6 +179,7 @@ class Database_MySQL extends Database {
 	 * @return integer
 	 */
 	public function get_inserted_id() {
+		return $this->handle->insert_id;
 	}
 
 	/**
@@ -163,6 +188,7 @@ class Database_MySQL extends Database {
 	 * @return integer
 	 */
 	public function num_rows() {
+		return $this->handle->affected_rows;
 	}
 
 	/**
