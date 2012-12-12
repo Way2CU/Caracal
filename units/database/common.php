@@ -1,29 +1,12 @@
 <?php
-
 /**
  * Commonly used database functions
- */
-require_once('mysql.php');
-
-/**
- * Check if database with specified name exists.
- * 
- * @param string $name
- * @return boolean
- */
-function database_exists($name) {
-	$result = false;
-
-	return $result;
-}
-
-/**
- * Return type of currently connected database.
+ * Copyright (c) 2012. by Way2CU
  *
- * @return string
+ * @author Mladen Mijatov
  */
-function database_get_type() {
-}
+
+require_once('mysql.php');
 
 /**
  * Connect to database server using data from config file.
