@@ -35,9 +35,17 @@ function fix_chars($string, $strip_tags=true) {
  * @author MeanEYE.rcf
  */
 function escape_chars($string) {
+	global $db;
+
 	if (!is_array($string)) {
+		// get rid of slashes
 		if (get_magic_quotes_gpc()) $string = stripcslashes($string);
-		$string = mysql_real_escape_string(strip_tags($string));
+
+		// remove tags
+		$string = strip_tags($string);
+
+		if ($db != null) 
+			$string = $db->escape_string($string);
 
 	} else {
 		foreach($string as $key => $value)
