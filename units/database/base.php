@@ -131,6 +131,14 @@ abstract class Database {
 	 * @param array/string $tables
 	 */
 	public abstract function drop_tables($tables);
+
+	/**
+	 * Escape string using database engine.
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	public abstract function escape_string($string);
 }
 
 ?>
