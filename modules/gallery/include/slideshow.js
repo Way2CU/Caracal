@@ -12,19 +12,19 @@
  */
 
 function FadingImage(image, transition_time) {
-	this.$image = $(image);
+	this.image = $(image);
 	this.transition_time = transition_time;
 
 	/**
 	 * Show image
 	 */
 	this.show = function() {
-		this.$image
-					.css({
-						opacity: 0,
-						display: 'block'
-					})
-					.animate({opacity: 1}, this.transition_time);
+		this.image
+				.css({
+					opacity: 0,
+					display: 'block'
+				})
+				.animate({opacity: 1}, this.transition_time);
 	};
 
 	/**
@@ -33,17 +33,17 @@ function FadingImage(image, transition_time) {
 	this.hide = function(next_slide) {
 		next_slide.show();
 
-		this.$image.animate(
-						{opacity: 0},
-						this.transition_time,
-						function() {
-							$(this).css('display', 'none');
-						});
+		this.image.animate(
+					{opacity: 0},
+					this.transition_time,
+					function() {
+						$(this).css('display', 'none');
+					});
 	};
 }
 
 function SlidingImage(image, transition_time) {
-	this.$image = $(image);
+	this.image = $(image);
 	this.transition_time = transition_time;
 
 	/**
@@ -72,53 +72,52 @@ function SlidingImage(image, transition_time) {
  * @param boolean scale_images
  */
 function Slideshow(container_id, animation_type, display_time, transition_time, gallery_group, scale_images) {
-	var self = this;  // used internally for nested functions
+	var self = this;
 
-	this.interval_id = null;
-	this.display_time = display_time;
-	this.transition_time = transition_time;
-	this.image_list = [];
-	this.active_item = 0;
-	this.group_name = gallery_group;
-	this.animation_type = animation_type;
-	this.scale_images = scale_images;
-
-	this.$container = $('#' + container_id);
+	self.interval_id = null;
+	self.display_time = display_time;
+	self.transition_time = transition_time;
+	self.image_list = [];
+	self.active_item = 0;
+	self.group_name = gallery_group;
+	self.animation_type = animation_type;
+	self.scale_images = scale_images;
+	self.container = $('#' + container_id);
 
 	// commonly used backend URL
 	var base = $('base');
-	this.backend_url = result = base.attr('href') + '/index.php'; 
+	self.backend_url = result = base.attr('href') + '/index.php'; 
 
 	/**
 	 * Initialize slideshow
 	 */
-	this.init = function() {
+	self.init = function() {
 		var data = {
-					section: 'gallery',
-					action: 'json_image_list',
-					slideshow: 1
-				};
+				section: 'gallery',
+				action: 'json_image_list',
+				slideshow: 1
+			};
 
-		if (this.group_name != undefined && this.group_name != null)
-			data['group'] = this.group_name;
+		if (self.group_name != undefined && self.group_name != null)
+			data['group'] = self.group_name;
 
 		// load images from server
 		$.ajax({
-			url: this.backend_url,
+			url: self.backend_url,
 			type: 'GET',
 			data: data,
 			dataType: 'json',
-			context: this,
-			success: this.loadImages
+			context: self,
+			success: self.loadImages
 		});
 	};
 
 	/**
 	 * Event called once data fwas retrieved from server
 	 */
-	this.loadImages = function(data) {
+	self.loadImages = function(data) {
 		// get image animation function
-		switch (this.animation_type) {
+		switch (self.animation_type) {
 			case 0:
 				var Slide = FadingImage;
 				break;
@@ -131,7 +130,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 				var Slide = FadingImage;
 		}
 
-		this.$container.css({
+		self.container.css({
 					display: 'block',
 					position: 'relative',
 					overflow: 'hidden'
@@ -145,10 +144,10 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 			while (i--) {
 				var item = data.items[i];
 				var image = new Image();
-				var container_width = this.$container.width();
-				var container_height = this.$container.height();
+				var container_width = self.container.width();
+				var container_height = self.container.height();
 
-				if (this.scale_images) image.src = '';  // ensure image is not cashed
+				if (self.scale_images) image.src = '';  // ensure image is not cashed
 				image.src = item.image;
 				image.alt = item.title[language];
 
@@ -159,13 +158,13 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 						top: '0px',
 						left: '0px'
 					})
-					.appendTo(this.$container);
+					.appendTo(self.container);
 
-				if (this.scale_images)
+				if (self.scale_images)
 					$(image).load(function() {
 						var rate = 1;
-						var image_width = this.width;
-						var image_height = this.height;
+						var image_width = self.width;
+						var image_height = self.height;
 
 						if (image_width > image_height) {
 							rate = container_width / image_width;
@@ -182,7 +181,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 						image_width = Math.round(image_width * rate);
 						image_height = Math.round(image_height * rate);
 
-						$(this).css({
+						$(self).css({
 							top: Math.round((container_height - image_height) / 2),
 							left: Math.round((container_width - image_width) / 2),
 							width: image_width,
@@ -191,15 +190,15 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 					});
 
 				// create new slide using image and push it to the list
-				this.image_list.push(new Slide(image, this.transition_time));
+				self.image_list.push(new Slide(image, self.transition_time));
 			}
 
 			// show first image
-			if (this.image_list.length > 0)
-				this.image_list[this.active_item].show();
+			if (self.image_list.length > 0)
+				self.image_list[self.active_item].show();
 
 			// start animation
-			if (this.image_list.length > 1)
+			if (self.image_list.length > 1)
 				setInterval(function() { self.changeActiveItem(); }, self.display_time);
 
 		} else {
@@ -210,17 +209,17 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 	};
 
 	// callback method used for switching news items
-	this.changeActiveItem = function() {
-		var next_item = this.active_item + 1;
+	self.changeActiveItem = function() {
+		var next_item = self.active_item + 1;
 
-		if (next_item > this.image_list.length - 1)
+		if (next_item > self.image_list.length - 1)
 			next_item = 0;
 
-		this.image_list[this.active_item].hide(this.image_list[next_item]);
+		self.image_list[self.active_item].hide(self.image_list[next_item]);
 
-		this.active_item = next_item;
+		self.active_item = next_item;
 	};
 
 	// initialize
-	this.init();
+	self.init();
 }
