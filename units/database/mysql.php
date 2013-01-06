@@ -198,6 +198,16 @@ class Database_MySQL extends Database {
 	 */
 	public function drop_tables($tables) {
 	}
+
+	/**
+	 * Escape string using database engine.
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	public function escape_string($string) {
+		return $this->handle->real_escape_string($string);
+	}
 }
 
 ?>
