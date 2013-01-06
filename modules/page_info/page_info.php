@@ -63,7 +63,7 @@ class page_info extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) { 
 				case 'set_omit_elements':
-					$this->omit_elements = fix_chars(split(',', $params['elements']));
+					$this->omit_elements = fix_chars(explode(',', $params['elements']));
 					break;
 
 				case 'set_optimizer_page':
