@@ -197,6 +197,8 @@ class Database_MySQL extends Database {
 	 * @param array/string $tables
 	 */
 	public function drop_tables($tables) {
+		$sql = 'DROP TABLES `'.implode('`, `', $tables).'`';
+		return $this->handle->query($sql) === true;
 	}
 
 	/**
