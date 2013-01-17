@@ -441,9 +441,9 @@ class TemplateHandler {
 	 * @param string $function_name Public tag handler method
 	 * @example function tagHandler($level, $params, $children)
 	 */
-	public function registerTagHandler($tag_name, &$object, $function_name) {
+	public function registerTagHandler($tag_name, $object, $function_name) {
 		$this->handlers[$tag_name] = array(
-					'object' 	=> &$object,
+					'object' 	=> $object,
 					'function'	=> $function_name
 				);
 	}
