@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div id="affiliate_information_notebook">
+		<div>
+			<label>
+				<span><_text constant="label_uid" module="affiliates"/></span>
+				<input
+					type="text"
+					name="uid"
+					value="$params['uid']"
+					eval="value"
+					readonly="readonly"
+					style="width: 200px;"
+				/>
+			</label>
+			<label class="horizontal" style="width: 100px;">
+				<span><_text constant="label_clicks" module="affiliates"/></span>
+				<input
+					type="text"
+					name="clicks"
+					value="$params['clicks']"
+					eval="value"
+					readonly="readonly"
+					style="width: 100px;"
+				/>
+			</label>
+			<label class="horizontal" style="width: 100px;">
+				<span><_text constant="label_conversions" module="affiliates"/></span>
+				<input
+					type="text"
+					name="conversions"
+					value="$params['conversions']"
+					eval="value"
+					readonly="readonly"
+					style="width: 100px;"
+				/>
+			</label>
+			<label class="horizontal" style="width: 70px;">
+				<span><_text constant="label_rate" module="affiliates"/></span>
+				<input
+					type="text"
+					name="rate"
+					value="$params['rate'] . '%'"
+					eval="value"
+					readonly="readonly"
+					style="width: 70px;"
+				/>
+			</label>
+			<label style="clear: both;">
+				<span><_text constant="label_name" module="affiliates"/></span>
+				<input
+					type="text"
+					name="name"
+					value="$params['name']"
+					eval="value"
+					readonly="readonly"
+					style="width: 350px;"
+				/>
+			</label>
+		</div>
+		<div>
+			<label>
+				<span><_text constant="label_url" module="affiliates"/></span>
+				<input type="text" name="url" style="width: 350px;"/>
+			</label>
+			<label>
+				<span><_text constant="label_url_output" module="affiliates"/></span>
+				<input type="text" name="url_output" style="width: 350px;" readonly="readonly"/>
+			</label>
+		</div>
+	</div>
+
+	<div class="button_bar">
+		<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<_text constant="close"/>
+		</button>
+	</div>
+
+	<script type="text/javascript">
+		<_replace>
+			var notebook = new Notebook('affiliate_information_notebook');
+			notebook
+				.setPageTitle(0, language_handler.getText('affiliates', 'tab_general'))
+				.setPageTitle(1, language_handler.getText('affiliates', 'tab_generate'));
+
+			$('#affiliate_information_notebook input[name=url]').change(function() {
+				var uid = '%uid%';
+				var url_rewrite = %url_rewrite%;
+				var url = $(this).val();
+				var output = $('#affiliate_information_notebook input[name=url_output]');
+
+				if (!url_rewrite) {
+					if (url.indexOf('?') != -1)
+						output.val(url + '&amp;affiliate=' + uid); else
+						output.val(url + '?affiliate=' + uid);
+				} else {
+					output.val(url + '/affiliate/' + uid);
+				}
+			});
+		</_replace>
+	</script>
+</document>

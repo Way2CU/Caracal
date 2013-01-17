@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_user" module="affiliates"/></span>
+			<select name="user" style="width: 270px;">
+				<_user_list
+					template="users_option.xml"
+					local="1"
+					selected="$params['user']"
+					eval="selected"
+				/>
+			</select>
+		</label>
+		<label>
+			<span><_text constant="label_name" module="affiliates"/></span>
+			<input type="text" name="name" style="width: 270px;" maxlength="50" value="$params['name']" eval="value"/>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_active" module="affiliates"/></span>
+			<_if condition="$params['active'] == 1">
+				<input type="checkbox" name="active" checked="checked"/>
+			</_if>
+			<_if condition="$params['active'] == 0">
+				<input type="checkbox" name="active"/>
+			</_if>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

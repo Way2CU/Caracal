@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<label>
+			<_text constant="group_by" module="affiliates"/>
+			<select name="group_by">
+				<option value="url"><_text constant="option_url" module="affiliates"/></option>
+				<option value="landing"><_text constant="option_landing" module="affiliates"/></option>
+			</select>
+		</label>
+
+		<label>
+			<_text constant="affiliate" module="affiliates"/>
+			<select name="affiliate">
+				<option/>
+			</select>
+		</label>
+	</div>
+
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 250px;">
+				<_var name="$params['column_group_by']"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<_text constant="column_clicks" module="affiliates"/>
+			</span>
+			<span class="column" style="width: 80px;">
+				<_text constant="column_conversions" module="affiliates"/>
+			</span>
+			<span class="column" style="width: 60px;">
+				<_text constant="column_rate" module="affiliates"/>
+			</span>
+			<_if condition="!isset($_REQUEST['for_affiliate'])">
+				<span class="column" style="width: 150px;">
+					<_text constant="column_affiliate" module="affiliates"/>
+				</span>
+			</_if>
+			<span class="column">
+				<_text constant="column_options"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 250px">
+			<!-- List Content -->
+			<_affiliate_list/>
+		</div>
+	</div>
+</document>
