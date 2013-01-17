@@ -64,7 +64,7 @@ function url_UnpackValues() {
  * @param string $section
  * @return string
  * @example url_Make( "action", "section", array("param", "value"), array("param2", "value2") );
- * @author MeanEYE
+ * @author Mladen Mijatov
  */
 function url_Make($action, $section) {
 	global $url_rewrite, $url_add_extension, $url_language_optional, $language;
@@ -99,7 +99,7 @@ function url_Make($action, $section) {
  *
  * @param array $params
  * @return string
- * @author MeanEYE
+ * @author Mladen Mijatov
  */
 function url_MakeFromArray($params) {
 	global $url_rewrite, $url_add_extension, $url_language_optional, $language, $section, $action;
@@ -214,7 +214,7 @@ function url_MakeFromArray($params) {
  *
  * @param array $args
  * @return string
- * @author MeanEYE
+ * @author Mladen Mijatov
  */
 function url_Form($args, $start_separator=true) {
 	$res = "";
@@ -236,7 +236,7 @@ function url_Form($args, $start_separator=true) {
  * @param string $target Window name where link will be opened. Some specific ones are "_blank", "_top"
  * @return string
  * @example url_MakeHyperlink( "click here", url_Make("action", "section") );
- * @author MeanEYE
+ * @author Mladen Mijatov
  */
 function url_MakeHyperlink($content, $link, $title='', $class='', $target='') {
 	if (!empty($title)) $title = ' title="'.$title.'"';
@@ -253,7 +253,7 @@ function url_MakeHyperlink($content, $link, $title='', $class='', $target='') {
  *
  * @param string $url
  * @param integer $seconds
- * @author MeanEYE
+ * @author Mladen Mijatov
  */
 function url_SetRefresh($url='', $seconds=2) {
         if ($url !== '')
