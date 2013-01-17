@@ -121,16 +121,16 @@ class ShopItemHandler {
 
 		// register external tag handlers
 		$category_handler = ShopCategoryHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_category_list', &$category_handler, 'tag_CategoryList');
+		$template->registerTagHandler('_category_list', $category_handler, 'tag_CategoryList');
 		
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
+		$template->registerTagHandler('_size_list', $size_handler, 'tag_SizeList');
 
 		$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_manufacturer_list', &$manufacturer_handler, 'tag_ManufacturerList');
+		$template->registerTagHandler('_manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
 		$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
+		$template->registerTagHandler('_delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
 		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
 
@@ -155,16 +155,16 @@ class ShopItemHandler {
 
 			// register tag handlers
 			$category_handler = ShopCategoryHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_category_list', &$category_handler, 'tag_CategoryList');
+			$template->registerTagHandler('_category_list', $category_handler, 'tag_CategoryList');
 			
 			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_size_list', &$size_handler, 'tag_SizeList');
+			$template->registerTagHandler('_size_list', $size_handler, 'tag_SizeList');
 
 			$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_manufacturer_list', &$manufacturer_handler, 'tag_ManufacturerList');
+			$template->registerTagHandler('_manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
 			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
+			$template->registerTagHandler('_delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
 			$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
 
@@ -507,10 +507,10 @@ class ShopItemHandler {
 		
 		// register tag handlers
 		if (!is_null($gallery)) 
-			$template->registerTagHandler('_image_list', &$gallery, 'tag_ImageList');
+			$template->registerTagHandler('_image_list', $gallery, 'tag_ImageList');
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_value_list', &$size_handler, 'tag_ValueList');
+		$template->registerTagHandler('_value_list', $size_handler, 'tag_ValueList');
 		$template->registerTagHandler('_color_list', $this, 'tag_ColorList');
 			
 		// parse template
