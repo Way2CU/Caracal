@@ -244,7 +244,7 @@ class user_page extends Module {
 
 		// add tag handler from user manager
 		$user_manager = UserManager::getInstance();
-		$template->registerTagHandler('_user_list', &$user_manager, 'tag_UserList');
+		$template->registerTagHandler('_user_list', $user_manager, 'tag_UserList');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save_page'),
@@ -270,7 +270,7 @@ class user_page extends Module {
 
 			// add tag handler from user manager
 			$user_manager = UserManager::getInstance();
-			$template->registerTagHandler('_user_list', &$user_manager, 'tag_UserList');
+			$template->registerTagHandler('_user_list', $user_manager, 'tag_UserList');
 
 			$params = array(
 						'id'			=> $item->id,
@@ -482,7 +482,7 @@ class user_page extends Module {
 		// add tag handler from youtube
 		if (class_exists('youtube')) {
 			$module = youtube::getInstance();
-			$template->registerTagHandler('_video_list', &$module, 'tag_VideoList');
+			$template->registerTagHandler('_video_list', $module, 'tag_VideoList');
 		}
 
 		$params = array(
@@ -508,7 +508,7 @@ class user_page extends Module {
 		// add tag handler from gallery
 		if (class_exists('gallery')) {
 			$module = gallery::getInstance();
-			$template->registerTagHandler('_gallery_list', &$module, 'tag_GroupList');
+			$template->registerTagHandler('_gallery_list', $module, 'tag_GroupList');
 		}
 
 		$params = array(
@@ -827,7 +827,7 @@ class user_page extends Module {
 			// connect tag handlers
 			if (class_exists('youtube')) {
 				$module = youtube::getInstance();
-				$template->registerTagHandler('_video', &$module, 'tag_Video');
+				$template->registerTagHandler('_video', $module, 'tag_Video');
 			}
 
 		} else {
@@ -837,7 +837,7 @@ class user_page extends Module {
 			// connect tag handlers
 			if (class_exists('gallery')) {
 				$module = gallery::getInstance();
-				$template->registerTagHandler('_gallery', &$module, 'tag_Group');
+				$template->registerTagHandler('_gallery', $module, 'tag_Group');
 			}
 		}
 
