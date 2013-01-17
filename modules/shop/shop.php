@@ -919,6 +919,28 @@ class shop extends Module {
 										'status' => TransactionStatus::PENDING
 									));
 
+			// if affiliate system is active we mark referral as conversion
+			if (class_exists('affiliates')) {
+				$referral = null;
+				$affiliates = affiliates::getInstance();
+				$referrals_manager = AffiliateReferralsManager::getInstance();
+
+				// get transaction from UID
+				$transaction = $transactions_manager->getSingleItem(
+										array('id'), 
+										array('uid' => $transaction_id)
+									);
+
+				if (is_object($transaction))
+					$referral = $referrals_manager->getSingleItem(
+											$referrals_manager->getFieldNames(), 
+											array('transaction' => $transaction->id)
+										);
+
+				if (is_object($referral))
+					$affiliates->convertReferral($referral->id);
+			}
+
 			// send emails
 			$handler = ShopTransactionsHandler::getInstance($this);
 			$handler->sendMail($transaction_id);
@@ -1752,7 +1774,6 @@ class shop extends Module {
 
 			// remove items associated with transaction
 			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
-
 			$transaction_items_manager->deleteData(array('transaction' => $transaction_data['id']));
 
 			// store items
@@ -1768,6 +1789,17 @@ class shop extends Module {
 											));
 				}
 
+			// if affiliate system is active, update referral
+			if (isset($_SESSION['referral_id']) && class_exists('affiliates')) {
+				$referral_id = $_SESSION['referral_id'];
+				$referrals_manager = AffiliateReferralsManager::getInstance();
+
+				$referrals_manager->updateData(
+								array('transaction' => $transaction_data['id']),
+								array('id' => $referral_id)
+							);
+			}
+
 			// create new payment
 			$checkout_fields = $method->new_payment(
 										$transaction_data,
@@ -1782,7 +1814,7 @@ class shop extends Module {
 			$template->registerTagHandler('_checkout_items', $this, 'tag_CheckoutItems');
 
 			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this);
-			$template->registerTagHandler('_delivery_methods', &$delivery_handler, 'tag_DeliveryMethodsList');
+			$template->registerTagHandler('_delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
 			// parse template
 			$params = array(
