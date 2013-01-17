@@ -222,7 +222,8 @@ class ItemManager {
 	}
 
 	public function getInsertedID() {
-		return $this->sqlResult('SELECT LAST_INSERT_ID()');
+		global $db;
+		return $db->get_inserted_id();
 	}
 
 	/**
@@ -276,7 +277,7 @@ class ItemManager {
 	 * @param boolean $only_current
 	 * @return array
 	 */
-	private function _expandMultilanguageFields(&$fields, $has_keys=true, $only_current=false) {
+	private function _expandMultilanguageFields($fields, $has_keys=true, $only_current=false) {
 		$temp = $fields;
 		$current_language = $_SESSION['language'];
 
