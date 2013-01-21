@@ -394,6 +394,8 @@ class articles extends Module {
 	 * Print confirmation dialog before deleting article
 	 */
 	private function deleteArticle() {
+		global $language;
+
 		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleManager::getInstance();
 
@@ -404,7 +406,7 @@ class articles extends Module {
 
 		$params = array(
 					'message'		=> $this->getLanguageConstant("message_article_delete"),
-					'name'			=> $item->title,
+					'name'			=> $item->title[$language],
 					'yes_text'		=> $this->getLanguageConstant("delete"),
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
