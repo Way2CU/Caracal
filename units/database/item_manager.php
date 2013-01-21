@@ -277,7 +277,7 @@ class ItemManager {
 	 * @param boolean $only_current
 	 * @return array
 	 */
-	private function _expandMultilanguageFields($fields, $has_keys=true, $only_current=false) {
+	private function _expandMultilanguageFields(&$fields, $has_keys=true, $only_current=false) {
 		$temp = $fields;
 		$current_language = $_SESSION['language'];
 
