@@ -83,15 +83,7 @@ function FormSteps(form_selector) {
 			var to_hide = self.steps.eq(self.current_step);
 			var to_show = self.steps.eq(step);
 
-			if (to_hide != to_show) {
-				// resize form to specified height
-				var height = to_show.height();
-
-				height += parseInt(self.form.css('padding-top').replace('px', ''))
-				height += parseInt(self.form.css('padding-bottom').replace('px', ''))
-
-				self.form.animate({height: height}, 200);
-
+			if (to_hide != to_show)
 				// swap step containers
 				to_hide
 					.css('display', 'block')
@@ -104,7 +96,6 @@ function FormSteps(form_selector) {
 							})
 							.animate({opacity: 1}, 200);
 					});
-			}
 		} else {
 			self.steps.each(function(index) {
 				$(this).css('display', index == step ? 'block' : 'none');
