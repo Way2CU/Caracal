@@ -152,11 +152,11 @@ class ModuleHandler {
 
 				if (!empty($line) && $mode > 0)
 					switch ($mode) {
-						case 0:
+						case 1:
 							$required[] = $line;
 							break;
 
-						case 1:
+						case 2:
 							$options[] = $line;
 							break;
 					}
