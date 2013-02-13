@@ -859,6 +859,8 @@ class youtube extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'video_item.xml');
+		$template->registerTagHandler('_video', $this, 'tag_Video');
+		$template->registerTagHandler('_thumbnail', $this, 'tag_Thumbnail');
 
 		// parse template
 		if (count($items) > 0)
