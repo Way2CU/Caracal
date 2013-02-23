@@ -214,11 +214,10 @@ class articles extends Module {
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 			";
 
-		foreach($list as $language)
+		foreach($list as $language) {
 			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
 			$sql .= "`content_{$language}` TEXT NOT NULL ,";
+		}
 
 		$sql .= "
 				`author` INT NOT NULL ,
@@ -240,11 +239,10 @@ class articles extends Module {
 				`text_id` VARCHAR (32) NULL ,
 			";
 
-		foreach($list as $language)
+		foreach($list as $language) {
 			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
+		}
 
 		$sql .= "
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
