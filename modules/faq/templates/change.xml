@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="faq_new_question_form">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<span><_text constant="label_question" module="faq"/></span>
+			<textarea 
+				class="multi-language"
+				name="question"
+				style="width: 450px; height: 100px;"
+			/>
+			<_language_data param="question"/>
+		</label>
+		<label>
+			<span><_text constant="label_answer" module="faq"/></span>
+			<textarea
+				class="multi-language"
+				name="answer"
+				style="width: 450px; height: 100px;"
+			/>
+			<_language_data param="answer"/>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_visible" module="faq"/></span>
+			<_if condition="$params['visible'] == 1">
+				<input type="checkbox" name="visible" checked="checked"/>
+			</_if>
+			<_if condition="$params['visible'] == 0">
+				<input type="checkbox" name="visible"/>
+			</_if>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('faq_new_question_form');
+	</script>
+</document>
