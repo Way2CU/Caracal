@@ -8,61 +8,61 @@
 function Dialog() {
 	var self = this;
 	
-	this._background = $('<div>');
-	this._container = $('<div>');
-	this._title = $('<div>');
-	this._title_text = $('<span>');
-	this._close_button = $('<a>');
-	this._content = $('<div>');
-	this._inner_content = $('<div>');
-	this._scrollbar = null;
+	self._background = $('<div>');
+	self._container = $('<div>');
+	self._title = $('<div>');
+	self._title_text = $('<span>');
+	self._close_button = $('<a>');
+	self._content = $('<div>');
+	self._inner_content = $('<div>');
+	self._scrollbar = null;
 	
 	/**
 	 * Complete object initialization
 	 */
-	this.init = function() {
+	self.init = function() {
 		// configure background
-		this._background
+		self._background
 				.addClass('dialog-background')
 				.appendTo($('body'));
 		
 		// configure container
-		this._container
+		self._container
 				.addClass('dialog')
 				.appendTo($('body'));
 		
 		// configure title
-		this._title
+		self._title
 				.addClass('title')
-				.appendTo(this._container);
+				.appendTo(self._container);
 		
-		this._title_text
-				.appendTo(this._title);
+		self._title_text
+				.appendTo(self._title);
 		
-		this._close_button
+		self._close_button
 				.addClass('close')
-				.attr('title', language_handler.getText(null, 'close'))
 				.attr('href', 'javascript: void(0);')
-				.click(this.__handle_close_click)
-				.appendTo(this._title);
+				.click(self.__handle_close_click)
+				.appendTo(self._title);
 		
-		this._title.append($('<div>').css('clear', 'both'));
+		self._title.append($('<div>').css('clear', 'both'));
 		
 		// configure content
-		this._content
+		self._content
 				.css('position', 'relative')
 				.addClass('content')
-				.appendTo(this._container);
+				.appendTo(self._container);
 
-		this._inner_content
+		self._inner_content
 				.addClass('inner_content')
-				.appendTo(this._content);
+				.appendTo(self._content);
 		
 		// connect events
-		$(window).bind('resize', this.__handle_window_resize);
+		$(window).bind('resize', self.__handle_window_resize);
 
 		// create scrollbar
-		this._scrollbar = new Scrollbar(this._content, 'div.inner_content');
+		if (typeof Scrollbar == 'function')
+			self._scrollbar = new Scrollbar(self._content, 'div.inner_content');
 	};
 	
 	/**
@@ -70,16 +70,17 @@ function Dialog() {
 	 * 
 	 * @param string url
 	 */
-	this.setContentFromURL = function(url, container) {
+	self.setContentFromURL = function(url, container) {
 		var callback = function() {
-			self._scrollbar.content_updated();
+			if (self._scrollbar != null)
+				self._scrollbar.content_updated();
 		};
 
 		if (container != null)
-			this._inner_content.load(url + ' #' + container, callback); else
-			this._inner_content.load(url, callback);
+			self._inner_content.load(url + ' #' + container, callback); else
+			self._inner_content.load(url, callback);
 
-		this._inner_content.css('top', 0);
+		self._inner_content.css('top', 0);
 	};
 	
 	/**
@@ -87,14 +88,16 @@ function Dialog() {
 	 * 
 	 * @param string selection
 	 */
-	this.setContentFromDOM = function(selection, detach) {
+	self.setContentFromDOM = function(selection) {
 		var element = $(selection).eq(0);
 		
 		element.detach();
-		this._inner_content
+		self._inner_content
 				.html(element)
 				.css('top', 0);
-		this._scrollbar.content_updated();
+
+		if (self._scrollbar != null)
+			self._scrollbar.content_updated();
 	};
 	
 	/**
@@ -103,48 +106,48 @@ function Dialog() {
 	 * @param integer width
 	 * @param integer height
 	 */
-	this.setSize = function(width, height) {
+	self.setSize = function(width, height) {
 		// set dialog size
-		this._content.css({
+		self._content.css({
 					width: width,
 					height: height
 				});
 		
 		// update dialog position
-		this._update_position();
+		self._update_position();
 	};
 	
 	/**
 	 * Set dialog title
 	 * @param string title
 	 */
-	this.setTitle = function(title) {
-		this._title_text.html(title);
+	self.setTitle = function(title) {
+		self._title_text.html(title);
 	};
 	
 	/**
 	 * Set scrollbar visibility
 	 * @param string show_scrollbar
 	 */
-	this.setScroll = function(show_scrollbar) {
+	self.setScroll = function(show_scrollbar) {
 		if (show_scrollbar)
-			this._content.addClass('scroll'); else
-			this._content.removeClass('scroll');
+			self._content.addClass('scroll'); else
+			self._content.removeClass('scroll');
 	};
 	
 	/**
 	 * Show dialog
 	 */
-	this.show = function() {
+	self.show = function() {
 		var chain = new AnimationChain();
 		
 		// configure containers
-		this._background.css({
+		self._background.css({
 					display: 'block',
 					opacity: 0
 				});
 		
-		this._container.css({
+		self._container.css({
 					display: 'block',
 					opacity: 0
 				});
@@ -152,12 +155,12 @@ function Dialog() {
 		// create animation chain
 		chain
 			.addAnimation(
-					this._background, 
+					self._background, 
 					{opacity: 0.5}, 
 					300
 				)
 			.addAnimation(
-					this._container,
+					self._container,
 					{opacity: 1},
 					300
 				)
@@ -172,18 +175,18 @@ function Dialog() {
 	/**
 	 * Hide dialog
 	 */
-	this.hide = function() {
+	self.hide = function() {
 		var chain = new AnimationChain();
 		
 		// create animation chain
 		chain
 			.addAnimation(
-					this._container, 
+					self._container, 
 					{opacity: 0}, 
 					200
 				)
 			.addAnimation(
-					this._background,
+					self._background,
 					{opacity: 0},
 					200
 				)
@@ -202,13 +205,13 @@ function Dialog() {
 	/**
 	 * Update dialog position based on size
 	 */
-	this._update_position = function() {
+	self._update_position = function() {
 		var window_width = $(window).width();
 		var window_height = $(window).height();
-		var width = this._container.width();
-		var height = this._container.height();
+		var width = self._container.width();
+		var height = self._container.height();
 		
-		this._container.css({
+		self._container.css({
 					left: Math.round((window_width - width) / 2),
 					top: Math.round((window_height - height) / 2)
 				});
@@ -218,7 +221,7 @@ function Dialog() {
 	 * Handle clicking on close button
 	 * @param object event
 	 */
-	this.__handle_close_click = function(event) {
+	self.__handle_close_click = function(event) {
 		self.hide();
 		event.preventDefault();
 	};
@@ -227,10 +230,10 @@ function Dialog() {
 	 * Handle browser window resize
 	 * @param object event
 	 */
-	this.__handle_window_resize = function(event) {
+	self.__handle_window_resize = function(event) {
 		self._update_position();
 	};
 	
 	// finish object initialization
-	this.init();
+	self.init();
 }
