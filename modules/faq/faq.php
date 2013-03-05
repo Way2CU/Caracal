@@ -68,9 +68,11 @@ class faq extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
+					$this->tag_Question($params, $children);
 					break;
 
 				case 'show_list':
+					$this->tag_QuestionList($params, $children);
 					break;
 
 				default:
