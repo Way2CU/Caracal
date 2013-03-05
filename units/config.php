@@ -29,6 +29,9 @@ $cache_enabled = false;
 $cache_expire_period = 86400;
 $cache_max_pages = 200;
 
+// head tag
+$include_scripts = false;
+
 // various
 $url_rewrite = false;
 $url_add_extension = false;

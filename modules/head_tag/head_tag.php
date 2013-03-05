@@ -116,9 +116,51 @@ class head_tag extends Module {
 	}
 
 	/**
+	 * Show specified tag.
+	 * 
+	 * @param object $tag
+	 */
+	private function printTag($tag, $body=null) {
+		print "<{$tag[0]}{$this->getTagParams($tag[1])}>";
+		print in_array($tag[0], $this->closeable_tags) || !is_null($body) ? "{$body}</{$tag[0]}>" : "";
+	}
+
+	/**
+	 * Show file associated with specified tag.
+	 *
+	 * @param object $tag
+	 */
+	private function printFile($tag) {
+		switch ($tag[0]) {
+			case 'link':
+				$body = null;
+				if (array_key_exists('rel', $tag[1]) && $tag[1]['rel'] == 'stylesheet') {
+					$body = file_get_contents($tag[1]['href']);
+					$tag = array('style', array('type' => 'text/css'));
+					unset($tag[1]['href']);
+				}
+
+				$this->printTag($tag, $body);
+				break;
+
+			case 'script':
+				$body = file_get_contents($tag[1]['src']);
+				unset($tag[1]['src']);
+				$this->printTag($tag, $body);
+				break;
+
+			default:
+				$this->printTag($tag);
+				break;
+		}
+	}
+
+	/**
 	 * Print previously added tags
 	 */
 	private function printTags() {
+		global $include_scripts;
+
 		// if page_info module is loaded, ask it to add its own tags
 		if (class_exists('page_info'))
 			page_info::getInstance()->addElements();
@@ -127,8 +169,9 @@ class head_tag extends Module {
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 		
 		foreach ($tags as $tag)
-			echo "<".$tag[0].$this->getTagParams($tag[1]).">".
-				(in_array($tag[0], $this->closeable_tags) ? "</".$tag[0].">" : "");
+			if (!$include_scripts)
+				$this->printTag($tag); else
+				$this->printFile($tag);
 
 		// print google analytics code if needed
 		if (!is_null($this->analytics)) {
