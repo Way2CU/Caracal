@@ -16,6 +16,7 @@ function Dialog() {
 	self._content = $('<div>');
 	self._inner_content = $('<div>');
 	self._scrollbar = null;
+	self._clear_on_close = false;
 	
 	/**
 	 * Complete object initialization
@@ -71,14 +72,9 @@ function Dialog() {
 	 * @param string url
 	 */
 	self.setContentFromURL = function(url, container) {
-		var callback = function() {
-			if (self._scrollbar != null)
-				self._scrollbar.content_updated();
-		};
-
 		if (container != null)
-			self._inner_content.load(url + ' #' + container, callback); else
-			self._inner_content.load(url, callback);
+			self._inner_content.load(url + ' #' + container); else
+			self._inner_content.load(url);
 
 		self._inner_content.css('top', 0);
 	};
@@ -95,9 +91,6 @@ function Dialog() {
 		self._inner_content
 				.html(element)
 				.css('top', 0);
-
-		if (self._scrollbar != null)
-			self._scrollbar.content_updated();
 	};
 	
 	/**
@@ -112,13 +105,11 @@ function Dialog() {
 					width: width,
 					height: height
 				});
-		
-		// update dialog position
-		self._update_position();
 	};
 	
 	/**
 	 * Set dialog title
+	 *
 	 * @param string title
 	 */
 	self.setTitle = function(title) {
@@ -127,12 +118,22 @@ function Dialog() {
 	
 	/**
 	 * Set scrollbar visibility
+	 *
 	 * @param string show_scrollbar
 	 */
 	self.setScroll = function(show_scrollbar) {
 		if (show_scrollbar)
 			self._content.addClass('scroll'); else
 			self._content.removeClass('scroll');
+	};
+
+	/**
+	 * Whether content of dialog should be cleared on close.
+	 *
+	 * @param boolean clear
+	 */
+	self.setClearOnClose = function(clear) {
+		self._clear_on_close = clear;
 	};
 	
 	/**
@@ -151,6 +152,9 @@ function Dialog() {
 					display: 'block',
 					opacity: 0
 				});
+
+		// update dialog position
+		self._update_position();
 		
 		// create animation chain
 		chain
@@ -165,7 +169,12 @@ function Dialog() {
 					300
 				)
 			.callback(function() {
+				// set visible marker
 				self._visible = true;
+
+				// update scrollbar
+				if (self._scrollbar != null)
+					self._scrollbar.content_updated();
 			});
 		
 		// start animation chain
@@ -195,7 +204,9 @@ function Dialog() {
 				
 				self._container.css('display', 'none');
 				self._background.css('display', 'none');
-				self._inner_content.html('');
+
+				if (self._clear_on_close)
+					self._inner_content.html('');
 			});
 			
 		// start animation chain
@@ -219,6 +230,7 @@ function Dialog() {
 	
 	/**
 	 * Handle clicking on close button
+	 *
 	 * @param object event
 	 */
 	self.__handle_close_click = function(event) {
@@ -228,6 +240,7 @@ function Dialog() {
 	
 	/**
 	 * Handle browser window resize
+	 *
 	 * @param object event
 	 */
 	self.__handle_window_resize = function(event) {
