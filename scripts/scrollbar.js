@@ -21,7 +21,9 @@ function Scrollbar(parent_selector, content_selector, is_rtl) {
 
 	if (is_rtl != undefined && is_rtl != null) 
 		this._is_rtl = is_rtl; else
-		this._is_rtl = language_handler.isRTL();
+		if (typeof language_handler != 'undefined')
+			this._is_rtl = language_handler.isRTL(); else
+			this._is_rtl = false;
 
 	/**
 	 * Complete object initialization
