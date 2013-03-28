@@ -7,6 +7,18 @@
 div.window {
 	display: block;
 	position: absolute;
+
+	filter: grayscale(100%);
+	-moz-filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+
+div.window.focused {
+	opacity: 0.6;
+
+	filter: none;
+	-moz-filter: none;
+	-webkit-filter: none;
 }
 
 /**
@@ -15,20 +27,32 @@ div.window {
 div.window div.title {
 	display: block;
 
-	padding: 4px;
+	padding: 6px;
 
 	border: 1px solid #CBCBCB;
 	border-bottom: 0px;
 	border-radius: 7px 7px 0px 0px;
 
-	background-color: #1A1A1A;
+	background-color: #505050;
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 
 	color: #BFBFBF;
+	font-size: 13px;
 	font-weight: bold;
 	text-align: center;
 
 	cursor: default;
+
+	transition-property: all;
+	transition-duration: 0.3s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.3s;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.3s;
+}
+
+div.window.focused div.title {
+	background-color: #1A1A1A;
 }
 
 div.window.loading div.title {
@@ -62,13 +86,12 @@ div.window div.title a.close_button:hover {
 
 div.window div.content {
 	display: block;
-
 	min-height: 30px;
 
 	padding: 7px;
 
 	border: 1px solid #CBCBCB;
-	border-top: 0px;
+	border-top-color: #f7f7f7;
 	border-radius: 0px 0px 7px 7px;
 	background-color: #EFEFEF;
 
@@ -248,8 +271,8 @@ div.window div.button_bar {
 	display: block;
 
 	padding: 5px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 
 	border: 1px solid #B8B8B8;
 	border-radius: 4px;
@@ -668,9 +691,13 @@ div.window div.main_menu {
 	margin: 0px;
 	padding: 2px;
 
-	border: 1px solid #A3ACD8;
-	border-radius: 4px;
-	background-color: #B8BFE1;
+	border: 1px solid #CBCBCB;
+	border-bottom-color: #c9c9c9;
+	background: #b8b8b8;
+	background-image: -webkit-linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
+	background-image: -moz-linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
+	background-image: linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
+	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 
 	color: #1A1A1A;
 	font-size: 12px;
@@ -686,12 +713,17 @@ div.window div.main_menu a {
 
 	color: #1A1A1A;
 	text-decoration: none;
+
+	transition-property: all;
+	transition-duration: 0.2s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.2s;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.2s;
 }
 
 div.window div.main_menu a:hover {
-	border-radius: 3px;
 	background-color: #2E3E6A;
-
 	color: white;
 }
 

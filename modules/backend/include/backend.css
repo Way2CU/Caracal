@@ -89,6 +89,58 @@ div.progress_bar div.gauge {
 }
 
 /**
+ * Window List
+ */
+ul#window_list {
+	display: block;
+	
+	margin: 0px;
+	padding: 0px;
+
+	position: absolute;
+	left: 0px;
+	top: 80px;
+
+	list-style-type: none;
+	list-style-image: none;
+}
+
+ul#window_list li {
+	display: block;
+	margin-top: 3px;
+	padding: 5px;
+	padding-right: 10px;
+	padding-left: 20px;
+
+	position: relative;
+	top: 0px;
+	left: -15px;
+
+	border-radius: 0px 7px 7px 0px;
+	background-color: rgba(10, 29, 54, 0.2);
+
+	color: #0a1d36;
+
+	transition-property: all;
+	transition-duration: 0.3s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.3s;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.3s;
+}
+
+ul#window_list li:hover {
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+ul#window_list li.active {
+	left: 0px;
+
+	background-color: #4791eb;
+	color: black;
+}
+
+/**
  * Scrollbars
  */
 ::-webkit-scrollbar {
