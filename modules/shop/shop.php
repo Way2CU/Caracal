@@ -561,7 +561,6 @@ class shop extends Module {
 			CREATE TABLE `shop_item_membership` (
 				`category` INT(11) NOT NULL,
 				`item` INT(11) NOT NULL,
-				PRIMARY KEY ( `id` ),
 				KEY `category` (`category`),
 				KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
