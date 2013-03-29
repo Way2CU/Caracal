@@ -105,6 +105,22 @@ function FormSteps(form_selector) {
 		self.current_step = step;
 	};
 
+	/**
+	 * Method that can be used to handle clicking on specified step or a button.
+	 * This method looks for HTML5 data-step parameter to determine which step to
+	 * show. If no step is defined event is ignored.
+	 *
+	 * @param object event
+	 */
+	self.handleClick = function(event) {
+		var step = $(this).data('step');
+
+		if (step != null)
+			self._switchContainer(step);
+
+		event.preventDefault();
+	};
+
 	// finish object initialization
 	self.init();
 }
