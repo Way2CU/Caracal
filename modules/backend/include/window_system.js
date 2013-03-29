@@ -542,7 +542,6 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 */
 	self.attachEvents = function() {
 		self.content.find('form').each(function() {
-			console.log(this);
 			if ($(this).find('input:file').length == 0) {
 				// normal case submission without file uploads
 				$(this).submit(function(event) {
@@ -587,6 +586,8 @@ function Window(id, width, title, can_close, url, existing_structure) {
 				});
 			}
 		});
+
+		return self;
 	};
 
 	/**
