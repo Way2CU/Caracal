@@ -397,6 +397,9 @@ class ShopCategoryHandler {
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
 		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
 
+		// initialize index
+		$index = 0;
+
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -419,6 +422,7 @@ class ShopCategoryHandler {
 
 				$params = array(
 							'id'			=> $item->id,
+							'index'			=> $index++,
 							'item_id'		=> $item_id,
 							'parent'		=> $item->parent,
 							'image_id'		=> $item->image,
