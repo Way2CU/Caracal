@@ -400,6 +400,10 @@ class shop extends Module {
 					$this->handlePayment();
 					break;
 					
+				case 'set_item_as_cart':
+					$this->setItemAsCart($params, $children);
+					break;
+
 				case 'set_cart_from_template':
 					$this->setCartFromTemplate($params, $children);
 					break;
@@ -851,6 +855,39 @@ class shop extends Module {
 	}
 
 	/**
+	 * Set shopping cart to contain only one item.
+	 *
+	 * @param array $params
+	 * @param array $children
+	 */
+	private function setItemAsCart($params, $children) {
+		$uid = isset($params['uid']) ? fix_chars($params['uid']) : null;
+		$count = isset($params['count']) ? fix_id($params['count']) : 1;
+
+		// make sure we have UID specified
+		if (!is_null($uid)) {
+			$cart = array();
+			$manager = ShopItemManager::getInstance();
+			$properties = isset($params['properties']) ? fix_chars($params['properties']) : array();
+			$variation_id = $this->generateVariationId($uid, $properties);
+
+			// check if item exists in database to avoid poluting shopping cart
+			$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+
+			if (is_object($item) && $count > 0) {
+				$cart[$uid] = array(
+							'uid'			=> $uid,
+							'quantity'		=> $count,
+							'variations'	=> array()
+						);
+				$cart[$uid]['variations'][$variation_id] = array('count' => $count);
+			}
+
+			$_SESSION['shopping_cart'] = $cart;
+		}
+	}
+
+	/**
 	 * Set content of a shopping cart from template
 	 *
 	 * @param 
@@ -863,17 +900,22 @@ class shop extends Module {
 			foreach ($children as $data) {
 				$uid = array_key_exists('uid', $data->tagAttrs) ? fix_chars($data->tagAttrs['uid']) : null;
 				$amount = array_key_exists('count', $data->tagAttrs) ? fix_id($data->tagAttrs['count']) : 0;
+				$properties = isset($data->tagAttrs['properties']) ? fix_chars($data->tagAttrs['properties']) : array();
+				$variation_id = $this->generateVariationId($uid, $properties);
 				$item = null;
 
 				if (!is_null($uid))
 					$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
 
 				// make sure item actually exists in database to avoid poluting
-				if (is_object($item) && $amount > 0)
+				if (is_object($item) && $amount > 0) {
 					$cart[$uid] = array(
-								'uid'		=> $uid,
-								'count'		=> $amount
+								'uid'			=> $uid,
+								'quantity'		=> $amount,
+								'variations'	=> array()
 							);
+					$cart[$uid]['variations'][$variation_id] = array('count' => $amount);
+				}
 			}
 
 			$_SESSION['shopping_cart'] = $cart;
