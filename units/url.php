@@ -18,7 +18,7 @@ function url_UnpackValues() {
 			$data = substr($data, 0, -5);
 			
 		// split data
-		$raw = split('/', $data);
+		$raw = explode('/', $data);
 
 		// get language
 		if (count($raw) > 0 && strlen($raw[0]) == 2) 
