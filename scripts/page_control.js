@@ -12,6 +12,8 @@ function PageControl(selector, page_selector) {
 	self.current_page = null;
 	self.container = null;
 	self.controls = null;
+	self.reached_page = 0;
+	self.allow_forward = true;
 
 	/**
 	 * Finalize object initalization.
@@ -101,7 +103,22 @@ function PageControl(selector, page_selector) {
 			});
 		}
 
+		// update controls if available
+		if (self.controls != null && self.controls.length > 0) 
+			self.controls.each(function() {
+				var control = $(this);
+
+				if (control.data('page') == page)
+					control.addClass('active'); else
+					control.removeClass('active');
+			});
+
+		// set current page
 		self.current_page = page;
+
+		// update reached page
+		if (self.current_page > self.reached_page)
+			self.reached_page = self.current_page;
 	};
 
 	/**
@@ -116,6 +133,22 @@ function PageControl(selector, page_selector) {
 
 		if (page != null)
 			self._switchContainer(page);
+
+		event.preventDefault();
+	};
+
+	/**
+	 * Handle click comming from controls. This method is affected by the
+	 * allow_forward option.
+	 *
+	 * @param object event
+	 */
+	self.handleControlClick = function(event) {
+		var page = $(this).data('page');
+
+		if (page != null)
+			if ((!self.allow_forward && page <= self.reached_page) || self.allow_forward)
+				self._switchContainer(page);
 
 		event.preventDefault();
 	};
@@ -139,9 +172,20 @@ function PageControl(selector, page_selector) {
 			});
 
 			// conect event handler
-			self.controls.click(self.handleClick);
+			self.controls.click(self.handleControlClick);
 		}
 
+		return self;
+	};
+
+	/**
+	 * Set the behavior of page control when clicking on step that hasn't been
+	 * reached yet. This does not apply to next/previous buttons only on controls.
+	 *
+	 * @param boolean allow
+	 */
+	self.setAllowForward = function(allow) {
+		self.allow_forward = allow;
 		return self;
 	};
 
