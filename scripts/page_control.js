@@ -14,6 +14,7 @@ function PageControl(selector, page_selector) {
 	self.controls = null;
 	self.reached_page = 0;
 	self.allow_forward = true;
+	self.disabled_pages = new Array();
 
 	/**
 	 * Finalize object initalization.
@@ -80,9 +81,20 @@ function PageControl(selector, page_selector) {
 	 * @param integer page
 	 */
 	self._switchContainer = function(page) {
+		var new_page = page;
+
+		// skip page if specified one is disabled
+		if (self.isPageDisabled(page)) 
+			new_page += page > self.current_page ? 1 : -1;
+
+		// if first or last page is disabled ignore switch request
+		if (new_page < 0 || new_page > self.pages.length - 1)
+			return;
+
+		// switch page
 		if (self.current_page != null) {
 			var to_hide = self.pages.eq(self.current_page);
-			var to_show = self.pages.eq(page);
+			var to_show = self.pages.eq(new_page);
 
 			if (to_hide != to_show)
 				// swap pages containers
@@ -99,7 +111,7 @@ function PageControl(selector, page_selector) {
 					});
 		} else {
 			self.pages.each(function(index) {
-				$(this).css('display', index == page ? 'block' : 'none');
+				$(this).css('display', index == new_page ? 'block' : 'none');
 			});
 		}
 
@@ -108,13 +120,13 @@ function PageControl(selector, page_selector) {
 			self.controls.each(function() {
 				var control = $(this);
 
-				if (control.data('page') == page)
+				if (control.data('page') == new_page)
 					control.addClass('active'); else
 					control.removeClass('active');
 			});
 
 		// set current page
-		self.current_page = page;
+		self.current_page = new_page;
 
 		// update reached page
 		if (self.current_page > self.reached_page)
@@ -176,6 +188,61 @@ function PageControl(selector, page_selector) {
 		}
 
 		return self;
+	};
+
+	/**
+	 * Enable previously disabled page.
+	 *
+	 * @param integer page
+	 */
+	self.enablePage = function(page) {
+		var index = self.disabled_pages.indexOf(page);
+
+		// remove page from list of disabled pages
+		if (index > -1) {
+			self.disabled_pages.splice(index, 1);
+
+			// update controls
+			self.controls.each(function(index) {
+				var control = $(this);
+
+				if (control.data('page') == page)
+					control.removeClass('disabled');
+			});
+		}
+
+		return self;
+	};
+
+	/**
+	 * Disable page.
+	 *
+	 * @param integer page
+	 */
+	self.disablePage = function(page) {
+		// add page to the list of disabled pages
+		if (self.disabled_pages.indexOf(page) == -1)
+			self.disabled_pages.push(page);
+
+		// update controls
+		self.controls.each(function(index) {
+			var control = $(this);
+
+			if (control.data('page') == page)
+				control.addClass('disabled');
+		});
+
+		return self;
+	};
+
+	/**
+	 * Check if specified page is disabled.
+	 *
+	 * @param integer page
+	 * @return boolean
+	 */
+	self.isPageDisabled = function(page) {
+		return self.disabled_pages.indexOf(page) > -1;
 	};
 
 	/**
