@@ -15,6 +15,9 @@ function PageControl(selector, page_selector) {
 	self.reached_page = 0;
 	self.allow_forward = true;
 	self.disabled_pages = new Array();
+	self.page_redirection = new Object();
+	self.form = null;
+	self.submit_on_end = false;
 
 	/**
 	 * Finalize object initalization.
@@ -87,9 +90,19 @@ function PageControl(selector, page_selector) {
 		if (self.isPageDisabled(page)) 
 			new_page += page > self.current_page ? 1 : -1;
 
+		// submit on last page
+		if (new_page > self.pages.length - 1 && self.submit_on_end) 
+			self.form.submit()
+
 		// if first or last page is disabled ignore switch request
-		if (new_page < 0 || new_page > self.pages.length - 1)
+		if (new_page < 0 || new_page > self.pages.length -1) 
 			return;
+
+		// redirect if needed
+		if (new_page in self.page_redirection) {
+			window.navigate(self.page_redirection[new_page]);
+			return;
+		}
 
 		// switch page
 		if (self.current_page != null) {
@@ -191,6 +204,28 @@ function PageControl(selector, page_selector) {
 	};
 
 	/**
+	 * Attach form to page control. This function is used along with
+	 * setSubmitOnEnd option. After reaching last page specified form
+	 * will receive submit signal.
+	 *
+	 * @param string selector
+	 */
+	self.attachForm = function(selector) {
+		self.form = $(selector);
+		return self;
+	};
+
+	/**
+	 * Make page control submit specified form when all pages have been flipped.
+	 *
+	 * @param boolean submit_on_end
+	 */
+	self.setSubmitOnEnd = function(submit_on_end) {
+		self.submit_on_end = submit_on_end;
+		return self;
+	};
+
+	/**
 	 * Enable previously disabled page.
 	 *
 	 * @param integer page
@@ -243,6 +278,26 @@ function PageControl(selector, page_selector) {
 	 */
 	self.isPageDisabled = function(page) {
 		return self.disabled_pages.indexOf(page) > -1;
+	};
+
+	/**
+	 * Add page redirection.
+	 *
+	 * @param integer page
+	 * @param string url
+	 */
+	self.addPageRedirection = function(page, url) {
+		self.page_redirection[page] = url;
+	};
+
+	/**
+	 * Remove page redirection.
+	 *
+	 * @param integer page
+	 */
+	self.removePageRedirection = function(page) {
+		if (page in self.page_redirection)
+			delete self.page_redirection[page];
 	};
 
 	/**
