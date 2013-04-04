@@ -51,6 +51,12 @@ abstract class PaymentMethod {
 	 * @return string
 	 */
 	abstract public function get_icon_url();
+
+	/**
+	 * Get image URL for payment method
+	 * @return string
+	 */
+	abstract public function get_image_url();
 	
 	/**
 	 * Make new payment form with specified items and return
