@@ -376,6 +376,10 @@ class shop extends Module {
 					$this->tag_CheckoutForm($params, $children);
 					break;
 
+				case 'show_payment_methods':
+					$this->tag_PaymentMethodsList($params, $children);
+					break;
+
 				case 'configure_search':
 					$this->configureSearch($params, $children);
 					break;
@@ -2003,5 +2007,30 @@ class shop extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Show list of payment methods.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_PaymentMethodsList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
+
+		if (count($this->payment_methods) > 0)
+			foreach ($this->payment_methods as $name => $module) {
+				$params = array(
+							'name'					=> $name,
+							'title'					=> $module->get_title(),
+							'icon'					=> $module->get_icon_url(),
+							'image'					=> $module->get_image_url(),
+							'provides_information'	=> $module->provides_information()
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 }
