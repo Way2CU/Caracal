@@ -92,6 +92,14 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
+	 * Get image URL for payment method
+	 * @return string
+	 */
+	public function get_image_url() {
+		return url_GetFromFilePath($this->parent->path.'images/image.png');
+	}
+
+	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
 	 * 
