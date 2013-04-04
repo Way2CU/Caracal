@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<span
+		data-name="$params['name']"
+		data-provides-information="$params['provides_information'] ? 1 : 0"
+		style="'background-image: url(\''.$params['image'].'\');'"
+		eval="data-name,data-provides-information,style"
+	/>
+</document>
