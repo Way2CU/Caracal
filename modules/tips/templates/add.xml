@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" eval="action" method="POST" id="tips_add_form">
 		<label>
 			<span><_text constant="label_content" module="tips"/></span>
-			<textarea name="content" class="multi-language" style="width: 370px; height: 100px;"/>
+			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="tips"/></span>
@@ -20,5 +20,10 @@
 	</form>
 	<script type="text/javascript">
 		new LanguageSelector('tips_add_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('tips_add_form', '[name=content]:input')
+				.addControl('common', 'markdown');
 	</script>
 </document>

@@ -5,7 +5,7 @@
 		<label>
 			<input type="hidden" name="id" value="$params['id']" eval="value"/>
 			<span><_text constant="label_content" module="tips"/></span>
-			<textarea name="content" class="multi-language" style="width: 370px; height: 100px;"/>
+			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
 			<_language_data param="content"/>
 		</label>
 		<label class="checkbox">
@@ -27,5 +27,10 @@
 	</form>
 	<script type="text/javascript">
 		new LanguageSelector('tips_change_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('tips_change_form', '[name=content]:input')
+				.addControl('common', 'markdown');
 	</script>
 </document>
