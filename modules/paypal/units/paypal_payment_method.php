@@ -49,6 +49,14 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	}
 	
 	/**
+	 * Whether this payment method is able to provide user information
+	 * @return boolean
+	 */
+	public function provides_information() {
+		return true;
+	}
+
+	/**
 	 * Return URL for checkout form
 	 * @return string
 	 */
@@ -92,6 +100,15 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	public function get_icon_url() {
 		return url_GetFromFilePath($this->parent->path.'images/icon.png');
 	}
+
+	/**
+	 * Get image URL for payment method
+	 * @return string
+	 */
+	public function get_image_url() {
+		return url_GetFromFilePath($this->parent->path.'images/image.png');
+	}
+
 
 	/**
 	 * Make new payment form with specified items and return
@@ -184,6 +201,24 @@ class PayPal_PaymentMethod extends PaymentMethod {
 
 		return $result;
 	}
+
+	/**
+	 * Verify origin of data and status of
+	 * payment is complete.
+	 * 
+	 * @return boolean
+	 */
+	public function verify_payment_complete() {
+	}
+
+	/**
+	 * Verify origin of data and status of
+	 * payment is canceled.
+	 * 
+	 * @return boolean
+	 */
+	public function verify_payment_canceled() {
+	}
 	
 	/**
 	 * Get items from data
@@ -232,6 +267,15 @@ class PayPal_PaymentMethod extends PaymentMethod {
 		return $result;
 	}
 	
+	/**
+	 * Return transaction id.
+	 *
+	 * @return string
+	 */
+	public function get_transaction_id() {
+		return fix_chars($_POST['txn_id']);
+	}
+
 	/**
 	 * Get transaction information from data
 	 * 
