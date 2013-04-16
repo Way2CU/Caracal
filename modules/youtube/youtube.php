@@ -746,10 +746,6 @@ class youtube extends Module {
 								);
 		}
 
-		if (isset($tag_params['autoplay']))
-			$autoplay = fix_id($tag_params['autoplay']); else
-			$autoplay = 0;
-
 		// no id was specified
 		if (is_object($video))
 			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1') && class_exists('swfobject')) {
@@ -761,7 +757,11 @@ class youtube extends Module {
 								isset($tag_params['width']) ? $tag_params['width'] : 320,
 								isset($tag_params['height']) ? $tag_params['height'] : 240,
 								array(
-									'autoplay'	=> $autoplay
+									'autoplay'	=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
+									'autohide'	=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
+									'color'		=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
+									'origin'	=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : 'website',
+									'theme'		=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
 								),
 								array(
 									'wmode'	=> 'opaque',
