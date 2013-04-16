@@ -1,109 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div id="checkout" skip_cache="1"> 
-		<form action="$params['checkout_url']" method="POST" eval="action">
-			<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
-				<!-- Header -->
-				<thead>
-					<tr>
-						<td><_text constant="column_name" module="shop"/></td>
-						<td style="width: 70px"><_text constant="column_quantity" module="shop"/></td>
-						<td style="width: 120px"><_text constant="column_price" module="shop"/></td>
-						<td style="width: 70px"><_text constant="column_tax" module="shop"/></td>
-						<td style="width: 70px"><_text constant="column_weight" module="shop"/></td>
-						<td style="width: 120px"><_text constant="column_item_total" module="shop"/></td>
-					</tr>
-				</thead>
+	<div id="checkout_container">
+		<div id="checkout" skip_cache="1"> 
+			<form action="$params['checkout_url']" method="POST" eval="action">
+				<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
+					<!-- Header -->
+					<thead>
+						<tr>
+							<td><_text constant="column_name" module="shop"/></td>
+							<td style="width: 70px"><_text constant="column_quantity" module="shop"/></td>
+							<td style="width: 120px"><_text constant="column_price" module="shop"/></td>
+							<td style="width: 70px"><_text constant="column_tax" module="shop"/></td>
+							<td style="width: 70px"><_text constant="column_weight" module="shop"/></td>
+							<td style="width: 120px"><_text constant="column_item_total" module="shop"/></td>
+						</tr>
+					</thead>
 
-				<!-- Summary -->
-				<tfoot>
-					<tr class="first">
-						<td colspan="3" rowspan="5" style="padding: 20px;">
-						</td>
-						<td colspan="2" class="subtotal-label"><_text constant="column_subtotal" module="shop"/></td>
-						<td class="subtotal-value subtotal"><_var name="$params['sub-total']"/></td>
-					</tr>
-					<tr>
-						<td colspan="2" class="subtotal-label"><_text constant="column_shipping" module="shop"/></td>
-						<td class="subtotal-value shipping"><_var name="$params['shipping']"/></td>
-					</tr>
-					<tr>
-						<td colspan="2" class="subtotal-label"><_text constant="column_handling" module="shop"/></td>
-						<td class="subtotal-value handling"><_var name="$params['handling']"/></td>
-					</tr>
-					<tr>
-						<td colspan="2" class="subtotal-label"><_text constant="column_total_weight" module="shop"/></td>
-						<td class="subtotal-value weight">
-							<_var name="$params['total_weight']"/>
-							<_raw text=" kg"/>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" class="total-label"><_text constant="column_total" module="shop"/></td>
-						<td class="total-value">
-							<_var name="$params['total']"/>
-							<_raw text=" "/>
-							<_var name="$params['currency']"/>
-						</td>
-					</tr>
-				</tfoot>
+					<!-- Summary -->
+					<tfoot>
+						<tr class="first">
+							<td colspan="3" rowspan="5" style="padding: 20px;">
+							</td>
+							<td colspan="2" class="subtotal-label"><_text constant="column_subtotal" module="shop"/></td>
+							<td class="subtotal-value subtotal"><_var name="$params['sub-total']"/></td>
+						</tr>
+						<tr>
+							<td colspan="2" class="subtotal-label"><_text constant="column_shipping" module="shop"/></td>
+							<td class="subtotal-value shipping"><_var name="$params['shipping']"/></td>
+						</tr>
+						<tr>
+							<td colspan="2" class="subtotal-label"><_text constant="column_handling" module="shop"/></td>
+							<td class="subtotal-value handling"><_var name="$params['handling']"/></td>
+						</tr>
+						<tr>
+							<td colspan="2" class="subtotal-label"><_text constant="column_total_weight" module="shop"/></td>
+							<td class="subtotal-value weight">
+								<_var name="$params['total_weight']"/>
+								<_raw text=" kg"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="total-label"><_text constant="column_total" module="shop"/></td>
+							<td class="total-value">
+								<_var name="$params['total']"/>
+								<_raw text=" "/>
+								<_var name="$params['currency']"/>
+							</td>
+						</tr>
+					</tfoot>
 
-				<!-- Shooping cart contents -->
-				<tbody>
-					<_checkout_items/>
-				</tbody>
-			</table>
+					<!-- Shooping cart contents -->
+					<tbody>
+						<_checkout_items/>
+					</tbody>
+				</table>
 
-			<div class="transaction_details">
-				<label>
-					<span><_text constant="label_delivery_method" module="shop"/></span>
-					<select
-						name="delivery_method"
-						onchange="javascript: shopping_cart.changeDeliveryMethod($(this).val());"
-					>
-						<option/>
-						<_delivery_methods
-							shopping_cart="1"
-							template="delivery_checkout_list_item.xml"
-							local="1"
-							selected="isset($_SESSION['delivery_method']) ? $_SESSION['delivery_method'] : 0"
-							eval="selected"
-						/>
-					</select>
-				</label>
-				<label>
-					<span><_text constant="label_remarks" module="shop"/></span>
-					<textarea name="remarks" rows="4" cols="25"/>
-				</label>
-			</div>
+				<div class="transaction_details">
+					<label>
+						<span><_text constant="label_delivery_method" module="shop"/></span>
+						<select
+							name="delivery_method"
+							onchange="javascript: shopping_cart.changeDeliveryMethod($(this).val());"
+						>
+							<option/>
+							<_delivery_methods
+								shopping_cart="1"
+								template="delivery_checkout_list_item.xml"
+								local="1"
+								selected="isset($_SESSION['delivery_method']) ? $_SESSION['delivery_method'] : 0"
+								eval="selected"
+							/>
+						</select>
+					</label>
+					<label>
+						<span><_text constant="label_remarks" module="shop"/></span>
+						<textarea name="remarks" rows="4" cols="25"/>
+					</label>
+				</div>
 
-			<_var name="$params['checkout_fields']"/>
+				<_var name="$params['checkout_fields']"/>
 
-			<div class="checkout_controls">
-				<_if condition="!isset($_SESSION['delivery_method'])">
-					<button type="submit" disabled="disabled">
-						<_text constant="checkout" module="shop"/>
-						<small>
-							<_text constant="with" module="shop"/>
-							<_raw text=" "/>
-							<_var name="$params['checkout_name']"/>
-						</small>
-					</button>
-				</_if>
-				<_if condition="isset($_SESSION['delivery_method'])">
-					<button type="submit">
-						<_text constant="checkout" module="shop"/>
-						<small>
-							<_text constant="with" module="shop"/>
-							<_raw text=" "/>
-							<_var name="$params['checkout_name']"/>
-						</small>
-					</button>
-				</_if>
-			</div>
+				<div class="checkout_controls">
+					<button type="button"><_text constant="back"/></button>
+					<_if condition="!isset($_SESSION['delivery_method'])">
+						<button type="submit" disabled="disabled">
+							<_text constant="checkout" module="shop"/>
+							<small>
+								<_text constant="with" module="shop"/>
+								<_raw text=" "/>
+								<_var name="$params['checkout_name']"/>
+							</small>
+						</button>
+					</_if>
+					<_if condition="isset($_SESSION['delivery_method'])">
+						<button type="submit">
+							<_text constant="checkout" module="shop"/>
+							<small>
+								<_text constant="with" module="shop"/>
+								<_raw text=" "/>
+								<_var name="$params['checkout_name']"/>
+							</small>
+						</button>
+					</_if>
+				</div>
 
-			<div style="clear: both;"/>
-		</form>
+				<div style="clear: both;"/>
+			</form>
+		</div>
 	</div>
 </document>

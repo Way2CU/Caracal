@@ -42,10 +42,10 @@ function PageControl(selector, page_selector) {
 		var button_previous = $(this).find('button.previous, input[type=button].previous, input[type=submit].previous');
 
 		if (button_next.length > 0)
-			button_next.data('index', index).click(self._handleNext);
+			button_next.click(self._handleNext);
 
 		if (button_previous.length > 0)
-			button_previous.data('index', index).click(self._handlePrevious);
+			button_previous.click(self._handlePrevious);
 	};
 
 	/**
@@ -55,10 +55,8 @@ function PageControl(selector, page_selector) {
 	 * @return boolean
 	 */
 	self._handleNext = function(event) {
-		var index = $(this).data('index');
-
-		if (index + 1 < self.pages.length) {
-			self._switchContainer(index + 1)
+		if (self.current_page + 1 < self.pages.length) {
+			self._switchContainer(self.current_page + 1)
 			event.preventDefault();
 		}
 	};
@@ -70,10 +68,8 @@ function PageControl(selector, page_selector) {
 	 * @return boolean
 	 */
 	self._handlePrevious = function(event) {
-		var index = $(this).data('index');
-
-		if (index - 1 >= 0) {
-			self._switchContainer(index - 1)
+		if (self.current_page - 1 >= 0) {
+			self._switchContainer(self.current_page - 1)
 			event.preventDefault();
 		}
 	};

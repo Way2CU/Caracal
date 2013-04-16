@@ -1,147 +1,423 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div id="input_details" skip_cache="1"> 
-		<h1><_text constant="title_buyer_information" module="shop"/></h1>
-		<form method="POST">
-			<label>
-				<input type="hidden" name="set_info" value="1"/>
-				<span><_text constant="label_first_name" module="shop"/></span>
-				<input
-					class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
-					eval="class,value"
-					type="text"
-					name="first_name"
-					value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
-					max="64"
-				/>
-			</label>
-			<label>
-				<span><_text constant="label_last_name" module="shop"/></span>
-				<input
-					class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
-					eval="class,value"
-					type="text"
-					name="last_name"
-					value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
-					max="64"
-				/>
-			</label>
-			<label>
-				<span><_text constant="label_email" module="shop"/></span>
-				<input
-					class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class,value" 
-					type="text" 
-					name="email" 
-					value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-					max="127" 
-					style="width: 270px;"
-				/>
-			</label>
+	<div id="checkout_container">
+		<div id="checkout_stepps" class="input_details">
+			<a href="#" data-page="1">
+				<span>1</span>
+				<_text constant="title_shipping_information" module="shop"/>
+			</a>
+			<a href="#" data-page="2">
+				<span>2</span>
+				<_text constant="title_payment_method" module="shop"/>
+			</a>
+			<a href="#" data-page="3">
+				<span>3</span>
+				<_text constant="title_billing_information" module="shop"/>
+			</a>
+			<a href="#" data-page="4">
+				<span>4</span>
+				<_text constant="title_checkout" module="shop"/>
+			</a>
+		</div>
 
-			<h2><_text constant="title_shipping_information" module="shop"/></h2>
+		<div id="input_details" skip_cache="1"> 
+			<form method="POST">
+				<div class="pages">
+					<!-- Sign In -->
+					<div class="page" id="sign_in">
+						<h1><_text constant="title_sign_in" module="shop"/></h1>
 
-			<label>
-				<span><_text constant="label_full_name" module="shop"/></span>
-				<input 
-					class="in_array('name', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class,value" 
-					type="text" 
-					name="name" 
-					value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-					max="128" 
-					style="width: 270px;"
-				/>
-			</label>
-			<label>
-				<span><_text constant="label_street" module="shop"/></span>
-				<input 
-					class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class,value" 
-					type="text" 
-					name="street" 
-					value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-					max="200" 
-					style="width: 300px;"
-				/>
-			</label>
-			<label>
-				<span><_text constant="label_city" module="shop"/></span>
-				<input 
-					class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class,value" 
-					type="text" 
-					name="city" 
-					value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
-					max="40"
-				/>
-			</label>
-			<label>
-				<span><_text constant="label_zip" module="shop"/></span>
-				<input 
-					class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class,value" 
-					type="text" 
-					name="zip" 
-					value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-					max="20" 
-					style="width: 120px;"
-				/>
-			</label>
-			<label>
-				<span><_text constant="label_country" module="shop"/></span>
-				<_if condition="empty($params['fixed_country'])">
-					<select 
-						name="country"
-						class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-						eval="class" 
-					>
-						<option/>
-						<_module
-							name="country_list"
-							action="show"
-							selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-							eval="selected"
-						/>
-					</select>
-				</_if>
-				<_if condition="!empty($params['fixed_country'])">
-					<select 
-						name="country"
-						class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-						eval="class" 
-					>
-						<_module
-							name="country_list"
-							action="show"
-							filter="$params['fixed_country']"
-							eval="filter"
-						/>
-					</select>
-				</_if>
-			</label>
-			<label>
-				<span><_text constant="label_state" module="shop"/></span>
-				<input 
-					class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
-					eval="class,value" 
-					type="text" 
-					name="state" 
-					value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
-					max="40"
-				/>
-			</label>
-			
+						<label class="checkbox">
+							<input
+								type="radio" 
+								name="existing_user" 
+								value="0"
+								checked="checked"
+							/>
+							<span><_text constant="label_existing_user" module="shop"/></span>
+						</label>
 
-			<_if condition="!empty($params['message'])">
-				<div class="message"><_var name="$params['message']"/></div>
-			</_if>
+						<label>
+							<span><_text constant="label_email" module="shop"/></span>
+							<input
+								type="text" 
+								name="email" 
+								max="127" 
+								style="width: 270px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_password" module="shop"/></span>
+							<input
+								eval="class,value"
+								type="password"
+								name="password"
+								max="127"
+							/>
+						</label>
 
-			<div class="checkout_controls">
-				<button><_text constant="next"/></button>
-				<button type="reset"><_text constant="reset"/></button>
-			</div>
-		</form>
+						<hr/>
+
+						<label class="checkbox">
+							<input
+								type="radio" 
+								name="existing_user" 
+								value="1"
+							/>
+							<span><_text constant="label_new_user" module="shop"/></span>
+						</label>
+
+						<hr/>
+
+						<label class="checkbox">
+							<input
+								type="radio" 
+								name="existing_user" 
+								value="2"
+							/>
+							<span><_text constant="label_guest" module="shop"/></span>
+						</label>
+
+						<div class="checkout_controls">
+							<button class="next"><_text constant="next"/></button>
+						</div>
+					</div>
+
+					<!-- Shipping Information -->
+					<div class="page">
+						<h1><_text constant="title_shipping_information" module="shop"/></h1>
+						<label>
+							<input type="hidden" name="set_info" value="1"/>
+							<span><_text constant="label_first_name" module="shop"/></span>
+							<input
+								class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
+								eval="class,value"
+								type="text"
+								name="first_name"
+								value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
+								max="64"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_last_name" module="shop"/></span>
+							<input
+								class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
+								eval="class,value"
+								type="text"
+								name="last_name"
+								value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
+								max="64"
+							/>
+						</label>
+						<hr/>
+						<label>
+							<span><_text constant="label_email" module="shop"/></span>
+							<input
+								class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="email" 
+								value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
+								max="127" 
+								style="width: 270px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_password" module="shop"/></span>
+							<input
+								class="in_array('password', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="password" 
+								name="password" 
+								max="127" 
+								style="width: 200px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_confirm" module="shop"/></span>
+							<input
+								class="in_array('password_confirm', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="password" 
+								name="password_confirm" 
+								max="127" 
+								style="width: 200px;"
+							/>
+						</label>
+						<hr/>
+						<label>
+							<span><_text constant="label_phone_number" module="shop"/></span>
+							<input
+								class="in_array('phone', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="phone" 
+								value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
+								max="127" 
+								style="width: 270px;"
+							/>
+						</label>
+						<hr/>
+						<label>
+							<span><_text constant="label_street" module="shop"/></span>
+							<input 
+								class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="street" 
+								value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
+								max="200" 
+								style="width: 300px;"
+							/>
+						</label>
+						<label>
+							<span></span>
+							<input 
+								class="in_array('street2', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="street2" 
+								value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
+								max="200" 
+								style="width: 300px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_city" module="shop"/></span>
+							<input 
+								class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="city" 
+								value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
+								max="40"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_zip" module="shop"/></span>
+							<input 
+								class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="zip" 
+								value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
+								max="20" 
+								style="width: 120px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_country" module="shop"/></span>
+							<_if condition="empty($params['fixed_country'])">
+								<select 
+									name="country"
+									class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class" 
+								>
+									<option/>
+									<_module
+										name="country_list"
+										action="show"
+										selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
+										eval="selected"
+									/>
+								</select>
+							</_if>
+							<_if condition="!empty($params['fixed_country'])">
+								<select 
+									name="country"
+									class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class" 
+								>
+									<_module
+										name="country_list"
+										action="show"
+										filter="$params['fixed_country']"
+										eval="filter"
+									/>
+								</select>
+							</_if>
+						</label>
+						<label>
+							<span><_text constant="label_state" module="shop"/></span>
+							<input 
+								class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="state" 
+								value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
+								max="40"
+							/>
+						</label>
+
+						<div class="checkout_controls">
+							<button class="next"><_text constant="next"/></button>
+						</div>
+
+						<_if condition="!empty($params['message'])">
+							<div class="message"><_var name="$params['message']"/></div>
+						</_if>
+					</div>
+
+					<!-- Payment Method Selection -->
+					<div class="page">
+						<h1><_text constant="title_payment_method" module="shop"/></h1>
+						<input type="hidden" name="payment_method" value=""/>
+						<div class="payment_methods">
+							<_module
+								name="shop"
+								action="show_payment_methods"
+							/>
+						</div>
+
+						<div class="checkout_controls">
+							<button class="previous"><_text constant="back"/></button>
+							<button class="next"><_text constant="next"/></button>
+						</div>
+					</div>
+
+					<!-- Billing Information -->
+					<div class="page">
+						<h1><_text constant="title_billing_information" module="shop"/></h1>
+
+						<label>
+							<span><_text constant="label_first_name" module="shop"/></span>
+							<input
+								class="in_array('billing_first_name', $params['bad_fields']) ? 'bad' : ''"
+								eval="class,value"
+								type="text"
+								name="billing_first_name"
+								value="isset($_POST['billing_first_name']) ? fix_chars($_POST['billing_first_name']) : ''"
+								max="64"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_last_name" module="shop"/></span>
+							<input
+								class="in_array('billing_last_name', $params['bad_fields']) ? 'bad' : ''"
+								eval="class,value"
+								type="text"
+								name="billing_last_name"
+								value="isset($_POST['billing_last_name']) ? fix_chars($_POST['billing_last_name']) : ''"
+								max="64"
+							/>
+						</label>
+						<hr/>
+						<label>
+							<span><_text constant="label_phone_number" module="shop"/></span>
+							<input
+								class="in_array('billing_phone', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="billing_phone" 
+								value="isset($_POST['billing_phone']) ? fix_chars($_POST['billing_phone']) : ''"
+								max="127" 
+								style="width: 270px;"
+							/>
+						</label>
+						<hr/>
+						<label>
+							<span><_text constant="label_street" module="shop"/></span>
+							<input 
+								class="in_array('billing_street', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="billing_street" 
+								value="isset($_POST['billing_street']) ? fix_chars($_POST['billing_street']) : ''"
+								max="200" 
+								style="width: 300px;"
+							/>
+						</label>
+						<label>
+							<span></span>
+							<input 
+								class="in_array('billing_street2', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="billing_street2" 
+								value="isset($_POST['billing_street2']) ? fix_chars($_POST['billing_street2']) : ''"
+								max="200" 
+								style="width: 300px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_city" module="shop"/></span>
+							<input 
+								class="in_array('billing_city', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="billing_city" 
+								value="isset($_POST['billing_city']) ? fix_chars($_POST['billing_city']) : ''"
+								max="40"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_zip" module="shop"/></span>
+							<input 
+								class="in_array('billing_zip', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="billing_zip" 
+								value="isset($_POST['billing_zip']) ? fix_chars($_POST['billing_zip']) : ''"
+								max="20" 
+								style="width: 120px;"
+							/>
+						</label>
+						<label>
+							<span><_text constant="label_country" module="shop"/></span>
+							<_if condition="empty($params['fixed_country'])">
+								<select 
+									name="billing_country"
+									class="in_array('billing_country', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class" 
+								>
+									<option/>
+									<_module
+										name="country_list"
+										action="show"
+										selected="isset($_POST['billing_country']) ? fix_chars($_POST['billing_country']) : ''"
+										eval="selected"
+									/>
+								</select>
+							</_if>
+							<_if condition="!empty($params['fixed_country'])">
+								<select 
+									name="billing_country"
+									class="in_array('billing_country', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class" 
+								>
+									<_module
+										name="country_list"
+										action="show"
+										filter="$params['fixed_country']"
+										eval="filter"
+									/>
+								</select>
+							</_if>
+						</label>
+						<label>
+							<span><_text constant="label_state" module="shop"/></span>
+							<input 
+								class="in_array('billing_state', $params['bad_fields']) ? 'bad' : ''" 
+								eval="class,value" 
+								type="text" 
+								name="billing_state" 
+								value="isset($_POST['billing_state']) ? fix_chars($_POST['billing_state']) : ''"
+								max="40"
+							/>
+						</label>
+
+						<div class="checkout_controls">
+							<button class="previous"><_text constant="back"/></button>
+							<button type="submit"><_text constant="next"/></button>
+						</div>
+					</div>
+				</div>
+				<script type="text/javascript">
+					<_raw file="checkout.js" path="modules/shop/include/"/>
+				</script>
+			</form>
+
+		</div>
 	</div>
 </document>

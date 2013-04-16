@@ -46,8 +46,11 @@
 		<constant name="title_currencies_set_default">Shop: Set default currency</constant>
 		<constant name="title_checkout_message">Checkout</constant>
 		<constant name="title_search_results">Search Results</constant>
-		<constant name="title_buyer_information">Billing information</constant>
+		<constant name="title_billing_information">Billing information</constant>
 		<constant name="title_shipping_information">Shipping information</constant>
+		<constant name="title_payment_method">Payment method</constant>
+		<constant name="title_checkout">Checkout</constant>
+		<constant name="title_sign_in">Sign in</constant>
 		<constant name="title_transactions">Shop: Transactions</constant>
 		<constant name="title_transaction_details">Shop: Transaction details: </constant>
 		<constant name="title_manufacturers">Shop: Manufacturers</constant>
@@ -115,6 +118,7 @@
 		<constant name="label_first_name">First name:</constant>
 		<constant name="label_last_name">Last name:</constant>
 		<constant name="label_email">E-Mail:</constant>
+		<constant name="label_phone_number">Phone number:</constant>
 		<constant name="label_full_name">Full name:</constant>
 		<constant name="label_street">Street:</constant>
 		<constant name="label_city">City:</constant>
@@ -137,6 +141,11 @@
 		<constant name="label_email_article">Invoice template:</constant>
 		<constant name="label_fixed_country">Limit delivery to this country:</constant>
 		<constant name="label_shop_location">Location of shop:</constant>
+		<constant name="label_existing_user">Yes, I already have an account.</constant>
+		<constant name="label_new_user">Create a new account.</constant>
+		<constant name="label_guest">Checkout as a guest.</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_confirm">Confirm:</constant>
 
 		<constant name="message_settings_saved">Shop settings were saved.</constant>
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
@@ -261,8 +270,11 @@
 		<constant name="title_currencies_set_default">חנות: קבע כמטבע ברירת מחדל</constant>
 		<constant name="title_checkout_message">תשלום</constant>
 		<constant name="title_search_results">תוצאות חיפוש</constant>
-		<constant name="title_buyer_information">פרטי חשבון</constant>
+		<constant name="title_billing_information">פרטי חשבון</constant>
 		<constant name="title_shipping_information">פרטי משלוח</constant>
+		<constant name="title_payment_method">Payment method</constant>
+		<constant name="title_checkout">Checkout</constant>
+		<constant name="title_sign_in">Sign in</constant>
 		<constant name="title_transactions">חנות: עסקאות</constant>
 		<constant name="title_transaction_details">חנות: פרטי עסקאות </constant>
 		<constant name="title_manufacturers">חנות: יצרן</constant>
@@ -330,6 +342,7 @@
 		<constant name="label_first_name">שם פרטי:</constant>
 		<constant name="label_last_name">שם משפחה:</constant>
 		<constant name="label_email">דואל:</constant>
+		<constant name="label_phone_number">Phone number:</constant>
 		<constant name="label_full_name">שם מלא:</constant>
 		<constant name="label_street">רחוב:</constant>
 		<constant name="label_city">עיר:</constant>
@@ -352,6 +365,8 @@
 		<constant name="label_email_article">שבלונת חשבונית:</constant>
 		<constant name="label_fixed_country">הגסל משלוח למדינה זו:</constant>
 		<constant name="label_shop_location">מיקום החנות:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_confirm">Confirm:</constant>
 
 		<constant name="message_settings_saved">הגדרות החנות נשמרו.</constant>
 		<constant name="message_default_currency_saved">מטבע ברירת מחדל נשמר</constant>
