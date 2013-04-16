@@ -421,6 +421,10 @@ class shop extends Module {
 					$this->json_GetCurrency();
 					break;
 
+				case 'json_get_user_info':
+					$this->json_GetUserInfo();
+					break;
+
 				case 'json_get_payment_methods':
 					$this->json_GetPaymentMethods();
 					break;
@@ -1192,6 +1196,24 @@ class shop extends Module {
 	 */
 	private function json_GetCurrency() {
 		print json_encode($this->getDefaultCurrency());
+	}
+
+	/**
+	 * Return user information if email and password are correct.
+	 */
+	private function json_GetUserInfo() {
+		$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
+		$password = isset($_REQUEST['password']) ? fix_chars($_REQUEST['password']) : null;
+		$valid_user = false;
+
+		if (!is_null($email) && !is_null($password) && $valid_user) {
+			$result = array(
+				);
+
+		} else {
+			// user didn't supply the right username/password
+			header('HTTP/1.1 401 Invalid username and/or password.');
+		}
 	}
 
 	/**
