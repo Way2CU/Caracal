@@ -50,6 +50,10 @@ class head_tag extends Module {
 				case 'print_tag':
 					$this->printTags();
 					break;
+
+				case 'add_tags':
+					$this->addTags($params, $children);
+					break;
 			}
 	}
 
@@ -123,6 +127,17 @@ class head_tag extends Module {
 	private function printTag($tag, $body=null) {
 		print "<{$tag[0]}{$this->getTagParams($tag[1])}>";
 		print in_array($tag[0], $this->closeable_tags) || !is_null($body) ? "{$body}</{$tag[0]}>" : "";
+	}
+
+	/**
+	 * Add specified tags to the head.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function addTags($tag_params, $children) {
+		foreach ($children as $tag) {
+		}
 	}
 
 	/**
