@@ -68,14 +68,6 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
-	 * Get name of payment method
-	 * @return string
-	 */
-	public function get_name() {
-		return $this->name;
-	}
-
-	/**
 	 * Get display name of payment method
 	 * @return string
 	 */
