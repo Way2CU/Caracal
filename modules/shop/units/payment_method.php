@@ -38,7 +38,9 @@ abstract class PaymentMethod {
 	 * Get name of payment method
 	 * @return string
 	 */
-	abstract public function get_name();
+	public function get_name() {
+		return $this->name;
+	}
 
 	/**
 	 * Get display name of payment method
