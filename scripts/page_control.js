@@ -100,24 +100,27 @@ function PageControl(selector, page_selector) {
 			return;
 		}
 
+		// make sure we don't show animation if page is already visible
+		if (new_page == self.current_page)
+			return;
+
 		// switch page
 		if (self.current_page != null) {
 			var to_hide = self.pages.eq(self.current_page);
 			var to_show = self.pages.eq(new_page);
 
-			if (to_hide != to_show)
-				// swap pages containers
-				to_hide
-					.css('display', 'block')
-					.animate({opacity: 0}, 200, function() {
-						to_hide.css('display', 'none');
-						to_show
-							.css({
-								display: 'block',
-								opacity: 0
-							})
-							.animate({opacity: 1}, 200);
-					});
+			// swap pages containers
+			to_hide
+				.css('display', 'block')
+				.animate({opacity: 0}, 200, function() {
+					to_hide.css('display', 'none');
+					to_show
+						.css({
+							display: 'block',
+							opacity: 0
+						})
+						.animate({opacity: 1}, 200);
+				});
 		} else {
 			self.pages.each(function(index) {
 				$(this).css('display', index == new_page ? 'block' : 'none');
