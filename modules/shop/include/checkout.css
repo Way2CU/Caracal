@@ -214,6 +214,11 @@ div.checkout_controls button {
 	font-size: 16px;
 	font-weight: bold;
 	text-shadow: -1px -1px 0px #0b63ce;
+
+	transition-property: all;
+	transition-duration: 0.3s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.3s;
 }
 
 div.checkout_controls button:hover {
@@ -325,6 +330,11 @@ div#input_details h1 {
 	padding-left: 7px;
 	padding-right: 7px;
 
+	position: inline;
+	left: auto;
+	right: auto;
+
+	border: none;
 	border-radius: 7px 7px 0px 0px;
 	background-color: #333333;
 
@@ -378,6 +388,8 @@ div#input_details label input {
 	padding: 5px;
 
 	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
 	background-color: white;
 	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
 	
