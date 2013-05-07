@@ -36,6 +36,7 @@ require_once('units/template.php');
 require_once('units/section.php');
 require_once('units/xml_parser.php');
 require_once('units/markdown.php');
+require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
 require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
