@@ -204,6 +204,7 @@ class TemplateHandler {
 			switch ($tag->tagName) {
 				// handle tag used for setting session variable
 				case '_session':
+				case 'cms:session':
 					$name = $tag->tagAttrs['name'];
 					
 					if (!in_array($name, $this->protected_variables)) {
@@ -213,6 +214,7 @@ class TemplateHandler {
 				
 				// transfer control to module
 				case '_module':
+				case 'cms:module':
 					if (class_exists($tag->tagAttrs['name'])) {
 						$module = call_user_func(array($tag->tagAttrs['name'], 'getInstance'));
 						$module->transferControl($tag->tagAttrs, $tag->tagChildren);
@@ -221,6 +223,7 @@ class TemplateHandler {
 
 				// load other template
 				case '_template':
+				case 'cms:template':
 					$file = $tag->tagAttrs['file'];
 					$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : '';
 
@@ -236,6 +239,7 @@ class TemplateHandler {
 
 				// raw text copy
 				case '_raw':
+				case 'cms:raw':
 					if (key_exists('file', $tag->tagAttrs)) {
 						// if file attribute is specified
 						$file = $tag->tagAttrs['file'];
@@ -257,6 +261,7 @@ class TemplateHandler {
 
 				// multi language constants
 				case '_text':
+				case 'cms:text':
 					$constant = $tag->tagAttrs['constant'];
 					$language = (key_exists('language', $tag->tagAttrs)) ? $tag->tagAttrs['language'] : $language;
 					$text = "";
@@ -277,6 +282,7 @@ class TemplateHandler {
 
 				// call section specific data
 				case '_section_data':
+				case 'cms:section_data':
 					if (!is_null($this->module)) {
 						$file = $this->module->getSectionFile($section, $action, $language);
 
@@ -292,6 +298,7 @@ class TemplateHandler {
 
 				// print multilanguage data
 				case '_language_data':
+				case 'cms:language_data':
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
 
 					if (!isset($this->params[$name]) || !is_array($this->params[$name]) || is_null($name)) break;
@@ -314,6 +321,7 @@ class TemplateHandler {
 
 				// replace tag data string with matching params
 				case '_replace':
+				case 'cms:replace':
 					$pool = isset($tag->tagAttrs['param']) ? $this->params[$tag->tagAttrs['param']] : $this->params;
 
 					$keys = array_keys($pool);
@@ -334,6 +342,7 @@ class TemplateHandler {
 
 				// conditional tag
 				case '_if':
+				case 'cms:if':
 					$settings = array();
 					if (!is_null($this->module))
 						$settings = $this->module->settings;
@@ -351,6 +360,7 @@ class TemplateHandler {
 
 				// variable
 				case '_var':
+				case 'cms:var':
 					$settings = array();
 					if (!is_null($this->module))
 						$settings = $this->module->settings;
