@@ -102,17 +102,17 @@ function Dialog() {
 		var start_params = {
 				top: Math.round($(document).height() / 2),
 				left: Math.round($(document).width() / 2),
-				width: 0,
+				width: 0
 			};
 
 		var c_start_params = {
-				height: 0,
+				height: 0
 			};
 
 		var end_params = {
 				top: Math.round(($(document).height() - height) / 2),
 				left: Math.round(($(document).width() - width) / 2),
-				width: width,
+				width: width
 			};
 
 		var c_end_params = {
