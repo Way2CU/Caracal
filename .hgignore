@@ -1,6 +1,12 @@
 syntax: glob
 !_*
 .*
+modules/gallery/images/*.jpg
+modules/gallery/images/*.png
+modules/gallery/images/*.bmp
+modules/gallery/thumbnails/*.jpg
+modules/gallery/thumbnails/*.png
+modules/gallery/thumbnails/*.bmp
 
 syntax: regexp
 ^images/.*
