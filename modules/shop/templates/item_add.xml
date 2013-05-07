@@ -170,7 +170,7 @@
 			.setPageTitle(4, language_handler.getText('shop', 'tab_delivery'));
 
 		// add colors
-		$('input[name=color_value]').miniColors();
+		$('input[name=color_value]').minicolors();
 
 		// create toolbar
 		toolbar_api
