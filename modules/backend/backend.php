@@ -57,7 +57,6 @@ class backend extends Module {
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.mousewheel.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.minicolors.js'), 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/animation_chain.js'), 'type'=>'text/javascript'));
 
 			if ($section == $this->name) {
@@ -70,6 +69,7 @@ class backend extends Module {
 					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 				}
 
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.minicolors.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/notebook.js'), 'type'=>'text/javascript'));
