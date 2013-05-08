@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_page_speed">Google PageSpeed</constant>
+
+		<constant name="title_page_speed">Google PageSpeed</constant>
+		<constant name="title_check_page_speed">Google PageSpeed: Refresh data</constant>
+		<constant name="title_set_api_key">Google PageSpeed: Set API key</constant>
+
+		<constant name="label_api_key"><![CDATA[API key <small>(get it from <a href="https://code.google.com/apis/console">here</a>)</small>:]]></constant>
+		<constant name="label_score">Score:</constant>
+		<constant name="label_title">Page title:</constant>
+		<constant name="label_bytes_request">Request:</constant>
+		<constant name="label_bytes_html">HTML:</constant>
+		<constant name="label_bytes_image">Images:</constant>
+		<constant name="label_bytes_css">CSS:</constant>
+		<constant name="label_bytes_javascript">JavaScript:</constant>
+		<constant name="label_bytes_other">Other:</constant>
+		<constant name="label_number_hosts">Number of hosts:</constant>
+		<constant name="label_number_resources">Resources:</constant>
+		<constant name="label_number_css">CSS:</constant>
+		<constant name="label_number_javascript">JavaScript:</constant>
+		<constant name="label_number_static">Static resources:</constant>
+		<constant name="label_number_problems">Number of problems:</constant>
+
+		<constant name="message_api_key_saved">New API key was saved.</constant>
+		<constant name="message_check_page_speed_done">New data has been downloaded.</constant>
+		<constant name="message_check_page_speed_error">There was an error dowloading data. Check API and try again.</constant>
+
+		<constant name="tab_general">General</constant>
+		<constant name="tab_details">Details</constant>
+
+		<constant name="check_page_speed">Refresh data</constant>
+		<constant name="set_api_key">Set API key</constant>
+	</language>
+</document>

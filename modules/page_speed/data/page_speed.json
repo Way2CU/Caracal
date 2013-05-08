@@ -1,0 +1,1751 @@
+{
+ "kind": "pagespeedonline#result",
+ "id": "http://www.way2cu.com/",
+ "responseCode": 200,
+ "title": "A Way To See You",
+ "score": 72,
+ "pageStats": {
+  "numberResources": 50,
+  "numberHosts": 5,
+  "totalRequestBytes": "4864",
+  "numberStaticResources": 40,
+  "htmlResponseBytes": "29680",
+  "cssResponseBytes": "102281",
+  "imageResponseBytes": "374557",
+  "javascriptResponseBytes": "311138",
+  "otherResponseBytes": "1248331",
+  "numberJsResources": 15,
+  "numberCssResources": 11
+ },
+ "formattedResults": {
+  "locale": "en_US",
+  "ruleResults": {
+   "AvoidBadRequests": {
+    "localizedRuleName": "Avoid bad requests",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "AvoidCharsetInMetaTag": {
+    "localizedRuleName": "Avoid a character set in the meta tag",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "AvoidCssImport": {
+    "localizedRuleName": "Avoid CSS @import",
+    "ruleScore": 85,
+    "ruleImpact": 1.0,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "The following external stylesheets were included in $1 using @import.",
+       "args": [
+        {
+         "type": "URL",
+         "value": "http://www.way2cu.com/wp-content/themes/Avada/style.css"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/all.css"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/flexslider.css"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/prettyPhoto.css"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "AvoidLandingPageRedirects": {
+    "localizedRuleName": "Avoid landing page redirects",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "AvoidLongRunningScripts": {
+    "localizedRuleName": "Avoid long-running scripts",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "DeferParsingJavaScript": {
+    "localizedRuleName": "Defer parsing of JavaScript",
+    "ruleScore": 71,
+    "ruleImpact": 1.9529100000000001,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "$1 of JavaScript is parsed during initial page load. Defer parsing JavaScript to reduce blocking of page rendering.",
+       "args": [
+        {
+         "type": "BYTES",
+         "value": "190.7KiB"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-includes/js/jquery/jquery.js?ver=1.7.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "86KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/js/jquery.flexslider-min.js?ver=1.0.0"
+          },
+          {
+           "type": "BYTES",
+           "value": "20.7KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.prettyPhoto.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "18.4KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.flexslider-min.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "14.5KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.isotope.min.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "14KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/main.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "9.5KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/modernizr.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "9KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.elastislide.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "6.8KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.cycle.lite.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "4.7KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/jquery-easing-1.3.js?ver=2.0.0"
+          },
+          {
+           "type": "BYTES",
+           "value": "3.5KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2 of inline JavaScript)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/"
+          },
+          {
+           "type": "BYTES",
+           "value": "1.4KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jtwt.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "1KiB"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.fitvids.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "928B"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/layerslider.kreaturamedia.jquery-min.js?ver=2.0.0"
+          },
+          {
+           "type": "BYTES",
+           "value": "347B"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "EnableGzipCompression": {
+    "localizedRuleName": "Enable compression",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "InlineSmallCss": {
+    "localizedRuleName": "Inline Small CSS",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "InlineSmallJavaScript": {
+    "localizedRuleName": "Inline Small JavaScript",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "LeverageBrowserCaching": {
+    "localizedRuleName": "Leverage browser caching",
+    "ruleScore": 9,
+    "ruleImpact": 18.071428571428555,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "The following cacheable resources have a short freshness lifetime. Specify an expiration at least one week in the future for the following resources:"
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1 (expiration not specified)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/speedometer_small.JPG"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/css/layerslider.css?ver=2.0.0"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/jquery-easing-1.3.js?ver=2.0.0"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/layerslider.kreaturamedia.jquery-min.js?ver=2.0.0"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/skins/defaultskin/skin.css"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/skins/defaultskin/skin.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/css/flexslider.css?ver=1.0.1"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/css/style.css?ver=1.0.1"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/js/jquery.flexslider-min.js?ver=1.0.0"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/all.css"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/flexslider.css"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/media.css"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/prettyPhoto.css"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/bg-blockquote.gif"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/bg-title.gif"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/ico-user.gif"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/shadow-bottom.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/shadow-top.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.cycle.lite.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.elastislide.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.fitvids.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.flexslider-min.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.isotope.min.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.prettyPhoto.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jtwt.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/main.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/modernizr.js?ver=3.4.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/style.css"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/equals.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/idea.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/logo_way2cu.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/money.png"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/arrows_small3.jpg"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/hat_small.jpg"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/metal_switch2.jpg"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/speedometer.jpg"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-includes/js/jquery/jquery.js?ver=1.7.2"
+          },
+          {
+           "type": "DURATION",
+           "value": "4 hours"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "MinifyCss": {
+    "localizedRuleName": "Minify CSS",
+    "ruleScore": 92,
+    "ruleImpact": 0.21860000000000002,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "Minifying the following CSS resources could reduce their size by $1 ($2 reduction).",
+       "args": [
+        {
+         "type": "BYTES",
+         "value": "582B"
+        },
+        {
+         "type": "PERCENTAGE",
+         "value": "8%"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "Minifying $1 could save $2 ($3 reduction) after compression.",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/css/all.css"
+          },
+          {
+           "type": "BYTES",
+           "value": "582B"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "8%"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "MinifyHTML": {
+    "localizedRuleName": "Minify HTML",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "MinifyJavaScript": {
+    "localizedRuleName": "Minify JavaScript",
+    "ruleScore": 90,
+    "ruleImpact": 0.8403000000000002,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "Minifying the following JavaScript resources could reduce their size by $1 ($2 reduction).",
+       "args": [
+        {
+         "type": "BYTES",
+         "value": "7KiB"
+        },
+        {
+         "type": "PERCENTAGE",
+         "value": "35%"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "Minifying $1 could save $2 ($3 reduction) after compression.",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/js/jquery.flexslider-min.js?ver=1.0.0"
+          },
+          {
+           "type": "BYTES",
+           "value": "3.2KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "37%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Minifying $1 could save $2 ($3 reduction) after compression.",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.elastislide.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "1.2KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "37%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Minifying $1 could save $2 ($3 reduction) after compression.",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/jquery-easing-1.3.js?ver=2.0.0"
+          },
+          {
+           "type": "BYTES",
+           "value": "1.1KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "58%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Minifying $1 could save $2 ($3 reduction) after compression.",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/main.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "796B"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "20%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Minifying $1 could save $2 ($3 reduction) after compression.",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.cycle.lite.js?ver=3.4.2"
+          },
+          {
+           "type": "BYTES",
+           "value": "658B"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "28%"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "MinimizeRedirects": {
+    "localizedRuleName": "Minimize redirects",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "MinimizeRequestSize": {
+    "localizedRuleName": "Minimize request size",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "OptimizeImages": {
+    "localizedRuleName": "Optimize images",
+    "ruleScore": 0,
+    "ruleImpact": 12.839400000000001,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "Optimizing the following images could reduce their size by $1 ($2 reduction).",
+       "args": [
+        {
+         "type": "BYTES",
+         "value": "125.2KiB"
+        },
+        {
+         "type": "PERCENTAGE",
+         "value": "37%"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/metal_switch2.jpg"
+          },
+          {
+           "type": "BYTES",
+           "value": "26.6KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "36%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/speedometer_small.JPG"
+          },
+          {
+           "type": "BYTES",
+           "value": "24.4KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "27%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/speedometer.jpg"
+          },
+          {
+           "type": "BYTES",
+           "value": "21.8KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "42%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/hat_small.jpg"
+          },
+          {
+           "type": "BYTES",
+           "value": "21.7KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "35%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/arrows_small3.jpg"
+          },
+          {
+           "type": "BYTES",
+           "value": "15.9KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "38%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/logo_way2cu.png"
+          },
+          {
+           "type": "BYTES",
+           "value": "3.2KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "39%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/money.png"
+          },
+          {
+           "type": "BYTES",
+           "value": "2.9KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "80%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/idea.png"
+          },
+          {
+           "type": "BYTES",
+           "value": "2.7KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "72%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/07/equals.png"
+          },
+          {
+           "type": "BYTES",
+           "value": "2.7KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "82%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/ico-user.gif"
+          },
+          {
+           "type": "BYTES",
+           "value": "1.2KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "55%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/bg-blockquote.gif"
+          },
+          {
+           "type": "BYTES",
+           "value": "1KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "81%"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "Losslessly compressing $1 could save $2 ($3 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/images/bg-title.gif"
+          },
+          {
+           "type": "BYTES",
+           "value": "993B"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "90%"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "OptimizeTheOrderOfStylesAndScripts": {
+    "localizedRuleName": "Optimize the order of styles and scripts",
+    "ruleScore": 85,
+    "ruleImpact": 1.0,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "The following external CSS files were included after an external JavaScript file in $1.  To ensure CSS files are downloaded in parallel, always include external CSS before  external JavaScript.",
+       "args": [
+        {
+         "type": "URL",
+         "value": "http://www.way2cu.com/"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "PreferAsyncResources": {
+    "localizedRuleName": "Prefer asynchronous resources",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "PutCssInTheDocumentHead": {
+    "localizedRuleName": "Put CSS in the document head",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "RemoveQueryStringsFromStaticResources": {
+    "localizedRuleName": "Remove query strings from static resources",
+    "ruleScore": 60,
+    "ruleImpact": 0.0,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "Resources with a \"?\" in the URL are not cached by some proxy caching servers.  Remove the query string and encode the parameters into the URL for the following resources:"
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/css/layerslider.css?ver=2.0.0"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/jquery-easing-1.3.js?ver=2.0.0"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/LayerSlider/js/layerslider.kreaturamedia.jquery-min.js?ver=2.0.0"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/css/flexslider.css?ver=1.0.1"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/css/style.css?ver=1.0.1"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/plugins/wooslider/assets/js/jquery.flexslider-min.js?ver=1.0.0"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.cycle.lite.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.elastislide.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.fitvids.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.flexslider-min.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.isotope.min.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jquery.prettyPhoto.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/jtwt.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/main.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/themes/Avada/js/modernizr.js?ver=3.4.2"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-includes/js/jquery/jquery.js?ver=1.7.2"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "ServeResourcesFromAConsistentUrl": {
+    "localizedRuleName": "Serve resources from a consistent URL",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "ServeScaledImages": {
+    "localizedRuleName": "Serve scaled images",
+    "ruleScore": 89,
+    "ruleImpact": 7.5544,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "The following images are resized in HTML or CSS.  Serving scaled images could save $1 ($2 reduction).",
+       "args": [
+        {
+         "type": "BYTES",
+         "value": "73.8KiB"
+        },
+        {
+         "type": "PERCENTAGE",
+         "value": "98%"
+        }
+       ]
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1 is resized in HTML or CSS from $2x$3 to $4x$5.  Serving a scaled image could save $6 ($7 reduction).",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/wp-content/uploads/2012/12/metal_switch2.jpg"
+          },
+          {
+           "type": "INT_LITERAL",
+           "value": "711"
+          },
+          {
+           "type": "INT_LITERAL",
+           "value": "675"
+          },
+          {
+           "type": "INT_LITERAL",
+           "value": "83"
+          },
+          {
+           "type": "INT_LITERAL",
+           "value": "78"
+          },
+          {
+           "type": "BYTES",
+           "value": "73.8KiB"
+          },
+          {
+           "type": "PERCENTAGE",
+           "value": "98%"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "ServerResponseTime": {
+    "localizedRuleName": "Improve server response time",
+    "ruleScore": 100,
+    "ruleImpact": 31.9,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "Long web server response times delay page loading. Reduce your response times to make your page load faster."
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://way2cu.com/"
+          },
+          {
+           "type": "DURATION",
+           "value": "1.5 seconds"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/"
+          },
+          {
+           "type": "DURATION",
+           "value": "1.2 seconds"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1 ($2)",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://www.way2cu.com/?wooslider-javascript=load&t=1368028451&ver=1.0.0"
+          },
+          {
+           "type": "DURATION",
+           "value": "1.4 seconds"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "SpecifyACacheValidator": {
+    "localizedRuleName": "Specify a cache validator",
+    "ruleScore": 95,
+    "ruleImpact": 0.5,
+    "urlBlocks": [
+     {
+      "header": {
+       "format": "The following resources are missing a cache validator. Resources that do not specify a cache validator cannot be refreshed efficiently. Specify a Last-Modified or ETag header to enable cache validation for the following resources:"
+      },
+      "urls": [
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://fonts.googleapis.com/css?family=PT+Sans+Caption:400,400italic,700,700italic&subset=latin,greek-ext,cyrillic,latin-ext,greek,cyrillic-ext,vietnamese"
+          }
+         ]
+        }
+       },
+       {
+        "result": {
+         "format": "$1",
+         "args": [
+          {
+           "type": "URL",
+           "value": "http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin,greek-ext,cyrillic,latin-ext,greek,cyrillic-ext,vietnamese"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "SpecifyAVaryAcceptEncodingHeader": {
+    "localizedRuleName": "Specify a Vary: Accept-Encoding header",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "SpecifyCharsetEarly": {
+    "localizedRuleName": "Specify a character set",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "SpecifyImageDimensions": {
+    "localizedRuleName": "Specify image dimensions",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   },
+   "SpriteImages": {
+    "localizedRuleName": "Combine images into CSS sprites",
+    "ruleScore": 100,
+    "ruleImpact": 0.0
+   }
+  }
+ },
+ "version": {
+  "major": 1,
+  "minor": 12
+ }
+}
