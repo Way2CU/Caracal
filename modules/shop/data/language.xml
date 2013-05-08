@@ -8,6 +8,7 @@
 		<constant name="menu_payment_methods">Payment methods</constant>
 		<constant name="menu_transactions">Transactions</constant>
 		<constant name="menu_stocks">Stocks</constant>
+		<constant name="menu_warehouses">Warehouses</constant>
 		<constant name="menu_special_offers">Special offers</constant>
 		<constant name="menu_currencies">Currencies</constant>
 		<constant name="menu_item_sizes">Manage item sizes</constant>
@@ -65,6 +66,8 @@
 		<constant name="title_delivery_method_price_add">Shop: Add delivery price</constant>
 		<constant name="title_delivery_method_price_change">Shop: Change delivery price</constant>
 		<constant name="title_delivery_method_price_delete">Shop: Delete delivery price</constant>
+		<constant name="title_stocks">Shop: Item stocks</constant>
+		<constant name="title_warehouses">Shop: Warehouses</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_name_and_price">Name and price</constant>
@@ -232,6 +235,7 @@
 		<constant name="menu_payment_methods">שיטות תשלום</constant>
 		<constant name="menu_transactions">עסקאות</constant>
 		<constant name="menu_stocks">מלאי</constant>
+		<constant name="menu_warehouses">Warehouses</constant>
 		<constant name="menu_special_offers">מבצעים</constant>
 		<constant name="menu_currencies">מטבעות</constant>
 		<constant name="menu_item_sizes">נהל גודל מוצר</constant>
