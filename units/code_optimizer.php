@@ -11,9 +11,12 @@
 class CodeOptimizer {
 	private static $_instance;
 
-	public const LEVEL_NONE = -1;
-	public const LEVEL_BASIC = 0;
-	public const LEVEL_ADVANCED = 1;
+	private $script_list = array();
+	private $style_list = array();
+
+	const LEVEL_NONE = 0;
+	const LEVEL_BASIC = 1;
+	const LEVEL_ADVANCED = 2;
 
 	/**
 	 * Constructor
@@ -36,18 +39,24 @@ class CodeOptimizer {
 	 * Add script to be compiled.
 	 *
 	 * @param string $url
-	 * @param string $data
 	 */
-	public function addScript($url=null, $data=null) {
+	public function addScript($url) {
 	}
 
 	/**
 	 * Add style to be compiled.
 	 *
 	 * @param string $url
-	 * @param string $data
 	 */
-	public function addStyle($url=null, $data=null) {
+	public function addStyle($url) {
+	}
+
+	/**
+	 * Return compiled scripts and styles.
+	 *
+	 * @return string
+	 */
+	public function getData() {
 	}
 }
 
