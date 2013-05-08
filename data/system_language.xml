@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../units/schema/language.dtd">
 <document>
 	<language name="Srpski" short="sr">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright"><![CDATA[Copyright &copy; by <a href="http://way2cu.com">Way2CU</a>. Icons by <a href="http://commons.wikimedia.org/wiki/User:Paintpot">Paintpot</a>. All rights reserved!]]></constant>
 
 		<!-- Column Names -->
 		<constant name="column_options">Opcije</constant>
@@ -43,7 +43,7 @@
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
 	<language name="English" short="en" default="yes">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright"><![CDATA[Copyright &copy; by <a href="http://way2cu.com">Way2CU</a>. Icons by <a href="http://commons.wikimedia.org/wiki/User:Paintpot">Paintpot</a>. All rights reserved!]]></constant>
 
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
@@ -84,7 +84,7 @@
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
 	<language name="Español" short="es" >
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright"><![CDATA[Copyright &copy; by <a href="http://way2cu.com">Way2CU</a>. Icons by <a href="http://commons.wikimedia.org/wiki/User:Paintpot">Paintpot</a>. All rights reserved!]]></constant>
 
 		<!-- Column Names -->
 		<constant name="column_options">Options</constant>
@@ -121,7 +121,7 @@
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
 	<language name="עברית" short="iw" rtl="yes">
-		<constant name="backend_copyright" value="Copyright &amp;copy; by &lt;a href=&quot;http://rcf-group.com&quot;&gt;RCF Group&lt;/a&gt; and &lt;a href=&quot;http://way2cu.com&quot;&gt;way2CU&lt;/a&gt;. Icons by &lt;a href=&quot;http://commons.wikimedia.org/wiki/User:Paintpot/Icons16&quot;&gt;Paintpot&lt;/a&gt;. All rights reserved!"/>
+		<constant name="backend_copyright"><![CDATA[Copyright &copy; by <a href="http://way2cu.com">Way2CU</a>. Icons by <a href="http://commons.wikimedia.org/wiki/User:Paintpot">Paintpot</a>. All rights reserved!"]]></constant>
 
 		<!-- Column Names -->
 		<constant name="column_options">אפשרויות</constant>
