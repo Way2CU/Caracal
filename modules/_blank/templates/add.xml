@@ -4,14 +4,14 @@
 	<form action="$params['form_action']" eval="action" method="POST">
 		<input type="hidden" name="hidden_field" value="$params['some_value']" eval="value"/>
 		<label>
-			<span><_text constant="label"/></span>
+			<span><cms:text constant="label"/></span>
 			<input type="text" name="name" style="width: 270px;" maxlength="30"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>
