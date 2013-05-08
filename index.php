@@ -41,6 +41,10 @@ require_once('units/cache/cache.php');
 require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
 
+// change error reporting level
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
+// define constants
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
 define('_AJAX_REQUEST', 
@@ -48,6 +52,7 @@ define('_AJAX_REQUEST',
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 		);
 
+// start measuring time
 $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];
 
