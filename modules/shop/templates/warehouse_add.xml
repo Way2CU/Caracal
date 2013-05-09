@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="shop_warehouse_add_form">
+		<label>
+			<span><cms:text constant="label_name" module="shop"/></span>
+			<input type="text" name="name" style="width: 200px;" maxlength="60"/>
+		</label>
+		<label>
+			<span><cms:text constant="label_street" module="shop"/></span>
+			<input type="text" name="street" style="width: 275px;" maxlength="200"/>
+		</label>
+		<label>
+			<input type="text" name="street2" style="width: 275px;" maxlength="200"/>
+		</label>
+		<label>
+			<span><cms:text constant="label_city" module="shop"/></span>
+			<input type="text" name="city" style="width: 200px;" maxlength="40"/>
+		</label>
+		<label>
+			<span><cms:text constant="label_zip" module="shop"/></span>
+			<input type="text" name="zip" style="width: 100px;" maxlength="20"/>
+		</label>
+		<label>
+			<span><cms:text constant="label_country" module="shop"/></span>
+			<select name="country" style="width: 150px;">
+				<option/>
+				<cms:module
+					name="country_list"
+					action="show"
+					template="country_option.xml"
+					local="1"
+				/>
+			</select>
+		</label>
+		<label>
+			<span><cms:text constant="label_state" module="shop"/></span>
+			<select name="state" style="width: 150px;"/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		var backend_url = $('base').attr('href') + '/index.php';
+		$('#shop_warehouse_add_form select[name=country]').change(function() {
+			var value = $(this).val();
+			var states = $('#shop_warehouse_add_form select[name=state]');
+			var data = {
+					section: 'country_list',
+					action: 'show_states',
+					country: value
+				};
+
+			if ($.inArray(value, ['US', 'CA', 'AU']) > -1) {
+				// country has states, load them from server
+				states.load(backend_url, data);
+
+			} else {
+				// country doesn't have states, clear the field
+				states.html('');
+			}
+		});
+	</script>
+</document>

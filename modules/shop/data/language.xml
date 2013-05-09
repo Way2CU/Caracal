@@ -68,6 +68,9 @@
 		<constant name="title_delivery_method_price_delete">Shop: Delete delivery price</constant>
 		<constant name="title_stocks">Shop: Item stocks</constant>
 		<constant name="title_warehouses">Shop: Warehouses</constant>
+		<constant name="title_warehouse_add">Shop: Add warehouse</constant>
+		<constant name="title_warehouse_change">Shop: Change warehouse information</constant>
+		<constant name="title_warehouse_delete">Shop: Delete warehouse</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_name_and_price">Name and price</constant>
@@ -94,6 +97,7 @@
 		<constant name="column_international">International</constant>
 		<constant name="column_domestic">Domestic</constant>
 		<constant name="column_count">Count</constant>
+		<constant name="column_warehouse">Warehouse</constant>
 
 		<constant name="label_timestamp">Timestamp:</constant>
 		<constant name="label_remark">Remark:</constant>
@@ -185,6 +189,9 @@
 		<constant name="message_delivery_price_saved">Delivery price was saved.</constant>
 		<constant name="message_delivery_price_delete">You are about to remove the following delivery price from the shop. Items connected to this delivery will not be removed. Are you sure you want to do this?</constant>
 		<constant name="message_delivery_price_deleted">Delivery price was deleted!</constant>
+		<constant name="message_warehouse_saved">Warehouse data was saved.</constant>
+		<constant name="message_warehouse_delete">The following warehouse will be removed. Items associated with it, and their stocks, will be cleared. None of the items will be removed! Are you sure about this?</constant>
+		<constant name="message_warehouse_deleted">Warehouse was deleted!</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
@@ -192,6 +199,7 @@
 		<constant name="add_manufacturer">Add manufacturer</constant>
 		<constant name="add_delivery_method">Add delivery method</constant>
 		<constant name="add_delivery_price">Add delivery price</constant>
+		<constant name="add_warehouse">Add warehouse</constant>
 		<constant name="manage_categories">Manage categories</constant>
 		<constant name="add_currency">Add currency</constant>
 		<constant name="update_currencies">Update currency list</constant>

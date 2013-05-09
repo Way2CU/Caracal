@@ -14,6 +14,8 @@ require_once('units/shop_item_sizes_handler.php');
 require_once('units/shop_item_size_values_manager.php');
 require_once('units/shop_transactions_manager.php');
 require_once('units/shop_transactions_handler.php');
+/* require_once('units/shop_stock_handler.php'); */
+require_once('units/shop_warehouse_handler.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_buyer_addresses_manager.php');
@@ -198,6 +200,18 @@ class shop extends Module {
 											$this->getLanguageConstant('title_transactions'),
 											true, true,
 											backend_UrlMake($this->name, 'transactions')
+										),
+								5  // level
+							));
+			$shop_menu->addChild(null, new backend_MenuItem(
+								$this->getLanguageConstant('menu_warehouses'),
+								url_GetFromFilePath($this->path.'images/warehouse.png'),
+								window_Open( // on click open window
+											'shop_warehouses',
+											490,
+											$this->getLanguageConstant('title_warehouses'),
+											true, true,
+											backend_UrlMake($this->name, 'warehouses')
 										),
 								5  // level
 							));
@@ -502,8 +516,15 @@ class shop extends Module {
 					break;
 
 				case 'special_offers':
+					break;
+
+				case 'warehouses':
+					$handler = ShopWarehouseHandler::getInstance($this);
+					$handler->transferControl($params, $children);
+					break;
 
 				case 'stocks':
+					break;
 
 				case 'delivery_methods':
 					$handler = ShopDeliveryMethodsHandler::getInstance($this);
@@ -737,6 +758,20 @@ class shop extends Module {
 		$db->query($sql);
 		
 		// create shop stock table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_warehouse` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `name` varchar(60) NOT NULL,
+				  `street` varchar(200) NOT NULL,
+				  `street2` varchar(200) NOT NULL,
+				  `city` varchar(40) NOT NULL,
+				  `zip` varchar(20) NOT NULL,
+				  `country` varchar(64) NOT NULL,
+				  `state` varchar(40) NOT NULL,
+				  PRIMARY KEY (`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop stock table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_stock` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `item` int(11) NOT NULL,
@@ -778,6 +813,7 @@ class shop extends Module {
 					'shop_buyer_addresses',
 					'shop_transactions',
 					'shop_transaction_items',
+					'shop_warehouse',
 					'shop_stock',
 					'shop_related_items',
 					'shop_manufacturers',

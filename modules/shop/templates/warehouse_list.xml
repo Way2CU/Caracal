@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<cms:var name="$params['warehouse_new']"/>
+	</div>
+
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 300px;">
+				<cms:text constant="column_warehouse" module="shop"/>
+			</span>
+			<span class="column">
+				<cms:text constant="column_options"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 250px">
+			<cms:warehouse_list/>
+		</div>
+	</div>
+</document>
