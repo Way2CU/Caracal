@@ -31,6 +31,7 @@ $cache_max_pages = 200;
 
 // head tag
 $include_scripts = false;
+$optimize_code = true;
 
 // various
 $url_rewrite = false;
