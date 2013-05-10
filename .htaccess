@@ -17,3 +17,15 @@
 <FilesMatch "\.(xml)$">
 	Deny from all
 </FilesMatch>
+
+# cache modifications
+Header unset Pragma
+
+<FilesMatch "\.(ico|pdf|jpg|jpeg|png|gif)$">
+	Header set Cache-Control "max-age=864000, public, must-revalidate"
+	Header unset Last-Modified
+</FilesMatch>
+
+<FilesMatch "\.(js|css)$">
+	Header set Cache-Control "max-age=864000, must-revalidate"
+</FilesMatch>
