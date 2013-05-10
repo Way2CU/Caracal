@@ -28,4 +28,9 @@ Header unset Pragma
 
 <FilesMatch "\.(js|css)$">
 	Header set Cache-Control "max-age=864000, must-revalidate"
+	SetOutputFilter DEFLATE
+</FilesMatch>
+
+<FilesMatch "\.(html|php)$">
+	SetOutputFilter DEFLATE
 </FilesMatch>
