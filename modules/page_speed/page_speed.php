@@ -41,7 +41,7 @@ class page_speed extends Module {
 									), 1);
 
 			// add style for backend
-			if (class_exists('head_tag')) {
+			if (class_exists('head_tag') && $section == 'backend') {
 				$head_tag = head_tag::getInstance();
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/page_speed.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
