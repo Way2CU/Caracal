@@ -370,6 +370,22 @@ class TemplateHandler {
 					echo eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 					break;
 
+				// support for script tag
+				case 'cms:script':
+					if (class_exists('head_tag')) {
+						$head_tag = head_tag::getInstance();
+						$head_tag->addTag('script', $tag->tagAttrs);
+					}
+					break;
+
+				// support for link tag
+				case 'cms:link':
+					if (class_exists('head_tag')) {
+						$head_tag = head_tag::getInstance();
+						$head_tag->addTag('link', $tag->tagAttrs);
+					}
+					break;
+
 				// default action for parser, draw tag
 				default:
 					if (in_array($tag->tagName, array_keys($this->handlers))) {
