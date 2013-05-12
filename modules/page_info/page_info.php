@@ -169,12 +169,14 @@ class page_info extends Module {
 		$head_tag->addTag('base', array('href' => _BASEURL));
 
 		// content meta tags
-		if (!in_array('content_type', $this->omit_elements))
+		if (!in_array('content_type', $this->omit_elements)) {
 			$head_tag->addTag('meta',
 						array(
 							'http-equiv'	=> 'Content-Type',
 							'content'		=> 'text/html; charset=UTF-8'
 						));
+			header('Content-Type: text/html; charset=UTF-8');
+		}
 
 		if (!in_array('language', $this->omit_elements))
 			$head_tag->addTag('meta',
@@ -257,6 +259,30 @@ class page_info extends Module {
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css',
 							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/main.css')
+						));
+
+			if (file_exists(_BASEPATH.'/styles/header.css'))
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/header.css')
+						));
+
+			if (file_exists(_BASEPATH.'/styles/content.css'))
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/content.css')
+						));
+
+			if (file_exists(_BASEPATH.'/styles/footer.css'))
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/footer.css')
 						));
 
 			if (file_exists(_BASEPATH.'/scripts/main.js'))
