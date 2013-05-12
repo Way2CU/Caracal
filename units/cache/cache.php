@@ -160,6 +160,10 @@ class CacheHandler {
 					$data = preg_replace($pattern, $result, $data, 1);
 				}
 
+			// make sure we have specified cache type
+			if (!_AJAX_REQUEST)
+				header('Content-Type: text/html; charset=UTF-8');
+
 			print $data;
 
 			// validate or expire cache entry
