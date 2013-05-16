@@ -41,11 +41,11 @@
 		function shop_AddRelatedItems() {
 			var items = $('#result_list').children('div.list_item');
 			var target = $('#related_items');
-			
+
 			items.each(function(index) {
 				var checkbox = $(this).find('input');
 
-				if (checkbox.attr('checked') == 'checked') {
+				if (checkbox.is(':checked')) {
 					var new_item = $(this).clone();
 					var name = checkbox.attr('name');
 					
