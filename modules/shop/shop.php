@@ -46,6 +46,7 @@ class TransactionStatus {
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
+	private $delivery_methods;
 
 	private $excluded_properties = array(
 					'size_value', 'color_value', 'count'
@@ -61,8 +62,8 @@ class shop extends Module {
 
 		parent::__construct(__FILE__);
 
-		// create payment providers container
 		$this->payment_methods = array();
+		$this->delivery_methods = array();
 
 		// load module style and scripts
 		if (class_exists('head_tag') && $section != 'backend') {
@@ -826,13 +827,23 @@ class shop extends Module {
 	}
 
 	/**
-	 * Method used by payment providers to register them selfs
+	 * Method used by payment providers to register with main module.
 	 *
 	 * @param string $name
 	 * @param object $module
 	 */
-	public function registerPaymentMethod($name, $module) {
+	public function registerPaymentMethod($name, &$module) {
 		$this->payment_methods[$name] = $module;
+	}
+
+	/**
+ 	 * Method used by delivery providers to register with main module.
+	 *
+	 * @param string $name
+	 * @param object $module
+	 */
+	public function registerDeliveryMethod($name, &$module) {
+		$this->delivery_methods[$name] = $module;
 	}
 
 	/**
