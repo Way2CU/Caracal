@@ -19,7 +19,7 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 		parent::__construct($parent);
 		
 		// register payment method
-		$this->name = 'paypal';
+		$this->name = 'google_checkout';
 		$this->registerPaymentMethod();
 	}
 	
@@ -38,6 +38,7 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function provides_information() {
+		return true;
 	}
 
 	/**
@@ -45,6 +46,7 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
+		return $this->url_sandbox;
 	}
 
 	/**
