@@ -6,7 +6,6 @@
  * @author MeanEYE.rcf
  */
 
-require_once("units/paypal_payment_method.php");
 
 class paypal extends Module {
 	private static $_instance;
@@ -42,6 +41,7 @@ class paypal extends Module {
 
 		// register payment method
 		if (class_exists('shop')) {
+			require_once("units/paypal_payment_method.php");
 			PayPal_PaymentMethod::getInstance($this); 		
 		}
 	}
