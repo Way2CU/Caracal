@@ -7,7 +7,6 @@
  * Author: Mladen Mijatov
  */
 
-require_once("units/google_checkout_payment_method.php");
 
 class google_checkout extends Module {
 	private static $_instance;
@@ -43,6 +42,7 @@ class google_checkout extends Module {
 
 		// register payment method
 		if (class_exists('shop')) {
+			require_once("units/google_checkout_payment_method.php");
 			GoogleCheckout_PaymentMethod::getInstance($this); 		
 		}
 	}
