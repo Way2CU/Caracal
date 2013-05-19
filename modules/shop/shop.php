@@ -833,7 +833,9 @@ class shop extends Module {
 	 * @param object $module
 	 */
 	public function registerPaymentMethod($name, &$module) {
-		$this->payment_methods[$name] = $module;
+		if (!array_key_exists($name, $this->payment_methods))
+			$this->payment_methods[$name] = $module; else
+			throw new Exception("Payment method '{$name}' is already registered with the system.");
 	}
 
 	/**
@@ -843,7 +845,9 @@ class shop extends Module {
 	 * @param object $module
 	 */
 	public function registerDeliveryMethod($name, &$module) {
-		$this->delivery_methods[$name] = $module;
+		if (!array_key_exists($name, $this->delivery_methods))
+			$this->delivery_methods[$name] = $module; else
+			throw new Exception("Delivery method '{$name}' is already registered with the system.");
 	}
 
 	/**
