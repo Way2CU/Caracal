@@ -6,7 +6,7 @@
  * Copyright (c) 2012. by Way2CU
  * Author: Mladen Mijatov
  */
-require_once("units/tranzila_payment_method.php");
+
 
 class tranzila extends Module {
 	private static $_instance;
@@ -42,6 +42,7 @@ class tranzila extends Module {
 
 		// register payment method
 		if (class_exists('shop')) {
+			require_once("units/tranzila_payment_method.php");
 			Tranzila_PaymentMethod::getInstance($this); 		
 		}
 	}
