@@ -61,16 +61,16 @@ class ModuleHandler {
 				$normal_list[] = $normal_item->name;
 
 		} else {
-			// no database available try to load from XML file
-			$file = $data_path.'modules.xml';
+			// no database available use system initialization file
+			$file = $data_path.'system_init.xml';
 
 			if (file_exists($file)) {
 				$xml = new XMLParser(@file_get_contents($file), $file);
 				$xml->Parse();
 
-				foreach ($xml->document->module as $xml_module) {
-					$module_list[] = $xml_module->tagAttrs['name'];
-				}
+				foreach ($xml->document->tagChildren as $xml_tag) 
+					if ($xml_tag->tagName == 'module') 
+						$normal_list[] = $xml_tag->tagAttrs['name'];
 			}
 		}
 
