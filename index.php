@@ -92,7 +92,8 @@ if ($section == 'backend' || $section == 'backend_module')
 	$url_rewrite = false;
 
 // start database engine
-database_connect();
+if ($db_use)
+	database_connect();
 
 // transfer display control
 $cache = CacheHandler::getInstance();
