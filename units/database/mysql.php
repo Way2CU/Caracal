@@ -29,10 +29,6 @@ class Database_MySQL extends Database {
 			
 			// set default protocol encoding
 			$this->handle->set_charset('utf8');
-
-			// try select database if specified
-			if (array_key_exists('name', $config))
-				$result = $this->select($config['name']);
 		} 
 
 		return $result;
