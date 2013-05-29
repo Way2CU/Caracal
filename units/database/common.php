@@ -7,6 +7,7 @@
  */
 
 require_once('mysql.php');
+require_once('sqlite.php');
 
 /**
  * Connect to database server using data from config file.
@@ -18,44 +19,49 @@ function database_connect() {
 	// create database object
 	switch ($db_type) {
 		case DatabaseType::MYSQL:
-			if (class_exists('Database_MySQL')) 
-				$db = new Database_MySQL();
+			$db = new Database_MySQL();
+			$connected = $db->connect($db_config);
+			$selected = $db->select($db_config['name']);
+
+			$result = $connected && $selected;
+
+			// connection was successful but database doesn't exist
+			if ($connected && (!$selected || ($selected && !ModuleManager::getInstance()->tableExists()))) 
+				$result = database_initialize(!$selected);
+
 			break;
 
 		case DatabaseType::PGSQL:
-			if (class_exists('Database_PostgreSQL'))
-				$db = new Database_PostgreSQL();
 			break;
 
 		case DatabaseType::SQLITE:
-			if (class_exists('Database_SQLite'))
-				$db = new Database_SQLite();
+			$db = new Database_SQLite();
+			$result = $db->connect($db_config);
+
+			// try to initialize database
+			if (!$result && !$db->exists($db_config['name'])) {
+				$result = $db->create($db_config['name']);
+
+				if ($result)
+					$result = database_initialize();
+			}
 			break;
 	}
-
-	// connect database
-	if (!is_null($db))
-		$result = $db->connect($db_config);
-
-	// we are connected, select database
-	if ($result) 
-		$result = $db->select($db_config['name']); else
-		trigger_error('Error connecting to database with specified credentials!', E_USER_ERROR);
-
-	// select failed, we probably need to initialize database
-	if (!$result)
-		$result = database_initialize();
 
 	return $result;
 }
 
 /**
  * Perform database initialization.
+ *
+ * @param boolean $create_database
+ * @return boolean
  */
-function database_initialize() {
+function database_initialize($create_database) {
 	global $db, $db_config, $data_path;
 
 	$result = false;
+	$database_exists = false;
 	$sql_file = 'units/database/init.sql';
 	$xml_file = $data_path.'system_init.xml';
 
@@ -70,8 +76,22 @@ function database_initialize() {
 	// get initialization SQL
 	$sql = file_get_contents($sql_file);
 
+	// create database if needed
+	if ($create_database) {
+		try {
+			$db->create($db_config['name']);
+			$db->select($db_config['name']);
+			$database_exists = true;
+
+		} catch (Exception $error) {
+			$database_exists = false;
+		}
+	} else {
+		$database_exists = true;
+	}
+
 	// create database
-	if ($db->create($db_config['name']) && $db->select($db_config['name']) && $db->multi_query($sql)) {
+	if ($database_exists && $db->multi_query($sql)) {
 		$module_manager = ModuleManager::getInstance();
 		$module_handler = ModuleHandler::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
