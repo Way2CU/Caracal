@@ -318,10 +318,6 @@ class XMLTag
         if($cleanTagName)
             $name = str_replace(array(':', '-'), '_', $name);
 
-        //Toss up a notice if someone's trying to to use a colon or dash in a tag name
-        elseif(strstr($name, ':') || strstr($name, '-'))
-            trigger_error('Your tag named "'.$name.'" contains either a dash or a colon. Neither of these characters are friendly with PHP variable names, and, as such, you may have difficulty accessing them. You might want to think about enabling the cleanTagName feature (pass true as the second argument of the XMLParser constructor). For more details, see http://www.criticaldevelopment.net/xml/', E_USER_NOTICE);
-
         //If there is no array already set for the tag name being added,
         //create an empty array for it
         if(!isset($this->$name))
