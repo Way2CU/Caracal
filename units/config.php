@@ -17,6 +17,7 @@ $system_template_path = 'units/templates/';
 // database
 $db = null;
 $db_use = true;
+$db_type = DatabaseType::MYSQL;
 $db_config = array(
 		'host' => 'localhost',
 		'user' => 'root',
