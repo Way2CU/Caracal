@@ -29,6 +29,10 @@ class Database_MySQL extends Database {
 			
 			// set default protocol encoding
 			$this->handle->set_charset('utf8');
+
+			// try select database if specified
+			if (array_key_exists('name', $config))
+				$result = $this->select($config['name']);
 		} 
 
 		return $result;
@@ -59,7 +63,7 @@ class Database_MySQL extends Database {
 		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = `{$database}`";
 		$response = $this->handle->query();
 
-		$result = $response->num_rows() > 0;
+		$result = $response->num_rows > 0;
 		$response->free();
 
 		return $result;
