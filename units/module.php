@@ -23,7 +23,7 @@ abstract class Module {
 		$this->name = get_class($this);
 
 		// load language file if present
-		$this->language = new LanguageHandler($this->path.'/data/language.xml');
+		$this->language = new LanguageHandler($this->path.'data/language.xml');
 
 		// load settings from database
 		$this->settings = $this->getSettings();
