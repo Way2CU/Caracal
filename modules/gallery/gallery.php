@@ -11,6 +11,7 @@ require_once('units/gallery_group_manager.php');
 require_once('units/gallery_container_manager.php');
 require_once('units/gallery_group_membership_manager.php');
 
+
 class gallery extends Module {
 	private static $_instance;
 
@@ -1116,6 +1117,12 @@ class gallery extends Module {
 				$conditions['group'] = $group_id; else
 				$conditions['group'] = -1;
 		}
+
+		if (isset($tag_params['order_by']))
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
 
 		$items = $manager->getItems(
 							$manager->getFieldNames(),
