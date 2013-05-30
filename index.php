@@ -45,7 +45,7 @@ require_once('units/doctypes.php');
 date_default_timezone_set(_TIMEZONE);
 
 // change error reporting level
-if (!is_defined('DEBUG'))
+if (!defined('DEBUG'))
 	error_reporting(E_ERROR | E_WARNING | E_USER_ERROR | E_USER_WARNING); else
 	error_reporting(E_ALL | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 
