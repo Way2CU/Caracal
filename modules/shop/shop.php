@@ -7,6 +7,7 @@
  */
 
 require_once('units/payment_method.php');
+require_once('units/delivery_method.php');
 require_once('units/shop_item_handler.php');
 require_once('units/shop_category_handler.php');
 require_once('units/shop_currencies_handler.php');
@@ -40,6 +41,16 @@ class TransactionStatus {
 	const SHIPPED = 5;
 	const LOST = 6;
 	const DELIVERED = 7;
+}
+
+class PackageType {
+	const BOX_10 = 0;
+	const BOX_20 = 1;
+	const BOX = 2;
+	const ENVELOPE = 3;
+	const PAK = 4;
+	const TUBE = 5;
+	const USER_PACKAGING = 6;
 }
 
 
@@ -138,19 +149,16 @@ class shop extends Module {
 										),
 								5  // level
 							));
-			$shop_menu->addChild(null, new backend_MenuItem(
+
+			// delivery methods menu
+			$delivery_menu = new backend_MenuItem(
 								$this->getLanguageConstant('menu_delivery_methods'),
 								url_GetFromFilePath($this->path.'images/delivery.png'),
-								window_Open( // on click open window
-											'shop_delivery_methods',
-											550,
-											$this->getLanguageConstant('title_delivery_methods'),
-											true, true,
-											backend_UrlMake($this->name, 'delivery_methods')
-										),
-								5  // level
-							));
-							
+								'javascript: void(0);', 5
+							);
+
+			$shop_menu->addChild('shop_delivery_methods', $delivery_menu);
+
 			$shop_menu->addSeparator(5);
 						
 			$shop_menu->addChild(null, new backend_MenuItem(
@@ -527,11 +535,6 @@ class shop extends Module {
 				case 'stocks':
 					break;
 
-				case 'delivery_methods':
-					$handler = ShopDeliveryMethodsHandler::getInstance($this);
-					$handler->transferControl($params, $children);
-					break;
-
 				case 'settings':
 					$this->showSettings();
 					break;
@@ -639,40 +642,6 @@ class shop extends Module {
 		$sql .= "PRIMARY KEY ( `id` ),
 				KEY `definition` (`definition`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop delivery methods
-		$sql = "
-			CREATE TABLE `shop_delivery_methods` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,";
-				
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
-			
-		$sql .= "
-				`international` BOOLEAN NOT NULL DEFAULT '0',
-				`domestic` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "
-			CREATE TABLE `shop_delivery_method_prices` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`method` int(11) NOT NULL,
-				`value` DECIMAL(8,2) NOT NULL,
-				PRIMARY KEY ( `id` ),
-				KEY `method` (`method`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "
-			CREATE TABLE `shop_delivery_item_relations` (
-				`item` int(11) NOT NULL,
-				`price` int(11) NOT NULL,
-				PRIMARY KEY ( `item` ),
-				KEY `price` (`price`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 		$db->query($sql);
 
 		// create shop categories table
@@ -818,9 +787,6 @@ class shop extends Module {
 					'shop_stock',
 					'shop_related_items',
 					'shop_manufacturers',
-					'shop_delivery_methods',
-					'shop_delivery_method_prices',
-					'shop_delivery_item_relations'
 				);
 		
 		$db->drop_tables($tables);
@@ -1563,8 +1529,6 @@ class shop extends Module {
 
 		// get managers
 		$manager = ShopItemManager::getInstance();
-		$delivery_manager = ShopDeliveryMethodPricesManager::getInstance();
-		$item_delivery_manager = ShopDeliveryItemRelationsManager::getInstance();
 
 		// get items from database and prepare result
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
@@ -1582,18 +1546,8 @@ class shop extends Module {
 		$map_id_to_uid = array();
 
 		// get prefered method
-		if (isset($_SESSION['delivery_method'])) {
+		if (isset($_SESSION['delivery_method'])) 
 			$delivery_method = $_SESSION['delivery_method'];
-			$delivery_method_manager = ShopDeliveryMethodsManager::getInstance();
-
-			$raw_delivery_mehtod = $delivery_method_manager->getSingleItem(
-											array('name'), 
-											array('id' => $delivery_method)
-										);
-
-			if (is_object($raw_delivery_mehtod))
-				$delivery_method_name = $raw_delivery_mehtod->name[$default_language];
-		}
 
 		// parse items from database
 		foreach ($items as $item) {
@@ -1609,46 +1563,11 @@ class shop extends Module {
 		}
 
 		// get delivery prices
-		$prices = $delivery_manager->getItems($delivery_manager->getFieldNames(), array());
-
-		if (count($prices) > 0)
-			foreach ($prices as $price)
-				$delivery_prices[$price->id] = array(
-									'method'	=> $price->method,
-									'value'		=> $price->value
-								);
-
-		// get item associations with delivery methods
-		$relations = $item_delivery_manager->getItems(
-									$item_delivery_manager->getFieldNames(),
-									array('item' => array_keys($map_id_to_uid))
-								);
-
-		if (count($relations) > 0)
-			foreach ($relations as $relation) {
-				$item_uid = $map_id_to_uid[$relation->item];
-
-				if (!array_key_exists('delivery_methods', $cart[$item_uid]))
-					$cart[$item_uid]['delivery_methods'] = array();
-
-				$method_id = $delivery_prices[$relation->price]['method'];
-				$cart[$item_uid]['delivery_methods'][$method_id] = $relation->price;
-			}
 
 		// prepare items for checkout
 		foreach ($cart as $uid => $item) {
 			// get price for delivery method
-			if (!empty($item['delivery_methods'])) {
-				if (array_key_exists($delivery_method, $item['delivery_methods']))
-					$delivery_price_id = $item['delivery_methods'][$delivery_method]; else
-					$delivery_price_id = array_pop($item['delivery_methods']);
-
-				$delivery_price = $delivery_prices[$delivery_price_id]['value'];
-
-			} else {
-				// no delivery methods defined
-				$delivery_price = 0;
-			}
+			$delivery_price = 0;
 
 			// include all item variations in preparation
 			if (count($item['variations']) > 0)
@@ -1930,9 +1849,7 @@ class shop extends Module {
 			// load template
 			$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
 			$template->registerTagHandler('_checkout_items', $this, 'tag_CheckoutItems');
-
-			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this);
-			$template->registerTagHandler('_delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
+			$template->registerTagHandler('_delivery_methods', $this, 'tag_DeliveryMethodsList');
 
 			// parse template
 			$params = array(
@@ -2105,5 +2022,39 @@ class shop extends Module {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+	}
+
+	/**
+	 * Show list of delivery methods.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_DeliveryMethodsList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'delivery_method.xml');
+
+		if (count($this->delivery_methods) > 0)
+			foreach($this->delivery_methods as $name => $module) {
+				$params = array(
+							'name'					=> $name,
+							'title'					=> $module->getTitle(),
+							'icon'					=> $module->getIcon(),
+							'image'					=> $module->getImage(),
+							'is_international'		=> $module->isInternational()
+						);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Function that returns boolean denoting if shop is in testing phase.
+	 *
+	 * @return boolean
+	 */
+	public function isDebug() {
+		return true;
 	}
 }
