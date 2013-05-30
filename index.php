@@ -22,8 +22,6 @@
  * @author Mladen Mijatov <meaneye.rcf@gmail.com>
  */
 
-require_once('units/config.php');
-require_once('units/doctypes.php');
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
@@ -40,9 +38,16 @@ require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
 require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
+require_once('units/config.php');
+require_once('units/doctypes.php');
+
+// set timezone as specificed in the config
+date_default_timezone_set(_TIMEZONE);
 
 // change error reporting level
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+if (!is_defined('DEBUG'))
+	error_reporting(E_ERROR | E_WARNING | E_USER_ERROR | E_USER_WARNING); else
+	error_reporting(E_ALL | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 
 // define constants
 define('_BASEPATH', dirname(__FILE__));
@@ -92,7 +97,9 @@ if ($section == 'backend' || $section == 'backend_module')
 	$url_rewrite = false;
 
 // start database engine
-database_connect();
+if ($db_use)
+	if (!database_connect())
+		die('There was an error while trying to connect database.');
 
 // transfer display control
 $cache = CacheHandler::getInstance();

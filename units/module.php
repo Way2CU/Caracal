@@ -102,14 +102,17 @@ abstract class Module {
 	 * @return array
 	 */
 	protected function getSettings() {
-		global $db;
+		global $db, $db_use;
+
 		$result = array();
 
-		$settings = $db->get_results("SELECT `variable`, `value` FROM `system_settings` WHERE `module` = '$this->name' ORDER BY `variable` ASC");
+		if ($db_use) {
+			$settings = $db->get_results("SELECT `variable`, `value` FROM `system_settings` WHERE `module` = '$this->name' ORDER BY `variable` ASC");
 
-		if ($db->num_rows() > 0)
-			foreach ($settings as $setting)
-				$result[$setting->variable] = $setting->value;
+			if ($db->num_rows() > 0)
+				foreach ($settings as $setting)
+					$result[$setting->variable] = $setting->value;
+		}
 
 		return $result;
 	}

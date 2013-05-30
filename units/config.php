@@ -6,6 +6,10 @@
 
 // document standard
 define('_STANDARD', 'html5');
+define('_TIMEZONE', 'America/New_York');
+
+/* define('DEBUG', 1); */
+/* define('SQL_DEBUG', 1); */
 
 // paths
 $module_path = 'modules/';
@@ -17,6 +21,7 @@ $system_template_path = 'units/templates/';
 // database
 $db = null;
 $db_use = true;
+$db_type = DatabaseType::MYSQL;
 $db_config = array(
 		'host' => 'localhost',
 		'user' => 'root',

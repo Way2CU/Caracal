@@ -265,7 +265,7 @@ class ItemManager {
 				break;
 		}
 
-		if (defined('SQL_DEBUG')) trigger_error($result);
+		if (defined('SQL_DEBUG')) trigger_error($result, E_USER_NOTICE);
 		return $result;
 	}
 
@@ -405,6 +405,23 @@ class ItemManager {
 		$result = implode($delimiter, $tmp);
 
 		unset($tmp);
+		return $result;
+	}
+
+	/**
+	 * Check if table manager is associated with exists.
+	 *
+	 * @return boolean
+	 */
+	public function tableExists() {
+		global $db, $db_use;
+		$result = false;
+
+		if ($db_use) {
+			$db->query("SHOW TABLES LIKE '{$this->table_name}'");
+			$result = $db->num_rows() > 0;
+		}
+
 		return $result;
 	}
 }

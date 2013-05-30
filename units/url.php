@@ -66,7 +66,7 @@ function url_UnpackValues() {
  * @example url_Make( "action", "section", array("param", "value"), array("param2", "value2") );
  * @author Mladen Mijatov
  */
-function url_Make($action, $section) {
+function url_Make($action='', $section='') {
 	global $url_rewrite, $url_add_extension, $url_language_optional, $language;
 
 	$arguments = array();

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * MySQL Support Implementation
- * Copyright (c) 2012. by Way2CU
+ * SQLite Support Implementation
+ * Copyright (c) 2013. by Way2CU
  *
  * @author Mladen Mijatov
  */
@@ -10,7 +10,18 @@
 require_once('base.php');
 
 
-class Database_MySQL extends Database {
+class Database_SQLite extends Database {
+
+	/**
+	 * Generate database file name.
+	 *
+	 * @return string
+	 */
+	private function getFileName($database) {
+		global $data_path;
+		return $data_path.$database.'.sqlite';
+	}
+
 	/**
 	 * Connect to database server.
 	 *
@@ -20,16 +31,16 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function connect($config) {
-		$result = false;
-		$this->handle = new mysqli($config['host'], $config['user'], $config['pass']);
+		$result = true;
 
-		if (!mysqli_connect_error()) {
-			$result = true;
+		try {
+			// try connecting to specified database
+			$this->handle = new SQLite3($this->getFileName($config['name']), SQLITE3_OPEN_READWRITE);
 			$this->active = true;
-			
-			// set default protocol encoding
-			$this->handle->set_charset('utf8');
-		} 
+
+		} catch (Exception $error) {
+			$result = false;
+		}
 
 		return $result;
 	}
@@ -41,12 +52,7 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function select($database) {
-		$result = false;
-
-		if ($this->active) 
-			$result = $this->handle->select_db($database);
-
-		return $result;
+		return file_exists($this->getFileName($database));
 	}
 
 	/**
@@ -56,13 +62,7 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function exists($database) {
-		$sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = `{$database}`";
-		$response = $this->handle->query();
-
-		$result = $response->num_rows > 0;
-		$response->free();
-
-		return $result;
+		return file_exists($this->getFileName($database));
 	}
 
 	/**
@@ -72,8 +72,18 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function create($database) {
-		$sql = "CREATE DATABASE `{$database}`";
-		return $this->handle->query($sql) === true;
+		$result = true;
+
+		try {
+			$this->handle = new SQLite3($this->getFileName($database), SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+			$this->active = true;
+
+		} catch (Exception $error) {
+			trigger_error($error);
+			$result = false;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -83,8 +93,13 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function drop($database) {
-		$sql = "DROP DATABASE `{$database}`";
-		$result = $this->handle->query($sql) === true;
+		$result = false;
+		$file_name = $this->getFileName($database);
+
+		if (file_exists($file_name)) {
+			unlink($file_name);
+			$result = true;
+		}
 
 		return $result;
 	}
@@ -96,7 +111,7 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function query($sql) {
-		return $this->handle->query($sql) === true;
+		return $this->handle->exec($sql) === false;
 	}
 
 	/**
@@ -106,10 +121,7 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function multi_query($sql) {
-		$this->handle->multi_query($sql) === true;
-		while ($this->handle->more_results() && $this->handle->next_result());
-
-		return $this->handle->errno == 0;
+		return $this->query($sql);
 	}
 
 	/**
@@ -121,11 +133,11 @@ class Database_MySQL extends Database {
 	public function get_results($sql) {
 		$result = array();
 
-		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
-			while ($row = $db_result->fetch_object())
+		if ($db_result = $this->handle->query($sql)) {
+			while ($row = $db_result->fetchArray())
 				$result[] = $row;
 
-			$db_result->close();
+			$db_result->finalize();
 		}
 
 		return $result;
@@ -139,18 +151,24 @@ class Database_MySQL extends Database {
 	 * @return array
 	 */
 	public function get_row($sql, $index=0) {
+		$i = 0;
 		$result = null;
 
-		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
-			if (!$db_result->data_seek($index))
-				return;
+		if ($db_result = $this->handle->query($sql)) {
+			while ($row = $db_result->fetchArray()) {
+				if ($index == $i++) {
+					$result = $row;
+					break;
+				}
+			}
 
-			$result = $db_result->fetch_array();
-			$db_result->close();
+			$db_result->finalize();
 		}
 
 		return $result;
 	}
+
+
 
 	/**
 	 * Get value of single varible.
@@ -161,13 +179,13 @@ class Database_MySQL extends Database {
 	public function get_var($sql) {
 		$result = null;
 
-		if ($db_result = $this->handle->query($sql, MYSQLI_STORE_RESULT)) {
-			$row = $db_result->fetch_array(MYSQLI_NUM);
+		if ($db_result = $this->handle->query($sql)) {
+			$row = $db_result->fetchArray(MYSQLI_NUM);
 
 			if (!is_null($row) && count($row) > 0)
 				$result = $row[0];
 
-			$db_result->close();
+			$db_result->finalize();
 		}
 
 		return $result;
@@ -179,7 +197,7 @@ class Database_MySQL extends Database {
 	 * @return integer
 	 */
 	public function get_inserted_id() {
-		return $this->handle->insert_id;
+		return $this->handle->lastInsertRowID();
 	}
 
 	/**
@@ -188,7 +206,7 @@ class Database_MySQL extends Database {
 	 * @return integer
 	 */
 	public function num_rows() {
-		return $this->handle->affected_rows;
+		return $this->handle->changes();
 	}
 
 	/**
@@ -198,7 +216,7 @@ class Database_MySQL extends Database {
 	 */
 	public function drop_tables($tables) {
 		$sql = 'DROP TABLES `'.implode('`, `', $tables).'`';
-		return $this->handle->query($sql) === true;
+		return $this->handle->exec($sql) === true;
 	}
 
 	/**
@@ -208,7 +226,7 @@ class Database_MySQL extends Database {
 	 * @return string
 	 */
 	public function escape_string($string) {
-		return $this->handle->real_escape_string($string);
+		return $this->handle->escapeString($string);
 	}
 }
 

@@ -120,6 +120,28 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Function that tries to figgure out if human is sending the data.
+	 *
+	 * @param boolean $strict Whether to be strict when checking for bots
+	 * @return boolean
+	 */
+	private function _detectBots($strict=false) {
+		$result = false;
+
+		// every browser sets user agent field, absence of one almost
+		// always means user submitting data is actually a bot
+		if (empty($_SERVER['HTTP_USER_AGENT']))
+			$result = true;
+
+		// most of modern browsers set referer field, however it's possible
+		// for this field not to be set by some browsers when submitting form
+		if ($strict && empty($_SERVER['HTTP_REFERER']))
+			$result = true;
+
+		return $results;
+	}
+
+	/**
 	 * Process mail sending request issued by template parser
 	 *
 	 * @param array $params
@@ -301,7 +323,7 @@ class contact_form extends Module {
 		// get headers string
 		$headers_string = $this->_makeHeaders($headers);
 		
-		return mail($to, $subject, $body, $headers_string);
+		return $this->_detectBots() && mail($to, $subject, $body, $headers_string);
 	}
 
 	/**
@@ -358,7 +380,7 @@ class contact_form extends Module {
 		$body = $this->_makeBody($fields, $boundary);
 		$headers_string = $this->_makeHeaders($headers);
 
-		return mail($to, $subject, $body, $headers_string);
+		return $this->_detectBots() && mail($to, $subject, $body, $headers_string);
 	}
 
 	/**
