@@ -30,13 +30,62 @@ div#checkout {
 table.checkout_details {
 	width: 100%;
 
+	margin-bottom: 20px;
+
 	border: 1px solid white;
-	border-radius: 8px 8px 5px 5px;
+	border-radius: 8px 8px 0px 0px;
 	background-color: white;
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
 	color: #333333;
 	font-size: 13px;
+}
+
+/**
+ * Delivery method selection
+ */
+div#checkout div.delivery_method {
+	display: block;
+
+	padding: 7px;
+
+	border: 1px solid white;
+	background-color: white;
+	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+
+	color: #333333;
+}
+
+div#checkout div.delivery_method label input[type=radio] {
+	display: none;
+}
+
+div#checkout div.delivery_method label input + span:before {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	
+	margin-bottom: -3px;
+	margin-right: 4px;
+
+	border: 1px solid #b0b0b0;
+	border-radius: 9px;
+	background-image: url(../images/checkbox.png);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
+
+	content: '';
+
+	transition-property: all;
+	transition-duration: 0.3s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.3s;
+}
+
+div#checkout div.delivery_method label input:checked + span:before {
+	background-position: -16px 0px;
+	box-shadow: none;
 }
 
 /**
@@ -51,7 +100,7 @@ div.transaction_details {
 	margin-top: 20px;
 	padding: 10px;
 
-	border: 1px solid #b0b0b0;
+	border: 1px solid white;
 	background-color: white;
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
@@ -64,9 +113,29 @@ body.rtl div.transaction_details {
 }
 
 div.transaction_details textarea {
-	display: block;
-	width: 390px;
+	width: 388px;
 	height: 100px;
+	resize: none;
+
+	margin: 0px;
+	padding: 5px;
+
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
+	background-color: white;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
+	
+	color: #333333;
+
+	transition-property: all;
+	transition-duration: 0.3s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.3s;
+}
+
+div.transaction_details textarea:focus {
+	border: 1px solid #0B63C8;
 }
 
 /**
@@ -346,6 +415,7 @@ div#input_details h1 {
 div#input_details hr {
 	display: block;
 	height: 0px;
+	width: auto;
 
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -404,11 +474,14 @@ div#input_details label input {
 div#input_details label select.bad,
 div#input_details label input.bad {
 	border-color: red;
+	box-shadow: 
+			inset 3px 3px 5px rgba(200, 200, 200, 0.4),
+			0px 0px 5px rgba(255, 0, 0, 0.6);
 }
 
 div#input_details label select:focus,
 div#input_details label input:focus {
-	border: 1px solid #0B63CE;
+	border: 1px solid #0B63C8;
 }
 
 div#input_details label.checkbox span,
@@ -613,4 +686,9 @@ div.payment_methods span {
 div.payment_methods span.active {
 	border: 1px solid #0b63ce;
 	box-shadow: 0px 0px 10px rgba(11, 111, 212, 0.7);
+}
+
+div.payment_methods span.bad {
+	border: 1px solid red;
+	box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
 }
