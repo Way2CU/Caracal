@@ -1,10 +1,12 @@
 <?php
 
 /**
- * BLANK MODULE
+ * FedEx Integration
  *
- * @author MeanEYE.rcf
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  */
+
 
 class fedex extends Module {
 	private static $_instance;
@@ -17,16 +19,31 @@ class fedex extends Module {
 		
 		parent::__construct(__FILE__);
 
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/fedex.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/fedex.js'), 'type'=>'text/javascript'));
+		// register backend
+		if (class_exists('backend') && class_exists('shop')) {
+			$backend = backend::getInstance();
+			$method_menu = $backend->getMenu('shop_delivery_methods');
+
+			if (!is_null($method_menu)) 
+				$method_menu->addChild('', new backend_MenuItem(
+									$this->getLanguageConstant('menu_fedex'),
+									url_GetFromFilePath($this->path.'images/icon.png'),
+
+									window_Open( // on click open window
+												'fedex',
+												650,
+												$this->getLanguageConstant('title_settings'),
+												true, true,
+												backend_UrlMake($this->name, 'settings')
+											),
+									$level=5
+								));
 		}
 
-		// register backend
-		if (class_exists('backend')) {
-			$backend = backend::getInstance();
+		// register delivery method
+		if (class_exists('shop')) {
+			require_once('units/delivery_method.php');
+			FedEx_DeliveryMethod::getInstance($this);
 		}
 	}
 
@@ -48,15 +65,16 @@ class fedex extends Module {
 	 */
 	public function transferControl($params = array(), $children = array()) {
 		// global control actions
-		if (isset($params['action']))
-			switch ($params['action']) {
-				default:
-					break;
-			}
-
-		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
+				case 'settings':
+					$this->showSettings();
+					break;
+
+				case 'save_settings':
+					$this->saveSettings();
+					break;
+
 				default:
 					break;
 			}
@@ -83,28 +101,16 @@ class fedex extends Module {
 
 		$db->query($sql);
 	}
-}
-
-
-class SomeManager extends ItemManager {
-	private static $_instance;
 
 	/**
-	 * Constructor
+	 * Show settings edit form.
 	 */
-	protected function __construct() {
-		parent::__construct('table_name');
-
-		$this->addProperty('id', 'int');
+	private function showSettings() {
 	}
 
 	/**
-	 * Public function that creates a single instance
+	 * Save settings.
 	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
+	private function saveSettings() {
 	}
 }
