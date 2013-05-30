@@ -56,23 +56,20 @@
 					</tbody>
 				</table>
 
+				<div class="delivery_method">
+					<span><_text constant="label_delivery_method" module="shop"/></span>
+					<div class="delivery_methods">
+						<_delivery_methods
+							shopping_cart="1"
+							template="delivery_checkout.xml"
+							local="1"
+							selected="isset($_SESSION['delivery_method']) ? $_SESSION['delivery_method'] : 0"
+							eval="selected"
+						/>
+					</div>
+				</div>
+
 				<div class="transaction_details">
-					<label>
-						<span><_text constant="label_delivery_method" module="shop"/></span>
-						<select
-							name="delivery_method"
-							onchange="javascript: shopping_cart.changeDeliveryMethod($(this).val());"
-						>
-							<option/>
-							<_delivery_methods
-								shopping_cart="1"
-								template="delivery_checkout_list_item.xml"
-								local="1"
-								selected="isset($_SESSION['delivery_method']) ? $_SESSION['delivery_method'] : 0"
-								eval="selected"
-							/>
-						</select>
-					</label>
 					<label>
 						<span><_text constant="label_remarks" module="shop"/></span>
 						<textarea name="remarks" rows="4" cols="25"/>

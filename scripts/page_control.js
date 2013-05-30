@@ -19,6 +19,10 @@ function PageControl(selector, page_selector) {
 	self.form = null;
 	self.submit_on_end = false;
 
+	// signal handlers
+	self.on_page_flip = new Array();
+	self.on_submit = new Array();
+
 	/**
 	 * Finalize object initalization.
 	 */
@@ -87,8 +91,14 @@ function PageControl(selector, page_selector) {
 			new_page += page > self.current_page ? 1 : -1;
 
 		// submit on last page
-		if (new_page > self.pages.length - 1 && self.submit_on_end) 
+		if (new_page > self.pages.length - 1 && self.submit_on_end) {
+			// emit submit signal
+			if (!self._emitSignal('submit', current_page))
+				return;
+
+			// submit form
 			self.form.submit()
+		}
 
 		// if first or last page is disabled ignore switch request
 		if (new_page < 0 || new_page > self.pages.length -1) 
@@ -102,6 +112,10 @@ function PageControl(selector, page_selector) {
 
 		// make sure we don't show animation if page is already visible
 		if (new_page == self.current_page)
+			return;
+
+		// emit signal and exit unless all of the handlers approve
+		if (!self._emitSignal('page-flip', self.current_page, new_page))
 			return;
 
 		// switch page
@@ -143,6 +157,49 @@ function PageControl(selector, page_selector) {
 		// update reached page
 		if (self.current_page > self.reached_page)
 			self.reached_page = self.current_page;
+	};
+
+	/**
+	 * Emit signal with specified parameters. This function accepts more than one
+	 * parameter. All except first parameter will be passed to callback function.
+	 *
+	 * @param string signal_name
+	 * @param ...
+	 * @return boolean
+	 */
+	self._emitSignal = function(signal_name) {
+		var result = true;
+		var params = new Array();
+		var list = null;
+
+		// prepare arguments
+		for (var index in arguments)
+			params.push(arguments[index]);
+		params = params.slice(1);
+
+		// get list of functions to call
+		switch(signal_name) {
+			case 'page-flip':
+				list = self.on_page_flip;
+				break;
+
+			case 'submit':
+				list = self.on_submit;
+				break;
+		}
+
+		// emit signal
+		if (list != null)
+			for (var index in list) {
+				var callback = list[index];
+
+				if (!callback.apply(this, params)) {
+					result = false;
+					break;
+				}
+			}
+
+		return result;
 	};
 
 	/**
@@ -308,6 +365,42 @@ function PageControl(selector, page_selector) {
 	self.setAllowForward = function(allow) {
 		self.allow_forward = allow;
 		return self;
+	};
+
+	/**
+	 * Connect function to be called when specified signal is emitted.
+	 *
+	 * Callback for page-flip:
+	 * 		function (current_page, new_page), returns boolean
+	 *
+	 * Callback for submit:
+	 * 		function (current_page), returns boolean
+	 *
+	 * @param string signal_name
+	 * @param function callback
+	 * @param boolean top
+	 */
+	self.connect = function(signal_name, callback, top) {
+		switch (signal_name) {
+			case 'page-flip':
+				if (!top)
+					self.on_page_flip.push(callback); else
+					self.on_page_flip.splice(0, 0, callback);
+
+				break;
+
+			case 'submit':
+				if (!top)
+					self.on_submit.push(callback); else
+					self.on_submit.splice(0, 0, callback);
+
+				break;
+
+			default:
+				break;
+		}
+
+		return this;
 	};
 
 	// finish object initialization

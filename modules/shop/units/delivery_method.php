@@ -81,6 +81,19 @@ abstract class DeliveryMethod {
 	 * Get available delivery types for selected items. Each type needs
 	 * to return estimated delivery time, cost and name of service.
 	 *
+	 * Example of items array:
+	 * 		$items = array(
+	 * 					array(
+	 * 						'properties'	=> array(),
+	 * 						'package_type'	=> 0,
+	 * 						'width'			=> 0.2,
+	 * 						'height'		=> 0.5,
+	 * 						'length'		=> 1,
+	 * 						'units'			=> 1,
+	 * 						'count'			=> 1
+	 * 					)
+	 * 				);
+	 *
 	 * Example of result array:
 	 *		$result = array(
 	 *					array('Normal', 19.95, 1364040000, 1365040000),
@@ -91,6 +104,21 @@ abstract class DeliveryMethod {
 	 * @return array
 	 */
 	abstract public function getDeliveryTypes($items);
+
+	/**
+	 * Get list of supported package types. Items in resulting array must
+	 * corespond to constants in PackageType class.
+	 *
+	 * Example of resulting array:
+	 * 		$result = array(
+	 * 					PackageType::BOX_10,
+	 * 					PackageType::ENVELOPE,
+	 * 					PackageType::PAK
+	 * 				);
+	 *
+	 * @return array
+	 */
+	abstract public function getSupportedPackageTypes();
 
 	/**
 	 * Get special params supported by delivery method which should be

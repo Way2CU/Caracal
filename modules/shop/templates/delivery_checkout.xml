@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label>
+		<span>
+			<img
+				src="$params['image']"
+				alt="$params['title']"
+				eval="src,alt"
+			/>
+		</span>
+		<cms:if condition="$params['selected']">
+			<input
+				type="radio"
+				name="delivery_method"
+				value="$params['name']"
+				eval="value"
+				checked="checked"
+			/>
+		</cms:if>
+		<cms:if condition="!$params['selected']">
+			<input
+				type="radio"
+				name="delivery_method"
+				value="$params['name']"
+				eval="value"
+			/>
+		</cms:if>
+	</label>
+</document>
