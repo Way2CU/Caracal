@@ -262,7 +262,7 @@ class page_info extends Module {
 			} else {
 				$styles = array(
 						'/styles/common.css',
-						'/styles/main_mobile.css',
+						'/styles/main.css',
 						'/styles/header_mobile.css',
 						'/styles/content_mobile.css',
 						'/styles/footer_mobile.css'
