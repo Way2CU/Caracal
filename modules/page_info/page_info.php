@@ -246,45 +246,40 @@ class page_info extends Module {
 
 		// add default styles and script if they exists
 		if ($section != 'backend') {
-			$head_tag->addTag('link',
-					array(
-						'rel'	=> 'stylesheet',
-						'type'	=> 'text/css',
-						'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/common.css')
-					));
+			$desktop_version = strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'mobile') === false;
 
-			if (file_exists(_BASEPATH.'/styles/main.css'))
-				$head_tag->addTag('link',
-						array(
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/main.css')
-						));
+			$styles = array();
 
-			if (file_exists(_BASEPATH.'/styles/header.css'))
-				$head_tag->addTag('link',
-						array(
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/header.css')
-						));
+			// prepare list of files
+			if ($desktop_version) {
+				$styles = array(
+						'/styles/common.css',
+						'/styles/main.css',
+						'/styles/header.css',
+						'/styles/content.css',
+						'/styles/footer.css'
+					);
+			} else {
+				$styles = array(
+						'/styles/common.css',
+						'/styles/main_mobile.css',
+						'/styles/header_mobile.css',
+						'/styles/content_mobile.css',
+						'/styles/footer_mobile.css'
+					);
+			}
 
-			if (file_exists(_BASEPATH.'/styles/content.css'))
-				$head_tag->addTag('link',
-						array(
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/content.css')
-						));
+			// include styles
+			foreach ($styles as $style)
+				if (file_exists(_BASEPATH.$style))
+					$head_tag->addTag('link',
+							array(
+								'rel'	=> 'stylesheet',
+								'type'	=> 'text/css',
+								'href'	=> url_GetFromFilePath(_BASEPATH.$style)
+							));
 
-			if (file_exists(_BASEPATH.'/styles/footer.css'))
-				$head_tag->addTag('link',
-						array(
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/styles/footer.css')
-						));
-
+			// add main javascript
 			if (file_exists(_BASEPATH.'/scripts/main.js'))
 				$head_tag->addTag('script',
 						array(
