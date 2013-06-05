@@ -41,27 +41,27 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 
 		// configure implemented version numbers for each service
 		$this->versions = array(
-					RATE_SERVICE				=> array(13, 0, 0),
-					TRACK_SERVICE				=> array(6, 0, 0),
-					GLOBAL_SHIPPING_SERVICE		=> array(1, 0, 0),
-					PACKAGE_MOVEMENT_SERVICE	=> array(5, 0, 0),
+					FedEx_DeliveryMethod::RATE_SERVICE				=> array(13, 0, 0),
+					FedEx_DeliveryMethod::TRACK_SERVICE				=> array(6, 0, 0),
+					FedEx_DeliveryMethod::GLOBAL_SHIPPING_SERVICE	=> array(1, 0, 0),
+					FedEx_DeliveryMethod::PACKAGE_MOVEMENT_SERVICE	=> array(5, 0, 0),
 				);
 		
 		// form path where protocol definitions are stored
 		$wsdl_path = $this->parent->path.'wsdl/';
 		$this->wsdl = array (
-					RATE_SERVICE				=> $wsdl_path."RateService_v{$this->versions[RATE_SERVICE][0]}.wsdl",
-					TRACK_SERVICE				=> $wsdl_path."TrackService_v{$this->versions[TRACK_SERVICE][0]}.wsdl",
-					GLOBAL_SHIPPING_SERVICE		=> $wsdl_path."GlobalShipAddressService_v{$this->versions[GLOBAL_SHIPPING_SERVICE][0]}.wsdl",
-					PACKAGE_MOVEMENT_SERVICE	=> $wsdl_path."PackageMovementInformationService_v{$this->versions[PACKAGE_MOVEMENT_SERVICE][0]}.wsdl"
+					FedEx_DeliveryMethod::RATE_SERVICE				=> $wsdl_path."RateService_v{$this->versions[FedEx_DeliveryMethod::RATE_SERVICE][0]}.wsdl",
+					FedEx_DeliveryMethod::TRACK_SERVICE				=> $wsdl_path."TrackService_v{$this->versions[FedEx_DeliveryMethod::TRACK_SERVICE][0]}.wsdl",
+					FedEx_DeliveryMethod::GLOBAL_SHIPPING_SERVICE	=> $wsdl_path."GlobalShipAddressService_v{$this->versions[FedEx_DeliveryMethod::GLOBAL_SHIPPING_SERVICE][0]}.wsdl",
+					FedEx_DeliveryMethod::PACKAGE_MOVEMENT_SERVICE	=> $wsdl_path."PackageMovementInformationService_v{$this->versions[FedEx_DeliveryMethod::PACKAGE_MOVEMENT_SERVICE][0]}.wsdl"
 				);
 
 		// populate service string ids
 		$this->string_id = array(
-					RATE_SERVICE				=> 'crs',
-					TRACK_SERVICE				=> 'crs',
-					GLOBAL_SHIPPING_SERVICE		=> 'crs',
-					PACKAGE_MOVEMENT_SERVICE	=> 'crs'
+					FedEx_DeliveryMethod::RATE_SERVICE				=> 'crs',
+					FedEx_DeliveryMethod::TRACK_SERVICE				=> 'crs',
+					FedEx_DeliveryMethod::GLOBAL_SHIPPING_SERVICE	=> 'crs',
+					FedEx_DeliveryMethod::PACKAGE_MOVEMENT_SERVICE	=> 'crs'
 				);
 
 		// register delivery method
