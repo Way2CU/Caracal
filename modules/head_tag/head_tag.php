@@ -15,6 +15,7 @@ class head_tag extends Module {
 	private $closeable_tags = array('script', 'style');
 	
 	private $analytics = null;
+	private $analytics_domain = null;
 
 	private $optimizer = null;
 	private $optimizer_key = '';
@@ -95,9 +96,11 @@ class head_tag extends Module {
 	 * Add Google Analytics script to the page
 	 *  
 	 * @param string $code
+	 * @param string $domain
 	 */
-	public function addGoogleAnalytics($code) {
+	public function addGoogleAnalytics($code, $domain) {
 		$this->analytics = $code;
+		$this->analytics_domain = $domain;
 	}
 
 	/**
@@ -204,8 +207,9 @@ class head_tag extends Module {
 			$template->setMappedModule($this->name);
 	
 			$params = array(
-							'code'	=> $this->analytics
-						);
+						'code'		=> $this->analytics,
+						'domain'	=> $this->analytics_domain
+					);
 	
 			$template->restoreXML();
 			$template->setLocalParams($params);
