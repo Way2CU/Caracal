@@ -132,12 +132,14 @@ class page_info extends Module {
 	private function saveSettings() {
 		$description = fix_chars($_REQUEST['description']);
 		$analytics = fix_chars($_REQUEST['analytics']);
+		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
 		$wm_tools = fix_chars($_REQUEST['wm_tools']);
 		$optimizer = fix_chars($_REQUEST['optimizer']);
 		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
 
 		$this->saveSetting('description', $description);
 		$this->saveSetting('analytics', $analytics);
+		$this->saveSetting('analytics_domain', $analytics_domain);
 		$this->saveSetting('wm_tools', $wm_tools);
 		$this->saveSetting('optimizer', $optimizer);
 		$this->saveSetting('optimizer_key', $optimizer_key);
@@ -193,7 +195,10 @@ class page_info extends Module {
 		if ($section != 'backend' && $section != 'backend_module' && $db_use) {
 			// google analytics
 			if (!empty($this->settings['analytics']))
-				$head_tag->addGoogleAnalytics($this->settings['analytics']);
+				$head_tag->addGoogleAnalytics(
+										$this->settings['analytics'],
+										$this->settings['analytics_domain']
+									);
 
 			// google website optimizer
 			if (!empty($this->settings['optimizer']))

@@ -8,10 +8,21 @@
 				<_var name="$settings['description']"/>
 			</textarea>
 		</label>
-		<label>
-			<span><_text constant="label_analytics" module="page_info"/></span>
-			<input type="text" name="analytics" value="$settings['analytics']" eval="value"/>
-		</label>
+		<div style="padding-bottom: 10px;">
+			<div class="box left">
+				<label>
+					<span><_text constant="label_analytics" module="page_info"/></span>
+					<input type="text" name="analytics" value="$settings['analytics']" eval="value"/>
+				</label>
+			</div>
+			<div class="box right">
+				<label>
+					<span><_text constant="label_analytics_domain" module="page_info"/></span>
+					<input type="text" name="analytics_domain" value="$settings['analytics_domain']" eval="value"/>
+				</label>
+			</div>
+			<div style="clear: both;"/>
+		</div>
 		<label>
 			<span><_text constant="label_wm_tools" module="page_info"/></span>
 			<input type="text" name="wm_tools" value="$settings['wm_tools']" eval="value" style="width: 350px;"/>
