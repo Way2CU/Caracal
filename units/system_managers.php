@@ -86,5 +86,86 @@ class LoginRetryManager extends ItemManager {
 
 		return self::$_instance;
 	}
+
+	/**
+	 * Purge outdated entries.
+	 */
+	private function purgeOutdated() {
+		$this->deleteData(array(
+						'day' => array(
+							'operator'	=> '!=',
+							'value'		=> date('j')
+						)));
+	}
+
+	/**
+	 * Get number of retries for current or specified address.
+	 *
+	 * @param string $address
+	 * @return integer
+	 */
+	public function getRetryCount($address=null) {
+		if (is_null($address))
+			$address = $_SERVER['REMOTE_ADDR'];
+
+		// purge outdated entries
+		$this->purgeOutdated();
+
+		// try to get existing entry
+		$result = 0;
+		$entry = $this->getSingleItem(array('count'), array('address' => $address));
+
+		if (is_object($entry))
+			$result = $entry->count;
+
+		return $result;
+	}
+
+	/**
+	 * Increase number of retries for current or specified address.
+	 *
+	 * @param string $address
+	 * @return integer
+	 */
+	public function increaseCount($address=null) {
+		if (is_null($address))
+			$address = $_SERVER['REMOTE_ADDR'];
+
+		// get existing entry if it exists
+		$entry = $this->getSingleItem($this->getFieldNames(), array('address' => $address));
+
+		if (is_object($entry)) {
+			// don't allow counter to go over 10
+			$count = ($entry->count < 10) ? $entry->count+1 : 10;
+			$this->updateData(
+							array('count'	=> $count),
+							array('id'		=> $entry->id)
+						);
+			$result = $count;
+
+		} else {
+			// there's no existing entry so we create one
+			$this->insertData(array(
+								'day'		=> date('j'),
+								'address'	=> $_SERVER['REMOTE_ADDR'],
+								'count'		=> 1
+							));
+			$result = 1;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Clear number of retries for current or specified address.
+	 *
+	 * @param string $address
+	 */
+	public function clearAddress($address=null) {
+		if (is_null($address))
+			$address = $_SERVER['REMOTE_ADDR'];
+
+		$this->deleteData(array('address' => $address));
+	}
 }
 ?>
