@@ -24,6 +24,7 @@ class ShopTransactionsManager extends ItemManager {
 		$this->addProperty('currency', 'int');
 		$this->addProperty('handling', 'decimal');
 		$this->addProperty('shipping', 'decimal');
+		$this->addProperty('payment_method', 'varchar');
 		$this->addProperty('delivery_method', 'varchar');
 		$this->addProperty('remark', 'text');
 		$this->addProperty('total', 'decimal');
