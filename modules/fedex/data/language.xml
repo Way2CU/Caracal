@@ -4,5 +4,7 @@
 	<language short="en">
 		<constant name="menu_fedex">FedEx</constant>
 		<constant name="title_settings">FedEx</constant>
+
+		<constant name="delivery_method_title">FedEx International</constant>
 	</language>
 </document>
