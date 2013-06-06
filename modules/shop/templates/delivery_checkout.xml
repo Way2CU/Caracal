@@ -2,13 +2,6 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<label>
-		<span>
-			<img
-				src="$params['image']"
-				alt="$params['title']"
-				eval="src,alt"
-			/>
-		</span>
 		<cms:if condition="$params['selected']">
 			<input
 				type="radio"
@@ -26,5 +19,12 @@
 				eval="value"
 			/>
 		</cms:if>
+		<span>
+			<img
+				src="$params['small_image']"
+				alt="$params['title']"
+				eval="src,alt"
+			/>
+		</span>
 	</label>
 </document>
