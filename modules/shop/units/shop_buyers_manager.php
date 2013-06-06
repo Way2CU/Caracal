@@ -19,6 +19,8 @@ class ShopBuyersManager extends ItemManager {
 		$this->addProperty('first_name', 'varchar');
 		$this->addProperty('last_name', 'varchar');
 		$this->addProperty('email', 'varchar');
+		$this->addProperty('validated', 'boolean');
+		$this->addProperty('password', 'varchar');
 		$this->addProperty('uid', 'varchar');
 	}
 
