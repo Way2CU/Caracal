@@ -79,23 +79,8 @@ class SessionManager {
 		$manager = LoginRetryManager::getInstance();
 		$show_captcha = false;
 
-		// remove old logs
-		$manager->deleteData(array(
-								'day'	=> array(
-											'operator'	=> '<>',
-											'value'		=> date('j')
-										)
-								));
-
-		// try to get retries log
-		$retry_log = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array('address' => $_SERVER['REMOTE_ADDR'])
-									);
-
 		// check if user has more than 3 failed atempts
-		if (is_object($retry_log))
-			$show_captcha = $retry_log->count > 3;
+		$show_captcha = $manager->getRetryCount() > 3;
 
 		// create template and show login form
 		$template = new TemplateHandler('session_login.xml', $this->parent->path.'templates/');
@@ -132,14 +117,10 @@ class SessionManager {
 										'password'	=> $password
 									));
 
-		$retry_log = $retry_manager->getSingleItem(
-									$retry_manager->getFieldNames(),
-									array(
-										'address' 	=> $_SERVER['REMOTE_ADDR']
-									));
+		$retry_count = $retry_manager->getRetryCount();
 
 		// check captcha
-		if (is_object($retry_log) && $retry_log->count > 3) {
+		if ($retry_count > 3) {
 			// on purpose we make a separate condition, if captcha
 			// module is not loaded, block IP address for one day
 			if (class_exists('captcha')) {
@@ -188,25 +169,9 @@ class SessionManager {
 		} else {
 			// user is not logged in properly, increase fail
 			// counter and present login window with message
-			if (is_object($retry_log)) {
-				// don't allow counter to go over 10
-				$count = ($retry_log->count < 10) ? $retry_log->count+1 : 10;
-
-				$retry_manager->updateData(
-									array('count' => $count),
-									array('id' => $retry_log->id)
-								);
-
-			} else {
-				$retry_manager->insertData(array(
-										'day'		=> date('j'),
-										'address'	=> $_SERVER['REMOTE_ADDR'],
-										'count'		=> 1
-									));
-			}
-
 			$message = $this->parent->getLanguageConstant('message_login_error');
 			$this->login($message);
+			$retry_manager->increaseCount();
 		}
 	}
 
@@ -271,19 +236,7 @@ class SessionManager {
 	 */
 	public function shouldShowCaptcha() {
 		$manager = LoginRetryManager::getInstance();
-		$show_captcha = false;
-
-		// try to get retries log
-		$retry_log = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array('address' => $_SERVER['REMOTE_ADDR'])
-									);
-
-		// check if user has more than 3 failed atempts
-		if (is_object($retry_log))
-			$show_captcha = $retry_log->count > 3;
-
-		return $show_captcha;
+		return $manager->getRetryCount() > 3;
 	}
 
 	/**
@@ -311,14 +264,10 @@ class SessionManager {
 										'password'	=> $password
 									));
 
-		$retry_log = $retry_manager->getSingleItem(
-									$retry_manager->getFieldNames(),
-									array(
-										'address' 	=> $_SERVER['REMOTE_ADDR']
-									));
+		$retry_count = $retry_manager->getRetryCount();
 
 		// check captcha
-		if (is_object($retry_log) && $retry_log->count > 3) {
+		if ($retry_count > 3) {
 			// on purpose we make a separate condition, if captcha
 			// module is not loaded, block IP address for one day
 			if (class_exists('captcha')) {
@@ -334,7 +283,7 @@ class SessionManager {
 		// check user data
 		if (is_object($user) && $captcha_ok) {
 			// remove login retries
-			$retry_manager->deleteData(array('address' => $_SERVER['REMOTE_ADDR']));
+			$retry_manager->clearAddress();
 
 			// set session variables
 			$_SESSION['uid'] = $user->id;
@@ -348,24 +297,7 @@ class SessionManager {
 		} else {
 			// user is not logged in properly, increase fail
 			// counter and present login window with message
-			$count = 1;
-
-			if (is_object($retry_log)) {
-				// don't allow counter to go over 10
-				$count = ($retry_log->count < 10) ? $retry_log->count+1 : 10;
-
-				$retry_manager->updateData(
-									array('count' => $count),
-									array('id' => $retry_log->id)
-								);
-
-			} else {
-				$retry_manager->insertData(array(
-										'day'		=> date('j'),
-										'address'	=> $_SERVER['REMOTE_ADDR'],
-										'count'		=> $count
-									));
-			}
+			$count = $retry_manager->increaseCount();
 
 			$result['message'] = $this->parent->getLanguageConstant('message_login_error');
 			$result['show_captcha'] = $count > 3;
