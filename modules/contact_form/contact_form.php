@@ -125,7 +125,7 @@ class contact_form extends Module {
 	 * @param boolean $strict Whether to be strict when checking for bots
 	 * @return boolean
 	 */
-	private function _detectBots($strict=false) {
+	public function detectBots($strict=false) {
 		$result = false;
 
 		// every browser sets user agent field, absence of one almost
@@ -323,7 +323,7 @@ class contact_form extends Module {
 		// get headers string
 		$headers_string = $this->_makeHeaders($headers);
 		
-		return $this->_detectBots() && mail($to, $subject, $body, $headers_string);
+		return $this->detectBots() && mail($to, $subject, $body, $headers_string);
 	}
 
 	/**
@@ -380,7 +380,7 @@ class contact_form extends Module {
 		$body = $this->_makeBody($fields, $boundary);
 		$headers_string = $this->_makeHeaders($headers);
 
-		return $this->_detectBots() && mail($to, $subject, $body, $headers_string);
+		return $this->detectBots() && mail($to, $subject, $body, $headers_string);
 	}
 
 	/**
