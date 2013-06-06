@@ -19,7 +19,7 @@ require_once('units/shop_transactions_handler.php');
 require_once('units/shop_warehouse_handler.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
-require_once('units/shop_buyer_addresses_manager.php');
+require_once('units/shop_delivery_address_manager.php');
 require_once('units/shop_related_items_manager.php');
 require_once('units/shop_manufacturer_handler.php');
 require_once('units/shop_delivery_methods_handler.php');
@@ -64,6 +64,8 @@ class shop extends Module {
 				);
 
 	private $search_params = array();
+
+	const BUYER_SECRET = 'oz$9=7if~db/MP|BBN>)63T}6w{D6no[^79L]9>8(8wrv6:$/n63YsvCa<BR4379De1d035wvi]]iqA<P=3gHNv1H';
 
 	/**
 	 * Constructor
@@ -435,6 +437,10 @@ class shop extends Module {
 					$this->setCartFromTemplate($params, $children);
 					break;
 
+				case 'include_scripts':
+					$this->includeScripts($params, $children);
+					break;
+
 				case 'json_get_item':
 					$handler = ShopItemHandler::getInstance($this);
 					$handler->json_GetItem();
@@ -444,8 +450,12 @@ class shop extends Module {
 					$this->json_GetCurrency();
 					break;
 
-				case 'json_get_user_info':
-					$this->json_GetUserInfo();
+				case 'json_get_account_info':
+					$this->json_GetAccountInfo();
+					break;
+
+				case 'json_get_account_exists':
+					$this->json_GetAccountExists();
 					break;
 
 				case 'json_get_payment_methods':
@@ -671,17 +681,21 @@ class shop extends Module {
 				  `first_name` varchar(64) NOT NULL,
 				  `last_name` varchar(64) NOT NULL,
 				  `email` varchar(127) NOT NULL,
+				  `password` varchar(200) NOT NULL,
+				  `validated` BOOLEAN NOT NULL DEFAULT '0',
 				  `uid` varchar(50) NOT NULL,
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 		
 		// create shop buyer addresses table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyer_addresses` (
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_delivery_address` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `buyer` int(11) NOT NULL,
 				  `name` varchar(128) NOT NULL,
 				  `street` varchar(200) NOT NULL,
+				  `street2` varchar(200) NOT NULL,
+				  `phone` varchar(200) NOT NULL,
 				  `city` varchar(40) NOT NULL,
 				  `zip` varchar(20) NOT NULL,
 				  `state` varchar(40) NOT NULL,
@@ -814,6 +828,22 @@ class shop extends Module {
 		if (!array_key_exists($name, $this->delivery_methods))
 			$this->delivery_methods[$name] = $module; else
 			throw new Exception("Delivery method '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Include buyer information and checkout form scripts.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function includeScripts($tag_params, $children) {
+		if (class_exists('head_tag')) {
+			$head_tag = head_tag::getInstance();
+
+			if (isset($_SESSION['buyer']))
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript')); else
+				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/buyer_information.js'), 'type'=>'text/javascript'));
+		}
 	}
 
 	/**
@@ -1218,19 +1248,105 @@ class shop extends Module {
 	/**
 	 * Return user information if email and password are correct.
 	 */
-	private function json_GetUserInfo() {
+	private function json_GetAccountInfo() {
 		$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
 		$password = isset($_REQUEST['password']) ? fix_chars($_REQUEST['password']) : null;
 		$valid_user = false;
 
-		if (!is_null($email) && !is_null($password) && $valid_user) {
+		// get managers
+		$retry_manager = LoginRetryManager::getInstance();
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$delivery_address_manager = ShopDeliveryAddressManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
+
+		if ($retry_manager->getRetryCount() > 3) {
+			header('HTTP/1.1 401 Exceeded number of retries for the day!');
+			return;
+		}
+
+		// check user credentials
+		$buyer = $buyer_manager->getSingleItem(
+									$buyer_manager->getFieldNames(),
+									array('email' => $email, 'password' => hash_hmac('sha256', $password, shop::BUYER_SECRET))
+								);
+
+		if (is_object($buyer)) {
 			$result = array(
+					'information'			=> array(),
+					'delivery_addresses'	=> array(),
+					'last_payment_method'	=> '',
+					'last_delivery_method'	=> ''
 				);
+
+			// populate user information
+			$result['information'] = array(
+									'first_name'	=> $buyer->first_name,
+									'last_name'		=> $buyer->last_name,
+									'email'			=> $buyer->email,
+									'uid'			=> $buyer->uid
+								);
+
+			// populate delivery addresses
+			$address_list = $delivery_address_manager->getItems(
+									$delivery_address_manager->getFieldNames(),
+									array('buyer' => $buyer->id)
+								);
+			if (count($address_list) > 0)
+				foreach ($address_list as $address) {
+					$result['delivery_addresses'][] = array(
+									'name'		=> $address->name,
+									'street'	=> $address->street,
+									'street2'	=> $address->street2,
+									'phone'		=> $address->phone,
+									'city'		=> $address->city,
+									'zip'		=> $address->zip,
+									'state'		=> $address->state,
+									'country'	=> $address->country
+								);
+				}
+
+			// get last used payment and delivery method
+			$transaction = $transaction_manager->getSingleItem(
+									$transaction_manager->getFieldNames(),
+									array('buyer' => $buyer->id),
+									array('timestamp'), false
+								);
+
+			if (is_object($transaction)) {
+				$result['last_payment_method'] = $transaction->payment_method;
+				$result['last_delivery_method'] = $transaction->delivery_method;
+			}
+			$retry_manager->clearAddress();
+
+			print json_encode($result);
 
 		} else {
 			// user didn't supply the right username/password
-			header('HTTP/1.1 401 Invalid username and/or password.');
+			header('HTTP/1.1 401 '.$this->getLanguageConstant('message_error_invalid_credentials'));
+
+			// record bad attempt
+			$retry_manager->increaseCount();
 		}
+	}
+
+	/**
+	 * Check if account with specified email exists in database already.
+	 */
+	private function json_GetAccountExists() {
+		$email = isset($_POST['email']) ? fix_chars($_POST['email']) : null;
+		$manager = ShopBuyersManager::getInstance();
+		$result = array(
+				'account_exists'	=> false,
+				'message'			=> ''
+			);
+
+		if (!is_null($email)) {
+			$account = $manager->getSingleItem(array('id'), array('email' => $email));
+			$result['account_exists'] = is_object($account);
+			$result['message'] = $this->getLanguageConstant('message_error_account_exists');
+		}
+
+		print json_encode($result);
 	}
 
 	/**
@@ -1619,90 +1735,66 @@ class shop extends Module {
 	 */
 	public function tag_CheckoutForm($tag_params, $children) {
 		$method = null;
+
+		$delivery_information = array();
+		$payment_method = null;
+		$billing_information = array();
+
+		$bad_fields = array();
 		$info_available = true;
 
-		// try to get specified payment method
-		if (isset($tag_params['method']) && array_key_exists($tag_params['method'], $this->payment_methods))
-			$method = $this->payment_methods[fix_chars($tag_params['method'])];
+		if (isset($_POST['set_info'])) {
+			// get delivery information
+			$fields = array(
+					'first_name', 'last_name', 'email', 'phone', 'street', 'street2', 
+					'city', 'zip', 'country', 'state'
+				);
+			$required = array('first_name', 'last_name', 'email', 'street', 'city', 'zip', 'country');
 
-		if (isset($_REQUEST['method']) && array_key_exists($_REQUEST['method'], $this->payment_methods))
-			$method = $this->payment_methods[fix_chars($_REQUEST['method'])];
+			foreach($fields as $field)
+				if (isset($_POST[$field]) && !empty($_POST[$field]))
+					$delivery_information[$field] = fid_chars($_POST[$field]); else
+					if (in_array($field, $required))
+						$bad_fields[] = $field;
 
-		// try to get fallback method
-		if (is_null($method) && count($this->payment_methods) > 0) {
-			$methods = $this->payment_methods;
-			$method = array_shift($methods);
-		}
+			// verify password
+			if ($_POST['existing_user'] == 1)
+				if ($_POST['password'] != $_POST['password_confirm']) {
+					// password fields missmatch, mark them as bad
+					$bad_fields[] = 'password';
+					$bad_fields[] = 'password_confirm';
 
-		// we didn't manage to get any payment method, bail out
-		if (is_null($method))
-			return;
-
-		// check if we have all the information we need
-		if (!$method->provides_information() && !isset($_SESSION['buyer'])) {
-			$bad_fields = array();
-			$message = "";
-
-			// grab fields 
-			if (isset($_POST['set_info']) && $_POST['set_info'] == 1) {
-				$buyer = array();
-
-				if (isset($_POST['first_name']) && !empty($_POST['first_name']))
-					$buyer['first_name'] = fix_chars($_POST['first_name']); else
-					$bad_fields[] = 'first_name';
-
-				if (isset($_POST['last_name']) && !empty($_POST['last_name']))
-					$buyer['last_name'] = fix_chars($_POST['last_name']); else
-					$bad_fields[] = 'last_name';
-
-				if (isset($_POST['email']) && !empty($_POST['email']))
-					$buyer['email'] = fix_chars($_POST['email']); else
-					$bad_fields[] = 'email';
-
-				if (isset($_POST['name']) && !empty($_POST['name'])) {
-					$buyer['name'] = fix_chars($_POST['name']); 
-				} else if (isset($buyer['first_name']) && isset($buyer['last_name'])){
-					$buyer['name'] = $buyer['first_name'].' '.$buyer['last_name'];
-					$_POST['name'] = $buyer['name'];
+				} else {
+					// password fields match, salt and hash password
+					$delivery_information['password'] = hash_hmac('sha256', $_POST['password'], shop::BUYER_SECRET);
 				}
 
-				if (isset($_POST['street']) && !empty($_POST['street']))
-					$buyer['street'] = fix_chars($_POST['street']); else
-					$bad_fields[] = 'street';
+			// get payment method
+			if (isset($tag_params['payment_method']) && array_key_exists($tag_params['payment_method'], $this->payment_methods)) {
+				$method_name = fix_chars($tag_params['payment_method']);
+				$payment_method = $this->payment_methods[$method_name];
 
-				if (isset($_POST['city']) && !empty($_POST['city']))
-					$buyer['city'] = fix_chars($_POST['city']); else
-					$bad_fields[] = 'city';
-
-				if (isset($_POST['zip']) && !empty($_POST['zip']))
-					$buyer['zip'] = fix_chars($_POST['zip']); else
-					$bad_fields[] = 'zip';
-
-				if (isset($_POST['country']) && !empty($_POST['country']))
-					$buyer['country'] = fix_chars($_POST['country']); else
-					$bad_fields[] = 'country';
-
-				if (
-					isset($buyer['country']) && $buyer['country'] == 'US' 
-					&& (!isset($_POST['state']) || empty($_POST['state']))
-				)
-					$bad_fields[] = 'state'; else
-					$buyer['state'] = fix_chars($_POST['state']); 
+			} else if (isset($_POST['payment_method']) && array_key_exists($_POST['payment_method'], $this->payment_methods)) {
+				$method_name = fix_chars($_POST['payment_method']);
+				$payment_method = $this->payment_methods[$method_name];
 			}
 
-			$info_available = (count($bad_fields) == 0) && isset($_POST['set_info']);
+			// try to get fallback payment method
+			if (is_null($payment_method) && count($this->payment_methods) > 0)
+				$payment_method = array_shift($this->payment_method);
 
-			// store buyer to session
-			if ($info_available)
-				$_SESSION['buyer'] = $buyer;
+			// get billing information
+			if (!is_null($method) && !$method->provides_information()) {
+				$billing_information = array(
+							);
+			}
 		}
+
+		$info_available = count($bad_fields) == 0 && !is_null($method);
 
 		if ($info_available) {
 			// get shopping cart summary
 			$summary = $this->getCartSummary();
-
-			if (empty($summary))
-				return;
 
 			// get fields for payment method
 			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $method->get_name())));
@@ -2036,10 +2128,12 @@ class shop extends Module {
 		if (count($this->delivery_methods) > 0)
 			foreach($this->delivery_methods as $name => $module) {
 				$params = array(
+							'selected'				=> isset($_SESSION['delivery_method']) && $_SESSION['delivery_method'] == $name,
 							'name'					=> $name,
 							'title'					=> $module->getTitle(),
 							'icon'					=> $module->getIcon(),
 							'image'					=> $module->getImage(),
+							'small_image'			=> $module->getSmallImage(),
 							'is_international'		=> $module->isInternational()
 						);
 
