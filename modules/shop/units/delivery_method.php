@@ -61,6 +61,16 @@ abstract class DeliveryMethod {
 	}
 
 	/**
+	 * Get URL of 100x28 pixel image for delivery method. This image is a
+	 * logo of delivery method and is used in forms for selection.
+	 *
+	 * @return string
+	 */
+	public function getSmallImage() {
+		return url_GetFromFilePath($this->parent->path.'images/image_small.png');
+	}
+
+	/**
 	 * Get status of specified delivery. If available multiple statuses
 	 * should be provided last item being the current status of delivery.
 	 *
