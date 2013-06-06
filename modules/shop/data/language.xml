@@ -192,6 +192,8 @@
 		<constant name="message_warehouse_saved">Warehouse data was saved.</constant>
 		<constant name="message_warehouse_delete">The following warehouse will be removed. Items associated with it, and their stocks, will be cleared. None of the items will be removed! Are you sure about this?</constant>
 		<constant name="message_warehouse_deleted">Warehouse was deleted!</constant>
+		<constant name="message_error_account_exists">Account with specified email address already exists on this system. Please select different email address or click on "password recovery" link.</constant>
+		<constant name="message_error_invalid_credentials">Invalid username and/or password.</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
