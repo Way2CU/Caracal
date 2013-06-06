@@ -8,12 +8,12 @@
 					<!-- Header -->
 					<thead>
 						<tr>
-							<td><_text constant="column_name" module="shop"/></td>
-							<td style="width: 70px"><_text constant="column_quantity" module="shop"/></td>
-							<td style="width: 120px"><_text constant="column_price" module="shop"/></td>
-							<td style="width: 70px"><_text constant="column_tax" module="shop"/></td>
-							<td style="width: 70px"><_text constant="column_weight" module="shop"/></td>
-							<td style="width: 120px"><_text constant="column_item_total" module="shop"/></td>
+							<td><cms:text constant="column_name" module="shop"/></td>
+							<td style="width: 70px"><cms:text constant="column_quantity" module="shop"/></td>
+							<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
+							<td style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
+							<td style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
+							<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
 						</tr>
 					</thead>
 
@@ -22,84 +22,92 @@
 						<tr class="first">
 							<td colspan="3" rowspan="5" style="padding: 20px;">
 							</td>
-							<td colspan="2" class="subtotal-label"><_text constant="column_subtotal" module="shop"/></td>
-							<td class="subtotal-value subtotal"><_var name="$params['sub-total']"/></td>
+							<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
+							<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
 						</tr>
 						<tr>
-							<td colspan="2" class="subtotal-label"><_text constant="column_shipping" module="shop"/></td>
-							<td class="subtotal-value shipping"><_var name="$params['shipping']"/></td>
+							<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
+							<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
 						</tr>
 						<tr>
-							<td colspan="2" class="subtotal-label"><_text constant="column_handling" module="shop"/></td>
-							<td class="subtotal-value handling"><_var name="$params['handling']"/></td>
+							<td colspan="2" class="subtotal-label"><cms:text constant="column_handling" module="shop"/></td>
+							<td class="subtotal-value handling"><cms:var name="$params['handling']"/></td>
 						</tr>
 						<tr>
-							<td colspan="2" class="subtotal-label"><_text constant="column_total_weight" module="shop"/></td>
+							<td colspan="2" class="subtotal-label"><cms:text constant="column_total_weight" module="shop"/></td>
 							<td class="subtotal-value weight">
-								<_var name="$params['total_weight']"/>
-								<_raw text=" kg"/>
+								<cms:var name="$params['total_weight']"/>
+								<cms:raw text=" kg"/>
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2" class="total-label"><_text constant="column_total" module="shop"/></td>
+							<td colspan="2" class="total-label"><cms:text constant="column_total" module="shop"/></td>
 							<td class="total-value">
-								<_var name="$params['total']"/>
-								<_raw text=" "/>
-								<_var name="$params['currency']"/>
+								<cms:var name="$params['total']"/>
+								<cms:raw text=" "/>
+								<cms:var name="$params['currency']"/>
 							</td>
 						</tr>
 					</tfoot>
 
 					<!-- Shooping cart contents -->
 					<tbody>
-						<_checkout_items/>
+						<cms:checkout_items/>
 					</tbody>
 				</table>
 
 				<div class="delivery_method">
-					<span><_text constant="label_delivery_method" module="shop"/></span>
+					<h3><cms:text constant="label_delivery_method" module="shop"/></h3>
 					<div class="delivery_methods">
 						<_delivery_methods
 							shopping_cart="1"
 							template="delivery_checkout.xml"
 							local="1"
-							selected="isset($_SESSION['delivery_method']) ? $_SESSION['delivery_method'] : 0"
-							eval="selected"
+						/>
+						<_delivery_methods
+							shopping_cart="1"
+							template="delivery_checkout.xml"
+							local="1"
+						/>
+						<_delivery_methods
+							shopping_cart="1"
+							template="delivery_checkout.xml"
+							local="1"
 						/>
 					</div>
 				</div>
 
 				<div class="transaction_details">
 					<label>
-						<span><_text constant="label_remarks" module="shop"/></span>
+						<span><cms:text constant="label_remarks" module="shop"/></span>
 						<textarea name="remarks" rows="4" cols="25"/>
 					</label>
 				</div>
 
-				<_var name="$params['checkout_fields']"/>
+				<cms:var name="$params['checkout_fields']"/>
 
 				<div class="checkout_controls">
-					<button type="button"><_text constant="back"/></button>
-					<_if condition="!isset($_SESSION['delivery_method'])">
+					<button type="button"><cms:text constant="back"/></button>
+					<cms:if condition="!isset($_SESSION['delivery_method'])">
 						<button type="submit" disabled="disabled">
-							<_text constant="checkout" module="shop"/>
+							<cms:text constant="checkout" module="shop"/>
 							<small>
-								<_text constant="with" module="shop"/>
-								<_raw text=" "/>
-								<_var name="$params['checkout_name']"/>
+								<cms:text constant="with" module="shop"/>
+								<cms:raw text=" "/>
+								<cms:var name="$params['checkout_name']"/>
 							</small>
 						</button>
-					</_if>
-					<_if condition="isset($_SESSION['delivery_method'])">
+					</cms:if>
+					<cms:if condition="isset($_SESSION['delivery_method'])">
 						<button type="submit">
-							<_text constant="checkout" module="shop"/>
+							<cms:text constant="checkout" module="shop"/>
 							<small>
-								<_text constant="with" module="shop"/>
-								<_raw text=" "/>
-								<_var name="$params['checkout_name']"/>
+								<cms:text constant="with" module="shop"/>
+								<cms:raw text=" "/>
+								<cms:var name="$params['checkout_name']"/>
 							</small>
 						</button>
-					</_if>
+					</cms:if>
 				</div>
 
 				<div style="clear: both;"/>
