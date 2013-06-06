@@ -56,15 +56,43 @@ div#checkout div.delivery_method {
 	color: #333333;
 }
 
+div#checkout div.delivery_method h3 {
+	display: block;
+	margin: 0px;
+	margin-bottom: 10px;
+	padding: 0px;
+
+	color: #909090;
+	font-weight: normal;
+}
+
+div#checkout div.delivery_method label {
+	display: inline-block;
+	width: 100px;
+	height: 55px;
+
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
 div#checkout div.delivery_method label input[type=radio] {
 	display: none;
 }
 
-div#checkout div.delivery_method label input + span:before {
+div#checkout div.delivery_method label input[type=radio] + span {
+	position: relative;
+}
+
+div#checkout div.delivery_method label input[type=radio] + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 	
+	position: absolute;
+	left: 50%;
+	bottom: -20px;
+
+	margin-left: -8px;
 	margin-bottom: -3px;
 	margin-right: 4px;
 
@@ -83,7 +111,7 @@ div#checkout div.delivery_method label input + span:before {
 	-moz-transition-duration: 0.3s;
 }
 
-div#checkout div.delivery_method label input:checked + span:before {
+div#checkout div.delivery_method label input[type=radio]:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
@@ -211,7 +239,7 @@ table.checkout_details tfoot td {
 }
 
 table.checkout_details tfoot tr.first td {
-	border-top: 1px solid #333333;
+	border-top: 1px solid #b0b0b0;
 }
 
 table.checkout_details tfoot td.subtotal-label {
@@ -225,10 +253,14 @@ table.checkout_details tfoot td.subtotal-value {
 table.checkout_details tfoot td.total-value,
 table.checkout_details tfoot td.total-label {
 	padding-top: 6px;
-	border-top: 1px solid #333333;
+	border-top: 1px solid #b0b0b0;
 	background-color: #F0F0F0;
 
 	font-size: 16px;
+}
+
+table.checkout_details tfoot td.total-label {
+	border-left: 1px solid #b0b0b0;
 }
 
 table.checkout_details tfoot td.total-label {
