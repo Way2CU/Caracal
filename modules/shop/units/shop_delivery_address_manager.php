@@ -6,19 +6,21 @@
  * @author MeanEYE.rcf
  */
 
-class ShopBuyerAddressesManager extends ItemManager {
+class ShopDeliveryAddressManager extends ItemManager {
 	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('shop_buyer_addresses');
+		parent::__construct('shop_delivery_address');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('buyer', 'int');
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('street', 'varchar');
+		$this->addProperty('street2', 'varchar');
+		$this->addProperty('phone', 'varchar');
 		$this->addProperty('city', 'varchar');
 		$this->addProperty('zip', 'varchar');
 		$this->addProperty('state', 'varchar');
