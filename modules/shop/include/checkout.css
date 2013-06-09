@@ -454,6 +454,16 @@ div#input_details hr {
 
 	border: 0px;
 	border-bottom: 1px solid #f0f0f0;
+
+	transition-property: margin;
+	transition-duration: 0.5s;
+	-moz-transition-property: margin;
+	-moz-transition-duration: 0.5s;
+}
+
+div#input_details div.existing_account:not(.visible) + hr,
+div#input_details div.new_account:not(.visible) + hr {
+	margin-top: 6px;
 }
 
 div#input_details label {
@@ -463,6 +473,52 @@ div#input_details label {
 	padding-right: 20px;
 
 	text-align: left;
+}
+
+div#input_details label.separator {
+	margin-bottom: 25px;
+}
+
+div#input_details label:last-of-type {
+	margin-bottom: 15px;
+}
+
+div#input_details a.password_recovery {
+	color: #0b6fd4;
+	text-decoration: none;
+
+	transition-property: all;
+	transition-duration: 0.3s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.3s;
+}
+
+div#input_details div.existing_account,
+div#input_details div.new_account {
+	height: 0px;
+	overflow: hidden;
+
+	transition-property: all;
+	transition-duration: 0.5s;
+	-moz-transition-property: all;
+	-moz-transition-duration: 0.5s;
+}
+
+div#input_details div.existing_account.visible {
+	height: 120px;
+}
+
+div#input_details div.new_account.visible {
+	height: 225px;
+}
+
+div#input_details div.existing_account label:first-of-type,
+div#input_details div.new_account label:first-of-type {
+	margin-top: 3px;
+}
+
+div#input_details a.password_recovery:hover {
+	text-decoration: underline;
 }
 
 body.rtl div#input_details label {
@@ -590,7 +646,8 @@ div#checkout_stepps {
 }
 
 div#checkout_stepps.input_details {
-	width: 550px;
+	width: 630px;
+	text-align: center;
 }
 
 div#checkout_stepps a {
