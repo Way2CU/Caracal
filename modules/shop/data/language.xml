@@ -99,6 +99,7 @@
 		<constant name="column_count">Count</constant>
 		<constant name="column_warehouse">Warehouse</constant>
 
+		<constant name="label_password_recovery">Forgot your password?</constant>
 		<constant name="label_timestamp">Timestamp:</constant>
 		<constant name="label_remark">Remark:</constant>
 		<constant name="label_name">Name:</constant>
@@ -125,6 +126,7 @@
 		<constant name="label_first_name">First name:</constant>
 		<constant name="label_last_name">Last name:</constant>
 		<constant name="label_email">E-Mail:</constant>
+		<constant name="label_presets">Presets:</constant>
 		<constant name="label_phone_number">Phone number:</constant>
 		<constant name="label_full_name">Full name:</constant>
 		<constant name="label_street">Street:</constant>
@@ -192,8 +194,9 @@
 		<constant name="message_warehouse_saved">Warehouse data was saved.</constant>
 		<constant name="message_warehouse_delete">The following warehouse will be removed. Items associated with it, and their stocks, will be cleared. None of the items will be removed! Are you sure about this?</constant>
 		<constant name="message_warehouse_deleted">Warehouse was deleted!</constant>
-		<constant name="message_error_account_exists">Account with specified email address already exists on this system. Please select different email address or click on "password recovery" link.</constant>
+		<constant name="message_error_account_exists">Account with specified email address already exists on this system. Please select different email address or try recovering your password and signing in with existing account.</constant>
 		<constant name="message_error_invalid_credentials">Invalid username and/or password.</constant>
+		<constant name="message_error_exceeded_attempts">Exceeded number of retries for the day!</constant>
 
 		<constant name="add_item">Add new item</constant>
 		<constant name="add_size_definition">Add size definition</constant>
@@ -228,6 +231,7 @@
 		<constant name="details">Details</constant>
 		<constant name="prices">Prices</constant>
 		<constant name="remove_delivery">Unavailable</constant>
+		<constant name="new_preset">⋯ New preset ⋯</constant>
 
 		<constant name="status_pending">Pending</constant>
 		<constant name="status_denied">Denied</constant>
