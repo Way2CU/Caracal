@@ -2,52 +2,70 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<label>
-			<span><_text constant="label_description" module="page_info"/></span>
-			<textarea name="description" style="width: 370px; height: 140px;">
-				<_var name="$settings['description']"/>
-			</textarea>
-		</label>
-		<div style="padding-bottom: 10px;">
-			<div class="box left">
+		<div id="page_info_notebook">
+			<div>
 				<label>
-					<span><_text constant="label_analytics" module="page_info"/></span>
+					<span><cms:text constant="label_description" module="page_info"/></span>
+					<textarea name="description" style="width: 350px; height: 140px;">
+						<cms:var name="$settings['description']"/>
+					</textarea>
+				</label>
+			</div>
+
+			<div>
+				<label>
+					<span><cms:text constant="label_analytics" module="page_info"/></span>
 					<input type="text" name="analytics" value="$settings['analytics']" eval="value"/>
 				</label>
-			</div>
-			<div class="box right">
 				<label>
-					<span><_text constant="label_analytics_domain" module="page_info"/></span>
+					<span><cms:text constant="label_analytics_domain" module="page_info"/></span>
 					<input type="text" name="analytics_domain" value="$settings['analytics_domain']" eval="value"/>
 				</label>
-			</div>
-			<div style="clear: both;"/>
-		</div>
-		<label>
-			<span><_text constant="label_wm_tools" module="page_info"/></span>
-			<input type="text" name="wm_tools" value="$settings['wm_tools']" eval="value" style="width: 350px;"/>
-		</label>
-		<div style="padding-bottom: 10px;">
-			<div class="box left">
 				<label>
-					<span><_text constant="label_optimizer" module="page_info"/></span>
-					<input type="text" name="optimizer" value="$settings['optimizer']" eval="value"/>
+					<span><cms:text constant="label_analytics_version" module="page_info"/></span>
+					<select name="analytics_version">
+						<cms:analytics_versions selected="$settings['analytics_version']" eval="selected"/>
+					</select>
 				</label>
 			</div>
-			<div class="box left">
+			<div>
 				<label>
-					<span><_text constant="label_optimizer_key" module="page_info"/></span>
-					<input type="text" name="optimizer_key" value="$settings['optimizer_key']" eval="value" style="width: 120px;"/>
+					<span><cms:text constant="label_wm_tools" module="page_info"/></span>
+					<input type="text" name="wm_tools" value="$settings['wm_tools']" eval="value" style="width: 350px;"/>
 				</label>
+				<div style="padding-bottom: 10px;">
+					<div class="box left">
+						<label>
+							<span><cms:text constant="label_optimizer" module="page_info"/></span>
+							<input type="text" name="optimizer" value="$settings['optimizer']" eval="value"/>
+						</label>
+					</div>
+					<div class="box left">
+						<label>
+							<span><cms:text constant="label_optimizer_key" module="page_info"/></span>
+							<input type="text" name="optimizer_key" value="$settings['optimizer_key']" eval="value" style="width: 120px;"/>
+						</label>
+					</div>
+					<div style="clear: both;"/>
+				</div>
 			</div>
-			<div style="clear: both;"/>
 		</div>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
+
+		<script type="text/javascript">
+			// create notebook
+			var notebook = new Notebook('page_info_notebook');
+			notebook
+				.setPageTitle(0, language_handler.getText('page_info', 'tab_general'))
+				.setPageTitle(1, language_handler.getText('page_info', 'tab_google_analytics'))
+				.setPageTitle(2, language_handler.getText('page_info', 'tab_google_webmasters_tools'));
+		</script>
 	</form>
 </document>
