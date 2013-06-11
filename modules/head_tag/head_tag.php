@@ -169,20 +169,20 @@ class head_tag extends Module {
 			page_info::getInstance()->addElements();
 
 		// merge tag lists
-		$tags = array_merge($this->tags, $this->meta_tags, $this->script_tags, $this->link_tags);
+		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 		
 		if (class_exists('CodeOptimizer') && $optimize_code) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::getInstance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
-			foreach ($this->script_tags as $script)
-				if (!$optimizer->addScript($script[1]['src']))
-					$unhandled_tags []= $script;
-
 			foreach ($this->link_tags as $link)
 				if (isset($link[1]['rel']) && $link[1]['rel'] == 'stylesheet' && !$optimizer->addStyle($link[1]['href']))
 					$unhandled_tags [] = $link;
+
+			foreach ($this->script_tags as $script)
+				if (!$optimizer->addScript($script[1]['src']))
+					$unhandled_tags []= $script;
 
 			foreach ($unhandled_tags as $tag)
 				$this->printTag($tag);
