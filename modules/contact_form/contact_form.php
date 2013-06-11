@@ -242,6 +242,11 @@ class contact_form extends Module {
 							'X-Mailer'	=> "RCF-CMS/1.0"
 						);
 
+			// prepare sender
+			$name = array($this->settings['default_name']);
+			$address = split(',', $this->settings['default_address']);
+			$headers['From'] = $this->generateAddressField($name, $address);
+
 			foreach($_REQUEST as $key => $value)
 				if (!in_array($key, $this->_invalid_params))
 					$fields[$key] = fix_chars($value);
