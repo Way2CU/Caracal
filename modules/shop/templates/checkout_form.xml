@@ -59,17 +59,17 @@
 				<div class="delivery_method">
 					<h3><cms:text constant="label_delivery_method" module="shop"/></h3>
 					<div class="delivery_methods">
-						<_delivery_methods
+						<cms:delivery_methods
 							shopping_cart="1"
 							template="delivery_checkout.xml"
 							local="1"
 						/>
-						<_delivery_methods
+						<cms:delivery_methods
 							shopping_cart="1"
 							template="delivery_checkout.xml"
 							local="1"
 						/>
-						<_delivery_methods
+						<cms:delivery_methods
 							shopping_cart="1"
 							template="delivery_checkout.xml"
 							local="1"
