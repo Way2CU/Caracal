@@ -3,42 +3,51 @@
 <document>
 	<language short="en">
 		<constant name="menu_page_info">Page settings</constant>
-
 		<constant name="title_page_info">Page Settings</constant>
-
 		<constant name="message_saved">Page settings were saved!</constant>
 
+		<constant name="tab_general">General</constant>
+		<constant name="tab_google_analytics">Google Analytics</constant>
+		<constant name="tab_google_webmasters_tools">Webmasters Tools</constant>
+
 		<constant name="label_description">Page description (between 70 and 160 characters):</constant>
-		<constant name="label_analytics">Google analytics ID:</constant>
-		<constant name="label_analytics_domain">Google analytics domain:</constant>
+		<constant name="label_analytics">Analytics ID:</constant>
+		<constant name="label_analytics_domain">Domain:</constant>
+		<constant name="label_analytics_version">Code version:</constant>
 		<constant name="label_wm_tools">Google webmasters tools:</constant>
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
 	</language>
 	<language short="iw">
 		<constant name="menu_page_info">הגדרות עמוד</constant>
-
 		<constant name="title_page_info">הגדרות עמוד</constant>
-
 		<constant name="message_saved">הגדרות עמוד נשמרו!</constant>
 
+		<constant name="tab_general">General</constant>
+		<constant name="tab_google_analytics">Google Analytics</constant>
+		<constant name="tab_google_webmasters_tools">Webmasters Tools</constant>
+
 		<constant name="label_description">תאור עמוד (between 70 and 160 characters):</constant>
-		<constant name="label_analytics">Google analytics ID:</constant>
-		<constant name="label_analytics_domain">Google analytics domain:</constant>
+		<constant name="label_analytics">Analytics ID:</constant>
+		<constant name="label_analytics_domain">Domain:</constant>
+		<constant name="label_analytics_version">Code version:</constant>
 		<constant name="label_wm_tools">Google webmasters tools:</constant>
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
 	</language>
 	<language short="sr">
 		<constant name="menu_page_info">Podešavanja stranice</constant>
-
 		<constant name="title_page_info">Podešavanja Stranice</constant>
-
 		<constant name="message_saved">Podešavanja stranice su snimljena!</constant>
 
+		<constant name="tab_general">General</constant>
+		<constant name="tab_google_analytics">Google Analytics</constant>
+		<constant name="tab_google_webmasters_tools">Webmasters Tools</constant>
+
 		<constant name="label_description">Opis stranice (između 70 i 160 karaktera):</constant>
-		<constant name="label_analytics">Google analytics ID:</constant>
-		<constant name="label_analytics_domain">Google analytics domain:</constant>
+		<constant name="label_analytics">Analytics ID:</constant>
+		<constant name="label_analytics_domain">Domain:</constant>
+		<constant name="label_analytics_version">Code version:</constant>
 		<constant name="label_wm_tools">Google webmasters tools:</constant>
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>

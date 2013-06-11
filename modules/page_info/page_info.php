@@ -121,6 +121,8 @@ class page_info extends Module {
 						'cancel_action'	=> window_Close('page_settings')
 					);
 
+		$template->registerTagHandler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -133,6 +135,7 @@ class page_info extends Module {
 		$description = fix_chars($_REQUEST['description']);
 		$analytics = fix_chars($_REQUEST['analytics']);
 		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
+		$analytics_version = fix_chars($_REQUEST['analytics_version']);
 		$wm_tools = fix_chars($_REQUEST['wm_tools']);
 		$optimizer = fix_chars($_REQUEST['optimizer']);
 		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
@@ -140,6 +143,7 @@ class page_info extends Module {
 		$this->saveSetting('description', $description);
 		$this->saveSetting('analytics', $analytics);
 		$this->saveSetting('analytics_domain', $analytics_domain);
+		$this->saveSetting('analytics_version', $analytics_version);
 		$this->saveSetting('wm_tools', $wm_tools);
 		$this->saveSetting('optimizer', $optimizer);
 		$this->saveSetting('optimizer_key', $optimizer_key);
@@ -197,7 +201,8 @@ class page_info extends Module {
 			if (!empty($this->settings['analytics']))
 				$head_tag->addGoogleAnalytics(
 										$this->settings['analytics'],
-										$this->settings['analytics_domain']
+										$this->settings['analytics_domain'],
+										$this->settings['analytics_version']
 									);
 
 			// google website optimizer
@@ -297,5 +302,38 @@ class page_info extends Module {
 							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
 						));
 		}
+	}
+
+	/**
+	 * Show list of available analytics versions.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_AnalyticsVersions($tag_params, $children) {
+		// load template
+		$template = $this->loadTemplate($tag_params, 'analytics_version.xml');
+		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : '0';
+
+		// get available versions
+		$versions = array();
+		$files = scandir(_BASEPATH.'/modules/head_tag/templates/');
+		trigger_error(print_r($files, true));
+
+		foreach ($files as $file) 
+			if (substr($file, 0, 16) == 'google_analytics')
+				$versions[] = substr(basename($file, '.xml'), 17);
+
+		// show options
+		if (count($versions) > 0)
+			foreach ($versions as $version) {
+				$params = array(
+						'version'	=> $version,
+						'selected'	=> $selected
+					);
+				$template->setLocalParams($params);
+				$template->restoreXML();
+				$template->parse();
+			}
 	}
 }
