@@ -16,6 +16,7 @@ class head_tag extends Module {
 	
 	private $analytics = null;
 	private $analytics_domain = null;
+	private $analytics_version = 'v1';
 
 	private $optimizer = null;
 	private $optimizer_key = '';
@@ -97,10 +98,12 @@ class head_tag extends Module {
 	 *  
 	 * @param string $code
 	 * @param string $domain
+	 * @param string $version
 	 */
-	public function addGoogleAnalytics($code, $domain) {
+	public function addGoogleAnalytics($code, $domain, $version) {
 		$this->analytics = $code;
 		$this->analytics_domain = $domain;
+		$this->analytics_version = $version;
 	}
 
 	/**
@@ -203,7 +206,7 @@ class head_tag extends Module {
 
 		// print google analytics code if needed
 		if (!is_null($this->analytics)) {
-			$template = new TemplateHandler('google_analytics.xml', $this->path.'templates/');
+			$template = new TemplateHandler("google_analytics_{$this->analytics_version}.xml", $this->path.'templates/');
 			$template->setMappedModule($this->name);
 	
 			$params = array(
