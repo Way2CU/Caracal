@@ -1,9 +1,10 @@
 <?php
 
 /**
- * PayPal Integration Module
+ * PayPal Payment Implementation
  *
- * @author MeanEYE.rcf
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  */
 
 
@@ -103,7 +104,7 @@ class paypal extends Module {
 	}
 
 	/**
-	 * Show PayPal transactions
+	 * Show PayPal settings form
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
