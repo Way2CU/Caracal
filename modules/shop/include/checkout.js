@@ -354,7 +354,29 @@ $(function() {
 	} else if ($('div#checkout').length > 0) {
 		// checkout form
 		$('div.delivery_method input[name=delivery_method]').change(function(event) {
-			console.log('test');
+			var checkout_details = $('div#checkout table.checkout_details');
+			var selected = $('div.delivery_method input[name=delivery_method]:checked').val();
+			var backend_url = $('base').attr('href') + '/index.php';
+			var data = {
+					section: 'shop',
+					action: 'json_get_shopping_cart_summary',
+					delivery_method: selected
+				};
+
+			$.ajax({
+				url: backend_url,
+				type: 'GET',
+				async: false,
+				data: data,
+				dataType: 'json',
+				context: this,
+				success: function(data) {
+					checkout_details.find('.subtotal-value.shipping').html(parseFloat(data.shipping).toFixed(2));
+					checkout_details.find('.subtotal-value.handling').html(parseFloat(data.handling).toFixed(2));
+					checkout_details.find('.total-value').html(parseFloat(data.total).toFixed(2) + ' ' + data.currency);
+					console.log(data);
+				}
+			});
 		});
 	}
 });
