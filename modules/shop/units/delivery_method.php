@@ -99,6 +99,7 @@ abstract class DeliveryMethod {
 	 * 						'width'			=> 0.2,
 	 * 						'height'		=> 0.5,
 	 * 						'length'		=> 1,
+	 * 						'weight'		=> 0,
 	 * 						'units'			=> 1,
 	 * 						'count'			=> 1
 	 * 					)
