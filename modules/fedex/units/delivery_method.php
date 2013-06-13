@@ -181,17 +181,17 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 */
 	public function getDeliveryTypes($items) {
 		$shop = shop::getInstance();
-		$debut = $shop->isDebug();
+		$debug = $shop->isDebug();
 		$result = array();
 		$request = array();
-		$client = new SoapClient($this->wsdl[RATE_SERVICE], array('trace' => $debug));
+		$client = new SoapClient($this->wsdl[FedEx_DeliveryMethod::RATE_SERVICE], array('trace' => $debug));
 		$transaction_id = '';
 
 		// populate request header
 		$this->_populateCredentials($request);
 		$this->_populateClientDetails($request);
 		$this->_populateTransactionDetails($request, $transaction_id);
-		$this->_populateVersionInformation($request, RATE_SERVICE);
+		$this->_populateVersionInformation($request, FedEx_DeliveryMethod::RATE_SERVICE);
 
 		// add remaining request information
 		$request['ReturnTransitAndCommit'] = true; // request tranzit time and commit data
