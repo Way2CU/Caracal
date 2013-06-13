@@ -42,7 +42,7 @@ class fedex extends Module {
 
 		// register delivery method
 		if (class_exists('shop')) {
-			require_once('units/delivery_method.php');
+			require_once('units/fedex_delivery_method.php');
 			FedEx_DeliveryMethod::getInstance($this);
 		}
 	}
