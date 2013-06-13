@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_stripe">Stripe</constant>
+
+		<constant name="title_settings">Settings</constant>
+		<constant name="payment_method_title">Stripe</constant>
+	</language>
+	<language short="iw">
+		<constant name="menu_stripe">Stripe</constant>
+
+		<constant name="title_settings">הגדרות</constant>
+		<constant name="payment_method_title">Stripe</constant>
+	</language>
+</document>
