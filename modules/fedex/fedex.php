@@ -31,7 +31,7 @@ class fedex extends Module {
 
 									window_Open( // on click open window
 												'fedex',
-												650,
+												350,
 												$this->getLanguageConstant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
@@ -106,11 +106,44 @@ class fedex extends Module {
 	 * Show settings edit form.
 	 */
 	private function showSettings() {
+		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
+						'cancel_action'	=> window_Close('fedex')
+					);
+
+		$template->setLocalParams($params);
+		$template->restoreXML();
+		$template->parse();
 	}
 
 	/**
 	 * Save settings.
 	 */
 	private function saveSettings() {
+		$key = fix_chars($_REQUEST['key']);
+		$password = fix_chars($_REQUEST['password']);
+		$account = fix_chars($_REQUEST['account']);
+		$meter = fix_chars($_REQUEST['meter']);
+
+		$this->saveSetting('fedex_key', $key);
+		$this->saveSetting('fedex_password', $password);
+		$this->saveSetting('fedex_account', $account);
+		$this->saveSetting('fedex_meter', $meter);
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_settings_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('fedex')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 }
