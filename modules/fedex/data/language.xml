@@ -3,8 +3,14 @@
 <document>
 	<language short="en">
 		<constant name="menu_fedex">FedEx</constant>
-		<constant name="title_settings">FedEx</constant>
+		<constant name="title_settings">FedEx Settings</constant>
 
 		<constant name="delivery_method_title">FedEx International</constant>
+		<constant name="message_settings_saved">FedEx account information was saved.</constant>
+
+		<constant name="label_key">Key:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_account">Account number:</constant>
+		<constant name="label_meter">Meter number:</constant>
 	</language>
 </document>
