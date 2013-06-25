@@ -94,6 +94,7 @@ abstract class DeliveryMethod {
 	 * Example of items array:
 	 * 		$items = array(
 	 * 					array(
+	 * 						'package'		=> 0, // number identifying package
 	 * 						'properties'	=> array(),
 	 * 						'package_type'	=> 0,
 	 * 						'width'			=> 0.2,
@@ -105,16 +106,38 @@ abstract class DeliveryMethod {
 	 * 					)
 	 * 				);
 	 *
+	 * Example of shipper array:
+	 * 		$shipper = array(
+	 * 					'street'	=> array(),
+	 * 					'city'		=> '',
+	 * 					'zip_code'	=> '',
+	 * 					'state'		=> '',
+	 * 					'country'	=> ''
+	 * 				);
+	 *
+	 * Example of recipient array:
+	 * 		$recipient = array(
+	 * 					'street'	=> array(),
+	 * 					'city'		=> '',
+	 * 					'zip_code'	=> '',
+	 * 					'state'		=> '',
+	 * 					'country'	=> ''
+	 * 				);
+	 *
 	 * Example of result array:
 	 *		$result = array(
-	 *					array('Normal', 19.95, 1364040000, 1365040000),
-	 *					array('Express', 33.23, 1363040000, 1364040000)
+	 *					array('Normal', 19.95, 'USD', 1364040000, 1365040000),
+	 *					array('Express', 33.23, 'USD', 1363040000, 1364040000)
 	 *				);
 	 *
 	 * @param array $items
+	 * @param array $shipper
+	 * @param array $recipient
+	 * @param string $transaction_id
+	 * @param string $preferred_currency
 	 * @return array
 	 */
-	abstract public function getDeliveryTypes($items);
+	abstract public function getDeliveryTypes($items, $shipper, $recipient, $transaction_id, $preferred_currency);
 
 	/**
 	 * Get list of supported package types. Items in resulting array must
