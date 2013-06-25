@@ -56,9 +56,16 @@
 					</tbody>
 				</table>
 
-				<div class="delivery_method">
-					<h3><cms:text constant="label_delivery_method" module="shop"/></h3>
-					<div class="delivery_methods">
+				<div class="container">
+					<div class="transaction_details">
+						<label>
+							<span><cms:text constant="label_remarks" module="shop"/></span>
+							<textarea name="remarks" rows="4" cols="25"/>
+						</label>
+					</div>
+
+					<div class="delivery_provider">
+						<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
 						<cms:delivery_methods
 							shopping_cart="1"
 							template="delivery_checkout.xml"
@@ -74,14 +81,15 @@
 							template="delivery_checkout.xml"
 							local="1"
 						/>
+						<div class="overlay"/>
 					</div>
 				</div>
 
-				<div class="transaction_details">
-					<label>
-						<span><cms:text constant="label_remarks" module="shop"/></span>
-						<textarea name="remarks" rows="4" cols="25"/>
-					</label>
+				<div class="delivery_method">
+					<div class="services">
+					</div>
+
+					<div class="clear_float"/>
 				</div>
 
 				<cms:var name="$params['checkout_fields']"/>
@@ -110,7 +118,7 @@
 					</cms:if>
 				</div>
 
-				<div style="clear: both;"/>
+				<div class="clear_float"/>
 			</form>
 		</div>
 	</div>
