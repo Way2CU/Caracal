@@ -5,378 +5,534 @@
  * Author: Mladen Mijatov
  */
 
-/**
- * Validate sign in page.
- *
- * @return boolean
- */
-function validateSignInPage() {
-	var result = false;
-	var sign_in_form = $('div#sign_in.page');
-	var shipping_information_form = $('div#shipping_information.page');
-	var next_button = sign_in_form.find('button.next');
-	var backend_url = $('base').attr('href') + '/index.php';
+function BuyerInformationForm() {
+	var self = this;
 
-	// check which option is selected
-	var selection = sign_in_form.find('input[name=existing_user]:checked').val();
-	var selection = parseInt(selection);
+	self.backend_url = $('base').attr('href') + '/index.php';
 
-	switch (selection) {
-		case 0:
-			var presets = shipping_information_form.find('select[name=presets]');
-			var email_field = sign_in_form.find('input[name=sign_in_email]');
-			var password_field = sign_in_form.find('input[name=sign_in_password]');
+	self.sign_in_form = $('div#sign_in.page');
+	self.shipping_information_form = $('div#shipping_information.page');
+	self.billing_information_form = $('div#billing_information.page');
+	self.methods = $('div.payment_methods span');
+	self.method_field = $('input[name=payment_method]');
+	self.page_control = new PageControl('div#input_details div.pages');
 
-			// reset presets
-			presets.html('');
+	/**
+	 * Complete object initialization.
+	 */
+	self.init = function() {
+		// implement page control
+		self.page_control
+			.setAllowForward(false)
+			.setSubmitOnEnd(true)
+			.attachControls('div#checkout_stepps a')
+			.attachForm('div#input_details form')
+			.connect('page-flip', self.validate_page);
 
-			// prepare data
-			var data = {
-					section: 'shop',
-					action: 'json_get_account_info',
-					email: email_field.val(),
-					password: password_field.val()
-				};
+		// connect events
+		self.sign_in_form.find('input[name=existing_user]').change(self._handle_account_type_change);
+		self.shipping_information_form.find('select[name=presets]').change(self._handle_shipping_information_preset_change);
+		self.methods.click(self._handle_payment_method_click);
+	};
 
-			// check with server if provided information is correct
-			$.ajax({
-				url: backend_url,
-				type: 'GET',
-				async: false,
-				data: data,
-				dataType: 'json',
-				context: this,
-				success: function(data) {
-					email_field.removeClass('bad');
-					password_field.removeClass('bad');
+	/**
+	 * Handle changing type of account for buyers information.
+	 *
+	 * @param object event
+	 */
+	self._handle_account_type_change = function(event) {
+		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
 
-					// populate shipping information with data received from the server
-					shipping_information_form.find('input[name=first_name]').val(data.information.first_name);
-					shipping_information_form.find('input[name=last_name]').val(data.information.last_name);
-					shipping_information_form.find('input[name=email]').val(data.information.email);
+		switch (parseInt(selection)) {
+			// existing account
+			case 0:
+				self.sign_in_form.find('div.new_account').removeClass('visible');
+				self.sign_in_form.find('div.existing_account').addClass('visible');
+				break;
 
-					// empty preset
-					var empty_option = $('<option>');
-					
-					empty_option
-							.html(language_handler.getText('shop', 'new_preset'))
-							.attr('value', 0)
-							.appendTo(presets);
+			// new account
+			case 1:
+				self.sign_in_form.find('div.new_account').addClass('visible');
+				self.sign_in_form.find('div.existing_account').removeClass('visible');
+				break;
 
-					// add different presets of data
-					for (var index in data.delivery_addresses) {
-						var address = data.delivery_addresses[index];
-						var option = $('<option>');
+			// checkout as guest
+			case 2:
+			default:
+				self.sign_in_form.find('div.new_account').removeClass('visible');
+				self.sign_in_form.find('div.existing_account').removeClass('visible');
+				break;
+		}
+	};
 
-						option
-							.html(address.name)
-							.attr('value', address.id)
-							.data('name', address.name)
-							.data('street', address.street)
-							.data('street2', address.street2)
-							.data('phone', address.phone)
-							.data('city', address.city)
-							.data('zip', address.zip)
-							.data('state', address.state)
-							.data('country', address.country)
-							.appendTo(presets);
-					}
-				}, 
-				error: function(request, text_status, error) {
-					// add "bad" class to input fields
-					email_field.addClass('bad');
-					password_field.addClass('bad');
+	/**
+	 * Handle change in shipping information preset control.
+	 *
+	 * @param object event
+	 */
+	self._handle_shipping_information_preset_change = function(event) {
+		var control = $(this);
+		var option = control.find('option[value='+control.val()+']');
 
-					// show error message to user
-					alert(error);
-				}
-			});
+		self.shipping_information_form.find('input[name=name]').val(option.data('name'));
+		self.shipping_information_form.find('input[name=phone]').val(option.data('phone'));
+		self.shipping_information_form.find('input[name=street]').val(option.data('street'));
+		self.shipping_information_form.find('input[name=street2]').val(option.data('street2'));
+		self.shipping_information_form.find('input[name=city]').val(option.data('city'));
+		self.shipping_information_form.find('input[name=zip]').val(option.data('zip'));
+		self.shipping_information_form.find('select[name=country]').val(option.data('country'));
+		self.shipping_information_form.find('input[name=state]').val(option.data('state'));
+	};
 
-			// alter field visibility
-			shipping_information_form.find('select[name=presets]').parent().show();
-			shipping_information_form.find('input[name=name]').parent().show();
-			shipping_information_form.find('input[name=email]').parent().hide();
-			shipping_information_form.find('hr').eq(0).show();
+	/**
+	 * Handle clicking on payment method.
+	 *
+	 * @param object event
+	 */
+	self._handle_payment_method_click = function(event) {
+		var method = $(this);
 
-			result = !(email_field.hasClass('bad') || password_field.hasClass('bad'));
-			break;
+		// set payment method before processing
+		self.method_field.val(method.data('name'));
+			
+		// add selection class to 
+		self.methods.not(method).removeClass('active');
+		method.addClass('active');
 
-		case 1:
-			// get new account section
-			var container = sign_in_form.find('div.new_account');
-			var fields = container.find('input');
-			var first_name = container.find('input[name=first_name]');
-			var last_name = container.find('input[name=last_name]');
+		// remove bad class
+		self.methods.removeClass('bad');
 
-			// ensure required fields are filled in
-			fields.each(function(index) {
-				var field = $(this);
+		// disable billing information page if payment method provides info about buyer
+		if (method.data('provides-information') == 1)
+			self.page_control.disablePage(3); else
+			self.page_control.enablePage(3);
+	};
+	/**
+	* Validate sign in page.
+	*
+	* @return boolean
+	*/
+	self._validate_sign_in_page = function () {
+		var result = false;
+		var next_button = self.sign_in_form.find('button.next');
 
-				if (field.data('required') == 1 && field.val() == '') 
-					field.addClass('bad'); else
-					field.removeClass('bad');
-			});
+		// check which option is selected
+		var selection = parseInt(self.sign_in_form.find('input[name=existing_user]:checked').val());
 
-			// make sure passwords match
-			var password = container.find('input[name=new_password]');
-			var password_confirm = container.find('input[name=new_password_confirm]');
+		switch (selection) {
+			case 0:
+				var presets = self.shipping_information_form.find('select[name=presets]');
+				var email_field = self.sign_in_form.find('input[name=sign_in_email]');
+				var password_field = self.sign_in_form.find('input[name=sign_in_password]');
 
-			if (password.val() != password_confirm.val()) {
-				password.addClass('bad');
-				password_confirm.addClass('bad');
-			}
+				// reset presets
+				presets.html('');
 
-			// check if account with specified email already exists
-			var email_field = sign_in_form.find('input[name=new_email]');
-
-			if (email_field.val() != '') {
+				// prepare data
 				var data = {
 						section: 'shop',
-						action: 'json_get_account_exists',
-						email: email_field.val()
+						action: 'json_get_account_info',
+						email: email_field.val(),
+						password: password_field.val()
 					};
 
+				// check with server if provided information is correct
 				$.ajax({
-					url: backend_url,
+					url: self.backend_url,
 					type: 'GET',
 					async: false,
 					data: data,
 					dataType: 'json',
 					context: this,
 					success: function(data) {
-						if (data.account_exists) {
-							email_field.addClass('bad');
-							alert(data.message);
-						} else {
-							email_field.removeClass('bad');
+						email_field.removeClass('bad');
+						password_field.removeClass('bad');
+
+						// populate shipping information with data received from the server
+						self.shipping_information_form.find('input[name=first_name]').val(data.information.first_name);
+						self.shipping_information_form.find('input[name=last_name]').val(data.information.last_name);
+						self.shipping_information_form.find('input[name=email]').val(data.information.email);
+
+						// empty preset
+						var empty_option = $('<option>');
+						
+						empty_option
+								.html(language_handler.getText('shop', 'new_preset'))
+								.attr('value', 0)
+								.appendTo(presets);
+
+						// add different presets of data
+						for (var index in data.delivery_addresses) {
+							var address = data.delivery_addresses[index];
+							var option = $('<option>');
+
+							option
+								.html(address.name)
+								.attr('value', address.id)
+								.data('name', address.name)
+								.data('street', address.street)
+								.data('street2', address.street2)
+								.data('phone', address.phone)
+								.data('city', address.city)
+								.data('zip', address.zip)
+								.data('state', address.state)
+								.data('country', address.country)
+								.appendTo(presets);
 						}
+					}, 
+					error: function(request, text_status, error) {
+						// add "bad" class to input fields
+						email_field.addClass('bad');
+						password_field.addClass('bad');
+
+						// show error message to user
+						alert(error);
 					}
 				});
-			}
 
-			// alter field visibility
-			shipping_information_form.find('select[name=presets]').parent().hide();
-			shipping_information_form.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().hide();
-			shipping_information_form.find('input[name=email]').val(email_field.val()).parent().hide();
-			shipping_information_form.find('hr').eq(0).hide();
+				// alter field visibility
+				self.shipping_information_form.find('select[name=presets]').parent().show();
+				self.shipping_information_form.find('input[name=name]').parent().show();
+				self.shipping_information_form.find('input[name=email]').parent().hide();
+				self.shipping_information_form.find('hr').eq(0).show();
 
-			result = !(password.hasClass('bad') || password_confirm.hasClass('bad') || email_field.hasClass('bad'));
-			break;
-
-		case 2:
-		default:
-			// hide unneeded fields
-			shipping_information_form.find('select[name=presets]').parent().hide();
-			shipping_information_form.find('input[name=name]').parent().show();
-			shipping_information_form.find('input[name=email]').parent().show();
-			shipping_information_form.find('hr').eq(0).show();
-
-			result = true;
-	}
-
-	return result;
-}
-
-/**
- * Validate shipping information page.
- *
- * @return boolean
- */
-function validateShippingInformationPage() {
-	var sign_in_form = $('div#sign_in.page');
-	var container = $('div#shipping_information.page');
-	var fields = container.find('input,select');
-	var backend_url = $('base').attr('href') + '/index.php';
-
-	// add "bad" class to every required field which is empty
-	fields.each(function(index) {
-		var field = $(this);
-
-		if (field.data('required') == 1 && field.is(':visible') && field.val() == '') 
-			field.addClass('bad'); else
-			field.removeClass('bad');
-	});
-
-	return container.find('.bad').length == 0;
-}
-
-/**
- * Validate payment method page.
- *
- * @return boolean
- */
-function validatePaymentMethodPage() {
-	var methods = $('div.payment_methods');
-	var result = methods.find('span.active').length > 0;
-
-	if (!result)
-		methods.find('span').addClass('bad');
-
-	return result;
-}
-
-/**
- * Validate billing information page.
- *
- * @return boolean
- */
-function validateBillingInformationPage() {
-	var container = $('div#billing_information');
-	var fields = container.find('input,select');
-
-	fields.each(function(index) {
-		var field = $(this);
-
-		if (field.data('required') == 1 && field.val() == '') 
-			field.addClass('bad'); else
-			field.removeClass('bad');
-	});
-
-	return container.find('.bad').length == 0;
-}
-
-/**
- * Validate form pages.
- *
- * @param integer current_page
- * @param integer new_page
- * @return boolean
- */
-function validatePage(current_page, new_page) {
-	var result = true;
-
-	if (new_page > current_page)
-		switch(current_page) {
-			case 0:
-				// validate sign in page
-				result = validateSignInPage();
+				result = !(email_field.hasClass('bad') || password_field.hasClass('bad'));
 				break;
 
 			case 1:
-				// validate shipping information page
-				result = validateShippingInformationPage();
+				// get new account section
+				var container = self.sign_in_form.find('div.new_account');
+				var fields = container.find('input');
+				var first_name = container.find('input[name=first_name]');
+				var last_name = container.find('input[name=last_name]');
+
+				// ensure required fields are filled in
+				fields.each(function(index) {
+					var field = $(this);
+
+					if (field.data('required') == 1 && field.val() == '') 
+						field.addClass('bad'); else
+						field.removeClass('bad');
+				});
+
+				// make sure passwords match
+				var password = container.find('input[name=new_password]');
+				var password_confirm = container.find('input[name=new_password_confirm]');
+
+				if (password.val() != password_confirm.val()) {
+					password.addClass('bad');
+					password_confirm.addClass('bad');
+				}
+
+				// check if account with specified email already exists
+				var email_field = self.sign_in_form.find('input[name=new_email]');
+
+				if (email_field.val() != '') {
+					var data = {
+							section: 'shop',
+							action: 'json_get_account_exists',
+							email: email_field.val()
+						};
+
+					$.ajax({
+						url: self.backend_url,
+						type: 'GET',
+						async: false,
+						data: data,
+						dataType: 'json',
+						context: this,
+						success: function(data) {
+							if (data.account_exists) {
+								email_field.addClass('bad');
+								alert(data.message);
+							} else {
+								email_field.removeClass('bad');
+							}
+						}
+					});
+				}
+
+				// alter field visibility
+				self.shipping_information_form.find('select[name=presets]').parent().hide();
+				self.shipping_information_form.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().hide();
+				self.shipping_information_form.find('input[name=email]').val(email_field.val()).parent().hide();
+				self.shipping_information_form.find('hr').eq(0).hide();
+
+				result = !(password.hasClass('bad') || password_confirm.hasClass('bad') || email_field.hasClass('bad'));
 				break;
 
 			case 2:
-				// validate payment method page
-				result = validatePaymentMethodPage();
-				break;
+			default:
+				// hide unneeded fields
+				self.shipping_information_form.find('select[name=presets]').parent().hide();
+				self.shipping_information_form.find('input[name=name]').parent().show();
+				self.shipping_information_form.find('input[name=email]').parent().show();
+				self.shipping_information_form.find('hr').eq(0).show();
 
-			case 3:
-				// validate billing information
-				result = validateBillingInformationPage();
-				break;
+				result = true;
 		}
 
-	return result;
+		return result;
+	};
+
+	/**
+	* Validate shipping information page.
+	*
+	* @return boolean
+	*/
+	self._validate_shipping_information_page = function () {
+		var fields = self.shipping_information_form.find('input,select');
+
+		// add "bad" class to every required field which is empty
+		fields.each(function(index) {
+			var field = $(this);
+
+			if (field.data('required') == 1 && field.is(':visible') && field.val() == '') 
+				field.addClass('bad'); else
+				field.removeClass('bad');
+		});
+
+		return self.shipping_information_form.find('.bad').length == 0;
+	};
+
+	/**
+	* Validate payment method page.
+	*
+	* @return boolean
+	*/
+	self._validate_payment_method_page = function () {
+		var result = self.methods.filter('.active').length > 0;
+
+		if (!result)
+			methods.find('span').addClass('bad');
+
+		return result;
+	};
+
+	/**
+	* Validate billing information page.
+	*
+	* @return boolean
+	*/
+	self._validate_billing_information_page = function () {
+		var fields = self.billing_information_form.find('input,select');
+
+		fields.each(function(index) {
+			var field = $(this);
+
+			if (field.data('required') == 1 && field.val() == '') 
+				field.addClass('bad'); else
+				field.removeClass('bad');
+		});
+
+		return self.billing_information_form.find('.bad').length == 0;
+	};
+
+	/**
+	* Validate form pages.
+	*
+	* @param integer current_page
+	* @param integer new_page
+	* @return boolean
+	*/
+	self.validate_page = function (current_page, new_page) {
+		var result = true;
+
+		if (new_page > current_page)
+			switch(current_page) {
+				case 0:
+					// validate sign in page
+					result = self._validate_sign_in_page();
+					break;
+
+				case 1:
+					// validate shipping information page
+					result = self._validate_shipping_information_page();
+					break;
+
+				case 2:
+					// validate payment method page
+					result = self._validate_payment_method_page();
+					break;
+
+				case 3:
+					// validate billing information
+					result = self._validate_billing_information_page();
+					break;
+			}
+
+		return result;
+	};
+
+	// finalize object
+	self.init();
 }
+
+
+/**
+ * Checkout form implementation
+ */
+function CheckoutForm() {
+	var self = this;
+
+	// cached response from server
+	self.cached_data = null;
+
+	// backend URL used to get JSON data
+	self.backend_url = $('base').attr('href') + '/index.php';
+
+	self.checkout = $('div#checkout');
+	self.checkout_details = self.checkout.find('table.checkout_details');
+	self.delivery_provider_list = self.checkout.find('div.delivery_provider');
+	self.delivery_method_list = self.checkout.find('div.delivery_method');
+	self.overlay = self.delivery_provider_list.find('div.overlay');
+
+	/**
+	 * Complete object initialization.
+	 */
+	self.init = function() {
+		self.delivery_provider_list.find('input[name=delivery_provider]').change(self._handle_delivery_provider_change);
+	};
+
+	/**
+	 * Handle successful data load from server.
+	 *
+	 * @param object data
+	 */
+	self._handle_delivery_providers_load = function(data) {
+		self.cached_data = data;
+		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(data.shipping).toFixed(2));
+		self.checkout_details.find('.subtotal-value.handling').html(parseFloat(data.handling).toFixed(2));
+		self.checkout_details.find('.total-value').html(parseFloat(data.total).toFixed(2) + ' ' + data.currency);
+
+		// add every delivery method to the container
+		self.delivery_method_list.html('');
+
+		for (var i=0, count=data.delivery_prices.length; i<count; i++) {
+			var method = data.delivery_prices[i];
+			var entry = $('<label>');
+			var name = $('<div>');
+			var price = $('<span>');
+			var time = $('<span>');
+			var checkbox = $('<input>');
+
+			checkbox
+				.attr('type', 'radio')
+				.attr('name', 'delivery_method')
+				.attr('value', i)
+				.data('method', method)
+				.change(self._handle_delivery_method_click)
+				.appendTo(entry);
+
+			price.html(method[1] + ' ' + method[2]);
+
+			name
+				.html(method[0])
+				.append(price)
+				.appendTo(entry);
+
+			if (method[4] === false)
+				time.html(self.cached_data.label_no_estimate); else
+				time.html(self.cached_data.label_estimated_time + ' ' + (method[3] == null ? method[4] : method[3] + ' - ' + method[4]));
+
+			time.appendTo(entry);
+
+			entry
+				.addClass('method')
+				.appendTo(self.delivery_method_list);
+		}
+
+		// hide overlay
+		self.overlay
+			.stop(true, true)
+			.animate({opacity: 0}, 500, function() {
+				$(this).css('display', 'none');
+			});
+
+		// enable checkout button
+		self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
+
+		// show list of delivery methods
+		self.delivery_method_list.addClass('visible');
+	};
+
+	/**
+	 * Handle error on server side while loading delivery methods.
+	 *
+	 * @param object error
+	 */
+	self._handle_delivery_providers_error = function(error) {
+		// disable checkout button
+		self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
+
+		// add every delivery method to the container
+		self.delivery_method_list.html('');
+
+		// hide overlay
+		self.overlay
+			.stop(true, true)
+			.animate({opacity: 0}, 500, function() {
+				$(this).css('display', 'none');
+			});
+	};
+
+	/**
+	 * Handle changing delivery provider.
+	 *
+	 * @param object event
+	 */
+	self._handle_delivery_provider_change = function(event) {
+		var selected = self.delivery_provider_list.find('input[name=delivery_provider]:checked').val();
+
+		var data = {
+				section: 'shop',
+				action: 'json_get_shopping_cart_summary',
+				delivery_method: selected
+			};
+
+		// show loading overlay
+		self.overlay
+			.css({
+				display: 'block',
+				opacity: 0
+			})
+			.animate({opacity: 1}, 500);
+		self.delivery_method_list.removeClass('visible');
+
+		$.ajax({
+			url: self.backend_url,
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json',
+			context: this,
+			success: self._handle_delivery_providers_load,
+			error: self._handle_delivery_providers_error
+		});
+	};
+
+	/**
+	 * Handle clicking on delivery method.
+	 *
+	 * @param object event
+	 */
+	self._handle_delivery_method_click = function(event) {
+		var method = $(this).data('method');
+		var total = self.cached_data.total + self.cached_data.handling + parseFloat(method[1]);
+
+		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(method[1]).toFixed(2));
+		self.checkout_details.find('.total-value').html(parseFloat(total).toFixed(2) + ' ' + self.cached_data.currency);
+	};
+
+	// complete object initialization
+	self.init();
+}
+
 
 $(function() {
 	if ($('div#input_details').length > 0) {
-		// implement page control
-		var page_control = new PageControl('div#input_details div.pages');
-
-		page_control
-			.setAllowForward(false)
-			.setSubmitOnEnd(true)
-			.attachControls('div#checkout_stepps a')
-			.attachForm('div#input_details form')
-			.connect('page-flip', validatePage);
-
-		// implement sign in page functionality
-		var sign_in_form = $('div#sign_in.page');
-
-		sign_in_form.find('input[name=existing_user]').change(function(event) {
-			var selection = sign_in_form.find('input[name=existing_user]:checked').val();
-
-			switch (parseInt(selection)) {
-				// existing account
-				case 0:
-					sign_in_form.find('div.new_account').removeClass('visible');
-					sign_in_form.find('div.existing_account').addClass('visible');
-					break;
-
-				// new account
-				case 1:
-					sign_in_form.find('div.new_account').addClass('visible');
-					sign_in_form.find('div.existing_account').removeClass('visible');
-					break;
-
-				// checkout as guest
-				case 2:
-				default:
-					sign_in_form.find('div.new_account').removeClass('visible');
-					sign_in_form.find('div.existing_account').removeClass('visible');
-					break;
-			}
-		});
-
-		// implement preset switching
-		var shipping_information_form = $('div#shipping_information.page');
-
-		shipping_information_form.find('select[name=presets]').change(function(event) {
-			var control = $(this);
-			var option = control.find('option[value='+control.val()+']');
-
-			shipping_information_form.find('input[name=name]').val(option.data('name'));
-			shipping_information_form.find('input[name=phone]').val(option.data('phone'));
-			shipping_information_form.find('input[name=street]').val(option.data('street'));
-			shipping_information_form.find('input[name=street2]').val(option.data('street2'));
-			shipping_information_form.find('input[name=city]').val(option.data('city'));
-			shipping_information_form.find('input[name=zip]').val(option.data('zip'));
-			shipping_information_form.find('select[name=country]').val(option.data('country'));
-			shipping_information_form.find('input[name=state]').val(option.data('state'));
-		});
-
-		// implement payment method selection
-		var methods = $('div.payment_methods span');
-		var method_field = $('input[name=payment_method]');
-
-		methods.click(function(event) {
-			var method = $(this);
-
-			// set payment method before processing
-			method_field.val(method.data('name'));
-				
-			// add selection class to 
-			methods.not(method).removeClass('active');
-			method.addClass('active');
-
-			// remove bad class
-			methods.removeClass('bad');
-
-			// disable billing information page if payment method provides info about buyer
-			if (method.data('provides-information') == 1)
-				page_control.disablePage(3); else
-				page_control.enablePage(3);
-		});
-
+		new BuyerInformationForm();
 	} else if ($('div#checkout').length > 0) {
-		// checkout form
-		$('div.delivery_method input[name=delivery_method]').change(function(event) {
-			var checkout_details = $('div#checkout table.checkout_details');
-			var selected = $('div.delivery_method input[name=delivery_method]:checked').val();
-			var backend_url = $('base').attr('href') + '/index.php';
-			var data = {
-					section: 'shop',
-					action: 'json_get_shopping_cart_summary',
-					delivery_method: selected
-				};
-
-			$.ajax({
-				url: backend_url,
-				type: 'GET',
-				async: false,
-				data: data,
-				dataType: 'json',
-				context: this,
-				success: function(data) {
-					checkout_details.find('.subtotal-value.shipping').html(parseFloat(data.shipping).toFixed(2));
-					checkout_details.find('.subtotal-value.handling').html(parseFloat(data.handling).toFixed(2));
-					checkout_details.find('.total-value').html(parseFloat(data.total).toFixed(2) + ' ' + data.currency);
-					console.log(data);
-				}
-			});
-		});
+		new CheckoutForm();
 	}
 });
