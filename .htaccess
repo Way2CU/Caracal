@@ -26,7 +26,7 @@ Header unset Pragma
 	Header unset Last-Modified
 </FilesMatch>
 
-<FilesMatch "\.(js|css)$">
+<FilesMatch "\.(js|css|ttf|otf)$">
 	Header set Cache-Control "max-age=864000, must-revalidate"
 	SetOutputFilter DEFLATE
 </FilesMatch>
