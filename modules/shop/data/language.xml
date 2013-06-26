@@ -155,6 +155,8 @@
 		<constant name="label_guest">Checkout as a guest.</constant>
 		<constant name="label_password">Password:</constant>
 		<constant name="label_confirm">Confirm:</constant>
+		<constant name="label_no_estimate">No date estimate available.</constant>
+		<constant name="label_estimated_time">Estimated delivery:</constant>
 
 		<constant name="message_settings_saved">Shop settings were saved.</constant>
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>

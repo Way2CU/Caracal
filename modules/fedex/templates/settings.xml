@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_key" module="fedex"/></span>
+			<input
+				type="text"
+				name="key"
+				style="width: 325px;"
+				maxlength="30"
+				value="$settings['fedex_key']"
+				eval="value"
+				class="code"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_password" module="fedex"/></span>
+			<input
+				type="text"
+				name="password"
+				style="width: 325px;"
+				maxlength="30"
+				value="$settings['fedex_password']"
+				eval="value"
+				class="code"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_account" module="fedex"/></span>
+			<input
+				type="text"
+				name="account"
+				style="width: 325px;"
+				maxlength="30"
+				value="$settings['fedex_account']"
+				eval="value"
+				class="code"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_meter" module="fedex"/></span>
+			<input
+				type="text"
+				name="meter"
+				style="width: 325px;"
+				maxlength="30"
+				value="$settings['fedex_meter']"
+				eval="value"
+				class="code"
+			/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

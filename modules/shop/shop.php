@@ -43,6 +43,7 @@ class TransactionStatus {
 	const DELIVERED = 7;
 }
 
+
 class PackageType {
 	const BOX_10 = 0;
 	const BOX_20 = 1;
@@ -51,6 +52,13 @@ class PackageType {
 	const PAK = 4;
 	const TUBE = 5;
 	const USER_PACKAGING = 6;
+}
+
+
+class User {
+	const EXISTING = 0;
+	const CREATE = 1;
+	const GUEST = 2;
 }
 
 
@@ -683,6 +691,7 @@ class shop extends Module {
 				  `email` varchar(127) NOT NULL,
 				  `password` varchar(200) NOT NULL,
 				  `validated` BOOLEAN NOT NULL DEFAULT '0',
+				  `guest` BOOLEAN NOT NULL DEFAULT '0',
 				  `uid` varchar(50) NOT NULL,
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -1270,7 +1279,9 @@ class shop extends Module {
 															'sha256', 
 															$password,
 															shop::BUYER_SECRET
-														)
+														),
+										'guest'		=> 0,
+										// 'validated'	=> 1
 									)
 								);
 
@@ -1565,7 +1576,12 @@ class shop extends Module {
 	 */
 	private function json_GetShoppingCartSummary() {
 		$result = array();
+		$uid = $_SESSION['transaction']['uid'];
 		$update_delivery_method = isset($_REQUEST['delivery_method']);
+
+		// get managers
+		$transactions_manager = ShopTransactionsManager::getInstance();
+		$address_manager = ShopDeliveryAddressManager::getInstance();
 
 		// update session delivery method
 		if ($update_delivery_method) {
@@ -1575,17 +1591,40 @@ class shop extends Module {
 				$_SESSION['delivery_method'] = $method;
 		}
 
-		$result = $this->getCartSummary();
+		// get recipient's address
+		$recipient = array();
+		$transaction = $transactions_manager->getSingleItem(array('address'), array('uid' => $uid));
+
+		if (is_object($transaction)) {
+			$address = $address_manager->getSingleItem(
+							$address_manager->getFieldNames(),
+							array('id' => $transaction->address)
+						);
+
+			if (is_object($address))
+				$recipient = array(
+							'street'	=> array($address->street, $address->street2),
+							'city'		=> $address->city,
+							'zip_code'	=> $address->zip,
+							'state'		=> $address->state,
+							'country'	=> $address->country
+						);
+		}
+
+		$result = $this->getCartSummary($recipient, $uid);
 		unset($result['items_for_checkout']);
 
 		// add currency to result
 		$result['currency'] = $this->getDefaultCurrency();
 
+		// add language constants
+		$result['label_no_estimate'] = $this->getLanguageConstant('label_no_estimate');
+		$result['label_estimated_time'] = $this->getLanguageConstant('label_estimated_time');
+
 		// if delivery method was changed update transaction details in database
 		if ($update_delivery_method) {
 			$manager = ShopTransactionsManager::getInstance();
 
-			$uid = $_SESSION['transaction']['uid'];
 			$data = array(
 					'handling'			=> $result['handling'],
 					'shipping'			=> $result['shipping'],
@@ -1637,10 +1676,13 @@ class shop extends Module {
 	}
 
 	/**
-	 * Get shopping cart summary
+	 * Get shopping cart summary.
+	 *
+	 * @param string $transaction_id
+	 * @param array $recipient
 	 * @return array
 	 */
-	private function getCartSummary() {
+	private function getCartSummary($recipient, $transaction_id) {
 		$result = array();
 		$default_language = MainLanguageHandler::getInstance()->getDefaultLanguage();
 
@@ -1703,12 +1745,14 @@ class shop extends Module {
 					$new_item['description'] = implode(', ', array_values($properties));
 
 					// add item to list for delivery estimation
-					$delivery_items[] = array(
+					$delivery_items []= array(
 								'properties'	=> array(),
+								'package'		=> 1,
+								'weight'		=> 0.5,
 								'package_type'	=> 0,
-								'width'			=> 0.2,
-								'height'		=> 0.5,
-								'length'		=> 1,
+								'width'			=> 2,
+								'height'		=> 5,
+								'length'		=> 15,
 								'units'			=> 1,
 								'count'			=> $data['count']
 							);
@@ -1727,8 +1771,45 @@ class shop extends Module {
 		}
 
 		// if there is a delivery method selected, get price estimation for items
-		if (!is_null($delivery_method))
-			$delivery_prices = $delivery_method->getDeliveryTypes($delivery_items);
+		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
+		if (!is_null($delivery_method)) {
+			$currency_manager = ShopCurrenciesManager::getInstance();
+			$warehouse_manager = ShopWarehouseManager::getInstance();
+			$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
+
+			// get currency associated with transaction
+			$currency = $currency_manager->getSingleItem(
+												$currency_manager->getFieldNames(),
+												array('id' => $currency_id)
+											);
+			if (is_object($currency))
+				$preferred_currency = $currency->currency; else
+				$preferred_currency = 'EUR';
+
+			if (is_object($warehouse)) {
+				$shipper = array(
+	 					'street'	=> array($warehouse->street, $warehouse->street2),
+	 					'city'		=> $warehouse->city,
+	 					'zip_code'	=> $warehouse->zip,
+	 					'state'		=> $warehouse->state,
+	 					'country'	=> $warehouse->country
+					);
+
+				// get types and prices from delivery method provider
+				$delivery_prices = $delivery_method->getDeliveryTypes(
+						$delivery_items,
+						$shipper,
+						$recipient,
+						$transaction_id,
+						$preferred_currency
+					);
+
+				// convert prices if needed
+				if (count($delivery_prices) > 0)
+					foreach ($delivery_prices as $key => $delivery) {
+					}
+			}
+		}
 
 		$result = array(
 				'items_for_checkout'	=> $items_for_checkout,
@@ -1736,7 +1817,7 @@ class shop extends Module {
 				'handling'				=> $handling,
 				'weight'				=> $total_weight,
 				'total'					=> $total_money,
-				'delivery_method'		=> $delivery_method_name,
+				'delivery_method'		=> is_null($delivery_method) ? '' : $delivery_method->getName(),
 				'delivery_prices'		=> $delivery_prices
 			);
 
@@ -1753,28 +1834,44 @@ class shop extends Module {
 		$method = null;
 
 		$account_information = array();
-		$delivery_information = array();
+		$shipping_information = array();
 		$payment_method = null;
 		$billing_information = array();
+		$existing_user = isset($_POST['existing_user']) ? fix_id($_POST['existing_user']) : null;
 
 		$bad_fields = array();
 		$info_available = false;
 
+		// grab user information
 		if (isset($_POST['set_info'])) {
 			// get delivery information
 			$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
 			$required = array('name', 'email', 'street', 'city', 'zip', 'country');
-			$existing_user = fix_id($_POST['existing_user']);
 
 			foreach($fields as $field)
 				if (isset($_POST[$field]) && !empty($_POST[$field]))
-					$delivery_information[$field] = fix_chars($_POST[$field]); else
+					$shipping_information[$field] = fix_chars($_POST[$field]); else
 					if (in_array($field, $required))
 						$bad_fields[] = $field;
 
+			// get billing information
+			if (!is_null($method) && !$method->provides_information()) {
+				$fields = array(
+					'billing_first_name', 'billing_last_name', 'billing_phone', 'billing_street',
+					'billing_street2', 'billing_city', 'billing_zip', 'billing_country', 'billing_state'
+				);
+				$required = array('name', 'email', 'street', 'city', 'zip', 'country');
+
+				foreach($fields as $field)
+					if (isset($_POST[$field]) && !empty($_POST[$field]))
+						$billing_information[$field] = fix_chars($_POST[$field]); else
+						if (in_array($field, $required))
+							$bad_fields[] = $field;
+			}
+
 			// set proper account data based on users choice
 			switch ($existing_user) {
-				case 0:
+				case User::EXISTING:
 					$manager = ShopBuyersManager::getInstance();
 					$retry_manager = LoginRetryManager::getInstance();
 
@@ -1789,7 +1886,9 @@ class shop extends Module {
 											$manager->getFieldNames(),
 											array(
 												'email'		=> $email,
-												'password'	=> $password
+												'password'	=> $password,
+												'guest'		=> 0,
+												// 'validated'	=> 1
 											));
 
 					if (is_object($account)) {
@@ -1805,11 +1904,13 @@ class shop extends Module {
 					}
 					break;
 
-				case 1:
+				case User::CREATE:
 					$account_information = array(
 									'first_name'	=> fix_chars($_POST['first_name']),
 									'last_name'		=> fix_chars($_POST['last_name']),
 									'email'			=> fix_chars($_POST['new_email']),
+									'validated'		=> 0,
+									'guest'			=> 0
 								);
 
 					if ($_POST['new_password'] != $_POST['new_password_confirm'] || empty($_POST['new_password'])) {
@@ -1826,9 +1927,20 @@ class shop extends Module {
 															);
 					}
 					break;
-
-				case 2:
+ 
+				case User::GUEST:
 				default:
+					$name = explode(' ', fix_chars($_POST['name']), 1);
+
+					$account_information = array(
+									'first_name'	=> $name[0],
+									'last_name'		=> $name[1],
+									'email'			=> fix_chars($_POST['email']),
+									'password'		=> '',
+									'validated'		=> 0,
+									'guest'			=> 1
+								);
+
 					break;
 			}
 
@@ -1845,19 +1957,16 @@ class shop extends Module {
 			// try to get fallback payment method
 			if (is_null($payment_method) && count($this->payment_methods) > 0)
 				$payment_method = array_shift($this->payment_methods);
-
-			// get billing information
-			if (!is_null($method) && !$method->provides_information()) {
-				$billing_information = array(
-							);
-			}
 		}
 
 		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
 
 		if ($info_available) {
-			// get shopping cart summary
-			$summary = $this->getCartSummary();
+			$buyers_manager = ShopBuyersManager::getInstance();
+			$address_manager = ShopDeliveryAddressManager::getInstance();
+			$transactions_manager = ShopTransactionsManager::getInstance();
+			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+			$currency_manager = ShopCurrenciesManager::getInstance();
 
 			// get fields for payment method
 			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $payment_method->get_name())));
@@ -1866,80 +1975,81 @@ class shop extends Module {
 
 			// get currency info
 			$currency = $this->settings['default_currency'];
-			$currency_manager = ShopCurrenciesManager::getInstance();
-
 			$currency_item = $currency_manager->getSingleItem(array('id'), array('currency' => $currency));
 
 			if (is_object($currency_item))
 				$transaction_data['currency'] = $currency_item->id;
 
-			// if payment method doesn't provide us with billing 
-			// information store data user entered
-			if (!$payment_method->provides_information()) {
-				$buyers_manager = ShopBuyersManager::getInstance();
-				$address_manager = ShopBuyerAddressesManager::getInstance();
-
-				// associate buyer with transaction
+			if ($existing_user == User::EXISTING) {
+				// associate existing buyer with transaction
 				$buyer = $buyers_manager->getSingleItem(
 									array('id'), 
-									array(
-										'first_name'	=> $account_information['first_name'],
-										'last_name'		=> $account_information['last_name'],
-										'email'			=> $account_information['email']
-									));
+									array('email' => $account_information['email'])
+								);
+				$transaction_data['buyer'] = $buyer->id;
 
-				if (is_object($buyer)) {
-					// buyer already exists
-					$transaction_data['buyer'] = $buyer->id;
-
-				} else {
-					// no buyer found, create new one
-					$buyers_manager->insertData(array(
-										'first_name'	=> $account_information['first_name'],
-										'last_name'		=> $account_information['last_name'],
-										'email'			=> $account_information['email']
-									));
-					$transaction_data['buyer'] = $buyers_manager->getInsertedID();
-				}
-
-				// try to associate address with transaction
-				$address = $address_manager->getSingleItem(
-									array('id'),
-									array(
-										'buyer'		=> $transaction_data['buyer'],
-										'name'		=> $shipping_information['name'],
-										'street'	=> $shipping_information['street'],
-										'street2'	=> $shipping_information['street2'],
-										'city'		=> $shipping_information['city'],
-										'zip'		=> $shipping_information['zip'],
-										'state'		=> $shipping_information['state'],
-										'country'	=> $shipping_information['country'],
-									));
-
-				if (is_object($address)) {
-					// existing address
-					$transaction_data['address'] = $address->id;
-
-				} else {
-					// create new address
-					$address_manager->insertData(array(
-										'buyer'		=> $transaction_data['buyer'],
-										'name'		=> $shipping_information['name'],
-										'street'	=> $shipping_information['street'],
-										'street2'	=> $shipping_information['street2'],
-										'phone'		=> $shipping_information['phone'],
-										'city'		=> $shipping_information['city'],
-										'zip'		=> $shipping_information['zip'],
-										'state'		=> $shipping_information['state'],
-										'country'	=> $shipping_information['country'],
-									));
-					$transaction_data['address'] = $address_manager->getInsertedID();
-				}
+			} else {
+				// create new buyer and associate with transaction
+				$buyers_manager->insertData($account_information);
+				$transaction_data['buyer'] = $buyers_manager->getInsertedID();
 			}
 
+			// try to associate address with transaction
+			$address = $address_manager->getSingleItem(
+								array('id'),
+								array(
+									'buyer'		=> $transaction_data['buyer'],
+									'name'		=> $shipping_information['name'],
+									'street'	=> $shipping_information['street'],
+									'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+									'city'		=> $shipping_information['city'],
+									'zip'		=> $shipping_information['zip'],
+									'state'		=> $shipping_information['state'],
+									'country'	=> $shipping_information['country'],
+								));
+
+			if (is_object($address)) {
+				// existing address
+				$address_id = $address->id;
+
+			} else {
+				// create new address
+				$address_manager->insertData(array(
+									'buyer'		=> $transaction_data['buyer'],
+									'name'		=> $shipping_information['name'],
+									'street'	=> $shipping_information['street'],
+									'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+									'phone'		=> $shipping_information['phone'],
+									'city'		=> $shipping_information['city'],
+									'zip'		=> $shipping_information['zip'],
+									'state'		=> $shipping_information['state'],
+									'country'	=> $shipping_information['country'],
+								));
+				$address_id = $address_manager->getInsertedID();
+			}
+
+			// generate recipient array for delivery method
+			$recipient = array(
+	 					'street'	=> array($shipping_information['street'], ),
+	 					'city'		=> $shipping_information['city'],
+	 					'zip_code'	=> $shipping_information['zip'],
+	 					'state'		=> $shipping_information['state'],
+	 					'country'	=> $shipping_information['country']
+					);
+
+			if (isset($shipping_information['street2']))
+				$recipient['street'][] = $shipping_information['street2'];
+
+			trigger_error(json_encode($address));
+			trigger_error(json_encode($_SESSION));
 			// check if we have existing transaction in our database
 			if (!isset($_SESSION['transaction'])) {
-				$transaction_data['uid'] = uniqid('', true);
+				// get shopping cart summary
+				$uid = uniqid('', true);
+				$summary = $this->getCartSummary($recipient, $uid);
+
+				// generate new transaction uid
+				$transaction_data['uid'] = $uid;
 				$transaction_data['type'] = TransactionType::SHOPPING_CART;
 				$transaction_data['status'] = TransactionStatus::PENDING;
 				$transaction_data['handling'] = $summary['handling'];
@@ -1947,10 +2057,10 @@ class shop extends Module {
 				$transaction_data['payment_method'] = $payment_method->get_name();
 				$transaction_data['delivery_method'] = '';
 				$transaction_data['remark'] = '';
+				$transaction_data['address'] = $address_id;
 				$transaction_data['total'] = $summary['total'];
 
 				// create new transaction
-				$transactions_manager = ShopTransactionsManager::getInstance();
 				$transactions_manager->insertData($transaction_data);
 				$transaction_data['id'] = $transactions_manager->getInsertedID();
 
@@ -1958,18 +2068,33 @@ class shop extends Module {
 				$_SESSION['transaction'] = $transaction_data;
 
 			} else {
+				$uid = $_SESSION['transaction']['uid'];
+				$summary = $this->getCartSummary($recipient, $uid);
+
 				// there's already an existing transaction
 				$transaction_data = $_SESSION['transaction'];
 				$transaction_data['handling'] = $summary['handling'];
 				$transaction_data['shipping'] = $summary['shipping'];
 				$transaction_data['total'] = $summary['total'];
 
+				// update existing transaction
+				$transactions_manager->updateData(
+									array(
+										'handling'	=> $summary['handling'],
+										'shipping'	=> $summary['shipping'],
+										'total'		=> $summary['total'],
+										'address'	=> $address_id
+									),
+									array('uid' => $uid)
+								);
+
 				// update session storage with newest data
 				$_SESSION['transaction'] = $transaction_data;
 			}
 
+			trigger_error(json_encode($_SESSION));
+
 			// remove items associated with transaction
-			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
 			$transaction_items_manager->deleteData(array('transaction' => $transaction_data['id']));
 
 			// store items

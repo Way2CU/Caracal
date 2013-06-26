@@ -5,7 +5,7 @@
 		<cms:if condition="$params['selected']">
 			<input
 				type="radio"
-				name="delivery_method"
+				name="delivery_provider"
 				value="$params['name']"
 				eval="value"
 				checked="checked"
@@ -14,7 +14,7 @@
 		<cms:if condition="!$params['selected']">
 			<input
 				type="radio"
-				name="delivery_method"
+				name="delivery_provider"
 				value="$params['name']"
 				eval="value"
 			/>
@@ -24,6 +24,8 @@
 				src="$params['small_image']"
 				alt="$params['title']"
 				eval="src,alt"
+				width="100"
+				height="28"
 			/>
 		</span>
 	</label>

@@ -3,8 +3,38 @@
 <document>
 	<language short="en">
 		<constant name="menu_fedex">FedEx</constant>
-		<constant name="title_settings">FedEx</constant>
+		<constant name="title_settings">FedEx Settings</constant>
 
 		<constant name="delivery_method_title">FedEx International</constant>
+		<constant name="message_settings_saved">FedEx account information was saved.</constant>
+
+		<constant name="label_key">Key:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_account">Account number:</constant>
+		<constant name="label_meter">Meter number:</constant>
+
+		<constant name="EUROPE_FIRST_INTERNATIONAL_PRIORITY">Europe, first international priority</constant>
+		<constant name="FEDEX_1_DAY_FREIGHT">One day freight</constant>
+		<constant name="FEDEX_2_DAY">Two days</constant>
+		<constant name="FEDEX_2_DAY_AM">Two days (AM)</constant>
+		<constant name="FEDEX_2_DAY_FREIGHT">Two day freight</constant>
+		<constant name="FEDEX_3_DAY_FREIGHT">Three day freight</constant>
+		<constant name="FEDEX_EXPRESS_SAVER">FedEx Express Saver</constant>
+		<constant name="FEDEX_FIRST_FREIGHT">First freight</constant>
+		<constant name="FEDEX_FREIGHT_PRIORITY">Freight priority</constant>
+		<constant name="FEDEX_FREIGHT_ECONOMY">Freight economy</constant>
+		<constant name="FEDEX_GROUND">FedEx Ground</constant>
+		<constant name="GROUND_HOME_DELIVERY">Ground home delivery</constant>
+		<constant name="FIRST_OVERNIGHT">First overnight</constant>
+		<constant name="INTERNATIONAL_DISTRIBUTION_FREIGHT">International distribution freight</constant>
+		<constant name="INTERNATIONAL_ECONOMY">International economy</constant>
+		<constant name="INTERNATIONAL_ECONOMY_DISTRIBUTION">International economy distribution</constant>
+		<constant name="INTERNATIONAL_ECONOMY_FREIGHT">International economy freight</constant>
+		<constant name="INTERNATIONAL_FIRST">International first</constant>
+		<constant name="INTERNATIONAL_PRIORITY">International priority</constant>
+		<constant name="INTERNATIONAL_PRIORITY_DISTRIBUTION">International priority distribution</constant>
+		<constant name="INTERNATIONAL_PRIORITY_FREIGHT">International priority freight</constant>
+		<constant name="PRIORITY_OVERNIGHT">Priority overnight</constant>
+		<constant name="STANDARD_OVERNIGHT">Standard overnight</constant>
 	</language>
 </document>
