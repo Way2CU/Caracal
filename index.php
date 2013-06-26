@@ -52,6 +52,7 @@ if (!defined('DEBUG'))
 // define constants
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
+define('_DESKTOP_VERSION', get_desktop_version());
 define('_AJAX_REQUEST', 
 			!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
