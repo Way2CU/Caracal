@@ -1,6 +1,25 @@
 <?php
 
 /**
+ * Detect if browser is running on a mobile or desktop device.
+ * Please note that this function is already called once and result
+ * is stored in global constant _DESKTOP_VERSION. There's no need
+ * for you to call this version manually.
+ *
+ * @return boolean
+ */
+function get_desktop_version() {
+	$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+	$desktop_version = strpos($user_agent, 'mobile') === false;
+
+	// ipad tries to emulate mobile, avoid that
+	if (!$desktop_version && strpos($user_agent, 'ipad') !== false)
+		$desktop_version = true;
+
+	return $desktop_version;
+}
+
+/**
  * Remove illegal characters and tags from input strings to avoid XSS.
  * It also replaces few tags such as [b] [small] [big] [i] [u] [tt] into
  * <b> <small> <big> <i> <u> <tt>
