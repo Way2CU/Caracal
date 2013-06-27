@@ -88,13 +88,13 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
 	 * 
+	 * @param array $data
 	 * @param array $items
-	 * @param string $currency
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 * @return string
 	 */
-	public function new_payment($items, $currency, $return_url, $cancel_url) {
+	public function new_payment($data, $items, $return_url, $cancel_url) {
 		global $language;
 
 		$account = $this->_getAccount();
@@ -104,7 +104,7 @@ class PayPal_PaymentMethod extends PaymentMethod {
 				'cmd'			=> '_cart',
 				'upload'		=> '1',
 				'business'		=> $account,  // paypal merchant account email
-				'currency_code'	=> $currency,
+				'currency_code'	=> $data['currency'],
 				'weight_unit'	=> 'kgs',
 				'lc'			=> $language,
 				'return'		=> $return_url,
