@@ -256,17 +256,10 @@ class page_info extends Module {
 
 		// add default styles and script if they exists
 		if ($section != 'backend') {
-			$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-			$desktop_version = strpos($user_agent, 'mobile') === false;
-
-			// ipad tries to emulate mobile, avoid that
-			if (!$desktop_version && strpos($user_agent, 'ipad') !== false)
-				$desktop_version = true;
-
 			$styles = array();
 
 			// prepare list of files
-			if ($desktop_version) {
+			if (_DESKTOP_VERSION) {
 				$styles = array(
 						'/styles/common.css',
 						'/styles/main.css',
