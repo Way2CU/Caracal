@@ -166,8 +166,18 @@ class CodeOptimizer {
 	 * @return boolean
 	 */
 	public function addScript($url) {
-		$this->script_list []= $url;
-		$this->compiler->add($url);
+		global $section;
+
+		if (!in_array($section, array('backend', 'backend_module'))) {
+			// add script to be compiled
+			$this->script_list []= $url;
+			$this->compiler->add($url);
+
+		} else {
+			// we do not need to compile code in backend
+			$result = false;
+		}
+
 		return true;
 	}
 
