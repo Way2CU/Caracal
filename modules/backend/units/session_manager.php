@@ -8,7 +8,6 @@
 
 class SessionManager {
 	private static $_instance;
-	private static $SALT = '_web_engine: SALT1.618: ';
 
 	/**
 	 * Parent module (backend)
@@ -105,6 +104,7 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
+		$hashed_password = hash_hmac('sha256', $password, AdministratorManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
 
 		$manager = AdministratorManager::getInstance();
@@ -114,7 +114,7 @@ class SessionManager {
 									$manager->getFieldNames(),
 									array(
 										'username'	=> $username,
-										'password'	=> $password
+										'password'	=> array($password, $hashed_password)
 									));
 
 		$retry_count = $retry_manager->getRetryCount();
@@ -246,6 +246,7 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
+		$hashed_password = hash_hmac('sha256', $password, AdministratorManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
 
 		$result = array(
@@ -261,7 +262,7 @@ class SessionManager {
 									$manager->getFieldNames(),
 									array(
 										'username'	=> $username,
-										'password'	=> $password
+										'password'	=> array($password, $hashed_password)
 									));
 
 		$retry_count = $retry_manager->getRetryCount();
