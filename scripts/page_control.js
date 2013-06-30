@@ -92,6 +92,10 @@ function PageControl(selector, page_selector) {
 
 		// submit on last page
 		if (new_page > self.pages.length - 1 && self.submit_on_end) {
+			// page-flip signal should be emitted before submit
+			if (!self._emitSignal('page-flip', self.current_page, new_page))
+				return;
+
 			// emit submit signal
 			if (!self._emitSignal('submit', current_page))
 				return;
