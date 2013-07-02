@@ -9,6 +9,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 
 	protected $name;
 	protected $parent;	
+	protected $url;
 	
 	protected function __construct($parent) {
 		parent::__construct($parent);
@@ -38,24 +39,52 @@ class Stripe_PaymentMethod extends PaymentMethod {
 
 	/**
 	 * Get URL to be used in checkout form.
+	 *
+	 * Note: Stripe is a JavaScript based payment method. This means that
+	 * form doesn't really need to point anywhere else other than return
+	 * page since all the operations are done on client side.
+	 *
 	 * @return string
 	 */
 	public function get_url() {
-		return '';
+		return $this->url;
 	}
 	
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
 	 * 
-	 * @param array $data
+	 * @param array $transaction_data
+	 * @param array $billing_information
 	 * @param array $items
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 * @return string
 	 */
-	public function new_payment($data, $items, $return_url, $cancel_url) {
-		return '';
+	public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url) {
+		$this->url = $return_url;
+
+		// load script template and populate it with real data
+		$script_file = file_get_contents($this->parent->path.'/include/checkout.js');
+		$script_file = str_replace(
+							array(
+								'%cc-number%',
+								'%cc-cvv%',
+								'%cc-exp-month%',
+								'%cc-exp-year%',
+								'%stripe-key%'
+							),
+							array(
+								$billing_information['billing_credit_card'],
+								$billing_information['billing_cvv'],
+								$billing_information['billing_expire_month'],
+								$billing_information['billing_expire_year'],
+								$this->parent->getPublicKey()
+							),
+							$script_file
+						);
+
+		return '<script type="text/javascript">'.$script_file.'</script>';
 	}
 	
 	/**
