@@ -77,6 +77,8 @@ function Dialog() {
 			self._inner_content.load(url);
 
 		self._inner_content.css('top', 0);
+
+		return self;
 	};
 	
 	/**
@@ -91,6 +93,8 @@ function Dialog() {
 		self._inner_content
 				.html(element)
 				.css('top', 0);
+
+		return self;
 	};
 	
 	/**
@@ -105,6 +109,8 @@ function Dialog() {
 					width: width,
 					height: height
 				});
+
+		return self;
 	};
 	
 	/**
@@ -114,6 +120,7 @@ function Dialog() {
 	 */
 	self.setTitle = function(title) {
 		self._title_text.html(title);
+		return self;
 	};
 	
 	/**
@@ -125,6 +132,8 @@ function Dialog() {
 		if (show_scrollbar)
 			self._content.addClass('scroll'); else
 			self._content.removeClass('scroll');
+
+		return self;
 	};
 
 	/**
@@ -134,6 +143,7 @@ function Dialog() {
 	 */
 	self.setClearOnClose = function(clear) {
 		self._clear_on_close = clear;
+		return self;
 	};
 	
 	/**
