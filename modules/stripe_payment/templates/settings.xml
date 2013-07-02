@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_secret_key" module="stripe_payment"/></span>
+			<input
+				type="text"
+				name="secret_key"
+				style="width: 325px;"
+				maxlength="40"
+				value="$settings['secret_key']"
+				eval="value"
+				class="code"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_public_key" module="stripe_payment"/></span>
+			<input
+				type="text"
+				name="public_key"
+				style="width: 325px;"
+				maxlength="40"
+				value="$settings['public_key']"
+				eval="value"
+				class="code"
+			/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
