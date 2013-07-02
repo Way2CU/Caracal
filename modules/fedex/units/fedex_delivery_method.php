@@ -285,7 +285,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 				$currency = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Currency;
 
 				// add new delivery type to result
-				$result [] = array(!empty($name) ? $name : $id, $amount, $currency, null, $timestamp);
+				$result [] = array(!empty($name) ? $name : $id, $amount, $currency, null, $timestamp ? $timestamp : null);
 			}
 
 		return $result;
