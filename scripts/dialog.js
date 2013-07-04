@@ -23,9 +23,11 @@ function Dialog() {
 	 */
 	self.init = function() {
 		// configure background
-		self._background
-				.addClass('dialog-background')
-				.appendTo($('body'));
+		self._background = $('div.dialog-background');
+		if (self._background.length > 0)
+			self._background
+					.addClass('dialog-background')
+					.appendTo($('body'));
 		
 		// configure container
 		self._container
