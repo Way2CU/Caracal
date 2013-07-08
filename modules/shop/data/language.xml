@@ -71,6 +71,8 @@
 		<constant name="title_warehouse_add">Shop: Add warehouse</constant>
 		<constant name="title_warehouse_change">Shop: Change warehouse information</constant>
 		<constant name="title_warehouse_delete">Shop: Delete warehouse</constant>
+		<constant name="title_password_dialog">Password recovery</constant>
+		<constant name="title_cvv_dialog">What is CVV?</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_name_and_price">Name and price</constant>
@@ -157,6 +159,10 @@
 		<constant name="label_confirm">Confirm:</constant>
 		<constant name="label_no_estimate">No date estimate available.</constant>
 		<constant name="label_estimated_time">Estimated delivery:</constant>
+		<constant name="label_credit_card">Card number:</constant>
+		<constant name="label_expiration_date">Expiration date:</constant>
+		<constant name="label_cvv">Security code:</constant>
+		<constant name="label_cvv_question">What is this?</constant>
 
 		<constant name="message_settings_saved">Shop settings were saved.</constant>
 		<constant name="message_default_currency_saved">Default currency was saved.</constant>
