@@ -27,6 +27,7 @@ class ShopTransactionsManager extends ItemManager {
 		$this->addProperty('payment_method', 'varchar');
 		$this->addProperty('delivery_method', 'varchar');
 		$this->addProperty('remark', 'text');
+		$this->addProperty('token', 'varchar');
 		$this->addProperty('total', 'decimal');
 		$this->addProperty('timestamp', 'timestamp');
 	}
