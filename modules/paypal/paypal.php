@@ -65,17 +65,6 @@ class paypal extends Module {
 	 */
 	public function transferControl($params, $children) {
 		// global control actions
-		if (isset($params['action']))
-			switch ($params['action']) {
-				case 'checkout':
-					$this->handlePaymentNotification();
-					break;
-
-				default:
-					break;
-			}
-
-		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'settings':
