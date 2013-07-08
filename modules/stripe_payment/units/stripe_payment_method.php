@@ -72,54 +72,20 @@ class Stripe_PaymentMethod extends PaymentMethod {
 								'%cc-cvv%',
 								'%cc-exp-month%',
 								'%cc-exp-year%',
-								'%stripe-key%'
+								'%stripe-key%',
+								'%transaction-uid%'
 							),
 							array(
 								$billing_information['billing_credit_card'],
 								$billing_information['billing_cvv'],
 								$billing_information['billing_expire_month'],
 								$billing_information['billing_expire_year'],
-								$this->parent->getPublicKey()
+								$this->parent->getPublicKey(),
+								$transaction_data['uid']
 							),
 							$script_file
 						);
 
 		return '<script type="text/javascript">'.$script_file.'</script>';
-	}
-	
-	/**
-	 * Verify origin of data and status of
-	 * payment is complete.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_complete() {
-		return false;
-	}
-
-	/**
-	 * Verify origin of data and status of
-	 * payment is canceled.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_canceled() {
-		return false;
-	}
-	
-	/**
-	 * Get buyer information from data
-	 * @return array
-	 */
-	public function get_buyer_info() {
-		return array();
-	}
-	
-	/**
-	 * Extract custom field from parameters
-	 * @return string
-	 */
-	public function get_transaction_id() {
-		return '';
 	}
 }
