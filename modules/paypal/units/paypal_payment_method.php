@@ -89,12 +89,13 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 * boolean stating the success of initial payment process.
 	 * 
 	 * @param array $data
+	 * @param array $billing_information
 	 * @param array $items
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 * @return string
 	 */
-	public function new_payment($data, $items, $return_url, $cancel_url) {
+	public function new_payment($data, $billing_information, $items, $return_url, $cancel_url) {
 		global $language;
 
 		$account = $this->_getAccount();
@@ -141,8 +142,6 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function verify_payment() {
-		define('_OMIT_STATS', 1);
-
 		$result = false;
 
 		// prepare response data
@@ -175,24 +174,6 @@ class PayPal_PaymentMethod extends PaymentMethod {
 
 		return $result;
 	}
-
-	/**
-	 * Verify origin of data and status of
-	 * payment is complete.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_complete() {
-	}
-
-	/**
-	 * Verify origin of data and status of
-	 * payment is canceled.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_canceled() {
-	}
 	
 	/**
 	 * Get items from data
@@ -215,41 +196,6 @@ class PayPal_PaymentMethod extends PaymentMethod {
 		return $result;
 	}
 	
-	/**
-	 * Get buyer information from data
-	 * 
-	 * @return array
-	 */
-	public function get_buyer_info() {
-		$address = array(
-				'name'		=> fix_chars($_POST['address_name']),
-				'street'	=> fix_chars($_POST['address_street']),
-				'city'		=> fix_chars($_POST['address_city']),
-				'zip'		=> fix_chars($_POST['address_zip']),
-				'state'		=> fix_chars($_POST['address_state']),
-				'country'	=> fix_chars($_POST['address_country']),
-			);
-
-		$result = array(
-				'first_name'	=> fix_chars($_POST['first_name']),
-				'last_name'		=> fix_chars($_POST['last_name']),
-				'email'			=> fix_chars($_POST['payer_email']),
-				'uid'			=> fix_chars($_POST['payer_id']),
-				'address'		=> $address,
-			);
-
-		return $result;
-	}
-	
-	/**
-	 * Return transaction id.
-	 *
-	 * @return string
-	 */
-	public function get_transaction_id() {
-		return fix_chars($_POST['txn_id']);
-	}
-
 	/**
 	 * Get transaction information from data
 	 * 
