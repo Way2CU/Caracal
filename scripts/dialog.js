@@ -67,10 +67,6 @@ function Dialog() {
 				.addClass('command_bar')
 				.appendTo(self._content);
 
-		
-		// connect events
-		$(window).bind('resize', self.__handle_window_resize);
-
 		// create scrollbar
 		if (typeof Scrollbar == 'function')
 			self._scrollbar = new Scrollbar(self._content, 'div.inner_content');
@@ -209,21 +205,6 @@ function Dialog() {
 	};
 	
 	/**
-	 * Update dialog position based on size
-	 */
-	self._update_position = function() {
-		var window_width = $(window).width();
-		var window_height = $(window).height();
-		var width = self._container.width();
-		var height = self._container.height();
-		
-		self._container.css({
-					left: Math.round((window_width - width) / 2),
-					top: Math.round((window_height - height) / 2)
-				});
-	};
-	
-	/**
 	 * Handle clicking on close button
 	 *
 	 * @param object event
@@ -231,15 +212,6 @@ function Dialog() {
 	self.__handle_close_click = function(event) {
 		self.hide();
 		event.preventDefault();
-	};
-	
-	/**
-	 * Handle browser window resize
-	 *
-	 * @param object event
-	 */
-	self.__handle_window_resize = function(event) {
-		self._update_position();
 	};
 	
 	// finish object initialization
