@@ -171,9 +171,13 @@ function Dialog() {
 
 	/**
 	 * Set dialog as error report.
+	 *
+	 * @param boolean error
 	 */
-	self.setError = function() {
-		self._container.addClass('error');
+	self.setError = function(error) {
+		if (error)
+			self._container.addClass('error'); else
+			self._container.removeClass('error');
 	};
 	
 	/**
