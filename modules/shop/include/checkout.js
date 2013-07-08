@@ -16,6 +16,8 @@ function BuyerInformationForm() {
 	self.methods = $('div.payment_methods span');
 	self.method_field = $('input[name=payment_method]');
 	self.page_control = new PageControl('div#input_details div.pages');
+	self.password_dialog = new Dialog();
+	self.cvv_dialog = new Dialog();
 
 	/**
 	 * Complete object initialization.
@@ -29,10 +31,59 @@ function BuyerInformationForm() {
 			.attachForm('div#input_details form')
 			.connect('page-flip', self.validate_page);
 
+		// load dialog titles from server
+		language_handler.getTextArrayAsync(
+					'shop',
+					['title_password_dialog', 'title_cvv_dialog'],
+					self._configure_dialogs
+				);
+
+		// configure dialogs
+		self.password_dialog
+				.setSize(400, 300)
+				.setScroll(false)
+				.setClearOnClose(false);
+
+		self.cvv_dialog
+				.setSize(642, 265)
+				.setScroll(false)
+				.setClearOnClose(false)
+				.setContentFromDOM('img#what_is_cvv');
+
 		// connect events
 		self.sign_in_form.find('input[name=existing_user]').change(self._handle_account_type_change);
 		self.shipping_information_form.find('select[name=presets]').change(self._handle_shipping_information_preset_change);
 		self.methods.click(self._handle_payment_method_click);
+		self.sign_in_form.find('a.password_recovery').click(self._show_password_dialog);
+		self.billing_information_form.find('a.what_is_cvv').click(self._show_cvv_dialog);
+	};
+
+	/**
+	 * Function called once async load of text variables is completed.
+	 */
+	self._configure_dialogs = function(data) {
+		self.password_dialog.setTitle(data['title_password_dialog']);
+		self.cvv_dialog.setTitle(data['title_cvv_dialog']);
+	};
+
+	/**
+	 * Show password recovery dialog.
+	 * 
+	 * @param object event
+	 */
+	self._show_password_dialog = function(event) {
+		event.preventDefault();
+		self.password_dialog.show();
+	};
+
+	/**
+	 * Show CVV explanation dialog.
+	 *
+	 * @param object event
+	 */
+	self._show_cvv_dialog = function(event) {
+		event.preventDefault();
+		self.cvv_dialog.show();
 	};
 
 	/**
@@ -316,6 +367,7 @@ function BuyerInformationForm() {
 	*/
 	self._validate_billing_information_page = function () {
 		var fields = self.billing_information_form.find('input,select');
+		var method = self.methods.filter('.active');
 
 		fields.each(function(index) {
 			var field = $(this);
@@ -324,6 +376,29 @@ function BuyerInformationForm() {
 				field.addClass('bad'); else
 				field.removeClass('bad');
 		});
+
+		// if supported check data validity with method provided functions
+		if (self.billing_information_form.find('.bad').length == 0)
+			switch (self.method_field.val()) {
+				case 'stripe':
+					var card_number = fields.filter('input[name=billing_credit_card]');
+					var card_expire_month = fields.filter('input[name=billing_expire_month]');
+					var card_expire_year = fields.filter('input[name=billing_expire_year]');
+					var card_cvv = fields.filter('input[name=billing_cvv]');
+
+					if (!Stripe.card.validateCardNumber(card_number.val()))
+						card_number.addClass('bad');
+
+					if (!Stripe.card.validateExpiry(card_expire_month.val(), card_expire_year.val())) {
+						card_expire_month.addClass('bad');
+						card_expire_year.addClass('bad');
+					}
+
+					if (!Stripe.card.validateCVC(card_cvv.val()))
+						card_cvv.addClass('bad');
+
+					break;
+			}
 
 		return self.billing_information_form.find('.bad').length == 0;
 	};
@@ -431,7 +506,7 @@ function CheckoutForm() {
 				.append(price)
 				.appendTo(entry);
 
-			if (method[4] === false)
+			if (method[4] === null)
 				time.html(self.cached_data.label_no_estimate); else
 				time.html(self.cached_data.label_estimated_time + ' ' + (method[3] == null ? method[4] : method[3] + ' - ' + method[4]));
 
@@ -448,9 +523,6 @@ function CheckoutForm() {
 			.animate({opacity: 0}, 500, function() {
 				$(this).css('display', 'none');
 			});
-
-		// enable checkout button
-		self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
 
 		// show list of delivery methods
 		self.delivery_method_list.addClass('visible');
@@ -520,8 +592,12 @@ function CheckoutForm() {
 		var method = $(this).data('method');
 		var total = self.cached_data.total + self.cached_data.handling + parseFloat(method[1]);
 
+		// update checkout table
 		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(method[1]).toFixed(2));
 		self.checkout_details.find('.total-value').html(parseFloat(total).toFixed(2) + ' ' + self.cached_data.currency);
+
+		// enable checkout button
+		self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
 	};
 
 	// complete object initialization
