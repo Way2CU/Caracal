@@ -126,46 +126,4 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		return $result;
 	}
-	
-	/**
-	 * Verify origin of data and status of
-	 * payment is complete.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_complete() {
-		return isset($_REQUEST['Response']) && $_REQUEST['Response'] == '000';
-	}
-
-	/**
-	 * Verify origin of data and status of
-	 * payment is canceled.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_canceled() {
-		return isset($_REQUEST['Response']) && $_REQUEST['Response'] == '800';
-	}
-	
-	/**
-	 * Get buyer information from data
-	 * 
-	 * @return array
-	 */
-	public function get_buyer_info() {
-	}
-	
-	/**
-	 * Get transaction id from data
-	 * @return string
-	 */
-	public function get_transaction_id() {
-		$result = null;
-
-		if (isset($_REQUEST['TranzilaToken']))
-			$result = fix_chars($_REQUEST['TranzilaToken']);
-
-		return $result;
-	}
-	
 }

@@ -727,6 +727,7 @@ class shop extends Module {
 				  `shipping` decimal(8,2) NOT NULL,
 				  `delivery_method` varchar(255) NOT NULL,
 				  `remark` text NOT NULL,
+				  `token` varchar(255) NOT NULL,
 				  `total` decimal(8,2) NOT NULL,
 				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				  PRIMARY KEY (`id`),
@@ -848,6 +849,8 @@ class shop extends Module {
 	public function includeScripts($tag_params, $children) {
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
+			$head_tag->addTag('script', array('src'=>_BASEURL.'/scripts/dialog.js', 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>_BASEURL.'/scripts/page_control.js', 'type'=>'text/javascript'));
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 		}
 	}
@@ -984,6 +987,51 @@ class shop extends Module {
 	}
 
 	/**
+	 * Set transaction status.
+	 *
+	 * @param string $transaction_id
+	 * @param string $status
+	 * @return boolean
+	 */
+	public function setTransactionStatus($transaction_id, $status) {
+		$result = false;
+		$manager = ShopTransactionsManager::getInstance();
+
+		// try to get transaction with specified id
+		$transaction = $manager->getSingleItem(array('id'), array('uid' => $transaction_id));
+
+		// set status of transaction
+		if (is_object($transaction)) {
+			$manager->updateData(array('status' => $status), array('id' => $transaction->id));
+			$result = true;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Set token from payment method for specified transaction.
+	 *
+	 * @param string $transaction_id
+	 * @param string $token
+	 */
+	public function setTransactionToken($transaction_id, $token) {
+		$result = false;
+		$manager = ShopTransactionsManager::getInstance();
+
+		// try to get transaction with specified id
+		$transaction = $manager->getSingleItem(array('id'), array('uid' => $transaction_id));
+
+		// set token for transaction
+		if (is_object($transaction)) {
+			$manager->updateData(array('token' => $token), array('id' => $transaction->id));
+			$result = true;
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Pre-configure search parameters
 	 *
 	 * @param array $tag_params
@@ -991,76 +1039,6 @@ class shop extends Module {
 	 */
 	private function configureSearch($tag_params, $children) {
 		$this->search_params = $tag_params;
-	}
-
-	/**
-	 * Update transaction status based on parameters. Returns
-	 * boolean denoting success of update, *not* transaction!
-	 * 
-	 * @return boolean
-	 */
-	private function updateTransactionStatus() {
-		$result = false;
-		$method_name = isset($_REQUEST['method']) ? fix_chars($_REQUEST['method']) : null;
-
-		if (is_null($method_name) || !array_key_exists($method_name, $this->payment_methods))
-			return $result;
-
-		// get method and transaction id
-		$method = $this->payment_methods[$method_name];
-		$transactions_manager = ShopTransactionsManager::getInstance();
-		$transaction_id = $method->get_transaction_id();
-
-		// update transaction state
-		if ($method->verify_payment_complete()) {
-			// transaction is completed
-			$transactions_manager->updateData(
-									array('status' => TransactionStatus::COMPLETED),
-									array(
-										'uid' => $transaction_id,
-										'status' => TransactionStatus::PENDING
-									));
-
-			// if affiliate system is active we mark referral as conversion
-			if (class_exists('affiliates')) {
-				$referral = null;
-				$affiliates = affiliates::getInstance();
-				$referrals_manager = AffiliateReferralsManager::getInstance();
-
-				// get transaction from UID
-				$transaction = $transactions_manager->getSingleItem(
-										array('id'), 
-										array('uid' => $transaction_id)
-									);
-
-				if (is_object($transaction))
-					$referral = $referrals_manager->getSingleItem(
-											$referrals_manager->getFieldNames(), 
-											array('transaction' => $transaction->id)
-										);
-
-				if (is_object($referral))
-					$affiliates->convertReferral($referral->id);
-			}
-
-			// send emails
-			$handler = ShopTransactionsHandler::getInstance($this);
-			$handler->sendMail($transaction_id);
-
-			$result = true;
-
-		} else if ($method->verify_payment_canceled()) {
-			// transaction was canceled
-			$transactions_manager->updateData(
-									array('status' => TransactionStatus::CANCELED),
-									array(
-										'uid' => $transaction_id,
-										'status' => TransactionStatus::PENDING
-									));
-			$result = true;
-		}
-
-		return $result;
 	}
 
 	/**
@@ -1087,8 +1065,6 @@ class shop extends Module {
 	 * Show message for completed checkout and empty shopping cart
 	 */
 	private function showCheckoutCompleted() {
-		$update_successful = $this->updateTransactionStatus();
-
 		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_completed_message', $this, 'tag_CompletedMessage');
@@ -1104,8 +1080,6 @@ class shop extends Module {
 	 * Show message for canceled checkout
 	 */
 	private function showCheckoutCanceled() {
-		$update_successful = $this->updateTransactionStatus();
-
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_canceled_message', $this, 'tag_CanceledMessage');
@@ -1133,7 +1107,7 @@ class shop extends Module {
 			// get data from payment method
 			$payment_info = $method->get_payment_info();
 			$transaction_info = $method->get_transaction_info();
-			$buyer_info = $method->get_buyer_info();
+			/* $buyer_info = $method->get_buyer_info(); */
 			$items_info = $method->get_items();
 
 			// get managers
@@ -1711,10 +1685,6 @@ class shop extends Module {
 		$delivery_prices = array();
 		$map_id_to_uid = array();
 
-		// get prefered method
-		if (isset($_SESSION['delivery_method']) && array_key_exists($_SESSION['delivery_method'], $this->delivery_methods)) 
-			$delivery_method = $this->delivery_methods[$_SESSION['delivery_method']];
-
 		// parse items from database
 		foreach ($items as $item) {
 			$db_item = array(
@@ -1770,44 +1740,67 @@ class shop extends Module {
 				}
 		}
 
-		// if there is a delivery method selected, get price estimation for items
-		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
-		if (!is_null($delivery_method)) {
-			$currency_manager = ShopCurrenciesManager::getInstance();
-			$warehouse_manager = ShopWarehouseManager::getInstance();
-			$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
 
-			// get currency associated with transaction
-			$currency = $currency_manager->getSingleItem(
-												$currency_manager->getFieldNames(),
-												array('id' => $currency_id)
-											);
-			if (is_object($currency))
-				$preferred_currency = $currency->currency; else
-				$preferred_currency = 'EUR';
+		// only get delivery method prices if request was made by client-side script
+		if (_AJAX_REQUEST) {
+			// get prefered method
+			if (isset($_SESSION['delivery_method']) && array_key_exists($_SESSION['delivery_method'], $this->delivery_methods)) 
+				$delivery_method = $this->delivery_methods[$_SESSION['delivery_method']];
 
-			if (is_object($warehouse)) {
-				$shipper = array(
-	 					'street'	=> array($warehouse->street, $warehouse->street2),
-	 					'city'		=> $warehouse->city,
-	 					'zip_code'	=> $warehouse->zip,
-	 					'state'		=> $warehouse->state,
-	 					'country'	=> $warehouse->country
-					);
+			// if there is a delivery method selected, get price estimation for items
+			// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
+			if (!is_null($delivery_method)) {
+				$currency_manager = ShopCurrenciesManager::getInstance();
+				$warehouse_manager = ShopWarehouseManager::getInstance();
+				$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
 
-				// get types and prices from delivery method provider
-				$delivery_prices = $delivery_method->getDeliveryTypes(
-						$delivery_items,
-						$shipper,
-						$recipient,
-						$transaction_id,
-						$preferred_currency
-					);
+				// get currency associated with transaction
+				$currency = $currency_manager->getSingleItem(
+													$currency_manager->getFieldNames(),
+													array('id' => $currency_id)
+												);
+				if (is_object($currency))
+					$preferred_currency = $currency->currency; else
+					$preferred_currency = 'EUR';
 
-				// convert prices if needed
-				if (count($delivery_prices) > 0)
-					foreach ($delivery_prices as $key => $delivery) {
-					}
+				if (is_object($warehouse)) {
+					$shipper = array(
+							'street'	=> array($warehouse->street, $warehouse->street2),
+							'city'		=> $warehouse->city,
+							'zip_code'	=> $warehouse->zip,
+							'state'		=> $warehouse->state,
+							'country'	=> $warehouse->country
+						);
+
+					// get types and prices from delivery method provider
+					$delivery_prices = $delivery_method->getDeliveryTypes(
+							$delivery_items,
+							$shipper,
+							$recipient,
+							$transaction_id,
+							$preferred_currency
+						);
+
+					// convert prices and format timestamps
+					$language_handler = MainLanguageHandler::getInstance();
+					$date_format = $language_handler->getText('format_date');
+
+					if (count($delivery_prices) > 0)
+						for ($i = 0; $i < count($delivery_prices); $i++) {
+							$delivery = $delivery_prices[$i];
+
+							// format starting date
+							if (!is_null($delivery[3]))
+								$delivery[3] = date($date_format, $delivery[3]);
+
+							// format ending date
+							if (!is_null($delivery[4]))
+								$delivery[4] = date($date_format, $delivery[4]);
+
+							// store delivery back to the original array
+							$delivery_prices[$i] = $delivery;
+						}
+				}
 			}
 		}
 
@@ -1831,8 +1824,6 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_CheckoutForm($tag_params, $children) {
-		$method = null;
-
 		$account_information = array();
 		$shipping_information = array();
 		$payment_method = null;
@@ -1844,6 +1835,20 @@ class shop extends Module {
 
 		// grab user information
 		if (isset($_POST['set_info'])) {
+			// get payment method
+			if (isset($tag_params['payment_method']) && array_key_exists($tag_params['payment_method'], $this->payment_methods)) {
+				$method_name = fix_chars($tag_params['payment_method']);
+				$payment_method = $this->payment_methods[$method_name];
+
+			} else if (isset($_POST['payment_method']) && array_key_exists($_POST['payment_method'], $this->payment_methods)) {
+				$method_name = fix_chars($_POST['payment_method']);
+				$payment_method = $this->payment_methods[$method_name];
+			}
+
+			// try to get fallback payment method
+			if (is_null($payment_method) && count($this->payment_methods) > 0)
+				$payment_method = array_shift($this->payment_methods);
+
 			// get delivery information
 			$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
 			$required = array('name', 'email', 'street', 'city', 'zip', 'country');
@@ -1855,12 +1860,12 @@ class shop extends Module {
 						$bad_fields[] = $field;
 
 			// get billing information
-			if (!is_null($method) && !$method->provides_information()) {
+			if (!is_null($payment_method) && !$payment_method->provides_information()) {
 				$fields = array(
-					'billing_first_name', 'billing_last_name', 'billing_phone', 'billing_street',
-					'billing_street2', 'billing_city', 'billing_zip', 'billing_country', 'billing_state'
+					'billing_full_name', 'billing_credit_card', 'billing_expire_month',
+					'billing_expire_year', 'billing_cvv' 
 				);
-				$required = array('name', 'email', 'street', 'city', 'zip', 'country');
+				$required = $fields;
 
 				foreach($fields as $field)
 					if (isset($_POST[$field]) && !empty($_POST[$field]))
@@ -1943,20 +1948,6 @@ class shop extends Module {
 
 					break;
 			}
-
-			// get payment method
-			if (isset($tag_params['payment_method']) && array_key_exists($tag_params['payment_method'], $this->payment_methods)) {
-				$method_name = fix_chars($tag_params['payment_method']);
-				$payment_method = $this->payment_methods[$method_name];
-
-			} else if (isset($_POST['payment_method']) && array_key_exists($_POST['payment_method'], $this->payment_methods)) {
-				$method_name = fix_chars($_POST['payment_method']);
-				$payment_method = $this->payment_methods[$method_name];
-			}
-
-			// try to get fallback payment method
-			if (is_null($payment_method) && count($this->payment_methods) > 0)
-				$payment_method = array_shift($this->payment_methods);
 		}
 
 		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
@@ -2040,8 +2031,6 @@ class shop extends Module {
 			if (isset($shipping_information['street2']))
 				$recipient['street'][] = $shipping_information['street2'];
 
-			trigger_error(json_encode($address));
-			trigger_error(json_encode($_SESSION));
 			// check if we have existing transaction in our database
 			if (!isset($_SESSION['transaction'])) {
 				// get shopping cart summary
@@ -2092,8 +2081,6 @@ class shop extends Module {
 				$_SESSION['transaction'] = $transaction_data;
 			}
 
-			trigger_error(json_encode($_SESSION));
-
 			// remove items associated with transaction
 			$transaction_items_manager->deleteData(array('transaction' => $transaction_data['id']));
 
@@ -2124,8 +2111,8 @@ class shop extends Module {
 			// create new payment
 			$checkout_fields = $payment_method->new_payment(
 										$transaction_data,
+										$billing_information,
 										$summary['items_for_checkout'],
-										$this->getDefaultCurrency(),
 										$return_url,
 										$cancel_url
 									);

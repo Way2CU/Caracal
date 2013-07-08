@@ -4,7 +4,6 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
-@CHARSET "UTF-8";
 
 div#checkout_container {
 	display: block;
@@ -129,7 +128,7 @@ div#checkout div.delivery_provider label input[type=radio]:checked + span:before
 	box-shadow: none;
 }
 
-div#checkout div.delivery_provider div.overlay {
+div#checkout div.overlay {
 	display: none;
 	width: 100%;
 	height: 100%;
@@ -138,11 +137,30 @@ div#checkout div.delivery_provider div.overlay {
 	top: 0px;
 	left: 0px;
 
-	background-color: white;
-	background-color: rgba(255, 255, 255, 0.8);
-	background-image: url(../images/checkout_loading.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
+	background-image: 
+		url(../images/checkout_loading.gif),
+		radial-gradient(
+			center center,
+			circle cover,
+			rgba(255, 255, 255, 0.9) 30%,
+			rgba(255, 255, 255, 0) 100%
+		);
+	background-image: 
+		url(../images/checkout_loading.gif),
+			-moz-radial-gradient(center center,
+			circle cover,
+			rgba(255, 255, 255, 0.9) 30%,
+			rgba(255, 255, 255, 0) 100%
+		);
+	background-image: 
+		url(../images/checkout_loading.gif),
+			-webkit-radial-gradient(center center,
+			circle cover,
+			rgba(255, 255, 255, 0.9) 30%,
+			rgba(255, 255, 255, 0) 100%
+		);
+	background-position: center center, center center;
+	background-repeat: no-repeat, no-repeat;
 }
 
 div#checkout div.delivery_method {
@@ -633,7 +651,7 @@ div#input_details label:last-of-type {
 	margin-bottom: 15px;
 }
 
-div#input_details a.password_recovery {
+div#input_details a {
 	color: #0b6fd4;
 	text-decoration: none;
 
@@ -641,6 +659,10 @@ div#input_details a.password_recovery {
 	transition-duration: 0.3s;
 	-moz-transition-property: all;
 	-moz-transition-duration: 0.3s;
+}
+
+div#input_details a:hover {
+	text-decoration: underline;
 }
 
 div#input_details div.existing_account,
@@ -665,10 +687,6 @@ div#input_details div.new_account.visible {
 div#input_details div.existing_account label:first-of-type,
 div#input_details div.new_account label:first-of-type {
 	margin-top: 3px;
-}
-
-div#input_details a.password_recovery:hover {
-	text-decoration: underline;
 }
 
 body.rtl div#input_details label {
@@ -757,6 +775,30 @@ div#input_details label.checkbox input + span:before {
 div#input_details label.checkbox input:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
+}
+
+div#input_details div.horizontal {
+	text-align: left;
+}
+
+div#input_details div.horizontal label {
+	display: inline-block;
+	padding-right: 7px;
+}
+
+div#input_details div.horizontal label:nth-child(2) {
+	margin: 0px;
+	padding: 0px;
+}
+
+body.rtl div#input_details div.horizontal {
+	text-align: right;
+}
+
+body.rtl div#input_details div.horizontal label {
+	display: inline-block;
+	padding-right: auto;
+	padding-left: 7px;
 }
 
 div#input_details div.message {

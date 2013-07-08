@@ -8,7 +8,7 @@
 function Dialog() {
 	var self = this;
 	
-	self._background = $('<div>');
+	self._background = null;
 	self._container = $('<div>');
 	self._title = $('<div>');
 	self._title_text = $('<span>');
@@ -17,15 +17,18 @@ function Dialog() {
 	self._inner_content = $('<div>');
 	self._scrollbar = null;
 	self._clear_on_close = false;
+	self._command_bar = $('<div>');
 	
 	/**
 	 * Complete object initialization
 	 */
 	self.init = function() {
 		// configure background
-		self._background
-				.addClass('dialog-background')
-				.appendTo($('body'));
+		self._background = $('div.dialog-background');
+		if (self._background.length == 0)
+			self._background = $('<div>')
+					.addClass('dialog-background')
+					.appendTo($('body'));
 		
 		// configure container
 		self._container
@@ -43,11 +46,12 @@ function Dialog() {
 		self._close_button
 				.addClass('close')
 				.attr('href', 'javascript: void(0);')
+				.html(language_handler.getText(null, 'close'))
 				.click(self.__handle_close_click)
-				.appendTo(self._title);
+				.appendTo(self._command_bar);
 		
 		self._title.append($('<div>').css('clear', 'both'));
-		
+
 		// configure content
 		self._content
 				.css('position', 'relative')
@@ -57,6 +61,12 @@ function Dialog() {
 		self._inner_content
 				.addClass('inner_content')
 				.appendTo(self._content);
+
+		// configure command bar
+		self._command_bar
+				.addClass('command_bar')
+				.appendTo(self._content);
+
 		
 		// connect events
 		$(window).bind('resize', self.__handle_window_resize);
@@ -89,6 +99,8 @@ function Dialog() {
 			self._inner_content.load(url);
 
 		self._inner_content.css('top', 0);
+
+		return self;
 	};
 	
 	/**
@@ -103,6 +115,8 @@ function Dialog() {
 		self._inner_content
 				.html(element)
 				.css('top', 0);
+
+		return self;
 	};
 	
 	/**
@@ -113,10 +127,13 @@ function Dialog() {
 	 */
 	self.setSize = function(width, height) {
 		// set dialog size
-		self._content.css({
+		self._inner_content.css({
 					width: width,
-					height: height
+					height: height,
 				});
+		self._container.css('margin-left', -Math.round(width/2));
+
+		return self;
 	};
 	
 	/**
@@ -126,6 +143,7 @@ function Dialog() {
 	 */
 	self.setTitle = function(title) {
 		self._title_text.html(title);
+		return self;
 	};
 	
 	/**
@@ -137,6 +155,8 @@ function Dialog() {
 		if (show_scrollbar)
 			self._content.addClass('scroll'); else
 			self._content.removeClass('scroll');
+
+		return self;
 	};
 
 	/**
@@ -146,83 +166,42 @@ function Dialog() {
 	 */
 	self.setClearOnClose = function(clear) {
 		self._clear_on_close = clear;
+		return self;
+	};
+
+	/**
+	 * Set dialog as error report.
+	 */
+	self.setError = function() {
+		self._container.addClass('error');
 	};
 	
 	/**
 	 * Show dialog
 	 */
 	self.show = function() {
-		var chain = new AnimationChain();
-		
-		// configure containers
-		self._background.css({
-					display: 'block',
-					opacity: 0
-				});
-		
-		self._container.css({
-					display: 'block',
-					opacity: 0
-				});
+		// set classes
+		self._background.addClass('visible');
+		self._container.addClass('visible');
+		self._visible = true;
 
-		// update dialog position
-		self._update_position();
-		
-		// create animation chain
-		chain
-			.addAnimation(
-					self._background, 
-					{opacity: 0.5}, 
-					300
-				)
-			.addAnimation(
-					self._container,
-					{opacity: 1},
-					300
-				)
-			.callback(function() {
-				// set visible marker
-				self._visible = true;
-
-				// update scrollbar
-				if (self._scrollbar != null)
-					self._scrollbar.content_updated();
-			});
-		
-		// start animation chain
-		chain.start();
+		// update scrollbar
+		if (self._scrollbar != null)
+			self._scrollbar.content_updated();
 	};
 	
 	/**
 	 * Hide dialog
 	 */
 	self.hide = function() {
-		var chain = new AnimationChain();
-		
-		// create animation chain
-		chain
-			.addAnimation(
-					self._container, 
-					{opacity: 0}, 
-					200
-				)
-			.addAnimation(
-					self._background,
-					{opacity: 0},
-					200
-				)
-			.callback(function() {
-				self._visible = false;
-				
-				self._container.css('display', 'none');
-				self._background.css('display', 'none');
+		// remove classes
+		self._background.removeClass('visible');
+		self._container.removeClass('visible');
+		self._visible = false;
 
-				if (self._clear_on_close)
-					self._inner_content.html('');
-			});
-			
-		// start animation chain
-		chain.start();
+		// clear content if neede
+		if (self._clear_on_close)
+			self._inner_content.html('');
 	};
 	
 	/**

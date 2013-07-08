@@ -24,8 +24,7 @@ class stripe_payment extends Module {
 		// load module style and scripts
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/stripe.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/stripe.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src' => 'https://js.stripe.com/v2/', 'type' => 'text/javascript'));
 		}
 
 		// register backend
@@ -40,10 +39,10 @@ class stripe_payment extends Module {
 
 									window_Open( // on click open window
 												'stripe',
-												650,
+												350,
 												$this->getLanguageConstant('title_settings'),
 												true, true,
-												backend_UrlMake($this->name, 'settings')
+												backend_UrlMake($this->name, 'show_settings')
 											),
 									$level=5
 								));
@@ -76,6 +75,10 @@ class stripe_payment extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'charge_token':
+					$this->chargeToken();
+					break;
+
 				default:
 					break;
 			}
@@ -83,6 +86,14 @@ class stripe_payment extends Module {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
+				case 'show_settings':
+					$this->showSettings();
+					break;
+					
+				case 'save_settings':
+					$this->saveSettings();
+					break;
+
 				default:
 					break;
 			}
@@ -106,6 +117,12 @@ class stripe_payment extends Module {
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
+		$params = array(
+						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
+						'cancel_action'	=> window_Close('stripe')
+					);
+
+		$template->setLocalParams($params);
 
 		$template->restoreXML();
 		$template->parse();
@@ -115,17 +132,79 @@ class stripe_payment extends Module {
 	 * Save settings
 	 */
 	private function saveSettings() {
+		$secret_key = fix_chars($_REQUEST['secret_key']);
+		$public_key = fix_chars($_REQUEST['public_key']);
+
+		$this->saveSetting('secret_key', $secret_key);
+		$this->saveSetting('public_key', $public_key);
+
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_article_saved'),
+					'message'	=> $this->getLanguageConstant('message_settings_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close($window).";".window_ReloadContent('articles'),
+					'action'	=> window_Close('stripe')
 				);
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Return Stripe publishable key
+	 *
+	 * @return string
+	 */
+	public function getPublicKey() {
+		return $this->settings['public_key'];
+	}
+
+	/**
+	 * Return Stripe private key
+	 *
+	 * @return string
+	 */
+	private function getPrivateKey() {
+		return $this->settings['secret_key'];
+	}
+
+	/**
+	 * Charge specified amount with specified token and transaction.
+	 */
+	public function chargeToken() {
+		$transaction_uid = fix_chars($_REQUEST['transaction_uid']);
+		$stripe_token = fix_chars($_REQUEST['stripe_token']);
+		$manager = ShopTransactionsManager::getInstance();
+		$currency_manager = ShopCurrenciesManager::getInstance();
+		$transaction = null;
+
+		// make sure we are working on same transaction for current user
+		if (isset($_SESSION['transaction']) && $_SESSION['transaction']['uid'] == $transaction_uid) 
+			$transaction = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $transaction_uid));
+
+		if (is_object($transaction)) {
+			$currency = $currency_manager->getSingleItem(array('currency'), array('id' => $transaction->currency));
+
+			try {
+				// create charge
+				Stripe::setApiKey($this->getPrivateKey());
+				$charge = Stripe_Charge::create(array(
+								'amount'		=> $transaction->total * 100,
+								'currency'		=> $currency->currency,
+								'card'			=> $stripe_token,
+								'description'	=> null
+							));
+			} catch (Stripe_CardError $error) {
+			}
+
+			// update transaction status
+			if (is_object($charge) && $charge->paid) {
+				$shop = shop::getInstance();
+				$shop->setTransactionToken($transaction_uid, $charge->id);
+				$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
+			}
+		}
 	}
 }

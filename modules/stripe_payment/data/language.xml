@@ -4,13 +4,23 @@
 	<language short="en">
 		<constant name="menu_stripe">Stripe</constant>
 
-		<constant name="title_settings">Settings</constant>
+		<constant name="title_settings">Stripe Settings</constant>
 		<constant name="payment_method_title">Stripe</constant>
+
+		<constant name="label_secret_key">Secret key:</constant>
+		<constant name="label_public_key">Publishable key:</constant>
+
+		<constant name="message_settings_saved">Stripe keys were saved!</constant>
 	</language>
 	<language short="iw">
 		<constant name="menu_stripe">Stripe</constant>
 
 		<constant name="title_settings">הגדרות</constant>
 		<constant name="payment_method_title">Stripe</constant>
+
+		<constant name="label_secret_key">Secret key:</constant>
+		<constant name="label_public_key">Publishable key:</constant>
+
+		<constant name="message_settings_saved">Stripe keys were saved!</constant>
 	</language>
 </document>

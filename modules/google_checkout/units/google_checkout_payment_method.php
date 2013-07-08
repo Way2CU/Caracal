@@ -61,36 +61,4 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 	 */
 	public function new_payment($data, $items, $return_url, $cancel_url) {
 	}
-	
-	/**
-	 * Verify origin of data and status of
-	 * payment is complete.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_complete() {
-	}
-
-	/**
-	 * Verify origin of data and status of
-	 * payment is canceled.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment_canceled() {
-	}
-	
-	/**
-	 * Get buyer information from data
-	 * @return array
-	 */
-	public function get_buyer_info() {
-	}
-	
-	/**
-	 * Extract custom field from parameters
-	 * @return string
-	 */
-	public function get_transaction_id() {
-	}
 }

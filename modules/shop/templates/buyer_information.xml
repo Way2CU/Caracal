@@ -26,7 +26,7 @@
 		</div>
 
 		<div id="input_details" skip_cache="1"> 
-			<form method="POST">
+			<form method="POST" action="">
 				<div class="pages">
 					<!-- Sign In -->
 					<div class="page" id="sign_in">
@@ -48,7 +48,7 @@
 								<input
 									type="text" 
 									name="sign_in_email" 
-									max="127" 
+									maxlength="127" 
 									style="width: 270px;"
 									autocomplete="email"
 								/>
@@ -58,7 +58,7 @@
 								<input
 									type="password"
 									name="sign_in_password"
-									max="127"
+									maxlength="127"
 									autocomplete="off"
 								/>
 							</label>
@@ -88,7 +88,7 @@
 									type="text"
 									name="first_name"
 									value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
-									max="64"
+									maxlength="64"
 									data-required="1"
 									autocomplete="given-name"
 								/>
@@ -101,7 +101,7 @@
 									type="text"
 									name="last_name"
 									value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
-									max="64"
+									maxlength="64"
 									data-required="1"
 									autocomplete="family-name"
 								/>
@@ -114,7 +114,7 @@
 									type="text" 
 									name="new_email" 
 									value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
-									max="127" 
+									maxlength="127" 
 									style="width: 270px;"
 									data-required="1"
 									autocomplete="email"
@@ -125,7 +125,7 @@
 								<input
 									type="password" 
 									name="new_password" 
-									max="127" 
+									maxlength="127" 
 									style="width: 200px;"
 									data-required="1"
 									autocomplete="off"
@@ -136,7 +136,7 @@
 								<input
 									type="password" 
 									name="new_password_confirm" 
-									max="127" 
+									maxlength="127" 
 									style="width: 200px;"
 									data-required="1"
 									autocomplete="off"
@@ -176,7 +176,7 @@
 								type="text"
 								name="name"
 								value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-								max="64"
+								maxlength="64"
 								data-required="1"
 								autocomplete="name"
 							/>
@@ -190,7 +190,7 @@
 								type="text" 
 								name="email" 
 								value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-								max="127" 
+								maxlength="127" 
 								style="width: 270px;"
 								data-required="1"
 								autocomplete="email"
@@ -204,7 +204,7 @@
 								type="text" 
 								name="phone" 
 								value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
-								max="127" 
+								maxlength="127" 
 								style="width: 270px;"
 								autocomplete="tel"
 							/>
@@ -218,7 +218,7 @@
 								type="text" 
 								name="street" 
 								value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-								max="200" 
+								maxlength="200" 
 								style="width: 300px;"
 								data-required="1"
 								autocomplete="address-line1"
@@ -232,7 +232,7 @@
 								type="text" 
 								name="street2" 
 								value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
-								max="200" 
+								maxlength="200" 
 								style="width: 300px;"
 								autocomplete="address-line2"
 							/>
@@ -245,7 +245,7 @@
 								type="text" 
 								name="city" 
 								value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
-								max="40"
+								maxlength="40"
 								data-required="1"
 								autocomplete="locality"
 							/>
@@ -258,7 +258,7 @@
 								type="text" 
 								name="zip" 
 								value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-								max="20" 
+								maxlength="20" 
 								style="width: 120px;"
 								data-required="1"
 								autocomplete="postal-code"
@@ -308,7 +308,7 @@
 								type="text" 
 								name="state" 
 								value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
-								max="40"
+								maxlength="40"
 								autocomplete="region"
 							/>
 						</label>
@@ -344,41 +344,16 @@
 						<h1><cms:text constant="title_billing_information" module="shop"/></h1>
 
 						<label>
-							<span><cms:text constant="label_first_name" module="shop"/></span>
+							<span><cms:text constant="label_full_name" module="shop"/></span>
 							<input
-								class="in_array('billing_first_name', $params['bad_fields']) ? 'bad' : ''"
+								class="in_array('billing_full_name', $params['bad_fields']) ? 'bad' : ''"
 								eval="class,value"
 								type="text"
-								name="billing_first_name"
-								value="isset($_POST['billing_first_name']) ? fix_chars($_POST['billing_first_name']) : ''"
-								max="64"
-								autocomplete="cc-given-name"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_last_name" module="shop"/></span>
-							<input
-								class="in_array('billing_last_name', $params['bad_fields']) ? 'bad' : ''"
-								eval="class,value"
-								type="text"
-								name="billing_last_name"
-								value="isset($_POST['billing_last_name']) ? fix_chars($_POST['billing_last_name']) : ''"
-								max="64"
-								autocomplete="cc-family-name"
-							/>
-						</label>
-						<hr/>
-						<label>
-							<span><cms:text constant="label_phone_number" module="shop"/></span>
-							<input
-								class="in_array('billing_phone', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_phone" 
-								value="isset($_POST['billing_phone']) ? fix_chars($_POST['billing_phone']) : ''"
-								max="127" 
-								style="width: 270px;"
-								autocomplete="phone"
+								name="billing_full_name"
+								value="isset($_POST['billing_full_name']) ? fix_chars($_POST['billing_first_name']) : ''"
+								maxlength="64"
+								autocomplete="cc-name"
+								data-required="1"
 							/>
 						</label>
 						<hr/>
@@ -390,139 +365,70 @@
 								type="text" 
 								name="billing_credit_card"
 								value="isset($_POST['billing_credit_card']) ? fix_chars($_POST['billing_credit_card']) : ''"
-								max="127" 
-								style="width: 270px;"
+								maxlength="127" 
+								style="width: 170px;"
 								autocomplete="cc-number"
+								data-required="1"
 							/>
 						</label>
+						<div class="horizontal">
+							<label>
+								<span><cms:text constant="label_expiration_date" module="shop"/></span>
+								<input
+									class="in_array('billing_expire_month', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="billing_expire_month"
+									value="isset($_POST['billing_expire_month']) ? fix_chars($_POST['billing_expire_month']) : ''"
+									maxlength="2" 
+									style="width: 30px;"
+									autocomplete="cc-exp-month"
+									placeholder="mm"
+									data-required="1"
+								/>
+							</label>
+							<label>
+								<input
+									class="in_array('billing_expire_year', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="billing_expire_year"
+									value="isset($_POST['billing_expire_year']) ? fix_chars($_POST['billing_expire_year']) : ''"
+									maxlength="4" 
+									style="width: 50px;"
+									autocomplete="cc-exp-year"
+									placeholder="yyyy"
+									data-required="1"
+								/>
+							</label>
+						</div>
 						<label>
-							<span/>
-							<input
-								class="in_array('billing_expire_month', $params['bad_fields']) ? 'bad' : ''" 
+							<span><cms:text constant="label_cvv" module="shop"/></span>
+							<input 
+								class="in_array('billing_cvv', $params['bad_fields']) ? 'bad' : ''" 
 								eval="class,value" 
 								type="text" 
-								name="billing_expire_month"
-								value="isset($_POST['billing_expire_month']) ? fix_chars($_POST['billing_expire_month']) : ''"
-								max="2" 
+								name="billing_cvv" 
+								value="isset($_POST['billing_cvv']) ? fix_chars($_POST['billing_cvv']) : ''"
+								maxlength="4" 
 								style="width: 50px;"
-								autocomplete="cc-exp-month"
+								autocomplete="cc-csc"
+								data-required="1"
+							/>
+							<cms:raw><![CDATA[&nbsp;]]></cms:raw>
+							<a href="javascript: void();" class="what_is_cvv">
+								<cms:text constant="label_cvv_question" module="shop"/>
+							</a>
+							<img
+								id="what_is_cvv"
+								src="_BASEURL.'/modules/shop/images/security_code.png'"
+								alt="CVV2"
+								eval="src"
 							/>
 						</label>
-						<label>
-							<span/>
-							<input
-								class="in_array('billing_expire_year', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_expire_year"
-								value="isset($_POST['billing_expire_year']) ? fix_chars($_POST['billing_expire_year']) : ''"
-								max="2" 
-								style="width: 50px;"
-								autocomplete="cc-exp-year"
-							/>
-						</label>
-						<hr/>
-						<label>
-							<span><cms:text constant="label_street" module="shop"/></span>
-							<input 
-								class="in_array('billing_street', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_street" 
-								value="isset($_POST['billing_street']) ? fix_chars($_POST['billing_street']) : ''"
-								max="200" 
-								style="width: 300px;"
-								autocomplete="address-line1"
-							/>
-						</label>
-						<label>
-							<span></span>
-							<input 
-								class="in_array('billing_street2', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_street2" 
-								value="isset($_POST['billing_street2']) ? fix_chars($_POST['billing_street2']) : ''"
-								max="200" 
-								style="width: 300px;"
-								autocomplete="address-line2"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_city" module="shop"/></span>
-							<input 
-								class="in_array('billing_city', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_city" 
-								value="isset($_POST['billing_city']) ? fix_chars($_POST['billing_city']) : ''"
-								max="40"
-								autocomplete="locality"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_zip" module="shop"/></span>
-							<input 
-								class="in_array('billing_zip', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_zip" 
-								value="isset($_POST['billing_zip']) ? fix_chars($_POST['billing_zip']) : ''"
-								max="20" 
-								style="width: 120px;"
-								autocomplete="postal-code"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_country" module="shop"/></span>
-							<cms:if condition="empty($params['fixed_country'])">
-								<select 
-									name="billing_country"
-									class="in_array('billing_country', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class" 
-									autocomplete="country"
-								>
-									<option/>
-									<cms:module
-										name="country_list"
-										action="show"
-										selected="isset($_POST['billing_country']) ? fix_chars($_POST['billing_country']) : ''"
-										eval="selected"
-									/>
-								</select>
-							</cms:if>
-							<cms:if condition="!empty($params['fixed_country'])">
-								<select 
-									name="billing_country"
-									class="in_array('billing_country', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class" 
-									autocomplete="country"
-								>
-									<cms:module
-										name="country_list"
-										action="show"
-										filter="$params['fixed_country']"
-										eval="filter"
-									/>
-								</select>
-							</cms:if>
-						</label>
-						<label>
-							<span><cms:text constant="label_state" module="shop"/></span>
-							<input 
-								class="in_array('billing_state', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="billing_state" 
-								value="isset($_POST['billing_state']) ? fix_chars($_POST['billing_state']) : ''"
-								max="40"
-								autocomplete="region"
-							/>
-						</label>
-
 						<div class="checkout_controls">
 							<button class="previous"><cms:text constant="back"/></button>
-							<button type="submit"><cms:text constant="next"/></button>
+							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</div>
 				</div>

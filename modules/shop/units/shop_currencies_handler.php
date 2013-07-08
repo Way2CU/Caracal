@@ -15,7 +15,8 @@ class ShopCurrenciesHandler {
 	private $path;
 
 	private $update_url = 'http://www.currency-iso.org/dl_iso_table_a1.xml';
-	private $convert_url = 'http://www.google.com/ig/calculator?q={amount}{from}%3D%3F{to}';
+	private $convert_url = 'http://www.google.com/ig/calculator?hl=en&q={amount}{from}%3D%3F{to}';
+	private $currency_cache = array();
 
 	/**
 	* Constructor
@@ -444,6 +445,52 @@ class ShopCurrenciesHandler {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Convert money from one currency to another.
+	 *
+	 * @param float $amount
+	 * @param string $from
+	 * @param string $to
+	 * @return float
+	 */
+	public function convertCurrency($amount, $from, $to) {
+		$conversion_rate = 1;
+		$get_conversion_rate = true;
+
+		// if the two currencies are the same, there's no need for conversion
+		if ($from == $to)
+			return $amount;
+
+		// see if we have conversion rate cached
+		if (array_key_exists($from, $this->currency_cache) && array_key_exists($to, $this->currency_cache[$from])) {
+			$conversion_rate = $this->currency_cache[$from][$to];
+			$get_conversion_rate = false;
+		} else if (array_key_exists($to, $this->currency_cache) && array_key_exists($from, $this->currency_cache[$to])) {
+			$conversion_rate = $this->currency_cache[$to][$from];
+			$get_conversion_rate = false;
+		}
+
+		// get conversion rate if needed
+		if ($get_conversion_rate) {
+			// form URL from template
+			$url = $this->convert_url;
+			$url = str_replace('{from}', $from, $url);
+			$url = str_replace('{to}', $to, $url);
+			$url = str_replace('{amount}', 100, $url);
+
+			// grab raw data
+			$raw_data = file_get_contents($url);
+
+			if (!empty($raw_data)) {
+				$data = json_decode($raw_data);
+				trigger_error(print_r($data, true));
+			}
+		}
+
+		// convert value
+		return $amount * $conversion_rate;
 	}
 }
 
