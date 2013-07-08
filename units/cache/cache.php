@@ -11,6 +11,7 @@ class CacheHandler {
 
 	private $uid = null;
 	private $is_cached = false;
+	private $cache_file = '';
 	private $should_cache = true;
 	private $in_dirty_area = false;
 
@@ -31,7 +32,8 @@ class CacheHandler {
 					$_SERVER['REQUEST_METHOD'] == 'GET';
 
 		$this->uid = $this->generateUniqueID();
-		$this->is_cached = file_exists($cache_path.$this->uid) && $this->should_cache;
+		$this->cache_file = $cache_path.$this->uid.(_DESKTOP_VERSION ? '' : '_m');
+		$this->is_cached = file_exists($this->cache_file) && $this->should_cache;
 	}
 
 	/**
@@ -60,7 +62,7 @@ class CacheHandler {
 					));
 
 		// store content to disk
-		file_put_contents($cache_path.$this->uid, $this->cache);
+		file_put_contents($this->cache_file, $this->cache);
 
 		// check if we reached maximum number of pages
 		$page_count = $manager->sqlResult('SELECT count(`uid`) FROM `system_cache`');
@@ -77,7 +79,7 @@ class CacheHandler {
 
 			foreach($entries_to_drop as $entry) {
 				$uid_list[] = $entry->uid;
-				unlink($cache_path.$entry->uid);
+				unlink($cache_path.$entry->uid.(_DESKTOP_VERSION ? '' : '_m'));
 			}
 
 			$manager->deleteData(array('uid' => $uid_list));
@@ -88,8 +90,6 @@ class CacheHandler {
 	 * Handle expired cache or update times_used counter
 	 */
 	private function validateCache() {
-		global $cache_path;
-
 		$manager = CacheManager::getInstance();
 		$today = date(self::TIMESTAMP_FORMAT);
 		$entry = $manager->getSingleItem(
@@ -104,7 +104,7 @@ class CacheHandler {
 
 		if (is_object($entry)) {
 			// object needs to be expired
-			unlink($cache_path.$this->uid);
+			unlink($this->cache_file);
 			$manager->deleteData(array('uid' => $this->uid));
 
 		} else {
@@ -134,11 +134,9 @@ class CacheHandler {
 	public function printCache() {
 		global $cache_path;
 
-		$filename = $cache_path.$this->uid;
-
-		if (file_exists($filename)) { 
+		if (file_exists($this->cache_file)) { 
 			// get data from file and prepare for parsing
-			$data = file_get_contents($filename);
+			$data = file_get_contents($this->cache_file);
 			$template = new TemplateHandler();
 			$pattern = '/'.self::TAG_OPEN.'(.*?)'.self::TAG_CLOSE.'/u';
 

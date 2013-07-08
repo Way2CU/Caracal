@@ -157,10 +157,10 @@ class UserManager {
 			);
 
 		if (isset($_REQUEST['password']))
-			$data['password'] = fix_chars($_REQUEST['password']);
+			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['password']), AdministratorManager::SALT);
 
 		if (isset($_REQUEST['new_password']) && !empty($_REQUEST['new_password']))
-			$data['password'] = fix_chars($_REQUEST['new_password']);
+			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['new_password']), AdministratorManager::SALT);
 
 		// test level is ok to ensure security is on right level
 		$level_is_ok = ($_SESSION['level'] > 5) || ($_SESSION['level'] <= 5 && $data['level'] < $_SESSION['level']);
@@ -190,7 +190,6 @@ class UserManager {
 			if ($level_is_ok) {
 				// save new user data
 				$message = $this->parent->getLanguageConstant('message_users_data_saved');
-
 				$manager->insertData($data);
 
 			} else {
@@ -459,8 +458,45 @@ class UserManager {
 	 * Salt and save password
 	 */
 	private function savePassword() {
-		$old_password = md5(SessionManager::SALT.$_REQUEST['old_password']);
-		$new_password = md5(SessionManager::SALE.$_REQUEST['new_password']);
+		$manager = AdministratorManager::getInstance();
+
+		$old_password = $_REQUEST['old_password'];
+		$new_password = $_REQUEST['new_password'];
+		$repeat_password = $_REQUEST['repeat_password'];
+		$user_id = $_SESSION['uid'];
+
+		// get existing user entry
+		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user_id));
+
+		if (is_object($user)) {
+			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
+			$old_password_ok = hash_hmac('sha256', $old_password, AdministratorManager::SALT) == $user->password || empty($user->password);
+
+			if ($new_password_ok && $old_password_ok) {
+				// all conditions are met, change password
+				$password = hash_hmac('sha256', $new_password, AdministratorManager::SALT);
+				$manager->updateData(array('password' => $password), array('id' => $user->id));
+
+				$message = $this->parent->getLanguageConstant('message_password_changed');
+
+			} else {
+				// mismatching passwords
+				$message = $this->parent->getLanguageConstant('message_password_change_error');
+			}
+		}
+
+		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
+		$template->setMappedModule($this->parent->name);
+
+		$params = array(
+					'message'	=> $message,
+					'button'	=> $this->parent->getLanguageConstant('close'),
+					'action'	=> window_Close('change_password_window')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
