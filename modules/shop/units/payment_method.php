@@ -78,32 +78,4 @@ abstract class PaymentMethod {
 	 * @return string
 	 */
 	abstract public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url);
-	
-	/**
-	 * Verify origin of data and status of
-	 * payment is complete.
-	 * 
-	 * @return boolean
-	 */
-	abstract public function verify_payment_complete();
-
-	/**
-	 * Verify origin of data and status of
-	 * payment is canceled.
-	 * 
-	 * @return boolean
-	 */
-	abstract public function verify_payment_canceled();
-	
-	/**
-	 * Get buyer information from data
-	 * @return array
-	 */
-	abstract public function get_buyer_info();
-	
-	/**
-	 * Extract custom field from parameters
-	 * @return string
-	 */
-	abstract public function get_transaction_id();
 }
