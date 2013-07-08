@@ -65,11 +65,23 @@ function Dialog() {
 		if (typeof Scrollbar == 'function')
 			self._scrollbar = new Scrollbar(self._content, 'div.inner_content');
 	};
+
+	/**
+	 * Set dialog content from jQuery object or string
+	 *
+	 * @param mixed content
+	 */
+	self.setContent = function(content) {
+		self._inner_content
+					.html(content)
+					.css('top', 0);
+	};
 	
 	/**
 	 * Set dialog content from specified URL
 	 * 
 	 * @param string url
+	 * @param string container
 	 */
 	self.setContentFromURL = function(url, container) {
 		if (container != null)
