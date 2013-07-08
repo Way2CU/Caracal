@@ -2,23 +2,12 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<label>
-		<cms:if condition="$params['selected']">
-			<input
-				type="radio"
-				name="delivery_provider"
-				value="$params['name']"
-				eval="value"
-				checked="checked"
-			/>
-		</cms:if>
-		<cms:if condition="!$params['selected']">
-			<input
-				type="radio"
-				name="delivery_provider"
-				value="$params['name']"
-				eval="value"
-			/>
-		</cms:if>
+		<input
+			type="radio"
+			name="delivery_provider"
+			value="$params['name']"
+			eval="value"
+		/>
 		<span>
 			<img
 				src="$params['small_image']"
