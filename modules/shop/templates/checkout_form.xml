@@ -96,30 +96,19 @@
 
 				<div class="checkout_controls">
 					<button type="button"><cms:text constant="back"/></button>
-					<cms:if condition="!isset($_SESSION['delivery_method'])">
-						<button type="submit" disabled="disabled">
-							<cms:text constant="checkout" module="shop"/>
-							<small>
-								<cms:text constant="with" module="shop"/>
-								<cms:raw text=" "/>
-								<cms:var name="$params['checkout_name']"/>
-							</small>
-						</button>
-					</cms:if>
-					<cms:if condition="isset($_SESSION['delivery_method'])">
-						<button type="submit">
-							<cms:text constant="checkout" module="shop"/>
-							<small>
-								<cms:text constant="with" module="shop"/>
-								<cms:raw text=" "/>
-								<cms:var name="$params['checkout_name']"/>
-							</small>
-						</button>
-					</cms:if>
+					<button type="submit" disabled="disabled">
+						<cms:text constant="checkout" module="shop"/>
+						<small>
+							<cms:text constant="with" module="shop"/>
+							<cms:raw text=" "/>
+							<cms:var name="$params['checkout_name']"/>
+						</small>
+					</button>
 				</div>
 
 				<div class="clear_float"/>
 			</form>
+			<div class="overlay"/>
 		</div>
 	</div>
 </document>
