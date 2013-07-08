@@ -4,10 +4,32 @@ function Stripe_handleResponse(status, response) {
 		.animate({opacity: 0}, 600, function() {
 			$(this).css('display', 'none');
 		});
+	var transaction_uid = '%transaction-uid%';
 
 	// handle response
 	switch (status) {
 		case 200:
+			var base = $('base');
+			var backend_url = base.attr('href') + '/index.php'; 
+			var data = {
+					section: 'stripe_payment',
+					action: 'charge_token',
+					transaction_uid: transaction_uid,
+					stripe_token: response['id']
+				};
+
+			$.ajax({
+				url: backend_url,
+				cache: false,
+				context: this,
+				dataType: 'json',
+				type: 'POST',
+				data: data,
+				success: function(data) {
+				},
+				error: function(data) {
+				}
+			});
 			break;
 
 		default:
