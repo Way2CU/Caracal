@@ -75,6 +75,10 @@ class stripe_payment extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'charge_token':
+					$this->chargeToken();
+					break;
+
 				default:
 					break;
 			}
@@ -164,5 +168,43 @@ class stripe_payment extends Module {
 	 */
 	private function getPrivateKey() {
 		return $this->settings['secret_key'];
+	}
+
+	/**
+	 * Charge specified amount with specified token and transaction.
+	 */
+	public function chargeToken() {
+		$transaction_uid = fix_chars($_REQUEST['transaction_uid']);
+		$stripe_token = fix_chars($_REQUEST['stripe_token']);
+		$manager = ShopTransactionsManager::getInstance();
+		$currency_manager = ShopCurrenciesManager::getInstance();
+		$transaction = null;
+
+		// make sure we are working on same transaction for current user
+		if (isset($_SESSION['transaction']) && $_SESSION['transaction']['uid'] == $transaction_uid) 
+			$transaction = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $transaction_uid));
+
+		if (is_object($transaction)) {
+			$currency = $currency_manager->getSingleItem(array('currency'), array('id' => $transaction->currency));
+
+			try {
+				// create charge
+				Stripe::setApiKey($this->getPrivateKey());
+				$charge = Stripe_Charge::create(array(
+								'amount'		=> $transaction->total * 100,
+								'currency'		=> $currency->currency,
+								'card'			=> $stripe_token,
+								'description'	=> null
+							));
+			} catch (Stripe_CardError $error) {
+			}
+
+			// update transaction status
+			if (is_object($charge) && $charge->paid) {
+				$shop = shop::getInstance();
+				$shop->setTransactionToken($transaction_uid, $charge->id);
+				$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
+			}
+		}
 	}
 }
