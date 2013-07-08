@@ -156,6 +156,13 @@ function Dialog() {
 		self._clear_on_close = clear;
 		return self;
 	};
+
+	/**
+	 * Set dialog as error report.
+	 */
+	self.setError = function() {
+		self._container.addClass('error');
+	};
 	
 	/**
 	 * Show dialog
