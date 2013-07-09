@@ -3,5 +3,7 @@
 <document>
 	<language short="en">
 		<constant name="message_error_bot">Failed bot test. Operation aborted!</constant>
+		<constant name="message_error_generic">Error sending data to destination URL.</constant>
+		<constant name="message_success">Data was sent!</constant>
 	</language>
 </document>
