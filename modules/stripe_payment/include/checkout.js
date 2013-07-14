@@ -35,7 +35,6 @@ function Stripe_handleResponse(status, response) {
 		default:
 			break;
 	}
-	console.log(status, response);
 }
 
 function Stripe_handleCheckout(event) {

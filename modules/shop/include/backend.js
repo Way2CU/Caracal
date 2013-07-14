@@ -105,7 +105,6 @@ function shop_DeleteColor(event) {
 	var excluded_value = parent.data('name') + ':' + parent.data('value');
 	
 	for (var i=0; i<color_values.length; i++) {
-		console.log(color_values[i], excluded_value);
 		if (color_values[i] != excluded_value)
 			new_values.push(color_values[i]);
 	}
