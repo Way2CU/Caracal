@@ -386,6 +386,30 @@ class TemplateHandler {
 					}
 					break;
 
+				// support for parameter based choice
+				case 'cms:choice':
+					$param_name = isset($tag->tagAttrs['param']) ? fix_chars($tag->tagAttrs['param']) : null;
+					$param_value = isset($_REQUEST[$param_name]) ? fix_chars($_REQUEST[$param_name]) : null;
+
+					trigger_error(json_encode($param_name));
+
+					// parse only option
+					foreach ($tag->tagChildren as $option) {
+						if (!$option->tagName == 'option')
+							continue;
+
+						$option_value = isset($option->tagAttrs['value']) ? $option->tagAttrs['value'] : null;
+						$option_default = isset($option->tagAttrs['default']) ? $option->tagAttrs['default'] == 1 : false;
+
+						// values match or option is default, parse its content
+						if ($option_value == $param_value || $option_default) {
+							$this->parse($option->tagChildren);
+							break;
+						}
+					}
+
+					break;
+
 				// default action for parser, draw tag
 				default:
 					if (in_array($tag->tagName, array_keys($this->handlers))) {

@@ -67,19 +67,27 @@ function Dialog() {
 				.addClass('command_bar')
 				.appendTo(self._content);
 
-		
-		// connect events
-		$(window).bind('resize', self.__handle_window_resize);
-
 		// create scrollbar
 		if (typeof Scrollbar == 'function')
 			self._scrollbar = new Scrollbar(self._content, 'div.inner_content');
+	};
+
+	/**
+	 * Set dialog content from jQuery object or string
+	 *
+	 * @param mixed content
+	 */
+	self.setContent = function(content) {
+		self._inner_content
+					.html(content)
+					.css('top', 0);
 	};
 	
 	/**
 	 * Set dialog content from specified URL
 	 * 
 	 * @param string url
+	 * @param string container
 	 */
 	self.setContentFromURL = function(url, container) {
 		if (container != null)
@@ -159,9 +167,13 @@ function Dialog() {
 
 	/**
 	 * Set dialog as error report.
+	 *
+	 * @param boolean error
 	 */
-	self.setError = function() {
-		self._container.addClass('error');
+	self.setError = function(error) {
+		if (error)
+			self._container.addClass('error'); else
+			self._container.removeClass('error');
 	};
 	
 	/**
@@ -193,21 +205,6 @@ function Dialog() {
 	};
 	
 	/**
-	 * Update dialog position based on size
-	 */
-	self._update_position = function() {
-		var window_width = $(window).width();
-		var window_height = $(window).height();
-		var width = self._container.width();
-		var height = self._container.height();
-		
-		self._container.css({
-					left: Math.round((window_width - width) / 2),
-					top: Math.round((window_height - height) / 2)
-				});
-	};
-	
-	/**
 	 * Handle clicking on close button
 	 *
 	 * @param object event
@@ -215,15 +212,6 @@ function Dialog() {
 	self.__handle_close_click = function(event) {
 		self.hide();
 		event.preventDefault();
-	};
-	
-	/**
-	 * Handle browser window resize
-	 *
-	 * @param object event
-	 */
-	self.__handle_window_resize = function(event) {
-		self._update_position();
 	};
 	
 	// finish object initialization

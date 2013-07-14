@@ -138,7 +138,7 @@ class contact_form extends Module {
 		if ($strict && empty($_SERVER['HTTP_REFERER']))
 			$result = true;
 
-		return $results;
+		return $result;
 	}
 
 	/**
@@ -244,7 +244,7 @@ class contact_form extends Module {
 
 			// prepare sender
 			$name = array($this->settings['default_name']);
-			$address = split(',', $this->settings['default_address']);
+			$address = explode(',', $this->settings['default_address']);
 			$headers['From'] = $this->generateAddressField($name, $address);
 
 			foreach($_REQUEST as $key => $value)
@@ -328,7 +328,7 @@ class contact_form extends Module {
 		// get headers string
 		$headers_string = $this->_makeHeaders($headers);
 		
-		return $this->detectBots() && mail($to, $subject, $body, $headers_string);
+		return !$this->detectBots() && mail($to, $subject, $body, $headers_string);
 	}
 
 	/**
@@ -385,7 +385,7 @@ class contact_form extends Module {
 		$body = $this->_makeBody($fields, $boundary);
 		$headers_string = $this->_makeHeaders($headers);
 
-		return $this->detectBots() && mail($to, $subject, $body, $headers_string);
+		return !$this->detectBots() && mail($to, $subject, $body, $headers_string);
 	}
 
 	/**

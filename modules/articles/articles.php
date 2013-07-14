@@ -625,42 +625,60 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_Article($tag_params, $children) {
-		$item = null;
 		$manager = ArticleManager::getInstance();
+		$group_manager = ArticleGroupManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
+		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 
-		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
+		// get parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
 
-		if (is_null($id)) {
-			$id_list = array();
-			$group_list = array();
-			$conditions = array();
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = explode(',', $tag_params['text_id']);
 
-			if (isset($tag_params['text_id']))
-				$conditions['text_id'] = explode(',', $tag_params['text_id']);
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', fix_chars($tag_params['order_by']));
 
-			if (isset($tag_params['group']))
-				$group_list = explode(',', $tag_params['group']);
+		if (isset($tag_params['random']) && $tag_params['random'] == 1)
+			$order_by = array('RAND()');
 
-			// get item from specified parameters
-			$list = $this->getArticleList(
-									$manager->getFieldNames(),
-									$conditions,
-									isset($tag_params['random']) && ($tag_params['random'] == 1),
-									1,
-									$group_list
-								);
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
 
-			if (count($list) > 0)
-				$item = $list[0];
-		} else {
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		if (isset($tag_params['group'])) {
+			$group_id_list = array();
+			$group_names = explode(',', $tag_params['group']);
+
+			if (count($group_names) > 0 && is_numeric($group_names[0])) {
+				// specified group is a number, treat it as group id
+				$group_id_list = $group_names;
+
+			} else {
+				// get id's from specitifed text_id
+				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+
+				if (count($groups) > 0)
+					foreach ($groups as $group)
+						$group_id_list []= $group->id;
+			}
+
+			if (count($group_id_list) > 0)
+				$conditions['group'] = $group_id_list; else
+				$conditions['group'] = -1;
 		}
 
+		// get single item from the database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+
+		// load template
 		$template = $this->loadTemplate($tag_params, 'article.xml');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
 
+		// parse article
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
 			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
@@ -699,14 +717,34 @@ class articles extends Module {
 	 */
 	public function tag_ArticleList($tag_params, $children) {
 		$manager = ArticleManager::getInstance();
+		$group_manager = ArticleGroupManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 
 		$conditions = array();
-		$group_list = array();
 		$selected = -1;
+		$order_by = array('id');
+		$order_asc = true;
 
-		if (isset($tag_params['group']))
-			$group_list = explode(',', $tag_params['group']);
+		// give the ability to limit number of articles to display
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']); else
+			$limit = null;
+
+		// get parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = explode(',', $tag_params['text_id']);
+
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', fix_chars($tag_params['order_by']));
+
+		if (isset($tag_params['random']) && $tag_params['random'] == 1)
+			$order_by = array('RAND()');
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 1)
 			$conditions['visible'] = 1;
@@ -714,19 +752,30 @@ class articles extends Module {
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
-		// give the ability to limit number of articles to display
-		if (isset($tag_params['limit']))
-			$limit = fix_id($tag_params['limit']); else
-			$limit = null;
+		if (isset($tag_params['group'])) {
+			$group_id_list = array();
+			$group_names = explode(',', $tag_params['group']);
+
+			if (count($group_names) > 0 && is_numeric($group_names[0])) {
+				// specified group is a number, treat it as group id
+				$group_id_list = $group_names;
+
+			} else {
+				// get id's from specitifed text_id
+				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+
+				if (count($groups) > 0)
+					foreach ($groups as $group)
+						$group_id_list []= $group->id;
+			}
+
+			if (count($group_id_list) > 0)
+				$conditions['group'] = $group_id_list; else
+				$conditions['group'] = -1;
+		}
 
 		// get items from manager
-		$items = $this->getArticleList(
-								$manager->getFieldNames(),
-								$conditions,
-								isset($tag_params['random']) && $tag_params['random'] == 1,
-								$limit,
-								$group_list
-							);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
@@ -1066,34 +1115,64 @@ class articles extends Module {
 		global $language;
 
 		$manager = ArticleManager::getInstance();
+		$group_manager = ArticleGroupManager::getInstance();
 		$admin_manager = AdministratorManager::getInstance();
 
 		$conditions = array();
-		$group_list = array();
-
-		if (isset($_REQUEST['group']))
-			$group_list = explode(',', $_REQUEST['group']);
-
-		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 1)
-			$conditions['visible'] = 1;
-
-		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
-
-		$rating_image_type = isset($_REQUEST['rating_image_type']) ? $_REQUEST['rating_image_type'] : ImageType::Stars;
+		$order_by = array('id');
+		$order_asc = true;
 
 		// give the ability to limit number of articles to display
 		if (isset($_REQUEST['limit']))
 			$limit = fix_id($_REQUEST['limit']); else
 			$limit = null;
 
+		// get parameters
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id($_REQUEST['id']);
+
+		if (isset($_REQUEST['text_id']))
+			$conditions['text_id'] = explode(',', $_REQUEST['text_id']);
+
+		if (isset($_REQUEST['order_by']))
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
+
+		if (isset($_REQUEST['random']) && $_REQUEST['random'] == 1)
+			$order_by = array('RAND()');
+
+		if (isset($_REQUEST['order_asc']))
+			$order_asc = $_REQUEST['order_asc'] == 1 ? true : false;
+
+		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 1)
+			$conditions['visible'] = 1;
+
+		if (isset($_REQUEST['group'])) {
+			$group_id_list = array();
+			$group_names = explode(',', $_REQUEST['group']);
+
+			if (count($group_names) > 0 && is_numeric($group_names[0])) {
+				// specified group is a number, treat it as group id
+				$group_id_list = $group_names;
+
+			} else {
+				// get id's from specitifed text_id
+				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+
+				if (count($groups) > 0)
+					foreach ($groups as $group)
+						$group_id_list []= $group->id;
+			}
+
+			if (count($group_id_list) > 0)
+				$conditions['group'] = $group_id_list; else
+				$conditions['group'] = -1;
+		}
+
+		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
+		$rating_image_type = isset($_REQUEST['rating_image_type']) ? $_REQUEST['rating_image_type'] : ImageType::Stars;
+
 		// get items from manager
-		$items = $this->getArticleList(
-								$manager->getFieldNames(),
-								$conditions,
-								isset($_REQUEST['random']) && $_REQUEST['random'] == 1,
-								$limit,
-								$group_list
-							);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,
@@ -1220,41 +1299,6 @@ class articles extends Module {
 			$result = ($article->votes_up * $max) / $total;
 
 		return $result;
-	}
-
-	/**
-	 * Function used to retrieve Id list (or single Id) from database based on parameters
-	 *
-	 * @param array $fields Specify field selection
-	 * @param array $conditions Initial conditions for query
-	 * @param boolean $random Should items be selected randomly
-	 * @param integer $limit Limit results
-	 * @param array $group_list If item should be member of any of specified group text_id's
-	 * @return array
-	 */
-	private function getArticleList($fields=array(), $conditions=array(), $random=true, $limit=null, $group_list=array()) {
-		$order_by = $random ? 'RAND()' : 'id';
-		$manager = ArticleManager::getInstance();
-
-		if (!empty($group_list)) {
-			$group_id_list = array();
-			$group_manager = ArticleGroupManager::getInstance();
-
-			$items = $group_manager->getItems(array('id'), array('text_id' => $group_list));
-
-			// no items were found in specified groups and id_list is empty
-			if (empty($id_list) && empty($items)) return array();
-
-			if (count($items) > 0)
-				foreach($items as $item)
-					$group_id_list[] = $item->id;
-
-			$conditions['group'] = $group_id_list;
-		}
-
-		$items = $manager->getItems($fields, $conditions, array($order_by), false, $limit);
-
-		return $items;
 	}
 }
 
