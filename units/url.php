@@ -239,11 +239,18 @@ function url_Form($args, $start_separator=true) {
  * @author Mladen Mijatov
  */
 function url_MakeHyperlink($content, $link, $title='', $class='', $target='') {
+	$on_click = '';
 	if (!empty($title)) $title = ' title="'.$title.'"';
 	if (!empty($class)) $class = ' class="'.$class.'"';
 	if (!empty($target)) $target = ' target="'.$target.'"';
 
-	$res = '<a href="'.$link.'"'.$target.$class.$title.'>'.$content.'</a>';
+	// move javascript URL's to onclick handler
+	if (substr($link, 0, 11) == 'javascript:') {
+		$on_click = ' onclick="'.$link.'"';
+		$link = 'javascript: void(0);';
+	}
+
+	$res = '<a href="'.$link.'"'.$on_click.$target.$class.$title.'>'.$content.'</a>';
 	return $res;
 }
 
