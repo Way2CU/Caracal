@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Modular Web Engine
- * Copyright (c) 2012. by Mladen Mijatov
+ * Caracal Framework
+ * Copyright (c) 2013. by Way2CU
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
- * @author Mladen Mijatov <meaneye.rcf@gmail.com>
+ * Author: Mladen Mijatov <mladen@way2cu.com>
  */
 
 require_once('units/database/common.php');
