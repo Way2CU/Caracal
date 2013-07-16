@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
-<document>
-	<div class="main_menu">
-		<_var name="$params['link_new']"/>
-		<_var name="$params['link_change']"/>
-		<_var name="$params['link_delete']"/>
-	</div>
-</document>
