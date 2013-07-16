@@ -1,8 +1,10 @@
-/*
-	Window Style Sheet
-	Copyright (c) 2010. by MeanEYE[RCF]
-	http://www.rcf-group.com
-*/
+/**
+ * Windows Style Sheet
+ * Backend Module
+ *
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
+ */
 
 div.window {
 	display: block;

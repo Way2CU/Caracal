@@ -3,7 +3,7 @@
 /**
  * Shop Buyer Addresses Manager
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopDeliveryAddressManager extends ItemManager {

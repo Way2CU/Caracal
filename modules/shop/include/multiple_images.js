@@ -2,7 +2,7 @@
  * Shop Module
  * Multiple images upload
  * 
- * Author: MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 function MultipleImagesUpload(id, name_base) {

@@ -6,7 +6,7 @@
  * This module provides a number of useful ways of printing and organising
  * links on your web site.
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class links extends Module {

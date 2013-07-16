@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Shop Buyers Manager
+ * Buyers Manager
+ * Shop Module
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopBuyersManager extends ItemManager {

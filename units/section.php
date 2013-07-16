@@ -3,7 +3,7 @@
 /**
  * Section Handler
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class SectionHandler {
@@ -76,8 +76,6 @@ class SectionHandler {
 /**
  * This manager is used only in index file. Sole purpose of this
  * object is to provide a separate section files.
- *
- * @author MeanEYE.rcf
  */
 class MainSectionHandler {
 	private static $_instance;

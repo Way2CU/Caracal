@@ -3,7 +3,10 @@
 /**
  * Tips Module
  *
- * @author MeanEYE.rcf
+ * Module that provides simple, single-field, data structure for
+ * showing tips.
+ *
+ * Author: Mladen Mijatov
  */
 
 class tips extends Module {

@@ -2,8 +2,6 @@
 
 /**
  * Backend User Manager
- *
- * @author: MeanEYE.rcf
  */
 
 class UserManager {

@@ -7,7 +7,7 @@
  * Don't try to access this table manually as other tables depend
  * on it (like payment logs and similar).
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopItemManager extends ItemManager {

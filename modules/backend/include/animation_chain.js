@@ -3,8 +3,8 @@
  *
  * Version: 1.0
  *
- * Copyright (c) 2010. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2010. by Mladen Mijatov
+ * http://way2cu.com
  *
  * This object provides you with ability to make complex chained
  * animations using jQuery.

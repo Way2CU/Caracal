@@ -1,10 +1,10 @@
 /**
  * Language API
  *
- * Copyright (c) 2010. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
- * Provides language services to client side of the backend.
+ * Provides language services to browser side of the framework.
  *
  * Requires jQuery 1.4.2+
  */

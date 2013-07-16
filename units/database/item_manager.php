@@ -3,7 +3,7 @@
 /**
  * Database Item Base Class
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 define('DB_INSERT', 0);

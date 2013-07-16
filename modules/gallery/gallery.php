@@ -3,7 +3,10 @@
 /**
  * Gallery Module
  *
- * @author MeanEYE.rcf
+ * Simple gallery with support for group and containers. This gallery
+ * module also includes JavaScript Lightbox.
+ *
+ * Author: Mladen Mijatov
  */
 
 require_once('units/gallery_manager.php');

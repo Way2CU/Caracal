@@ -4,8 +4,9 @@
  * Code Poject Module
  *
  * This module provides simple URL redirection based on supplied code.
+ * Note: This module has not been used for a while.
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class code_project extends Module {

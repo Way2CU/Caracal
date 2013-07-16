@@ -1,8 +1,8 @@
 /**
  * LightBox System
  *
- * Copyright (c) 2011. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
  * This system provides developers with simple picture zoom
  * optionally displayed with title and description.

@@ -1,12 +1,15 @@
-/*
-	Backend Style Sheet
-	Copyright (c) 2009. by MeanEYE[RCF]
-	http://www.rcf-group.com
-*/
+/**
+ * Main Style Sheet
+ * Backend Module
+ *
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
+ */
 
 @import "window.css";
 @import "menus.css";
 @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:400,700,400italic,700italic);
+
 
 body {
 	margin: 0px;

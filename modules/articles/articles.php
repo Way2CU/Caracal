@@ -3,7 +3,10 @@
 /**
  * Articles Module
  *
- * @author MeanEYE.rcf
+ * Module for managing articles. This module supports multiple languages
+ * as well as many article-related properties.
+ *
+ * Author: Mladen Mijatov
  */
 
 class articles extends Module {
