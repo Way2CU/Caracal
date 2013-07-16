@@ -13,7 +13,7 @@ class contact_form extends Module {
 	private static $_instance;
 	private $_invalid_params = array(
 						'section', 'action', 'PHPSESSID', '__utmz', '__utma',
-						'__utmc', '__utmb'
+						'__utmc', '__utmb', '_'
 					);
 
 	/**
