@@ -3,7 +3,7 @@
 /**
  * Shop Item Membership Manager
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopItemMembershipManager extends ItemManager {

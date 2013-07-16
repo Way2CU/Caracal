@@ -1,8 +1,8 @@
 /**
  * Multi-language Selector
  *
- * Copyright (c) 2010. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
  * You need to create new language selector for each window. Id specified in
  * constructor function is forum Id.

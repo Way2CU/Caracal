@@ -1,9 +1,12 @@
 <?php
 
 /**
- * Captcha
+ * CAPTCHA Support
  *
- * @author MeanEYE.rcf
+ * This module provides support CAPTCHA generation and verification for
+ * other modules.
+ *
+ * Author: Mladen Mijatov
  */
 
 class captcha extends Module {

@@ -3,7 +3,7 @@
 /**
  * Shop Delivery Methods Manager
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopDeliveryMethodsManager extends ItemManager {

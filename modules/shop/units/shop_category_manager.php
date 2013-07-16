@@ -5,7 +5,7 @@
 *
 * Manager used to manipulate shop item categories.
 *
-* @author MeanEYE.rcf
+* Author: Mladen Mijatov
 */
 
 class ShopCategoryManager extends ItemManager {

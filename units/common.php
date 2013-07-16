@@ -51,7 +51,6 @@ function fix_chars($string, $strip_tags=true) {
  *
  * @param mixed $string
  * @return mixed
- * @author MeanEYE.rcf
  */
 function escape_chars($string) {
 	global $db;

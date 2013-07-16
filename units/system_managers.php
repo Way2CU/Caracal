@@ -3,7 +3,7 @@
 /**
  * System Managers
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ModuleManager extends ItemManager {

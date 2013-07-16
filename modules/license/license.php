@@ -3,7 +3,10 @@
 /**
  * License Manager
  *
- * @author MeanEYE.rcf
+ * This module provides API usage verification services by generating
+ * licenses for each referral URL.
+ *
+ * Author: Mladen Mijatov
  */
 
 class license extends Module {

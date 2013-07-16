@@ -3,7 +3,9 @@
 /**
  * Head Tag Module
  *
- * @author MeanEYE.rcf
+ * This module provides simplified interface for adding links and scripts.
+ *
+ * Author: Mladen Mijatov
  */
 
 class head_tag extends Module {

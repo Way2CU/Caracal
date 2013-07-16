@@ -1,8 +1,8 @@
 /**
  * Backend Toolbar API
  *
- * Copyright (c) 2010. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
  * This API was designed to be used with RCF WebEngine
  * administration system and has very little use outside of it.

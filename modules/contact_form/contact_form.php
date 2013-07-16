@@ -6,7 +6,7 @@
  * This contact form provides multiple ways of contacting user. It can be
  * used WITHOUT database connection or with it.
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class contact_form extends Module {

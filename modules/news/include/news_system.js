@@ -1,8 +1,8 @@
 /**
  * News Display System
  *
- * Copyright (c) 2012. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
  * This system provides developers with extensive array of options to display
  * news in eye-appealing and animated way. By specifying parameters in NewsSystem

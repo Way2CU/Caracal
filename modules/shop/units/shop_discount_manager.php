@@ -3,7 +3,7 @@
 /**
  * Shop Discount Manager
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopDiscountManager extends ItemManager {

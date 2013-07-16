@@ -3,7 +3,7 @@
 /**
  * Page Switch
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class PageSwitch {
