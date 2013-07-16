@@ -3,8 +3,8 @@
 
 	# make sure we point to the same content
 	RewriteCond %{HTTP_HOST} !^localhost$
-	RewriteCond %{HTTP_HOST} !^www\.
-	RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+	RewriteCond %{HTTP_HOST} ^www\.
+	RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1 [R=301,L]
 
 	# make sure requested file name is not directory or file name
 	RewriteCond %{REQUEST_FILENAME} !-f
