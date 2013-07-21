@@ -194,8 +194,8 @@ function PageControl(selector, page_selector) {
 
 		// emit signal
 		if (list != null && list.length > 0)
-			for (var index in list) {
-				var callback = list[index];
+			for (var i=0, length=list.length; i < length; i++) {
+				var callback = list[i];
 
 				if (!callback.apply(this, params)) {
 					result = false;
