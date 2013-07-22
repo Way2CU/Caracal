@@ -105,11 +105,16 @@ class contact_form extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db;
-		
-		// $this->settings['default_address']
-		// $this->settings['default_subject']
-		// $this->settings['default_name']
+		$this->saveSetting('use_smtp', 0);
+		$this->saveSetting('sender_name', '');
+		$this->saveSetting('sender_address', 'sample@email.com');
+		$this->saveSetting('sender_subject', 'Caracal contact email');
+		$this->saveSetting('recipient_name', '');
+		$this->saveSetting('recipient_address', 'sample@email.com');
+		$this->saveSetting('recipient_subject', 'Caracal contact email');
+		$this->saveSetting('smtp_server', 'smtp.gmail.com');
+		$this->saveSetting('smtp_port', '465');
+		$this->saveSetting('use_ssl', 1);
 	}
 
 	/**
@@ -492,14 +497,26 @@ class contact_form extends Module {
 	 * Save settings
 	 */
 	private function saveSettings() {
-		$default_name = fix_chars($_REQUEST['name']);
-		$default_address = fix_chars($_REQUEST['address']);
-		$default_subject = fix_chars($_REQUEST['subject']);
+		// grab parameters
+		$use_smtp = isset($_REQUEST['use_smtp']) && ($_REQUEST['use_smtp'] == 'on' || $_REQUEST['use_smtp'] == '1') ? 1 : 0;
+		$use_ssl = isset($_REQUEST['use_ssl']) && ($_REQUEST['use_ssl'] == 'on' || $_REQUEST['use_ssl'] == '1') ? 1 : 0;
 
-		$this->saveSetting('default_name', $default_name);
-		$this->saveSetting('default_address', $default_address);
-		$this->saveSetting('default_subject', $default_subject);
+		$params = array(
+			'sender_name', 'sender_address', 'sender_subject',
+			'recipient_name', 'recipient_address', 'recipient_subject',
+			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password'
+		);
 
+		// save settings
+		foreach($params as $param) {
+			$value = fix_chars($_REQUEST[$param]);
+			$this->saveSetting($param, $value);
+		}
+
+		$this->saveSetting('use_smtp', $use_smtp);
+		$this->saveSetting('use_ssl', $use_ssl);
+
+		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
