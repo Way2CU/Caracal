@@ -5,7 +5,7 @@
  *
  * This manager is used to manipulate stored currencies.
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ShopCurrenciesManager extends ItemManager {

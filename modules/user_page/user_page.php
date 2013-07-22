@@ -3,7 +3,9 @@
 /**
  * User Page Module
  *
- * @author MeanEYE.rcf
+ * Note: This module has not been used for a while.
+ *
+ * Author: Mladen Mijatov
  */
 
 require_once('units/userpage_manager.php');

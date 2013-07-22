@@ -1,8 +1,10 @@
-/*
-	Window Style Sheet
-	Copyright (c) 2010. by MeanEYE[RCF]
-	http://www.rcf-group.com
-*/
+/**
+ * Windows Style Sheet
+ * Backend Module
+ *
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
+ */
 
 div.window {
 	display: block;
@@ -162,6 +164,7 @@ div.window div.content textarea {
 	-webkit-transition-duration: 0.3s;
 }
 
+div.window div.content input[type=radio],
 div.window div.content input[type=checkbox] {
 	margin-right: 3px;
 	padding: 0px;
@@ -174,6 +177,7 @@ div.window div.content textarea {
 	resize: vertical;
 }
 
+div.window div.content label.radio span,
 div.window div.content label.checkbox span {
 	display: inline-block;
 

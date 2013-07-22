@@ -3,7 +3,7 @@
 /**
  * Flash Integration Module
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class swfobject extends Module {

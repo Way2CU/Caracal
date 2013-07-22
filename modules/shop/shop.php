@@ -2,8 +2,12 @@
 
 /**
  * Shop Module
+ * 
+ * Complete online shopping solution integration. This module provides
+ * only the basic framework for online shopps. Payment and delivery methods
+ * need to be added additionally.
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 require_once('units/payment_method.php');

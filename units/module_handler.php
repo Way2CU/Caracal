@@ -3,7 +3,7 @@
 /**
  * Module Handler
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 class ModuleHandler {

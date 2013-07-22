@@ -1,8 +1,8 @@
 /**
  * Downloads Toolbar Extension
  *
- * Copyright (c) 2011. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
  * This toolbar extension provides controls to be used in conjunction
  * with downloads module.

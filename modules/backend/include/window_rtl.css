@@ -1,8 +1,10 @@
-/*
-	Window Style Sheet (RTL modifications)
-	Copyright (c) 2010. by MeanEYE[RCF]
-	http://www.rcf-group.com
-*/
+/**
+ * RTL Windows Style Sheet Modifications
+ * Backend Module
+ *
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
+ */
 
 @charset "UTF-8";
 
@@ -94,7 +96,6 @@ div.window div.content label.horizontal {
 /**
  * Floated boxes
  */
-
 div.window div.box.left {
 	float: right;
 	margin-right: 0px;

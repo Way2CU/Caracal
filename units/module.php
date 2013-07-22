@@ -3,7 +3,7 @@
 /**
  * Base Module Class
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  */
 
 abstract class Module {

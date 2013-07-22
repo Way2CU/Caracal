@@ -1,8 +1,8 @@
 /**
  * Gallery Slideshow System
  *
- * Copyright (c) 2010. by MeanEYE.rcf
- * http://rcf-group.com
+ * Copyright (c) 2010. by Way2CU
+ * Author: Mladen Mijatov
  *
  * This system provides developers with extensive array of options to display
  * gallery images in eye-appealing and animated way. By specifying parameters in

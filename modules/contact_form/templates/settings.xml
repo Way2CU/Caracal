@@ -1,46 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_text constant="message_default" module="contact_form"/>
-	<hr/>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<label>
-			<span><_text constant="label_default_name" module="contact_form"/></span>
-			<input 
-				type="text" 
-				name="name" 
-				value="$settings['default_name']" 
-				eval="value"
-				style="width: 360px;"
-			/>
-		</label>
-		<label>
-			<span><_text constant="label_default_address" module="contact_form"/></span>
-			<input 
-				type="text" 
-				name="address" 
-				value="$settings['default_address']" 
-				eval="value"
-				style="width: 360px;"
-				class="code"
-			/>
-		</label>
-		<label>
-			<span><_text constant="label_default_subject" module="contact_form"/></span>
-			<input 
-				type="text" 
-				name="subject" 
-				value="$settings['default_subject']" 
-				eval="value"
-				style="width: 360px;"
-			/>
-		</label>
+		<div id="contact_form_settings_notebook">
+			<div>
+				<label>
+					<span><cms:text constant="label_name" module="contact_form"/></span>
+					<input 
+						type="text" 
+						name="sender_name" 
+						value="$settings['sender_name']" 
+						eval="value"
+						style="width: 250px;"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_address" module="contact_form"/></span>
+					<input 
+						type="text" 
+						name="sender_address" 
+						value="$settings['sender_address']" 
+						eval="value"
+						style="width: 250px;"
+						class="code"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_subject" module="contact_form"/></span>
+					<input 
+						type="text" 
+						name="sender_subject" 
+						value="$settings['sender_subject']" 
+						eval="value"
+						style="width: 350px;"
+					/>
+				</label>
+			</div>
+
+			<div>
+				<label>
+					<span><cms:text constant="label_name" module="contact_form"/></span>
+					<input 
+						type="text" 
+						name="recipient_name" 
+						value="$settings['recipient_name']" 
+						eval="value"
+						style="width: 250px;"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_address" module="contact_form"/></span>
+					<input 
+						type="text" 
+						name="recipient_address" 
+						value="$settings['recipient_address']" 
+						eval="value"
+						style="width: 250px;"
+						class="code"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_subject" module="contact_form"/></span>
+					<input 
+						type="text" 
+						name="recipient_subject" 
+						value="$settings['recipient_subject']" 
+						eval="value"
+						style="width: 350px;"
+					/>
+				</label>
+			</div>
+
+			<div>
+				<label class="checkbox">
+					<span><cms:text constant="label_use_smtp" module="contact_form"/></span>
+					<cms:if condition="$settings['use_smtp']">
+						<input type="checkbox" name="use_smtp" checked="checked"/>
+					</cms:if>
+					<cms:if condition="!$settings['use_smtp']">
+						<input type="checkbox" name="use_smtp"/>
+					</cms:if>
+				</label>
+				<hr/>
+				<label class="horizontal">
+					<span><cms:text constant="label_server" module="contact_form"/></span>
+					<input
+						type="text"
+						name="smtp_server"
+						value="$settings['smtp_server']"
+						eval="value"
+						style="width: 250px;"
+					/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_port" module="contact_form"/></span>
+					<input
+						type="text"
+						name="smtp_port"
+						value="$settings['smtp_port']"
+						eval="value"
+						style="width: 50px;"
+					/>
+				</label>
+				<label class="checkbox">
+					<span><cms:text constant="label_use_ssl" module="contact_form"/></span>
+					<cms:if condition="$settings['use_ssl']">
+						<input type="checkbox" name="use_ssl" checked="checked"/>
+					</cms:if>
+					<cms:if condition="!$settings['use_ssl']">
+						<input type="checkbox" name="use_ssl"/>
+					</cms:if>
+				</label>
+				<hr/>
+				<label class="radio">
+					<span><cms:text constant="label_smtp_no_authentication" module="contact_form"/></span>
+					<cms:if condition="$settings['smtp_authenticate'] == 0">
+						<input type="radio" name="smtp_authenticate" value="0" checked="checked"/>
+					</cms:if>
+					<cms:if condition="$settings['smtp_authenticate'] == 1">
+						<input type="radio" name="smtp_authenticate" value="0"/>
+					</cms:if>
+				</label>
+				<label class="radio">
+					<span><cms:text constant="label_smtp_authenticate" module="contact_form"/></span>
+					<cms:if condition="$settings['smtp_authenticate'] == 1">
+						<input type="radio" name="smtp_authenticate" value="1" checked="checked"/>
+					</cms:if>
+					<cms:if condition="$settings['smtp_authenticate'] == 0">
+						<input type="radio" name="smtp_authenticate" value="1"/>
+					</cms:if>
+				</label>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_smtp_username" module="contact_form"/></span>
+					<input
+						type="text"
+						name="smtp_username"
+						value="$settings['smtp_username']"
+						eval="value"
+						style="width: 150px;"
+					/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_smtp_password" module="contact_form"/></span>
+					<input
+						type="text"
+						name="smtp_password"
+						value="$settings['smtp_password']"
+						eval="value"
+						style="width: 150px;"
+					/>
+				</label>
+				<div style="clear: both;"/>
+			</div>
+		</div>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		var notebook = new Notebook('contact_form_settings_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('contact_form', 'tab_sender'))
+			.setPageTitle(1, language_handler.getText('contact_form', 'tab_recipient'))
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_smtp'));
+	</script>
 </document>

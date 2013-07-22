@@ -1,8 +1,10 @@
-/*
-	Backend Style Sheet for RTL languages
-	Copyright (c) 2010. by MeanEYE[RCF]
-	http://www.rcf-group.com
-*/
+/**
+ * RTL Language Modifications
+ * Backend Module
+ *
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
+ */
 
 body {
 	direction: rtl;

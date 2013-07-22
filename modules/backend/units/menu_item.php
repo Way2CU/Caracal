@@ -2,7 +2,6 @@
 
 /**
  * Backend Menu Item
- * @author MeanEYE[rcf]
  */
 
 class backend_MenuItem {

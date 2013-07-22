@@ -3,7 +3,9 @@
 /**
  * Country List Module
  *
- * @author MeanEYE.rcf
+ * This module provides list of countries and states for certain countries.
+ *
+ * Author: Mladen Mijatov
  */
 
 class country_list extends Module {

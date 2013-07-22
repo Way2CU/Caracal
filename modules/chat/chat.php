@@ -3,7 +3,9 @@
 /**
  * Semi-Realtime HTTP Based Chat
  *
- * @author MeanEYE.rcf
+ * Note: Currently this module is not working.
+ *
+ * Author: Mladen Mijatov
  */
 
 class chat extends Module {

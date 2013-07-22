@@ -1,9 +1,12 @@
 <?php
 
 /**
- * Main backend framework class
+ * Backend Module
  *
- * @author MeanEYE.rcf
+ * This module offers easy to use and user-friednly interface for managing
+ * content and framework itself.
+ *
+ * Author: Mladen Mijatov
  */
 
 define('_BACKEND_SECTION_', 'backend_module');

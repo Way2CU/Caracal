@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
-<document>
-	<question_list>
-		<_kabalah_questions template="question_list_item.xml"/>
-	</question_list>
-</document>

@@ -1,11 +1,10 @@
-/*
-
-	Chat Style Sheet
-	Copyright (c) 2010. by way2CU, http://www.way2cu.com
-
-	Author: MeanEYE[rcf], http://rcf-group.com
-
-*/
+/**
+ * Main Style Sheet
+ * Chat Module
+ *
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
+ */
 
 div.chat_log {
 	display: block;

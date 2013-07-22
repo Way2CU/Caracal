@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Web Engine Configuration
+ * Main Configuration File
  */
 
 // document standard

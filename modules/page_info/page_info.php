@@ -3,7 +3,10 @@
 /**
  * Page Information
  *
- * @author MeanEYE.rcf
+ * This module integrates some of the basic elements of the web site
+ * pages. It also provides support for Google Webmasters Tools and Analytics.
+ *
+ * Author: Mladen Mijatov
  */
 
 class page_info extends Module {

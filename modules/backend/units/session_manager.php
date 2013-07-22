@@ -2,8 +2,6 @@
 
 /**
  * Backend Session Manager
- *
- * @author: MeanEYE.rcf
  */
 
 class SessionManager {

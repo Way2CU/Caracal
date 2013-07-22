@@ -3,7 +3,9 @@
 /**
  * Downloads Module
  *
- * @author MeanEYE.rcf
+ * Module providing easy-to-manage downloads section.
+ *
+ * Author: Mladen Mijatov
  */
 
 class downloads extends Module {

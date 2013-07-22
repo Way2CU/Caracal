@@ -1,15 +1,15 @@
-/*
-
-	YouTube Player Controls
-	Copyright (c) 2010. by way2CU, http://www.way2cu.com
-	
-	Author: MeanEYE[rcf], http://rcf-group.com
-	
-*/
+/**
+ *
+ * YouTube Player Controls
+ * Copyright (c) 2013. by Way2CU
+ * 
+ * Author: Mladen Mijatov
+ */
 
 function onYouTubePlayerReady(playerId) {
 	YouTube_Controls.init(playerId);
 }
+
 
 YouTube_Controls = {
 	player: null,

@@ -1,9 +1,13 @@
 <?php
 
 /**
- * BLANK MODULE
+ * Module Template
  *
- * @author MeanEYE.rcf
+ * This module is a template to make process of starting a development of new module
+ * fast and painless. This code reflects the state of system in general and should be
+ * kept up-to-date with remainder of the system.
+ *
+ * Author: Mladen Mijatov
  */
 
 class _blank extends Module {

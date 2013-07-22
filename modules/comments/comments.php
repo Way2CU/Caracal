@@ -4,7 +4,7 @@
  * Comments Module
  * This module is designed to be easily implementable anywhere.
  *
- * @author MeanEYE.rcf
+ * Author: Mladen Mijatov
  * @todo Module is not finished.
  */
 

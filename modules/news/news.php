@@ -3,7 +3,9 @@
 /**
  * News Module
  *
- * @author MeanEYE.rcf
+ * Support for news and RSS feeds.
+ *
+ * Author: Mladen Mijatov
  */
 
 class news extends Module {
