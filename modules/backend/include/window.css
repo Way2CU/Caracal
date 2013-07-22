@@ -164,6 +164,7 @@ div.window div.content textarea {
 	-webkit-transition-duration: 0.3s;
 }
 
+div.window div.content input[type=radio],
 div.window div.content input[type=checkbox] {
 	margin-right: 3px;
 	padding: 0px;
@@ -176,6 +177,7 @@ div.window div.content textarea {
 	resize: vertical;
 }
 
+div.window div.content label.radio span,
 div.window div.content label.checkbox span {
 	display: inline-block;
 
