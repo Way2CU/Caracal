@@ -4,7 +4,7 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  *
- * This window management system was designed to be used with RCF WebEngine
+ * This window management system was designed to be used with Caracal framework
  * administration system and has very little use outside of it. Is you are going
  * to take parts from this file leave credits intact.
  *
