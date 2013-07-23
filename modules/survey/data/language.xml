@@ -22,6 +22,7 @@
 		<constant name="label_name">Name:</constant>
 		<constant name="label_fields">Fields:</constant>
 		<constant name="label_unique_address">Allow only one entry per IP address</constant>
+		<constant name="label_send_email">Send email to default recipient on submit</constant>
 	</language>
 	<language short="iw">
 		<constant name="menu_survey">סקר</constant>
@@ -44,5 +45,6 @@
 		<constant name="label_name">שם:</constant>
 		<constant name="label_fields">שדות:</constant>
 		<constant name="label_unique_address">אשר רק כניסה אחת לכל כתובת IP</constant>
+		<constant name="label_send_email">Send email to default recipient on submit</constant>
 	</language>
 </document>

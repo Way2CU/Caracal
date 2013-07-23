@@ -14,6 +14,10 @@
 			<span><_text constant="label_unique_address" module="survey"/></span>
 			<input type="checkbox" name="unique_address"/>
 		</label>
+		<label class="checkbox">
+			<span><_text constant="label_send_email" module="survey"/></span>
+			<input type="checkbox" name="send_email"/>
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">

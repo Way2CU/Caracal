@@ -19,6 +19,7 @@ class SurveyTypesManager extends ItemManager {
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('fields', 'varchar');
 		$this->addProperty('unique_address', 'boolean');
+		$this->addProperty('send_email', 'boolean');
 	}
 
 	/**

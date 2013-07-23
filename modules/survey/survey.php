@@ -96,10 +96,6 @@ class survey extends Module {
 		// global control action
 		if (isset($params['action']))
 			switch ($params['action']) {
-				case 'save_from_xml':
-					$this->saveFromXML($params, $children);
-					break;
-
 				case 'save_from_ajax':
 					$this->saveFromAJAX();
 					break;
@@ -171,6 +167,7 @@ class survey extends Module {
 					`name` varchar(30) NOT NULL,
 					`fields` varchar(255) NOT NULL,
 					`unique_address` BOOLEAN NOT NULL DEFAULT '0',
+					`send_email` BOOLEAN NOT NULL DEFAULT '0',
 					PRIMARY KEY (`id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
 		$db->query($sql);
@@ -341,6 +338,7 @@ class survey extends Module {
 					'name'			=> $item->name,
 					'fields'		=> $item->fields,
 					'unique_address' => $item->unique_address,
+					'send_email'	=> $item->send_email,
 					'form_action'	=> backend_UrlMake($this->name, 'types_save'),
 					'cancel_action'	=> window_Close($this->name.'_types_change')
 				);
@@ -354,23 +352,30 @@ class survey extends Module {
 	 * Save new survey type or changes to existing
 	 */
 	private function saveType() {
+		// parse and sanitize data
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$name = fix_chars($_REQUEST['name']);
 		$fields = fix_chars($_REQUEST['fields']);
 		$unique_address = isset($_REQUEST['unique_address']) && ($_REQUEST['unique_address'] == 'on' || $_REQUEST['unique_address'] == '1') ? 1 : 0;
+		$send_email = isset($_REQUEST['send_email']) && ($_REQUEST['send_email'] == 'on' || $_REQUEST['send_email'] == '1') ? 1 : 0;
 
+		// get manager instance
 		$manager = SurveyTypesManager::getInstance();
 
+		// prepare data
 		$data = array(
-					'name'		=> $name,
-					'fields'	=> $fields,
-					'unique_address'	=> $unique_address
+					'name'				=> $name,
+					'fields'			=> $fields,
+					'unique_address'	=> $unique_address,
+					'send_email'		=> $send_email
 				);
 
+		// update or insert new data
 		if (is_null($id))
 			$manager->insertData($data); else
 			$manager->updateData($data, array('id' => $id));
 
+		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
@@ -458,75 +463,6 @@ class survey extends Module {
 	}
 
 	/**
-	 * Save data from $_REQUEST specified by XML tag
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	private function saveFromXML($tag_params, $children) {
-		$manager = SurveyEntriesManager::getInstance();
-		$data_manager = SurveyEntryDataManager::getInstance();
-		$type_manager = SurveyTypesManager::getInstance();
-		$allow_only_one = false;
-		$fields = array();
-		$type = null;
-		$type_id = null;
-
-		if (isset($tag_params['type'])) {
-			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('name' => fix_chars($tag_params['type'])));
-
-			if (is_object($type))
-				$type_id = $type->id;
-
-		} else if (isset($tag_params['type_id'])) {
-			$type_id = fix_id($tag_params['type_id']);
-			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('id' => $type_id));
-		} 
-
-		// we need a type in order to store data
-		if (is_null($type_id))
-			return;
-
-		// get setting if this type allows only one entry per address
-		$allow_only_one = $type->unique_address == 1;
-		$fields = explode(',', $type->fields);
-
-		if ($allow_only_one) {
-			// get existing entry from database 
-			$entry = $manager->getSingleItem(
-									$manager->getFieldNames(),
-									array(
-										'type'		=> $type_id,
-										'address' 	=> $_SERVER['REMOTE_ADDR']
-									)
-								);
-
-			// if entry doesn't exist, create new one
-			if (!is_object($entry)) {
-				$manager->insertData(array(
-								'type'		=> $type_id,
-								'address'	=> $_SERVER['REMOTE_ADDR']
-							));
-				$id = $manager->getInsertedID();
-				$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-			}
-
-		} else {
-			// create new entry anyway
-			$manager->insertData(array(
-							'type'		=> $type_id,
-							'address'	=> $_SERVER['REMOTE_ADDR']
-						));
-			$id = $manager->getInsertedID();
-			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-		}
-
-		// parse children and see what we need to save
-		foreach ($children as $child) {
-		}
-	}
-
-	/**
 	 * Save data from AJAX request
 	 */
 	private function saveFromAJAX() {
@@ -594,15 +530,27 @@ class survey extends Module {
 			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		}
 		
-		$data = $_REQUEST;
-
-		foreach ($data as $key => $value) {
+		// prepare data for insertion
+		$data = array();
+		foreach ($_REQUEST as $key => $value) 
 			if (in_array($key, $fields))
-				$data_manager->insertData(array(
-									'entry'	=> $entry->id,
-									'name'	=> $key,
-									'value'	=> fix_chars($value)
-								));
+				$data[$key] = fix_chars($value);
+
+		// store data
+		foreach ($data as $key => $value)
+			$data_manager->insertData(array(
+					'entry'	=> $entry->id,
+					'name'	=> $key,
+					'value'	=> $value
+				));
+
+		// send email if requested
+		if ($type->send_email && class_exists('contact_form')) {
+			$contact_form = contact_form::getInstance();
+			$body = $contact_form->makePlainBody($data);
+			$html_body = $contact_form->makeHtmlBody($data);
+			
+			$contact_form->sendFromModule(null, null, $body, $html_body);
 		}
 
 		print json_encode(true);

@@ -35,6 +35,15 @@
 				<input type="checkbox" name="unique_address"/>
 			</_if>
 		</label>
+		<label class="checkbox">
+			<span><_text constant="label_send_email" module="survey"/></span>
+			<_if condition="$params['send_email'] == 1">
+				<input type="checkbox" name="send_email" checked="checked"/>
+			</_if>
+			<_if condition="$params['send_email'] == 0">
+				<input type="checkbox" name="send_email"/>
+			</_if>
+		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">
