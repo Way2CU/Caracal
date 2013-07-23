@@ -1,8 +1,8 @@
 /**
  * Shopping Cart
  *
- * Copyright (c) 2011. by Mladen Mijatov
- * http://rcf-group.com
+ * Copyright (c) 2013. by Way2CU
+ * Author: Mladen Mijatov
  *
  * Requires jQuery 1.4.2+
  */
