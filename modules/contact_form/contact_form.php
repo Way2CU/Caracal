@@ -201,7 +201,7 @@ class contact_form extends Module {
 					break;
 			}
 
-		$headers['X-Mailer'] = "RCF-CMS/1.0";
+		$headers['X-Mailer'] = "Cracal-Framework/1.0";
 
 		// if address is not specified by the XML, check for system setting
 		if (empty($to) && isset($this->settings['recipient_address'])) {
@@ -244,7 +244,7 @@ class contact_form extends Module {
 			$subject = $this->settings['recipient_subject'];
 			$fields = array();
 			$headers = array(
-							'X-Mailer'	=> "RCF-CMS/1.0"
+							'X-Mailer'	=> "Cracal-Framework/1.0"
 						);
 
 			// prepare sender
@@ -284,7 +284,11 @@ class contact_form extends Module {
 	 */
 	public function sendFromModule($to, $subject, $text_body, $html_body, $bcc=null) {
 		$headers = array();
-		$headers['X-Mailer'] = "RCF-CMS/1.0";
+		$headers['X-Mailer'] = "Cracal-Framework/1.0";
+
+		// prepare recipient
+		if ($to == '' || is_null($to)) 
+			$to = $this->settings['recipient_address'];
 		
 		// prepare subject
 		if ($subject == '' || is_null($subject))
@@ -422,13 +426,13 @@ class contact_form extends Module {
 		$result .= "--{$boundary}\n";
 		$result .= "Content-Type: text/plain; charset=UTF-8\n";
 		$result .= "Content-Transfer-Encoding: base64\n\n";
-		$result .= base64_encode($this->_makePlainBody($fields))."\n";
+		$result .= base64_encode($this->makePlainBody($fields))."\n";
 
 		// make html body
 		$result .= "--{$boundary}\n";
 		$result .= "Content-Type: text/html; charset=UTF-8\n";
 		$result .= "Content-Transfer-Encoding: base64\n\n";
-		$result .= base64_encode($this->_makeHtmlBody($fields))."\n";
+		$result .= base64_encode($this->makeHtmlBody($fields))."\n";
 
 		// make ending boundary
 		$result .= "--{$boundary}--\n";
@@ -437,12 +441,12 @@ class contact_form extends Module {
 	}
 
 	/**
-	 * Generate plain text message body
+	 * Generate plain text message body from specified fields.
 	 *
 	 * @param array $fields
 	 * @return string
 	 */
-	private function _makePlainBody($fields) {
+	public function makePlainBody($fields) {
 		$result = "";
 		$max_length = 0;
 
@@ -456,12 +460,12 @@ class contact_form extends Module {
 	}
 
 	/**
-	 * Generate HTML message body
+	 * Generate HTML body containing table with specified fields.
 	 *
 	 * @param array $fields
 	 * @return string
 	 */
-	private function _makeHtmlBody($fields) {
+	public function makeHtmlBody($fields) {
 		$is_rtl = MainLanguageHandler::getInstance()->isRTL();
 		$direction = $is_rtl ? 'direction: rtl;' : 'direction: ltr;';
 		$result = '<table width="100%" cellspacing="0" cellpadding="5" border="1" frame="box" rules="rows">';
