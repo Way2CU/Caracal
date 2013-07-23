@@ -1,10 +1,9 @@
 <?php
 
 /**
- * LANGUAGE MODULE
+ * Multi-language support module.
  *
- * @author MeanEYE
- * @copyright RCF Group,2008.
+ * Author: Mladen Mijatov
  */
 
 class language_menu extends Module {
