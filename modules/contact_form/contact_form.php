@@ -204,8 +204,8 @@ class contact_form extends Module {
 		$headers['X-Mailer'] = "RCF-CMS/1.0";
 
 		// if address is not specified by the XML, check for system setting
-		if (empty($to) && isset($this->settings['default_address'])) {
-			$to = $this->settings['default_address'];
+		if (empty($to) && isset($this->settings['recipient_address'])) {
+			$to = $this->settings['recipient_address'];
 			$template_params['_to'] = $to;
 		}
 
@@ -239,17 +239,17 @@ class contact_form extends Module {
 					'message'	=> ''
 				);
 
-		if (isset($this->settings['default_address'])) {
-			$to = $this->settings['default_address'];
-			$subject = $this->settings['default_subject'];
+		if (isset($this->settings['recipient_address'])) {
+			$to = $this->settings['recipient_address'];
+			$subject = $this->settings['recipient_subject'];
 			$fields = array();
 			$headers = array(
 							'X-Mailer'	=> "RCF-CMS/1.0"
 						);
 
 			// prepare sender
-			$name = array($this->settings['default_name']);
-			$address = explode(',', $this->settings['default_address']);
+			$name = $this->settings['sender_name'];
+			$address = $this->settings['sender_address'];
 			$headers['From'] = $this->generateAddressField($name, $address);
 
 			foreach($_REQUEST as $key => $value)
@@ -288,13 +288,13 @@ class contact_form extends Module {
 		
 		// prepare subject
 		if ($subject == '' || is_null($subject))
-			$subject = $this->settings['default_subject'];
+			$subject = $this->settings['recipient_subject'];
 		
 		$subject = "=?utf-8?B?".base64_encode($subject)."?=";
 		
 		// prepare sender
-		$name = array($this->settings['default_name']);
-		$address = split(',', $this->settings['default_address']);
+		$name = $this->settings['sender_name'];
+		$address = $this->settings['sender_address'];
 		$headers['From'] = $this->generateAddressField($name, $address);
 
 		// add bcc if specified setting bcc = -1 will use from 
