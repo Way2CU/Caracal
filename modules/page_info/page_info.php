@@ -187,6 +187,13 @@ class page_info extends Module {
 			header('Content-Type: text/html; charset=UTF-8');
 		}
 
+		if (!in_array('viewport') && !_DESKTOP_VERSION) 
+			$head_tag->addTag('meta',
+						array(
+							'name'		=> 'viewport',
+							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
+						));
+
 		if (!in_array('language', $this->omit_elements))
 			$head_tag->addTag('meta',
 						array(
