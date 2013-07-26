@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+require_once('units/smtp.php');
+
 
 class contact_form extends Module {
 	private static $_instance;
@@ -281,6 +283,8 @@ class contact_form extends Module {
 	 * @param string $text_body
 	 * @param string $html_body
 	 * @param string $bcc
+	 *
+	 * TODO: Simplify this code.
 	 */
 	public function sendFromModule($to, $subject, $text_body, $html_body, $bcc=null) {
 		$headers = array();
@@ -336,8 +340,32 @@ class contact_form extends Module {
 		
 		// get headers string
 		$headers_string = $this->_makeHeaders($headers);
+
+		if (!$this->detectBots())
+			if ($this->settings['use_smtp']) {
+				$smtp = new SMTP();
+				$smtp->set_server(
+							$this->settings['smtp_server'],
+							$this->settings['smtp_port'],
+							$this->settings['use_ssl']
+						);
+				
+				if ($this->settings['smtp_authenticate'])
+					$smtp->set_credentials(
+								$this->settings['smtp_username'],
+								$this->settings['smtp_password']
+							);
+
+				$smtp->set_sender($this->settings['sender_address']);
+				$smtp->add_recipient($to);
+				$result = $smtp->send();
+
+			} else {
+				// send mail using PHP function
+				$result = mail($to, $subject, $body, $headers_string);
+			}
 		
-		return !$this->detectBots() && mail($to, $subject, $body, $headers_string);
+		return $result;
 	}
 
 	/**
@@ -384,6 +412,8 @@ class contact_form extends Module {
 	 * @return boolean
 	 */
 	private function _sendMail($to, $subject, $headers, $fields) {
+		$result = false;
+
 		// generate boundary string
 		$boundary = md5(time().'--cms--'.(rand() * 10000));
 
@@ -394,7 +424,32 @@ class contact_form extends Module {
 		$body = $this->_makeBody($fields, $boundary);
 		$headers_string = $this->_makeHeaders($headers);
 
-		return !$this->detectBots() && mail($to, $subject, $body, $headers_string);
+		if (!$this->detectBots())
+			if ($this->settings['use_smtp']) {
+				// send email using SMTP
+				$smtp = new SMTP();
+				$smtp->set_server(
+							$this->settings['smtp_server'],
+							$this->settings['smtp_port'],
+							$this->settings['use_ssl']
+						);
+				
+				if ($this->settings['smtp_authenticate'])
+					$smtp->set_credentials(
+								$this->settings['smtp_username'],
+								$this->settings['smtp_password']
+							);
+
+				$smtp->set_sender($this->settings['sender_address']);
+				$smtp->add_recipient($to);
+				$result = $smtp->send();
+
+			} else {
+				// send email using built-in function
+				$result = mail($to, $subject, $body, $headers_string);
+			}
+
+		return $result;
 	}
 
 	/**
