@@ -108,7 +108,7 @@ class webhook extends Module {
 				$params []= $key.'='.urlencode($value);
 
 		// create target URL
-		$url = $url_base.(strpos($url_base, '?') ? '&amp;' : '?').implode('&amp;', $params);
+		$url = $url_base.(strpos($url_base, '?') ? '&' : '?').implode('&', $params);
 
 		// submit the content
 		try {
