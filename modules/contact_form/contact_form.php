@@ -358,7 +358,8 @@ class contact_form extends Module {
 
 				$smtp->set_sender($this->settings['sender_address']);
 				$smtp->add_recipient($to);
-				$result = $smtp->send();
+				$smtp->set_subject($subject);
+				$result = $smtp->send($headers_string, $body);
 
 			} else {
 				// send mail using PHP function
@@ -442,7 +443,8 @@ class contact_form extends Module {
 
 				$smtp->set_sender($this->settings['sender_address']);
 				$smtp->add_recipient($to);
-				$result = $smtp->send();
+				$smtp->set_subject($subject);
+				$result = $smtp->send($headers_string, $body);
 
 			} else {
 				// send email using built-in function
