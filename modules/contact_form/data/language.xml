@@ -46,17 +46,17 @@
 		<constant name="tab_general">כללי</constant>
 		<constant name="tab_smtp">SMTP</constant>
 		
-		<constant name="label_name">:שם</constant>
-		<constant name="label_address">:דוא"ל</constant>
-		<constant name="label_subject">:נושא</constant>
-		<constant name="label_use_smtp">להשתמש בשרת smtp ?</constant>
+		<constant name="label_name">שם:</constant>
+		<constant name="label_address">דוא"ל:</constant>
+		<constant name="label_subject">נושא:</constant>
+		<constant name="label_use_smtp">להשתמש בשרת SMTP?</constant>
 		<constant name="label_use_ssl">להשתמש בקידוד SSL?</constant>
-		<constant name="label_server">:שרת</constant>
-		<constant name="label_port">:פורט</constant>
+		<constant name="label_server">שרת:</constant>
+		<constant name="label_port">פורט:</constant>
 		<constant name="label_smtp_no_authentication">ללא אימות</constant>
-		<constant name="label_smtp_authenticate">:אימות עם האישורים הבאים </constant>
-		<constant name="label_smtp_username">:שם משתמש</constant>
-		<constant name="label_smtp_password">:סיסמא</constant>
+		<constant name="label_smtp_authenticate">אימות עם האישורים הבאים:</constant>
+		<constant name="label_smtp_username">שם משתמש:</constant>
+		<constant name="label_smtp_password">סיסמא:</constant>
 	</language>
 
 	<language short="sr">
