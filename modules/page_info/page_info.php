@@ -187,7 +187,7 @@ class page_info extends Module {
 			header('Content-Type: text/html; charset=UTF-8');
 		}
 
-		if (!in_array('viewport') && !_DESKTOP_VERSION) 
+		if (!in_array('viewport', $this->omit_elements) && !_DESKTOP_VERSION) 
 			$head_tag->addTag('meta',
 						array(
 							'name'		=> 'viewport',
