@@ -12,6 +12,7 @@ class SMTP {
 	private $password = null;
 	private $sender = '';
 	private $recipients = array();
+	private $subject = '';
 
 	private $socket = null;
 
@@ -114,10 +115,13 @@ class SMTP {
 	private function _send_data($headers, $body) {
 		$result = false;
 
+		trigger_error(json_encode($headers));
+
 		// send command for starting data transfer
 		$this->_send_command('DATA');
 		if ($this->_validate_response('354')) {
-			fwrite($this->socket, $headers);
+			fwrite($this->socket, $headers."\r\n");
+			fwrite($this->socket, "Subject: {$this->subject}\r\n");
 			fwrite($this->socket, "\r\n\r\n");
 			fwrite($this->socket, $body."\r\n");
 			fwrite($this->socket, ".\r\n");
@@ -222,14 +226,22 @@ class SMTP {
 	}
 
 	/**
-	 * Send email using specified server.
+	 * Set message subject.
 	 *
 	 * @param string $subject
-	 * @param string $body
+	 */
+	public function set_subject($subject) {
+		$this->subject = $subject;
+	}
+
+	/**
+	 * Send email using specified server.
+	 *
 	 * @param string $headers
+	 * @param string $body
 	 * @return boolean
 	 */
-	public function send($subject, $body, $headers) {
+	public function send($headers, $body) {
 		$result = true;
 
 		// connect and authenticate
