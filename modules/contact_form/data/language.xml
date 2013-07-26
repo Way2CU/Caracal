@@ -41,13 +41,22 @@
 		
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 
-		<constant name="tab_sender">Sender</constant>
-		<constant name="tab_recipient">Recipient</constant>
-		<constant name="tab_general">General</constant>
+		<constant name="tab_sender">שולח</constant>
+		<constant name="tab_recipient">כתובת מקבל</constant>
+		<constant name="tab_general">כללי</constant>
+		<constant name="tab_smtp">SMTP</constant>
 		
-		<constant name="label_name">שם:</constant>
-		<constant name="label_address">דואל:</constant>
-		<constant name="label_subject">נושא:</constant>
+		<constant name="label_name">:שם</constant>
+		<constant name="label_address">:דוא"ל</constant>
+		<constant name="label_subject">:נושא</constant>
+		<constant name="label_use_smtp">להשתמש בשרת smtp ?</constant>
+		<constant name="label_use_ssl">להשתמש בקידוד SSL?</constant>
+		<constant name="label_server">:שרת</constant>
+		<constant name="label_port">:פורט</constant>
+		<constant name="label_smtp_no_authentication">ללא אימות</constant>
+		<constant name="label_smtp_authenticate">:אימות עם האישורים הבאים </constant>
+		<constant name="label_smtp_username">:שם משתמש</constant>
+		<constant name="label_smtp_password">:סיסמא</constant>
 	</language>
 
 	<language short="sr">
@@ -60,9 +69,22 @@
 		<constant name="message_saved">Podešavanja su snimljena.</constant>
 		
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
+
+		<constant name="tab_sender">Sender</constant>
+		<constant name="tab_recipient">Recipient</constant>
+		<constant name="tab_general">General</constant>
+		<constant name="tab_smtp">SMTP</constant>
 		
 		<constant name="label_default_name">Ime:</constant>
 		<constant name="label_default_address">Email adresa:</constant>
 		<constant name="label_default_subject">Naslov poruke:</constant>
+		<constant name="label_use_smtp">Use SMTP to send email?</constant>
+		<constant name="label_use_ssl">Use SSL encryption?</constant>
+		<constant name="label_server">Server:</constant>
+		<constant name="label_port">Port:</constant>
+		<constant name="label_smtp_no_authentication">No authentication needed</constant>
+		<constant name="label_smtp_authenticate">Authenticate with following credentials:</constant>
+		<constant name="label_smtp_username">Username:</constant>
+		<constant name="label_smtp_password">Password:</constant>
 	</language>
 </document>
