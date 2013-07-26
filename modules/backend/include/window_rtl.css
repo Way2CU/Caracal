@@ -9,7 +9,9 @@
 @charset "UTF-8";
 
 div.window div.content input[type=checkbox],
-div.window_inactive div.content input[type=checkbox] {
+div.window_inactive div.content input[type=checkbox],
+div.window div.content input[type=radio],
+div.window_inactive div.content input[type=radio] {
 	margin-left: 3px;
 	margin-right: 0px;
 	float: right;
