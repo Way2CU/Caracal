@@ -357,7 +357,12 @@ class contact_form extends Module {
 							);
 
 				$smtp->set_sender($this->settings['sender_address']);
-				$smtp->add_recipient($to);
+
+				// add recipients
+				$recipient_list = explode(',', $to);
+				foreach($recipient_list as $address)
+					$smtp->add_recipient($address);
+
 				$smtp->set_subject($subject);
 				$result = $smtp->send($headers_string, $body);
 
@@ -442,7 +447,12 @@ class contact_form extends Module {
 							);
 
 				$smtp->set_sender($this->settings['sender_address']);
-				$smtp->add_recipient($to);
+
+				// add recipients
+				$recipient_list = explode(',', $to);
+				foreach($recipient_list as $address)
+					$smtp->add_recipient($address);
+
 				$smtp->set_subject($subject);
 				$result = $smtp->send($headers_string, $body);
 
