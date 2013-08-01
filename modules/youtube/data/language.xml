@@ -52,7 +52,7 @@
 		<constant name="videos">Videos</constant>
 	</language>
 	
-	<language short="iw">
+	<language short="he">
 		<constant name="title" value="YouTube" />
 
 		<!-- Menu Items -->

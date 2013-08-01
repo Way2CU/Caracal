@@ -250,7 +250,7 @@
 		<constant name="status_lost">Lost</constant>
 		<constant name="status_delivered">Delivered</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_shop">חנות</constant>
 		<constant name="menu_items">נהל מוצרים</constant>
 		<constant name="menu_categories">נהל קטגוריות</constant>

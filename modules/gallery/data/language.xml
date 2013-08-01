@@ -67,7 +67,7 @@
 		<constant name="all_images">All images</constant>
 		<constant name="container_groups">Groups</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_gallery">גלריה</constant>
 		<constant name="menu_images">כל התמונות</constant>
 		<constant name="menu_groups">קבוצות תמונות</constant>

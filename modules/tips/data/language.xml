@@ -19,7 +19,7 @@
 		<constant name="label_content">Content:</constant>
 		<constant name="label_visible">This tip is visible</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_tips">טיפים</constant>
 		<constant name="menu_tips_manage">ערוך טיפים</constant>
 

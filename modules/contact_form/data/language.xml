@@ -30,7 +30,7 @@
 		<constant name="label_smtp_password">Password:</constant>
 	</language>
 
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_contact">טופס יצירת קשר</constant>
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>
 
