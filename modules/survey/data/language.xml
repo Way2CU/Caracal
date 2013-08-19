@@ -24,7 +24,7 @@
 		<constant name="label_unique_address">Allow only one entry per IP address</constant>
 		<constant name="label_send_email">Send email to default recipient on submit</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_survey">סקר</constant>
 		<constant name="menu_results">תוצאות סקר</constant>
 		<constant name="menu_types">סוגי סקר</constant>

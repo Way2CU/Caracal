@@ -22,7 +22,7 @@
 		<constant name="column_referer">Referer URL</constant>
 		<constant name="column_license_key">License key</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_license">רשיונות</constant>
 
 		<constant name="title_licenses">רשיונות</constant>

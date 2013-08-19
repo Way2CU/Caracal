@@ -13,7 +13,7 @@
 
 		<constant name="message_settings_saved">New settings were saved.</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_tranzila">טרנזילה</constant>
 
 		<constant name="title_settings">הגדרות טרנזילה</constant>

@@ -103,7 +103,7 @@
 		<constant name="logout">Logout</constant>
 	</language>
 
-	<language name="עברית" short="iw" rtl="yes">
+	<language name="עברית" short="he" rtl="yes">
 		<constant name="title">ממשק מנהל</constant>
 		<!-- Menu Items -->
 		<constant name="menu_system">מערכת</constant>

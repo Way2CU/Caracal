@@ -10,7 +10,7 @@
 	<language short="sr-cyr">
 		<constant name="captcha_message" value="Captcha слика (клик на слику освежава)" />
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="captcha_message" value="תמונת קאפצ'ה (לחץ לרענון)" />
 	</language>
 </document>

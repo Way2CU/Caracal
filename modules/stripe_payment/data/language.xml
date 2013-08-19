@@ -12,7 +12,7 @@
 
 		<constant name="message_settings_saved">Stripe keys were saved!</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_stripe">Stripe</constant>
 
 		<constant name="title_settings">הגדרות</constant>

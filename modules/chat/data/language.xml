@@ -62,7 +62,7 @@
 
 		<constant name="add_channel">Add channel</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_chat">צט</constant>
 		<constant name="menu_join_chat">צירוף לצט</constant>
 		<constant name="menu_users">נהל משתמשים</constant>

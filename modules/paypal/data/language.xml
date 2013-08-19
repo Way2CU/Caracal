@@ -7,7 +7,7 @@
 		<constant name="title_settings">Settings</constant>
 		<constant name="payment_method_title">PayPal</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_paypal">PayPal</constant>
 
 		<constant name="title_settings">הגדרות</constant>

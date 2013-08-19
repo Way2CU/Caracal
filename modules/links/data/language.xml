@@ -61,7 +61,7 @@
 		<constant name="overview">Sponsored links</constant>
 		<constant name="sponsored">Sponsored</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<!-- Menu Items -->
 		<constant name="menu_links">קישורים</constant>
 		<constant name="menu_links_groups">נהל קבוצות</constant>

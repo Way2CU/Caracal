@@ -18,7 +18,7 @@
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
 	</language>
-	<language short="iw">
+	<language short="he">
 		<constant name="menu_page_info">הגדרות עמוד</constant>
 		<constant name="title_page_info">הגדרות עמוד</constant>
 		<constant name="message_saved">הגדרות עמוד נשמרו!</constant>
