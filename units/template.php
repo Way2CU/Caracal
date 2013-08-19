@@ -280,6 +280,30 @@ class TemplateHandler {
 					echo $text;
 					break;
 
+				// support for markdown
+				case 'cms:markdown':
+					$word_count = isset($tag->tagAttrs['words']) ? fix_id($tag->tagAttrs['words']) : null;
+					$end_with = isset($tag->tagAttrs['end_with']) ? fix_id($tag->tagAttrs['end_with']) : null;
+					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
+
+					// get content for parsing
+					if (is_null($name))
+						$content = $tag->tagData;
+						$content = $this->params[$name];
+
+					// convert to HTML
+					$content = Markdown($content);
+
+					// limit words if specified
+					if (!is_null($word_count)) {
+						if (is_null($end_with))
+							$content = limit_words($content, $word_count); else
+							$content = limit_words($content, $word_count, $end_with);
+					}
+
+					echo $content;
+					break;
+
 				// call section specific data
 				case '_section_data':
 				case 'cms:section_data':
