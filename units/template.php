@@ -285,11 +285,12 @@ class TemplateHandler {
 					$word_count = isset($tag->tagAttrs['words']) ? fix_id($tag->tagAttrs['words']) : null;
 					$end_with = isset($tag->tagAttrs['end_with']) ? fix_id($tag->tagAttrs['end_with']) : null;
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
+					$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
 
 					// get content for parsing
 					if (is_null($name))
 						$content = $tag->tagData;
-						$content = $this->params[$name];
+						$content = $multilanguage ? $this->params[$name][$language] : $this->params[$name];
 
 					// convert to HTML
 					$content = Markdown($content);
