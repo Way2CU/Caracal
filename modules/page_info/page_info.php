@@ -271,34 +271,53 @@ class page_info extends Module {
 		if ($section != 'backend') {
 			$styles = array();
 
-			// prepare list of files
+			// prepare list of files without extensions
 			if (_DESKTOP_VERSION) {
 				$styles = array(
-						'/styles/common.css',
-						'/styles/main.css',
-						'/styles/header.css',
-						'/styles/content.css',
-						'/styles/footer.css'
+						'/styles/common',
+						'/styles/main',
+						'/styles/header',
+						'/styles/content',
+						'/styles/footer'
 					);
 			} else {
 				$styles = array(
-						'/styles/common.css',
-						'/styles/main.css',
-						'/styles/header_mobile.css',
-						'/styles/content_mobile.css',
-						'/styles/footer_mobile.css'
+						'/styles/common',
+						'/styles/main',
+						'/styles/header_mobile',
+						'/styles/content_mobile',
+						'/styles/footer_mobile'
 					);
 			}
 
 			// include styles
-			foreach ($styles as $style)
-				if (file_exists(_BASEPATH.$style))
+			$less_included = false;
+
+			foreach ($styles as $style) {
+				// check for css files
+				if (file_exists(_BASEPATH.$style.'.css'))
 					$head_tag->addTag('link',
 							array(
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.$style)
+								'href'	=> url_GetFromFilePath(_BASEPATH.$style.'.css')
 							));
+
+				// check for less files
+				if (file_exists(_BASEPATH.$style.'.less')) {
+					$head_tag->addTag('link',
+							array(
+								'rel'	=> 'stylesheet/less',
+								'type'	=> 'text/css',
+								'href'	=> url_GetFromFilePath(_BASEPATH.$style.'.less')
+							));
+
+					if (!$less_included) {
+						$collection->includeScript(collection::LESS);
+						$less_included = true;
+					}
+				}
+			}
 
 			// add main javascript
 			if (file_exists(_BASEPATH.'/scripts/main.js'))
