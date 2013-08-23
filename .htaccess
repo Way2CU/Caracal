@@ -26,6 +26,11 @@ Header unset Pragma
 	Header unset Last-Modified
 </FilesMatch>
 
+<FilesMatch "\.(svg)$">
+	Header set Cache-Control "max-age=864000, public, must-revalidate"
+	SetOutputFilter DEFLATE
+</FilesMatch>
+
 <FilesMatch "\.(js|css|ttf|otf)$">
 	Header set Cache-Control "max-age=864000, must-revalidate"
 	SetOutputFilter DEFLATE
