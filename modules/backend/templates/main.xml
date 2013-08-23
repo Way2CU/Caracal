@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_var name="_HTML_401"/>
+	<cms:var name="_HTML_401"/>
 	<html>
 		<head>
-			<title><_text constant="site_title" /><_raw text=" - "/><_text constant="title" module="backend" /></title>
-			<_module name="head_tag" action="print_tag"/>
+			<title>
+				<cms:text constant="site_title" />
+				<cms:raw text=" - "/>
+				<cms:text constant="title" module="backend"/>
+			</title>
+			<cms:module
+				name="head_tag"
+				action="print_tag"
+			/>
 		</head>
 
-		<body>
+		<body class="$language_rtl ? 'rtl' : 'ltr'" eval="class">
 			<div id="wrap">
 				<div id="main_menu">
-					<_if condition="isset($_SESSION['logged']) and $_SESSION['logged']">
+					<cms:if condition="isset($_SESSION['logged']) and $_SESSION['logged']">
 						<_main_menu/>
-					</_if>
+					</cms:if>
 
 					<ol id="language_menu">
-						<_module name="language_menu" action="print" from_module="backend"/>
+						<cms:module name="language_menu" action="print" from_module="backend"/>
 					</ol>
 				</div>
 
-				<_if condition="!isset($_SESSION['logged']) or !$_SESSION['logged']">
+				<cms:if condition="!isset($_SESSION['logged']) or !$_SESSION['logged']">
 					<div id="login_window" class="window">
-						<div class="title"><_text constant="title_login" module="backend"/></div>
+						<div class="title"><cms:text constant="title_login" module="backend"/></div>
 						<div class="content">
-							<_module name="backend" action="login"/>
+							<cms:module name="backend" action="login"/>
 						</div>
 					</div>
 					<script type="text/javascript">
@@ -32,10 +39,11 @@
 							window_system.attachToStructure('login_window', 350, false);
 						});
 					</script>
-				</_if>
+				</cms:if>
 			</div>
+
 			<div id="copyright">
-				<_text constant="backend_copyright"/>
+				<cms:text constant="backend_copyright"/>
 			</div>
 		</body>
 	</html>
