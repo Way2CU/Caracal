@@ -55,6 +55,7 @@ define('_AJAX_REQUEST',
 			!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 		);
+define('_BROWSER_OK', is_browser_ok());
 
 // start measuring time
 $time_start = explode(" ", microtime());
