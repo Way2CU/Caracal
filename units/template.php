@@ -403,6 +403,16 @@ class TemplateHandler {
 					}
 					break;
 
+				// support for collection module
+				case 'cms:collection':
+					if (array_key_exists('include', $tag->tagAttrs) && class_exists('collection')) {
+						$scripts = fix_chars(explode(',', $tag->tagAttrs['include']));
+
+						$collection = collection::getInstance();
+						$collection->includeScript($scripts);
+					}
+					break;
+
 				// support for link tag
 				case 'cms:link':
 					if (class_exists('head_tag')) {
