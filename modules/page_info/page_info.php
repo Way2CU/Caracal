@@ -172,6 +172,7 @@ class page_info extends Module {
 		global $section, $db_use;
 
 		$head_tag = head_tag::getInstance();
+		$collection = collection::getInstance();
 		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		// add base url tag
@@ -265,6 +266,8 @@ class page_info extends Module {
 					));
 
 		// add default styles and script if they exists
+		$collection->includeScript(collection::JQUERY);
+
 		if ($section != 'backend') {
 			$styles = array();
 
