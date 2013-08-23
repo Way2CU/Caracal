@@ -270,53 +270,53 @@ class page_info extends Module {
 
 		if ($section != 'backend') {
 			$styles = array();
+			$less_style = null;
 
 			// prepare list of files without extensions
 			if (_DESKTOP_VERSION) {
 				$styles = array(
-						'/styles/common',
-						'/styles/main',
-						'/styles/header',
-						'/styles/content',
-						'/styles/footer'
+						'/styles/common.css',
+						'/styles/main.css',
+						'/styles/header.css',
+						'/styles/content.css',
+						'/styles/footer.css'
 					);
+				$less_style = '/styles/main.less';
+
 			} else {
 				$styles = array(
-						'/styles/common',
-						'/styles/main',
-						'/styles/header_mobile',
-						'/styles/content_mobile',
-						'/styles/footer_mobile'
+						'/styles/common.css',
+						'/styles/main.css',
+						'/styles/header_mobile.css',
+						'/styles/content_mobile.css',
+						'/styles/footer_mobile.css'
 					);
+
+				$less_style = '/styles/main_mobile.less';
 			}
 
 			// include styles
-			$less_included = false;
-
 			foreach ($styles as $style) {
 				// check for css files
-				if (file_exists(_BASEPATH.$style.'.css'))
+				if (file_exists(_BASEPATH.$style))
 					$head_tag->addTag('link',
 							array(
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.$style.'.css')
+								'href'	=> url_GetFromFilePath(_BASEPATH.$style)
 							));
+			}
 
-				// check for less files
-				if (file_exists(_BASEPATH.$style.'.less')) {
-					$head_tag->addTag('link',
-							array(
-								'rel'	=> 'stylesheet/less',
-								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.$style.'.less')
-							));
+			// add main less file if it exists
+			if (file_exists(_BASEPATH.$less_style)) {
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet/less',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style.(defined('DEBUG') ? '#!watch' : ''))
+						));
 
-					if (!$less_included) {
-						$collection->includeScript(collection::LESS);
-						$less_included = true;
-					}
-				}
+				$collection->includeScript(collection::LESS);
 			}
 
 			// add main javascript
@@ -343,7 +343,6 @@ class page_info extends Module {
 		// get available versions
 		$versions = array();
 		$files = scandir(_BASEPATH.'/modules/head_tag/templates/');
-		trigger_error(print_r($files, true));
 
 		foreach ($files as $file) 
 			if (substr($file, 0, 16) == 'google_analytics')
