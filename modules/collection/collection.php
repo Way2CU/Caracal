@@ -91,6 +91,9 @@ class collection extends Module {
 		// get instance of head tag early on
 		if (class_exists('head_tag'))
 			$this->head_tag = head_tag::getInstance();
+
+		// include jquery by default
+		$this->includeScriptById(collection::JQUERY);
 	}
 
 	/**
