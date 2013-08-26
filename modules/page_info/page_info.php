@@ -195,7 +195,7 @@ class page_info extends Module {
 							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
 						));
 
-		if (!in_array('language', $this->omit_elements))
+		if (!in_array('language', $this->omit_elements) && _STANDARD == 'html401')
 			$head_tag->addTag('meta',
 						array(
 							'http-equiv'	=> 'Content-Language',
@@ -243,7 +243,7 @@ class page_info extends Module {
 		}
 
   		// copyright
-		if (!in_array('copyright', $this->omit_elements)) {
+		if (!in_array('copyright', $this->omit_elements) && _STANDARD == 'html401') {
 			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
 			$copyright = strip_tags($copyright);
 			$head_tag->addTag('meta',
