@@ -43,7 +43,7 @@ div.dialog-background {
 	
 	background-color: #303030;
 
-	z-index: 10000;
+	z-index: 100000;
 	opacity: 0;
 
 	transition-property: opacity;
@@ -66,7 +66,7 @@ div.dialog {
 	left: 50%;
 
 	background-color: white;
-	z-index: 10001;
+	z-index: 100001;
 
 	color: #333333;
 
