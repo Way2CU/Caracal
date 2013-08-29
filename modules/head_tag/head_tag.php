@@ -25,6 +25,8 @@ class head_tag extends Module {
 	private $optimizer_page = '';
 	private $optimizer_show_control = false;
 
+	private $supported_styles = array('stylesheet', 'stylesheet/less');
+
 	/**
 	 * Constructor
 	 */
@@ -181,9 +183,12 @@ class head_tag extends Module {
 			$optimizer = CodeOptimizer::getInstance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
-			foreach ($this->link_tags as $link)
-				if (isset($link[1]['rel']) && $link[1]['rel'] == 'stylesheet' && !$optimizer->addStyle($link[1]['href']))
+			foreach ($this->link_tags as $link) {
+				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
+
+				if ($can_be_compiled && !$optimizer->addStyle($link[1]['href']))
 					$unhandled_tags [] = $link;
+			}
 
 			foreach ($this->script_tags as $script)
 				if (!$optimizer->addScript($script[1]['src']))
