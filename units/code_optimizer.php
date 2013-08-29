@@ -9,6 +9,7 @@
  */
 
 require_once('closure.php');
+require_once('lessc.php');
 
 
 class CodeOptimizer {
@@ -18,8 +19,9 @@ class CodeOptimizer {
 	private $style_list = array();
 	private $style_secondary_list = array();  // list populated with @import
 
-	// closure compiler object
-	private $compiler;
+	// compilers
+	private $closure_compiler = null;
+	private $less_compiler = null;
 
 	const LEVEL_NONE = 0;
 	const LEVEL_BASIC = 1;
@@ -29,7 +31,7 @@ class CodeOptimizer {
 	 * Constructor
 	 */
 	protected function __construct() {
-		$this->compiler = new PhpClosure();
+		$this->closure_compiler = new PhpClosure();
 	}
 
 	/**
@@ -81,36 +83,53 @@ class CodeOptimizer {
 		$result = array();
 		$data = file_get_contents($file_name);
 
-		// parse most important
-		$data = str_replace("\r", "", $data);
-		$data = explode("\n", $data);
+		switch (pathinfo($file_name, PATHINFO_EXTENSION)) {
+			case 'less':
+				// create compiler if we need it
+				if (is_null($this->less_compiler))
+					$this->less_compiler = new lessc();
 
-		$in_comment = false;
+				try {
+					$result = $this->less_compiler->compile($data);
+				} catch (Exception $error) {
+					trigger_error('Error compiling: '.$file_name, E_USER_NOTICE);
+				}
 
-		foreach($data as $line) {
-			$line_data = trim($line);
-			$command = explode(" ", $line_data);
+				break;
 
-			// skip empty lines
-			if (empty($line_data))
-				continue;
+			case 'css':
+			default:
+				// parse most important
+				$data = str_replace("\r", "", $data);
+				$data = explode("\n", $data);
 
-			// handle each command individually
-			switch (strtolower($command[0])) {
-				case '@import':
-					if (substr($command[1], 0, 3) == 'url')
-						$priority_commands []= $line_data; else
-						$additional_imports []= dirname($file_name).'/'.trim($command[1], '";');
-						
-					break;
+				$in_comment = false;
 
-				case '@charset':
-					array_unshift($priority_commands, $line_data);
-					break;
+				foreach($data as $line) {
+					$line_data = trim($line);
+					$command = explode(" ", $line_data);
 
-				default:
-					$result []= $line_data;
-			}
+					// skip empty lines
+					if (empty($line_data))
+						continue;
+
+					// handle each command individually
+					switch (strtolower($command[0])) {
+						case '@import':
+							if (substr($command[1], 0, 3) == 'url')
+								$priority_commands []= $line_data; else
+								$additional_imports []= dirname($file_name).'/'.trim($command[1], '";');
+								
+							break;
+
+						case '@charset':
+							array_unshift($priority_commands, $line_data);
+							break;
+
+						default:
+							$result []= $line_data;
+					}
+				}
 		}
 
 		return $result;
@@ -171,7 +190,7 @@ class CodeOptimizer {
 		if (!in_array($section, array('backend', 'backend_module'))) {
 			// add script to be compiled
 			$this->script_list []= $url;
-			$this->compiler->add($url);
+			$this->closure_compiler->add($url);
 
 		} else {
 			// we do not need to compile code in backend
@@ -216,7 +235,7 @@ class CodeOptimizer {
 			$this->_recompileStyles($style_cache, $this->style_list);
 
 		// compile scripts
-		$script_cache = $this->compiler
+		$script_cache = $this->closure_compiler
 				->quiet()
 				->hideDebugInfo()
 	 			->simpleMode()
