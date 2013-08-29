@@ -284,6 +284,16 @@ function url_GetFromFilePath($path) {
 }
 
 /**
+ * Get local file path from URL
+ *
+ * @param string $url
+ * @return string
+ */
+function path_GetFromURL($url, $base=_BASEURL) {
+	return _BASEPATH.substr($url, strlen($base));
+}
+
+/**
  * Form base URL
  * 
  * @return string
