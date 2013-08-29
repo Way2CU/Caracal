@@ -169,7 +169,7 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function addElements() {
-		global $section, $db_use;
+		global $section, $db_use, $optimize_code;
 
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
@@ -316,7 +316,8 @@ class page_info extends Module {
 							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style.(defined('DEBUG') ? '#!watch' : ''))
 						));
 
-				$collection->includeScript(collection::LESS);
+				if (!$optimize_code)
+					$collection->includeScript(collection::LESS);
 			}
 
 			// add main javascript
