@@ -90,6 +90,7 @@
 						value="$settings['smtp_server']"
 						eval="value"
 						style="width: 250px;"
+						class="code"
 					/>
 				</label>
 				<label class="horizontal">
@@ -100,6 +101,7 @@
 						value="$settings['smtp_port']"
 						eval="value"
 						style="width: 50px;"
+						class="code"
 					/>
 				</label>
 				<label class="checkbox">
@@ -139,6 +141,7 @@
 						value="$settings['smtp_username']"
 						eval="value"
 						style="width: 150px;"
+						class="code"
 					/>
 				</label>
 				<label class="horizontal">
@@ -149,6 +152,7 @@
 						value="$settings['smtp_password']"
 						eval="value"
 						style="width: 150px;"
+						class="code"
 					/>
 				</label>
 				<div style="clear: both;"/>

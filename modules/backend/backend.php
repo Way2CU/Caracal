@@ -54,29 +54,24 @@ class backend extends Module {
 		// load CSS and JScript
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
-
-			// always load jquery
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.event.drag.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.mousewheel.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.extensions.js'), 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/animation_chain.js'), 'type'=>'text/javascript'));
+			$collection = collection::getInstance();
 
 			if ($section == $this->name) {
+				$collection->includeScript(collection::JQUERY);
+				$collection->includeScript(collection::JQUERY_EVENT_DRAG);
+				$collection->includeScript(collection::JQUERY_EXTENSIONS);
+				$collection->includeScript(collection::JQUERY_MINICOLORS);
+				$collection->includeScript(collection::WINDOW_SYSTEM);
+				$collection->includeScript(collection::NOTEBOOK);
+				$collection->includeScript(collection::SHOWDOWN);
+				$collection->includeScript(collection::TOOLBAR);
+
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/notebook.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/jquery.minicolors.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 
 				if (MainLanguageHandler::getInstance()->isRTL()) {
 					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 				}
-
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/jquery.minicolors.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/toolbar_api.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/window_system.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/notebook.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/showdown.js'), 'type'=>'text/javascript'));
 			}
 		}
 

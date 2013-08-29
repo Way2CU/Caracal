@@ -172,6 +172,7 @@ class page_info extends Module {
 		global $section, $db_use;
 
 		$head_tag = head_tag::getInstance();
+		$collection = collection::getInstance();
 		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		// add base url tag
@@ -194,7 +195,7 @@ class page_info extends Module {
 							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
 						));
 
-		if (!in_array('language', $this->omit_elements))
+		if (!in_array('language', $this->omit_elements) && _STANDARD == 'html401')
 			$head_tag->addTag('meta',
 						array(
 							'http-equiv'	=> 'Content-Language',
@@ -242,7 +243,7 @@ class page_info extends Module {
 		}
 
   		// copyright
-		if (!in_array('copyright', $this->omit_elements)) {
+		if (!in_array('copyright', $this->omit_elements) && _STANDARD == 'html401') {
 			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
 			$copyright = strip_tags($copyright);
 			$head_tag->addTag('meta',
@@ -265,10 +266,13 @@ class page_info extends Module {
 					));
 
 		// add default styles and script if they exists
+		$collection->includeScript(collection::JQUERY);
+
 		if ($section != 'backend') {
 			$styles = array();
+			$less_style = null;
 
-			// prepare list of files
+			// prepare list of files without extensions
 			if (_DESKTOP_VERSION) {
 				$styles = array(
 						'/styles/common.css',
@@ -277,6 +281,8 @@ class page_info extends Module {
 						'/styles/content.css',
 						'/styles/footer.css'
 					);
+				$less_style = '/styles/main.less';
+
 			} else {
 				$styles = array(
 						'/styles/common.css',
@@ -285,10 +291,13 @@ class page_info extends Module {
 						'/styles/content_mobile.css',
 						'/styles/footer_mobile.css'
 					);
+
+				$less_style = '/styles/main_mobile.less';
 			}
 
 			// include styles
-			foreach ($styles as $style)
+			foreach ($styles as $style) {
+				// check for css files
 				if (file_exists(_BASEPATH.$style))
 					$head_tag->addTag('link',
 							array(
@@ -296,6 +305,19 @@ class page_info extends Module {
 								'type'	=> 'text/css',
 								'href'	=> url_GetFromFilePath(_BASEPATH.$style)
 							));
+			}
+
+			// add main less file if it exists
+			if (file_exists(_BASEPATH.$less_style)) {
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet/less',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style.(defined('DEBUG') ? '#!watch' : ''))
+						));
+
+				$collection->includeScript(collection::LESS);
+			}
 
 			// add main javascript
 			if (file_exists(_BASEPATH.'/scripts/main.js'))
@@ -321,7 +343,6 @@ class page_info extends Module {
 		// get available versions
 		$versions = array();
 		$files = scandir(_BASEPATH.'/modules/head_tag/templates/');
-		trigger_error(print_r($files, true));
 
 		foreach ($files as $file) 
 			if (substr($file, 0, 16) == 'google_analytics')
