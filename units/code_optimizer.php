@@ -63,7 +63,7 @@ class CodeOptimizer {
 		// check each individual file
 		if (!$result)
 			foreach ($list as $file) 
-				if (filemtime($file) > $cache_time) {
+				if (filemtime(path_GetFromURL($file)) > $cache_time) {
 					$result = true;
 					break;
 				}
@@ -81,55 +81,63 @@ class CodeOptimizer {
 	 */
 	private function _includeStyle($file_name, &$additional_imports, &$priority_commands) {
 		$result = array();
-		$data = file_get_contents($file_name);
+		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
-		switch (pathinfo($file_name, PATHINFO_EXTENSION)) {
+		switch ($extension) {
 			case 'less':
 				// create compiler if we need it
 				if (is_null($this->less_compiler))
 					$this->less_compiler = new lessc();
 
+				// compile files
 				try {
-					$result = $this->less_compiler->compile($data);
-				} catch (Exception $error) {
-					trigger_error('Error compiling: '.$file_name, E_USER_NOTICE);
-				}
+					$file_name = path_GetFromURL($file_name);
+					$data = $this->less_compiler->compileFile($file_name);
 
+				} catch (Exception $error) {
+					trigger_error('Error compiling: '.$file_name.' - '.$error, E_USER_NOTICE);
+				}
 				break;
 
 			case 'css':
 			default:
-				// parse most important
-				$data = str_replace("\r", "", $data);
-				$data = explode("\n", $data);
+				$data = file_get_contents($file_name);
+				break;
+		}
 
-				$in_comment = false;
+		// parse most important
+		$data = str_replace("\r", "", $data);
+		$data = explode("\n", $data);
 
-				foreach($data as $line) {
-					$line_data = trim($line);
-					$command = explode(" ", $line_data);
+		$in_comment = false;
 
-					// skip empty lines
-					if (empty($line_data))
+		foreach($data as $line) {
+			$line_data = trim($line);
+			$command = explode(" ", $line_data);
+
+			// skip empty lines
+			if (empty($line_data))
+				continue;
+
+			// handle each command individually
+			switch (strtolower($command[0])) {
+				case '@import':
+					if ($extension == 'less')
 						continue;
 
-					// handle each command individually
-					switch (strtolower($command[0])) {
-						case '@import':
-							if (substr($command[1], 0, 3) == 'url')
-								$priority_commands []= $line_data; else
-								$additional_imports []= dirname($file_name).'/'.trim($command[1], '";');
-								
-							break;
+					if (substr($command[1], 0, 3) == 'url')
+						$priority_commands []= $line_data; else
+						$additional_imports []= dirname($file_name).'/'.trim($command[1], '\'";');
+						
+					break;
 
-						case '@charset':
-							array_unshift($priority_commands, $line_data);
-							break;
+				case '@charset':
+					array_unshift($priority_commands, $line_data);
+					break;
 
-						default:
-							$result []= $line_data;
-					}
-				}
+				default:
+					$result []= $line_data;
+			}
 		}
 
 		return $result;
