@@ -313,7 +313,7 @@ class page_info extends Module {
 						array(
 							'rel'	=> 'stylesheet/less',
 							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style.(defined('DEBUG') ? '#!watch' : ''))
+							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style)
 						));
 
 				if (!$optimize_code)
