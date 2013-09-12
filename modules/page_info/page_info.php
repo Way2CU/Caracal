@@ -169,11 +169,13 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function addElements() {
-		global $section, $db_use, $optimize_code;
+		global $section, $db_use, $optimize_code, $url_rewrite;
 
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
-		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$language_handler = MainLanguageHandler::getInstance();
+		$default_language = $language_handler->getDefaultLanguage();
+		$language_list = $language_handler->getLanguages(false);
 
 		// add base url tag
 		$head_tag->addTag('base', array('href' => _BASEURL));
@@ -201,6 +203,27 @@ class page_info extends Module {
 							'http-equiv'	=> 'Content-Language',
 							'content'		=> join(', ', $language_list)
 						));
+
+		// add other languages if required
+		if (count($language_list) > 1 && $url_rewrite) {
+			// prepare parameters for link building
+			$link_params = array();
+			foreach($_GET as $key => $value)
+				$link_params[$key] = escape_chars($value);
+
+			// add link to each language
+			foreach ($language_list as $language_code) {
+				$link_params['language'] = $language_code;
+				$url = url_MakeFromArray($link_params);
+
+				$head_tag->addTag('link',
+						array(
+							'rel'		=> 'alternate',
+							'href'		=> $url,
+							'hreflang'	=> $language_code == $default_language ? 'x-default' : $language_code
+						));
+			}
+		}
 
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
