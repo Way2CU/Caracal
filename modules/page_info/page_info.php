@@ -369,10 +369,24 @@ class page_info extends Module {
 	 * @param array $children
 	 */
 	private function setDescription($tag_params, $children) {
+		global $language;
+
+		// set from language constant
 		if (isset($tag_params['constant'])) {
 			$language_handler = MainLanguageHandler::getInstance();
 			$constant = fix_chars($tag_params['constant']);
 			$this->page_description = $language_handler->getText($constant);
+
+		// set from article
+		} else if (isset($tag_params['article']) && class_exists('articles')) {
+			$manager = ArticleManager::getInstance();
+			$text_id = fix_chars($tag_params['article']);
+
+			// get article from database
+			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
+
+			if (is_object($item))
+				$this->page_description = limit_words($item->content[$language], 149, '');
 		}
 	}
 
