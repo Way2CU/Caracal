@@ -14,6 +14,7 @@ class page_info extends Module {
 	private $omit_elements = array();
 	private $optimizer_page = '';
 	private $optimizer_show_control = false;
+	private $page_description = null;
 
 	/**
 	 * Constructor
@@ -73,6 +74,10 @@ class page_info extends Module {
 					$this->optimizer_page = fix_chars($params['page']);
 					if (isset($params['show_control']))
 						$this->optimizer_show_control = fix_id($params['show_control']) == 0 ? false : true;
+					break;
+
+				case 'set_description':
+					$this->setDescription($params, $children);
 					break;
 
 				default:
@@ -258,10 +263,14 @@ class page_info extends Module {
 
 			// page description
 			if ($db_use) 
+				if (!is_null($this->page_description))
+					$value = $this->page_description; else
+					$value = $this->settings['description'];
+
 				$head_tag->addTag('meta',
 							array(
 								'name'		=> 'description',
-								'content'	=> $this->settings['description']
+								'content'	=> $value
 							));
 		}
 
@@ -350,6 +359,20 @@ class page_info extends Module {
 							'type'	=> 'text/javascript',
 							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
 						));
+		}
+	}
+
+	/**
+	 * Set page description for current execution.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function setDescription($tag_params, $children) {
+		if (isset($tag_params['constant'])) {
+			$language_handler = MainLanguageHandler::getInstance();
+			$constant = fix_chars($tag_params['constant']);
+			$this->page_description = $language_handler->getText($constant);
 		}
 	}
 
