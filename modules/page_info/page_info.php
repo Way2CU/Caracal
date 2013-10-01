@@ -385,8 +385,12 @@ class page_info extends Module {
 			// get article from database
 			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
 
-			if (is_object($item))
-				$this->page_description = limit_words($item->content[$language], 149, '');
+			if (is_object($item)) {
+				$data = explode("\n", utf8_wordwrap($item->content[$language], 150, "\n", true));
+
+				if (count($data) > 0)
+					$this->page_description = $data[0];
+			}
 		}
 	}
 
