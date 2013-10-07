@@ -156,6 +156,7 @@ class survey extends Module {
 					`id` int(11) NOT NULL AUTO_INCREMENT,
 					`type` int(11) NOT NULL DEFAULT 0,
 					`address` varchar(50) NOT NULL,
+					`referral` varchar(255) NOT NULL,
 					`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 					PRIMARY KEY (`id`),
 					KEY `type` (`type`)
@@ -524,7 +525,8 @@ class survey extends Module {
 			// create new entry anyway
 			$manager->insertData(array(
 							'type'		=> $type_id,
-							'address'	=> $_SERVER['REMOTE_ADDR']
+							'address'	=> $_SERVER['REMOTE_ADDR'],
+							'referral'	=> isset($_SESSION['survey_referer']) ? fix_chars($_SESSION['survey_referer']) : ''
 						));
 			$id = $manager->getInsertedID();
 			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
