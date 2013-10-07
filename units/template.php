@@ -206,10 +206,18 @@ class TemplateHandler {
 				case '_session':
 				case 'cms:session':
 					$name = $tag->tagAttrs['name'];
+
+					// allow setting referral only once per seesion
+					if (isset($tag->tagAttrs['once']))
+						$only_once = in_array($tag->tagAttrs['once'], array(1, 'yes')); else
+						$only_once = false;
+
+					$should_set = ($only_once && !isset($_SESSION[$name])) || !$only_once;
 					
-					if (!in_array($name, $this->protected_variables)) {
+					// store value
+					if (!in_array($name, $this->protected_variables) && $should_set) 
 						$_SESSION[$name] = $tag->tagAttrs['value'];
-					}
+
 					break;
 				
 				// transfer control to module
