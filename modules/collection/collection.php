@@ -44,7 +44,10 @@ class collection extends Module {
 												),
 				collection::TOOLBAR				=> 'toolbar.js',
 				collection::ANIMATION_CHAIN		=> 'animation_chain.js',
-				collection::DIALOG				=> 'dialog.js',
+				collection::DIALOG				=> array(
+													'dialog.js',
+													'dialog.css'
+												),
 				collection::SCROLLBAR			=> 'scrollbar.js',
 				collection::PAGE_CONTROL		=> 'page_control.js',
 				collection::JQUERY				=> 'jquery.js',
