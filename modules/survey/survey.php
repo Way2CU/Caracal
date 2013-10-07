@@ -510,7 +510,8 @@ class survey extends Module {
 			if (!is_object($entry)) {
 				$manager->insertData(array(
 								'type'		=> $type_id,
-								'address'	=> $_SERVER['REMOTE_ADDR']
+								'address'	=> $_SERVER['REMOTE_ADDR'],
+								'referral'	=> isset($_SESSION['survey_referer']) ? $_SESSION['survey_referer'] : ''
 							));
 				$id = $manager->getInsertedID();
 				$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -526,7 +527,7 @@ class survey extends Module {
 			$manager->insertData(array(
 							'type'		=> $type_id,
 							'address'	=> $_SERVER['REMOTE_ADDR'],
-							'referral'	=> isset($_SESSION['survey_referer']) ? fix_chars($_SESSION['survey_referer']) : ''
+							'referral'	=> isset($_SESSION['survey_referer']) ? $_SESSION['survey_referer'] : ''
 						));
 			$id = $manager->getInsertedID();
 			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
