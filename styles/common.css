@@ -148,31 +148,3 @@ p {
 	font-size: 1em;
 }
 
-/**
- * Boxes
- */
-div.box {
-	display: inline-block;
-	vertical-align: top;
-	box-sizing: border-box;
-}
-
-div.box.one_half {
-	width: 50%;
-	padding-right: 20px;
-}
-
-body.rtl div.box.one_half {
-	padding-left: 20px;
-	padding-right: 0px;
-}
-
-div.box.last {
-	padding-left: 0px;
-	padding-right: 0px;
-}
-
-div.box.one_third {
-	width: 33%;
-	padding-right: 20px;
-}
