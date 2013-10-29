@@ -15,7 +15,7 @@ class contact_form extends Module {
 	private static $_instance;
 	private $_invalid_params = array(
 						'section', 'action', 'PHPSESSID', '__utmz', '__utma',
-						'__utmc', '__utmb', '_'
+						'__utmc', '__utmb', '_', 'subject'
 					);
 
 	/**
@@ -110,13 +110,14 @@ class contact_form extends Module {
 		$this->saveSetting('use_smtp', 0);
 		$this->saveSetting('sender_name', '');
 		$this->saveSetting('sender_address', 'sample@email.com');
-		$this->saveSetting('sender_subject', 'Caracal contact email');
 		$this->saveSetting('recipient_name', '');
 		$this->saveSetting('recipient_address', 'sample@email.com');
 		$this->saveSetting('recipient_subject', 'Caracal contact email');
 		$this->saveSetting('smtp_server', 'smtp.gmail.com');
 		$this->saveSetting('smtp_port', '465');
 		$this->saveSetting('use_ssl', 1);
+		$this->saveSetting('save_copy', 0);
+		$this->saveSetting('save_location', '');
 	}
 
 	/**
@@ -243,11 +244,19 @@ class contact_form extends Module {
 
 		if (isset($this->settings['recipient_address'])) {
 			$to = $this->settings['recipient_address'];
-			$subject = $this->settings['recipient_subject'];
 			$fields = array();
 			$headers = array(
 							'X-Mailer'	=> "Cracal-Framework/1.0"
 						);
+
+			// allow setting subject in request but sanitize heavily
+			if (isset($_REQUEST['subject'])) {
+				$subject = fix_chars($_REQUEST['subject']);
+				$subject = str_replace(array('/', '\\', '.'), '-', $subject);
+
+			} else {
+				$subject = $this->settings['recipient_subject'];
+			}
 
 			// prepare sender
 			$name = $this->settings['sender_name'];
@@ -418,6 +427,8 @@ class contact_form extends Module {
 	 * @return boolean
 	 */
 	private function _sendMail($to, $subject, $headers, $fields) {
+		global $data_path;
+
 		$result = false;
 
 		// generate boundary string
@@ -430,7 +441,7 @@ class contact_form extends Module {
 		$body = $this->_makeBody($fields, $boundary);
 		$headers_string = $this->_makeHeaders($headers);
 
-		if (!$this->detectBots())
+		if (!$this->detectBots()) {
 			if ($this->settings['use_smtp']) {
 				// send email using SMTP
 				$smtp = new SMTP();
@@ -460,6 +471,41 @@ class contact_form extends Module {
 				// send email using built-in function
 				$result = mail($to, $subject, $body, $headers_string);
 			}
+
+			// store email after sending
+			if (isset($this->settings['save_location']) && !empty($this->settings['save_location']))
+				$location = $this->settings['save_location']; else
+				$location = _BASEPATH.'/'.$data_path;
+
+			$save_copy = isset($this->settings['save_copy']) ? $this->settings['save_copy'] : false;
+			$location_okay = is_writable($location);
+
+			if ($result && $save_copy && $location_okay) {
+				$timestamp = strftime('%c');
+				$file_name = $location."/{$subject} - {$timestamp}.eml";
+
+				$data = "To: {$to}\r\n";
+				$data .= "Subject: {$subject}\r\n";
+				$data .= $headers_string."\r\n".$body;
+
+				// try to open file for saving email
+				$handle = fopen($file_name, 'w');
+				
+				if ($handle !== false) {
+					// save email content to specifed file
+					fwrite($handle, $data);
+					fclose($handle);
+
+				} else {
+					// log error
+					trigger_error("Unable to open file for saving: {$file_name}", E_USER_WARNING);
+				}
+			
+			} else if (!$location_okay) {
+				// log problem with destination directory
+				trigger_error("Directory is not writable! Unable to save email to: {$location}", E_USER_WARNING);
+			}
+		}
 
 		return $result;
 	}
@@ -571,11 +617,11 @@ class contact_form extends Module {
 		// grab parameters
 		$use_smtp = isset($_REQUEST['use_smtp']) && ($_REQUEST['use_smtp'] == 'on' || $_REQUEST['use_smtp'] == '1') ? 1 : 0;
 		$use_ssl = isset($_REQUEST['use_ssl']) && ($_REQUEST['use_ssl'] == 'on' || $_REQUEST['use_ssl'] == '1') ? 1 : 0;
+		$save_copy = isset($_REQUEST['save_copy']) && ($_REQUEST['save_copy'] == 'on' || $_REQUEST['save_copy'] == '1') ? 1 : 0;
 
 		$params = array(
-			'sender_name', 'sender_address', 'sender_subject',
-			'recipient_name', 'recipient_address', 'recipient_subject',
-			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password'
+			'sender_name', 'sender_address', 'recipient_name', 'recipient_address', 'recipient_subject',
+			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password', 'save_location'
 		);
 
 		// save settings
@@ -586,6 +632,7 @@ class contact_form extends Module {
 
 		$this->saveSetting('use_smtp', $use_smtp);
 		$this->saveSetting('use_ssl', $use_ssl);
+		$this->saveSetting('save_copy', $save_copy);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
