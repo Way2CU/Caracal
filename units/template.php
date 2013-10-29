@@ -431,10 +431,17 @@ class TemplateHandler {
 
 				// support for parameter based choice
 				case 'cms:choice':
-					$param_name = isset($tag->tagAttrs['param']) ? fix_chars($tag->tagAttrs['param']) : null;
-					$param_value = isset($_REQUEST[$param_name]) ? fix_chars($_REQUEST[$param_name]) : null;
+					$param_value = null;
 
-					trigger_error(json_encode($param_name));
+					if (array_key_exists('param', $tag->tagAttrs)) {
+						// grap param value from GET or POST parameters
+						$param_name = fix_chars($tag->tagAttrs['param']);
+						$param_value = isset($_REQUEST[$param_name]) ? fix_chars($_REQUEST[$param_name]) : null;
+
+					} else if (array_key_exists('value', $tag->tagAttrs)) {
+						// use param value specified
+						$param_value = fix_chars($tag->tagAttrs['value']);
+					}
 
 					// parse only option
 					foreach ($tag->tagChildren as $option) {
