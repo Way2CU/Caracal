@@ -15,7 +15,7 @@ class contact_form extends Module {
 	private static $_instance;
 	private $_invalid_params = array(
 						'section', 'action', 'PHPSESSID', '__utmz', '__utma',
-						'__utmc', '__utmb', '_', 'subject'
+						'__utmc', '__utmb', '_', 'subject', 'MAX_FILE_SIZE'
 					);
 
 	/**
@@ -163,6 +163,7 @@ class contact_form extends Module {
 		$headers = array();
 		$message_success = null;
 		$message_error = null;
+		$attachments = array();
 
 		foreach($children as $param)
 			switch ($param->tagName) {
@@ -172,18 +173,18 @@ class contact_form extends Module {
 					break;
 
 				case 'subject':
-					// TODO: Allow usage of form data in subject
-					$subject = "=?utf-8?B?".base64_encode($param->tagData)."?=";
+					$subject = $param->tagData;
+					$subject = $this->generateSubjectField($subject, $fields);
 					$template_params['_subject'] = $subject;
 					break;
 
 				case 'from':
 					if (array_key_exists('name', $param->tagAttrs))
-						$name = "=?utf-8?B?".base64_encode($param->tagAttrs['name'])."?="; else
+						$name = $param->tagAttrs['name']; else
 						$name = $param->tagData;
 
 					$address = $param->tagData;
-					$headers['From'] = "{$name} <{$address}>";
+					$headers['From'] = $this->generateAddressField($name, $address);
 					$template_params['_from'] = "{$param->tagAttrs['name']} <{$param->tagData}>";
 					break;
 
@@ -211,8 +212,16 @@ class contact_form extends Module {
 			$to = $this->settings['recipient_address'];
 			$template_params['_to'] = $to;
 		}
+	
+		// attach speficied files
+		if (count($_FILES) > 0)
+			foreach($_FILES as $name => $data) {
+				$temp_name = $data['tmp_name'];
+				$name = $data['name'];
+				$attachments[$temp_name] = $name;
+			}
 
-		if ($this->_sendMail($to, $subject, $headers, $fields)) {
+		if ($this->_sendMail($to, $subject, $headers, $fields, $attachments)) {
 			// message successfuly sent
 			if (!is_null($message_success)) {
 				$template = new TemplateHandler();
@@ -235,12 +244,11 @@ class contact_form extends Module {
 	 * Send contact form data using AJAX request
 	 */
 	public function sendFromAJAX($skip_message=False) {
-		define('_OMIT_STATS', 1);
-
 		$result = array(
 					'error'		=> false,
 					'message'	=> ''
 				);
+		$attachments = array();
 
 		if (isset($this->settings['recipient_address'])) {
 			$to = $this->settings['recipient_address'];
@@ -258,6 +266,14 @@ class contact_form extends Module {
 				$subject = $this->settings['recipient_subject'];
 			}
 
+			// attach speficied files
+			if (count($_FILES) > 0)
+				foreach($_FILES as $name => $data) {
+					$temp_name = $data['tmp_name'];
+					$name = $data['name'];
+					$attachments[$temp_name] = $name;
+				}
+
 			// prepare sender
 			$name = $this->settings['sender_name'];
 			$address = $this->settings['sender_address'];
@@ -267,14 +283,20 @@ class contact_form extends Module {
 				if (!in_array($key, $this->_invalid_params))
 					$fields[$key] = fix_chars($value);
 
-			if ($this->_sendMail($to, $subject, $headers, $fields)) {
+			// format subject
+			$subject = $this->generateSubjectField($subject, $fields);
+
+			// try sending message
+			if ($this->_sendMail($to, $subject, $headers, $fields, $attachments)) {
 				// message successfuly sent
 				$result['message'] = $this->getLanguageConstant('message_sent');
+
 			} else {
 				// error sending
 				$result['error'] = true;
 				$result['message'] = $this->getLanguageConstant('message_error');
 			}
+
 		} else {
 			$result['error'] = true;
 			$result['message'] = $this->getLanguageConstant('message_error_no_address');
@@ -307,7 +329,7 @@ class contact_form extends Module {
 		if ($subject == '' || is_null($subject))
 			$subject = $this->settings['recipient_subject'];
 		
-		$subject = "=?utf-8?B?".base64_encode($subject)."?=";
+		$subject = $this->generateSubjectField($subject);
 		
 		// prepare sender
 		$name = $this->settings['sender_name'];
@@ -328,23 +350,23 @@ class contact_form extends Module {
 		// create mail body
 		if (!empty($html_body)) {
 			// make plain text body
-			$body .= "--{$boundary}\n";
-			$body .= "Content-Type: text/plain; charset=UTF-8\n";
-			$body .= "Content-Transfer-Encoding: base64\n\n";
-			$body .= base64_encode($text_body)."\n";
+			$body .= "--{$boundary}\r\n";
+			$body .= "Content-Type: text/plain; charset=UTF-8\r\n";
+			$body .= "Content-Transfer-Encoding: base64\r\n\r\n";
+			$body .= base64_encode($text_body)."\r\n";
 	
 			// make html body
-			$body .= "--{$boundary}\n";
-			$body .= "Content-Type: text/html; charset=UTF-8\n";
-			$body .= "Content-Transfer-Encoding: base64\n\n";
-			$body .= base64_encode($html_body)."\n";
+			$body .= "--{$boundary}\r\n";
+			$body .= "Content-Type: text/html; charset=UTF-8\r\n";
+			$body .= "Content-Transfer-Encoding: base64\r\n\r\n";
+			$body .= base64_encode($html_body)."\r\n";
 	
 			// make ending boundary
-			$body .= "--{$boundary}--\n";
+			$body .= "--{$boundary}--\r\n";
 			
 		} else {
 			// no HTML specified, use plain text
-			$body = "\n".$text_body;
+			$body = "\r\n".$text_body;
 		}		
 		
 		// get headers string
@@ -407,7 +429,7 @@ class contact_form extends Module {
 		} else {
 			// generate from single address
 			if (!empty($name)) {
-				$name = '=?utf-8?B?' . base64_encode($name) . '?=';
+				$name = $this->encodeString($name);
 				$result = "{$name} <{$address}>";
 			} else {
 				$result = $address;
@@ -418,27 +440,60 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Generate subject using specified template.
+	 *
+	 * @param string $template
+	 * @param array $fields
+	 */
+	public function generateSubjectField($template, $fields=array()) {
+		$keys = array_keys($fields);
+		$values = array_values($fields);
+
+		// preformat keys for replacement
+		foreach ($keys as $index => $key)
+			$keys[$index] = "%{$key}%";
+
+		// replace field place holders with values
+		$subject = str_replace($keys, $values, $template);
+
+		return $this->encodeString($subject);
+	}
+
+	/**
+	 * Create UTF-8 base64 encoded string.
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	public function encodeString($string) {
+		return "=?utf-8?B?".base64_encode($string)."?=";
+	}
+
+	/**
 	 * Perform send email
 	 *
 	 * @param string $to
 	 * @param string $subject
 	 * @param array $headers
 	 * @param array $fields
+	 * @param array $attachments
 	 * @return boolean
 	 */
-	private function _sendMail($to, $subject, $headers, $fields) {
+	private function _sendMail($to, $subject, $headers, $fields, $attachments=array()) {
 		global $data_path;
 
 		$result = false;
 
 		// generate boundary string
-		$boundary = md5(time().'--cms--'.(rand() * 10000));
+		$boundary = md5(time().'--global--'.(rand() * 10000));
 
 		// add content type to headers
-		$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}";
+		if (count($attachments) == 0)
+			$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}"; else
+			$headers['Content-Type'] = "multipart/mixed; boundary={$boundary}";
 
 		// make body and headers
-		$body = $this->_makeBody($fields, $boundary);
+		$body = $this->_makeBody($fields, $boundary, $attachments);
 		$headers_string = $this->_makeHeaders($headers);
 
 		if (!$this->detectBots()) {
@@ -486,7 +541,7 @@ class contact_form extends Module {
 
 				$data = "To: {$to}\r\n";
 				$data .= "Subject: {$subject}\r\n";
-				$data .= $headers_string."\r\n".$body;
+				$data .= $headers_string."\r\n\r\n".$body;
 
 				// try to open file for saving email
 				$handle = fopen($file_name, 'w');
@@ -530,25 +585,48 @@ class contact_form extends Module {
 	 *
 	 * @param array $fields
 	 * @param string $boundary
+	 * @param array $attachments Associative array of attachments
 	 * @return string
+	 *
+	 * Example:
+	 * 		$this->_makeBody(
+	 * 					array(
+	 * 						'field' => 'value'
+	 * 					),
+	 * 					'some-string',
+	 * 					array(
+	 * 						'/var/tmp/somefile-0000.tmp' => 'archive.zip'
+	 * 					)
+	 * 				);
 	 */
-	private function _makeBody($fields, $boundary) {
+	private function _makeBody($fields, $boundary, $attachments=array()) {
 		$result = "";
+		$content_boundary = md5(time().'--content--'.(rand() * 10000));
+
+		// add global boundary
+		$result .= "--{$boundary}\r\n";
+		$result .= "Content-Type: multipart/alternative; boundary={$content_boundary}\r\n\r\n";
 
 		// make plain text body
-		$result .= "--{$boundary}\n";
-		$result .= "Content-Type: text/plain; charset=UTF-8\n";
-		$result .= "Content-Transfer-Encoding: base64\n\n";
-		$result .= base64_encode($this->makePlainBody($fields))."\n";
+		$result .= "--{$content_boundary}\r\n";
+		$result .= "Content-Type: text/plain; charset=UTF-8\r\n";
+		$result .= "Content-Transfer-Encoding: base64\r\n\r\n";
+		$result .= base64_encode($this->makePlainBody($fields))."\r\n";
 
 		// make html body
-		$result .= "--{$boundary}\n";
-		$result .= "Content-Type: text/html; charset=UTF-8\n";
-		$result .= "Content-Transfer-Encoding: base64\n\n";
-		$result .= base64_encode($this->makeHtmlBody($fields))."\n";
+		$result .= "--{$content_boundary}\r\n";
+		$result .= "Content-Type: text/html; charset=UTF-8\r\n";
+		$result .= "Content-Transfer-Encoding: base64\r\n\r\n";
+		$result .= base64_encode($this->makeHtmlBody($fields))."\r\n";
+		$result .= "--{$content_boundary}--\r\n";
+
+		// attach files
+		if (count($attachments) > 0)
+			foreach ($attachments as $file => $name)
+				$result .= $this->makeAttachment($file, $name, $boundary);
 
 		// make ending boundary
-		$result .= "--{$boundary}--\n";
+		$result .= "--{$boundary}--\r\n";
 
 		return $result;
 	}
@@ -567,7 +645,7 @@ class contact_form extends Module {
 			if (strlen($name) > $max_length) $max_length = strlen($name);
 
 		foreach($fields as $name => $value)
-			$result .= $name.str_repeat(" ", $max_length-strlen($name)).": {$value}\n";
+			$result .= $name.str_repeat(" ", $max_length-strlen($name)).": {$value}\r\n";
 
 		return $result;
 	}
@@ -589,6 +667,38 @@ class contact_form extends Module {
 				$result .= '<tr><td valign="top" style="'.$direction.'"><b>'.$name.'</b></td><td valign="top" style="'.$direction.'">'.$value.'</td></tr>';
 
 		$result .= '</table>';
+
+		return $result;
+	}
+
+	/**
+	 * Create string for file to be attached to body of email.
+	 *
+	 * @param string $file_name Location of file to be attached
+	 * @param string $attachment_name Name of file appearing in email
+	 * @param string $boundary Boundary string used to separate content
+	 * @return string
+	 */
+	public function makeAttachment($file_name, $attachment_name, $boundary) {
+		$result = '';
+		$attachment_name = $this->encodeString($attachment_name);
+
+		if (file_exists($file_name)) {
+			$data = file_get_contents($file_name);
+			$data = base64_encode($data);
+
+			// get file mime type
+			$handle = finfo_open(FILEINFO_MIME_TYPE);
+			$mime_type = finfo_file($handle, $file_name);
+			finfo_close($handle);
+
+			// create result
+			$result = "--{$boundary}\r\n";
+			$result .= "Content-Type: {$mime_type}; charset=US-ASCII; name=\"{$attachment_name}\"\r\n";
+			$result .= "Content-Disposition: attachment; filename=\"{$attachment_name}\"\r\n";
+			$result .= "Content-Transfer-Encoding: base64\r\n\r\n";
+			$result .= $data."\r\n";
+		}
 
 		return $result;
 	}
