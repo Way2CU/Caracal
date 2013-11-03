@@ -293,7 +293,7 @@ function path_GetFromURL($url, $base=_BASEURL) {
  * @return string
  */
 function url_GetBaseURL() {
-	$result = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
+	$result = dirname('http://'._DOMAIN.$_SERVER['PHP_SELF']);
 	$result = preg_replace("/\/$/i", "", $result);
 
 	return $result;

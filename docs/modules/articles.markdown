@@ -8,8 +8,8 @@ language.
 Summary:
 
 1. Functions
-	1.1. Public functions
-	1.2. AJAX functions
+	1. Public functions
+	2. AJAX functions
 2. Database structure
 3. Contact
 
@@ -38,6 +38,7 @@ parameters are sanitized by the module. This function accepts the following inpu
 	/>
 
 **Param name**  | **Type**          | **Required** | **Default**             | **Description**
+----------------|-------------------|--------------|-------------------------|----------------
 `id`            | `int`             |              |                         | Unique article id.
 `text_id`       | `string`          |              |                         | Textual id specified by the user.
 `order_by`      | `string`          |              | 'id'                    | One or more field names to sort by. Comma-separated _without_ spaces!
@@ -52,6 +53,7 @@ parameters are sanitized by the module. This function accepts the following inpu
 Available template parameters:
 
 **Param name** | **Type** | **Description**
+---------------|----------|----------------
 `id`           | `int`    | Unique article id.
 `text_id`      | `string` | User specified textual id.
 `timestamp`    | `int`    | Unix time stamp of article creation.
@@ -81,6 +83,7 @@ Available template parameters:
 Function description.
 
 **Param name** | **Type** | **Required** | **Description**
+---------------|----------|--------------|----------------
 required-param | `int`    | +            | Param description
 optional-param | `string` |              | Param description
 
@@ -95,6 +98,7 @@ Short description of what is stored in the table. If there are any foreign relat
 mentioned as well.
 
 **Field name** | **Type**     | **Size** | **Required** | **Default value** | **Description**
+---------------|--------------|----------|--------------|-------------------|----------------
 example        | `varchar`    | 250      | +            |                   | Example field description
 example        | `ml_varchar` | 250      | +            |                   | Example field description
 
