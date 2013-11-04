@@ -169,7 +169,7 @@ class head_tag extends Module {
 	 * Print previously added tags
 	 */
 	private function printTags() {
-		global $include_scripts, $optimize_code;
+		global $include_scripts, $optimize_code, $section;
 
 		// if page_info module is loaded, ask it to add its own tags
 		if (class_exists('page_info'))
@@ -178,7 +178,7 @@ class head_tag extends Module {
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 		
-		if (class_exists('CodeOptimizer') && $optimize_code) {
+		if (class_exists('CodeOptimizer') && $optimize_code && $section != 'backend') {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::getInstance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
