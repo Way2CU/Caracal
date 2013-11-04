@@ -18,15 +18,18 @@ abstract class Module {
 	 *
 	 * @return Module
 	 */
-	protected function __construct($file) {
+	protected function __construct($file, $load_settings=True) {
 		$this->path = dirname($file).'/';
 		$this->name = get_class($this);
+		$language_file = $this->path.'data/language.xml';
 
 		// load language file if present
-		$this->language = new LanguageHandler($this->path.'data/language.xml');
+		if (file_exists($language_file))
+			$this->language = new LanguageHandler($language_file);
 
 		// load settings from database
-		$this->settings = $this->getSettings();
+		if ($load_settings)
+			$this->settings = $this->getSettings();
 	}
 
 	/**

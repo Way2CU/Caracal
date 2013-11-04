@@ -48,6 +48,7 @@ if (!defined('DEBUG'))
 	error_reporting(E_ALL | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 
 // define constants
+define('_DOMAIN', $_SERVER['HTTP_HOST']);
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
 define('_DESKTOP_VERSION', get_desktop_version());
@@ -55,6 +56,7 @@ define('_AJAX_REQUEST',
 			!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 		);
+define('_BROWSER_OK', is_browser_ok());
 
 // start measuring time
 $time_start = explode(" ", microtime());

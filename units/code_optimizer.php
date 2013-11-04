@@ -9,6 +9,7 @@
  */
 
 require_once('closure.php');
+require_once('lessc.php');
 
 
 class CodeOptimizer {
@@ -18,8 +19,9 @@ class CodeOptimizer {
 	private $style_list = array();
 	private $style_secondary_list = array();  // list populated with @import
 
-	// closure compiler object
-	private $compiler;
+	// compilers
+	private $closure_compiler = null;
+	private $less_compiler = null;
 
 	const LEVEL_NONE = 0;
 	const LEVEL_BASIC = 1;
@@ -29,7 +31,7 @@ class CodeOptimizer {
 	 * Constructor
 	 */
 	protected function __construct() {
-		$this->compiler = new PhpClosure();
+		$this->closure_compiler = new PhpClosure();
 	}
 
 	/**
@@ -61,7 +63,7 @@ class CodeOptimizer {
 		// check each individual file
 		if (!$result)
 			foreach ($list as $file) 
-				if (filemtime($file) > $cache_time) {
+				if (filemtime(path_GetFromURL($file)) > $cache_time) {
 					$result = true;
 					break;
 				}
@@ -79,7 +81,29 @@ class CodeOptimizer {
 	 */
 	private function _includeStyle($file_name, &$additional_imports, &$priority_commands) {
 		$result = array();
-		$data = file_get_contents($file_name);
+		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+		switch ($extension) {
+			case 'less':
+				// create compiler if we need it
+				if (is_null($this->less_compiler))
+					$this->less_compiler = new lessc();
+
+				// compile files
+				try {
+					$file_name = path_GetFromURL($file_name);
+					$data = $this->less_compiler->compileFile($file_name);
+
+				} catch (Exception $error) {
+					trigger_error('Error compiling: '.$file_name.' - '.$error, E_USER_NOTICE);
+				}
+				break;
+
+			case 'css':
+			default:
+				$data = file_get_contents($file_name);
+				break;
+		}
 
 		// parse most important
 		$data = str_replace("\r", "", $data);
@@ -98,9 +122,12 @@ class CodeOptimizer {
 			// handle each command individually
 			switch (strtolower($command[0])) {
 				case '@import':
+					if ($extension == 'less')
+						continue;
+
 					if (substr($command[1], 0, 3) == 'url')
 						$priority_commands []= $line_data; else
-						$additional_imports []= dirname($file_name).'/'.trim($command[1], '";');
+						$additional_imports []= dirname($file_name).'/'.trim($command[1], '\'";');
 						
 					break;
 
@@ -171,7 +198,7 @@ class CodeOptimizer {
 		if (!in_array($section, array('backend', 'backend_module'))) {
 			// add script to be compiled
 			$this->script_list []= $url;
-			$this->compiler->add($url);
+			$this->closure_compiler->add($url);
 
 		} else {
 			// we do not need to compile code in backend
@@ -216,7 +243,7 @@ class CodeOptimizer {
 			$this->_recompileStyles($style_cache, $this->style_list);
 
 		// compile scripts
-		$script_cache = $this->compiler
+		$script_cache = $this->closure_compiler
 				->quiet()
 				->hideDebugInfo()
 	 			->simpleMode()

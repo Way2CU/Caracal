@@ -16,8 +16,6 @@ div.window {
 }
 
 div.window.focused {
-	opacity: 0.6;
-
 	filter: none;
 	-moz-filter: none;
 	-webkit-filter: none;
@@ -33,15 +31,15 @@ div.window div.title {
 
 	border: 1px solid #CBCBCB;
 	border-bottom: 0px;
-	border-radius: 7px 7px 0px 0px;
 
 	background-color: #505050;
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 
 	color: #BFBFBF;
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: bold;
 	text-align: center;
+	line-height: 100%;
 
 	cursor: default;
 
@@ -58,7 +56,7 @@ div.window.focused div.title {
 }
 
 div.window.loading div.title {
-	background-image: url(../images/title_animation.gif);
+	background-image: url(../../backend/images/title_animation.gif);
 	background-position: 6px center;
 	background-repeat: no-repeat;
 }
@@ -70,9 +68,8 @@ div.window div.title a.close_button {
 
 	float: right;
 
-	border-radius: 2px;
 	background-color: #1A1A1A;
-	background-image: url(../images/close_normal.gif);
+	background-image: url(../../backend/images/close_normal.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
 
@@ -82,7 +79,7 @@ div.window div.title a.close_button {
 
 div.window div.title a.close_button:hover {
 	background-color: #4D4D4D;
-	background-image: url(../images/close_active.gif);
+	background-image: url(../../backend/images/close_active.gif);
 }
 
 
@@ -94,7 +91,6 @@ div.window div.content {
 
 	border: 1px solid #CBCBCB;
 	border-top-color: #f7f7f7;
-	border-radius: 0px 0px 7px 7px;
 	background-color: #EFEFEF;
 
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
@@ -154,7 +150,7 @@ div.window div.content textarea {
 
 	color: #444444;
 	font-size: 12px;
-	font-family: Ubuntu, sans-serif, Arial, Tahoma;
+	font-family: Roboto, sans-serif, Arial, Tahoma;
 
 	transition-property: all;
 	transition-duration: 0.3s;
@@ -180,8 +176,6 @@ div.window div.content textarea {
 div.window div.content label.radio span,
 div.window div.content label.checkbox span {
 	display: inline-block;
-
-	padding-top: 1px;
 }
 
 div.window div.content label.inline span {
@@ -192,7 +186,7 @@ div.window div.content label.inline span {
 div.window div.content input.code,
 div.window div.content textarea.code {
 	direction: ltr !important;
-	font-family: 'Ubuntu Mono', monospace;
+	font-family: monospace;
 }
 
 div.window div.content input:focus,
@@ -230,7 +224,7 @@ div.window button {
 	box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
 
 	color: #333333;
-	font-family: Ubuntu, sans-serif, Arial, Tahoma;
+	font-family: Roboto, sans-serif, Arial, Tahoma;
 	font-size: 13px;
 	font-weight: normal;
 
@@ -405,7 +399,7 @@ div.window div.language_selector {
 }
 
 div.window div.language_selector.loading {
-	background-image: url(../images/title_animation.gif);
+	background-image: url(../../backend/images/title_animation.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
 }
@@ -444,7 +438,7 @@ div.window div.toolbar {
 	border: 1px solid #999999;
 	border-bottom: 0px;
 	background-color: white;
-	background-image: url(../images/toolbar_back.png);
+	background-image: url(../../backend/images/toolbar_back.png);
 	background-position: top left;
 	background-repeat: repeat-x;
 
@@ -490,7 +484,7 @@ div.window div.toolbar span.separator {
 
 	float: left;
 
-	background-image: url(../images/toolbar_separator.png);
+	background-image: url(../../backend/images/toolbar_separator.png);
 	background-position: center top;
 	background-repeat: no-repeat;
 }
@@ -534,7 +528,7 @@ div.dialog div.container {
 }
 
 div.dialog div.container.loading {
-	background-image: url(../images/title_animation.gif);
+	background-image: url(../../backend/images/title_animation.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
 }
@@ -569,7 +563,7 @@ div.dialog div.container div.title_bar a.close_button {
 
 	border-radius: 2px;
 	background-color: #1A1A1A;
-	background-image: url(../images/close_normal.gif);
+	background-image: url(../../backend/images/close_normal.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
 
@@ -579,7 +573,7 @@ div.dialog div.container div.title_bar a.close_button {
 
 div.dialog div.container div.title_bar a.close_button:hover {
 	background-color: #4D4D4D;
-	background-image: url(../images/close_active.gif);
+	background-image: url(../../backend/images/close_active.gif);
 }
 
 div.dialog div.container div.content {
@@ -757,4 +751,94 @@ div.window div.main_menu input {
 	background-color: #C8D0F5;
 	
 	color: black;
+}
+
+/**
+ * RTL Windows Style Sheet Modifications
+ */
+body.rtl div.window div.content input[type=checkbox],
+body.rtl div.window_inactive div.content input[type=checkbox],
+body.rtl div.window div.content input[type=radio],
+body.rtl div.window_inactive div.content input[type=radio] {
+	margin-left: 3px;
+	margin-right: 0px;
+	float: right;
+}
+
+body.rtl div.window div.content label.inline span {
+	margin-right: 0px;
+	margin-left: 5px;
+}
+
+body.rtl div.window div.title {
+	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+}
+
+body.rtl div.window.loading div.title {
+	background-position: 25px center;
+}
+
+body.rtl div.window div.title a.close_button {
+	float: left;
+}
+
+body.rtl div.window div.content {
+	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
+}
+
+body.rtl div.window div.toolbar a.button,
+body.rtl div.window div.toolbar span.separator {
+	float: right;
+}
+
+
+body.rtl div.dialog div.scrollable_list .column,
+body.rtl div.window div.scrollable_list .column {
+	margin-left: 3px;
+	margin-right: 0px;
+}
+
+body.rtl div.window div.main_menu div.floated {
+	display: block;
+	float: left;
+}
+
+body.rtl div.dialog div.container div.title_bar div.title {
+	direction: rtl;
+	text-align: right;
+}
+
+body.rtl div.dialog div.container div.title_bar a.close_button {
+	float: left;
+}
+
+body.rtl div#login_window div.icon {
+	padding-left: 5px;
+	padding-right: 0px;
+	float: right;
+}
+
+body.rtl div#login_window div.controls {
+	float: right;
+}
+
+body.rtl div#login_window div.input_controls {
+	padding-left: 0px;
+	padding-right: 25px;
+}
+
+body.rtl div.window div.content label.horizontal {
+	float: right;
+	margin-left: 20px;
+	margin-right: 0px;
+}
+ 
+body.rtl div.window div.box.left {
+	float: right;
+	margin-right: 0px;
+	margin-left: 7px;
+}
+
+body.rtl div.window div.box.right {
+	float: right;
 }

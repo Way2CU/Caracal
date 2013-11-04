@@ -18,6 +18,7 @@ class SurveyEntriesManager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('type', 'int');
 		$this->addProperty('address', 'varchar');
+		$this->addProperty('referral', 'varchar');
 		$this->addProperty('timestamp', 'timestamp');
 	}
 

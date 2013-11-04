@@ -53,7 +53,7 @@ class TemplateHandler {
 	 * List of tags that shouldn't be closed
 	 * @var array
 	 */
-	private $tags_without_end = array('br', 'hr', 'img', 'base', 'input');
+	private $tags_without_end = array('br', 'hr', 'img', 'base', 'input', 'link');
 	
 	/**
 	 * If we should close all tags
@@ -206,10 +206,18 @@ class TemplateHandler {
 				case '_session':
 				case 'cms:session':
 					$name = $tag->tagAttrs['name'];
+
+					// allow setting referral only once per seesion
+					if (isset($tag->tagAttrs['once']))
+						$only_once = in_array($tag->tagAttrs['once'], array(1, 'yes')); else
+						$only_once = false;
+
+					$should_set = ($only_once && !isset($_SESSION[$name])) || !$only_once;
 					
-					if (!in_array($name, $this->protected_variables)) {
+					// store value
+					if (!in_array($name, $this->protected_variables) && $should_set) 
 						$_SESSION[$name] = $tag->tagAttrs['value'];
-					}
+
 					break;
 				
 				// transfer control to module
@@ -403,6 +411,16 @@ class TemplateHandler {
 					}
 					break;
 
+				// support for collection module
+				case 'cms:collection':
+					if (array_key_exists('include', $tag->tagAttrs) && class_exists('collection')) {
+						$scripts = fix_chars(explode(',', $tag->tagAttrs['include']));
+
+						$collection = collection::getInstance();
+						$collection->includeScript($scripts);
+					}
+					break;
+
 				// support for link tag
 				case 'cms:link':
 					if (class_exists('head_tag')) {
@@ -413,10 +431,17 @@ class TemplateHandler {
 
 				// support for parameter based choice
 				case 'cms:choice':
-					$param_name = isset($tag->tagAttrs['param']) ? fix_chars($tag->tagAttrs['param']) : null;
-					$param_value = isset($_REQUEST[$param_name]) ? fix_chars($_REQUEST[$param_name]) : null;
+					$param_value = null;
 
-					trigger_error(json_encode($param_name));
+					if (array_key_exists('param', $tag->tagAttrs)) {
+						// grap param value from GET or POST parameters
+						$param_name = fix_chars($tag->tagAttrs['param']);
+						$param_value = isset($_REQUEST[$param_name]) ? fix_chars($_REQUEST[$param_name]) : null;
+
+					} else if (array_key_exists('value', $tag->tagAttrs)) {
+						// use param value specified
+						$param_value = fix_chars($tag->tagAttrs['value']);
+					}
 
 					// parse only option
 					foreach ($tag->tagChildren as $option) {

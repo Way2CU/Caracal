@@ -25,16 +25,6 @@
 						class="code"
 					/>
 				</label>
-				<label>
-					<span><cms:text constant="label_subject" module="contact_form"/></span>
-					<input 
-						type="text" 
-						name="sender_subject" 
-						value="$settings['sender_subject']" 
-						eval="value"
-						style="width: 350px;"
-					/>
-				</label>
 			</div>
 
 			<div>
@@ -90,6 +80,7 @@
 						value="$settings['smtp_server']"
 						eval="value"
 						style="width: 250px;"
+						class="code"
 					/>
 				</label>
 				<label class="horizontal">
@@ -100,6 +91,7 @@
 						value="$settings['smtp_port']"
 						eval="value"
 						style="width: 50px;"
+						class="code"
 					/>
 				</label>
 				<label class="checkbox">
@@ -139,6 +131,7 @@
 						value="$settings['smtp_username']"
 						eval="value"
 						style="width: 150px;"
+						class="code"
 					/>
 				</label>
 				<label class="horizontal">
@@ -149,11 +142,36 @@
 						value="$settings['smtp_password']"
 						eval="value"
 						style="width: 150px;"
+						class="code"
 					/>
 				</label>
 				<div style="clear: both;"/>
 			</div>
+
+			<div>
+				<label class="checkbox">
+					<span><cms:text constant="label_save_copy" module="contact_form"/></span>
+					<cms:if condition="$settings['save_copy']">
+						<input type="checkbox" name="save_copy" checked="checked"/>
+					</cms:if>
+					<cms:if condition="!$settings['save_copy']">
+						<input type="checkbox" name="save_copy"/>
+					</cms:if>
+				</label>
+				<label>
+					<span><cms:text constant="label_save_location" module="contact_form"/></span>
+					<input
+						type="text" 
+						name="save_location"
+						value="$settings['save_location']"
+						eval="value"
+						class="code"
+						style="width: 350px;"
+					/>
+				</label>
+			</div>
 		</div>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
@@ -167,6 +185,7 @@
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_sender'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_recipient'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_smtp'));
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_smtp'))
+			.setPageTitle(3, language_handler.getText('contact_form', 'tab_backup'));
 	</script>
 </document>

@@ -340,13 +340,7 @@ class tips extends Module {
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, false);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('tip.xml', $this->path.'templates/');
-		}
+		$template = $this->loadTemplate($tag_params, 'tip.xml');
 		$template->setMappedModule($this->name);
 
 		if (is_object($item)) {
@@ -371,22 +365,27 @@ class tips extends Module {
 	public function tag_TipList($tag_params, $children) {
 		$manager = TipManager::getInstance();
 		$conditions = array();
+		$limit = null;
+		$order_by = array('id');
+		$order_asc = true;
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 1)
 			$conditions['visible'] = 1;
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
-		}
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', fix_chars($tag_params['order_by']));
 
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == '1' || $tag_params['order_asc'] == 'yes';
+
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']);
+
+		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 		$template->setMappedModule($this->name);
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -472,8 +471,6 @@ class tips extends Module {
 							'content'	=> $all_languages ? $item->content : $item->content[$language],
 							'visible'	=> $item->visible
 						);
-		} else {
-			
 		}
 		
 		print json_encode($result);
@@ -486,6 +483,7 @@ class tips extends Module {
 		global $language;
 		
 		$conditions = array();
+		$limit = null;
 		$order_by = isset($_REQUEST['random']) && $_REQUEST['random'] == 'yes' ? 'RAND()' : 'id';
 		$order_asc = isset($_REQUEST['order_asc']) && $_REQUEST['order_asc'] == 'yes';
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
@@ -495,6 +493,9 @@ class tips extends Module {
 			
 		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
+
+		if (isset($_REQUEST['limit']))
+			$limit = fix_id($_REQUEST['limit']);
 			
 		$manager = TipManager::getInstance();
 		
@@ -502,7 +503,8 @@ class tips extends Module {
 								$manager->getFieldNames(), 
 								$conditions, 
 								array($order_by), 
-								$order_asc
+								$order_asc,
+								$limit
 							);
 
 		$result = array(

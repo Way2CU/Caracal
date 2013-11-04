@@ -14,6 +14,7 @@ class page_info extends Module {
 	private $omit_elements = array();
 	private $optimizer_page = '';
 	private $optimizer_show_control = false;
+	private $page_description = null;
 
 	/**
 	 * Constructor
@@ -73,6 +74,10 @@ class page_info extends Module {
 					$this->optimizer_page = fix_chars($params['page']);
 					if (isset($params['show_control']))
 						$this->optimizer_show_control = fix_id($params['show_control']) == 0 ? false : true;
+					break;
+
+				case 'set_description':
+					$this->setDescription($params, $children);
 					break;
 
 				default:
@@ -169,10 +174,13 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function addElements() {
-		global $section, $db_use;
+		global $section, $db_use, $optimize_code, $url_rewrite;
 
 		$head_tag = head_tag::getInstance();
-		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$collection = collection::getInstance();
+		$language_handler = MainLanguageHandler::getInstance();
+		$default_language = $language_handler->getDefaultLanguage();
+		$language_list = $language_handler->getLanguages(false);
 
 		// add base url tag
 		$head_tag->addTag('base', array('href' => _BASEURL));
@@ -194,12 +202,33 @@ class page_info extends Module {
 							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
 						));
 
-		if (!in_array('language', $this->omit_elements))
+		if (!in_array('language', $this->omit_elements) && _STANDARD == 'html401')
 			$head_tag->addTag('meta',
 						array(
 							'http-equiv'	=> 'Content-Language',
 							'content'		=> join(', ', $language_list)
 						));
+
+		// add other languages if required
+		if (count($language_list) > 1 && $url_rewrite) {
+			// prepare parameters for link building
+			$link_params = array();
+			foreach($_GET as $key => $value)
+				$link_params[$key] = escape_chars($value);
+
+			// add link to each language
+			foreach ($language_list as $language_code) {
+				$link_params['language'] = $language_code;
+				$url = url_MakeFromArray($link_params);
+
+				$head_tag->addTag('link',
+						array(
+							'rel'		=> 'alternate',
+							'href'		=> $url,
+							'hreflang'	=> $language_code == $default_language ? 'x-default' : $language_code
+						));
+			}
+		}
 
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
@@ -234,15 +263,19 @@ class page_info extends Module {
 
 			// page description
 			if ($db_use) 
+				if (!is_null($this->page_description))
+					$value = $this->page_description; else
+					$value = $this->settings['description'];
+
 				$head_tag->addTag('meta',
 							array(
 								'name'		=> 'description',
-								'content'	=> $this->settings['description']
+								'content'	=> $value
 							));
 		}
 
   		// copyright
-		if (!in_array('copyright', $this->omit_elements)) {
+		if (!in_array('copyright', $this->omit_elements) && _STANDARD == 'html401') {
 			$copyright = MainLanguageHandler::getInstance()->getText('copyright');
 			$copyright = strip_tags($copyright);
 			$head_tag->addTag('meta',
@@ -265,10 +298,13 @@ class page_info extends Module {
 					));
 
 		// add default styles and script if they exists
+		$collection->includeScript(collection::JQUERY);
+
 		if ($section != 'backend') {
 			$styles = array();
+			$less_style = null;
 
-			// prepare list of files
+			// prepare list of files without extensions
 			if (_DESKTOP_VERSION) {
 				$styles = array(
 						'/styles/common.css',
@@ -277,6 +313,8 @@ class page_info extends Module {
 						'/styles/content.css',
 						'/styles/footer.css'
 					);
+				$less_style = '/styles/main.less';
+
 			} else {
 				$styles = array(
 						'/styles/common.css',
@@ -285,10 +323,13 @@ class page_info extends Module {
 						'/styles/content_mobile.css',
 						'/styles/footer_mobile.css'
 					);
+
+				$less_style = '/styles/main_mobile.less';
 			}
 
 			// include styles
-			foreach ($styles as $style)
+			foreach ($styles as $style) {
+				// check for css files
 				if (file_exists(_BASEPATH.$style))
 					$head_tag->addTag('link',
 							array(
@@ -296,6 +337,20 @@ class page_info extends Module {
 								'type'	=> 'text/css',
 								'href'	=> url_GetFromFilePath(_BASEPATH.$style)
 							));
+			}
+
+			// add main less file if it exists
+			if (file_exists(_BASEPATH.$less_style)) {
+				$head_tag->addTag('link',
+						array(
+							'rel'	=> 'stylesheet/less',
+							'type'	=> 'text/css',
+							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style)
+						));
+
+				if (!$optimize_code)
+					$collection->includeScript(collection::LESS);
+			}
 
 			// add main javascript
 			if (file_exists(_BASEPATH.'/scripts/main.js'))
@@ -304,6 +359,38 @@ class page_info extends Module {
 							'type'	=> 'text/javascript',
 							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
 						));
+		}
+	}
+
+	/**
+	 * Set page description for current execution.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function setDescription($tag_params, $children) {
+		global $language;
+
+		// set from language constant
+		if (isset($tag_params['constant'])) {
+			$language_handler = MainLanguageHandler::getInstance();
+			$constant = fix_chars($tag_params['constant']);
+			$this->page_description = $language_handler->getText($constant);
+
+		// set from article
+		} else if (isset($tag_params['article']) && class_exists('articles')) {
+			$manager = ArticleManager::getInstance();
+			$text_id = fix_chars($tag_params['article']);
+
+			// get article from database
+			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
+
+			if (is_object($item)) {
+				$data = explode("\n", utf8_wordwrap($item->content[$language], 150, "\n", true));
+
+				if (count($data) > 0)
+					$this->page_description = $data[0];
+			}
 		}
 	}
 
@@ -321,7 +408,6 @@ class page_info extends Module {
 		// get available versions
 		$versions = array();
 		$files = scandir(_BASEPATH.'/modules/head_tag/templates/');
-		trigger_error(print_r($files, true));
 
 		foreach ($files as $file) 
 			if (substr($file, 0, 16) == 'google_analytics')

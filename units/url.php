@@ -107,20 +107,17 @@ function url_MakeFromArray($params) {
 	$arguments = $params;
 
 	// unset parameters we need to control order of
+	$section_argument = $section;
 	if (array_key_exists('section', $arguments)) {
 		$section_argument = $arguments['section'];
 		unset($arguments['section']);
-	} else {
-		$section_argument = $section;
 	}
 
+	$action_argument = $action;
 	if (array_key_exists('action', $arguments)) {
 		$action_argument = $arguments['action'];
 		unset($arguments['action']);
-	} else {
-		$action_argument = $action;
 	}
-
 
 	if ($url_rewrite) {
 		// form URL with rewrite engine on mind
@@ -131,15 +128,12 @@ function url_MakeFromArray($params) {
 		$include_action = false;
 
 		// should we include language in URL
-		if (in_array('language', $arguments)) {
-			// include language in URL
-			$_lang = $arguments['language'];
+		$language_argument = $language;
+		if (array_key_exists('language', $arguments)) {
+			$language_argument = $arguments['language'];
 			unset($arguments['language']);
-			$include_language = true;
 
-		} else {
-			// use default language
-			$_lang = $language;
+			$include_language = true;
 		}
 
 		// should we include section in URL
@@ -159,13 +153,13 @@ function url_MakeFromArray($params) {
 				$include_language = true;
 		}
 
-		if ($include_section) {
+		if ($include_section || $include_language) {
 			// form URL
 			$result = '';
 
 			// add language
 			if ($include_language)
-				$result .= '/'.$_lang;	
+				$result .= '/'.$language_argument;	
 
 			// add section
 			if ($include_section)
@@ -284,12 +278,22 @@ function url_GetFromFilePath($path) {
 }
 
 /**
+ * Get local file path from URL
+ *
+ * @param string $url
+ * @return string
+ */
+function path_GetFromURL($url, $base=_BASEURL) {
+	return _BASEPATH.substr($url, strlen($base));
+}
+
+/**
  * Form base URL
  * 
  * @return string
  */
 function url_GetBaseURL() {
-	$result = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
+	$result = dirname('http://'._DOMAIN.$_SERVER['PHP_SELF']);
 	$result = preg_replace("/\/$/i", "", $result);
 
 	return $result;
