@@ -115,8 +115,6 @@ class SMTP {
 	private function _send_data($headers, $body) {
 		$result = false;
 
-		trigger_error(json_encode($headers));
-
 		// send command for starting data transfer
 		$this->_send_command('DATA');
 		if ($this->_validate_response('354')) {
