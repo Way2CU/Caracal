@@ -290,7 +290,7 @@ class TemplateHandler {
 
 				// support for markdown
 				case 'cms:markdown':
-					$word_count = isset($tag->tagAttrs['words']) ? fix_id($tag->tagAttrs['words']) : null;
+					$char_count = isset($tag->tagAttrs['chars']) ? fix_id($tag->tagAttrs['chars']) : null;
 					$end_with = isset($tag->tagAttrs['end_with']) ? fix_id($tag->tagAttrs['end_with']) : null;
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
 					$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
@@ -304,10 +304,10 @@ class TemplateHandler {
 					$content = Markdown($content);
 
 					// limit words if specified
-					if (!is_null($word_count)) {
+					if (!is_null($char_count)) {
 						if (is_null($end_with))
-							$content = limit_words($content, $word_count); else
-							$content = limit_words($content, $word_count, $end_with);
+							$content = limit_words($content, $char_count); else
+							$content = limit_words($content, $char_count, $end_with);
 					}
 
 					echo $content;
