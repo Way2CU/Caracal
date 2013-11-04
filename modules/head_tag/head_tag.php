@@ -178,7 +178,7 @@ class head_tag extends Module {
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 		
-		if (class_exists('CodeOptimizer') && $optimize_code && $section != 'backend') {
+		if (class_exists('CodeOptimizer') && $optimize_code && !in_array($section, array('backend', 'backend_module'))) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::getInstance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
@@ -187,8 +187,7 @@ class head_tag extends Module {
 				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
 
 				if ($can_be_compiled && !$optimizer->addStyle($link[1]['href']))
-					$unhandled_tags [] = $link; else
-					trigger_error('Unable to compile "'.$link[1]['href'].'".');
+					$unhandled_tags [] = $link;
 			}
 
 			foreach ($this->script_tags as $script)
