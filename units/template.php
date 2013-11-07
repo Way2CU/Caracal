@@ -391,6 +391,20 @@ class TemplateHandler {
 
 					break;
 
+				// conditional tag parsed for desktop version
+				case 'cms:desktop':
+					if (_DESKTOP_VERSION)
+						$this->parse($tag->tagChildren);
+
+					break;
+
+				// conditional tag parsed for mobile version
+				case 'cms:mobile':
+					if (_MOBILE_VERSION)
+						$this->parse($tag->tagChildren);
+
+					break;
+
 				// variable
 				case '_var':
 				case 'cms:var':
