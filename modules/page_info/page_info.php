@@ -185,6 +185,10 @@ class page_info extends Module {
 		// add base url tag
 		$head_tag->addTag('base', array('href' => _BASEURL));
 
+		// add mobile menu script
+		if (_MOBILE_VERSION && !in_array('mobile_menu', $this->omit_elements))
+			$collection->includeScript(collection::MOBILE_MENU);
+
 		// content meta tags
 		if (!in_array('content_type', $this->omit_elements)) {
 			$head_tag->addTag('meta',
