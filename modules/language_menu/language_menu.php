@@ -95,14 +95,7 @@ class language_menu extends Module {
 			$list = MainLanguageHandler::getInstance()->getLanguages(true);
 		}
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
-		}
-		$template->setMappedModule($this->name);
+		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 
 		$link_params = array();
 		foreach($_GET as $key => $value)
