@@ -44,9 +44,9 @@ div.dialog {
 	color: #333333;
 
 	transition-property: transform;
-	transition-duration: 0.3s;
+	transition-duration: 0.6s;
 	-moz-transition-property: transform;
-	-moz-transition-duration: 0.3s;
+	-moz-transition-duration: 0.6s;
 	transform: translateY(-100%);
 	-moz-transform: translateY(-100%);
 	-webkit-transform: translateY(-100%);
