@@ -8,6 +8,10 @@
 
 class language_menu extends Module {
 	private static $_instance;
+	private $invalid_params = array(
+						'PHPSESSID', '__utmz', '__utma', 'language',
+						'__utmc', '__utmb', '_', 'subject', 'MAX_FILE_SIZE', '_rewrite'
+					);
 
 	/**
 	 * Constructor
@@ -79,6 +83,33 @@ class language_menu extends Module {
 	public function onDisable() {
 	}
 
+	public function addMeta() {
+		$head_tag = head_tag::getInstance();
+		$language_handler = MainLanguageHandler::getInstance();
+		$language_list = $language_handler->getLanguages(false);
+
+		// prepare params
+		$params = $_REQUEST;
+		$link_params = array();
+
+		foreach($params as $key => $value)
+			if (!in_array($key, $this->invalid_params))
+				$link_params[$key] = escape_chars($value);
+
+		// add link to each language
+		foreach ($language_list as $language_code) {
+			$link_params['language'] = $language_code;
+			$url = url_MakeFromArray($link_params);
+
+			$head_tag->addTag('link',
+					array(
+						'rel'		=> 'alternate',
+						'href'		=> $url,
+						'hreflang'	=> $language_code == $default_language ? 'x-default' : $language_code
+					));
+		}
+	}
+
 	/**
 	 * Prints language menu using OL
 	 *
@@ -95,20 +126,17 @@ class language_menu extends Module {
 			$list = MainLanguageHandler::getInstance()->getLanguages(true);
 		}
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
-		}
-		$template->setMappedModule($this->name);
+		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 
+		// prepare params
+		$params = $_REQUEST;
 		$link_params = array();
-		foreach($_GET as $key => $value)
-			if ($key != 'language')
+
+		foreach($params as $key => $value)
+			if (!in_array($key, $this->invalid_params))
 				$link_params[$key] = escape_chars($value);
 
+		// print language list
 		if (count($list) > 0)
 			foreach ($list as $short=>$long) {
 				$link_params['language'] = $short;
@@ -131,8 +159,6 @@ class language_menu extends Module {
 	 */
 	private function json_Menu() {
 		global $action, $section, $language;
-
-		define('_OMIT_STATS', 1);
 
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {

@@ -199,7 +199,7 @@ class page_info extends Module {
 			header('Content-Type: text/html; charset=UTF-8');
 		}
 
-		if (!in_array('viewport', $this->omit_elements) && !_DESKTOP_VERSION) 
+		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION) 
 			$head_tag->addTag('meta',
 						array(
 							'name'		=> 'viewport',
@@ -214,25 +214,8 @@ class page_info extends Module {
 						));
 
 		// add other languages if required
-		if (count($language_list) > 1 && $url_rewrite) {
-			// prepare parameters for link building
-			$link_params = array();
-			foreach($_GET as $key => $value)
-				$link_params[$key] = escape_chars($value);
-
-			// add link to each language
-			foreach ($language_list as $language_code) {
-				$link_params['language'] = $language_code;
-				$url = url_MakeFromArray($link_params);
-
-				$head_tag->addTag('link',
-						array(
-							'rel'		=> 'alternate',
-							'href'		=> $url,
-							'hreflang'	=> $language_code == $default_language ? 'x-default' : $language_code
-						));
-			}
-		}
+		if (count($language_list) > 1 && $url_rewrite && class_exists('language_menu'))
+			language_menu::getInstance()->addMeta();
 
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
