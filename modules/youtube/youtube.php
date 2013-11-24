@@ -868,8 +868,10 @@ class youtube extends Module {
 			$params = array(
 							'id'			=> $item->id,
 							'video_id'		=> $item->video_id,
+							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
 							'thumbnail'		=> $this->getThumbnailURL($item->video_id),
+							'image'			=> $this->getThumbnailURL($item->video_id, 0),
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -1208,7 +1210,7 @@ class youtube extends Module {
 	 * Simple function that provides thumbnail image URL based on video ID
 	 *
 	 * @param string[11] $video_id
-	 * @param integer $number 1-3
+	 * @param integer $number 0-3
 	 * @return string
 	 */
 	public function getThumbnailURL($video_id, $number=2) {
