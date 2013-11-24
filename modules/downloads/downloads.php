@@ -98,6 +98,10 @@ class downloads extends Module {
 					$this->redirectDownload();
 					break;
 
+				case 'show':
+					$this->tag_Download($params, $children);
+					break;
+
 				case 'json_list':
 					$this->json_DownloadsList();
 					break;
@@ -378,8 +382,6 @@ class downloads extends Module {
 	 * Record download count and redirect to existing file
 	 */
 	private function redirectDownload() {
-		define('_OMIT_STATS', 1);
-
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = DownloadsManager::getInstance();
 
@@ -405,6 +407,36 @@ class downloads extends Module {
 	 * @param array $children
 	 */
 	public function tag_Download($tag_params, $children) {
+		$manager = DownloadsManager::getInstance();
+		$conditions = array();
+		$order_by = array();
+		$order_asc = true;
+
+		$template = $this->loadTemplate($tag_params, 'download.xml');
+
+		if (isset($tag_params['latest']) && $tag_params['latest'] == 1) {
+			$order_by = array('id');
+			$order_asc = false;
+		}
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+
+		if (is_object($item)) {
+			$params = array(
+						'id'			=> $item->id,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+						'filename'		=> $item->filename,
+						'size'			=> $item->size,
+						'count'			=> $item->count,
+						'visible'		=> $item->visible,
+						'timestamp'		=> $item->timestamp,
+					);
+
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
 	}
 
 	/**
@@ -489,8 +521,6 @@ class downloads extends Module {
 	 * Handle JSON request for list of downloads.
 	 */
 	private function json_DownloadsList() {
-		define('_OMIT_STATS', 1);
-
 		$result = array(
 					'error'			=> false,
 					'error_message'	=> '',
