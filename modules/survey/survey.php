@@ -156,6 +156,7 @@ class survey extends Module {
 					`id` int(11) NOT NULL AUTO_INCREMENT,
 					`type` int(11) NOT NULL DEFAULT 0,
 					`address` varchar(50) NOT NULL,
+					`referral` varchar(255) NOT NULL,
 					`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 					PRIMARY KEY (`id`),
 					KEY `type` (`type`)
@@ -225,7 +226,7 @@ class survey extends Module {
 
 		// get entries for type
 		if (is_object($type)) {
-			$data = 'id,ip_address,timestamp;'.$type->fields."\n";
+			$data = 'id,ip_address,timestamp,referral;'.$type->fields."\n";
 			$entries = $entries_manager->getItems($entries_manager->getFieldNames(), array('type' => $type->id));
 			$rows = array();
 
@@ -235,7 +236,8 @@ class survey extends Module {
 					$id = $entry->id;
 					$rows[$id] = array(
 								'ip_address'	=> $entry->address,
-								'timestamp'		=> $entry->timestamp
+								'timestamp'		=> $entry->timestamp,
+								'referral'		=> $entry->referral
 							);
 				}
 
@@ -260,6 +262,7 @@ class survey extends Module {
 				$tmp[] = $id;
 				$tmp[] = $entry['ip_address'];
 				$tmp[] = '"'.$entry['timestamp'].'"';
+				$tmp[] = '"'.$entry['referral'].'"';
 
 				foreach ($fields as $field)
 					if (array_key_exists($field, $entry))
@@ -509,7 +512,8 @@ class survey extends Module {
 			if (!is_object($entry)) {
 				$manager->insertData(array(
 								'type'		=> $type_id,
-								'address'	=> $_SERVER['REMOTE_ADDR']
+								'address'	=> $_SERVER['REMOTE_ADDR'],
+								'referral'	=> isset($_SESSION['survey_referer']) ? $_SESSION['survey_referer'] : ''
 							));
 				$id = $manager->getInsertedID();
 				$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -524,7 +528,8 @@ class survey extends Module {
 			// create new entry anyway
 			$manager->insertData(array(
 							'type'		=> $type_id,
-							'address'	=> $_SERVER['REMOTE_ADDR']
+							'address'	=> $_SERVER['REMOTE_ADDR'],
+							'referral'	=> isset($_SESSION['survey_referer']) ? $_SESSION['survey_referer'] : ''
 						));
 			$id = $manager->getInsertedID();
 			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -543,6 +548,10 @@ class survey extends Module {
 					'name'	=> $key,
 					'value'	=> $value
 				));
+
+		// add referral url to mail body
+		if (isset($_SESSION['survey_referer']))
+			$data['referral'] = $_SESSION['survey_referer'];
 
 		// send email if requested
 		if ($type->send_email && class_exists('contact_form')) {

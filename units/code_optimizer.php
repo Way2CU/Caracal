@@ -195,15 +195,9 @@ class CodeOptimizer {
 	public function addScript($url) {
 		global $section;
 
-		if (!in_array($section, array('backend', 'backend_module'))) {
-			// add script to be compiled
-			$this->script_list []= $url;
-			$this->closure_compiler->add($url);
-
-		} else {
-			// we do not need to compile code in backend
-			$result = false;
-		}
+		// add script to be compiled
+		$this->script_list []= $url;
+		$this->closure_compiler->add(path_GetFromURL($url));
 
 		return true;
 	}
@@ -218,10 +212,10 @@ class CodeOptimizer {
 		global $module_path;
 
 		$result = false;
-		$url_base = _BASEURL.'/'.$module_path;
+		$data = parse_url($url);
 
 		// only add styles that are site specific
-		if (substr($url, 0, strlen(_BASEURL)) == _BASEURL && substr($url, 0, strlen($url_base)) != $url_base) {
+		if ($data['host'] == _DOMAIN) {
 			$this->style_list []= $url;
 			$result = true;
 		}

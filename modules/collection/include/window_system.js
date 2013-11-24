@@ -214,7 +214,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 					.attr('id', self.id)
 					.addClass('window')
 					.css('width', width)
-					.click(self._handleClick)
+					.bind('mousedown', self._handleClick)
 					.hide();
 
 			self.title = $('<div>')
@@ -222,6 +222,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 					.addClass('title')
 					.html(title)
 					.drag(self._handleDrag)
+					.bind('mousedown', self._handleClick)
 					.appendTo(self.container);
 
 			self.content = $('<div>')
@@ -253,7 +254,8 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 * @param object event
 	 */
 	self._handleClick = function(event) {
-		self.window_system.focusWindow(self.id);
+		if (self.window_system.getTopWindowId != self.id)
+			self.window_system.focusWindow(self.id);
 	};
 	
 	/**
@@ -311,7 +313,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		self.visible = true;
 
 		// set window to be top level
-		self.window_system.focusWindow(self.id);
+		self.focus();
 
 		return self;
 	};
@@ -377,7 +379,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	};
 
 	/**
-	 * Event triggered when window looses focus.
+	 * Event triggered when window loses focus.
 	 */
 	self.loseFocus = function() {
 		self.zIndex--;

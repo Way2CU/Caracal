@@ -17,6 +17,8 @@ function Dialog() {
 	self._inner_content = $('<div>');
 	self._scrollbar = null;
 	self._clear_on_close = false;
+	self._show_on_load = false;
+	self._content_loaded = false;
 	self._command_bar = $('<div>');
 	
 	/**
@@ -78,9 +80,13 @@ function Dialog() {
 	 * @param mixed content
 	 */
 	self.setContent = function(content) {
+		// set specified content
 		self._inner_content
 					.html(content)
-					.css('top', 0);
+					.css('top', 0);  // reset scroll position
+
+		// set content state flag
+		self._content_loaded = true;
 	};
 	
 	/**
@@ -90,10 +96,15 @@ function Dialog() {
 	 * @param string container
 	 */
 	self.setContentFromURL = function(url, container) {
-		if (container != null)
-			self._inner_content.load(url + ' #' + container); else
-			self._inner_content.load(url);
+		// reset content state flag
+		self._content_loaded = false;
 
+		// initiate loading process
+		if (container != null)
+			self._inner_content.load(url + ' #' + container, self.__handle_content_load); else
+			self._inner_content.load(url, self.__handle_content_load);
+
+		// reset scroll position
 		self._inner_content.css('top', 0);
 
 		return self;
@@ -107,10 +118,14 @@ function Dialog() {
 	self.setContentFromDOM = function(selection) {
 		var element = $(selection).eq(0);
 		
+		// detach and reattach content
 		element.detach();
 		self._inner_content
 				.html(element)
-				.css('top', 0);
+				.css('top', 0);  // reset scroll position
+
+		// set content state flag
+		self._content_loaded = true;
 
 		return self;
 	};
@@ -189,6 +204,19 @@ function Dialog() {
 		if (self._scrollbar != null)
 			self._scrollbar.content_updated();
 	};
+
+	/**
+	 * Show dialog when content is ready.
+	 */
+	self.showWhenReady = function() {
+		// prevent user from clicking more than once
+		self._background.addClass('visible');
+
+		// show content now or later
+		if (self._content_loaded)
+			self.show(); else
+			self._show_on_load = true;
+	};
 	
 	/**
 	 * Hide dialog
@@ -200,8 +228,12 @@ function Dialog() {
 		self._visible = false;
 
 		// clear content if neede
-		if (self._clear_on_close)
+		if (self._clear_on_close) {
 			self._inner_content.html('');
+
+			// reset content state flag
+			self._content_loaded = false;
+		}
 	};
 	
 	/**
@@ -212,6 +244,22 @@ function Dialog() {
 	self.__handle_close_click = function(event) {
 		self.hide();
 		event.preventDefault();
+	};
+
+	/**
+	 * Handle content load from URL.
+	 *
+	 * @param string response
+	 * @param string status
+	 * @param object xhr
+	 */
+	self.__handle_content_load = function(response, status, xhr) {
+		// update content state flag
+		self._content_loaded = true;
+
+		// show dialog if needed
+		if (self._show_on_load)
+			self.show();
 	};
 	
 	// finish object initialization

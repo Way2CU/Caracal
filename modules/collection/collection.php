@@ -20,6 +20,7 @@ class collection extends Module {
 	const DIALOG = 4;
 	const SCROLLBAR = 5;
 	const PAGE_CONTROL = 6;
+	const MOBILE_MENU = 7;
 
 	// jQuery and its extensions
 	const JQUERY = 50;
@@ -44,9 +45,13 @@ class collection extends Module {
 												),
 				collection::TOOLBAR				=> 'toolbar.js',
 				collection::ANIMATION_CHAIN		=> 'animation_chain.js',
-				collection::DIALOG				=> 'dialog.js',
+				collection::DIALOG				=> array(
+													'dialog.js',
+													'dialog.css'
+												),
 				collection::SCROLLBAR			=> 'scrollbar.js',
 				collection::PAGE_CONTROL		=> 'page_control.js',
+				collection::MOBILE_MENU			=> 'mobile_menu.js',
 				collection::JQUERY				=> 'jquery.js',
 				collection::JQUERY_EVENT_DRAG	=> 'jquery.event.drag.js',
 				collection::JQUERY_MINICOLORS	=> array(
@@ -67,6 +72,7 @@ class collection extends Module {
 				'dialog'				=> collection::DIALOG,
 				'scrollbar'				=> collection::SCROLLBAR,
 				'page_control'			=> collection::PAGE_CONTROL,
+				'mobile_menu'			=> collection::MOBILE_MENU,
 				'jquery'				=> collection::JQUERY,
 				'jquery_event_drag'		=> collection::JQUERY_EVENT_DRAG,
 				'jquery_minicolors'		=> collection::JQUERY_MINICOLORS,

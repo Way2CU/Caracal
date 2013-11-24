@@ -14,6 +14,7 @@ class page_info extends Module {
 	private $omit_elements = array();
 	private $optimizer_page = '';
 	private $optimizer_show_control = false;
+	private $page_description = null;
 
 	/**
 	 * Constructor
@@ -73,6 +74,10 @@ class page_info extends Module {
 					$this->optimizer_page = fix_chars($params['page']);
 					if (isset($params['show_control']))
 						$this->optimizer_show_control = fix_id($params['show_control']) == 0 ? false : true;
+					break;
+
+				case 'set_description':
+					$this->setDescription($params, $children);
 					break;
 
 				default:
@@ -169,14 +174,20 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function addElements() {
-		global $section, $db_use, $optimize_code;
+		global $section, $db_use, $optimize_code, $url_rewrite;
 
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
-		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$language_handler = MainLanguageHandler::getInstance();
+		$default_language = $language_handler->getDefaultLanguage();
+		$language_list = $language_handler->getLanguages(false);
 
 		// add base url tag
 		$head_tag->addTag('base', array('href' => _BASEURL));
+
+		// add mobile menu script
+		if (_MOBILE_VERSION && !in_array('mobile_menu', $this->omit_elements))
+			$collection->includeScript(collection::MOBILE_MENU);
 
 		// content meta tags
 		if (!in_array('content_type', $this->omit_elements)) {
@@ -188,7 +199,7 @@ class page_info extends Module {
 			header('Content-Type: text/html; charset=UTF-8');
 		}
 
-		if (!in_array('viewport', $this->omit_elements) && !_DESKTOP_VERSION) 
+		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION) 
 			$head_tag->addTag('meta',
 						array(
 							'name'		=> 'viewport',
@@ -201,6 +212,10 @@ class page_info extends Module {
 							'http-equiv'	=> 'Content-Language',
 							'content'		=> join(', ', $language_list)
 						));
+
+		// add other languages if required
+		if (count($language_list) > 1 && $url_rewrite && class_exists('language_menu'))
+			language_menu::getInstance()->addMeta();
 
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
@@ -235,10 +250,14 @@ class page_info extends Module {
 
 			// page description
 			if ($db_use) 
+				if (!is_null($this->page_description))
+					$value = $this->page_description; else
+					$value = $this->settings['description'];
+
 				$head_tag->addTag('meta',
 							array(
 								'name'		=> 'description',
-								'content'	=> $this->settings['description']
+								'content'	=> $value
 							));
 		}
 
@@ -327,6 +346,38 @@ class page_info extends Module {
 							'type'	=> 'text/javascript',
 							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
 						));
+		}
+	}
+
+	/**
+	 * Set page description for current execution.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function setDescription($tag_params, $children) {
+		global $language;
+
+		// set from language constant
+		if (isset($tag_params['constant'])) {
+			$language_handler = MainLanguageHandler::getInstance();
+			$constant = fix_chars($tag_params['constant']);
+			$this->page_description = $language_handler->getText($constant);
+
+		// set from article
+		} else if (isset($tag_params['article']) && class_exists('articles')) {
+			$manager = ArticleManager::getInstance();
+			$text_id = fix_chars($tag_params['article']);
+
+			// get article from database
+			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
+
+			if (is_object($item)) {
+				$data = explode("\n", utf8_wordwrap($item->content[$language], 150, "\n", true));
+
+				if (count($data) > 0)
+					$this->page_description = $data[0];
+			}
 		}
 	}
 
