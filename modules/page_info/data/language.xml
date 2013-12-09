@@ -14,9 +14,10 @@
 		<constant name="label_analytics">Analytics ID:</constant>
 		<constant name="label_analytics_domain">Domain:</constant>
 		<constant name="label_analytics_version">Code version:</constant>
-		<constant name="label_wm_tools">Google webmasters tools:</constant>
+		<constant name="label_wm_tools">Google webmaster tools:</constant>
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
+		<constant name="label_bing_wm_tools">Bing webmaster tools:</constant>
 	</language>
 	<language short="he">
 		<constant name="menu_page_info">הגדרות עמוד</constant>
@@ -31,9 +32,10 @@
 		<constant name="label_analytics">Analytics ID:</constant>
 		<constant name="label_analytics_domain">Domain:</constant>
 		<constant name="label_analytics_version">Code version:</constant>
-		<constant name="label_wm_tools">Google webmasters tools:</constant>
+		<constant name="label_wm_tools">Google webmaster tools:</constant>
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
+		<constant name="label_bing_wm_tools">Bing webmaster tools:</constant>
 	</language>
 	<language short="sr">
 		<constant name="menu_page_info">Podešavanja stranice</constant>
@@ -48,8 +50,9 @@
 		<constant name="label_analytics">Analytics ID:</constant>
 		<constant name="label_analytics_domain">Domain:</constant>
 		<constant name="label_analytics_version">Code version:</constant>
-		<constant name="label_wm_tools">Google webmasters tools:</constant>
+		<constant name="label_wm_tools">Google webmaster tools:</constant>
 		<constant name="label_optimizer">Google website optimizer:</constant>
 		<constant name="label_optimizer_key">Key:</constant>
+		<constant name="label_bing_wm_tools">Bing webmaster tools:</constant>
 	</language>
 </document>

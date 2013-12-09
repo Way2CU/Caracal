@@ -28,6 +28,7 @@
 					</select>
 				</label>
 			</div>
+
 			<div>
 				<label>
 					<span><cms:text constant="label_wm_tools" module="page_info"/></span>
@@ -48,6 +49,13 @@
 					</div>
 					<div style="clear: both;"/>
 				</div>
+				
+				<hr/>
+
+				<label>
+					<span><cms:text constant="label_bing_wm_tools" module="page_info"/></span>
+					<input type="text" name="bing_wm_tools" value="$settings['bing_wm_tools']" eval="value" style="width: 350px"/>
+				</label>
 			</div>
 		</div>
 

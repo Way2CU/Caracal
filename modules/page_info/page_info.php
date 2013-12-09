@@ -112,6 +112,9 @@ class page_info extends Module {
 
 		if (!isset($this->settings['wm_tools']))
 			$this->saveSetting('wm_tools', '');
+
+		if (!isset($this->settings['bing_wm_tools']))
+			$this->saveSetting('bing_wm_tools', '');
 	}
 
 	public function onDisable() {
@@ -145,6 +148,7 @@ class page_info extends Module {
 		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
 		$analytics_version = fix_chars($_REQUEST['analytics_version']);
 		$wm_tools = fix_chars($_REQUEST['wm_tools']);
+		$bing_wm_tools = fix_chars($_REQUEST['bing_wm_tools']);
 		$optimizer = fix_chars($_REQUEST['optimizer']);
 		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
 
@@ -153,6 +157,7 @@ class page_info extends Module {
 		$this->saveSetting('analytics_domain', $analytics_domain);
 		$this->saveSetting('analytics_version', $analytics_version);
 		$this->saveSetting('wm_tools', $wm_tools);
+		$this->saveSetting('bing_wm_tools', $bing_wm_tools);
 		$this->saveSetting('optimizer', $optimizer);
 		$this->saveSetting('optimizer_key', $optimizer_key);
 
@@ -240,12 +245,20 @@ class page_info extends Module {
 										$this->optimizer_show_control
 									);
 
-			// google webmasters tools
+			// google webmaster tools
 			if (!empty($this->settings['wm_tools']))
 				$head_tag->addTag('meta',
 							array(
 								'name' 		=> 'google-site-verification',
 								'content' 	=> $this->settings['wm_tools']
+							));
+
+			// bing webmaster tools
+			if (!empty($this->settings['bing_wm_tools']))
+				$head_tag->addTag('meta',
+							array(
+								'name' 		=> 'msvalidate.01',
+								'content' 	=> $this->settings['bing_wm_tools']
 							));
 
 			// page description
