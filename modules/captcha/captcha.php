@@ -204,11 +204,8 @@ class captcha extends Module {
 	 * @return boolean
 	 */
 	private function __checkExtension($filename, $ext) {
-		$result = false;
-		$test_string = "\.".$ext."$";
-
-		$result = eregi($test_string, $filename);
-		return $result;
+		$info = pathinfo($filename, PATHINFO_EXTENSION);
+		return $info == $ext;
 	}
 
 	/**
