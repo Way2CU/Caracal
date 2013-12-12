@@ -87,6 +87,7 @@ class language_menu extends Module {
 		$head_tag = head_tag::getInstance();
 		$language_handler = MainLanguageHandler::getInstance();
 		$language_list = $language_handler->getLanguages(false);
+		$default_language = $language_handler->getDefaultLanguage();
 
 		// prepare params
 		$params = $_REQUEST;
