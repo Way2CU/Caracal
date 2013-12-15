@@ -114,7 +114,7 @@ class captcha extends Module {
 
 		// check if referer is in allowed list
 		$value = $this->__generateValue();
-		$referer = dirname($_SERVER['HTTP_REFERER']);
+		$referer = $_SERVER['HTTP_REFERER'];
 		$accepted_hosts = explode(',', $this->settings['accepted_hosts']);
 		$arc_count = $this->settings['arc_count'];
 		$char_count = $this->settings['char_count'];
