@@ -405,6 +405,20 @@ class TemplateHandler {
 
 					break;
 
+				// conditional tag parsed for users that are logged in
+				case 'cms:user':
+					if ($_SESSION['logged'])
+						$this->parse($tag->tagChildren);
+
+					break;
+
+				// conditional tag parsed for guests
+				case 'cms:guest':
+					if (!$_SESSION['logged'])
+						$this->parse($tag->tagChildren);
+
+					break;
+
 				// variable
 				case '_var':
 				case 'cms:var':
