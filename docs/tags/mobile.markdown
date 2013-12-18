@@ -24,6 +24,6 @@ If there's a need for more complex condition use of `cms:if` is recommended. For
 	</cms:if>
 
 As [per advice][1] from Google, tablet computers are considered desktop and will be served desktop
-versio of the pages.
+version of the pages.
 
 [1]: http://googlewebmastercentral.blogspot.com/2012/11/giving-tablet-users-full-sized-web.html
