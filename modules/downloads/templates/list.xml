@@ -9,6 +9,12 @@
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
+			<span class="column" style="width: 70px;">
+				<_text constant="column_id" module="downloads"/>
+			</span>
+			<span class="column" style="width: 150px;">
+				<_text constant="column_name" module="downloads"/>
+			</span>
 			<span class="column" style="width: 150px;">
 				<_text constant="column_name" module="downloads"/>
 			</span>

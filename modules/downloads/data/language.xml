@@ -16,6 +16,7 @@
 		<constant name="label_file">File:</constant>
 		<constant name="label_visible">File is visible to users</constant>
 
+		<constant name="column_id">ID</constant>
 		<constant name="column_name">Name</constant>
 		<constant name="column_size">Size</constant>
 		<constant name="column_downloads">Downloads</constant>
@@ -46,6 +47,7 @@
 		<constant name="label_file">קובץ:</constant>
 		<constant name="label_visible">קובץ נראה למשתמש</constant>
 
+		<constant name="column_id">ID</constant>
 		<constant name="column_name">שם</constant>
 		<constant name="column_size">גודל</constant>
 		<constant name="column_downloads">הורדות</constant>
@@ -71,6 +73,7 @@
 		<constant name="title_change">Izmena Datoteke</constant>
 		<constant name="title_delete">Brisanje Datoteke</constant>
 
+		<constant name="column_id">ID</constant>
 		<constant name="label_name">Naziv:</constant>
 		<constant name="label_description">Opis:</constant>
 		<constant name="label_file">Lokacija datoteke:</constant>

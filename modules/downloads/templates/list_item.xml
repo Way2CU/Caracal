@@ -2,6 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
+		<span class="column" style="width: 70px;">
+			<_var name="$params['id']"/>
+		</span>
 		<span class="column" style="width: 150px;">
 			<_var name="$params['name'][$language]"/>
 		</span>
