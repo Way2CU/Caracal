@@ -15,9 +15,6 @@
 			<span class="column" style="width: 150px;">
 				<_text constant="column_name" module="downloads"/>
 			</span>
-			<span class="column" style="width: 150px;">
-				<_text constant="column_name" module="downloads"/>
-			</span>
 			<span class="column" style="width: 70px;">
 				<_text constant="column_size" module="downloads"/>
 			</span>

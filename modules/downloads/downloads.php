@@ -62,7 +62,7 @@ class downloads extends Module {
 								url_GetFromFilePath($this->path.'images/manage.png'),
 								window_Open( // on click open window
 											'downloads',
-											450,
+											520,
 											$this->getLanguageConstant('title_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'list')
