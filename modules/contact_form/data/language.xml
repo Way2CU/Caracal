@@ -4,19 +4,33 @@
 	<language short="en">
 		<constant name="menu_contact">Contact form</constant>
 		<constant name="menu_settings">Configure defaults</constant>
+		<constant name="menu_manage_templates">Manage templates</constant>
 	
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
 		<constant name="message_error_no_address">Error sending data! No default recipient was specified by the system.</constant>
 		<constant name="message_saved">Configuration was saved!</constant>
+		<constant name="message_template_saved">New template was saved!</constant>
+		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
+		<constant name="message_template_deleted">Template was removed from the system!</constant>
 		
 		<constant name="title_settings">Contact form: Settings</constant>
+		<constant name="title_templates_add">Contact form: New template</constant>
+		<constant name="title_templates_edit">Contact form: Edit template</constant>
+		<constant name="title_templates_delete">Contact form: Delete template</constant>
+		<constant name="title_templates_manage">Contact form: Manage templates</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
 		<constant name="tab_general">General</constant>
 		<constant name="tab_smtp">SMTP</constant>
 		<constant name="tab_backup">Backup</constant>
+		<constant name="tab_plain_text">Plain text</constant>
+		<constant name="tab_html">HTML</constant>
+		<constant name="tab_preview">Preview</constant>
+
+		<constant name="column_text_id">Text ID</constant>
+		<constant name="column_name">Name</constant>
 		
 		<constant name="label_name">Name:</constant>
 		<constant name="label_address">Email address:</constant>
@@ -25,6 +39,8 @@
 		<constant name="label_use_ssl">Use SSL encryption?</constant>
 		<constant name="label_server">Server:</constant>
 		<constant name="label_port">Port:</constant>
+		<constant name="label_template_name">Template name:</constant>
+		<constant name="label_template_text_id">Unique template text ID:</constant>
 		<constant name="label_smtp_no_authentication">No authentication needed</constant>
 		<constant name="label_smtp_authenticate">Authenticate with following credentials:</constant>
 		<constant name="label_smtp_username">Username:</constant>
@@ -36,13 +52,21 @@
 	<language short="he">
 		<constant name="menu_contact">טופס יצירת קשר</constant>
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>
+		<constant name="menu_manage_templates">Manage templates</constant>
 
 		<constant name="message_sent">מידע נשלח בהצלחה!</constant>
 		<constant name="message_error">נוצרה בעיה בשליחת מידע אנא בדוק השדות ונסה שנית!</constant>
 		<constant name="message_error_no_address">תקלה בשליחת מידע, לא נקבע נמען.</constant>
 		<constant name="message_saved">הגדרות נשמרו</constant>
+		<constant name="message_template_saved">New template was saved!</constant>
+		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
+		<constant name="message_template_deleted">Template was removed from the system!</constant>
 		
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
+		<constant name="title_templates_add">Contact form: New template</constant>
+		<constant name="title_templates_edit">Contact form: Edit template</constant>
+		<constant name="title_templates_delete">Contact form: Delete template</constant>
+		<constant name="title_templates_manage">Contact form: Manage templates</constant>
 
 		<constant name="tab_sender">שולח</constant>
 		<constant name="tab_recipient">כתובת מקבל</constant>
@@ -68,13 +92,21 @@
 	<language short="sr">
 		<constant name="menu_contact">Kontakt</constant>
 		<constant name="menu_settings">Podešavanje formulara</constant>
+		<constant name="menu_manage_templates">Manage templates</constant>
 	
 		<constant name="message_sent">Podaci su uspešno poslati!</constant>
 		<constant name="message_error">Greška prilikom slanja podataka. Proverite sva polja i pokušajte opet.</constant>
 		<constant name="message_error_no_address">Greška prilikom slanja podataka. Sistem nema podešenog podrazumevanog primaoca.</constant>
 		<constant name="message_saved">Podešavanja su snimljena.</constant>
+		<constant name="message_template_saved">New template was saved!</constant>
+		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
+		<constant name="message_template_deleted">Template was removed from the system!</constant>
 		
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
+		<constant name="title_templates_add">Contact form: New template</constant>
+		<constant name="title_templates_edit">Contact form: Edit template</constant>
+		<constant name="title_templates_delete">Contact form: Delete template</constant>
+		<constant name="title_templates_manage">Contact form: Manage templates</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>

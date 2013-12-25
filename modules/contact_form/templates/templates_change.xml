@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="contact_form_template_add">
+		<div>
+			<label class="horizontal">
+				<input type="hidden" name="id" value="$params['id']" eval="value"/>
+				<span><cms:text constant="label_template_name" module="contact_form"/></span>
+				<input name="name" class="multi-language" type="text" maxlength="50" style="width: 200px"/>
+				<cms:language_data param="name"/>
+			</label>
+			<label class="horizontal">
+				<span><cms:text constant="label_template_text_id" module="contact_form"/></span>
+				<input
+					name="text_id"
+					class="code"
+					type="text"
+					maxlength="32"
+					style="width: 200px"
+					value="$params['text_id']"
+					eval="value"
+				/>
+			</label>
+			<div style="clear: both;"/>
+		</div>
+
+		<label>
+			<span><cms:text constant="label_subject" module="contact_form"/></span>
+			<input name="subject" class="multi-language" type="text" maxlength="255" style="width: 600px"/>
+			<cms:language_data param="subject"/>
+		</label>
+
+		<div id="contact_form_templates_notbook">
+			<div>
+				<textarea
+					name="plain_text_content"
+					class="code multi-language"
+					rows="6"
+					cols="80"
+					style="width: 600px; height: 300px; resize: none;"
+				/>
+				<cms:language_data param="plain_text_content"/>
+			</div>
+
+			<div>
+				<textarea
+					name="html_content"
+					class="code multi-language"
+					rows="6"
+					cols="80"
+					style="width: 600px; height: 275px; resize: none;"
+				/>
+				<cms:language_data param="html_content"/>
+			</div>
+
+			<div>
+				<div class="markdown_preview" id="contact_form_template_preview"/>
+			</div>
+		</div>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		new LanguageSelector('contact_form_template_add');
+		var converter = new Showdown.converter();
+
+		// create notebook
+		var notebook = new Notebook('contact_form_templates_notbook');
+		notebook
+			.setPageTitle(0, language_handler.getText('contact_form', 'tab_plain_text'))
+			.setPageTitle(1, language_handler.getText('contact_form', 'tab_html'))
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_preview'));
+
+		// update preview on blur
+		$('div#contact_form_templates_notbook textarea[name=html_content]').blur(function() {
+			var preview = $('div#contact_form_template_preview');
+			preview.html(converter.makeHtml($(this).val()));
+		});
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('contact_form_template_add', '[name=html_content]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
+	</script>
+</document>

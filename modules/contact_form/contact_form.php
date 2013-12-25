@@ -8,7 +8,9 @@
  *
  * Author: Mladen Mijatov
  */
+
 require_once('units/smtp.php');
+require_once('units/template_manager.php');
 
 
 class contact_form extends Module {
@@ -37,6 +39,19 @@ class contact_form extends Module {
 					$level=5
 				);
 			
+			$contact_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_manage_templates'),
+								url_GetFromFilePath($this->path.'images/templates.png'),
+
+								window_Open( // on click open window
+											'contact_form_templates',
+											550,
+											$this->getLanguageConstant('title_templates_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'templates_manage')
+										),
+								$level=5
+							));	
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.png'),
@@ -97,6 +112,30 @@ class contact_form extends Module {
 				case 'settings_save':
 					$this->saveSettings();
 					break;
+
+				case 'templates_manage':
+					$this->manageTemplates();
+					break;
+
+				case 'templates_add':
+					$this->addTemplate();
+					break;
+
+				case 'templates_edit':
+					$this->editTemplate();
+					break;
+
+				case 'templates_save':
+					$this->saveTemplate();
+					break;
+
+				case 'templates_delete':
+					$this->deleteTemplate();
+					break;
+
+				case 'templates_delete_commit':
+					$this->deleteTemplate_Commit();
+					break;
 					
 				default:
 					break;
@@ -107,6 +146,11 @@ class contact_form extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
+		global $db;
+
+		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+
+		// predefined settings stored in system wide tables
 		$this->saveSetting('use_smtp', 0);
 		$this->saveSetting('sender_name', '');
 		$this->saveSetting('sender_address', 'sample@email.com');
@@ -118,6 +162,26 @@ class contact_form extends Module {
 		$this->saveSetting('use_ssl', 1);
 		$this->saveSetting('save_copy', 0);
 		$this->saveSetting('save_location', '');
+
+		// create templates table
+		$sql = "
+			CREATE TABLE `contact_form_templates` (
+				`id` INT NOT NULL AUTO_INCREMENT ,
+				`text_id` VARCHAR (32) NULL ,
+			";
+
+		foreach($list as $language) {
+			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
+			$sql .= "`subject_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
+			$sql .= "`plain_{$language}` TEXT NOT NULL ,";
+			$sql .= "`html_{$language}` TEXT NOT NULL ,";
+		}
+
+		$sql .= "
+				PRIMARY KEY ( `id` ),
+				INDEX ( `text_id` )
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
 	}
 
 	/**
@@ -125,6 +189,9 @@ class contact_form extends Module {
 	 */
 	public function onDisable() {
 		global $db;
+
+		$tables = array('contact_form_templates');
+		$db->drop_tables($tables);
 	}
 
 	/**
@@ -757,5 +824,247 @@ class contact_form extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Show form for managing email templates.
+	 */
+	private function manageTemplates() {
+		$template = new TemplateHandler('templates_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'		=> window_OpenHyperlink(
+										$this->getLanguageConstant('new'),
+										'contact_form_templates_add', 650,
+										$this->getLanguageConstant('title_templates_add'),
+										true, false,
+										$this->name,
+										'templates_add'
+									),
+				);
+
+		$template->registerTagHandler('cms:list', $this, 'tag_TemplateList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for new template.
+	 */
+	private function addTemplate() {
+		$template = new TemplateHandler('templates_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'templates_save'),
+					'cancel_action'	=> window_Close('contact_form_templates_add')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for editing email template.
+	 */
+	private function editTemplate() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_TemplateManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		trigger_error(json_encode($item));
+
+		if (is_object($item)) {
+			$template = new TemplateHandler('templates_change.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'id'					=> $item->id,
+						'text_id'				=> $item->text_id,
+						'name'					=> $item->name,
+						'subject'				=> $item->subject,
+						'plain_text_content'	=> $item->plain,
+						'html_content'			=> $item->html,
+						'form_action'  			=> backend_UrlMake($this->name, 'templates_save'),
+						'cancel_action'			=> window_Close('contact_form_templates_edit')
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Save new or changed template data.
+	 */
+	private function saveTemplate() {
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$text_id = fix_chars($_REQUEST['text_id']);
+		$name = $this->getMultilanguageField('name');
+		$subject = $this->getMultilanguageField('subject');
+		$plain_text = $this->getMultilanguageField('plain_text_content');
+		$html = $this->getMultilanguageField('html_content');
+
+		$manager = ContactForm_TemplateManager::getInstance();
+		$data = array(
+				'text_id'	=> $text_id,
+				'name'		=> $name,
+				'subject'	=> $subject,
+				'plain'		=> $plain_text,
+				'html'		=> $html
+			);
+
+		if (is_null($id)) {
+			$window = 'contact_form_templates_add';
+			$manager->insertData($data);
+		} else {
+			$window = 'contact_form_templates_edit';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_template_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_templates'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show confirmation form for deleting template.
+	 */
+	private function deleteTemplate() {
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_TemplateManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_template_delete"),
+					'name'			=> $item->name[$language],
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'contact_form_templates_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'templates_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('contact_form_templates_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Delete template.
+	 */
+	private function deleteTemplate_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_TemplateManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_template_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('contact_form_templates_delete').';'.window_ReloadContent('contact_form_templates')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Handle drawing list of templates.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_TemplateList($tag_params, $children) {
+		$conditions = array();
+		$manager = ContactForm_TemplateManager::getInstance();
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'templates_list_item.xml');
+
+		// get items from database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// parse template
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'name'			=> $item->name,
+						'subject'		=> $item->subject,
+						'plain'			=> $item->plain,
+						'html'			=> $item->html,
+						'item_change'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('change'),
+												window_Open(
+													'contact_form_templates_edit', 	// window id
+													650,				// width
+													$this->getLanguageConstant('title_templates_edit'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'templates_edit'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('delete'),
+												window_Open(
+													'contact_form_templates_delete', 	// window id
+													400,				// width
+													$this->getLanguageConstant('title_templates_delete'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'templates_delete'),
+														array('id', $item->id)
+													)
+												)
+											),
+					);
+
+				$template->setLocalParams($params);
+				$template->restoreXML();
+				$template->parse();
+			}
 	}
 }
