@@ -38,6 +38,7 @@ require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
 require_once('units/config.php');
 require_once('units/doctypes.php');
+require_once('units/gravatar.php');
 
 // set timezone as specificed in the config
 date_default_timezone_set(_TIMEZONE);

@@ -43,4 +43,9 @@ $url_rewrite = false;
 $url_add_extension = false;
 $url_language_optional = true;
 
+// gravatar global variables
+$gravatar_url = 'http://gravatar.com/avatar/{email_hash}?s={size}&amp;d={default}&amp;r={rating}';
+$gravatar_rating = 'x';
+$gravatar_default = 'mm';
+
 ?>
