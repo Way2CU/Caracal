@@ -1011,6 +1011,7 @@ class contact_form extends Module {
 	public function tag_TemplateList($tag_params, $children) {
 		$conditions = array();
 		$manager = ContactForm_TemplateManager::getInstance();
+		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'templates_list_item.xml');
@@ -1028,6 +1029,7 @@ class contact_form extends Module {
 						'subject'		=> $item->subject,
 						'plain'			=> $item->plain,
 						'html'			=> $item->html,
+						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
