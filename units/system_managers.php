@@ -34,7 +34,7 @@ class ModuleManager extends ItemManager {
 }
 
 
-class AdministratorManager extends ItemManager {
+class UserManager extends ItemManager {
 	private static $_instance;
 	const SALT = '5sWeaGqp53loh7hYFDEjBi6VHMYDznrx5ITUF9Bzni7WXU9IJOBmr/80u2vjklSfhK+lvPBel/T9';
 
@@ -50,6 +50,7 @@ class AdministratorManager extends ItemManager {
 		$this->addProperty('fullname', 'varchar');
 		$this->addProperty('email', 'varchar');
 		$this->addProperty('level', 'int');
+		$this->addProperty('verified', 'boolean');
 	}
 
 	/**
@@ -62,6 +63,33 @@ class AdministratorManager extends ItemManager {
 		return self::$_instance;
 	}
 }
+
+
+class UserVerificationManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('system_access_verification');
+
+		$this->addProperty('user', 'int');
+		$this->addProperty('timestamp', 'timestamp');
+		$this->addProperty('code', 'varchar');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
+	}
+}
+
 
 class LoginRetryManager extends ItemManager {
 	private static $_instance;
