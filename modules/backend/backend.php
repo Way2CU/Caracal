@@ -177,12 +177,12 @@ class backend extends Module {
 					break;
 				
 				case 'save_unpriviledged_user':
-					$user_manager = UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->saveUnpriviledgedUser($params, $children);
 					break;
 
 				case 'password_recovery':
-					$user_manager = UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->recoverPasswordByEmail($params, $children);
 					break;
 
@@ -263,7 +263,9 @@ class backend extends Module {
 				case 'users_delete_commit':
 				case 'change_password':
 				case 'save_password':
-					$user_manager = UserManager::getInstance();
+				case 'email_templates':
+				case 'email_templates_save':
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->transferControl();
 					break;
 
@@ -280,11 +282,27 @@ class backend extends Module {
 	 * Redefine abstract methods
 	 */
 	public function onInit() {
+		$this->saveSetting('template_verify', '');
+		$this->saveSetting('template_recovery', '');
 	}
 
 	public function onDisable() {
 	}
 
+	/**
+	 * Save template selection.
+	 *
+	 * @param string $verify
+	 * @param string $recovery
+	 */
+	public function saveTemplateSelection($verify, $recovery) {
+		$this->saveSetting('template_verify', $verify);
+		$this->saveSetting('template_recovery', $recovery);
+	}
+
+	/**
+	 * Parse main backend template.
+	 */
 	private function showBackend() {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
