@@ -94,7 +94,7 @@ function database_initialize($create_database) {
 	if ($database_exists && $db->multi_query($sql)) {
 		$module_manager = ModuleManager::getInstance();
 		$module_handler = ModuleHandler::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		// populate tables
 		$raw_data = file_get_contents($xml_file);
@@ -122,12 +122,13 @@ function database_initialize($create_database) {
 					break;
 
 				case 'user':
-					$password = hash_hmac('sha256', $item->tagAttrs['password'], AdministratorManager::SALT);
+					$password = hash_hmac('sha256', $item->tagAttrs['password'], UserManager::SALT);
 					$admin_manager->insertData(array(
 									'username'	=> $item->tagAttrs['username'],
 									'password'	=> $password,
 									'fullname'	=> $item->tagAttrs['fullname'],
 									'level'		=> $item->tagAttrs['level']
+									'verified'	=> 1
 								));
 					break;
 			}
