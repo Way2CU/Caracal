@@ -660,6 +660,7 @@ class Backend_UserManager {
 							'fullname'	=> $user->fullname,
 							'username'	=> $user->username,
 							'level'		=> $user->level,
+							'verified'	=> $user->verified,
 							'selected'	=> isset($tag_params['selected']) && ($tag_params['selected'] == $user->id),
 							'item_change'	=> url_MakeHyperlink(
 													$this->parent->getLanguageConstant('change'),
