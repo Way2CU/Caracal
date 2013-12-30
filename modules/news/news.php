@@ -964,7 +964,7 @@ class news extends Module {
 	public function tag_News($tag_params, $children) {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
 		$manager = NewsManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		if (!is_null($id))
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
@@ -1013,7 +1013,7 @@ class news extends Module {
 		$manager = NewsManager::getInstance();
 		$membership_manager = NewsMembershipManager::getInstance();
 		$group_manager = NewsGroupManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		if (!is_null($group)) {
 			// group is set, get item ids and feed them to conditions list
@@ -1408,7 +1408,7 @@ class news extends Module {
 		define('_OMIT_STATS', 1);
 
 		$manager = NewsManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		if (isset($_REQUEST['id'])) {
 			// id was specified, fetch the news
