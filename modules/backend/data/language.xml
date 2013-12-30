@@ -48,6 +48,7 @@
 		<constant name="message_users_data_saved">User data was saved!</constant>
 		<constant name="message_users_delete">You are about to remove the following user from the system. User will loose all data associated with this account. Are you sure?</constant>
 		<constant name="message_users_deleted">Specified user was removed!</constant>
+		<constant name="message_users_account_not_verified">User account is not verified!</constant>
 		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
@@ -152,6 +153,7 @@
 		<constant name="message_users_data_saved">מידע עבור המשתמש נשמר.</constant>
 		<constant name="message_users_delete">אתה עומד להסיר את המשתמש, כל המידע המשוייך אליו ימחקהאם אתה בטוח?יאליו</constant>
 		<constant name="message_users_deleted">המשתמש הוסר</constant>
+		<constant name="message_users_account_not_verified">User account is not verified!</constant>
 		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
@@ -258,6 +260,7 @@
 		<constant name="message_users_data_saved">Novi korisnički podaci su snimljeni!</constant>
 		<constant name="message_users_delete">Odabrali se brisanje korisničkog naloga. Korisnik će izgubiti sve podatke vezane za ovaj nalog. Da li ste sigurni?</constant>
 		<constant name="message_users_deleted">Odabrani korisnički nalog je izbrisan!</constant>
+		<constant name="message_users_account_not_verified">User account is not verified!</constant>
 		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
