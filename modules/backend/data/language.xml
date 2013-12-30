@@ -22,6 +22,7 @@
 		<constant name="title_users_create">Users: Create new</constant>
 		<constant name="title_users_change">Users: Change user data</constant>
 		<constant name="title_users_delete">Users: Delete account</constant>
+		<constant name="title_email_templates">Users: Email Templates</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
@@ -47,6 +48,8 @@
 		<constant name="message_users_data_saved">User data was saved!</constant>
 		<constant name="message_users_delete">You are about to remove the following user from the system. User will loose all data associated with this account. Are you sure?</constant>
 		<constant name="message_users_deleted">Specified user was removed!</constant>
+		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>
@@ -67,6 +70,8 @@
 		<constant name="label_email">Email:</constant>
 		<constant name="label_level">Level:</constant>
 		<constant name="label_link">Enter URL:</constant>
+		<constant name="label_template_verify">Account verification:</constant>
+		<constant name="label_template_password_recovery">Password recovery:</constant>
 
 		<!-- Toolbar -->
 		<constant name="toolbar_markdown_bold">Bold</constant>
@@ -88,6 +93,7 @@
 
 		<!-- User Manager Related -->
 		<constant name="create_user">Create user</constant>
+		<constant name="email_templates">Email templates</constant>
 		<constant name="group_guests">Guests</constant>
 		<constant name="group_users">Users</constant>
 		<constant name="group_admins">Administrators</constant>
@@ -122,6 +128,7 @@
 		<constant name="title_users_create">משתמשים: צור חדש</constant>
 		<constant name="title_users_change">משתמשים: שנה מידע</constant>
 		<constant name="title_users_delete">משתמשים: מחק חשבון</constant>
+		<constant name="title_email_templates">Users: Email Templates</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">המודול פעיל</constant>
@@ -145,6 +152,8 @@
 		<constant name="message_users_data_saved">מידע עבור המשתמש נשמר.</constant>
 		<constant name="message_users_delete">אתה עומד להסיר את המשתמש, כל המידע המשוייך אליו ימחקהאם אתה בטוח?יאליו</constant>
 		<constant name="message_users_deleted">המשתמש הוסר</constant>
+		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
 		<!-- Labels -->
 		<constant name="label_old_password">סיסמא ישנה:</constant>
@@ -186,6 +195,7 @@
 
 		<!-- User Manager Related -->
 		<constant name="create_user">צור משתמש</constant>
+		<constant name="email_templates">Email templates</constant>
 		<constant name="group_guests">אורחים</constant>
 		<constant name="group_users">משתמשים</constant>
 		<constant name="group_admins">מנהלים</constant>
@@ -222,6 +232,7 @@
 		<constant name="title_users_create">Korisnici: Dodavanje novog</constant>
 		<constant name="title_users_change">Korisnici: Promena podataka</constant>
 		<constant name="title_users_delete">Korisnici: Brisanje naloga</constant>
+		<constant name="title_email_templates">Korisnici: Email Templates</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module je aktiviran.</constant>
@@ -247,6 +258,8 @@
 		<constant name="message_users_data_saved">Novi korisnički podaci su snimljeni!</constant>
 		<constant name="message_users_delete">Odabrali se brisanje korisničkog naloga. Korisnik će izgubiti sve podatke vezane za ovaj nalog. Da li ste sigurni?</constant>
 		<constant name="message_users_deleted">Odabrani korisnički nalog je izbrisan!</constant>
+		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Ime modula</constant>
@@ -288,6 +301,7 @@
 
 		<!-- User Manager Related -->
 		<constant name="create_user">Novi korisnik</constant>
+		<constant name="email_templates">Email templates</constant>
 		<constant name="group_guests">Gosti</constant>
 		<constant name="group_users">Korisnici</constant>
 		<constant name="group_admins">Administratori</constant>
