@@ -169,6 +169,7 @@ class Backend_UserManager {
 				'username'	=> fix_chars($_REQUEST['username']),
 				'email'		=> fix_chars($_REQUEST['email']),
 				'level'		=> fix_id($_REQUEST['level']),
+				'verified'	=> 1,
 			);
 
 		if (isset($_REQUEST['password']))
