@@ -4,6 +4,7 @@
 	<!-- Window Menu -->
 	<div class="main_menu">
 		<_var name="$params['link_new']"/>
+		<_var name="$params['link_templates']"/>
 	</div>
 
 	<!-- Header -->
