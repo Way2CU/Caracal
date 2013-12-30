@@ -651,7 +651,7 @@ class user_page extends Module {
 	 */
 	public function tag_Page($tag_params, $children) {
 		$manager = UserPageManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 		$conditions = array();
 
 		// prepare query parameters
@@ -711,7 +711,7 @@ class user_page extends Module {
 		global $language;
 
 		$manager = UserPageManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 		$conditions = array();
 
 		// get items from database
