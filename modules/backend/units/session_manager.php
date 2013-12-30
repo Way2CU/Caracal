@@ -280,7 +280,7 @@ class SessionManager {
 		}
 
 		// check user data
-		if (is_object($user) && $captcha_ok) {
+		if (is_object($user) && $captcha_ok && $user->verified) {
 			// remove login retries
 			$retry_manager->clearAddress();
 
@@ -292,6 +292,10 @@ class SessionManager {
 			$_SESSION['fullname'] = $user->fullname;
 
 			$result['logged_in'] = true;
+
+		} elseif (is_object($user) && $captcha_ok && !$user->verified) {
+			// user is logged but account is not verified
+			$result['message'] = $this->parent->getLanguageConstant('message_users_account_not_verified');
 
 		} else {
 			// user is not logged in properly, increase fail
