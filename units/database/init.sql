@@ -5,8 +5,16 @@ CREATE TABLE `system_access` (
 	`fullname` varchar(100) COLLATE utf8_bin DEFAULT NULL,
 	`email` varchar(200) COLLATE utf8_bin NOT NULL,
 	`level` smallint(6) NOT NULL DEFAULT '1',
+	`verified` boolean NOT NULL DEFAULT FALSE,
 	PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `system_access_verification` (
+	`user` int(11) NOT NULL,
+	`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`code` varchar(64) NOT NULL,
+	KEY `index_by_account` (`account`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_cache` (
 	`uid` char(32) NOT NULL,
@@ -26,7 +34,7 @@ CREATE TABLE `system_modules` (
 	PRIMARY KEY (`id`),
 	KEY `index_by_preload` (`preload`),
 	KEY `idnex_by_active` (`active`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_retries` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,7 +42,7 @@ CREATE TABLE `system_retries` (
 	`address` varchar(15) NOT NULL,
 	`count` tinyint(4) NOT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_settings` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -43,4 +51,4 @@ CREATE TABLE `system_settings` (
 	`value` text COLLATE utf8_bin,
 	PRIMARY KEY (`id`),
 	KEY `index_by_module` (`module`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
