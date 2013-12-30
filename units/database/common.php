@@ -127,7 +127,7 @@ function database_initialize($create_database) {
 									'username'	=> $item->tagAttrs['username'],
 									'password'	=> $password,
 									'fullname'	=> $item->tagAttrs['fullname'],
-									'level'		=> $item->tagAttrs['level']
+									'level'		=> $item->tagAttrs['level'],
 									'verified'	=> 1
 								));
 					break;
