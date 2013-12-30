@@ -102,10 +102,10 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
-		$hashed_password = hash_hmac('sha256', $password, AdministratorManager::SALT);
+		$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
 
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
 
 		$user = $manager->getSingleItem(
@@ -244,7 +244,7 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
-		$hashed_password = hash_hmac('sha256', $password, AdministratorManager::SALT);
+		$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
 
 		$result = array(
@@ -253,7 +253,7 @@ class SessionManager {
 				'message'		=> ''
 			);
 
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
 
 		$user = $manager->getSingleItem(
