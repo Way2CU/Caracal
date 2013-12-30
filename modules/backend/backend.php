@@ -175,6 +175,11 @@ class backend extends Module {
 					$session_manager = SessionManager::getInstance($this);
 					$session_manager->transferControl();
 					break;
+
+				case 'verify_account':
+					$user_manager = Backend_UserManager::getInstance();
+					$user_manager->verifyAccount($params, $children);
+					break;
 				
 				case 'save_unpriviledged_user':
 					$user_manager = Backend_UserManager::getInstance();

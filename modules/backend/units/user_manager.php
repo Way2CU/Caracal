@@ -737,6 +737,63 @@ class Backend_UserManager {
 			$template->parse();
 		}
 	}
+
+	/**
+	 * Verify user account using code specified in either tag_params or _REQUEST.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function verifyAccount($tag_params, $children) {
+		$manager = UserManager::getInstance();
+		$verification_manager = UserVerificationManager::getInstance();
+
+		$result = false;
+		$username = null;
+		$code = null;
+		$verification = null;
+
+		// get username
+		if (isset($tag_params['username']))
+			$username = fix_chars($tag_params['username']);
+
+		if (isset($_REQUEST['username']) && is_null($username))
+			$username = fix_chars($_REQUEST['username']);
+
+		// get verification code
+		if (isset($tag_params['code']))
+			$code = fix_chars($tag_params['code']);
+
+		if (isset($_REQUEST['code']) && is_null($code))
+			$code = fix_chars($_REQUEST['code']);
+
+		if (is_null($username) || is_null($code))
+			return;
+
+		// get user from database
+		$user = $manager->getSingleItem($manager->getFieldNames(), array('username' => $username));
+
+		if (is_object($user))
+			$verification = $verification_manager->getSingleItem(
+									$verification_manager->getFieldNames(),
+									array(
+										'user'	=> $user->id,
+										'code'	=> $code
+									));
+
+		// data matches, mark account as verified
+		if (is_object($verification)) {
+			$manager->updateData(array('verified' => 1), array('id' => $user->id));
+			$verification_manager->deleteData(array('user' => $user->id));
+
+			// automatically log user in
+			$_SESSION['uid'] = $user->id;
+			$_SESSION['logged'] = true;
+			$_SESSION['level'] = $user->level;
+			$_SESSION['username'] = $user->username;
+			$_SESSION['fullname'] = $user->fullname;
+		}
+	}
 }
 
 ?>
