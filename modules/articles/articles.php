@@ -630,7 +630,7 @@ class articles extends Module {
 	public function tag_Article($tag_params, $children) {
 		$manager = ArticleManager::getInstance();
 		$group_manager = ArticleGroupManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;
@@ -721,7 +721,7 @@ class articles extends Module {
 	public function tag_ArticleList($tag_params, $children) {
 		$manager = ArticleManager::getInstance();
 		$group_manager = ArticleGroupManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		$conditions = array();
 		$selected = -1;
@@ -1061,7 +1061,7 @@ class articles extends Module {
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
 
 		$manager = ArticleManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		$result = array(
 					'error'			=> false,
@@ -1119,7 +1119,7 @@ class articles extends Module {
 
 		$manager = ArticleManager::getInstance();
 		$group_manager = ArticleGroupManager::getInstance();
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		$conditions = array();
 		$order_by = array('id');
