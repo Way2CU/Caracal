@@ -4,7 +4,7 @@
  * Backend User Manager
  */
 
-class UserManager {
+class Backend_UserManager {
 	private static $_instance;
 
 	var $parent;
@@ -59,6 +59,14 @@ class UserManager {
 					$this->savePassword();
 					break;
 
+				case 'email_templates':
+					$this->showTemplateSelection();
+					break;
+
+				case 'email_templates_save':
+					$this->saveTemplateSelection();
+					break;
+
 				default:
 					$this->showUsers();
 					break;
@@ -81,6 +89,15 @@ class UserManager {
 										true, true,
 										$this->parent->name,
 										'users_create'
+									),
+				'link_templates'	=> window_OpenHyperlink(
+										$this->parent->getLanguageConstant('email_templates'),
+										'system_users_email_templates',
+										370,
+										$this->parent->getLanguageConstant('title_email_templates'),
+										true, true,
+										$this->parent->name,
+										'email_templates'
 									)
 			);
 
@@ -113,7 +130,7 @@ class UserManager {
 	 */
 	private function changeUser() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -144,7 +161,7 @@ class UserManager {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		// get manager instance
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 
 		// grab new user data
 		$data = array(
@@ -155,10 +172,10 @@ class UserManager {
 			);
 
 		if (isset($_REQUEST['password']))
-			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['password']), AdministratorManager::SALT);
+			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['password']), UserManager::SALT);
 
 		if (isset($_REQUEST['new_password']) && !empty($_REQUEST['new_password']))
-			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['new_password']), AdministratorManager::SALT);
+			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['new_password']), UserManager::SALT);
 
 		// test level is ok to ensure security is on right level
 		$level_is_ok = ($_SESSION['level'] > 5) || ($_SESSION['level'] <= 5 && $data['level'] < $_SESSION['level']);
@@ -220,7 +237,8 @@ class UserManager {
 				'error'		=> false,
 				'message'	=> ''
 			);
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
+		$user_id = null;
 
 		// grab new user data
 		if (defined('_AJAX_REQUEST')) 
@@ -230,7 +248,7 @@ class UserManager {
 		$data = array(
 				'fullname'	=> fix_chars($source['fullname']),
 				'username'	=> fix_chars($source['username']),
-				'password'	=> fix_chars($source['password']),
+				'password'	=> hash_hmac('sha256', $source['password'], UserManager::SALT),
 				'email'		=> fix_chars($source['email']),
 				'level'		=> 0,
 			);
@@ -256,6 +274,7 @@ class UserManager {
 			} else {
 				// insert data
 				$manager->insertData($data);
+				$user_id = $manager->getInsertedID();
 				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
 			}
 
@@ -263,6 +282,7 @@ class UserManager {
 		if (isset($source['show_result']) && $source['show_result'] == 1)
 			if (defined('_AJAX_REQUEST')) {
 				print json_encode($result);
+
 			} else {
 				// show message
 				$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
@@ -278,6 +298,45 @@ class UserManager {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+
+		// send notification email
+		if (!$result['error'] && class_exists('contact_form') && !is_null($user_id)) {
+			$verification_manager = UserVerificationManager::getInstance();
+			$contact_form = contact_form::getInstance();
+			$verification_code = $contact_form->generateVerificationCode(
+											$data['username'],
+											$data['email']
+										);
+
+			// insert verification code
+			$verification_data = array(
+						'user'	=> $user_id,
+						'code'	=> $verification_code
+					);
+			$verification_manager->insertData($verification_data);
+
+			// prepare email
+			$fields = array(
+					'fullname'		=> $data['fullname'],
+					'username'		=> $data['username'],
+					'password'		=> fix_chars($source['password']),
+					'email'			=> $data['email'],
+					'verify_code'	=> $verification_code
+				);
+
+			$email = $contact_form->makeEmailFromTemplate(
+											$this->parent->settings['template_verify'],
+											$fields
+										);
+
+			// send email
+			$contact_form->sendMail(
+					$data['email'],
+					$email['subject'],
+					$email['body'],
+					$email['headers']
+				);
+		}
 	}
 
 	/**
@@ -289,7 +348,7 @@ class UserManager {
 	public function recoverPasswordByEmail($tag_params, $children) {
 		$result = false;
 		$captcha_valid = false;
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 
 		$subject = null;
 		$body = null;
@@ -382,7 +441,7 @@ class UserManager {
 	 */
 	private function deleteUser() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 
 		$item = $manager->getSingleItem(array('fullname'), array('id' => $id));
 
@@ -417,7 +476,7 @@ class UserManager {
 	 */
 	private function deleteUser_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 
@@ -456,7 +515,7 @@ class UserManager {
 	 * Salt and save password
 	 */
 	private function savePassword() {
-		$manager = AdministratorManager::getInstance();
+		$manager = UserManager::getInstance();
 
 		$old_password = $_REQUEST['old_password'];
 		$new_password = $_REQUEST['new_password'];
@@ -468,11 +527,11 @@ class UserManager {
 
 		if (is_object($user)) {
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
-			$old_password_ok = hash_hmac('sha256', $old_password, AdministratorManager::SALT) == $user->password || empty($user->password);
+			$old_password_ok = hash_hmac('sha256', $old_password, UserManager::SALT) == $user->password || empty($user->password);
 
 			if ($new_password_ok && $old_password_ok) {
 				// all conditions are met, change password
-				$password = hash_hmac('sha256', $new_password, AdministratorManager::SALT);
+				$password = hash_hmac('sha256', $new_password, UserManager::SALT);
 				$manager->updateData(array('password' => $password), array('id' => $user->id));
 
 				$message = $this->parent->getLanguageConstant('message_password_changed');
@@ -498,13 +557,80 @@ class UserManager {
 	}
 
 	/**
+	 * Show form for selecting email templates for notifying users.
+	 */
+	private function showTemplateSelection() {
+		if (class_exists('contact_form')) {
+			// get contact form and show settings
+			$contact_form = contact_form::getInstance();
+			$template = new TemplateHandler('email_templates.xml', $this->parent->path.'templates/');
+			$template->setMappedModule($this->parent->name);
+
+			$template->registerTagHandler('cms:templates', $contact_form, 'tag_TemplateList');
+
+			$params = array(
+						'form_action'	=> backend_UrlMake($this->parent->name, 'email_templates_save'),
+						'cancel_action'	=> window_Close('system_users_email_templates')
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+
+		} else {
+			// contact form module is not active, show message instead
+			$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
+			$template->setMappedModule($this->parent->name);
+
+			$params = array(
+						'message'	=> $this->parent->getLanguageConstant('message_no_contact_form'),
+						'button'	=> $this->parent->getLanguageConstant('close'),
+						'action'	=> window_Close('system_users_email_templates')
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+		
+	}
+
+	/**
+	 * Save selection of email templates.
+	 */
+	private function saveTemplateSelection() {
+		// save configuration
+		$template_verify = fix_chars($_REQUEST['template_verify']);
+		$template_recovery = fix_chars($_REQUEST['template_recovery']);
+
+		$this->parent->saveTemplateSelection(
+							$template_verify,
+							$template_recovery
+						);
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
+		$template->setMappedModule($this->parent->name);
+
+		$params = array(
+					'message'	=> $this->parent->getLanguageConstant('message_template_selection_saved'),
+					'button'	=> $this->parent->getLanguageConstant('close'),
+					'action'	=> window_Close('system_users_email_templates')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Handle drawing user list
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_UserList($tag_params, $children) {
-		$admin_manager = AdministratorManager::getInstance();
+		$admin_manager = UserManager::getInstance();
 
 		// make sure lower levels can't edit others
 		if ($_SESSION['level'] < 5)
