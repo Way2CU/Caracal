@@ -341,100 +341,224 @@ class Backend_UserManager {
 	}
 
 	/**
-	 * Send password to users email
+	 * Password recovery for user accounts using email or username.
+	 * Password reset string is sent to users email.
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function recoverPasswordByEmail($tag_params, $children) {
-		$result = false;
-		$captcha_valid = false;
-		$manager = UserManager::getInstance();
+		$result = array(
+					'error'		=> true,
+					'message'	=> ''
+				);
 
-		$subject = null;
-		$body = null;
+		// make sure contact form module is enabled
+		if (!class_exists('contact_form'))
+			if (_AJAX_REQUEST) {
+				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
+				print json_encode($result);
+				return;
 
-		$message_success = 'Mail sent!';
-		$message_error = 'There was a problem sending email!';
-		$message_bad_captcha = 'Invalid captcha value!';
+			} else {
+				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
 
-		foreach ($children as $tag) {
-			switch ($tag->tagName) {
-				case 'subject':
-					$subject = fix_chars($tag->tagData);
-					break;
-
-				case 'body':
-					$body = fix_chars($tag->tagData);
-					break;
-
-				case 'message_success':
-					$message_success = fix_chars($tag->tagData);
-					break;
-
-				case 'message_error':
-					$message_error = fix_chars($tag->tagData);
-					break;
-
-				case 'message_bad_captcha':
-					$message_bad_captcha = fix_chars($tag->tagData);
-					break;
+				$template->restoreXML();
+				$template->setLocalParams($result);
+				$template->parse();
+				return;
 			}
-		}
+		
+		// get required module instances
+		$manager = UserManager::getInstance();
+		$verification_manager = UserVerificationManager::getInstance();
+		$contact_form = contact_form::getInstance();
+		$username = null;
+		$email = null;
+		$captcha = null;
+		$conditions = array();
+	
+		// get username
+		if (array_key_exists('username', $tag_params))
+			$username = fix_chars($tag_params['username']);
 
-		if (class_exists('captcha')) {
-			$captcha = captcha::getInstance();
-			$captcha_valid = $captcha->isCaptchaValid($tag_params['captcha']);
+		if (is_null($username) && array_key_exists('username', $_REQUEST))
+			$username = fix_chars($_REQUEST['username']);
 
-		} else {
-			$captcha_valid = true;
-		}
+		// get email
+		if (array_key_exists('email', $tag_params))
+			$email = fix_chars($tag_params['email']);
+
+		if (is_null($email) && array_key_exists('email', $_REQUEST))
+			$email = fix_chars($_REQUEST['email']);
+
+		// get user from the database
+		if (!is_null($username))
+			$conditions['username'] = $username;
+
+		if (!is_null($email))
+			$conditions['email'] = $email;
+
+		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// send email
-		if ($captcha_valid && class_exists('contact_form')) {
-			$contact_form = contact_form::getInstance();
-			$conditions = array();
+		if (is_object($user)) {
+			$code = $contact_form->generateVerificationCode($user->username, $user->email);
 
-			if (isset($tag_params['username']))
-				$conditions['username'] = fix_chars($tag_params['username']);	
+			// insert verification code
+			$verification_data = array(
+						'user'	=> $user->id,
+						'code'	=> $code
+					);
+			$verification_manager->insertData($verification_data);
 
-			if (isset($tag_params['email']))
-				$conditions['email'] = fix_chars($tag_params['email']);
+			// prepare email
+			$fields = array(
+					'fullname'		=> $user->fullname,
+					'username'		=> $user->username,
+					'email'			=> $user->email,
+					'code'			=> $code
+				);
 
-			$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+			$email = $contact_form->makeEmailFromTemplate(
+											$this->parent->settings['template_recovery'],
+											$fields
+										);
 
-			if (is_object($user)) {
-				$search = array(
-							'%username%',
-							'%password%',
-							'%email%',
-							'%fullname%'
-						);
+			// send email
+			$result['error'] = !$contact_form->sendMail(
+										$user->email,
+										$email['subject'],
+										$email['body'],
+										$email['headers']
+									);
 
-				$replace = array(
-							$user->username,
-							$user->password,
-							$user->email,
-							$user->fullname
-						);
-
-				// replace string
-				$body = str_replace($search, $replace, $body);
-
-				// send email
-				$result = $contact_form->sendFromModule($user->email, $subject, $body);
-
-				// show result
-				if (isset($tag_params['show_result']))
-					print $result ? $message_success : $message_error;
-			}
 		} else {
-			if (isset($tag_params['show_result']))
-				print $message_bad_captcha;
+			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
 		}
-		
 
-		return $result;
+		// show response
+		if (_AJAX_REQUEST) {
+			print json_encode($result);
+
+		} else {
+			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+
+			$template->restoreXML();
+			$template->setLocalParams($result);
+			$template->parse();
+		}
+
+		return !$result['error'];
+	}
+
+	/**
+	 * Save new password for specified account.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function saveRecoveredPassword($tag_params, $children) {
+		$manager = UserManager::getInstance();
+		$verification_manager = UserVerificationManager::getInstance();
+		$username = null;
+		$email = null;
+		$password = null;
+		$code = null;
+		$conditions = array();
+		$result = array(
+				'error'		=> true,
+				'message'	=> ''
+			);
+
+		// get username
+		if (array_key_exists('username', $tag_params))
+			$username = fix_chars($tag_params['username']);
+
+		if (is_null($username) && array_key_exists('username', $_REQUEST))
+			$username = fix_chars($_REQUEST['username']);
+
+		// get email
+		if (array_key_exists('email', $tag_params))
+			$email = fix_chars($tag_params['email']);
+
+		if (is_null($email) && array_key_exists('email', $_REQUEST))
+			$email = fix_chars($_REQUEST['email']);
+
+		// get password
+		if (array_key_exists('password', $tag_params))
+			$password = hash_hmac('sha256', $tag_params['password'], UserManager::SALT);
+
+		if (is_null($password) && array_key_exists('password', $_REQUEST))
+			$password = hash_hmac('sha256', $_REQUEST['password'], UserManager::SALT);
+
+		// get code
+		if (array_key_exists('code', $tag_params))
+			$code = fix_chars($tag_params['code']);
+
+		if (is_null($code) && array_key_exists('code', $_REQUEST))
+			$code = fix_chars($_REQUEST['code']);
+
+		// get user with specified data
+		if (!is_null($username))
+			$conditions['username'] = $username;
+
+		if (!is_null($email))
+			$conditions['email'] = $email;
+
+		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		// store new password
+		if (is_object($user)) {
+			$verification = $verification_manager->getSingleItem(
+													$verification_manager->getFieldNames(),
+													array(
+														'user'	=> $user->id,
+														'code'	=> $code
+													));
+
+			if (is_object($verification)) {
+				// remove verification code from the database
+				$verification_manager->deleteData(array('user' => $verification->user));
+
+				// store new password and mark account as verified
+				$manager->updateData(
+							array(
+								'verified'	=> 1,
+								'password'	=> $password
+							),
+							array(
+								'user'	=> $user->id
+							)
+						);
+
+				$result['error'] = false;
+				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
+
+			} else {
+				// invalid code or user
+				$result['message'] = $this->parent->getLanguageConstant('message_invalid_code');
+			}
+
+		} else {
+			// no user in the system
+			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
+		}
+
+		// show response
+		if (_AJAX_REQUEST) {
+			print json_encode($result);
+
+		} else {
+			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+
+			$template->restoreXML();
+			$template->setLocalParams($result);
+			$template->parse();
+		}
+
+		return !$result['error'];
 	}
 
 	/**
