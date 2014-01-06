@@ -50,6 +50,8 @@
 		<constant name="message_users_deleted">Specified user was removed!</constant>
 		<constant name="message_users_account_not_verified">User account is not verified!</constant>
 		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
+		<constant name="message_invalid_code">Invalid verification code.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
 		<!-- Column Names -->
@@ -155,6 +157,8 @@
 		<constant name="message_users_deleted">המשתמש הוסר</constant>
 		<constant name="message_users_account_not_verified">User account is not verified!</constant>
 		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
+		<constant name="message_invalid_code">Invalid verification code.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
 		<!-- Labels -->
@@ -262,6 +266,8 @@
 		<constant name="message_users_deleted">Odabrani korisnički nalog je izbrisan!</constant>
 		<constant name="message_users_account_not_verified">User account is not verified!</constant>
 		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
+		<constant name="message_invalid_code">Invalid verification code.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
 
 		<!-- Column Names -->
