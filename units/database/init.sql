@@ -13,7 +13,7 @@ CREATE TABLE `system_access_verification` (
 	`user` int(11) NOT NULL,
 	`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`code` varchar(64) NOT NULL,
-	KEY `index_by_account` (`account`)
+	KEY `index_by_user` (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_cache` (
