@@ -21,6 +21,7 @@ class collection extends Module {
 	const SCROLLBAR = 5;
 	const PAGE_CONTROL = 6;
 	const MOBILE_MENU = 7;
+	const COMMUNICATOR = 8;
 
 	// jQuery and its extensions
 	const JQUERY = 50;
@@ -52,6 +53,7 @@ class collection extends Module {
 				collection::SCROLLBAR			=> 'scrollbar.js',
 				collection::PAGE_CONTROL		=> 'page_control.js',
 				collection::MOBILE_MENU			=> 'mobile_menu.js',
+				collection::COMMUNICATOR		=> 'communicator.js',
 				collection::JQUERY				=> 'jquery.js',
 				collection::JQUERY_EVENT_DRAG	=> 'jquery.event.drag.js',
 				collection::JQUERY_MINICOLORS	=> array(
@@ -73,6 +75,7 @@ class collection extends Module {
 				'scrollbar'				=> collection::SCROLLBAR,
 				'page_control'			=> collection::PAGE_CONTROL,
 				'mobile_menu'			=> collection::MOBILE_MENU,
+				'communicator'			=> collection::COMMUNICATOR,
 				'jquery'				=> collection::JQUERY,
 				'jquery_event_drag'		=> collection::JQUERY_EVENT_DRAG,
 				'jquery_minicolors'		=> collection::JQUERY_MINICOLORS,
