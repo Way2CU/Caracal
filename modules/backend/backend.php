@@ -191,6 +191,11 @@ class backend extends Module {
 					$user_manager->recoverPasswordByEmail($params, $children);
 					break;
 
+				case 'password_recovery_save':
+					$user_manager = Backend_UserManager::getInstance();
+					$user_manager->saveRecoveredPassword($params, $children);
+					break;
+
 				case 'draw_menu':
 					$this->drawCompleteMenu();
 					break;
