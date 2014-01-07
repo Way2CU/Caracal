@@ -64,11 +64,23 @@ abstract class Module {
 	 * @return array
 	 */
 	public function getMultilanguageField($name) {
+		global $db;
+
 		$result = array();
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
-		foreach($list as $lang)
-			$result[$lang] = isset($_REQUEST["{$name}_{$lang}"]) ? $_REQUEST["{$name}_{$lang}"] : '';
+		foreach($list as $lang) {
+			$value = '';
+			$param_name = "{$name}_{$lang}";
+
+			// properly escape string
+			if (isset($_REQUEST[$param_name]))
+				if ($db->is_active())
+					$value = $db->escape_string($_REQUEST[$param_name]); else
+					$value = mysql_real_escape_string($_REQUEST[$param_name]);
+
+			$result[$lang] = $value;
+		}
 
 		return $result;
 	}
