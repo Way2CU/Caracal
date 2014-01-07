@@ -369,11 +369,28 @@ class Backend_UserManager {
 				$template->parse();
 				return;
 			}
-		
+
+		if (class_exists('captcha')) {
+			if (_AJAX_REQUEST) {
+				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
+				print json_encode($result);
+				return;
+
+			} else {
+				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
+
+				$template->restoreXML();
+				$template->setLocalParams($result);
+				$template->parse();
+				return;
+			}
+
 		// get required module instances
 		$manager = UserManager::getInstance();
 		$verification_manager = UserVerificationManager::getInstance();
 		$contact_form = contact_form::getInstance();
+		$captcha_module = captcha::getInstance();
 		$username = null;
 		$email = null;
 		$captcha = null;
@@ -393,6 +410,13 @@ class Backend_UserManager {
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
 			$email = fix_chars($_REQUEST['email']);
 
+		// get captcha value
+		if (array_key_exists('captcha', $tag_params))
+			$captcha = fix_chars($tag_params['captcha']);
+
+		if (is_null($captcha) && array_key_exists('captcha', $_REQUEST))
+			$captcha = fix_chars($_REQUEST['captcha']);
+
 		// get user from the database
 		if (!is_null($username))
 			$conditions['username'] = $username;
@@ -401,9 +425,10 @@ class Backend_UserManager {
 			$conditions['email'] = $email;
 
 		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$captcha_valid = $captcha_module->isCaptchaValid($captcha);
 
 		// send email
-		if (is_object($user)) {
+		if (is_object($user) && $captcha_valid) {
 			$code = $contact_form->generateVerificationCode($user->username, $user->email);
 
 			// insert verification code
@@ -433,6 +458,9 @@ class Backend_UserManager {
 										$email['body'],
 										$email['headers']
 									);
+
+		} elseif (is_object($user) && !$captcha_valid) {
+			$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
 
 		} else {
 			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
