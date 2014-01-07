@@ -4,11 +4,8 @@
 	<language short="en">
 		<constant name="captcha_message" value="Captcha image (click to refresh)" />
 	</language>
-	<language short="sr-lat">
+	<language short="sr">
 		<constant name="captcha_message" value="Captcha slika (klik na sliku osvežava)" />
-	</language>
-	<language short="sr-cyr">
-		<constant name="captcha_message" value="Captcha слика (клик на слику освежава)" />
 	</language>
 	<language short="he">
 		<constant name="captcha_message" value="תמונת קאפצ'ה (לחץ לרענון)" />
