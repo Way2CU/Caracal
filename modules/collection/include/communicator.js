@@ -12,6 +12,7 @@ function Communicator(module_name) {
 
 	self._url = null;
 	self._url_path = '/index.php';
+	self._module = module_name;
 	self._headers = {};
 	self._callback_success = null;
 	self._callback_error = null;
@@ -54,6 +55,7 @@ function Communicator(module_name) {
 	 */
 	self.on_success = function(callback) {
 		self._callback_success = callback;
+		return self;
 	};
 
 	/**
@@ -63,6 +65,7 @@ function Communicator(module_name) {
 	 */
 	self.on_error = function(callback) {
 		self._callback_error = callback;
+		return self;
 	};
 
 	/**
@@ -72,6 +75,7 @@ function Communicator(module_name) {
 	 */
 	self.use_cache = function(use_cache) {
 		self._cache_response = use_cache;
+		return self;
 	};
 
 	/**
@@ -83,6 +87,7 @@ function Communicator(module_name) {
 	 */
 	self.add_headers = function(headers) {
 		self._headers = headers;
+		return self;
 	};
 
 	/**
@@ -92,6 +97,7 @@ function Communicator(module_name) {
 	 */
 	self.set_asynchronous = function(async) {
 		self._asynchronous = async;
+		return self;
 	};
 
 	/**
@@ -108,6 +114,10 @@ function Communicator(module_name) {
 				url: self._url,
 				type: 'POST',
 				context: this,
+				data: {
+					section: self._module,
+					action: action
+				},
 				cache: self._cache_response,
 				async: self._asynchronous,
 				success: self._handle_success,
@@ -115,8 +125,8 @@ function Communicator(module_name) {
 			};
 
 		// add optional parameters
-		if (data !== undefined)
-			params.data = data;
+		if (data !== undefined) 
+			$.extend(params.data, data);
 
 		if (response_type === undefined)
 			params.dataType = 'json'; else
@@ -143,6 +153,10 @@ function Communicator(module_name) {
 				url: self._url,
 				type: 'GET',
 				context: this,
+				data: {
+					section: self._module,
+					action: action
+				},
 				cache: self._cache_response,
 				async: self._asynchronous,
 				success: self._handle_success,
@@ -151,7 +165,7 @@ function Communicator(module_name) {
 
 		// add optional parameters
 		if (data !== undefined)
-			params.data = data;
+			$.extend(params.data, data);
 
 		if (response_type === undefined)
 			params.dataType = 'json'; else
