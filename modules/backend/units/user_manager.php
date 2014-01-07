@@ -370,7 +370,7 @@ class Backend_UserManager {
 				return;
 			}
 
-		if (class_exists('captcha')) {
+		if (!class_exists('captcha'))
 			if (_AJAX_REQUEST) {
 				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
 				print json_encode($result);
