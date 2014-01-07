@@ -556,9 +556,7 @@ class Backend_UserManager {
 								'verified'	=> 1,
 								'password'	=> $password
 							),
-							array(
-								'user'	=> $user->id
-							)
+							array('id' => $user->id)
 						);
 
 				$result['error'] = false;
