@@ -36,6 +36,7 @@ require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
 require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
+require_once('units/session.php');
 require_once('units/config.php');
 require_once('units/doctypes.php');
 require_once('units/gravatar.php');
@@ -65,7 +66,7 @@ $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];
 
 // start session
-session_start();
+Session::start();
 
 // unpack parameters if needed
 if ($url_rewrite)
