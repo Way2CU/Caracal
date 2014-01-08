@@ -104,6 +104,7 @@ class SessionManager {
 		$password = fix_chars($_REQUEST['password']);
 		$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
+		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
 
 		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
@@ -135,6 +136,10 @@ class SessionManager {
 		if (is_object($user) && $captcha_ok) {
 			// remove login retries
 			$retry_manager->deleteData(array('address' => $_SERVER['REMOTE_ADDR']));
+
+			// reset session
+			if ($lasting_session)
+				Session::change_type(Session::TYPE_EXTENDED);
 
 			// set session variables
 			$_SESSION['uid'] = $user->id;
@@ -201,6 +206,9 @@ class SessionManager {
 	 * Perform logout procedure
 	 */
 	private function logout_commit() {
+		// change session type to default
+		Session::change_type();
+
 		// kill session variables
 		unset($_SESSION['uid']);
 		unset($_SESSION['logged']);
@@ -246,7 +254,9 @@ class SessionManager {
 		$password = fix_chars($_REQUEST['password']);
 		$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
+		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
 
+		trigger_error($lasting_session ? '1': '0');
 		$result = array(
 				'logged_in'		=> false,
 				'show_captcha'	=> false,
@@ -283,6 +293,10 @@ class SessionManager {
 		if (is_object($user) && $captcha_ok && $user->verified) {
 			// remove login retries
 			$retry_manager->clearAddress();
+			
+			// change session type
+			if ($lasting_session) 
+				Session::change_type(Session::TYPE_EXTENDED);
 
 			// set session variables
 			$_SESSION['uid'] = $user->id;
@@ -313,6 +327,9 @@ class SessionManager {
 	 * Perform AJAX logout
 	 */
 	private function json_Logout() {
+		// change session type to default
+		Session::change_type();
+
 		// kill session variables
 		unset($_SESSION['uid']);
 		unset($_SESSION['logged']);
