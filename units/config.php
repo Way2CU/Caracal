@@ -11,6 +11,9 @@ define('_TIMEZONE', 'America/New_York');
 define('DEBUG', 1);
 // define('SQL_DEBUG', 1);
 
+// default session options
+$session_type = Session::TYPE_NORMAL;
+
 // paths
 $module_path = 'modules/';
 $data_path = 'data/';
