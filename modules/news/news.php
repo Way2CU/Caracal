@@ -409,8 +409,8 @@ class news extends Module {
 
 		$data = array(
 					'author'	=> $_SESSION['uid'],
-					'title'		=> fix_chars($this->getMultilanguageField('title')),
-					'content'	=> escape_chars($this->getMultilanguageField('content')),
+					'title'		=> $this->getMultilanguageField('title'),
+					'content'	=> $this->getMultilanguageField('content'),
 					'visible'	=> fix_id($_REQUEST['visible'])
 				);
 
@@ -593,7 +593,7 @@ class news extends Module {
 
 		$data = array(
 					'text_id'	=> fix_chars($_REQUEST['text_id']),
-					'title'		=> fix_chars($this->getMultilanguageField('title'))
+					'title'		=> $this->getMultilanguageField('title')
 				);
 
 		if (is_null($id)) {
@@ -830,8 +830,8 @@ class news extends Module {
 		$data = array(
 					'group'			=> fix_id($_REQUEST['group']),
 					'news_count'	=> empty($_REQUEST['news_count']) ? 10 : fix_id($_REQUEST['news_count']),
-					'title'			=> escape_chars($this->getMultilanguageField('title')),
-					'description'	=> escape_chars($this->getMultilanguageField('description')),
+					'title'			=> $this->getMultilanguageField('title'),
+					'description'	=> $this->getMultilanguageField('description'),
 					'active'		=> fix_id($_REQUEST['active'])
 				);
 
