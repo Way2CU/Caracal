@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_feedback">Feedback</constant>
+		<constant name="menu_feedback_show">Show feedback</constant>
+
+		<constant name="title_feedback_show">Feedback</constant>
+		<constant name="title_feedback_change">Feedback: Change status</constant>
+		<constant name="title_feedback_delete">Feedback: Delete</constant>
+
+		<constant name="column_user">User</constant>
+		<constant name="column_page">Page</constant>
+	</language>
+
+	<language short="he">
+		<constant name="menu_feedback">Feedback</constant>
+		<constant name="menu_feedback_show">Show feedback</constant>
+
+		<constant name="title_feedback_show">Feedback</constant>
+		<constant name="title_feedback_change">Feedback: Change status</constant>
+		<constant name="title_feedback_delete">Feedback: Delete</constant>
+	</language>
+
+	<language short="sr">
+		<constant name="menu_feedback">Feedback</constant>
+		<constant name="menu_feedback_show">Show feedback</constant>
+
+		<constant name="title_feedback_show">Feedback</constant>
+		<constant name="title_feedback_change">Feedback: Change status</constant>
+		<constant name="title_feedback_delete">Feedback: Delete</constant>
+	</language>
+</document>
