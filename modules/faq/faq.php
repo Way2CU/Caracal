@@ -215,8 +215,8 @@ class faq extends Module {
 	 */
 	private function saveQuestion() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$question = fix_chars($this->getMultilanguageField('question'));
-		$answer = fix_chars($this->getMultilanguageField('answer'));
+		$question = $this->getMultilanguageField('question');
+		$answer = $this->getMultilanguageField('answer');
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 
 		$manager = QuestionManager::getInstance();
