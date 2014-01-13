@@ -172,6 +172,8 @@ class PayPal_PaymentMethod extends PaymentMethod {
 			$result = ($_POST['receiver_email'] == $this->_getAccount()) && strcmp($response, 'VERIFIED');
 		}
 
+		fclose($socket);
+
 		return $result;
 	}
 	
