@@ -355,8 +355,8 @@ class articles extends Module {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
-		$title = fix_chars($this->getMultilanguageField('title'));
-		$content = escape_chars($this->getMultilanguageField('content'));
+		$title = $this->getMultilanguageField('title');
+		$content = $this->getMultilanguageField('content');
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 
@@ -590,8 +590,8 @@ class articles extends Module {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
-		$title = fix_chars($this->getMultilanguageField('title'));
-		$description = escape_chars($this->getMultilanguageField('description'));
+		$title = $this->getMultilanguageField('title');
+		$description = $this->getMultilanguageField('description');
 
 		$data = array(
 					'text_id'		=> $text_id,
