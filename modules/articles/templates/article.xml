@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="article">
-		<h1><_var name="$params['title'][$language]"/></h1>
-		<_var name="Markdown($params['content'][$language])"/>
+		<h1><cms:var name="$params['title'][$language]"/></h1>
+		<cms:markdown param="content" multilanguage="yes"/>
 	</div>
 </document>
