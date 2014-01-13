@@ -233,7 +233,7 @@ class tips extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = TipManager::getInstance();
 		$data = array(
-					'content'	=> fix_chars($this->getMultilanguageField('content')),
+					'content'	=> $this->getMultilanguageField('content'),
 					'visible'	=> fix_id($_REQUEST['visible'])
 				);
 
