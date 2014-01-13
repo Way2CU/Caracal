@@ -575,8 +575,8 @@ class chat extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
 					'text_id'		=> escape_chars($_REQUEST['text_id']),
-					'name'			=> fix_chars($this->getMultilanguageField('name')),
-					'description'	=> escape_chars($this->getMultilanguageField('description')),
+					'name'			=> $this->getMultilanguageField('name'),
+					'description'	=> $this->getMultilanguageField('description'),
 					'limit'			=> fix_id($_REQUEST['limit'])
 				);
 
