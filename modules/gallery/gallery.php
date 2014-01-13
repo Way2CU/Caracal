@@ -458,9 +458,9 @@ class gallery extends Module {
 		$manager = GalleryManager::getInstance();
 
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$title = fix_chars($this->getMultilanguageField('title'));
+		$title = $this->getMultilanguageField('title');
 		$group = fix_id($_REQUEST['group']);
-		$description = escape_chars($this->getMultilanguageField('description'));
+		$description = $this->getMultilanguageField('description');
 		$visible = isset($_REQUEST['visible']) ? 1 : 0;
 		$slideshow = isset($_REQUEST['slideshow']) ? 1 : 0;
 
@@ -534,9 +534,9 @@ class gallery extends Module {
 
 		$id = fix_id($_REQUEST['id']);
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$title = fix_chars($this->getMultilanguageField('title'));
+		$title = $this->getMultilanguageField('title');
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
-		$description = escape_chars($this->getMultilanguageField('description'));
+		$description = $this->getMultilanguageField('description');
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 		$slideshow = isset($_REQUEST['slideshow']) && ($_REQUEST['slideshow'] == 'on' || $_REQUEST['slideshow'] == '1') ? 1 : 0;
 
@@ -704,8 +704,8 @@ class gallery extends Module {
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> fix_chars($this->getMultilanguageField('name')),
-			'description' 	=> escape_chars($this->getMultilanguageField('description')),
+			'name' 			=> $this->getMultilanguageField('name'),
+			'description' 	=> $this->getMultilanguageField('description'),
 		);
 
 		if (isset($_REQUEST['thumbnail']))
@@ -874,8 +874,8 @@ class gallery extends Module {
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> fix_chars($this->getMultilanguageField('name')),
-			'description' 	=> escape_chars($this->getMultilanguageField('description')),
+			'name' 			=> $this->getMultilanguageField('name'),
+			'description' 	=> $this->getMultilanguageField('description'),
 		);
 
 		$manager = GalleryContainerManager::getInstance();
