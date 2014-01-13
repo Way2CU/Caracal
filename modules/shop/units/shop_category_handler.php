@@ -173,8 +173,8 @@ class ShopCategoryHandler {
 		$data = array(
 				'parent'		=> fix_id($_REQUEST['parent']),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
-				'title'			=> fix_chars($this->_parent->getMultilanguageField('title')),
-				'description'	=> escape_chars($this->_parent->getMultilanguageField('description'))
+				'title'			=> $this->_parent->getMultilanguageField('title'),
+				'description'	=> $this->_parent->getMultilanguageField('description')
 			);
 
 		// get image if set and gallery is activated
