@@ -296,8 +296,8 @@ class user_page extends Module {
 	 */
 	private function savePage() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$title = fix_chars($this->getMultilanguageField('title'));
-		$content = escape_chars($this->getMultilanguageField('content'));
+		$title = $this->getMultilanguageField('title');
+		$content = $this->getMultilanguageField('content');
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 
 		if (isset($_REQUEST['owner']))
