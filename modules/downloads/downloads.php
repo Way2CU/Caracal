@@ -237,8 +237,8 @@ class downloads extends Module {
 			$manager =  DownloadsManager::getInstance();
 
 			$data = array(
-					'name'			=> fix_chars($this->getMultilanguageField('name')),
-					'description' 	=> escape_chars($this->getMultilanguageField('description')),
+					'name'			=> $this->getMultilanguageField('name'),
+					'description' 	=> $this->getMultilanguageField('description'),
 					'filename'		=> $result['filename'],
 					'size'			=> $_FILES['file']['size'],
 					'visible'		=> isset($_REQUEST['visible']) ? 1 : 0
@@ -296,8 +296,8 @@ class downloads extends Module {
 
 		$id = fix_id($_REQUEST['id']);
 		$data = array(
-				'name'			=> fix_chars($this->getMultilanguageField('name')),
-				'description' 	=> escape_chars($this->getMultilanguageField('description')),
+				'name'			=> $this->getMultilanguageField('name'),
+				'description' 	=> $this->getMultilanguageField('description'),
 				'visible'		=> fix_id($_REQUEST['visible'])
 			);
 
