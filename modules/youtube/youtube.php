@@ -332,7 +332,7 @@ class youtube extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
-		$title = fix_chars($this->getMultilanguageField('title'));
+		$title = $this->getMultilanguageField('title');
 
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -541,8 +541,8 @@ class youtube extends Module {
 		// get parameters and secure them
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$name = fix_chars($this->getMultilanguageField('name'));
-		$description = escape_chars($this->getMultilanguageField('description'));
+		$name = $this->getMultilanguageField('name');
+		$description = $this->getMultilanguageField('description');
 		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
 
 		if (is_null($id)) {
