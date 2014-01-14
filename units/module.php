@@ -9,6 +9,8 @@
 abstract class Module {
 	protected $language;
 	protected $file;
+	protected $event_handler = null;
+
 	public $name;
 	public $path;
 	public $settings;
@@ -187,6 +189,24 @@ abstract class Module {
 		$db->query( ($update) ? $update_query : $insert_query );
 	}
 
+	/**
+	 * Expose event handler's `connect` method to public.
+	 *
+	 * @param string $event_name
+	 * @param callable $callback
+	 * @param object $object [optional]
+	 * @return boolean
+	 */
+	public function connectEvent($event_name, $callback, $object=null) {
+		$result = false;
+
+		if (!is_null($this->event_handler)) {
+			$this->event_handler->connect($event_name, $callback, $object);
+			$result = true;
+		}
+
+		return $result;
+	}
 }
 
 ?>
