@@ -268,11 +268,21 @@ class captcha extends Module {
 
 	/**
 	 * Prints fully formed IMG tag
+	 *
+	 * @param array $tag_params
+	 * @param array $children
 	 */
-	private function printImageTag() {
-		$url = $this->getImageURL();
-		echo '<img src="'.$url.'" alt="'.$this->language->getText('captcha_message').'" '.
-			'onClick="javascript:this.src=\''.$url.'&amp;\'+(new Date()).getTime().toString();">';
+	private function printImageTag($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'image.xml');
+
+		$params = array(
+				'url'	=> $this->getImageURL(),
+				'alt'	=> $this->getLanguageConstant('captcha_message')
+			);
+
+		$template->setLocalParams($params);
+		$template->restoreXML();
+		$template->parse();
 	}
 
 	/**
