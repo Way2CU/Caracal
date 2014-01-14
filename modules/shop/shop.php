@@ -87,8 +87,13 @@ class shop extends Module {
 
 		parent::__construct(__FILE__);
 
+		// create methods storage
 		$this->payment_methods = array();
 		$this->delivery_methods = array();
+
+		// create events
+		$self->event_handler = new EventHandler();
+		$self->event_handler->registerEvent('shopping-cart-changed');
 
 		// load module style and scripts
 		if (class_exists('head_tag') && $section != 'backend') {
@@ -952,6 +957,7 @@ class shop extends Module {
 			}
 
 			$_SESSION['shopping_cart'] = $cart;
+			$this->event_handler->trigger('shopping-cart-changed');
 		}
 	}
 
@@ -987,6 +993,7 @@ class shop extends Module {
 			}
 
 			$_SESSION['shopping_cart'] = $cart;
+			$this->event_handler->trigger('shopping-cart-changed');
 		}
 	}
 
@@ -1419,6 +1426,7 @@ class shop extends Module {
 	 */
 	private function json_ClearCart() {
 		$_SESSION['shopping_cart'] = array();
+		$this->event_handler->trigger('shopping-cart-changed');
 
 		print json_encode(true);
 	}
@@ -1483,6 +1491,7 @@ class shop extends Module {
 			$_SESSION['shopping_cart'] = $cart;
 		}
 
+		$this->event_handler->trigger('shopping-cart-changed');
 		print json_encode($result);
 	}
 
@@ -1508,6 +1517,7 @@ class shop extends Module {
 			$result = true;
 		}
 
+		$this->event_handler->trigger('shopping-cart-changed');
 		print json_encode($result);
 	}
 
@@ -1528,6 +1538,7 @@ class shop extends Module {
 			$result = true;
 		}
 
+		$this->event_handler->trigger('shopping-cart-changed');
 		print json_encode($result);
 	}
 

@@ -1,24 +1,13 @@
-# Articles
-
-This module provides storage and handling of articles in multiple languages. It can be used for anything from
-blog posts to containers of small text blocks. Module, when used with default templates, uses [Markdown][] markup
-language.
-
+# Articles - Functions
 
 Summary:
 
-1. Functions
-	1. Public functions
-	2. AJAX functions
-2. Database structure
-3. Contact
+1. Public functions
+2. AJAX functions
 
+## 1. Public functions
 
-## 1. Functions
-
-### 1.1. Public functions
-
-#### 1.1.1. `show`
+### 1.1. `show`
 
 Shows a single article for different conditions specified. Output template can be specified. All of the
 parameters are sanitized by the module. This function accepts the following input parameters:
@@ -69,43 +58,11 @@ Available template parameters:
 `rating`       | `float`  | Rating based on `votes_up` and `votes_down` in range of 0 to 5.
 
 
-#### 1.1.2. `show_list`
-#### 1.1.3. `show_group`
-#### 1.1.4. `show_group_list`
-#### 1.1.5. `get_rating_image`
-#### 1.1.6. `show_rating_image`
+### 1.2. `show_list`
+### 1.3. `show_group`
+### 1.4. `show_group_list`
+### 1.5. `get_rating_image`
+### 1.6. `show_rating_image`
 
 
-### 1.2. AJAX functions
-
-### 1.2.1. Function name
-
-Function description.
-
-**Param name** | **Type** | **Required** | **Description**
----------------|----------|--------------|----------------
-required-param | `int`    | +            | Param description
-optional-param | `string` |              | Param description
-
-Description of return type.
-
-
-## 2. Database structure
-
-### 2.1. Table name
-
-Short description of what is stored in the table. If there are any foreign relations they should be
-mentioned as well.
-
-**Field name** | **Type**     | **Size** | **Required** | **Default value** | **Description**
----------------|--------------|----------|--------------|-------------------|----------------
-example        | `varchar`    | 250      | +            |                   | Example field description
-example        | `ml_varchar` | 250      | +            |                   | Example field description
-
-
-## 3. Contact
-
-This section is required only for third party developers. Make sure you provide at least one email address.
-
-
-[Markdown]: http://daringfireball.net/projects/markdown/syntax
+## 2. AJAX functions
