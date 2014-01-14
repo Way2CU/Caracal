@@ -47,7 +47,7 @@ class captcha extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_image_tag':
-					$this->printImageTag();
+					$this->printImageTag($params, $children);
 					break;
 
 				case 'print_image':
