@@ -23,6 +23,7 @@
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
+require_once('units/event_handler.php');
 require_once('units/module.php');
 require_once('units/module_handler.php');
 require_once('units/url.php');
