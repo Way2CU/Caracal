@@ -47,11 +47,11 @@ class captcha extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_image_tag':
-					$this->__printImageTag();
+					$this->printImageTag();
 					break;
 
 				case 'print_image':
-					$this->__printImage();
+					$this->printImage();
 					break;
 
 				default:
@@ -95,12 +95,12 @@ class captcha extends Module {
 	 * Event called upon module initialisation
 	 */
 	public function onInit() {
-		$this->saveSetting("char_count", 4);
-		$this->saveSetting("char_type", "numbers");
-		$this->saveSetting("arc_count", 15);
-		$this->saveSetting("font_size", 28);
-		$this->saveSetting("accepted_hosts", $_SERVER['HTTP_HOST']);
-		$this->saveSetting("colors", "#555555,#777777,#999999,#bbbbbb,#dddddd");
+		$this->saveSetting('char_count', 4);
+		$this->saveSetting('char_type', 'numbers');
+		$this->saveSetting('arc_count', 15);
+		$this->saveSetting('font_size', 28);
+		$this->saveSetting('accepted_hosts', $_SERVER['HTTP_HOST']);
+		$this->saveSetting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
 	}
 
 	public function onDisable() {
@@ -109,16 +109,16 @@ class captcha extends Module {
 	/**
 	 * Prints captcha image
 	 */
-	private function __printImage() {
+	private function printImage() {
 		define('_OMIT_STATS', 1);
 
 		// check if referer is in allowed list
-		$value = $this->__generateValue();
+		$value = $this->generateValue();
 		$referer = $_SERVER['HTTP_REFERER'];
 		$accepted_hosts = explode(',', $this->settings['accepted_hosts']);
 		$arc_count = $this->settings['arc_count'];
 		$char_count = $this->settings['char_count'];
-		$font_size = $this->__convertPXtoPT($this->settings['font_size']);
+		$font_size = $this->convertPXtoPT($this->settings['font_size']);
 		$font_size_px = $this->settings['font_size'];
 		$width = (10 + $this->settings['char_count'] * $this->settings['font_size']);
 		$height = $font_size_px + 10;
@@ -132,8 +132,8 @@ class captcha extends Module {
 			$image = imagecreate($width, $height);
 
 			// allocate colors and fonts
-			$colors = $this->__getColors($image);
-			$fonts = $this->__getFonts();
+			$colors = $this->getColors($image);
+			$fonts = $this->getFonts();
 
 			// set random seed
 			srand ((float) microtime() * 10000000);
@@ -179,7 +179,7 @@ class captcha extends Module {
 	 *
 	 * @return array
 	 */
-	private function __getFonts() {
+	private function getFonts() {
 		$path = $this->path.'include/';
 		$result = array();
 
@@ -187,7 +187,7 @@ class captcha extends Module {
 			$dir_handle = opendir($path);
 
 			while($file = readdir($dir_handle))
-				if ($this->__checkExtension($file, "ttf"))
+				if ($this->checkExtension($file, 'ttf'))
 					$result[] = $path.$file;
 
 			closedir($dir_handle);
@@ -203,7 +203,7 @@ class captcha extends Module {
 	 * @param string $ext
 	 * @return boolean
 	 */
-	private function __checkExtension($filename, $ext) {
+	private function checkExtension($filename, $ext) {
 		$info = pathinfo($filename, PATHINFO_EXTENSION);
 		return $info == $ext;
 	}
@@ -214,12 +214,12 @@ class captcha extends Module {
 	 * @param resource $image
 	 * @return array
 	 */
-	private function __getColors($image) {
+	private function getColors($image) {
 		$result = array();
 		$colors = explode(',', $this->settings['colors']);
 
 		foreach($colors as $color) {
-			$RGB = $this->__colorHEXtoRGB($color);
+			$RGB = $this->colorHEXtoRGB($color);
 			$result[] = imagecolorallocate($image, $RGB[0], $RGB[1], $RGB[2]);
 		}
 
@@ -232,7 +232,7 @@ class captcha extends Module {
 	 * @param string $rex
 	 * @return array
 	 */
-	private function __colorHEXtoRGB($hex) {
+	private function colorHEXtoRGB($hex) {
 		if ($hex[0] != '#')
 			$result = array(0,0,0); else
 			$result = array(
@@ -252,7 +252,7 @@ class captcha extends Module {
 	 * @param integer $blue
 	 * @return string
 	 */
-	private function __colorRGBtoHEX($red, $green, $blue) {
+	private function colorRGBtoHEX($red, $green, $blue) {
 		$result = '#'.dechex($red).dechex($green).dechex($blue);
 		return $result;
 	}
@@ -261,7 +261,7 @@ class captcha extends Module {
 	 * Returns absolute image URL
 	 * @return string
 	 */
-	private function __getImageURL() {
+	private function getImageURL() {
 		$result = url_Make('print_image', $this->name);
 		return $result;
 	}
@@ -269,8 +269,8 @@ class captcha extends Module {
 	/**
 	 * Prints fully formed IMG tag
 	 */
-	private function __printImageTag() {
-		$url = $this->__getImageURL();
+	private function printImageTag() {
+		$url = $this->getImageURL();
 		echo '<img src="'.$url.'" alt="'.$this->language->getText('captcha_message').'" '.
 			'onClick="javascript:this.src=\''.$url.'&amp;\'+(new Date()).getTime().toString();">';
 	}
@@ -281,7 +281,7 @@ class captcha extends Module {
 	 * @param string $char_mode
 	 * @return string
 	 */
-	private function __getRandomChar($char_mode) {
+	private function getRandomChar($char_mode) {
 		switch ($char_mode) {
 			case 'numbers': 			$chartype = 1; break;
 			case 'lower': 				$chartype = 2; break;
@@ -308,11 +308,11 @@ class captcha extends Module {
 	 *
 	 * @return string
 	 */
-	private function __generateValue() {
+	private function generateValue() {
 		$value = '';
 
 		for($i=0; $i < $this->settings['char_count']; $i++) {
-			$char = $this->__getRandomChar($this->settings['char_type']);
+			$char = $this->getRandomChar($this->settings['char_type']);
 			$value .= $char;
 		}
 
@@ -328,8 +328,8 @@ class captcha extends Module {
 	 * @param integer $pxpi pixels per inch
 	 * @return integer
 	 */
-	private function __convertPTtoPX($points, $ptpi = 72, $pxpi = 96) {
-		return round( ($points * $pxpi / $ptpi), 0 );
+	private function convertPTtoPX($points, $ptpi=72, $pxpi=96) {
+		return round(($points * $pxpi / $ptpi), 0);
 	}
 
 	/**
@@ -340,7 +340,7 @@ class captcha extends Module {
 	 * @param integer $pxpi pixels per inch
 	 * @return integer
 	 */
-	private function __convertPXtoPT($pixels, $ptpi = 72, $pxpi = 96) {
-		return round( ($pixels * $ptpi / $pxpi), 0 );
+	private function convertPXtoPT($pixels, $ptpi=72, $pxpi=96) {
+		return round(($pixels * $ptpi / $pxpi), 0);
 	}
 }
