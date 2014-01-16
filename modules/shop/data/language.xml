@@ -15,6 +15,7 @@
 		<constant name="menu_manufacturers">Manufacturers</constant>
 		<constant name="menu_delivery_methods">Delivery methods</constant>
 		<constant name="menu_settings">Settings</constant>
+		<constant name="menu_recurring_plans">Recurring payment plans</constant>
 
 		<constant name="tab_item">Item data</constant>
 		<constant name="tab_colors">Colors</constant>
@@ -264,6 +265,7 @@
 		<constant name="menu_manufacturers">יצרנים</constant>
 		<constant name="menu_delivery_methods">שיטות משלוח</constant>
 		<constant name="menu_settings">הגדרות</constant>
+		<constant name="menu_recurring_plans">Recurring payment plans</constant>
 
 		<constant name="tab_item">מידע מוצר</constant>
 		<constant name="tab_colors">צבעים</constant>
