@@ -23,10 +23,16 @@ abstract class PaymentMethod {
 	}
 
 	/**
-	 * Whether this payment method is able to provide user information
+	 * Whether this payment method is able to provide user information.
 	 * @return boolean
 	 */
 	abstract public function provides_information();
+
+	/**
+	 * If recurring payments are supported by this payment method.
+	 * @return boolean
+	 */
+	abstract public function supports_recurring();
 
 	/**
 	 * Get URL to be used in checkout form.
@@ -65,6 +71,26 @@ abstract class PaymentMethod {
 	public function get_image_url() {
 		return url_GetFromFilePath($this->parent->path.'images/image.png');
 	}
+
+	/**
+	 * Get list of plans for recurring payments.
+	 *
+	 * $result = array(
+	 * 			array(
+	 * 				'id'				=> 'plan_1',
+	 * 				'name'				=> 'Plan 1',
+	 * 				'trial_period'		=> 7,
+	 * 				'trial_unit'		=> RecurringPayment::DAY,
+	 * 				'interval'			=> RecurringPayment::MONTH,
+	 * 				'interval_count'	=> 1,
+	 * 				'price'				=> 13,
+	 * 				'setup_price'		=> 0
+	 * 			)
+	 * 		);
+	 *
+	 * @return array
+	 */
+	abstract public function get_recurring_plans();
 	
 	/**
 	 * Make new payment form with specified items and return
