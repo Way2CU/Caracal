@@ -383,7 +383,7 @@ class articles extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_article_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close($window).";".window_ReloadContent('articles'),
+					'action'	=> window_Close($window).';'.window_ReloadContent('articles'),
 				);
 
 		$template->restoreXML();
@@ -406,10 +406,10 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_article_delete"),
+					'message'		=> $this->getLanguageConstant('message_article_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->getLanguageConstant('delete'),
+					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'articles_delete',
 											url_Make(
@@ -441,9 +441,9 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_article_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
-					'action'	=> window_Close('articles_delete').";".window_ReloadContent('articles')
+					'message'	=> $this->getLanguageConstant('message_article_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('articles_delete').';'.window_ReloadContent('articles')
 				);
 
 		$template->restoreXML();
@@ -533,10 +533,10 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_group_delete"),
+					'message'		=> $this->getLanguageConstant('message_group_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->getLanguageConstant('delete'),
+					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'article_groups_delete',
 											url_Make(
@@ -570,10 +570,10 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
-					'action'	=> window_Close('article_groups_delete').";"
-									.window_ReloadContent('articles').";"
+					'message'	=> $this->getLanguageConstant('message_group_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('article_groups_delete').';'
+									.window_ReloadContent('articles').';'
 									.window_ReloadContent('article_groups')
 				);
 
@@ -613,7 +613,7 @@ class articles extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_group_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close($window).";".window_ReloadContent('article_groups'),
+					'action'	=> window_Close($window).';'.window_ReloadContent('article_groups'),
 				);
 
 		$template->restoreXML();
