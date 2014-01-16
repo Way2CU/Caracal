@@ -66,6 +66,14 @@ class User {
 }
 
 
+class RecurringPayment {
+	const DAY = 0;
+	const WEEK = 1;
+	const MONTH = 2;
+	const YEAR = 3;
+}
+
+
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
@@ -132,6 +140,16 @@ class shop extends Module {
 										),
 								5  // level
 							));
+
+			$recurring_plans_menu = new backend_MenuItem(
+								$this->getLanguageConstant('menu_recurring_plans'),
+								url_GetFromFilePath($this->path.'images/recurring_plans.png'),
+								'javascript: void(0);', 5
+							);
+			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
+
+			$shop_menu->addSeparator(5);
+
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_categories'),
 								url_GetFromFilePath($this->path.'images/categories.png'),
@@ -144,6 +162,7 @@ class shop extends Module {
 										),
 								5  // level
 							));
+
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_item_sizes'),
 								url_GetFromFilePath($this->path.'images/item_sizes.png'),
@@ -156,6 +175,7 @@ class shop extends Module {
 										),
 								5  // level
 							));
+
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_manufacturers'),
 								url_GetFromFilePath($this->path.'images/manufacturers.png'),
