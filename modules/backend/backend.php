@@ -39,7 +39,7 @@ class backend extends Module {
 	 * List of protected modules who can't be disabled or deactivated
 	 * @var array
 	 */
-	private $protected_modules = array('backend', 'head_tag');
+	private $protected_modules = array('backend', 'head_tag', 'collection');
 
 	/**
 	 * Constructor
