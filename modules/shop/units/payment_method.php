@@ -79,12 +79,14 @@ abstract class PaymentMethod {
 	 * 			array(
 	 * 				'id'				=> 'plan_1',
 	 * 				'name'				=> 'Plan 1',
-	 * 				'trial_period'		=> 7,
-	 * 				'trial_unit'		=> RecurringPayment::DAY,
+	 * 				'trial'				=> RecurringPayment::DAY, 
+	 * 				'trial_count'		=> 7,
 	 * 				'interval'			=> RecurringPayment::MONTH,
 	 * 				'interval_count'	=> 1,
 	 * 				'price'				=> 13,
-	 * 				'setup_price'		=> 0
+	 * 				'setup_price'		=> 0,
+	 * 				'start_time'		=> time(),
+	 * 				'end_time'			=> time() + (365 * 24 * 60 * 60)
 	 * 			)
 	 * 		);
 	 *
