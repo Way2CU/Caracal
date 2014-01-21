@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_ctm">CTM</constant>
+		<constant name="menu_settings">Settings</constant>
+
+		<constant name="title_settings">CallTrackingMetrics: Settings</constant>
+
+		<constant name="message_saved">Account settings were saved.</constant>
+
+		<constant name="label_account_key">Account key:</constant>
+		<constant name="label_account_secret">Account secret:</constant>
+	</language>
+
+	<language short="he">
+		<constant name="menu_ctm">CTM</constant>
+		<constant name="menu_settings">Settings</constant>
+
+		<constant name="title_settings">CallTrackingMetrics: Settings</constant>
+
+		<constant name="message_saved">Account settings were saved.</constant>
+
+		<constant name="label_account_key">Account key:</constant>
+		<constant name="label_account_secret">Account secret:</constant>
+	</language>
+</document>

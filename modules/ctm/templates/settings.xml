@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_account_key" module="ctm"/></span>
+			<input 
+				type="text" 
+				name="account_key" 
+				value="$settings['account_key']" 
+				eval="value"
+				style="width: 370px;"
+				class="code"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_account_secret" module="ctm"/></span>
+			<input 
+				type="text" 
+				name="account_secret" 
+				value="$settings['account_secret']" 
+				eval="value"
+				style="width: 370px;"
+				class="code"
+			/>
+		</label>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
