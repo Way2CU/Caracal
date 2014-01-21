@@ -118,7 +118,7 @@ class ctm extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('contact_form_settings')
+						'cancel_action'	=> window_Close('ctm_settings')
 					);
 
 		$template->restoreXML();
@@ -126,6 +126,9 @@ class ctm extends Module {
 		$template->parse();
 	}
 
+	/**
+	 * Save settings.
+	 */
 	private function saveSettings() {
 		// grab parameters
 		$account_key = fix_chars($_REQUEST['account_key']);
