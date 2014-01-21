@@ -2357,6 +2357,36 @@ class shop extends Module {
 	}
 
 	/**
+	 * Handle drawing recurring payment cycle units.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CycleUnit($tag_params, $children) {
+		$units = array(
+			RecurringPayment::DAY 	=> $this->getLanguageConstant('cycle_day'),
+			RecurringPayment::WEEK	=> $this->getLanguageConstant('cycle_week'),
+			RecurringPayment::MONTH	=> $this->getLanguageConstant('cycle_month'),
+			RecurringPayment::YEAR	=> $this->getLanguageConstant('cycle_year')
+		);
+
+		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : null;
+		$template = $this->loadTemplate($tag_params, 'cycle_unit_option.xml');
+
+		foreach($units as $id => $text) {
+			$params = array(
+					'id'		=> $id,
+					'text'		=> $text,
+					'selected'	=> $id == $selected
+				);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
 	 * Function that returns boolean denoting if shop is in testing phase.
 	 *
 	 * @return boolean
