@@ -25,6 +25,11 @@
 		<constant name="tab_general">General</constant>
 		<constant name="tab_shipping">Shipping</constant>
 
+		<constant name="cycle_day">Day</constant>
+		<constant name="cycle_week">Week</constant>
+		<constant name="cycle_month">Month</constant>
+		<constant name="cycle_year">Year</constant>
+
 		<constant name="title_settings">Shop: Settings</constant>
 		<constant name="title_manage_items">Shop: Manage items</constant>
 		<constant name="title_manage_categories">Shop: Manage categories</constant>
@@ -274,6 +279,11 @@
 		<constant name="tab_delivery">משלוח</constant>
 		<constant name="tab_general">כללי</constant>
 		<constant name="tab_shipping">משלוח</constant>
+
+		<constant name="cycle_day">Day</constant>
+		<constant name="cycle_week">Week</constant>
+		<constant name="cycle_month">Month</constant>
+		<constant name="cycle_year">Year</constant>
 
 		<constant name="title_settings">חנות: הגדרות</constant>
 		<constant name="title_manage_items">חנות:נהל מוצרים</constant>
