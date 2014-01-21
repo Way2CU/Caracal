@@ -96,9 +96,25 @@ div.window div.content {
 	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 }
 
-div.window div.content label {
+div.window div.content fieldset {
 	display: block;
 
+	margin: 0px;
+	margin-bottom: 10px;
+
+	border: 1px solid #d0d0d0;
+}
+
+div.window div.content fieldset legend {
+	color: #b0b0b0;
+}
+
+div.window div.content div.box fieldset {
+	margin-bottom: 5px;
+}
+
+div.window div.content label {
+	display: block;
 	margin-bottom: 10px;
 }
 
@@ -130,11 +146,9 @@ div.window div.content div.scrollable_list {
 	margin-bottom: 5px;
 }
 
-div.window div.content div:last-child {
-	margin-bottom: 0px;
-}
-
-div.window div.content label:last-child {
+div.window div.content div:last-child,
+div.window div.content label:last-child,
+div.window div.content fieldset:last-child {
 	margin-bottom: 0px;
 }
 
