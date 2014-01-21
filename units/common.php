@@ -57,7 +57,8 @@ function escape_chars($string) {
 
 	if (!is_array($string)) {
 		// get rid of slashes
-		if (get_magic_quotes_gpc()) $string = stripcslashes($string);
+		if (get_magic_quotes_gpc())
+			$string = stripcslashes($string);
 
 		// remove tags
 		$string = strip_tags($string);
