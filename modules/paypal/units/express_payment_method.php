@@ -41,7 +41,7 @@ class PayPal_PaymentMethod extends PaymentMethod {
 		parent::__construct($parent);
 		
 		// register payment method
-		$this->name = 'paypal';
+		$this->name = 'paypal_express';
 		$this->registerPaymentMethod();
 	}
 	
@@ -64,11 +64,39 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
+	 * If recurring payments are supported by this payment method.
+	 * @return boolean
+	 */
+	public function supports_recurring() {
+		return true;
+	}
+
+	/**
 	 * Return URL for checkout form
 	 * @return string
 	 */
 	public function get_url() {
 		return $this->url;
+	}
+
+	/**
+	 * Get list of plans for recurring payments.
+	 * @return array
+	 */
+	public function get_recurring_plans() {
+		$result = array();
+		$conditions = array();
+		$manager = PayPal_PlansManager::getInstance();
+
+		// get items from database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// populate result array
+		if (count($items) > 0)
+			foreach($items as $item) {
+			}
+
+		return $result;
 	}
 
 	/**
@@ -131,6 +159,28 @@ class PayPal_PaymentMethod extends PaymentMethod {
 
 		foreach ($params as $key => $value)
 			$result .= "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\">";
+
+		return $result;
+	}
+
+	/**
+	 * Make new recurring payment based on named plan.
+	 *
+	 * @param string $plan_name
+	 * @param array $billing_information
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url) {
+		$result = '';
+		$fields = array();
+		$manager = PayPal_PlansManager::getInstance();
+		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+
+		if (is_object($plan)) {
+			$fields['creditcardtype'] = 
+		}
 
 		return $result;
 	}
