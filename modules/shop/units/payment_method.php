@@ -106,4 +106,15 @@ abstract class PaymentMethod {
 	 * @return string
 	 */
 	abstract public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url);
+
+	/**
+	 * Make new recurring payment based on named plan.
+	 *
+	 * @param string $plan_name
+	 * @param array $billing_information
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	abstract public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url);
 }
