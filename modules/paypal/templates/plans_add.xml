@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST" id="paypal_recurring_plans_add_form">
+		<label>
+			<span><cms:text constant="label_plan_name" module="paypal"/></span>
+			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="200"/>
+		</label>
+		<label>
+			<span><cms:text constant="label_text_id" module="paypal"/></span>
+			<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="200"/>
+		</label>
+
+		<div class="box left" style="width: 190px;">
+			<fieldset>
+				<legend><cms:text constant="label_billing_cycle" module="paypal"/></legend>
+				<label class="horizontal">
+					<span><cms:text constant="label_count" module="paypal"/></span>
+					<input
+						type="text"
+						name="interval_count"
+						class="code"
+						style="width: 50px;"
+						maxlength="5"
+						value="0"
+					/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_unit" module="paypal"/></span>
+					<select name="interval_unit" style="width: 70px;">
+						<cms:cycle_unit/>
+					</select>
+				</label>
+				<label style="clear: both;">
+					<span><cms:text constant="label_price" module="paypal"/></span>
+					<input
+						type="text"
+						name="interval_price"
+						class="code"
+						style="width: 150px;"
+						value="0"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_setup_price" module="paypal"/></span>
+					<input
+						type="text"
+						name="setup_price"
+						class="code"
+						style="width: 150px;"
+						value="0"
+					/>
+				</label>
+			</fieldset>
+		</div>
+
+		<div class="box right" style="width: 190px;">
+			<fieldset>
+				<legend><cms:text constant="label_trial_period" module="paypal"/></legend>
+				<label class="horizontal">
+					<span><cms:text constant="label_count" module="paypal"/></span>
+					<input
+						type="text"
+						name="trial_count"
+						class="code"
+						style="width: 50px;"
+						maxlength="5"
+						value="0"
+					/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_unit" module="paypal"/></span>
+					<select name="trial_unit" style="width: 70px;">
+						<cms:cycle_unit/>
+					</select>
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<legend><cms:text constant="label_times" module="paypal"/></legend>
+				<label>
+					<span><cms:text constant="label_start_time" module="paypal"/></span>
+					<input
+						type="text"
+						name="start_time"
+						class="code"
+						style="width: 150px;"
+						value="0"
+					/>
+				</label>
+			</fieldset>
+		</div>
+
+		<div style="clear:both; margin-bottom: 10px;"/>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+	<script type="text/javascript">
+		new LanguageSelector('paypal_recurring_plans_add_form');
+	</script>
+</document>
