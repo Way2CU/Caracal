@@ -5,12 +5,48 @@
 		<constant name="menu_paypal">PayPal</constant>
 
 		<constant name="title_settings">Settings</constant>
+		<constant name="title_recurring_plans">PayPal: Recurring payment plans</constant>
+		<constant name="title_recurring_plans_new">PayPal: New recurring payment plan</constant>
+		<constant name="title_recurring_plans_change">PayPal: Change recurring payment plan</constant>
+		<constant name="title_recurring_plans_delete">PayPal: Delete recurring payment plan</constant>
+
+		<constant name="message_plan_saved">Recurring payment plan data was saved!</constant>
+		<constant name="message_plan_delete">You are about to remove the following recurring payment plan. Are you sure?</constant>
+		<constant name="message_plan_deleted">Recurring payment plan was deleted. Active subscriptions will remain intact until manually canceled.</constant>
+
 		<constant name="payment_method_title">PayPal</constant>
+
+		<constant name="label_trial_period">Trial period</constant>
+		<constant name="label_billing_cycle">Billing cycle</constant>
+		<constant name="label_times">Times</constant>
+		<constant name="label_plan_name">Plan name:</constant>
+		<constant name="label_text_id">Unique text id:</constant>
+		<constant name="label_count">Count:</constant>
+		<constant name="label_unit">Unit:</constant>
+		<constant name="label_price">Price:</constant>
+		<constant name="label_setup_price">One time setup fee:</constant>
+		<constant name="label_start_time">Starts:</constant>
+
+		<constant name="column_name">Name</constant>
+		<constant name="column_price">Price</constant>
 	</language>
+
 	<language short="he">
 		<constant name="menu_paypal">PayPal</constant>
 
 		<constant name="title_settings">הגדרות</constant>
+		<constant name="title_recurring_plans">PayPal: Recurring payment plans</constant>
+		<constant name="title_recurring_plans_new">PayPal: New recurring payment plan</constant>
+		<constant name="title_recurring_plans_change">PayPal: Change recurring payment plan</constant>
+		<constant name="title_recurring_plans_delete">PayPal: Delete recurring payment plan</constant>
+
+		<constant name="message_plan_saved">Recurring payment plan data was saved!</constant>
+		<constant name="message_plan_delete">You are about to remove the following recurring payment plan. Are you sure?</constant>
+		<constant name="message_plan_deleted">Recurring payment plan was deleted. Active subscriptions will remain intact until manually canceled.</constant>
+
 		<constant name="payment_method_title">PayPal</constant>
+
+		<constant name="column_name">Name</constant>
+		<constant name="column_price">Price</constant>
 	</language>
 </document>
