@@ -190,20 +190,19 @@ class ctm extends Module {
 
 		// prepare headers
 		$api_path = str_replace('{reactor_id}', $reactor_id, ctm::URL_FORM_REACTOR);
-		$header = 'POST '.$api_path.' HTTP/1.1\n';
-		$header .= 'Content-Type: application/x-www-form-urlencoded\n';
-		$header .= 'Content-Length: '.strlen($content).'\n';
-		$header .= 'Authorization: Basic '.base64_encode($account_key.':'.$account_secret).'\n';
-		$header .= 'Connection: close\n\n';
+		$header = "POST ".$api_path." HTTP/1.0\n";
+		$header .= "Content-Type: application/x-www-form-urlencoded\n";
+		$header .= "Content-Length: ".strlen($content)."\n";
+		$header .= "Authorization: Basic ".base64_encode($account_key.':'.$account_secret)."\n";
+		$header .= "Connection: close\n\n";
 
 		// connect to server and send data
 		$socket = fsockopen(ctm::URL_API, 443, $error_number, $error_string, 30);
 
 		if ($socket) {
-			fputs($content);
+			fputs($socket, $header.$content);
 			$response = fgets($socket);
-
-			$result = true;
+			$result = strpos($response, '200 OK') != false;
 		}
 
 		fclose($socket);
