@@ -3,324 +3,345 @@
 <document>
 	<div id="checkout_container">
 		<div id="checkout_stepps" class="input_details">
-			<a href="#" class="active">
-				<span>1</span>
-				<cms:text constant="title_sign_in" module="shop"/>
-			</a>
-			<a href="#">
-				<span>2</span>
-				<cms:text constant="title_shipping_information" module="shop"/>
-			</a>
-			<a href="#">
-				<span>3</span>
-				<cms:text constant="title_payment_method" module="shop"/>
-			</a>
-			<a href="#">
-				<span>4</span>
-				<cms:text constant="title_billing_information" module="shop"/>
-			</a>
-			<a href="#">
-				<span>5</span>
-				<cms:text constant="title_checkout" module="shop"/>
-			</a>
+			<!-- Shipping included -->
+			<cms:if condition="$params['include_shipping']">
+				<a href="#" class="active">
+					<span>1</span>
+					<cms:text constant="title_sign_in" module="shop"/>
+				</a>
+				<a href="#">
+					<span>2</span>
+					<cms:text constant="title_shipping_information" module="shop"/>
+				</a>
+				<a href="#">
+					<span>3</span>
+					<cms:text constant="title_payment_method" module="shop"/>
+				</a>
+				<a href="#">
+					<span>4</span>
+					<cms:text constant="title_billing_information" module="shop"/>
+				</a>
+				<a href="#">
+					<span>5</span>
+					<cms:text constant="title_checkout" module="shop"/>
+				</a>
+			</cms:if>
+
+			<!-- No shipping included -->
+			<cms:if condition="!$params['include_shipping']">
+				<a href="#" class="active">
+					<span>1</span>
+					<cms:text constant="title_payment_method" module="shop"/>
+				</a>
+				<a href="#">
+					<span>2</span>
+					<cms:text constant="title_billing_information" module="shop"/>
+				</a>
+				<a href="#">
+					<span>3</span>
+					<cms:text constant="title_checkout" module="shop"/>
+				</a>
+			</cms:if>
 		</div>
 
 		<div id="input_details" skip_cache="1"> 
 			<form method="POST" action="">
 				<div class="pages">
-					<!-- Sign In -->
-					<div class="page" id="sign_in">
-						<h1><cms:text constant="title_sign_in" module="shop"/></h1>
+					<cms:if condition="$params['include_shipping']">
+						<!-- Sign In -->
+						<div class="page" id="sign_in">
+							<h1><cms:text constant="title_sign_in" module="shop"/></h1>
 
-						<label class="checkbox">
-							<input
-								type="radio" 
-								name="existing_user" 
-								value="0"
-								checked="checked"
-							/>
-							<span><cms:text constant="label_existing_user" module="shop"/></span>
-						</label>
+							<label class="checkbox">
+								<input
+									type="radio" 
+									name="existing_user" 
+									value="0"
+									checked="checked"
+								/>
+								<span><cms:text constant="label_existing_user" module="shop"/></span>
+							</label>
 
-						<div class="existing_account visible">
+							<div class="existing_account visible">
+								<label>
+									<span><cms:text constant="label_email" module="shop"/></span>
+									<input
+										type="text" 
+										name="sign_in_email" 
+										maxlength="127" 
+										style="width: 270px;"
+										autocomplete="email"
+									/>
+								</label>
+								<label>
+									<span><cms:text constant="label_password" module="shop"/></span>
+									<input
+										type="password"
+										name="sign_in_password"
+										maxlength="127"
+										autocomplete="off"
+									/>
+								</label>
+								<a href="javascript:void();" class="password_recovery">
+									<cms:text constant="label_password_recovery" module="shop"/>
+								</a>
+							</div>
+
+							<hr/>
+
+							<label class="checkbox">
+								<input
+									type="radio" 
+									name="existing_user" 
+									value="1"
+								/>
+								<span><cms:text constant="label_new_user" module="shop"/></span>
+							</label>
+
+							<div class="new_account">
+								<label>
+									<input type="hidden" name="set_info" value="1"/>
+									<span><cms:text constant="label_first_name" module="shop"/></span>
+									<input
+										class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
+										eval="class,value"
+										type="text"
+										name="first_name"
+										value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
+										maxlength="64"
+										data-required="1"
+										autocomplete="given-name"
+									/>
+								</label>
+								<label class="separator">
+									<span><cms:text constant="label_last_name" module="shop"/></span>
+									<input
+										class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
+										eval="class,value"
+										type="text"
+										name="last_name"
+										value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
+										maxlength="64"
+										data-required="1"
+										autocomplete="family-name"
+									/>
+								</label>
+								<label>
+									<span><cms:text constant="label_email" module="shop"/></span>
+									<input
+										class="in_array('new_email', $params['bad_fields']) ? 'bad' : ''"
+										eval="class,value"
+										type="text" 
+										name="new_email" 
+										value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
+										maxlength="127" 
+										style="width: 270px;"
+										data-required="1"
+										autocomplete="email"
+									/>
+								</label>
+								<label>
+									<span><cms:text constant="label_password" module="shop"/></span>
+									<input
+										type="password" 
+										name="new_password" 
+										maxlength="127" 
+										style="width: 200px;"
+										data-required="1"
+										autocomplete="off"
+									/>
+								</label>
+								<label>
+									<span><cms:text constant="label_confirm" module="shop"/></span>
+									<input
+										type="password" 
+										name="new_password_confirm" 
+										maxlength="127" 
+										style="width: 200px;"
+										data-required="1"
+										autocomplete="off"
+									/>
+								</label>
+							</div>
+
+							<hr/>
+
+							<label class="checkbox">
+								<input
+									type="radio" 
+									name="existing_user" 
+									value="2"
+								/>
+								<span><cms:text constant="label_guest" module="shop"/></span>
+							</label>
+
+							<div class="checkout_controls">
+								<button class="next"><cms:text constant="next"/></button>
+							</div>
+						</div>
+
+						<!-- Shipping Information -->
+						<div class="page" id="shipping_information">
+							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
+							<label>
+								<span><cms:text constant="label_presets" module="shop"/></span>
+								<select name="presets"/>
+							</label>
+							<label>
+								<input type="hidden" name="set_info" value="1"/>
+								<span><cms:text constant="label_full_name" module="shop"/></span>
+								<input
+									class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
+									eval="class,value"
+									type="text"
+									name="name"
+									value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
+									maxlength="64"
+									data-required="1"
+									autocomplete="name"
+								/>
+							</label>
+							<hr/>
 							<label>
 								<span><cms:text constant="label_email" module="shop"/></span>
 								<input
+									class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
 									type="text" 
-									name="sign_in_email" 
+									name="email" 
+									value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
 									maxlength="127" 
 									style="width: 270px;"
+									data-required="1"
 									autocomplete="email"
 								/>
 							</label>
 							<label>
-								<span><cms:text constant="label_password" module="shop"/></span>
+								<span><cms:text constant="label_phone_number" module="shop"/></span>
 								<input
-									type="password"
-									name="sign_in_password"
-									maxlength="127"
-									autocomplete="off"
+									class="in_array('phone', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="phone" 
+									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
+									maxlength="127" 
+									style="width: 270px;"
+									autocomplete="tel"
 								/>
 							</label>
-							<a href="javascript:void();" class="password_recovery">
-								<cms:text constant="label_password_recovery" module="shop"/>
-							</a>
-						</div>
-
-						<hr/>
-
-						<label class="checkbox">
-							<input
-								type="radio" 
-								name="existing_user" 
-								value="1"
-							/>
-							<span><cms:text constant="label_new_user" module="shop"/></span>
-						</label>
-
-						<div class="new_account">
+							<hr/>
 							<label>
-								<input type="hidden" name="set_info" value="1"/>
-								<span><cms:text constant="label_first_name" module="shop"/></span>
-								<input
-									class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
-									eval="class,value"
-									type="text"
-									name="first_name"
-									value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
-									maxlength="64"
+								<span><cms:text constant="label_street" module="shop"/></span>
+								<input 
+									class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="street" 
+									value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
+									maxlength="200" 
+									style="width: 300px;"
 									data-required="1"
-									autocomplete="given-name"
+									autocomplete="address-line1"
 								/>
 							</label>
 							<label class="separator">
-								<span><cms:text constant="label_last_name" module="shop"/></span>
-								<input
-									class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
-									eval="class,value"
-									type="text"
-									name="last_name"
-									value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
-									maxlength="64"
-									data-required="1"
-									autocomplete="family-name"
-								/>
-							</label>
-							<label>
-								<span><cms:text constant="label_email" module="shop"/></span>
-								<input
-									class="in_array('new_email', $params['bad_fields']) ? 'bad' : ''"
-									eval="class,value"
+								<span></span>
+								<input 
+									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
 									type="text" 
-									name="new_email" 
-									value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
-									maxlength="127" 
-									style="width: 270px;"
-									data-required="1"
-									autocomplete="email"
+									name="street2" 
+									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
+									maxlength="200" 
+									style="width: 300px;"
+									autocomplete="address-line2"
 								/>
 							</label>
 							<label>
-								<span><cms:text constant="label_password" module="shop"/></span>
-								<input
-									type="password" 
-									name="new_password" 
-									maxlength="127" 
-									style="width: 200px;"
+								<span><cms:text constant="label_city" module="shop"/></span>
+								<input 
+									class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="city" 
+									value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
+									maxlength="40"
 									data-required="1"
-									autocomplete="off"
+									autocomplete="locality"
 								/>
 							</label>
 							<label>
-								<span><cms:text constant="label_confirm" module="shop"/></span>
-								<input
-									type="password" 
-									name="new_password_confirm" 
-									maxlength="127" 
-									style="width: 200px;"
+								<span><cms:text constant="label_zip" module="shop"/></span>
+								<input 
+									class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="zip" 
+									value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
+									maxlength="20" 
+									style="width: 120px;"
 									data-required="1"
-									autocomplete="off"
+									autocomplete="postal-code"
 								/>
 							</label>
-						</div>
+							<label>
+								<span><cms:text constant="label_country" module="shop"/></span>
+								<cms:if condition="empty($params['fixed_country'])">
+									<select 
+										name="country"
+										class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+										eval="class" 
+										data-required="1"
+										autocomplete="country"
+									>
+										<option/>
+										<cms:module
+											name="country_list"
+											action="show"
+											selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
+											eval="selected"
+										/>
+									</select>
+								</cms:if>
+								<cms:if condition="!empty($params['fixed_country'])">
+									<select 
+										name="country"
+										class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
+										eval="class" 
+										data-required="1"
+										autocomplete="country"
+									>
+										<cms:module
+											name="country_list"
+											action="show"
+											filter="$params['fixed_country']"
+											eval="filter"
+										/>
+									</select>
+								</cms:if>
+							</label>
+							<label>
+								<span><cms:text constant="label_state" module="shop"/></span>
+								<input 
+									class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
+									eval="class,value" 
+									type="text" 
+									name="state" 
+									value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
+									maxlength="40"
+									autocomplete="region"
+								/>
+							</label>
 
-						<hr/>
+							<div class="checkout_controls">
+								<button class="next"><cms:text constant="next"/></button>
+							</div>
 
-						<label class="checkbox">
-							<input
-								type="radio" 
-								name="existing_user" 
-								value="2"
-							/>
-							<span><cms:text constant="label_guest" module="shop"/></span>
-						</label>
-
-						<div class="checkout_controls">
-							<button class="next"><cms:text constant="next"/></button>
-						</div>
-					</div>
-
-					<!-- Shipping Information -->
-					<div class="page" id="shipping_information">
-						<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
-						<label>
-							<span><cms:text constant="label_presets" module="shop"/></span>
-							<select name="presets"/>
-						</label>
-						<label>
-							<input type="hidden" name="set_info" value="1"/>
-							<span><cms:text constant="label_full_name" module="shop"/></span>
-							<input
-								class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
-								eval="class,value"
-								type="text"
-								name="name"
-								value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-								maxlength="64"
-								data-required="1"
-								autocomplete="name"
-							/>
-						</label>
-						<hr/>
-						<label>
-							<span><cms:text constant="label_email" module="shop"/></span>
-							<input
-								class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="email" 
-								value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-								maxlength="127" 
-								style="width: 270px;"
-								data-required="1"
-								autocomplete="email"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_phone_number" module="shop"/></span>
-							<input
-								class="in_array('phone', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="phone" 
-								value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
-								maxlength="127" 
-								style="width: 270px;"
-								autocomplete="tel"
-							/>
-						</label>
-						<hr/>
-						<label>
-							<span><cms:text constant="label_street" module="shop"/></span>
-							<input 
-								class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="street" 
-								value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-								maxlength="200" 
-								style="width: 300px;"
-								data-required="1"
-								autocomplete="address-line1"
-							/>
-						</label>
-						<label class="separator">
-							<span></span>
-							<input 
-								class="in_array('street2', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="street2" 
-								value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
-								maxlength="200" 
-								style="width: 300px;"
-								autocomplete="address-line2"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_city" module="shop"/></span>
-							<input 
-								class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="city" 
-								value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
-								maxlength="40"
-								data-required="1"
-								autocomplete="locality"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_zip" module="shop"/></span>
-							<input 
-								class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="zip" 
-								value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-								maxlength="20" 
-								style="width: 120px;"
-								data-required="1"
-								autocomplete="postal-code"
-							/>
-						</label>
-						<label>
-							<span><cms:text constant="label_country" module="shop"/></span>
-							<cms:if condition="empty($params['fixed_country'])">
-								<select 
-									name="country"
-									class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class" 
-									data-required="1"
-									autocomplete="country"
-								>
-									<option/>
-									<cms:module
-										name="country_list"
-										action="show"
-										selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-										eval="selected"
-									/>
-								</select>
+							<cms:if condition="!empty($params['message'])">
+								<div class="message"><cms:var name="$params['message']"/></div>
 							</cms:if>
-							<cms:if condition="!empty($params['fixed_country'])">
-								<select 
-									name="country"
-									class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class" 
-									data-required="1"
-									autocomplete="country"
-								>
-									<cms:module
-										name="country_list"
-										action="show"
-										filter="$params['fixed_country']"
-										eval="filter"
-									/>
-								</select>
-							</cms:if>
-						</label>
-						<label>
-							<span><cms:text constant="label_state" module="shop"/></span>
-							<input 
-								class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
-								type="text" 
-								name="state" 
-								value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
-								maxlength="40"
-								autocomplete="region"
-							/>
-						</label>
-
-						<div class="checkout_controls">
-							<button class="next"><cms:text constant="next"/></button>
 						</div>
-
-						<cms:if condition="!empty($params['message'])">
-							<div class="message"><cms:var name="$params['message']"/></div>
-						</cms:if>
-					</div>
+					</cms:if>
 
 					<!-- Payment Method Selection -->
 					<div class="page" id="payment_method">
