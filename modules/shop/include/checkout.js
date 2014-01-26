@@ -154,9 +154,11 @@ function BuyerInformationForm() {
 		self.methods.removeClass('bad');
 
 		// disable billing information page if payment method provides info about buyer
+		billing_information_page = $('div.page.sign_in').length > 0 ? 3 : 1;
+
 		if (method.data('provides-information') == 1)
-			self.page_control.disablePage(3); else
-			self.page_control.enablePage(3);
+			self.page_control.disablePage(billing_information_page); else
+			self.page_control.enablePage(billing_information_page);
 	};
 	/**
 	* Validate sign in page.
