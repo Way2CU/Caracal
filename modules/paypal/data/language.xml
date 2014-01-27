@@ -14,7 +14,8 @@
 		<constant name="message_plan_delete">You are about to remove the following recurring payment plan. Are you sure?</constant>
 		<constant name="message_plan_deleted">Recurring payment plan was deleted. Active subscriptions will remain intact until manually canceled.</constant>
 
-		<constant name="payment_method_title">PayPal</constant>
+		<constant name="express_method_title">PayPal Express</constant>
+		<constant name="direct_method_title">PayPal Direct</constant>
 
 		<constant name="label_trial_period">Trial period</constant>
 		<constant name="label_billing_cycle">Billing cycle</constant>
