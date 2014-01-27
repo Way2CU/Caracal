@@ -7,11 +7,15 @@
  * Author: Mladen Mijatov
  */
 
+require_once('units/helper.php');
 require_once('units/plans_manager.php');
 
 
 class paypal extends Module {
 	private static $_instance;
+
+	private $express_method;
+	private $direct_method;
 
 	/**
 	 * Constructor
@@ -30,7 +34,7 @@ class paypal extends Module {
 			// add menu entry for payment methods
 			if (!is_null($method_menu)) 
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_paypal'),
+									$this->getLanguageConstant('menu_oay'),
 									url_GetFromFilePath($this->path.'images/icon.png'),
 									window_Open( // on click open window
 												'paypal',
@@ -59,8 +63,15 @@ class paypal extends Module {
 
 		// register payment method
 		if (class_exists('shop')) {
-			require_once('units/paypal_payment_method.php');
-			PayPal_PaymentMethod::getInstance($this); 		
+			require_once('units/express_payment_method.php');
+			require_once('units/direct_payment_method.php');
+
+			// set helped in debug mode if specified
+			PayPal_Helper::setSandbox(shop::getInstance()->isDebug());
+
+			// create payment methods
+			$this->express_method = PayPal_Express::getInstance($this); 		
+			$this->direct_method = PayPal_Direct::getInstance($this); 		
 		}
 	}
 
@@ -81,7 +92,18 @@ class paypal extends Module {
 	 * @param array $children
 	 */
 	public function transferControl($params, $children) {
-		// global control actions
+		// global control action
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'express_return':
+					$this->handleExpressCheckoutCallback();
+					break;
+
+				default:
+					break;
+			}
+
+		// global control action
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'settings':
@@ -374,6 +396,13 @@ class paypal extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Handle callback from express checkout.
+	 */
+	private function handleExpressCheckoutCallback() {
+		$this->express_method->handleCallback();
 	}
 
 	/**
