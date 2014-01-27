@@ -8,7 +8,7 @@
  */
 
 
-class PayPal_PaymentMethod extends PaymentMethod {
+class PayPal_Express extends PaymentMethod {
 	private static $_instance;
 
 	private $url = 'https://www.paypal.com/cgi-bin/webscr';
@@ -43,6 +43,9 @@ class PayPal_PaymentMethod extends PaymentMethod {
 		// register payment method
 		$this->name = 'paypal_express';
 		$this->registerPaymentMethod();
+
+		// connect signal handler
+		shop::getInstance()->connectEvent('before-checkout', 'beforeCheckout', $this);
 	}
 	
 	/**
@@ -77,6 +80,30 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 */
 	public function get_url() {
 		return $this->url;
+	}
+
+	/**
+	 * Get display name of payment method
+	 * @return string
+	 */
+	public function get_title() {
+		return $this->parent->getLanguageConstant('express_method_title');
+	}
+
+	/**
+	 * Get icon URL for payment method
+	 * @return string
+	 */
+	public function get_icon_url() {
+		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+	}
+
+	/**
+	 * Get image URL for payment method
+	 * @return string
+	 */
+	public function get_image_url() {
+		return url_GetFromFilePath($this->parent->path.'images/express_image.png');
 	}
 
 	/**
@@ -173,16 +200,92 @@ class PayPal_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url) {
-		$result = '';
-		$fields = array();
-		$manager = PayPal_PlansManager::getInstance();
-		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+	}
 
-		if (is_object($plan)) {
-			$fields['creditcardtype'] = 
+	/**
+	 * Before checking out redirect user.
+	 *
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 */
+	public function beforeCheckout($return_url, $cancel_url) {
+		global $language;
+
+		$fields = array();
+		$request_id = 0;
+		$recurring_plan = isset($_SESSION['recurring_plan']) ? $_SESSION['recurring_plan'] : null;
+
+		// add recurring payment plan
+		if (!is_null($recurring_plan)) {
+			$manager = PayPal_PlansManager::getInstance();
+			$shop = shop::getInstance();
+			$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $recurring_plan));
+
+			if (is_object($plan)) {
+				// prepare fields for initial negotiation
+				$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->price;
+				$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+				$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $plan->name[$language];
+				$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = '';  // transaction id
+				$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Authorization';
+
+				// add one time payment
+				if ($plan->setup_price > 0) {
+					$request_id++;
+					$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
+					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
+					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = '';  // transaction id
+					$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
+				}
+			}
 		}
 
-		return $result;
+		// TODO: Add other shop items.
+
+		// store return URL in session
+		$_SESSION['paypal_redirect_url'] = $return_url;
+
+		// add regular fields
+		$fields['NOSHIPPING'] = 1;
+		$fields['REQCONFIRMSHIPPING'] = 0;
+		$fields['ALLOWNOTE'] = 0;
+		$fields['BILLINGTYPE'] = 'RecurringPayments';
+		$fields['RETURNURL'] = url_Make('express_return', $this->parent->name);
+		$fields['CANCELURL'] = $cancel_url;
+
+		// generate name-value pair string for sending
+		$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_SetExpressCheckout, $fields);
+
+		if (strcasecmp($response['ACK'], 'success') || strcasecmp($response['ACK'], 'successwithwarning')) {
+			$token = $response['TOKEN'];
+			PayPal_Helper::redirect(PayPal_Helper::COMMAND_ExpressCheckout, $token);
+
+		} else {
+			// report error
+			$error_code = urldecode($response['L_ERRORCODE0']);
+			$error_long = urldecode($response['L_LONGMESSAGE0']);
+
+			trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Handle callback from PayPal site.
+	 */
+	public function handleCallback() {
+		$token = escape_chars($_REQUEST['token']);
+		$_SESSION['paypal_token'] = $token;
+
+		if (isset($_SESSION['paypal_redirect_url'])) {
+			$url = $_SESSION['paypal_redirect_url'];
+			unset($_SESSION['paypal_redirect_url']);
+
+			// redirect with 
+			header('Location: '.$url, true, 302);
+		}
 	}
 	
 	/**
