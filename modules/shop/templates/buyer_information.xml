@@ -47,6 +47,8 @@
 		<div id="input_details" skip_cache="1"> 
 			<form method="POST" action="">
 				<div class="pages">
+					<input type="hidden" name="set_info" value="1"/>
+
 					<cms:if condition="$params['include_shipping']">
 						<!-- Sign In -->
 						<div class="page" id="sign_in">
@@ -100,7 +102,6 @@
 
 							<div class="new_account">
 								<label>
-									<input type="hidden" name="set_info" value="1"/>
 									<span><cms:text constant="label_first_name" module="shop"/></span>
 									<input
 										class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
