@@ -102,9 +102,7 @@ class shop extends Module {
 		// create events
 		$this->event_handler = new EventHandler();
 		$this->event_handler->registerEvent('shopping-cart-changed');
-		$this->event_handler->registerEvent('shipping-information-entered');
-		$this->event_handler->registerEvent('payment-method-selected');
-		$this->event_handler->registerEvent('billing-information-entered');
+		$this->event_handler->registerEvent('before-checkout');
 		$this->event_handler->registerEvent('payment-completed');
 
 		// load module style and scripts
@@ -1936,82 +1934,86 @@ class shop extends Module {
 			}
 
 			// set proper account data based on users choice
-			switch ($existing_user) {
-				case User::EXISTING:
-					$manager = ShopBuyersManager::getInstance();
-					$retry_manager = LoginRetryManager::getInstance();
+			if ($include_shipping)
+				switch ($existing_user) {
+					case User::EXISTING:
+						$manager = ShopBuyersManager::getInstance();
+						$retry_manager = LoginRetryManager::getInstance();
 
-					$email = fix_chars($_POST['sign_in_email']);
-					$password = hash_hmac(
-									'sha256',
-									$_POST['sign_in_password'],
-									shop::BUYER_SECRET
-								);
-
-					$account = $manager->getSingleItem(
-											$manager->getFieldNames(),
-											array(
-												'email'		=> $email,
-												'password'	=> $password,
-												'guest'		=> 0,
-												// 'validated'	=> 1
-											));
-
-					if (is_object($account)) {
-						$account_information = array(
-										'first_name'	=> $account->first_name,
-										'last_name'		=> $account->last_name,
-										'email'			=> $email
+						$email = fix_chars($_POST['sign_in_email']);
+						$password = hash_hmac(
+										'sha256',
+										$_POST['sign_in_password'],
+										shop::BUYER_SECRET
 									);
-					} else {
-						// invalid user name
-						$bad_fields[] = 'sign_in_email';
-						$bad_fields[] = 'sign_in_password';
-					}
-					break;
 
-				case User::CREATE:
-					$account_information = array(
-									'first_name'	=> fix_chars($_POST['first_name']),
-									'last_name'		=> fix_chars($_POST['last_name']),
-									'email'			=> fix_chars($_POST['new_email']),
-									'validated'		=> 0,
-									'guest'			=> 0
-								);
+						$account = $manager->getSingleItem(
+												$manager->getFieldNames(),
+												array(
+													'email'		=> $email,
+													'password'	=> $password,
+													'guest'		=> 0,
+													// 'validated'	=> 1
+												));
 
-					if ($_POST['new_password'] != $_POST['new_password_confirm'] || empty($_POST['new_password'])) {
-						// password fields missmatch, mark them as bad
-						$bad_fields[] = 'new_password';
-						$bad_fields[] = 'new_password_confirm';
+						if (is_object($account)) {
+							$account_information = array(
+											'first_name'	=> $account->first_name,
+											'last_name'		=> $account->last_name,
+											'email'			=> $email
+										);
+						} else {
+							// invalid user name
+							$bad_fields[] = 'sign_in_email';
+							$bad_fields[] = 'sign_in_password';
+						}
+						break;
 
-					} else {
-						// password fields match, salt and hash password
-						$account_information['password'] = hash_hmac(
-																'sha256',
-																$_POST['new_password'],
-																shop::BUYER_SECRET
-															);
-					}
-					break;
- 
-				case User::GUEST:
-				default:
-					$name = explode(' ', fix_chars($_POST['name']), 1);
+					case User::CREATE:
+						$account_information = array(
+										'first_name'	=> fix_chars($_POST['first_name']),
+										'last_name'		=> fix_chars($_POST['last_name']),
+										'email'			=> fix_chars($_POST['new_email']),
+										'validated'		=> 0,
+										'guest'			=> 0
+									);
 
-					$account_information = array(
-									'first_name'	=> $name[0],
-									'last_name'		=> $name[1],
-									'email'			=> fix_chars($_POST['email']),
-									'password'		=> '',
-									'validated'		=> 0,
-									'guest'			=> 1
-								);
+						if ($_POST['new_password'] != $_POST['new_password_confirm'] || empty($_POST['new_password'])) {
+							// password fields missmatch, mark them as bad
+							$bad_fields[] = 'new_password';
+							$bad_fields[] = 'new_password_confirm';
 
-					break;
-			}
+						} else {
+							// password fields match, salt and hash password
+							$account_information['password'] = hash_hmac(
+																	'sha256',
+																	$_POST['new_password'],
+																	shop::BUYER_SECRET
+																);
+						}
+						break;
+	
+					case User::GUEST:
+					default:
+						$name = explode(' ', fix_chars($_POST['name']), 1);
+
+						$account_information = array(
+										'first_name'	=> $name[0],
+										'last_name'		=> $name[1],
+										'email'			=> fix_chars($_POST['email']),
+										'password'		=> '',
+										'validated'		=> 0,
+										'guest'			=> 1
+									);
+
+						break;
+				}
 		}
 
 		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
+		trigger_error(json_encode($_POST));
+		trigger_error(json_encode($payment_method));
+		trigger_error(json_encode($bad_fields));
 
 		if ($info_available) {
 			$buyers_manager = ShopBuyersManager::getInstance();
@@ -2024,6 +2026,14 @@ class shop extends Module {
 			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $payment_method->get_name())));
 			$cancel_url = urlencode(url_Make('checkout_canceled', 'shop', array('method', $payment_method->get_name())));
 			$transaction_data = array();
+
+			// emit signal and return if handled
+			$result_list = $this->event_handler->trigger('before-checkout', $return_url, $cancel_url);
+
+			foreach ($result_list as $result)
+				if ($result) return;
+
+			trigger_error(json_encode($result_list));
 
 			// get currency info
 			$currency = $this->settings['default_currency'];
