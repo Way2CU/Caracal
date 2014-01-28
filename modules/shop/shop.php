@@ -100,8 +100,10 @@ class shop extends Module {
 		$this->delivery_methods = array();
 
 		// create events
-		$self->event_handler = new EventHandler();
-		$self->event_handler->registerEvent('shopping-cart-changed');
+		$this->event_handler = new EventHandler();
+		$this->event_handler->registerEvent('shopping-cart-changed');
+		$this->event_handler->registerEvent('before-checkout');
+		$this->event_handler->registerEvent('payment-completed');
 
 		// load module style and scripts
 		if (class_exists('head_tag') && $section != 'backend') {
@@ -472,6 +474,10 @@ class shop extends Module {
 
 				case 'set_cart_from_template':
 					$this->setCartFromTemplate($params, $children);
+					break;
+
+				case 'set_recurring_plan':
+					$this->setRecurringPlan($params, $children);
 					break;
 
 				case 'include_scripts':
@@ -1015,6 +1021,17 @@ class shop extends Module {
 			$_SESSION['shopping_cart'] = $cart;
 			$this->event_handler->trigger('shopping-cart-changed');
 		}
+	}
+
+	/**
+	 * Set recurring plan to be activated.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function setRecurringPlan($tag_params, $children) {
+		$recurring_plan = fix_chars($tag_params['text_id']);
+		$_SESSION['recurring_plan'] = $recurring_plan;
 	}
 
 	/**
@@ -1865,6 +1882,11 @@ class shop extends Module {
 		$billing_information = array();
 		$existing_user = isset($_POST['existing_user']) ? fix_id($_POST['existing_user']) : null;
 
+		// decide whether to include shipping and account information
+		if (isset($tag_params['include_shipping']))
+			$include_shipping = fix_id($tag_params['include_shipping']); else
+			$include_shipping = true;
+
 		$bad_fields = array();
 		$info_available = false;
 
@@ -1885,14 +1907,16 @@ class shop extends Module {
 				$payment_method = array_shift($this->payment_methods);
 
 			// get delivery information
-			$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
-			$required = array('name', 'email', 'street', 'city', 'zip', 'country');
+			if ($include_shipping) {
+				$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
+				$required = array('name', 'email', 'street', 'city', 'zip', 'country');
 
-			foreach($fields as $field)
-				if (isset($_POST[$field]) && !empty($_POST[$field]))
-					$shipping_information[$field] = fix_chars($_POST[$field]); else
-					if (in_array($field, $required))
-						$bad_fields[] = $field;
+				foreach($fields as $field)
+					if (isset($_POST[$field]) && !empty($_POST[$field]))
+						$shipping_information[$field] = fix_chars($_POST[$field]); else
+						if (in_array($field, $required))
+							$bad_fields[] = $field;
+			}
 
 			// get billing information
 			if (!is_null($payment_method) && !$payment_method->provides_information()) {
@@ -1910,82 +1934,86 @@ class shop extends Module {
 			}
 
 			// set proper account data based on users choice
-			switch ($existing_user) {
-				case User::EXISTING:
-					$manager = ShopBuyersManager::getInstance();
-					$retry_manager = LoginRetryManager::getInstance();
+			if ($include_shipping)
+				switch ($existing_user) {
+					case User::EXISTING:
+						$manager = ShopBuyersManager::getInstance();
+						$retry_manager = LoginRetryManager::getInstance();
 
-					$email = fix_chars($_POST['sign_in_email']);
-					$password = hash_hmac(
-									'sha256',
-									$_POST['sign_in_password'],
-									shop::BUYER_SECRET
-								);
-
-					$account = $manager->getSingleItem(
-											$manager->getFieldNames(),
-											array(
-												'email'		=> $email,
-												'password'	=> $password,
-												'guest'		=> 0,
-												// 'validated'	=> 1
-											));
-
-					if (is_object($account)) {
-						$account_information = array(
-										'first_name'	=> $account->first_name,
-										'last_name'		=> $account->last_name,
-										'email'			=> $email
+						$email = fix_chars($_POST['sign_in_email']);
+						$password = hash_hmac(
+										'sha256',
+										$_POST['sign_in_password'],
+										shop::BUYER_SECRET
 									);
-					} else {
-						// invalid user name
-						$bad_fields[] = 'sign_in_email';
-						$bad_fields[] = 'sign_in_password';
-					}
-					break;
 
-				case User::CREATE:
-					$account_information = array(
-									'first_name'	=> fix_chars($_POST['first_name']),
-									'last_name'		=> fix_chars($_POST['last_name']),
-									'email'			=> fix_chars($_POST['new_email']),
-									'validated'		=> 0,
-									'guest'			=> 0
-								);
+						$account = $manager->getSingleItem(
+												$manager->getFieldNames(),
+												array(
+													'email'		=> $email,
+													'password'	=> $password,
+													'guest'		=> 0,
+													// 'validated'	=> 1
+												));
 
-					if ($_POST['new_password'] != $_POST['new_password_confirm'] || empty($_POST['new_password'])) {
-						// password fields missmatch, mark them as bad
-						$bad_fields[] = 'new_password';
-						$bad_fields[] = 'new_password_confirm';
+						if (is_object($account)) {
+							$account_information = array(
+											'first_name'	=> $account->first_name,
+											'last_name'		=> $account->last_name,
+											'email'			=> $email
+										);
+						} else {
+							// invalid user name
+							$bad_fields[] = 'sign_in_email';
+							$bad_fields[] = 'sign_in_password';
+						}
+						break;
 
-					} else {
-						// password fields match, salt and hash password
-						$account_information['password'] = hash_hmac(
-																'sha256',
-																$_POST['new_password'],
-																shop::BUYER_SECRET
-															);
-					}
-					break;
- 
-				case User::GUEST:
-				default:
-					$name = explode(' ', fix_chars($_POST['name']), 1);
+					case User::CREATE:
+						$account_information = array(
+										'first_name'	=> fix_chars($_POST['first_name']),
+										'last_name'		=> fix_chars($_POST['last_name']),
+										'email'			=> fix_chars($_POST['new_email']),
+										'validated'		=> 0,
+										'guest'			=> 0
+									);
 
-					$account_information = array(
-									'first_name'	=> $name[0],
-									'last_name'		=> $name[1],
-									'email'			=> fix_chars($_POST['email']),
-									'password'		=> '',
-									'validated'		=> 0,
-									'guest'			=> 1
-								);
+						if ($_POST['new_password'] != $_POST['new_password_confirm'] || empty($_POST['new_password'])) {
+							// password fields missmatch, mark them as bad
+							$bad_fields[] = 'new_password';
+							$bad_fields[] = 'new_password_confirm';
 
-					break;
-			}
+						} else {
+							// password fields match, salt and hash password
+							$account_information['password'] = hash_hmac(
+																	'sha256',
+																	$_POST['new_password'],
+																	shop::BUYER_SECRET
+																);
+						}
+						break;
+	
+					case User::GUEST:
+					default:
+						$name = explode(' ', fix_chars($_POST['name']), 1);
+
+						$account_information = array(
+										'first_name'	=> $name[0],
+										'last_name'		=> $name[1],
+										'email'			=> fix_chars($_POST['email']),
+										'password'		=> '',
+										'validated'		=> 0,
+										'guest'			=> 1
+									);
+
+						break;
+				}
 		}
 
 		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
+		trigger_error(json_encode($_POST));
+		trigger_error(json_encode($payment_method));
+		trigger_error(json_encode($bad_fields));
 
 		if ($info_available) {
 			$buyers_manager = ShopBuyersManager::getInstance();
@@ -1998,6 +2026,14 @@ class shop extends Module {
 			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $payment_method->get_name())));
 			$cancel_url = urlencode(url_Make('checkout_canceled', 'shop', array('method', $payment_method->get_name())));
 			$transaction_data = array();
+
+			// emit signal and return if handled
+			$result_list = $this->event_handler->trigger('before-checkout', $return_url, $cancel_url);
+
+			foreach ($result_list as $result)
+				if ($result) return;
+
+			trigger_error(json_encode($result_list));
 
 			// get currency info
 			$currency = $this->settings['default_currency'];
@@ -2179,13 +2215,15 @@ class shop extends Module {
 			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
 
+			// get fixed country if set
 			$fixed_country = '';
 			if (isset($this->settings['fixed_country']))
 				$fixed_country = $this->settings['fixed_country'];
 
 			$params = array(
-						'fixed_country'	=> $fixed_country,
-						'bad_fields'	=> $bad_fields
+						'include_shipping'	=> $include_shipping,
+						'fixed_country'		=> $fixed_country,
+						'bad_fields'		=> $bad_fields
 					);
 
 			$template->restoreXML();
@@ -2312,21 +2350,23 @@ class shop extends Module {
 	 */
 	public function tag_PaymentMethodsList($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
+		$only_recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
 		if (count($this->payment_methods) > 0)
-			foreach ($this->payment_methods as $name => $module) {
-				$params = array(
-							'name'					=> $name,
-							'title'					=> $module->get_title(),
-							'icon'					=> $module->get_icon_url(),
-							'image'					=> $module->get_image_url(),
-							'provides_information'	=> $module->provides_information()
-						);
+			foreach ($this->payment_methods as $name => $module) 
+				if (($only_recurring && $module->supports_recurring()) || !$only_recurring) {
+					$params = array(
+								'name'					=> $name,
+								'title'					=> $module->get_title(),
+								'icon'					=> $module->get_icon_url(),
+								'image'					=> $module->get_image_url(),
+								'provides_information'	=> $module->provides_information()
+							);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
-				$template->parse();
-			}
+					$template->restoreXML();
+					$template->setLocalParams($params);
+					$template->parse();
+				}
 	}
 
 	/**

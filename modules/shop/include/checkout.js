@@ -19,6 +19,24 @@ function BuyerInformationForm() {
 	self.password_dialog = new Dialog();
 	self.cvv_dialog = new Dialog();
 
+	// pages
+	if (self.sign_in_form.length > 0) {
+		self.pages = {
+				SIGN_IN: 0,
+				SHIPPING_INFORMATION: 1,
+				PAYMENT_METHOD: 2,
+				BILLING_INFORMATION: 3,
+			};
+
+	} else {
+		self.pages = {
+				SIGN_IN: -2,
+				SHIPPING_INFORMATION: -1,
+				PAYMENT_METHOD: 0,
+				BILLING_INFORMATION: 1,
+			};
+	}
+
 	/**
 	 * Complete object initialization.
 	 */
@@ -155,8 +173,8 @@ function BuyerInformationForm() {
 
 		// disable billing information page if payment method provides info about buyer
 		if (method.data('provides-information') == 1)
-			self.page_control.disablePage(3); else
-			self.page_control.enablePage(3);
+			self.page_control.disablePage(self.pages.BILLING_INFORMATION); else
+			self.page_control.enablePage(self.pages.BILLING_INFORMATION);
 	};
 	/**
 	* Validate sign in page.
@@ -355,7 +373,7 @@ function BuyerInformationForm() {
 		var result = self.methods.filter('.active').length > 0;
 
 		if (!result)
-			methods.find('span').addClass('bad');
+			self.methods.addClass('bad');
 
 		return result;
 	};
@@ -415,22 +433,22 @@ function BuyerInformationForm() {
 
 		if (new_page > current_page)
 			switch(current_page) {
-				case 0:
+				case self.pages.SIGN_IN:
 					// validate sign in page
 					result = self._validate_sign_in_page();
 					break;
 
-				case 1:
+				case self.pages.SHIPPING_INFORMATION:
 					// validate shipping information page
 					result = self._validate_shipping_information_page();
 					break;
 
-				case 2:
+				case self.pages.PAYMENT_METHOD:
 					// validate payment method page
 					result = self._validate_payment_method_page();
 					break;
 
-				case 3:
+				case self.pages.BILLING_INFORMATION:
 					// validate billing information
 					result = self._validate_billing_information_page();
 					break;

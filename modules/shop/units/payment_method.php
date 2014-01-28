@@ -52,25 +52,19 @@ abstract class PaymentMethod {
 	 * Get display name of payment method
 	 * @return string
 	 */
-	public function get_title() {
-		return $this->parent->getLanguageConstant('payment_method_title');
-	}
+	abstract public function get_title();
 
 	/**
 	 * Get icon URL for payment method
 	 * @return string
 	 */
-	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
-	}
+	abstract public function get_icon_url();
 
 	/**
 	 * Get image URL for payment method
 	 * @return string
 	 */
-	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
-	}
+	abstract public function get_image_url();
 
 	/**
 	 * Get list of plans for recurring payments.
@@ -106,4 +100,15 @@ abstract class PaymentMethod {
 	 * @return string
 	 */
 	abstract public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url);
+
+	/**
+	 * Make new recurring payment based on named plan.
+	 *
+	 * @param string $plan_name
+	 * @param array $billing_information
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	abstract public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url);
 }
