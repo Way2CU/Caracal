@@ -47,8 +47,6 @@
 		<div id="input_details" skip_cache="1"> 
 			<form method="POST" action="">
 				<div class="pages">
-					<input type="hidden" name="set_info" value="1"/>
-
 					<cms:if condition="$params['include_shipping']">
 						<!-- Sign In -->
 						<div class="page" id="sign_in">
@@ -189,7 +187,6 @@
 								<select name="presets"/>
 							</label>
 							<label>
-								<input type="hidden" name="set_info" value="1"/>
 								<span><cms:text constant="label_full_name" module="shop"/></span>
 								<input
 									class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
@@ -348,6 +345,7 @@
 					<div class="page" id="payment_method">
 						<h1><cms:text constant="title_payment_method" module="shop"/></h1>
 						<input type="hidden" name="payment_method" value=""/>
+						<input type="hidden" name="stage" value="set_info"/>
 						<div class="payment_methods">
 							<cms:module
 								name="shop"
@@ -356,7 +354,9 @@
 						</div>
 
 						<div class="checkout_controls">
-							<button class="previous"><cms:text constant="back"/></button>
+							<cms:if condition="$params['include_shipping']">
+								<button class="previous"><cms:text constant="back"/></button>
+							</cms:if>
 							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</div>
@@ -453,6 +453,7 @@
 							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</div>
+					<div class="page" id="checkout"/>
 				</div>
 			</form>
 		</div>
