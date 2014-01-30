@@ -53,7 +53,7 @@ class ctm extends Module {
 		if (class_exists('head_tag') && $section != 'backend' && $this->settings['include_code']) {
 			$head_tag = head_tag::getInstance();
 
-			$url = str_replace('{id}', $this->settings['account_id'], '{id}.tctm.co/t.js');
+			$url = str_replace('{id}', $this->settings['account_id'], '//{id}.tctm.co/t.js');
 			$head_tag->addTag(
 						'script',
 						array(
