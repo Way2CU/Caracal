@@ -88,6 +88,15 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return array
 	 */
 	public function get_recurring_plans() {
+		return array();
+	}
+
+	/**
+	 * Get billing information.
+	 * @return array
+	 */
+	public function get_information() {
+		return array();
 	}
 
 	/**
@@ -102,6 +111,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_payment($data, $billing_information, $items, $return_url, $cancel_url) {
+		return '';
 	}
 
 	/**
@@ -114,6 +124,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url) {
+		return '';
 	}
 }
 
