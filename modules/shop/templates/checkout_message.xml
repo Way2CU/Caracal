@@ -2,17 +2,23 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="checkout"> 
-		<div class="checkout_message">
-			<h3><_text constant="title_checkout_message" module="shop"/></h3>
+		<div class="$params['redirect'] ? 'checkout_message redirect' : 'checkout_message'" eval="class">
+			<h3><cms:text constant="title_checkout_message" module="shop"/></h3>
 			<p>
-				<_var name="$params['message']"/>
+				<cms:var name="$params['message']"/>
 			</p>
 		</div>
 
-		<div class="checkout_controls for_message">
-			<button type="button" onclick="'javascript: window.location=\''.$params['button_action'].'\';'" eval="onclick">
-				<_var name="$params['button_text']"/>
-			</button>
-		</div>
+		<cms:if condition="!$params['redirect']">
+			<div class="checkout_controls for_message">
+				<button
+					type="button"
+					onclick="'javascript: window.location=\''.$params['button_action'].'\';'"
+					eval="onclick"
+				>
+					<cms:var name="$params['button_text']"/>
+				</button>
+			</div>
+		</cms:if>
 	</div>
 </document>
