@@ -34,11 +34,11 @@ class paypal extends Module {
 			// add menu entry for payment methods
 			if (!is_null($method_menu)) 
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_oay'),
+									$this->getLanguageConstant('menu_paypal'),
 									url_GetFromFilePath($this->path.'images/icon.png'),
 									window_Open( // on click open window
 												'paypal',
-												650,
+												400,
 												$this->getLanguageConstant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
@@ -68,6 +68,11 @@ class paypal extends Module {
 
 			// set helped in debug mode if specified
 			PayPal_Helper::setSandbox(shop::getInstance()->isDebug());
+			PayPal_Helper::setCredentials(
+								$this->settings['api_username'],
+								$this->settings['api_password'],
+								$this->settings['api_signature']
+							);
 
 			// create payment methods
 			$this->express_method = PayPal_Express::getInstance($this); 		
@@ -95,8 +100,8 @@ class paypal extends Module {
 		// global control action
 		if (isset($params['action']))
 			switch ($params['action']) {
-				case 'express_return':
-					$this->handleExpressCheckoutCallback();
+				case 'express-checkout':
+					$this->completeExpressCheckout();
 					break;
 
 				default:
@@ -149,8 +154,15 @@ class paypal extends Module {
 	public function onInit() {
 		global $db;
 
+		// get list of languages
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
+		// store global settings
+		$this->saveSetting('api_username', '');
+		$this->saveSetting('api_password', '');
+		$this->saveSetting('api_signature', '');
+
+		// create tables
 		$sql = "
 			CREATE TABLE `paypal_recurring_plans` (
 				`id` INT NOT NULL AUTO_INCREMENT,
@@ -192,7 +204,13 @@ class paypal extends Module {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
+		$params = array(
+						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
+						'cancel_action'	=> window_Close('paypal')
+					);
+
 		$template->restoreXML();
+		$template->setLocalParams($params);
 		$template->parse();
 	}
 	
@@ -203,10 +221,14 @@ class paypal extends Module {
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
+		$this->saveSetting('api_username', escape_chars($_REQUEST['api_username']));
+		$this->saveSetting('api_password', escape_chars($_REQUEST['api_password']));
+		$this->saveSetting('api_signature', escape_chars($_REQUEST['api_signature']));
+
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_plan_saved'),
+					'message'	=> $this->getLanguageConstant('message_settings_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close($window)
+					'action'	=> window_Close('paypal')
 				);
 
 		$template->restoreXML();
@@ -399,10 +421,10 @@ class paypal extends Module {
 	}
 
 	/**
-	 * Handle callback from express checkout.
+	 * Complete express checkout.
 	 */
-	private function handleExpressCheckoutCallback() {
-		$this->express_method->handleCallback();
+	private function completeExpressCheckout() {
+		$this->express_method->completeCheckout();
 	}
 
 	/**
