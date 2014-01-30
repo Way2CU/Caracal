@@ -20,12 +20,12 @@ final class PayPal_Helper {
 	 */
 	private static $version_overrides = array();
 
-	const API_LIVE_ENDPOINT = 'ssl://api-3t.paypal.com';
-	const API_SANDBOX_ENDPOINT = 'ssl://api-3t.paypal.com';
+	const API_LIVE_ENDPOINT = 'api-3t.paypal.com';
+	const API_SANDBOX_ENDPOINT = 'api-3t.sandbox.paypal.com';
 	const API_VERSION = 109;
 
-	const PAYPAL_LIVE_URL = 'https://www.paypal.com/cgi-bin/webscr';
-	const PAYPAL_SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr';
+	const PAYPAL_LIVE_URL = 'www.paypal.com/cgi-bin/webscr/';
+	const PAYPAL_SANDBOX_URL = 'www.sandbox.paypal.com/webscr/';
 
 	const METHOD_AddressVerify = 'AddressVerify';
 	const METHOD_BAUpdate = 'BAUpdate';
@@ -68,6 +68,19 @@ final class PayPal_Helper {
 	 */
 	public static function setSandbox($sandbox) {
 		self::$sandbox = $sandbox;
+	}
+
+	/**
+	 * Set API credentials.
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @param string $signature
+	 */
+	public static function setCredentials($username, $password, $signature) {
+		self::$api_username = $username;
+		self::$api_password = $password;
+		self::$api_signature = $signature;
 	}
 
 	/**
@@ -131,19 +144,35 @@ final class PayPal_Helper {
 		$nvp_string = self::getNameValuePairs($final_params);
 
 		// make the call
-		$header = 'POST /nvp HTTP/1.0\n';
-		$header .= 'Content-Type: application/x-www-form-urlencoded\n';
-		$header .= 'Content-Length: ' . strlen($nvp_string) . '\n\n';
+		$header = "POST /nvp HTTP/1.1\n";
+		$header .= "User-Agent: Caracal\n";
+		$header .= "Content-Type: application/x-www-form-urlencoded\n";
+		$header .= "Content-Length: " . strlen($nvp_string) . "\n";
+		$header .= "Host: ".$endpoint_url."\n";
+		$header .= "Connection: close\n\n";
 
-		$socket = fsockopen($endpoint_url, 443, $error_number, $error_string, 30);
+		$socket = fsockopen('ssl://'.$endpoint_url, 443, $error_number, $error_string, 5);
 
 		if ($socket) {
+			// send and receive data
 			fputs($socket, $header.$nvp_string);
-			$raw_result = fgets($socket);
+			$raw_data = stream_get_contents($socket, 1024);
+
+			// parse result
+			$data = str_replace("\r\n", "\n", $raw_data);
+			$data = explode("\n\n", $data);
+			$header = $data[0];
+			$content = $data[1];
+
+			// close socket
+			fclose($socket);
 		}
 
 		// parse the result
-		$result = self::getArrayFromNVP($raw_result);
+		$result = self::getArrayFromNVP($content);
+
+		if (!isset($result['ACK']))
+			$result['ACK'] = null;
 
 		return $result;
 	}
@@ -157,6 +186,12 @@ final class PayPal_Helper {
 	 */
 	public static function redirect($command, $token) {
 		$url = self::$sandbox ? self::PAYPAL_SANDBOX_URL : self::PAYPAL_LIVE_URL;
+		$params = array(
+				'cmd'	=> $command,
+				'token'	=> $token
+			);
+
+		url_SetRefresh('https://'.$url.self::getNameValuePairs($params), 0);
 	}
 }
 
