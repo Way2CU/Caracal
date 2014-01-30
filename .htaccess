@@ -3,7 +3,6 @@
 
 	# make sure we point to the same content
 	RewriteCond %{HTTP_HOST} !^localhost$
-	RewriteCond %{REQUEST_URI} !^/blog/
 	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 

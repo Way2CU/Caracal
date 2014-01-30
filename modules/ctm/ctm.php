@@ -49,6 +49,20 @@ class ctm extends Module {
 
 			$backend->addMenu($this->name, $ctm_menu);
 		}
+
+		if (class_exists('head_tag') && $section != 'backend' && $this->settings['include_code']) {
+			$head_tag = head_tag::getInstance();
+
+			$url = str_replace('{id}', $this->settings['account_id'], '//{id}.tctm.co/t.js');
+			$head_tag->addTag(
+						'script',
+						array(
+							'src'	=> $url,
+							'type'	=> 'text/javascript',
+							'async'	=> ''
+						)
+					);
+		}
 	}
 
 	/**
@@ -99,8 +113,10 @@ class ctm extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
+		$this->saveSetting('account_id', '');
 		$this->saveSetting('account_key', '');
 		$this->saveSetting('account_secret', '');
+		$this->saveSetting('include_code', 0);
 	}
 
 	/**
@@ -131,11 +147,15 @@ class ctm extends Module {
 	 */
 	private function saveSettings() {
 		// grab parameters
+		$account_id = fix_chars($_REQUEST['account_id']);
 		$account_key = fix_chars($_REQUEST['account_key']);
 		$account_secret = fix_chars($_REQUEST['account_secret']);
+		$include_code = isset($_REQUEST['include_code']) && ($_REQUEST['include_code'] == 'on' || $_REQUEST['include_code'] == '1') ? 1 : 0;
 
+		$this->saveSetting('account_id', $account_id);
 		$this->saveSetting('account_key', $account_key);
 		$this->saveSetting('account_secret', $account_secret);
+		$this->saveSetting('include_code', $include_code);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
