@@ -8,8 +8,6 @@
 div#checkout_container {
 	display: block;
 	padding-bottom: 100px;
-
-	position: relative;
 }
 
 /**
@@ -26,11 +24,19 @@ div#checkout {
 	position: relative;
 }
 
+div#checkout.recurring {
+	width: 570px;
+}
+
 div#checkout div.container {
 	display: block;
 	height: 130px;
 
 	position: relative;
+}
+
+div#checkout.recurring div.container {
+	height: auto;
 }
 
 div#checkout div.clear_float {
@@ -70,6 +76,10 @@ div#checkout div.delivery_provider {
 
 body.rtl div#checkout div.delivery_provider {
 	float: left;
+}
+
+div#checkout.recurring div.delivery_provider {
+	float: none;
 }
 
 div#checkout div.delivery_provider span.title {
@@ -128,6 +138,14 @@ div#checkout div.delivery_provider label input[type=radio]:checked + span:before
 	box-shadow: none;
 }
 
+div#checkout div.checkout_message.redirect p {
+	padding: 20px;
+	padding-left: 70px;
+	background-image: url(../images/checkout_loading.gif);
+	background-position: 20px center;
+	background-repeat: no-repeat;
+}
+
 div#checkout div.overlay {
 	display: none;
 	width: 100%;
@@ -178,8 +196,6 @@ div#checkout div.delivery_method {
 	color: #333333;
 	transition-property: all;
 	transition-duration: 0.5s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.5s;
 
 	opacity: 0;
 }
@@ -188,6 +204,10 @@ div#checkout div.delivery_method.visible {
 	height: auto;
 	padding: 7px;
 	opacity: 1;
+}
+
+div#checkout.recurring div.delivery_method.visible {
+	margin-top: 20px;
 }
 
 div#checkout div.delivery_method label {
@@ -296,6 +316,13 @@ body.rtl div.transaction_details {
 	float: right;
 }
 
+div#checkout.recurring div.transaction_details {
+	width: 550px;
+	float: none;
+
+	margin-bottom: 20px;
+}
+
 div.transaction_details textarea {
 	width: 356px;
 	height: 60px;
@@ -320,6 +347,52 @@ div.transaction_details textarea {
 
 div.transaction_details textarea:focus {
 	border: 1px solid #0B63C8;
+}
+
+div#checkout.recurring div.transaction_details textarea {
+	width: 538px;
+}
+
+/**
+ * Recurring payment summary
+ */
+div#recurring_summary {
+	display: block;
+	
+	margin-bottom: 20px;
+
+	border: 1px solid white;
+	border-radius: 8px 8px 0px 0px;
+	background-color: white;
+	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+
+	color: #333333;
+	font-size: 13px;
+}
+
+div#recurring_summary div {
+	padding: 20px;
+}
+
+div#recurring_summary h1 {
+	margin: 0px;
+	padding: 5px;
+	padding-left: 7px;
+	padding-right: 7px;
+
+	border: none;
+	border-radius: 7px 7px 0px 0px;
+	background-color: #333333;
+
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+div#recurring_summary h2 {
+	margin: 0px;
+	padding: 0px;
+	padding-bottom: 5px;
 }
 
 /**
