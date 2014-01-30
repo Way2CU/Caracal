@@ -74,6 +74,9 @@ class RecurringPayment {
 }
 
 
+class PaymentMethodError extends Exception {};
+
+
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
@@ -1117,7 +1120,23 @@ class shop extends Module {
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_completed_message', $this, 'tag_CompletedMessage');
 
-		$params = array();
+		$template->restoreXML();
+		$template->parse();
+	}
+
+	/**
+	 * Show message before user gets redirected.
+	 */
+	private function showCheckoutRedirect() {
+		$template = new TemplateHandler('checkout_message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_checkout_redirect'),
+					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+					'button_action'	=> url_Make('', 'home'),
+					'redirect'		=> true
+			);
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -1131,8 +1150,6 @@ class shop extends Module {
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_canceled_message', $this, 'tag_CanceledMessage');
-
-		$params = array();
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -1870,6 +1887,358 @@ class shop extends Module {
 	}
 
 	/**
+	 * Get payment method for checkout form.
+	 *
+	 * @param array $tag_params
+	 * @return object
+	 */
+	private function getPaymentMethod($tag_params) {
+		$result = null;
+		$method_name = null;
+
+		// require at least one payment method
+		if (count($this->payment_methods) == 0)
+			throw new PaymentMethodError('No payment methods found!');
+
+		// get method name from various sources
+		if (isset($tag_params['payment_method']))
+			$method_name = fix_chars($tag_params['payment_method']);
+
+		if (isset($_REQUEST['payment_method']) && is_null($method_name))
+			$method_name = fix_chars($_REQUEST['payment_method']);
+
+		// get method based on its name
+		if (isset($this->payment_methods[$method_name]))
+			$result = $this->payment_methods[$method_name];
+
+		return $result;
+	}
+
+	/**
+	 * Get billing information if needed.
+	 */
+	private function getBillingInformation($payment_method) {
+		$result = array();
+
+		// get billing information
+		if (!$payment_method->provides_information()) {
+			$fields = array(
+				'billing_full_name', 'billing_credit_card', 'billing_expire_month',
+				'billing_expire_year', 'billing_cvv' 
+			);
+
+			foreach($fields as $field)
+				if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field]))
+					$result[$field] = fix_chars($_REQUEST[$field]);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get shipping information.
+	 *
+	 * @return array
+	 */
+	private function getShippingInformation() {
+		$result = array();
+		$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
+
+		// get delivery information
+		foreach($fields as $field)
+			if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field]))
+				$result[$field] = fix_chars($_REQUEST[$field]);
+
+		return $result;
+	}
+
+	/**
+	 * Get existing or create a new user account.
+	 *
+	 * @return object
+	 */
+	private function getUserAccount() {
+		$result = null;
+		$existing_user = isset($_POST['existing_user']) ? fix_id($_POST['existing_user']) : null;
+
+		// set proper account data based on users choice
+		if (!is_null($existing_user))
+			switch ($existing_user) {
+				case User::EXISTING:
+					$manager = ShopBuyersManager::getInstance();
+					$retry_manager = LoginRetryManager::getInstance();
+
+					$email = fix_chars($_REQUEST['sign_in_email']);
+					$password = hash_hmac(
+									'sha256',
+									$_REQUEST['sign_in_password'],
+									shop::BUYER_SECRET
+								);
+
+					// get account from database
+					$account = $manager->getSingleItem(
+											$manager->getFieldNames(),
+											array(
+												'email'		=> $email,
+												'password'	=> $password,
+												'guest'		=> 0,
+												// 'validated'	=> 1
+											));
+
+					// if account exists pass it as result
+					if (is_object($account))
+						$result = $account;
+
+					break;
+
+				case User::CREATE:
+					$data = array(
+								'first_name'	=> fix_chars($_REQUEST['first_name']),
+								'last_name'		=> fix_chars($_REQUEST['last_name']),
+								'email'			=> fix_chars($_REQUEST['new_email']),
+								'uid'			=> isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : '',
+								'validated'		=> 0,
+								'guest'			=> 0
+							);
+
+					if ($_REQUEST['new_password'] == $_REQUEST['new_password_confirm'] || empty($_REQUEST['new_password'])) {
+						// password fields match, salt and hash password
+						$data['password'] = hash_hmac(
+												'sha256',
+												$_REQUEST['new_password'],
+												shop::BUYER_SECRET
+											);
+
+						// create new account
+						$manager->insertData($account_information);
+
+						// get account object
+						$id = $manager->getInsertedID();
+						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+					}
+
+					break;
+
+				case User::GUEST:
+					// collect data
+					if (isset($_REQUEST['name'])) {
+						$name = explode(' ', fix_chars($_REQUEST['name']), 1);
+						$first_name = $name[0];
+						$last_name = $name[1];
+					} else {
+						$first_name = fix_chars($_REQUEST['first_name']);
+						$last_name = fix_chars($_REQUEST['last_name']);
+					}
+
+					$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
+					$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
+
+					$conditions = array();
+					$data = array(
+							'first_name'	=> $first_name,
+							'last_name'		=> $last_name,
+							'password'		=> '',
+							'validated'		=> 0,
+							'guest'			=> 1
+						);
+
+					// include uid if specified
+					if (!is_null($uid)) {
+						$conditions['uid'] = $uid;
+						$data['uid'] = $uid;
+					}
+					
+					// include email if specified
+					if (!is_null($email)) {
+						$conditions['email'] = $email;
+						$data['email'] = $email;
+					}
+
+					// try finding existing account
+					if (count($conditions) > 0) {
+						$account = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+						if (is_object($account))
+							$result = $account;
+					}
+
+					// create new account
+					if (is_null($result)) {
+						// create new account
+						$manager->insertData($account_information);
+
+						// get account object
+						$id = $manager->getInsertedID();
+						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+					}
+
+					break;
+			}
+
+		return $result;
+	}
+
+	/**
+	 * Get user's address.
+	 */
+	private function getAddress($buyer, $shipping_information) {
+		// try to associate address with transaction
+		$address = $address_manager->getSingleItem(
+							array('id'),
+							array(
+								'buyer'		=> $buyer->id,
+								'name'		=> $shipping_information['name'],
+								'street'	=> $shipping_information['street'],
+								'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+								'city'		=> $shipping_information['city'],
+								'zip'		=> $shipping_information['zip'],
+								'state'		=> $shipping_information['state'],
+								'country'	=> $shipping_information['country'],
+							));
+
+		if (is_object($address)) {
+			// existing address
+			$result = $address;
+
+		} else {
+			// create new address
+			$address_manager->insertData(array(
+								'buyer'		=> $transaction_data['buyer'],
+								'name'		=> $shipping_information['name'],
+								'street'	=> $shipping_information['street'],
+								'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+								'phone'		=> $shipping_information['phone'],
+								'city'		=> $shipping_information['city'],
+								'zip'		=> $shipping_information['zip'],
+								'state'		=> $shipping_information['state'],
+								'country'	=> $shipping_information['country'],
+							));
+			$id = $address_manager->getInsertedID();
+			$result = $address_manager->getSingleItem($address_manager->getFieldNames(), array('id' => $id));
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Update transaction data.
+	 *
+	 * @param object $payment_method
+	 * @param string $delivery_method
+	 * @param object $buyer
+	 */
+	private function updateTransaction($payment_method, $delivery_method, $buyer, $address) {
+		$result = array();
+		$transactions_manager = ShopTransactionsManager::getInstance();
+		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+
+		// generate recipient array for delivery method
+		if (!is_null($address)) {
+			$recipient = array(
+						'street'	=> array($address->street, ),
+						'city'		=> $address->city,
+						'zip_code'	=> $address->zip,
+						'state'		=> $address->state,
+						'country'	=> $address->country
+					);
+
+			if (isset($address->street2))
+				$recipient['street'][] = $address->street2;
+
+		} else {
+			$recipient = null;
+		}
+
+
+		// update buyer
+		if (!is_null($buyer))
+			$result['buyer'] = $buyer->id;
+
+		// check if we have existing transaction in our database
+		if (!isset($_SESSION['transaction'])) {
+			// get shopping cart summary
+			$uid = uniqid('', true);
+			$summary = $this->getCartSummary($recipient, $uid);
+
+			// generate new transaction uid
+			$result['uid'] = $uid;
+			$result['type'] = TransactionType::SHOPPING_CART;
+			$result['status'] = TransactionStatus::PENDING;
+			$result['handling'] = $summary['handling'];
+			$result['shipping'] = $summary['shipping'];
+			$result['weight'] = $summary['weight'];
+			$result['payment_method'] = $payment_method->get_name();
+			$result['delivery_method'] = $delivery_method;
+			$result['remark'] = '';
+			$result['total'] = $summary['total'];
+
+			// add address if needed
+			if (!is_null($address))
+				$result['address'] = $address->id;
+
+			// create new transaction
+			$transactions_manager->insertData($result);
+			$result['id'] = $transactions_manager->getInsertedID();
+
+			// store transaction data to session
+			$_SESSION['transaction'] = $result;
+
+		} else {
+			$uid = $_SESSION['transaction']['uid'];
+			$summary = $this->getCartSummary($recipient, $uid);
+
+			// there's already an existing transaction
+			$result = $_SESSION['transaction'];
+			$result['handling'] = $summary['handling'];
+			$result['shipping'] = $summary['shipping'];
+			$result['total'] = $summary['total'];
+
+			// update existing transaction
+			$transactions_manager->updateData(
+								array(
+									'handling'	=> $summary['handling'],
+									'shipping'	=> $summary['shipping'],
+									'total'		=> $summary['total'],
+									'address'	=> $address_id
+								),
+								array('uid' => $uid)
+							);
+
+			// update session storage with newest data
+			$_SESSION['transaction'] = $result;
+		}
+
+		// remove items associated with transaction
+		$transaction_items_manager->deleteData(array('transaction' => $result['id']));
+
+		// store items
+		if (count($summary['items_for_checkout']) > 0) 
+			foreach($summary['items_for_checkout'] as $uid => $item) {
+				$transaction_items_manager->insertData(array(
+											'transaction'	=> $result['id'],
+											'item'			=> $item['id'],
+											'price'			=> $item['price'],
+											'tax'			=> $item['tax'],
+											'amount'		=> $item['count'],
+											'description'	=> $item['description']
+										));
+			}
+
+		// if affiliate system is active, update referral
+		if (isset($_SESSION['referral_id']) && class_exists('affiliates')) {
+			$referral_id = $_SESSION['referral_id'];
+			$referrals_manager = AffiliateReferralsManager::getInstance();
+
+			$referrals_manager->updateData(
+							array('transaction' => $result['id']),
+							array('id' => $referral_id)
+						);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Handle drawing checkout form
 	 *
 	 * @param array $tag_params
@@ -1878,162 +2247,61 @@ class shop extends Module {
 	public function tag_CheckoutForm($tag_params, $children) {
 		$account_information = array();
 		$shipping_information = array();
-		$payment_method = null;
 		$billing_information = array();
-		$existing_user = isset($_POST['existing_user']) ? fix_id($_POST['existing_user']) : null;
+		$payment_method = null;
+		$stage = isset($_REQUEST['stage']) ? fix_chars($_REQUEST['stage']) : null;
+		$recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
 		// decide whether to include shipping and account information
 		if (isset($tag_params['include_shipping']))
-			$include_shipping = fix_id($tag_params['include_shipping']); else
+			$include_shipping = fix_id($tag_params['include_shipping']) == 1; else
 			$include_shipping = true;
 
 		$bad_fields = array();
 		$info_available = false;
 
 		// grab user information
-		if (isset($_POST['set_info'])) {
+		if (!is_null($stage)) {
 			// get payment method
-			if (isset($tag_params['payment_method']) && array_key_exists($tag_params['payment_method'], $this->payment_methods)) {
-				$method_name = fix_chars($tag_params['payment_method']);
-				$payment_method = $this->payment_methods[$method_name];
+			$payment_method = $this->getPaymentMethod($tag_params);
 
-			} else if (isset($_POST['payment_method']) && array_key_exists($_POST['payment_method'], $this->payment_methods)) {
-				$method_name = fix_chars($_POST['payment_method']);
-				$payment_method = $this->payment_methods[$method_name];
-			}
-
-			// try to get fallback payment method
-			if (is_null($payment_method) && count($this->payment_methods) > 0)
-				$payment_method = array_shift($this->payment_methods);
-
-			// get delivery information
-			if ($include_shipping) {
-				$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
-				$required = array('name', 'email', 'street', 'city', 'zip', 'country');
-
-				foreach($fields as $field)
-					if (isset($_POST[$field]) && !empty($_POST[$field]))
-						$shipping_information[$field] = fix_chars($_POST[$field]); else
-						if (in_array($field, $required))
-							$bad_fields[] = $field;
-			}
+			if (is_null($payment_method))
+				throw new PaymentMethodError('No payment method selected!');
 
 			// get billing information
-			if (!is_null($payment_method) && !$payment_method->provides_information()) {
-				$fields = array(
-					'billing_full_name', 'billing_credit_card', 'billing_expire_month',
-					'billing_expire_year', 'billing_cvv' 
-				);
-				$required = $fields;
+			$billing_information = $this->getBillingInformation($payment_method);
 
-				foreach($fields as $field)
-					if (isset($_POST[$field]) && !empty($_POST[$field]))
-						$billing_information[$field] = fix_chars($_POST[$field]); else
-						if (in_array($field, $required))
-							$bad_fields[] = $field;
+			if ($include_shipping && $stage == 'set_info') {
+				$shipping_information = $this->getShippingInformation();
+				$required = array('name', 'email', 'street', 'city', 'zip', 'country');
 			}
-
-			// set proper account data based on users choice
-			if ($include_shipping)
-				switch ($existing_user) {
-					case User::EXISTING:
-						$manager = ShopBuyersManager::getInstance();
-						$retry_manager = LoginRetryManager::getInstance();
-
-						$email = fix_chars($_POST['sign_in_email']);
-						$password = hash_hmac(
-										'sha256',
-										$_POST['sign_in_password'],
-										shop::BUYER_SECRET
-									);
-
-						$account = $manager->getSingleItem(
-												$manager->getFieldNames(),
-												array(
-													'email'		=> $email,
-													'password'	=> $password,
-													'guest'		=> 0,
-													// 'validated'	=> 1
-												));
-
-						if (is_object($account)) {
-							$account_information = array(
-											'first_name'	=> $account->first_name,
-											'last_name'		=> $account->last_name,
-											'email'			=> $email
-										);
-						} else {
-							// invalid user name
-							$bad_fields[] = 'sign_in_email';
-							$bad_fields[] = 'sign_in_password';
-						}
-						break;
-
-					case User::CREATE:
-						$account_information = array(
-										'first_name'	=> fix_chars($_POST['first_name']),
-										'last_name'		=> fix_chars($_POST['last_name']),
-										'email'			=> fix_chars($_POST['new_email']),
-										'validated'		=> 0,
-										'guest'			=> 0
-									);
-
-						if ($_POST['new_password'] != $_POST['new_password_confirm'] || empty($_POST['new_password'])) {
-							// password fields missmatch, mark them as bad
-							$bad_fields[] = 'new_password';
-							$bad_fields[] = 'new_password_confirm';
-
-						} else {
-							// password fields match, salt and hash password
-							$account_information['password'] = hash_hmac(
-																	'sha256',
-																	$_POST['new_password'],
-																	shop::BUYER_SECRET
-																);
-						}
-						break;
-	
-					case User::GUEST:
-					default:
-						$name = explode(' ', fix_chars($_POST['name']), 1);
-
-						$account_information = array(
-										'first_name'	=> $name[0],
-										'last_name'		=> $name[1],
-										'email'			=> fix_chars($_POST['email']),
-										'password'		=> '',
-										'validated'		=> 0,
-										'guest'			=> 1
-									);
-
-						break;
-				}
 		}
 
 		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
-		trigger_error(json_encode($_POST));
-		trigger_error(json_encode($payment_method));
-		trigger_error(json_encode($bad_fields));
 
 		if ($info_available) {
-			$buyers_manager = ShopBuyersManager::getInstance();
 			$address_manager = ShopDeliveryAddressManager::getInstance();
-			$transactions_manager = ShopTransactionsManager::getInstance();
-			$transaction_items_manager = ShopTransactionItemsManager::getInstance();
 			$currency_manager = ShopCurrenciesManager::getInstance();
 
 			// get fields for payment method
-			$return_url = urlencode(url_Make('checkout_completed', 'shop', array('method', $payment_method->get_name())));
-			$cancel_url = urlencode(url_Make('checkout_canceled', 'shop', array('method', $payment_method->get_name())));
-			$transaction_data = array();
+			$return_url = url_Make('checkout_completed', 'shop', array('method', $payment_method->get_name()));
+			$cancel_url = url_Make('checkout_canceled', 'shop', array('method', $payment_method->get_name()));
 
 			// emit signal and return if handled
-			$result_list = $this->event_handler->trigger('before-checkout', $return_url, $cancel_url);
+			if ($stage == 'set_info') {
+				$result_list = $this->event_handler->trigger(
+														'before-checkout',
+														$payment_method->get_name(),
+														$return_url,
+														$cancel_url
+													);
 
-			foreach ($result_list as $result)
-				if ($result) return;
-
-			trigger_error(json_encode($result_list));
+				foreach ($result_list as $result)
+					if ($result) { 
+						$this->showCheckoutRedirect();
+						return;
+					}
+			}
 
 			// get currency info
 			$currency = $this->settings['default_currency'];
@@ -2042,151 +2310,36 @@ class shop extends Module {
 			if (is_object($currency_item))
 				$transaction_data['currency'] = $currency_item->id;
 
-			if ($existing_user == User::EXISTING) {
-				// associate existing buyer with transaction
-				$buyer = $buyers_manager->getSingleItem(
-									array('id'), 
-									array('email' => $account_information['email'])
-								);
-				$transaction_data['buyer'] = $buyer->id;
+			// get buyer
+			$buyer = $this->getUserAccount();
 
-			} else {
-				// create new buyer and associate with transaction
-				$buyers_manager->insertData($account_information);
-				$transaction_data['buyer'] = $buyers_manager->getInsertedID();
-			}
+			if ($include_shipping)
+				$address = $this->getAddress($buyer, $shipping_information); else
+				$address = null;
 
-			// try to associate address with transaction
-			$address = $address_manager->getSingleItem(
-								array('id'),
-								array(
-									'buyer'		=> $transaction_data['buyer'],
-									'name'		=> $shipping_information['name'],
-									'street'	=> $shipping_information['street'],
-									'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
-									'city'		=> $shipping_information['city'],
-									'zip'		=> $shipping_information['zip'],
-									'state'		=> $shipping_information['state'],
-									'country'	=> $shipping_information['country'],
-								));
-
-			if (is_object($address)) {
-				// existing address
-				$address_id = $address->id;
-
-			} else {
-				// create new address
-				$address_manager->insertData(array(
-									'buyer'		=> $transaction_data['buyer'],
-									'name'		=> $shipping_information['name'],
-									'street'	=> $shipping_information['street'],
-									'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
-									'phone'		=> $shipping_information['phone'],
-									'city'		=> $shipping_information['city'],
-									'zip'		=> $shipping_information['zip'],
-									'state'		=> $shipping_information['state'],
-									'country'	=> $shipping_information['country'],
-								));
-				$address_id = $address_manager->getInsertedID();
-			}
-
-			// generate recipient array for delivery method
-			$recipient = array(
-	 					'street'	=> array($shipping_information['street'], ),
-	 					'city'		=> $shipping_information['city'],
-	 					'zip_code'	=> $shipping_information['zip'],
-	 					'state'		=> $shipping_information['state'],
-	 					'country'	=> $shipping_information['country']
-					);
-
-			if (isset($shipping_information['street2']))
-				$recipient['street'][] = $shipping_information['street2'];
-
-			// check if we have existing transaction in our database
-			if (!isset($_SESSION['transaction'])) {
-				// get shopping cart summary
-				$uid = uniqid('', true);
-				$summary = $this->getCartSummary($recipient, $uid);
-
-				// generate new transaction uid
-				$transaction_data['uid'] = $uid;
-				$transaction_data['type'] = TransactionType::SHOPPING_CART;
-				$transaction_data['status'] = TransactionStatus::PENDING;
-				$transaction_data['handling'] = $summary['handling'];
-				$transaction_data['shipping'] = $summary['shipping'];
-				$transaction_data['payment_method'] = $payment_method->get_name();
-				$transaction_data['delivery_method'] = '';
-				$transaction_data['remark'] = '';
-				$transaction_data['address'] = $address_id;
-				$transaction_data['total'] = $summary['total'];
-
-				// create new transaction
-				$transactions_manager->insertData($transaction_data);
-				$transaction_data['id'] = $transactions_manager->getInsertedID();
-
-				// store transaction data to session
-				$_SESSION['transaction'] = $transaction_data;
-
-			} else {
-				$uid = $_SESSION['transaction']['uid'];
-				$summary = $this->getCartSummary($recipient, $uid);
-
-				// there's already an existing transaction
-				$transaction_data = $_SESSION['transaction'];
-				$transaction_data['handling'] = $summary['handling'];
-				$transaction_data['shipping'] = $summary['shipping'];
-				$transaction_data['total'] = $summary['total'];
-
-				// update existing transaction
-				$transactions_manager->updateData(
-									array(
-										'handling'	=> $summary['handling'],
-										'shipping'	=> $summary['shipping'],
-										'total'		=> $summary['total'],
-										'address'	=> $address_id
-									),
-									array('uid' => $uid)
-								);
-
-				// update session storage with newest data
-				$_SESSION['transaction'] = $transaction_data;
-			}
-
-			// remove items associated with transaction
-			$transaction_items_manager->deleteData(array('transaction' => $transaction_data['id']));
-
-			// store items
-			if (count($summary['items_for_checkout']) > 0) 
-				foreach($summary['items_for_checkout'] as $uid => $item) {
-					$transaction_items_manager->insertData(array(
-												'transaction'	=> $transaction_data['id'],
-												'item'			=> $item['id'],
-												'price'			=> $item['price'],
-												'tax'			=> $item['tax'],
-												'amount'		=> $item['count'],
-												'description'	=> $item['description']
-											));
-				}
-
-			// if affiliate system is active, update referral
-			if (isset($_SESSION['referral_id']) && class_exists('affiliates')) {
-				$referral_id = $_SESSION['referral_id'];
-				$referrals_manager = AffiliateReferralsManager::getInstance();
-
-				$referrals_manager->updateData(
-								array('transaction' => $transaction_data['id']),
-								array('id' => $referral_id)
-							);
-			}
+			if (!$recurring)
 
 			// create new payment
-			$checkout_fields = $payment_method->new_payment(
-										$transaction_data,
-										$billing_information,
-										$summary['items_for_checkout'],
-										$return_url,
-										$cancel_url
-									);
+			if ($recurring) {
+				// recurring payment
+				$checkout_fields = $payment_method->new_recurring_payment(
+											$_SESSION['recurring_plan'],
+											$billing_information,
+											$return_url,
+											$cancel_url
+										);
+
+			} else {
+				// regular payment
+				$summary = $this->updateTransaction($payment_method, '', $buyer, $address);
+				$checkout_fields = $payment_method->new_payment(
+											$transaction_data,
+											$billing_information,
+											$summary['items_for_checkout'],
+											$return_url,
+											$cancel_url
+										);
+			}
 
 			// load template
 			$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
@@ -2198,13 +2351,35 @@ class shop extends Module {
 						'checkout_url'		=> $payment_method->get_url(),
 						'checkout_fields'	=> $checkout_fields,
 						'checkout_name'		=> $payment_method->get_title(),
-						'sub-total'			=> number_format($summary['total'], 2),
-						'shipping'			=> number_format($summary['shipping'], 2),
-						'handling'			=> number_format($summary['handling'], 2),
-						'total_weight'		=> number_format($summary['weight'], 2),
-						'total'				=> number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2),
-						'currency'			=> $this->getDefaultCurrency()
+						'currency'			=> $this->getDefaultCurrency(),
+						'recurring'			=> $recurring,
+						'include_shipping'	=> $include_shipping,
 					);
+
+			// for recurring plans add additional params
+			if ($recurring) {
+				$plans = $payment_method->get_recurring_plans();
+				$plan_name = $_SESSION['recurring_plan'];
+
+				$plan = $plans[$plan_name];
+
+				$params['plan_name'] = $plan['name'];
+				$params['plan_description'] = $this->formatRecurring(array(
+												'price'			=> $plan['price'],
+												'period'		=> $plan['interval_count'],
+												'period'		=> $plan['interval_count'],
+												'unit'			=> $plan['interval'],
+												'setup'			=> $plan['setup_price'],
+												'trial_period'	=> $plan['trial_count'],
+												'trial_unit'	=> $plan['trial']
+											));
+			} else {
+				$params['sub-total'] = number_format($summary['total'], 2);
+				$params['shipping'] = number_format($summary['shipping'], 2);
+				$params['handling'] = number_format($summary['handling'], 2);
+				$params['total_weight'] = number_format($summary['weight'], 2);
+				$params['total'] = number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2);
+			}
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
@@ -2223,7 +2398,8 @@ class shop extends Module {
 			$params = array(
 						'include_shipping'	=> $include_shipping,
 						'fixed_country'		=> $fixed_country,
-						'bad_fields'		=> $bad_fields
+						'bad_fields'		=> $bad_fields,
+						'recurring'			=> $recurring
 					);
 
 			$template->restoreXML();
@@ -2313,7 +2489,8 @@ class shop extends Module {
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_completed'),
 					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-					'button_action'	=> url_Make('', 'home')
+					'button_action'	=> url_Make('', 'home'),
+					'redirect'		=> false
 				);
 
 		$template->restoreXML();
@@ -2334,7 +2511,8 @@ class shop extends Module {
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_canceled'),
 					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-					'button_action'	=> url_Make('', 'home')
+					'button_action'	=> url_Make('', 'home'),
+					'redirect'		=> false
 				);
 
 		$template->restoreXML();
@@ -2433,5 +2611,46 @@ class shop extends Module {
 	 */
 	public function isDebug() {
 		return true;
+	}
+
+	/**
+	 * Format recurring plan description string.
+	 *
+	 * $params = array(
+	 *			'price'			=> 2.99,
+	 *			'period'		=> 1,
+	 *			'unit'			=> RecurringPayment::DAY,
+	 *			'setup'			=> 0.99,
+	 *			'trial_period'	=> 0,
+	 *			'trial_unit'	=> RecurringPayment::WEEK
+	 *		);
+	 *
+	 * @param array $params
+	 * @return string
+	 */
+	public function formatRecurring($params) {
+		$units = array(
+			RecurringPayment::DAY 	=> mb_strtolower($this->getLanguageConstant('cycle_day')),
+			RecurringPayment::WEEK	=> mb_strtolower($this->getLanguageConstant('cycle_week')),
+			RecurringPayment::MONTH	=> mb_strtolower($this->getLanguageConstant('cycle_month')),
+			RecurringPayment::YEAR	=> mb_strtolower($this->getLanguageConstant('cycle_year'))
+		);
+
+		$template = $this->getLanguageConstant('recurring_description');
+		$zero_word = $this->getLanguageConstant('recurring_period_zero');
+		$currency = $this->getDefaultCurrency();
+
+		$price = $params['price'].' '.$currency;
+		$period = $params['period'].' '.$units[$params['unit']];
+		$setup = $params['setup'] == 0 ? $zero_word : $params['setup'].' '.$currency;
+		$trial_period = $params['trial_period'] == 0 ? $zero_word : $params['trial_period'].' '.$units[$params['trial_unit']];
+
+		$result = str_replace(
+				array('{price}', '{period}', '{setup}', '{trial_period}'),
+				array($price, $period, $setup, $trial_period),
+				$template
+			);
+
+		return $result;
 	}
 }
