@@ -2,59 +2,71 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="checkout_container">
-		<div id="checkout" skip_cache="1"> 
+		<div id="checkout" skip_cache="1" class="$params['recurring'] ? 'recurring' : 'sale'" eval="class"> 
 			<form action="$params['checkout_url']" method="POST" eval="action">
-				<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
-					<!-- Header -->
-					<thead>
-						<tr>
-							<td><cms:text constant="column_name" module="shop"/></td>
-							<td style="width: 70px"><cms:text constant="column_quantity" module="shop"/></td>
-							<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
-							<td style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
-							<td style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
-							<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
-						</tr>
-					</thead>
+				<cms:if condition="!$params['recurring']">
+					<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
+						<!-- Header -->
+						<thead>
+							<tr>
+								<td><cms:text constant="column_name" module="shop"/></td>
+								<td style="width: 70px"><cms:text constant="column_quantity" module="shop"/></td>
+								<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
+								<td style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
+								<td style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
+								<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
+							</tr>
+						</thead>
 
-					<!-- Summary -->
-					<tfoot>
-						<tr class="first">
-							<td colspan="3" rowspan="5" style="padding: 20px;">
-							</td>
-							<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
-							<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
-						</tr>
-						<tr>
-							<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
-							<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
-						</tr>
-						<tr>
-							<td colspan="2" class="subtotal-label"><cms:text constant="column_handling" module="shop"/></td>
-							<td class="subtotal-value handling"><cms:var name="$params['handling']"/></td>
-						</tr>
-						<tr>
-							<td colspan="2" class="subtotal-label"><cms:text constant="column_total_weight" module="shop"/></td>
-							<td class="subtotal-value weight">
-								<cms:var name="$params['total_weight']"/>
-								<cms:raw text=" kg"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" class="total-label"><cms:text constant="column_total" module="shop"/></td>
-							<td class="total-value">
-								<cms:var name="$params['total']"/>
-								<cms:raw text=" "/>
-								<cms:var name="$params['currency']"/>
-							</td>
-						</tr>
-					</tfoot>
+						<!-- Summary -->
+						<tfoot>
+							<tr class="first">
+								<td colspan="3" rowspan="5" style="padding: 20px;">
+								</td>
+								<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
+								<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
+							</tr>
+							<tr>
+								<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
+								<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
+							</tr>
+							<tr>
+								<td colspan="2" class="subtotal-label"><cms:text constant="column_handling" module="shop"/></td>
+								<td class="subtotal-value handling"><cms:var name="$params['handling']"/></td>
+							</tr>
+							<tr>
+								<td colspan="2" class="subtotal-label"><cms:text constant="column_total_weight" module="shop"/></td>
+								<td class="subtotal-value weight">
+									<cms:var name="$params['total_weight']"/>
+									<cms:raw text=" kg"/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="total-label"><cms:text constant="column_total" module="shop"/></td>
+								<td class="total-value">
+									<cms:var name="$params['total']"/>
+									<cms:raw text=" "/>
+									<cms:var name="$params['currency']"/>
+								</td>
+							</tr>
+						</tfoot>
 
-					<!-- Shooping cart contents -->
-					<tbody>
-						<cms:checkout_items/>
-					</tbody>
-				</table>
+						<!-- Shooping cart contents -->
+						<tbody>
+							<cms:checkout_items/>
+						</tbody>
+					</table>
+				</cms:if>
+
+				<cms:if condition="$params['recurring']">
+					<div id="recurring_summary">
+						<h1><cms:text constant="title_recurring_summary" module="shop"/></h1>
+						<div>
+							<h2><cms:var name="$params['plan_name'][$language]"/></h2>
+							<cms:var name="$params['plan_description']"/>
+						</div>
+					</div>
+				</cms:if>
 
 				<div class="container">
 					<div class="transaction_details">
@@ -64,39 +76,43 @@
 						</label>
 					</div>
 
-					<div class="delivery_provider">
-						<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
-						<cms:delivery_methods
-							shopping_cart="1"
-							template="delivery_checkout.xml"
-							local="1"
-						/>
-						<cms:delivery_methods
-							shopping_cart="1"
-							template="delivery_checkout.xml"
-							local="1"
-						/>
-						<cms:delivery_methods
-							shopping_cart="1"
-							template="delivery_checkout.xml"
-							local="1"
-						/>
-						<div class="overlay"/>
-					</div>
+					<cms:if condition="$params['include_shipping']">
+						<div class="delivery_provider">
+							<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
+							<cms:delivery_methods
+								shopping_cart="1"
+								template="delivery_checkout.xml"
+								local="1"
+							/>
+							<cms:delivery_methods
+								shopping_cart="1"
+								template="delivery_checkout.xml"
+								local="1"
+							/>
+							<cms:delivery_methods
+								shopping_cart="1"
+								template="delivery_checkout.xml"
+								local="1"
+							/>
+							<div class="overlay"/>
+						</div>
+					</cms:if>
 				</div>
 
-				<div class="delivery_method">
-					<div class="services">
-					</div>
+				<cms:if condition="$params['include_shipping']">
+					<div class="delivery_method">
+						<div class="services">
+						</div>
 
-					<div class="clear_float"/>
-				</div>
+						<div class="clear_float"/>
+					</div>
+				</cms:if>
 
 				<cms:var name="$params['checkout_fields']"/>
 
 				<div class="checkout_controls">
 					<button type="button"><cms:text constant="back"/></button>
-					<button type="submit" disabled="disabled">
+					<button type="submit">
 						<cms:text constant="checkout" module="shop"/>
 						<small>
 							<cms:text constant="with" module="shop"/>
