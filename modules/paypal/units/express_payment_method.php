@@ -11,27 +11,6 @@
 class PayPal_Express extends PaymentMethod {
 	private static $_instance;
 
-	private $url = 'https://www.paypal.com/cgi-bin/webscr';
-	private $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-
-	/**
-	 * Transaction type
-	 * @var array
-	 */
-	private $type = array(
-				'cart'	=> TransactionType::SHOPPING_CART,
-			);
-
-	/**
-	 * Transaction status
-	 * @var array
-	 */
-	private $status = array(
-				'Pending'	=> TransactionStatus::PENDING,
-				'Completed'	=> TransactionStatus::COMPLETED,
-				'Denied'	=> TransactionStatus::DENIED,
-			);
-
 	/**
 	 * Constructor
 	 */
@@ -79,7 +58,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		return $this->url;
+		return url_Make('express-checkout', 'paypal');
 	}
 
 	/**
@@ -120,23 +99,31 @@ class PayPal_Express extends PaymentMethod {
 
 		// populate result array
 		if (count($items) > 0)
-			foreach($items as $item) {
-			}
+			foreach($items as $item)
+				$result[$item->text_id] = array(
+					'name'				=> $item->name,
+					'trial'				=> $item->trial,
+					'trial_count'		=> $item->trial_count,
+					'interval'			=> $item->interval,
+					'interval_count'	=> $item->interval_count,
+					'price'				=> $item->price,
+					'setup_price'		=> $item->setup_price,
+					'start_time'		=> $item->start_time,
+					'end_time'			=> 0
+				);
+
 
 		return $result;
 	}
 
 	/**
-	 * Get account from parent
-	 *
-	 * @return string
+	 * Get buyer information.
+	 * @return array
 	 */
-	private function _getAccount() {
-		if (array_key_exists('account', $this->parent->settings))
-			$account = $this->parent->settings['account']; else
-			$account = 'seller_1322054168_biz@gmail.com';
+	public function get_information() {
+		$result = array();
 
-		return $account;
+		return $result;
 	}
 
 	/**
@@ -151,43 +138,6 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_payment($data, $billing_information, $items, $return_url, $cancel_url) {
-		global $language;
-
-		$account = $this->_getAccount();
-
-		// prepare basic parameters
-		$params = array(
-				'cmd'			=> '_cart',
-				'upload'		=> '1',
-				'business'		=> $account,  // paypal merchant account email
-				'currency_code'	=> $data['currency'],
-				'weight_unit'	=> 'kgs',
-				'lc'			=> $language,
-				'return'		=> $return_url,
-				'cancel_return'	=> $cancel_url,
-			);
-
-		// prepare items for checkout
-		$item_count = count($items);
-		for ($i = 1; $i <= $item_count; $i++) {
-			$item = array_shift($items);
-
-			$params["item_name_{$i}"] = $item['name'][$language];
-			$params["item_number_{$i}"] = $item['uid'];
-			$params["item_description_{$i}"] = $item['description'];
-			$params["amount_{$i}"] = $item['price'];
-			$params["quantity_{$i}"] = $item['count'];
-			$params["tax_{$i}"] = $item['price'] * ($item['tax'] / 100);
-			$params["weight_{$i}"] = $item['weight'];
-		}
-
-		// create HTML form
-		$result = '';
-
-		foreach ($params as $key => $value)
-			$result .= "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\">";
-
-		return $result;
 	}
 
 	/**
@@ -200,26 +150,58 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url) {
+		$result = '';
+		$manager = PayPal_PlansManager::getInstance();
+		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+
+		if (is_object($plan)) {
+			$params = array(
+					'token'			=> $_SESSION['paypal_token'],
+					'payer_id'		=> fix_chars($_REQUEST['PayerID']),
+					'plan_name'		=> $plan_name,
+					'return_url'	=> $return_url,
+					'type'			=> 'recurring'
+				);
+
+			foreach ($params as $name => $value)
+				$result .= '<input type="hidden" name="'.$name.'" value="'.$value.'">';
+		}
+
+		return $result;
 	}
 
 	/**
 	 * Before checking out redirect user.
 	 *
+	 * @param string $method
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 */
-	public function beforeCheckout($return_url, $cancel_url) {
-		global $language;
+	public function beforeCheckout($method, $return_url, $cancel_url) {
+		global $language, $section, $action;
 
+		$result = false;
 		$fields = array();
 		$request_id = 0;
 		$recurring_plan = isset($_SESSION['recurring_plan']) ? $_SESSION['recurring_plan'] : null;
+
+		// only react in case right payment method is selected
+		if ($method != $this->name)
+			return $result;
 
 		// add recurring payment plan
 		if (!is_null($recurring_plan)) {
 			$manager = PayPal_PlansManager::getInstance();
 			$shop = shop::getInstance();
 			$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $recurring_plan));
+			$params = array(
+				'price'			=> $plan->price,
+				'period'		=> $plan->interval_count,
+				'unit'			=> $plan->interval,
+				'setup'			=> $plan->setup_price,
+				'trial_period'	=> $plan->trial_count,
+				'trial_unit'	=> $plan->trial
+			);
 
 			if (is_object($plan)) {
 				// prepare fields for initial negotiation
@@ -228,6 +210,8 @@ class PayPal_Express extends PaymentMethod {
 				$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $plan->name[$language];
 				$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = '';  // transaction id
 				$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Authorization';
+				$fields['L_BILLINGTYPE'.$request_id] = 'RecurringPayments';
+				$fields['L_BILLINGAGREEMENTDESCRIPTION'.$request_id] = $shop->formatRecurring($params);
 
 				// add one time payment
 				if ($plan->setup_price > 0) {
@@ -244,24 +228,34 @@ class PayPal_Express extends PaymentMethod {
 		// TODO: Add other shop items.
 
 		// store return URL in session
-		$_SESSION['paypal_redirect_url'] = $return_url;
+		$return_url = url_Make(
+							$action,
+							$section,
+							array('stage', 'return'),
+							array('method', $this->name)
+						);
 
 		// add regular fields
 		$fields['NOSHIPPING'] = 1;
 		$fields['REQCONFIRMSHIPPING'] = 0;
 		$fields['ALLOWNOTE'] = 0;
-		$fields['BILLINGTYPE'] = 'RecurringPayments';
-		$fields['RETURNURL'] = url_Make('express_return', $this->parent->name);
+		$fields['RETURNURL'] = $return_url;
 		$fields['CANCELURL'] = $cancel_url;
 
 		// generate name-value pair string for sending
 		$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_SetExpressCheckout, $fields);
 
-		if (strcasecmp($response['ACK'], 'success') || strcasecmp($response['ACK'], 'successwithwarning')) {
+		if (isset($response['ACK']) && $response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
+			$result = true;
 			$token = $response['TOKEN'];
+
+			// store token for later use
+			$_SESSION['paypal_token'] = $token;
+
+			// redirect to paypal site
 			PayPal_Helper::redirect(PayPal_Helper::COMMAND_ExpressCheckout, $token);
 
-		} else {
+		} else if (!is_null($response['ACK'])) {
 			// report error
 			$error_code = urldecode($response['L_ERRORCODE0']);
 			$error_long = urldecode($response['L_LONGMESSAGE0']);
@@ -269,123 +263,21 @@ class PayPal_Express extends PaymentMethod {
 			trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
 		}
 
-		return true;
+		return $result;
 	}
 
 	/**
-	 * Handle callback from PayPal site.
+	 * Complete checkout and charge money.
 	 */
-	public function handleCallback() {
+	public function completeCheckout() {
 		$token = escape_chars($_REQUEST['token']);
-		$_SESSION['paypal_token'] = $token;
+		$payer_id = escape_chars($_REQUEST['payer_id']);
+		$return_url = fix_chars($_REQUEST['return_url']);
+		$recurring = isset($_REQUEST['type']) && $_REQUEST['type'] == 'recurring';
 
-		if (isset($_SESSION['paypal_redirect_url'])) {
-			$url = $_SESSION['paypal_redirect_url'];
-			unset($_SESSION['paypal_redirect_url']);
-
-			// redirect with 
-			header('Location: '.$url, true, 302);
+		if ($recurring) {
+			$fields = array('TOKEN' => $token);
+			$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_GetExpressCheckoutDetails, $fields);
 		}
 	}
-	
-	/**
-	 * Handle verification received from payment gateway
-	 * and return boolean denoting success of complete payment.
-	 * 
-	 * @return boolean
-	 */
-	public function verify_payment() {
-		$result = false;
-
-		// prepare response data
-		$strip = get_magic_quotes_gpc();
-		$response = "cmd=_notify-validate";
-
-		foreach ($_POST as $key => $value) {
-			if ($strip)	$value = stripslashes($value);
-			$value = urlencode($value);
-
-			$response .= "&{$key}={$value}";
-		}
-
-		// validate with paypal.com this transaction
-		$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
-		$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-		$header .= "Content-Length: " . strlen($response) . "\r\n\r\n";
-		$socket = fsockopen('ssl://www.paypal.com', 443, $error_number, $error_string, 30);
-
-		if ($socket) {
-			// send request
-			fputs($socket, $header.$response);
-
-			// get response from server
-			$response = fgets($socket);
-
-			// set result
-			$result = ($_POST['receiver_email'] == $this->_getAccount()) && strcmp($response, 'VERIFIED');
-		}
-
-		fclose($socket);
-
-		return $result;
-	}
-	
-	/**
-	 * Get items from data
-	 * 
-	 * @return array
-	 */
-	public function get_items() {
-		$result = array();
-		$item_count = fix_id($_POST['num_cart_items']);
-
-		for ($i = 1; $i < $item_count + 1; $i++) {
-			$result[] = array(
-					'uid'		=> fix_chars($_POST["item_number{$i}"]),
-					'quantity'	=> fix_id($_POST["quantity{$i}"]),
-					'price'		=> escape_chars($_POST["mc_gross_{$i}"]),
-					'tax'		=> 0
-				);
-		}
-
-		return $result;
-	}
-	
-	/**
-	 * Get transaction information from data
-	 * 
-	 * @return array
-	 */
-	public function get_transaction_info() {
-		$type = array_key_exists($_POST['txn_type'], $this->type) ? $this->type[$_POST['txn_type']] : TransactionType::SHOPPING_CART;
-		$status = array_key_exists($_POST['payment_status'], $this->status) ? $this->status[$_POST['payment_status']] : TransactionStatus::DENIED;
-
-		$result = array(
-				'id'		=> fix_chars($_POST['txn_id']),
-				'type'		=> $type,
-				'status'	=> $status,
-				'custom'	=> isset($_POST['custom']) ? fix_chars($_POST['custom']) : ''
-			);
-		
-		return $result;
-	}
-	
-	/**
-	 * Get payment infromation from data
-	 * 
-	 * @return array
-	 */
-	public function get_payment_info() {
-		$result = array(
-				'tax'		=> escape_chars($_POST['tax']),
-				'fee'		=> escape_chars($_POST['mc_fee']),
-				'gross'		=> escape_chars($_POST['mc_gross']),
-				'handling'	=> escape_chars($_POST['mc_handling']),
-				'shipping'	=> escape_chars($_POST['mc_shipping']),
-				'currency'	=> escape_chars($_POST['mc_currency'])
-			);
-
-		return $result;
-	}
-	
 }
