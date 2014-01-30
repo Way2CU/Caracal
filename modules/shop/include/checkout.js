@@ -428,7 +428,7 @@ function BuyerInformationForm() {
 	* @param integer new_page
 	* @return boolean
 	*/
-	self.validate_page = function (current_page, new_page) {
+	self.validate_page = function(current_page, new_page) {
 		var result = true;
 
 		if (new_page > current_page)
@@ -484,7 +484,9 @@ function CheckoutForm() {
 	 * Complete object initialization.
 	 */
 	self.init = function() {
-		self.delivery_provider_list.find('input[name=delivery_provider]').change(self._handle_delivery_provider_change);
+		self.delivery_provider_list
+				.find('input[name=delivery_provider]')
+				.change(self._handle_delivery_provider_change);
 	};
 
 	/**
@@ -626,6 +628,7 @@ function CheckoutForm() {
 $(function() {
 	if ($('div#input_details').length > 0) {
 		new BuyerInformationForm();
+
 	} else if ($('div#checkout').length > 0) {
 		new CheckoutForm();
 	}
