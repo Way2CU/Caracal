@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_text constant="message_default" module="contact_form"/>
-	<hr/>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<label>
-			<span><_text constant="label_default_name" module="contact_form"/></span>
-			<input 
-				type="text" 
-				name="name" 
-				value="$settings['default_name']" 
-				eval="value"
-				style="width: 360px;"
-			/>
-		</label>
-		<label>
-			<span><_text constant="label_default_address" module="contact_form"/></span>
-			<input 
-				type="text" 
-				name="address" 
-				value="$settings['default_address']" 
-				eval="value"
-				style="width: 360px;"
-			/>
-		</label>
-		<label>
-			<span><_text constant="label_default_subject" module="contact_form"/></span>
-			<input 
-				type="text" 
-				name="subject" 
-				value="$settings['default_subject']" 
-				eval="value"
-				style="width: 360px;"
-			/>
-		</label>
+		<div id="paypal_settings_notebook">
+			<div>
+				<label>
+					<span><cms:text constant="label_username" module="paypal"/></span>
+					<input
+						type="text"
+						class="code"
+						name="api_username"
+						value="$settings['api_username']"
+						eval="value"
+						style="width: 250px;"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_password" module="paypal"/></span>
+					<input
+						type="text"
+						class="code"
+						name="api_password"
+						value="$settings['api_password']"
+						eval="value"
+						style="width: 250px;"
+					/>
+				</label>
+				<label>
+					<span><cms:text constant="label_signature" module="paypal"/></span>
+					<input
+						type="text"
+						class="code"
+						name="api_signature"
+						value="$settings['api_signature']"
+						eval="value"
+						style="width: 350px;"
+					/>
+				</label>
+			</div>
+		</div>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript">
+		var notebook = new Notebook('paypal_settings_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('paypal', 'tab_api'));
+	</script>
 </document>
