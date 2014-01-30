@@ -60,7 +60,7 @@ function PageControl(selector, page_selector) {
 	 */
 	self._handleNext = function(event) {
 		if (self.current_page + 1 < self.pages.length) {
-			self._switchContainer(self.current_page + 1)
+			self._switchContainer(self.current_page + 1);
 			event.preventDefault();
 		}
 	};
@@ -73,7 +73,7 @@ function PageControl(selector, page_selector) {
 	 */
 	self._handlePrevious = function(event) {
 		if (self.current_page - 1 >= 0) {
-			self._switchContainer(self.current_page - 1)
+			self._switchContainer(self.current_page - 1);
 			event.preventDefault();
 		}
 	};
@@ -91,7 +91,7 @@ function PageControl(selector, page_selector) {
 			new_page += page > self.current_page ? 1 : -1;
 
 		// submit on last page
-		if (new_page > self.pages.length - 1 && self.submit_on_end) {
+		if (new_page >= self.pages.length-1 && self.submit_on_end) {
 			// page-flip signal should be emitted before submit
 			if (!self._emitSignal('page-flip', self.current_page, new_page))
 				return;
