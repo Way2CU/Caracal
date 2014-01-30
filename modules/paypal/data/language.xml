@@ -13,6 +13,7 @@
 		<constant name="message_plan_saved">Recurring payment plan data was saved!</constant>
 		<constant name="message_plan_delete">You are about to remove the following recurring payment plan. Are you sure?</constant>
 		<constant name="message_plan_deleted">Recurring payment plan was deleted. Active subscriptions will remain intact until manually canceled.</constant>
+		<constant name="message_settings_saved">New configuration was saved!</constant>
 
 		<constant name="express_method_title">PayPal Express</constant>
 		<constant name="direct_method_title">PayPal Direct</constant>
@@ -27,6 +28,13 @@
 		<constant name="label_price">Price:</constant>
 		<constant name="label_setup_price">One time setup fee:</constant>
 		<constant name="label_start_time">Starts:</constant>
+		<constant name="label_username">Username:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_signature">Signature:</constant>
+
+		<constant name="tab_api">API</constant>
+
+		<constant name="api_setup_fee">Setup fee</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
@@ -44,8 +52,28 @@
 		<constant name="message_plan_saved">Recurring payment plan data was saved!</constant>
 		<constant name="message_plan_delete">You are about to remove the following recurring payment plan. Are you sure?</constant>
 		<constant name="message_plan_deleted">Recurring payment plan was deleted. Active subscriptions will remain intact until manually canceled.</constant>
+		<constant name="message_settings_saved">New configuration was saved!</constant>
 
-		<constant name="payment_method_title">PayPal</constant>
+		<constant name="express_method_title">PayPal Express</constant>
+		<constant name="direct_method_title">PayPal Direct</constant>
+
+		<constant name="label_trial_period">Trial period</constant>
+		<constant name="label_billing_cycle">Billing cycle</constant>
+		<constant name="label_times">Times</constant>
+		<constant name="label_plan_name">Plan name:</constant>
+		<constant name="label_text_id">Unique text id:</constant>
+		<constant name="label_count">Count:</constant>
+		<constant name="label_unit">Unit:</constant>
+		<constant name="label_price">Price:</constant>
+		<constant name="label_setup_price">One time setup fee:</constant>
+		<constant name="label_start_time">Starts:</constant>
+		<constant name="label_username">Username:</constant>
+		<constant name="label_password">Password:</constant>
+		<constant name="label_signature">Signature:</constant>
+
+		<constant name="tab_api">API</constant>
+
+		<constant name="api_setup_fee">Setup fee</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_price">Price</constant>
