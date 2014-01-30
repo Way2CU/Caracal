@@ -70,9 +70,8 @@ abstract class PaymentMethod {
 	 * Get list of plans for recurring payments.
 	 *
 	 * $result = array(
-	 * 			array(
-	 * 				'id'				=> 'plan_1',
-	 * 				'name'				=> 'Plan 1',
+	 * 			'text_id' => array(
+	 * 				'name'				=> array(),
 	 * 				'trial'				=> RecurringPayment::DAY, 
 	 * 				'trial_count'		=> 7,
 	 * 				'interval'			=> RecurringPayment::MONTH,
@@ -87,6 +86,19 @@ abstract class PaymentMethod {
 	 * @return array
 	 */
 	abstract public function get_recurring_plans();
+
+	/**
+	 * Get billing information from payment method.
+	 *
+	 * $result = array(
+	 * 			'first_name'	=> '',
+	 * 			'last_name'		=> '',
+	 * 			'email'			=> ''
+	 * 		);
+	 *
+	 * @return array
+	 */
+	abstract public function get_information();
 	
 	/**
 	 * Make new payment form with specified items and return
