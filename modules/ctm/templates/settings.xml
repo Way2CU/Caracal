@@ -2,28 +2,64 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
-		<label>
-			<span><cms:text constant="label_account_key" module="ctm"/></span>
-			<input 
-				type="text" 
-				name="account_key" 
-				value="$settings['account_key']" 
-				eval="value"
-				style="width: 370px;"
-				class="code"
-			/>
-		</label>
-		<label>
-			<span><cms:text constant="label_account_secret" module="ctm"/></span>
-			<input 
-				type="text" 
-				name="account_secret" 
-				value="$settings['account_secret']" 
-				eval="value"
-				style="width: 370px;"
-				class="code"
-			/>
-		</label>
+		<fieldset>
+			<legend><cms:text constant="legend_account" module="ctm"/></legend>
+			<label>
+				<span><cms:text constant="label_account_id" module="ctm"/></span>
+				<input 
+					type="text" 
+					name="account_id" 
+					value="$settings['account_id']" 
+					eval="value"
+					style="width: 270px;"
+					class="code"
+				/>
+			</label>
+			<label class="checkbox">
+				<span><cms:text constant="label_include_code" module="ctm"/></span>
+				<cms:if condition="$settings['include_code']">
+					<input 
+						type="checkbox" 
+						name="include_code" 
+						eval="value"
+						checked="checked"
+					/>
+				</cms:if>
+				<cms:if condition="!$settings['include_code']">
+					<input 
+						type="checkbox" 
+						name="include_code" 
+						eval="value"
+					/>
+				</cms:if>
+			</label>
+		</fieldset>
+
+		<fieldset>
+			<legend><cms:text constant="legend_api" module="ctm"/></legend>
+			<label>
+				<span><cms:text constant="label_account_key" module="ctm"/></span>
+				<input 
+					type="text" 
+					name="account_key" 
+					value="$settings['account_key']" 
+					eval="value"
+					style="width: 350px;"
+					class="code"
+				/>
+			</label>
+			<label>
+				<span><cms:text constant="label_account_secret" module="ctm"/></span>
+				<input 
+					type="text" 
+					name="account_secret" 
+					value="$settings['account_secret']" 
+					eval="value"
+					style="width: 350px;"
+					class="code"
+				/>
+			</label>
+		</fieldset>
 
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
