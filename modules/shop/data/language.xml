@@ -25,10 +25,10 @@
 		<constant name="tab_general">General</constant>
 		<constant name="tab_shipping">Shipping</constant>
 
-		<constant name="cycle_day">Day</constant>
-		<constant name="cycle_week">Week</constant>
-		<constant name="cycle_month">Month</constant>
-		<constant name="cycle_year">Year</constant>
+		<constant name="cycle_day">Day(s)</constant>
+		<constant name="cycle_week">Week(s)</constant>
+		<constant name="cycle_month">Month(s)</constant>
+		<constant name="cycle_year">Year(s)</constant>
 
 		<constant name="title_settings">Shop: Settings</constant>
 		<constant name="title_manage_items">Shop: Manage items</constant>
@@ -79,6 +79,7 @@
 		<constant name="title_warehouse_delete">Shop: Delete warehouse</constant>
 		<constant name="title_password_dialog">Password recovery</constant>
 		<constant name="title_cvv_dialog">What is CVV?</constant>
+		<constant name="title_recurring_summary">Recurring payment summary</constant>
 
 		<constant name="column_name">Name</constant>
 		<constant name="column_name_and_price">Name and price</constant>
@@ -195,6 +196,7 @@
 		<constant name="message_no_items_in_cart">There are no items in your shopping cart.</constant>
 		<constant name="message_checkout_completed">Checkout is now completed. You should receive email from us soon confirming your purchase. If you experience any problems, please let us know. Thank you for using our online services.</constant>
 		<constant name="message_checkout_canceled">Your checkout was canceled. Shopping cart was not cleared in case you want to continue shopping and checkout later. If you canceled because of problem on our part, please let us know.</constant>
+		<constant name="message_checkout_redirect">Please wait while you are being redirected...</constant>
 		<constant name="message_bad_fields">The following fields are invalid:</constant>
 		<constant name="message_manufacturer_saved">Manufacturer data was saved.</constant>
 		<constant name="message_manufacturer_delete">You are about to remove the following manufacturer from the shop. Items connected to this manufacturer will not be removed. Are you sure you want to do this?</constant>
@@ -246,6 +248,9 @@
 		<constant name="prices">Prices</constant>
 		<constant name="remove_delivery">Unavailable</constant>
 		<constant name="new_preset">⋯ New preset ⋯</constant>
+
+		<constant name="recurring_description">{price} every {period}, {setup} setup fee and {trial_period} trial period.</constant>
+		<constant name="recurring_period_zero">no</constant>
 
 		<constant name="status_pending">Pending</constant>
 		<constant name="status_denied">Denied</constant>
@@ -327,6 +332,14 @@
 		<constant name="title_delivery_method_price_add">חנות: הוסף מחיר משלוח</constant>
 		<constant name="title_delivery_method_price_change">חנות: שנה מחיר משלוח</constant>
 		<constant name="title_delivery_method_price_delete">חנות: מחק מחיר משלוח</constant>
+		<constant name="title_stocks">Shop: Item stocks</constant>
+		<constant name="title_warehouses">Shop: Warehouses</constant>
+		<constant name="title_warehouse_add">Shop: Add warehouse</constant>
+		<constant name="title_warehouse_change">Shop: Change warehouse information</constant>
+		<constant name="title_warehouse_delete">Shop: Delete warehouse</constant>
+		<constant name="title_password_dialog">Password recovery</constant>
+		<constant name="title_cvv_dialog">What is CVV?</constant>
+		<constant name="title_recurring_summary">Recurring payment summary</constant>
 
 		<constant name="column_name">שם</constant>
 		<constant name="column_name_and_price">שם ומחיר</constant>
@@ -431,6 +444,7 @@
 		<constant name="message_no_items_in_cart">אין מוצרים בעגלת הקניות.</constant>
 		<constant name="message_checkout_completed">תהליך התשלום הושלם!. בקרוב תקבל מייל מאיתנו המאשר את הרכישה. אם נתקלת בבעיה כלשהי, אנא צור עמנו קשר. תודה על שקנית אונליין.</constant>
 		<constant name="message_checkout_canceled">תהליך החיוב בוטל. העגלה לא רוקנה למקרה שתרצה להמשיך ולקנות. באם בטלת בשל בעיה כלשהי שלנו, אנא ידע אותנו.</constant>
+		<constant name="message_checkout_redirect">Please wait while you are being redirected...</constant>
 		<constant name="message_bad_fields">השדות הבאים אינם חוקיים:</constant>
 		<constant name="message_manufacturer_saved">מידע אודות יצרן נשמר</constant>
 		<constant name="message_manufacturer_delete">אתה עומד להסיר יצרן, מוצרים המחוברים לאותו יצרן לא יוסר- האם אצה בטוח?</constant>
@@ -474,6 +488,10 @@
 		<constant name="details">פרטים</constant>
 		<constant name="prices">מחירים</constant>
 		<constant name="remove_delivery">לא נמצא</constant>
+		<constant name="new_preset">⋯ New preset ⋯</constant>
+
+		<constant name="recurring_description">{price} every {period}, {setup} setup fee and {trial_period} trial period.</constant>
+		<constant name="recurring_period_zero">no</constant>
 
 		<constant name="status_pending">מחכה</constant>
 		<constant name="status_denied">נכשל</constant>
