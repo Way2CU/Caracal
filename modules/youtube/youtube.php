@@ -749,10 +749,16 @@ class youtube extends Module {
 		// no id was specified
 		if (is_object($video))
 			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1') && class_exists('swfobject')) {
+				// query parameters
+				$query_params = array(
+						'rel'	=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
+						'showinfo'	=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0
+					);
+
 				// embed video player
 				$module = swfobject::getInstance();
 				$module->embedSWF(
-								$this->getEmbedURL($video->video_id),
+								$this->getEmbedURL($video->video_id, $query_params),
 								$tag_params['target'],
 								isset($tag_params['width']) ? $tag_params['width'] : 320,
 								isset($tag_params['height']) ? $tag_params['height'] : 240,
@@ -762,6 +768,8 @@ class youtube extends Module {
 									'color'		=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
 									'origin'	=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : 'website',
 									'theme'		=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
+									'start'		=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
+									'loop'		=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
 								),
 								array(
 									'wmode'	=> 'opaque',
@@ -1136,8 +1144,6 @@ class youtube extends Module {
 	private function json_Video() {
 		global $language;
 
-		define('_OMIT_STATS', 1);
-
 		$id = fix_id($_REQUEST['id']);
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
 
@@ -1167,8 +1173,6 @@ class youtube extends Module {
 	 */
 	private function json_VideoList() {
 		global $language;
-
-		define('_OMIT_STATS', 1);
 
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
@@ -1223,8 +1227,18 @@ class youtube extends Module {
 	 * @param string[11] $video_id
 	 * @return string
 	 */
-	public function getEmbedURL($video_id) {
-		return "http://www.youtube.com/v/{$video_id}?enablejsapi=1&version=3";
+	public function getEmbedURL($video_id, $params=array()) {
+		$params['enablejsapi'] = 1;
+		$params['version'] = 3;
+
+		// join params into query string
+		$new_params = array();
+		foreach ($params as $key => $value)
+			$new_params[] = $key.'='.$value;
+
+		$query_params = implode('&amp;', $new_params);
+
+		return "http://www.youtube.com/v/{$video_id}?{$query_params}";
 	}
 
 }
