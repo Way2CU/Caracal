@@ -164,19 +164,24 @@ class Backend_UserManager {
 		$manager = UserManager::getInstance();
 
 		// grab new user data
+		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
 				'fullname'	=> fix_chars($_REQUEST['fullname']),
 				'username'	=> fix_chars($_REQUEST['username']),
 				'email'		=> fix_chars($_REQUEST['email']),
 				'level'		=> fix_id($_REQUEST['level']),
-				'verified'	=> 1,
+				'verified'	=> 1
 			);
 
-		if (isset($_REQUEST['password']))
-			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['password']), UserManager::SALT);
+		if (isset($_REQUEST['password'])) {
+			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['password']), $salt);
+			$data['salt'] = $salt;
+		}
 
-		if (isset($_REQUEST['new_password']) && !empty($_REQUEST['new_password']))
-			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['new_password']), UserManager::SALT);
+		if (isset($_REQUEST['new_password']) && !empty($_REQUEST['new_password'])) {
+			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['new_password']), $salt);
+			$data['salt'] = $salt;
+		}
 
 		// test level is ok to ensure security is on right level
 		$level_is_ok = ($_SESSION['level'] > 5) || ($_SESSION['level'] <= 5 && $data['level'] < $_SESSION['level']);
@@ -246,12 +251,14 @@ class Backend_UserManager {
 			$source = $_REQUEST; else
 			$source = $tag_params;
 
+		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
 				'fullname'	=> fix_chars($source['fullname']),
 				'username'	=> fix_chars($source['username']),
-				'password'	=> hash_hmac('sha256', $source['password'], UserManager::SALT),
+				'password'	=> hash_hmac('sha256', $source['password'], $salt),
 				'email'		=> fix_chars($source['email']),
 				'level'		=> 0,
+				'salt'		=> $salt
 			);
 
 		// check for duplicates
@@ -514,12 +521,15 @@ class Backend_UserManager {
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
 			$email = fix_chars($_REQUEST['email']);
 
+		// prepare salt
+		$salt = hash('sha256', UserManager::SALT.strval(time()));
+
 		// get password
 		if (array_key_exists('password', $tag_params))
-			$password = hash_hmac('sha256', $tag_params['password'], UserManager::SALT);
+			$password = hash_hmac('sha256', $tag_params['password'], $salt);
 
 		if (is_null($password) && array_key_exists('password', $_REQUEST))
-			$password = hash_hmac('sha256', $_REQUEST['password'], UserManager::SALT);
+			$password = hash_hmac('sha256', $_REQUEST['password'], $salt);
 
 		// get code
 		if (array_key_exists('code', $tag_params))
@@ -554,7 +564,8 @@ class Backend_UserManager {
 				$manager->updateData(
 							array(
 								'verified'	=> 1,
-								'password'	=> $password
+								'password'	=> $password,
+								'sald'		=> $salt
 							),
 							array('id' => $user->id)
 						);
@@ -677,13 +688,24 @@ class Backend_UserManager {
 		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user_id));
 
 		if (is_object($user)) {
+			$salt = hash('sha256', UserManager::SALT.strval(time()));
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
-			$old_password_ok = hash_hmac('sha256', $old_password, UserManager::SALT) == $user->password || empty($user->password);
+			
+			// generate hash from old password
+			if (!empty($user->salt))
+				$old_password_ok = hash_hmac('sha256', $old_password, $salt) == $user->password || empty($user->password); else
+				$old_password_ok = hash_hmac('sha256', $old_password, UserManager::SALT) == $user->password || empty($user->password);  // compatibility
 
 			if ($new_password_ok && $old_password_ok) {
 				// all conditions are met, change password
-				$password = hash_hmac('sha256', $new_password, UserManager::SALT);
-				$manager->updateData(array('password' => $password), array('id' => $user->id));
+				$password = hash_hmac('sha256', $new_password, $salt);
+				$manager->updateData(
+							array(
+								'password'	=> $password,
+								'salt'		=> $salt
+							),
+							array('id' => $user->id)
+						);
 
 				$message = $this->parent->getLanguageConstant('message_password_changed');
 
