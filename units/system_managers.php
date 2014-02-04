@@ -51,6 +51,8 @@ class UserManager extends ItemManager {
 		$this->addProperty('email', 'varchar');
 		$this->addProperty('level', 'int');
 		$this->addProperty('verified', 'boolean');
+		$this->addProperty('agreed', 'boolean');
+		$this->addProperty('salt', 'char');
 	}
 
 	/**
