@@ -11,6 +11,13 @@
 class PayPal_Express extends PaymentMethod {
 	private static $_instance;
 
+	private $units = array(
+		RecurringPayment::DAY	=> 'Day',
+		RecurringPayment::WEEK	=> 'Week',
+		RecurringPayment::MONTH	=> 'Month',
+		RecurringPayment::YEAR	=> 'Year'
+	);
+
 	/**
 	 * Constructor
 	 */
@@ -208,7 +215,7 @@ class PayPal_Express extends PaymentMethod {
 				$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->price;
 				$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
 				$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $plan->name[$language];
-				$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = '';  // transaction id
+				$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 				$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Authorization';
 				$fields['L_BILLINGTYPE'.$request_id] = 'RecurringPayments';
 				$fields['L_BILLINGAGREEMENTDESCRIPTION'.$request_id] = $shop->formatRecurring($params);
@@ -219,7 +226,7 @@ class PayPal_Express extends PaymentMethod {
 					$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
 					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
 					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
-					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = '';  // transaction id
+					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 					$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 				}
 			}
@@ -227,12 +234,11 @@ class PayPal_Express extends PaymentMethod {
 
 		// TODO: Add other shop items.
 
-		// store return URL in session
 		$return_url = url_Make(
 							$action,
 							$section,
 							array('stage', 'return'),
-							array('method', $this->name)
+							array('payment_method', $this->name)
 						);
 
 		// add regular fields
@@ -270,14 +276,108 @@ class PayPal_Express extends PaymentMethod {
 	 * Complete checkout and charge money.
 	 */
 	public function completeCheckout() {
+		global $language;
+
+		$shop = shop::getInstance();
 		$token = escape_chars($_REQUEST['token']);
 		$payer_id = escape_chars($_REQUEST['payer_id']);
 		$return_url = fix_chars($_REQUEST['return_url']);
 		$recurring = isset($_REQUEST['type']) && $_REQUEST['type'] == 'recurring';
+		$transaction_uid = $_SESSION['transaction']['uid'];
 
+		// get buyer information
+		$fields = array('TOKEN' => $token);
+		$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_GetExpressCheckoutDetails, $fields);
+
+		// update transaction status and buyer
+		if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
+			$buyer = array(
+					'first_name'	=> $response['FIRSTNAME'],
+					'last_name'		=> $response['LASTNAME'],
+					'email'			=> $response['EMAIL'],
+					'uid'			=> $response['PAYERID']
+				);
+
+			$shop->updateBuyerInformation($transaction_uid, $buyer);
+
+		} else {
+			// report error
+			$error_code = urldecode($response['L_ERRORCODE0']);
+			$error_long = urldecode($response['L_LONGMESSAGE0']);
+
+			trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
+		}
+
+		// create recurring profile
 		if ($recurring) {
-			$fields = array('TOKEN' => $token);
-			$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_GetExpressCheckoutDetails, $fields);
+			$plan_name = $_SESSION['recurring_plan'];
+			$manager = PayPal_PlansManager::getInstance();
+			$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+			$request_id = 0;
+
+			// generate params for description
+			$plan_params = array(
+				'price'			=> $plan->price,
+				'period'		=> $plan->interval_count,
+				'unit'			=> $plan->interval,
+				'setup'			=> $plan->setup_price,
+				'trial_period'	=> $plan->trial_count,
+				'trial_unit'	=> $plan->trial
+			);
+
+			// charge one time setup fee
+			if (is_object($plan) && $plan->setup_price > 0) {
+				$setup_fields = $fields;
+				$setup_fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
+				$setup_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+				$setup_fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
+				$setup_fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
+				$setup_fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
+
+				$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_DoExpressCheckoutPayment, $setup_fields);
+			}
+
+			// create recurring payments profile
+			$recurring_fields = $fields;
+
+			// set starting date of the profile
+			$start_timestamp = strtotime($plan->start_time);
+			if ($start_timestamp < time())
+				$start_timestamp = time();
+
+			$recurring_fields['PROFILESTARTDATE'] = strftime('%Y-%m-%dT%T%z', $start_timestamp);
+			$recurring_fields['PAYERID'] = $payer_id;
+
+			// set description
+			$recurring_fields['DESC'] = $shop->formatRecurring($plan_params);
+
+			// set currency
+			$recurring_fields['AMT'] = $plan->price;
+			$recurring_fields['CURRENCYCODE'] = $shop->getDefaultCurrency();
+
+			// billing period
+			$recurring_fields['BILLINGPERIOD'] = $this->units[$plan->interval];
+			$recurring_fields['BILLINGFREQUENCY'] = $plan->interval_count;
+
+			// trial period
+			$recurring_fields['TRIALBILLINGPERIOD'] = $this->units[$plan->trial];
+			$recurring_fields['TRIALBILLINGFREQUENCY'] = $plan->trial_count;
+			$recurring_fields['TRIALTOTALBILLINGCYCLES'] = 1;
+
+			// make api call
+			$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_CreateRecurringPaymentsProfile, $recurring_fields);
+
+			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
+				// update transaction token
+				$shop->setTransactionToken($transaction_uid, fix_chars($response['PROFILEID']));
+
+				// update transaction status
+				if ($response['PROFILESTATUS'] == 'ActiveProfile')
+					$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
+			}
+
+			// redirect user
+			header('Location: '.$return_url, true, 302);
 		}
 	}
 }
