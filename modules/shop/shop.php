@@ -731,7 +731,9 @@ class shop extends Module {
 				  `validated` BOOLEAN NOT NULL DEFAULT '0',
 				  `guest` BOOLEAN NOT NULL DEFAULT '0',
 				  `uid` varchar(50) NOT NULL,
-				  PRIMARY KEY (`id`)
+				  `system_user` int(8) NULL,
+				  PRIMARY KEY (`id`),
+				  KEY `system_user` (`system_user`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 		
@@ -761,13 +763,21 @@ class shop extends Module {
 				  `type` smallint(6) NOT NULL,
 				  `status` smallint(6) NOT NULL,
 				  `currency` int(11) NOT NULL,
+				  `trial` int(11) NOT NULL,
+				  `trial_count` int(11) NOT NULL,
+				  `interval` int(11) NOT NULL,
+				  `interval_count` int(11) NOT NULL,
 				  `handling` decimal(8,2) NOT NULL,
 				  `shipping` decimal(8,2) NOT NULL,
+				  `weight` decimal(4,2) NOT NULL,
+				  `payment_method` varchar(255) NOT NULL,
 				  `delivery_method` varchar(255) NOT NULL,
 				  `remark` text NOT NULL,
 				  `token` varchar(255) NOT NULL,
 				  `total` decimal(8,2) NOT NULL,
 				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				  `start_time` timestamp NULL,
+				  `end_time` timestamp NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`),
 				  KEY `address` (`address`)
@@ -1056,6 +1066,13 @@ class shop extends Module {
 			$manager->updateData(array('status' => $status), array('id' => $transaction->id));
 			$result = true;
 		}
+
+		// trigger event
+		$this->event_handler->trigger('payment-completed', $transaction_id, $status);
+
+		// remove transaction information
+		if ($status == TransactionStatus::COMPLETED)
+			unset($_SESSION['transaction']);
 
 		return $result;
 	}
@@ -1654,7 +1671,7 @@ class shop extends Module {
 						);
 		}
 
-		$result = $this->getCartSummary($recipient, $uid);
+		$result = $this->getCartSummary(TransactionType::SHOPPING_CART, $recipient, $uid);
 		unset($result['items_for_checkout']);
 
 		// add currency to result
@@ -1721,26 +1738,14 @@ class shop extends Module {
 	/**
 	 * Get shopping cart summary.
 	 *
+	 * @param integer $type
 	 * @param string $transaction_id
 	 * @param array $recipient
 	 * @return array
 	 */
-	private function getCartSummary($recipient, $transaction_id) {
+	private function getCartSummary($type, $recipient, $transaction_id) {
 		$result = array();
 		$default_language = MainLanguageHandler::getInstance()->getDefaultLanguage();
-
-		// colect ids from session
-		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
-		$ids = array_keys($cart);
-
-		if (count($cart) == 0)
-			return $result;
-
-		// get managers
-		$manager = ShopItemManager::getInstance();
-
-		// get items from database and prepare result
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
 
 		// prepare params
 		$shipping = 0;
@@ -1754,61 +1759,89 @@ class shop extends Module {
 		$delivery_prices = array();
 		$map_id_to_uid = array();
 
-		// parse items from database
-		foreach ($items as $item) {
-			$db_item = array(
-					'id'		=> $item->id,
-					'name'		=> $item->name,
-					'price'		=> $item->price,
-					'tax'		=> $item->tax,
-					'weight'	=> $item->weight
-				);
-			$items_by_uid[$item->uid] = $db_item;
-			$map_id_to_uid[$item->id] = $item->uid;
+		if (isset($_SESSION['recurring_plan'])) {
+			$plan_name = $_SESSION['recurring_plan'];
+			$payment_method = $this->getPaymentMethod(null);
+
+			// get selected recurring plan
+			$plans = $payment_method->get_recurring_plans();
+
+			if (isset($plans[$plan_name])) {
+				$plan = $plans[$plan_name];
+
+				$handling = $plan['setup_price'];
+				$total_money = $plan['price'];
+			}
+
+		} else {
+			// colect ids from session
+			$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+			$ids = array_keys($cart);
+
+			if (count($cart) == 0)
+				return $result;
+
+			// get managers
+			$manager = ShopItemManager::getInstance();
+
+			// get items from database and prepare result
+			$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+
+			// parse items from database
+			foreach ($items as $item) {
+				$db_item = array(
+						'id'		=> $item->id,
+						'name'		=> $item->name,
+						'price'		=> $item->price,
+						'tax'		=> $item->tax,
+						'weight'	=> $item->weight
+					);
+				$items_by_uid[$item->uid] = $db_item;
+				$map_id_to_uid[$item->id] = $item->uid;
+			}
+
+			// prepare items for checkout
+			foreach ($cart as $uid => $item) {
+				// include all item variations in preparation
+				if (count($item['variations']) > 0)
+					foreach($item['variations'] as $variation_id => $data) {
+						// add items to checkout list
+						$properties = $data;
+
+						foreach ($this->excluded_properties as $key)
+							if (isset($properties[$key]))
+								unset($properties[$key]);
+
+						$new_item = $items_by_uid[$uid];
+						$new_item['count'] = $data['count'];
+						$new_item['description'] = implode(', ', array_values($properties));
+
+						// add item to list for delivery estimation
+						$delivery_items []= array(
+									'properties'	=> array(),
+									'package'		=> 1,
+									'weight'		=> 0.5,
+									'package_type'	=> 0,
+									'width'			=> 2,
+									'height'		=> 5,
+									'length'		=> 15,
+									'units'			=> 1,
+									'count'			=> $data['count']
+								);
+
+						// add item to the list
+						$items_for_checkout[] = $new_item;
+
+						// include item data in summary
+						$tax = $new_item['tax'];
+						$price = $new_item['price'];
+						$weight = $new_item['weight'];
+						
+						$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
+						$total_weight += $weight * $data['count'];
+					}
+			}
 		}
-
-		// prepare items for checkout
-		foreach ($cart as $uid => $item) {
-			// include all item variations in preparation
-			if (count($item['variations']) > 0)
-				foreach($item['variations'] as $variation_id => $data) {
-					// add items to checkout list
-					$properties = $data;
-
-					foreach ($this->excluded_properties as $key)
-						if (isset($properties[$key]))
-							unset($properties[$key]);
-
-					$new_item = $items_by_uid[$uid];
-					$new_item['count'] = $data['count'];
-					$new_item['description'] = implode(', ', array_values($properties));
-
-					// add item to list for delivery estimation
-					$delivery_items []= array(
-								'properties'	=> array(),
-								'package'		=> 1,
-								'weight'		=> 0.5,
-								'package_type'	=> 0,
-								'width'			=> 2,
-								'height'		=> 5,
-								'length'		=> 15,
-								'units'			=> 1,
-								'count'			=> $data['count']
-							);
-
-					// add item to the list
-					$items_for_checkout[] = $new_item;
-
-					// include item data in summary
-					$tax = $new_item['tax'];
-					$price = $new_item['price'];
-					$weight = $new_item['weight'];
-					
-					$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
-					$total_weight += $weight * $data['count'];
-				}
-		}
-
 
 		// only get delivery method prices if request was made by client-side script
 		if (_AJAX_REQUEST) {
@@ -1901,7 +1934,7 @@ class shop extends Module {
 			throw new PaymentMethodError('No payment methods found!');
 
 		// get method name from various sources
-		if (isset($tag_params['payment_method']))
+		if (!is_null($tag_params) && isset($tag_params['payment_method']))
 			$method_name = fix_chars($tag_params['payment_method']);
 
 		if (isset($_REQUEST['payment_method']) && is_null($method_name))
@@ -2123,11 +2156,14 @@ class shop extends Module {
 	/**
 	 * Update transaction data.
 	 *
+	 * @param integer $type
 	 * @param object $payment_method
 	 * @param string $delivery_method
 	 * @param object $buyer
+	 * @param object $address
+	 * @return array
 	 */
-	private function updateTransaction($payment_method, $delivery_method, $buyer, $address) {
+	private function updateTransaction($type, $payment_method, $delivery_method, $buyer, $address) {
 		$result = array();
 		$transactions_manager = ShopTransactionsManager::getInstance();
 		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
@@ -2149,20 +2185,28 @@ class shop extends Module {
 			$recipient = null;
 		}
 
-
 		// update buyer
 		if (!is_null($buyer))
 			$result['buyer'] = $buyer->id;
 
+		// determine if we need a new session
+		$new_transaction = true;
+
+		if (isset($_SESSION['transaction']) && isset($_SESSION['transaction']['uid'])) {
+			$uid = $_SESSION['transaction']['uid'];
+			$transaction = $transactions_manager->getSingleItem(array('status'), array('uid' => $uid));
+			$new_transaction = !(is_object($transaction) && $transaction->status == TransactionStatus::PENDING);
+		}
+
 		// check if we have existing transaction in our database
-		if (!isset($_SESSION['transaction'])) {
+		if ($new_transaction) {
 			// get shopping cart summary
 			$uid = uniqid('', true);
-			$summary = $this->getCartSummary($recipient, $uid);
+			$summary = $this->getCartSummary($type, $recipient, $uid);
 
 			// generate new transaction uid
 			$result['uid'] = $uid;
-			$result['type'] = TransactionType::SHOPPING_CART;
+			$result['type'] = $type;
 			$result['status'] = TransactionStatus::PENDING;
 			$result['handling'] = $summary['handling'];
 			$result['shipping'] = $summary['shipping'];
@@ -2185,7 +2229,7 @@ class shop extends Module {
 
 		} else {
 			$uid = $_SESSION['transaction']['uid'];
-			$summary = $this->getCartSummary($recipient, $uid);
+			$summary = $this->getCartSummary($type, $recipient, $uid);
 
 			// there's already an existing transaction
 			$result = $_SESSION['transaction'];
@@ -2193,16 +2237,17 @@ class shop extends Module {
 			$result['shipping'] = $summary['shipping'];
 			$result['total'] = $summary['total'];
 
+			$data = array(
+					'handling'	=> $summary['handling'],
+					'shipping'	=> $summary['shipping'],
+					'total'		=> $summary['total']
+				);
+
+			if (!is_null($address))
+				$data['address'] = $address->id;
+
 			// update existing transaction
-			$transactions_manager->updateData(
-								array(
-									'handling'	=> $summary['handling'],
-									'shipping'	=> $summary['shipping'],
-									'total'		=> $summary['total'],
-									'address'	=> $address_id
-								),
-								array('uid' => $uid)
-							);
+			$transactions_manager->updateData($data, array('uid' => $uid));
 
 			// update session storage with newest data
 			$_SESSION['transaction'] = $result;
@@ -2239,6 +2284,87 @@ class shop extends Module {
 	}
 
 	/**
+	 * Update buyer information for specified transaction. This function is
+	 * called by the payment methods that provide buyer information. Return
+	 * value denotes whether information update is successful and if method
+	 * should complete the billing process.
+	 *
+	 * @param string $transaction_uid
+	 * @param array $buyer_data
+	 * @return boolean
+	 */
+	public function updateBuyerInformation($transaction_uid, $buyer_data) {
+		$result = false;
+		$transaction_manager = ShopTransactionsManager::getInstance();
+		$buyer_manager = ShopBuyersManager::getInstance();
+
+		// make sure buyer is marked as guest if password is not specified
+		if (!isset($buyer_data['password']))
+			$buyer_data['guest'] = 1;
+
+		// get transaction from database
+		$transaction = $transaction_manager->getSingleItem(
+											array('id', 'buyer'),
+											array('uid' => $transaction_uid)
+										);
+
+		// try to get buyer from the system based on uid
+		if (isset($buyer_data['uid']))
+			$buyer = $buyer_manager->getSingleItem(
+											$buyer_manager->getFieldNames(),
+											array('uid' => $buyer_data['uid'])
+										);
+
+		// update buyer information
+		if (is_object($transaction)) {
+			// get buyer id
+			if (is_object($buyer)) {
+				$buyer_id = $buyer->id;
+
+				// update buyer information
+				$buyer_manager->updateData($buyer_data, array('id' => $buyer->id));
+
+			} else {
+				// create new buyer
+				$buyer_manager->insertData($buyer_data);
+				$buyer_id = $buyer_manager->getInsertedID();
+			}
+
+			// update transaction buyer
+			$transaction_manager->updateData(
+							array('buyer'	=> $buyer_id),
+							array('id'		=> $transaction->id)
+						);
+
+			$result = true;
+
+		} else {
+			trigger_error("No transaction with specified id: {$transaction_uid}");
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Check if data doesn't contain required fields.
+	 *
+	 * @param array $data
+	 * @param array $required
+	 * @param array $start
+	 * @return array
+	 */
+	private function checkFields($data, $required, $start=array()) {
+		$result = $start;
+		$keys = array_keys($data);
+
+		foreach($required as $field)
+			if (!in_array($field, $keys))
+				$return[] = $field;
+
+		return $result;
+	}
+
+	/**
 	 * Handle drawing checkout form
 	 *
 	 * @param array $tag_params
@@ -2270,10 +2396,17 @@ class shop extends Module {
 
 			// get billing information
 			$billing_information = $this->getBillingInformation($payment_method);
+			$billing_required = array(
+				'billing_full_name', 'billing_credit_card', 'billing_expire_month',
+				'billing_expire_year', 'billing_cvv' 
+			);
+			$bad_fields = $this->checkFields($billing_information, $billing_required, $bad_fields);
 
+			// get shipping information
 			if ($include_shipping && $stage == 'set_info') {
 				$shipping_information = $this->getShippingInformation();
-				$required = array('name', 'email', 'street', 'city', 'zip', 'country');
+				$shipping_required = array('name', 'email', 'street', 'city', 'zip', 'country');
+				$bad_fields = $this->checkFields($shipping_information, $shipping_required, $bad_fields);
 			}
 		}
 
@@ -2284,8 +2417,8 @@ class shop extends Module {
 			$currency_manager = ShopCurrenciesManager::getInstance();
 
 			// get fields for payment method
-			$return_url = url_Make('checkout_completed', 'shop', array('method', $payment_method->get_name()));
-			$cancel_url = url_Make('checkout_canceled', 'shop', array('method', $payment_method->get_name()));
+			$return_url = url_Make('checkout_completed', 'shop', array('payment_method', $payment_method->get_name()));
+			$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
 
 			// emit signal and return if handled
 			if ($stage == 'set_info') {
@@ -2317,7 +2450,9 @@ class shop extends Module {
 				$address = $this->getAddress($buyer, $shipping_information); else
 				$address = null;
 
-			if (!$recurring)
+			// update transaction
+			$transaction_type = $recurring ? TransactionType::SUBSCRIPTION : TransactionType::SHOPPING_CART;
+			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 			// create new payment
 			if ($recurring) {
@@ -2331,7 +2466,6 @@ class shop extends Module {
 
 			} else {
 				// regular payment
-				$summary = $this->updateTransaction($payment_method, '', $buyer, $address);
 				$checkout_fields = $payment_method->new_payment(
 											$transaction_data,
 											$billing_information,
