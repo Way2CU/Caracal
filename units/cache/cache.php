@@ -2,7 +2,8 @@
 
 /**
  * Page Caching Mechanism
- * Copyright (c) 2012. by Mladen Mijatov
+ * 
+ * Author: Mladen Mijatov
  */
 
 
@@ -17,6 +18,14 @@ class CacheHandler {
 
 	private $cache = '';
 	private $output = '';
+
+	/**
+	 * Parameters to ignore when generating UID.
+	 * @var array
+	 */
+	private $ignored_params = array(
+			'gclid'
+		);
 
 	const TAG_OPEN = '{%{';
 	const TAG_CLOSE = '}%}';
@@ -41,12 +50,19 @@ class CacheHandler {
 	 * @return string
 	 */
 	private function generateUniqueID() {
-		$result = md5($_SERVER['REQUEST_URI'].'_cache_salt');
+		$data = '';
 
-		return $result;
+		foreach ($_REQUEST as $key => $value)
+			if (!in_array($key, $this->ignored_params))
+				$data .= $key.'/'.$value;
+
+		return md5($data);
 	}
 
-	private function storeCache($data) {
+	/**
+	 * Store cached page to file.
+	 */
+	private function storeCache() {
 		global $cache_path, $cache_expire_period, $cache_max_pages;
 
 		$expires = date(self::TIMESTAMP_FORMAT, time() + $cache_expire_period);
@@ -246,7 +262,7 @@ class CacheHandler {
 		ob_end_clean();
 
 		// store data
-		$this->storeCache($data);
+		$this->storeCache();
 
 		// print output
 		print $this->output;
