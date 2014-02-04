@@ -6,6 +6,8 @@ CREATE TABLE `system_access` (
 	`email` varchar(200) COLLATE utf8_bin NOT NULL,
 	`level` smallint(6) NOT NULL DEFAULT '1',
 	`verified` boolean NOT NULL DEFAULT FALSE,
+	`agreed` boolean NOT NULL DEFAULT FALSE,
+	`salt` char(64) COLLATE ascii_bin NOT NULL DEFAULT '',
 	PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
