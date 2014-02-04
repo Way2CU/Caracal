@@ -30,6 +30,14 @@ class Session {
 	 * Start a new session. This function is called
 	 * once by main initialization script and should not
 	 * be used in other parts of the system.
+	 *
+	 * @note: When session is set to TYPE_NORMAL some
+	 * versions of IE will create new session on each page
+	 * load. This is due to bug in IE which accepts
+	 * cookies in GMT but checks for their validity in
+	 * local time zone. Since our cookies are set to
+	 * exprite in 15 minutes, they are expired before they
+	 * are stored. Using TYPE_BROWSER solves this issue.
 	 */
 	public static function start() {
 		global $session_type;
