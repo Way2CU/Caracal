@@ -102,13 +102,29 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
-		$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
 		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
 
+		// get managers
 		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
 
+		// prepare hashed password
+		$test_user = $manager->getSingleItem(
+									array('salt'),
+									array('username' => $username)
+								);
+
+		if (is_object($test_user) && !empty($test_user->salt)) {
+			// hash password using stored salt
+			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
+
+		} else {
+			// old salting method
+			$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
+		}
+
+		// get user based with password
 		$user = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
@@ -252,11 +268,9 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = fix_chars($_REQUEST['username']);
 		$password = fix_chars($_REQUEST['password']);
-		$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
 		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
 		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
 
-		trigger_error($lasting_session ? '1': '0');
 		$result = array(
 				'logged_in'		=> false,
 				'show_captcha'	=> false,
@@ -266,6 +280,22 @@ class SessionManager {
 		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
 
+		// prepare hashed password
+		$test_user = $manager->getSingleItem(
+									array('salt'),
+									array('username' => $username)
+								);
+
+		if (is_object($test_user) && !empty($test_user->salt)) {
+			// hash password using stored salt
+			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
+
+		} else {
+			// old salting method
+			$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
+		}
+
+		// get user based with password
 		$user = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
