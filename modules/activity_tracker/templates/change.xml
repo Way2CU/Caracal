@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_activity" module="activity_tracker"/></span>
+			<input
+				type="text"
+				name="activity"
+				style="width: 300px;"
+				maxlength="32"
+				class="code"
+				value="$params['activity']"
+				eval="value"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_function" module="activity_tracker"/></span>
+			<input
+				type="text"
+				name="function"
+				style="width: 300px;"
+				maxlength="32"
+				class="code"
+				value="$params['function']"
+				eval="value"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_timeout" module="activity_tracker"/></span>
+			<input
+				type="text"
+				name="timeout"
+				style="width: 150px;"
+				maxlength="32"
+				class="code"
+				value="$params['timeout']"
+				eval="value"
+			/>
+		</label>
+		<label class="checkbox">
+			<span><cms:text constant="label_ignore_address" module="activity_tracker"/></span>
+			<cms:if condition="$params['ignore_address']">
+				<input
+					type="checkbox"
+					name="ignore_address"
+					checked="checked"
+				/>
+			</cms:if>
+			<cms:if condition="!$params['ignore_address']">
+				<input
+					type="checkbox"
+					name="ignore_address"
+				/>
+			</cms:if>
+		</label>
+
+		<div class="button_bar">
+			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
