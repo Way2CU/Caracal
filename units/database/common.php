@@ -122,13 +122,15 @@ function database_initialize($create_database) {
 					break;
 
 				case 'user':
-					$password = hash_hmac('sha256', $item->tagAttrs['password'], UserManager::SALT);
+					$salt = hash('sha256', UserManager::SALT.strval(time()));
+					$password = hash_hmac('sha256', $item->tagAttrs['password'], $salt);
 					$admin_manager->insertData(array(
 									'username'	=> $item->tagAttrs['username'],
 									'password'	=> $password,
 									'fullname'	=> $item->tagAttrs['fullname'],
 									'level'		=> $item->tagAttrs['level'],
-									'verified'	=> 1
+									'verified'	=> 1,
+									'salt'		=> $salt
 								));
 					break;
 			}
