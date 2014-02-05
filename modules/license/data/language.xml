@@ -14,14 +14,15 @@
 		<constant name="message_license_deleted">Access to modules revoked.</constant>
 		<constant name="message_no_access">You don't have access to this API. Please contact site administrator.</constant>
 
-		<constant name="label_referer">Referer URL:</constant>
+		<constant name="label_domain">Domain:</constant>
 		<constant name="label_modules">Grant access to selected modules:</constant>
 		<constant name="label_active">License is active</constant>
 		<constant name="label_license_key">License key:</constant>
 
-		<constant name="column_referer">Referer URL</constant>
+		<constant name="column_domain">Domain</constant>
 		<constant name="column_license_key">License key</constant>
 	</language>
+
 	<language short="he">
 		<constant name="menu_license">רשיונות</constant>
 
@@ -35,14 +36,15 @@
 		<constant name="message_license_deleted">הגישה למודול הוסרה</constant>
 		<constant name="message_no_access">אין לך גישה, אנא פנה למהל האתר</constant>
 
-		<constant name="label_referer">Referer URL:</constant>
+		<constant name="label_domain">Domain:</constant>
 		<constant name="label_modules">הענקת רשיון כניסה למודול</constant>
 		<constant name="label_active">רשיון הופעל</constant>
 		<constant name="label_license_key">מפתח רשיון:</constant>
 
-		<constant name="column_referer">URL מצביע</constant>
+		<constant name="column_domain">Domain</constant>
 		<constant name="column_license_key">מפתח רשיון</constant>
 	</language>
+
 	<language short="sr">
 		<constant name="menu_license">Licence</constant>
 
@@ -56,12 +58,12 @@
 		<constant name="message_license_deleted">Licenca je izbrisana. Pristup modulima je zabranjen.</constant>
 		<constant name="message_no_access">Nemate pristup ovom interfejsu. Za više informacija kontaktirajte administratora.</constant>
 
-		<constant name="label_referer">Referer URL:</constant>
+		<constant name="label_domain">Domen:</constant>
 		<constant name="label_modules">Dozvoljen pristup selektovanim modulima:</constant>
 		<constant name="label_active">Licenca je aktivna</constant>
 		<constant name="label_license_key">Ključ licence:</constant>
 
-		<constant name="column_referer">Referer URL</constant>
+		<constant name="column_domain">Domen</constant>
 		<constant name="column_license_key">Ključ licence</constant>
 	</language>
 </document>

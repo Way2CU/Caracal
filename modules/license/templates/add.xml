@@ -3,9 +3,9 @@
 <document>
 	<form action="$params['form_action']" eval="action" method="POST">
 		<label>
-			<span><_text constant="label_referer" module="license"/></span>
+			<span><_text constant="label_domain" module="license"/></span>
 			<input
-				type="text" name="referer" style="width: 300px;"
+				type="text" name="domain" style="width: 300px;"
 				maxlength="100" onblur="javascript: license_UpdateKey(this);"
 			/>
 		</label>
@@ -42,7 +42,7 @@
 				{
 					section: 'license',
 					action: 'json_get_license_key',
-					referer: $(object).val()
+					domain: $(object).val()
 				},
 				function(data) {
 					$('input#license_key').val(data);

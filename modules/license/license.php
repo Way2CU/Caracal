@@ -8,10 +8,12 @@
  *
  * Author: Mladen Mijatov
  */
+require_once('units/license_manager.php');
+require_once('units/license_modules_manager.php');
+
 
 class license extends Module {
 	private static $_instance;
-	private $_salt = 'CMS_LICENSE_SALT_';
 
 	/**
 	 * Constructor
@@ -20,13 +22,6 @@ class license extends Module {
 		global $section;
 
 		parent::__construct(__FILE__);
-
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
 
 		// register backend
 		if (class_exists('backend')) {
@@ -119,8 +114,8 @@ class license extends Module {
 		$sql = "
 			CREATE TABLE `licenses` (
 				`id` INT NOT NULL AUTO_INCREMENT ,
-				`license` VARCHAR( 35 ) NOT NULL ,
-				`referer` VARCHAR( 100 ) NOT NULL ,
+				`license` VARCHAR(64) NOT NULL ,
+				`domain` VARCHAR(100) NOT NULL ,
 				`active` BOOLEAN NOT NULL DEFAULT '0',
 				PRIMARY KEY ( `id` )
 			) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -130,10 +125,25 @@ class license extends Module {
 			CREATE TABLE `license_modules` (
 				`id` INT NOT NULL AUTO_INCREMENT ,
 				`license` INT NOT NULL ,
-				`module` VARCHAR( 32 ) NOT NULL ,
+				`module` VARCHAR(64) NOT NULL ,
 				PRIMARY KEY ( `id` )
 			) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
+
+		// load and generate salt
+		if (file_exists('/dev/random')) {
+			$file = fopen('/dev/random', 'rb');
+			$data = fread($file, 32);
+			fclose($file);
+
+		} else {
+			// no entropy pool available, use normal random numbers
+			$data = base64_encode(rand() * time());
+		}
+
+		// save salt
+		$salt = hash('sha256', $data);
+		$this->saveSetting('salt', $salt);
 	}
 
 	/**
@@ -147,6 +157,21 @@ class license extends Module {
 	}
 
 	/**
+	 * Get domain from referer.
+	 *
+	 * @return string
+	 */
+	private function getDomain() {
+		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		$domain = '';
+
+		if (!is_null($referer))
+			$domain = parse_url($referer, PHP_URL_HOST);
+
+		return $domain;
+	}
+
+	/**
 	 * Check if license is valid for specified module
 	 *
 	 * @param string $module_name
@@ -155,29 +180,35 @@ class license extends Module {
 	 */
 	public function isLicenseValid($module_name, $license) {
 		$result = false;
-		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		$domain = $this->getDomain();
 
-		if (!is_null($referer)) {
-			$url = parse_url($referer, PHP_URL_HOST);
+		if (!empty($domain) && $domain == $_SERVER['HTTP_HOST']) {
+			// local api, just return true
+			$result = true;
 
-			if (!is_null($url) && $url == $_SERVER['HTTP_HOST']) {
-				// local api, just return true
-				$result = true;
+		} else {
+			// API requesting verification is not local
+			$manager = LicenseManager::getInstance();
+			$modules_manager = LicenseModulesManager::getInstance();
 
-			} else {
-				// API requesting verification is not local
-				$manager = LicenseManager::getInstance();
-				$manager_modules = LicenseModulesManager::getInstance();
+			$license = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array(
+											'license' 	=> $license,
+											'active'	=> true
+										));
 
-				$license = $manager->getSingleItem(
-											$manager->getFieldNames(),
-											array(
-												'license' 	=> $license,
-												'active'	=> true
-											));
+			// check if module is allowed by the license
+			if (is_object($license) && $license->domain == $domain) {
+				$module = $modules_manager->getSingleItem(
+								array('id'),
+								array(
+									'license'	=> $license->id,
+									'module'	=> $module_name
+								));
 
 				// set result
-				$result = is_object($license) && $license->referer = $referer;
+				$result = is_object($module);
 			}
 		}
 
@@ -185,13 +216,13 @@ class license extends Module {
 	}
 
 	/**
-	 * Generate license based on referer URL and localy set salt
+	 * Generate license based on domain and localy set salt
 	 *
-	 * @param string $referer
+	 * @param string $domain
 	 * @return string
 	 */
-	private function generateLicense($referer) {
-		$license = md5($this->_salt.$referer);
+	private function generateLicense($domain) {
+		$license = hash('sha256', $this->settings['salt'].$domain);
 		$license = substr($license, 0, 5).'-'.substr($license, 5, -5).'-'.substr($license, -5);
 		$license = substr($license, 0, 16).'-'.substr($license, -16);
 
@@ -261,7 +292,7 @@ class license extends Module {
 			$params = array(
 						'id'			=> $item->id,
 						'license'		=> $item->license,
-						'referer'		=> $item->referer,
+						'domain'		=> $item->domain,
 						'active'		=> $item->active,
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
 						'cancel_action'	=> window_Close('licenses_change')
@@ -281,9 +312,9 @@ class license extends Module {
 	private function saveLicense() {
 		// get data
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$referer = escape_chars($_REQUEST['referer']);
+		$domain = fix_chars($_REQUEST['domain']);
 		$active = fix_id($_REQUEST['active']);
-		$license_key = $this->generateLicense($referer);
+		$license_key = $this->generateLicense($domain);
 		$modules = array();
 
 		// populate array with selected modules
@@ -297,7 +328,7 @@ class license extends Module {
 
 		$data = array(
 					'license'	=> $license_key,
-					'referer'	=> $referer,
+					'domain'	=> $domain,
 					'active'	=> $active,
 				);
 
@@ -344,14 +375,14 @@ class license extends Module {
 		$id = fix_id(fix_chars($_REQUEST['id']));
 		$manager = LicenseManager::getInstance();
 
-		$item = $manager->getSingleItem(array('referer'), array('id' => $id));
+		$item = $manager->getSingleItem(array('domain'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
 					'message'		=> $this->getLanguageConstant("message_license_delete"),
-					'name'			=> $item->referer,
+					'name'			=> $item->domain,
 					'yes_text'		=> $this->getLanguageConstant("delete"),
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
@@ -470,7 +501,7 @@ class license extends Module {
 			foreach ($items as $item) {
 				$params = array(
 							'license'		=> $item->license,
-							'referer'		=> $item->referer,
+							'domain'		=> $item->domain,
 							'active'		=> $item->active,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
@@ -513,69 +544,19 @@ class license extends Module {
 	}
 
 	/**
-	 * Get license for specified referer
+	 * Get license for specified domain
 	 */
 	private function json_GetLicense() {
-		define('_OMIT_STATS', 1);
 		$result = '';
+		$domain = $this->getDomain();
+		$local_server = !empty($domain) && $domain == $_SERVER['HTTP_HOST'];
 
-		if (isset($_REQUEST['referer'])) {
-			$referer = escape_chars($_REQUEST['referer']);
-			$result = $this->generateLicense($referer);
+		if (isset($_REQUEST['domain']) && $local_server) {
+			$domain = escape_chars($_REQUEST['domain']);
+			$result = $this->generateLicense($domain);
 		}
 
 		print json_encode($result);
 	}
 }
 
-
-class LicenseManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('licenses');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('license', 'varchar');
-		$this->addProperty('referer', 'varchar');
-		$this->addProperty('active', 'boolean');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-class LicenseModulesManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('license_modules');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('license', 'int');
-		$this->addProperty('module', 'varchar');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}

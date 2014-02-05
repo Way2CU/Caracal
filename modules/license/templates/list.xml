@@ -10,7 +10,7 @@
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 250px;">
-				<_text constant="column_referer" module="license"/>
+				<_text constant="column_domain" module="license"/>
 			</span>
 			<span class="column" style="width: 250px;">
 				<_text constant="column_license_key" module="license"/>
