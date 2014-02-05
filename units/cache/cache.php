@@ -47,14 +47,22 @@ class CacheHandler {
 
 	/**
 	 * Generate unique id based on URL.
+	 *
+	 * @param array $fields
 	 * @return string
 	 */
-	private function generateUniqueID() {
+	private function generateUniqueID($fields=null) {
 		$data = '';
 
-		foreach ($_REQUEST as $key => $value)
-			if (!in_array($key, $this->ignored_params))
-				$data .= $key.'/'.$value;
+		if (is_null($fields))
+			$fields = $_REQUEST;
+
+		foreach ($fields as $key => $value)
+			if (!in_array($key, $this->ignored_params)) {
+				if (!is_array($value))
+					$data .= $key.'/'.$value; else
+					$data .= $key.'/'.$this->generateUniqueID($value);
+			}
 
 		return md5($data);
 	}
