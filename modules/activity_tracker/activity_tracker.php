@@ -362,6 +362,15 @@ class activity_tracker extends Module {
 		$activity_name = isset($_REQUEST['activity']) ? fix_chars($_REQUEST['activity']) : null;
 		$function_name = isset($_REQUEST['function']) ? fix_chars($_REQUEST['function']) : null;
 
+		// check license if module is loaded
+		if (class_exists('license')) {
+			$license = license::getInstance();
+			$license_number = fix_chars($_REQUEST['license']);
+
+			if (!$license->isLicenseValid($this->name, $license_numer))
+				return $result;
+		}
+
 		// get activity
 		$activity = $manager->getSingleItem(
 								$manager->getFieldNames(), 
@@ -430,6 +439,15 @@ class activity_tracker extends Module {
 		$result = false;
 		$activity_name = isset($_REQUEST['activity']) ? fix_chars($_REQUEST['activity']) : null;
 		$function_name = isset($_REQUEST['function']) ? fix_chars($_REQUEST['function']) : null;
+
+		// check license if module is loaded
+		if (class_exists('license')) {
+			$license = license::getInstance();
+			$license_number = fix_chars($_REQUEST['license']);
+
+			if (!$license->isLicenseValid($this->name, $license_numer))
+				return $result;
+		}
 
 		// get activity
 		$activity = $manager->getSingleItem(
