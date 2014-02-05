@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_activity" module="activity_tracker"/></span>
+			<input
+				type="text"
+				name="activity"
+				style="width: 300px;"
+				maxlength="32"
+				class="code"
+			/>
+		</label>
+		<label>
+			<span><cms:text constant="label_function" module="activity_tracker"/></span>
+			<input
+				type="text"
+				name="function"
+				style="width: 300px;"
+				maxlength="32"
+				class="code"
+			/>
+		</label>
+		<label class="checkbox">
+			<span><cms:text constant="label_ignore_address" module="activity_tracker"/></span>
+			<input
+				type="checkbox"
+				name="ignore_address"
+			/>
+		</label>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

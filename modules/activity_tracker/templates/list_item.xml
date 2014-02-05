@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 200px;">
+			<cms:var name="$params['activity']"/>
+		</span>
+		<span class="column" style="width: 200px;">
+			<cms:var name="$params['function']"/>
+		</span>
+		<span class="column" style="width: 130px; text-align: center">
+			<cms:var name="$params['ignore_address_char']"/>
+		</span>
+		<span class="column">
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
+		</span>
+	</div>
+</document>
