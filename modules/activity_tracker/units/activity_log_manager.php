@@ -7,7 +7,7 @@ class ActivityLogManager extends ItemManager {
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('activitie_log');
+		parent::__construct('activity_log');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('activity', 'int');
