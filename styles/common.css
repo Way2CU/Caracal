@@ -140,6 +140,14 @@ body.rtl .mobile_menu {
 	right: -200px;
 }
 
+.mobile_menu.visible {
+	left: 0px;
+}
+
+body.rtl .mobile_menu.visible {
+	right: 0px;
+}
+
 .mobile_menu a {
 	display: block;
 }
