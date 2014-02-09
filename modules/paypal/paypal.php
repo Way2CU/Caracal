@@ -104,6 +104,10 @@ class paypal extends Module {
 					$this->completeExpressCheckout();
 					break;
 
+				case 'ipn':
+					$this->handleIPN();
+					break;
+
 				default:
 					break;
 			}
@@ -418,6 +422,12 @@ class paypal extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Handle IPN.
+	 */
+	private function handleIPN() {
 	}
 
 	/**
