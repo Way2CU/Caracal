@@ -158,6 +158,8 @@ div.scrollbar_thumb.active {
 
 	color: white;
 	text-align: center;
+
+	transition: 0.3s all;
 }
 
 .mobile_title.menu_visible {
