@@ -1073,7 +1073,7 @@ class shop extends Module {
 		
 			// trigger event
 			if ($status == TransactionStatus::COMPLETED) {
-				$this->event_handler->trigger('payment-completed', $transaction, $status);
+				$this->event_handler->trigger('payment-completed', $transaction);
 
 				// remove transaction information
 				unset($_SESSION['transaction']);
