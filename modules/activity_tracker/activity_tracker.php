@@ -91,6 +91,10 @@ class activity_tracker extends Module {
 					$this->isAlive();
 					break;
 
+				case 'include_scripts':
+					$this->includeScripts();
+					break;
+
 				default:
 					break;
 			}
@@ -410,13 +414,16 @@ class activity_tracker extends Module {
 			
 		} else {
 			// create new log
-			$log_manager->insertData(
-						array(
-							'activity'	=> $activity->id,
-							'user'		=> $_SESSION['logged'] ? $_SESSION['uid'] : null,
-							'address'	=> $_SERVER['REMOTE_ADDR'],
-							'timestamp'	=> date('Y-m-d H:i:s')
-						));
+			$data = array(
+						'activity'	=> $activity->id,
+						'address' 	=> $_SERVER['REMOTE_ADDR'],
+						'timestamp'	=> date('Y-m-d H:i:s')
+					);
+
+			if ($_SESSION['logged'])
+				$data['user'] = $_SESSION['uid'];
+
+			$log_manager->insertData($data);
 			$result = true;
 		}
 
@@ -483,6 +490,22 @@ class activity_tracker extends Module {
 			print json_encode($result);
 
 		return $result;
+	}
+
+	/**
+	 * Include beacon JavaScript.
+	 */
+	private function includeScripts() {
+		if (!class_exists('head_tag'))
+			return;
+
+		$head_tag = head_tag::getInstance();
+		$head_tag->addTag(
+					'script',
+					array(
+						'src'	=> url_GetFromFilePath($this->path.'include/beacon.js'),
+						'type'	=> 'text/javascript'
+					));
 	}
 
 	/**
