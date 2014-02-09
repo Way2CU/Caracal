@@ -1061,20 +1061,24 @@ class shop extends Module {
 		$manager = ShopTransactionsManager::getInstance();
 
 		// try to get transaction with specified id
-		$transaction = $manager->getSingleItem(array('id'), array('uid' => $transaction_id));
+		$transaction = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array('uid' => $transaction_id)
+									);
 
 		// set status of transaction
 		if (is_object($transaction)) {
 			$manager->updateData(array('status' => $status), array('id' => $transaction->id));
 			$result = true;
+		
+			// trigger event
+			if ($status == TransactionStatus::COMPLETED) {
+				$this->event_handler->trigger('payment-completed', $transaction, $status);
+
+				// remove transaction information
+				unset($_SESSION['transaction']);
+			}
 		}
-
-		// trigger event
-		$this->event_handler->trigger('payment-completed', $transaction_id, $status);
-
-		// remove transaction information
-		if ($status == TransactionStatus::COMPLETED)
-			unset($_SESSION['transaction']);
 
 		return $result;
 	}
