@@ -5,7 +5,7 @@
  * Author: Mladen Mijatov
  */
 
-function MobileMenu(top_bar_id, menu_id) {
+function MobileMenu() {
 	var self = this;
 
 	self._visible = false;
@@ -26,8 +26,8 @@ function MobileMenu(top_bar_id, menu_id) {
 	 */
 	self._init = function() {
 		// assign site components
-		self._top_bar = $('#' + top_bar_id);
-		self._menu = $('#' + menu_id);
+		self._top_bar = $('.mobile_title').eq(0);
+		self._menu = $('.mobile_menu').eq(0);
 
 		// configure top bar
 		self._top_bar.css('z-index', 10001);
