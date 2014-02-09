@@ -19,7 +19,6 @@ require_once('units/shop_item_sizes_handler.php');
 require_once('units/shop_item_size_values_manager.php');
 require_once('units/shop_transactions_manager.php');
 require_once('units/shop_transactions_handler.php');
-/* require_once('units/shop_stock_handler.php'); */
 require_once('units/shop_warehouse_handler.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_buyers_manager.php');
@@ -895,12 +894,15 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function includeScripts($tag_params, $children) {
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			$head_tag->addTag('script', array('src'=>_BASEURL.'/scripts/dialog.js', 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>_BASEURL.'/scripts/page_control.js', 'type'=>'text/javascript'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
-		}
+		if (!class_exists('head_tag'))
+			return;
+
+		$head_tag = head_tag::getInstance();
+		$collection = collection::getInstance();
+
+		$collection->includeScriptById(collection::DIALOG);
+		$collection->includeScriptById(collection::PAGE_CONTROL);
+		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
