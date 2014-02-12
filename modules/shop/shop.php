@@ -21,6 +21,7 @@ require_once('units/shop_transactions_manager.php');
 require_once('units/shop_transactions_handler.php');
 require_once('units/shop_warehouse_handler.php');
 require_once('units/shop_transaction_items_manager.php');
+require_once('units/shop_transaction_plans_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_delivery_address_manager.php');
 require_once('units/shop_related_items_manager.php');
@@ -762,10 +763,6 @@ class shop extends Module {
 				  `type` smallint(6) NOT NULL,
 				  `status` smallint(6) NOT NULL,
 				  `currency` int(11) NOT NULL,
-				  `trial` int(11) NOT NULL,
-				  `trial_count` int(11) NOT NULL,
-				  `interval` int(11) NOT NULL,
-				  `interval_count` int(11) NOT NULL,
 				  `handling` decimal(8,2) NOT NULL,
 				  `shipping` decimal(8,2) NOT NULL,
 				  `weight` decimal(4,2) NOT NULL,
@@ -775,8 +772,6 @@ class shop extends Module {
 				  `token` varchar(255) NOT NULL,
 				  `total` decimal(8,2) NOT NULL,
 				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-				  `start_time` timestamp NULL,
-				  `end_time` timestamp NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`),
 				  KEY `address` (`address`)
@@ -795,6 +790,23 @@ class shop extends Module {
 				  PRIMARY KEY (`id`),
 				  KEY `transaction` (`transaction`),
 				  KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop transaction plans table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_plans` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `transaction` int(11) NOT NULL,
+				  `plan_name` varchar(64) NOT NULL,
+				  `trial` int(11) NOT NULL,
+				  `trial_count` int(11) NOT NULL,
+				  `interval` int(11) NOT NULL,
+				  `interval_count` int(11) NOT NULL,
+				  `start_time` timestamp NULL,
+				  `end_time` timestamp NULL,
+				  PRIMARY KEY (`id`),
+				  KEY `transaction` (`transaction`),
+				  KEY `plan_name` (`plan_name`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 		
@@ -854,6 +866,7 @@ class shop extends Module {
 					'shop_buyer_addresses',
 					'shop_transactions',
 					'shop_transaction_items',
+					'shop_transaction_plans',
 					'shop_warehouse',
 					'shop_stock',
 					'shop_related_items',
@@ -900,8 +913,8 @@ class shop extends Module {
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
 
-		$collection->includeScriptById(collection::DIALOG);
-		$collection->includeScriptById(collection::PAGE_CONTROL);
+		$collection->includeScript(collection::DIALOG);
+		$collection->includeScript(collection::PAGE_CONTROL);
 		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 	}
 
@@ -2170,9 +2183,12 @@ class shop extends Module {
 	 * @return array
 	 */
 	private function updateTransaction($type, $payment_method, $delivery_method, $buyer, $address) {
+		global $db;
+
 		$result = array();
 		$transactions_manager = ShopTransactionsManager::getInstance();
 		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
+		$transaction_plans_manager = ShopTransactionPlansManager::getInstance();
 
 		// generate recipient array for delivery method
 		if (!is_null($address)) {
@@ -2262,6 +2278,9 @@ class shop extends Module {
 		// remove items associated with transaction
 		$transaction_items_manager->deleteData(array('transaction' => $result['id']));
 
+		// remove plans associated with transaction
+		$transaction_plans_manager->deleteData(array('transaction' => $result['id']));
+
 		// store items
 		if (count($summary['items_for_checkout']) > 0) 
 			foreach($summary['items_for_checkout'] as $uid => $item) {
@@ -2274,6 +2293,25 @@ class shop extends Module {
 											'description'	=> $item['description']
 										));
 			}
+
+		// create plan entry
+		if (isset($_SESSION['recurring_plan'])) {
+			$plan_name = $_SESSION['recurring_plan'];
+			$plan_list = $payment_method->get_recurring_plans();
+			$plan = isset($plan_list[$plan_name]) ? $plan_list[$plan_name] : null;
+
+			if (!is_null($plan))
+				$transaction_plans_manager->insertData(array(
+												'transaction'		=> $result['id'],
+												'plan_name'			=> $plan_name,
+												'trial'				=> $plan['trial'],
+												'trial_count'		=> $plan['trial_count'],
+												'interval'			=> $plan['interval'],
+												'interval_count'	=> $plan['interval_count'],
+												'start_time'		=> $db->format_timestamp($plan['start_time']),
+												'end_time'			=> $db->format_timestamp($plan['end_time'])
+											));
+		}
 
 		// if affiliate system is active, update referral
 		if (isset($_SESSION['referral_id']) && class_exists('affiliates')) {
@@ -2426,22 +2464,6 @@ class shop extends Module {
 			$return_url = url_Make('checkout_completed', 'shop', array('payment_method', $payment_method->get_name()));
 			$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
 
-			// emit signal and return if handled
-			if ($stage == 'set_info') {
-				$result_list = $this->event_handler->trigger(
-														'before-checkout',
-														$payment_method->get_name(),
-														$return_url,
-														$cancel_url
-													);
-
-				foreach ($result_list as $result)
-					if ($result) { 
-						$this->showCheckoutRedirect();
-						return;
-					}
-			}
-
 			// get currency info
 			$currency = $this->settings['default_currency'];
 			$currency_item = $currency_manager->getSingleItem(array('id'), array('currency' => $currency));
@@ -2459,6 +2481,22 @@ class shop extends Module {
 			// update transaction
 			$transaction_type = $recurring ? TransactionType::SUBSCRIPTION : TransactionType::SHOPPING_CART;
 			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
+
+			// emit signal and return if handled
+			if ($stage == 'set_info') {
+				$result_list = $this->event_handler->trigger(
+														'before-checkout',
+														$payment_method->get_name(),
+														$return_url,
+														$cancel_url
+													);
+
+				foreach ($result_list as $result)
+					if ($result) { 
+						$this->showCheckoutRedirect();
+						return;
+					}
+			}
 
 			// create new payment
 			if ($recurring) {
