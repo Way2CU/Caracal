@@ -358,6 +358,8 @@ class activity_tracker extends Module {
 	 * @return boolean
 	 */
 	public function keepAlive() {
+		global $db;
+
 		$manager = ActivityManager::getInstance();
 		$log_manager = ActivityLogManager::getInstance();
 
@@ -371,7 +373,7 @@ class activity_tracker extends Module {
 			$license = license::getInstance();
 			$license_number = fix_chars($_REQUEST['license']);
 
-			if (!$license->isLicenseValid($this->name, $license_numer))
+			if (!$license->isLicenseValid($this->name, $license_number))
 				return $result;
 		}
 
@@ -406,7 +408,7 @@ class activity_tracker extends Module {
 		if (is_object($log)) {
 			// update existing log
 			$log_manager->updateData(
-						array('timestamp' => date('Y-m-d H:i:s')),
+						array('timestamp' => $db->format_timestamp(time())),
 						array('id' => $log->id)
 					);
 
@@ -417,7 +419,7 @@ class activity_tracker extends Module {
 			$data = array(
 						'activity'	=> $activity->id,
 						'address' 	=> $_SERVER['REMOTE_ADDR'],
-						'timestamp'	=> date('Y-m-d H:i:s')
+						'timestamp'	=> $db->format_timestamp(time())
 					);
 
 			if ($_SESSION['logged'])
@@ -439,6 +441,8 @@ class activity_tracker extends Module {
 	 * @return boolean
 	 */
 	public function isAlive() {
+		global $db;
+
 		$manager = ActivityManager::getInstance();
 		$log_manager = ActivityLogManager::getInstance();
 
@@ -452,7 +456,7 @@ class activity_tracker extends Module {
 			$license = license::getInstance();
 			$license_number = fix_chars($_REQUEST['license']);
 
-			if (!$license->isLicenseValid($this->name, $license_numer))
+			if (!$license->isLicenseValid($this->name, $license_number))
 				return $result;
 		}
 
@@ -471,7 +475,7 @@ class activity_tracker extends Module {
 			$conditions['activity'] = $activity->id;
 			$conditions['timestamp'] = array(
 								'operator'	=> '>=',
-								'value'		=> date('Y-m-d H:i:s', time() - $activity->timeout)
+								'value'		=> $db->format_timestamp(time() - $activity->timeout)
 							);
 
 			if (!$activity->ignore_address)
