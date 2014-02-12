@@ -51,6 +51,13 @@ class backend extends Module {
 
 		parent::__construct(__FILE__);
 
+		// create events
+		$this->event_handler = new EventHandler();
+		$this->event_handler->registerEvent('user-create');
+		$this->event_handler->registerEvent('user-change');
+		$this->event_handler->registerEvent('user-delete');
+		$this->event_handler->registerEvent('user-password-change');
+
 		// load CSS and JScript
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
@@ -101,7 +108,7 @@ class backend extends Module {
 									url_GetFromFilePath($this->path.'images/icons/16/users.png'),
 									window_Open( // on click open window
 												'system_users',
-												610,
+												690,
 												$this->getLanguageConstant('title_users_manager'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'users')
@@ -172,27 +179,27 @@ class backend extends Module {
 				case 'logout_commit':
 				case 'json_login':
 				case 'json_logout':
-					$session_manager = SessionManager::getInstance($this);
+					$session_manager = SessionManager::getInstance();
 					$session_manager->transferControl();
 					break;
 
 				case 'verify_account':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance($this->event_handler);
 					$user_manager->verifyAccount($params, $children);
 					break;
 				
 				case 'save_unpriviledged_user':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance($this->event_handler);
 					$user_manager->saveUnpriviledgedUser($params, $children);
 					break;
 
 				case 'password_recovery':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance($this->event_handler);
 					$user_manager->recoverPasswordByEmail($params, $children);
 					break;
 
 				case 'password_recovery_save':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance($this->event_handler);
 					$user_manager->saveRecoveredPassword($params, $children);
 					break;
 
@@ -275,7 +282,7 @@ class backend extends Module {
 				case 'save_password':
 				case 'email_templates':
 				case 'email_templates_save':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::getInstance($this->event_handler);
 					$user_manager->transferControl();
 					break;
 
