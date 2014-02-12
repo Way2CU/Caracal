@@ -121,17 +121,62 @@ abstract class Module {
 	protected function getSettings() {
 		global $db, $db_use;
 
+		// this method is only meant to be used with database
+		if (!$db_use)
+			return;
+
+		// get manager
+		$manager = SettingsManager::getInstance();
 		$result = array();
 
-		if ($db_use) {
-			$settings = $db->get_results("SELECT `variable`, `value` FROM `system_settings` WHERE `module` = '$this->name' ORDER BY `variable` ASC");
+		// get values from the database
+		$settings = $manager->getItems($manager->getFieldNames(), array('module' => $this->name));
 
-			if ($db->num_rows() > 0)
-				foreach ($settings as $setting)
-					$result[$setting->variable] = $setting->value;
-		}
+		if (count($settings) > 0)
+			foreach ($settings as $setting)
+				$result[$setting->variable] = $setting->value;
 
 		return $result;
+	}
+
+	/**
+	 * Updates or creates new variable in module settings
+	 *
+	 * @param string $var
+	 * @param string $value
+	 */
+	protected function saveSetting($var, $value) {
+		global $db, $db_use;
+
+		// this method is only meant for used with database
+		if (!$db_use)
+			return;
+
+		// get manager
+		$manager = SettingsManager::getInstance();
+
+		// check if specified setting already exists
+		$setting = $manager->getSingleItem(
+								array('id'),
+								array(
+									'module'	=> $this->name,
+									'variable'	=> $var
+								));
+
+		// update or insert data
+		if (is_object($setting)) {
+			$manager->updateData(
+						array('value' => $value),
+						array('id' => $setting->id)
+					);
+
+		} else {
+			$manager->insertData(array(
+						'module'	=> $this->name,
+						'variable'	=> $var,
+						'value'		=> $value
+					));
+		}
 	}
 
 	/**
@@ -163,30 +208,6 @@ abstract class Module {
 		$template->setMappedModule($this->name);
 
 		return $template;
-	}
-
-	/**
-	 * Updates or creates new variable in module settings
-	 *
-	 * @param string $var
-	 * @param string $value
-	 */
-	protected function saveSetting($var, $value) {
-		global $db;
-
-		// TODO: Make usage of Item Manager
-		$select_query = "SELECT count(`id`) FROM `system_settings` WHERE
-						`module` = '{$this->name}' AND `variable` = '{$var}'";
-
-		$update_query = "UPDATE `system_settings`
-						SET `value` = '{$value}'
-						WHERE `variable` = '{$var}' AND `module` = '{$this->name}'";
-
-		$insert_query = "INSERT INTO `system_settings` (`module`,`variable`,`value`)
-						VALUES ('{$this->name}', '{$var}', '{$value}')";
-
-		$update = $db->get_var($select_query) > 0;
-		$db->query( ($update) ? $update_query : $insert_query );
 	}
 
 	/**
