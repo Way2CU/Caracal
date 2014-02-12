@@ -7,25 +7,21 @@
 class SessionManager {
 	private static $_instance;
 
-	/**
-	 * Parent module (backend)
-	 * @var resource
-	 */
-	var $parent;
+	private $parent;
 
 	/**
 	 * Constructor
 	 */
-	protected function __construct($parent) {
-		$this->parent = $parent;
+	protected function __construct() {
+		$this->parent = backend::getInstance();
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function getInstance() {
 		if (!isset(self::$_instance))
-			self::$_instance = new self($parent);
+			self::$_instance = new self();
 
 		return self::$_instance;
 	}
