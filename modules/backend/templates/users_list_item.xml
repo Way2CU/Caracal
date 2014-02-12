@@ -3,17 +3,23 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 200px;">
-			<_var name="$params['fullname']"/>
+			<cms:var name="$params['fullname']"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['username']"/>
+			<cms:var name="$params['username']"/>
 		</span>
 		<span class="column" style="width: 50px; text-align: center;">
-			<_var name="$params['level']"/>
+			<cms:var name="$params['level']"/>
+		</span>
+		<span class="column" style="width: 60px; text-align: center;">
+			<cms:var name="$params['verified_char']"/>
+		</span>
+		<span class="column" style="width: 60px; text-align: center;">
+			<cms:var name="$params['agreed_char']"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>
