@@ -210,6 +210,36 @@ class Database_MySQL extends Database {
 	public function escape_string($string) {
 		return $this->handle->real_escape_string($string);
 	}
+
+	/**
+	 * Get database specific time format from UNIX timestamp.
+	 *
+	 * @param integer $timestamp
+	 * @return string
+	 */
+	public function format_time($timestamp) {
+		return date('H:i:s', $timestamp);
+	}
+
+	/**
+	 * Get database specific date format from UNIX timestamp.
+	 *
+	 * @param integer $timestamp
+	 * @return string
+	 */
+	public function format_date($timestamp) {
+		return date('Y-m-d', $timestamp);
+	}
+
+	/**
+	 * Get database specific timestamp format from UNIX timestamp.
+	 *
+	 * @param integer $timestamp
+	 * @return string
+	 */
+	public function format_timestamp($timestamp) {
+		return date('Y-m-d H:i:s', $timestamp);
+	}
 }
 
 ?>
