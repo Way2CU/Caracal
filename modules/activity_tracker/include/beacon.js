@@ -98,9 +98,10 @@ function Beacon(activity, function_name, license) {
 	 * Check if function of the same activity is alive.
 	 *
 	 * @param string function_name
+	 * @param function callback
 	 * @return boolean
 	 */
-	self.is_alive = function(function_name) {
+	self.is_alive = function(function_name, callback) {
 		var result = false;
 		var params = {
 				url: self._url,
@@ -111,7 +112,7 @@ function Beacon(activity, function_name, license) {
 					section: 'activity_tracker',
 					action: 'is_alive',
 					activity: self._activity,
-					function: self._function,
+					function: function_name,
 					license: self._license
 				},
 				cache: false,
@@ -121,6 +122,13 @@ function Beacon(activity, function_name, license) {
 				}
 			};
 
+		// allow asynchronous callback
+		if (callback !== undefined) {
+			params.success = callback;
+			params.async = true;
+		} 
+
+		// send notification
 		$.ajax(params);
 
 		return result;
