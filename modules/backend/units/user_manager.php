@@ -7,18 +7,20 @@
 class Backend_UserManager {
 	private static $_instance;
 
-	var $parent;
+	private $event_handler;
+	private $parent;
 
-	protected function __construct() {
+	protected function __construct($event_handler) {
 		$this->parent = backend::getInstance();
+		$this->event_handler = $event_handler;
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function getInstance($event_handler) {
 		if (!isset(self::$_instance))
-			self::$_instance = new self();
+			self::$_instance = new self($event_handler);
 
 		return self::$_instance;
 	}
@@ -196,13 +198,14 @@ class Backend_UserManager {
 			if (($_SESSION['level'] == 10) || (is_object($user) && $user->level < $_SESSION['level'])) {
 				// save changed user data
 				$message = $this->parent->getLanguageConstant('message_users_data_saved');
-
 				$manager->updateData($data, array('id' => $id));
+
+				// trigger event
+				$this->event_handler->trigger('user-change', $user);
 
 			} else {
 				// we can't edit user with higher level than our own
 				$message = $this->parent->getLanguageConstant('message_users_error_user_level_higher');
-
 			}
 
 		} else {
@@ -212,6 +215,13 @@ class Backend_UserManager {
 				// save new user data
 				$message = $this->parent->getLanguageConstant('message_users_data_saved');
 				$manager->insertData($data);
+				$user = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array('id' => $manager->getInsertedID())
+									);
+
+				// trigger event
+				$this->event_handler->trigger('user-create', $user);
 
 			} else {
 				// can't assign specified level
@@ -245,6 +255,7 @@ class Backend_UserManager {
 			);
 		$manager = UserManager::getInstance();
 		$user_id = null;
+		$agreed = isset($_REQUEST['agreed']) && ($_REQUEST['agreed'] == 'on' || $_REQUEST['agreed'] == '1') ? 1 : 0;
 
 		// grab new user data
 		if (defined('_AJAX_REQUEST')) 
@@ -258,7 +269,8 @@ class Backend_UserManager {
 				'password'	=> hash_hmac('sha256', $source['password'], $salt),
 				'email'		=> fix_chars($source['email']),
 				'level'		=> 0,
-				'salt'		=> $salt
+				'salt'		=> $salt,
+				'agreed'	=> $agreed
 			);
 
 		// check for duplicates
@@ -283,7 +295,16 @@ class Backend_UserManager {
 				// insert data
 				$manager->insertData($data);
 				$user_id = $manager->getInsertedID();
+
+				// assign message
 				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
+
+				// trigger event
+				$user = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array('id' => $user_id)
+									);
+				$this->event_handler->trigger('user-create', $user);
 			}
 
 		// show result
@@ -570,8 +591,13 @@ class Backend_UserManager {
 							array('id' => $user->id)
 						);
 
+				// prepare response
 				$result['error'] = false;
 				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
+
+				// trigger event
+				$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user->id));
+				$this->event_handler->trigger('user-password-change', $user);
 
 			} else {
 				// invalid code or user
@@ -640,6 +666,11 @@ class Backend_UserManager {
 		$id = fix_id($_REQUEST['id']);
 		$manager = UserManager::getInstance();
 
+		// trigger event
+		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$this->event_handler->trigger('user-delete', $user);
+
+		// remove user from database
 		$manager->deleteData(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
@@ -707,7 +738,12 @@ class Backend_UserManager {
 							array('id' => $user->id)
 						);
 
+				// prepare response
 				$message = $this->parent->getLanguageConstant('message_password_changed');
+
+				// trigger event
+				$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user->id));
+				$this->event_handler->trigger('user-password-change', $user);
 
 			} else {
 				// mismatching passwords
@@ -828,13 +864,16 @@ class Backend_UserManager {
 		if (count($users) > 0)
 			foreach ($users as $user) {
 				$params = array(
-							'id'		=> $user->id,
-							'fullname'	=> $user->fullname,
-							'username'	=> $user->username,
-							'level'		=> $user->level,
-							'verified'	=> $user->verified,
-							'selected'	=> isset($tag_params['selected']) && ($tag_params['selected'] == $user->id),
-							'item_change'	=> url_MakeHyperlink(
+							'id'				=> $user->id,
+							'fullname'			=> $user->fullname,
+							'username'			=> $user->username,
+							'level'				=> $user->level,
+							'verified'			=> $user->verified,
+							'verified_char'		=> $user->verified ? CHAR_CHECKED : CHAR_UNCHECKED,
+							'agreed'			=> $user->agreed,
+							'agreed_char'		=> $user->agreed ? CHAR_CHECKED : CHAR_UNCHECKED,
+							'selected'			=> isset($tag_params['selected']) && ($tag_params['selected'] == $user->id),
+							'item_change'		=> url_MakeHyperlink(
 													$this->parent->getLanguageConstant('change'),
 													window_Open(
 														'system_users_change', 	// window id
@@ -850,7 +889,7 @@ class Backend_UserManager {
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'		=> url_MakeHyperlink(
 													$this->parent->getLanguageConstant('delete'),
 													window_Open(
 														'system_users_delete', // window id
