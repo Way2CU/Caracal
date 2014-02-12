@@ -63,6 +63,8 @@
 		<constant name="column_users_fullname">Full name</constant>
 		<constant name="column_users_username">Username</constant>
 		<constant name="column_users_level">Level</constant>
+		<constant name="column_users_verified">Verified</constant>
+		<constant name="column_users_agreed">Agreed</constant>
 
 		<!-- Labels -->
 		<constant name="label_old_password">Old password:</constant>
@@ -192,6 +194,8 @@
 		<constant name="column_users_fullname">Full name</constant>
 		<constant name="column_users_username">Username</constant>
 		<constant name="column_users_level">Level</constant>
+		<constant name="column_users_verified">Verified</constant>
+		<constant name="column_users_agreed">Agreed</constant>
 
 		<!-- General -->
 		<constant name="activate">הפעל</constant>
@@ -281,6 +285,8 @@
 		<constant name="column_users_fullname">Ime i prezime</constant>
 		<constant name="column_users_username">Korisničko ime</constant>
 		<constant name="column_users_level">Nivo</constant>
+		<constant name="column_users_verified">Verified</constant>
+		<constant name="column_users_agreed">Agreed</constant>
 
 		<!-- Labels -->
 		<constant name="label_old_password">Stara lozinka:</constant>
