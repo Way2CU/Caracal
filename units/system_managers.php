@@ -199,4 +199,31 @@ class LoginRetryManager extends ItemManager {
 		$this->deleteData(array('address' => $address));
 	}
 }
+
+
+class SettingsManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('system_settings');
+
+		$this->addProperty('id', 'int');
+		$this->addProperty('module', 'varchar');
+		$this->addProperty('variable', 'varchar');
+		$this->addProperty('value', 'text');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
+	}
+}
 ?>
