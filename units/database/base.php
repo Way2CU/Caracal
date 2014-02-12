@@ -139,6 +139,30 @@ abstract class Database {
 	 * @return string
 	 */
 	public abstract function escape_string($string);
+
+	/**
+	 * Get database specific time format from UNIX timestamp.
+	 *
+	 * @param integer $timestamp
+	 * @return string
+	 */
+	public abstract function format_time($timestamp);
+
+	/**
+	 * Get database specific date format from UNIX timestamp.
+	 *
+	 * @param integer $timestamp
+	 * @return string
+	 */
+	public abstract function format_date($timestamp);
+
+	/**
+	 * Get database specific timestamp format from UNIX timestamp.
+	 *
+	 * @param integer $timestamp
+	 * @return string
+	 */
+	public abstract function format_timestamp($timestamp);
 }
 
 ?>
