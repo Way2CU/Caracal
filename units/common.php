@@ -235,4 +235,5 @@ function get_qr_image($uri, $size=100, $error_correction="L") {
 
 	return $result;
 }
+
 ?>

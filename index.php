@@ -2,7 +2,7 @@
 
 /**
  * Caracal Framework
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2014. by Way2CU
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ define('_AJAX_REQUEST',
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 		);
 define('_BROWSER_OK', is_browser_ok());
+define('_VERSION', 0.1);
 
 // start measuring time
 $time_start = explode(" ", microtime());
@@ -102,9 +103,14 @@ if ($section == 'backend' || $section == 'backend_module')
 	$url_rewrite = false;
 
 // start database engine
-if ($db_use)
-	if (!database_connect())
-		die('There was an error while trying to connect database.');
+if ($db_use && !database_connect())
+	die('There was an error while trying to connect database.');
+
+// add protocol specific headers
+header('X-Powered-By: Caracal/'._VERSION);
+
+if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
+	header('Vary: User-Agent');  // different content/styles for mobile 
 
 // transfer display control
 $cache = CacheHandler::getInstance();
