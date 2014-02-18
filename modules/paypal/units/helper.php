@@ -58,6 +58,7 @@ final class PayPal_Helper {
 	const METHOD_UpdateRecurringPaymentsProfile = 'UpdateRecurringPaymentsProfile';
 
 	const COMMAND_ExpressCheckout = '_express-checkout';
+	const COMMAND_NotifyValidate = '_notify-validate';
 
 	private static $sandbox = false;
 
@@ -173,6 +174,45 @@ final class PayPal_Helper {
 
 		if (!isset($result['ACK']))
 			$result['ACK'] = null;
+
+		return $result;
+	}
+
+	/**
+	 * Validate IPN call.
+	 *
+	 * @return boolean
+	 */
+	public static function validate_notification() {
+		$result = false;
+		$endpoint_url = self::$sandbox ? self::API_SANDBOX_ENDPOINT : self::API_LIVE_ENDPOINT;
+
+		// get name-value pairs
+		$params = array('cms' => self::COMMAND_NotifyValidate);
+		$params = array_merge($params, $_POST);
+
+		$nvp_string = self::getNameValuePairs($params);
+
+		// make the call
+		$header = "POST /nvp HTTP/1.1\n";
+		$header .= "User-Agent: Caracal\n";
+		$header .= "Content-Type: application/x-www-form-urlencoded\n";
+		$header .= "Content-Length: " . strlen($nvp_string) . "\n";
+		$header .= "Host: ".$endpoint_url."\n";
+		$header .= "Connection: close\n\n";
+
+		$socket = fsockopen('ssl://'.$endpoint_url, 443, $error_number, $error_string, 5);
+
+		if ($socket) {
+			// send and receive data
+			fputs($socket, $header.$nvp_string);
+			$raw_data = stream_get_contents($socket, 1024);
+
+			$result = strcmp($raw_data, 'VERIFIED');
+
+			// close socket
+			fclose($socket);
+		}
 
 		return $result;
 	}
