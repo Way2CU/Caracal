@@ -369,6 +369,88 @@ class Backend_UserManager {
 	}
 
 	/**
+	 * Save password for unpriviledge user.
+	 * Returns `true` if password was changed.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 * @return boolean
+	 */
+	public function saveUnpriviledgedPassword($tag_params, $children) {
+		$result = array(
+				'error'		=> true,
+				'message'	=> ''
+			);
+		$manager = UserManager::getInstance();
+
+		// grab new user data
+		if (defined('_AJAX_REQUEST')) 
+			$source = $_REQUEST; else
+			$source = $tag_params;
+
+		// get user data
+		$user_id = $_SESSION['logged'] ? $_SESSION['uid'] : null;
+		$new_password = $source['new_password'];
+
+		// we need user to be logged in
+		if (is_null($user_id)) {
+			if (defined('_AJAX_REQUEST'))
+				print json_encode($result);
+
+			return !$result['error'];
+		}
+
+		// get user from the database
+		$user = $manager->getSingleItem(
+								$manager->getFieldNames(),
+								array('id' => $user_id)
+							);
+
+		if (is_object($user)) {
+			// make sure old password is correct
+			$old_password = hash_hmac('sha256', $source['current_password'], $user->salt);
+
+			if ($old_password == $user->password) {
+				// generate new salt
+				$salt = hash('sha256', UserManager::SALT.strval(time()));
+				$password = hash_hmac('sha256', $new_password, $salt);
+
+				// update data
+				$manager->updateData(
+								array(
+									'password'	=> $password,
+									'salt'		=> $salt
+								),
+								array('id' => $user->id)
+							);
+
+				// prepare result
+				$result['error'] = false;
+				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
+
+				// trigger error
+				$user = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array('id' => $user->id)
+									);
+				$this->event_handler->trigger('user-password-change', $user);
+
+			} else {
+				$result['message'] = $this->parent->getLanguageConstant('message_invalid_password');
+			}
+
+		} else {
+			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
+		}
+
+		// show result
+		if (defined('_AJAX_REQUEST'))
+			print json_encode($result);
+
+		return !$result['error'];
+	}
+
+	/**
 	 * Password recovery for user accounts using email or username.
 	 * Password reset string is sent to users email.
 	 *
@@ -596,7 +678,10 @@ class Backend_UserManager {
 				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
 
 				// trigger event
-				$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user->id));
+				$user = $manager->getSingleItem(
+										$manager->getFieldNames(),
+										array('id' => $user->id)
+									);
 				$this->event_handler->trigger('user-password-change', $user);
 
 			} else {
