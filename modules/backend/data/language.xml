@@ -54,6 +54,7 @@
 		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
 		<constant name="message_invalid_code">Invalid verification code.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
+		<constant name="message_invalid_password">Invalid current password.</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>
@@ -164,6 +165,7 @@
 		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
 		<constant name="message_invalid_code">Invalid verification code.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
+		<constant name="message_invalid_password">Invalid current password.</constant>
 
 		<!-- Labels -->
 		<constant name="label_old_password">סיסמא ישנה:</constant>
@@ -276,6 +278,7 @@
 		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
 		<constant name="message_invalid_code">Invalid verification code.</constant>
 		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
+		<constant name="message_invalid_password">Invalid current password.</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Ime modula</constant>
