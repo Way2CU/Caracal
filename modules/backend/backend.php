@@ -193,6 +193,11 @@ class backend extends Module {
 					$user_manager->saveUnpriviledgedUser($params, $children);
 					break;
 
+				case 'save_unpriviledged_password':
+					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager->saveUnpriviledgedPassword($params, $children);
+					break;
+
 				case 'password_recovery':
 					$user_manager = Backend_UserManager::getInstance($this->event_handler);
 					$user_manager->recoverPasswordByEmail($params, $children);
