@@ -187,6 +187,9 @@ class page_info extends Module {
 		$default_language = $language_handler->getDefaultLanguage();
 		$language_list = $language_handler->getLanguages(false);
 
+		// change powered by header
+		header('X-Powered-By: Caracal/'._VERSION);
+
 		// add base url tag
 		$head_tag->addTag('base', array('href' => _BASEURL));
 
@@ -299,6 +302,10 @@ class page_info extends Module {
 
 		// add default styles and script if they exists
 		$collection->includeScript(collection::JQUERY);
+
+		// let the browser/crawler know we have different desktop/mobile styles
+		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
+			header('Vary: User-Agent');  
 
 		if ($section != 'backend') {
 			$styles = array();

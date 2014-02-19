@@ -106,12 +106,6 @@ if ($section == 'backend' || $section == 'backend_module')
 if ($db_use && !database_connect())
 	die('There was an error while trying to connect database.');
 
-// add protocol specific headers
-header('X-Powered-By: Caracal/'._VERSION);
-
-if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-	header('Vary: User-Agent');  // different content/styles for mobile 
-
 // transfer display control
 $cache = CacheHandler::getInstance();
 $module_handler = ModuleHandler::getInstance();
