@@ -195,11 +195,17 @@ class CodeOptimizer {
 	public function addScript($url) {
 		global $section;
 
-		// add script to be compiled
-		$this->script_list []= $url;
-		$this->closure_compiler->add(path_GetFromURL($url));
+		$result = false;
+		$data = parse_url($url);
 
-		return true;
+		// add script to be compiled
+		if ($data['host'] == _DOMAIN) {
+			$this->script_list []= $url;
+			$this->closure_compiler->add(path_GetFromURL($url));
+			$result = true;
+		}
+
+		return $result;
 	}
 
 	/**
