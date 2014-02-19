@@ -24,7 +24,7 @@ class CacheHandler {
 	 * @var array
 	 */
 	private $ignored_params = array(
-			'gclid'
+			'gclid', '_rewrite', Session::COOKIE_ID, Session::COOKIE_TYPE
 		);
 
 	const TAG_OPEN = '{%{';
@@ -60,8 +60,8 @@ class CacheHandler {
 		foreach ($fields as $key => $value)
 			if (!in_array($key, $this->ignored_params)) {
 				if (!is_array($value))
-					$data .= $key.'/'.$value; else
-					$data .= $key.'/'.$this->generateUniqueID($value);
+					$data .= '/'.$key.'='.$value; else
+					$data .= '/'.$key.'='.$this->generateUniqueID($value);
 			}
 
 		return md5($data);
