@@ -38,7 +38,8 @@ class CacheHandler {
 		$this->should_cache = 
 					$cache_enabled && 
 					!($section == 'backend' || $section == 'backend_module') && 
-					$_SERVER['REQUEST_METHOD'] == 'GET';
+					$_SERVER['REQUEST_METHOD'] == 'GET' &&
+					!_AJAX_REQUEST;
 
 		$this->uid = $this->generateUniqueID();
 		$this->cache_file = $cache_path.$this->uid.(_DESKTOP_VERSION ? '' : '_m');
