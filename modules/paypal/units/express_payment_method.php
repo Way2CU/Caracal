@@ -115,7 +115,7 @@ class PayPal_Express extends PaymentMethod {
 					'interval_count'	=> $item->interval_count,
 					'price'				=> $item->price,
 					'setup_price'		=> $item->setup_price,
-					'start_time'		=> $item->start_time,
+					'start_time'		=> strtotime($item->start_time),
 					'end_time'			=> 0
 				);
 
@@ -172,6 +172,45 @@ class PayPal_Express extends PaymentMethod {
 
 			foreach ($params as $name => $value)
 				$result .= '<input type="hidden" name="'.$name.'" value="'.$value.'">';
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Cancel existing recurring payment.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function cancel_recurring_payment($transaction) {
+		$result = false;
+
+		// prepare parameters
+		$params = array(
+			'ACTION'	=> 'Cancel'
+			'PROFILEID'	=> $transaction->token
+		);
+
+		// make the call
+		$response = PayPal_Helper::callAPI(
+							PayPal_Helper::METHOD_ManageRecurringPaymentsProfileStatus,
+							$params
+						);
+
+		// handle response
+		if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
+			$shop = shop::getInstance();
+			$shop->setTransactionStatus($transaction->uid, TransactionStatus::CANCELED);
+
+			$result = true;
+
+		} else {
+			// report error
+			$error_code = urldecode($response['L_ERRORCODE0']);
+			$error_long = urldecode($response['L_LONGMESSAGE0']);
+
+			trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
 		}
 
 		return $result;
@@ -360,12 +399,17 @@ class PayPal_Express extends PaymentMethod {
 			$recurring_fields['BILLINGFREQUENCY'] = $plan->interval_count;
 
 			// trial period
-			$recurring_fields['TRIALBILLINGPERIOD'] = $this->units[$plan->trial];
-			$recurring_fields['TRIALBILLINGFREQUENCY'] = $plan->trial_count;
-			$recurring_fields['TRIALTOTALBILLINGCYCLES'] = 1;
+			if ($plan->trial_count > 0) {
+				$recurring_fields['TRIALBILLINGPERIOD'] = $this->units[$plan->trial];
+				$recurring_fields['TRIALBILLINGFREQUENCY'] = $plan->trial_count;
+				$recurring_fields['TRIALTOTALBILLINGCYCLES'] = 1;
+			}
 
 			// make api call
-			$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_CreateRecurringPaymentsProfile, $recurring_fields);
+			$response = PayPal_Helper::callAPI(
+								PayPal_Helper::METHOD_CreateRecurringPaymentsProfile,
+								$recurring_fields
+							);
 
 			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
 				// update transaction token
@@ -374,6 +418,13 @@ class PayPal_Express extends PaymentMethod {
 				// update transaction status
 				if ($response['PROFILESTATUS'] == 'ActiveProfile')
 					$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
+
+			} else {
+				// report error
+				$error_code = urldecode($response['L_ERRORCODE0']);
+				$error_long = urldecode($response['L_LONGMESSAGE0']);
+
+				trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
 			}
 
 			// redirect user
