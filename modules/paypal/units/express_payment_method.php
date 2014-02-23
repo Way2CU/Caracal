@@ -116,7 +116,8 @@ class PayPal_Express extends PaymentMethod {
 					'price'				=> $item->price,
 					'setup_price'		=> $item->setup_price,
 					'start_time'		=> strtotime($item->start_time),
-					'end_time'			=> 0
+					'end_time'			=> 0,
+					'group'				=> $item->group_name
 				);
 
 
@@ -188,7 +189,7 @@ class PayPal_Express extends PaymentMethod {
 
 		// prepare parameters
 		$params = array(
-			'ACTION'	=> 'Cancel'
+			'ACTION'	=> 'Cancel',
 			'PROFILEID'	=> $transaction->token
 		);
 
