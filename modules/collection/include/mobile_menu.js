@@ -55,7 +55,7 @@ function MobileMenu() {
 		}
 
 		// connect events in top bar
-		menu_toggle.click(self._handle_menu_button_click); else
+		menu_toggle.click(self._handle_menu_button_click);
 
 		// connect window events
 		$(window)
