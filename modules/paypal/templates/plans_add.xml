@@ -6,12 +6,16 @@
 			<span><cms:text constant="label_plan_name" module="paypal"/></span>
 			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="200"/>
 		</label>
-		<label>
+		<label class="horizontal">
 			<span><cms:text constant="label_text_id" module="paypal"/></span>
-			<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="200"/>
+			<input type="text" name="text_id" class="code" style="width: 160px;" maxlength="200"/>
+		</label>
+		<label class="horizontal">
+			<span><cms:text constant="label_group_name" module="paypal"/></span>
+			<input type="text" name="group_name" class="code" style="width: 160px;" maxlength="64"/>
 		</label>
 
-		<div class="box left" style="width: 190px;">
+		<div class="box left" style="width: 190px; clear: both;">
 			<fieldset>
 				<legend><cms:text constant="label_billing_cycle" module="paypal"/></legend>
 				<label class="horizontal">
