@@ -22,6 +22,7 @@ class PayPal_PlansManager extends ItemManager {
 		$this->addProperty('setup_price', 'decimal');
 
 		$this->addProperty('start_time', 'timestamp');
+		$this->addProperty('group_name', 'varchar');
 	}
 
 	/**
