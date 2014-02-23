@@ -183,6 +183,7 @@ class paypal extends Module {
 				`price` DECIMAL(8,2) NOT NULL,
 				`setup_price` DECIMAL(8,2) NOT NULL,
 				`start_time` TIMESTAMP NULL,
+				`group_name` varchar(64) NOT NULL,
 				PRIMARY KEY (`id`),
 				INDEX (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -310,6 +311,7 @@ class paypal extends Module {
 						'price'				=> $plan->price,
 						'setup_price'		=> $plan->setup_price,
 						'start_time'		=> $plan->start_time,
+						'group_name'		=> $plan->group_name,
 						'form_action'	=> backend_UrlMake($this->name, 'recurring_plans_save'),
 						'cancel_action'	=> window_Close('paypal_recurring_plans_change')
 					);
@@ -336,7 +338,8 @@ class paypal extends Module {
 				'interval_count'	=> fix_id($_REQUEST['interval_count']),
 				'price'				=> fix_chars($_REQUEST['interval_price']),
 				'setup_price'		=> fix_chars($_REQUEST['setup_price']),
-				'start_time'		=> fix_chars($_REQUEST['start_time'])
+				'start_time'		=> fix_chars($_REQUEST['start_time']),
+				'group_name'		=> fix_chars($_REQUEST['group_name'])
 			);
 
 
@@ -563,6 +566,17 @@ class paypal extends Module {
 
 		if (is_object($item)) {
 			$params = array(
+					'id'				=> $item->id,
+					'text_id'			=> $item->text_id,
+					'name'				=> $item->name,
+					'trial'				=> $item->trial,
+					'trial_count'		=> $item->trial_count,
+					'interval'			=> $item->interval,
+					'interval_count'	=> $item->interval_count,
+					'price'				=> $item->price,
+					'setup_price'		=> $item->setup_price,
+					'start_time'		=> $item->start_time,
+					'group_name'		=> $item->group_name
 				);
 
 			$template->restoreXML();
@@ -598,6 +612,7 @@ class paypal extends Module {
 					'price'				=> $item->price,
 					'setup_price'		=> $item->setup_price,
 					'start_time'		=> $item->start_time,
+					'group_name'		=> $item->group_name,
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
