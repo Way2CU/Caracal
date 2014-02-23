@@ -69,6 +69,9 @@ abstract class PaymentMethod {
 	/**
 	 * Get list of plans for recurring payments.
 	 *
+	 * Plan groups, if not empty, are used to group plans. When creating
+	 * new recurring payment all plans from the same group will be canceled.
+	 *
 	 * $result = array(
 	 * 			'text_id' => array(
 	 * 				'name'				=> array(),
@@ -79,7 +82,8 @@ abstract class PaymentMethod {
 	 * 				'price'				=> 13,
 	 * 				'setup_price'		=> 0,
 	 * 				'start_time'		=> time(),
-	 * 				'end_time'			=> time() + (365 * 24 * 60 * 60)
+	 * 				'end_time'			=> time() + (365 * 24 * 60 * 60),
+	 * 				'group'				=> ''
 	 * 			)
 	 * 		);
 	 *
@@ -123,4 +127,12 @@ abstract class PaymentMethod {
 	 * @return string
 	 */
 	abstract public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url);
+
+	/**
+	 * Cancel existing recurring payment.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	abstract public function cancel_recurring_payment($transaction);
 }
