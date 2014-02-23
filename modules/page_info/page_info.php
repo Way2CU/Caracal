@@ -393,7 +393,8 @@ class page_info extends Module {
 			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
 
 			if (is_object($item)) {
-				$data = explode("\n", utf8_wordwrap($item->content[$language], 150, "\n", true));
+				$content = strip_tags(Markdown($item->content[$language]));
+				$data = explode("\n", utf8_wordwrap($content, 150, "\n", true));
 
 				if (count($data) > 0)
 					$this->page_description = $data[0];
