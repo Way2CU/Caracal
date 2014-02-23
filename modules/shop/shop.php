@@ -22,6 +22,7 @@ require_once('units/shop_transactions_handler.php');
 require_once('units/shop_warehouse_handler.php');
 require_once('units/shop_transaction_items_manager.php');
 require_once('units/shop_transaction_plans_manager.php');
+require_once('units/shop_recurring_payments_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_delivery_address_manager.php');
 require_once('units/shop_related_items_manager.php');
@@ -67,10 +68,31 @@ class User {
 
 
 class RecurringPayment {
+	// interval units
 	const DAY = 0;
 	const WEEK = 1;
 	const MONTH = 2;
 	const YEAR = 3;
+
+	// status
+	const PENDING = 0;
+	const ACTIVE = 1;
+	const SKIPPED = 2;
+	const FAILED = 3;
+	const SUSPENDED = 4;
+	const CANCELED = 5;
+	const EXPIRED = 6;
+
+	// status to signal
+	public static $signals = array(
+			self::PENDING => 'recurring-payment-pending',
+			self::ACTIVE => 'recurring-payment',
+			self::SKIPPED => 'recurring-payment-skipped',
+			self::FAILED => 'recurring-payment-failed',
+			self::SUSPENDED => 'recurring-payment-suspended',
+			self::CANCELED => 'recurring-payment-canceled',
+			self::EXPIRED => 'recurring-payment-expired'
+		);
 }
 
 
@@ -107,6 +129,10 @@ class shop extends Module {
 		$this->event_handler->registerEvent('shopping-cart-changed');
 		$this->event_handler->registerEvent('before-checkout');
 		$this->event_handler->registerEvent('payment-completed');
+
+		// register recurring events
+		foreach (RecurringPayment::$signals as $status => $signal_name)
+			$this->event_handler->registerEvent($signal_name);
 
 		// load module style and scripts
 		if (class_exists('head_tag') && $section != 'backend') {
@@ -483,6 +509,10 @@ class shop extends Module {
 					$this->setRecurringPlan($params, $children);
 					break;
 
+				case 'cancel_recurring_plan':
+					$this->cancelRecurringPlan($params, $children);
+					break;
+
 				case 'include_scripts':
 					$this->includeScripts($params, $children);
 					break;
@@ -616,7 +646,7 @@ class shop extends Module {
 		// create shop items table
 		$sql = "
 			CREATE TABLE `shop_items` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`id` int NOT NULL AUTO_INCREMENT,
 				`uid` VARCHAR(13) NOT NULL,";
 
 		foreach($list as $language)
@@ -626,17 +656,17 @@ class shop extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .= "
-				`gallery` INT(11) NOT NULL,
-				`manufacturer` INT(11) NOT NULL,
-				`size_definition` INT(11) NULL,
+				`gallery` INT NOT NULL,
+				`manufacturer` INT NOT NULL,
+				`size_definition` INT NULL,
 				`colors` VARCHAR(255) NOT NULL DEFAULT '',
-				`author` INT(11) NOT NULL,
-				`views` INT(11) NOT NULL,
+				`author` INT NOT NULL,
+				`views` INT NOT NULL,
 				`price` DECIMAL(8,2) NOT NULL,
 				`tax` DECIMAL(3,2) NOT NULL,
 				`weight` DECIMAL(8,2) NOT NULL,
-				`votes_up` INT(11) NOT NULL,
-				`votes_down` INT(11) NOT NULL,
+				`votes_up` INT NOT NULL,
+				`votes_down` INT NOT NULL,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				`priority` INT(4) NOT NULL DEFAULT '5',
 				`visible` BOOLEAN NOT NULL DEFAULT '1',
@@ -652,8 +682,8 @@ class shop extends Module {
 		// create shop currencies table
 		$sql = "
 			CREATE TABLE `shop_item_membership` (
-				`category` INT(11) NOT NULL,
-				`item` INT(11) NOT NULL,
+				`category` INT NOT NULL,
+				`item` INT NOT NULL,
 				KEY `category` (`category`),
 				KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -662,8 +692,8 @@ class shop extends Module {
 		// create table for related shop items
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `shop_related_items` (
-				`item` int(11) NOT NULL,
-				`related` int(11) NOT NULL,
+				`item` INT NOT NULL,
+				`related` INT NOT NULL,
 				KEY `item` (`item`,`related`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		$db->query($sql);
@@ -671,7 +701,7 @@ class shop extends Module {
 		// create shop currencies tableshop_related_items
 		$sql = "
 			CREATE TABLE `shop_currencies` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`id` INT NOT NULL AUTO_INCREMENT,
 				`currency` VARCHAR(5) NOT NULL,
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -680,7 +710,7 @@ class shop extends Module {
 		// create shop item sizes table
 		$sql = "
 			CREATE TABLE `shop_item_sizes` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`id` INT NOT NULL AUTO_INCREMENT,
 				`name` VARCHAR(25) NOT NULL,
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -689,8 +719,8 @@ class shop extends Module {
 		// create shop item size values table
 		$sql = "
 			CREATE TABLE `shop_item_size_values` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`definition` int(11) NOT NULL,";
+				`id` INT NOT NULL AUTO_INCREMENT,
+				`definition` INT NOT NULL,";
 				
 		foreach($list as $language)
 			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
@@ -703,10 +733,10 @@ class shop extends Module {
 		// create shop categories table
 		$sql = "
 			CREATE TABLE `shop_categories` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`id` INT NOT NULL AUTO_INCREMENT,
 				`text_id` VARCHAR(32) NOT NULL,
-				`parent` INT(11) NOT NULL DEFAULT '0',
-				`image` INT(11),";
+				`parent` INT NOT NULL DEFAULT '0',
+				`image` INT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
@@ -723,7 +753,7 @@ class shop extends Module {
 		
 		// create shop buyers table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyers` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `id` INT NOT NULL AUTO_INCREMENT,
 				  `first_name` varchar(64) NOT NULL,
 				  `last_name` varchar(64) NOT NULL,
 				  `email` varchar(127) NOT NULL,
@@ -731,7 +761,7 @@ class shop extends Module {
 				  `validated` BOOLEAN NOT NULL DEFAULT '0',
 				  `guest` BOOLEAN NOT NULL DEFAULT '0',
 				  `uid` varchar(50) NOT NULL,
-				  `system_user` int(8) NULL,
+				  `system_user` int NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `system_user` (`system_user`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -739,8 +769,8 @@ class shop extends Module {
 		
 		// create shop buyer addresses table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_delivery_address` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
-				  `buyer` int(11) NOT NULL,
+				  `id` INT NOT NULL AUTO_INCREMENT,
+				  `buyer` INT NOT NULL,
 				  `name` varchar(128) NOT NULL,
 				  `street` varchar(200) NOT NULL,
 				  `street2` varchar(200) NOT NULL,
@@ -756,13 +786,13 @@ class shop extends Module {
 		
 		// create shop transactions table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
-				  `buyer` int(11) NOT NULL,
-				  `address` int(11) NOT NULL,
+				  `id` INT NOT NULL AUTO_INCREMENT,
+				  `buyer` INT NOT NULL,
+				  `address` INT NOT NULL,
 				  `uid` varchar(30) NOT NULL,
 				  `type` smallint(6) NOT NULL,
 				  `status` smallint(6) NOT NULL,
-				  `currency` int(11) NOT NULL,
+				  `currency` INT NOT NULL,
 				  `handling` decimal(8,2) NOT NULL,
 				  `shipping` decimal(8,2) NOT NULL,
 				  `weight` decimal(4,2) NOT NULL,
@@ -780,12 +810,12 @@ class shop extends Module {
 		
 		// create shop transaction items table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_items` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
-				  `transaction` int(11) NOT NULL,
-				  `item` int(11) NOT NULL,
+				  `id` INT NOT NULL AUTO_INCREMENT,
+				  `transaction` INT NOT NULL,
+				  `item` INT NOT NULL,
 				  `price` DECIMAL(8,2) NOT NULL,
 				  `tax` DECIMAL(8,2) NOT NULL,
-				  `amount` int(11) NOT NULL,
+				  `amount` INT NOT NULL,
 				  `description` varchar(500) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `transaction` (`transaction`),
@@ -795,13 +825,13 @@ class shop extends Module {
 
 		// create shop transaction plans table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_plans` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
-				  `transaction` int(11) NOT NULL,
+				  `id` int NOT NULL AUTO_INCREMENT,
+				  `transaction` int NOT NULL,
 				  `plan_name` varchar(64) NOT NULL,
-				  `trial` int(11) NOT NULL,
-				  `trial_count` int(11) NOT NULL,
-				  `interval` int(11) NOT NULL,
-				  `interval_count` int(11) NOT NULL,
+				  `trial` int NOT NULL,
+				  `trial_count` int NOT NULL,
+				  `interval` int NOT NULL,
+				  `interval_count` int NOT NULL,
 				  `start_time` timestamp NULL,
 				  `end_time` timestamp NULL,
 				  PRIMARY KEY (`id`),
@@ -809,10 +839,22 @@ class shop extends Module {
 				  KEY `plan_name` (`plan_name`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
+
+		// create show recurring payments table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_recurring_payments` (
+				  `id` INT NOT NULL AUTO_INCREMENT,
+				  `plan` INT NOT NULL,
+				  `amount` DECIMAL(8,2) NOT NULL,
+				  `status` INT NOT NULL, 
+				  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				  PRIMARY KEY (`id`),
+				  KEY `index_by_plan` (`plan`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
 		
 		// create shop stock table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_warehouse` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `id` int NOT NULL AUTO_INCREMENT,
 				  `name` varchar(60) NOT NULL,
 				  `street` varchar(200) NOT NULL,
 				  `street2` varchar(200) NOT NULL,
@@ -826,10 +868,10 @@ class shop extends Module {
 
 		// create shop stock table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_stock` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,
-				  `item` int(11) NOT NULL,
-				  `size` int(11) DEFAULT NULL,
-				  `amount` int(11) NOT NULL,
+				  `id` int NOT NULL AUTO_INCREMENT,
+				  `item` int NOT NULL,
+				  `size` int DEFAULT NULL,
+				  `amount` int NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -837,13 +879,13 @@ class shop extends Module {
 
 		// create shop manufacturers table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_manufacturers` (
-				  `id` int(11) NOT NULL AUTO_INCREMENT,";
+				  `id` int NOT NULL AUTO_INCREMENT,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
 
 		$sql .= " `web_site` varchar(255) NOT NULL,
-				  `logo` int(11) NOT NULL,
+				  `logo` int NOT NULL,
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
@@ -867,6 +909,7 @@ class shop extends Module {
 					'shop_transactions',
 					'shop_transaction_items',
 					'shop_transaction_plans',
+					'shop_recurring_payments',
 					'shop_warehouse',
 					'shop_stock',
 					'shop_related_items',
@@ -1063,6 +1106,52 @@ class shop extends Module {
 	}
 
 	/**
+	 * Cancel recurring payment plan for specified user or transaction.
+	 * If not provided system will try to find information for currently
+	 * logged user.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 * @return boolean
+	 */
+	private function cancelRecurringPlan($tag_params, $children) {
+		$result = false;
+		$user_id = null;
+		$transaction_id = null;
+
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
+
+		// try to get user id
+		if (isset($tag_params['user']))
+			$user_id = fix_id($tag_params['user']);
+
+		if (is_null($user_id) && $_SESSION['logged'])
+			$user_id = $_SESSION['uid'];
+
+		// try to get transaction id
+		if (isset($tag_params['transaction']))
+			$transaction_id = fix_chars($tag_params['transaction']);
+
+		if (is_null($transaction_id) && !is_null($user_id)) {
+			$buyer = $buyer_manager->getSingleItem(
+										$buyer_manager->getFieldNames(),
+										array('system_user' => $user_id)
+									);
+
+			// we got the buyer based on user id, now get the transaction id
+			if (is_object($buyer)) {
+				$transaction = $transaction_manager->getSingleItem(
+										$transaction_manager->getFieldNames(),
+										array('buyer' => $buyer->id)
+									);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Set transaction status.
 	 *
 	 * @param string $transaction_id
@@ -1081,7 +1170,10 @@ class shop extends Module {
 
 		// set status of transaction
 		if (is_object($transaction)) {
-			$manager->updateData(array('status' => $status), array('id' => $transaction->id));
+			$manager->updateData(
+							array('status' => $status),
+							array('id' => $transaction->id)
+						);
 			$result = true;
 		
 			// trigger event
@@ -1114,6 +1206,72 @@ class shop extends Module {
 			$manager->updateData(array('token' => $token), array('id' => $transaction->id));
 			$result = true;
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Add recurring payment for specified plan.
+	 * Returns true if new recurring payment was added for
+	 * specified transaction.
+	 *
+	 * @param integer $plan_id
+	 * @param float $amount
+	 * @param integer $status
+	 * @return boolean
+	 */
+	public function addRecurringPayment($plan_id, $amount, $status) {
+		$result = false;
+
+		// get managers
+		$manager = ShopRecurringPaymentsManager::getInstance();
+		$plan_manager = ShopTransactionPlansManager::getInstance();
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
+
+		// get transaction and associated plan
+		$plan = $plan_manager->getSingleItem(
+									$plan_manager->getFieldNames(),
+									array('id' => $plan_id)
+								);
+
+		// plan id is not valid
+		if (!is_object($plan))
+			return $result;
+
+		// insert new data
+		$data = array(
+					'plan'		=> $plan->id,
+					'amount'	=> $amount,
+					'status'	=> $status
+				);
+
+		$manager->insertData($data);
+		$payment_id = $manager->getInsertedID();
+		$result = true;
+
+		// get newly inserted data
+		$payment = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array('id' => $payment_id)
+								);
+
+		// get transaction and buyer
+		$transaction = $transaction_manager->getSingleItem(
+									array('buyer'),
+									array('id' => $plan->transaction)
+								);
+
+		$buyer = $buyer_manager->getSingleItem(
+									$buyer_manager->getFieldNames(),
+									array('id' => $transaction->buyer)
+								);
+
+		// trigger event
+		$this->event_handler->trigger(
+									RecurringPayment::$signals[$status],
+									$buyer, $plan, $payment
+								);
 
 		return $result;
 	}
@@ -2094,6 +2252,9 @@ class shop extends Module {
 							'guest'			=> 1
 						);
 
+					if ($_SESSION['logged'])
+						$data['system_user'] = $_SESSION['uid'];
+
 					// include uid if specified
 					if (!is_null($uid)) {
 						$conditions['uid'] = $uid;
@@ -2370,6 +2531,9 @@ class shop extends Module {
 
 			} else {
 				// create new buyer
+				if (!isset($buyer_data['system_user']) && $_SESSION['logged'])
+					$buyer_data['system_user'] = $_SESSION['uid'];
+
 				$buyer_manager->insertData($buyer_data);
 				$buyer_id = $buyer_manager->getInsertedID();
 			}
