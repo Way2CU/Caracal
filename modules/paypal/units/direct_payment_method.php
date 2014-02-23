@@ -126,6 +126,18 @@ class PayPal_Direct extends PaymentMethod {
 	public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url) {
 		return '';
 	}
+
+	/**
+	 * Cancel existing recurring payment.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function cancel_recurring_payment($transaction) {
+		$result = false;
+
+		return $result;
+	}
 }
 
 ?>
