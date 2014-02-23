@@ -43,8 +43,19 @@ function MobileMenu() {
 		// connect events in main menu
 		self._menu.find('a').click(self._handle_menu_item_click);
 
+		// create menu toggle if it doesn't exist
+		var menu_toggle = self._top_bar.find('.menu');
+
+		if (menu_toggle.length == 0) {
+			menu_toggle = $('<a>');
+			menu_toggle
+					.attr('href', 'javascript: void(0);')
+					.addClass('menu')
+					.appendTo(self._top_bar);
+		}
+
 		// connect events in top bar
-		self._top_bar.find('.menu').click(self._handle_menu_button_click);
+		menu_toggle.click(self._handle_menu_button_click); else
 
 		// connect window events
 		$(window)
