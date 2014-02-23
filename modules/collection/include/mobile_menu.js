@@ -180,3 +180,9 @@ function MobileMenu() {
 }
 
 window['MobileMenu'] = MobileMenu;
+
+// try to automatically create mobile menu
+$(function() {
+	if ($('.mobile_menu').length > 0 && $('.mobile_title').length > 0)
+		new MobileMenu();
+});
