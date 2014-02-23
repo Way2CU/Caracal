@@ -31,8 +31,10 @@
 		<constant name="label_username">Username:</constant>
 		<constant name="label_password">Password:</constant>
 		<constant name="label_signature">Signature:</constant>
+		<constant name="label_handler_url">Handler URL:</constant>
 
 		<constant name="tab_api">API</constant>
+		<constant name="tab_ipn">Payment Notification</constant>
 
 		<constant name="api_setup_fee">Setup fee</constant>
 
