@@ -425,9 +425,119 @@ class paypal extends Module {
 	}
 
 	/**
+	 * Handle recurring payment IPN.
+	 *
+	 * @param object $buyer
+	 * @param string $type
+	 * @param float $amount
+	 * @return boolean
+	 */
+	private function handleRecurringIPN($buyer, $type, $amount) {
+		$result = false;
+		$shop = shop::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
+		$plan_manager = ShopTransactionPlansManager::getInstance();
+
+		// get latest transaction associated with this buyer
+		$transaction = $transaction_manager->getSingleItem(
+													array('id'),
+													array('buyer' => $buyer->id),
+													array('timestamp'),
+													false
+												);
+
+		if (!is_object($transaction)) {
+			trigger_error(
+					'PayPal: Unable to handle IPN, unable to get transaction for buyer: '.$buyer->id,
+					E_USER_WARNING
+				);
+			return;
+		}
+
+		// get plan associated with this transaction
+		$plan = $plan_manager->getSingleItem(
+									$plan_manager->getFieldNames(),
+									array('transaction' => $transaction->id)
+								);
+
+		if (!is_object($plan)) {
+			trigger_error(
+					'PayPal: Unable to handle IPN, unable to get plan for transaction: '.$transaction->id,
+					E_USER_WARNING
+				);
+			return $result;
+		}
+
+		// notification type to status relation
+		$status = array(
+				'recurring_payment' => RecurringPayment::ACTIVE,
+				'recurring_payment_expired' => RecurringPayment::EXPIRED,
+				'recurring_payment_failed' => RecurringPayment::FAILED,
+				'recurring_payment_profile_created' => RecurringPayment::PENDING,
+				'recurring_payment_profile_cancel' => RecurringPayment::CANCELED,
+				'recurring_payment_skipped' => RecurringPayment::SKIPPED,
+				'recurring_payment_suspended' => RecurringPayment::SUSPENDED,
+				'recurring_payment_suspended_due_to_max_failed_payment' => RecurringPayment::SUSPENDED
+			);
+
+		// add new recurring payment
+		$result = $shop->addRecurringPayment($plan->id, $amount, $status[$type]);
+
+		return $result;
+	}
+
+	/**
 	 * Handle IPN.
 	 */
 	private function handleIPN() {
+		if (!PayPal_Helper::validate_notification()) {
+			trigger_error(
+					'PayPal: Invalid notification received. '.json_encode($_POST),
+					E_USER_WARNING
+				);
+			return;
+		}
+
+		// get objects
+		$buyer_manager = ShopBuyersManager::getInstance();
+
+		// get data
+		$handled = false;
+		$payer_id = escape_chars($_POST['payer_id']);
+		$type = escape_chars($_POST['txn_type']);
+		$amount = escape_chars($_POST['amount']);
+
+		// get buyer
+		$buyer = $buyer_manager->getSingleItem(
+										$buyer_manager->getFieldNames(),
+										array('uid' => $payer_id)
+									);
+
+		if (!is_object($buyer)) {
+			trigger_error(
+					'PayPal: Unable to handle IPN, unknown buyer: '.$payer_id,
+					E_USER_WARNING
+				);
+			return;
+		}
+
+		// handle different notification types
+		switch ($type) {
+			case 'recurring_payment':
+			case 'recurring_payment_expired':
+			case 'recurring_payment_failed':
+			case 'recurring_payment_profile_created':
+			case 'recurring_payment_profile_cancel':
+			case 'recurring_payment_skipped':
+			case 'recurring_payment_suspended':
+			case 'recurring_payment_suspended_due_to_max_failed_payment':
+				$handled = $this->handleRecurringIPN($buyer, $type, $amount);
+				break;
+		}
+
+		// record unhandled notifications
+		if (!$handled)
+			trigger_error("PayPal: Unhandled notification '{$type}'.", E_USER_NOTICE);
 	}
 
 	/**
