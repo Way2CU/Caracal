@@ -38,6 +38,20 @@
 					/>
 				</label>
 			</div>
+
+			<div>
+				<label>
+					<span><cms:text constant="label_handler_url" module="paypal"/></span>
+					<input
+						type="text"
+						class="code"
+						value="url_Make('ipn', 'paypal')"
+						eval="value"
+						style="width: 350px;"
+						readonly="readonly"
+					/>
+				</label>
+			</div>
 		</div>
 
 		<div class="button_bar">
@@ -51,6 +65,7 @@
 	<script type="text/javascript">
 		var notebook = new Notebook('paypal_settings_notebook');
 		notebook
-			.setPageTitle(0, language_handler.getText('paypal', 'tab_api'));
+			.setPageTitle(0, language_handler.getText('paypal', 'tab_api'))
+			.setPageTitle(1, language_handler.getText('paypal', 'tab_ipn'));
 	</script>
 </document>
