@@ -178,6 +178,7 @@ class ctm extends Module {
 	private function json_FormReactor() {
 		$result = false;
 		$reactor_id = fix_chars($_REQUEST['reactor_id']);
+		$visitor_sid = fix_chars($_REQUEST['visitor_sid']);
 		$account_key = $this->settings['account_key'];
 		$account_secret = $this->settings['account_secret'];
 
@@ -206,6 +207,10 @@ class ctm extends Module {
 			$data[] = $param.'='.urlencode($value);
 		}
 
+		// add visitor session id
+		$data['visitor_sid'] = $visitor_sid;
+
+		// make query string
 		$content = implode('&', $data);
 
 		// prepare headers
