@@ -131,8 +131,10 @@ div.scrollbar_thumb.active {
 	position: fixed;
 	left: -200px;
 
+	background-color: white;
+
 	overflow: auto;
-	transition: 0.5s all;
+	transition: all 0.5s;
 }
 
 .mobile_menu.visible {
@@ -141,6 +143,18 @@ div.scrollbar_thumb.active {
 
 .mobile_menu a {
 	display: block;
+
+	padding: 0.5em;
+	padding-left: 1em;
+	padding-right: 1em;
+
+	color: #333333;
+	text-decoration: none;
+}
+
+.mobile_menu a:active {
+	color: white;
+	background-color: #333333;
 }
 
 .mobile_title {
