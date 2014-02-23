@@ -24,6 +24,7 @@ class ShopBuyersManager extends ItemManager {
 		$this->addProperty('password', 'varchar');
 		$this->addProperty('guest', 'boolean');
 		$this->addProperty('uid', 'varchar');
+		$this->addProperty('system_user', 'int');
 	}
 
 	/**
