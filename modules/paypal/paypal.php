@@ -551,41 +551,6 @@ class paypal extends Module {
 	}
 
 	/**
-	 * Tag handler for drawing a single plan.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	public function tag_Plan($tag_params, $children) {
-		$manager = PayPal_PlansManager::getInstance();
-		$conditions = array();
-
-		$template = $this->loadTemplate($tag_params, 'plan.xml');
-
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
-
-		if (is_object($item)) {
-			$params = array(
-					'id'				=> $item->id,
-					'text_id'			=> $item->text_id,
-					'name'				=> $item->name,
-					'trial'				=> $item->trial,
-					'trial_count'		=> $item->trial_count,
-					'interval'			=> $item->interval,
-					'interval_count'	=> $item->interval_count,
-					'price'				=> $item->price,
-					'setup_price'		=> $item->setup_price,
-					'start_time'		=> $item->start_time,
-					'group_name'		=> $item->group_name
-				);
-
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
-		}
-	}
-
-	/**
 	 * Tag handler for drawing multiple plans.
 	 *
 	 * @param array $tag_params
