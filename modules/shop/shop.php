@@ -128,7 +128,8 @@ class shop extends Module {
 		$this->event_handler = new EventHandler();
 		$this->event_handler->registerEvent('shopping-cart-changed');
 		$this->event_handler->registerEvent('before-checkout');
-		$this->event_handler->registerEvent('payment-completed');
+		$this->event_handler->registerEvent('transaction-completed');
+		$this->event_handler->registerEvent('transaction-canceled');
 
 		// register recurring events
 		foreach (RecurringPayment::$signals as $status => $signal_name)
@@ -471,6 +472,10 @@ class shop extends Module {
 
 				case 'show_payment_methods':
 					$this->tag_PaymentMethodsList($params, $children);
+					break;
+
+				case 'show_recurring_plan':
+					$this->tag_RecurringPlan($params, $children);
 					break;
 
 				case 'configure_search':
@@ -1130,19 +1135,103 @@ class shop extends Module {
 			$transaction_id = fix_chars($tag_params['transaction']);
 
 		if (is_null($transaction_id) && !is_null($user_id)) {
-			$buyer = $buyer_manager->getSingleItem(
-										$buyer_manager->getFieldNames(),
-										array('system_user' => $user_id)
-									);
+			$buyer = $buyer_manager->getSingleItem(array('id'), array('system_user' => $user_id));
 
 			// we got the buyer based on user id, now get the transaction id
-			if (is_object($buyer)) {
-				$transaction = $transaction_manager->getSingleItem(
-										$transaction_manager->getFieldNames(),
-										array('buyer' => $buyer->id)
-									);
+			if (is_object($buyer))
+				$transaction_id = $transaction_manager->getItemValue('id', array('buyer' => $buyer->id));
+		}
+
+		// cancel recurring plan
+		if (!is_null($transaction_id)) {
+			$transaction = $transaction_manager->getSingleItem(
+				$transaction_manager->getFieldNames(),
+				array('id' => $transaction_id)
+			);
+
+			if (is_object($transaction) && array_key_exists($transaction->payment_method, $this->payment_methods)) {
+				// get payment method and initate cancelation process
+				$payment_method = $this->payment_methods[$transaction->payment_method];
+				$result = $payment_method->cancel_recurring_plan($transaction);
+
+			} else {
+				// unknown method or transaction, log error
+				trigger_error('Shop: Unknown payment method or transaction. Unable to cancel recurring payment.', E_USER_WARNING);
 			}
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Get recurring payment plan associated with specified user. If no
+	 * user id is specified system will try to find payment plan associated
+	 * with currently logged in user.
+	 *
+	 * @param integer $user_id
+	 * @return object
+	 */
+	public function getRecurringPlan($user_id=null) {
+		$result = null;
+
+		// get managers
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
+		$plan_manager = ShopTransactionPlansManager::getInstance();
+		$recurring_manager = ShopRecurringPaymentsManager::getInstance();
+
+		// try to get currently logged user
+		if (is_null($user_id) && $_SESSION['logged']) 
+			$user_id = $_SESSION['uid'];
+
+		// we need to have a user
+		if (is_null($user_id))
+			return $result;
+
+		// get buyer
+		$buyer = $buyer_manager->getSingleItem(
+			$buyer_manager->getFieldNames(),
+			array('system_user' => $user_id)
+		);
+
+		if (!is_object($buyer)) {
+			trigger_error('Shop: Unknown buyer, can not check for recurring payment.', E_USER_NOTICE);
+			return $result;
+		}
+
+		// get all recurring payment transactions for current buyer
+		$transaction = $transaction_manager->getSingleItem(
+			array('id'),
+			array(
+				'type'		=> TransactionType::SUBSCRIPTION,
+				'status'	=> TransactionStatus::COMPLETED,
+				'buyer'		=> $buyer->id
+			),
+			array('timestamp'),
+			false  // ascending
+		);
+
+		// user doesn't have a recurring payment
+		if (!is_object($transaction))
+			return $result;
+
+		$plan = $plan_manager->getSingleItem(
+			$plan_manager->getFieldNames(),
+			array('transaction' => $transaction->id)
+		);
+
+		trigger_error($plan->plan_name);
+
+		// get last payment
+		$last_payment = $recurring_manager->getSingleItem(
+			$recurring_manager->getFieldNames(),
+			array('plan' => $plan->id),
+			array('timestamp'),
+			false  // ascending
+		);
+
+		if (is_object($last_payment) && $last_payment->status <= RecurringPayment::ACTIVE)
+			$result = $plan;
 
 		return $result;
 	}
@@ -1173,11 +1262,15 @@ class shop extends Module {
 			$result = true;
 		
 			// trigger event
-			if ($status == TransactionStatus::COMPLETED) {
-				$this->event_handler->trigger('payment-completed', $transaction);
+			switch ($status) {
+				case TransactionStatus::COMPLETED:
+					$this->event_handler->trigger('transaction-completed', $transaction);
+					unset($_SESSION['transaction']);
+					break;
 
-				// remove transaction information
-				unset($_SESSION['transaction']);
+				case TransactionStatus::CANCELED:
+					$this->event_handler->trigger('transaction-canceled', $transaction);
+					break;
 			}
 		}
 
@@ -2442,6 +2535,42 @@ class shop extends Module {
 	}
 
 	/**
+	 * Show recurring plan from specified payment method.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_RecurringPlan($tag_params, $children) {
+		$plan_name = null;
+		$payment_method = $this->getPaymentMethod($tag_params);
+
+		// we ned payment mothod to proceed
+		if (!is_object($payment_method))
+			return;
+
+		// get plan name from the parameters
+		if (isset($tag_params['plan']))
+			$plan_name = fix_chars($tag_params['plan']);
+
+		// get all the plans from payment method
+		$plans = $payment_method->get_recurring_plans();
+
+		// show plan
+		if (count($plans) > 0 && !is_null($plan_name) && isset($plans[$plan_name])) {
+			$template = $this->loadTemplate($tag_params, 'plan.xml');
+			$current_plan = $this->getRecurringPlan();
+
+			$params = $plans[$plan_name];
+			$params['selected'] = is_object($current_plan) && $current_plan->plan_name == $plan_name;
+			$params['text_id'] = $plan_name;
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
 	 * Handle drawing checkout form
 	 *
 	 * @param array $tag_params
@@ -2691,9 +2820,6 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_CompletedMessage($tag_params, $children) {
-		// kill shopping cart
-		$_SESSION['shopping_cart'] = array();
-
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
 		
