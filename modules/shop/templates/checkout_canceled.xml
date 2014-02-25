@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_var name="_HTML_401"/>
-	<html>
+	<cms:var name="_DOCTYPE"/>
+	<html lang="$language" eval="lang">
 		<head>
-			<title><_text constant="site_title" /></title>
-			<_module name="head_tag" action="print_tag"/>
+			<title><cms:text constant="site_title"/></title>
+			<cms:module name="head_tag" action="print_tag"/>
 		</head>
 
 		<body class="MainLanguageHandler::getInstance()->isRTL() ? 'rtl' : 'ltr'" eval="class">
