@@ -104,6 +104,10 @@ class paypal extends Module {
 					$this->completeExpressCheckout();
 					break;
 
+				case 'direct-checkout':
+					$this->completeDirectCheckout();
+					break;
+
 				case 'ipn':
 					$this->handleIPN();
 					break;
@@ -548,6 +552,10 @@ class paypal extends Module {
 	 */
 	private function completeExpressCheckout() {
 		$this->express_method->completeCheckout();
+	}
+
+	private function completeDirectCheckout() {
+		$this->direct_method->completeCheckout();
 	}
 
 	/**
