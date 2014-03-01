@@ -96,6 +96,23 @@ class RecurringPayment {
 }
 
 
+class CardType {
+	const VISA = 0;
+	const MASTERCARD = 1;
+	const DISCOVER = 2;
+	const AMERICAN_EXPRESS = 3;
+	const MAESTRO = 4;
+
+	public static $names = array(
+			self::VISA => 'Visa',
+			self::MASTERCARD => 'MasterCard',
+			self::DISCOVER => 'Discover',
+			self::AMERICAN_EXPRESS => 'American Express',
+			self::MAESTRO => 'Maestro'
+		);
+}
+
+
 class PaymentMethodError extends Exception {};
 
 
@@ -1220,8 +1237,6 @@ class shop extends Module {
 			array('transaction' => $transaction->id)
 		);
 
-		trigger_error($plan->plan_name);
-
 		// get last payment
 		$last_payment = $recurring_manager->getSingleItem(
 			$recurring_manager->getFieldNames(),
@@ -2095,13 +2110,19 @@ class shop extends Module {
 		// get billing information
 		if (!$payment_method->provides_information()) {
 			$fields = array(
-				'billing_full_name', 'billing_credit_card', 'billing_expire_month',
+				'billing_full_name', 'billing_card_type', 'billing_credit_card', 'billing_expire_month',
 				'billing_expire_year', 'billing_cvv' 
 			);
 
 			foreach($fields as $field)
-				if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field]))
+				if (isset($_REQUEST[$field]))
 					$result[$field] = fix_chars($_REQUEST[$field]);
+
+			// remove dashes and empty spaces
+			$result['billing_credit_card'] = str_replace(
+				array(' ', '-', '_'), '',
+				$result['billing_credit_card']
+			);
 		}
 
 		return $result;
@@ -2603,7 +2624,7 @@ class shop extends Module {
 			// get billing information
 			$billing_information = $this->getBillingInformation($payment_method);
 			$billing_required = array(
-				'billing_full_name', 'billing_credit_card', 'billing_expire_month',
+				'billing_full_name', 'billing_card_type', 'billing_credit_card', 'billing_expire_month',
 				'billing_expire_year', 'billing_cvv' 
 			);
 			$bad_fields = $this->checkFields($billing_information, $billing_required, $bad_fields);
@@ -2729,6 +2750,8 @@ class shop extends Module {
 			// no information available, show form
 			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
+
+			$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
 
 			// get fixed country if set
 			$fixed_country = '';
@@ -2933,6 +2956,27 @@ class shop extends Module {
 					'id'		=> $id,
 					'text'		=> $text,
 					'selected'	=> $id == $selected
+				);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Handle drawing of supported credit cards.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CardType($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'card_type.xml');
+
+		foreach (CardType::$names as $id => $name) {
+			$params = array(
+					'id'	=> $id,
+					'name'	=> $name
 				);
 
 			$template->restoreXML();
