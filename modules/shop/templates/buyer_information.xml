@@ -380,6 +380,13 @@
 						</label>
 						<hr/>
 						<label>
+							<span><cms:text constant="label_credit_card_type" module="shop"/></span>
+							<select name="billing_card_type" data-required="1">
+								<option/>
+								<cms:card_type/>
+							</select>
+						</label>
+						<label>
 							<span><cms:text constant="label_credit_card" module="shop"/></span>
 							<input
 								class="in_array('billing_credit_card', $params['bad_fields']) ? 'bad' : ''" 
