@@ -167,6 +167,7 @@
 		<constant name="label_no_estimate">No date estimate available.</constant>
 		<constant name="label_estimated_time">Estimated delivery:</constant>
 		<constant name="label_credit_card">Card number:</constant>
+		<constant name="label_credit_card_type">Card type:</constant>
 		<constant name="label_expiration_date">Expiration date:</constant>
 		<constant name="label_cvv">Security code:</constant>
 		<constant name="label_cvv_question">What is this?</constant>
