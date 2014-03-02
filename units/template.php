@@ -158,9 +158,13 @@ class TemplateHandler {
 			$tag = $tag_array[$i];
 
 			// if tag has eval set
-			if (isset($tag->tagAttrs['eval'])) {
+			if (isset($tag->tagAttrs['cms:eval']) || isset($tag->tagAttrs['eval'])) {
 				// get evaluation values
-				$eval_params = explode(',', $tag->tagAttrs['eval']);
+				if (isset($tag->tagAttrs['eval']))
+					$value = $tag->tagAttrs['eval']; else
+					$value = $tag->tagAttrs['cms:eval'];
+
+				$eval_params = explode(',', $value);
 
 				foreach ($eval_params as $param) {
 					// prepare module includes for evaluation
@@ -175,7 +179,31 @@ class TemplateHandler {
 				}
 
 				// unset param
-				unset($tag->tagAttrs['eval']);
+				unset($tag->tagAttrs['cms:eval']);
+			}
+
+			if (isset($tag->tagAttrs['cms:optional'])) {
+				// get evaluation values
+				$optional_params = explode(',', $tag->tagAttrs['cms:eval']);
+
+				foreach ($eval_params as $param) {
+					// prepare module includes for evaluation
+					$settings = array();
+					if (!is_null($this->module))
+						$settings = $this->module->settings;
+
+					$params = $this->params;
+					$to_eval = $tag->tagAttrs[$param];
+
+					$value = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+
+					if ($value === false)
+						unset($tag->tagAttrs[$param]); else
+						$tag->tagAttrs[$param] = $value;
+				}
+
+				// unset param
+				unset($tag->tagAttrs['cms:eval']);
 			}
 
 			// check if specified tag shouldn't be cached
