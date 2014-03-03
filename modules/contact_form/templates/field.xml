@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label
+		class="in_array($params['type'], array('checkbox', 'radio')) ? $params['type'] : false"
+		cms:optional="class"
+		>
+		<span><cms:var name="$params['label'][$language]"/></span>
+		<cms:choice value="$params['type']" cms:eval="value">
+			<!-- Hidden -->
+			<option value="hidden" default="0">
+				<input
+					name="$params['name']"
+					type="hidden"
+					value="$params['value']"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Radio button -->
+			<option value="radio" default="0">
+				<input
+					name="$params['name']"
+					type="radio"
+					value="$params['value']"
+					checked="$params['checked'] ? 'checked' : false"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="checked,required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Checkbox -->
+			<option value="checkbox" default="0">
+				<input
+					name="$params['name']"
+					type="checkbox"
+					checked="$params['checked'] ? 'checked' : false"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="checked,required,disabled"
+					cms:eval="name"
+				/>
+			</option>
+
+			<!-- Color -->
+			<option value="color" default="0">
+				<input
+					name="$params['name']"
+					type="color"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Date -->
+			<option value="date" default="0">
+				<input
+					name="$params['name']"
+					type="date"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Month and year -->
+			<option value="month" default="0">
+				<input
+					name="$params['name']"
+					type="month"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Date and time -->
+			<option value="datetime" default="0">
+				<input
+					name="$params['name']"
+					type="datetime"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Date and time (local) -->
+			<option value="datetime-local" default="0">
+				<input
+					name="$params['name']"
+					type="datetime-local"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Time -->
+			<option value="time" default="0">
+				<input
+					name="$params['name']"
+					type="time"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Week -->
+			<option value="week" default="0">
+				<input
+					name="$params['name']"
+					type="week"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- File -->
+			<option value="file" default="0">
+				<input
+					name="$params['name']"
+					type="file"
+					value="$params['value']"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- URL -->
+			<option value="url" default="0">
+				<input
+					name="$params['name']"
+					type="url"
+					placeholder="$params['placeholder'][$language]"
+					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					maxlength="$params['max_length']"
+					value="$params['value']"
+					cms:optional="required,disabled"
+					cms:eval="name,placeholder,autocomplete,value"
+				/>
+			</option>
+
+			<!-- email -->
+			<option value="email" default="0">
+				<input
+					name="$params['name']"
+					type="email"
+					placeholder="$params['placeholder'][$language]"
+					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					maxlength="$params['max_length']"
+					value="$params['value']"
+					cms:optional="required,disabled"
+					cms:eval="name,placeholder,autocomplete,value"
+				/>
+			</option>
+
+			<!-- Number -->
+			<option value="number" default="0">
+				<input
+					name="$params['name']"
+					type="number"
+					placeholder="$params['placeholder'][$language]"
+					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					min="$params['minimum']"
+					max="$params['maximum']"
+					value="$params['value']"
+					cms:optional="required,disabled"
+					cms:eval="name,placeholder,autocomplete,value,min,max"
+				/>
+			</option>
+
+			<!-- Range -->
+			<option value="range" default="0">
+				<input
+					name="$params['name']"
+					type="range"
+					placeholder="$params['placeholder'][$language]"
+					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					min="$params['minimum']"
+					max="$params['maximum']"
+					value="$params['value']"
+					cms:optional="required,disabled"
+					cms:eval="name,placeholder,autocomplete,value,min,max"
+				/>
+			</option>
+
+			<!-- Password -->
+			<option value="password" default="0">
+				<input
+					name="$params['name']"
+					type="password"
+					placeholder="$params['placeholder'][$language]"
+					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					maxlength="$params['max_length']"
+					cms:optional="required,disabled"
+					cms:eval="name,placeholder,autocomplete"
+				/>
+			</option>
+
+			<!-- Text input -->
+			<option value="text" default="1">
+				<input
+					name="$params['name']"
+					type="text"
+					placeholder="$params['placeholder'][$language]"
+					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					maxlength="$params['max_length']"
+					pattern="!empty($params['pattern']) ? $params['pattern'] : false"
+					cms:optional="required,pattern,disabled"
+					cms:eval="name,placeholder,data-required,autocomplete,maxlength"
+				/>
+			</option>
+		</cms:choice>
+	</label>
+</document>
