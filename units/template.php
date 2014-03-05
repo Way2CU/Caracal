@@ -184,9 +184,9 @@ class TemplateHandler {
 
 			if (isset($tag->tagAttrs['cms:optional'])) {
 				// get evaluation values
-				$optional_params = explode(',', $tag->tagAttrs['cms:eval']);
+				$optional_params = explode(',', $tag->tagAttrs['cms:optional']);
 
-				foreach ($eval_params as $param) {
+				foreach ($optional_params as $param) {
 					// prepare module includes for evaluation
 					$settings = array();
 					if (!is_null($this->module))
@@ -197,13 +197,13 @@ class TemplateHandler {
 
 					$value = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 
-					if ($value === false)
+					if ($value == false)
 						unset($tag->tagAttrs[$param]); else
 						$tag->tagAttrs[$param] = $value;
 				}
 
 				// unset param
-				unset($tag->tagAttrs['cms:eval']);
+				unset($tag->tagAttrs['cms:optional']);
 			}
 
 			// check if specified tag shouldn't be cached
