@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form
+		action="$params['action']"
+		enctype="$params['has_files'] ? 'multipart/form-data' : false"
+		cms:optional="enctype"
+		cms:eval="action"
+		>
+
+		<!-- Form ID -->
+		<input type="hidden" name="form_id" value="$params['id']" cms:eval="value"/>
+
+		<!-- Fields -->
+		<cms:fields
+			form="$params['id']"
+			cms:eval="form"
+			/>
+
+		<!-- Controls -->
+		<cms:if condition="$params['show_controls']">
+			<div class="controls">
+				<cms:if condition="$params['show_submit']">
+					<button type="submit" class="submit"><cms:text constant="send"/></button>
+				</cms:if>
+
+				<cms:if condition="$params['show_reset']">
+					<button type="reset" class="reset"><cms:text constant="reset"/></button>
+				</cms:if>
+
+				<cms:if condition="$params['show_cancel']">
+					<button type="button" class="cancel"><cms:text constant="cancel"/></button>
+				</cms:if>
+			</div>
+		</cms:if>
+	</form>
+</document>

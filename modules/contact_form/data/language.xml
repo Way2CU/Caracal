@@ -4,21 +4,36 @@
 	<language short="en">
 		<constant name="menu_contact">Contact form</constant>
 		<constant name="menu_settings">Configure defaults</constant>
+		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
 	
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
 		<constant name="message_error_no_address">Error sending data! No default recipient was specified by the system.</constant>
 		<constant name="message_saved">Configuration was saved!</constant>
-		<constant name="message_template_saved">New template was saved!</constant>
+		<constant name="message_template_saved">Template data was saved!</constant>
 		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
 		<constant name="message_template_deleted">Template was removed from the system!</constant>
+		<constant name="message_form_saved">Form data was saved.</constant>
+		<constant name="message_form_delete">You are about to remove the following form. All data collected for this form and its fields will be removed with it. Are you sure?</constant>
+		<constant name="message_form_deleted">Form and its data was removed from the system.</constant>
+		<constant name="message_field_saved">Form field data was saved.</constant>
+		<constant name="message_field_delete">You are about to remove the follwing field from the form. Are you sure?</constant>
+		<constant name="message_field_deleted">Form field was removed.</constant>
 		
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
 		<constant name="title_templates_edit">Contact form: Edit template</constant>
 		<constant name="title_templates_delete">Contact form: Delete template</constant>
 		<constant name="title_templates_manage">Contact form: Manage templates</constant>
+		<constant name="title_forms_manage">Contact form: Manage forms</constant>
+		<constant name="title_forms_add">Contact form: Add form</constant>
+		<constant name="title_forms_edit">Contact form: Edit form</constant>
+		<constant name="title_forms_delete">Contact form: Delete form</constant>
+		<constant name="title_form_fields">Contact form: Manage fields</constant>
+		<constant name="title_fields_add">Contact form: Add field</constant>
+		<constant name="title_fields_edit">Contact form: Edit field</constant>
+		<constant name="title_fields_delete">Contact form: Delete field</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -47,11 +62,54 @@
 		<constant name="label_smtp_password">Password:</constant>
 		<constant name="label_save_copy">Save copy of sent emails</constant>
 		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
+		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_action">Action:</constant>
+		<constant name="label_show_submit">Show submit button?</constant>
+		<constant name="label_show_reset">Show reset button?</constant>
+		<constant name="label_show_cancel">Show cancel button?</constant>
+		<constant name="label_template">Email template to use:</constant>
+		<constant name="label_label">Label:</constant>
+		<constant name="label_placeholder">Placeholder:</constant>
+		<constant name="label_minimum">Minimum:</constant>
+		<constant name="label_maximum">Maximum:</constant>
+		<constant name="label_type">Field type:</constant>
+		<constant name="label_value"><![CDATA[Predefined value <small>(use 0 or 1 for checkboxes)</small>:]]></constant>
+		<constant name="label_length">Max. length:</constant>
+		<constant name="label_pattern"><![CDATA[Pattern for matching <small>(regexp)</small>:]]></constant>
+		<constant name="label_disabled">Field is disabled?</constant>
+		<constant name="label_required">Require user to enter value?</constant>
+		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+
+		<constant name="field_hidden">Hidden</constant>
+		<constant name="field_radio">Radio button</constant>
+		<constant name="field_checkbox">Checkbox</constant>
+		<constant name="field_color">Color selection</constant>
+		<constant name="field_date">Date</constant>
+		<constant name="field_month">Month</constant>
+		<constant name="field_datetime">Date and time</constant>
+		<constant name="field_datetime-local">Local date and time</constant>
+		<constant name="field_time">Time</constant>
+		<constant name="field_week">Week and year</constant>
+		<constant name="field_file">File</constant>
+		<constant name="field_url">URL</constant>
+		<constant name="field_email">Email</constant>
+		<constant name="field_number">Number</constant>
+		<constant name="field_range">Range</constant>
+		<constant name="field_password">Password</constant>
+		<constant name="field_text">Text</constant>
+		<constant name="field_textarea">Multiline text</constant>
+		<constant name="field_honey-pot">Honey pot text</constant>
+
+		<constant name="legend_controls">Form controls</constant>
+		<constant name="legend_range">Range</constant>
+
+		<constant name="fields">Fields</constant>
 	</language>
 
 	<language short="he">
 		<constant name="menu_contact">טופס יצירת קשר</constant>
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>
+		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
 
 		<constant name="message_sent">מידע נשלח בהצלחה!</constant>
@@ -61,12 +119,23 @@
 		<constant name="message_template_saved">New template was saved!</constant>
 		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
 		<constant name="message_template_deleted">Template was removed from the system!</constant>
+		<constant name="message_form_saved">Form data was saved.</constant>
+		<constant name="message_form_delete">You are about to remove the following form. All data collected for this form and its fields will be removed with it. Are you sure?</constant>
+		<constant name="message_form_deleted">Form and its data was removed from the system.</constant>
 		
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
 		<constant name="title_templates_edit">Contact form: Edit template</constant>
 		<constant name="title_templates_delete">Contact form: Delete template</constant>
 		<constant name="title_templates_manage">Contact form: Manage templates</constant>
+		<constant name="title_forms_manage">Contact form: Manage forms</constant>
+		<constant name="title_forms_add">Contact form: Add form</constant>
+		<constant name="title_forms_edit">Contact form: Edit form</constant>
+		<constant name="title_forms_delete">Contact form: Delete form</constant>
+		<constant name="title_form_fields">Contact form: Manage fields</constant>
+		<constant name="title_fields_add">Contact form: Add field</constant>
+		<constant name="title_fields_edit">Contact form: Edit field</constant>
+		<constant name="title_fields_delete">Contact form: Delete field</constant>
 
 		<constant name="tab_sender">שולח</constant>
 		<constant name="tab_recipient">כתובת מקבל</constant>
@@ -86,12 +155,55 @@
 		<constant name="label_smtp_username">שם משתמש:</constant>
 		<constant name="label_smtp_password">סיסמא:</constant>
 		<constant name="label_save_copy">Save copy of sent emails</constant>
-		<constant name="label_save_location">Location for saved emails:</constant>
+		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
+		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_action">Action:</constant>
+		<constant name="label_show_submit">Show submit button?</constant>
+		<constant name="label_show_reset">Show reset button?</constant>
+		<constant name="label_show_cancel">Show cancel button?</constant>
+		<constant name="label_template">Email template to use:</constant>
+		<constant name="label_label">Label:</constant>
+		<constant name="label_placeholder">Placeholder:</constant>
+		<constant name="label_minimum">Minimum:</constant>
+		<constant name="label_maximum">Maximum:</constant>
+		<constant name="label_type">Field type:</constant>
+		<constant name="label_value"><![CDATA[Predefined value <small>(use 0 or 1 for checkboxes)</small>:]]></constant>
+		<constant name="label_length">Max. length:</constant>
+		<constant name="label_pattern"><![CDATA[Pattern for matching <small>(regexp)</small>:]]></constant>
+		<constant name="label_disabled">Field is disabled?</constant>
+		<constant name="label_required">Require user to enter value?</constant>
+		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+
+		<constant name="field_hidden">Hidden</constant>
+		<constant name="field_radio">Radio button</constant>
+		<constant name="field_checkbox">Checkbox</constant>
+		<constant name="field_color">Color selection</constant>
+		<constant name="field_date">Date</constant>
+		<constant name="field_month">Month</constant>
+		<constant name="field_datetime">Date and time</constant>
+		<constant name="field_datetime-local">Local date and time</constant>
+		<constant name="field_time">Time</constant>
+		<constant name="field_week">Week and year</constant>
+		<constant name="field_file">File</constant>
+		<constant name="field_url">URL</constant>
+		<constant name="field_email">Email</constant>
+		<constant name="field_number">Number</constant>
+		<constant name="field_range">Range</constant>
+		<constant name="field_password">Password</constant>
+		<constant name="field_text">Text</constant>
+		<constant name="field_textarea">Multiline text</constant>
+		<constant name="field_honey-pot">Honey pot text</constant>
+
+		<constant name="legend_controls">Form controls</constant>
+		<constant name="legend_range">Range</constant>
+
+		<constant name="fields">Fields</constant>
 	</language>
 
 	<language short="sr">
 		<constant name="menu_contact">Kontakt</constant>
 		<constant name="menu_settings">Podešavanje formulara</constant>
+		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
 	
 		<constant name="message_sent">Podaci su uspešno poslati!</constant>
@@ -101,12 +213,23 @@
 		<constant name="message_template_saved">New template was saved!</constant>
 		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
 		<constant name="message_template_deleted">Template was removed from the system!</constant>
+		<constant name="message_form_saved">Form data was saved.</constant>
+		<constant name="message_form_delete">You are about to remove the following form. All data collected for this form and its fields will be removed with it. Are you sure?</constant>
+		<constant name="message_form_deleted">Form and its data was removed from the system.</constant>
 		
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
 		<constant name="title_templates_edit">Contact form: Edit template</constant>
 		<constant name="title_templates_delete">Contact form: Delete template</constant>
 		<constant name="title_templates_manage">Contact form: Manage templates</constant>
+		<constant name="title_forms_manage">Contact form: Manage forms</constant>
+		<constant name="title_forms_add">Contact form: Add form</constant>
+		<constant name="title_forms_edit">Contact form: Edit form</constant>
+		<constant name="title_forms_delete">Contact form: Delete form</constant>
+		<constant name="title_form_fields">Contact form: Manage fields</constant>
+		<constant name="title_fields_add">Contact form: Add field</constant>
+		<constant name="title_fields_edit">Contact form: Edit field</constant>
+		<constant name="title_fields_delete">Contact form: Delete field</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -126,6 +249,48 @@
 		<constant name="label_smtp_username">Username:</constant>
 		<constant name="label_smtp_password">Password:</constant>
 		<constant name="label_save_copy">Save copy of sent emails</constant>
-		<constant name="label_save_location">Location for saved emails:</constant>
+		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
+		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_action">Action:</constant>
+		<constant name="label_show_submit">Show submit button?</constant>
+		<constant name="label_show_reset">Show reset button?</constant>
+		<constant name="label_show_cancel">Show cancel button?</constant>
+		<constant name="label_template">Email template to use:</constant>
+		<constant name="label_label">Label:</constant>
+		<constant name="label_placeholder">Placeholder:</constant>
+		<constant name="label_minimum">Minimum:</constant>
+		<constant name="label_maximum">Maximum:</constant>
+		<constant name="label_type">Field type:</constant>
+		<constant name="label_value"><![CDATA[Predefined value <small>(use 0 or 1 for checkboxes)</small>:]]></constant>
+		<constant name="label_length">Max. length:</constant>
+		<constant name="label_pattern"><![CDATA[Pattern for matching <small>(regexp)</small>:]]></constant>
+		<constant name="label_disabled">Field is disabled?</constant>
+		<constant name="label_required">Require user to enter value?</constant>
+		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+
+		<constant name="field_hidden">Hidden</constant>
+		<constant name="field_radio">Radio button</constant>
+		<constant name="field_checkbox">Checkbox</constant>
+		<constant name="field_color">Color selection</constant>
+		<constant name="field_date">Date</constant>
+		<constant name="field_month">Month</constant>
+		<constant name="field_datetime">Date and time</constant>
+		<constant name="field_datetime-local">Local date and time</constant>
+		<constant name="field_time">Time</constant>
+		<constant name="field_week">Week and year</constant>
+		<constant name="field_file">File</constant>
+		<constant name="field_url">URL</constant>
+		<constant name="field_email">Email</constant>
+		<constant name="field_number">Number</constant>
+		<constant name="field_range">Range</constant>
+		<constant name="field_password">Password</constant>
+		<constant name="field_text">Text</constant>
+		<constant name="field_textarea">Multiline text</constant>
+		<constant name="field_honey-pot">Honey pot text</constant>
+
+		<constant name="legend_controls">Form controls</constant>
+		<constant name="legend_range">Range</constant>
+
+		<constant name="fields">Fields</constant>
 	</language>
 </document>

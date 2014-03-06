@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div id="contact_form_settings_notebook">
 			<div>
 				<label>
@@ -10,7 +10,7 @@
 						type="text" 
 						name="sender_name" 
 						value="$settings['sender_name']" 
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 					/>
 				</label>
@@ -20,7 +20,7 @@
 						type="text" 
 						name="sender_address" 
 						value="$settings['sender_address']" 
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 						class="code"
 					/>
@@ -34,7 +34,7 @@
 						type="text" 
 						name="recipient_name" 
 						value="$settings['recipient_name']" 
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 					/>
 				</label>
@@ -44,7 +44,7 @@
 						type="text" 
 						name="recipient_address" 
 						value="$settings['recipient_address']" 
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 						class="code"
 					/>
@@ -55,7 +55,7 @@
 						type="text" 
 						name="recipient_subject" 
 						value="$settings['recipient_subject']" 
-						eval="value"
+						cms:eval="value"
 						style="width: 350px;"
 					/>
 				</label>
@@ -78,7 +78,7 @@
 						type="text"
 						name="smtp_server"
 						value="$settings['smtp_server']"
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 						class="code"
 					/>
@@ -89,7 +89,7 @@
 						type="text"
 						name="smtp_port"
 						value="$settings['smtp_port']"
-						eval="value"
+						cms:eval="value"
 						style="width: 50px;"
 						class="code"
 					/>
@@ -129,7 +129,7 @@
 						type="text"
 						name="smtp_username"
 						value="$settings['smtp_username']"
-						eval="value"
+						cms:eval="value"
 						style="width: 150px;"
 						class="code"
 					/>
@@ -140,7 +140,7 @@
 						type="text"
 						name="smtp_password"
 						value="$settings['smtp_password']"
-						eval="value"
+						cms:eval="value"
 						style="width: 150px;"
 						class="code"
 					/>
@@ -164,7 +164,7 @@
 						type="text" 
 						name="save_location"
 						value="$settings['save_location']"
-						eval="value"
+						cms:eval="value"
 						class="code"
 						style="width: 350px;"
 					/>
@@ -175,7 +175,7 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_fields_edit_form">
+		<div>
+			<label class="horizontal">
+				<span><cms:text constant="label_name" module="contact_form"/></span>
+				<input
+					name="name"
+					class="code"
+					type="text"
+					maxlength="32"
+					style="width: 165px;"
+					value="$params['name']"
+					cms:eval="value"
+					/>
+			</label>
+
+			<label class="horizontal">
+				<span><cms:text constant="label_type" module="contact_form"/></span>
+				<select name="type" style="width: 170px">
+					<cms:field_types
+						selected="$params['type']"
+						cms:eval="selected"
+						/>
+				</select>
+			</label>
+			<div style="clear: both;"/>
+		</div>
+
+		<hr/>
+
+		<label>
+			<span><cms:text constant="label_label" module="contact_form"/></span>
+			<input
+				name="label"
+				class="multi-language"
+				type="text"
+				maxlength="50"
+				style="width: 370px"
+				/>
+			<cms:language_data param="label"/>
+		</label>
+
+		<label>
+			<span><cms:text constant="label_placeholder" module="contact_form"/></span>
+			<input
+				name="placeholder"
+				class="multi-language"
+				type="text"
+				maxlength="50"
+				style="width: 370px"
+				/>
+			<cms:language_data param="placeholder"/>
+		</label>
+
+		<fieldset class="range" style="display: none;">
+			<legend><cms:text constant="legend_range" module="contact_form"/></legend>
+			<label class="horizontal">
+				<span><cms:text constant="label_minimum" module="contact_form"/></span>
+				<input
+					type="text"
+					name="min"
+					style="width: 100px"
+					value="$params['min']"
+					cms:eval="value"
+					/>
+			</label>
+			<label class="horizontal">
+				<span><cms:text constant="label_maximum" module="contact_form"/></span>
+				<input
+					type="text"
+					name="max"
+					style="width: 100px"
+					value="$params['max']"
+					cms:eval="value"
+					/>
+			</label>
+		</fieldset>
+
+		<div>
+			<label class="horizontal">
+				<span><cms:text constant="label_value" module="contact_form"/></span>
+				<input
+					type="text"
+					name="value"
+					class="code"
+					maxlength="255"
+					style="width: 250px"
+					value="$params['value']"
+					cms:eval="value"
+					/>
+			</label>
+			<label class="horizontal maxlength">
+				<span><cms:text constant="label_length" module="contact_form"/></span>
+				<input
+					type="text"
+					name="maxlength"
+					class="code"
+					style="width: 70px"
+					value="$params['maxlength']"
+					cms:eval="value"
+					/>
+			</label>
+			<div style="clear: both;"/>
+		</div>
+
+		<label class="pattern">
+			<span><cms:text constant="label_pattern" module="contact_form"/></span>
+			<input
+				type="text"
+				name="pattern"
+				class="code"
+				maxlength="255"
+				style="width: 370px"
+				value="$params['pattern']"
+				cms:eval="value"
+				/>
+		</label>
+
+		<label class="checkbox">
+			<span><cms:text constant="label_disabled" module="contact_form"/></span>
+			<input
+				type="checkbox"
+				name="disabled"
+				checked="$params['disabled'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
+		</label>
+
+		<label class="checkbox">
+			<span><cms:text constant="label_required" module="contact_form"/></span>
+			<input
+				type="checkbox"
+				name="required"
+				checked="$params['required'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
+		</label>
+
+		<label class="checkbox">
+			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
+			<input
+				type="checkbox"
+				name="autocomplete"
+				checked="$params['autocomplete'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
+		</label>
+
+		<div class="button_bar">
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+			<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>
+			<button type="submit"><_text constant="save"/></button>
+			<button type="reset"><_text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		new LanguageSelector('contact_form_fields_edit_form');
+	</script>
+</document>

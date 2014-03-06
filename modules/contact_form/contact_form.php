@@ -10,6 +10,8 @@
  */
 
 require_once('units/smtp.php');
+require_once('units/form_manager.php');
+require_once('units/form_field_manager.php');
 require_once('units/template_manager.php');
 
 
@@ -19,6 +21,12 @@ class contact_form extends Module {
 						'section', 'action', 'PHPSESSID', '__utmz', '__utma',
 						'__utmc', '__utmb', '_', 'subject', 'MAX_FILE_SIZE', '_rewrite'
 					);
+
+	private $field_types = array(
+						'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
+						'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
+						'time', 'week', 'url', 'number', 'range', 'honey-pot'
+				);
 
 	/**
 	 * Constructor
@@ -40,6 +48,19 @@ class contact_form extends Module {
 				);
 			
 			$contact_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_manage_forms'),
+								url_GetFromFilePath($this->path.'images/forms.png'),
+
+								window_Open( // on click open window
+											'contact_forms',
+											600,
+											$this->getLanguageConstant('title_forms_manage'),
+											true, true,
+											backend_UrlMake($this->name, 'forms_manage')
+										),
+								$level=5
+							));	
+			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_templates'),
 								url_GetFromFilePath($this->path.'images/templates.png'),
 
@@ -52,6 +73,7 @@ class contact_form extends Module {
 										),
 								$level=5
 							));	
+			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.png'),
@@ -90,6 +112,10 @@ class contact_form extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'show':
+					$this->tag_Form($params, $children);
+					break;
+
 				case 'send_from_xml':
 					$this->sendFromXML($params, $children);
 					break;
@@ -136,6 +162,54 @@ class contact_form extends Module {
 				case 'templates_delete_commit':
 					$this->deleteTemplate_Commit();
 					break;
+
+				case 'forms_manage':
+					$this->manageForms();
+					break;
+
+				case 'forms_add':
+					$this->addForm();
+					break;
+
+				case 'forms_edit':
+					$this->editForm();
+					break;
+
+				case 'forms_save':
+					$this->saveForm();
+					break;
+
+				case 'forms_delete':
+					$this->deleteForm();
+					break;
+
+				case 'forms_delete_commit':
+					$this->deleteForm_Commit();
+					break;
+
+				case 'fields_manage':
+					$this->manageFields();
+					break;
+
+				case 'fields_add':
+					$this->addField();
+					break;
+
+				case 'fields_edit':
+					$this->editField();
+					break;
+
+				case 'fields_save':
+					$this->saveField();
+					break;
+
+				case 'fields_delete':
+					$this->deleteField();
+					break;
+
+				case 'fields_delete_commit':
+					$this->deleteField_Commit();
+					break;
 					
 				default:
 					break;
@@ -166,20 +240,69 @@ class contact_form extends Module {
 		// create templates table
 		$sql = "
 			CREATE TABLE `contact_form_templates` (
-				`id` INT NOT NULL AUTO_INCREMENT ,
-				`text_id` VARCHAR (32) NULL ,
+				`id` int NOT NULL AUTO_INCREMENT ,
+				`text_id` varchar(32) NULL ,
 			";
 
 		foreach($list as $language) {
-			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
-			$sql .= "`subject_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-			$sql .= "`plain_{$language}` TEXT NOT NULL ,";
-			$sql .= "`html_{$language}` TEXT NOT NULL ,";
+			$sql .= "`name_{$language}` varchar(50) NOT NULL DEFAULT '',";
+			$sql .= "`subject_{$language}` varchar(255) NOT NULL DEFAULT '',";
+			$sql .= "`plain_{$language}` text NOT NULL,";
+			$sql .= "`html_{$language}` text NOT NULL,";
 		}
 
 		$sql .= "
-				PRIMARY KEY ( `id` ),
-				INDEX ( `text_id` )
+				PRIMARY KEY(`id`),
+				INDEX `contact_form_templates_by_text_id` (`text_id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create forms table
+		$sql = "
+			CREATE TABLE `contact_forms` (
+				`id` int NOT NULL AUTO_INCREMENT,
+				`text_id` varchar(32) NULL,
+			";
+
+		foreach($list as $language) 
+			$sql .= "`name_{$language}` varchar(50) NOT NULL DEFAULT '',";
+
+		$sql .= "
+				`action` varchar(255) NULL,
+				`template` varchar(32) NOT NULL,
+				`show_submit` boolean NOT NULL DEFAULT '1',
+				`show_reset` boolean NOT NULL DEFAULT '1',
+				`show_cancel` boolean NOT NULL DEFAULT '0',
+				PRIMARY KEY(`id`),
+				INDEX `contact_forms_by_text_id` (`text_id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		$sql = "
+			CREATE TABLE `contact_form_fields` (
+				`id` int NOT NULL AUTO_INCREMENT,
+				`form` int NOT NULL,
+				`name` varchar(32) NULL,
+				`type` varchar(32) NOT NULL,
+			";
+
+		foreach($list as $language) {
+			$sql .= "`label_{$language}` varchar(100) NOT NULL DEFAULT '',";
+			$sql .= "`placeholder_{$language}` varchar(100) NOT NULL DEFAULT '',";
+		}
+
+		$sql .= "
+				`min` int NOT NULL,
+				`max` int NOT NULL,
+				`maxlength` int NOT NULL,
+				`value` varchar(255) NOT NULL,
+				`pattern` varchar(255) NOT NULL,
+				`disabled` boolean NOT NULL DEFAULT '0',
+				`required` boolean NOT NULL DEFAULT '0',
+				`autocomplete` boolean NOT NULL DEFAULT '0',
+				PRIMARY KEY(`id`),
+				INDEX `contact_form_fields_by_form` (`form`),
+				INDEX `contact_form_fields_by_form_and_type` (`form`, `type`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 	}
@@ -190,7 +313,7 @@ class contact_form extends Module {
 	public function onDisable() {
 		global $db;
 
-		$tables = array('contact_form_templates');
+		$tables = array('contact_form_templates', 'contact_forms', 'contact_form_fields');
 		$db->drop_tables($tables);
 	}
 
@@ -1025,6 +1148,414 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Show management window for forms.
+	 */
+	private function manageForms() {
+		$template = new TemplateHandler('forms_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'		=> window_OpenHyperlink(
+										$this->getLanguageConstant('new'),
+										'contact_forms_add', 400,
+										$this->getLanguageConstant('title_forms_add'),
+										true, false,
+										$this->name,
+										'forms_add'
+									),
+				);
+
+		$template->registerTagHandler('cms:list', $this, 'tag_FormList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show new contact form dialog.
+	 */
+	private function addForm() {
+		$template = new TemplateHandler('forms_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'forms_save'),
+					'cancel_action'	=> window_Close('contact_forms_add')
+				);
+
+		$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+ 	 * Show change form dialog.
+	 */
+	private function editForm() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FormManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			$template = new TemplateHandler('forms_change.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'id'				=> $item->id,
+						'text_id'			=> $item->text_id,
+						'name'				=> $item->name,
+						'action'			=> $item->action,
+						'template'			=> $item->template,
+						'show_submit'		=> $item->show_submit,
+						'show_reset'		=> $item->show_reset,
+						'show_cancel'		=> $item->show_cancel,
+						'form_action'  		=> backend_UrlMake($this->name, 'forms_save'),
+						'cancel_action'		=> window_Close('contact_forms_edit')
+					);
+
+			$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Save new of changed form data.
+	 */
+	private function saveForm() {
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$data = array(
+				'text_id'		=> fix_chars($_REQUEST['text_id']),
+				'name'			=> $this->getMultilanguageField('name'),
+				'action'		=> escape_chars($_REQUEST['action']),
+				'template'		=> fix_chars($_REQUEST['template']),
+				'show_submit'	=> isset($_REQUEST['show_submit']) && ($_REQUEST['show_submit'] == 'on' || $_REQUEST['show_submit'] == '1') ? 1 : 0,
+				'show_reset'	=> isset($_REQUEST['show_reset']) && ($_REQUEST['show_reset'] == 'on' || $_REQUEST['show_reset'] == '1') ? 1 : 0,
+				'show_cancel'	=> isset($_REQUEST['show_cancel']) && ($_REQUEST['show_cancel'] == 'on' || $_REQUEST['show_cancel'] == '1') ? 1 : 0
+			);
+		$manager = ContactForm_FormManager::getInstance();
+
+		// insert or update data in database
+		if (is_null($id)) {
+			$window = 'contact_forms_add';
+			$manager->insertData($data);
+		} else {
+			$window = 'contact_forms_edit';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_form_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('contact_forms'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show confirmation form before removing contact form.
+	 */
+	private function deleteForm() {
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FormManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_form_delete"),
+					'name'			=> $item->name[$language],
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'contact_forms_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'forms_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('contact_forms_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+ 	 * Remove contact form and all of its fields.
+	 * Note: This will remove contact form data as well.
+	 */
+	private function deleteForm_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FormManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+		$field_manager->deleteData(array('form' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_form_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('contact_forms_delete').';'.window_ReloadContent('contact_forms')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show field management window.
+	 */
+	private function manageFields() {
+		$form_id = fix_id($_REQUEST['form']);
+		$template = new TemplateHandler('fields_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form'		=> $form_id,
+					'link_new'	=> url_MakeHyperlink(
+										$this->getLanguageConstant('new'),
+										window_Open(
+											'contact_form_fields_add', 	// window id
+											400,				// width
+											$this->getLanguageConstant('title_fields_add'), // title
+											false, false,
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'fields_add'),
+												array('form', $form_id)
+											)
+										)
+									)
+				);
+
+		$template->registerTagHandler('cms:list', $this, 'tag_FieldList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for adding new field.
+	 */
+	private function addField() {
+		$form_id = fix_id($_REQUEST['form']);
+
+		$template = new TemplateHandler('fields_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form'			=> $form_id,
+					'form_action'	=> backend_UrlMake($this->name, 'fields_save'),
+					'cancel_action'	=> window_Close('contact_form_fields_add')
+				);
+
+		$template->registerTagHandler('cms:field_types', $this, 'tag_FieldTypes');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for editing existing field.
+	 */
+	private function editField() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FormFieldManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			$template = new TemplateHandler('fields_change.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'id'				=> $item->id,
+						'form'				=> $item->form,
+						'name'				=> $item->name,
+						'type'				=> $item->type,
+						'label'				=> $item->label,
+						'placeholder'		=> $item->placeholder,
+						'min'				=> $item->min,
+						'max'				=> $item->max,
+						'maxlength'			=> $item->maxlength,
+						'value'				=> $item->value,
+						'pattern'			=> $item->pattern,
+						'disabled'			=> $item->disabled,
+						'required'			=> $item->required,
+						'autocomplete'		=> $item->autocomplete,
+						'form_action'  		=> backend_UrlMake($this->name, 'fields_save'),
+						'cancel_action'		=> window_Close('contact_form_fields_edit')
+					);
+
+			$template->registerTagHandler('cms:field_types', $this, 'tag_FieldTypes');
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Save new or changed field data.
+	 */
+	private function saveField() {
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$form_id = fix_id($_REQUEST['form']);
+
+		$data = array(
+			'form'			=> $form_id,
+			'name'			=> fix_chars($_REQUEST['name']),
+			'type'			=> fix_chars($_REQUEST['type']),
+			'label'			=> $this->getMultilanguageField('label'),
+			'placeholder'	=> $this->getMultilanguageField('placeholder'),
+			'min'			=> fix_id($_REQUEST['min']),
+			'max'			=> fix_id($_REQUEST['max']),
+			'maxlength'		=> fix_id($_REQUEST['maxlength']),
+			'value'			=> escape_chars($_REQUEST['value']),
+			'pattern'		=> escape_chars($_REQUEST['pattern']),
+			'disabled'		=> isset($_REQUEST['disabled']) && ($_REQUEST['disabled'] == 'on' || $_REQUEST['disabled'] == '1') ? 1 : 0,
+			'required'		=> isset($_REQUEST['required']) && ($_REQUEST['required'] == 'on' || $_REQUEST['required'] == '1') ? 1 : 0,
+			'autocomplete'	=> isset($_REQUEST['autocomplete']) && ($_REQUEST['autocomplete'] == 'on' || $_REQUEST['autocomplete'] == '1') ? 1 : 0
+		);
+		$manager = ContactForm_FormFieldManager::getInstance();
+
+		// insert or update data in database
+		if (is_null($id)) {
+			$window = 'contact_form_fields_add';
+			$manager->insertData($data);
+		} else {
+			$window = 'contact_form_fields_edit';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_field_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_fields_'.$form_id),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show confirmation dialog before removing field.
+	 */
+	private function deleteField() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FormFieldManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant("message_field_delete"),
+					'name'			=> $item->name,
+					'yes_text'		=> $this->getLanguageConstant("delete"),
+					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_action'	=> window_LoadContent(
+											'contact_form_fields_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'fields_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('contact_form_fields_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Perfrom field removal.
+	 */
+	private function deleteField_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FormFieldManager::getInstance();
+
+		$form = $manager->getItemValue('form', array('id' => $id));
+		$manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_field_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('contact_form_fields_delete').';'.window_ReloadContent('contact_form_fields_'.$form)
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	public function tag_FieldTypes($tag_params, $children) {
+		$selected = null;
+
+		// get parameters
+		if (isset($tag_params['selected']))
+			$selected = fix_chars($tag_params['selected']);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'field_option.xml');
+
+		foreach ($this->field_types as $field) {
+			$params = array(
+				'selected'	=> $field == $selected,
+				'type'		=> $field,
+				'name'		=> $this->getLanguageConstant('field_'.$field)
+			);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
 	 * Handle drawing list of templates.
 	 *
 	 * @param array $tag_params
@@ -1088,6 +1619,223 @@ class contact_form extends Module {
 
 				$template->setLocalParams($params);
 				$template->restoreXML();
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Handle drawing fields for specified form.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_FieldList($tag_params, $children) {
+		$conditions = array();
+		$manager = ContactForm_FormFieldManager::getInstance();
+
+		// get parameters
+		if (isset($tag_params['form']))
+			$conditions['form'] = fix_id($tag_params['form']);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'field.xml');
+
+		// get fields
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		trigger_error(json_encode($items));
+
+		// parse template
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+					'id'			=> $item->id,
+					'form'			=> $item->form,
+					'name'			=> $item->name,
+					'type'			=> $item->type,
+					'label'			=> $item->label,
+					'placeholder'	=> $item->placeholder,
+					'min'			=> $item->min,
+					'max'			=> $item->max,
+					'maxlength'		=> $item->maxlength,
+					'value'			=> $item->value,
+					'pattern'		=> $item->pattern,
+					'disabled'		=> $item->disabled,
+					'required'		=> $item->required,
+					'autocomplete'	=> $item->autocomplete,
+					'item_change'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('change'),
+											window_Open(
+												'contact_form_fields_edit', 	// window id
+												400,				// width
+												$this->getLanguageConstant('title_fields_edit'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'fields_edit'),
+													array('id', $item->id)
+												)
+											)
+										),
+					'item_delete'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('delete'),
+											window_Open(
+												'contact_form_fields_delete', 	// window id
+												400,				// width
+												$this->getLanguageConstant('title_fields_delete'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'fields_delete'),
+													array('id', $item->id)
+												)
+											)
+										)
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Handle drawing a single form.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Form($tag_params, $children) {
+		$conditions = array();
+		$manager = ContactForm_FormManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+
+		// get parameters
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
+
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'form.xml');
+		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
+
+		// get form from the database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		if (is_object($item)) {
+			$fields = $field_manager->getItems(
+				array('id'),
+				array(
+					'form'	=> $item->id,
+					'type'	=> 'file'
+				)
+			);
+
+			$params = array(
+				'id'			=> $item->id,
+				'text_id'		=> $item->text_id,
+				'name'			=> $item->name,
+				'action'		=> !empty($item->action) ? $item->action : url_Make('submit', $this->name),
+				'template'		=> $item->template,
+				'show_submit'	=> $item->show_submit,
+				'show_reset'	=> $item->show_reset,
+				'show_cancel'	=> $item->show_cancel,
+				'show_controls'	=> $item->show_submit || $item->show_reset || $item->show_cancel,
+				'has_files'		=> count($fields) > 0
+			);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Handle drawing list of forms.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_FormList($tag_params, $children) {
+		$conditions = array();
+		$manager = ContactForm_FormManager::getInstance();
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'forms_list_item.xml');
+		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
+
+		// get items from database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+					'id'			=> $item->id,
+					'text_id'		=> $item->text_id,
+					'name'			=> $item->name,
+					'action'		=> $item->action,
+					'template'		=> $item->template,
+					'show_submit'	=> $item->show_submit,
+					'show_reset'	=> $item->show_reset,
+					'show_cancel'	=> $item->show_cancel,
+					'item_fields'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('fields'),
+											window_Open(
+												'contact_form_fields_'.$item->id, 	// window id
+												350,				// width
+												$this->getLanguageConstant('title_form_fields'), // title
+												true, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'fields_manage'),
+													array('form', $item->id)
+												)
+											)
+										),
+					'item_change'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('change'),
+											window_Open(
+												'contact_forms_edit', 	// window id
+												400,				// width
+												$this->getLanguageConstant('title_forms_edit'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'forms_edit'),
+													array('id', $item->id)
+												)
+											)
+										),
+					'item_delete'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('delete'),
+											window_Open(
+												'contact_forms_delete', 	// window id
+												400,				// width
+												$this->getLanguageConstant('title_forms_delete'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'forms_delete'),
+													array('id', $item->id)
+												)
+											)
+										)
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
 				$template->parse();
 			}
 	}

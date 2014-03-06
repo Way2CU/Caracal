@@ -5,7 +5,7 @@
 		<option
 			selected="selected"
 			value="$params['text_id']"
-			eval="value"
+			cms:eval="value"
 		>
 			<cms:var name="$params['name'][$language]"/>
 		</option>
@@ -13,7 +13,7 @@
 	<cms:if condition="$params['selected'] != $params['text_id']">
 		<option
 			value="$params['text_id']"
-			eval="value"
+			cms:eval="value"
 		>
 			<cms:var name="$params['name'][$language]"/>
 		</option>

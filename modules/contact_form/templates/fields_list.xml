@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<cms:var name="$params['link_new']"/>
+	</div>
+
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 200px;">
+				<cms:text constant="column_name" module="contact_form"/>
+			</span>
+			<span class="column">
+				<cms:text constant="column_options"/>
+			</span>
+		</div>
+
+		<div class="list_content" style="height: 350px">
+			<cms:list
+				template="fields_list_item.xml"
+				local="1"
+				form="$params['form']"
+				cms:eval="form"
+				/>
+		</div>
+	</div>
+</document>

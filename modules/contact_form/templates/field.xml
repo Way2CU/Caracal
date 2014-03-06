@@ -23,7 +23,7 @@
 					name="$params['name']"
 					type="radio"
 					value="$params['value']"
-					checked="$params['checked'] ? 'checked' : false"
+					checked="$params['checked'] == '1' ? 'checked' : false"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="checked,required,disabled"
@@ -36,7 +36,7 @@
 				<input
 					name="$params['name']"
 					type="checkbox"
-					checked="$params['checked'] ? 'checked' : false"
+					checked="$params['value'] == '1' ? 'checked' : false"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="checked,required,disabled"
@@ -157,9 +157,9 @@
 					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
-					maxlength="$params['max_length']"
+					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 					value="$params['value']"
-					cms:optional="required,disabled"
+					cms:optional="required,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete,value"
 				/>
 			</option>
@@ -173,9 +173,9 @@
 					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
-					maxlength="$params['max_length']"
+					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 					value="$params['value']"
-					cms:optional="required,disabled"
+					cms:optional="required,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete,value"
 				/>
 			</option>
@@ -223,9 +223,39 @@
 					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
-					maxlength="$params['max_length']"
-					cms:optional="required,disabled"
+					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
+					cms:optional="required,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete"
+				/>
+			</option>
+
+			<!-- Text area -->
+			<option value="textarea" default="0">
+				<textarea
+					name="$params['name']"
+					rows="4"
+					cols="50"
+					placeholder="$params['placeholder'][$language]"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
+					cms:optional="required,disabled,maxlength"
+					cms:eval="name,placeholder"
+					>
+					<cms:var name="$params['value']"/>
+				</textarea>
+			</option>
+
+			<!-- Honey pot trap -->
+			<option value="honey-pot" default="0">
+				<input
+					type="text"
+					name="$params['name']"
+					required="$params['required'] ? 'required' : false"
+					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
+					style="display: none;"
+					cms:optional="required,maxlength"
+					cms:eval="name"
 				/>
 			</option>
 
@@ -238,10 +268,11 @@
 					autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
-					maxlength="$params['max_length']"
+					value="$params['value']"
+					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 					pattern="!empty($params['pattern']) ? $params['pattern'] : false"
-					cms:optional="required,pattern,disabled"
-					cms:eval="name,placeholder,data-required,autocomplete,maxlength"
+					cms:optional="required,pattern,disabled,maxlength"
+					cms:eval="name,placeholder,autocomplete,value"
 				/>
 			</option>
 		</cms:choice>
