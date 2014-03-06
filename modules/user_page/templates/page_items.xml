@@ -28,7 +28,7 @@
 		</div>
 	</div>
 	<div class="button_bar">
-		<button type="button" onclick="$params['cancel_action']" eval="onclick">
+		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 			<_text constant="close"/>
 		</button>
 	</div>

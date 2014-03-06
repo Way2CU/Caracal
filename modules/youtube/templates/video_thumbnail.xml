@@ -4,6 +4,6 @@
 	<img
 		src="$params['thumbnail']"
 		alt="$params['title'][$language]"
-		eval="src,alt"
+		cms:eval="src,alt"
 	/>
 </document>

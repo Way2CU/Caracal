@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_fullname" module="backend"/></span>
-			<input type="text" name="fullname" value="$params['fullname']" eval="value" style="width: 330px;" maxlength="100"/>
+			<input type="text" name="fullname" value="$params['fullname']" cms:eval="value" style="width: 330px;" maxlength="100"/>
 		</label>
 		<label>
 			<span><_text constant="label_username" module="backend"/></span>
-			<input type="text" name="username" value="$params['username']" eval="value" style="width: 200px;" maxlength="50"/>
+			<input type="text" name="username" value="$params['username']" cms:eval="value" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
 			<span><_text constant="label_new_password" module="backend"/></span>
@@ -22,13 +22,13 @@
 		<label>
 			<span><_text constant="label_level" module="backend"/></span>
 			<select name="level" style="width: 100px;">
-				<_level selected="$params['level']" eval="selected"/>
+				<_level selected="$params['level']" cms:eval="selected"/>
 			</select>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

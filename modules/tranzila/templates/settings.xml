@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><_text constant="label_terminal" module="tranzila"/></span>
 			<input 
@@ -9,7 +9,7 @@
 				class="code"
 				name="terminal" 
 				value="$settings['terminal']" 
-				eval="value"
+				cms:eval="value"
 				style="width: 260px;"
 			/>
 		</label>
@@ -20,7 +20,7 @@
 				class="code"
 				name="confirm_url" 
 				value="$params['confirm_url']" 
-				eval="value"
+				cms:eval="value"
 				style="width: 360px;"
 				readonly="readonly"
 			/>
@@ -32,14 +32,14 @@
 				class="code"
 				name="confirm_url" 
 				value="$params['cancel_url']" 
-				eval="value"
+				cms:eval="value"
 				style="width: 360px;"
 				readonly="readonly"
 			/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

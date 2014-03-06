@@ -5,10 +5,10 @@
 		<span class="column" style="width: 250px;">
 			<label>
 				<_if condition="$params['in_group'] == 1">
-					<input type="checkbox" name="'video_id_'.$params['id']" eval="name" value="1" checked="checked"/>
+					<input type="checkbox" name="'video_id_'.$params['id']" cms:eval="name" value="1" checked="checked"/>
 				</_if>
 				<_if condition="$params['in_group'] == 0">
-					<input type="checkbox" name="'video_id_'.$params['id']" eval="name" value="1"/>
+					<input type="checkbox" name="'video_id_'.$params['id']" cms:eval="name" value="1"/>
 				</_if>
 				<_var name="$params['title'][$language]"/>
 			</label>

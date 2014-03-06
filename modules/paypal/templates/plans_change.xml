@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="paypal_recurring_plans_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="paypal_recurring_plans_add_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_plan_name" module="paypal"/></span>
 			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="200"/>
 			<cms:language_data param="name"/>
@@ -17,7 +17,7 @@
 				style="width: 160px;"
 				maxlength="200"
 				value="$params['text_id']"
-				eval="value"
+				cms:eval="value"
 			/>
 		</label>
 		<label class="horizontal">
@@ -29,7 +29,7 @@
 				style="width: 160px;"
 				maxlength="64"
 				value="$params['group_name']"
-				eval="value"
+				cms:eval="value"
 			/>
 		</label>
 
@@ -45,13 +45,13 @@
 						style="width: 50px;"
 						maxlength="5"
 						value="$params['interval_count']"
-						eval="value"
+						cms:eval="value"
 					/>
 				</label>
 				<label class="horizontal">
 					<span><cms:text constant="label_unit" module="paypal"/></span>
 					<select name="interval_unit" style="width: 70px;">
-						<cms:cycle_unit selected="$params['interval']" eval="selected"/>
+						<cms:cycle_unit selected="$params['interval']" cms:eval="selected"/>
 					</select>
 				</label>
 				<label style="clear: both;">
@@ -62,7 +62,7 @@
 						class="code"
 						style="width: 150px;"
 						value="$params['price']"
-						eval="value"
+						cms:eval="value"
 					/>
 				</label>
 				<label>
@@ -73,7 +73,7 @@
 						class="code"
 						style="width: 150px;"
 						value="$params['setup_price']"
-						eval="value"
+						cms:eval="value"
 					/>
 				</label>
 			</fieldset>
@@ -91,13 +91,13 @@
 						style="width: 50px;"
 						maxlength="5"
 						value="$params['trial_count']"
-						eval="value"
+						cms:eval="value"
 					/>
 				</label>
 				<label class="horizontal">
 					<span><cms:text constant="label_unit" module="paypal"/></span>
 					<select name="trial_unit" style="width: 70px;">
-						<cms:cycle_unit selected="$params['trial']" eval="selected"/>
+						<cms:cycle_unit selected="$params['trial']" cms:eval="selected"/>
 					</select>
 				</label>
 			</fieldset>
@@ -112,7 +112,7 @@
 						class="code"
 						style="width: 150px;"
 						value="$params['start_time']"
-						eval="value"
+						cms:eval="value"
 					/>
 				</label>
 			</fieldset>
@@ -123,7 +123,7 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

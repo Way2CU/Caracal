@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="user_page_edit_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="user_page_edit_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_title" module="user_page"/></span>
 			<input type="text" class="multi-language" name="title" style="width: 690px;" maxlength="255"/>
 			<_language_data param="title"/>
@@ -22,7 +22,7 @@
 			<label>
 				<span><_text constant="label_owner" module="user_page"/></span>
 				<select name="owner" style="width: 270px;">
-					<_user_list selected="$params['owner']" template="users_option.xml" local="1" eval="selected"/>
+					<_user_list selected="$params['owner']" template="users_option.xml" local="1" cms:eval="selected"/>
 				</select>
 			</label>
 			<label class="checkbox">
@@ -47,7 +47,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

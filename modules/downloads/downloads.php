@@ -638,9 +638,11 @@ class DownloadsManager extends ItemManager {
 
 	/**
 	 * Override function in order to remove required files along with database data
+	 *
 	 * @param array $conditionals
+	 * @param integer $limit
 	 */
-	function deleteData($conditionals) {
+	function deleteData($conditionals, $limit=null) {
 		$items = $this->getItems(array('filename'), $conditionals);
 
 		$path = dirname(__FILE__).'/files/';

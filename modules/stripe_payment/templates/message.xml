@@ -5,7 +5,7 @@
 		<cms:var name="$params['message']"/>
 	</div>
 	<div class="button_bar">
-		<button type="button" onclick="$params['action']" eval="onclick">
+		<button type="button" onclick="$params['action']" cms:eval="onclick">
 			<cms:var name="$params['button']"/>
 		</button>
 	</div>

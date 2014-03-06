@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
-		<input type="hidden" name="id" value="$params['id']" eval="value"/>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
 			<span><_text constant="label_code" module="code_project"/></span>
-			<input type="text" name="code" value="$params['code']" eval="value" style="width: 270px;" maxlength="50"/>
+			<input type="text" name="code" value="$params['code']" cms:eval="value" style="width: 270px;" maxlength="50"/>
 		</label>
 		<label>
 			<span><_text constant="label_url" module="code_project"/></span>
-			<input type="text" name="url" value="$params['url']" eval="value" style="width: 340px;" maxlength="255"/>
+			<input type="text" name="url" value="$params['url']" cms:eval="value" style="width: 340px;" maxlength="255"/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

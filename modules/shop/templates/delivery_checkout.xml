@@ -6,13 +6,13 @@
 			type="radio"
 			name="delivery_provider"
 			value="$params['name']"
-			eval="value"
+			cms:eval="value"
 		/>
 		<span>
 			<img
 				src="$params['small_image']"
 				alt="$params['title']"
-				eval="src,alt"
+				cms:eval="src,alt"
 				width="100"
 				height="28"
 			/>

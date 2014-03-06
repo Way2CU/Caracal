@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div id="paypal_settings_notebook">
 			<div>
 				<label>
@@ -11,7 +11,7 @@
 						class="code"
 						name="api_username"
 						value="$settings['api_username']"
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 					/>
 				</label>
@@ -22,7 +22,7 @@
 						class="code"
 						name="api_password"
 						value="$settings['api_password']"
-						eval="value"
+						cms:eval="value"
 						style="width: 250px;"
 					/>
 				</label>
@@ -33,7 +33,7 @@
 						class="code"
 						name="api_signature"
 						value="$settings['api_signature']"
-						eval="value"
+						cms:eval="value"
 						style="width: 350px;"
 					/>
 				</label>
@@ -46,7 +46,7 @@
 						type="text"
 						class="code"
 						value="url_Make('ipn', 'paypal')"
-						eval="value"
+						cms:eval="value"
 						style="width: 350px;"
 						readonly="readonly"
 					/>
@@ -57,7 +57,7 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="paypal_recurring_plans_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="paypal_recurring_plans_add_form">
 		<label>
 			<span><cms:text constant="label_plan_name" module="paypal"/></span>
 			<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="200"/>
@@ -100,7 +100,7 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

@@ -5,6 +5,6 @@
 		data-name="$params['name']"
 		data-provides-information="$params['provides_information'] ? 1 : 0"
 		style="'background-image: url(\''.$params['image'].'\');'"
-		eval="data-name,data-provides-information,style"
+		cms:eval="data-name,data-provides-information,style"
 	/>
 </document>

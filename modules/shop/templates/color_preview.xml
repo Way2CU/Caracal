@@ -6,6 +6,6 @@
 		style="'display: inline-block; width: 30px; height: 13px; background-color: '.$params['value'].';'"
 		data-value="$params['value']"
 		data-name="$params['name']"
-		eval="style,data-value,data-name"
+		cms:eval="style,data-value,data-name"
 	><![CDATA[&nbsp;]]></span>
 </document>

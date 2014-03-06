@@ -5,7 +5,7 @@
 		field="$params['param']"
 		language="$params['language']"
 		style="display: none;"
-		eval="field,language"
+		cms:eval="field,language"
 	>
 		<_var name="$params['data']"/>
 	</data>

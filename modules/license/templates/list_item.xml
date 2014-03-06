@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 250px; overflow: hidden;" title="$params['domain']" eval="title">
+		<span class="column" style="width: 250px; overflow: hidden;" title="$params['domain']" cms:eval="title">
 			<_var name="$params['domain']"/>
 		</span>
 		<span class="column" style="width: 250px;">

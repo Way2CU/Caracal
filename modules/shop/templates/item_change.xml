@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="shop_item_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_item_change_form">
 		<div id="shop_change_item_notebook">
 			<div>
 				<div class="box left" style="width: 290px;">
 					<label>
-						<input type="hidden" name="id" value="$params['id']" eval="value"/>
+						<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 						<span><_text constant="label_name" module="shop"/></span>
 						<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
 						<_language_data param="name"/>
@@ -21,7 +21,7 @@
 								template="manufacturer_option.xml"
 								local="1"
 								selected="$params['manufacturer']"
-								eval="selected"
+								cms:eval="selected"
 							/>
 						</select>
 					</label>
@@ -38,7 +38,7 @@
 							type="text" 
 							name="price" 
 							value="$params['price']"
-							eval="value"
+							cms:eval="value"
 							style="width: 100px;" 
 							maxlength="30"
 						/>
@@ -53,7 +53,7 @@
 								template="size_option.xml"
 								local="1"
 								selected="$params['size_definition']"
-								eval="selected"
+								cms:eval="selected"
 							/>
 						</select>
 					</label>
@@ -62,19 +62,19 @@
 					<div class="box left" style="width: 120px;">
 						<label>
 							<span><_text constant="label_tax" module="shop"/></span>
-							<input name="tax" value="$params['tax']" style="width: 100px;" eval="value"/>
+							<input name="tax" value="$params['tax']" style="width: 100px;" cms:eval="value"/>
 						</label>
 					</div>
 					<div class="box left" style="width: 120px;">
 						<label>
 							<span><_text constant="label_weight" module="shop"/></span>
-							<input name="weight" value="$params['weight']" style="width: 100px;" eval="value"/>
+							<input name="weight" value="$params['weight']" style="width: 100px;" cms:eval="value"/>
 						</label>
 					</div>
 					<div class="box left">
 						<label>
 							<span><_text constant="label_priority" module="shop"/></span>
-							<input name="priority" value="$params['priority']" style="width: 60px;" eval="value"/>
+							<input name="priority" value="$params['priority']" style="width: 60px;" cms:eval="value"/>
 						</label>
 					</div>
 				</div>
@@ -84,7 +84,7 @@
 			</div>
 
 			<div class="scrollable_list">
-				<input name="colors" type="hidden" value="$params['colors']" eval="value"/>
+				<input name="colors" type="hidden" value="$params['colors']" cms:eval="value"/>
 				<label class="inline">
 					<span><_text constant="label_color_value" module="shop"/></span>
 					<input name="color_value" class="code" type="text" style="width: 60px"/>
@@ -120,7 +120,7 @@
 						template="category_checkbox_list_item.xml" 
 						local="1"
 						item_id="$params['id']"
-						eval="item_id"
+						cms:eval="item_id"
 					/>
 				</div>
 			</div>
@@ -153,7 +153,7 @@
 				<div class="list_content" style="height: 340px" id="related_items">
 					<_item_list
 						related="$params['id']"
-						eval="related"
+						cms:eval="related"
 						template="item_list_option.xml"
 						local="1"
 					/>
@@ -171,7 +171,7 @@
 						template="item_delivery_list.xml"
 						local="1"
 						item="$params['id']"
-						eval="item"
+						cms:eval="item"
 					/>
 				</div>
 			</div>
@@ -180,7 +180,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

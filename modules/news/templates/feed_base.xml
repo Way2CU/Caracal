@@ -9,7 +9,7 @@
 			<link><_var name="url_Make('', 'home')"/></link>
 			<lastBuildDate><_var name="date('r', $params['build_date'])"/></lastBuildDate>
 
-			<_news_list group="$params['group']" limit="$params['news_count']" template="feed_item.xml" local="1" eval="group,limit"/>
+			<_news_list group="$params['group']" limit="$params['news_count']" template="feed_item.xml" local="1" cms:eval="group,limit"/>
 		</channel>
 	</rss>
 </document>

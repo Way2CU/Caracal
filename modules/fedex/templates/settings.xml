@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_key" module="fedex"/></span>
 			<input
@@ -10,7 +10,7 @@
 				style="width: 325px;"
 				maxlength="30"
 				value="$settings['fedex_key']"
-				eval="value"
+				cms:eval="value"
 				class="code"
 			/>
 		</label>
@@ -22,7 +22,7 @@
 				style="width: 325px;"
 				maxlength="30"
 				value="$settings['fedex_password']"
-				eval="value"
+				cms:eval="value"
 				class="code"
 			/>
 		</label>
@@ -34,7 +34,7 @@
 				style="width: 325px;"
 				maxlength="30"
 				value="$settings['fedex_account']"
-				eval="value"
+				cms:eval="value"
 				class="code"
 			/>
 		</label>
@@ -46,13 +46,13 @@
 				style="width: 325px;"
 				maxlength="30"
 				value="$settings['fedex_meter']"
-				eval="value"
+				cms:eval="value"
 				class="code"
 			/>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

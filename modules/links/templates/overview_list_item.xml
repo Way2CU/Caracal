@@ -7,7 +7,7 @@
 		</span>
 		<span class="column" style="width: 100px;">
 			<div class="progress_bar" style="width: 90px;">
-				<div class="gauge" style="'width: '.$params['display_percent'].'%'" eval="style"/>
+				<div class="gauge" style="'width: '.$params['display_percent'].'%'" cms:eval="style"/>
 			</div>
 		</span>
 		<span class="column" style="width: 70px;">

@@ -103,7 +103,7 @@
 									<span><cms:text constant="label_first_name" module="shop"/></span>
 									<input
 										class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
-										eval="class,value"
+										cms:eval="class,value"
 										type="text"
 										name="first_name"
 										value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
@@ -116,7 +116,7 @@
 									<span><cms:text constant="label_last_name" module="shop"/></span>
 									<input
 										class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
-										eval="class,value"
+										cms:eval="class,value"
 										type="text"
 										name="last_name"
 										value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
@@ -129,7 +129,7 @@
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
 										class="in_array('new_email', $params['bad_fields']) ? 'bad' : ''"
-										eval="class,value"
+										cms:eval="class,value"
 										type="text" 
 										name="new_email" 
 										value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
@@ -190,7 +190,7 @@
 								<span><cms:text constant="label_full_name" module="shop"/></span>
 								<input
 									class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
-									eval="class,value"
+									cms:eval="class,value"
 									type="text"
 									name="name"
 									value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
@@ -204,7 +204,7 @@
 								<span><cms:text constant="label_email" module="shop"/></span>
 								<input
 									class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="email" 
 									value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
@@ -218,7 +218,7 @@
 								<span><cms:text constant="label_phone_number" module="shop"/></span>
 								<input
 									class="in_array('phone', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="phone" 
 									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
@@ -232,7 +232,7 @@
 								<span><cms:text constant="label_street" module="shop"/></span>
 								<input 
 									class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="street" 
 									value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
@@ -246,7 +246,7 @@
 								<span></span>
 								<input 
 									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="street2" 
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
@@ -259,7 +259,7 @@
 								<span><cms:text constant="label_city" module="shop"/></span>
 								<input 
 									class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="city" 
 									value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
@@ -272,7 +272,7 @@
 								<span><cms:text constant="label_zip" module="shop"/></span>
 								<input 
 									class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="zip" 
 									value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
@@ -288,7 +288,7 @@
 									<select 
 										name="country"
 										class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-										eval="class" 
+										cms:eval="class" 
 										data-required="1"
 										autocomplete="country"
 									>
@@ -297,7 +297,7 @@
 											name="country_list"
 											action="show"
 											selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-											eval="selected"
+											cms:eval="selected"
 										/>
 									</select>
 								</cms:if>
@@ -305,7 +305,7 @@
 									<select 
 										name="country"
 										class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-										eval="class" 
+										cms:eval="class" 
 										data-required="1"
 										autocomplete="country"
 									>
@@ -313,7 +313,7 @@
 											name="country_list"
 											action="show"
 											filter="$params['fixed_country']"
-											eval="filter"
+											cms:eval="filter"
 										/>
 									</select>
 								</cms:if>
@@ -322,7 +322,7 @@
 								<span><cms:text constant="label_state" module="shop"/></span>
 								<input 
 									class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="state" 
 									value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
@@ -369,7 +369,7 @@
 							<span><cms:text constant="label_full_name" module="shop"/></span>
 							<input
 								class="in_array('billing_full_name', $params['bad_fields']) ? 'bad' : ''"
-								eval="class,value"
+								cms:eval="class,value"
 								type="text"
 								name="billing_full_name"
 								value="isset($_POST['billing_full_name']) ? fix_chars($_POST['billing_first_name']) : ''"
@@ -390,7 +390,7 @@
 							<span><cms:text constant="label_credit_card" module="shop"/></span>
 							<input
 								class="in_array('billing_credit_card', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
+								cms:eval="class,value" 
 								type="text" 
 								name="billing_credit_card"
 								value="isset($_POST['billing_credit_card']) ? fix_chars($_POST['billing_credit_card']) : ''"
@@ -405,7 +405,7 @@
 								<span><cms:text constant="label_expiration_date" module="shop"/></span>
 								<input
 									class="in_array('billing_expire_month', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="billing_expire_month"
 									value="isset($_POST['billing_expire_month']) ? fix_chars($_POST['billing_expire_month']) : ''"
@@ -419,7 +419,7 @@
 							<label>
 								<input
 									class="in_array('billing_expire_year', $params['bad_fields']) ? 'bad' : ''" 
-									eval="class,value" 
+									cms:eval="class,value" 
 									type="text" 
 									name="billing_expire_year"
 									value="isset($_POST['billing_expire_year']) ? fix_chars($_POST['billing_expire_year']) : ''"
@@ -435,7 +435,7 @@
 							<span><cms:text constant="label_cvv" module="shop"/></span>
 							<input 
 								class="in_array('billing_cvv', $params['bad_fields']) ? 'bad' : ''" 
-								eval="class,value" 
+								cms:eval="class,value" 
 								type="text" 
 								name="billing_cvv" 
 								value="isset($_POST['billing_cvv']) ? fix_chars($_POST['billing_cvv']) : ''"
@@ -452,7 +452,7 @@
 								id="what_is_cvv"
 								src="_BASEURL.'/modules/shop/images/security_code.png'"
 								alt="CVV2"
-								eval="src"
+								cms:eval="src"
 							/>
 						</label>
 						<div class="checkout_controls">

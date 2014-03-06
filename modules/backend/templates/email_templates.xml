@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<cms:text constant="label_template_verify" module="backend"/>
 			<select name="template_verify" style="width: 300px;">
 				<option/>
 				<cms:templates
 					selected="$settings['template_verify']"
-					eval="selected"
+					cms:eval="selected"
 					template="templates_option.xml"
 					local="1"
 					/>
@@ -20,7 +20,7 @@
 				<option/>
 				<cms:templates
 					selected="$settings['template_recovery']"
-					eval="selected"
+					cms:eval="selected"
 					template="templates_option.xml"
 					local="1"
 					/>
@@ -29,7 +29,7 @@
 
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

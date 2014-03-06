@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_name" module="survey"/></span>
 			<input 
 				type="text" 
@@ -12,7 +12,7 @@
 				style="width: 270px;" 
 				maxlength="30"
 				value="$params['name']"
-				eval="value"
+				cms:eval="value"
 			/>
 		</label>
 		<label>
@@ -46,7 +46,7 @@
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

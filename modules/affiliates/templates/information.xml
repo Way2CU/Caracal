@@ -9,7 +9,7 @@
 					type="text"
 					name="uid"
 					value="$params['uid']"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
 				/>
@@ -20,7 +20,7 @@
 					type="text"
 					name="clicks"
 					value="$params['clicks']"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 100px;"
 				/>
@@ -31,7 +31,7 @@
 					type="text"
 					name="conversions"
 					value="$params['conversions']"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 100px;"
 				/>
@@ -42,7 +42,7 @@
 					type="text"
 					name="rate"
 					value="$params['rate'] . '%'"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 70px;"
 				/>
@@ -53,7 +53,7 @@
 					type="text"
 					name="name"
 					value="$params['name']"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 350px;"
 				/>
@@ -72,7 +72,7 @@
 	</div>
 
 	<div class="button_bar">
-		<button type="button" onclick="$params['cancel_action']" eval="onclick">
+		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 			<_text constant="close"/>
 		</button>
 	</div>

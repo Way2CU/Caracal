@@ -18,7 +18,7 @@
 				template="item_list_search_result.xml"
 				local="1"
 				filter="$params['query']"
-				eval="filter"
+				cms:eval="filter"
 			/>
 		</div>
 		

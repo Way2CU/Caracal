@@ -3,9 +3,9 @@
 <document>
 	<div class="list_item">
 			<span class="column" style="width: 18px; text-align: left; vertical-align: middle;">
-				<img src="$params['icon']" alt="$params['name']" eval="src,alt"/>
+				<img src="$params['icon']" alt="$params['name']" cms:eval="src,alt"/>
 			</span>
-			<span class="column" style="'width: 200px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" eval="style">
+			<span class="column" style="'width: 200px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" cms:eval="style">
 				<_var name="$params['name']"/>
 			</span>
 			<span class="column" style="width: 50px; text-align: center;">

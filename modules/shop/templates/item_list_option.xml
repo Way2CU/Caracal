@@ -3,7 +3,7 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 250px;">
-			<input type="hidden" name="'related_'.$params['id']" eval="name" value="1"/>
+			<input type="hidden" name="'related_'.$params['id']" cms:eval="name" value="1"/>
 			<_var name="$params['name'][$language]"/>
 		</span>
 		<span class="column" style="width: 60px;">

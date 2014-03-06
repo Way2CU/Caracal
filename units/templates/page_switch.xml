@@ -2,19 +2,19 @@
 <!DOCTYPE document SYSTEM "../schema/template.dtd">
 <document>
 	<div class="page_switch">
-		<a href="$params['link_first']" class="first" eval="href">
+		<a href="$params['link_first']" class="first" cms:eval="href">
 			<_text constant="page_first"/>
 		</a>
-		<a href="$params['link_previous']" class="previous" eval="href">
+		<a href="$params['link_previous']" class="previous" cms:eval="href">
 			<_text constant="page_previous"/>
 		</a>
 		<span>
 			<_pages/>
 		</span>
-		<a href="$params['link_next']" class="next" eval="href">
+		<a href="$params['link_next']" class="next" cms:eval="href">
 			<_text constant="page_next"/>
 		</a>
-		<a href="$params['link_last']" class="last" eval="href">
+		<a href="$params['link_last']" class="last" cms:eval="href">
 			<_text constant="page_last"/>
 		</a>
 	</div>

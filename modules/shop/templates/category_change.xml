@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="shop_category_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_category_add_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_category_parent" module="shop"/></span>
 			<select name="parent" style="width: 375px;">
 				<_if condition="$params['parent'] == 0">
@@ -22,7 +22,7 @@
 					local="1"
 					exclude="$params['id']"
 					selected="$params['parent']"
-					eval="selected,exclude"
+					cms:eval="selected,exclude"
 				/>
 			</select>
 		</label>
@@ -35,7 +35,7 @@
 				style="width: 275px;" 
 				maxlength="32" 
 				value="$params['text_id']" 
-				eval="value"
+				cms:eval="value"
 			/>
 		</label>
 		<label>
@@ -55,7 +55,7 @@
 					<option></option>
 					<_image_list 
 						selected="$params['image']" 
-						eval="selected"
+						cms:eval="selected"
 						template="image_option.xml"
 						local="1"
 					/>
@@ -65,7 +65,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

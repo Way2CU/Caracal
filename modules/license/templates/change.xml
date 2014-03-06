@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_domain" module="license"/></span>
 			<input
 				type="text" name="domain" style="width: 300px;"
 				maxlength="100" onblur="javascript: license_UpdateKey(this);"
-				value="$params['domain']" eval="value"
+				value="$params['domain']" cms:eval="value"
 			/>
 		</label>
 		<label class="checkbox">
@@ -24,7 +24,7 @@
 			<span><_text constant="label_license_key" module="license"/></span>
 			<input
 				type="text" name="license" style="width: 300px;" readonly="readonly"
-				value="$params['license']" eval="value" id="license_key"
+				value="$params['license']" cms:eval="value" id="license_key"
 			/>
 		</label>
 		<div class="scrollable_list">
@@ -34,13 +34,13 @@
 				</span>
 			</div>
 			<div class="list_content" style="height: 200px">
-				<_module_list license="$params['id']" eval="license"/>
+				<_module_list license="$params['id']" cms:eval="license"/>
 			</div>
 		</div>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

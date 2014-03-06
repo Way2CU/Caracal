@@ -8,7 +8,7 @@
 					<input
 						type="radio"
 						name="'delivery_'.$params['method']"
-						eval="name,value"
+						cms:eval="name,value"
 						value="$params['id']"
 						checked="checked"
 					/>
@@ -17,7 +17,7 @@
 					<input
 						type="radio"
 						name="'delivery_'.$params['method']"
-						eval="name,value"
+						cms:eval="name,value"
 						value="$params['id']"
 					/>
 				</_if>

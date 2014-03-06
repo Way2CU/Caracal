@@ -2,12 +2,12 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<cms:if condition="$params['selected']">
-		<option value="$params['id']" eval="value" selected="selected">
+		<option value="$params['id']" cms:eval="value" selected="selected">
 			<cms:var name="$params['text']"/>
 		</option>
 	</cms:if>
 	<cms:if condition="!$params['selected']">
-		<option value="$params['id']" eval="value">
+		<option value="$params['id']" cms:eval="value">
 			<cms:var name="$params['text']"/>
 		</option>
 	</cms:if>

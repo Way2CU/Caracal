@@ -6,7 +6,7 @@
 			<_var name="$params['title'][$language]"/>
 		</span>
 		<div class="list">
-			<_module name="news" action="show_news_list" group="$params['text_id']" eval="group"/>
+			<_module name="news" action="show_news_list" group="$params['text_id']" cms:eval="group"/>
 		</div>
 	</div>
 </document>

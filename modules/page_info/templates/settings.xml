@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div id="page_info_notebook">
 			<div>
 				<label>
@@ -15,16 +15,16 @@
 			<div>
 				<label>
 					<span><cms:text constant="label_analytics" module="page_info"/></span>
-					<input type="text" name="analytics" value="$settings['analytics']" eval="value"/>
+					<input type="text" name="analytics" value="$settings['analytics']" cms:eval="value"/>
 				</label>
 				<label>
 					<span><cms:text constant="label_analytics_domain" module="page_info"/></span>
-					<input type="text" name="analytics_domain" value="$settings['analytics_domain']" eval="value"/>
+					<input type="text" name="analytics_domain" value="$settings['analytics_domain']" cms:eval="value"/>
 				</label>
 				<label>
 					<span><cms:text constant="label_analytics_version" module="page_info"/></span>
 					<select name="analytics_version">
-						<cms:analytics_versions selected="$settings['analytics_version']" eval="selected"/>
+						<cms:analytics_versions selected="$settings['analytics_version']" cms:eval="selected"/>
 					</select>
 				</label>
 			</div>
@@ -32,19 +32,19 @@
 			<div>
 				<label>
 					<span><cms:text constant="label_wm_tools" module="page_info"/></span>
-					<input type="text" name="wm_tools" value="$settings['wm_tools']" eval="value" style="width: 350px;"/>
+					<input type="text" name="wm_tools" value="$settings['wm_tools']" cms:eval="value" style="width: 350px;"/>
 				</label>
 				<div style="padding-bottom: 10px;">
 					<div class="box left">
 						<label>
 							<span><cms:text constant="label_optimizer" module="page_info"/></span>
-							<input type="text" name="optimizer" value="$settings['optimizer']" eval="value"/>
+							<input type="text" name="optimizer" value="$settings['optimizer']" cms:eval="value"/>
 						</label>
 					</div>
 					<div class="box left">
 						<label>
 							<span><cms:text constant="label_optimizer_key" module="page_info"/></span>
-							<input type="text" name="optimizer_key" value="$settings['optimizer_key']" eval="value" style="width: 120px;"/>
+							<input type="text" name="optimizer_key" value="$settings['optimizer_key']" cms:eval="value" style="width: 120px;"/>
 						</label>
 					</div>
 					<div style="clear: both;"/>
@@ -54,7 +54,7 @@
 
 				<label>
 					<span><cms:text constant="label_bing_wm_tools" module="page_info"/></span>
-					<input type="text" name="bing_wm_tools" value="$settings['bing_wm_tools']" eval="value" style="width: 350px"/>
+					<input type="text" name="bing_wm_tools" value="$settings['bing_wm_tools']" cms:eval="value" style="width: 350px"/>
 				</label>
 			</div>
 		</div>
@@ -62,7 +62,7 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

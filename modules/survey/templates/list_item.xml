@@ -4,7 +4,7 @@
 	<div class="list_item">
 		<!--
 		<span class="column" style="width: 50px;">
-			<input type="checkbox" name="'result_'.$params['entry']" eval="name"/>
+			<input type="checkbox" name="'result_'.$params['entry']" cms:eval="name"/>
 		</span>
 		-->
 		<span class="column" style="width: 150px;">

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="downloads_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="downloads_change_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_name" module="downloads"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="100"/>
 			<_language_data param="name"/>
@@ -19,7 +19,7 @@
 		</label>
 		<label>
 			<span><_text constant="label_file" module="downloads"/></span>
-			<input type="text" name="file" readonly="readonly" style="width: 270px;"  value="$params['filename']" eval="value"/>
+			<input type="text" name="file" readonly="readonly" style="width: 270px;"  value="$params['filename']" cms:eval="value"/>
 		</label>
 		<label class="checkbox">
 			<span><_text constant="label_visible" module="downloads"/></span>
@@ -32,7 +32,7 @@
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

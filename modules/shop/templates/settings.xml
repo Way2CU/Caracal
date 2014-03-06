@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><_text constant="label_email_article" module="shop"/></span>
 			<select name="email_article" style="width: 300px">
@@ -12,7 +12,7 @@
 					template="article_option.xml"
 					local="1"
 					selected="$settings['email_article']"
-					eval="selected"
+					cms:eval="selected"
 				/>
 			</select>
 		</label>
@@ -26,7 +26,7 @@
 					template="country_option.xml"
 					local="1"
 					selected="$settings['fixed_country']"
-					eval="selected"
+					cms:eval="selected"
 				/>
 			</select>
 		</label>
@@ -40,14 +40,14 @@
 					template="country_option.xml"
 					local="1"
 					selected="$settings['shop_location']"
-					eval="selected"
+					cms:eval="selected"
 				/>
 			</select>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

@@ -5,21 +5,21 @@
 		<span class="column" style="display: block;">
 			<label>
 				<_if condition="$params['in_category'] == 1">
-					<input type="checkbox" name="'category_id_'.$params['id']" eval="name" value="1" checked="checked"/>
+					<input type="checkbox" name="'category_id_'.$params['id']" cms:eval="name" value="1" checked="checked"/>
 				</_if>
 				<_if condition="$params['in_category'] == 0">
-					<input type="checkbox" name="'category_id_'.$params['id']" eval="name" value="1"/>
+					<input type="checkbox" name="'category_id_'.$params['id']" cms:eval="name" value="1"/>
 				</_if>
 				<_var name="$params['title'][$language]"/>
 			</label>
 		</span>
 	</div>
-	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" eval="style">
+	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" cms:eval="style">
 		<_children
 			parent_id="$params['id']"
 			level="$params['level'] + 1"
 			item_id="$params['item_id']"
-			eval="parent_id,level,item_id"
+			cms:eval="parent_id,level,item_id"
 			template="category_checkbox_list_item.xml"
 			local="1"
 		/>

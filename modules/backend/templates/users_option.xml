@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<_if condition="$params['selected']">
-		<option value="$params['id']" eval="value" selected="selected"><_var name="$params['fullname']"/></option>
+		<option value="$params['id']" cms:eval="value" selected="selected"><_var name="$params['fullname']"/></option>
 	</_if>
 	<_if condition="!$params['selected']">
-		<option value="$params['id']" eval="value"><_var name="$params['fullname']"/></option>
+		<option value="$params['id']" cms:eval="value"><_var name="$params['fullname']"/></option>
 	</_if>
 </document>

@@ -12,10 +12,10 @@
 			}
 		]]>
 	</script>
-	<form action="$_SERVER['PHP_SELF']" method="POST" eval="action">
+	<form action="$_SERVER['PHP_SELF']" method="POST" cms:eval="action">
 		<div style="margin-bottom: 15px;">
 			<div class="icon">
-				<img src="$params['image']" alt="" eval="src"/>
+				<img src="$params['image']" alt="" cms:eval="src"/>
 			</div>
 
 			<div class="controls">
@@ -27,7 +27,7 @@
 				<div class="input_controls">
 					<label style="clear: both;">
 						<span><_text constant="username" module="backend"/></span>
-						<input type="text" name="username" value="$params['username']" eval="value" style="width: 160px;"/>
+						<input type="text" name="username" value="$params['username']" cms:eval="value" style="width: 160px;"/>
 					</label>
 					<label>
 						<span><_text constant="password" module="backend"/></span>

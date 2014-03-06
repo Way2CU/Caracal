@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="image_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="image_change_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_text_id" module="gallery"/></span>
-			<input type="text" name="text_id" class="code" value="$params['text_id']" style="width: 270px;" maxlength="32" eval="value"/>
+			<input type="text" name="text_id" class="code" value="$params['text_id']" style="width: 270px;" maxlength="32" cms:eval="value"/>
 		</label>
 		<label>
 			<span><_text constant="label_title" module="gallery"/></span>
@@ -16,7 +16,7 @@
 			<span><_text constant="label_group" module="gallery"/></span>
 			<select name="group" style="width: 270px;">
 				<option></option>
-				<_group_list template="groups_option.xml" selected="$params['group']" eval="selected" local="1"/>
+				<_group_list template="groups_option.xml" selected="$params['group']" cms:eval="selected" local="1"/>
 			</select>
 		</label>
 		<label>
@@ -48,7 +48,7 @@
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

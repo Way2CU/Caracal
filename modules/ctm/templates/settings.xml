@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<fieldset>
 			<legend><cms:text constant="legend_account" module="ctm"/></legend>
 			<label>
@@ -10,7 +10,7 @@
 					type="text" 
 					name="account_id" 
 					value="$settings['account_id']" 
-					eval="value"
+					cms:eval="value"
 					style="width: 270px;"
 					class="code"
 				/>
@@ -21,7 +21,7 @@
 					<input 
 						type="checkbox" 
 						name="include_code" 
-						eval="value"
+						cms:eval="value"
 						checked="checked"
 					/>
 				</cms:if>
@@ -29,7 +29,7 @@
 					<input 
 						type="checkbox" 
 						name="include_code" 
-						eval="value"
+						cms:eval="value"
 					/>
 				</cms:if>
 			</label>
@@ -43,7 +43,7 @@
 					type="text" 
 					name="account_key" 
 					value="$settings['account_key']" 
-					eval="value"
+					cms:eval="value"
 					style="width: 350px;"
 					class="code"
 				/>
@@ -54,7 +54,7 @@
 					type="text" 
 					name="account_secret" 
 					value="$settings['account_secret']" 
-					eval="value"
+					cms:eval="value"
 					style="width: 350px;"
 					class="code"
 				/>
@@ -64,7 +64,7 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<cms:text constant="cancel"/>
 			</button>
 		</div>

@@ -11,14 +11,14 @@
 					selected="isset($_REQUEST['type']) ? fix_chars($_REQUEST['type']) : 0"
 					template="types_option.xml"
 					local="1"
-					eval="selected"
+					cms:eval="selected"
 				/>
 			</select>
 		</div>
 		<_if condition="isset($_REQUEST['type']) &amp;&amp; !empty($_REQUEST['type'])">
 			<a 
 				href="url_Make('transfer_control', 'backend_module', array('module', 'survey'), array('backend_action', 'export_data'), array('type', fix_chars($_REQUEST['type'])))"
-				eval="href"
+				cms:eval="href"
 			>
 				<_text constant="menu_export" module="survey"/>
 			</a>
@@ -36,14 +36,14 @@
 			-->
 			<_columns_list
 				type="isset($_REQUEST['type']) ? $_REQUEST['type'] : -1"
-				eval="type"
+				cms:eval="type"
 			/>
 		</div>
 		<div class="list_content" style="height: 250px">
 			<_if condition="isset($_REQUEST['type']) &amp;&amp; !empty($_REQUEST['type'])">
 				<_results_list
 					type="$_REQUEST['type']"
-					eval="type"
+					cms:eval="type"
 				/>
 			</_if>
 		</div>

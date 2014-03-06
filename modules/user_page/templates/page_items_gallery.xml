@@ -8,7 +8,7 @@
 					id="$params['item']"
 					template="title_gallery.xml"
 					template_path="user_page::getInstance()->path.'templates/'"
-					eval="template_path,id"
+					cms:eval="template_path,id"
 				/>
 			</label>
 		</span>

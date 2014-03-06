@@ -8,10 +8,10 @@
 		</div>
 	</div>
 	<div class="button_bar">
-		<button type="button" onclick="$params['yes_action']" eval="onclick">
+		<button type="button" onclick="$params['yes_action']" cms:eval="onclick">
 			<_var name="$params['yes_text']"/>
 		</button>
-		<button type="button" onclick="$params['no_action']" eval="onclick">
+		<button type="button" onclick="$params['no_action']" cms:eval="onclick">
 			<_var name="$params['no_text']"/>
 		</button>
 	</div>

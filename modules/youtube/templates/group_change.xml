@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="group_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="group_change_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_text_id" module="youtube"/></span>
 			<input
 				type="text"
@@ -12,7 +12,7 @@
 				style="width: 200px;"
 				maxlength="32"
 				value="$params['text_id']"
-				eval="value"
+				cms:eval="value"
 			/>
 		</label>
 		<label>
@@ -43,7 +43,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

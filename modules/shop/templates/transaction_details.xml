@@ -5,11 +5,11 @@
 		<div>
 			<label>
 				<span><_text constant="label_full_name" module="shop"/></span>
-				<input type="hidden" name="id" value="$params['id']" eval="value"/>
+				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 				<input 
 					type="text" 
 					value="$params['first_name'].' '.$params['last_name']" 
-					eval="value" 
+					cms:eval="value" 
 					readonly="readonly"
 					style="width: 200px;"
 				/>
@@ -19,7 +19,7 @@
 				<input 
 					type="text" 
 					value="$params['email']" 
-					eval="value" 
+					cms:eval="value" 
 					readonly="readonly"
 					style="width: 200px;"
 				/>
@@ -28,7 +28,7 @@
 			<label>
 				<span><_text constant="label_status" module="shop"/></span>
 				<select name="status">
-					<_transaction_status active="$params['status']" eval="active"/>
+					<_transaction_status active="$params['status']" cms:eval="active"/>
 				</select>
 				<button 
 					type="button"
@@ -41,15 +41,15 @@
 			<table>
 				<tr>
 					<td><_text constant="label_handling" module="shop"/></td>
-					<td><input type="text" value="$params['handling']" eval="value" readonly="readonly"/></td>
+					<td><input type="text" value="$params['handling']" cms:eval="value" readonly="readonly"/></td>
 				</tr>
 				<tr>
 					<td><_text constant="label_shipping" module="shop"/></td>
-					<td><input type="text" value="$params['shipping']" eval="value" readonly="readonly"/></td>
+					<td><input type="text" value="$params['shipping']" cms:eval="value" readonly="readonly"/></td>
 				</tr>
 				<tr>
 					<td><_text constant="label_total" module="shop"/></td>
-					<td><input type="text" value="$params['total']" eval="value" readonly="readonly"/></td>
+					<td><input type="text" value="$params['total']" cms:eval="value" readonly="readonly"/></td>
 				</tr>
 			</table>
 			<hr/>
@@ -58,7 +58,7 @@
 				<input 
 					type="text" 
 					value="$params['timestamp']" 
-					eval="value" 
+					cms:eval="value" 
 					readonly="readonly"
 					style="width: 200px;"
 				/>
@@ -76,7 +76,7 @@
 				<input
 					type="text"
 					value="$params['delivery_method']"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 270px;"
 				/>

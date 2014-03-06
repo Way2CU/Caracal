@@ -14,7 +14,7 @@
 					selected="isset($_REQUEST['group']) ? fix_chars($_REQUEST['group']) : 0"
 					template="groups_option.xml"
 					local="1"
-					eval="selected"
+					cms:eval="selected"
 				/>
 			</select>
 		</div>
@@ -33,7 +33,7 @@
 			<_image_list 
 				show_invisible="1"
 				group_id="isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0"
-				eval="group_id"
+				cms:eval="group_id"
 			/>
 		</div>
 		<script type="text/javascript">

@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="checkout"> 
-		<div class="$params['redirect'] ? 'checkout_message redirect' : 'checkout_message'" eval="class">
+		<div class="$params['redirect'] ? 'checkout_message redirect' : 'checkout_message'" cms:eval="class">
 			<h3><cms:text constant="title_checkout_message" module="shop"/></h3>
 			<p>
 				<cms:var name="$params['message']"/>
@@ -14,7 +14,7 @@
 				<button
 					type="button"
 					onclick="'javascript: window.location=\''.$params['button_action'].'\';'"
-					eval="onclick"
+					cms:eval="onclick"
 				>
 					<cms:var name="$params['button_text']"/>
 				</button>

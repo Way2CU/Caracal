@@ -20,7 +20,7 @@
 			<!-- List Content -->
 			<_value_list
 				definition="$_REQUEST['definition']"
-				eval="definition"
+				cms:eval="definition"
 			/>
 		</div>
 	</div>

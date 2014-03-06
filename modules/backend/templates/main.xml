@@ -15,7 +15,7 @@
 			/>
 		</head>
 
-		<body class="$language_rtl ? 'rtl' : 'ltr'" eval="class">
+		<body class="$language_rtl ? 'rtl' : 'ltr'" cms:eval="class">
 			<div id="wrap">
 				<div id="main_menu">
 					<cms:if condition="isset($_SESSION['logged']) and $_SESSION['logged']">

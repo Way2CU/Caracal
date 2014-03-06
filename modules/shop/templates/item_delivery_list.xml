@@ -6,14 +6,14 @@
 			<_var name="$params['name'][$language]"/>
 		</span>
 	</div>
-	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" eval="style">
+	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" cms:eval="style">
 		<div class="list_item">
 			<span class="column" style="width: 360px;">
 				<label style="opacity: 0.5">
 					<input
 						type="radio"
 						name="'delivery_'.$params['id']"
-						eval="name"
+						cms:eval="name"
 						value=""
 					/>
 					<_text constant="remove_delivery" module="shop"/>
@@ -26,7 +26,7 @@
 			local="1"
 			item="$params['item']"
 			method="$params['id']"
-			eval="item,method"
+			cms:eval="item,method"
 		/>
 	</div>
 </document>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="shop_category_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_category_add_form">
 		<label>
 			<span><_text constant="label_category_parent" module="shop"/></span>
 			<_if condition="!is_null($params['parent'])">
-				<input type="hidden" name="parent" value="fix_id($_REQUEST['parent'])" eval="value"/>
+				<input type="hidden" name="parent" value="fix_id($_REQUEST['parent'])" cms:eval="value"/>
 				<_category
 					id="$params['parent']"
-					eval="id"
+					cms:eval="id"
 					template="category_readonly_input.xml"
 					local="1"
 				/>
@@ -19,7 +19,7 @@
 					type="text"
 					name="parent_display"
 					value="shop::getInstance()->getLanguageConstant('no_parent_category')"
-					eval="value"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 375px;"
 				/>
@@ -52,7 +52,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

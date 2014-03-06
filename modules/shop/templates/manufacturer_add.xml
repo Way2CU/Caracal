@@ -3,7 +3,7 @@
 <document>
 	<form 
 		action="$params['form_action']" 
-		eval="action" 
+		cms:eval="action" 
 		method="POST" 
 		id="shop_manufacturer_add_form" 
 		enctype="multipart/form-data"
@@ -23,7 +23,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

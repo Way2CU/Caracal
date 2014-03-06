@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
-		<input type="hidden" name="page" value="$params['page']" eval="value"/>
-		<input type="hidden" name="type" value="user_page::VIDEO" eval="value"/>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<input type="hidden" name="page" value="$params['page']" cms:eval="value"/>
+		<input type="hidden" name="type" value="user_page::VIDEO" cms:eval="value"/>
 		<label>
 			<span><_text constant="label_title" module="youtube"/></span>
 			<select name="item" style="width: 270px;">
 				<_video_list
 					template="option_video.xml"
 					template_path="user_page::getInstance()->path.'templates/'"
-					eval="template_path"
+					cms:eval="template_path"
 				/>
 			</select>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><_text constant="add"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

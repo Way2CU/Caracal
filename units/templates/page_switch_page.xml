@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../schema/template.dtd">
 <document>
-	<a href="$params['link']" class="$params['class']" eval="href,class">
+	<a href="$params['link']" class="$params['class']" cms:eval="href,class">
 		<_var name="$params['number']"/>
 	</a>
 </document>

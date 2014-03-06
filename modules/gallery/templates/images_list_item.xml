@@ -9,7 +9,7 @@
 		</div>
 
 		<div class="image_holder">
-			<img src="$params['thumbnail']" alt="$params['title'][$language]" eval="src,alt"/>
+			<img src="$params['thumbnail']" alt="$params['title'][$language]" cms:eval="src,alt"/>
 		</div>
 
 		<span class="title">

@@ -4,7 +4,7 @@
 	<_if condition="$params['selected'] == $params['short']">
 		<option 
 			value="$params['short']" 
-			eval="value" 
+			cms:eval="value" 
 			selected="selected"
 		>
 			<_var name="$params['name']"/>
@@ -13,7 +13,7 @@
 	<_if condition="$params['selected'] != $params['short']">
 		<option 
 			value="$params['short']" 
-			eval="value" 
+			cms:eval="value" 
 		>
 			<_var name="$params['name']"/>
 		</option>

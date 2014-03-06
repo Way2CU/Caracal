@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST">
-		<input type="hidden" name="hidden_field" value="$params['some_value']" eval="value"/>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<input type="hidden" name="hidden_field" value="$params['some_value']" cms:eval="value"/>
 		<label>
 			<span><_text constant="label"/></span>
 			<input type="text" name="name" style="width: 270px;" maxlength="30"/>
@@ -10,7 +10,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>

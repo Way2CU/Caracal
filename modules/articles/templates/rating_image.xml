@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<img src="$params['url']" alt="$params['rating']" title="$params['rating']" eval="src,alt,title"/>
+	<img src="$params['url']" alt="$params['rating']" title="$params['rating']" cms:eval="src,alt,title"/>
 </document>

@@ -26,7 +26,7 @@
 	<div class="area">
 		<img
 			src="$params['image_score']"
-			eval="src"
+			cms:eval="src"
 		/>
 	</div>
 
@@ -48,7 +48,7 @@
 	<div class="area double">
 		<img
 			src="$params['image_bytes']"
-			eval="src"
+			cms:eval="src"
 		/>
 	</div>
 </document>

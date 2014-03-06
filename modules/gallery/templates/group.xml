@@ -3,7 +3,7 @@
 <document>
 	<div class="group">
 		<h2><_var name="$params['name']"/></h2>
-		<_group_thumbnail id="$params['id']" eval="id"/>
+		<_group_thumbnail id="$params['id']" cms:eval="id"/>
 		<_var name="$params['description']"/>
 	</div>
 </document>

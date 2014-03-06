@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" eval="action" method="POST" id="shop_manufacturer_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_manufacturer_change_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" eval="value"/>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><_text constant="label_manufacturer_name" module="shop"/></span>
 			<input type="text" name="name" style="width: 270px;" class="multi-language" maxlength="255"/>
 			<_language_data param="name"/>
@@ -17,7 +17,7 @@
 				style="width: 270px;" 
 				maxlength="255"
 				value="$params['web_site']"
-				eval="value"
+				cms:eval="value"
 			/>
 		</label>
 		<label>
@@ -26,7 +26,7 @@
 				<option/>
 				<_image_list
 					selected="$params['logo']"
-					eval="selected"
+					cms:eval="selected"
 					template="image_option.xml"
 					local="1"
 					protected="1"
@@ -36,7 +36,7 @@
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" eval="onclick">
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
 				<_text constant="cancel"/>
 			</button>
 		</div>
