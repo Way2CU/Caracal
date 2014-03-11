@@ -1218,7 +1218,7 @@ class youtube extends Module {
 	 * @return string
 	 */
 	public function getThumbnailURL($video_id, $number=2) {
-		return "http://img.youtube.com/vi/{$video_id}/{$number}.jpg";
+		return (_SECURE ? 'https://' : 'http://')."img.youtube.com/vi/{$video_id}/{$number}.jpg";
 	}
 
 	/**
@@ -1238,7 +1238,7 @@ class youtube extends Module {
 
 		$query_params = implode('&amp;', $new_params);
 
-		return "http://www.youtube.com/v/{$video_id}?{$query_params}";
+		return (_SECURE ? 'https://' : 'http://')."www.youtube.com/v/{$video_id}?{$query_params}";
 	}
 
 }
