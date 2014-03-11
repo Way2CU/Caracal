@@ -1,10 +1,5 @@
 <?php
 
-/**
- * LANGUAGE HANDLER
- *
- * @author MeanEYE
- */
 
 class LanguageHandler {
 	private $engine;
