@@ -779,9 +779,7 @@ class shop extends Module {
 				  `validated` BOOLEAN NOT NULL DEFAULT '0',
 				  `guest` BOOLEAN NOT NULL DEFAULT '0',
 				  `uid` varchar(50) NOT NULL,
-				  `system_user` int NULL,
-				  PRIMARY KEY (`id`),
-				  KEY `system_user` (`system_user`)
+				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 		
@@ -806,6 +804,7 @@ class shop extends Module {
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
 				  `id` INT NOT NULL AUTO_INCREMENT,
 				  `buyer` INT NOT NULL,
+				  `system_user` int NULL,
 				  `address` INT NOT NULL,
 				  `uid` varchar(30) NOT NULL,
 				  `type` smallint(6) NOT NULL,
@@ -822,6 +821,7 @@ class shop extends Module {
 				  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 				  PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`),
+				  KEY `system_user` (`system_user`),
 				  KEY `address` (`address`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";		
 		$db->query($sql);
@@ -923,7 +923,7 @@ class shop extends Module {
 					'shop_item_sizes',
 					'shop_item_size_values',
 					'shop_buyers',
-					'shop_buyer_addresses',
+					'shop_delivery_address',
 					'shop_transactions',
 					'shop_transaction_items',
 					'shop_transaction_plans',
@@ -931,7 +931,7 @@ class shop extends Module {
 					'shop_warehouse',
 					'shop_stock',
 					'shop_related_items',
-					'shop_manufacturers',
+					'shop_manufacturers'
 				);
 		
 		$db->drop_tables($tables);
@@ -1137,7 +1137,6 @@ class shop extends Module {
 		$user_id = null;
 		$transaction_id = null;
 
-		$buyer_manager = ShopBuyersManager::getInstance();
 		$transaction_manager = ShopTransactionsManager::getInstance();
 
 		// try to get user id
@@ -1151,13 +1150,11 @@ class shop extends Module {
 		if (isset($tag_params['transaction']))
 			$transaction_id = fix_chars($tag_params['transaction']);
 
-		if (is_null($transaction_id) && !is_null($user_id)) {
-			$buyer = $buyer_manager->getSingleItem(array('id'), array('system_user' => $user_id));
-
-			// we got the buyer based on user id, now get the transaction id
-			if (is_object($buyer))
-				$transaction_id = $transaction_manager->getItemValue('id', array('buyer' => $buyer->id));
-		}
+		if (is_null($transaction_id) && !is_null($user_id))
+			$transaction_id = $transaction_manager->getSingleItem(
+				array('id'),
+				array('system_user' => $user_id)
+			);
 
 		// cancel recurring plan
 		if (!is_null($transaction_id)) {
@@ -1169,7 +1166,7 @@ class shop extends Module {
 			if (is_object($transaction) && array_key_exists($transaction->payment_method, $this->payment_methods)) {
 				// get payment method and initate cancelation process
 				$payment_method = $this->payment_methods[$transaction->payment_method];
-				$result = $payment_method->cancel_recurring_plan($transaction);
+				$result = $payment_method->cancel_recurring_payment($transaction);
 
 			} else {
 				// unknown method or transaction, log error
@@ -1192,7 +1189,6 @@ class shop extends Module {
 		$result = null;
 
 		// get managers
-		$buyer_manager = ShopBuyersManager::getInstance();
 		$transaction_manager = ShopTransactionsManager::getInstance();
 		$plan_manager = ShopTransactionPlansManager::getInstance();
 		$recurring_manager = ShopRecurringPaymentsManager::getInstance();
@@ -1205,24 +1201,13 @@ class shop extends Module {
 		if (is_null($user_id))
 			return $result;
 
-		// get buyer
-		$buyer = $buyer_manager->getSingleItem(
-			$buyer_manager->getFieldNames(),
-			array('system_user' => $user_id)
-		);
-
-		if (!is_object($buyer)) {
-			trigger_error('Shop: Unknown buyer, can not check for recurring payment.', E_USER_NOTICE);
-			return $result;
-		}
-
 		// get all recurring payment transactions for current buyer
 		$transaction = $transaction_manager->getSingleItem(
 			array('id'),
 			array(
-				'type'		=> TransactionType::SUBSCRIPTION,
-				'status'	=> TransactionStatus::COMPLETED,
-				'buyer'		=> $buyer->id
+				'type'			=> TransactionType::SUBSCRIPTION,
+				'status'		=> TransactionStatus::COMPLETED,
+				'system_user'	=> $user_id
 			),
 			array('timestamp'),
 			false  // ascending
@@ -1362,19 +1347,14 @@ class shop extends Module {
 
 		// get transaction and buyer
 		$transaction = $transaction_manager->getSingleItem(
-									array('buyer'),
+									$transaction_manager->getFieldNames(),
 									array('id' => $plan->transaction)
-								);
-
-		$buyer = $buyer_manager->getSingleItem(
-									$buyer_manager->getFieldNames(),
-									array('id' => $transaction->buyer)
 								);
 
 		// trigger event
 		$this->event_handler->trigger(
 									RecurringPayment::$signals[$status],
-									$buyer, $plan, $payment
+									$transaction, $plan, $payment
 								);
 
 		return $result;
@@ -2235,9 +2215,6 @@ class shop extends Module {
 							'guest'			=> 1
 						);
 
-					if ($_SESSION['logged'])
-						$data['system_user'] = $_SESSION['uid'];
-
 					// include uid if specified
 					if (!is_null($uid)) {
 						$conditions['uid'] = $uid;
@@ -2370,7 +2347,6 @@ class shop extends Module {
 			$uid = uniqid('', true);
 			$summary = $this->getCartSummary($type, $recipient, $uid);
 
-			// generate new transaction uid
 			$result['uid'] = $uid;
 			$result['type'] = $type;
 			$result['status'] = TransactionStatus::PENDING;
@@ -2385,6 +2361,10 @@ class shop extends Module {
 			// add address if needed
 			if (!is_null($address))
 				$result['address'] = $address->id;
+
+			// assign system user
+			if ($_SESSION['logged'])
+				$result['system_user'] = $_SESSION['uid'];
 
 			// create new transaction
 			$transactions_manager->insertData($result);
@@ -2514,9 +2494,6 @@ class shop extends Module {
 
 			} else {
 				// create new buyer
-				if (!isset($buyer_data['system_user']) && $_SESSION['logged'])
-					$buyer_data['system_user'] = $_SESSION['uid'];
-
 				$buyer_manager->insertData($buyer_data);
 				$buyer_id = $buyer_manager->getInsertedID();
 			}
