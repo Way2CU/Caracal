@@ -17,6 +17,7 @@ class ShopTransactionsManager extends ItemManager {
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('buyer', 'int');
+		$this->addProperty('system_user', 'int');
 		$this->addProperty('address', 'int');
 		$this->addProperty('uid', 'varchar');
 		$this->addProperty('type', 'smallint');
