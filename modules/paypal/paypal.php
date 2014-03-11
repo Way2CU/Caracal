@@ -434,32 +434,15 @@ class paypal extends Module {
 	/**
 	 * Handle recurring payment IPN.
 	 *
-	 * @param object $buyer
+	 * @param object $transaction
 	 * @param string $type
 	 * @param float $amount
 	 * @return boolean
 	 */
-	private function handleRecurringIPN($buyer, $type, $amount) {
+	private function handleRecurringIPN($transaction, $type, $amount) {
 		$result = false;
 		$shop = shop::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
 		$plan_manager = ShopTransactionPlansManager::getInstance();
-
-		// get latest transaction associated with this buyer
-		$transaction = $transaction_manager->getSingleItem(
-													array('id'),
-													array('buyer' => $buyer->id),
-													array('timestamp'),
-													false
-												);
-
-		if (!is_object($transaction)) {
-			trigger_error(
-					'PayPal: Unable to handle IPN, unable to get transaction for buyer: '.$buyer->id,
-					E_USER_WARNING
-				);
-			return;
-		}
 
 		// get plan associated with this transaction
 		$plan = $plan_manager->getSingleItem(
@@ -505,28 +488,15 @@ class paypal extends Module {
 			return;
 		}
 
+		trigger_error(json_encode($_REQUEST));
+
 		// get objects
-		$buyer_manager = ShopBuyersManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
 
 		// get data
 		$handled = false;
-		$payer_id = escape_chars($_POST['payer_id']);
 		$type = escape_chars($_POST['txn_type']);
 		$amount = escape_chars($_POST['amount']);
-
-		// get buyer
-		$buyer = $buyer_manager->getSingleItem(
-										$buyer_manager->getFieldNames(),
-										array('uid' => $payer_id)
-									);
-
-		if (!is_object($buyer)) {
-			trigger_error(
-					'PayPal: Unable to handle IPN, unknown buyer: '.$payer_id,
-					E_USER_WARNING
-				);
-			return;
-		}
 
 		// handle different notification types
 		switch ($type) {
@@ -538,7 +508,19 @@ class paypal extends Module {
 			case 'recurring_payment_skipped':
 			case 'recurring_payment_suspended':
 			case 'recurring_payment_suspended_due_to_max_failed_payment':
-				$handled = $this->handleRecurringIPN($buyer, $type, $amount);
+				$profile_id = escape_chars($_REQUEST['recurring_payment_id']);
+				$transaction = $transaction_manager->getSingleItem(
+												$transaction_manager->getFieldNames(),
+												array('token' => $profile_id)
+											);
+
+				if (is_object($transaction))
+					$handled = $this->handleRecurringIPN($transaction, $type, $amount); else
+					trigger_error(
+						"PayPal: Unable to handle IPN, unknown transaction {$profile_id}.",
+						E_USER_WARNING
+					);
+
 				break;
 		}
 
