@@ -13,7 +13,7 @@ function gravatar_Get($email, $size=50) {
 	$result = str_replace('{default}', $gravatar_default, $result);
 	$result = str_replace('{rating}', $gravatar_rating, $result);
 
-	return $result;
+	return (_SECURE ? 'https://' : 'http://').$result;
 }
 
 ?>
