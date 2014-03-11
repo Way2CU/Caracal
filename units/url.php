@@ -179,7 +179,7 @@ function url_MakeFromArray($params) {
 		}
 		
 		// add relative path and domain
-		$result = dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']) . $result;
+		$result = dirname((_SECURE ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']) . $result;
 
 		// add extension in the end
 		if ($url_add_extension && $include_section)
@@ -187,7 +187,7 @@ function url_MakeFromArray($params) {
 
 	} else {
 		// form normal URL
-		$result = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+		$result = (_SECURE ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 
 		if ($section_argument != 'home')
 			$result .= '?section='.urlencode($section_argument);
@@ -293,7 +293,7 @@ function path_GetFromURL($url, $base=_BASEURL) {
  * @return string
  */
 function url_GetBaseURL() {
-	$result = dirname('http://'._DOMAIN.$_SERVER['PHP_SELF']);
+	$result = dirname((_SECURE ? 'https://' : 'http://')._DOMAIN.$_SERVER['PHP_SELF']);
 	$result = preg_replace("/\/$/i", "", $result);
 
 	return $result;
