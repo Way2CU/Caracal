@@ -1150,29 +1150,19 @@ class shop extends Module {
 		if (isset($tag_params['transaction']))
 			$transaction_id = fix_chars($tag_params['transaction']);
 
-		if (is_null($transaction_id) && !is_null($user_id))
-			$transaction_id = $transaction_manager->getSingleItem(
+		if (is_null($transaction_id) && !is_null($user_id)) {
+			$transaction = $transaction_manager->getSingleItem(
 				array('id'),
 				array('system_user' => $user_id)
 			);
 
-		// cancel recurring plan
-		if (!is_null($transaction_id)) {
-			$transaction = $transaction_manager->getSingleItem(
-				$transaction_manager->getFieldNames(),
-				array('id' => $transaction_id)
-			);
-
-			if (is_object($transaction) && array_key_exists($transaction->payment_method, $this->payment_methods)) {
-				// get payment method and initate cancelation process
-				$payment_method = $this->payment_methods[$transaction->payment_method];
-				$result = $payment_method->cancel_recurring_payment($transaction);
-
-			} else {
-				// unknown method or transaction, log error
-				trigger_error('Shop: Unknown payment method or transaction. Unable to cancel recurring payment.', E_USER_WARNING);
-			}
+			if (is_object($transaction))
+				$transaction_id = $transaction->id;
 		}
+
+		// cancel recurring plan
+		if (!is_null($transaction_id))
+			$this->cancelTransaction($transaction_id);
 
 		return $result;
 	}
@@ -1297,6 +1287,55 @@ class shop extends Module {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Cancel specified transaction.
+	 *
+	 * @param integer $id
+	 * @param string $uid
+	 * @param string $token
+	 * @return boolean
+	 */
+	public function cancelTransaction($id=null, $uid=null, $token=null) {
+		$result = false;
+		$conditions = array();
+
+		// we should always have at least one identifying method
+		if (is_null($id) && is_null($uid) && is_null($token)) {
+			trigger_error('Shop: Unable to cancel transaction, no id provided.', E_USER_WARNING);
+			return $result;
+		}
+
+		// prepare conditions for manager
+		if (!is_null($id))
+			$conditions['id'] = $id;
+
+		if (!is_null($uid))
+			$conditions['uid'] = $uid;
+
+		if (!is_null($token))
+			$conditions['token'] = $token;
+
+		// get transaction
+		$manager = ShopTransactionsManager::getInstance();
+		$transaction = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		// cancel transaction
+		if (is_object($transaction) && array_key_exists($transaction->payment_method, $this->payment_methods)) {
+			// get payment method and initate cancelation process
+			$payment_method = $this->payment_methods[$transaction->payment_method];
+
+			switch ($transaction->type) {
+				case TransactionType::SUBSCRIPTION:
+					$result = $payment_method->cancel_recurring_payment($transaction);
+					break;
+			}
+
+		} else {
+			// unknown method or transaction, log error
+			trigger_error('Shop: Unknown payment method or transaction. Unable to cancel recurring payment.', E_USER_WARNING);
+		}
 	}
 
 	/**
