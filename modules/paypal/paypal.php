@@ -488,8 +488,6 @@ class paypal extends Module {
 			return;
 		}
 
-		trigger_error(json_encode($_REQUEST));
-
 		// get objects
 		$transaction_manager = ShopTransactionsManager::getInstance();
 
