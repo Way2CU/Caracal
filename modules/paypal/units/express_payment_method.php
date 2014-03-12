@@ -318,6 +318,7 @@ class PayPal_Express extends PaymentMethod {
 	public function completeCheckout() {
 		global $language;
 
+		// prepare data for new recurring profile
 		$shop = shop::getInstance();
 		$token = escape_chars($_REQUEST['token']);
 		$payer_id = escape_chars($_REQUEST['payer_id']);
@@ -348,12 +349,34 @@ class PayPal_Express extends PaymentMethod {
 			trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
 		}
 
+
 		// create recurring profile
 		if ($recurring) {
-			$plan_name = $_SESSION['recurring_plan'];
-			$manager = PayPal_PlansManager::getInstance();
-			$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
 			$request_id = 0;
+			$plan_name = $_SESSION['recurring_plan'];
+
+			$manager = PayPal_PlansManager::getInstance();
+			$plan = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array('text_id' => $plan_name)
+								);
+			$current_plan = $shop->getRecurringPlan();
+
+			// cancel existing recurring payment if exists
+			if (!is_null($current_plan)) {
+				$plans = $this->get_recurring_plans();
+				$current_group = null;
+
+				// get plan data
+				if (isset($plans[$current_plan->plan_name]))
+					$current_group = $plans[$current_plan->plan_name]['group'];
+
+				// cancel current plan
+				if (!is_null($current_group) && $current_group == $plan->group_name) {
+					trigger_error('PayPal Express: Canceling current plan: '.$current_plan->id, E_USER_NOTICE);
+					$shop->cancelTransaction($current_plan->transaction);
+				}
+			}
 
 			// generate params for description
 			$plan_params = array(
