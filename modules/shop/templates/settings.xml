@@ -2,48 +2,78 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<label>
-			<span><_text constant="label_email_article" module="shop"/></span>
-			<select name="email_article" style="width: 300px">
-				<option/>
-				<_module
-					name="articles"
-					action="show_list"
-					template="article_option.xml"
-					local="1"
-					selected="$settings['email_article']"
-					cms:eval="selected"
-				/>
-			</select>
-		</label>
-		<label>
-			<span><_text constant="label_fixed_country" module="shop"/></span>
-			<select name="fixed_country" style="width: 300px">
-				<option/>
-				<_module
-					name="country_list"
-					action="show"
-					template="country_option.xml"
-					local="1"
-					selected="$settings['fixed_country']"
-					cms:eval="selected"
-				/>
-			</select>
-		</label>
-		<label>
-			<span><_text constant="label_shop_location" module="shop"/></span>
-			<select name="shop_location" style="width: 300px">
-				<option/>
-				<_module
-					name="country_list"
-					action="show"
-					template="country_option.xml"
-					local="1"
-					selected="$settings['shop_location']"
-					cms:eval="selected"
-				/>
-			</select>
-		</label>
+		<div id="shop_settings_notebook">
+			<div>
+				<label>
+					<span><_text constant="label_fixed_country" module="shop"/></span>
+					<select name="fixed_country" style="width: 300px">
+						<option/>
+						<_module
+							name="country_list"
+							action="show"
+							template="country_option.xml"
+							local="1"
+							selected="$settings['fixed_country']"
+							cms:eval="selected"
+						/>
+					</select>
+				</label>
+				<label>
+					<span><_text constant="label_shop_location" module="shop"/></span>
+					<select name="shop_location" style="width: 300px">
+						<option/>
+						<_module
+							name="country_list"
+							action="show"
+							template="country_option.xml"
+							local="1"
+							selected="$settings['shop_location']"
+							cms:eval="selected"
+						/>
+					</select>
+				</label>
+			</div>
+
+			<div>
+				<label>
+					<span><_text constant="label_payment_completed" module="shop"/></span>
+					<select name="payment_completed_template" style="width: 300px">
+						<option/>
+						<cms:template_list
+							selected="$settings['payment_completed_template']"
+							template="templates_option.xml"
+							local="1"
+							cms:eval="selected"
+						/>
+					</select>
+				</label>
+				<label>
+					<span><cms:text constant="label_recurring_payment_started" module="shop"/></span>
+					<select name="recurring_payment_started_template" style="width: 300px;">
+						<option/>
+						<cms:template_list
+							selected="$settings['recurring_payment_started_template']"
+							template="templates_option.xml"
+							local="1"
+							cms:eval="selected"
+						/>
+					</select>
+				</label>
+				<label>
+					<span><cms:text constant="label_recurring_payment_canceled" module="shop"/></span>
+					<select name="recurring_payment_canceled_template" style="width: 300px;">
+						<option/>
+						<cms:template_list
+							selected="$settings['recurring_payment_canceled_template']"
+							template="templates_option.xml"
+							local="1"
+							cms:eval="selected"
+						/>
+					</select>
+				</label>
+			</div>
+		</div>
+
 		<div class="button_bar">
 			<button type="submit"><_text constant="save"/></button>
 			<button type="reset"><_text constant="reset"/></button>
@@ -52,4 +82,11 @@
 			</button>
 		</div>
 	</form>
+
+	<script type="text/javascript">
+		var notebook = new Notebook('shop_settings_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
+			.setPageTitle(1, language_handler.getText('shop', 'tab_email_templates'));
+	</script>
 </document>

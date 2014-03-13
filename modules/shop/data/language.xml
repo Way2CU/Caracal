@@ -24,6 +24,7 @@
 		<constant name="tab_delivery">Delivery</constant>
 		<constant name="tab_general">General</constant>
 		<constant name="tab_shipping">Shipping</constant>
+		<constant name="tab_email_templates">Email Templates</constant>
 
 		<constant name="cycle_day">Day(s)</constant>
 		<constant name="cycle_week">Week(s)</constant>
@@ -156,7 +157,9 @@
 		<constant name="label_domestic">Available for domestic shipping</constant>
 		<constant name="label_delivery_method">Delivery method:</constant>
 		<constant name="label_remarks">Remarks or special instructions:</constant>
-		<constant name="label_email_article">Invoice template:</constant>
+		<constant name="label_payment_completed">Completed payment:</constant>
+		<constant name="label_recurring_payment_started">Recurring payment started:</constant>
+		<constant name="label_recurring_payment_canceled">Recurring payment canceled:</constant>
 		<constant name="label_fixed_country">Limit delivery to this country:</constant>
 		<constant name="label_shop_location">Location of shop:</constant>
 		<constant name="label_existing_user">Yes, I already have an account.</constant>
@@ -285,6 +288,7 @@
 		<constant name="tab_delivery">משלוח</constant>
 		<constant name="tab_general">כללי</constant>
 		<constant name="tab_shipping">משלוח</constant>
+		<constant name="tab_email_templates">Email Templates</constant>
 
 		<constant name="cycle_day">Day</constant>
 		<constant name="cycle_week">Week</constant>

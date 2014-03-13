@@ -991,6 +991,11 @@ class shop extends Module {
 						'cancel_action'	=> window_Close('shop_settings')
 					);
 
+		if (class_exists('contact_form')) {
+			$contact_form = contact_form::getInstance();
+			$template->registerTagHandler('cms:template_list', $contact_form, 'tag_TemplateList');
+		}
+
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -1001,11 +1006,15 @@ class shop extends Module {
 	 */
 	private function saveSettings() {
 		// save new settings
-		$email_article = fix_id($_REQUEST['email_article']);
+		$payment_completed = fix_chars($_REQUEST['payment_completed_template']);
+		$recurring_started = fix_chars($_REQUEST['recurring_payment_started_template']);
+		$recurring_canceled = fix_chars($_REQUEST['recurring_payment_canceled_template']);
 		$shop_location = fix_chars($_REQUEST['shop_location']);
 		$fixed_country = fix_chars($_REQUEST['fixed_country']);
 
-		$this->saveSetting('email_article', $email_article);
+		$this->saveSetting('payment_completed_template', $payment_completed);
+		$this->saveSetting('recurring_payment_started_template', $recurring_started);
+		$this->saveSetting('recurring_payment_canceled_template', $recurring_canceled);
 		$this->saveSetting('shop_location', $shop_location);
 		$this->saveSetting('fixed_country', $fixed_country);
 
