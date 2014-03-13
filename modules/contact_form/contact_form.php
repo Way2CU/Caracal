@@ -696,6 +696,8 @@ class contact_form extends Module {
 	private function _sendMail($to, $subject, $headers, $fields, $attachments=array()) {
 		global $data_path;
 
+		trigger_error('Deprecation warning: contact_form::_sendMail should not be used any more!', E_USER_NOTICE);
+
 		$result = false;
 
 		// generate boundary string
