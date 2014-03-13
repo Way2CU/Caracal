@@ -1265,10 +1265,31 @@ class shop extends Module {
 				case TransactionStatus::COMPLETED:
 					$this->event_handler->trigger('transaction-completed', $transaction);
 					unset($_SESSION['transaction']);
+
+					if ($transaction->type == TransactionType::SUBSCRIPTION) {
+						if (isset($this->settings['recurring_payment_started_template'])) {
+							$template = $this->settings['recurring_payment_started_template'];
+							$this->sendTransactionMail($transaction, $template);
+						}
+
+					} else if ($transaction->type == TransactionType::SHOPPING_CART) {
+						if (isset($this->settings['payment_completed_template'])) {
+							$template = $this->settings['payment_completed_template'];
+							$this->sendTransactionMail($transaction, $template);
+						}
+					}
+
 					break;
 
 				case TransactionStatus::CANCELED:
 					$this->event_handler->trigger('transaction-canceled', $transaction);
+
+					// send email notification
+					if ($transaction->type == TransactionType::SUBSCRIPTION)
+						if (isset($this->settings['recurring_payment_canceled_template'])) {
+							$template = $this->settings['recurring_payment_canceled_template'];
+							$this->sendTransactionMail($transaction, $template);
+						}
 					break;
 			}
 		}
@@ -1335,11 +1356,8 @@ class shop extends Module {
 			// get payment method and initate cancelation process
 			$payment_method = $this->payment_methods[$transaction->payment_method];
 
-			switch ($transaction->type) {
-				case TransactionType::SUBSCRIPTION:
-					$result = $payment_method->cancel_recurring_payment($transaction);
-					break;
-			}
+			if ($transaction->type == TransactionType::SUBSCRIPTION)
+				$result = $payment_method->cancel_recurring_payment($transaction);
 
 		} else {
 			// unknown method or transaction, log error
@@ -2576,6 +2594,244 @@ class shop extends Module {
 		foreach($required as $field)
 			if (!in_array($field, $keys))
 				$return[] = $field;
+
+		return $result;
+	}
+
+	/**
+	 * Send email for transaction using specified template.
+	 *
+	 * @param object $transaction
+	 * @param string $template
+	 * @return boolean
+	 */
+	private function sendTransactionMail($transaction, $template) {
+		global $language;
+
+		$result = false;
+
+		// require contact form
+		if (!class_exists('contact_form'))
+			return $result;
+
+		$email_address = null;
+		$contact_form = contact_form::getInstance();
+
+		// template replacement data
+		$fields = array(
+				'transaction_id'				=> $transaction->id,
+				'transaction_uid'				=> $transaction->uid,
+				'status'						=> $transaction->status,
+				'handling'						=> $transaction->handling,
+				'shipping'						=> $transaction->shipping,
+				'total'							=> $transaction->total,
+				'weight'						=> $transaction->weight,
+				'payment_method'				=> $transaction->payment_method,
+				'delivery_method'				=> $transaction->delivery_method,
+				'remark'						=> $transaction->remark,
+				'token'							=> $transaction->token,
+				'timestamp'						=> $transaction->timestamp
+			);
+
+		$timestamp = strtotime($item->timestamp);
+		$fields['date'] = date($this->getLanguageConstant('format_date_short'), $timestamp);
+		$fields['time'] = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+		// get currency
+		$currency_manager = ShopCurrenciesManager::getInstance();
+		$currency = $currency_manager->getSingleItem(
+									$currency_manager->getFieldNames(),
+									array('id' => $transaction->currency)
+								);
+		if (is_object($currency))
+			$fields['currency'] = $currency->currency;
+
+		// add buyer information
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$buyer = $buyer_manager->getSingleItem(
+								$buyer_manager->getFieldNames(),
+								array('id' => $transaction->buyer)
+							);
+
+		if (is_object($buyer)) {
+			$fields['buyer_first_name'] = $buyer->first_name;
+			$fields['buyer_last_name'] = $buyer->last_name;
+			$fields['buyer_email'] = $buyer->email;
+			$fields['buyer_uid'] = $buyer->uid;
+
+			$email_address = $buyer->email;
+		}
+
+		// add system user information
+		$user_manager = UserManager::getInstance();
+		$user = $user_manager->getSingleItem(
+							$user_manager->getFieldNames(),
+							array('id' => $transaction->system_user)
+						);
+
+		if (is_object($user)) {
+			$fields['user_name'] = $user->username;
+			$fields['user_fullname'] = $user->fullname;
+			$fields['user_email'] = $user->email;
+
+			if (is_null($email_address) || empty($email_address))
+				$email_address = $user->email;
+		}
+
+		// add buyer address
+		$address_manager = ShopBuyerAddressesManager::getInstance();
+		$address = $address_manager->getSingleItem(
+							$address_manager->getFieldNames(),
+							array('id' => $transaction->address)
+						);
+
+		if (is_object($address)) {
+			$fields['address_name'] = $address->name;
+			$fields['address_street'] = $address->street;
+			$fields['address_street2'] = $address->street2;
+			$fields['address_phone'] = $address->phone;
+			$fields['address_city'] = $address->city;
+			$fields['address_zip'] = $address->zip;
+			$fields['address_state'] = $address->state;
+			$fields['address_country'] = $address->country;
+		}
+
+		// create item table
+		switch ($transaction->type) {
+			case TransactionType::SHOPPING_CART:
+				$item_manager = ShopTransactionItemsManager::getInstance();
+				$items = $item_manager->getItems(
+								$item_manager->getFieldNames(),
+								array('transaction' => $transaction->id)
+							);
+
+				if (count($items) > 0) {
+					// create items table
+					$text_table = str_pad($this->getLanguageConstant('column_name'), 40);
+					$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
+					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
+					$text_table .= str_pad($this->getLanguageConstant('column_item_total'), 8);
+					$text_table .= "\n" . str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+
+					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
+					$html_table .= '<thead><tr>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_price').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_item_total').'</td>';
+					$html_table .= '</td></thead><tbody>';
+
+					foreach ($items as $item) {
+						// append item name with description
+						if (empty($data['description']))
+							$line = $item->name[$language] . ' (' . $item->description . ')'; else
+							$line = $item->name[$language];
+
+						$line = utf8_wordwrap($line, 40, "\n", true);
+						$line = mb_split("\n", $line);
+
+						// append other columns
+						$line[0] = $line[0] . str_pad($item->price, 8, ' ', STR_PAD_LEFT);
+						$line[0] = $line[0] . str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
+						$line[0] = $line[0] . str_pad($item->total, 8, ' ', STR_PAD_LEFT);
+
+						// add this item to text table
+						$text_table .= implode("\n", $line) . "\n\n";
+
+						// form html row
+						$row = '<tr><td>' . $item->name[$language];
+
+						if (!empty($item->description))
+							$row .= ' <small>' . $item->description . '</small>';
+
+						$row .= '</td><td>' . $item->price . '</td>';
+						$row .= '<td>' . $item->amount . '</td>';
+						$row .= '<td>' . $item->total . '</td></tr>';
+
+						// update subtotal
+						$subtotal += $item->total;
+					}
+
+					// close text table
+					$text_table .= str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+					$html_table .= '</tbody>';
+
+					// create totals
+					$text_table .= str_pad($this->getLanguageConstant('column_subtotal'), 15);
+					$text_table .= str_pad($subtotal, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_repeat('-', 25);
+					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$html_table .= '<tfoot>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_subtotal') . '</td>';
+					$html_table .= '<td>' . $subtotal . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
+
+					$html_table .= '</tfoot>';
+
+					// close table
+					$html_table .= '</table>';
+
+					// add field
+					$fields['item_table'] = $text_table;
+				}
+				break;
+
+			case TransactionType::SUBSCRIPTION:
+				$plan_manager = ShopTransactionPlansManager::getInstance();
+				$plan = $plan_manager->getSingleItem(
+								$plan_manager->getFieldNames(),
+								array('transaction' => $transaction->id)
+							);
+
+				// get payment method
+				$plan_data = null;
+				if (isset($this->payment_methods[$transaction->payment_method])) {
+					$payment_method = $this->payment_methods[$method_name];
+					$plans = $payment_method->get_recurring_plans();
+
+					if (isset($plans[$plan->plan_name]))
+						$plan_data = $plans[$plan->plan_name];
+				}
+
+				// populate fields with plan params
+				if (is_object($plan) && !is_null($plan_data)) {
+					$fields['plan_text_id'] = $plan->name;
+					$fields['plan_name'] = $plan['name'][$language];
+				}
+				break;
+		}
+
+		// we require email address for sending
+		if (is_null($email_address) || empty($email_address))
+			return $result;
+
+		// make email body
+		$email = $contact_form->makeEmailFromTemplate($template, $fields);
+
+		// send email
+		$result = $contact_form->sendMail(
+					$email_address,
+					$email['subject'],
+					$email['body'],
+					$email['headers']
+				);
 
 		return $result;
 	}
