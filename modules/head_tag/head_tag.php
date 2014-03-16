@@ -186,7 +186,10 @@ class head_tag extends Module {
 			foreach ($this->link_tags as $link) {
 				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
 
-				if ($can_be_compiled && !$optimizer->addStyle($link[1]['href']))
+				if ($can_be_compiled)
+					$added = $optimizer->addStyle($link[1]['href']);
+
+				if (!$can_be_compiled || !$added)
 					$unhandled_tags [] = $link;
 			}
 
