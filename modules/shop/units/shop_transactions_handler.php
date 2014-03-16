@@ -71,7 +71,7 @@ class ShopTransactionsHandler {
 	private function showTransactionDetails() {
 		$manager = ShopTransactionsManager::getInstance();
 		$buyer_manager = ShopBuyersManager::getInstance();
-		$address_manager = ShopBuyerAddressesManager::getInstance();
+		$address_manager = ShopDeliveryAddressManager::getInstance();
 		
 		$id = fix_id($_REQUEST['id']);
 		$transaction = $manager->getSingleItem(
