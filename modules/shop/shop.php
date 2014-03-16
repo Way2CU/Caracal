@@ -661,6 +661,9 @@ class shop extends Module {
 
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
+		// set shop in testing mode by default
+		$this->saveSetting('testing_mode', 1);
+
 		// create shop items table
 		$sql = "
 			CREATE TABLE `shop_items` (
@@ -1011,12 +1014,14 @@ class shop extends Module {
 		$recurring_canceled = fix_chars($_REQUEST['recurring_payment_canceled_template']);
 		$shop_location = fix_chars($_REQUEST['shop_location']);
 		$fixed_country = fix_chars($_REQUEST['fixed_country']);
+		$testing_mode = fix_id($_REQUEST['testing_mode']);
 
 		$this->saveSetting('payment_completed_template', $payment_completed);
 		$this->saveSetting('recurring_payment_started_template', $recurring_started);
 		$this->saveSetting('recurring_payment_canceled_template', $recurring_canceled);
 		$this->saveSetting('shop_location', $shop_location);
 		$this->saveSetting('fixed_country', $fixed_country);
+		$this->saveSetting('testing_mode', $testing_mode);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -2633,7 +2638,7 @@ class shop extends Module {
 				'timestamp'						=> $transaction->timestamp
 			);
 
-		$timestamp = strtotime($item->timestamp);
+		$timestamp = strtotime($transaction->timestamp);
 		$fields['date'] = date($this->getLanguageConstant('format_date_short'), $timestamp);
 		$fields['time'] = date($this->getLanguageConstant('format_time_short'), $timestamp);
 
@@ -2674,12 +2679,16 @@ class shop extends Module {
 			$fields['user_fullname'] = $user->fullname;
 			$fields['user_email'] = $user->email;
 
-			if (is_null($email_address) || empty($email_address))
-				$email_address = $user->email;
+			if (is_null($email_address) || empty($email_address)) {
+				$email_address = $user->email; 
+
+			} else if ($email_address != $user->email) {
+				$email_address = $email_address.','.$user->email;
+			}
 		}
 
 		// add buyer address
-		$address_manager = ShopBuyerAddressesManager::getInstance();
+		$address_manager = ShopDeliveryAddressManager::getInstance();
 		$address = $address_manager->getSingleItem(
 							$address_manager->getFieldNames(),
 							array('id' => $transaction->address)
@@ -2803,7 +2812,7 @@ class shop extends Module {
 				// get payment method
 				$plan_data = null;
 				if (isset($this->payment_methods[$transaction->payment_method])) {
-					$payment_method = $this->payment_methods[$method_name];
+					$payment_method = $this->payment_methods[$transaction->payment_method];
 					$plans = $payment_method->get_recurring_plans();
 
 					if (isset($plans[$plan->plan_name]))
@@ -2812,8 +2821,8 @@ class shop extends Module {
 
 				// populate fields with plan params
 				if (is_object($plan) && !is_null($plan_data)) {
-					$fields['plan_text_id'] = $plan->name;
-					$fields['plan_name'] = $plan['name'][$language];
+					$fields['plan_text_id'] = $plan->plan_name;
+					$fields['plan_name'] = $plan_data['name'][$language];
 				}
 				break;
 		}
@@ -3272,7 +3281,12 @@ class shop extends Module {
 	 * @return boolean
 	 */
 	public function isDebug() {
-		return true;
+		$result = true;
+
+		if (isset($this->settings['testing_mode']))
+			$result = $this->settings['testing_mode'] == 1;
+
+		return $result;
 	}
 
 	/**
