@@ -217,10 +217,8 @@ class PayPal_Direct extends PaymentMethod {
 					$current_group = $plans[$current_plan->plan_name]['group'];
 
 				// cancel current plan
-				if (!is_null($current_group) && $current_group == $plan->group_name) {
-					trigger_error('PayPal Express: Canceling current plan: '.$current_plan->id, E_USER_NOTICE);
+				if (!is_null($current_group) && $current_group == $plan->group_name)
 					$shop->cancelTransaction($current_plan->transaction);
-				}
 			}
 
 			// generate params for description
