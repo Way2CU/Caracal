@@ -569,6 +569,10 @@ class Backend_UserManager {
 										$email['headers']
 									);
 
+			if (!$result['error'])
+				$result['message'] = $this->parent->getLanguageConstant('message_password_recovery_email_sent'); else
+				$result['message'] = $this->parent->getLanguageConstant('message_password_reocvery_email_error');
+
 		} elseif (is_object($user) && !$captcha_valid) {
 			$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
 
