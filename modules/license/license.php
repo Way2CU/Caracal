@@ -182,7 +182,7 @@ class license extends Module {
 		$result = false;
 		$domain = $this->getDomain();
 
-		if (!empty($domain) && $domain == $_SERVER['HTTP_HOST']) {
+		if (!empty($domain) && $domain == $_SERVER['SERVER_NAME']) {
 			// local api, just return true
 			$result = true;
 
@@ -549,7 +549,7 @@ class license extends Module {
 	private function json_GetLicense() {
 		$result = '';
 		$domain = $this->getDomain();
-		$local_server = !empty($domain) && $domain == $_SERVER['HTTP_HOST'];
+		$local_server = !empty($domain) && $domain == $_SERVER['SERVER_NAME'];
 
 		if (isset($_REQUEST['domain']) && $local_server) {
 			$domain = escape_chars($_REQUEST['domain']);

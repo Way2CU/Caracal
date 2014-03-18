@@ -99,7 +99,7 @@ class captcha extends Module {
 		$this->saveSetting('char_type', 'numbers');
 		$this->saveSetting('arc_count', 15);
 		$this->saveSetting('font_size', 28);
-		$this->saveSetting('accepted_hosts', $_SERVER['HTTP_HOST']);
+		$this->saveSetting('accepted_hosts', $_SERVER['SERVER_NAME']);
 		$this->saveSetting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
 	}
 

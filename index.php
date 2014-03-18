@@ -51,7 +51,7 @@ if (!defined('DEBUG'))
 	error_reporting(E_ALL | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 
 // define constants
-define('_DOMAIN', $_SERVER['HTTP_HOST']);
+define('_DOMAIN', $_SERVER['SERVER_NAME']);
 define('_SECURE', !empty($_SERVER['HTTPS']));
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
