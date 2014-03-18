@@ -40,6 +40,27 @@
 			</div>
 
 			<div>
+				<label class="checkbox">
+					<span><cms:text constant="label_express_enabled" module="paypal"/></span>
+					<input
+						type="checkbox"
+						name="express_enabled"
+						checked="$settings['express_enabled'] ? 'checked' : false"
+						cms:optional="checked"
+					/>
+				</label>
+				<label class="checkbox">
+					<span><cms:text constant="label_direct_enabled" module="paypal"/></span>
+					<input
+						type="checkbox"
+						name="direct_enabled"
+						checked="$settings['direct_enabled'] ? 'checked' : false"
+						cms:optional="checked"
+					/>
+				</label>
+			</div>
+
+			<div>
 				<label>
 					<span><cms:text constant="label_handler_url" module="paypal"/></span>
 					<input
@@ -66,6 +87,7 @@
 		var notebook = new Notebook('paypal_settings_notebook');
 		notebook
 			.setPageTitle(0, language_handler.getText('paypal', 'tab_api'))
-			.setPageTitle(1, language_handler.getText('paypal', 'tab_ipn'));
+			.setPageTitle(1, language_handler.getText('paypal', 'tab_methods'))
+			.setPageTitle(2, language_handler.getText('paypal', 'tab_ipn'));
 	</script>
 </document>
