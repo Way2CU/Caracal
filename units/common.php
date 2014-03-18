@@ -9,12 +9,16 @@
  * @return boolean
  */
 function get_desktop_version() {
-	$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-	$desktop_version = strpos($user_agent, 'mobile') === false;
+	$desktop_version = true;
 
-	// ipad tries to emulate mobile, avoid that
-	if (!$desktop_version && strpos($user_agent, 'ipad') !== false)
-		$desktop_version = true;
+	if (isset($_SERVER['HTTP_USER_AGENT'])) {
+		$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+		$desktop_version = strpos($user_agent, 'mobile') === false;
+
+		// ipad tries to emulate mobile, avoid that
+		if (!$desktop_version && strpos($user_agent, 'ipad') !== false)
+			$desktop_version = true;
+	}
 
 	return $desktop_version;
 }
@@ -126,13 +130,14 @@ function unfix_chars($string) {
  * Checks if browser is non-IE
  *
  * @return boolean
- * @author MeanEYE
  */
 function is_browser_ok() {
-	$res = false;
-	if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') == false) $res = true;
+	$result = true;
 
-	return $res;
+	if (isset($_SERVER['HTTP_USER_AGENT']))
+		$result = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') == false;
+
+	return $result;
 }
 
 /**
