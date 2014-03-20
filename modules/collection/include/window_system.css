@@ -6,19 +6,49 @@
  * Author: Mladen Mijatov
  */
 
+@keyframes title_animation {
+	from { background-position: 0px 0px; }
+	to { background-position: 10px 0px; }
+}
+
+@-webkit-keyframes title_animation {
+	from { background-position: 0px 0px; }
+	to { background-position: 10px 0px; }
+}
+
 div.window {
 	display: block;
 	position: absolute;
 
-	filter: grayscale(100%);
-	-moz-filter: grayscale(100%);
-	-webkit-filter: grayscale(100%);
+	visibility: hidden;
+	opacity: 0;
+
+	margin-top: 0px;
+	background-color: #EFEFEF;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+
+	transition: top 0.5s, left 0.5s, opacity 0.5s;
 }
 
-div.window.focused {
-	filter: none;
-	-moz-filter: none;
-	-webkit-filter: none;
+div.window.visible {
+	visibility: visible;
+	opacity: 1;
+}
+
+div.window > div.container {
+	display: block;
+	overflow: hidden;
+
+	transition: max-height 1s;
+}
+
+div.window > div.container,
+div.window.loading > div.container {
+	max-height: 0px;
+}
+
+div.window.loaded > div.container {
+	max-height: 1000px;
 }
 
 /**
@@ -27,73 +57,66 @@ div.window.focused {
 div.window div.title {
 	display: block;
 
-	padding: 6px;
+	position: relative;
+	padding: 7px;
 
-	border: 1px solid #CBCBCB;
-	border-bottom: 0px;
+	background-color: #595959;
 
-	background-color: #505050;
-	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
-
-	color: #BFBFBF;
-	font-size: 14px;
-	font-weight: bold;
+	color: white;
+	font-size: 1.2em;
+	font-weight: normal;
 	text-align: center;
 	line-height: 100%;
 
-	cursor: default;
-
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window.focused div.title {
-	background-color: #1A1A1A;
+	border-color: #AC382E;
+	background-color: #e74c3c;
 }
 
 div.window.loading div.title {
-	background-image: url(../../backend/images/title_animation.gif);
-	background-position: 6px center;
-	background-repeat: no-repeat;
+	background-image: url(../images/loading.png);
+	background-repeat: repeat-both;
+
+	animation: title_animation 0.5s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	-webkit-animation: title_animation 0.5s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
 }
 
 div.window div.title a.close_button {
 	display: block;
-	width: 14px;
-	height: 14px;
+	padding: 7px;
 
-	float: right;
+	position: absolute;
+	right: 0px;
+	top: 0px;
 
-	background-color: #1A1A1A;
-	background-image: url(../../backend/images/close_normal.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
+	border-radius: 1px;
+	color: white;
 
-	text-decoration: none;
-	cursor: pointer;
+	transition: all 0.3s;
 }
 
 div.window div.title a.close_button:hover {
 	background-color: #4D4D4D;
-	background-image: url(../../backend/images/close_active.gif);
 }
 
+div.window.focused div.title a.close_button:hover {
+	background-color: #AC382E;
+}
 
 div.window div.content {
 	display: block;
-	min-height: 30px;
-
 	padding: 7px;
 
 	border: 1px solid #CBCBCB;
-	border-top-color: #f7f7f7;
+	border-top: none;
 	background-color: #EFEFEF;
-
-	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 }
 
 div.window div.content fieldset {
@@ -125,6 +148,7 @@ div.window div.content label.horizontal {
 
 div.window div.content label span {
 	display: block;
+	margin-bottom: 2px;
 }
 
 div.window div.content label span small {
@@ -163,15 +187,10 @@ div.window div.content textarea {
 	background-color: #ffffff;
 
 	color: #444444;
-	font-size: 12px;
-	font-family: Roboto, sans-serif, Arial, Tahoma;
+	font-size: 1em;
+	font-family: Ubuntu, sans-serif, Arial, Tahoma;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window div.content input[type=radio],
@@ -200,7 +219,7 @@ div.window div.content label.inline span {
 div.window div.content input.code,
 div.window div.content textarea.code {
 	direction: ltr !important;
-	font-family: monospace;
+	font-family: Ubuntu Mono;
 }
 
 div.window div.content input:focus,
@@ -209,12 +228,7 @@ div.window div.content textarea:focus {
 	border: 1px solid #345DC9;
 	color: #000000;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window button {
@@ -238,16 +252,11 @@ div.window button {
 	box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
 
 	color: #333333;
-	font-family: Roboto, sans-serif, Arial, Tahoma;
-	font-size: 13px;
+	font-size: 1em;
+	font-family: Ubuntu, sans-serif, Arial, Tahoma;
 	font-weight: normal;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window button:focus {
@@ -257,12 +266,7 @@ div.window button:focus {
 div.window button:hover {
 	border-color: #345DC9;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window button:active {
@@ -456,23 +460,13 @@ div.window div.toolbar {
 	background-position: top left;
 	background-repeat: repeat-x;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window div.toolbar.active {
 	border-color: #345DC9;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window div.toolbar a.button {
@@ -483,12 +477,7 @@ div.window div.toolbar a.button {
 	border-radius: 3px;
 	font-size: 0px;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.window div.toolbar span.separator {
@@ -617,13 +606,8 @@ div.window div.box.right {
  * Login Window
  */
 
-div#login_window {
-	display: none;
-}
-
 div#login_window div.message {
 	display: block;
-
 	margin-bottom: 15px;
 }
 
@@ -709,10 +693,9 @@ div.window div.main_menu {
 	background-image: -webkit-linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
 	background-image: -moz-linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
 	background-image: linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
-	box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4);
 
 	color: #1A1A1A;
-	font-size: 12px;
+	font-size: 1em;
 	font-weight: normal;
 }
 
@@ -723,15 +706,11 @@ div.window div.main_menu a {
 	padding-left: 7px;
 	padding-right: 7px;
 
+	outline: none;
 	color: #1A1A1A;
 	text-decoration: none;
 
-	transition-property: all;
-	transition-duration: 0.2s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.2s;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 0.2s;
+	transition: all 0.2s;
 }
 
 div.window div.main_menu a:hover {
@@ -767,92 +746,3 @@ div.window div.main_menu input {
 	color: black;
 }
 
-/**
- * RTL Windows Style Sheet Modifications
- */
-body.rtl div.window div.content input[type=checkbox],
-body.rtl div.window_inactive div.content input[type=checkbox],
-body.rtl div.window div.content input[type=radio],
-body.rtl div.window_inactive div.content input[type=radio] {
-	margin-left: 3px;
-	margin-right: 0px;
-	float: right;
-}
-
-body.rtl div.window div.content label.inline span {
-	margin-right: 0px;
-	margin-left: 5px;
-}
-
-body.rtl div.window div.title {
-	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
-}
-
-body.rtl div.window.loading div.title {
-	background-position: 25px center;
-}
-
-body.rtl div.window div.title a.close_button {
-	float: left;
-}
-
-body.rtl div.window div.content {
-	box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4);
-}
-
-body.rtl div.window div.toolbar a.button,
-body.rtl div.window div.toolbar span.separator {
-	float: right;
-}
-
-
-body.rtl div.dialog div.scrollable_list .column,
-body.rtl div.window div.scrollable_list .column {
-	margin-left: 3px;
-	margin-right: 0px;
-}
-
-body.rtl div.window div.main_menu div.floated {
-	display: block;
-	float: left;
-}
-
-body.rtl div.dialog div.container div.title_bar div.title {
-	direction: rtl;
-	text-align: right;
-}
-
-body.rtl div.dialog div.container div.title_bar a.close_button {
-	float: left;
-}
-
-body.rtl div#login_window div.icon {
-	padding-left: 5px;
-	padding-right: 0px;
-	float: right;
-}
-
-body.rtl div#login_window div.controls {
-	float: right;
-}
-
-body.rtl div#login_window div.input_controls {
-	padding-left: 0px;
-	padding-right: 25px;
-}
-
-body.rtl div.window div.content label.horizontal {
-	float: right;
-	margin-left: 20px;
-	margin-right: 0px;
-}
- 
-body.rtl div.window div.box.left {
-	float: right;
-	margin-right: 0px;
-	margin-left: 7px;
-}
-
-body.rtl div.window div.box.right {
-	float: right;
-}

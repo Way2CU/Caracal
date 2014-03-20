@@ -651,7 +651,7 @@ class DownloadsManager extends ItemManager {
 			foreach ($items as $item)
 				unlink($path.$item->filename);
 
-		parent::deleteData($conditionals);
+		parent::deleteData($conditionals, $limit);
 	}
 
 	/**

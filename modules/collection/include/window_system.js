@@ -51,6 +51,7 @@ function Dialog() {
 
 		self.close_button
 				.addClass('close_button')
+				.html('&#10060')
 				.click(self.hide);
 	};
 
@@ -193,12 +194,14 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	self.visible = false;
 	self.zIndex = 1000;
 
+	self._title_string = title;
 	self.title = null;
 	self.container = null;
 	self.content = null;
 	self.close_button = null;
 	self.main_menu = null;
 	self.window_list_item = $('<li>');
+	self.icon = null;
 
 	self.parent = null;
 	self.window_system = null;
@@ -214,21 +217,27 @@ function Window(id, width, title, can_close, url, existing_structure) {
 					.attr('id', self.id)
 					.addClass('window')
 					.css('width', width)
-					.bind('mousedown', self._handleClick)
-					.hide();
+					.bind('mousedown', self._handleClick);
 
 			self.title = $('<div>')
 			self.title
 					.addClass('title')
 					.html(title)
+					.bind('dragstart', self._handleDragStart)
+					.bind('dragend', self._handleDragEnd)
 					.drag(self._handleDrag)
 					.bind('mousedown', self._handleClick)
+					.appendTo(self.container);
+
+			var window_container = $('<div>');
+			window_container
+					.addClass('container')
 					.appendTo(self.container);
 
 			self.content = $('<div>')
 			self.content
 					.addClass('content')
-					.appendTo(self.container);
+					.appendTo(window_container);
 
 		} else {
 			// inherit existing structure and configure it
@@ -239,9 +248,10 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 		// add close button if needed
 		if (can_close) {
-			self.close_button = $('<a>')
+			self.close_button = $('<a>');
 			self.close_button
 					.addClass('close_button')
+					.html('&#10060')
 					.click(self.close)
 					.appendTo(self.title);
 		}
@@ -269,6 +279,20 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	};
 
 	/**
+	 * Handle start dragging.
+	 */
+	self._handleDragStart = function() {
+		self.container.css('transition', 'none');
+	};
+
+	/**
+	 * Handle stop dragging.
+	 */
+	self._handleDragEnd = function() {
+		self.container.css('transition', '');
+	};
+
+	/**
 	 * Handle dragging window.
 	 *
 	 * @param object event
@@ -277,10 +301,22 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	self._handleDrag = function(event, position) {
 		event.preventDefault();
 
-		self.container.css({
-					top: position.offsetY,
-					left: position.offsetX
-				});
+		// get container offset
+		var container_offset = self.window_system.container_offset;
+		var position = {
+					top: position.offsetY - container_offset.top,
+					left: position.offsetX - container_offset.left
+				};
+
+		// make sure window doesn't run away
+		if (position.top < 0)
+			position.top = 0;
+
+		if (position.left < 0)
+			position.left = 0;
+
+		// update position
+		self.container.css(position);
 	};
 
 	/**
@@ -291,28 +327,24 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	self.show = function(center) {
 		if (self.visible) return self;  // don't allow animation of visible window
 
-		var params = {
-			display: 'block',
-			opacity: 0
-		};
+		var params = {};
 
 		// center if needed
 		if (center != undefined && center) {
-			params.top = Math.floor((self.parent.height() - self.container.height()) / 2) - 50;
-			params.left = Math.floor((self.parent.width() - self.container.width()) / 2);
+			params.top = (self.parent.height() - self.container.height()) / 2;
+			params.left = (self.parent.width() - self.container.width()) / 2;
 
-			if (params.top < 35)
-				params.top = 35;
+			// move window to the top
+			params.top -= 50;
 		}
 
 		// apply params and show window
 		self.container
-			.css(params)
-			.animate({opacity: 1}, 300);
-
-		self.visible = true;
+				.css(params)
+				.addClass('visible');
 
 		// set window to be top level
+		self.visible = true;
 		self.focus();
 
 		return self;
@@ -322,14 +354,9 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 * Close window.
 	 */
 	self.close = function() {
-		self.container.animate(
-				{opacity: 0}, 300, 
-				function() {
-					self.visible = false;
-					self.window_system.removeWindow(self);
-					self.window_system.focusTopWindow();
-				});
-
+		self.visible = false;
+		self.window_system.removeWindow(self);
+		self.window_system.focusTopWindow();
 		self.window_list_item.remove();
 	};
 
@@ -356,7 +383,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 		// add window list item
 		self.window_list_item
-				.html(self.title.html())
+				.html(self._title_string)
 				.appendTo(self.window_system.window_list)
 				.click(self._handleWindowListClick);
 
@@ -371,7 +398,6 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		self.zIndex = 1000;
 		self.container
 				.css({zIndex: self.zIndex})
-				.animate({opacity: 1}, 300)
 				.addClass('focused');
 
 		// change window list item
@@ -385,7 +411,6 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		self.zIndex--;
 		self.container
 				.css({zIndex: self.zIndex})
-				.animate({opacity: 0.5}, 300)
 				.removeClass('focused');
 
 		// change window list item
@@ -482,12 +507,8 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 */
 	self.contentLoaded = function(data) {
 		// animate display
-		var start_params = {
-						top: self.container.position().top,
-						left: self.container.position().left,
-						width: self.container.width(),
-						height: self.container.height()
-					};
+		var start_position = self.container.position().top;
+		var start_height = self.content.height();
 
 		// remove old menu if needed
 		if (self.main_menu != null && self.main_menu.length > 0)
@@ -501,22 +522,14 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		if (self.main_menu.length > 0) 
 			self.main_menu
 					.detach()
-					.insertAfter(self.title);
+					.insertBefore(self.content);
 
-		var end_params = {
-					top: start_params.top + Math.floor((start_params.height - self.container.height()) / 2),
-					height: self.container.height()
-				};
-
-		// prevent window from going under menu
-		if (end_params.top < 35)
-			end_params.top = 35;
+		var top_position = start_position + Math.floor((start_height - self.content.height()) / 2);
 
 		// animate
 		self.container
-				.stop(true, true)
-				.css(start_params)
-				.animate(end_params, 400);
+				.css('top', top_position)
+				.addClass('loaded');
 
 		// attach events
 		self.attachEvents();
@@ -646,6 +659,15 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		return result;
 	};
 
+	/**
+	 * Set window icon.
+	 *
+	 * @param string background
+	 */
+	self.setIcon = function(background) {
+		self.window_list_item[0].style.backgroundImage = background;
+	};
+
 	// finish object initialization
 	self.init();
 }
@@ -653,14 +675,16 @@ function Window(id, width, title, can_close, url, existing_structure) {
 /**
  * Window System
  */
-function WindowSystem(container) {
+function WindowSystem(container, list_container) {
 	var self = this;  // used internally for events
 
 	self.modal_dialog = null;
 	self.modal_dialog_container = null;
 	self.container = $(container);
+	self.list_container = $(list_container);
 	self.list = [];
 	self.window_list = $('<ul>');
+	self.container_offset = self.container.offset();
 
 	/**
 	 * Finish object initialization.
@@ -668,7 +692,22 @@ function WindowSystem(container) {
 	self.init = function() {
 		self.window_list
 				.attr('id', 'window_list')
-				.appendTo(self.container);
+				.appendTo(self.list_container);
+	};
+
+	/**
+	 * Show login window.
+	 */
+	self.showLoginWindow = function() {
+		var base = $('base').attr('href');
+
+		self.openWindow(
+			'login_window',
+			350,
+			language_handler.getText('backend', 'title_login'),
+			false,
+			base+'/?section=backend&action=login'
+		);
 	};
 
 	/**
@@ -681,7 +720,10 @@ function WindowSystem(container) {
 	 * @param string url
 	 * @return object
 	 */
-	self.openWindow = function(id, width, title, can_close, url) {
+	self.openWindow = function(id, width, title, can_close, url, caller) {
+		if (caller != undefined)
+			var window_icon = caller.style.backgroundImage;
+
 		if (self.windowExists(id)) {
 			// window already exists, reload content and show it
 			var window = self.getWindow(id);
@@ -694,6 +736,11 @@ function WindowSystem(container) {
 			// window does not exist, create it
 			var window = new Window(id, width, title, can_close, url, false);
 
+			// set icon if needed
+			if (window_icon != '')
+				window.setIcon(window_icon);
+
+			// show window
 			self.list[id] = window;
 			window
 				.attach(self)
@@ -702,30 +749,6 @@ function WindowSystem(container) {
 		}
 
 		return window;
-	};
-
-	/**
-	 * Attach window class to existing structure.
-	 *
-	 * @param string id
-	 * @param integer width
-	 * @param boolean can_close
-	 */
-	self.attachToStructure = function(id, width, can_close) {
-		if (self.windowExists(id)) {
-			// window already exists, reload content and show it
-			self.getWindow(id).focus();
-
-		} else {
-			// window does not exist, create it
-			var window = new Window(id, width, null, can_close, null, true);
-
-			self.list[id] = window;
-			window
-				.attach(self)
-				.attachEvents()
-				.show(true);
-		}
 	};
 
 	/**
@@ -864,5 +887,5 @@ function WindowSystem(container) {
 }
 
 $(function() {
-	window_system = new WindowSystem('#wrap');
+	window_system = new WindowSystem('div#container', 'footer');
 });

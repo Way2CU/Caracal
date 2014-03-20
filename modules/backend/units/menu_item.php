@@ -94,23 +94,26 @@ class backend_MenuItem {
 	function drawItem() {
 		if (!$this->isDrawable()) return;
 		
-		$icon = "<img src=\"{$this->icon}\" alt=\"{$this->title}\">";
-		$title = $_SESSION['level'] >= 10 ? "{$this->title} ({$this->level})" : "";
-		$link = (!empty($this->action)) ? "<a href=\"javascript:void(0);\" onclick=\"{$this->action}\" title=\"{$title}\">{$icon}{$this->title}</a>" : $icon.$this->title;
-		$class = (count($this->children) > 0) ? ' class="sub_menu"' : '';
+		$icon = 'style="background-image: url('.$this->icon.');"';
+
+		if (!empty($this->action))
+			$link =  "<a href=\"javascript:void(0);\" onclick=\"{$this->action}\"{$icon}>{$this->title}</a>"; else
+			$link =  "<a href=\"javascript:void(0);\"{$icon}>{$this->title}</a>";
+
+		$class = (count($this->children) > 0) ? ' class="submenu"' : '';
 
 		echo "<li{$class}>{$link}";
 
 		if (count($this->children) > 0) {
-			echo "<ul>";
+			echo '<ul>';
 
 			foreach ($this->children as $child)
 				$child->drawItem();
 
-			echo "</ul>";
+			echo '</ul>';
 		}
 
-		echo "</li>";
+		echo '</li>';
 	}
 
 	/**
@@ -189,7 +192,7 @@ function window_Open($id, $width, $title, $can_close, $can_minimize, $url) {
 	$can_close = $can_close ? 'true' : 'false';
 	$can_minimize = $can_minimize ? 'true' : 'false';
 
-	return "javascript: window_system.openWindow('{$id}', {$width}, '{$title}', {$can_close}, '{$url}');";
+	return "javascript: window_system.openWindow('{$id}', {$width}, '{$title}', {$can_close}, '{$url}', this);";
 }
 
 function window_OpenHyperlink($text, $id, $width, $title, $can_close, $can_minimize, $module, $action) {

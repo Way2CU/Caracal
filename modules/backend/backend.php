@@ -59,27 +59,25 @@ class backend extends Module {
 		$this->event_handler->registerEvent('user-password-change');
 
 		// load CSS and JScript
-		if (class_exists('head_tag')) {
+		if (class_exists('head_tag') && $section == 'backend') {
 			$head_tag = head_tag::getInstance();
 			$collection = collection::getInstance();
 
-			if ($section == $this->name) {
-				$collection->includeScript(collection::JQUERY);
-				$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-				$collection->includeScript(collection::JQUERY_EXTENSIONS);
+			$collection->includeScript(collection::JQUERY);
+			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
+			$collection->includeScript(collection::WINDOW_SYSTEM);
+
+			if ($_SESSION['logged']) {
 				$collection->includeScript(collection::JQUERY_MINICOLORS);
-				$collection->includeScript(collection::WINDOW_SYSTEM);
+				$collection->includeScript(collection::JQUERY_EXTENSIONS);
 				$collection->includeScript(collection::NOTEBOOK);
 				$collection->includeScript(collection::SHOWDOWN);
 				$collection->includeScript(collection::TOOLBAR);
-
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-
-				if (MainLanguageHandler::getInstance()->isRTL()) {
-					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-				}
 			}
+
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+
 		}
 
 		// add admin level menus
@@ -327,8 +325,9 @@ class backend extends Module {
 	 */
 	private function showBackend() {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
+
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_main_menu', $this, 'tag_MainMenu');
+		$template->registerTagHandler('cms:main_menu', $this, 'tag_MainMenu');
 
 		$params = array();
 
