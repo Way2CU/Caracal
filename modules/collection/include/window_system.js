@@ -51,7 +51,6 @@ function Dialog() {
 
 		self.close_button
 				.addClass('close_button')
-				.html('&#10060')
 				.click(self.hide);
 	};
 
@@ -251,7 +250,6 @@ function Window(id, width, title, can_close, url, existing_structure) {
 			self.close_button = $('<a>');
 			self.close_button
 					.addClass('close_button')
-					.html('&#10060')
 					.click(self.close)
 					.appendTo(self.title);
 		}
@@ -384,6 +382,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		// add window list item
 		self.window_list_item
 				.html(self._title_string)
+				.prepend($('<span>'))
 				.appendTo(self.window_system.window_list)
 				.click(self._handleWindowListClick);
 
@@ -665,7 +664,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 * @param string background
 	 */
 	self.setIcon = function(background) {
-		self.window_list_item[0].style.backgroundImage = background;
+		self.window_list_item.find('span')[0].style.backgroundImage = background;
 	};
 
 	// finish object initialization
@@ -721,8 +720,15 @@ function WindowSystem(container, list_container) {
 	 * @return object
 	 */
 	self.openWindow = function(id, width, title, can_close, url, caller) {
-		if (caller != undefined)
-			var window_icon = caller.style.backgroundImage;
+		var window_icon = null;
+
+		// get window icon from caller
+		if (caller != undefined) {
+			var icon = $(caller).find('span');
+
+			if (icon.length > 0)
+				window_icon = icon[0].style.backgroundImage;
+		}
 
 		if (self.windowExists(id)) {
 			// window already exists, reload content and show it
@@ -736,14 +742,16 @@ function WindowSystem(container, list_container) {
 			// window does not exist, create it
 			var window = new Window(id, width, title, can_close, url, false);
 
-			// set icon if needed
-			if (window_icon != '')
+			// preconfigure window
+			self.list[id] = window;
+			window.attach(self)
+
+			// set window icon
+			if (window_icon != null)
 				window.setIcon(window_icon);
 
 			// show window
-			self.list[id] = window;
 			window
-				.attach(self)
 				.show(true)
 				.loadContent();
 		}

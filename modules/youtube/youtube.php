@@ -35,14 +35,14 @@ class youtube extends Module {
 
 			$youtube_menu = new backend_MenuItem(
 								$this->getLanguageConstant('menu_youtube'),
-								url_GetFromFilePath($this->path.'images/icon.png'),
+								url_GetFromFilePath($this->path.'images/icon.svg'),
 								'javascript:void(0);',
 								$level=5
 							);
 
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_video_list'),
-								url_GetFromFilePath($this->path.'images/list.png'),
+								url_GetFromFilePath($this->path.'images/list.svg'),
 								window_Open( // on click open window
 											$this->name.'_video_list',
 											650,
@@ -55,7 +55,7 @@ class youtube extends Module {
 
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_video_groups'),
-								url_GetFromFilePath($this->path.'images/groups.png'),
+								url_GetFromFilePath($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											$this->name.'_group_list',
 											570,

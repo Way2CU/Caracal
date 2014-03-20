@@ -84,6 +84,24 @@ footer {
 	line-height: 100%;
 }
 
+footer:before {
+	display: block;
+	content: ' ';
+	height: 100%;
+	width: 200px;
+
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	
+	background-image: url(../images/logo_text_white.svg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: auto 75%;
+
+	opacity: 0.5;
+}
+
 /**
  * Common links menu
  */
@@ -115,7 +133,7 @@ ul#window_list {
 	padding: 0px;
 
 	position: absolute;
-	left: 0px;
+	left: 201px;
 	top: 0px;
 
 	list-style-type: none;
@@ -124,21 +142,46 @@ ul#window_list {
 
 ul#window_list li {
 	display: inline-block;
+	min-width: 100px;
+
+	margin-right: 2px;
 	padding: 10px;
 	padding-left: 44px;
 
-	background-image: url(../images/default_itemicon.gif);
-	background-position: 10px center;
-	background-repeat: no-repeat;
+	position: relative;
 
-	color: white;
+	background-color: #b4b4b4;
 
-	transition: 0.3s all;
+	color: #333333;
+	transition: all 0.3s;
 }
 
 ul#window_list li.active {
 	background-color: white;
 	color: #e74c3c;
+}
+
+ul#window_list li span {
+	display: block;
+	width: 24px;
+	height: 24px;
+
+	position: absolute;
+	left: 10px;
+	top: 50%;
+
+	margin-top: -12px;
+
+	background-image: url(../images/icons/16/modules.svg);
+	background-position: 0px center;
+	background-repeat: no-repeat;
+	background-size: auto 24px;
+
+	transition: all 0.3s;
+}
+
+ul#window_list li.active span {
+	background-position: -24px center;
 }
 
 /**
@@ -182,9 +225,9 @@ ul#navigation li a {
 	padding: 10px;
 	padding-left: 44px;
 
+	position: relative;
+
 	outline: none;
-	background-repeat: no-repeat;
-	background-position: 10px center;
 
 	color: #333333;
 	font-size: 1.3em;
@@ -192,6 +235,30 @@ ul#navigation li a {
 	text-decoration: none;
 
 	cursor: pointer;
+	transition: all 0.3s;
+}
+
+ul#navigation li a span {
+	display: block;
+	width: 24px;
+	height: 24px;
+	
+	position: absolute;
+	left: 10px;
+	top: 50%;
+
+	margin-top: -12px;
+
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	background-size: auto 24px;
+
+	font-size: 0px;
+	transition: all 0.3s;
+}
+
+ul#navigation li:hover > a span {
+	background-position: -24px 0px;
 }
 
 ul#navigation > li:first-child {
@@ -242,6 +309,25 @@ ul#navigation li > ul {
 ul#navigation li:hover > ul {
 	visibility: visible;
 	opacity: 1;
+}
+
+ul#navigation li > ul > li.submenu > a:after {
+	display: block;
+	width: 0px;
+	height: 0px;
+	content: ' ';
+
+	position: absolute;
+	top: 50%;
+	right: 7px;
+
+	margin-top: -5px;
+
+	border-left: 5px solid rgba(0, 0, 0, 0.3);
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+
+	font-size: 0px;
 }
 
 /**

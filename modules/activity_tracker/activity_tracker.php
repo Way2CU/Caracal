@@ -28,14 +28,14 @@ class activity_tracker extends Module {
 
 			$activities_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_activities'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$activities_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage'),
-								url_GetFromFilePath($this->path.'images/activities.png'),
+								url_GetFromFilePath($this->path.'images/activities.svg'),
 
 								window_Open( // on click open window
 											'activities',
@@ -48,7 +48,7 @@ class activity_tracker extends Module {
 							));
 			$activities_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_log'),
-								url_GetFromFilePath($this->path.'images/log.png'),
+								url_GetFromFilePath($this->path.'images/log.svg'),
 
 								window_Open( // on click open window
 											'activities_log',

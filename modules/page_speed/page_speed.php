@@ -29,7 +29,7 @@ class page_speed extends Module {
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->getLanguageConstant('menu_page_speed'),
-										url_GetFromFilePath($this->path.'images/icon.png'),
+										url_GetFromFilePath($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_speed',
 													670,

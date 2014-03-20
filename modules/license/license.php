@@ -32,7 +32,7 @@ class license extends Module {
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->getLanguageConstant('menu_license'),
-										url_GetFromFilePath($this->path.'images/icon.png'),
+										url_GetFromFilePath($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'licenses',
 													680,

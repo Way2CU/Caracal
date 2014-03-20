@@ -40,14 +40,14 @@ class chat extends Module {
 
 			$chat_menu = new backend_MenuItem(
 								$this->getLanguageConstant('menu_chat'),
-								url_GetFromFilePath($this->path.'images/icon.png'),
+								url_GetFromFilePath($this->path.'images/icon.svg'),
 								'javascript:void(0);',
 								$level=5
 							);
 
 			$chat_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_join_chat'),
-								url_GetFromFilePath($this->path.'images/chat.png'),
+								url_GetFromFilePath($this->path.'images/chat.svg'),
 								window_Open( // on click open window
 											'chat',
 											670,
@@ -60,7 +60,7 @@ class chat extends Module {
 			$chat_menu->addSeparator(5);
 			$chat_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_users'),
-								url_GetFromFilePath($this->path.'images/users.png'),
+								url_GetFromFilePath($this->path.'images/users.svg'),
 								window_Open( // on click open window
 											'chat_users',
 											550,
@@ -72,7 +72,7 @@ class chat extends Module {
 							));
 			$chat_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_rooms'),
-								url_GetFromFilePath($this->path.'images/rooms.png'),
+								url_GetFromFilePath($this->path.'images/rooms.svg'),
 								window_Open( // on click open window
 											'chat_rooms',
 											450,
@@ -84,7 +84,7 @@ class chat extends Module {
 							));
 			$chat_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_admins'),
-								url_GetFromFilePath($this->path.'images/admins.png'),
+								url_GetFromFilePath($this->path.'images/admins.svg'),
 								window_Open( // on click open window
 											'chat_admins',
 											450,
@@ -94,21 +94,6 @@ class chat extends Module {
 										),
 								$level=5
 							));
-/*
-			$chat_menu->addSeparator(5);
-			$chat_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.png'),
-								window_Open( // on click open window
-											'chat_settings',
-											450,
-											$this->getLanguageConstant('title_chat_settings'),
-											true, true,
-											backend_UrlMake($this->name, 'chat_settings')
-										),
-								$level=5
-							));
-*/
 
 			$backend->addMenu($this->name, $chat_menu);
 		}

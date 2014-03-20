@@ -31,14 +31,14 @@ class news extends Module {
 
 			$news_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_news'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					5  // level
 				);
 
 			$news_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_add_news'),
-								url_GetFromFilePath($this->path.'images/add_news.png'),
+								url_GetFromFilePath($this->path.'images/add_news.svg'),
 								window_Open( // on click open window
 											'news_add',
 											490,
@@ -52,7 +52,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->getLanguageConstant('menu_manage_news'),
-					url_GetFromFilePath($this->path.'images/manage_news.png'),
+					url_GetFromFilePath($this->path.'images/manage_news.svg'),
 					window_Open( // on click open window
 								'news',
 								520,
@@ -65,7 +65,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->getLanguageConstant('menu_manage_groups'),
-					url_GetFromFilePath($this->path.'images/manage_groups.png'),
+					url_GetFromFilePath($this->path.'images/manage_groups.svg'),
 					window_Open( // on click open window
 								'news_groups',
 								580,
@@ -80,7 +80,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->getLanguageConstant('menu_news_feeds'),
-					url_GetFromFilePath($this->path.'images/rss.png'),
+					url_GetFromFilePath($this->path.'images/rss.svg'),
 					window_Open( // on click open window
 								'news_feeds',
 								700,

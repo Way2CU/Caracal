@@ -46,7 +46,7 @@ class backend_MenuItem {
 	 */
 	function __construct($title, $icon, $action, $level=0) {
 		$this->title = $title;
-		$this->icon = (empty($icon)) ? url_GetFromFilePath(dirname(__FILE__).'/..').'/images/default_itemicon.gif' : $icon;
+		$this->icon = $icon;
 		$this->action = $action;
 		$this->level = $level;
 	}
@@ -94,11 +94,11 @@ class backend_MenuItem {
 	function drawItem() {
 		if (!$this->isDrawable()) return;
 		
-		$icon = 'style="background-image: url('.$this->icon.');"';
+		$icon = '<span style="background-image: url('.$this->icon.')"></span>';
 
 		if (!empty($this->action))
-			$link =  "<a href=\"javascript:void(0);\" onclick=\"{$this->action}\"{$icon}>{$this->title}</a>"; else
-			$link =  "<a href=\"javascript:void(0);\"{$icon}>{$this->title}</a>";
+			$link =  "<a onclick=\"{$this->action}\">{$icon}{$this->title}</a>"; else
+			$link =  "<a>{$icon}{$this->title}</a>";
 
 		$class = (count($this->children) > 0) ? ' class="submenu"' : '';
 

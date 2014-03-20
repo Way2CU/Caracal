@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<label>
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+			<span><_text constant="label_name" module="leads"/></span>
+			<input 
+				type="text" 
+				class="code" 
+				name="name" 
+				style="width: 270px;" 
+				maxlength="30"
+				value="$params['name']"
+				cms:eval="value"
+			/>
+		</label>
+		<label>
+			<span><_text constant="label_fields" module="leads"/></span>
+			<textarea 
+				name="fields" 
+				class="code" 
+				style="width: 320px; height: 100px;"
+				maxlength="255"
+			>
+				<_var name="$params['fields']"/>
+			</textarea>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_unique_address" module="leads"/></span>
+			<_if condition="$params['unique_address'] == 1">
+				<input type="checkbox" name="unique_address" checked="checked"/>
+			</_if>
+			<_if condition="$params['unique_address'] == 0">
+				<input type="checkbox" name="unique_address"/>
+			</_if>
+		</label>
+		<label class="checkbox">
+			<span><_text constant="label_send_email" module="leads"/></span>
+			<_if condition="$params['send_email'] == 1">
+				<input type="checkbox" name="send_email" checked="checked"/>
+			</_if>
+			<_if condition="$params['send_email'] == 0">
+				<input type="checkbox" name="send_email"/>
+			</_if>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><_text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<_text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>

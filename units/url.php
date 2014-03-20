@@ -241,10 +241,13 @@ function url_MakeHyperlink($content, $link, $title='', $class='', $target='') {
 	// move javascript URL's to onclick handler
 	if (substr($link, 0, 11) == 'javascript:') {
 		$on_click = ' onclick="'.$link.'"';
-		$link = 'javascript: void(0);';
+		$link = '';
+		$href = '';
+	} else {
+		$href = ' href="'.$link.'"';
 	}
 
-	$res = '<a href="'.$link.'"'.$on_click.$target.$class.$title.'>'.$content.'</a>';
+	$res = '<a '.$href.$on_click.$target.$class.$title.'>'.$content.'</a>';
 	return $res;
 }
 

@@ -90,6 +90,8 @@ div.window.loading div.title {
 
 div.window div.title a.close_button {
 	display: block;
+	width: 1em;
+	height: 1em;
 	padding: 7px;
 
 	position: absolute;
@@ -97,6 +99,10 @@ div.window div.title a.close_button {
 	top: 0px;
 
 	border-radius: 1px;
+	background-image: url(../images/close_button.svg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 10px;
 	color: white;
 
 	transition: all 0.3s;

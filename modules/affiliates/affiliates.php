@@ -28,13 +28,13 @@ class affiliates extends Module {
 
 			$referrals_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_affiliates'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 			$referrals_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_affiliates'),
-								url_GetFromFilePath($this->path.'images/affiliates.png'),
+								url_GetFromFilePath($this->path.'images/affiliates.svg'),
 
 								window_Open( // on click open window
 											'affiliates',
@@ -47,7 +47,7 @@ class affiliates extends Module {
 							));
 			$referrals_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_referral_urls'),
-								url_GetFromFilePath($this->path.'images/referrals.png'),
+								url_GetFromFilePath($this->path.'images/referrals.svg'),
 
 								window_Open( // on click open window
 											'referrals',
@@ -60,7 +60,7 @@ class affiliates extends Module {
 							));
 			$referrals_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_information'),
-								url_GetFromFilePath($this->path.'images/information.png'),
+								url_GetFromFilePath($this->path.'images/information.svg'),
 
 								window_Open( // on click open window
 											'affiliate_information',

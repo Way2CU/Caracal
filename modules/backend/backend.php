@@ -84,14 +84,14 @@ class backend extends Module {
 		if ($section == 'backend') {
 			$system_menu = new backend_MenuItem(
 									$this->getLanguageConstant('menu_system'),
-									url_GetFromFilePath($this->path.'images/icons/16/system.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/system.svg'),
 									'javascript:void(0);',
 									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_modules'),
-									url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/modules.svg'),
 									window_Open( // on click open window
 												'system_modules',
 												610,
@@ -103,7 +103,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_users'),
-									url_GetFromFilePath($this->path.'images/icons/16/users.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/users.svg'),
 									window_Open( // on click open window
 												'system_users',
 												690,
@@ -116,7 +116,7 @@ class backend extends Module {
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_change_password'),
-									url_GetFromFilePath($this->path.'images/icons/16/change_password.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/change_password.svg'),
 									window_Open( // on click open window
 												'change_password_window',
 												350,
@@ -128,7 +128,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_logout'),
-									url_GetFromFilePath($this->path.'images/icons/16/logout.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/logout.svg'),
 									window_Open( // on click open window
 												'logout_window',
 												350,
@@ -663,11 +663,11 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		foreach($list as $name => $definition) {
-			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.png';
+			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.svg';
 
 			if (file_exists($icon_file))
 				$icon = url_GetFromFilePath($icon_file); else
-				$icon = url_GetFromFilePath($this->path.'images/icons/16/modules.png');
+				$icon = url_GetFromFilePath($this->path.'images/icons/16/module.svg');
 
 			$params = array(
 							'name'				=> $name,

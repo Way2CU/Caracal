@@ -29,14 +29,14 @@ class feedback extends Module {
 
 			$feedback_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_feedback'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$feedback_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_feedback_show'),
-								url_GetFromFilePath($this->path.'images/feedback_list.png'),
+								url_GetFromFilePath($this->path.'images/feedback_list.svg'),
 
 								window_Open( // on click open window
 											'feedback_manage',
