@@ -195,6 +195,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 	self._title_string = title;
 	self.title = null;
+	self.title_bar = null;
 	self.container = null;
 	self.content = null;
 	self.close_button = null;
@@ -218,15 +219,28 @@ function Window(id, width, title, can_close, url, existing_structure) {
 					.css('width', width)
 					.bind('mousedown', self._handleClick);
 
-			self.title = $('<div>')
-			self.title
+			// create window title bar
+			self.title_bar = $('<div>')
+			self.title_bar
 					.addClass('title')
-					.html(title)
 					.bind('dragstart', self._handleDragStart)
 					.bind('dragend', self._handleDragEnd)
 					.drag(self._handleDrag)
 					.bind('mousedown', self._handleClick)
 					.appendTo(self.container);
+
+			// title container
+			self.title = $('<div>');
+			self.title
+					.addClass('wrap')
+					.html(title)
+					.appendTo(self.title_bar);
+
+			// create window icon
+			self.icon = $('<span>');
+			self.icon
+					.addClass('icon')
+					.appendTo(self.title_bar);
 
 			var window_container = $('<div>');
 			window_container
@@ -241,7 +255,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		} else {
 			// inherit existing structure and configure it
 			self.container = $('#' + id);
-			self.title = self.container.children('div.title').eq(0);
+			self.title_bar = self.container.children('div.title').eq(0);
 			self.content = self.container.children('div.content').eq(0);
 		}
 
@@ -251,7 +265,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 			self.close_button
 					.addClass('close_button')
 					.click(self.close)
-					.appendTo(self.title);
+					.appendTo(self.title_bar);
 		}
 
 	};
@@ -430,6 +444,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 		self.container.addClass('loading');
 
+		setTimeout(function() {
 		$.ajax({
 			cache: false,
 			context: self,
@@ -437,7 +452,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 			success: self.contentLoaded,
 			error: self.contentError,
 			url: self.url
-		});
+		})}, 2000);
 
 		return self;  // allow linking
 	};
@@ -509,19 +524,8 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		var start_position = self.container.position().top;
 		var start_height = self.content.height();
 
-		// remove old menu if needed
-		if (self.main_menu != null && self.main_menu.length > 0)
-			self.main_menu.remove();
-
 		// set new window content
 		self.content.html(data);
-
-		// reposition main menu
-		self.main_menu = self.content.find('div.main_menu');
-		if (self.main_menu.length > 0) 
-			self.main_menu
-					.detach()
-					.insertBefore(self.content);
 
 		var top_position = start_position + Math.floor((start_height - self.content.height()) / 2);
 
@@ -664,6 +668,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 * @param string background
 	 */
 	self.setIcon = function(background) {
+		self.icon[0].style.backgroundImage = background;
 		self.window_list_item.find('span')[0].style.backgroundImage = background;
 	};
 

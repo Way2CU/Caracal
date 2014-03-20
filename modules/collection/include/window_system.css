@@ -24,10 +24,15 @@ div.window {
 	opacity: 0;
 
 	margin-top: 0px;
+	border: 1px solid #595959;
 	background-color: #EFEFEF;
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 
 	transition: top 0.5s, left 0.5s, opacity 0.5s;
+}
+
+div.window.focused {
+	border-color: #e74c3c;
 }
 
 div.window.visible {
@@ -58,22 +63,25 @@ div.window div.title {
 	display: block;
 
 	position: relative;
-	padding: 7px;
 
 	background-color: #595959;
 
-	color: white;
-	font-size: 1.2em;
-	font-weight: normal;
-	text-align: center;
+	color: #595959;
+	font-size: 1.1em;
+	font-weight: 700;
 	line-height: 100%;
 
 	transition: all 0.3s;
 }
 
+div.window.loaded div.title {
+	border-bottom: 1px solid #595959;
+}
+
 div.window.focused div.title {
-	border-color: #AC382E;
+	border-color: #e74c3c;
 	background-color: #e74c3c;
+	color: #e74c3c;
 }
 
 div.window.loading div.title {
@@ -86,6 +94,41 @@ div.window.loading div.title {
 	-webkit-animation: title_animation 0.5s;
 	-webkit-animation-timing-function: linear;
 	-webkit-animation-iteration-count: infinite;
+}
+
+div.window div.title div.wrap {
+	display: inline-block;
+	padding: 7px;
+	padding-left: 32px;
+	padding-right: 30px;
+
+	background-image: linear-gradient(45deg, white, white calc(100% - 1.5em), transparent calc(100% - 1.5em), transparent);
+	background-position: right top;
+	background-size: 100% 30px;
+	background-repeat: no-repeat;
+}
+
+div.window div.title span.icon {
+	display: block;
+	width: 24px;
+	height: 24px;
+
+	position: absolute;
+	left: 3px;
+	top: 50%;
+
+	margin-top: -12px;
+
+	background-image: url(../../backend/images/icons/16/modules.svg);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+	background-size: 48px 24px;
+
+	transition: all 0.3s;
+}
+
+div.window.focused div.title span.icon {
+	background-position: -24px 0px;
 }
 
 div.window div.title a.close_button {
@@ -170,8 +213,6 @@ div.window div.content label a:hover {
 	text-decoration: underline;
 }
 
-div.window div.content div.main_menu,
-div.window div.content div.button_bar,
 div.window div.content div.scrollable_list {
 	margin-bottom: 5px;
 }
@@ -186,7 +227,7 @@ div.window div.content select,
 div.window div.content input,
 div.window div.content textarea {
 	margin: 0px;
-	padding: 3px;
+	padding: 5px;
 
 	border: 1px solid #999999;
 	outline: 0px;
@@ -209,7 +250,8 @@ div.window div.content input[type=checkbox] {
 }
 
 div.window div.content textarea {
-	resize: vertical;
+	width: 100%;
+	resize: none;
 }
 
 div.window div.content label.radio span,
@@ -244,18 +286,14 @@ div.window button {
 	margin: 0px;
 	margin-left: 5px;
 	margin-right: 5px;
-	padding: 7px;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
 
 	border: 1px solid #b0b0b0;
-	border-radius: 3px;
+	border-radius: 2px;
 	background-color: #cccccc; 
-	background-image: linear-gradient(bottom, rgb(204,204,204) 0%, rgb(250,250,250) 100%);
-	background-image: -o-linear-gradient(bottom, rgb(204,204,204) 0%, rgb(250,250,250) 100%);
-	background-image: -moz-linear-gradient(bottom, rgb(204,204,204) 0%, rgb(250,250,250) 100%);
-	background-image: -webkit-linear-gradient(bottom, rgb(204,204,204) 0%, rgb(250,250,250) 100%);
-	box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
+	background-image: linear-gradient(0deg, #d5d5d5, #ffffff 90%);
 
 	color: #333333;
 	font-size: 1em;
@@ -270,16 +308,13 @@ div.window button:focus {
 }
 
 div.window button:hover {
-	border-color: #345DC9;
+	border-color: #e74c3c;
 
 	transition: all 0.3s;
 }
 
 div.window button:active {
-	background-image: linear-gradient(bottom, rgb(250,250,250) 0%, rgb(204,204,204) 100%);
-	background-image: -o-linear-gradient(bottom, rgb(250,250,250) 0%, rgb(204,204,204) 100%);
-	background-image: -moz-linear-gradient(bottom, rgb(250,250,250) 0%, rgb(204,204,204) 100%);
-	background-image: -webkit-linear-gradient(bottom, rgb(250,250,250) 0%, rgb(204,204,204) 100%);
+	background-image: linear-gradient(0deg, rgb(250,250,250) 0%, rgb(204,204,204) 100%);
 }
 
 div.window label button {
@@ -291,15 +326,16 @@ div.window label button {
 
 div.window div.button_bar {
 	display: block;
+	width: calc(100% + 14px);
 
-	padding: 5px;
-	padding-top: 8px;
-	padding-bottom: 8px;
+	position: relative;
+	left: -7px;
+	top: 7px;
 
-	border: 1px solid #B8B8B8;
-	border-radius: 4px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
 	background-color: #D4D4D4;
-
 	text-align: center;
 }
 
@@ -317,8 +353,7 @@ div.window div.scrollable_list {
 div.dialog div.scrollable_list div.list_header,
 div.window div.scrollable_list div.list_header {
 	display: block;
-
-	padding: 3px;
+	padding: 5px;
 
 	border: 1px solid #B8B8B8;
 	border-bottom: 0px;
@@ -341,14 +376,13 @@ div.window div.scrollable_list .list_content {
 div.dialog div.scrollable_list .list_content .list_item,
 div.window div.scrollable_list .list_content .list_item {
 	display: block;
-
-	padding: 3px;
+	padding: 5px;
 }
 
 div.dialog div.scrollable_list .list_content .list_item.group_title,
 div.window div.scrollable_list .list_content .list_item.group_title {
 	margin-top: 5px;
-	padding: 4px;
+	padding: 5px;
 
 	border-bottom: 1px solid #F0F0F0;
 
@@ -376,21 +410,20 @@ div.window div.scrollable_list .list_content .list_item:hover {
 div.dialog div.scrollable_list .column,
 div.window div.scrollable_list .column {
 	display: inline-block;
-
 	margin-right: 3px;
 }
 
 div.dialog div.scrollable_list .column a,
 div.window div.scrollable_list .column a {
 	display: inline-block;
+	
+	position: relative;
 
-	padding: 2px;
-	padding-left: 3px;
-	padding-right: 3px;
+	margin-top: -4px;
+	margin-bottom: -4px;
+	padding: 4px;
 
-	border: 1px solid #CCCCCC;
-	border-radius: 3px;
-	background-color: #FFFFFF;
+	background-color: #ecf0f1;
 
 	color: #595959;
 	text-decoration: none;
@@ -398,9 +431,7 @@ div.window div.scrollable_list .column a {
 
 div.dialog div.scrollable_list .column a:hover,
 div.window div.scrollable_list .column a:hover {
-	border-color: #3E52D6;
-	background-color: #3E52D6;
-
+	background-color: #595959;
 	color: #FFFFFF;
 }
 
@@ -413,10 +444,9 @@ div.window div.language_selector {
 	min-height: 20px;
 
 	margin-bottom: 10px;
-	padding: 1px;
 
 	border: 1px solid #B8B8B8;
-	border-radius: 4px;
+	border-radius: 2px;
 	background-color: #D4D4D4;
 
 	text-align: center;
@@ -430,15 +460,8 @@ div.window div.language_selector.loading {
 
 div.window div.language_selector span {
 	display: inline-block;
-
-	margin: 1px;
-	padding: 3px;
-	padding-left: 5px;
-	padding-right: 5px;
-
-	border-radius: 3px;
-
-	cursor: pointer;
+	border-radius: 1px;
+	padding: 5px;
 }
 
 div.window div.language_selector span:hover {
@@ -689,16 +712,17 @@ div.window div.markdown_preview {
  */
 div.window div.main_menu {
 	display: block;
+	width: calc(100% + 14px);
+
+	position: relative;
+	left: -7px;
+	top: -7px;
 
 	margin: 0px;
-	padding: 2px;
+	padding: 0px;
 
-	border: 1px solid #CBCBCB;
-	border-bottom-color: #c9c9c9;
-	background: #b8b8b8;
-	background-image: -webkit-linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
-	background-image: -moz-linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
-	background-image: linear-gradient(top, #b8b8b8 0%, #e5e5e5 100%);
+	border-bottom: 1px solid #d5d5d5;
+	background-color: #d5d5d5;
 
 	color: #1A1A1A;
 	font-size: 1em;
@@ -708,20 +732,17 @@ div.window div.main_menu {
 div.window div.main_menu a {
 	display: inline-block;
 
-	padding: 3px;
-	padding-left: 7px;
-	padding-right: 7px;
+	padding: 7px;
 
 	outline: none;
-	color: #1A1A1A;
+	color: #595959;
 	text-decoration: none;
 
 	transition: all 0.2s;
 }
 
 div.window div.main_menu a:hover {
-	background-color: #2E3E6A;
-	color: white;
+	background-image: linear-gradient(180deg, #d5d5d5 0%, #ffffff 100%);
 }
 
 div.window div.main_menu div.floated {
@@ -740,14 +761,11 @@ div.window div.main_menu label {
 
 div.window div.main_menu select, 
 div.window div.main_menu input {
-	margin: 0px;
-	margin-left: 3px;
-	margin-right: 3px;
-	padding: 1px;
+	margin: 3px;
+	padding: 2px;
 	
-	border: 1px solid #A3A9C7;
-	border-radius: 2px;
-	background-color: #C8D0F5;
+	border: 1px solid #929292;
+	background-color: #d5d5d5;
 	
 	color: black;
 }

@@ -42,7 +42,7 @@ function Toolbar(parent_id, component) {
 		.insertBefore(this.$component)
 		.addClass('toolbar')
 		.css({
-			width: this.$component.width() + 2
+			width: this.$component.width() + 6
 		});
 
 	this.$component.css({

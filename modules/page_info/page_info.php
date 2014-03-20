@@ -289,16 +289,38 @@ class page_info extends Module {
 		}				
 
 		// favicon
-		if (file_exists(_BASEPATH.'/images/favicon.png'))
-			$icon_file = _BASEPATH.'/images/favicon.png'; else
-			$icon_file = _BASEPATH.'/images/default_icon.png';
+		if (file_exists(_BASEPATH.'/images/favicon.png')) {
+			// regular, single size favicon
+			$icon_files = array(
+					'16x16'	=> _BASEPATH.'/images/favicon.png'
+				);
 
-		$head_tag->addTag('link',
-					array(
-						'rel'	=> 'icon',
-						'type'	=> 'image/png',
-						'href'	=> url_GetFromFilePath($icon_file)
-					));
+		} else if (file_exists(_BASEPATH.'/images/favicon')) {
+			$icon_sizes = array(16, 32, 64);
+			$icon_files = array();
+
+			foreach ($icon_sizes as $size) {
+				$file_name = _BASEPATH.'/images/favicon/'.$size.'.png';
+				if (file_exists($file_name))
+					$icon_files[$size.'x'.$size] = $file_name;
+			}
+
+		} else {
+			$icon_files = array(
+					'16x16'	=> _BASEPATH.'/images/default_icon/16.png',
+					'32x32'	=> _BASEPATH.'/images/default_icon/32.png',
+					'64x64'	=> _BASEPATH.'/images/default_icon/64.png'
+				);
+		}
+
+		foreach ($icon_files as $sizes => $icon)
+			$head_tag->addTag('link',
+						array(
+							'rel'	=> 'icon',
+							'type'	=> 'image/png',
+							'sizes'	=> $sizes,
+							'href'	=> url_GetFromFilePath($icon)
+						));
 
 		// add default styles and script if they exists
 		$collection->includeScript(collection::JQUERY);
