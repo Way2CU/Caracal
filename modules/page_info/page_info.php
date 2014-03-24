@@ -24,6 +24,16 @@ class page_info extends Module {
 
 		parent::__construct(__FILE__);
 
+		// let the browser/crawler know we have different desktop/mobile styles
+		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
+			header('Vary: User-Agent');  
+
+		// change powered by header
+		header('X-Powered-By: Caracal/'._VERSION);
+
+		// send encoding
+		header('Content-Type: text/html; charset=UTF-8');
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -187,9 +197,6 @@ class page_info extends Module {
 		$default_language = $language_handler->getDefaultLanguage();
 		$language_list = $language_handler->getLanguages(false);
 
-		// change powered by header
-		header('X-Powered-By: Caracal/'._VERSION);
-
 		// add base url tag
 		$head_tag->addTag('base', array('href' => _BASEURL));
 
@@ -204,7 +211,6 @@ class page_info extends Module {
 							'http-equiv'	=> 'Content-Type',
 							'content'		=> 'text/html; charset=UTF-8'
 						));
-			header('Content-Type: text/html; charset=UTF-8');
 		}
 
 		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION) 
@@ -302,10 +308,6 @@ class page_info extends Module {
 
 		// add default styles and script if they exists
 		$collection->includeScript(collection::JQUERY);
-
-		// let the browser/crawler know we have different desktop/mobile styles
-		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-			header('Vary: User-Agent');  
 
 		if ($section != 'backend') {
 			$styles = array();
