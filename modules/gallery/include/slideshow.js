@@ -158,7 +158,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 						top: '0px',
 						left: '0px'
 					})
-					.appendTo(self.container);
+					.prependTo(self.container);
 
 				if (self.scale_images)
 					$(image).load(function() {
@@ -199,7 +199,7 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 
 			// start animation
 			if (self.image_list.length > 1)
-				setInterval(function() { self.changeActiveItem(); }, self.display_time);
+				setInterval(self._changeActiveItem, self.display_time);
 
 		} else {
 			// server side error occured, report back to user
@@ -208,8 +208,10 @@ function Slideshow(container_id, animation_type, display_time, transition_time, 
 		}
 	};
 
-	// callback method used for switching news items
-	self.changeActiveItem = function() {
+	/**
+	 * Switch to next image.
+	 */
+	self._changeActiveItem = function() {
 		var next_item = self.active_item + 1;
 
 		if (next_item > self.image_list.length - 1)
