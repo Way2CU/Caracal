@@ -6,7 +6,7 @@
 		<constant name="menu_settings">Configure defaults</constant>
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
-	
+
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
 		<constant name="message_error_no_address">Error sending data! No default recipient was specified by the system.</constant>
@@ -20,7 +20,11 @@
 		<constant name="message_field_saved">Form field data was saved.</constant>
 		<constant name="message_field_delete">You are about to remove the follwing field from the form. Are you sure?</constant>
 		<constant name="message_field_deleted">Form field was removed.</constant>
-		
+		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
+		<constant name="message_missing_field">One or more required fields is missing.</constant>
+		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
+		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
+
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
 		<constant name="title_templates_edit">Contact form: Edit template</constant>
@@ -122,6 +126,13 @@
 		<constant name="message_form_saved">Form data was saved.</constant>
 		<constant name="message_form_delete">You are about to remove the following form. All data collected for this form and its fields will be removed with it. Are you sure?</constant>
 		<constant name="message_form_deleted">Form and its data was removed from the system.</constant>
+		<constant name="message_field_saved">Form field data was saved.</constant>
+		<constant name="message_field_delete">You are about to remove the follwing field from the form. Are you sure?</constant>
+		<constant name="message_field_deleted">Form field was removed.</constant>
+		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
+		<constant name="message_missing_field">One or more required fields is missing.</constant>
+		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
+		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
 		
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -216,6 +227,13 @@
 		<constant name="message_form_saved">Form data was saved.</constant>
 		<constant name="message_form_delete">You are about to remove the following form. All data collected for this form and its fields will be removed with it. Are you sure?</constant>
 		<constant name="message_form_deleted">Form and its data was removed from the system.</constant>
+		<constant name="message_field_saved">Form field data was saved.</constant>
+		<constant name="message_field_delete">You are about to remove the follwing field from the form. Are you sure?</constant>
+		<constant name="message_field_deleted">Form field was removed.</constant>
+		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
+		<constant name="message_missing_field">One or more required fields is missing.</constant>
+		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
+		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
 		
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>

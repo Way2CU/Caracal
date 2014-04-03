@@ -13,6 +13,8 @@ require_once('units/smtp.php');
 require_once('units/form_manager.php');
 require_once('units/form_field_manager.php');
 require_once('units/template_manager.php');
+require_once('units/submission_manager.php');
+require_once('units/submission_field_manager.php');
 
 
 class contact_form extends Module {
@@ -122,6 +124,10 @@ class contact_form extends Module {
 
 				case 'send_from_ajax':
 					$this->sendFromAJAX();
+					break;
+
+				case 'submit':
+					$this->submitForm($params, $children);
 					break;
 					
 				default:
@@ -237,7 +243,7 @@ class contact_form extends Module {
 		$this->saveSetting('save_copy', 0);
 		$this->saveSetting('save_location', '');
 
-		// create templates table
+		// templates table
 		$sql = "
 			CREATE TABLE `contact_form_templates` (
 				`id` int NOT NULL AUTO_INCREMENT ,
@@ -257,7 +263,7 @@ class contact_form extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		// create forms table
+		// contact form table
 		$sql = "
 			CREATE TABLE `contact_forms` (
 				`id` int NOT NULL AUTO_INCREMENT,
@@ -278,6 +284,7 @@ class contact_form extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
+		// table for storing contact form fields
 		$sql = "
 			CREATE TABLE `contact_form_fields` (
 				`id` int NOT NULL AUTO_INCREMENT,
@@ -305,6 +312,29 @@ class contact_form extends Module {
 				INDEX `contact_form_fields_by_form_and_type` (`form`, `type`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
+
+		// form submissions table
+		$sql = "
+			CREATE TABLE `contact_form_submission` (
+				`id` int NOT NULL AUTO_INCREMENT,
+				`form` int NOT NULL,
+				`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`address` varchar(45) NOT NULL,
+				PRIMARY KEY(`id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// form submission fields table
+		$sql = "
+			CREATE TABLE `contact_form_submission_fields` (
+				`id` int NOT NULL AUTO_INCREMENT,
+				`submission` int NOT NULL,
+				`field` int NULL,
+				`value` text NOT NULL,
+				PRIMARY KEY(`id`),
+				INDEX `contact_form_submissions` (`submission`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
 	}
 
 	/**
@@ -313,7 +343,10 @@ class contact_form extends Module {
 	public function onDisable() {
 		global $db;
 
-		$tables = array('contact_form_templates', 'contact_forms', 'contact_form_fields');
+		$tables = array(
+			'contact_form_templates', 'contact_forms', 'contact_form_fields',
+			'contact_form_submissions', 'contact_form_submission_fields'
+		);
 		$db->drop_tables($tables);
 	}
 
@@ -335,6 +368,161 @@ class contact_form extends Module {
 		// for this field not to be set by some browsers when submitting form
 		if ($strict && empty($_SERVER['HTTP_REFERER']))
 			$result = true;
+
+		return $result;
+	}
+
+	/**
+	 * Submit form.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 * @return boolean
+	 */
+	private function submitForm($tag_params, $children) {
+		$id = isset($_REQUEST['form_id']) ? fix_id($_REQUEST['form_id']) : null;
+		$result = false;
+
+		// we need form id
+		if (is_null($id))
+			return;
+
+		// get managers
+		$manager = ContactForm_FormManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+
+		// load form and fields
+		$form = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$fields = $field_manager->getItemValue($field_manager->getFieldNames(), array('id' => $id));
+
+		// require both form and field
+		if (!is_object($form) || !count($fields) > 0) {
+			trigger_error('ContactForm: Unable to submit. Missing form or fields.', E_USER_WARNING);
+			return;
+		}
+
+		// collect data
+		$data = array();
+		$fields = array();
+		$attachments = array();
+		$missing_fields = array();
+		$messages = array();
+
+		foreach ($fields as $field) {
+			$name = $field->name;
+			$value = '';
+
+			// get field value
+			if (isset($_REQUEST[$name]))
+				$value = fix_chars($_REQUEST[$name]);
+
+			// add field to missing fields list
+			switch ($field->type) {
+				case 'file':
+					if ($_FILES[$name]['error'] == UPLOAD_ERR_OK) {
+						$attachments[] = $_FILES[$name]['name'];
+
+					} else if ($field->required) {
+						$missing_fields[$name] = array(
+												$field->label,
+												$field->placeholder
+											);
+						$messages[] = $this->getLanguageConstant('message_upload_error');
+					}
+					break;
+
+				case 'honey-pot':
+					if (!empty($value)) {
+						trigger_error('ContactFrom: Honey-pot field populated. Ignoring submission!', E_USER_NOTICE);
+						return;
+					}
+					break;
+
+				default:
+					if (empty($value) && $field->required) {
+						$missing_fields[$name] = array(
+												$field->label,
+												$field->placeholder
+											);
+
+						$message = $this->getLanguageConstant('message_missing_field');
+						if (!in_array($message, $messages))
+							$messages[] = $message;
+					}
+
+					$data[] = array(
+							'field'	=> $field->id,
+							'value'	=> $value
+						);
+					$fields[$name] = $value;
+					break;
+			}
+		}
+
+		// store and email
+		if (count($missing_fields) == 0) {
+			// store form submission
+			$submission_manager->insertData(array(
+					'form'	=> $form->id,
+					'address'	=> $_SERVER['REMOTE_ADDR'],
+				));
+			$submission_id = $submission_manager->getInsertedID();
+
+			// store data to database
+			foreach($data as $field_data) {
+				$new_data = $field_data;
+				$new_data['submission'] = $submission_id;
+
+				$submission_manager->insertData($new_data);
+			}
+
+			// TODO: Store files somewhere after submission, if needed.
+
+			// load template
+			$email = $this->makeEmailFromTemplate($template_name, $fields, $attachments);
+
+			// send email
+			$result = $this->sendMail(
+						$email_address,
+						$email['subject'],
+						$email['body'],
+						$email['headers']
+					);
+		}
+
+		// show result
+		if (_AJAX_REQUEST) {
+			// return JSON object as reponse
+			$response = array(
+					'error'				=> $result,
+					'messages'			=> $messages,
+					'missing_fields'	=> $missing_fields
+				);
+
+			if ($result)
+				$response['message'] = $this->getLanguageConstant('message_form_sent'); else
+				$response['message'] = $this->getLanguageConstant('message_form_error');
+
+			print json_encode($response);
+
+		} else {
+			// show response from template
+			$template = $this->loadTemplate($tag_params, 'reponse.xml');
+
+			$params = array(
+					'error'				=> $result,
+					'messages'			=> $messages,
+					'missing_fields'	=> $missing_fields
+				);
+			if ($result)
+				$params['message'] = $this->getLanguageConstant('message_form_sent'); else
+				$params['message'] = $this->getLanguageConstant('message_form_error');
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
 
 		return $result;
 	}
