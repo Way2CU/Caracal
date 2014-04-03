@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="'result'.$params['error'] ? ' error' : ''" cms:eval="class">
+		<cms:var name="$params['message']"/>
+	</div>
+</document>
