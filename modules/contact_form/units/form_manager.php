@@ -14,6 +14,7 @@ class ContactForm_FormManager extends ItemManager {
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('action', 'varchar');
 		$this->addProperty('template', 'varchar');
+		$this->addProperty('use_ajax', 'boolean');
 		$this->addProperty('show_submit', 'boolean');
 		$this->addProperty('show_reset', 'boolean');
 		$this->addProperty('show_cancel', 'boolean');

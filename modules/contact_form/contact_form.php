@@ -92,6 +92,28 @@ class contact_form extends Module {
 
 			$backend->addMenu($this->name, $contact_menu);
 		}		
+
+		if (class_exists('collection') && $section != 'backend') {
+			$collection = collection::getInstance();
+			$collection->includeScript(collection::DIALOG);
+			$collection->includeScript(collection::COMMUNICATOR);
+		}
+
+		if (class_exists('head_tag') && $section != 'backend') {
+			$head_tag = head_tag::getInstance();
+
+			$head_tag->addTag('script',
+						array(
+							'src' 	=> url_GetFromFilePath($this->path.'include/contact_form.js'),
+							'type'	=> 'text/javascript'
+						));
+			$head_tag->addTag('link',
+						array(
+							'href'	=> url_GetFromFilePath($this->path.'include/contact_form.css'),
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css'
+						));
+		}
 	}
 
 	/**
@@ -276,6 +298,7 @@ class contact_form extends Module {
 		$sql .= "
 				`action` varchar(255) NULL,
 				`template` varchar(32) NOT NULL,
+				`use_ajax` boolean NOT NULL DEFAULT '1',
 				`show_submit` boolean NOT NULL DEFAULT '1',
 				`show_reset` boolean NOT NULL DEFAULT '1',
 				`show_cancel` boolean NOT NULL DEFAULT '0',
@@ -391,10 +414,17 @@ class contact_form extends Module {
 		$manager = ContactForm_FormManager::getInstance();
 		$field_manager = ContactForm_FormFieldManager::getInstance();
 		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
 
 		// load form and fields
-		$form = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-		$fields = $field_manager->getItemValue($field_manager->getFieldNames(), array('id' => $id));
+		$form = $manager->getSingleItem(
+						$manager->getFieldNames(),
+						array('id' => $id)
+					);
+		$fields = $field_manager->getItems(
+						$field_manager->getFieldNames(),
+						array('form' => $id)
+					);
 
 		// require both form and field
 		if (!is_object($form) || !count($fields) > 0) {
@@ -404,7 +434,7 @@ class contact_form extends Module {
 
 		// collect data
 		$data = array();
-		$fields = array();
+		$replacement_fields = array();
 		$attachments = array();
 		$missing_fields = array();
 		$messages = array();
@@ -455,7 +485,7 @@ class contact_form extends Module {
 							'field'	=> $field->id,
 							'value'	=> $value
 						);
-					$fields[$name] = $value;
+					$replacement_fields[$name] = $value;
 					break;
 			}
 		}
@@ -464,27 +494,34 @@ class contact_form extends Module {
 		if (count($missing_fields) == 0) {
 			// store form submission
 			$submission_manager->insertData(array(
-					'form'	=> $form->id,
+					'form'		=> $form->id,
 					'address'	=> $_SERVER['REMOTE_ADDR'],
 				));
 			$submission_id = $submission_manager->getInsertedID();
 
 			// store data to database
 			foreach($data as $field_data) {
-				$new_data = $field_data;
-				$new_data['submission'] = $submission_id;
+				$new_data = array(
+						'submission'	=> $submission_id,
+						'field'			=> $field_data['field'],
+						'value'			=> $field_data['value']
+					);
 
-				$submission_manager->insertData($new_data);
+				$submission_field_manager->insertData($new_data);
 			}
 
 			// TODO: Store files somewhere after submission, if needed.
 
 			// load template
-			$email = $this->makeEmailFromTemplate($template_name, $fields, $attachments);
+			$email = $this->makeEmailFromTemplate(
+						$form->template,
+						$replacement_fields,
+						$attachments
+					);
 
 			// send email
 			$result = $this->sendMail(
-						$email_address,
+						$this->settings['recipient_address'],
 						$email['subject'],
 						$email['body'],
 						$email['headers']
@@ -495,7 +532,7 @@ class contact_form extends Module {
 		if (_AJAX_REQUEST) {
 			// return JSON object as reponse
 			$response = array(
-					'error'				=> $result,
+					'error'				=> !$result,
 					'messages'			=> $messages,
 					'missing_fields'	=> $missing_fields
 				);
@@ -511,7 +548,7 @@ class contact_form extends Module {
 			$template = $this->loadTemplate($tag_params, 'reponse.xml');
 
 			$params = array(
-					'error'				=> $result,
+					'error'				=> !$result,
 					'messages'			=> $messages,
 					'missing_fields'	=> $missing_fields
 				);
@@ -1400,6 +1437,7 @@ class contact_form extends Module {
 						'name'				=> $item->name,
 						'action'			=> $item->action,
 						'template'			=> $item->template,
+						'use_ajax'			=> $item->use_ajax,
 						'show_submit'		=> $item->show_submit,
 						'show_reset'		=> $item->show_reset,
 						'show_cancel'		=> $item->show_cancel,
@@ -1425,6 +1463,7 @@ class contact_form extends Module {
 				'name'			=> $this->getMultilanguageField('name'),
 				'action'		=> escape_chars($_REQUEST['action']),
 				'template'		=> fix_chars($_REQUEST['template']),
+				'use_ajax'		=> isset($_REQUEST['use_ajax']) && ($_REQUEST['use_ajax'] == 'on' || $_REQUEST['use_ajax'] == '1') ? 1 : 0,
 				'show_submit'	=> isset($_REQUEST['show_submit']) && ($_REQUEST['show_submit'] == 'on' || $_REQUEST['show_submit'] == '1') ? 1 : 0,
 				'show_reset'	=> isset($_REQUEST['show_reset']) && ($_REQUEST['show_reset'] == 'on' || $_REQUEST['show_reset'] == '1') ? 1 : 0,
 				'show_cancel'	=> isset($_REQUEST['show_cancel']) && ($_REQUEST['show_cancel'] == 'on' || $_REQUEST['show_cancel'] == '1') ? 1 : 0
@@ -1833,8 +1872,6 @@ class contact_form extends Module {
 		// get fields
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		trigger_error(json_encode($items));
-
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -1933,6 +1970,7 @@ class contact_form extends Module {
 				'name'			=> $item->name,
 				'action'		=> !empty($item->action) ? $item->action : url_Make('submit', $this->name),
 				'template'		=> $item->template,
+				'use_ajax'		=> $item->use_ajax,
 				'show_submit'	=> $item->show_submit,
 				'show_reset'	=> $item->show_reset,
 				'show_cancel'	=> $item->show_cancel,
@@ -1971,6 +2009,7 @@ class contact_form extends Module {
 					'name'			=> $item->name,
 					'action'		=> $item->action,
 					'template'		=> $item->template,
+					'use_ajax'		=> $item->use_ajax,
 					'show_submit'	=> $item->show_submit,
 					'show_reset'	=> $item->show_reset,
 					'show_cancel'	=> $item->show_cancel,

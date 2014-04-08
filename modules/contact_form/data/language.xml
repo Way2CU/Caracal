@@ -50,6 +50,8 @@
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
+
+		<constant name="dialog_title">Contact Form</constant>
 		
 		<constant name="label_name">Name:</constant>
 		<constant name="label_address">Email address:</constant>
@@ -68,6 +70,7 @@
 		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_action">Action:</constant>
+		<constant name="label_use_ajax">Use AJAX for submitting data?</constant>
 		<constant name="label_show_submit">Show submit button?</constant>
 		<constant name="label_show_reset">Show reset button?</constant>
 		<constant name="label_show_cancel">Show cancel button?</constant>
@@ -153,6 +156,14 @@
 		<constant name="tab_general">כללי</constant>
 		<constant name="tab_smtp">SMTP</constant>
 		<constant name="tab_backup">Backup</constant>
+		<constant name="tab_plain_text">Plain text</constant>
+		<constant name="tab_html">HTML</constant>
+		<constant name="tab_preview">Preview</constant>
+
+		<constant name="column_text_id">Text ID</constant>
+		<constant name="column_name">Name</constant>
+
+		<constant name="dialog_title">Contact Form</constant>
 		
 		<constant name="label_name">שם:</constant>
 		<constant name="label_address">דוא"ל:</constant>
@@ -169,6 +180,7 @@
 		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_action">Action:</constant>
+		<constant name="label_use_ajax">Use AJAX for submitting data?</constant>
 		<constant name="label_show_submit">Show submit button?</constant>
 		<constant name="label_show_reset">Show reset button?</constant>
 		<constant name="label_show_cancel">Show cancel button?</constant>
@@ -254,6 +266,14 @@
 		<constant name="tab_general">General</constant>
 		<constant name="tab_smtp">SMTP</constant>
 		<constant name="tab_backup">Backup</constant>
+		<constant name="tab_plain_text">Plain text</constant>
+		<constant name="tab_html">HTML</constant>
+		<constant name="tab_preview">Preview</constant>
+
+		<constant name="column_text_id">Text ID</constant>
+		<constant name="column_name">Name</constant>
+
+		<constant name="dialog_title">Contact Form</constant>
 		
 		<constant name="label_default_name">Ime:</constant>
 		<constant name="label_default_address">Email adresa:</constant>
@@ -270,6 +290,7 @@
 		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
 		<constant name="label_text_id">Text ID:</constant>
 		<constant name="label_action">Action:</constant>
+		<constant name="label_use_ajax">Use AJAX for submitting data?</constant>
 		<constant name="label_show_submit">Show submit button?</constant>
 		<constant name="label_show_reset">Show reset button?</constant>
 		<constant name="label_show_cancel">Show cancel button?</constant>
