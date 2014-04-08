@@ -1,0 +1,37 @@
+/**
+ * Contact Form Style Sheet
+ * Caracal Development Framework
+ *
+ * Copyright (c) 2014. by Way2CU, http://way2cu.com
+ * Authors: Mladen Mijatov
+ */
+
+form[data-dynamic='1'] {
+	position: relative;
+}
+
+form[data-dynamic='1'] div.overlay {
+	display: block;
+	width: 100%;
+	height: 100%;
+
+	visibility: hidden;
+	opacity: 0;
+
+	position: absolute;
+	left: 0px;
+	top: 0px;
+
+	background-color: white;
+	background-color: rgba(255, 255, 255, 0.8);
+	background-image: url(../images/loading.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+
+	transition: all 0.5s;
+}
+
+form[data-dynamic='1'] div.overlay.visible {
+	visibility: visible;
+	opacity: 1;
+}
