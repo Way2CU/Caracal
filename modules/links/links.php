@@ -26,14 +26,14 @@ class links extends Module {
 
 			$links_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_links'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_manage'),
-								url_GetFromFilePath($this->path.'images/manage.png'),
+								url_GetFromFilePath($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'links_list',
 											720,
@@ -46,7 +46,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_groups'),
-								url_GetFromFilePath($this->path.'images/groups.png'),
+								url_getFromFilePath($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'groups_list',
 											500,
@@ -59,7 +59,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_overview'),
-								url_GetFromFilePath($this->path.'images/overview.png'),
+								url_GetFromFilePath($this->path.'images/overview.svg'),
 								window_Open( // on click open window
 											'links_overview',
 											650,

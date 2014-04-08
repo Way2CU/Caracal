@@ -26,14 +26,14 @@ class articles extends Module {
 
 			$articles_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_articles'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_articles_new'),
-								url_GetFromFilePath($this->path.'images/new_article.png'),
+								url_GetFromFilePath($this->path.'images/new_article.svg'),
 
 								window_Open( // on click open window
 											'articles_new',
@@ -48,7 +48,7 @@ class articles extends Module {
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_articles_manage'),
-								url_GetFromFilePath($this->path.'images/manage.png'),
+								url_GetFromFilePath($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'articles',
@@ -61,7 +61,7 @@ class articles extends Module {
 							));
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_article_groups'),
-								url_GetFromFilePath($this->path.'images/groups.png'),
+								url_GetFromFilePath($this->path.'images/groups.svg'),
 
 								window_Open( // on click open window
 											'article_groups',

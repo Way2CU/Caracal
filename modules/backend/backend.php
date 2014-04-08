@@ -59,41 +59,39 @@ class backend extends Module {
 		$this->event_handler->registerEvent('user-password-change');
 
 		// load CSS and JScript
-		if (class_exists('head_tag')) {
+		if (class_exists('head_tag') && $section == 'backend') {
 			$head_tag = head_tag::getInstance();
 			$collection = collection::getInstance();
 
-			if ($section == $this->name) {
-				$collection->includeScript(collection::JQUERY);
-				$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-				$collection->includeScript(collection::JQUERY_EXTENSIONS);
+			$collection->includeScript(collection::JQUERY);
+			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
+			$collection->includeScript(collection::WINDOW_SYSTEM);
+
+			if ($_SESSION['logged']) {
 				$collection->includeScript(collection::JQUERY_MINICOLORS);
-				$collection->includeScript(collection::WINDOW_SYSTEM);
+				$collection->includeScript(collection::JQUERY_EXTENSIONS);
 				$collection->includeScript(collection::NOTEBOOK);
 				$collection->includeScript(collection::SHOWDOWN);
 				$collection->includeScript(collection::TOOLBAR);
-
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-
-				if (MainLanguageHandler::getInstance()->isRTL()) {
-					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/window_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-					$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend_rtl.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-				}
 			}
+
+			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+
 		}
 
 		// add admin level menus
 		if ($section == 'backend') {
 			$system_menu = new backend_MenuItem(
 									$this->getLanguageConstant('menu_system'),
-									url_GetFromFilePath($this->path.'images/icons/16/system.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/system.svg'),
 									'javascript:void(0);',
 									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_modules'),
-									url_GetFromFilePath($this->path.'images/icons/16/modules.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/modules.svg'),
 									window_Open( // on click open window
 												'system_modules',
 												610,
@@ -105,7 +103,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_users'),
-									url_GetFromFilePath($this->path.'images/icons/16/users.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/users.svg'),
 									window_Open( // on click open window
 												'system_users',
 												690,
@@ -118,7 +116,7 @@ class backend extends Module {
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_change_password'),
-									url_GetFromFilePath($this->path.'images/icons/16/change_password.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/change_password.svg'),
 									window_Open( // on click open window
 												'change_password_window',
 												350,
@@ -130,7 +128,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_logout'),
-									url_GetFromFilePath($this->path.'images/icons/16/logout.png'),
+									url_GetFromFilePath($this->path.'images/icons/16/logout.svg'),
 									window_Open( // on click open window
 												'logout_window',
 												350,
@@ -327,8 +325,9 @@ class backend extends Module {
 	 */
 	private function showBackend() {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
+
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_main_menu', $this, 'tag_MainMenu');
+		$template->registerTagHandler('cms:main_menu', $this, 'tag_MainMenu');
 
 		$params = array();
 
@@ -664,11 +663,11 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		foreach($list as $name => $definition) {
-			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.png';
+			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.svg';
 
 			if (file_exists($icon_file))
 				$icon = url_GetFromFilePath($icon_file); else
-				$icon = url_GetFromFilePath($this->path.'images/icons/16/modules.png');
+				$icon = url_GetFromFilePath($this->path.'images/icons/16/module.svg');
 
 			$params = array(
 							'name'				=> $name,

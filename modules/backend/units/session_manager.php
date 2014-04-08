@@ -57,7 +57,6 @@ class SessionManager {
 				break;
 
 			default:
-				$_SESSION['redirect_url'] = $_SERVER['REQUEST_URI']; // grab url for later redirection
 				$this->login();
 				break;
 		}

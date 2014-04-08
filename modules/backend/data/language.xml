@@ -3,6 +3,7 @@
 <document>
 	<language name="English" short="en">
 		<constant name="title">Administration Suite</constant>
+		<constant name="slogan">Development Framework</constant>
 
 		<!-- Menu Items -->
 		<constant name="menu_system">System</constant>
@@ -10,6 +11,8 @@
 		<constant name="menu_users">User management</constant>
 		<constant name="menu_logout">Logout</constant>
 		<constant name="menu_change_password">Change password</constant>
+		<constant name="menu_report_bug">Report a bug</constant>
+		<constant name="menu_help">Help</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">Modules</constant>

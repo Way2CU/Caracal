@@ -39,14 +39,14 @@ class downloads extends Module {
 
 			$downloads_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_downloads'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_upload_file'),
-								url_GetFromFilePath($this->path.'images/upload.png'),
+								url_GetFromFilePath($this->path.'images/upload.svg'),
 								window_Open( // on click open window
 											'upload_file',
 											400,
@@ -59,7 +59,7 @@ class downloads extends Module {
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage'),
-								url_GetFromFilePath($this->path.'images/manage.png'),
+								url_GetFromFilePath($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'downloads',
 											520,
@@ -651,7 +651,7 @@ class DownloadsManager extends ItemManager {
 			foreach ($items as $item)
 				unlink($path.$item->filename);
 
-		parent::deleteData($conditionals);
+		parent::deleteData($conditionals, $limit);
 	}
 
 	/**

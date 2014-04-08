@@ -45,7 +45,7 @@ class contact_form extends Module {
 
 			$contact_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_contact'),
-					url_GetFromFilePath($this->path.'images/icon.png'),
+					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
@@ -65,7 +65,7 @@ class contact_form extends Module {
 							));	
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_templates'),
-								url_GetFromFilePath($this->path.'images/templates.png'),
+								url_GetFromFilePath($this->path.'images/templates.svg'),
 
 								window_Open( // on click open window
 											'contact_form_templates',
@@ -79,7 +79,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.png'),
+								url_GetFromFilePath($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'contact_form_settings',

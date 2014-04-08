@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<cms:var name="_HTML_401"/>
+	<cms:var name="_HTML_5"/>
 	<html>
 		<head>
 			<title>
@@ -9,42 +9,61 @@
 				<cms:raw text=" - "/>
 				<cms:text constant="title" module="backend"/>
 			</title>
-			<cms:module
-				name="head_tag"
-				action="print_tag"
-			/>
+			<cms:module name="head_tag" action="print_tag"/>
 		</head>
 
 		<body class="$language_rtl ? 'rtl' : 'ltr'" cms:eval="class">
-			<div id="wrap">
-				<div id="main_menu">
-					<cms:if condition="isset($_SESSION['logged']) and $_SESSION['logged']">
-						<_main_menu/>
-					</cms:if>
-
-					<ol id="language_menu">
-						<cms:module name="language_menu" action="print" from_module="backend"/>
-					</ol>
+			<header>
+				<div id="logo">
+					<img
+						src="_BASEURL.'/modules/backend/images/logo_text.svg'"
+						alt="Caracal"
+						eval="src"
+					/>
+					<cms:text constant="slogan" module="backend"/>
 				</div>
 
-				<cms:if condition="!isset($_SESSION['logged']) or !$_SESSION['logged']">
-					<div id="login_window" class="window">
-						<div class="title"><cms:text constant="title_login" module="backend"/></div>
-						<div class="content">
-							<cms:module name="backend" action="login"/>
-						</div>
-					</div>
-					<script type="text/javascript">
-						$(document).ready(function() {
-							window_system.attachToStructure('login_window', 350, false);
-						});
-					</script>
-				</cms:if>
-			</div>
+				<div id="user_widget">
+				</div>
+			</header>
 
-			<div id="copyright">
-				<cms:text constant="backend_copyright"/>
-			</div>
+			<cms:user>
+				<div id="container">
+					<cms:main_menu/>
+				</div>
+			</cms:user>
+
+			<cms:guest>
+				<div id="container" class="guest"/>
+				<script type="text/javascript">
+					$(document).ready(function() {
+						window_system.showLoginWindow();
+					});
+				</script>
+			</cms:guest>
+
+			<footer>
+				<nav id="common">
+					<a href="http://code.google.com/p/caracal" target="_blank">
+						<cms:text constant="menu_report_bug" module="backend"/>
+					</a>
+					<a href="http://google.com" target="_blank">
+						<cms:text constant="menu_help" module="backend"/>
+					</a>
+				</nav>
+				<div style="clear: both;"/>
+			</footer>
+
+			<!-- <div id="wrap"> -->
+			<!-- 	<div id="main_menu"> -->
+			<!-- 		<ol id="language_menu"> -->
+			<!-- 			<cms:module name="language_menu" action="print" from_module="backend"/> -->
+			<!-- 		</ol> -->
+			<!-- 	</div> -->
+
+			<!-- <div id="copyright"> -->
+			<!-- 	<cms:text constant="backend_copyright"/> -->
+			<!-- </div> -->
 		</body>
 	</html>
 </document>
