@@ -456,7 +456,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 					} else {
 						// all other components
-						data[$(this).attr('name')] = $(this).val(); 
+						data[$(this).attr('name')] = encodeURIComponent($(this).val());
 					}
 				}
 			});
