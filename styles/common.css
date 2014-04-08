@@ -171,7 +171,6 @@ div.scrollbar_thumb.active {
 	box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
 
 	color: white;
-	text-align: center;
 
 	transition: 0.3s all;
 }
