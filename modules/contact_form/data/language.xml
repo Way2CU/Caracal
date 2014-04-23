@@ -6,6 +6,7 @@
 		<constant name="menu_settings">Configure defaults</constant>
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
+		<constant name="menu_submissions">Form submissions</constant>
 
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
@@ -24,6 +25,7 @@
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
 		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
+		<constant name="message_no_form_selected">Please select form from the menu.</constant>
 
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -38,6 +40,7 @@
 		<constant name="title_fields_add">Contact form: Add field</constant>
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
+		<constant name="title_submissions">Contact form: Submitted information</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -50,6 +53,7 @@
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
+		<constant name="column_address">Address</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 		
@@ -118,6 +122,7 @@
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
+		<constant name="menu_submissions">Form submissions</constant>
 
 		<constant name="message_sent">מידע נשלח בהצלחה!</constant>
 		<constant name="message_error">נוצרה בעיה בשליחת מידע אנא בדוק השדות ונסה שנית!</constant>
@@ -228,6 +233,7 @@
 		<constant name="menu_settings">Podešavanje formulara</constant>
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
+		<constant name="menu_submissions">Form submissions</constant>
 	
 		<constant name="message_sent">Podaci su uspešno poslati!</constant>
 		<constant name="message_error">Greška prilikom slanja podataka. Proverite sva polja i pokušajte opet.</constant>
