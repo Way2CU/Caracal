@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<div class="floated">
+			<_text constant="type" module="survey"/>
+			<select onchange="javascript: submissions_update_result_list();" id="submission_form_list">
+				<option/>
+				<cms:form_list
+					selected="isset($_REQUEST['form']) ? fix_chars($_REQUEST['form']) : 0"
+					template="form_option.xml"
+					local="1"
+					cms:eval="selected"
+				/>
+			</select>
+		</div>
+
+		<cms:if condition="isset($_REQUEST['form']) and !empty($_REQUEST['form'])">
+			<a 
+				href="url_Make('transfer_control', 'backend_module', array('module', 'contact_form'), array('backend_action', 'export_submissions'), array('form', fix_chars($_REQUEST['form'])))"
+				cms:eval="href"
+			>
+				<cms:text constant="menu_export" module="survey"/>
+			</a>
+		</cms:if>
+
+		<div style="clear: both;"/>
+	</div>
+
+	<!-- Header -->
+	<cms:if condition="isset($_REQUEST['form']) and !empty($_REQUEST['form'])">
+		<div class="scrollable_list">
+			<div class="list_header">
+				<cms:field_list
+					form="$_REQUEST['form']"
+					limit="3"
+					template="field_column.xml"
+					local="1"
+					cms:eval="form"
+					/>
+
+				<span class="column">
+					<cms:text constant="column_options"/>
+				</span>
+			</div>
+			<div class="list_content" style="height: 250px">
+				<cms:list
+					form="$_REQUEST['form']"
+					cms:eval="form"
+					/>
+			</div>
+		</div>
+	</cms:if>
+
+	<cms:if condition="!isset($_REQUEST['form']) or empty($_REQUEST['form'])">
+		<div class="window_message">
+			<cms:text constant="message_no_form_selected" module="contact_form"/>
+		</div>
+	</cms:if>
+</document>

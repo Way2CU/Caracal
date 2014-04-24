@@ -132,6 +132,9 @@ function ContactForm(form_object) {
 		// clear form on success
 		if (!data.error)
 			self._form[0].reset();
+
+		// trigger other form events
+		self._form.trigger('analytics-event', data);
 	};
 
 	/**

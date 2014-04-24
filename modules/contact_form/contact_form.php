@@ -89,8 +89,30 @@ class contact_form extends Module {
 										),
 								$level=5
 							));	
+			$contact_menu->addSeparator(5);
+			$contact_menu->addChild('', new backend_MenuItem(
+								$this->getLanguageConstant('menu_submissions'),
+								url_GetFromFilePath($this->path.'images/submissions.png'),
+
+								window_Open( // on click open window
+											'contact_form_submissions',
+											650,
+											$this->getLanguageConstant('title_submissions'),
+											true, true,
+											backend_UrlMake($this->name, 'submissions')
+										),
+								$level=5
+							));
 
 			$backend->addMenu($this->name, $contact_menu);
+
+			// add backend support script
+			$head_tag = head_tag::getInstance();
+			$head_tag->addTag('script',
+						array(
+							'src' 	=> url_GetFromFilePath($this->path.'include/backend.js'),
+							'type'	=> 'text/javascript'
+						));
 		}		
 
 		if (class_exists('collection') && $section != 'backend') {
@@ -161,6 +183,10 @@ class contact_form extends Module {
 			switch ($params['backend_action']) {
 				case 'settings_show':
 					$this->showSettings();
+					break;
+
+				case 'submissions':
+					$this->showSubmissions();
 					break;
 
 				case 'settings_save':
@@ -1201,6 +1227,26 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Show sbumissions for specific form.
+	 */
+	private function showSubmissions() {
+		// load template
+		$template = new TemplateHandler('submissions_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$template->registerTagHandler('cms:form_list', $this, 'tag_FormList');
+		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+		$template->registerTagHandler('cms:list', $this, 'tag_SubmissionList');
+
+		// parse template
+		$params = array();
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Show form for managing email templates.
 	 */
 	private function manageTemplates() {
@@ -1994,6 +2040,9 @@ class contact_form extends Module {
 		$conditions = array();
 		$manager = ContactForm_FormManager::getInstance();
 
+		// get params
+		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0;
+
 		// load template
 		$template = $this->loadTemplate($tag_params, 'forms_list_item.xml');
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
@@ -2013,6 +2062,7 @@ class contact_form extends Module {
 					'show_submit'	=> $item->show_submit,
 					'show_reset'	=> $item->show_reset,
 					'show_cancel'	=> $item->show_cancel,
+					'selected'		=> $selected == $item->id,
 					'item_fields'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('fields'),
 											window_Open(
@@ -2067,6 +2117,98 @@ class contact_form extends Module {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+	}
+
+	/**
+	 * Handle rendering detailed submission.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Submission($tag_params, $children) {
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$fields = array();
+		$conditions = array();
+
+		// get parameters
+		$conditions['form'] = -1;
+		if (isset($tag_params['form']))
+			$conditions['form'] = fix_id($tag_params['form']);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'submission.xml');
+
+		// get submission
+		$item = $submission_manager->getSingleItem(
+				$submission_manager->getFieldNames(),
+				$conditions
+			);
+
+		// load field definitions
+		if ($conditions['form'] != -1) {
+			$field_definitions = $field_manager->getItems(
+				$field_manager->getFieldNames(),
+				array('form' => $conditions['form'])
+			);
+
+			if (count($field_definitions) > 0)
+				foreach ($field_definitions as $field)
+					$fields[$field->id] = $field;
+		}
+
+		// parse template
+		if (is_object($item)) {
+			// get submitted fields
+			$submitted_data = $submission_field_manager->getItems(
+					$submission_field_manager->getFieldNames(),
+					array('form' => $conditions['form'])
+				);
+
+			$field_data = array();
+
+			if (count($submitted_data) > 0)
+				foreach ($submitted_data as $record)
+					$field_data[] = array(
+							'submission'	=> $record->submission,
+							'field'			=> $record->field,
+							'value'			=> $record->value,
+							'label'			=> $fields[$record->field]->label,
+							'placeholder'	=> $fields[$record->field]->placeholder,
+							'type'			=> $fields[$record->field]->type,
+						);
+
+			// prepare timestamps
+			$timestamp = strtotime($item->timestamp);
+			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+			$params = array(
+					'id'			=> $item->id,
+					'form'			=> $item->form,
+					'timestamp'		=> $item->timestamp,
+					'time'			=> $time,
+					'date'			=> $date,
+					'address'		=> $item->address,
+					'fields'		=> $field_data
+				);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Handle rendering list of submissions.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_SubmissionList($tag_params, $children) {
+		$manager = ContactForm_SubmissionManager::getInstance();
+		$conditions = array();
 	}
 
 	/**

@@ -52,7 +52,7 @@ if (!defined('DEBUG'))
 
 // define constants
 define('_DOMAIN', $_SERVER['SERVER_NAME']);
-define('_SECURE', !empty($_SERVER['HTTPS']));
+define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
 define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
 define('_DESKTOP_VERSION', get_desktop_version());
