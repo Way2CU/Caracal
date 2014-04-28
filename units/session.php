@@ -18,10 +18,15 @@ class Session {
 	/**
 	 * Get relative site path. This path is used for
 	 * properly setting cookies.
+	 *
+	 * @note: Although not specified in documentation cookie path
+	 * must be URL encoded. Otherwise you will run into mysterious
+	 * problems of cookies not being set. Additionally only ASCII
+	 * characters are allowed.
 	 */
 	public static function get_path() {
 		if (!isset(self::$path)) 
-			self::$path = dirname($_SERVER['PHP_SELF']);
+			self::$path = urlencode(dirname($_SERVER['PHP_SELF']));
 
 		return self::$path;
 	}
@@ -36,7 +41,7 @@ class Session {
 	 * load. This is due to bug in IE which accepts
 	 * cookies in GMT but checks for their validity in
 	 * local time zone. Since our cookies are set to
-	 * exprite in 15 minutes, they are expired before they
+	 * expire in 15 minutes, they are expired before they
 	 * are stored. Using TYPE_BROWSER solves this issue.
 	 */
 	public static function start() {
@@ -76,7 +81,7 @@ class Session {
 	/**
 	 * Change session type.
 	 *
-	 * @param integer $type		Default if not otherwise specified
+	 * @param integer $type	Default if not otherwise specified
 	 * @param integer $duration	In minutes, required only for extended
 	 */
 	public static function change_type($type=null, $duration=null) {
