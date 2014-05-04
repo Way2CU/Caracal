@@ -1,7 +1,7 @@
 /**
  * Universal Dialog Component
  * 
- * Copyright (c) 2012. by Way2CU
+ * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -31,12 +31,12 @@ function Dialog() {
 			self._background = $('<div>')
 					.addClass('dialog-background')
 					.appendTo($('body'));
-		
+
 		// configure container
 		self._container
 				.addClass('dialog')
 				.appendTo($('body'));
-		
+
 		// configure title
 		self._title
 				.addClass('title')
@@ -44,15 +44,18 @@ function Dialog() {
 		
 		self._title_text
 				.appendTo(self._title);
-		
+
 		self._close_button
 				.addClass('close')
 				.attr('href', 'javascript: void(0);')
 				.html(language_handler.getText(null, 'close'))
 				.click(self.__handle_close_click)
 				.appendTo(self._command_bar);
-		
+
 		self._title.append($('<div>').css('clear', 'both'));
+
+		// connect click event for background
+		self._background.click(self.__handle_close_click);
 
 		// configure content
 		self._content
