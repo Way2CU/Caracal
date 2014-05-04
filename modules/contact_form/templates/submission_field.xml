@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label
+		class="in_array($params['type'], array('checkbox', 'radio')) ? $params['type'] : false"
+		cms:optional="class"
+		>
+		<span><cms:var name="$params['text']"/></span>
+		<cms:choice value="$params['type']" cms:eval="value">
+			<!-- Radio button -->
+			<option value="radio" default="0">
+				<input
+					name="$params['name']"
+					type="radio"
+					value="$params['value']"
+					checked="$params['checked'] == '1' ? 'checked' : false"
+					readonly="readonly"
+					cms:optional="checked"
+					cms:eval="name,value"
+				/>
+			</option>
+
+			<!-- Checkbox -->
+			<option value="checkbox" default="0">
+				<input
+					name="$params['name']"
+					type="checkbox"
+					checked="$params['value'] == '1' ? 'checked' : false"
+					readonly="readonly"
+					cms:optional="checked"
+					cms:eval="name"
+				/>
+			</option>
+
+			<!-- Text area -->
+			<option value="textarea" default="0">
+				<textarea
+					name="$params['name']"
+					rows="4"
+					cols="50"
+					readonly="readonly"
+					cms:eval="name"
+					>
+					<cms:var name="$params['value']"/>
+				</textarea>
+			</option>
+
+			<!-- Text input -->
+			<option value="text" default="1">
+				<input
+					name="$params['name']"
+					type="$params['type']"
+					value="$params['value']"
+					readonly="readonly"
+					cms:eval="name,type,value"
+				/>
+			</option>
+		</cms:choice>
+	</label>
+</document>

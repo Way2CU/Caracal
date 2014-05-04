@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="submission_details">
+		<cms:fields
+			submission="$params['id']"
+			cms:eval="submission"
+			/>
+	</div>
+
+	<div class="button_bar">
+		<button
+			type="button"
+			onclick="$params['button_action']"
+			cms:eval="onclick"
+			>
+			<_text constant="close"/>
+		</button>
+	</div>
+</document>

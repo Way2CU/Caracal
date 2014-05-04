@@ -2,16 +2,17 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 150px;">
-			<cms:var name="$params['text_id']"/>
+		<span class="column" style="width: 170px;">
+			<cms:var name="$params['fields'][0]['value']"/>
 		</span>
-		<span class="column" style="width: 250px;">
-			<cms:var name="$params['name'][$language]"/>
+		<span class="column" style="width: 170px;">
+			<cms:var name="$params['fields'][1]['value']"/>
+		</span>
+		<span class="column" style="width: 170px;">
+			<cms:var name="$params['fields'][2]['value']"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_fields']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_delete']"/>
+			<cms:var name="$params['item_details']"/>
 		</span>
 	</div>
 </document>
