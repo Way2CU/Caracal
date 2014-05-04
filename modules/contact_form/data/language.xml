@@ -41,6 +41,7 @@
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
 		<constant name="title_submissions">Contact form: Submitted information</constant>
+		<constant name="title_submission_details">Constact form: Submission details</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -115,6 +116,7 @@
 		<constant name="legend_range">Range</constant>
 
 		<constant name="fields">Fields</constant>
+		<constant name="details">Details</constant>
 	</language>
 
 	<language short="he">
@@ -141,6 +143,7 @@
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
 		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
+		<constant name="message_no_form_selected">Please select form from the menu.</constant>
 		
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -155,6 +158,8 @@
 		<constant name="title_fields_add">Contact form: Add field</constant>
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
+		<constant name="title_submissions">Contact form: Submitted information</constant>
+		<constant name="title_submission_details">Constact form: Submission details</constant>
 
 		<constant name="tab_sender">שולח</constant>
 		<constant name="tab_recipient">כתובת מקבל</constant>
@@ -226,6 +231,7 @@
 		<constant name="legend_range">Range</constant>
 
 		<constant name="fields">Fields</constant>
+		<constant name="details">Details</constant>
 	</language>
 
 	<language short="sr">
@@ -252,6 +258,7 @@
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
 		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
+		<constant name="message_no_form_selected">Please select form from the menu.</constant>
 		
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -266,6 +273,8 @@
 		<constant name="title_fields_add">Contact form: Add field</constant>
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
+		<constant name="title_submissions">Contact form: Submitted information</constant>
+		<constant name="title_submission_details">Constact form: Submission details</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -337,5 +346,6 @@
 		<constant name="legend_range">Range</constant>
 
 		<constant name="fields">Fields</constant>
+		<constant name="details">Details</constant>
 	</language>
 </document>

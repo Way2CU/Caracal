@@ -25,10 +25,11 @@ class contact_form extends Module {
 					);
 
 	private $field_types = array(
-						'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
-						'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
-						'time', 'week', 'url', 'number', 'range', 'honey-pot'
+					'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
+					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
+					'time', 'week', 'url', 'number', 'range', 'honey-pot'
 				);
+	private $hidden_fields = array('hidden', 'honey-pot');
 
 	/**
 	 * Constructor
@@ -113,6 +114,12 @@ class contact_form extends Module {
 							'src' 	=> url_GetFromFilePath($this->path.'include/backend.js'),
 							'type'	=> 'text/javascript'
 						));
+			$head_tag->addTag('link',
+						array(
+							'href'	=> url_GetFromFilePath($this->path.'include/backend.css'),
+							'rel'	=> 'stylesheet',
+							'type'	=> 'text/css'
+						));
 		}		
 
 		if (class_exists('collection') && $section != 'backend') {
@@ -187,6 +194,10 @@ class contact_form extends Module {
 
 				case 'submissions':
 					$this->showSubmissions();
+					break;
+
+				case 'submission_details':
+					$this->showSubmissionDetails();
 					break;
 
 				case 'settings_save':
@@ -1247,6 +1258,45 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Show details for submission.
+	 */
+	private function showSubmissionDetails() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_SubmissionManager::getInstance();
+
+		// load submission details
+		$item = $manager->getSingleItem(
+				$manager->getFieldNames(),
+				array('id' => $id)
+			);
+
+		// report error and return if specified submission doesn't exist
+		if (!is_object($item)) {
+			trigger_error("Contact form: Unable to show submission details for {$id}.", E_USER_NOTICE);
+			return;
+		}
+
+		// load template
+		$template = new TemplateHandler('submission_details.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
+
+		// prepare parameters
+		$params = array(
+				'id'		=> $item->id,
+				'form'		=> $item->form,
+				'timestamp'	=> $item->timestamp,
+				'address'	=> $item->address,
+				'button_action'	=> window_Close('contact_form_submission_details'.$item->id)
+			);
+
+		// parse template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Show form for managing email templates.
 	 */
 	private function manageTemplates() {
@@ -1912,15 +1962,41 @@ class contact_form extends Module {
 		if (isset($tag_params['form']))
 			$conditions['form'] = fix_id($tag_params['form']);
 
+		$skip_hidden = false;
+		if (isset($tag_params['skip_hidden']))
+			$skip_hidden = $tag_params['skip_hidden'] == 1;
+
+		$count = 0;
+		$limit = null;
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']);
+
+		$order_by = array('id');
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', $tag_params['order_by']);
+
+		$order_asc = true;
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
+
 		// load template
 		$template = $this->loadTemplate($tag_params, 'field.xml');
 
 		// get fields
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
+				// skip hidden fields
+				if ($skip_hidden && in_array($item->type, $this->hidden_fields))
+					continue;
+
+				// respect limit
+				$count++;
+				if (!is_null($limit) && $count > $limit)
+					break;
+
 				$params = array(
 					'id'			=> $item->id,
 					'form'			=> $item->form,
@@ -2139,6 +2215,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'submission.xml');
+		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submission
 		$item = $submission_manager->getSingleItem(
@@ -2163,7 +2240,7 @@ class contact_form extends Module {
 			// get submitted fields
 			$submitted_data = $submission_field_manager->getItems(
 					$submission_field_manager->getFieldNames(),
-					array('form' => $conditions['form'])
+					array('submission' => $item->id)
 				);
 
 			$field_data = array();
@@ -2171,7 +2248,6 @@ class contact_form extends Module {
 			if (count($submitted_data) > 0)
 				foreach ($submitted_data as $record)
 					$field_data[] = array(
-							'submission'	=> $record->submission,
 							'field'			=> $record->field,
 							'value'			=> $record->value,
 							'label'			=> $fields[$record->field]->label,
@@ -2207,8 +2283,180 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_SubmissionList($tag_params, $children) {
-		$manager = ContactForm_SubmissionManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$fields = array();
 		$conditions = array();
+
+		// get parameters
+		$conditions['form'] = -1;
+		if (isset($tag_params['form']))
+			$conditions['form'] = fix_id($tag_params['form']);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'submissions_list_item.xml');
+		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
+
+		// get submissions
+		$items = $submission_manager->getItems(
+				$submission_manager->getFieldNames(),
+				$conditions
+			);
+
+		// load field definitions
+		if ($conditions['form'] != -1) {
+			$field_definitions = $field_manager->getItems(
+				$field_manager->getFieldNames(),
+				array('form' => $conditions['form'])
+			);
+
+			if (count($field_definitions) > 0)
+				foreach ($field_definitions as $field)
+					$fields[$field->id] = $field;
+		}
+
+		// parse template
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				// get submitted fields
+				$submitted_data = $submission_field_manager->getItems(
+						$submission_field_manager->getFieldNames(),
+						array('submission' => $item->id)
+					);
+
+				$field_data = array();
+
+				if (count($submitted_data) > 0)
+					foreach ($submitted_data as $record)
+						$field_data[] = array(
+								'submission'	=> $record->submission,
+								'field'			=> $record->field,
+								'value'			=> $record->value,
+								'label'			=> $fields[$record->field]->label,
+								'placeholder'	=> $fields[$record->field]->placeholder,
+								'type'			=> $fields[$record->field]->type,
+							);
+
+				// prepare timestamps
+				$timestamp = strtotime($item->timestamp);
+				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+				$params = array(
+						'id'			=> $item->id,
+						'form'			=> $item->form,
+						'timestamp'		=> $item->timestamp,
+						'time'			=> $time,
+						'date'			=> $date,
+						'address'		=> $item->address,
+						'fields'		=> $field_data,
+						'item_details'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('details'),
+												window_Open(
+													'contact_form_submission_details'.$item->id, 	// window id
+													400,				// width
+													$this->getLanguageConstant('title_submission_details'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'submission_details'),
+														array('id', $item->id)
+													)
+												)
+											),
+					);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Show submission data.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_SubmissionFields($tag_params, $children) {
+		global $language;
+
+		$conditions = array();
+		$form_field_manager = ContactForm_FormFieldManager::getInstance();
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+
+		// get conditional parameters
+		$submission_id = null;
+		if (isset($tag_params['submission']))
+			$submission_id = fix_id($tag_params['submission']);
+
+		// we require submission to be specified
+		if (is_null($submission_id)) {
+			trigger_error('Submission fields tag: No submission id specified.', E_USER_NOTICE);
+			return;
+		}
+
+		// get submission for specified id
+		$submission = $submission_manager->getSingleItem(
+				$submission_manager->getFieldNames(),
+				array('id' => $submission_id)
+			);
+
+		if (!is_object($submission)) {
+			trigger_error('Submission fields tag: Unknown submission.', E_USER_NOTICE);
+			return;
+		}
+
+		// get form fields
+		$raw_fields = $form_field_manager->getItems(
+				$form_field_manager->getFieldNames(),
+				array('form' => $submission->form)
+			);
+
+		$fields = array();
+		foreach ($raw_fields as $field)
+			$fields[$field->id] = $field;
+
+		// load submission data
+		$items = $submission_field_manager->getItems(
+				$submission_field_manager->getFieldNames(),
+				array('submission' => $submission->id)
+			);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'submission_field.xml');
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$field = $fields[$item->field];
+				$text = $field->name;
+
+				if (!empty($field->placeholder[$language]))
+					$text = $field->placeholder[$language];
+
+				if (!empty($field->label[$language]))
+					$text = $field->label[$language];
+
+				$params = array(
+					'submission'	=> $submission->id,
+					'form'			=> $submission->form,
+					'field'			=> $item->field,
+					'value'			=> $item->value,
+					'label'			=> $field->label,
+					'placeholder'	=> $field->placeholder,
+					'text'			=> $text,
+					'type'			=> $field->type,
+					'name'			=> $field->name
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 
 	/**

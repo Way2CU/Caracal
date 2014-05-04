@@ -3,7 +3,8 @@
 <document>
 	<label
 		class="in_array($params['type'], array('checkbox', 'radio')) ? $params['type'] : false"
-		cms:optional="class"
+		style="$params['type'] == 'honey-pot' ? 'display: none;' : false"
+		cms:optional="class,style"
 		>
 		<span><cms:var name="$params['label'][$language]"/></span>
 		<cms:choice value="$params['type']" cms:eval="value">
@@ -253,7 +254,6 @@
 					name="$params['name']"
 					required="$params['required'] ? 'required' : false"
 					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
-					style="display: none;"
 					cms:optional="required,maxlength"
 					cms:eval="name"
 				/>

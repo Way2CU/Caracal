@@ -1,0 +1,19 @@
+/**
+ * Contact Form Backend Style Sheet
+ *
+ * Copyright (c) 2014. by Way2CU, http://way2cu.com
+ * Authors: Mladen Mijatov
+ */
+
+div.submission_details {
+	padding-bottom: 10px;
+}
+
+div.submission_details input {
+	width: 350px;
+}
+
+div.submission_details textarea {
+	width: 400px;
+	height: 150px;
+}
