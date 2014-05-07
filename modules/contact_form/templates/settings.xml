@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div id="contact_form_settings_notebook">
 			<div>
-				<label>
+				<label cms:tooltip="tooltip_sender_name">
 					<span><cms:text constant="label_name" module="contact_form"/></span>
 					<input 
 						type="text" 
@@ -14,7 +14,7 @@
 						style="width: 250px;"
 					/>
 				</label>
-				<label>
+				<label cms:tooltip="tooltip_sender_address">
 					<span><cms:text constant="label_address" module="contact_form"/></span>
 					<input 
 						type="text" 
@@ -28,7 +28,7 @@
 			</div>
 
 			<div>
-				<label>
+				<label cms:tooltip="tooltip_recipient_name">
 					<span><cms:text constant="label_name" module="contact_form"/></span>
 					<input 
 						type="text" 
@@ -38,7 +38,7 @@
 						style="width: 250px;"
 					/>
 				</label>
-				<label>
+				<label cms:tooltip="tooltip_recipient_address">
 					<span><cms:text constant="label_address" module="contact_form"/></span>
 					<input 
 						type="text" 

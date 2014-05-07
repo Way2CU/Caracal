@@ -92,6 +92,18 @@
 		<constant name="label_required">Require user to enter value?</constant>
 		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
 
+		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
+		<constant name="tooltip_name">Localized form name for use in backend.</constant>
+		<constant name="tooltip_action">Location of script handling form submission. If left empty system will handle form data automatically.</constant>
+		<constant name="tooltip_email_template">Template to use when formatting email sent to emails specified in general settings.</constant>
+		<constant name="tooltip_use_ajax">If checked system will use JavaScript to submit data. User will not be redirected to a different page.</constant>
+		<constant name="tooltip_template_name">Localized template name for use in backend.</constant>
+		<constant name="tooltip_template_subject">Email subject template. Form fields can be referrenced by enclosing field name in percenage sign (eg. %name%).</constant>
+		<constant name="tooltip_sender_name">This name appears as sender in received messages.</constant>
+		<constant name="tooltip_sender_address">Messages received will appear as sent from this email. This address is also used when replying to email.</constant>
+		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
+		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
+
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
 		<constant name="field_checkbox">Checkbox</constant>
@@ -207,6 +219,18 @@
 		<constant name="label_required">Require user to enter value?</constant>
 		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
 
+		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
+		<constant name="tooltip_name">Localized form name for use in backend.</constant>
+		<constant name="tooltip_action">Location of script handling form submission. If left empty system will handle form data automatically.</constant>
+		<constant name="tooltip_email_template">Template to use when formatting email sent to emails specified in general settings.</constant>
+		<constant name="tooltip_use_ajax">If checked system will use JavaScript to submit data. User will not be redirected to a different page.</constant>
+		<constant name="tooltip_template_name">Localized template name for use in backend.</constant>
+		<constant name="tooltip_template_subject">Email subject template. Form fields can be referrenced by enclosing field name in percenage sign (eg. %name%).</constant>
+		<constant name="tooltip_sender_name">This name appears as sender in received messages.</constant>
+		<constant name="tooltip_sender_address">Messages received will appear as sent from this email. This address is also used when replying to email.</constant>
+		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
+		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
+
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
 		<constant name="field_checkbox">Checkbox</constant>
@@ -321,6 +345,18 @@
 		<constant name="label_disabled">Field is disabled?</constant>
 		<constant name="label_required">Require user to enter value?</constant>
 		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+
+		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
+		<constant name="tooltip_name">Localized form name for use in backend.</constant>
+		<constant name="tooltip_action">Location of script handling form submission. If left empty system will handle form data automatically.</constant>
+		<constant name="tooltip_email_template">Template to use when formatting email sent to emails specified in general settings.</constant>
+		<constant name="tooltip_use_ajax">If checked system will use JavaScript to submit data. User will not be redirected to a different page.</constant>
+		<constant name="tooltip_template_name">Localized template name for use in backend.</constant>
+		<constant name="tooltip_template_subject">Email subject template. Form fields can be referrenced by enclosing field name in percenage sign (eg. %name%).</constant>
+		<constant name="tooltip_sender_name">This name appears as sender in received messages.</constant>
+		<constant name="tooltip_sender_address">Messages received will appear as sent from this email. This address is also used when replying to email.</constant>
+		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
+		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>

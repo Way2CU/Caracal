@@ -147,7 +147,11 @@ class TemplateHandler {
 	public function parse($tags=array()) {
 		global $section, $action, $language, $template_path, $system_template_path;
 
-		if ((!$this->active) && empty($tags)) return;
+		if ((!$this->active) && empty($tags))
+			return;
+
+		// get language handler for later
+		$language_handler = MainLanguageHandler::getInstance();
 
 		// take the tag list for parsing
 		$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
@@ -175,7 +179,7 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$tag->tagAttrs[$param] = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$tag->tagAttrs[$param] = eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';');
 				}
 
 				// unset param
@@ -195,7 +199,7 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$value = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$value = eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';');
 
 					if ($value == false)
 						unset($tag->tagAttrs[$param]); else
@@ -204,6 +208,16 @@ class TemplateHandler {
 
 				// unset param
 				unset($tag->tagAttrs['cms:optional']);
+			}
+
+			// implement tooltip
+			if (isset($tag->tagAttrs['cms:tooltip'])) {
+				if (!is_null($this->module))
+					$value = $this->module->getLanguageConstant($tag->tagAttrs['cms:tooltip']); else
+					$value = $language_handler->getText($tag->tagAttrs['cms:tooltip']);
+
+				$tag->tagAttrs['data-tooltip'] = $value;
+				unset($tag->tagAttrs['cms:tooltip']);
 			}
 
 			// check if specified tag shouldn't be cached
@@ -414,7 +428,7 @@ class TemplateHandler {
 						trigger_error('Missing required attribute "condition" in: '.$this->file);
 
 					$to_eval = $tag->tagAttrs['condition'];
-					if (eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';'))
+					if (eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';'))
 						$this->parse($tag->tagChildren);
 
 					break;
@@ -456,7 +470,7 @@ class TemplateHandler {
 
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs['name'];
-					echo eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					echo eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';');
 					break;
 
 				// support for script tag

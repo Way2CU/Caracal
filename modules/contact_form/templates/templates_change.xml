@@ -3,13 +3,13 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_template_add">
 		<div>
-			<label class="horizontal">
+			<label class="horizontal" cms:tooltip="tooltip_template_name">
 				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 				<span><cms:text constant="label_template_name" module="contact_form"/></span>
 				<input name="name" class="multi-language" type="text" maxlength="50" style="width: 200px"/>
 				<cms:language_data param="name"/>
 			</label>
-			<label class="horizontal">
+			<label class="horizontal" cms:tooltip="tooltip_text_id">
 				<span><cms:text constant="label_template_text_id" module="contact_form"/></span>
 				<input
 					name="text_id"
@@ -24,7 +24,7 @@
 			<div style="clear: both;"/>
 		</div>
 
-		<label>
+		<label cms:tooltip="tooltip_template_subject">
 			<span><cms:text constant="label_subject" module="contact_form"/></span>
 			<input name="subject" class="multi-language" type="text" maxlength="255" style="width: 600px"/>
 			<cms:language_data param="subject"/>
