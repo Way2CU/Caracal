@@ -52,7 +52,7 @@ class contact_form extends Module {
 			
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_forms'),
-								url_GetFromFilePath($this->path.'images/forms.png'),
+								url_GetFromFilePath($this->path.'images/forms.svg'),
 
 								window_Open( // on click open window
 											'contact_forms',
@@ -93,7 +93,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_submissions'),
-								url_GetFromFilePath($this->path.'images/submissions.png'),
+								url_GetFromFilePath($this->path.'images/submissions.svg'),
 
 								window_Open( // on click open window
 											'contact_form_submissions',
