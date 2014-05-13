@@ -7,19 +7,20 @@
 		<constant name="menu_groups">Image groups</constant>
 		<constant name="menu_containers">Group containers</constant>
 
-		<constant name="title_image_options">Gallery: Image Options</constant>
+		<constant name="title_image_options">Gallery: Image options</constant>
 		<constant name="title_images">Gallery: Images</constant>
-		<constant name="title_images_upload">Gallery: Upload Image</constant>
-		<constant name="title_images_change">Gallery: Change Image Data</constant>
-		<constant name="title_images_delete">Gallery: Delete Image</constant>
+		<constant name="title_images_upload">Gallery: Upload image</constant>
+		<constant name="title_images_upload_bulk">Gallery: Upload multiple images</constant>
+		<constant name="title_images_change">Gallery: Change image data</constant>
+		<constant name="title_images_delete">Gallery: Delete image</constant>
 		<constant name="title_groups">Gallery: Groups</constant>
-		<constant name="title_groups_create">Gallery: Create Group</constant>
-		<constant name="title_groups_change">Gallery: Change Group</constant>
-		<constant name="title_groups_delete">Gallery: Delete Group</constant>
-		<constant name="title_containers">Gallery: Group Containers</constant>
-		<constant name="title_containers_create">Gallery: Create Container</constant>
-		<constant name="title_containers_change">Gallery: Change Container</constant>
-		<constant name="title_containers_delete">Gallery: Delete Container</constant>
+		<constant name="title_groups_create">Gallery: Create group</constant>
+		<constant name="title_groups_change">Gallery: Change group</constant>
+		<constant name="title_groups_delete">Gallery: Delete group</constant>
+		<constant name="title_containers">Gallery: Group containers</constant>
+		<constant name="title_containers_create">Gallery: Create container</constant>
+		<constant name="title_containers_change">Gallery: Change container</constant>
+		<constant name="title_containers_delete">Gallery: Delete container</constant>
 		<constant name="title_containers_groups">Gallery: Groups within container</constant>
 		<constant name="title_insert_image">Gallery: Insert image</constant>
 
@@ -60,6 +61,7 @@
 		<constant name="column_image_list">Images&lt;small style="padding-left: 5px; color: #7F7F7F;"&gt;(click for more options)&lt;/small&gt;</constant>
 
 		<constant name="upload_images">Upload image</constant>
+		<constant name="upload_images_bulk">Upload multiple images</constant>
 		<constant name="create_group">Create group</constant>
 		<constant name="create_container">Create container</constant>
 		<constant name="groups">Image groups</constant>

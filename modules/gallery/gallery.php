@@ -211,6 +211,10 @@ class gallery extends Module {
 					$this->uploadImage();
 					break;
 
+				case 'images_upload_bulk':
+					$this->uploadMultipleImages();
+					break;
+
 				case 'images_upload_save':
 					$this->uploadImage_Save();
 					break;
@@ -390,30 +394,57 @@ class gallery extends Module {
 	 * Show images management form
 	 */
 	private function showImages() {
+		// load template
 		$template = new TemplateHandler('images_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
+		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+
+		// upload image menu item
 		$url_new = url_Make(
-						'transfer_control', 
-						_BACKEND_SECTION_, 
-						array('backend_action', 'images_upload'), 
+						'transfer_control',
+						_BACKEND_SECTION_,
+						array('backend_action', 'images_upload'),
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
 		
 		$link_new = url_MakeHyperlink(
-					$this->getLanguageConstant('upload_images'),		
+					$this->getLanguageConstant('upload_images'),
 					window_Open(
-						'gallery_images_upload', 
-						400, 
-						$this->getLanguageConstant('title_images_upload'), 
-						true, false, 
+						'gallery_images_upload',
+						400,
+						$this->getLanguageConstant('title_images_upload'),
+						true, false,
 						$url_new
 					)
 				);
+
+		// bulk upload image menu item
+		$url_new_bulk = url_Make(
+						'transfer_control',
+						_BACKEND_SECTION_,
+						array('backend_action', 'images_upload_bulk'),
+						array('module', $this->name),
+						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
+					);
 		
+		$link_new_bulk = url_MakeHyperlink(
+					$this->getLanguageConstant('upload_images_bulk'),
+					window_Open(
+						'gallery_images_upload_bulk',
+						400,
+						$this->getLanguageConstant('title_images_upload_bulk'),
+						true, false,
+						$url_new_bulk
+					)
+				);
+		
+		// prepare parameters
 		$params = array(
 					'link_new'		=> $link_new,
+					'link_new_bulk'	=> $link_new_bulk,
 					'link_groups'	=> url_MakeHyperlink(
 										$this->getLanguageConstant('groups'),
 										window_Open( // on click open window
@@ -426,8 +457,6 @@ class gallery extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_image_list', $this, 'tag_ImageList');
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -445,7 +474,25 @@ class gallery extends Module {
 					'cancel_action'	=> window_Close('gallery_images_upload')
 				);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show multiple image upload form.
+	 */
+	private function uploadMultipleImages() {
+		$template = new TemplateHandler('images_bulk_upload.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'images_upload_save'),
+					'cancel_action'	=> window_Close('gallery_images_upload_bulk')
+				);
+
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -457,26 +504,43 @@ class gallery extends Module {
 	private function uploadImage_Save() {
 		$manager = GalleryManager::getInstance();
 
-		$text_id = fix_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
+		$multiple_images = isset($_REQUEST['multiple_upload']) ? $_REQUEST['multiple_upload'] == 1 : false;
 		$group = fix_id($_REQUEST['group']);
-		$description = $this->getMultilanguageField('description');
 		$visible = isset($_REQUEST['visible']) ? 1 : 0;
 		$slideshow = isset($_REQUEST['slideshow']) ? 1 : 0;
 
-		$result = $this->createImage('image', $this->settings['thumbnail_size']);
+		if ($multiple_images) {
+			// store multiple uploaded images
+			$window_name = 'gallery_images_upload_bulk';
+			$result = $this->createImage('image', $this->settings['thumbnail_size']);
 
-		if (!$result['error']) {
-			$data = array(
-						'group'			=> $group,
-						'text_id'		=> $text_id,
-						'title'			=> $title,
-						'description'	=> $description,
-						'visible'		=> $visible,
-						'slideshow'		=> $slideshow,
+			if (!$result['error'])
+				$manager->updateData(
+						array('group'	=> $group),
+						array('id'		=> $result['id'])
 					);
 
-			$manager->updateData($data, array('id' => $result['id']));
+		} else {
+			// store single uploaded image
+			$text_id = fix_chars($_REQUEST['text_id']);
+			$title = $this->getMultilanguageField('title');
+			$description = $this->getMultilanguageField('description');
+			$window_name = 'gallery_images_upload';
+
+			$result = $this->createImage('image', $this->settings['thumbnail_size']);
+
+			if (!$result['error']) {
+				$data = array(
+							'group'			=> $group,
+							'text_id'		=> $text_id,
+							'title'			=> $title,
+							'description'	=> $description,
+							'visible'		=> $visible,
+							'slideshow'		=> $slideshow,
+						);
+
+				$manager->updateData($data, array('id' => $result['id']));
+			}
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -485,7 +549,7 @@ class gallery extends Module {
 		$params = array(
 					'message'	=> $result['message'],
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close('gallery_images_upload').";".window_ReloadContent('gallery_images')
+					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_images')
 				);
 
 		$template->restoreXML();
@@ -563,7 +627,6 @@ class gallery extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
-
 	}
 
 	/**
@@ -2037,6 +2100,7 @@ class gallery extends Module {
 	 *
 	 * @param string $field_name
 	 * @param integer $thumb_size
+	 * @param integer $protected
 	 * @return array
 	 */
 	public function createImage($field_name, $thumb_size=null, $protected=0) {
@@ -2045,53 +2109,99 @@ class gallery extends Module {
 					'message'	=> '',
 					'id'		=> null
 				);
+
+		// preload uploaded file values
+		if (is_array($_FILES[$field_name]['name'])) {
+			$file_names = $_FILES[$field_name]['name'];
+			$file_temp_names = $_FILES[$field_name]['tmp_name'];
+			$file_sizes = $_FILES[$field_name]['size'];
+			$multiple_upload = true;
+
+		} else {
+			$file_names = array($_FILES[$field_name]['name']);
+			$file_temp_names = array($_FILES[$field_name]['tmp_name']);
+			$file_sizes = array($_FILES[$field_name]['size']);
+			$multiple_upload = false;
+
+		}
 		
-		// get unique file name for this image to be stored
-		$filename = $this->_getFileName($_FILES[$field_name]['name']);
+		// filter out unwanted files
+		$allowed_extensions = explode(',', strtolower($this->settings['image_extensions']));
+		for ($i = count($file_names) - 1; $i >= 0; $i--) {
+			$extension = pathinfo(strtolower($file_names[$i]), PATHINFO_EXTENSION);
+
+			// check extension
+			if (!in_array($extension, $allowed_extensions)) {
+				unset($file_names[$i]);
+				unset($file_temp_names[$i]);
+				unset($file_sizes[$i]);
+
+				$result['error'] = true;
+				$result['message'] = $this->getLanguageConstant('message_image_invalid_type');
+
+				trigger_error('Gallery: Invalid file type uploaded.', E_USER_NOTICE);
+
+				// skip to next file
+				continue;
+			}
+
+			if (!is_uploaded_file($file_temp_names[$i])) {
+				unset($file_names[$i]);
+				unset($file_temp_names[$i]);
+				unset($file_sizes[$i]);
+
+				$result['error'] = true;
+				$result['message'] = $this->getLanguageConstant('message_image_upload_error');
+
+				trigger_error('Gallery: Not an uploaded file. This should not happen!', E_USER_ERROR);
+
+				// skip to next file
+				continue;
+			}
+		}
 		
 		// make sure we have the right thumbnail size
 		if (is_null($thumb_size))
 			$thumb_size = $this->settings['thumbnail_size'];
 
-		if (is_uploaded_file($_FILES[$field_name]['tmp_name'])) {
-			if (in_array(
-					pathinfo(strtolower($_FILES[$field_name]['name']), PATHINFO_EXTENSION),
-					explode(',', $this->settings['image_extensions'])
-				)) {
+		for ($i = 0; $i < count($file_names); $i++) {
+			// get unique file name for this image to be stored
+			$filename = $this->_getFileName($file_names[$i]);
 
-				// try moving file to new destination
-				if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->path.'images/'.$filename) &&
-				$this->_createThumbnail($this->path.'images/'.$filename, $thumb_size)) {
-					// store empty data in database
-					$manager = GalleryManager::getInstance();
-					$data = array(
-								'size'			=> $_FILES[$field_name]['size'],
-								'filename'		=> $filename,
-								'visible'		=> 1,
-								'slideshow'		=> 0,
-								'protected'		=> $protected
-							);
-		
-					$manager->insertData($data);
-					$id = $manager->getInsertedID();
-					
-					$result['filename'] = $filename;
-					$result['message'] = $this->getLanguageConstant('message_image_uploaded');
-					$result['id'] = $id;
-					
+			// try moving file to new destination
+			if (move_uploaded_file($file_temp_names[$i], $this->path.'images/'.$filename) &&
+			$this->_createThumbnail($this->path.'images/'.$filename, $thumb_size)) {
+				// store empty data in database
+				$manager = GalleryManager::getInstance();
+				$data = array(
+							'size'			=> $file_sizes[$i],
+							'filename'		=> $filename,
+							'visible'		=> 1,
+							'slideshow'		=> 0,
+							'protected'		=> $protected
+						);
+	
+				$manager->insertData($data);
+				$id = $manager->getInsertedID();
+				
+				$result['filename'] = $filename;
+				$result['message'] = $this->getLanguageConstant('message_image_uploaded');
+
+				// append result
+				if ($multiple_upload) {
+					if (is_null($result['id']))
+						$result['id'] = array();
+
+					$result['id'][] = $id;
+
 				} else {
-					$result['error'] = true;
-					$result['message'] = $this->getLanguageConstant('message_image_save_error');
+					$result['id'] = $id;
 				}
 				
 			} else {
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_invalid_type');
+				$result['message'] = $this->getLanguageConstant('message_image_save_error');
 			}
-
-		} else {
-			$result['error'] = true;
-			$result['message'] = $this->getLanguageConstant('message_image_upload_error');
 		}
 
 		return $result;

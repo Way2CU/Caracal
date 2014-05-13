@@ -3,14 +3,6 @@
 <document>
 	<form id="image_upload_form" action="$params['form_action']" cms:eval="action" method="POST" enctype="multipart/form-data">
 		<label>
-			<span><cms:text constant="label_text_id" module="gallery"/></span>
-			<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
-		</label>
-		<label>
-			<span><cms:text constant="label_title" module="gallery"/></span>
-			<input type="text" name="title" class="multi-language" style="width: 270px;" maxlength="255"/>
-		</label>
-		<label>
 			<span><cms:text constant="label_group" module="gallery"/></span>
 			<select name="group" style="width: 270px;">
 				<option></option>
@@ -24,13 +16,9 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_file" module="gallery"/></span>
-			<input type="hidden" name="MAX_FILE_SIZE" value="3000000" />
-			<input type="hidden" name="multiple_upload" value="0"/>
-			<input type="file" name="image"/>
-		</label>
-		<label>
-			<span><cms:text constant="label_description" module="gallery"/></span>
-			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
+			<input type="hidden" name="MAX_FILE_SIZE" value="3000000"/>
+			<input type="hidden" name="multiple_upload" value="1"/>
+			<input type="file" name="image[]" multiple="multiple"/>
 		</label>
 		<label class="checkbox">
 			<span><cms:text constant="label_visible" module="gallery"/></span>
@@ -47,13 +35,4 @@
 			</button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('image_upload_form');
-
-		// create toolbar
-		toolbar_api
-				.createToolbar('image_upload_form', '[name=description]:input')
-				.addControl('common', 'markdown')
-				.addControl('downloads', 'link');
-	</script>
 </document>

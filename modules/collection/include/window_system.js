@@ -444,6 +444,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 		self.container.addClass('loading');
 
+		setTimeout(function() {
 		$.ajax({
 			cache: false,
 			context: self,
@@ -451,7 +452,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 			success: self.contentLoaded,
 			error: self.contentError,
 			url: self.url
-		});
+		})}, 2000);
 
 		return self;  // allow linking
 	};
