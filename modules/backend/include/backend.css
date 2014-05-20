@@ -20,12 +20,18 @@ body {
 	font-size: 13px;
 }
 
+body.rtl {
+	direction: rtl;
+}
+
 /**
  * Header
  */
 header {
 	display: block;
 	padding: 10px;
+
+	position: relative;
 
 	background-color: #2c3e50;
 }
@@ -42,6 +48,12 @@ div#logo {
 	color: white;
 	line-height: 100%;
 	text-transform: uppercase;
+}
+
+body.rtl div#logo {
+	padding: 6px;
+	padding-right: 75px;
+	background-position: right center;
 }
 
 div#logo img {
@@ -64,6 +76,10 @@ div#container {
 	background-size: auto 90%;
 
 	overflow: hidden;
+}
+
+body.rtl div#container {
+	background-position: calc(50% - 100px) center;
 }
 
 div#container.guest {
@@ -102,12 +118,21 @@ footer:before {
 	opacity: 0.5;
 }
 
+body.rtl footer:before {
+	left: auto;
+	right: 0px;
+}
+
 /**
  * Common links menu
  */
 nav#common {
 	display: block;
 	float: right;
+}
+
+body.rtl nav#common {
+	float: left;
 }
 
 nav#common a {
@@ -140,6 +165,11 @@ ul#window_list {
 	list-style-image: none;
 }
 
+body.rtl ul#window_list {
+	left: auto;
+	right: 201px;
+}
+
 ul#window_list li {
 	display: inline-block;
 	min-width: 100px;
@@ -154,6 +184,13 @@ ul#window_list li {
 
 	color: #333333;
 	transition: all 0.3s;
+}
+
+body.rtl ul#window_list li {
+	margin: 0px;
+	margin-left: 2px;
+	padding: 10px;
+	padding-right: 44px;
 }
 
 ul#window_list li.active {
@@ -178,6 +215,11 @@ ul#window_list li span {
 	background-size: auto 24px;
 
 	transition: all 0.3s;
+}
+
+body.rtl ul#window_list li span {
+	left: auto;
+	right: 10px;
 }
 
 ul#window_list li.active span {
@@ -222,6 +264,8 @@ ul#navigation li {
 
 ul#navigation li a {
 	display: block;
+	min-height: 1em;
+
 	padding: 10px;
 	padding-left: 44px;
 
@@ -236,6 +280,11 @@ ul#navigation li a {
 
 	cursor: pointer;
 	transition: all 0.3s;
+}
+
+body.rtl ul#navigation li a {
+	padding: 10px;
+	padding-right: 44px;
 }
 
 ul#navigation li a span {
@@ -255,6 +304,11 @@ ul#navigation li a span {
 
 	font-size: 0px;
 	transition: all 0.3s;
+}
+
+body.rtl ul#navigation li a span {
+	left: auto;
+	right: 10px;
 }
 
 ul#navigation li:hover > a span {
@@ -306,6 +360,12 @@ ul#navigation li > ul {
 	transition: 0.3s all;
 }
 
+body.rtl ul#navigation li > ul {
+	left: auto;
+	right: 95%;
+	box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.3);
+}
+
 ul#navigation li:hover > ul {
 	visibility: visible;
 	opacity: 1;
@@ -328,6 +388,84 @@ ul#navigation li > ul > li.submenu > a:after {
 	border-bottom: 5px solid transparent;
 
 	font-size: 0px;
+}
+
+body.rtl ul#navigation li > ul > li.submenu > a:after {
+	right: auto;
+	left: 7px;
+
+	border-left: 0px;
+	border-right: 5px solid rgba(0, 0, 0, 0.3);
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+}
+
+/**
+ * Language menu
+ */
+nav#language {
+	display: block;
+
+	position: absolute;
+	right: 10px;
+	top: calc(100% - 40px);
+
+	border: 1px solid transparent;
+	z-index: 100;
+}
+
+body.rtl nav#language {
+	right: auto;
+	left: 10px;
+}
+
+nav#language:hover {
+	border: 1px solid #595959;
+	background-color: #b4b4b4;
+}
+
+nav#language a {
+	display: block;
+	max-height: 0px;
+
+	padding: 0px;
+	padding-left: 15px;
+	padding-right: 15px;
+
+	color: rgba(255, 255, 255, 0);
+	text-decoration: none;
+
+	transition: 0.3s all;
+	overflow: hidden;
+	text-align: center;
+}
+
+nav#language a:hover {
+	background-color: white;
+}
+
+nav#language:hover a {
+	max-height: 50px;
+
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+
+	color: #333333;
+}
+
+nav#language a.active {
+	max-height: 50px;
+
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+
+	color: white;
+}
+
+nav#language:hover a.active {
+	color: black;
 }
 
 /**

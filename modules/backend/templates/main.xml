@@ -25,6 +25,14 @@
 
 				<div id="user_widget">
 				</div>
+
+				<nav id="language">
+					<cms:module
+						name="language_menu"
+						action="print"
+						from_module="backend"
+						/>
+				</nav>
 			</header>
 
 			<cms:user>
@@ -56,9 +64,6 @@
 
 			<!-- <div id="wrap"> -->
 			<!-- 	<div id="main_menu"> -->
-			<!-- 		<ol id="language_menu"> -->
-			<!-- 			<cms:module name="language_menu" action="print" from_module="backend"/> -->
-			<!-- 		</ol> -->
 			<!-- 	</div> -->
 
 			<!-- <div id="copyright"> -->

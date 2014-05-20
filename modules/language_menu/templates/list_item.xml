@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<li class="$params['short_name'].($params['short_name'] == $language ? ' active' : '')" cms:eval="class">
-		<a href="$params['url']" cms:eval="href"><_var name="$params['long_name']"/></a>
-	</li>
+	<a
+		class="$params['short_name'].($params['short_name'] == $language ? ' active' : '')" 
+		href="$params['url']"
+		cms:eval="href,class"
+		>
+		<cms:var name="$params['long_name']"/>
+	</a>
 </document>

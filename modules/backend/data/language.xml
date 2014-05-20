@@ -123,12 +123,17 @@
 
 	<language name="עברית" short="he" rtl="yes">
 		<constant name="title">ממשק מנהל</constant>
+		<constant name="slogan">Development Framework</constant>
+
 		<!-- Menu Items -->
 		<constant name="menu_system">מערכת</constant>
 		<constant name="menu_modules">מודולים</constant>
 		<constant name="menu_users">ניהול משתמשים</constant>
 		<constant name="menu_logout">התנתק</constant>
 		<constant name="menu_change_password">שנה סיסמא</constant>
+		<constant name="menu_report_bug">Report a bug</constant>
+		<constant name="menu_help">Help</constant>
+
 		<!-- Window Titles -->
 		<constant name="title_modules">מודולים</constant>
 		<constant name="title_module_activate">הפעל מודול</constant>

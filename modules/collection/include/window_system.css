@@ -31,6 +31,10 @@ div.window {
 	transition: top 0.5s, left 0.5s, opacity 0.5s;
 }
 
+body.rtl div.window {
+	box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
 div.window.focused {
 	border-color: #e74c3c;
 }
@@ -98,6 +102,8 @@ div.window.loading div.title {
 
 div.window div.title div.wrap {
 	display: inline-block;
+	min-height: 1em;
+
 	padding: 7px;
 	padding-left: 32px;
 	padding-right: 30px;
@@ -106,6 +112,12 @@ div.window div.title div.wrap {
 	background-position: right top;
 	background-size: 100% 30px;
 	background-repeat: no-repeat;
+}
+
+body.rtl div.window div.title div.wrap {
+	padding-left: 30px;
+	padding-right: 32px;
+	background-image: linear-gradient(-45deg, white, white calc(100% - 1.5em), transparent calc(100% - 1.5em), transparent);
 }
 
 div.window div.title span.icon {
@@ -125,6 +137,11 @@ div.window div.title span.icon {
 	background-size: 48px 24px;
 
 	transition: all 0.3s;
+}
+
+body.rtl div.window div.title span.icon {
+	left: auto;
+	right: 3px;
 }
 
 div.window.focused div.title span.icon {
@@ -149,6 +166,11 @@ div.window div.title a.close_button {
 	color: white;
 
 	transition: all 0.3s;
+}
+
+body.rtl div.window div.title a.close_button {
+	right: auto;
+	left: 0px;
 }
 
 div.window div.title a.close_button:hover {
@@ -193,6 +215,12 @@ div.window div.content label {
 div.window div.content label.horizontal {
 	float: left;
 	margin-right: 20px;
+}
+
+body.rtl div.window div.content label.horizontal {
+	float: right;
+	margin-left: 20px;
+	margin-right: 0px;
 }
 
 div.window div.content label span {
@@ -249,6 +277,13 @@ div.window div.content input[type=checkbox] {
 	clear: both;
 }
 
+body.rtl div.window div.content input[type=radio],
+body.rtl div.window div.content input[type=checkbox] {
+	margin-left: 3px;
+	margin-right: 0px;
+	float: right;
+}
+
 div.window div.content textarea {
 	width: 100%;
 	resize: none;
@@ -264,10 +299,19 @@ div.window div.content label.inline span {
 	margin-right: 5px;
 }
 
+body.rtl div.window div.content label.inline span {
+	margin-left: 5px;
+	margin-right: 0px;
+}
+
 div.window div.content input.code,
 div.window div.content textarea.code {
-	direction: ltr !important;
 	font-family: Ubuntu Mono;
+}
+
+div.window div.content input.code.ltr,
+div.window div.content textarea.code.ltr {
+	direction: ltr !important;
 }
 
 div.window div.content input:focus,
@@ -337,6 +381,11 @@ div.window div.button_bar {
 
 	background-color: #D4D4D4;
 	text-align: center;
+}
+
+body.rtl div.window div.button_bar {
+	left: auto;
+	right: -7px;
 }
 
 div.window hr,
@@ -503,10 +552,13 @@ div.window div.toolbar a.button {
 	float: left;
 
 	padding: 3px;
-	border-radius: 3px;
 	font-size: 0px;
 
 	transition: all 0.3s;
+}
+
+body.rtl div.window div.toolbar a.button {
+	float: right;
 }
 
 div.window div.toolbar span.separator {
@@ -521,8 +573,12 @@ div.window div.toolbar span.separator {
 	background-repeat: no-repeat;
 }
 
+body.rtl div.window div.toolbar span.separator {
+	float: right;
+}
+
 div.window div.toolbar a.button:hover {
-	background-color: #598BC9;
+	background-color: #e74c3c;
 }
 
 div.window div.toolbar a.button img {
@@ -552,9 +608,9 @@ div.dialog div.container {
 
 	position: absolute;
 
-	border-radius: 5px;
 	border: 1px solid white;
-	background-color: #EFEFEF;
+	background-color: #efefef;
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
 
 	overflow: hidden;
 }
@@ -568,10 +624,12 @@ div.dialog div.container.loading {
 div.dialog div.container div.title_bar {
 	display: block;
 
-	padding: 3px;
+	padding: 7px;
+	background-color: #e74c3c;
 
-	border-radius: 3px;
-	background-color: #1A1A1A;
+	font-size: 1.1em;
+	font-weight: 700;
+	line-height: 100%;
 }
 
 div.dialog div.container div.title_bar div.title {
@@ -580,32 +638,37 @@ div.dialog div.container div.title_bar div.title {
 	padding-left: 2px;
 	padding-right: 2px;
 
-	color: #BFBFBF;
-	font-weight: normal;
-
+	color: white;
 	overflow: hidden;
 }
 
 div.dialog div.container div.title_bar a.close_button {
 	display: block;
-	width: 14px;
-	height: 14px;
+	width: 1em;
+	height: 1em;
+	padding: 7px;
 
-	float: right;
+	position: absolute;
+	right: 0px;
+	top: 0px;
 
-	border-radius: 2px;
-	background-color: #1A1A1A;
-	background-image: url(../../backend/images/close_normal.gif);
+	border-radius: 1px;
+	background-image: url(../images/close_button.svg);
 	background-position: center center;
 	background-repeat: no-repeat;
+	background-size: 10px;
+	color: white;
 
-	text-decoration: none;
-	cursor: pointer;
+	transition: all 0.3s;
+}
+
+body.rtl div.dialog div.container div.title_bar a.close_button {
+	right: auto;
+	left: 0px;
 }
 
 div.dialog div.container div.title_bar a.close_button:hover {
-	background-color: #4D4D4D;
-	background-image: url(../../backend/images/close_active.gif);
+	background-color: #ac382e;
 }
 
 div.dialog div.container div.content {
@@ -629,6 +692,16 @@ div.window div.box.left {
 
 div.window div.box.right {
 	float: left;
+}
+
+body.rtl div.window div.box.left {
+	float: right;
+	margin-left: 7px;
+	margin-right: 0px;
+}
+
+body.rtl div.window div.box.right {
+	float: right;
 }
 
 /**
@@ -664,6 +737,12 @@ div#login_window div.icon {
 	text-align: center;
 }
 
+body.rtl div#login_window div.icon {
+	padding-right: 0px;
+	padding-left: 5px;
+	float: right;
+}
+
 div#login_window div.controls {
 	display: block;
 	width: 270px;
@@ -671,10 +750,19 @@ div#login_window div.controls {
 	float: left;
 }
 
+body.rtl div#login_window div.controls {
+	float: right;
+}
+
 div#login_window div.input_controls {
 	display: block;
 
 	padding-left: 25px;
+}
+
+div#login_window div.input_controls {
+	padding-left: 0px;
+	padding-right: 25px;
 }
 
 div#login_window div.input_controls input {
@@ -729,6 +817,11 @@ div.window div.main_menu {
 	font-weight: normal;
 }
 
+body.rtl div.window div.main_menu {
+	left: auto;
+	right: -7px;
+}
+
 div.window div.main_menu a {
 	display: inline-block;
 
@@ -748,6 +841,10 @@ div.window div.main_menu a:hover {
 div.window div.main_menu div.floated {
 	display: block;
 	float: right;
+}
+
+body.rtl div.window div.main_menu div.floated {
+	float: left;
 }
 
 div.window div.main_menu label {
