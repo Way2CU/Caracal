@@ -408,9 +408,14 @@ nav#language {
 
 	position: absolute;
 	right: 10px;
-	top: calc(100% - 40px);
+	top: 10px;
 
 	border: 1px solid transparent;
+	background-image: url(../images/language_menu.svg);
+	background-position: left 10px;
+	background-repeat: no-repeat;
+	background-size: 16px 16px;
+
 	z-index: 100;
 }
 
@@ -422,6 +427,7 @@ body.rtl nav#language {
 nav#language:hover {
 	border: 1px solid #595959;
 	background-color: #b4b4b4;
+	background-image: none;
 }
 
 nav#language a {
@@ -429,8 +435,8 @@ nav#language a {
 	max-height: 0px;
 
 	padding: 0px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding-left: 17px;
+	padding-right: 17px;
 
 	color: rgba(255, 255, 255, 0);
 	text-decoration: none;
@@ -448,8 +454,8 @@ nav#language:hover a {
 	max-height: 50px;
 
 	padding: 10px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding-left: 17px;
+	padding-right: 17px;
 
 	color: #333333;
 }
@@ -458,8 +464,8 @@ nav#language a.active {
 	max-height: 50px;
 
 	padding: 10px;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding-left: 17px;
+	padding-right: 17px;
 
 	color: white;
 }

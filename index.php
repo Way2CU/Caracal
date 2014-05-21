@@ -91,9 +91,15 @@ if (!isset($_REQUEST['language'])) {
 
 } else {
 	// language change was specified, make sure it's valid
-	if (array_key_exists($_REQUEST['language'], $language_handler->getLanguages()))
-		$_SESSION['language'] = fix_chars($_REQUEST['language']); else
-		$_SESSION['language'] = $language_handler->getDefaultLanguage();
+	if (array_key_exists($_REQUEST['language'], $language_handler->getLanguages())) {
+		$_SESSION['language'] = fix_chars($_REQUEST['language']);
+
+	} else {
+		// set language without asking if module is backend
+		if (in_array($section, array('backend', 'backend_module')))
+			$_SESSION['language'] = fix_chars($_REQUEST['language']); else
+			$_SESSION['language'] = $language_handler->getDefaultLanguage();
+	}
 }
 
 $language = $_SESSION['language'];
