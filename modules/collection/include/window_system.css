@@ -760,7 +760,7 @@ div#login_window div.input_controls {
 	padding-left: 25px;
 }
 
-div#login_window div.input_controls {
+body.rtl div#login_window div.input_controls {
 	padding-left: 0px;
 	padding-right: 25px;
 }
