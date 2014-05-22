@@ -78,6 +78,7 @@ class collection extends Module {
 				'page_control'			=> collection::PAGE_CONTROL,
 				'mobile_menu'			=> collection::MOBILE_MENU,
 				'communicator'			=> collection::COMMUNICATOR,
+				'dynamic_page_content'	=> collection::DYNAMIC_PAGE_CONTENT,
 				'jquery'				=> collection::JQUERY,
 				'jquery_event_drag'		=> collection::JQUERY_EVENT_DRAG,
 				'jquery_minicolors'		=> collection::JQUERY_MINICOLORS,
