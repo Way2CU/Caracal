@@ -22,6 +22,7 @@ class collection extends Module {
 	const PAGE_CONTROL = 6;
 	const MOBILE_MENU = 7;
 	const COMMUNICATOR = 8;
+	const DYNAMIC_PAGE_CONTENT = 9;
 
 	// jQuery and its extensions
 	const JQUERY = 50;
@@ -54,6 +55,7 @@ class collection extends Module {
 				collection::PAGE_CONTROL		=> 'page_control.js',
 				collection::MOBILE_MENU			=> 'mobile_menu.js',
 				collection::COMMUNICATOR		=> 'communicator.js',
+				collection::COMMUNICATOR		=> 'dynamic_page_content.js',
 				collection::JQUERY				=> 'jquery.js',
 				collection::JQUERY_EVENT_DRAG	=> 'jquery.event.drag.js',
 				collection::JQUERY_MINICOLORS	=> array(
