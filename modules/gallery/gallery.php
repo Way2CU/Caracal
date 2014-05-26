@@ -14,6 +14,11 @@ require_once('units/gallery_group_manager.php');
 require_once('units/gallery_container_manager.php');
 require_once('units/gallery_group_membership_manager.php');
 
+class Thumbnail {
+	const CONSTRAIN_WIDTH = 0;
+	const CONSTRAIN_HEIGHT = 1;
+	const CONSTRAIN_BOTH = 2;
+}
 
 class gallery extends Module {
 	private static $_instance;
@@ -2016,17 +2021,18 @@ class gallery extends Module {
 	 *
 	 * @param resource $item
 	 * @param integer $size
+	 * @param integer $constraint
 	 * @return string
 	 */
-	public function getThumbnailURL($item, $size=100) {
+	public function getThumbnailURL($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
 		$result = '';
 
 		// prepare result
 		$image_file = $this->path.'images/'.$item->filename;
-		$thumbnail_file = $this->path.'thumbnails/'.$size.'_'.$item->filename;
+		$thumbnail_file = $this->path.'thumbnails/'.$size.'_'.$constraint.'_'.$item->filename;
 
 		if (!file_exists($thumbnail_file))
-			self::getInstance()->createThumbnail($image_file, $size);
+			self::getInstance()->createThumbnail($image_file, $size, $constraint);
 
 		return url_GetFromFilePath($thumbnail_file);
 	}
@@ -2037,9 +2043,10 @@ class gallery extends Module {
 	 * @param integer $id
 	 * @param string $text_id
 	 * @param integer $size
+	 * @param integer $constraint
 	 * @return string
 	 */
-	public static function getThumbnailById($id=null, $text_id=null, $size=100) {
+	public static function getThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
 		$result = '';
 		$conditions = array();
 		$manager = GalleryManager::getInstance();
@@ -2061,10 +2068,10 @@ class gallery extends Module {
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
 			$image_file = $path.'/images/'.$item->filename;
-			$thumbnail_file = $path.'/thumbnails/'.$size.'_'.$item->filename;
+			$thumbnail_file = $path.'/thumbnails/'.$size.'_'.$constraint.'_'.$item->filename;
 
 			if (!file_exists($thumbnail_file))
-				self::getInstance()->createThumbnail($image_file, $size);
+				self::getInstance()->createThumbnail($image_file, $size, $constraint);
 
 			$result = url_GetFromFilePath($thumbnail_file);
 		}
@@ -2315,8 +2322,10 @@ class gallery extends Module {
 	 * Create thumbnail from specified image
 	 *
 	 * @param string $filename
+	 * @param integer $thumb_size
+	 * @param integer $constraint
 	 */
-	private function createThumbnail($filename, $thumb_size) {
+	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH) {
 		$img_source = null;
 
 		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
@@ -2342,9 +2351,22 @@ class gallery extends Module {
 		$source_width = imagesx($img_source);
 		$source_height = imagesy($img_source);
 
-		if ($source_width >= $source_height)
-			$scale = $thumb_size / $source_width; else
-			$scale = $thumb_size / $source_height;
+		switch ($constant) {
+			case Thumbnail::CONSTRAIN_WIDTH:
+				$scale = $thumb_size / $source_height;
+				break;
+
+			case Thumbnail::CONSTRAIN_HEIGHT:
+				$scale = $thumb_size / $source_width;
+				break;
+
+			case Thumbnail::CONSTRAIN_BOTH:
+			default:
+				if ($source_width >= $source_height)
+					$scale = $thumb_size / $source_width; else
+					$scale = $thumb_size / $source_height;
+				break;
+		}
 
 		// calculate thumbnail size
 		$thumb_width = floor($scale * $source_width);
@@ -2354,7 +2376,7 @@ class gallery extends Module {
 		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
 		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
 
-		$save_function($thumbnail, $this->path.'thumbnails/'.$thumb_size.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
+		$save_function($thumbnail, $this->path.'thumbnails/'.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
 
 		return true;
 	}
