@@ -9,7 +9,11 @@
 		</div>
 
 		<div class="image_holder">
-			<img src="$params['thumbnail']" alt="$params['title'][$language]" cms:eval="src,alt"/>
+			<img
+				src="gallery::getThumbnailById($params['id'], null, 100)"
+				alt="$params['title'][$language]"
+				cms:eval="src,alt"
+				/>
 		</div>
 
 		<span class="title">

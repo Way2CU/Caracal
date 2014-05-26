@@ -173,7 +173,7 @@ class ShopManufacturerHandler {
 				$gallery = gallery::getInstance();
 				$gallery_manager = GalleryManager::getInstance();
 
-				$result = $gallery->createImage('logo', null);
+				$result = $gallery->createImage('logo');
 
 				if (!$result['error']) {
 					$image_data = array(
