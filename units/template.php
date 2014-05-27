@@ -418,17 +418,27 @@ class TemplateHandler {
 				// conditional tag
 				case '_if':
 				case 'cms:if':
-					$settings = array();
-					if (!is_null($this->module))
-						$settings = $this->module->settings;
-
+					$settings = !is_null($this->module) ? $this->module->settings : array();
 					$params = $this->params;
+					$condition = true;
 
-					if (!array_key_exists('condition', $tag->tagAttrs)) 
-						trigger_error('Missing required attribute "condition" in: '.$this->file);
+					// check if section is specified and matches
+					if (isset($tag->tagAttrs['section']))
+						$condition &= $tag->tagAttrs['section'] == $section;
 
-					$to_eval = $tag->tagAttrs['condition'];
-					if (eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';'))
+					// check if action is specified and matches
+					if (isset($tag->tagAttrs['action']))
+						$condition &= $tag->tagAttrs['action'] == $action;
+
+					// check custom condition
+					if (isset($tag->tagAttrs['condition'])) {
+						$to_eval = $tag->tagAttrs['condition'];
+						$eval_result = eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';') === true;
+						$condition &= $eval_result;
+					}
+
+					// parse children
+					if ($condition)
 						$this->parse($tag->tagChildren);
 
 					break;
