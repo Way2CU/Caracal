@@ -15,6 +15,7 @@ function MobileMenu() {
 	self._menu = null;
 
 	// swipe configuration
+	self._page_rtl = false;
 	self._start_time = null;
 	self._start_params = null;
 	self._allowed_time = 500;
@@ -25,6 +26,9 @@ function MobileMenu() {
 	 * Finalize object initialization.
 	 */
 	self._init = function() {
+		// detect if page is in RTL
+		self._page_rtl = $('body').hasClass('rtl');
+
 		// assign site components
 		self._top_bar = $('.mobile_title').eq(0);
 		self._menu = $('.mobile_menu').eq(0);
@@ -158,10 +162,13 @@ function MobileMenu() {
 		var deviation = Math.abs(temp.pageY - self._start_params.y);
 		var time = Date.now() - self._start_time;
 
+		// modification for RTL pages
+		var directions = self._page_rtl ? [-1, 1] : [1, -1];
+
 		// determine in which direction user is swiping
 		if (distance > 0)
-			direction = 1; else
-			direction = -1;
+			direction = directions[0]; else
+			direction = directions[1];
 
 		// call event handler for swipe
 		if (Math.abs(distance) >= self._minimum_distance && deviation < self._vertical_deviation && time <= self._allowed_time) {
