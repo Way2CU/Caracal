@@ -433,7 +433,7 @@ class TemplateHandler {
 					// check custom condition
 					if (isset($tag->tagAttrs['condition'])) {
 						$to_eval = $tag->tagAttrs['condition'];
-						$eval_result = eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';') === true;
+						$eval_result = eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';') == true;
 						$condition &= $eval_result;
 					}
 
