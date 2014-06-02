@@ -8,9 +8,11 @@
 			<_var name="$params['item_delete']"/>
 		</div>
 
-		<div class="image_holder">
-			<img src="$params['thumbnail']" alt="$params['title'][$language]" cms:eval="src,alt"/>
-		</div>
+		<div
+			class="image_holder"
+			style="'background-image: url('.gallery::getThumbnailById($params['id'], null, 100).')'"
+			cms:eval="style"
+			/>
 
 		<span class="title">
 			<_var name="$params['title'][$language]"/>

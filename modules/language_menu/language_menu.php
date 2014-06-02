@@ -123,6 +123,7 @@ class language_menu extends Module {
 		if (isset($tag_params['from_module']) && class_exists($tag_params['from_module'])) {
 			$module = call_user_func(array($tag_params['from_module'], 'getInstance'));
 			$list = $module->language->getLanguages(true);
+
 		} else {
 			$list = MainLanguageHandler::getInstance()->getLanguages(true);
 		}

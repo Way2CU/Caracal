@@ -372,7 +372,7 @@ class links extends Module {
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
 
-			$result = $gallery->createImage('image', $this->settings['thumbnail_size']);
+			$result = $gallery->createImage('image');
 
 			if (!$result['error']) {
 				$image_data = array(

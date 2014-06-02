@@ -28,27 +28,20 @@ div.list_content.thumbnails div.list_item:hover {
 
 div.list_content.thumbnails div.list_item div.options {
 	display: none;
-	width: 90px;
-	height: 90px;
-
-	padding: 5px;
+	width: 100%;
+	height: 100%;
 
 	position: absolute;
-	top: 4px;
-	left: 4px;
+	top: 0px;
+	left: 0px;
 
-	background-color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(255, 255, 255, 0.9);
 }
 
 div.list_content.thumbnails div.list_item div.options a {
 	display: block;
 
-	padding: 1px;
-	padding-left: 4px;
-	padding-right: 4px;
-
-	border-radius: 3px;
-	-moz-border-radius: 3px;
+	padding: 4px;
 
 	color: #2E67AA;
 	text-decoration: none;
@@ -70,6 +63,8 @@ div.list_content.thumbnails div.list_item div.image_holder {
 
 	border: 1px solid #EBEBEB;
 	background-color: white;
+	background-position: center center;
+	background-repeat: no-repeat;
 
 	font-size: 0px;
 	text-align: center;

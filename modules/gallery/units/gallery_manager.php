@@ -34,10 +34,10 @@ class GalleryManager extends ItemManager {
 		$path = dirname(__FILE__).'/../';
 
 		if (count($items) > 0)
-		foreach ($items as $item) {
-			unlink($path.'images/'.$item->filename);
-			unlink($path.'thumbnails/'.$item->filename);
-		}
+			foreach ($items as $item) {
+				unlink($path.'images/'.$item->filename);
+				array_map('unlink', glob($path.'thumbnails/*'.$item->filename));
+			}
 
 		parent::deleteData($conditionals, $limit);
 	}

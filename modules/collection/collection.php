@@ -55,7 +55,7 @@ class collection extends Module {
 				collection::PAGE_CONTROL		=> 'page_control.js',
 				collection::MOBILE_MENU			=> 'mobile_menu.js',
 				collection::COMMUNICATOR		=> 'communicator.js',
-				collection::COMMUNICATOR		=> 'dynamic_page_content.js',
+				collection::DYNAMIC_PAGE_CONTENT => 'dynamic_page_content.js',
 				collection::JQUERY				=> 'jquery.js',
 				collection::JQUERY_EVENT_DRAG	=> 'jquery.event.drag.js',
 				collection::JQUERY_MINICOLORS	=> array(
@@ -78,6 +78,7 @@ class collection extends Module {
 				'page_control'			=> collection::PAGE_CONTROL,
 				'mobile_menu'			=> collection::MOBILE_MENU,
 				'communicator'			=> collection::COMMUNICATOR,
+				'dynamic_page_content'	=> collection::DYNAMIC_PAGE_CONTENT,
 				'jquery'				=> collection::JQUERY,
 				'jquery_event_drag'		=> collection::JQUERY_EVENT_DRAG,
 				'jquery_minicolors'		=> collection::JQUERY_MINICOLORS,

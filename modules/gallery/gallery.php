@@ -14,6 +14,11 @@ require_once('units/gallery_group_manager.php');
 require_once('units/gallery_container_manager.php');
 require_once('units/gallery_group_membership_manager.php');
 
+class Thumbnail {
+	const CONSTRAIN_WIDTH = 0;
+	const CONSTRAIN_HEIGHT = 1;
+	const CONSTRAIN_BOTH = 2;
+}
 
 class gallery extends Module {
 	private static $_instance;
@@ -375,9 +380,6 @@ class gallery extends Module {
 
 		if (!array_key_exists('image_extensions', $this->settings))
 			$this->saveSetting('image_extensions', 'jpg,jpeg,png');
-
-		if (!array_key_exists('thumbnail_size', $this->settings))
-			$this->saveSetting('thumbnail_size', '100');
 	}
 
 	/**
@@ -512,7 +514,7 @@ class gallery extends Module {
 		if ($multiple_images) {
 			// store multiple uploaded images
 			$window_name = 'gallery_images_upload_bulk';
-			$result = $this->createImage('image', $this->settings['thumbnail_size']);
+			$result = $this->createImage('image');
 
 			if (!$result['error'])
 				$manager->updateData(
@@ -527,7 +529,7 @@ class gallery extends Module {
 			$description = $this->getMultilanguageField('description');
 			$window_name = 'gallery_images_upload';
 
-			$result = $this->createImage('image', $this->settings['thumbnail_size']);
+			$result = $this->createImage('image');
 
 			if (!$result['error']) {
 				$data = array(
@@ -1129,8 +1131,7 @@ class gallery extends Module {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'slideshow'		=> $item->slideshow,
-						'image'			=> $this->getImageURL($item),
-						'thumbnail'		=> $this->getThumbnailURL($item),
+						'image'			=> $this->getImageURL($item)
 				);
 
 			$template->restoreXML();
@@ -1216,7 +1217,6 @@ class gallery extends Module {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'image'			=> $this->getImageURL($item),
-						'thumbnail'		=> $this->getThumbnailURL($item),
 						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
@@ -1299,8 +1299,8 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
-						'thumbnail'		=> $this->_getGroupImage($item),
-						'image'			=> $this->_getGroupImage($item, true)
+						'thumbnail'		=> $this->getGroupImage($item),
+						'image'			=> $this->getGroupImage($item, true)
 					);
 
 			$template->restoreXML();
@@ -1388,8 +1388,8 @@ class gallery extends Module {
 							'text_id'		=> $item->text_id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
-							'thumbnail'		=> $this->_getGroupImage($item),
-							'image'			=> $this->_getGroupImage($item, true),
+							'thumbnail'		=> $this->getGroupImage($item),
+							'image'			=> $this->getGroupImage($item, true),
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
@@ -1466,7 +1466,7 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
-						'image'			=> $this->_getContainerImage($item)
+						'image'			=> $this->getContainerImage($item)
 					);
 
 			$template->restoreXML();
@@ -1520,7 +1520,7 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
-						'image'			=> $this->_getContainerImage($item),
+						'image'			=> $this->getContainerImage($item),
 						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
 												$this->getLanguageConstant('change'),
@@ -1669,7 +1669,6 @@ class gallery extends Module {
 						'visible'		=> $item->visible,
 						'slideshow'		=> $item->slideshow,
 						'image'			=> $this->getImageURL($item),
-						'thumbnail'		=> $this->getThumbnailURL($item),
 					);
 		} else {
 			$result = array(
@@ -1754,7 +1753,6 @@ class gallery extends Module {
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
 							'image'			=> $this->getImageURL($item),
-							'thumbnail'		=> $this->getThumbnailURL($item),
 						);
 			}
 		} else {
@@ -1888,7 +1886,7 @@ class gallery extends Module {
 							'id'			=> $item->id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
-							'image'			=> $this->_getGroupImage($item)
+							'image'			=> $this->getGroupImage($item)
 						);
 		} else {
 			$result['error'] = true;
@@ -1967,7 +1965,7 @@ class gallery extends Module {
 	 *
 	 * @param $filename
 	 */
-	private function _getFileName($filename) {
+	private function getFileName($filename) {
 		return md5($filename.strval(time())).'.'.pathinfo(strtolower($filename), PATHINFO_EXTENSION);
 	}
 
@@ -1987,13 +1985,98 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Get image URL based on id or text_id.
+	 *
+	 * @param integer $id
+	 * @param string $text_id
+	 * @return string
+	 */
+	public static function getImageById($id=null, $text_id=null) {
+		$result = '';
+		$conditions = array();
+		$manager = GalleryManager::getInstance();
+
+		// get params
+		if (!is_null($id))
+			$conditions['id'] = $id;
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		// get image from the database
+		$item = $manager->getSingleItem(
+				$manager->getFieldNames(),
+				$conditions
+			);
+
+		// prepare result
+		if (is_object($item))
+			$result = url_GetFromFilePath($this->path.'images/'.$item->filename);
+
+		return $result;
+	}
+
+	/**
 	 * Get thumbnail URL
 	 *
 	 * @param resource $item
+	 * @param integer $size
+	 * @param integer $constraint
 	 * @return string
 	 */
-	public function getThumbnailURL($item) {
-		return url_GetFromFilePath($this->path.'thumbnails/'.$item->filename);
+	public function getThumbnailURL($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+		$result = '';
+
+		// prepare result
+		$image_file = $this->path.'images/'.$item->filename;
+		$thumbnail_file = $this->path.'thumbnails/'.$size.'_'.$constraint.'_'.$item->filename;
+
+		if (!file_exists($thumbnail_file))
+			self::getInstance()->createThumbnail($image_file, $size, $constraint);
+
+		return url_GetFromFilePath($thumbnail_file);
+	}
+
+	/**
+	 * Get thumbnail URL based on image id or text_id.
+	 *
+	 * @param integer $id
+	 * @param string $text_id
+	 * @param integer $size
+	 * @param integer $constraint
+	 * @return string
+	 */
+	public static function getThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+		$result = '';
+		$conditions = array();
+		$manager = GalleryManager::getInstance();
+
+		// get params
+		if (!is_null($id))
+			$conditions['id'] = $id;
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		// get image from the database
+		$item = $manager->getSingleItem(
+				$manager->getFieldNames(),
+				$conditions
+			);
+
+		// prepare result
+		if (is_object($item)) {
+			$path = dirname(__FILE__);
+			$image_file = $path.'/images/'.$item->filename;
+			$thumbnail_file = $path.'/thumbnails/'.$size.'_'.$constraint.'_'.$item->filename;
+
+			if (!file_exists($thumbnail_file))
+				self::getInstance()->createThumbnail($image_file, $size, $constraint);
+
+			$result = url_GetFromFilePath($thumbnail_file);
+		}
+
+		return $result;
 	}
 	
 	/**
@@ -2009,7 +2092,7 @@ class gallery extends Module {
 		
 		$result = '';
 		if (is_object($group))
-			$result = $this->_getGroupImage($group, $big_image);
+			$result = $this->getGroupImage($group, $big_image);
 		
 		return $result;
 	}
@@ -2020,7 +2103,7 @@ class gallery extends Module {
 	 * @param string $filename
 	 * @return integer
 	 */
-	public function _getImageIdByFileName($filename) {
+	public function getImageIdByFileName($filename) {
 		$manager = GalleryManager::getInstance();
 		return $manager->getItemValue('id', array('filename' => $filename));
 	}
@@ -2031,7 +2114,7 @@ class gallery extends Module {
 	 * @param resource $group
 	 * @return string
 	 */
-	private function _getGroupImage($group, $big_image=false) {
+	private function getGroupImage($group, $big_image=false) {
 		$result = '';
 		$manager = GalleryManager::getInstance();
 
@@ -2071,7 +2154,7 @@ class gallery extends Module {
 	 * @param resource $container
 	 * @return string
 	 */
-	private function _getContainerImage($container) {
+	private function getContainerImage($container) {
 		$result = '';
 		$group_manager = GalleryGroupManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
@@ -2089,7 +2172,7 @@ class gallery extends Module {
 			$group = $group_manager->getSingleItem(array('id', 'thumbnail'), array('id' => $id));
 
 			if (is_object($group))
-				$result = $this->_getGroupImage($group);
+				$result = $this->getGroupImage($group);
 		}
 
 		return $result;
@@ -2099,11 +2182,10 @@ class gallery extends Module {
 	 * Saves image from specified field name and return error code
 	 *
 	 * @param string $field_name
-	 * @param integer $thumb_size
 	 * @param integer $protected
 	 * @return array
 	 */
-	public function createImage($field_name, $thumb_size=null, $protected=0) {
+	public function createImage($field_name, $protected=0) {
 		$result = array(
 					'error'		=> false,
 					'message'	=> '',
@@ -2160,17 +2242,13 @@ class gallery extends Module {
 			}
 		}
 		
-		// make sure we have the right thumbnail size
-		if (is_null($thumb_size))
-			$thumb_size = $this->settings['thumbnail_size'];
-
+		// process uploaded images
 		for ($i = 0; $i < count($file_names); $i++) {
 			// get unique file name for this image to be stored
-			$filename = $this->_getFileName($file_names[$i]);
+			$filename = $this->getFileName($file_names[$i]);
 
 			// try moving file to new destination
-			if (move_uploaded_file($file_temp_names[$i], $this->path.'images/'.$filename) &&
-			$this->_createThumbnail($this->path.'images/'.$filename, $thumb_size)) {
+			if (move_uploaded_file($file_temp_names[$i], $this->path.'images/'.$filename)) {
 				// store empty data in database
 				$manager = GalleryManager::getInstance();
 				$data = array(
@@ -2244,9 +2322,12 @@ class gallery extends Module {
 	 * Create thumbnail from specified image
 	 *
 	 * @param string $filename
+	 * @param integer $thumb_size
+	 * @param integer $constraint
 	 */
-	private function _createThumbnail($filename, $thumb_size) {
+	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH) {
 		$img_source = null;
+
 		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
 			case 'jpg':
 			case 'jpeg':
@@ -2262,22 +2343,40 @@ class gallery extends Module {
 				break;
 		}
 
-		if (is_null($img_source)) return false;
+		// we failed to load image, exit
+		if (is_null($img_source))
+			return false;
 
+		// calculate width to height ratio
 		$source_width = imagesx($img_source);
 		$source_height = imagesy($img_source);
 
-		if ($source_width >= $source_height)
-			$scale = $thumb_size / $source_width; else
-			$scale = $thumb_size / $source_height;
+		switch ($constant) {
+			case Thumbnail::CONSTRAIN_WIDTH:
+				$scale = $thumb_size / $source_height;
+				break;
 
+			case Thumbnail::CONSTRAIN_HEIGHT:
+				$scale = $thumb_size / $source_width;
+				break;
+
+			case Thumbnail::CONSTRAIN_BOTH:
+			default:
+				if ($source_width >= $source_height)
+					$scale = $thumb_size / $source_width; else
+					$scale = $thumb_size / $source_height;
+				break;
+		}
+
+		// calculate thumbnail size
 		$thumb_width = floor($scale * $source_width);
 		$thumb_height = floor($scale * $source_height);
 
+		// create thumbnail
 		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
 		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
 
-		$save_function($thumbnail, $this->path.'thumbnails/'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
+		$save_function($thumbnail, $this->path.'thumbnails/'.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
 
 		return true;
 	}

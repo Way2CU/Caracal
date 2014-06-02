@@ -229,4 +229,62 @@ class MainLanguageHandler {
 	}
 }
 
+/**
+ * Helper class for language handling.
+ */
+final class Language {
+	private static $handler;
+
+	/**
+	 * Get localized value for specified constant and language.
+	 *
+	 * @param string $constant
+	 * @param string $language
+	 * @return string
+	 */
+	public static function getText($constant, $language='') {
+		if (!isset(self::$handler))
+			self::$handler = MainLanguageHandler::getInstance();
+
+		return self::$handler->getText($constant, $language);
+	}
+
+	/**
+	 * Returns list of languages available
+	 *
+	 * @param boolean $printable What list should contain, printable text or language code
+	 * @return array
+	 */
+	public static function getLanguages($printable = true) {
+		if (!isset(self::$handler))
+			self::$handler = MainLanguageHandler::getInstance();
+
+		return self::$handler->getLanguages($printable);
+	}
+
+	/**
+	 * Returns default language
+	 *
+	 * @return string
+	 */
+	public static function getDefaultLanguage() {
+		if (!isset(self::$handler))
+			self::$handler = MainLanguageHandler::getInstance();
+
+		return self::$handler->getDefaultLanguage();
+	}
+
+	/**
+ 	 * Check if currently selected language is right-to-left.
+	 *
+	 * @return boolean
+	 */
+	public static function isRTL() {
+		if (!isset(self::$handler))
+			self::$handler = MainLanguageHandler::getInstance();
+
+		return self::$handler->isRTL();
+	}
+}
+
 ?>
