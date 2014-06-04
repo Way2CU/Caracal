@@ -37,7 +37,6 @@
 					<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 685px; height: 250px;"/>
 					<_language_data param="content"/>
 				</label>
-				<div style="padding: 7px;"/>
 			</div>
 			<div>
 				<div class="markdown_preview" id="article_preview"/>
@@ -55,6 +54,13 @@
 		new LanguageSelector('article_change_form');
 		var converter = new Showdown.converter();
 
+		// create toolbar
+		toolbar_api
+				.createToolbar('article_change_form', '[name=content]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
+
 		// create notebook
 		var notebook = new Notebook('article_write_notebook');
 		notebook
@@ -68,12 +74,6 @@
 			preview.html(converter.makeHtml($(this).val()));
 		});
 
-		// create toolbar
-		toolbar_api
-				.createToolbar('article_change_form', '[name=content]:input')
-				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image')
-				.addControl('downloads', 'link');
 	</script>
 
 </document>
