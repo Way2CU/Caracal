@@ -27,9 +27,8 @@ class collection extends Module {
 	// jQuery and its extensions
 	const JQUERY = 50;
 	const JQUERY_EVENT_DRAG = 51;
-	const JQUERY_MINICOLORS = 52;
-	const JQUERY_EVENT_SCROLL = 53;
-	const JQUERY_EXTENSIONS = 54;
+	const JQUERY_EVENT_SCROLL = 52;
+	const JQUERY_EXTENSIONS = 53;
 
 	// other scripts
 	const LESS = 100;
@@ -58,10 +57,6 @@ class collection extends Module {
 				collection::DYNAMIC_PAGE_CONTENT => 'dynamic_page_content.js',
 				collection::JQUERY				=> 'jquery.js',
 				collection::JQUERY_EVENT_DRAG	=> 'jquery.event.drag.js',
-				collection::JQUERY_MINICOLORS	=> array(
-													'jquery.minicolors.js',
-													'jquery.minicolors.css'
-												),
 				collection::JQUERY_EVENT_SCROLL	=> 'jquery.mousewheel.js',
 				collection::JQUERY_EXTENSIONS	=> 'jquery.extensions.js',
 				collection::LESS				=> 'less.js',
@@ -81,7 +76,6 @@ class collection extends Module {
 				'dynamic_page_content'	=> collection::DYNAMIC_PAGE_CONTENT,
 				'jquery'				=> collection::JQUERY,
 				'jquery_event_drag'		=> collection::JQUERY_EVENT_DRAG,
-				'jquery_minicolors'		=> collection::JQUERY_MINICOLORS,
 				'jquery_event_scroll'	=> collection::JQUERY_EVENT_SCROLL,
 				'jquery_extensions'		=> collection::JQUERY_EXTENSIONS,
 				'less'					=> collection::LESS,

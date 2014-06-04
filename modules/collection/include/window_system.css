@@ -284,6 +284,11 @@ body.rtl div.window div.content input[type=checkbox] {
 	float: right;
 }
 
+div.window div.content input[type=color] {
+	padding: 0px;
+	vertical-align: middle;
+}
+
 div.window div.content textarea {
 	width: 100%;
 	resize: none;
