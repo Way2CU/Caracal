@@ -38,18 +38,14 @@ function Notebook(selector) {
 
 		// configure notebook pages
 		var page_max_height = 0;
-		var page_max_width = 0;
 
 		this._pages.each(function(current_index) {
 			// get maximum page height
-			var page_height = $(this).height();
-			var page_width = $(this).width();
+			var page = $(this);
+			var page_height = page.height();
 
 			if (page_height > page_max_height)
 				page_max_height = page_height;
-
-			if (page_width > page_max_width)
-				page_max_width = page_width;
 
 			// add new item to tab control
 			$('<li>')
@@ -62,7 +58,6 @@ function Notebook(selector) {
 
 		this._pages
 				.css('height', page_max_height)
-				.css('width', page_max_width)
 				.addClass('page');
 
 		// configure container
