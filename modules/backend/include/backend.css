@@ -514,3 +514,30 @@ nav#language:hover a.active {
 	
 	cursor: default !important;
 }
+
+/**
+ * Backend window specific styles.
+ */
+div.window div.scrollable_list.modules div.list_item span.icon {
+	display: inline-block;
+	vertical-align: middle;
+	width: 24px;
+	height: 24px;
+
+	margin-right: 5px;
+
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+	background-size: 48px 24px;
+
+	transition: 0.3s all;
+}
+
+body.rtl div.window div.scrollable_list.modules div.list_item span.icon {
+	margin-right: 0px;
+	margin-left: 5px;
+}
+
+div.window div.scrollable_list.modules div.list_item:hover span.icon {
+	background-position: -24px 0px;
+}

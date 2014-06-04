@@ -2,39 +2,41 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-			<span class="column" style="width: 18px; text-align: left; vertical-align: middle;">
-				<img src="$params['icon']" alt="$params['name']" cms:eval="src,alt"/>
-			</span>
-			<span class="column" style="'width: 200px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" cms:eval="style">
-				<_var name="$params['name']"/>
+			<span class="column" style="'width: 220px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" cms:eval="style">
+				<span
+					class="icon"
+					style="'background-image: url('.$params['icon'].');'"
+					cms:eval="style"
+					/>
+				<cms:var name="$params['name']"/>
 			</span>
 			<span class="column" style="width: 50px; text-align: center;">
-				<_var name="$params['order']"/>
+				<cms:var name="$params['order']"/>
 			</span>
 			<span class="column" style="width: 60px; text-align: center;">
-				<_var name="$params['preload_symbol']"/>
+				<cms:var name="$params['preload_symbol']"/>
 			</span>
 			<span class="column" style="width: 50px; text-align: center;">
-				<_var name="$params['active_symbol']"/>
+				<cms:var name="$params['active_symbol']"/>
 			</span>
 			<span class="column">
-				<_if condition="$params['status'] == 'not_initialized'">
+				<cms:if condition="$params['status'] == 'not_initialized'">
 					<!-- Module is NOT initialised -->
-					<_var name="$params['item_initialise']"/>
-				</_if>
+					<cms:var name="$params['item_initialise']"/>
+				</cms:if>
 
-				<_if condition="$params['status'] != 'not_initialized'">
+				<cms:if condition="$params['status'] != 'not_initialized'">
 					<!-- Module is initialised -->
-					<_if condition="$params['status'] == 'active'">
-						<_var name="$params['item_deactivate']"/><_raw text=" "/>
-					</_if>
+					<cms:if condition="$params['status'] == 'active'">
+						<cms:var name="$params['item_deactivate']"/><_raw text=" "/>
+					</cms:if>
 
-					<_if condition="$params['status'] == 'inactive'">
-						<_var name="$params['item_activate']"/><_raw text=" "/>
-					</_if>
+					<cms:if condition="$params['status'] == 'inactive'">
+						<cms:var name="$params['item_activate']"/><_raw text=" "/>
+					</cms:if>
 
-					<_var name="$params['item_disable']"/><_raw text=" "/>
-				</_if>
+					<cms:var name="$params['item_disable']"/><_raw text=" "/>
+				</cms:if>
 			</span>
 	</div>
 </document>
