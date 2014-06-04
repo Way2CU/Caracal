@@ -68,7 +68,6 @@ class backend extends Module {
 			$collection->includeScript(collection::WINDOW_SYSTEM);
 
 			if ($_SESSION['logged']) {
-				$collection->includeScript(collection::JQUERY_MINICOLORS);
 				$collection->includeScript(collection::JQUERY_EXTENSIONS);
 				$collection->includeScript(collection::NOTEBOOK);
 				$collection->includeScript(collection::SHOWDOWN);
