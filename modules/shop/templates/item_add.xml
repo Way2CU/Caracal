@@ -73,7 +73,7 @@
 				<input name="colors" type="hidden"/>
 				<label class="inline">
 					<span><_text constant="label_color_value" module="shop"/></span>
-					<input name="color_value" class="code" type="text" style="width: 60px"/>
+					<input name="color_value" class="code" type="color" style="width: 60px;"/>
 				</label>
 				<label class="inline">
 					<span><_text constant="label_color_name" module="shop"/></span>
@@ -168,9 +168,6 @@
 			.setPageTitle(2, language_handler.getText('shop', 'tab_category'))
 			.setPageTitle(3, language_handler.getText('shop', 'tab_related'))
 			.setPageTitle(4, language_handler.getText('shop', 'tab_delivery'));
-
-		// add colors
-		$('input[name=color_value]').minicolors();
 
 		// create toolbar
 		toolbar_api
