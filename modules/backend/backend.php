@@ -667,7 +667,7 @@ class backend extends Module {
 
 			if (file_exists($icon_file))
 				$icon = url_GetFromFilePath($icon_file); else
-				$icon = url_GetFromFilePath($this->path.'images/icons/16/module.svg');
+				$icon = url_GetFromFilePath($this->path.'images/icons/16/modules.svg');
 
 			$params = array(
 							'name'				=> $name,
