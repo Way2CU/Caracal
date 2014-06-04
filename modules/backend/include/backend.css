@@ -357,7 +357,8 @@ ul#navigation li > ul {
 	list-style-type: none;
 	list-style-image: none;
 
-	transition: 0.3s all;
+	transition: 0.2s all;
+	z-index: 1000;
 }
 
 body.rtl ul#navigation li > ul {
@@ -369,6 +370,8 @@ body.rtl ul#navigation li > ul {
 ul#navigation li:hover > ul {
 	visibility: visible;
 	opacity: 1;
+
+	z-index: 2000;
 }
 
 ul#navigation li > ul > li.submenu > a:after {
