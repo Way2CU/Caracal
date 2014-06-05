@@ -161,8 +161,8 @@ class SessionManager {
 
 			// check if we need to make redirect URL
 			if (isset($_SESSION['redirect_url']))
-				$url = url_SetRefresh($_SESSION['redirect_url'], 4); else
-				$url = url_SetRefresh(url_Make('', $this->parent->name), 4);
+				$url = url_SetRefresh($_SESSION['redirect_url'], 2); else
+				$url = url_SetRefresh(url_Make('', $this->parent->name), 2);
 
 			// get message
 			$message = $this->parent->getLanguageConstant('message_login_ok');
