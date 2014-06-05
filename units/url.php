@@ -264,10 +264,8 @@ function url_MakeHyperlink($content, $link, $title='', $class='', $target='') {
  * @author Mladen Mijatov
  */
 function url_SetRefresh($url='', $seconds=2) {
-        if ($url !== '')
-                $s_url = $url; else
-                $s_url = $_SERVER['REQUEST_URI'];
-        echo "<meta http-equiv=\"refresh\" content=\"$seconds;url=$s_url\">";
+	$url = $url === '' ? $_SERVER['REQUEST_URI'] : $url;
+	print '<script type="text/javascript">setTimeout(function() { window.location = \''.$url.'\'; }, '.($seconds * 1000).')</script>';
 }
 
 /**
