@@ -200,6 +200,14 @@ class contact_form extends Module {
 					$this->showSubmissionDetails();
 					break;
 
+				case 'export_submissions':
+					$this->showExportOptions();
+					break;
+
+				case 'export_submissions_commit':
+					$this->exportSubmissions();
+					break;
+
 				case 'settings_save':
 					$this->saveSettings();
 					break;
@@ -1249,9 +1257,35 @@ class contact_form extends Module {
 		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 		$template->registerTagHandler('cms:list', $this, 'tag_SubmissionList');
 
-		// parse template
+		// get variables
 		$params = array();
+		$form = isset($_REQUEST['form']) ? fix_id($_REQUEST['form']) : null;
 
+		// export menu item
+		if (!is_null($form)) {
+			$export_url = url_Make(
+				'transfer_control',
+				_BACKEND_SECTION_,
+				array('backend_action', 'export_submissions'),
+				array('module', $this->name),
+				array('form', $form)
+			);
+
+			$export_link = url_MakeHyperlink(
+				$this->getLanguageConstant('menu_export'),
+				window_Open(
+					'contact_form_export',
+					400,
+					$this->getLanguageConstant('title_export'),
+					true, false,
+					$export_url
+				)
+			);
+
+			$params['link_export'] = $export_link;
+		}
+
+		// parse template
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -1294,6 +1328,197 @@ class contact_form extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Show export configuration dialog.
+	 */
+	private function showExportOptions() {
+		// load template
+		$template = new TemplateHandler('export_options.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
+
+		// prepare options
+		$form = fix_id($_REQUEST['form']);
+		$params = array(
+			'form'			=> $form,
+			'filename'		=> 'export.csv',
+			'form_action'	=> backend_UrlMake($this->name, 'export_submissions_commit'),
+			'cancel_action'	=> window_Close('contact_form_export')
+		);
+
+		// parse template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Generate file and start downloading.
+	 */
+	private function exportSubmissions() {
+		global $language;
+
+		// get managers
+		$form_manager = ContactForm_FormManager::getInstance();
+		$form_field_manager = ContactForm_FormFieldManager::getInstance();
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+
+		// get options
+		$form_id = fix_id($_REQUEST['form']);
+		$filename = empty($_REQUEST['filename']) ? 'export.csv' : fix_chars($_REQUEST['filename']);
+		$include_headers = isset($_REQUEST['headers_included']) && ($_REQUEST['headers_included'] == 'on' || $_REQUEST['headers_included'] == '1') ? 1 : 0;
+		$export_ip = isset($_REQUEST['export_ip']) && ($_REQUEST['export_ip'] == 'on' || $_REQUEST['export_ip'] == '1') ? 1 : 0;
+		$export_timestamp = isset($_REQUEST['export_timestamp']) && ($_REQUEST['export_timestamp'] == 'on' || $_REQUEST['export_timestamp'] == '1') ? 1 : 0;
+
+		switch (fix_id($_REQUEST['separator_type'])) {
+			case 0:
+				$separator = "\t";
+				break;
+
+			case 1:
+				$separator = ";";
+				break;
+
+			case 2:
+			default:
+				$separator = ",";
+				break;
+		}
+
+		// prepare for parsing data
+		$data = array();
+		$fields = array();
+		$headers = array();
+
+		// get fields
+		foreach ($_REQUEST as $key => $value) {
+			if (substr($key, 0, 7) == 'include') {
+				$include = ($value == 'on' || $value == '1') ? true : false;
+				$field_name = substr($key, 8);
+
+				if ($include)
+					$fields[] = $field_name;
+
+			} elseif (substr($key, 0, 6) == 'header') {
+				$field_name = substr($key, 7);
+
+				if (!empty($value))
+					$headers[$field_name] = $value; else
+					$headers[$field_name] = '';
+			}
+		}
+
+		// populate missing header values
+		$form_fields = $form_field_manager->getItems(
+			$form_field_manager->getFieldNames(),
+			array('form' => $form_id)
+		);
+
+		if (count($form_fields) > 0)
+			foreach ($form_fields as $field) {
+				if (!empty($headers[$field->name]))
+					continue;
+
+				// make header unacceptable
+				$value = null;
+
+				// try to get label
+				if (!empty($field->label[$language]))
+					$value = $field->label[$language];
+
+				// try to get placeholder
+				if (is_null($value) && !empty($field->placeholder[$language]))
+					$value = $field->placeholder[$language];
+
+				// finally just set header to field name
+				if (is_null($value))
+					$value = $field->name;
+
+				$headers[$field->name] = $value;
+			}
+
+		// add headers to data array
+		if ($include_headers) {
+			$data[] = array();
+
+			if ($export_ip)
+				$data[0][] = $this->getLanguageConstant('header_ip_address');
+
+			if ($export_timestamp)
+				$data[0][] = $this->getLanguageConstant('header_timestamp');
+
+			foreach ($headers as $field_name => $header)
+				if (in_array($field_name, $fields))
+					$data[0][] = $header;
+		}
+
+		// get related submissions
+		$submissions = $submission_manager->getItems(
+			$submission_manager->getFieldNames(),
+			array('form' => $form_id)
+		);
+
+		if (count($submissions) > 0) {
+			// get ids for all fields
+			$field_ids = array();
+			$form_fields = $form_field_manager->getItems(array('id'), array('name' => $fields));
+
+			if (count($form_fields) > 0)
+				foreach ($form_fields as $field)
+					$field_ids[] = $field->id;
+			
+			// append submission fields to data array
+			foreach ($submissions as $submission) {
+				$record = array();
+				$field_data = $submission_field_manager->getItems(
+					$submission_field_manager->getFieldNames(),
+					array(
+						'submission'	=> $submission->id,
+						'field'			=> $field_ids
+					)
+				);
+
+				// add ip address
+				if ($export_ip)
+					$record[] = $submission->address;
+
+				// add timestamp
+				if ($export_timestamp) {
+					$timestamp = strtotime($submission->timestamp);
+					$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
+					$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+
+					$record[] = $date.' '.$time;
+				}
+
+				// add remaining fields
+				if (count($field_data) > 0)
+					foreach ($field_data as $field)
+						$record[] = $field->value;
+
+				// add row to data array
+				$data[] = $record;
+			}
+		}
+
+		// generate raw file
+		$raw_data = '';
+
+		foreach ($data as $row) {
+			$line = '"'.implode('"'.$separator.'"', $row).'"';
+			$raw_data .= $line."\n";
+		}
+
+		define('_OMIT_STATS', 1);
+
+		// send headers and data
+    	header('Content-Type: text/csv; charset=utf-8');
+    	header('Content-Disposition: attachment; filename="'.$filename.'"');
+    	header('Content-Length: '.strlen($raw_data));
+    	print $raw_data;
 	}
 
 	/**

@@ -14,11 +14,13 @@ require_once('units/gallery_group_manager.php');
 require_once('units/gallery_container_manager.php');
 require_once('units/gallery_group_membership_manager.php');
 
+
 class Thumbnail {
 	const CONSTRAIN_WIDTH = 0;
 	const CONSTRAIN_HEIGHT = 1;
 	const CONSTRAIN_BOTH = 2;
 }
+
 
 class gallery extends Module {
 	private static $_instance;

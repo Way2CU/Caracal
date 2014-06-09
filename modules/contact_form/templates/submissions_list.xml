@@ -17,12 +17,7 @@
 		</div>
 
 		<cms:if condition="isset($_REQUEST['form']) and !empty($_REQUEST['form'])">
-			<a 
-				href="url_Make('transfer_control', 'backend_module', array('module', 'contact_form'), array('backend_action', 'export_submissions'), array('form', fix_chars($_REQUEST['form'])))"
-				cms:eval="href"
-			>
-				<cms:text constant="menu_export" module="survey"/>
-			</a>
+			<cms:var name="$params['link_export']"/>
 		</cms:if>
 
 		<div style="clear: both;"/>

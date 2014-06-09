@@ -7,6 +7,7 @@
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
 		<constant name="menu_submissions">Form submissions</constant>
+		<constant name="menu_export">Export</constant>
 
 		<constant name="message_sent">Data was successfuly sent!</constant>
 		<constant name="message_error">An error occured while trying to send your data! Check all fields and try again.</constant>
@@ -41,7 +42,8 @@
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
 		<constant name="title_submissions">Contact form: Submitted information</constant>
-		<constant name="title_submission_details">Constact form: Submission details</constant>
+		<constant name="title_submission_details">Contact form: Submission details</constant>
+		<constant name="title_export">Contact form: Export submissions</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -51,10 +53,14 @@
 		<constant name="tab_plain_text">Plain text</constant>
 		<constant name="tab_html">HTML</constant>
 		<constant name="tab_preview">Preview</constant>
+		<constant name="tab_export_options">Options</constant>
+		<constant name="tab_export_fields">Fields</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
 		<constant name="column_address">Address</constant>
+		<constant name="column_field_name">Name</constant>
+		<constant name="column_header">Header value</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 		
@@ -91,6 +97,13 @@
 		<constant name="label_disabled">Field is disabled?</constant>
 		<constant name="label_required">Require user to enter value?</constant>
 		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+		<constant name="label_export_ip">Include IP address?</constant>
+		<constant name="label_export_timestamp">Include date and time?</constant>
+		<constant name="label_export_filename">Filename:</constant>
+		<constant name="label_export_include_headers">Include headers?</constant>
+		<constant name="label_separator_tab">Tab</constant>
+		<constant name="label_separator_semi">Semicolon</constant>
+		<constant name="label_separator_comma">Comma</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -103,6 +116,7 @@
 		<constant name="tooltip_sender_address">Messages received will appear as sent from this email. This address is also used when replying to email.</constant>
 		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
+		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -126,9 +140,15 @@
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
+		<constant name="legend_separator_type">Separator type</constant>
+
+		<constant name="header_ip_address">IP</constant>
+		<constant name="header_timestamp">Timestamp</constant>
 
 		<constant name="fields">Fields</constant>
 		<constant name="details">Details</constant>
+		<constant name="export">Export</constant>
+		<constant name="selected_fields_export">Only selected fields will be exported. Header values will default to field label or placeholder unless otherwise specified.</constant>
 	</language>
 
 	<language short="he">
@@ -137,6 +157,7 @@
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
 		<constant name="menu_submissions">Form submissions</constant>
+		<constant name="menu_export">Export</constant>
 
 		<constant name="message_sent">מידע נשלח בהצלחה!</constant>
 		<constant name="message_error">נוצרה בעיה בשליחת מידע אנא בדוק השדות ונסה שנית!</constant>
@@ -171,7 +192,8 @@
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
 		<constant name="title_submissions">Contact form: Submitted information</constant>
-		<constant name="title_submission_details">Constact form: Submission details</constant>
+		<constant name="title_submission_details">Contact form: Submission details</constant>
+		<constant name="title_export">Contact form: Export submissions</constant>
 
 		<constant name="tab_sender">שולח</constant>
 		<constant name="tab_recipient">כתובת מקבל</constant>
@@ -181,9 +203,14 @@
 		<constant name="tab_plain_text">Plain text</constant>
 		<constant name="tab_html">HTML</constant>
 		<constant name="tab_preview">Preview</constant>
+		<constant name="tab_export_options">Options</constant>
+		<constant name="tab_export_fields">Fields</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
+		<constant name="column_address">Address</constant>
+		<constant name="column_field_name">Name</constant>
+		<constant name="column_header">Header value</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 		
@@ -218,6 +245,13 @@
 		<constant name="label_disabled">Field is disabled?</constant>
 		<constant name="label_required">Require user to enter value?</constant>
 		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+		<constant name="label_export_ip">Include IP address?</constant>
+		<constant name="label_export_timestamp">Include date and time?</constant>
+		<constant name="label_export_filename">Filename:</constant>
+		<constant name="label_export_include_headers">Include headers?</constant>
+		<constant name="label_separator_tab">Tab</constant>
+		<constant name="label_separator_semi">Semicolon</constant>
+		<constant name="label_separator_comma">Comma</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -230,6 +264,7 @@
 		<constant name="tooltip_sender_address">Messages received will appear as sent from this email. This address is also used when replying to email.</constant>
 		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
+		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -253,9 +288,15 @@
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
+		<constant name="legend_separator_type">Separator type</constant>
+
+		<constant name="header_ip_address">IP</constant>
+		<constant name="header_timestamp">Timestamp</constant>
 
 		<constant name="fields">Fields</constant>
 		<constant name="details">Details</constant>
+		<constant name="export">Export</constant>
+		<constant name="selected_fields_export">Only selected fields will be exported. Header values will default to field label or placeholder unless otherwise specified.</constant>
 	</language>
 
 	<language short="sr">
@@ -264,6 +305,7 @@
 		<constant name="menu_manage_forms">Manage forms</constant>
 		<constant name="menu_manage_templates">Manage templates</constant>
 		<constant name="menu_submissions">Form submissions</constant>
+		<constant name="menu_export">Export</constant>
 	
 		<constant name="message_sent">Podaci su uspešno poslati!</constant>
 		<constant name="message_error">Greška prilikom slanja podataka. Proverite sva polja i pokušajte opet.</constant>
@@ -298,7 +340,8 @@
 		<constant name="title_fields_edit">Contact form: Edit field</constant>
 		<constant name="title_fields_delete">Contact form: Delete field</constant>
 		<constant name="title_submissions">Contact form: Submitted information</constant>
-		<constant name="title_submission_details">Constact form: Submission details</constant>
+		<constant name="title_submission_details">Contact form: Submission details</constant>
+		<constant name="title_export">Contact form: Export submissions</constant>
 
 		<constant name="tab_sender">Sender</constant>
 		<constant name="tab_recipient">Recipient</constant>
@@ -308,15 +351,20 @@
 		<constant name="tab_plain_text">Plain text</constant>
 		<constant name="tab_html">HTML</constant>
 		<constant name="tab_preview">Preview</constant>
+		<constant name="tab_export_options">Options</constant>
+		<constant name="tab_export_fields">Fields</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
+		<constant name="column_address">Address</constant>
+		<constant name="column_field_name">Name</constant>
+		<constant name="column_header">Header value</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 		
-		<constant name="label_default_name">Ime:</constant>
-		<constant name="label_default_address">Email adresa:</constant>
-		<constant name="label_default_subject">Naslov poruke:</constant>
+		<constant name="label_name">Ime:</constant>
+		<constant name="label_address">Email adresa:</constant>
+		<constant name="label_subject">Naslov poruke:</constant>
 		<constant name="label_use_smtp">Use SMTP to send email?</constant>
 		<constant name="label_use_ssl">Use SSL encryption?</constant>
 		<constant name="label_server">Server:</constant>
@@ -345,6 +393,13 @@
 		<constant name="label_disabled">Field is disabled?</constant>
 		<constant name="label_required">Require user to enter value?</constant>
 		<constant name="label_autocomplete">Allow browser to autocomplete?</constant>
+		<constant name="label_export_ip">Include IP address?</constant>
+		<constant name="label_export_timestamp">Include date and time?</constant>
+		<constant name="label_export_filename">Filename:</constant>
+		<constant name="label_export_include_headers">Include headers?</constant>
+		<constant name="label_separator_tab">Tab</constant>
+		<constant name="label_separator_semi">Semicolon</constant>
+		<constant name="label_separator_comma">Comma</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -357,6 +412,7 @@
 		<constant name="tooltip_sender_address">Messages received will appear as sent from this email. This address is also used when replying to email.</constant>
 		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
+		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -380,8 +436,14 @@
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
+		<constant name="legend_separator_type">Separator type</constant>
+
+		<constant name="header_ip_address">IP</constant>
+		<constant name="header_timestamp">Timestamp</constant>
 
 		<constant name="fields">Fields</constant>
 		<constant name="details">Details</constant>
+		<constant name="export">Export</constant>
+		<constant name="selected_fields_export">Only selected fields will be exported. Header values will default to field label or placeholder unless otherwise specified.</constant>
 	</language>
 </document>

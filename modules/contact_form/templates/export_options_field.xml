@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<cms:if condition="$params['type'] != 'honey-pot'">
+		<div class="list_item">
+			<span class="column" style="width: 150px;">
+				<input
+					type="checkbox"
+					name="'include_'.$params['name']"
+					checked="checked"
+					cms:eval="name"
+					/>
+				<cms:var name="$params['name']"/>
+			</span>
+			<span class="column">
+				<input
+					type="text"
+					name="'header_'.$params['name']"
+					cms:eval="name"
+					/>
+			</span>
+		</div>
+	</cms:if>
+</document>

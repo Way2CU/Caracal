@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST" target="contact_form_export_target">
+		<div style="margin-bottom: 10px;" id="contact_form_export_notebook">
+			<div>
+				<div class="scrollable_list">
+					<div class="list_header">
+						<span class="column" style="width: 150px;">
+							<cms:text constant="column_field_name" module="contact_form"/>
+						</span>
+
+						<span class="column">
+							<cms:text constant="column_header" module="contact_form"/>
+						</span>
+					</div>
+
+					<div class="list_content" style="height: 200px">
+						<cms:fields
+							template="export_options_field.xml"
+							local="1"
+							form="$params['form']"
+							cms:eval="form"
+							/>
+					</div>
+				</div>
+				<div style="padding-bottom: 10px;">
+					<cms:text constant="selected_fields_export" module="contact_form"/>
+				</div>
+			</div>
+
+			<div>
+				<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>
+				<label>
+					<span><cms:text constant="label_export_filename" module="contact_form"/></span>
+					<input
+						type="text"
+						name="filename"
+						maxlength="50"
+						style="width: 350px;"
+						value="$params['filename']"
+						cms:eval="value"
+						/>
+				</label>
+
+				<hr/>
+
+				<div class="box left" style="width: 200px;">
+					<label class="checkbox" cms:tooltip="tooltip_include_headers">
+						<span><cms:text constant="label_export_include_headers" module="contact_form"/></span>
+						<input type="checkbox" name="headers_included" checked="checked"/>
+					</label>
+
+					<label class="checkbox">
+						<span><cms:text constant="label_export_ip" module="contact_form"/></span>
+						<input type="checkbox" name="export_ip"/>
+					</label>
+
+					<label class="checkbox">
+						<span><cms:text constant="label_export_timestamp" module="contact_form"/></span>
+						<input type="checkbox" name="export_timestamp"/>
+					</label>
+				</div>
+
+				<div class="box right" style="width: 150px;">
+					<fieldset>
+						<legend><cms:text constant="legend_separator_type" module="contact_form"/></legend>
+
+						<label class="radio">
+							<span><cms:text constant="label_separator_tab" module="contact_form"/></span>
+							<input type="radio" name="separator_type" value="0"/>
+						</label>
+
+						<label class="radio">
+							<span><cms:text constant="label_separator_semi" module="contact_form"/></span>
+							<input type="radio" name="separator_type" value="1"/>
+						</label>
+
+						<label class="radio">
+							<span><cms:text constant="label_separator_comma" module="contact_form"/></span>
+							<input type="radio" name="separator_type" value="2" checked="checked"/>
+						</label>
+					</fieldset>
+				</div>
+
+				<div style="clear: both;"/>
+			</div>
+		</div>
+
+		<div class="button_bar">
+			<button type="submit">
+				<cms:text constant="export" module="contact_form"/>
+			</button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<iframe name="contact_form_export_target" class="target"/>
+
+	<script type="text/javascript">
+		// create notebook
+		var notebook = new Notebook('contact_form_export_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('contact_form', 'tab_export_fields'))
+			.setPageTitle(1, language_handler.getText('contact_form', 'tab_export_options'));
+	</script>
+</document>
