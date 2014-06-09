@@ -42,7 +42,7 @@
 						type="text"
 						name="interval_count"
 						class="code"
-						style="width: 50px;"
+						style="width: 45px;"
 						maxlength="5"
 						value="$params['interval_count']"
 						cms:eval="value"
@@ -54,7 +54,7 @@
 						<cms:cycle_unit selected="$params['interval']" cms:eval="selected"/>
 					</select>
 				</label>
-				<label style="clear: both;">
+				<label>
 					<span><cms:text constant="label_price" module="paypal"/></span>
 					<input
 						type="text"
@@ -88,7 +88,7 @@
 						type="text"
 						name="trial_count"
 						class="code"
-						style="width: 50px;"
+						style="width: 45px;"
 						maxlength="5"
 						value="$params['trial_count']"
 						cms:eval="value"

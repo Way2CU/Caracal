@@ -47,7 +47,7 @@
 					style="width: 70px;"
 				/>
 			</label>
-			<label style="clear: both;">
+			<label>
 				<span><_text constant="label_name" module="affiliates"/></span>
 				<input
 					type="text"

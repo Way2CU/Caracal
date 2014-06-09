@@ -11,7 +11,6 @@
 				<span><cms:text constant="label_template_text_id" module="contact_form"/></span>
 				<input name="text_id" class="code" type="text" maxlength="32" style="width: 200px"/>
 			</label>
-			<div style="clear: both;"/>
 		</div>
 
 		<label cms:tooltip="tooltip_template_subject">

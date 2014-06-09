@@ -18,14 +18,13 @@
 
 			<label class="horizontal">
 				<span><cms:text constant="label_type" module="contact_form"/></span>
-				<select name="type" style="width: 170px">
+				<select name="type" style="width: 165px">
 					<cms:field_types
 						selected="$params['type']"
 						cms:eval="selected"
 						/>
 				</select>
 			</label>
-			<div style="clear: both;"/>
 		</div>
 
 		<hr/>
@@ -102,7 +101,6 @@
 					cms:eval="value"
 					/>
 			</label>
-			<div style="clear: both;"/>
 		</div>
 
 		<label class="pattern">

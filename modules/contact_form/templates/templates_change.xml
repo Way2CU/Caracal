@@ -21,7 +21,6 @@
 					cms:eval="value"
 				/>
 			</label>
-			<div style="clear: both;"/>
 		</div>
 
 		<label cms:tooltip="tooltip_template_subject">

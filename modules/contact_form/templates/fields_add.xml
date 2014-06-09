@@ -10,11 +10,10 @@
 
 			<label class="horizontal">
 				<span><cms:text constant="label_type" module="contact_form"/></span>
-				<select name="type" style="width: 170px">
+				<select name="type" style="width: 165px">
 					<cms:field_types/>
 				</select>
 			</label>
-			<div style="clear: both;"/>
 		</div>
 
 		<hr/>
@@ -50,7 +49,6 @@
 				<span><cms:text constant="label_length" module="contact_form"/></span>
 				<input type="text" name="maxlength" class="code" style="width: 70px"/>
 			</label>
-			<div style="clear: both;"/>
 		</div>
 
 		<label class="pattern">

@@ -24,7 +24,7 @@
 						type="text"
 						name="interval_count"
 						class="code"
-						style="width: 50px;"
+						style="width: 45px;"
 						maxlength="5"
 						value="0"
 					/>
@@ -35,7 +35,7 @@
 						<cms:cycle_unit/>
 					</select>
 				</label>
-				<label style="clear: both;">
+				<label>
 					<span><cms:text constant="label_price" module="paypal"/></span>
 					<input
 						type="text"
@@ -67,7 +67,7 @@
 						type="text"
 						name="trial_count"
 						class="code"
-						style="width: 50px;"
+						style="width: 45px;"
 						maxlength="5"
 						value="0"
 					/>

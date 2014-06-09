@@ -79,7 +79,7 @@
 						name="smtp_server"
 						value="$settings['smtp_server']"
 						cms:eval="value"
-						style="width: 250px;"
+						style="width: 240px;"
 						class="code"
 					/>
 				</label>
@@ -130,7 +130,7 @@
 						name="smtp_username"
 						value="$settings['smtp_username']"
 						cms:eval="value"
-						style="width: 150px;"
+						style="width: 140px;"
 						class="code"
 					/>
 				</label>
@@ -141,11 +141,10 @@
 						name="smtp_password"
 						value="$settings['smtp_password']"
 						cms:eval="value"
-						style="width: 150px;"
+						style="width: 140px;"
 						class="code"
 					/>
 				</label>
-				<div style="clear: both;"/>
 			</div>
 
 			<div>

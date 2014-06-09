@@ -213,12 +213,11 @@ div.window div.content label {
 }
 
 div.window div.content label.horizontal {
-	float: left;
+	display: inline-block;
 	margin-right: 20px;
 }
 
 body.rtl div.window div.content label.horizontal {
-	float: right;
 	margin-left: 20px;
 	margin-right: 0px;
 }
