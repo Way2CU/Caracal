@@ -270,6 +270,9 @@ div.window div.content textarea {
 
 div.window div.content input[type=radio],
 div.window div.content input[type=checkbox] {
+	position: relative;
+	bottom: -1px;
+
 	margin-right: 3px;
 	padding: 0px;
 
@@ -883,6 +886,13 @@ div.window div.window_message {
 	background-color: white;
 
 	text-align: center;
+}
+
+/**
+ * Target IFrames
+ */
+div.window div.content iframe.target {
+	display: none;
 }
 
 /**

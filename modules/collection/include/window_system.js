@@ -558,7 +558,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 	 * Attach events to window content
 	 */
 	self.attachEvents = function() {
-		self.content.find('form').each(function() {
+		self.content.find('form').not('[target]').each(function() {
 			if ($(this).find('input:file').length == 0) {
 				// normal case submission without file uploads
 				$(this).submit(function(event) {
