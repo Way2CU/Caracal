@@ -1,14 +1,14 @@
 <?php
 
 /**
- * CallTrackingMetrics
+ * Callbox
  *
- * Support for CallTrackingMetrics service.
+ * Support for Callbox service.
  *
  * Author: Mladen Mijatov
  */
 
-class ctm extends Module {
+class callbox extends Module {
 	private static $_instance;
 
 	const URL_API = 'ssl://api.calltrackingmetrics.com';
@@ -26,19 +26,19 @@ class ctm extends Module {
 		if (class_exists('backend')) {
 			$backend = backend::getInstance();
 
-			$ctm_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_ctm'),
+			$callbox_menu = new backend_MenuItem(
+					$this->getLanguageConstant('menu_callbox'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
-			$ctm_menu->addChild('', new backend_MenuItem(
+			$callbox_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
-											'ctm_settings',
+											'callbox_settings',
 											400,
 											$this->getLanguageConstant('title_settings'),
 											true, true,
@@ -47,7 +47,7 @@ class ctm extends Module {
 								$level=5
 							));
 
-			$backend->addMenu($this->name, $ctm_menu);
+			$backend->addMenu($this->name, $callbox_menu);
 		}
 
 		if (class_exists('head_tag') && $section != 'backend' && $this->settings['include_code']) {
@@ -134,7 +134,7 @@ class ctm extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('ctm_settings')
+						'cancel_action'	=> window_Close('callbox_settings')
 					);
 
 		$template->restoreXML();
@@ -164,7 +164,7 @@ class ctm extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close('ctm_settings')
+					'action'	=> window_Close('callbox_settings')
 				);
 
 		$template->restoreXML();
@@ -214,7 +214,7 @@ class ctm extends Module {
 		$content = implode('&', $data);
 
 		// prepare headers
-		$api_path = str_replace('{reactor_id}', $reactor_id, ctm::URL_FORM_REACTOR);
+		$api_path = str_replace('{reactor_id}', $reactor_id, callbox::URL_FORM_REACTOR);
 		$header = "POST ".$api_path." HTTP/1.0\n";
 		$header .= "Content-Type: application/x-www-form-urlencoded\n";
 		$header .= "Content-Length: ".strlen($content)."\n";
@@ -222,7 +222,7 @@ class ctm extends Module {
 		$header .= "Connection: close\n\n";
 
 		// connect to server and send data
-		$socket = fsockopen(ctm::URL_API, 443, $error_number, $error_string, 30);
+		$socket = fsockopen(callbox::URL_API, 443, $error_number, $error_string, 30);
 
 		if ($socket) {
 			fputs($socket, $header.$content);

@@ -2,10 +2,10 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language short="en">
-		<constant name="menu_ctm">CTM</constant>
+		<constant name="menu_callbox">Callbox</constant>
 		<constant name="menu_settings">Settings</constant>
 
-		<constant name="title_settings">CallTrackingMetrics: Settings</constant>
+		<constant name="title_settings">Callbox: Settings</constant>
 
 		<constant name="message_saved">Account settings were saved.</constant>
 
@@ -19,10 +19,10 @@
 	</language>
 
 	<language short="he">
-		<constant name="menu_ctm">CTM</constant>
+		<constant name="menu_callbox">Callbox</constant>
 		<constant name="menu_settings">Settings</constant>
 
-		<constant name="title_settings">CallTrackingMetrics: Settings</constant>
+		<constant name="title_settings">Callbox: Settings</constant>
 
 		<constant name="message_saved">Account settings were saved.</constant>
 
