@@ -3,6 +3,9 @@
 /**
  * PayPay API helper class.
  *
+ * Support class used for common operations in communication
+ * with PayPal payment gateway.
+ *
  * Author: Mladen Mijatov
  */
 
