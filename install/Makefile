@@ -1,6 +1,6 @@
 
 # directories
-project_directory := $(shell hg root)
+project_directory := ..
 working_directory := $(project_directory)/install
 build_directory := $(working_directory)/build
 
