@@ -221,8 +221,8 @@ class TemplateHandler {
 			}
 
 			// implement constants
-			if (isset($tag->tagAttrs['cms:constants'])) {
-				$params = explode(',', $tag->tagAttrs['cms:constants']);
+			if (isset($tag->tagAttrs['cms:constant'])) {
+				$params = explode(',', $tag->tagAttrs['cms:constant']);
 
 				if (count($params) > 0)
 					foreach ($params as $param)
@@ -230,7 +230,7 @@ class TemplateHandler {
 							$tag->tagAttrs[$param] = $this->module->getLanguageConstant($tag->tagAttrs[$param]); else
 							$tag->tagAttrs[$param] = $language_handler->getText($tag->tagAttrs[$param]);
 
-				unset($tag->tagAttrs['cms:constants']);
+				unset($tag->tagAttrs['cms:constant']);
 			}
 
 			// check if specified tag shouldn't be cached
