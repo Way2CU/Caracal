@@ -220,6 +220,20 @@ class TemplateHandler {
 				unset($tag->tagAttrs['cms:tooltip']);
 			}
 
+			// implement constants
+			if (isset($tag->tagAttrs['cms:constants'])) {
+				if (!is_null($this->module))
+					$get_constant = $this->module->getLanguageConstant; else
+					$get_constant = $language_handler->getText;
+				$params = explode(',', $tag->tagAttrs['cms:constants']);
+
+				if (count($params) > 0)
+					foreach ($params as $param)
+						$tag->tagAttrs[$param] = $get_constant($tag->tagAttrs[$param]);
+
+				unset($tag->tagAttrs['cms:constants']);
+			}
+
 			// check if specified tag shouldn't be cached
 			$skip_cache = false;
 
