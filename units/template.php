@@ -222,14 +222,13 @@ class TemplateHandler {
 
 			// implement constants
 			if (isset($tag->tagAttrs['cms:constants'])) {
-				if (!is_null($this->module))
-					$get_constant = $this->module->getLanguageConstant; else
-					$get_constant = $language_handler->getText;
 				$params = explode(',', $tag->tagAttrs['cms:constants']);
 
 				if (count($params) > 0)
 					foreach ($params as $param)
-						$tag->tagAttrs[$param] = $get_constant($tag->tagAttrs[$param]);
+						if (!is_null($this->module))
+							$tag->tagAttrs[$param] = $this->module->getLanguageConstant($tag->tagAttrs[$param]); else
+							$tag->tagAttrs[$param] = $language_handler->getText($tag->tagAttrs[$param]);
 
 				unset($tag->tagAttrs['cms:constants']);
 			}
