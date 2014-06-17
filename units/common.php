@@ -134,8 +134,12 @@ function unfix_chars($string) {
 function is_browser_ok() {
 	$result = true;
 
-	if (isset($_SERVER['HTTP_USER_AGENT']))
-		$result = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') == false;
+	if (isset($_SERVER['HTTP_USER_AGENT'])) {
+		$company = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false;
+		$engine = strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false;
+
+		$result = !($company || $engine);
+	}
 
 	return $result;
 }
