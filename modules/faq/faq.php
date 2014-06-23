@@ -4,8 +4,10 @@
  * Frequently Asked Questions Module
  * @author Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/manager.php');
+
 
 class faq extends Module {
 	private static $_instance;
