@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class captcha extends Module {
 	private static $_instance;
