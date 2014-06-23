@@ -5,11 +5,18 @@
  *
  * Author: Mladen Mijatov
  */
+namespace Core;
+
+// temporary fallbacks
+use \LanguageHandler as LanguageHandler;
+use \SettingsManager as SettingsManager;
+use \TemplateHandler as TemplateHandler;
+use \MainLanguageHandler as MainLanguageHandler;
+
 
 abstract class Module {
 	protected $language;
 	protected $file;
-	protected $event_handler = null;
 
 	public $name;
 	public $path;
@@ -208,25 +215,6 @@ abstract class Module {
 		$template->setMappedModule($this->name);
 
 		return $template;
-	}
-
-	/**
-	 * Expose event handler's `connect` method to public.
-	 *
-	 * @param string $event_name
-	 * @param callable $callback
-	 * @param object $object [optional]
-	 * @return boolean
-	 */
-	public function connectEvent($event_name, $callback, $object=null) {
-		$result = false;
-
-		if (!is_null($this->event_handler)) {
-			$this->event_handler->connect($event_name, $callback, $object);
-			$result = true;
-		}
-
-		return $result;
 	}
 }
 
