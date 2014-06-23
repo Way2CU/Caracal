@@ -6,6 +6,7 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/affiliate_manager.php');
 require_once('units/referrals_manager.php');
