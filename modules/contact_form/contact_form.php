@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/smtp.php');
 require_once('units/form_manager.php');
