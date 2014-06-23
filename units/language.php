@@ -2,50 +2,80 @@
 
 
 class LanguageHandler {
-	private $engine;
 	private $active;
+
+	private $rtl_languages = array();
+	private $languages = array();
+	private $data = array();
+	private $default = null;
 
 	/**
 	 * Constructor
 	 *
 	 * @return LanguageHandler
 	 */
-	public function __construct($file="") {
+	public function __construct($file='') {
 		global $data_path;
 
 		$this->active = false;
 		$file = (empty($file)) ? $data_path.'system_language.xml' : $file;
 
-		if (file_exists($file)) {
-			$this->engine = new XMLParser(@file_get_contents($file), $file);
-			$this->engine->Parse();
-			$this->active = true;
+		// make sure language file exists
+		if (!file_exists($file))
+			return;
+
+		// parse language file
+		$engine = new XMLParser(@file_get_contents($file), $file);
+		$engine->Parse();
+		$this->active = true;
+
+		foreach ($engine->document->language as $xml_language) {
+			$short_name = $xml_language->tagAttrs['short'];
+			$full_name = isset($xml_language->tagAttrs['name']) ? $xml_language->tagAttrs['name'] : '';
+			$is_rtl = isset($xml_language->tagAttrs['rtl']) && $xml_language->tagAttrs['rtl'] == 'yes';
+			$default = isset($xml_language->tagAttrs['default']);
+
+			// add to language list
+			$this->languages[$short_name] = $full_name;
+
+			// create storage for constants
+			$this->data[$short_name] = array();
+
+			// mark as RTL
+			if ($is_rtl)
+				$this->rtl_languages[] = $short_name;
+
+			// set as default
+			if (is_null($this->default) && $default)
+				$this->default = $short_name;
+
+			// parse language constants
+			foreach ($xml_language->constant as $xml_constant) {
+				$constant_name = $xml_constant->tagAttrs['name'];
+				$value = $xml_constant->tagData;
+				$this->data[$short_name][$constant_name] = $value;
+			}
 		}
+
+		// remove parser
+		unset($engine);
 	}
 
 	/**
 	 * Returns localised text for given constant
 	 *
 	 * @param string $constant
-	 * @param string $language
+	 * @param string $specified_language
 	 * @return string
 	 */
-	public function getText($constant, $lang='') {
+	public function getText($constant, $specified_language='') {
 		global $language;
 
 		$result = '';
+		$lang = empty($specified_language) ? $language : $specified_language;
 
-		if ($this->active) {
-			if (empty($lang)) $lang = $language;  // use current language
-
-			foreach ($this->engine->document->language as $xml_language)
-				if ($xml_language->tagAttrs['short'] == $lang)
-					foreach ($xml_language->constant as $xml_constant)
-						if ($xml_constant->tagAttrs['name'] == $constant) {
-							$result = empty($xml_constant->tagData) ? $xml_constant->tagAttrs['value'] : $xml_constant->tagData;
-							break;
-						}
-		}
+		if ($this->active && isset($this->data[$lang][$constant]))
+			$result = $this->data[$lang][$constant];
 
 		return $result;
 	}
@@ -57,14 +87,12 @@ class LanguageHandler {
 	 * @return array
 	 */
 	public function getLanguages($printable = true) {
-		if (!$this->active) return;
+		if (!$this->active)
+			return;
 
-		$result = array();
-
-		foreach ($this->engine->document->language as $xml_language)
-			if ($printable)
-				$result[$xml_language->tagAttrs['short']] = $xml_language->tagAttrs['name']; else
-				$result[] = $xml_language->tagAttrs['short'];
+		if ($printable)
+			$result = $this->languages; else
+			$result = array_keys($this->languages);
 
 		return $result;
 	}
@@ -75,15 +103,10 @@ class LanguageHandler {
 	 * @return array
 	 */
 	public function getRTL() {
-		if (!$this->active) return;
+		if (!$this->active)
+			return;
 
-		$result = array();
-
-		foreach ($this->engine->document->language as $xml_language)
-			if (isset($xml_language->tagAttrs['rtl']) && $xml_language->tagAttrs['rtl'] == 'yes')
-				$result[] = $xml_language->tagAttrs['short'];
-
-		return $result;
+		return $this->rtl_languages;
 	}
 
 	/**
@@ -94,11 +117,8 @@ class LanguageHandler {
 	public function getDefaultLanguage() {
 		$result = 'en';
 
-		foreach ($this->engine->document->language as $xml_language)
-			if (key_exists('default', $xml_language->tagAttrs)) {
-				$result = $xml_language->tagAttrs['short'];
-				break;
-			}
+		if (!is_null($this->default))
+			$result = $this->default;
 
 		return $result;
 	}
@@ -111,15 +131,7 @@ class LanguageHandler {
 	public function isRTL() {
 		global $language;
 
-		$result = false;
-
-		foreach ($this->engine->document->language as $xml_language)
-			if ($language == $xml_language->tagAttrs['short']) {
-				$result = array_key_exists('rtl', $xml_language->tagAttrs) && strtolower($xml_language->tagAttrs['rtl']) == 'yes';
-				break;
-			}
-
-		return $result;
+		return in_array($language, $this->rtl_languages);
 	}
 }
 
