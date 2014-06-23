@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
+use Core\Module;
 
 define('_BACKEND_SECTION_', 'backend_module');
 define('_BACKEND_PATH_', dirname(__FILE__));
@@ -52,11 +54,10 @@ class backend extends Module {
 		parent::__construct(__FILE__);
 
 		// create events
-		$this->event_handler = new EventHandler();
-		$this->event_handler->registerEvent('user-create');
-		$this->event_handler->registerEvent('user-change');
-		$this->event_handler->registerEvent('user-delete');
-		$this->event_handler->registerEvent('user-password-change');
+		Events::register('backend', 'user-create');
+		Events::register('backend', 'user-change');
+		Events::register('backend', 'user-delete');
+		Events::register('backend', 'user-password-change');
 
 		// load CSS and JScript
 		if (class_exists('head_tag') && $section == 'backend') {
