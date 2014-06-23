@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 require_once('units/license_manager.php');
 require_once('units/license_modules_manager.php');
 
