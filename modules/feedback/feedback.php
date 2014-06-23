@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/manager.php');
 
