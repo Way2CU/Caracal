@@ -7,6 +7,8 @@
  * Author: Mladen Mijatov
  * @todo Module is not finished.
  */
+use Core\Module;
+
 
 class comments extends Module {
 	private static $_instance;

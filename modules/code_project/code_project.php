@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class code_project extends Module {
 	private static $_instance;

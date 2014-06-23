@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class links extends Module {
 	private static $_instance;

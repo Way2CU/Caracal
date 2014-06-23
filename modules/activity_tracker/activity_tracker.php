@@ -7,6 +7,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/activity_manager.php');
 require_once('units/activity_log_manager.php');

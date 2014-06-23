@@ -7,6 +7,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class callbox extends Module {
 	private static $_instance;

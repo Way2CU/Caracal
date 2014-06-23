@@ -6,9 +6,11 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('library/Stripe.php');
 require_once('units/stripe_payment_method.php');
+
 
 class stripe_payment extends Module {
 	private static $_instance;

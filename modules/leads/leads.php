@@ -8,10 +8,12 @@
  *
  * @author Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/entries_manager.php');
 require_once('units/entry_data_manager.php');
 require_once('units/types_manager.php');
+
 
 class leads extends Module {
 	private static $_instance;

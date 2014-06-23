@@ -201,7 +201,7 @@ class Backend_UserManager {
 				$manager->updateData($data, array('id' => $id));
 
 				// trigger event
-				$this->event_handler->trigger('user-change', $user);
+				Events::trigger('backend', 'user-change', $user);
 
 			} else {
 				// we can't edit user with higher level than our own
@@ -221,7 +221,7 @@ class Backend_UserManager {
 									);
 
 				// trigger event
-				$this->event_handler->trigger('user-create', $user);
+				Events::trigger('backend', 'user-create', $user);
 
 			} else {
 				// can't assign specified level
@@ -304,7 +304,7 @@ class Backend_UserManager {
 										$manager->getFieldNames(),
 										array('id' => $user_id)
 									);
-				$this->event_handler->trigger('user-create', $user);
+				Events::trigger('backend', 'user-create', $user);
 			}
 
 		// show result
@@ -433,7 +433,7 @@ class Backend_UserManager {
 										$manager->getFieldNames(),
 										array('id' => $user->id)
 									);
-				$this->event_handler->trigger('user-password-change', $user);
+				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
 				$result['message'] = $this->parent->getLanguageConstant('message_invalid_password');
@@ -686,7 +686,7 @@ class Backend_UserManager {
 										$manager->getFieldNames(),
 										array('id' => $user->id)
 									);
-				$this->event_handler->trigger('user-password-change', $user);
+				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
 				// invalid code or user
@@ -757,7 +757,7 @@ class Backend_UserManager {
 
 		// trigger event
 		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-		$this->event_handler->trigger('user-delete', $user);
+		Events::trigger('backend', 'user-delete', $user);
 
 		// remove user from database
 		$manager->deleteData(array('id' => $id));
@@ -832,7 +832,7 @@ class Backend_UserManager {
 
 				// trigger event
 				$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user->id));
-				$this->event_handler->trigger('user-password-change', $user);
+				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
 				// mismatching passwords

@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class webhook extends Module {
 	private static $_instance;

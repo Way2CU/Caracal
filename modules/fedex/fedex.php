@@ -6,6 +6,7 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 
 class fedex extends Module {

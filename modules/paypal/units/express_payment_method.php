@@ -6,6 +6,7 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
+use Core\Events;
 
 
 class PayPal_Express extends PaymentMethod {
@@ -31,7 +32,7 @@ class PayPal_Express extends PaymentMethod {
 		$this->registerPaymentMethod();
 
 		// connect signal handler
-		shop::getInstance()->connectEvent('before-checkout', 'beforeCheckout', $this);
+		Events::connect('shop', 'before-checkout', 'beforeCheckout', $this);
 	}
 	
 	/**

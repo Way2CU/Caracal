@@ -10,6 +10,9 @@
  * Author: Mladen Mijatov
  */
 
+use Core\Events;
+use Core\Module;
+
 require_once('units/payment_method.php');
 require_once('units/delivery_method.php');
 require_once('units/shop_item_handler.php');
@@ -142,15 +145,14 @@ class shop extends Module {
 		$this->delivery_methods = array();
 
 		// create events
-		$this->event_handler = new EventHandler();
-		$this->event_handler->registerEvent('shopping-cart-changed');
-		$this->event_handler->registerEvent('before-checkout');
-		$this->event_handler->registerEvent('transaction-completed');
-		$this->event_handler->registerEvent('transaction-canceled');
+		Events::register('shop', 'shopping-cart-changed');
+		Events::register('shop', 'before-checkout');
+		Events::register('shop', 'transaction-completed');
+		Events::register('shop', 'transaction-canceled');
 
 		// register recurring events
 		foreach (RecurringPayment::$signals as $status => $signal_name)
-			$this->event_handler->registerEvent($signal_name);
+			Events::register('shop', $signal_name);
 
 		// load module style and scripts
 		if (class_exists('head_tag') && $section != 'backend') {
@@ -1086,7 +1088,7 @@ class shop extends Module {
 			}
 
 			$_SESSION['shopping_cart'] = $cart;
-			$this->event_handler->trigger('shopping-cart-changed');
+			Events::trigger('shop', 'shopping-cart-changed');
 		}
 	}
 
@@ -1122,7 +1124,7 @@ class shop extends Module {
 			}
 
 			$_SESSION['shopping_cart'] = $cart;
-			$this->event_handler->trigger('shopping-cart-changed');
+			Events::trigger('shop', 'shopping-cart-changed');
 		}
 	}
 
@@ -1268,7 +1270,7 @@ class shop extends Module {
 			// trigger event
 			switch ($status) {
 				case TransactionStatus::COMPLETED:
-					$this->event_handler->trigger('transaction-completed', $transaction);
+					Events::trigger('shop', 'transaction-completed', $transaction);
 					unset($_SESSION['transaction']);
 
 					if ($transaction->type == TransactionType::SUBSCRIPTION) {
@@ -1287,7 +1289,7 @@ class shop extends Module {
 					break;
 
 				case TransactionStatus::CANCELED:
-					$this->event_handler->trigger('transaction-canceled', $transaction);
+					Events::trigger('shop', 'transaction-canceled', $transaction);
 
 					// send email notification
 					if ($transaction->type == TransactionType::SUBSCRIPTION)
@@ -1423,10 +1425,7 @@ class shop extends Module {
 								);
 
 		// trigger event
-		$this->event_handler->trigger(
-									RecurringPayment::$signals[$status],
-									$transaction, $plan, $payment
-								);
+		Events::trigger('shop', RecurringPayment::$signals[$status], $transaction, $plan, $payment);
 
 		return $result;
 	}
@@ -1702,7 +1701,7 @@ class shop extends Module {
 	 */
 	private function json_ClearCart() {
 		$_SESSION['shopping_cart'] = array();
-		$this->event_handler->trigger('shopping-cart-changed');
+		Events::trigger('shop', 'shopping-cart-changed');
 
 		print json_encode(true);
 	}
@@ -1767,7 +1766,7 @@ class shop extends Module {
 			$_SESSION['shopping_cart'] = $cart;
 		}
 
-		$this->event_handler->trigger('shopping-cart-changed');
+		Events::trigger('shop', 'shopping-cart-changed');
 		print json_encode($result);
 	}
 
@@ -1793,7 +1792,7 @@ class shop extends Module {
 			$result = true;
 		}
 
-		$this->event_handler->trigger('shopping-cart-changed');
+		Events::trigger('shop', 'shopping-cart-changed');
 		print json_encode($result);
 	}
 
@@ -1814,7 +1813,7 @@ class shop extends Module {
 			$result = true;
 		}
 
-		$this->event_handler->trigger('shopping-cart-changed');
+		Events::trigger('shop', 'shopping-cart-changed');
 		print json_encode($result);
 	}
 
@@ -2957,12 +2956,13 @@ class shop extends Module {
 
 			// emit signal and return if handled
 			if ($stage == 'set_info') {
-				$result_list = $this->event_handler->trigger(
-														'before-checkout',
-														$payment_method->get_name(),
-														$return_url,
-														$cancel_url
-													);
+				Events::trigger(
+						'shop', 
+						'before-checkout',
+						$payment_method->get_name(),
+						$return_url,
+						$cancel_url
+					);
 
 				foreach ($result_list as $result)
 					if ($result) { 

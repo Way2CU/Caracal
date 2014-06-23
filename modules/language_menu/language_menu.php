@@ -5,6 +5,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class language_menu extends Module {
 	private static $_instance;

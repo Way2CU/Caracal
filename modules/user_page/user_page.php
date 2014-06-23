@@ -7,9 +7,11 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/userpage_manager.php');
 require_once('units/userpage_items_manager.php');
+
 
 class user_page extends Module {
 	private static $_instance;

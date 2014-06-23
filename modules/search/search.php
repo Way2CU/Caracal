@@ -3,6 +3,8 @@
 /**
  * Search Module
  */
+use Core\Module;
+
 
 class search extends Module {
 	private static $_instance;

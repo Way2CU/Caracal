@@ -7,6 +7,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Module;
+
 
 class country_list extends Module {
 	private static $_instance;
