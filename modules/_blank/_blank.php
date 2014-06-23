@@ -9,6 +9,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Code\Module;
+
 
 class _blank extends Module {
 	private static $_instance;
