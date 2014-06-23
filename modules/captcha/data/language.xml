@@ -2,12 +2,14 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language short="en">
-		<constant name="captcha_message" value="Captcha image (click to refresh)" />
+		<constant name="captcha_message">Captcha image (click to refresh)</constant>
 	</language>
+
 	<language short="sr">
-		<constant name="captcha_message" value="Captcha slika (klik na sliku osvežava)" />
+		<constant name="captcha_message">Captcha slika (klik na sliku osvežava)</constant>
 	</language>
+
 	<language short="he">
-		<constant name="captcha_message" value="תמונת קאפצ'ה (לחץ לרענון)" />
+		<constant name="captcha_message">תמונת קאפצ'ה (לחץ לרענון)</constant>
 	</language>
 </document>
