@@ -6,6 +6,7 @@
  * Copyright (c) 2012. by Way2CU
  * Author: Mladen Mijatov
  */
+use Core\Module;
 
 
 class tranzila extends Module {
