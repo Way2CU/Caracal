@@ -3,13 +3,14 @@
 /**
  * YouTube Implmenetation Module
  *
- * @author MeanEYE
- * @todo Add playlist support
+ * Author: Mladen Mijatov
  */
+use Core\Module;
 
 require_once('units/video_manager.php');
 require_once('units/group_manager.php');
 require_once('units/membership_manager.php');
+
 
 class youtube extends Module {
 	private static $_instance;
