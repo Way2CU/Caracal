@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en" rtl="no">
+		<constant name="menu_mailchimp">MailChimp</constant>
+		<constant name="menu_lists">Mailing lists</constant>
+		<constant name="menu_settings">Settings</constant>
+	</language>
+</document>
