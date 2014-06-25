@@ -30,10 +30,8 @@ class LanguageHandler {
 		$this->active = true;
 
 		// make sure language file is not empty
-		if (!isset($engine->document) || !isset($engine->document->language)) {
-			trigger_error("Unable to load language file '{$file}'.", E_USER_NOTICE);
+		if (!isset($engine->document) || !isset($engine->document->language))
 			return;
-		}
 
 		foreach ($engine->document->language as $xml_language) {
 			$short_name = $xml_language->tagAttrs['short'];
