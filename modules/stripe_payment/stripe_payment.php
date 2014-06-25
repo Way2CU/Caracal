@@ -6,10 +6,11 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
-use Core\Module;
 
-require_once('library/Stripe.php');
+require_once(_LIBPATH.'/stripe/Stripe.php');
 require_once('units/stripe_payment_method.php');
+
+use Core\Module;
 
 
 class stripe_payment extends Module {
