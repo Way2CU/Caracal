@@ -365,3 +365,92 @@ form textarea:focus {
 
 	transition: all 0.3s;
 }
+
+/**
+ * Tooltips
+ */
+dfn {
+	display: inline-block;
+	vertical-align: middle;
+	width: 20px;
+	height: 20px;
+
+	border-radius: 10px;
+	background-color: #929292;
+}
+
+dfn[data-tooltip] {
+	position: relative;
+}
+
+dfn[data-tooltip]:after {
+	display: block;
+	width: 300px;
+
+	opacity: 0;
+	visibility: hidden;
+
+	position: absolute;
+	left: -10px;
+	bottom: 100%;
+	margin-bottom: 42px;
+
+	padding: 4px;
+	padding-left: 5px;
+	padding-right: 5px;
+
+	content: attr(data-tooltip);
+	z-index: 10000;
+
+	border: 1px solid #929292;
+	background-color: #ECF0F1;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+
+	color: #595959;
+	font-size: 0.9em;
+
+	transition-delay: 0s;
+	transition-duration: 0.3s;
+	transition-property: all;
+}
+
+dfn[data-tooltip]:before {
+	display: block;
+	width: 0px;
+	height: 0px;
+
+	opacity: 0;
+	visibility: hidden;
+
+	position: absolute;
+	left: 5px;
+	bottom: 100%;
+	margin-bottom: 30px;
+
+	border: 6px solid transparent;
+	border-top-color: #929292;
+
+	content: '';
+	font-size: 0px;
+	z-index: 10000;
+
+	transition-delay: 0s;
+	transition-duration: 0.3s;
+	transition-property: all;
+}
+
+dfn[data-tooltip]:hover:after {
+	visibility: visible;
+	opacity: 1;
+	margin-bottom: 12px;
+
+	transition-delay: 0.5s;
+}
+
+dfn[data-tooltip]:hover:before {
+	visibility: visible;
+	opacity: 1;
+	margin-bottom: 0px;
+
+	transition-delay: 0.5s;
+}

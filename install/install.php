@@ -55,16 +55,19 @@
 						<label>
 							<span>Site title:</span>
 							<input type="text" name="site_title">
+							<dfn data-tooltip="Main part of title that will always be included."></dfn>
 						</label>
 
 						<label>
 							<span>Page description:</span>
 							<textarea name="site_description"></textarea>
+							<dfn data-tooltip="Page description for home page. This description will be shown in search results."></dfn>
 						</label>
 
 						<label>
 							<span>Copyright:</span>
 							<input type="text" name="site_copyright">
+							<dfn data-tooltip="Text displayed at the bottom of page."></dfn>
 						</label>
 					</div>
 
@@ -75,11 +78,13 @@
 						<label>
 							<span>Full name:</span>
 							<input type="text" name="admin_name">
+							<dfn data-tooltip="Optional name for use in backend.">?</dfn>
 						</label>
 
 						<label>
 							<span>Email:</span>
 							<input type="text" name="admin_email">
+							<dfn data-tooltip="Address to which future notifications will be sent."></dfn>
 						</label>
 
 						<label>
@@ -90,6 +95,7 @@
 						<label>
 							<span>Password:</span>
 							<input type="text" name="admin_password">
+							<dfn data-tooltip="There are no limits or requirements for password. We suggest forming a sentence of 3-5 unrelated words ending with few interpunction signs or numbers."></dfn>
 						</label>
 
 						<label>
