@@ -1,11 +1,10 @@
 /**
  * Multi-language Selector
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
  *
- * You need to create new language selector for each window. Id specified in
- * constructor function is forum Id.
+ * You need to create new language selector for each window. 
  *
  * Requires jQuery 1.4.2+
  */
@@ -13,92 +12,140 @@
 var language_selector = null;
 
 function LanguageSelector(id) {
-	var self = this;  // used internally for events
+	var self = this;
 
-	this.languages = null;
-	this.rtl_languages = null;
-	this.current_language = null;
-	this.$objects = [];
-	this.$parent = $('#'+id);
+	self.current_language = null;
+	self.container = $('#' + id);
+	self.fields = null;
 
-	this.$container = $('<div>').addClass('language_selector');
+	self.button_container = $('<div>').addClass('language_selector');
 
 	/**
 	 * Process result from server
 	 *
 	 * @param object data
 	 */
-	this.init = function() {
-		this.$parent.prepend(this.$container);
-		this.$container.addClass('loading');
+	self.init = function() {
+		self.container.prepend(self.button_container);
+		self.button_container.addClass('loading');
 
-		var field_data = {};
+		// find fields
+		self.fields = self.container.find('input.multi-language, textarea.multi-language');
 
 		// create options
-		for(var i in language_handler.languages) {
-			var language = language_handler.languages[i];
-			var $button = $('<span>');
+		var languages = language_handler.languages;
+		var default_supported = false;
+		var default_language = null;
 
-			$button
+		for(var i in languages) {
+			var language = languages[i];
+			var button = $('<span>');
+
+			// configure button
+			button
 				.html(language.long)
-				.data(language)
-				.click(function() {
-					self.setLanguage($(this).data().short);
-				});
+				.attr('data-short', language.short)
+				.click(self._handle_button_click);
 
-			this.$objects[language.short] = $button;
-			this.$container.append($button);
+			// add button to container
+			self.button_container.append(button);
+
+			// check if language matches default one
+			if (language.short == language_handler.default_language) {
+				default_supported = true;
+				default_language = language.short;
+			}
 		}
+		
+		// make sure we have default language to set
+		if (default_language === null)
+			default_language = languages[0].short;
 
-		// attach reset event if parent is form
-		if (this.$parent.get(0).nodeName == 'FORM') {
-			this.$parent.find(':reset').eq(0).click(function(event) {
-				event.preventDefault();
-
-				self.$parent.get(0).reset();
-				self.resetFields(event);
-			});
-		}
+		// attach reset event to forms in container
+		self.container.find('form').on('reset', self._handle_form_reset);
 
 		// collect multi-language data
-		this.$parent.find('data').each(function() {
-			var field = $(this).attr('field');
-			var language = $(this).attr('language');
+		var field_data = {};
+
+		self.container.find('data').each(function() {
+			var data_tag = $(this);
+			var field = data_tag.attr('field');
+			var language = data_tag.attr('language');
 
 			if (field_data[field] == undefined)
 				field_data[field] = {};
 
-			field_data[field][language] = $(this).html();
-			$(this).remove();
+			field_data[field][language] = data_tag.html();
+			data_tag.remove();
 		});
 
-		// set language data and DOM references
-		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
-			var name = $(this).attr('name');
+		// set language data
+		self.fields.each(function() {
+			var field = $(this);
+			var name = field.attr('name');
 			var data = field_data[name];
 
-			if (data == undefined) data = {};
+			if (data == undefined)
+				data = {};
 
 			var original_data = $.extend({}, data);
 
-			$(this).data('language', data);
-			$(this).data('original_data', original_data);
-			$(this).data('selector', self);
+			field.data('language', data);
+			field.data('original_data', original_data);
 
 			// upon leaving input element, store data
-			$(this).blur(function() {
-				var data = $(this).data('language');
-				data[self.current_language] = $(this).val();
-
-				$(this).data('language', data);
-			});
+			field.blur(self._handle_field_lost_focus);
 		});
 
 		// select default language
-		this.setLanguage(language_handler.default_language);
+		self.set_language(default_language);
 
 		// stop the loading animation
-		this.$container.removeClass('loading');
+		self.button_container.removeClass('loading');
+	};
+
+	/**
+	 * Handle clicking on language button.
+	 *
+	 * @param object event
+	 */
+	self._handle_button_click = function(event) {
+		// get data
+		var button = $(this);
+		var language = button.data('short');
+
+		// prevent default behavior
+		event.preventDefault();
+
+		// change language
+		self.set_language(language);
+	};
+
+	/**
+	 * Handle field loosing focus.
+	 *
+	 * @param object event
+	 */
+	self._handle_field_lost_focus = function(event) {
+		var field = $(this);
+		var data = field.data('language');
+
+		// update field data for current language
+		data[self.current_language] = field.val();
+		field.data('language', data);
+
+		// unset focused field
+		self.focused_field = null;
+	};
+
+	/**
+	 * Handle reseting the form.
+	 *
+	 * @param object event
+	 */
+	self._handle_form_reset = function(event) {
+		// reset fields
+		self.reset_fields(event);
 	};
 
 	/**
@@ -106,51 +153,58 @@ function LanguageSelector(id) {
 	 *
 	 * @param string language
 	 */
-	this.setLanguage = function(language) {
-		if (this.current_language != null)
-			this.$objects[self.current_language].removeClass('active');
+	self.set_language = function(language) {
+		if (self.current_language == language) 
+			return;
 
-		this.$objects[language].addClass('active');
+		// change active button
+		var new_button = self.button_container.find('[data-short=\'' + language + '\']');
+		self.button_container.children().not(new_button).removeClass('active');
+		new_button.addClass('active');
 
-		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
-			var data = $(this).data('language');
+		// switch language for each field
+		self.fields.each(function() {
+			var field = $(this);
+			var data = field.data('language');
 
 			// store data if current language is not null
 			if (self.current_language != null)
-				data[self.current_language] = $(this).val();
+				data[self.current_language] = field.val();
 
 			// get data for new language from storage
 			if (language in data)
-				$(this).val(data[language]); else
-				$(this).val('');
+				field.val(data[language]); else
+				field.val('');
 
 			// save old data once we switched everything
-			$(this).data('language', data);
+			field.data('language', data);
 
 			// apply proper direction
 			if (!language_handler.isRTL(language))
-				$(this).css('direction', 'ltr'); else
-				$(this).css('direction', 'rtl');
+				field.css('direction', 'ltr'); else
+				field.css('direction', 'rtl');
 		});
 
-		this.current_language = language;
+		// store new language selection
+		self.current_language = language;
 	};
 
 	/**
 	 * Function used to restore original language data on form reset event
 	 */
-	this.resetFields = function() {
-		this.$parent.find('input.multi-language, textarea.multi-language').each(function() {
-			var data = $.extend({}, $(this).data('original_data'));
-			$(this).data('language', data);
+	self.reset_fields = function() {
+		self.fields.each(function() {
+			var field = $(this);
+			var data = $.extend({}, field.data('original_data'));
+			field.data('language', data);
 
 			// get data for language from storage
 			if (self.current_language in data)
-				$(this).val(data[self.current_language]); else
-				$(this).val('');
+				field.val(data[self.current_language]); else
+				field.val('');
 		});
 	};
 
 	// load languages and construct selector
-	this.init();
+	self.init();
 }
