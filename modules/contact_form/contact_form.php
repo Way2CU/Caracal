@@ -569,10 +569,10 @@ class contact_form extends Module {
 			// TODO: Store files somewhere after submission, if needed.
 
 			// get mailer
-			$mailer = $contact_form->getMailer();
-			$sender = $contact_form->getSender();
-			$recipients = $contact_form->getRecipients();
-			$template = $contact_form->getTemplate($form->template);
+			$mailer = $this->getMailer();
+			$sender = $this->getSender();
+			$recipients = $this->getRecipients();
+			$template = $this->getTemplate($form->template);
 
 			// start creating message
 			$mailer->start_message();
@@ -2332,6 +2332,15 @@ class contact_form extends Module {
 	 * @return array
 	 */
 	public function getRecipient() {
+		$name = explode(',', $this->settings['recipient_name']);
+		$address = explode(',', $this->settings['recipient_address']);
+
+		$result = array(
+				'name'		=> $name[0],
+				'address'	=> $address[0]
+			);
+
+		return $result;
 	}
 
 	/**
@@ -2340,6 +2349,17 @@ class contact_form extends Module {
 	 * @return array
 	 */
 	public function getRecipients() {
+		$result = array();
+		$names = explode(',', $this->settings['recipient_name']);
+		$addresses = explode(',', $this->settings['recipient_address']);
+
+		for ($i=0; $i<count($addresses); $i++)
+			$result[] = array(
+					'name'		=> isset($names[$i]) ? $names[$i] : '',
+					'address'	=> $addresses[$i]
+				);
+
+		return $result;
 	}
 
 	/**
@@ -2348,5 +2368,21 @@ class contact_form extends Module {
 	 * @return array
 	 */
 	public function getTemplate($name) {
+		global $language;
+
+		$result = null;
+		$manager = ContactForm_TemplateManager::getInstance();
+
+		// get template
+		$template = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $name));
+
+		if (is_object($template))
+			$result = array(
+					'plain_body'	=> $template->plain[$language],
+					'html_body'		=> $template->html[$language],
+					'subject'		=> $template->subject[$language]
+				);
+
+		return $result;
 	}
 }
