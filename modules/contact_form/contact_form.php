@@ -10,21 +10,20 @@
  */
 use Core\Module;
 
-require_once('units/smtp.php');
 require_once('units/form_manager.php');
 require_once('units/form_field_manager.php');
 require_once('units/template_manager.php');
 require_once('units/submission_manager.php');
 require_once('units/submission_field_manager.php');
+require_once('units/mailer.php');
+require_once('units/system_mailer.php');
+require_once('units/smtp_mailer.php');
 
 
 class contact_form extends Module {
 	private static $_instance;
-	private $_invalid_params = array(
-						'section', 'action', 'PHPSESSID', '__utmz', '__utma',
-						'__utmc', '__utmb', '_', 'subject', 'MAX_FILE_SIZE', '_rewrite'
-					);
 
+	private $mailers = array();
 	private $field_types = array(
 					'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
@@ -39,6 +38,26 @@ class contact_form extends Module {
 		global $section;
 		
 		parent::__construct(__FILE__);
+
+		// create mailer support
+		$system_mailer = new ContactForm_SystemMailer($this->language);
+		$smtp_mailer = new ContactForm_SmtpMailer($this->language);
+
+		$this->registerMailer('system', $system_mailer);
+		$this->registerMailer('smtp', $smtp_mailer);
+
+		// configure SMTP mailer
+		$smtp_mailer->set_server(
+					$this->settings['smtp_server'],
+					$this->settings['smtp_port'],
+					$this->settings['use_ssl']
+				);
+		
+		if ($this->settings['smtp_authenticate'])
+			$smtp_mailer->set_credentials(
+						$this->settings['smtp_username'],
+						$this->settings['smtp_password']
+					);
 		
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
@@ -170,14 +189,6 @@ class contact_form extends Module {
 					$this->tag_Form($params, $children);
 					break;
 
-				case 'send_from_xml':
-					$this->sendFromXML($params, $children);
-					break;
-
-				case 'send_from_ajax':
-					$this->sendFromAJAX();
-					break;
-
 				case 'submit':
 					$this->submitForm($params, $children);
 					break;
@@ -304,7 +315,6 @@ class contact_form extends Module {
 		$this->saveSetting('sender_address', 'sample@email.com');
 		$this->saveSetting('recipient_name', '');
 		$this->saveSetting('recipient_address', 'sample@email.com');
-		$this->saveSetting('recipient_subject', 'Caracal contact email');
 		$this->saveSetting('smtp_server', 'smtp.gmail.com');
 		$this->saveSetting('smtp_port', '465');
 		$this->saveSetting('use_ssl', 1);
@@ -558,20 +568,28 @@ class contact_form extends Module {
 
 			// TODO: Store files somewhere after submission, if needed.
 
-			// load template
-			$email = $this->makeEmailFromTemplate(
-						$form->template,
-						$replacement_fields,
-						$attachments
-					);
+			// get mailer
+			$mailer = $contact_form->getMailer();
+			$sender = $contact_form->getSender();
+			$recipients = $contact_form->getRecipients();
+			$template = $contact_form->getTemplate($form->template);
+
+			// start creating message
+			$mailer->start_message();
+			$mailer->set_subject($template['subject']);
+			$mailer->set_sender($sender['address'], $sender['name']);
+
+			foreach ($recipients as $recipient)
+				$mailer->add_recipient($recipient['address'], $recipient['name']);
+
+			foreach ($attachments as $attachment)
+				$mailer->add_attachment($attachment);
+
+			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_variables($replacement_fields);
 
 			// send email
-			$result = $this->sendMail(
-						$this->settings['recipient_address'],
-						$email['subject'],
-						$email['body'],
-						$email['headers']
-					);
+			$result = $mailer->send();
 		}
 
 		// show result
@@ -607,262 +625,6 @@ class contact_form extends Module {
 			$template->parse();
 		}
 
-		return $result;
-	}
-
-	/**
-	 * Process mail sending request issued by template parser
-	 *
-	 * @param array $params
-	 * @param array $children
-	 */
-	public function sendFromXML($params, $children) {
-		$to = "";
-		$subject = "";
-		$fields = array();
-		$template_params = array();
-		$headers = array();
-		$message_success = null;
-		$message_error = null;
-		$attachments = array();
-
-		foreach($children as $param)
-			switch ($param->tagName) {
-				case 'to':
-					$to = $param->tagData;
-					$template_params['_to'] = $to;
-					break;
-
-				case 'subject':
-					$subject = $param->tagData;
-					$subject = $this->generateSubjectField($subject, $fields);
-					$template_params['_subject'] = $subject;
-					break;
-
-				case 'from':
-					if (array_key_exists('name', $param->tagAttrs))
-						$name = $param->tagAttrs['name']; else
-						$name = $param->tagData;
-
-					$address = $param->tagData;
-					$headers['From'] = $this->generateAddressField($name, $address);
-					$template_params['_from'] = "{$param->tagAttrs['name']} <{$param->tagData}>";
-					break;
-
-				case 'fields':
-					foreach($param->tagChildren as $field) {
-						$fields[$field->tagData] = isset($_REQUEST[$field->tagAttrs['name']]) ? fix_chars($_REQUEST[$field->tagAttrs['name']]) : '';
-						$template_params[$field->tagAttrs['name']] = isset($_REQUEST[$field->tagAttrs['name']]) ? fix_chars($_REQUEST[$field->tagAttrs['name']]) : '';
-					}
-
-					break;
-
-				case 'message_success':
-					$message_success = $param->tagChildren;
-					break;
-
-				case 'message_error':
-					$message_error = $param->tagChildren;
-					break;
-			}
-
-		$headers['X-Mailer'] = "Cracal-Framework/1.0";
-
-		// if address is not specified by the XML, check for system setting
-		if (empty($to) && isset($this->settings['recipient_address'])) {
-			$to = $this->settings['recipient_address'];
-			$template_params['_to'] = $to;
-		}
-	
-		// attach speficied files
-		if (count($_FILES) > 0)
-			foreach($_FILES as $name => $data) {
-				$temp_name = $data['tmp_name'];
-				$name = $data['name'];
-				$attachments[$temp_name] = $name;
-			}
-
-		if ($this->_sendMail($to, $subject, $headers, $fields, $attachments)) {
-			// message successfuly sent
-			if (!is_null($message_success)) {
-				$template = new TemplateHandler();
-				$template->setMappedModule($this->name);
-				$template->setLocalParams($template_params);
-				$template->parse($message_success);
-			}
-		} else {
-			// error sending
-			if (!is_null($message_error)) {
-				$template = new TemplateHandler();
-				$template->setMappedModule($this->name);
-				$template->setLocalParams($template_params);
-				$template->parse($message_error);
-			}
-		}
-	}
-
-	/**
-	 * Send contact form data using AJAX request
-	 */
-	public function sendFromAJAX($skip_message=False) {
-		$result = array(
-					'error'		=> false,
-					'message'	=> ''
-				);
-		$attachments = array();
-
-		if (isset($this->settings['recipient_address'])) {
-			$to = $this->settings['recipient_address'];
-			$fields = array();
-			$headers = array(
-							'X-Mailer'	=> "Cracal-Framework/1.0"
-						);
-
-			// allow setting subject in request but sanitize heavily
-			if (isset($_REQUEST['subject'])) {
-				$subject = fix_chars($_REQUEST['subject']);
-				$subject = str_replace(array('/', '\\', '.'), '-', $subject);
-
-			} else {
-				$subject = $this->settings['recipient_subject'];
-			}
-
-			// attach speficied files
-			if (count($_FILES) > 0)
-				foreach($_FILES as $name => $data) {
-					$temp_name = $data['tmp_name'];
-					$name = $data['name'];
-					$attachments[$temp_name] = $name;
-				}
-
-			// prepare sender
-			$name = $this->settings['sender_name'];
-			$address = $this->settings['sender_address'];
-			$headers['From'] = $this->generateAddressField($name, $address);
-
-			foreach($_REQUEST as $key => $value)
-				if (!in_array($key, $this->_invalid_params))
-					$fields[$key] = fix_chars($value);
-
-			// format subject
-			$subject = $this->generateSubjectField($subject, $fields);
-
-			// try sending message
-			if ($this->_sendMail($to, $subject, $headers, $fields, $attachments)) {
-				// message successfuly sent
-				$result['message'] = $this->getLanguageConstant('message_sent');
-
-			} else {
-				// error sending
-				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_error');
-			}
-
-		} else {
-			$result['error'] = true;
-			$result['message'] = $this->getLanguageConstant('message_error_no_address');
-		}
-
-		if (!$skip_message)
-			print json_encode($result);
-	}
-	
-	/**
-	 * Send mail from different module with specified parameters
-	 * 
-	 * @param string $to
-	 * @param string $subject
-	 * @param string $text_body
-	 * @param string $html_body
-	 * @param string $bcc
-	 *
-	 * TODO: Simplify this code.
-	 */
-	public function sendFromModule($to, $subject, $text_body, $html_body, $bcc=null) {
-		$headers = array();
-		$headers['X-Mailer'] = "Cracal-Framework/1.0";
-
-		// prepare recipient
-		if ($to == '' || is_null($to)) 
-			$to = $this->settings['recipient_address'];
-		
-		// prepare subject
-		if ($subject == '' || is_null($subject))
-			$subject = $this->settings['recipient_subject'];
-		
-		$subject = $this->generateSubjectField($subject);
-		
-		// prepare sender
-		$name = $this->settings['sender_name'];
-		$address = $this->settings['sender_address'];
-		$headers['From'] = $this->generateAddressField($name, $address);
-
-		// add bcc if specified setting bcc = -1 will use from 
-		// field effectively sending copy of email to sender
-		if (!is_null($bcc)) 
-			if (is_numeric($bcc) && $bcc == -1)
-				$headers['Bcc'] = $headers['From']; else
-				$headers['Bcc'] = $bcc;
-		
-		// create boundary string
-		$boundary = md5(time().'--cms--'.(rand() * 10000));
-		$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}";
-		
-		// create mail body
-		if (!empty($html_body)) {
-			// make plain text body
-			$body .= "--{$boundary}\r\n";
-			$body .= "Content-Type: text/plain; charset=UTF-8\r\n";
-			$body .= "Content-Transfer-Encoding: base64\r\n\r\n";
-			$body .= base64_encode($text_body)."\r\n";
-	
-			// make html body
-			$body .= "--{$boundary}\r\n";
-			$body .= "Content-Type: text/html; charset=UTF-8\r\n";
-			$body .= "Content-Transfer-Encoding: base64\r\n\r\n";
-			$body .= base64_encode($html_body)."\r\n";
-	
-			// make ending boundary
-			$body .= "--{$boundary}--\r\n";
-			
-		} else {
-			// no HTML specified, use plain text
-			$body = "\r\n".$text_body;
-		}		
-		
-		// get headers string
-		$headers_string = $this->_makeHeaders($headers);
-
-		if (!$this->detectBots())
-			if ($this->settings['use_smtp']) {
-				$smtp = new SMTP();
-				$smtp->set_server(
-							$this->settings['smtp_server'],
-							$this->settings['smtp_port'],
-							$this->settings['use_ssl']
-						);
-				
-				if ($this->settings['smtp_authenticate'])
-					$smtp->set_credentials(
-								$this->settings['smtp_username'],
-								$this->settings['smtp_password']
-							);
-
-				$smtp->set_sender($this->settings['sender_address']);
-
-				// add recipients
-				$recipient_list = explode(',', $to);
-				foreach($recipient_list as $address)
-					$smtp->add_recipient($address);
-
-				$smtp->set_subject($subject);
-				$result = $smtp->send($headers_string, $body);
-
-			} else {
-				// send mail using PHP function
-				$result = mail($to, $subject, $body, $headers_string);
-			}
-		
 		return $result;
 	}
 
@@ -952,107 +714,6 @@ class contact_form extends Module {
 	}
 
 	/**
-	 * Perform send email
-	 *
-	 * @param string $to
-	 * @param string $subject
-	 * @param array $headers
-	 * @param array $fields
-	 * @param array $attachments
-	 * @return boolean
-	 * @deprecated
-	 *
-	 * TODO: Remove this function. It's not needed!
-	 */
-	private function _sendMail($to, $subject, $headers, $fields, $attachments=array()) {
-		global $data_path;
-
-		trigger_error('Deprecation warning: contact_form::_sendMail should not be used any more!', E_USER_NOTICE);
-
-		$result = false;
-
-		// generate boundary string
-		$boundary = md5(time().'--global--'.(rand() * 10000));
-
-		// add content type to headers
-		if (count($attachments) == 0)
-			$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}"; else
-			$headers['Content-Type'] = "multipart/mixed; boundary={$boundary}";
-
-		// make body and headers
-		$body = $this->_makeBody($fields, $boundary, $attachments);
-		$headers_string = $this->_makeHeaders($headers);
-
-		if (!$this->detectBots()) {
-			if ($this->settings['use_smtp']) {
-				// send email using SMTP
-				$smtp = new SMTP();
-				$smtp->set_server(
-							$this->settings['smtp_server'],
-							$this->settings['smtp_port'],
-							$this->settings['use_ssl']
-						);
-				
-				if ($this->settings['smtp_authenticate'])
-					$smtp->set_credentials(
-								$this->settings['smtp_username'],
-								$this->settings['smtp_password']
-							);
-
-				$smtp->set_sender($this->settings['sender_address']);
-
-				// add recipients
-				$recipient_list = explode(',', $to);
-				foreach($recipient_list as $address)
-					$smtp->add_recipient($address);
-
-				$smtp->set_subject($subject);
-				$result = $smtp->send($headers_string, $body);
-
-			} else {
-				// send email using built-in function
-				$result = mail($to, $subject, $body, $headers_string);
-			}
-
-			// store email after sending
-			if (isset($this->settings['save_location']) && !empty($this->settings['save_location']))
-				$location = $this->settings['save_location']; else
-				$location = _BASEPATH.'/'.$data_path;
-
-			$save_copy = isset($this->settings['save_copy']) ? $this->settings['save_copy'] : false;
-			$location_okay = is_writable($location);
-
-			if ($result && $save_copy && $location_okay) {
-				$timestamp = strftime('%c');
-				$file_name = $location."/{$subject} - {$timestamp}.eml";
-
-				$data = "To: {$to}\r\n";
-				$data .= "Subject: {$subject}\r\n";
-				$data .= $headers_string."\r\n\r\n".$body;
-
-				// try to open file for saving email
-				$handle = fopen($file_name, 'w');
-				
-				if ($handle !== false) {
-					// save email content to specifed file
-					fwrite($handle, $data);
-					fclose($handle);
-
-				} else {
-					// log error
-					trigger_error("Unable to open file for saving: {$file_name}", E_USER_WARNING);
-				}
-			
-			} else if (!$location_okay) {
-				// log problem with destination directory
-				trigger_error("Directory is not writable! Unable to save email to: {$location}", E_USER_WARNING);
-			}
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Create header string from specified array
 	 *
 	 * @param array $headers
@@ -1065,97 +726,6 @@ class contact_form extends Module {
 			$result[] = "{$key}: {$value}";
 
 		return join("\r\n", $result);
-	}
-
-	/**
-	 * Create message body from fields
-	 *
-	 * @param array $fields
-	 * @param string $boundary
-	 * @param array $attachments Associative array of attachments
-	 * @return string
-	 *
-	 * Example:
-	 * 		$this->_makeBody(
-	 * 					array(
-	 * 						'field' => 'value'
-	 * 					),
-	 * 					'some-string',
-	 * 					array(
-	 * 						'/var/tmp/somefile-0000.tmp' => 'archive.zip'
-	 * 					)
-	 * 				);
-	 */
-	private function _makeBody($fields, $boundary, $attachments=array()) {
-		$result = "";
-		$content_boundary = md5(time().'--content--'.(rand() * 10000));
-
-		// add global boundary
-		$result .= "--{$boundary}\r\n";
-		$result .= "Content-Type: multipart/alternative; boundary={$content_boundary}\r\n\r\n";
-
-		// make plain text body
-		$result .= "--{$content_boundary}\r\n";
-		$result .= "Content-Type: text/plain; charset=UTF-8\r\n";
-		$result .= "Content-Transfer-Encoding: base64\r\n\r\n";
-		$result .= base64_encode($this->makePlainBody($fields))."\r\n";
-
-		// make html body
-		$result .= "--{$content_boundary}\r\n";
-		$result .= "Content-Type: text/html; charset=UTF-8\r\n";
-		$result .= "Content-Transfer-Encoding: base64\r\n\r\n";
-		$result .= base64_encode($this->makeHtmlBody($fields))."\r\n";
-		$result .= "--{$content_boundary}--\r\n";
-
-		// attach files
-		if (count($attachments) > 0)
-			foreach ($attachments as $file => $name)
-				$result .= $this->makeAttachment($file, $name, $boundary);
-
-		// make ending boundary
-		$result .= "--{$boundary}--\r\n";
-
-		return $result;
-	}
-
-	/**
-	 * Generate plain text message body from specified fields.
-	 *
-	 * @param array $fields
-	 * @return string
-	 */
-	public function makePlainBody($fields) {
-		$result = "";
-		$max_length = 0;
-
-		foreach($fields as $name => $value)
-			if (strlen($name) > $max_length) $max_length = strlen($name);
-
-		foreach($fields as $name => $value)
-			$result .= $name.str_repeat(" ", $max_length-strlen($name)).": {$value}\r\n";
-
-		return $result;
-	}
-
-	/**
-	 * Generate HTML body containing table with specified fields.
-	 *
-	 * @param array $fields
-	 * @return string
-	 */
-	public function makeHtmlBody($fields) {
-		$is_rtl = MainLanguageHandler::getInstance()->isRTL();
-		$direction = $is_rtl ? 'direction: rtl;' : 'direction: ltr;';
-		$result = '<table width="100%" cellspacing="0" cellpadding="5" border="1" frame="box" rules="rows">';
-
-		foreach($fields as $name => $value)
-			if ($is_rtl) 
-				$result .= '<tr><td valign="top" style="'.$direction.'">'.$value.'</td><td valign="top" style="'.$direction.'"><b>'.$name.'</b></td></tr>'; else
-				$result .= '<tr><td valign="top" style="'.$direction.'"><b>'.$name.'</b></td><td valign="top" style="'.$direction.'">'.$value.'</td></tr>';
-
-		$result .= '</table>';
-
-		return $result;
 	}
 
 	/**
@@ -1196,6 +766,7 @@ class contact_form extends Module {
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('cms:mailer_list', $this, 'tag_MailerList');
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
@@ -1212,13 +783,13 @@ class contact_form extends Module {
 	 */
 	private function saveSettings() {
 		// grab parameters
-		$use_smtp = isset($_REQUEST['use_smtp']) && ($_REQUEST['use_smtp'] == 'on' || $_REQUEST['use_smtp'] == '1') ? 1 : 0;
 		$use_ssl = isset($_REQUEST['use_ssl']) && ($_REQUEST['use_ssl'] == 'on' || $_REQUEST['use_ssl'] == '1') ? 1 : 0;
 		$save_copy = isset($_REQUEST['save_copy']) && ($_REQUEST['save_copy'] == 'on' || $_REQUEST['save_copy'] == '1') ? 1 : 0;
 
 		$params = array(
-			'sender_name', 'sender_address', 'recipient_name', 'recipient_address', 'recipient_subject',
-			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password', 'save_location'
+			'mailer', 'sender_name', 'sender_address', 'recipient_name', 'recipient_address',
+			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password',
+			'save_location'
 		);
 
 		// save settings
@@ -1227,7 +798,6 @@ class contact_form extends Module {
 			$this->saveSetting($param, $value);
 		}
 
-		$this->saveSetting('use_smtp', $use_smtp);
 		$this->saveSetting('use_ssl', $use_ssl);
 		$this->saveSetting('save_copy', $save_copy);
 
@@ -2686,177 +2256,97 @@ class contact_form extends Module {
 	}
 
 	/**
-	 * Create email from specified template.
+	 * Show list of mailers.
 	 *
-	 * @param string $name
-	 * @param array $fields
-	 * @param array $attachments
-	 * @return array
+	 * @param array $tag_params
+	 * @param array $childen
 	 */
-	public function makeEmailFromTemplate($name, $fields=array(), $attachments=array()) {
-		global $language;
+	public function tag_MailerList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'mailer_option.xml');
 
-		$manager = ContactForm_TemplateManager::getInstance();
-		$headers = array();
-		$body = '';
-		$boundary = md5(time().'--global--'.(rand() * 10000));
-		$content_boundary = md5(time().'--content--'.(rand() * 10000));
-
-		// create result template
-		$result = array(
-				'headers'		=> null,
-				'subject'		=> '',
-				'body'			=> '',
-				'error'			=> true
+		foreach ($this->mailers as $name => $mailer) {
+			$params = array(
+				'name'		=> $name,
+				'title'		=> $mailer->get_title(),
+				'selected'	=> isset($this->settings['mailer']) && $this->settings['mailer'] == $name
 			);
 
-		// add content type to headers
-		if (count($attachments) == 0)
-			$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}"; else
-			$headers['Content-Type'] = "multipart/mixed; boundary={$boundary}";
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
 
-		// prepare sender
-		$sender_name = $this->settings['sender_name'];
-		$sender_address = $this->settings['sender_address'];
-		$headers['From'] = $this->generateAddressField($sender_name, $sender_address);
+	/**
+	 * Register object for sending emails.
+	 *
+	 * @param string $name
+	 * @param object $mailer
+	 * @return boolean
+	 */
+	public function registerMailer($name, $mailer) {
+		$result = false;
 
-		// get templates
-		$template = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $name));
-
-		if (is_object($template)) {
-			$plain_text_body = $template->plain[$language];
-			$html_body = $template->html[$language];
-			$subject = $template->subject[$language];
-
-			// replace fields
-			$plain_text_body = $this->replaceFields($plain_text_body, $fields);
-			$html_body = $this->replaceFields($html_body, $fields);
-			$subject = $this->generateSubjectField($subject, $fields);
-
-			// make html from markdown
-			$html_body = Markdown($html_body);
-
-		} else {
-			// no template with specified name found
+		// make sure name is unique
+		if (isset($this->mailers[$name])) {
+			trigger_error("Unable to register mailer '{$name}'. Name already taken.", E_USER_WARNING);
 			return $result;
 		}
 
-		// add global boundary
-		$body .= "--{$boundary}\n";
-		$body .= "Content-Type: multipart/alternative; boundary={$content_boundary}\n\n";
+		$this->mailers[$name] = $mailer;
+	}
 
-		// add plain text body
-		$body .= "--{$content_boundary}\n";
-		$body .= "Content-Type: text/plain; charset=UTF-8\n";
-		$body .= "Content-Transfer-Encoding: base64\n\n";
-		$body .= base64_encode($plain_text_body)."\n";
-
-		// add html body
-		$body .= "--{$content_boundary}\n";
-		$body .= "Content-Type: text/html; charset=UTF-8\n";
-		$body .= "Content-Transfer-Encoding: base64\n\n";
-		$body .= base64_encode($html_body)."\n";
-		$body .= "--{$content_boundary}--\n";
-
-		// add attachments if needed
-		if (count($attachments) > 0)
-			foreach ($attachments as $fiel => $name)
-				$body .= $this->makeAttachment($file, $name, $boundary);
-
-		// add ending boundary
-		$body .= "--{$boundary}--\n";
-
-		// update result with proper values
-		$result['headers'] = $headers;
-		$result['body'] = $body;
-		$result['subject'] = $subject;
-		$result['error'] = false;
+	/**
+	 * Get selected mailer object.
+	 *
+	 * @return object
+	 */
+	public function getMailer() {
+		$result = null;
+		$name = isset($this->settings['mailer']) ? $this->settings['mailer'] : null;
+		
+		if (isset($this->mailers[$name]))
+			$result = $this->mailers[$name]; else
+			$result = $this->mailers[0];
 
 		return $result;
 	}
 
 	/**
-	 * Send email using predefined parameters.
+	 * Get default sender.
 	 *
-	 * @param string $to
-	 * @param string $subject
-	 * @param string $body
-	 * @param array $additional_headers
-	 * @return boolean
+	 * @return array
 	 */
-	public function sendMail($to, $subject, $body, $headers) {
-		global $data_path;
-
-		$result = false;
-		$headers_string = $this->_makeHeaders($headers);
-
-		// make sure bot is not submitting email
-		if (!$this->detectBots()) {
-			if ($this->settings['use_smtp']) {
-				// send email using SMTP
-				$smtp = new SMTP();
-				$smtp->set_server(
-							$this->settings['smtp_server'],
-							$this->settings['smtp_port'],
-							$this->settings['use_ssl']
-						);
-				
-				if ($this->settings['smtp_authenticate'])
-					$smtp->set_credentials(
-								$this->settings['smtp_username'],
-								$this->settings['smtp_password']
-							);
-
-				$smtp->set_sender($this->settings['sender_address']);
-
-				// add recipients
-				$recipient_list = explode(',', $to);
-				foreach($recipient_list as $address)
-					$smtp->add_recipient($address);
-
-				$smtp->set_subject($subject);
-				$result = $smtp->send($headers_string, $body);
-
-			} else {
-				// send email using built-in function
-				$result = mail($to, $subject, $body, $headers_string);
-			}
-
-			// store email after sending
-			if (isset($this->settings['save_location']) && !empty($this->settings['save_location']))
-				$location = $this->settings['save_location']; else
-				$location = _BASEPATH.'/'.$data_path;
-
-			$save_copy = isset($this->settings['save_copy']) ? $this->settings['save_copy'] : false;
-			$location_okay = is_writable($location);
-
-			if ($result && $save_copy && $location_okay) {
-				$timestamp = strftime('%c');
-				$file_name = $location."/{$subject} - {$timestamp}.eml";
-
-				$data = "To: {$to}\r\n";
-				$data .= "Subject: {$subject}\r\n";
-				$data .= $headers_string."\r\n\r\n".$body;
-
-				// try to open file for saving email
-				$handle = fopen($file_name, 'w');
-				
-				if ($handle !== false) {
-					// save email content to specifed file
-					fwrite($handle, $data);
-					fclose($handle);
-
-				} else {
-					// log error
-					trigger_error("Unable to open file for saving: {$file_name}", E_USER_WARNING);
-				}
-			
-			} else if (!$location_okay && $save_copy) {
-				// log problem with destination directory
-				trigger_error("Directory is not writable! Unable to save email to: {$location}", E_USER_WARNING);
-			}
-		}
+	public function getSender() {
+		$result = array(
+				'name'		=> $this->settings['sender_name'],
+				'address'	=> $this->settings['sender_address']
+			);
 
 		return $result;
+	}
+
+	/**
+	 * Get default recipient.
+	 *
+	 * @return array
+	 */
+	public function getRecipient() {
+	}
+
+	/**
+	 * Get list of all recipients.
+	 *
+	 * @return array
+	 */
+	public function getRecipients() {
+	}
+
+	/**
+	 * Get raw template.
+	 *
+	 * @return array
+	 */
+	public function getTemplate($name) {
 	}
 }
