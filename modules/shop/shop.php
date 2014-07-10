@@ -2830,16 +2830,22 @@ class shop extends Module {
 		if (is_null($email_address) || empty($email_address))
 			return $result;
 
-		// make email body
-		$email = $contact_form->makeEmailFromTemplate($template, $fields);
+		// get mailer
+		$mailer = $contact_form->getMailer();
+		$sender = $contact_form->getSender();
+		$template = $contact_form->getTemplate($template);
+
+		// start creating message
+		$mailer->start_message();
+		$mailer->set_subject($template['subject']);
+		$mailer->set_sender($sender['address'], $sender['name']);
+		$mailer->add_recipient($email_address);
+
+		$mailer->set_body($template['plain_body'], $template['html_body']);
+		$mailer->set_variables($fields);
 
 		// send email
-		$result = $contact_form->sendMail(
-					$email_address,
-					$email['subject'],
-					$email['body'],
-					$email['headers']
-				);
+		$mailer->send();
 
 		return $result;
 	}
