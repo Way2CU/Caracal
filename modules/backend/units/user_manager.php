@@ -353,18 +353,25 @@ class Backend_UserManager {
 					'verify_code'	=> $verification_code
 				);
 
-			$email = $contact_form->makeEmailFromTemplate(
-											$this->parent->settings['template_verify'],
-											$fields
-										);
+			// get mailer
+			$mailer = $contact_form->getMailer();
+			$sender = $contact_form->getSender();
+			$recipients = $contact_form->getRecipients();
+			$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
+
+			// start creating message
+			$mailer->start_message();
+			$mailer->set_subject($template['subject']);
+			$mailer->set_sender($sender['address'], $sender['name']);
+
+			foreach ($recipients as $recipient)
+				$mailer->add_recipient($recipient['address'], $recipient['name']);
+
+			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_variables($fields);
 
 			// send email
-			$contact_form->sendMail(
-					$data['email'],
-					$email['subject'],
-					$email['body'],
-					$email['headers']
-				);
+			$mailer->send();
 		}
 	}
 
@@ -556,18 +563,24 @@ class Backend_UserManager {
 					'code'			=> $code
 				);
 
-			$email = $contact_form->makeEmailFromTemplate(
-											$this->parent->settings['template_recovery'],
-											$fields
-										);
+			$mailer = $contact_form->getMailer();
+			$sender = $contact_form->getSender();
+			$recipients = $contact_form->getRecipients();
+			$template = $contact_form->getTemplate($this->parent->settings['template_recovery']);
+
+			// start creating message
+			$mailer->start_message();
+			$mailer->set_subject($template['subject']);
+			$mailer->set_sender($sender['address'], $sender['name']);
+
+			foreach ($recipients as $recipient)
+				$mailer->add_recipient($recipient['address'], $recipient['name']);
+
+			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_variables($fields);
 
 			// send email
-			$result['error'] = !$contact_form->sendMail(
-										$user->email,
-										$email['subject'],
-										$email['body'],
-										$email['headers']
-									);
+			$result['error'] = !$mailer->send();
 
 			if (!$result['error'])
 				$result['message'] = $this->parent->getLanguageConstant('message_password_recovery_email_sent'); else
