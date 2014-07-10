@@ -558,15 +558,6 @@ class leads extends Module {
 		if (isset($_SESSION['lead_referer']))
 			$data['referral'] = $_SESSION['lead_referer'];
 
-		// send email if requested
-		if ($type->send_email && class_exists('contact_form')) {
-			$contact_form = contact_form::getInstance();
-			$body = $contact_form->makePlainBody($data);
-			$html_body = $contact_form->makeHtmlBody($data);
-			
-			$contact_form->sendFromModule(null, null, $body, $html_body);
-		}
-
 		print json_encode(true);
 	}
 
