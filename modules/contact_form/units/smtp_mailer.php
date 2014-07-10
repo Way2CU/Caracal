@@ -44,20 +44,31 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 	 * @return boolean
 	 */
 	protected function perform_send($to, $subject, $headers, $content) {
-		$result = true;
+		$result = false;
 
 		// connect and authenticate
 		if ($this->connect() && $this->authenticate()) {
+			// default answer now that we've access
+			$result = true;
+
 			// set sender
-			$this->send_command("MAIL FROM: {$this->sender}");
+			$this->send_command("MAIL FROM: <{$this->sender_address}>");
 			$result &= $this->validate_response('250');
 
-			// set recipients
-			foreach ($this->recipients as $recipient)
-				$this->send_command("RCPT TO: {$recipient}");
-				$result &= $this->validate_response('250');
+			// if server doesn't allow this sender abort
+			if (!$result) {
+				$this->quit();
+				return $result;
+			}
 
-			$result &= $this->send_data($headers, $body);
+			// set recipients
+			foreach ($this->recipient_addresses as $recipient) {
+				$this->send_command("RCPT TO: <{$recipient}>");
+				$result &= $this->validate_response('250');
+			}
+
+			$result &= $this->send_data($subject, $headers, $content);
+			$this->quit();
 		}
 
 		return $result;
@@ -81,11 +92,14 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 				);
 
 		// send handshake if we are connected
-		if ($this->socket != false && $this->validate_response('220')) {
+		if ($error_number == 0 && $this->validate_response('220')) {
 			// send hello to the server
 			$this->send_command('EHLO '.$this->host);
 			if ($this->validate_response('250'))
 				$result = true;
+
+		} else {
+			trigger_error('Error connecting to SMTP. '.$error_string, E_USER_WARNING);
 		}
 
 		return $result;
@@ -108,16 +122,17 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 		$this->send_command('AUTH LOGIN');
 		if ($this->validate_response('334')) {
 			// send username
-			$this->_send_command(base64_encode($this->username));
+			$this->send_command(base64_encode($this->username));
 			$valid_username = $this->validate_response('334');
 
 			// send password
-			$this->_send_command(base64_encode($this->password));
+			$this->send_command(base64_encode($this->password));
 			$valid_password = $this->validate_response('235');
-
-			// be polite
-			$this->quit();
 		}
+
+		// log error
+		if (!($valid_username && $valid_password))
+			trigger_error('Failed to authenticate!', E_USER_WARNING);
 
 		return $valid_username && $valid_password;
 	}
@@ -137,7 +152,7 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 	 * @param string $data
 	 */
 	private function send_command($data) {
-		fwrite($this->socket, $data."\r\n");
+		return fwrite($this->socket, $data."\r\n");
 	}
 
 	/**
@@ -150,11 +165,12 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 	 */
 	private function send_data($subject, $headers, $body) {
 		$result = false;
+		$headers_string = $this->prepare_headers($headers);
 
 		// send command for starting data transfer
 		$this->send_command('DATA');
 		if ($this->validate_response('354')) {
-			fwrite($this->socket, $headers."\r\n");
+			fwrite($this->socket, $headers_string."\r\n");
 			fwrite($this->socket, "Subject: {$subject}\r\n");
 			fwrite($this->socket, "\r\n\r\n");
 			fwrite($this->socket, $body."\r\n");
@@ -172,12 +188,22 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 	 * @return boolean
 	 */
 	private function validate_response($expected_code) {
+		$received_code = "0";
+
+		// receive data
 		$data = '';
+		while ($data !== false) {
+			$data = fgets($this->socket, 1024);
 
-		while (substr($data, 3, 1) != ' ')
-			$data = fgets($this->socket, 256);
+			if (substr($data, 3, 1) == ' ')
+				break;
+		}
 
-		return substr($data, 0, 3) == $expected_code;
+		// get code
+		if (!empty($data))
+			$received_code = substr($data, 0, 3);
+
+		return $received_code == $expected_code;
 	}
 
 	/**

@@ -11,16 +11,18 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	protected $language;
 	protected $name = 'system';
 
-	private $subject;
-	private $variables;
-	private $plain_body;
-	private $html_body;
-	private $sender;
-	private $recipients;
-	private $recipients_cc;
-	private $recipients_bcc;
-	private $attachments;
-	private $inline_attachments;
+	protected $subject;
+	protected $variables;
+	protected $plain_body;
+	protected $html_body;
+	protected $sender;
+	protected $sender_address;
+	protected $recipients;
+	protected $recipient_addresses;
+	protected $recipients_cc;
+	protected $recipients_bcc;
+	protected $attachments;
+	protected $inline_attachments;
 
 	public function __construct($language) {
 		// store language handler for later use
@@ -71,13 +73,13 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	 * @param array $headers
 	 * @return string
 	 */
-	private function prepare_headers($headers) {
+	protected function prepare_headers($headers) {
 		$result = array();
 
 		foreach ($headers as $key => $value)
 			$result[] = "{$key}: {$value}";
 
-		return implode('\n', $result);
+		return implode("\n", $result);
 	}
 
 	/**
@@ -93,7 +95,8 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$result = false;
 
 		// send email
-		$result = mail($to, $subject, $content, $headers);
+		$header_string = $this->prepare_headers($headers);
+		$result = mail($to, $subject, $content, $header_string);
 
 		return $result;
 	}
@@ -165,7 +168,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$headers['Bcc'] = implode(', ', $this->recipients_bcc);
 
 		// add content type to headers
-		if (count($attachments) == 0) {
+		if (count($this->attachments) == 0) {
 			// no attachments available
 			if (is_null($this->html_body)) {
 				$headers['Content-Type'] = 'text/plain';
@@ -222,8 +225,11 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 					$body .= $this->makeAttachment($file, $name, $boundary);
 
 			// add ending boundary
-			$body .= "--{$boundary}--\n";
+			$content .= "--{$boundary}--\n";
 		}
+
+		// send email
+		$result = $this->perform_send($to, $subject, $headers, $content);
 
 		return $result;
 	}
@@ -239,6 +245,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 			$sender = $address; else
 			$sender = $this->encode_string($name).' <'.$address.'>';
 
+		$this->sender_address = $address;
 		$this->sender = $sender;
 	}
 
@@ -253,6 +260,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 			$recipient = $address; else
 			$recipient = $this->encode_string($name).' <'.$address.'>';
 
+		$this->recipient_addresses[] = $address;
 		$this->recipients[] = $recipient;
 	}
 
