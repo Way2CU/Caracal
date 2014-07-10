@@ -45,16 +45,17 @@
 		<constant name="title_submission_details">Contact form: Submission details</constant>
 		<constant name="title_export">Contact form: Export submissions</constant>
 
-		<constant name="tab_sender">Sender</constant>
-		<constant name="tab_recipient">Recipient</constant>
+		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">General</constant>
 		<constant name="tab_smtp">SMTP</constant>
-		<constant name="tab_backup">Backup</constant>
 		<constant name="tab_plain_text">Plain text</constant>
 		<constant name="tab_html">HTML</constant>
 		<constant name="tab_preview">Preview</constant>
 		<constant name="tab_export_options">Options</constant>
 		<constant name="tab_export_fields">Fields</constant>
+
+		<constant name="mailer_system">System</constant>
+		<constant name="mailer_smtp">SMTP</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
@@ -67,7 +68,6 @@
 		<constant name="label_name">Name:</constant>
 		<constant name="label_address">Email address:</constant>
 		<constant name="label_subject">Subject:</constant>
-		<constant name="label_use_smtp">Use SMTP to send email?</constant>
 		<constant name="label_use_ssl">Use SSL encryption?</constant>
 		<constant name="label_server">Server:</constant>
 		<constant name="label_port">Port:</constant>
@@ -104,6 +104,7 @@
 		<constant name="label_separator_tab">Tab</constant>
 		<constant name="label_separator_semi">Semicolon</constant>
 		<constant name="label_separator_comma">Comma</constant>
+		<constant name="label_mailer">Mailing method:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -141,6 +142,9 @@
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
 		<constant name="legend_separator_type">Separator type</constant>
+		<constant name="legend_sender">Sender</constant>
+		<constant name="legend_recipient">Recipient</constant>
+		<constant name="legend_backup">Backup</constant>
 
 		<constant name="header_ip_address">IP</constant>
 		<constant name="header_timestamp">Timestamp</constant>
@@ -195,16 +199,17 @@
 		<constant name="title_submission_details">Contact form: Submission details</constant>
 		<constant name="title_export">Contact form: Export submissions</constant>
 
-		<constant name="tab_sender">שולח</constant>
-		<constant name="tab_recipient">כתובת מקבל</constant>
+		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">כללי</constant>
 		<constant name="tab_smtp">SMTP</constant>
-		<constant name="tab_backup">Backup</constant>
 		<constant name="tab_plain_text">Plain text</constant>
 		<constant name="tab_html">HTML</constant>
 		<constant name="tab_preview">Preview</constant>
 		<constant name="tab_export_options">Options</constant>
 		<constant name="tab_export_fields">Fields</constant>
+
+		<constant name="mailer_system">System</constant>
+		<constant name="mailer_smtp">SMTP</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
@@ -217,7 +222,6 @@
 		<constant name="label_name">שם:</constant>
 		<constant name="label_address">דוא"ל:</constant>
 		<constant name="label_subject">נושא:</constant>
-		<constant name="label_use_smtp">להשתמש בשרת SMTP?</constant>
 		<constant name="label_use_ssl">להשתמש בקידוד SSL?</constant>
 		<constant name="label_server">שרת:</constant>
 		<constant name="label_port">פורט:</constant>
@@ -252,6 +256,7 @@
 		<constant name="label_separator_tab">Tab</constant>
 		<constant name="label_separator_semi">Semicolon</constant>
 		<constant name="label_separator_comma">Comma</constant>
+		<constant name="label_mailer">Mailing method:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -289,6 +294,9 @@
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
 		<constant name="legend_separator_type">Separator type</constant>
+		<constant name="legend_sender">שולח</constant>
+		<constant name="legend_recipient">כתובת מקבל</constant>
+		<constant name="legend_backup">Backup</constant>
 
 		<constant name="header_ip_address">IP</constant>
 		<constant name="header_timestamp">Timestamp</constant>
@@ -343,16 +351,17 @@
 		<constant name="title_submission_details">Contact form: Submission details</constant>
 		<constant name="title_export">Contact form: Export submissions</constant>
 
-		<constant name="tab_sender">Sender</constant>
-		<constant name="tab_recipient">Recipient</constant>
+		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">General</constant>
 		<constant name="tab_smtp">SMTP</constant>
-		<constant name="tab_backup">Backup</constant>
 		<constant name="tab_plain_text">Plain text</constant>
 		<constant name="tab_html">HTML</constant>
 		<constant name="tab_preview">Preview</constant>
 		<constant name="tab_export_options">Options</constant>
 		<constant name="tab_export_fields">Fields</constant>
+
+		<constant name="mailer_system">System</constant>
+		<constant name="mailer_smtp">SMTP</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
@@ -365,7 +374,6 @@
 		<constant name="label_name">Ime:</constant>
 		<constant name="label_address">Email adresa:</constant>
 		<constant name="label_subject">Naslov poruke:</constant>
-		<constant name="label_use_smtp">Use SMTP to send email?</constant>
 		<constant name="label_use_ssl">Use SSL encryption?</constant>
 		<constant name="label_server">Server:</constant>
 		<constant name="label_port">Port:</constant>
@@ -400,6 +408,7 @@
 		<constant name="label_separator_tab">Tab</constant>
 		<constant name="label_separator_semi">Semicolon</constant>
 		<constant name="label_separator_comma">Comma</constant>
+		<constant name="label_mailer">Mailing method:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -437,6 +446,9 @@
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
 		<constant name="legend_separator_type">Separator type</constant>
+		<constant name="legend_sender">Sender</constant>
+		<constant name="legend_recipient">Recipient</constant>
+		<constant name="legend_backup">Backup</constant>
 
 		<constant name="header_ip_address">IP</constant>
 		<constant name="header_timestamp">Timestamp</constant>

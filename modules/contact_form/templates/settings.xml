@@ -4,74 +4,94 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div id="contact_form_settings_notebook">
 			<div>
-				<label cms:tooltip="tooltip_sender_name">
-					<span><cms:text constant="label_name" module="contact_form"/></span>
-					<input 
-						type="text" 
-						name="sender_name" 
-						value="$settings['sender_name']" 
-						cms:eval="value"
-						style="width: 250px;"
-					/>
-				</label>
-				<label cms:tooltip="tooltip_sender_address">
-					<span><cms:text constant="label_address" module="contact_form"/></span>
-					<input 
-						type="text" 
-						name="sender_address" 
-						value="$settings['sender_address']" 
-						cms:eval="value"
-						style="width: 250px;"
-						class="code"
-					/>
-				</label>
-			</div>
-
-			<div>
-				<label cms:tooltip="tooltip_recipient_name">
-					<span><cms:text constant="label_name" module="contact_form"/></span>
-					<input 
-						type="text" 
-						name="recipient_name" 
-						value="$settings['recipient_name']" 
-						cms:eval="value"
-						style="width: 250px;"
-					/>
-				</label>
-				<label cms:tooltip="tooltip_recipient_address">
-					<span><cms:text constant="label_address" module="contact_form"/></span>
-					<input 
-						type="text" 
-						name="recipient_address" 
-						value="$settings['recipient_address']" 
-						cms:eval="value"
-						style="width: 250px;"
-						class="code"
-					/>
-				</label>
 				<label>
-					<span><cms:text constant="label_subject" module="contact_form"/></span>
-					<input 
-						type="text" 
-						name="recipient_subject" 
-						value="$settings['recipient_subject']" 
-						cms:eval="value"
-						style="width: 350px;"
-					/>
+					<span><cms:text constant="label_mailer" module="contact_form"/></span>
+					<select name="mailer" style="width: 150px">
+						<cms:mailer_list
+							selected="$settings['mailer']"
+							cms:eval="selected"
+							/>
+					</select>
 				</label>
+
+				<fieldset>
+					<legend><cms:text constant="legend_backup" module="contact_form"/></legend>
+					<label class="checkbox">
+						<span><cms:text constant="label_save_copy" module="contact_form"/></span>
+						<cms:if condition="$settings['save_copy']">
+							<input type="checkbox" name="save_copy" checked="checked"/>
+						</cms:if>
+						<cms:if condition="!$settings['save_copy']">
+							<input type="checkbox" name="save_copy"/>
+						</cms:if>
+					</label>
+					<label>
+						<span><cms:text constant="label_save_location" module="contact_form"/></span>
+						<input
+							type="text" 
+							name="save_location"
+							value="$settings['save_location']"
+							cms:eval="value"
+							class="code"
+							style="width: 320px;"
+						/>
+					</label>
+				</fieldset>
 			</div>
 
 			<div>
-				<label class="checkbox">
-					<span><cms:text constant="label_use_smtp" module="contact_form"/></span>
-					<cms:if condition="$settings['use_smtp']">
-						<input type="checkbox" name="use_smtp" checked="checked"/>
-					</cms:if>
-					<cms:if condition="!$settings['use_smtp']">
-						<input type="checkbox" name="use_smtp"/>
-					</cms:if>
-				</label>
-				<hr/>
+				<fieldset>
+					<legend><cms:text constant="legend_sender" module="contact_form"/></legend>
+					<label cms:tooltip="tooltip_sender_name">
+						<span><cms:text constant="label_name" module="contact_form"/></span>
+						<input 
+							type="text" 
+							name="sender_name" 
+							value="$settings['sender_name']" 
+							cms:eval="value"
+							style="width: 250px;"
+						/>
+					</label>
+					<label cms:tooltip="tooltip_sender_address">
+						<span><cms:text constant="label_address" module="contact_form"/></span>
+						<input 
+							type="text" 
+							name="sender_address" 
+							value="$settings['sender_address']" 
+							cms:eval="value"
+							style="width: 250px;"
+							class="code"
+						/>
+					</label>
+				</fieldset>
+
+				<fieldset>
+					<legend><cms:text constant="legend_recipient" module="contact_form"/></legend>
+					<label cms:tooltip="tooltip_recipient_name">
+						<span><cms:text constant="label_name" module="contact_form"/></span>
+						<input 
+							type="text" 
+							name="recipient_name" 
+							value="$settings['recipient_name']" 
+							cms:eval="value"
+							style="width: 250px;"
+						/>
+					</label>
+					<label cms:tooltip="tooltip_recipient_address">
+						<span><cms:text constant="label_address" module="contact_form"/></span>
+						<input 
+							type="text" 
+							name="recipient_address" 
+							value="$settings['recipient_address']" 
+							cms:eval="value"
+							style="width: 250px;"
+							class="code"
+						/>
+					</label>
+				</fieldset>
+			</div>
+
+			<div>
 				<label class="horizontal">
 					<span><cms:text constant="label_server" module="contact_form"/></span>
 					<input
@@ -146,29 +166,6 @@
 					/>
 				</label>
 			</div>
-
-			<div>
-				<label class="checkbox">
-					<span><cms:text constant="label_save_copy" module="contact_form"/></span>
-					<cms:if condition="$settings['save_copy']">
-						<input type="checkbox" name="save_copy" checked="checked"/>
-					</cms:if>
-					<cms:if condition="!$settings['save_copy']">
-						<input type="checkbox" name="save_copy"/>
-					</cms:if>
-				</label>
-				<label>
-					<span><cms:text constant="label_save_location" module="contact_form"/></span>
-					<input
-						type="text" 
-						name="save_location"
-						value="$settings['save_location']"
-						cms:eval="value"
-						class="code"
-						style="width: 350px;"
-					/>
-				</label>
-			</div>
 		</div>
 
 		<div class="button_bar">
@@ -182,9 +179,8 @@
 	<script type="text/javascript">
 		var notebook = new Notebook('contact_form_settings_notebook');
 		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_sender'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_recipient'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_smtp'))
-			.setPageTitle(3, language_handler.getText('contact_form', 'tab_backup'));
+			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
+			.setPageTitle(1, language_handler.getText('contact_form', 'tab_identity'))
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_smtp'));
 	</script>
 </document>
