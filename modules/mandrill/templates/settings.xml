@@ -6,6 +6,7 @@
 			<span><cms:text constant="label_api_key" module="mandrill"/></span>
 			<input
 				type="text"
+				class="code ltr"
 				name="api_key"
 				value="$settings['api_key']"
 				cms:eval="value"
