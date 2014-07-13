@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
+<document>
+	<language short="en">
+		<constant name="menu_mandrill">Mandrill</constant>
+		<constant name="menu_settings">Settings</constant>
+
+		<constant name="mailer_title">Mandrill</constant>
+
+		<constant name="title_settings">Mandrill Settings</constant>
+		<constant name="message_saved">Settings were saved.</constant>
+
+		<constant name="label_api_key">API key:</constant>
+	</language>
+</document>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_api_key" module="mandrill"/></span>
+			<input
+				type="text"
+				name="api_key"
+				value="$settings['api_key']"
+				cms:eval="value"
+				style="width: 330px;"
+				/>
+		</label>
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
