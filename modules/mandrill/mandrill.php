@@ -41,23 +41,15 @@ class mandrill extends Module {
 			$mandrill_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_mandrill'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
-					'javascript:void(0);',
+					window_Open( // on click open window
+								'mandrill_settings',
+								370,
+								$this->getLanguageConstant('title_settings'),
+								true, true,
+								backend_UrlMake($this->name, 'settings')
+							),
 					$level=5
 				);
-
-			$mandrill_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
-
-								window_Open( // on click open window
-											'mandrill_settings',
-											370,
-											$this->getLanguageConstant('title_settings'),
-											true, true,
-											backend_UrlMake($this->name, 'settings')
-										),
-								$level=5
-							));
 
 			$backend->addMenu($this->name, $mandrill_menu);
 		}

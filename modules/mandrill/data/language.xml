@@ -3,8 +3,6 @@
 <document>
 	<language short="en">
 		<constant name="menu_mandrill">Mandrill</constant>
-		<constant name="menu_settings">Settings</constant>
-
 		<constant name="mailer_title">Mandrill</constant>
 
 		<constant name="title_settings">Mandrill Settings</constant>
