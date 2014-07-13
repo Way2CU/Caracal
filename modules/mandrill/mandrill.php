@@ -12,6 +12,7 @@
 use Core\Module;
 
 require_once('units/mailer.php');
+require_once(_LIBPATH.'mandrill/mandrill.php');
 
 
 class mandrill extends Module {
