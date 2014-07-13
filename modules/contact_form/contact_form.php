@@ -727,38 +727,6 @@ class contact_form extends Module {
 
 		return join("\r\n", $result);
 	}
-
-	/**
-	 * Create string for file to be attached to body of email.
-	 *
-	 * @param string $file_name Location of file to be attached
-	 * @param string $attachment_name Name of file appearing in email
-	 * @param string $boundary Boundary string used to separate content
-	 * @return string
-	 */
-	public function makeAttachment($file_name, $attachment_name, $boundary) {
-		$result = '';
-		$attachment_name = $this->encodeString($attachment_name);
-
-		if (file_exists($file_name)) {
-			$data = file_get_contents($file_name);
-			$data = base64_encode($data);
-
-			// get file mime type
-			$handle = finfo_open(FILEINFO_MIME_TYPE);
-			$mime_type = finfo_file($handle, $file_name);
-			finfo_close($handle);
-
-			// create result
-			$result = "--{$boundary}\r\n";
-			$result .= "Content-Type: {$mime_type}; charset=US-ASCII; name=\"{$attachment_name}\"\r\n";
-			$result .= "Content-Disposition: attachment; filename=\"{$attachment_name}\"\r\n";
-			$result .= "Content-Transfer-Encoding: base64\r\n\r\n";
-			$result .= $data."\r\n";
-		}
-
-		return $result;
-	}
 	
 	/**
 	 * Show settings form
