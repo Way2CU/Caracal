@@ -9,7 +9,7 @@
  *
  * Author: Mladen Mijatov
  */
-use Code\Module;
+use Core\Module;
 
 
 class _blank extends Module {
