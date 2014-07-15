@@ -443,7 +443,7 @@ class youtube extends Module {
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
 
-			$template->registerTagHandler('_video', $this, 'tag_Video');
+			$template->registerTagHandler('cms:video', $this, 'tag_Video');
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
