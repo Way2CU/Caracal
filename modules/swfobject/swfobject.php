@@ -85,8 +85,8 @@ class swfobject extends Module {
 		$template = new TemplateHandler('embed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
-		$p_flashvars = $this->getParams($flash_vars);
-		$p_params = $this->getParams($params);
+		$p_flashvars = json_encode($flash_vars);
+		$p_params = json_encode($params);
 		$script = "swfobject.embedSWF('{$url}', '{$target_id}', '{$width}', '{$height}', '{$this->flash_version}', null, {$p_flashvars}, {$p_params});";
 
 		$params = array(
@@ -103,42 +103,5 @@ class swfobject extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
-	}
-
-	/**
-	 * Get
-	 * @param unknown_type $var_name
-	 * @param unknown_type $params
-	 * @return string
-	 */
-	private function getParams($params) {
-		$result = "";
-
-		foreach($params as $key=>$value) {
-			switch(gettype($value)) {
-				case 'string':
-					$value = "'{$value}'";
-					break;
-
-				case 'boolean':
-					$value = $value ? 'true' : 'false';
-					break;
-
-				case 'integer':
-					$value = strval($value);
-					break;
-
-				default:
-					$value = '';
-					break;
-			}
-
-			$last = $key == end(array_keys($params));
-			$result .= "{$key}: {$value}".($last ? '' : ', ');
-		}
-
-		$result = "{".$result."}";
-
-		return $result;
 	}
 }
