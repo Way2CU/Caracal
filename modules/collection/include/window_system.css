@@ -29,6 +29,7 @@ div.window {
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 
 	transition: top 0.5s, left 0.5s, opacity 0.5s;
+	-webkit-transform: translateZ(0);
 }
 
 body.rtl div.window {
