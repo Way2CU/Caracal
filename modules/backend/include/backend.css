@@ -248,6 +248,7 @@ ul#navigation {
 	list-style-image: none;
 
 	z-index: 2000;
+	-webkit-transform: translateZ(0);
 }
 
 body.rtl ul#navigation {
