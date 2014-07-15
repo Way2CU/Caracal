@@ -2,11 +2,20 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="youtube_preview_player"></div>
-	<_video id="$params['video_id']" width="384" height="288" embed="1" target="youtube_preview_player" cms:eval="id"/>
+	<cms:video
+		id="$params['video_id']"
+		width="384"
+		height="288"
+		embed="1"
+		autoplay="1"
+		theme="light"
+		target="youtube_preview_player"
+		cms:eval="id"
+		/>
 
 	<div class="button_bar">
 		<button type="button" onclick="$params['action']" cms:eval="onclick">
-			<_var name="$params['button']"/>
+			<cms:var name="$params['button']"/>
 		</button>
 	</div>
 </document>
