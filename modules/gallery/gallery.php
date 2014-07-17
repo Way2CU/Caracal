@@ -2354,7 +2354,7 @@ class gallery extends Module {
 		$source_width = imagesx($img_source);
 		$source_height = imagesy($img_source);
 
-		switch ($constant) {
+		switch ($constraint) {
 			case Thumbnail::CONSTRAIN_WIDTH:
 				$scale = $thumb_size / $source_height;
 				break;
