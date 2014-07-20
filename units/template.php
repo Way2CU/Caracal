@@ -236,9 +236,9 @@ class TemplateHandler {
 			// check if specified tag shouldn't be cached
 			$skip_cache = false;
 
-			if (isset($tag->tagAttrs['skip_cache'])) {
+			if (isset($tag->tagAttrs['cms:skip_cache'])) {
 				// unset param
-				unset($tag->tagAttrs['skip_cache']);
+				unset($tag->tagAttrs['cms:skip_cache']);
 
 				// get cache handler
 				$cache = CacheHandler::getInstance();
