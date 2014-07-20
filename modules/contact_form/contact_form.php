@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 require_once('units/form_manager.php');
