@@ -39,6 +39,9 @@ class contact_form extends Module {
 		
 		parent::__construct(__FILE__);
 
+		// register events
+		Events::register($this->name, 'email-sent', 3);  // params: mailer, recipient, data
+
 		// create mailer support
 		$system_mailer = new ContactForm_SystemMailer($this->language);
 		$smtp_mailer = new ContactForm_SmtpMailer($this->language);
