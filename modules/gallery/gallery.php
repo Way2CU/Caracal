@@ -2013,8 +2013,10 @@ class gallery extends Module {
 			);
 
 		// prepare result
-		if (is_object($item))
-			$result = url_GetFromFilePath($this->path.'images/'.$item->filename);
+		if (is_object($item)) {
+			$path = dirname(__FILE__);
+			$result = url_GetFromFilePath($this->path.'/images/'.$item->filename);
+		}
 
 		return $result;
 	}
