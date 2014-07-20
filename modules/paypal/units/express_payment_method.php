@@ -152,13 +152,14 @@ class PayPal_Express extends PaymentMethod {
 	/**
 	 * Make new recurring payment based on named plan.
 	 *
-	 * @param string $plan_name
+	 * @param array $data
 	 * @param array $billing_information
+	 * @param string $plan_name
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 * @return string
 	 */
-	public function new_recurring_payment($plan_name, $billing_information, $return_url, $cancel_url) {
+	public function new_recurring_payment($data, $billing_information, $plan_name, $return_url, $cancel_url) {
 		$result = '';
 		$manager = PayPal_PlansManager::getInstance();
 		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
