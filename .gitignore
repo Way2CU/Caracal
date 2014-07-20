@@ -1,3 +1,6 @@
 images/*
+site/*
+scripts/*
+styles/*
 data/language.xml
 data/section.xml
