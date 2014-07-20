@@ -265,6 +265,10 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		// send email
 		$result = $this->perform_send($to, $subject, $headers, $content);
 
+		// trigger event
+		if ($result)
+			Events::trigger('contact_form', 'email-sent', $this->name, $to, $this->variables);
+
 		return $result;
 	}
 
