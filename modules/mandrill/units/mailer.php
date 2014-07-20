@@ -88,6 +88,16 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 		// prepare result
 		$result = in_array($response[0]['status'], $this->accepted_status);
 
+		// trigger event
+		if ($result)
+			Events::trigger(
+				'contact_form',
+				'email-sent',
+				'mandrill',
+				$this->message['to']['email'],
+				$this->variables
+			);
+
 		return $result;
 	}
 
