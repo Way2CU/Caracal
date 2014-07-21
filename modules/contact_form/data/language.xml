@@ -155,6 +155,158 @@
 		<constant name="selected_fields_export">Only selected fields will be exported. Header values will default to field label or placeholder unless otherwise specified.</constant>
 	</language>
 
+	<language short="ar">
+		<constant name="menu_contact">نموذج الاتصال</constant>
+		<constant name="menu_settings">حفظ كالافتراضي</constant>
+		<constant name="menu_manage_forms">إدارة النماذج</constant>
+		<constant name="menu_manage_templates">إدارة قوالب</constant>
+		<constant name="menu_submissions">Form submissions</constant>
+		<constant name="menu_export">اخراج</constant>
+
+		<constant name="message_sent">تم إرسال البيانات بنجاح!</constant>
+		<constant name="message_error">حدث خطأ أثناء محاولة إرسال البيانات الخاصة بك! تحقق من كل البيانات وحاول مرة أخرى.</constant>
+		<constant name="message_error_no_address">خطأ أثناء إرسال البيانات! لم يتم تحديد المستلم الافتراضي من قبل النظام.</constant>
+		<constant name="message_saved">تم حفظ التغيرات</constant>
+		<constant name="message_template_saved">تم حفظ البيانات القالب!</constant>
+		<constant name="message_template_delete">كنت على وشك أن إزالة القالب التالي. في حالة وجود والخدمات التي لا تزال تعتمد على هذا القالب إزالة هذا القالب يسبب مشاكل. هل أنت متأكد؟
+		</constant>
+		<constant name="message_template_deleted">Template was removed from the system!</constant>
+		<constant name="message_form_saved">تمت إزالة قالب من النظام!</constant>
+		<constant name="message_form_delete">كنت على وشك إزالة النموذج التالي. سيتم حذف جميع البيانات التي تم جمعها لهذا النموذج وحقولها معها. هل أنت متأكد؟</constant>
+		<constant name="message_form_deleted">التشكيل وبياناته حذفو من النظام</constant>
+		<constant name="message_field_saved">بيانات نطاقات االنموذج حفظو بنجاح</constant>
+		<constant name="message_field_delete">كنت على وشك إزالة النطاق التالي من النموذج. هل أنت متأكد؟</constant>
+		<constant name="message_field_deleted">نطاثات الشكيل حذفو بنجاح</constant>
+		<constant name="message_upload_error">هنالك مشكله في رفع البيانات</constant>
+		<constant name="message_missing_field">One or more required fields is missing.</constant>
+		<constant name="message_form_sent">لقد تم ارسال البيانات بنجاح</constant>
+		<constant name="message_form_error">حدث خطأ أثناء محاولة إرسال المعلومات الخاصة بك. يرجى مراجعة كافة البيانات وحاول مرة أخرى.</constant>
+		<constant name="message_no_form_selected">الرجاء اختيار النموذج من القائمة.</constant>
+
+		<constant name="title_settings">نموذج الاتصال: اعدادات</constant>
+		<constant name="title_templates_add">نموذج الاتصال: قالب جديد</constant>
+		<constant name="title_templates_edit">نموذج الاتصال: تحرير قالب </constant>
+		<constant name="title_templates_delete">نموذج الاتصال: حذف قالب</constant>
+		<constant name="title_templates_manage">نموذج الاتصال: إدارة قوالب</constant>
+		<constant name="title_forms_manage">نموذج الاتصال: إدارة النماذج</constant>
+		<constant name="title_forms_add">نموذج الاتصال: إضافة استمارة</constant>
+		<constant name="title_forms_edit">نموذج الاتصال: تحرير استمارة</constant>
+		<constant name="title_forms_delete">نموذج الاتصال: حذف استمارة</constant>
+		<constant name="title_form_fields">نموذج الاتصال: إدارة النطاقات</constant>
+		<constant name="title_fields_add">نموذج الاتصال: نطاق جديد</constant>
+		<constant name="title_fields_edit">نموذج الاتصال: تحرير النطاق</constant>
+		<constant name="title_fields_delete">نموذج الاتصال: حذف النطاق</constant>
+		<constant name="title_submissions">نموذج الاتصال: المعلومات المقدمة</constant>
+		<constant name="title_submission_details">نموذج الاتصال: تفاصيل التقديم</constant>
+		<constant name="title_export">نموذج الاتصال: عروض الاخراج</constant>
+
+		<constant name="tab_identity">Identity</constant>
+		<constant name="tab_general">عام</constant>
+		<constant name="tab_smtp">SMTP</constant>
+		<constant name="tab_plain_text">نص عادي</constant>
+		<constant name="tab_html">HTML</constant>
+		<constant name="tab_preview">عرض</constant>
+		<constant name="tab_export_options">خيارات</constant>
+		<constant name="tab_export_fields">نطاقات</constant>
+
+		<constant name="column_text_id">Text ID</constant>
+		<constant name="column_name">اسم</constant>
+		<constant name="column_address">عنوان</constant>
+		<constant name="column_field_name">اسم</constant>
+		<constant name="column_header">Header value</constant>
+
+		<constant name="dialog_title">استماره الاتصال</constant>
+		
+		<constant name="label_name">اسم:</constant>
+		<constant name="label_address">البريد الاكتروني:</constant>
+		<constant name="label_subject">الموضوع:</constant>
+		<constant name="label_use_smtp">استخدام SMTP لإرسال البريد الإلكتروني?</constant>
+		<constant name="label_use_ssl">استخدام التشفير SSL؟</constant>
+		<constant name="label_server">الخادم:</constant>
+		<constant name="label_port">المدخل:</constant>
+		<constant name="label_template_name">اسم القالب:</constant>
+		<constant name="label_template_text_id">قالب فريد text ID:</constant>
+		<constant name="label_smtp_no_authentication">لا حاجة إلى مصادقة</constant>
+		<constant name="label_smtp_authenticate">المصادقة مع أوراق الاعتماد التالية:</constant>
+		<constant name="label_smtp_username">اسم المستخدم:</constant>
+		<constant name="label_smtp_password">كلمه المرور:</constant>
+		<constant name="label_save_copy">حفظ نسخة من رسائل البريد الإلكتروني المرسلة</constant>
+		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
+		<constant name="label_text_id">Text ID:</constant>
+		<constant name="label_action">Action:</constant>
+		<constant name="label_use_ajax">استخدام AJAX لتقديم البيانات؟</constant>
+		<constant name="label_show_submit">اظهار زر التثبيت ؟</constant>
+		<constant name="label_show_reset">اظهار زر التصفير ؟</constant>
+		<constant name="label_show_cancel">ظهار زر الالغاء ?</constant>
+		<constant name="label_template">قالب البريد الإلكتروني للاستخدام:</constant>
+		<constant name="label_label">صنف:</constant>
+		<constant name="label_placeholder">كلمه في المكان:</constant>
+		<constant name="label_minimum">الحد الأدنى:</constant>
+		<constant name="label_maximum">الحد الاقصى:</constant>
+		<constant name="label_type">نوع النطاق:</constant>
+		<constant name="label_value"><![CDATA[Predefined value <small>(use 0 or 1 for checkboxes)</small>:]]></constant>
+		<constant name="label_length">كحد أقصى. طول:</constant>
+		<constant name="label_pattern"><![CDATA[Pattern for matching <small>(regexp)</small>:]]></constant>
+		<constant name="label_disabled">نطاق معطل?</constant>
+		<constant name="label_required">تتطلب المستخدم إدخال قيمة؟</constant>
+		<constant name="label_autocomplete">السماح لمتصفح الإكمال التلقائي؟</constant>
+		<constant name="label_export_ip">تضمين عنوان IP؟</constant>
+		<constant name="label_export_timestamp">تشمل التاريخ والوقت؟</constant>
+		<constant name="label_export_filename">اسم الملف:</constant>
+		<constant name="label_export_include_headers">تضمن headers?</constant>
+		<constant name="label_separator_tab">Tab</constant>
+		<constant name="label_separator_semi">نقطه</constant>
+		<constant name="label_separator_comma">فاصله</constant>
+
+		<constant name="tooltip_text_id">معرف النصية فريدة من نوعها تستخدم في القوالب لتسهيل معالجة.</constant>
+		<constant name="tooltip_name">مترجمة اسم النموذج للاستخدام في الخلفية.</constant>
+		<constant name="tooltip_action">موقع التعامل مع استمارة التقديم النصي. إذا تركت النظام فارغة سوف تتعامل مع بيانات النموذج تلقائيا.</constant>
+		<constant name="tooltip_email_template">قالب لاستخدامه عند تنسيق البريد الإلكتروني المرسلة إلى رسائل البريد الإلكتروني المحدد في الإعدادات العامة.</constant>
+		<constant name="tooltip_use_ajax">إذا كان نظام التحقق سوف تستخدم javascript لتقديم البيانات. لن يتم إعادة توجيه المستخدم إلى صفحة مختلفة.</constant>
+		<constant name="tooltip_template_name">مترجمة اسم القالب للاستخدام في الخلفية.</constant>
+		<constant name="tooltip_template_subject">قالب موضوع البريد الإلكتروني. حقول النموذج يمكن referrenced بواسطة إحاطة اسم النطاق في علامة percenage (اسم على سبيل المثال٪٪).</constant>
+		<constant name="tooltip_sender_name">يظهر هذا الاسم كما المرسل في الرسائل المستلمة.</constant>
+		<constant name="tooltip_sender_address">الرسائل المستلمة تظهر كما يتم إرساله من هذا البريد الإلكتروني. يستخدم هذا العنوان أيضا عند الرد على البريد الإلكتروني.</constant>
+		<constant name="tooltip_recipient_name">اسم واحد أو أكثر من الأشخاص تلقي البريد الإلكتروني. لا يقل أهمية، ويمكن أن تترك فارغة .</constant>
+		<constant name="tooltip_recipient_address">قائمة مفصولة بفواصل من عنوان لتلقي شكل تقديم البيانات.</constant>
+		<constant name="tooltip_include_headers">إذا سيتضمن ملف CSV فحص الرؤوس. هذه يمكن أن تكون مخصصة من علامة التبويب النطاقات. من قبل النظام الافتراضي سوف تستخدم تسمية النطاق أو الاسم الحامل.</constant>
+
+		<constant name="field_hidden">مخفي</constant>
+		<constant name="field_radio">Radio زر</constant>
+		<constant name="field_checkbox">Checkbox</constant>
+		<constant name="field_color">اختيار اللون</constant>
+		<constant name="field_date">التاريخ</constant>
+		<constant name="field_month">شهر</constant>
+		<constant name="field_datetime">التاريخ والوقت</constant>
+		<constant name="field_datetime-local">تاريخ المحلية والوقت</constant>
+		<constant name="field_time">الوقت</constant>
+		<constant name="field_week">اسروع والسنه</constant>
+		<constant name="field_file">الملف</constant>
+		<constant name="field_url">الرابط</constant>
+		<constant name="field_email">البريد الالكتروني</constant>
+		<constant name="field_number">الرقم</constant>
+		<constant name="field_range">مدلى</constant>
+		<constant name="field_password">كلمه المرور</constant>
+		<constant name="field_text">نص</constant>
+		<constant name="field_textarea">نص متعدد الأسطر</constant>
+		<constant name="field_honey-pot">Honey pot text</constant>
+
+		<constant name="legend_controls">ضوابط الاستماره</constant>
+		<constant name="legend_range">مدى</constant>
+		<constant name="legend_separator_type">نوع فاصل</constant>
+		<constant name="legend_sender">Sender</constant>
+		<constant name="legend_recipient">Recipient</constant>
+		<constant name="legend_backup">Backup</constant>
+
+		<constant name="header_ip_address">IP</constant>
+		<constant name="header_timestamp">الطابع الزمني</constant>
+
+		<constant name="fields">النطاقات</constant>
+		<constant name="details">تفاصيل</constant>
+		<constant name="export">اخراج</constant>
+		<constant name="selected_fields_export">وسيتم تصدير النطاقات المحددة فقط. قيم headers افتراضية تسمية النطاق أو الاسم الحامل حتى  ينص على خلاف ذلك.</constant>
+	</language>
+
 	<language short="he">
 		<constant name="menu_contact">טופס יצירת קשר</constant>
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>

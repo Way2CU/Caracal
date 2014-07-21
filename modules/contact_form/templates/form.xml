@@ -4,6 +4,7 @@
 	<form
 		action="$params['action']"
 		enctype="$params['has_files'] ? 'multipart/form-data' : false"
+		method="post"
 		data-dynamic="$params['use_ajax'] ? '1' : '0'"
 		cms:optional="enctype"
 		cms:eval="action,data-dynamic"
