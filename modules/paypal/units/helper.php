@@ -88,26 +88,6 @@ final class PayPal_Helper {
 	}
 
 	/**
-	 * Get string name-value pair string from associative array.
-	 *
-	 * @param array $params
-	 * @return string
-	 */
-	public static function getNameValuePairs($params) {
-		$result = '';
-
-		// create data array
-		$data = array();
-		foreach($params as $key => $value)
-			$data[] = $key.'='.urlencode($value);
-
-		// join array elements
-		$result = implode('&', $data);
-
-		return $result;
-	}
-
-	/**
 	 * Get associative array from name-value pair string.
 	 *
 	 * @param string $content
@@ -145,7 +125,7 @@ final class PayPal_Helper {
 			);
 
 		$final_params = array_merge($required_params, $params);
-		$nvp_string = self::getNameValuePairs($final_params);
+		$nvp_string = http_build_query($final_params);
 
 		// make the call
 		$header = "POST /nvp HTTP/1.1\n";
@@ -194,7 +174,7 @@ final class PayPal_Helper {
 		$params = array('cms' => self::COMMAND_NotifyValidate);
 		$params = array_merge($params, $_POST);
 
-		$nvp_string = self::getNameValuePairs($params);
+		$nvp_string = http_build_query($params);
 
 		// make the call
 		$header = "POST /nvp HTTP/1.1\n";
@@ -234,7 +214,7 @@ final class PayPal_Helper {
 				'token'	=> $token
 			);
 
-		url_SetRefresh('https://'.$url.self::getNameValuePairs($params), 0);
+		url_SetRefresh('https://'.$url.'?'.http_build_query($params), 0);
 	}
 }
 
