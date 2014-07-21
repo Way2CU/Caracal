@@ -1,5 +1,6 @@
 <?php
 
+use Core\Events;
 use Library\Mandrill\Mandrill as API;
 use Library\Mandrill\Mandrill_Error as API_Error;
 
@@ -94,7 +95,7 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 				'contact_form',
 				'email-sent',
 				'mandrill',
-				$this->message['to']['email'],
+				$this->message['to'][0]['email'],
 				$this->variables
 			);
 
