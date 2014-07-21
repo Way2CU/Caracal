@@ -161,4 +161,46 @@
 		<constant name="format_time">H:i:s</constant>
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
+	
+	<language name="االعربيه" short="ar" rtl="yes">
+		<constant name="backend_copyright"><![CDATA[Copyright &copy; by <a href="http://way2cu.com">Way2CU</a>. Icons by <a href="http://commons.wikimedia.org/wiki/User:Paintpot">Paintpot</a>. All rights reserved!"]]></constant>
+
+		<!-- Column Names -->
+		<constant name="column_options">خيارات</constant>
+
+		<!-- Buttons -->
+		<constant name="add">اضف</constant>
+		<constant name="new">جديد</constant>
+		<constant name="change">تحرير</constant>
+		<constant name="delete">حذف</constant>
+		<constant name="save">حفظ</constant>
+		<constant name="submit">اعتماد</constant>
+		<constant name="send">ارسال</constant>
+		<constant name="upload">رفع</constant>
+		<constant name="cancel">إلغاء</constant>
+		<constant name="open">فتح</constant>
+		<constant name="close">اغلاق</constant>
+		<constant name="reset">تصفير</constant>
+		<constant name="filter">مرشح</constant>
+		<constant name="search">بحث</constant>
+		<constant name="next">التالي</constant>
+		<constant name="back">السابق</constant>
+		<constant name="print">طبع</constant>
+
+		<!-- Messages -->
+		<constant name="message_server_error">خادم يواجه المشكلة التالية:</constant>
+		<constant name="message_license_error">أنت لا تملك الصلاحيه لتلقي لخدمات من هذا الموقع</constant>
+
+		<!-- Page switch -->
+		<constant name="page_first">الاول</constant>
+		<constant name="page_previous">السابق</constant>
+		<constant name="page_next">التالي</constant>
+		<constant name="page_last">الاخير</constant>
+
+		<!-- Other language specific data formats -->
+		<constant name="format_date">d.m.Y.</constant>
+		<constant name="format_date_short">d.m.Y.</constant>
+		<constant name="format_time">H:i:s</constant>
+		<constant name="format_time_short">H:i:s</constant>
+	</language>
 </document>
