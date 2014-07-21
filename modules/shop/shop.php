@@ -2981,8 +2981,9 @@ class shop extends Module {
 			if ($recurring) {
 				// recurring payment
 				$checkout_fields = $payment_method->new_recurring_payment(
-											$_SESSION['recurring_plan'],
+											$transaction_data,
 											$billing_information,
+											$_SESSION['recurring_plan'],
 											$return_url,
 											$cancel_url
 										);
