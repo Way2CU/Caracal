@@ -2962,7 +2962,7 @@ class shop extends Module {
 
 			// emit signal and return if handled
 			if ($stage == 'set_info') {
-				Events::trigger(
+				$result_list = Events::trigger(
 						'shop', 
 						'before-checkout',
 						$payment_method->get_name(),
@@ -2981,7 +2981,7 @@ class shop extends Module {
 			if ($recurring) {
 				// recurring payment
 				$checkout_fields = $payment_method->new_recurring_payment(
-											$transaction_data,
+											$summary,
 											$billing_information,
 											$_SESSION['recurring_plan'],
 											$return_url,
@@ -2991,7 +2991,7 @@ class shop extends Module {
 			} else {
 				// regular payment
 				$checkout_fields = $payment_method->new_payment(
-											$transaction_data,
+											$summary,
 											$billing_information,
 											$summary['items_for_checkout'],
 											$return_url,
