@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Header -->
+	<div class="scrollable_list">
+		<div class="list_header">
+			<span class="column" style="width: 200px;">
+				<cms:text constant="column_name" module="stripe_payment"/>
+			</span>
+			<span class="column" style="width: 150px;">
+				<cms:text constant="column_text_id" module="stripe_payment"/>
+			</span>
+			<span class="column" style="width: 60px;">
+				<cms:text constant="column_price" module="stripe_payment"/>
+			</span>
+		</div>
+		<div class="list_content" style="height: 250px">
+			<!-- List Content -->
+			<cms:list/>
+		</div>
+	</div>
+</document>

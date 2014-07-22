@@ -38,6 +38,14 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
+	 * If recurring payments are supported by this payment method.
+	 * @return boolean
+	 */
+	public function supports_recurring() {
+		return true;
+	}
+
+	/**
 	 * Get URL to be used in checkout form.
 	 *
 	 * Note: Stripe is a JavaScript based payment method. This means that
@@ -49,7 +57,103 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	public function get_url() {
 		return $this->url;
 	}
-	
+
+	/**
+	 * Get display name of payment method
+	 * @return string
+	 */
+	public function get_title() {
+		$this->parent->getLanguageConstant('payment_method_title');
+	}
+
+	/**
+	 * Get icon URL for payment method
+	 * @return string
+	 */
+	public function get_icon_url() {
+		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+	}
+
+	/**
+	 * Get image URL for payment method
+	 * @return string
+	 */
+	public function get_image_url() {
+		return url_GetFromFilePath($this->parent->path.'images/image.png');
+	}
+
+	/**
+	 * Get list of plans for recurring payments.
+	 *
+	 * Plan groups, if not empty, are used to group plans. When creating
+	 * new recurring payment all plans from the same group will be canceled.
+	 *
+	 * $result = array(
+	 * 			'text_id' => array(
+	 * 				'name'				=> array(),
+	 * 				'trial'				=> RecurringPayment::DAY,
+	 * 				'trial_count'		=> 7,
+	 * 				'interval'			=> RecurringPayment::MONTH,
+	 * 				'interval_count'	=> 1,
+	 * 				'price'				=> 13,
+	 * 				'setup_price'		=> 0,
+	 * 				'start_time'		=> time(),
+	 * 				'end_time'			=> time() + (365 * 24 * 60 * 60),
+	 * 				'group'				=> ''
+	 * 			)
+	 * 		);
+	 *
+	 * @return array
+	 */
+	public function get_recurring_plans() {
+		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$result = array();
+		$manager = Stripe_PlansManager::getInstance();
+
+		// get recurring payment plans from database
+		$items = $manager->getItems($manager->getFieldNames(), array());
+
+		// prepare result
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$name = array();
+				foreach ($language_list as $language)
+					$name[$language] = $item->name;
+
+				$plan = array(
+						'name'				=> $name,
+						'trial'				=> RecurringPayment::DAY,
+						'trial_count'		=> $item->trial_days,
+						'interval'			=> $item->interval,
+						'interval_count'	=> $item->interval_count,
+						'price'				=> $item->price,
+						'setup_price'		=> 0,
+						'start_time'		=> time(),
+						'end_time'			=> null,
+						'group'				=> ''
+					);
+
+				$result[$item->text_id] = $plan;
+			}
+
+		return $result;
+	}
+
+	/**
+	 * Get billing information from payment method.
+	 *
+	 * $result = array(
+	 * 			'first_name'	=> '',
+	 * 			'last_name'		=> '',
+	 * 			'email'			=> ''
+	 * 		);
+	 *
+	 * @return array
+	 */
+	public function get_information() {
+		return array();
+	}
+
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
@@ -62,30 +166,89 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url) {
-		$this->url = $return_url;
+		$shop = shop::getInstance();
+		$currency = $shop->getDefaultCurrency();
 
-		// load script template and populate it with real data
-		$script_file = file_get_contents($this->parent->path.'/include/checkout.js');
-		$script_file = str_replace(
-							array(
-								'%cc-number%',
-								'%cc-cvv%',
-								'%cc-exp-month%',
-								'%cc-exp-year%',
-								'%stripe-key%',
-								'%transaction-uid%'
-							),
-							array(
-								$billing_information['billing_credit_card'],
-								$billing_information['billing_cvv'],
-								$billing_information['billing_expire_month'],
-								$billing_information['billing_expire_year'],
-								$this->parent->getPublicKey(),
-								$transaction_data['uid']
-							),
-							$script_file
-						);
+		// charge url
+		$this->url = url_Make('charge', $this->parent->name);
 
-		return '<script type="text/javascript">'.$script_file.'</script>';
+		// prepare params
+		$params = array(
+				'transaction'	=> $transaction_data['uid'],
+				'return_url'	=> $return_url,
+				'name'			=> $billing_information['billing_full_name'],
+				'credit_card'	=> $billing_information['billing_credit_card'],
+				'exp_month'		=> $billing_information['billing_expire_month'],
+				'exp_year'		=> $billing_information['billing_expire_year'],
+				'cvv'			=> $billing_information['billing_cvv']
+			);
+
+		// prepare elements
+		$elements = array();
+		foreach ($params as $key => $value)
+			$elements[] = '<input type="hidden" name="'.$key.'" value="'.$value.'">';
+
+		return implode('', $elements);
+	}
+
+	/**
+	 * Make new recurring payment based on named plan.
+	 *
+	 * @param array $transaction_data
+	 * @param array $billing_information
+	 * @param string $plan_name
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	public function new_recurring_payment($transaction_data, $billing_information, $plan_name, $return_url, $cancel_url) {
+		$shop = shop::getInstance();
+		$currency = $shop->getDefaultCurrency();
+
+		// charge url
+		$this->url = url_Make('subscribe', $this->parent->name);
+
+		// get customer
+		$customer = stripe_payment::getCustomer($transaction_data['uid']);
+
+		// prepare params
+		if (is_null($customer)) {
+			$params = array(
+					'transaction'	=> $transaction_data['uid'],
+					'return_url'	=> $return_url,
+					'name'			=> $billing_information['billing_full_name'],
+					'credit_card'	=> $billing_information['billing_credit_card'],
+					'exp_month'		=> $billing_information['billing_expire_month'],
+					'exp_year'		=> $billing_information['billing_expire_year'],
+					'cvv'			=> $billing_information['billing_cvv'],
+					'plan_name'		=> $plan_name
+				);
+
+		} else {
+			$params = array(
+					'transaction'	=> $transaction_data['uid'],
+					'return_url'	=> $return_url,
+					'customer'		=> $customer->text_id,
+					'plan_name'		=> $plan_name
+				);
+		}
+		
+
+		// prepare elements
+		$elements = array();
+		foreach ($params as $key => $value)
+			$elements[] = '<input type="hidden" name="'.$key.'" value="'.$value.'">';
+
+		return implode('', $elements);
+	}
+
+	/**
+	 * Cancel existing recurring payment.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function cancel_recurring_payment($transaction) {
+		return false;
 	}
 }
