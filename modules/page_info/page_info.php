@@ -273,16 +273,15 @@ class page_info extends Module {
 							));
 
 			// page description
-			if ($db_use) 
-				if (!is_null($this->page_description))
-					$value = $this->page_description; else
-					$value = $this->settings['description'];
+			if (!is_null($this->page_description))
+				$value = $this->page_description; else
+				$value = isset($this->settings['description']) ? $this->settings['description'] : '';
 
-				$head_tag->addTag('meta',
-							array(
-								'name'		=> 'description',
-								'content'	=> $value
-							));
+			$head_tag->addTag('meta',
+						array(
+							'name'		=> 'description',
+							'content'	=> $value
+						));
 		}
 
   		// copyright
