@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="checkout_container">
-		<div id="checkout" skip_cache="1" class="$params['recurring'] ? 'recurring' : 'sale'" cms:eval="class"> 
+		<div id="checkout" cms:skip_cache="1" class="$params['recurring'] ? 'recurring' : 'sale'" cms:eval="class"> 
 			<form action="$params['checkout_url']" method="POST" cms:eval="action">
 				<cms:if condition="!$params['recurring']">
 					<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
@@ -79,16 +79,6 @@
 					<cms:if condition="$params['include_shipping']">
 						<div class="delivery_provider">
 							<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
-							<cms:delivery_methods
-								shopping_cart="1"
-								template="delivery_checkout.xml"
-								local="1"
-							/>
-							<cms:delivery_methods
-								shopping_cart="1"
-								template="delivery_checkout.xml"
-								local="1"
-							/>
 							<cms:delivery_methods
 								shopping_cart="1"
 								template="delivery_checkout.xml"
