@@ -193,19 +193,19 @@ abstract class Module {
 	 * @param string $default_file
 	 * @return TemplateHandler
 	 */
-	public function loadTemplate($params, $default_file) {
-		if (isset($params['template'])) {
+	public function loadTemplate($params, $default_file, $param_name='template') {
+		if (isset($params[$param_name])) {
 			if (isset($params['local']) && $params['local'] == 1) {
 				// load local template
-				$template = new TemplateHandler($params['template'], $this->path.'templates/');
+				$template = new TemplateHandler($params[$param_name], $this->path.'templates/');
 
 			} else if (isset($params['template_path'])) {
 				// load template from specified path
-				$template = new TemplateHandler($params['template'], $params['template_path']);
+				$template = new TemplateHandler($params[$param_name], $params['template_path']);
 
 			} else {
 				// load template from absolute path
-				$template = new TemplateHandler($params['template']);
+				$template = new TemplateHandler($params[$param_name]);
 			}
 		} else {
 			// load template from module path
