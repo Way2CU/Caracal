@@ -7,7 +7,8 @@
  * Requires jQuery 1.4.2+
  */
 
-var shopping_cart = null;
+var Caracal = Caracal || {};
+Caracal.shop = Caracal.shop || {};
 
 /**
  * Shopping Cart
@@ -106,12 +107,12 @@ function ShoppingCart() {
 				.appendTo($('body'));
 
 		// parse initial options
-		if (typeof shop_init_options !== 'undefined') {
-			if ('visible' in shop_init_options)
-				this.main_container.css('display', shop_init_options.visible ? 'block' : 'none');
+		if (typeof Caracal.shop.config !== 'undefined') {
+			if ('visible' in Caracal.shop.config)
+				this.main_container.css('display', Caracal.shop.config.visible ? 'block' : 'none');
 	
-			if ('default_method' in shop_init_options)
-				this._default_method = shop_init_options.default_method;
+			if ('default_method' in Caracal.shop.config)
+				this._default_method = Caracal.shop.config.default_method;
 		}
 
 		// configure container
@@ -1213,6 +1214,6 @@ function ShopItem(uid, cart) {
 }
 
 // create single instance of shopping cart
-$(document).ready(function() {
-	shopping_cart = new ShoppingCart();
+$(function() {
+	Caracal.shop.cart = new ShoppingCart();
 });
