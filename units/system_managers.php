@@ -67,6 +67,32 @@ class UserManager extends ItemManager {
 }
 
 
+class UserDataManager extends ItemManager {
+	private static $_instance;
+
+	/**
+	 * Constructor
+	 */
+	protected function __construct() {
+		parent::__construct('system_user_data');
+
+		$this->addProperty('user', 'int');
+		$this->addProperty('name', 'varchar');
+		$this->addProperty('value', 'varchar');
+	}
+
+	/**
+	 * Public function that creates a single instance
+	 */
+	public static function getInstance() {
+		if (!isset(self::$_instance))
+			self::$_instance = new self();
+
+		return self::$_instance;
+	}
+}
+
+
 class UserVerificationManager extends ItemManager {
 	private static $_instance;
 
