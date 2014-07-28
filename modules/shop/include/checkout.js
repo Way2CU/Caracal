@@ -1,9 +1,12 @@
 /**
- * Checkout Form JavaScript Implemenentation
+ * Checkout Form Implemenentation
  *
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
+
+var Caracal = Caracal || {};
+Caracal.shop = Caracal.shop || {};
 
 function BuyerInformationForm() {
 	var self = this;
@@ -13,29 +16,12 @@ function BuyerInformationForm() {
 	self.sign_in_form = $('div#sign_in.page');
 	self.shipping_information_form = $('div#shipping_information.page');
 	self.billing_information_form = $('div#billing_information.page');
+	self.payment_method_form = $('div#payment_method.page');
 	self.methods = $('div.payment_methods span');
 	self.method_field = $('input[name=payment_method]');
 	self.page_control = new PageControl('div#input_details div.pages');
 	self.password_dialog = new Dialog();
 	self.cvv_dialog = new Dialog();
-
-	// pages
-	if (self.sign_in_form.length > 0) {
-		self.pages = {
-				SIGN_IN: 0,
-				SHIPPING_INFORMATION: 1,
-				PAYMENT_METHOD: 2,
-				BILLING_INFORMATION: 3,
-			};
-
-	} else {
-		self.pages = {
-				SIGN_IN: -2,
-				SHIPPING_INFORMATION: -1,
-				PAYMENT_METHOD: 0,
-				BILLING_INFORMATION: 1,
-			};
-	}
 
 	/**
 	 * Complete object initialization.
@@ -46,8 +32,7 @@ function BuyerInformationForm() {
 			.setAllowForward(false)
 			.setSubmitOnEnd(true)
 			.attachControls('div#checkout_stepps a')
-			.attachForm('div#input_details form')
-			.connect('page-flip', self.validate_page);
+			.attachForm('div#input_details form');
 
 		// load dialog titles from server
 		language_handler.getTextArrayAsync(
@@ -68,12 +53,18 @@ function BuyerInformationForm() {
 				.setClearOnClose(false)
 				.setContentFromDOM('img#what_is_cvv');
 
+		// set validators used by page control
+		self.sign_in_form.data('validator', self._validate_sign_in_page);
+		self.shipping_information_form.data('validator', self._validate_shipping_information_page);
+		self.billing_information_form.data('validator', self._validate_billing_information_page);
+		self.payment_method_form.data('validator', self._validate_payment_method_page);
+
 		// connect events
 		self.sign_in_form.find('input[name=existing_user]').change(self._handle_account_type_change);
 		self.shipping_information_form.find('select[name=presets]').change(self._handle_shipping_information_preset_change);
-		self.methods.click(self._handle_payment_method_click);
 		self.sign_in_form.find('a.password_recovery').click(self._show_password_dialog);
 		self.billing_information_form.find('a.what_is_cvv').click(self._show_cvv_dialog);
+		self.methods.click(self._handle_payment_method_click);
 	};
 
 	/**
@@ -421,42 +412,6 @@ function BuyerInformationForm() {
 		return self.billing_information_form.find('.bad').length == 0;
 	};
 
-	/**
-	* Validate form pages.
-	*
-	* @param integer current_page
-	* @param integer new_page
-	* @return boolean
-	*/
-	self.validate_page = function(current_page, new_page) {
-		var result = true;
-
-		if (new_page > current_page)
-			switch(current_page) {
-				case self.pages.SIGN_IN:
-					// validate sign in page
-					result = self._validate_sign_in_page();
-					break;
-
-				case self.pages.SHIPPING_INFORMATION:
-					// validate shipping information page
-					result = self._validate_shipping_information_page();
-					break;
-
-				case self.pages.PAYMENT_METHOD:
-					// validate payment method page
-					result = self._validate_payment_method_page();
-					break;
-
-				case self.pages.BILLING_INFORMATION:
-					// validate billing information
-					result = self._validate_billing_information_page();
-					break;
-			}
-
-		return result;
-	};
-
 	// finalize object
 	self.init();
 }
@@ -626,10 +581,11 @@ function CheckoutForm() {
 
 
 $(function() {
+
 	if ($('div#input_details').length > 0) {
-		new BuyerInformationForm();
+		Caracal.shop.buyer_information_form = new BuyerInformationForm();
 
 	} else if ($('div#checkout').length > 0) {
-		new CheckoutForm();
+		Caracal.shop.checkout_form = new CheckoutForm();
 	}
 });
