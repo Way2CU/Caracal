@@ -86,6 +86,11 @@ function PageControl(selector, page_selector) {
 	self._switchContainer = function(page) {
 		var new_page = page;
 
+		// check if validator is set
+		var validator = self.pages.eq(self.current_page).data('validator');
+		if ((validator !== undefined && new_page > self.current_page) && !validator(self.current_page))
+			return;
+
 		// skip page if specified one is disabled
 		if (self.isPageDisabled(page)) 
 			new_page += page > self.current_page ? 1 : -1;
@@ -404,7 +409,30 @@ function PageControl(selector, page_selector) {
 				break;
 		}
 
-		return this;
+		return self;
+	};
+
+	/**
+	 * Make specified function act as validator for specified page.
+	 * If function returns false page will not be switched.
+	 *
+	 * Example callback:
+	 *
+	 * function check(current_page) {
+	 * 		result = true;
+	 *
+	 * 		if (something)
+	 * 			result = false;
+	 *
+	 * 		return result;
+	 * }
+	 *
+	 * @param integer page
+	 * @param callable validator
+	 */
+	self.setValidatorFunction = function(page, validator) {
+		self.pages.eq(page).data('validator', validator);
+		return self;
 	};
 
 	// finish object initialization
