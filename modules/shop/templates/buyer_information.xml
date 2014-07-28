@@ -44,7 +44,7 @@
 			</cms:if>
 		</div>
 
-		<div id="input_details" skip_cache="1"> 
+		<div id="input_details" cms:skip_cache="1">
 			<form method="POST" action="">
 				<div class="pages">
 					<cms:if condition="$params['include_shipping']">
