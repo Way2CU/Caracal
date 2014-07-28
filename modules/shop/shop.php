@@ -154,14 +154,6 @@ class shop extends Module {
 		foreach (RecurringPayment::$signals as $status => $signal_name)
 			Events::register('shop', $signal_name);
 
-		// load module style and scripts
-		if (class_exists('head_tag') && $section != 'backend') {
-			$head_tag = head_tag::getInstance();
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/checkout.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
-		}
-
 		// register backend
 		if (class_exists('backend') && $section == 'backend') {
 			$head_tag = head_tag::getInstance();
@@ -534,7 +526,11 @@ class shop extends Module {
 					break;
 
 				case 'include_scripts':
-					$this->includeScripts($params, $children);
+					$this->includeScripts();
+					break;
+
+				case 'include_cart_scripts':
+					$this->includeCartScripts();
 					break;
 
 				case 'json_get_item':
@@ -968,12 +964,9 @@ class shop extends Module {
 
 	/**
 	 * Include buyer information and checkout form scripts.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
 	 */
-	public function includeScripts($tag_params, $children) {
-		if (!class_exists('head_tag'))
+	public function includeScripts() {
+		if (!class_exists('head_tag') || !class_exists('collection'))
 			return;
 
 		$head_tag = head_tag::getInstance();
@@ -981,7 +974,23 @@ class shop extends Module {
 
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
+		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/checkout.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
+	}
+
+	/**
+	 * Include shopping cart scripts.
+	 */
+	public function includeCartScripts() {
+		if (!class_exists('head_tag') || !class_exists('collection'))
+			return;
+
+		$head_tag = head_tag::getInstance();
+		$collection = collection::getInstance();
+
+		$collection->includeScript(collection::PAGE_CONTROL);
+		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -3000,7 +3009,7 @@ class shop extends Module {
 			}
 
 			// load template
-			$template = $this->loadTemplate($tag_params, 'checkout_form.xml');
+			$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
 			$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
 			$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 
@@ -3045,9 +3054,7 @@ class shop extends Module {
 
 		} else {
 			// no information available, show form
-			$template = new TemplateHandler('buyer_information.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
-
+			$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
 			$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
 
 			// get fixed country if set
