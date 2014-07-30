@@ -87,7 +87,7 @@ class swfobject extends Module {
 
 		$p_flashvars = json_encode($flash_vars);
 		$p_params = json_encode($params);
-		$script = "swfobject.embedSWF('{$url}', '{$target_id}', '{$width}', '{$height}', '{$this->flash_version}', null, {$p_flashvars}, {$p_params});";
+		$script = "window.addEventListener('load', function() { swfobject.embedSWF('{$url}', '{$target_id}', '{$width}', '{$height}', '{$this->flash_version}', null, {$p_flashvars}, {$p_params}); });";
 
 		$params = array(
 					'params'		=> $p_params,
