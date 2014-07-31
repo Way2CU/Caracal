@@ -168,8 +168,7 @@
 		<constant name="message_error_no_address">خطأ أثناء إرسال البيانات! لم يتم تحديد المستلم الافتراضي من قبل النظام.</constant>
 		<constant name="message_saved">تم حفظ التغيرات</constant>
 		<constant name="message_template_saved">تم حفظ البيانات القالب!</constant>
-		<constant name="message_template_delete">كنت على وشك أن إزالة القالب التالي. في حالة وجود والخدمات التي لا تزال تعتمد على هذا القالب إزالة هذا القالب يسبب مشاكل. هل أنت متأكد؟
-		</constant>
+		<constant name="message_template_delete">كنت على وشك أن إزالة القالب التالي. في حالة وجود والخدمات التي لا تزال تعتمد على هذا القالب إزالة هذا القالب يسبب مشاكل. هل أنت متأكد؟</constant>
 		<constant name="message_template_deleted">Template was removed from the system!</constant>
 		<constant name="message_form_saved">تمت إزالة قالب من النظام!</constant>
 		<constant name="message_form_delete">كنت على وشك إزالة النموذج التالي. سيتم حذف جميع البيانات التي تم جمعها لهذا النموذج وحقولها معها. هل أنت متأكد؟</constant>

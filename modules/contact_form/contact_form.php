@@ -600,8 +600,8 @@ class contact_form extends Module {
 				);
 
 			if ($result)
-				$response['message'] = $this->getLanguageConstant('message_form_sent'); else
-				$response['message'] = $this->getLanguageConstant('message_form_error');
+				$response['message'] = $this->getLanguageConstant('message_sent'); else
+				$response['message'] = $this->getLanguageConstant('message_error');
 
 			print json_encode($response);
 
@@ -615,8 +615,8 @@ class contact_form extends Module {
 					'missing_fields'	=> $missing_fields
 				);
 			if ($result)
-				$params['message'] = $this->getLanguageConstant('message_form_sent'); else
-				$params['message'] = $this->getLanguageConstant('message_form_error');
+				$params['message'] = $this->getLanguageConstant('message_sent'); else
+				$params['message'] = $this->getLanguageConstant('message_error');
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
