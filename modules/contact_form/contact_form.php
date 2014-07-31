@@ -601,7 +601,7 @@ class contact_form extends Module {
 
 			if ($result)
 				$response['message'] = $this->getLanguageConstant('message_sent'); else
-				$response['message'] = $this->getLanguageConstant('message_error');
+				$response['message'] = $this->getLanguageConstant('message_form_error');
 
 			print json_encode($response);
 
@@ -2273,7 +2273,7 @@ class contact_form extends Module {
 		
 		if (isset($this->mailers[$name]))
 			$result = $this->mailers[$name]; else
-			$result = $this->mailers[0];
+			$result = array_shift(array_values($this->mailers));
 
 		return $result;
 	}

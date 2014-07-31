@@ -24,8 +24,6 @@
 		<constant name="message_field_deleted">Form field was removed.</constant>
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
-		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
-		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
 
 		<constant name="title_settings">Contact form: Settings</constant>
@@ -178,8 +176,6 @@
 		<constant name="message_field_deleted">نطاثات الشكيل حذفو بنجاح</constant>
 		<constant name="message_upload_error">هنالك مشكله في رفع البيانات</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
-		<constant name="message_form_sent">لقد تم ارسال البيانات بنجاح</constant>
-		<constant name="message_form_error">حدث خطأ أثناء محاولة إرسال المعلومات الخاصة بك. يرجى مراجعة كافة البيانات وحاول مرة أخرى.</constant>
 		<constant name="message_no_form_selected">الرجاء اختيار النموذج من القائمة.</constant>
 
 		<constant name="title_settings">نموذج الاتصال: اعدادات</constant>
@@ -329,8 +325,6 @@
 		<constant name="message_field_deleted">Form field was removed.</constant>
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
-		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
-		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
 		
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
@@ -481,8 +475,6 @@
 		<constant name="message_field_deleted">Form field was removed.</constant>
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
-		<constant name="message_form_sent">Your data has been sent. Thank you!</constant>
-		<constant name="message_form_error">Error occured trying to send your information. Please check all of the fields and try again.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
 		
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
