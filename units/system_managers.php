@@ -77,6 +77,7 @@ class UserDataManager extends ItemManager {
 		parent::__construct('system_user_data');
 
 		$this->addProperty('user', 'int');
+		$this->addProperty('namespace', 'varchar');
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('value', 'varchar');
 	}

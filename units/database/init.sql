@@ -20,10 +20,13 @@ CREATE TABLE `system_access_verification` (
 
 CREATE TABLE `system_user_data` (
 	`user` int NOT NULL,
+	`namespace` varchar(30) NOT NULL,
 	`key` varchar(30) NOT NULL,
 	`value` text NOT NULL,
 	KEY `index_by_user` (`user`),
-	KEY `index_by_user_and_key` (`user`, `key`)
+	KEY `index_by_user_and_namespace` (`user`, `namespace`),
+	KEY `index_by_user_and_key` (`user`, `key`),
+	KEY `index_by_all` (`user`, `namespace`, `key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_cache` (
