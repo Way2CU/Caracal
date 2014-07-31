@@ -6,6 +6,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
+
 
 class ContactForm_SystemMailer extends ContactForm_Mailer {
 	protected $language;

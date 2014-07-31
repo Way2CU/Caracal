@@ -8,6 +8,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
+
 
 class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 	protected $name = 'smtp';
