@@ -377,10 +377,10 @@
 		<constant name="label_save_copy">Save copy of sent emails</constant>
 		<constant name="label_save_location"><![CDATA[Location for saved emails: <small>(when empty defaults to: data/)</small>]]></constant>
 		<constant name="label_text_id">Text ID:</constant>
-		<constant name="label_action">Action:</constant>
+		<constant name="label_action">פעולה:</constant>
 		<constant name="label_use_ajax">Use AJAX for submitting data?</constant>
-		<constant name="label_show_submit">Show submit button?</constant>
-		<constant name="label_show_reset">Show reset button?</constant>
+		<constant name="label_show_submit">הצג כתפור הגשת טופס?</constant>
+		<constant name="label_show_reset">הצג כפתור רענון?</constant>
 		<constant name="label_show_cancel">Show cancel button?</constant>
 		<constant name="label_template">Email template to use:</constant>
 		<constant name="label_label">Label:</constant>
