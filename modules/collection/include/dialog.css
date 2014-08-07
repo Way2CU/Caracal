@@ -87,6 +87,9 @@ div.dialog div.command_bar {
 }
 
 div.dialog div.command_bar a {
+	display: inline-block;
+	margin-left: 3px;
+	margin-right: 3px;
 	padding: 0.4em;
 	padding-left: 0.6em;
 	padding-right: 0.6em;
