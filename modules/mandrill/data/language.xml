@@ -10,4 +10,13 @@
 
 		<constant name="label_api_key">API key:</constant>
 	</language>
+	<language short="he">
+		<constant name="menu_mandrill">מנדריל</constant>
+		<constant name="mailer_title">מנדריל</constant>
+
+		<constant name="title_settings">הגדרות מנדריל</constant>
+		<constant name="message_saved">ההגדרות נשמרו בהצלחה.</constant>
+
+		<constant name="label_api_key">מפתח API:</constant>
+	</language>
 </document>
