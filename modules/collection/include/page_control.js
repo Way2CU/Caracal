@@ -133,21 +133,10 @@ function PageControl(selector, page_selector) {
 			var to_show = self.pages.eq(new_page);
 
 			// swap pages containers
-			to_hide
-				.css('display', 'block')
-				.animate({opacity: 0}, 200, function() {
-					to_hide.css('display', 'none');
-					to_show
-						.css({
-							display: 'block',
-							opacity: 0
-						})
-						.animate({opacity: 1}, 200);
-				});
+			to_hide.removeClass('visible');
+			to_show.addClass('visible');
 		} else {
-			self.pages.each(function(index) {
-				$(this).css('display', index == new_page ? 'block' : 'none');
-			});
+			self.pages.eq(new_page).addClass('visible');
 		}
 
 		// update controls if available
