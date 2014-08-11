@@ -347,6 +347,7 @@ div.transaction_details textarea {
 
 div.transaction_details textarea:focus {
 	border: 1px solid #0B63C8;
+	outline: none;
 }
 
 div#checkout.recurring div.transaction_details textarea {
@@ -557,6 +558,10 @@ div.checkout_controls button {
 
 div#checkout div.checkout_controls button {
 	height: 3.5em;
+}
+
+div.checkout_controls button:focus {
+	outline: none;
 }
 
 div.checkout_controls button:hover {
@@ -811,6 +816,7 @@ div#input_details label input.bad {
 div#input_details label select:focus,
 div#input_details label input:focus {
 	border: 1px solid #0B63C8;
+	outline: none;
 }
 
 div#input_details label.checkbox span,
