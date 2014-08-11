@@ -182,27 +182,27 @@ class backend extends Module {
 					break;
 
 				case 'verify_account':
-					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->verifyAccount($params, $children);
 					break;
 				
 				case 'save_unpriviledged_user':
-					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->saveUnpriviledgedUser($params, $children);
 					break;
 
 				case 'save_unpriviledged_password':
-					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->saveUnpriviledgedPassword($params, $children);
 					break;
 
 				case 'password_recovery':
-					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->recoverPasswordByEmail($params, $children);
 					break;
 
 				case 'password_recovery_save':
-					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->saveRecoveredPassword($params, $children);
 					break;
 
@@ -285,7 +285,7 @@ class backend extends Module {
 				case 'save_password':
 				case 'email_templates':
 				case 'email_templates_save':
-					$user_manager = Backend_UserManager::getInstance($this->event_handler);
+					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->transferControl();
 					break;
 

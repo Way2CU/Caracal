@@ -3,6 +3,7 @@
 /**
  * Backend User Manager
  */
+use Core\Events;
 
 class Backend_UserManager {
 	private static $_instance;
@@ -10,17 +11,16 @@ class Backend_UserManager {
 	private $event_handler;
 	private $parent;
 
-	protected function __construct($event_handler) {
+	protected function __construct() {
 		$this->parent = backend::getInstance();
-		$this->event_handler = $event_handler;
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($event_handler) {
+	public static function getInstance() {
 		if (!isset(self::$_instance))
-			self::$_instance = new self($event_handler);
+			self::$_instance = new self();
 
 		return self::$_instance;
 	}
