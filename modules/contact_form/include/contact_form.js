@@ -6,7 +6,9 @@
  * Authors: Mladen Mijatov
  */
 
-var contact_form_dialog = null;
+var Caracal = Caracal || {};
+Caracal.contact_form = Caracal.contact_form || {};
+
 
 function ContactForm(form_object) {
 	var self = this;
@@ -16,6 +18,7 @@ function ContactForm(form_object) {
 	self._communicator = null;
 	self._overlay = null;
 	self._message = null;
+	self._silent = false;
 
 	/**
 	 * Complete object initialization.
@@ -45,12 +48,12 @@ function ContactForm(form_object) {
 		}
 
 		// create dialog
-		if (contact_form_dialog == null) {
-			contact_form_dialog = new Dialog();
-			contact_form_dialog.setTitle(language_handler.getText('contact_form', 'dialog_title'));
-			contact_form_dialog.setSize(400, 100);
-			contact_form_dialog.setScroll(false);
-			contact_form_dialog.setClearOnClose(true);
+		if (Caracal.contact_form.dialog == null) {
+			Caracal.contact_form.dialog = new Dialog();
+			Caracal.contact_form.dialog.setTitle(language_handler.getText('contact_form', 'dialog_title'));
+			Caracal.contact_form.dialog.setSize(400, 100);
+			Caracal.contact_form.dialog.setScroll(false);
+			Caracal.contact_form.dialog.setClearOnClose(true);
 		}
 
 		// create message container
@@ -124,10 +127,13 @@ function ContactForm(form_object) {
 		self._overlay.removeClass('visible');
 
 		// configure and show dialog
-		self._message.html(data.message);
-		contact_form_dialog.setError(data.error);
-		contact_form_dialog.setContent(self._message);
-		contact_form_dialog.show();
+		var response = self._form.triggerHandler('dialog-show', [data.error]);
+		if (response == undefined || (response != undefined && response == true)) {
+			self._message.html(data.message);
+			Caracal.contact_form.dialog.setError(data.error);
+			Caracal.contact_form.dialog.setContent(self._message);
+			Caracal.contact_form.dialog.show();
+		}
 
 		// clear form on success
 		if (!data.error)
@@ -149,10 +155,13 @@ function ContactForm(form_object) {
 		self._overlay.removeClass('visible');
 
 		// configure and show dialog
-		self._message.html(data.message);
-		contact_form_dialog.setError(true);
-		contact_form_dialog.setContent(self._message);
-		contact_form_dialog.show();
+		var response = self._form.triggerHandler('dialog-show', [true]);
+		if (response == undefined || (response != undefined && response == true)) {
+			self._message.html(data.message);
+			Caracal.contact_form.dialog.setError(true);
+			Caracal.contact_form.dialog.setContent(self._message);
+			Caracal.contact_form.dialog.show();
+		}
 	};
 
 	// finalize object
@@ -160,7 +169,11 @@ function ContactForm(form_object) {
 }
 
 $(function() {
+	Caracal.contact_form.forms = [];
+	Caracal.contact_form.dialog = null;
+
 	$('form[data-dynamic]').each(function() {
-		new ContactForm(this);
+		var form = new ContactForm(this);
+		Caracal.contact_form.forms.push(form);
 	});
 });
