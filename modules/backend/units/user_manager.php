@@ -8,7 +8,6 @@ use Core\Events;
 class Backend_UserManager {
 	private static $_instance;
 
-	private $event_handler;
 	private $parent;
 
 	protected function __construct() {
@@ -826,7 +825,7 @@ class Backend_UserManager {
 			
 			// generate hash from old password
 			if (!empty($user->salt))
-				$old_password_ok = hash_hmac('sha256', $old_password, $salt) == $user->password || empty($user->password); else
+				$old_password_ok = hash_hmac('sha256', $old_password, $user->salt) == $user->password || empty($user->password); else
 				$old_password_ok = hash_hmac('sha256', $old_password, UserManager::SALT) == $user->password || empty($user->password);  // compatibility
 
 			if ($new_password_ok && $old_password_ok) {
