@@ -30,7 +30,7 @@ class contact_form extends Module {
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
 					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param'
 				);
-	private $hidden_fields = array('hidden', 'honey-pot', 'transfer-param');
+	private $hidden_fields = array('hidden', 'honey-pot');
 
 	/**
 	 * Constructor
