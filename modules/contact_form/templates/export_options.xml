@@ -19,6 +19,7 @@
 						<cms:fields
 							template="export_options_field.xml"
 							local="1"
+							skip_virtual="0"
 							form="$params['form']"
 							cms:eval="form"
 							/>
