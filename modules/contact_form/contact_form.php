@@ -28,9 +28,9 @@ class contact_form extends Module {
 	private $field_types = array(
 					'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
-					'time', 'week', 'url', 'number', 'range', 'honey-pot'
+					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param'
 				);
-	private $hidden_fields = array('hidden', 'honey-pot');
+	private $hidden_fields = array('hidden', 'honey-pot', 'transfer-param');
 
 	/**
 	 * Constructor
@@ -161,6 +161,9 @@ class contact_form extends Module {
 							'type'	=> 'text/css'
 						));
 		}
+
+		// collect transfer params
+		$this->collectTransferParams();
 	}
 
 	/**
@@ -450,6 +453,35 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Collect all the params to be transfered to form.
+	 */
+	private function collectTransferParams() {
+		$params = isset($_SESSION['contact_form_transfer_params']) ? $_SESSION['contact_form_transfer_params'] : array();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+
+		// get all transfer fields
+		$fields = $field_manager->getItems(
+				$field_manager->getFieldNames(),
+				array('type', 'transfer-param')
+			);
+
+		// collect new data
+		if (count($fields) > 0)
+			foreach	($fields as $field) {
+				// skip fields that are not in request parameters
+				if (!isset($_REQUEST[$field->name]) || empty($_REQUEST[$field->name]))
+					continue;
+
+				// store parameter value
+				$value = fix_chars($_REQUEST[$field->name]);
+				$params[$field->id] = $value;
+			}
+
+		// store array to session
+		$_SESSION['contact_form_transfer_params'] = $params;
+	}
+
+	/**
 	 * Submit form.
 	 *
 	 * @param array $tag_params
@@ -492,6 +524,7 @@ class contact_form extends Module {
 		$attachments = array();
 		$missing_fields = array();
 		$messages = array();
+		$transfer_params = isset($_SESSION['contact_form_transfer_params']) ? $_SESSION['contact_form_transfer_params'] : array();
 
 		foreach ($fields as $field) {
 			$name = $field->name;
@@ -520,6 +553,21 @@ class contact_form extends Module {
 					if (!empty($value)) {
 						trigger_error('ContactFrom: Honey-pot field populated. Ignoring submission!', E_USER_NOTICE);
 						return;
+					}
+					break;
+
+				case 'transfer-param':
+					if (isset($transfer_params[$field->id])) {
+						$data[] = array(
+								'field'	=> $field->id,
+								'value'	=> $transfer_params[$field->id]
+							);
+
+					} else {
+						$data[] = array(
+								'field'	=> $field->id,
+								'value'	=> $field->value
+							);
 					}
 					break;
 
