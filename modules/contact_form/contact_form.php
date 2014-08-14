@@ -463,7 +463,7 @@ class contact_form extends Module {
 		// get all transfer fields
 		$fields = $field_manager->getItems(
 				$field_manager->getFieldNames(),
-				array('type', 'transfer-param')
+				array('type' => 'transfer-param')
 			);
 
 		// collect new data
