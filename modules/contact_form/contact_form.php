@@ -1065,7 +1065,7 @@ class contact_form extends Module {
 						'submission'	=> $submission->id,
 						'field'			=> $field_ids
 					),
-					array('id'), true  // order by
+					array('field'), true  // order by
 				);
 
 				// add ip address
