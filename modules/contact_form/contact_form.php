@@ -31,6 +31,7 @@ class contact_form extends Module {
 					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param'
 				);
 	private $hidden_fields = array('hidden', 'honey-pot');
+	private $virtual_fields = array('transfer-param');
 
 	/**
 	 * Constructor
@@ -1776,6 +1777,10 @@ class contact_form extends Module {
 		if (isset($tag_params['skip_hidden']))
 			$skip_hidden = $tag_params['skip_hidden'] == 1;
 
+		$skip_virtual = true;
+		if (isset($tag_params['skip_virtual']))
+			$skip_virtual = $tag_params['skip_virtual'] == 1;
+
 		$count = 0;
 		$limit = null;
 		if (isset($tag_params['limit']))
@@ -1800,6 +1805,10 @@ class contact_form extends Module {
 			foreach ($items as $item) {
 				// skip hidden fields
 				if ($skip_hidden && in_array($item->type, $this->hidden_fields))
+					continue;
+
+				// skip virtual fields
+				if ($skip_virtual && in_array($item->type, $this->virtual_fields))
 					continue;
 
 				// respect limit
