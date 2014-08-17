@@ -558,18 +558,15 @@ class contact_form extends Module {
 					break;
 
 				case 'transfer-param':
-					if (isset($transfer_params[$field->id])) {
-						$data[] = array(
-								'field'	=> $field->id,
-								'value'	=> $transfer_params[$field->id]
-							);
+					if (isset($transfer_params[$field->id]))
+						$value = $transfer_params[$field->id]; else
+						$value = $field->value;
 
-					} else {
-						$data[] = array(
-								'field'	=> $field->id,
-								'value'	=> $field->value
-							);
-					}
+					$data[] = array(
+							'field'	=> $field->id,
+							'value'	=> $value
+						);
+					$replacement_fields[$name] = $value;
 					break;
 
 				default:
