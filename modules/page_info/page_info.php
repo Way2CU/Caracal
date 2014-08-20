@@ -297,27 +297,27 @@ class page_info extends Module {
 		}				
 
 		// favicon
-		if (file_exists(_BASEPATH.$images_path.'favicon.png')) {
+		if (file_exists(_BASEPATH.'/'.$images_path.'favicon.png')) {
 			// regular, single size favicon
 			$icon_files = array(
-					'16x16'	=> _BASEPATH.$images_path.'favicon.png'
+					'16x16'	=> _BASEPATH.'/'.$images_path.'favicon.png'
 				);
 
-		} else if (file_exists(_BASEPATH.$images_path.'favicon')) {
+		} else if (file_exists(_BASEPATH.'/'.$images_path.'favicon')) {
 			$icon_sizes = array(16, 32, 64);
 			$icon_files = array();
 
 			foreach ($icon_sizes as $size) {
-				$file_name = _BASEPATH.$images_path.'favicon/'.$size.'.png';
+				$file_name = _BASEPATH.'/'.$images_path.'favicon/'.$size.'.png';
 				if (file_exists($file_name))
 					$icon_files[$size.'x'.$size] = $file_name;
 			}
 
 		} else {
 			$icon_files = array(
-					'16x16'	=> _BASEPATH.$system_images_path.'default_icon/16.png',
-					'32x32'	=> _BASEPATH.$system_images_path.'default_icon/32.png',
-					'64x64'	=> _BASEPATH.$system_images_path.'default_icon/64.png'
+					'16x16'	=> _BASEPATH.'/'.$system_images_path.'default_icon/16.png',
+					'32x32'	=> _BASEPATH.'/'.$system_images_path.'default_icon/32.png',
+					'64x64'	=> _BASEPATH.'/'.$system_images_path.'default_icon/64.png'
 				);
 		}
 
