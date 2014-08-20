@@ -662,7 +662,11 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		foreach($list as $name => $definition) {
-			$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.svg';
+			// locate module icon
+			$icon_file = null;
+			if (file_exists(_BASEPATH.'/'.$module_path.$name))
+				$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.svg'; else
+				$icon_file = _BASEPATH.'/modules/'.$name.'/images/icon.svg';
 
 			if (file_exists($icon_file))
 				$icon = url_GetFromFilePath($icon_file); else
@@ -758,13 +762,28 @@ class backend extends Module {
 		global $module_path;
 
 		$result = array();
-		$directory = dir($module_path);
 
-		while (false !== ($entry = $directory->read()))
-			if (is_dir($directory->path.DIRECTORY_SEPARATOR.$entry) && $entry[0] != '.' && $entry[0] != '_')
-				$result[] = $entry;
+		// load site module list
+		if (file_exists($module_path)) {
+			$directory = dir($module_path);
 
-		$directory->close();
+			while (false !== ($entry = $directory->read()))
+				if (is_dir($directory->path.DIRECTORY_SEPARATOR.$entry) && $entry[0] != '.' && $entry[0] != '_')
+					$result[] = $entry;
+
+			$directory->close();
+		}
+
+		// load system module list
+		if (file_exists('modules/')) {
+			$directory = dir('modules/');
+
+			while (false !== ($entry = $directory->read()))
+				if (is_dir($directory->path.DIRECTORY_SEPARATOR.$entry) && $entry[0] != '.' && $entry[0] != '_')
+					$result[] = $entry;
+
+			$directory->close();
+		}
 
 		return $result;
 	}
