@@ -4,32 +4,30 @@
  * Main Configuration File
  */
 
-// document standard
-define('_STANDARD', 'html5');
-define('_TIMEZONE', 'America/New_York');
-
-define('DEBUG', 1);
-// define('SQL_DEBUG', 1);
-
-// default session options
-$session_type = Session::TYPE_NORMAL;
-
 // paths
-$module_path = 'modules/';
-$data_path = 'data/';
-$template_path = 'site/';
+$site_path = 'site/';
 $cache_path = 'cache/';
-$system_template_path = 'units/templates/';
+
+$system_images_path = 'system/images/';
+$system_styles_path = 'system/styles/';
+$system_template_path = 'system/templates/';
+
+$data_path = $site_path.'data/';
+$module_path = $site_path.'modules/';
+$template_path = $site_path.'templates/';
+$scripts_path = $site_path.'scripts/';
+$styles_path = $site_path.'styles/';
+$images_path = $site_path.'images/';
 
 // database
 $db = null;
-$db_use = true;
+$db_use = false;
 $db_type = DatabaseType::MYSQL;
 $db_config = array(
 		'host' => 'localhost',
 		'user' => 'root',
-		'pass' => 'matrix',
-		'name' => 'web_engine'
+		'pass' => '',
+		'name' => 'database'
 	);
 
 // cache
