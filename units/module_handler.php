@@ -100,14 +100,24 @@ class ModuleHandler {
 		global $module_path;
 
 		$result = null;
-		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
+		$filename = $module_path.$name.'/'.$name.'.php';
+		$system_filename = 'modules/'.$name.'/'.$name.'.php';
 
+		// try to load user define plugin
 		if (file_exists($filename) && $this->_checkDependencies($name)) {
 			include_once($filename);
 
 			$class = basename($filename, '.php');
 			$result = call_user_func(array($class, 'getInstance'));
+
+		} else if (file_exists($system_filename) && $this->_checkDependencies($name)) {
+			// no user plugin, try to load system
+			include_once($system_filename);
+
+			$class = basename($system_filename, '.php');
+			$result = call_user_func(array($class, 'getInstance'));
 		}
+
 
 		return $result;
 	}
@@ -120,10 +130,15 @@ class ModuleHandler {
 	public function _includeModule($name) {
 		global $module_path;
 
-		$filename = $module_path.$name.DIRECTORY_SEPARATOR.$name.'.php';
+		$filename = $module_path.$name.'/'.$name.'.php';
+		$system_filename = 'modules/'.$name.'/'.$name.'.php';
 
-		if (file_exists($filename) && $this->_checkDependencies($name)) 
+		if (file_exists($filename) && $this->_checkDependencies($name)) {
 			include_once($filename);
+
+		} else if (file_exists($system_filename) && $this->_checkDependencies($name)) {
+			include_once($system_filename);
+		}
 	}
 
 	/**
@@ -134,11 +149,18 @@ class ModuleHandler {
 		global $module_path;
 	
 		$result = true;
-		$filename = $module_path.$name.DIRECTORY_SEPARATOR.'depends';
 		$required = array();
 		$optional = array();
 		$mode = 0;
 
+		// default to user module
+		$filename = $module_path.$name.'/depends';
+
+		// try system module
+		if (!file_exists($filename))
+			$filename = 'modules/'.$name.'/depends';
+
+		// check dependencies
 		if (file_exists($filename)) {
 			$data = file_get_contents($filename);
 			$data = explode('\n', $data);
