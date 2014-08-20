@@ -235,7 +235,6 @@ class backend extends Module {
 						$module = call_user_func(array($module_name, 'getInstance'));
 						$module->transferControl($params, $children);
 					}
-
 					break;
 
 				default: 

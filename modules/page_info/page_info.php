@@ -191,7 +191,8 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function addElements() {
-		global $section, $db_use, $optimize_code, $url_rewrite;
+		global $section, $db_use, $optimize_code, $url_rewrite, $styles_path,
+			$images_path, $scripts_path, $system_styles_path, $system_images_path;
 
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
@@ -296,27 +297,27 @@ class page_info extends Module {
 		}				
 
 		// favicon
-		if (file_exists(_BASEPATH.'/images/favicon.png')) {
+		if (file_exists(_BASEPATH.$images_path.'favicon.png')) {
 			// regular, single size favicon
 			$icon_files = array(
-					'16x16'	=> _BASEPATH.'/images/favicon.png'
+					'16x16'	=> _BASEPATH.$images_path.'favicon.png'
 				);
 
-		} else if (file_exists(_BASEPATH.'/images/favicon')) {
+		} else if (file_exists(_BASEPATH.$images_path.'favicon')) {
 			$icon_sizes = array(16, 32, 64);
 			$icon_files = array();
 
 			foreach ($icon_sizes as $size) {
-				$file_name = _BASEPATH.'/images/favicon/'.$size.'.png';
+				$file_name = _BASEPATH.$images_path.'favicon/'.$size.'.png';
 				if (file_exists($file_name))
 					$icon_files[$size.'x'.$size] = $file_name;
 			}
 
 		} else {
 			$icon_files = array(
-					'16x16'	=> _BASEPATH.'/images/default_icon/16.png',
-					'32x32'	=> _BASEPATH.'/images/default_icon/32.png',
-					'64x64'	=> _BASEPATH.'/images/default_icon/64.png'
+					'16x16'	=> _BASEPATH.$system_images_path.'default_icon/16.png',
+					'32x32'	=> _BASEPATH.$system_images_path.'default_icon/32.png',
+					'64x64'	=> _BASEPATH.$system_images_path.'default_icon/64.png'
 				);
 		}
 
@@ -339,45 +340,45 @@ class page_info extends Module {
 			// prepare list of files without extensions
 			if (_DESKTOP_VERSION) {
 				$styles = array(
-						'/styles/common.css',
-						'/styles/main.css',
-						'/styles/header.css',
-						'/styles/content.css',
-						'/styles/footer.css'
+						$system_styles_path.'common.css',
+						$styles_path.'main.css',
+						$styles_path.'header.css',
+						$styles_path.'content.css',
+						$styles_path.'footer.css'
 					);
-				$less_style = '/styles/main.less';
+				$less_style = $styles_path.'main.less';
 
 			} else {
 				$styles = array(
-						'/styles/common.css',
-						'/styles/main.css',
-						'/styles/header_mobile.css',
-						'/styles/content_mobile.css',
-						'/styles/footer_mobile.css'
+						$system_styles_path.'common.css',
+						$styles_path.'main.css',
+						$styles_path.'header_mobile.css',
+						$styles_path.'content_mobile.css',
+						$styles_path.'footer_mobile.css'
 					);
 
-				$less_style = '/styles/main_mobile.less';
+				$less_style = $styles_path.'main_mobile.less';
 			}
 
 			// include styles
 			foreach ($styles as $style) {
 				// check for css files
-				if (file_exists(_BASEPATH.$style))
+				if (file_exists(_BASEPATH.'/'.$style))
 					$head_tag->addTag('link',
 							array(
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.$style)
+								'href'	=> url_GetFromFilePath(_BASEPATH.'/'.$style)
 							));
 			}
 
 			// add main less file if it exists
-			if (file_exists(_BASEPATH.$less_style)) {
+			if (file_exists(_BASEPATH.'/'.$less_style)) {
 				$head_tag->addTag('link',
 						array(
 							'rel'	=> 'stylesheet/less',
 							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.$less_style)
+							'href'	=> url_GetFromFilePath(_BASEPATH.'/'.$less_style)
 						));
 
 				if (!$optimize_code)
@@ -385,11 +386,11 @@ class page_info extends Module {
 			}
 
 			// add main javascript
-			if (file_exists(_BASEPATH.'/scripts/main.js'))
+			if (file_exists(_BASEPATH.$scripts_path.'main.js'))
 				$head_tag->addTag('script',
 						array(
 							'type'	=> 'text/javascript',
-							'src'	=> url_GetFromFilePath(_BASEPATH.'/scripts/main.js')
+							'src'	=> url_GetFromFilePath(_BASEPATH.$scripts_path.'main.js')
 						));
 		}
 	}
