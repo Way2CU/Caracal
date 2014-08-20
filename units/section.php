@@ -7,91 +7,23 @@
  */
 
 class SectionHandler {
+	private static $_instance;
 	public $engine;
 	public $active = false;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct($file="") {
+	private function __construct() {
 		global $data_path;
 
-		$file = (empty($file)) ? $data_path.'system_section.xml' : $file;
+		$file = $data_path.'section.xml';
 
 		if (file_exists($file)) {
 			$this->engine = new XMLParser(@file_get_contents($file), $file);
 			$this->engine->Parse();
 			$this->active = true;
 		}
-	}
-
-	/**
-	 * Retrieves file for parsing
-	 *
-	 * @param string $section
-	 * @param string $action
-	 * @param string $language
-	 * @return string
-	 */
-	public function getFile($section, $action, $language='') {
-		global $default_language;
-
-		$result = "";
-
-		if (!$this->active) return;
-		$action = (empty($action)) ? '_default' : $action;
-		$language = (empty($language)) ? $default_language : $language;
-
-		$xml_languages = null;
-		$xml_actions = null;
-
-		// cycle through xml file and find the apropriate action
-		foreach ($this->engine->document->section as $xml_section)
-			if ($xml_section->tagAttrs['name'] == $section) {
-				$xml_languages = $xml_section->language;
-				break;
-			}
-
-		if (!is_null($xml_languages) && count($xml_languages) > 0)
-			foreach ($xml_languages as $xml_language)
-				if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == "all") {
-					if (array_key_exists('file', $xml_language->tagAttrs)) 
-						$result = $xml_language->tagAttrs['file']; else
-						$xml_actions = $xml_language->action;
-
-					break;
-				}
-
-		if (empty($result) && !is_null($xml_actions) && count($xml_actions) > 0)
-			foreach ($xml_actions as $xml_action)
-				if ($xml_action->tagAttrs['name'] == $action) {
-					$result = $xml_action->tagAttrs['file'];
-					break;
-				}
-
-		return $result;
-	}
-}
-
-/**
- * This manager is used only in index file. Sole purpose of this
- * object is to provide a separate section files.
- */
-class MainSectionHandler {
-	private static $_instance;
-	private $section_system = null;
-	private $section_local = null;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		global $data_path;
-
-		$this->section_system = new SectionHandler();
-
-		if (file_exists($data_path."section.xml"))
-			$this->section_local = new SectionHandler($data_path."section.xml");
 	}
 
 	/**
@@ -113,21 +45,46 @@ class MainSectionHandler {
 	 * @return string
 	 */
 	public function getFile($section, $action, $language='') {
-		$file = "";
+		global $default_language;
 
-		// check for site specific section definition
-		if (!is_null($this->section_local))
-			$file = $this->section_local->getFile($section, $action, $language);
+		$result = '';
 
-		// in case local section definition does not exist, try system
-		if (empty($file))
-			$file = $this->section_system->getFile($section, $action, $language);
+		if (!$this->active) return;
+		$action = (empty($action)) ? '_default' : $action;
+		$language = (empty($language)) ? $default_language : $language;
 
-		return $file;
+		$xml_languages = null;
+		$xml_actions = null;
+
+		// cycle through xml file and find the apropriate action
+		foreach ($this->engine->document->section as $xml_section)
+			if ($xml_section->tagAttrs['name'] == $section) {
+				$xml_languages = $xml_section->language;
+				break;
+			}
+
+		if (!is_null($xml_languages) && count($xml_languages) > 0)
+			foreach ($xml_languages as $xml_language)
+				if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == 'all') {
+					if (array_key_exists('file', $xml_language->tagAttrs)) 
+						$result = $xml_language->tagAttrs['file']; else
+						$xml_actions = $xml_language->action;
+
+					break;
+				}
+
+		if (empty($result) && !is_null($xml_actions) && count($xml_actions) > 0)
+			foreach ($xml_actions as $xml_action)
+				if ($xml_action->tagAttrs['name'] == $action) {
+					$result = $xml_action->tagAttrs['file'];
+					break;
+				}
+
+		return $result;
 	}
 
 	/**
-	 * Transfers control to preconfigured template
+	 * Transfers control to preconfigured template.
 	 *
 	 * @param string $section
 	 * @param string $action
@@ -144,6 +101,13 @@ class MainSectionHandler {
 
 				// transfer control to module
 				$module->transferControl($params, array());
+
+			} else if ($section == 'backend_module' && class_exists('backend')) {
+				$module = backend::getInstance();
+				$params = array('action' => $action);
+
+				// transfer control to module
+				$module->transferControl($params, array());
 			}
 
 		} else {
@@ -152,7 +116,6 @@ class MainSectionHandler {
 			$template->parse();
 		}
 	}
-
 }
 
 ?>
