@@ -39,6 +39,12 @@ require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
 require_once('units/session.php');
 require_once('units/config.php');
+
+// include site config
+if (file_exists($site_path.'config.php'))
+	require_once($site_path.'config.php');
+
+// include remaining units
 require_once('units/doctypes.php');
 require_once('units/gravatar.php');
 
@@ -127,7 +133,7 @@ if ($cache->isCached()) {
 
 } else {
 	// get main section handler so we can transfer control
-	$section_handler = MainSectionHandler::getInstance();
+	$section_handler = SectionHandler::getInstance();
 
 	// load all the modules
 	$module_handler->loadModules();
