@@ -56,7 +56,7 @@ abstract class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	public function getLanguageConstant($constant, $language="") {
+	public function getLanguageConstant($constant, $language='') {
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
 		$result = $this->language->getText($constant, $language_in_use);
 
