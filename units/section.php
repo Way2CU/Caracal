@@ -104,7 +104,7 @@ class SectionHandler {
 
 			} else if ($section == 'backend_module' && class_exists('backend')) {
 				$module = backend::getInstance();
-				$params = array('action' => $action);
+				$params = array('action' => 'transfer_control');
 
 				// transfer control to module
 				$module->transferControl($params, array());
