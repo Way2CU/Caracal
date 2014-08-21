@@ -156,6 +156,13 @@ class Backend_UserManager {
 	}
 
 	/**
+	 * Save timer for unpriviledged user submission.
+	 */
+	public function saveTimer() {
+		$_SESSION['backend_user_timer'] = time();
+	}
+
+	/**
 	 * Save changed or new user data
 	 */
 	private function saveUser() {
@@ -257,7 +264,7 @@ class Backend_UserManager {
 		$agreed = isset($_REQUEST['agreed']) && ($_REQUEST['agreed'] == 'on' || $_REQUEST['agreed'] == '1') ? 1 : 0;
 
 		// grab new user data
-		if (defined('_AJAX_REQUEST')) 
+		if (_AJAX_REQUEST)
 			$source = $_REQUEST; else
 			$source = $tag_params;
 
@@ -276,12 +283,24 @@ class Backend_UserManager {
 		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
 		$duplicate_emails = $manager->getItems(array('id'), array('email' => $data['email']));
 
-		if (class_exists('captcha')) {
+		if (class_exists('captcha') && isset($source['captcha'])) {
+			// validate submission through captcha
 			$captcha = captcha::getInstance();
 			if (!$captcha->isCaptchaValid($source['captcha'])) {
 				$result['error'] = true;
 				$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
 			}
+
+		} else {
+			// no captcha is present, validate through submission timer
+			$timer = isset($_SESSION['backend_user_timer']) ? $_SESSION['backend_user_timer'] : null;
+
+			if (is_null($timer) || (!is_null($timer) && time() - $timer < 5)) {
+				$result['error'] = true;
+				$result['message'] = $this->parent->getLanguageConstant('message_users_error_premature_submission');
+			}
+
+			unset($_SESSION['backend_user_timer']);
 		}
 
 		if (!$result['error'])
@@ -294,6 +313,17 @@ class Backend_UserManager {
 				// insert data
 				$manager->insertData($data);
 				$user_id = $manager->getInsertedID();
+
+				// log user in
+				$validation_required = $this->parent->settings['require_verified'];
+
+				if (!$validation_required) {
+					$_SESSION['uid'] = $user_id;
+					$_SESSION['logged'] = true;
+					$_SESSION['level'] = $data['level'];
+					$_SESSION['username'] = $data['username'];
+					$_SESSION['fullname'] = $data['fullname'];
+				}
 
 				// assign message
 				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
