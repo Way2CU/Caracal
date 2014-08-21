@@ -314,8 +314,14 @@ class SessionManager {
 			$captcha_ok = true;
 		}
 
+		// check if account is verified and verification is required
+		if (is_object($user)) {
+			$required = $this->parent->settings['require_verified'];
+			$verified = ($required == 1 && $user->verified) || $required == 0;
+		}
+
 		// check user data
-		if (is_object($user) && $captcha_ok && $user->verified) {
+		if (is_object($user) && $captcha_ok && $verified) {
 			// remove login retries
 			$retry_manager->clearAddress();
 			
@@ -332,7 +338,7 @@ class SessionManager {
 
 			$result['logged_in'] = true;
 
-		} elseif (is_object($user) && $captcha_ok && !$user->verified) {
+		} elseif (is_object($user) && $captcha_ok && !$verified) {
 			// user is logged but account is not verified
 			$result['message'] = $this->parent->getLanguageConstant('message_users_account_not_verified');
 
