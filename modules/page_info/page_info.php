@@ -386,11 +386,11 @@ class page_info extends Module {
 			}
 
 			// add main javascript
-			if (file_exists(_BASEPATH.$scripts_path.'main.js'))
+			if (file_exists(_BASEPATH.'/'.$scripts_path.'main.js'))
 				$head_tag->addTag('script',
 						array(
 							'type'	=> 'text/javascript',
-							'src'	=> url_GetFromFilePath(_BASEPATH.$scripts_path.'main.js')
+							'src'	=> url_GetFromFilePath(_BASEPATH.'/'.$scripts_path.'main.js')
 						));
 		}
 	}
