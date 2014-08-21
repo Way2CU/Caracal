@@ -47,6 +47,7 @@
 		<constant name="message_users_error_user_level_higher">Error saving user data. Specified user has higher access than you.</constant>
 		<constant name="message_users_error_duplicate">Unable to create new user. Specified username or email already exists.</constant>
 		<constant name="message_users_error_captcha">Invalid captcha value!</constant>
+		<constant name="message_users_error_premature_submission">Unable to create account. Data was submitted too fast.</constant>
 		<constant name="message_users_created">New user has been created!</constant>
 		<constant name="message_users_data_saved">User data was saved!</constant>
 		<constant name="message_users_delete">You are about to remove the following user from the system. User will loose all data associated with this account. Are you sure?</constant>
@@ -165,6 +166,7 @@
 		<constant name="message_users_error_user_level_higher">טעות בשמירת מידע עבור משתמש,כל מה שנאמר</constant>
 		<constant name="message_users_error_duplicate">אין אפשרות ליצור משתמש מאחר ושם המשתמש קיים במערכת</constant>
 		<constant name="message_users_error_captcha">Invalid captcha value!</constant>
+		<constant name="message_users_error_premature_submission">Unable to create account. Data was submitted too fast.</constant>
 		<constant name="message_users_created">נוצא משתמש חגש</constant>
 		<constant name="message_users_data_saved">מידע עבור המשתמש נשמר.</constant>
 		<constant name="message_users_delete">אתה עומד להסיר את המשתמש, כל המידע המשוייך אליו ימחקהאם אתה בטוח?יאליו</constant>
