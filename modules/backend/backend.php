@@ -185,6 +185,11 @@ class backend extends Module {
 					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->verifyAccount($params, $children);
 					break;
+
+				case 'save_unpriviledged_user_timer':
+					$user_manager = Backend_UserManager::getInstance();
+					$user_manager->saveTimer();
+					break;
 				
 				case 'save_unpriviledged_user':
 					$user_manager = Backend_UserManager::getInstance();
@@ -303,6 +308,7 @@ class backend extends Module {
 	public function onInit() {
 		$this->saveSetting('template_verify', '');
 		$this->saveSetting('template_recovery', '');
+		$this->saveSetting('require_verified', 1);
 	}
 
 	public function onDisable() {
