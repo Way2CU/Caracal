@@ -322,6 +322,14 @@ class TemplateHandler {
 					echo $text;
 					break;
 
+				// embed svg images
+				case 'cms:svg':
+					$path = _BASEPATH.'/images/';
+					$file = $tag->tagAttrs['file'];
+
+					echo file_get_contents($path.$file);
+					break;
+
 				// multi language constants
 				case '_text':
 				case 'cms:text':
