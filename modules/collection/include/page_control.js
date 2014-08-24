@@ -18,6 +18,7 @@ function PageControl(selector, page_selector) {
 	self.page_redirection = new Object();
 	self.form = null;
 	self.submit_on_end = false;
+	self.wrap_around = false;
 	self.paused = false;
 	self.interval_id = null;
 
@@ -143,7 +144,9 @@ function PageControl(selector, page_selector) {
 
 		// if first or last page is disabled ignore switch request
 		if (new_page < 0 || new_page > self.pages.length -1) 
-			return;
+			if (self.wrap_around)
+				new_page = page > self.current_page ? 0 : self.pages.length - 1; else
+				return;
 
 		// redirect if needed
 		if (new_page in self.page_redirection) {
@@ -409,6 +412,15 @@ function PageControl(selector, page_selector) {
 
 		// create interval
 		self.interval_id = setInterval(self._handleInterval, interval);
+	};
+
+	/**
+	 * Configure page control to start pages from beginning once last is reached.
+	 *
+	 * @param boolean wrap
+	 */
+	self.setWrapAround = function(wrap) {
+		self.wrap_around = wrap;
 	};
 
 	/**
