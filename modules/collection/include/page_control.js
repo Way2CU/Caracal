@@ -291,6 +291,26 @@ function PageControl(selector, page_selector) {
 	};
 
 	/**
+	 * Attach click event for previous page control.
+	 *
+	 * @param object control
+	 */
+	self.attachPreviousControl = function(control) {
+		control.click(self._handlePrevious);
+		return self;
+	};
+
+	/**
+	 * Attach click event for next page control.
+	 *
+	 * @param object control
+	 */
+	self.attachNextControl = function(control) {
+		control.click(self._handleNext);
+		return self;
+	};
+
+	/**
 	 * Attach form to page control. This function is used along with
 	 * setSubmitOnEnd option. After reaching last page specified form
 	 * will receive submit signal.
