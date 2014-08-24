@@ -129,7 +129,7 @@ function PageControl(selector, page_selector) {
 			new_page += page > self.current_page ? 1 : -1;
 
 		// submit on last page
-		if (new_page >= self.pages.length-1 && self.submit_on_end) {
+		if (new_page >= self.pages.length - 1 && self.submit_on_end) {
 			// page-flip signal should be emitted before submit
 			if (!self._emitSignal('page-flip', self.current_page, new_page))
 				return;
@@ -142,11 +142,9 @@ function PageControl(selector, page_selector) {
 			self.form.submit()
 		}
 
-		// if first or last page is disabled ignore switch request
-		if (new_page < 0 || new_page > self.pages.length -1) 
-			if (self.wrap_around)
-				new_page = new_page < 0 ? self.pages.length - 1 : 0; else
-				return;
+		// start showing pages from start
+		if (self.wrap_around && new_page > self.pages.length - 1)
+			new_page = 0;
 
 		// redirect if needed
 		if (new_page in self.page_redirection) {
@@ -412,6 +410,8 @@ function PageControl(selector, page_selector) {
 
 		// create interval
 		self.interval_id = setInterval(self._handleInterval, interval);
+
+		return self;
 	};
 
 	/**
@@ -421,6 +421,8 @@ function PageControl(selector, page_selector) {
 	 */
 	self.setWrapAround = function(wrap) {
 		self.wrap_around = wrap;
+
+		return self;
 	};
 
 	/**
