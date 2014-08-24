@@ -145,7 +145,7 @@ function PageControl(selector, page_selector) {
 		// if first or last page is disabled ignore switch request
 		if (new_page < 0 || new_page > self.pages.length -1) 
 			if (self.wrap_around)
-				new_page = page > self.current_page ? 0 : self.pages.length - 1; else
+				new_page = new_page < 0 ? self.pages.length - 1 : 0; else
 				return;
 
 		// redirect if needed
