@@ -145,7 +145,7 @@ class TemplateHandler {
 	 * @param boolean $parent_block If parent tag is block element
 	 */
 	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path;
+		global $section, $action, $language, $template_path, $system_template_path, $images_path;
 
 		if ((!$this->active) && empty($tags))
 			return;
@@ -324,7 +324,7 @@ class TemplateHandler {
 
 				// embed svg images
 				case 'cms:svg':
-					$path = _BASEPATH.'/images/';
+					$path = _BASEPATH.'/'.$images_path;
 					$file = $tag->tagAttrs['file'];
 
 					echo file_get_contents($path.$file);
