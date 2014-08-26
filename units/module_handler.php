@@ -77,16 +77,16 @@ class ModuleHandler {
 		// load modules
 		if (count($preload_list) > 0)
 			foreach ($preload_list as $module_name)
-				$this->_loadModule($module_name);
+				$this->loadModule($module_name);
 
 		if (count($normal_list) > 0)
 			if ($include_only) {
 				foreach($normal_list as $module_name)
-					$this->_includeModule($module_name);
+					$this->includeModule($module_name);
 
 			} else {
 				foreach($normal_list as $module_name)
-					$this->_loadModule($module_name);
+					$this->loadModule($module_name);
 			}
 	}
 
@@ -96,7 +96,7 @@ class ModuleHandler {
 	 * @param string $filename
 	 * @return resource
 	 */
-	public function _loadModule($name) {
+	public function loadModule($name) {
 		global $module_path;
 
 		$result = null;
@@ -104,20 +104,19 @@ class ModuleHandler {
 		$system_filename = 'modules/'.$name.'/'.$name.'.php';
 
 		// try to load user define plugin
-		if (file_exists($filename) && $this->_checkDependencies($name)) {
+		if (file_exists($filename)) {
 			include_once($filename);
 
 			$class = basename($filename, '.php');
 			$result = call_user_func(array($class, 'getInstance'));
 
-		} else if (file_exists($system_filename) && $this->_checkDependencies($name)) {
+		} else if (file_exists($system_filename)) {
 			// no user plugin, try to load system
 			include_once($system_filename);
 
 			$class = basename($system_filename, '.php');
 			$result = call_user_func(array($class, 'getInstance'));
 		}
-
 
 		return $result;
 	}
@@ -127,7 +126,7 @@ class ModuleHandler {
 	 *
 	 * @param string $filename
 	 */
-	public function _includeModule($name) {
+	public function includeModule($name) {
 		global $module_path;
 
 		$filename = $module_path.$name.'/'.$name.'.php';

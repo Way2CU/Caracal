@@ -512,7 +512,7 @@ class backend extends Module {
 							));
 
 			$handler = ModuleHandler::getInstance();
-			$module = $handler->_loadModule($module_name);
+			$module = $handler->loadModule($module_name);
 
 			if (!is_null($module)) {
 				$module->onInit();
