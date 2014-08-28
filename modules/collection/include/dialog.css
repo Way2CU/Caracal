@@ -1,7 +1,7 @@
 /**
  * Dialog Style Sheet
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -19,10 +19,7 @@ div.dialog-background {
 	z-index: 100000;
 	opacity: 0;
 
-	transition-property: opacity;
-	transition-duration: 0.3s;
-	-moz-transition-property: opacity;
-	-moz-transition-duration: 0.3s;
+	transition: opacity 0.3s;
 }
 
 div.dialog-background.visible {
@@ -43,13 +40,8 @@ div.dialog {
 
 	color: #333333;
 
-	transition-property: transform;
-	transition-duration: 0.6s;
-	-moz-transition-property: transform;
-	-moz-transition-duration: 0.6s;
+	transition: transform 0.6s;
 	transform: translateY(-100%);
-	-moz-transform: translateY(-100%);
-	-webkit-transform: translateY(-100%);
 }
 
 div.dialog.visible {
@@ -58,8 +50,6 @@ div.dialog.visible {
 	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 
 	transform: translateY(0%);
-	-moz-transform: translateY(0%);
-	-webkit-transform: translateY(0%);
 }
 
 div.dialog div.title {
@@ -100,10 +90,7 @@ div.dialog div.command_bar a {
 	font-size: 1.1em;
 	text-decoration: none;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.dialog div.command_bar a:hover {
