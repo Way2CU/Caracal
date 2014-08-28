@@ -44,7 +44,7 @@ class stripe_payment extends Module {
 			if (!is_null($method_menu)) 
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_stripe'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
+									url_GetFromFilePath($this->path.'images/icon.svg'),
 
 									window_Open( // on click open window
 												'stripe',
@@ -59,7 +59,7 @@ class stripe_payment extends Module {
 			if (!is_null($plans_menu))
 				$plans_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_stripe'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
+									url_GetFromFilePath($this->path.'images/icon.svg'),
 
 									window_Open( // on click open window
 												'stripe_recurring_plans',
