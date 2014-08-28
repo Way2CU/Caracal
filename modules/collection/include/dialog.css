@@ -32,7 +32,7 @@ div.dialog-background.visible {
 }
 
 div.dialog {
-	display: block;
+	display: none;
 	position: fixed;
 
 	top: -100%;
