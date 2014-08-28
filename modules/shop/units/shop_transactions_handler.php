@@ -141,7 +141,7 @@ class ShopTransactionsHandler {
 
 		// get conditionals
 		if (isset($tag_params['system_user']))
-			$conditions['user'] = fix_id($tag_params['system_user']);
+			$conditions['system_user'] = fix_id($tag_params['system_user']);
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
