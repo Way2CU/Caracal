@@ -194,22 +194,23 @@ abstract class Module {
 	 * @return TemplateHandler
 	 */
 	public function loadTemplate($params, $default_file, $param_name='template') {
-		global $template_path;
-
-		// get path
-		$path = $template_path;
-
-		if (isset($params['local']) && $params['local'] == 1)
-			$path = $this->path.'templates/';
-
-		if (isset($params['template_path']))
-			$path = $params['template_path'];
-
-		// get file name
-		$file_name = $default_file;
-
-		if (isset($params[$param_name]))
+		if (isset($params[$param_name])) {
+			$path = '';
 			$file_name = $params[$param_name];
+
+			if (isset($params['local']) && $params['local'] == 1) {
+				// load local template
+				$path = $this->path.'templates/';
+			} else if (isset($params['template_path'])) {
+				// load template from specified path
+				$path = $params['template_path'];
+			}
+
+		} else {
+			// load template from module path
+			$path = $this->path.'templates/';
+			$file_name = $default_file;
+		}
 
 		// print debug statements
 		if (defined('DEBUG'))
