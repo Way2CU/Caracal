@@ -194,24 +194,29 @@ abstract class Module {
 	 * @return TemplateHandler
 	 */
 	public function loadTemplate($params, $default_file, $param_name='template') {
-		if (isset($params[$param_name])) {
-			if (isset($params['local']) && $params['local'] == 1) {
-				// load local template
-				$template = new TemplateHandler($params[$param_name], $this->path.'templates/');
+		global $template_path;
 
-			} else if (isset($params['template_path'])) {
-				// load template from specified path
-				$template = new TemplateHandler($params[$param_name], $params['template_path']);
+		// get path
+		$path = $template_path;
 
-			} else {
-				// load template from absolute path
-				$template = new TemplateHandler($params[$param_name]);
-			}
-		} else {
-			// load template from module path
-			$template = new TemplateHandler($default_file, $this->path.'templates/');
-		}
+		if (isset($params['local']) && $params['local'] == 1)
+			$path = $this->path.'templates/';
 
+		if (isset($params['template_path']))
+			$path = $params['template_path'];
+
+		// get file name
+		$file_name = $default_file;
+
+		if (isset($params[$param_name]))
+			$file_name = $params[$param_name];
+
+		// print debug statements
+		if (defined('DEBUG'))
+			trigger_error($this->name.': Load template: '.$path.$file_name, E_USER_NOTICE);
+
+		// load template
+		$template = new TemplateHandler($file_name, $path);
 		$template->setMappedModule($this->name);
 
 		return $template;
