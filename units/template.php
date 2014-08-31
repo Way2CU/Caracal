@@ -20,12 +20,6 @@ class TemplateHandler {
 	public $engine;
 
 	/**
-	 * Raw XML data
-	 * @var string
-	 */
-	private $data;
-
-	/**
 	 * If XML parser is active and ready
 	 * @var boolean
 	 */
@@ -80,12 +74,12 @@ class TemplateHandler {
 		$this->active = false;
 		$this->params = array();
 		$this->module = null;
-		$path = (empty($path)) ? $template_path : $path;
+		$path = empty($path) ? $template_path : $path;
 
 		// if file exits then load
 		if (!empty($file) && file_exists($path.$file)) {
-			$this->data = @file_get_contents($path.$file);
-			$this->engine = new XMLParser($this->data, $path.$file);
+			$data = @file_get_contents($path.$file);
+			$this->engine = new XMLParser($data, $path.$file);
 			$this->engine->Parse();
 
 			$this->active = true;
