@@ -709,7 +709,7 @@ function WindowSystem(container, list_container) {
 			350,
 			language_handler.getText('backend', 'title_login'),
 			false,
-			base+'/?section=backend&action=login'
+			base+'/index.php?section=backend&action=login'
 		);
 	};
 
