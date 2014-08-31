@@ -12,6 +12,9 @@ body {
 	font-size: 100%;
 	font-family: Arial, Helvetica, sans-serif;
 	direction: ltr;
+
+	/* fix for mobile use of z-index */
+	z-index: 0;
 }
 
 input,
@@ -129,9 +132,12 @@ div.scrollbar_thumb.active {
 	left: -200px;
 
 	background-color: white;
-
-	overflow: auto;
 	transition: all 0.5s;
+
+	/* improve performance on old Android browsers */
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	perspective: 1000;
 }
 
 .mobile_menu.visible {
