@@ -138,6 +138,9 @@ div.scrollbar_thumb.active {
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 	perspective: 1000;
+
+	/* optimize crhome */
+	will-change: left;
 }
 
 .mobile_menu.visible {
