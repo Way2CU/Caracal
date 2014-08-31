@@ -67,14 +67,14 @@ class TemplateHandler {
 	 * @param string $file
 	 * @return TemplateHandler
 	 */
-	public function __construct($file = "", $path = "") {
+	public function __construct($file = '', $path = '') {
 		global $template_path;
 
-		$this->file = $path.$file;
 		$this->active = false;
 		$this->params = array();
 		$this->module = null;
 		$path = empty($path) ? $template_path : $path;
+		$this->file = $path.$file;
 
 		// if file exits then load
 		if (!empty($file) && file_exists($path.$file)) {
