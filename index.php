@@ -121,7 +121,7 @@ if ($db_use && !database_connect())
 	die('There was an error while trying to connect database.');
 
 // transfer display control
-$cache = CacheHandler::getInstance();
+$cache = Cache::getInstance();
 $module_handler = ModuleHandler::getInstance();
 
 if ($cache->isCached()) {

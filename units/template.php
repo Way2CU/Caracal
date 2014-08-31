@@ -6,6 +6,9 @@
  * @author MeanEYE
  */
 
+use Core\Cache;
+
+
 class TemplateHandler {
 	/**
 	 * Used for debugging
@@ -239,7 +242,7 @@ class TemplateHandler {
 				unset($tag->tagAttrs['cms:skip_cache']);
 
 				// get cache handler
-				$cache = CacheHandler::getInstance();
+				$cache = Cache::getInstance();
 
 				// only if current URL is being cached, we start dirty area
 				if ($cache->isCaching()) {

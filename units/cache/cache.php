@@ -1,13 +1,18 @@
 <?php
 
 /**
- * Page Caching Mechanism
- * 
+ * Caching System
+ *
+ * This class provides global functions for page and system
+ * response cashing.
+ *
  * Author: Mladen Mijatov
  */
 
+namespace Core;
 
-class CacheHandler {
+
+class Cache {
 	private static $_instance;
 
 	private $uid = null;
