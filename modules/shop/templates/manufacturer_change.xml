@@ -24,7 +24,7 @@
 			<span><_text constant="label_logo" module="shop"/></span>
 			<select name="logo" style="width: 270px;">
 				<option/>
-				<_image_list
+				<cms:image_list
 					selected="$params['logo']"
 					cms:eval="selected"
 					template="image_option.xml"

@@ -114,7 +114,7 @@ class ShopCategoryHandler {
 
 		if (class_exists('gallery')) {
 			$gallery = gallery::getInstance();
-			$template->registerTagHandler('_image_list', $gallery, 'tag_ImageList');
+			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 		}
 
 		$template->restoreXML();
@@ -141,7 +141,7 @@ class ShopCategoryHandler {
 
 			if (class_exists('gallery')) {
 				$gallery = gallery::getInstance();
-				$template->registerTagHandler('_image_list', $gallery, 'tag_ImageList');
+				$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 			}
 
 			// prepare parameters

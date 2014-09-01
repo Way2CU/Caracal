@@ -507,7 +507,7 @@ class ShopItemHandler {
 		
 		// register tag handlers
 		if (!is_null($gallery)) 
-			$template->registerTagHandler('_image_list', $gallery, 'tag_ImageList');
+			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_value_list', $size_handler, 'tag_ValueList');
