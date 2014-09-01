@@ -1325,10 +1325,14 @@ class gallery extends Module {
 
 		$conditions = array();
 		$order_by = array();
+		$order_asc = true;
 
 		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
 
 		if (isset($tag_params['container']) || isset($tag_params['container_id'])) {
 			$container_manager = GalleryContainerManager::getInstance();
@@ -1373,7 +1377,8 @@ class gallery extends Module {
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								$conditions,
-								$order_by
+								$order_by,
+								$order_asc
 							);
 
 		// create template
