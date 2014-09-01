@@ -573,7 +573,7 @@ class gallery extends Module {
 
 		$template = new TemplateHandler('images_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
 		$params = array(
 					'id'			=> $item->id,
@@ -713,7 +713,7 @@ class gallery extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -758,7 +758,7 @@ class gallery extends Module {
 					'cancel_action'	=> window_Close('gallery_groups_change')
 				);
 
-		$template->registerTagHandler('_image_list', $this, 'tag_ImageList');
+		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -1204,7 +1204,7 @@ class gallery extends Module {
 
 		$template = $this->loadTemplate($tag_params, 'images_list_item.xml');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_image', $this, 'tag_Image');
+		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
@@ -1292,8 +1292,8 @@ class gallery extends Module {
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
 
-		$template->registerTagHandler('_image', $this, 'tag_Image');
-		$template->registerTagHandler('_image_list', $this, 'tag_ImageList');
+		$template->registerTagHandler('cms:image', $this, 'tag_Image');
+		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
 
 		// parse template
 		if (is_object($item)) {
@@ -1379,8 +1379,8 @@ class gallery extends Module {
 		// create template
 		$template = $this->loadTemplate($tag_params, 'groups_list_item.xml');
 
-		$template->registerTagHandler('_image', $this, 'tag_Image');
-		$template->registerTagHandler('_image_list', $this, 'tag_ImageList');
+		$template->registerTagHandler('cms:image', $this, 'tag_Image');
+		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
@@ -1458,10 +1458,10 @@ class gallery extends Module {
 		}
 
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_image', $this, 'tag_Image');
-		$template->registerTagHandler('_image_list', $this, 'tag_ImageList');
-		$template->registerTagHandler('_group', $this, 'tag_Group');
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:image', $this, 'tag_Image');
+		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
+		$template->registerTagHandler('cms:group', $this, 'tag_Group');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
 		if (is_object($item)) {
 			$params = array(
@@ -1509,10 +1509,10 @@ class gallery extends Module {
 
 		$template = $this->loadTemplate($tag_params, 'containers_list_item.xml');
 
-		$template->registerTagHandler('_image', $this, 'tag_Image');
-		$template->registerTagHandler('_image_list', $this, 'tag_ImageList');
-		$template->registerTagHandler('_group', $this, 'tag_Group');
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:image', $this, 'tag_Image');
+		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
+		$template->registerTagHandler('cms:group', $this, 'tag_Group');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 

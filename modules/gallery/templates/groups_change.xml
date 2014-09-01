@@ -41,7 +41,7 @@
 			<span><_text constant="label_thumbnail" module="gallery"/></span>
 			<select name="thumbnail">
 				<option/>
-				<_image_list
+				<cms:image_list
 					selected="$params['thumbnail']"
 					group_id="$params['id']"
 					template="thumbnail_change_item.xml"

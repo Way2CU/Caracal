@@ -16,7 +16,7 @@
 			<span><_text constant="label_group" module="gallery"/></span>
 			<select name="group" style="width: 270px;">
 				<option></option>
-				<_group_list template="groups_option.xml" selected="$params['group']" cms:eval="selected" local="1"/>
+				<cms:group_list template="groups_option.xml" selected="$params['group']" cms:eval="selected" local="1"/>
 			</select>
 		</label>
 		<label>
