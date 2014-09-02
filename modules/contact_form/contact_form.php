@@ -2445,6 +2445,21 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Get mailer by name.
+	 *
+	 * @param string $name
+	 * @return object
+	 */
+	public function getMailerByName($name) {
+		$result = null;
+
+		if (array_key_exists($name, $this->mailers))
+			$result = $this->mailers[$name];
+		
+		return $result;
+	}
+
+	/**
 	 * Get default sender.
 	 *
 	 * @return array
