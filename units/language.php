@@ -54,12 +54,11 @@ class LanguageHandler {
 				$this->default = $short_name;
 
 			// parse language constants
-			if (count($xml_language->constant) > 0)
-				foreach ($xml_language->constant as $xml_constant) {
-					$constant_name = $xml_constant->tagAttrs['name'];
-					$value = $xml_constant->tagData;
-					$this->data[$short_name][$constant_name] = $value;
-				}
+			foreach ($xml_language->constant as $xml_constant) {
+				$constant_name = $xml_constant->tagAttrs['name'];
+				$value = $xml_constant->tagData;
+				$this->data[$short_name][$constant_name] = $value;
+			}
 		}
 
 		// remove parser
