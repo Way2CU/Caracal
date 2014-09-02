@@ -194,6 +194,10 @@ class contact_form extends Module {
 				case 'submit':
 					$this->submitForm($params, $children);
 					break;
+
+				case 'amend_submission':
+					$this->amendSubmission($params, $children);
+					break;
 					
 				default:
 					break;
@@ -670,6 +674,113 @@ class contact_form extends Module {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Modify previous submission based on one or more references. This function takes
+	 * parameters through children tags.
+	 */
+	public function amendSubmission($tag_params, $children) {
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+
+		$data = array();
+		$fields = array();
+		$field_ids = array();
+		$id_list = array();
+		$conditions = array();
+		$form_id = null;
+		$text_id = null;
+
+		// make sure we have form to work with
+		if (isset($tag_params['id']))
+			$form_id = fix_id($tag_params['id']);
+
+		if (isset($tag_params['text_id']))
+			$text_id = fix_chars($tag_params['text_id']);
+
+		if (is_null($form_id) && is_null($text_id))
+			return;
+
+		// parse children
+		foreach ($children as $child) {
+			switch ($child->tagName) {
+				case 'param':
+					$param_name = fix_chars($child->tagAttrs['name']);
+					$field_name = fix_chars($child->tagAttrs['field']);
+
+					if ($child->tagAttrs['type'] == 'request') {
+						$field_value = fix_chars($_REQUEST[$param_name]);
+					}
+
+					$fields[$field_name] = $field_value;
+					break;
+
+				case 'set':
+					$field_name = fix_chars($child->tagAttrs['field']);
+					$data[$field_name] = fix_chars($child->tagAttrs['value']);
+					break;
+			}
+		}
+
+		// get field ids
+		$raw_fields = $field_manager->getItems(
+				array('id', 'name'),
+				array('name' => array_keys($fields))
+			);
+
+		foreach ($raw_fields as $field)
+			$field_ids[$field->name] = $field->id;
+
+		// get all the submissions for current IP address
+		$conditions['address'] = $_SERVER['REMOTE_ADDR'];
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		if (!is_null($form_id))
+			$conditions['form'] = $form_id;
+
+		$score = array();
+		$submissions = $submission_manager->getItems(array('id'), $conditions);
+
+		if (count($submissions) > 0)
+			foreach ($submissions as $submission) {
+				$id_list[] = $submission->id;
+				$score[$submission->id] = 0;
+			}
+
+		// collect all the matching data
+		foreach ($fields as $name => $value) {
+			$conditions = array(
+				'submission'	=> $id_list,
+				'field'			=> $field_ids[$name],
+				'value'			=> $value
+			);
+
+			$data_list = $submission_field_manager->getItems(array('id', 'submission'), $conditions);
+
+			if (count($data_list) > 0)
+				$score[$data_list->submission]++;
+		}
+
+		// get the highest rated submission
+		rsort($score);
+		$submission_id = reset(array_keys($score));
+
+		// update submission
+		foreach ($data as $name => $value) {
+			$submission_field_manager->updateData(
+					array(
+						'submission'	=> $submission_id, 
+						'field'			=> $field_ids[$name]
+					),
+					array(
+						'value'			=> $value
+					)
+				);
+		}
 	}
 
 	/**
