@@ -32,7 +32,7 @@
 							name="save_location"
 							value="$settings['save_location']"
 							cms:eval="value"
-							class="code"
+							class="code ltr"
 							style="width: 320px;"
 						/>
 					</label>
@@ -60,7 +60,7 @@
 							value="$settings['sender_address']" 
 							cms:eval="value"
 							style="width: 250px;"
-							class="code"
+							class="code ltr"
 						/>
 					</label>
 				</fieldset>
@@ -85,7 +85,7 @@
 							value="$settings['recipient_address']" 
 							cms:eval="value"
 							style="width: 250px;"
-							class="code"
+							class="code ltr"
 						/>
 					</label>
 				</fieldset>
@@ -100,7 +100,7 @@
 						value="$settings['smtp_server']"
 						cms:eval="value"
 						style="width: 240px;"
-						class="code"
+						class="code ltr"
 					/>
 				</label>
 				<label class="horizontal">
@@ -111,7 +111,7 @@
 						value="$settings['smtp_port']"
 						cms:eval="value"
 						style="width: 50px;"
-						class="code"
+						class="code ltr"
 					/>
 				</label>
 				<label class="checkbox">
@@ -126,21 +126,23 @@
 				<hr/>
 				<label class="radio">
 					<span><cms:text constant="label_smtp_no_authentication" module="contact_form"/></span>
-					<cms:if condition="$settings['smtp_authenticate'] == 0">
-						<input type="radio" name="smtp_authenticate" value="0" checked="checked"/>
-					</cms:if>
-					<cms:if condition="$settings['smtp_authenticate'] == 1">
-						<input type="radio" name="smtp_authenticate" value="0"/>
-					</cms:if>
+					<input
+						type="radio"
+						name="smtp_authenticate"
+						value="0"
+						checked="$settings['smtp_authenticate'] == 0 ? 'checked' : false"
+						cms:optional="checked"
+						/>
 				</label>
 				<label class="radio">
 					<span><cms:text constant="label_smtp_authenticate" module="contact_form"/></span>
-					<cms:if condition="$settings['smtp_authenticate'] == 1">
-						<input type="radio" name="smtp_authenticate" value="1" checked="checked"/>
-					</cms:if>
-					<cms:if condition="$settings['smtp_authenticate'] == 0">
-						<input type="radio" name="smtp_authenticate" value="1"/>
-					</cms:if>
+					<input
+						type="radio"
+						name="smtp_authenticate"
+						value="1"
+						checked="$settings['smtp_authenticate'] == 1 ? 'checked' : false"
+						cms:optional="checked"
+						/>
 				</label>
 
 				<label class="horizontal">
@@ -151,7 +153,7 @@
 						value="$settings['smtp_username']"
 						cms:eval="value"
 						style="width: 140px;"
-						class="code"
+						class="code rtl"
 					/>
 				</label>
 				<label class="horizontal">
@@ -162,7 +164,7 @@
 						value="$settings['smtp_password']"
 						cms:eval="value"
 						style="width: 140px;"
-						class="code"
+						class="code rtl"
 					/>
 				</label>
 			</div>
