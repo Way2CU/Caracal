@@ -932,6 +932,11 @@ div.window div.content iframe.target {
 	transition-property: all;
 }
 
+body.rtl [data-tooltip]:after {
+	left: auto;
+	right: 15px;
+}
+
 [data-tooltip]:before {
 	display: block;
 	width: 0px;
@@ -955,6 +960,11 @@ div.window div.content iframe.target {
 	transition-delay: 0s;
 	transition-duration: 0.3s;
 	transition-property: all;
+}
+
+body.rtl [data-tooltip]:before {
+	left: auto;
+	right: 30px;
 }
 
 [data-tooltip]:hover:after {
