@@ -10,6 +10,8 @@
  */
 namespace Core\Cache;
 
+use \Memcached as Memcached;
+
 
 class MemcachedProvider implements Provider {
 	private $api = null;
