@@ -48,6 +48,9 @@ if (file_exists($site_path.'config.php'))
 require_once('units/doctypes.php');
 require_once('units/gravatar.php');
 
+// make namespaces more friendly
+use Core\Cache\Manager as Cache;
+
 // set timezone as specificed in the config
 date_default_timezone_set(_TIMEZONE);
 
