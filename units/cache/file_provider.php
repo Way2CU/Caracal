@@ -49,7 +49,7 @@ class FileProvider implements Provider {
 
 		// store content
 		file_put_contents($file_name, $data);
-	};
+	}
 
 	/**
 	 * Retrieve data for specified unique identifier. If
@@ -71,7 +71,7 @@ class FileProvider implements Provider {
 			$result = file_get_contents($file_name);
 
 		return $result;
-	};
+	}
 
 	/**
 	 * Check if specified unique identified exists in database.
@@ -86,7 +86,7 @@ class FileProvider implements Provider {
 		$time_limit = time() - $cache_expire_period;
 
 		return = file_exists($file_name) && filemtime($file_name) > $time_limit;
-	};
+	}
 
 	/**
 	 * Clear all cache.
@@ -94,7 +94,7 @@ class FileProvider implements Provider {
 	function clearCache() {
 		global $cache_path;
 		array_map('unlink', glob($cache_path.'*.cache'));
-	};
+	}
 }
 
 ?>
