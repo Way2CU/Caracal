@@ -114,7 +114,7 @@ class Manager {
 		$result = false;
 
 		if (!is_null($this->provider))
-			$result = $this->provider->isCached();
+			$result = $this->provider->isCached($this->uid);
 
 		return $result;
 	}
