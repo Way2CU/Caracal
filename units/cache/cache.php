@@ -137,10 +137,8 @@ class Manager {
 		$data = $this->provider->getData($this->uid);
 
 		// show cached page
-		if (!is_null($data)) {
-			header('Content-Type: text/html; charset=UTF-8');
+		if (!is_null($data))
 			print $data;
-		}
 
 		return $data != null;
 	}
