@@ -12,6 +12,7 @@ namespace Core\Cache;
 
 require_once('base.php');
 require_once('file_provider.php');
+require_once('memcached_provider.php');
 
 use \Session as Session;
 
@@ -60,6 +61,18 @@ class Manager {
 		switch ($cache_method) {
 			case Type::FILE_SYSTEM:
 				$this->provider = new FileProvider();
+				break;
+
+			case Type::MEMCACHED:
+				if (class_exists('Memcached')) {
+					// create memcache provider
+					$this->provider = new MemcachedProvider();
+
+				} else {
+					// fallback to file provider
+					$this->provider = new FileProvider();
+					trigger_error('Memcached not present. Falling back to file provider.', E_USER_NOTICE);
+				}
 				break;
 		}
 
