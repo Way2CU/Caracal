@@ -61,7 +61,7 @@
 		<constant name="menu_articles">מאמרים</constant>
 		<constant name="menu_articles_new">צור מאמר חדש</constant>
 		<constant name="menu_articles_manage">נהל מאמרים</constant>
-		<constant name="menu_article_groups">נהל מאמרים</constant>
+		<constant name="menu_article_groups">נהל קבוצות מאמרים</constant>
 
 		<!-- Titles -->
 		<constant name="title_articles_new">מאמרים: צור חדש</constant>
