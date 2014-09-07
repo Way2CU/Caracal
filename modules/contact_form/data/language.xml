@@ -314,7 +314,7 @@
 		<constant name="message_error">נוצרה בעיה בשליחת מידע אנא בדוק השדות ונסה שנית!</constant>
 		<constant name="message_error_no_address">תקלה בשליחת מידע, לא נקבע נמען.</constant>
 		<constant name="message_saved">הגדרות נשמרו</constant>
-		<constant name="message_template_saved">New template was saved!</constant>
+		<constant name="message_template_saved">התבנית שלך נשמרה בהצלחה!</constant>
 		<constant name="message_template_delete">You are about to remove the following template. In case there are services that still rely on this template removing this template will cause problems. Are you sure?</constant>
 		<constant name="message_template_deleted">Template was removed from the system!</constant>
 		<constant name="message_form_saved">Form data was saved.</constant>
