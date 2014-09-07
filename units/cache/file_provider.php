@@ -26,7 +26,7 @@ class FileProvider implements Provider {
 		foreach ($file_list as $file_name)
 			if (filemtime($file_name) < $time_limit)
 				unlink($file_name);
-	};
+	}
 
 	/**
 	 * Store specified data to cache under unique
