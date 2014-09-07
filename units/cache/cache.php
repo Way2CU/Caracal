@@ -10,6 +10,7 @@
  */
 namespace Core\Cache;
 
+require_once('base.php');
 require_once('file_provider.php');
 
 use \Session as Session;

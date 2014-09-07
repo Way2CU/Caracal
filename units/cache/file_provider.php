@@ -11,8 +11,6 @@
  */
 namespace Core\Cache;
 
-require_once('base.php');
-
 
 class FileProvider implements Provider {
 	/**
