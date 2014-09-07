@@ -15,7 +15,7 @@ interface Provider {
 	/**
 	 * Initialization function.
 	 */
-	public abstract function initialize();
+	public function initialize();
 
 	/**
 	 * Store specified data to cache under unique
@@ -26,7 +26,7 @@ interface Provider {
 	 * @param string $data
 	 * @param int $expires
 	 */
-	public abstract function storeData($uid, $data, $expires);
+	public function storeData($uid, $data, $expires);
 
 	/**
 	 * Retrieve data for specified unique identifier. If
@@ -36,7 +36,7 @@ interface Provider {
 	 * @param string $uid
 	 * @return mixed
 	 */
-	public abstract function getData($uid);
+	public function getData($uid);
 
 	/**
 	 * Check if specified unique identified exists in database.
@@ -44,12 +44,12 @@ interface Provider {
 	 * @param string $uid
 	 * @return boolean
 	 */
-	public abstract function isCached($uid);
+	public function isCached($uid);
 
 	/**
 	 * Clear all cache.
 	 */
-	public abstract function clearCache();
+	public function clearCache();
 }
 
 ?>
