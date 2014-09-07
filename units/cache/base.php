@@ -26,7 +26,7 @@ interface Provider {
 	 * @param string $data
 	 * @param int $expires
 	 */
-	public abstract function store_data($uid, $data, $expires);
+	public abstract function storeData($uid, $data, $expires);
 
 	/**
 	 * Retrieve data for specified unique identifier. If
@@ -36,7 +36,7 @@ interface Provider {
 	 * @param string $uid
 	 * @return mixed
 	 */
-	public abstract function get_data($uid);
+	public abstract function getData($uid);
 
 	/**
 	 * Check if specified unique identified exists in database.
@@ -44,12 +44,12 @@ interface Provider {
 	 * @param string $uid
 	 * @return boolean
 	 */
-	public abstract function is_cached($uid);
+	public abstract function isCached($uid);
 
 	/**
 	 * Clear all cache.
 	 */
-	public abstract function clear_cache();
+	public abstract function clearCache();
 }
 
 ?>
