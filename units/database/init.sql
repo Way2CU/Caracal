@@ -29,15 +29,6 @@ CREATE TABLE `system_user_data` (
 	KEY `index_by_all` (`user`, `namespace`, `key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-CREATE TABLE `system_cache` (
-	`uid` char(32) NOT NULL,
-	`url` varchar(256) NOT NULL,
-	`times_used` bigint NOT NULL DEFAULT '0',
-	`times_renewed` int NOT NULL DEFAULT '0',
-	`expires` timestamp NULL DEFAULT NULL,
-	PRIMARY KEY (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 CREATE TABLE `system_modules` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`order` int NOT NULL DEFAULT '0',
