@@ -85,7 +85,7 @@ class FileProvider implements Provider {
 		$file_name = $cache_path.$uid.'.cache';
 		$time_limit = time() - $cache_expire_period;
 
-		return = file_exists($file_name) && filemtime($file_name) > $time_limit;
+		return file_exists($file_name) && filemtime($file_name) > $time_limit;
 	}
 
 	/**
