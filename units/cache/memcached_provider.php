@@ -59,7 +59,7 @@ class MemcachedProvider implements Provider {
 		// get data from server
 		$data = $this->api->get($uid);
 		if ($data !== false)
-			$result = $data
+			$result = $data;
 
 		return $result;
 	}
