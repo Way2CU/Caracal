@@ -3,24 +3,23 @@
 /**
  * Backend User Manager
  */
+use Core\Events;
 
 class Backend_UserManager {
 	private static $_instance;
 
-	private $event_handler;
 	private $parent;
 
-	protected function __construct($event_handler) {
+	protected function __construct() {
 		$this->parent = backend::getInstance();
-		$this->event_handler = $event_handler;
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($event_handler) {
+	public static function getInstance() {
 		if (!isset(self::$_instance))
-			self::$_instance = new self($event_handler);
+			self::$_instance = new self();
 
 		return self::$_instance;
 	}
@@ -157,6 +156,13 @@ class Backend_UserManager {
 	}
 
 	/**
+	 * Save timer for unpriviledged user submission.
+	 */
+	public function saveTimer() {
+		$_SESSION['backend_user_timer'] = time();
+	}
+
+	/**
 	 * Save changed or new user data
 	 */
 	private function saveUser() {
@@ -258,7 +264,7 @@ class Backend_UserManager {
 		$agreed = isset($_REQUEST['agreed']) && ($_REQUEST['agreed'] == 'on' || $_REQUEST['agreed'] == '1') ? 1 : 0;
 
 		// grab new user data
-		if (defined('_AJAX_REQUEST')) 
+		if (_AJAX_REQUEST)
 			$source = $_REQUEST; else
 			$source = $tag_params;
 
@@ -277,12 +283,24 @@ class Backend_UserManager {
 		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
 		$duplicate_emails = $manager->getItems(array('id'), array('email' => $data['email']));
 
-		if (class_exists('captcha')) {
+		if (class_exists('captcha') && isset($source['captcha'])) {
+			// validate submission through captcha
 			$captcha = captcha::getInstance();
 			if (!$captcha->isCaptchaValid($source['captcha'])) {
 				$result['error'] = true;
 				$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
 			}
+
+		} else {
+			// no captcha is present, validate through submission timer
+			$timer = isset($_SESSION['backend_user_timer']) ? $_SESSION['backend_user_timer'] : null;
+
+			if (is_null($timer) || (!is_null($timer) && time() - $timer < 5)) {
+				$result['error'] = true;
+				$result['message'] = $this->parent->getLanguageConstant('message_users_error_premature_submission');
+			}
+
+			unset($_SESSION['backend_user_timer']);
 		}
 
 		if (!$result['error'])
@@ -295,6 +313,17 @@ class Backend_UserManager {
 				// insert data
 				$manager->insertData($data);
 				$user_id = $manager->getInsertedID();
+
+				// log user in
+				$validation_required = $this->parent->settings['require_verified'];
+
+				if (!$validation_required) {
+					$_SESSION['uid'] = $user_id;
+					$_SESSION['logged'] = true;
+					$_SESSION['level'] = $data['level'];
+					$_SESSION['username'] = $data['username'];
+					$_SESSION['fullname'] = $data['fullname'];
+				}
 
 				// assign message
 				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
@@ -826,7 +855,7 @@ class Backend_UserManager {
 			
 			// generate hash from old password
 			if (!empty($user->salt))
-				$old_password_ok = hash_hmac('sha256', $old_password, $salt) == $user->password || empty($user->password); else
+				$old_password_ok = hash_hmac('sha256', $old_password, $user->salt) == $user->password || empty($user->password); else
 				$old_password_ok = hash_hmac('sha256', $old_password, UserManager::SALT) == $user->password || empty($user->password);  // compatibility
 
 			if ($new_password_ok && $old_password_ok) {

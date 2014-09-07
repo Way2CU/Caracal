@@ -136,6 +136,7 @@
 		<constant name="field_text">Text</constant>
 		<constant name="field_textarea">Multiline text</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
+		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
@@ -285,6 +286,7 @@
 		<constant name="field_text">نص</constant>
 		<constant name="field_textarea">نص متعدد الأسطر</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
+		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="legend_controls">ضوابط الاستماره</constant>
 		<constant name="legend_range">مدى</constant>
@@ -435,6 +437,7 @@
 		<constant name="field_text">Text</constant>
 		<constant name="field_textarea">Multiline text</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
+		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
@@ -585,6 +588,7 @@
 		<constant name="field_text">Text</constant>
 		<constant name="field_textarea">Multiline text</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
+		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>

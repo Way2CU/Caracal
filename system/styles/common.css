@@ -12,6 +12,9 @@ body {
 	font-size: 100%;
 	font-family: Arial, Helvetica, sans-serif;
 	direction: ltr;
+
+	/* fix for mobile use of z-index */
+	z-index: 0;
 }
 
 input,
@@ -129,9 +132,15 @@ div.scrollbar_thumb.active {
 	left: -200px;
 
 	background-color: white;
-
-	overflow: auto;
 	transition: all 0.5s;
+
+	/* improve performance on old Android browsers */
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	perspective: 1000;
+
+	/* optimize crhome */
+	will-change: left;
 }
 
 .mobile_menu.visible {
@@ -230,6 +239,11 @@ body.rtl .mobile_title.visible {
 	transition-property: all;
 }
 
+body.rtl [data-tooltip]:after {
+	left: auto;
+	right: 15px;
+}
+
 [data-tooltip]:before {
 	display: block;
 	width: 0px;
@@ -253,6 +267,11 @@ body.rtl .mobile_title.visible {
 	transition-delay: 0s;
 	transition-duration: 0.3s;
 	transition-property: all;
+}
+
+body.rtl [data-tooltip]:before {
+	left: auto;
+	right: 30px;
 }
 
 [data-tooltip]:hover:after {

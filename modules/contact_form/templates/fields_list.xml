@@ -21,6 +21,7 @@
 			<cms:list
 				template="fields_list_item.xml"
 				local="1"
+				skip_virtual="0"
 				form="$params['form']"
 				cms:eval="form"
 				/>

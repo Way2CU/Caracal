@@ -18,6 +18,7 @@ function PageControl(selector, page_selector) {
 	self.page_redirection = new Object();
 	self.form = null;
 	self.submit_on_end = false;
+	self.wrap_around = false;
 	self.paused = false;
 	self.interval_id = null;
 
@@ -128,7 +129,7 @@ function PageControl(selector, page_selector) {
 			new_page += page > self.current_page ? 1 : -1;
 
 		// submit on last page
-		if (new_page >= self.pages.length-1 && self.submit_on_end) {
+		if (new_page >= self.pages.length - 1 && self.submit_on_end) {
 			// page-flip signal should be emitted before submit
 			if (!self._emitSignal('page-flip', self.current_page, new_page))
 				return;
@@ -141,9 +142,9 @@ function PageControl(selector, page_selector) {
 			self.form.submit()
 		}
 
-		// if first or last page is disabled ignore switch request
-		if (new_page < 0 || new_page > self.pages.length -1) 
-			return;
+		// start showing pages from start
+		if (self.wrap_around && new_page > self.pages.length - 1)
+			new_page = 0;
 
 		// redirect if needed
 		if (new_page in self.page_redirection) {
@@ -165,21 +166,10 @@ function PageControl(selector, page_selector) {
 			var to_show = self.pages.eq(new_page);
 
 			// swap pages containers
-			to_hide
-				.css('display', 'block')
-				.animate({opacity: 0}, 200, function() {
-					to_hide.css('display', 'none');
-					to_show
-						.css({
-							display: 'block',
-							opacity: 0
-						})
-						.animate({opacity: 1}, 200);
-				});
+			to_hide.removeClass('visible');
+			to_show.addClass('visible');
 		} else {
-			self.pages.each(function(index) {
-				$(this).css('display', index == new_page ? 'block' : 'none');
-			});
+			self.pages.eq(new_page).addClass('visible');
 		}
 
 		// update controls if available
@@ -297,6 +287,26 @@ function PageControl(selector, page_selector) {
 			self.controls.click(self.handleControlClick);
 		}
 
+		return self;
+	};
+
+	/**
+	 * Attach click event for previous page control.
+	 *
+	 * @param object control
+	 */
+	self.attachPreviousControl = function(control) {
+		control.click(self._handlePrevious);
+		return self;
+	};
+
+	/**
+	 * Attach click event for next page control.
+	 *
+	 * @param object control
+	 */
+	self.attachNextControl = function(control) {
+		control.click(self._handleNext);
 		return self;
 	};
 
@@ -420,6 +430,19 @@ function PageControl(selector, page_selector) {
 
 		// create interval
 		self.interval_id = setInterval(self._handleInterval, interval);
+
+		return self;
+	};
+
+	/**
+	 * Configure page control to start pages from beginning once last is reached.
+	 *
+	 * @param boolean wrap
+	 */
+	self.setWrapAround = function(wrap) {
+		self.wrap_around = wrap;
+
+		return self;
 	};
 
 	/**

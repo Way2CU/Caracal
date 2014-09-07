@@ -1,7 +1,7 @@
 /**
  * Dialog Style Sheet
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -9,20 +9,17 @@ div.dialog-background {
 	display: block;
 	width: 0px;
 	height: 0px;
-	
+
 	position: fixed;
 	top: 0px;
 	left: 0px;
-	
+
 	background-color: #303030;
 
 	z-index: 100000;
 	opacity: 0;
 
-	transition-property: opacity;
-	transition-duration: 0.3s;
-	-moz-transition-property: opacity;
-	-moz-transition-duration: 0.3s;
+	transition: opacity 0.3s;
 }
 
 div.dialog-background.visible {
@@ -40,26 +37,14 @@ div.dialog {
 
 	background-color: white;
 	z-index: 100001;
-
 	color: #333333;
 
-	transition-property: transform;
-	transition-duration: 0.6s;
-	-moz-transition-property: transform;
-	-moz-transition-duration: 0.6s;
-	transform: translateY(-100%);
-	-moz-transform: translateY(-100%);
-	-webkit-transform: translateY(-100%);
+	transition: top 0.6s;
 }
 
 div.dialog.visible {
-	display: block;
 	top: 0px;
 	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-
-	transform: translateY(0%);
-	-moz-transform: translateY(0%);
-	-webkit-transform: translateY(0%);
 }
 
 div.dialog div.title {
@@ -67,9 +52,9 @@ div.dialog div.title {
 	padding: 0.5em;
 	padding-left: 0.6em;
 	padding-right: 0.6em;
-	
+
 	background-color: #3e8df3;
-	
+
 	color: white;
 	font-size: 1.5em;
 	overflow: hidden;
@@ -87,20 +72,20 @@ div.dialog div.command_bar {
 }
 
 div.dialog div.command_bar a {
+	display: inline-block;
+	margin-left: 3px;
+	margin-right: 3px;
 	padding: 0.4em;
 	padding-left: 0.6em;
 	padding-right: 0.6em;
-	
+
 	background-color: #a0a0a0;
 
 	color: white;
 	font-size: 1.1em;
 	text-decoration: none;
 
-	transition-property: all;
-	transition-duration: 0.3s;
-	-moz-transition-property: all;
-	-moz-transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div.dialog div.command_bar a:hover {

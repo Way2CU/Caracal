@@ -53,7 +53,7 @@
 				<span><_text constant="label_category_image" module="shop"/></span>
 				<select name="image" style="width: 300px;">
 					<option></option>
-					<_image_list 
+					<cms:image_list 
 						selected="$params['image']" 
 						cms:eval="selected"
 						template="image_option.xml"

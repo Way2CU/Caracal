@@ -20,12 +20,6 @@ class TemplateHandler {
 	public $engine;
 
 	/**
-	 * Raw XML data
-	 * @var string
-	 */
-	private $data;
-
-	/**
 	 * If XML parser is active and ready
 	 * @var boolean
 	 */
@@ -73,19 +67,23 @@ class TemplateHandler {
 	 * @param string $file
 	 * @return TemplateHandler
 	 */
-	public function __construct($file = "", $path = "") {
+	public function __construct($file = '', $path = '') {
 		global $template_path;
 
-		$this->file = $path.$file;
 		$this->active = false;
 		$this->params = array();
 		$this->module = null;
-		$path = (empty($path)) ? $template_path : $path;
+		$path = empty($path) ? $template_path : $path;
+		$this->file = $path.$file;
+
+		// record debug message
+		if (defined('DEBUG'))
+			trigger_error('Template load: '.$this->file, E_USER_NOTICE);
 
 		// if file exits then load
-		if (!empty($file) && file_exists($path.$file)) {
-			$this->data = @file_get_contents($path.$file);
-			$this->engine = new XMLParser($this->data, $path.$file);
+		if (!empty($this->file) && file_exists($this->file)) {
+			$data = @file_get_contents($this->file);
+			$this->engine = new XMLParser($data, $this->file);
 			$this->engine->Parse();
 
 			$this->active = true;
@@ -145,7 +143,7 @@ class TemplateHandler {
 	 * @param boolean $parent_block If parent tag is block element
 	 */
 	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path;
+		global $section, $action, $language, $template_path, $system_template_path, $images_path;
 
 		if ((!$this->active) && empty($tags))
 			return;
@@ -320,6 +318,14 @@ class TemplateHandler {
 					}
 
 					echo $text;
+					break;
+
+				// embed svg images
+				case 'cms:svg':
+					$path = _BASEPATH.'/'.$images_path;
+					$file = $tag->tagAttrs['file'];
+
+					echo file_get_contents($path.$file);
 					break;
 
 				// multi language constants

@@ -139,6 +139,10 @@ class ShopTransactionsHandler {
 		$manager = ShopTransactionsManager::getInstance();
 		$conditions = array();
 
+		// get conditionals
+		if (isset($tag_params['system_user']))
+			$conditions['system_user'] = fix_id($tag_params['system_user']);
+
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
 
@@ -153,6 +157,7 @@ class ShopTransactionsHandler {
 
 				$params = array(
 							'buyer'				=> $item->buyer,
+							'system_user'		=> $item->system_user,
 							'address'			=> $item->address,
 							'uid'				=> $item->uid,
 							'type'				=> $item->type,

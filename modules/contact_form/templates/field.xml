@@ -235,7 +235,7 @@
 				<textarea
 					name="$params['name']"
 					rows="4"
-					cols="50"
+					cols="30"
 					placeholder="$params['placeholder'][$language]"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"

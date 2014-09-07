@@ -224,9 +224,10 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 	* <img src="cid:example_file.png">
 	*
 	* @param string $file_name
+	* @param string $attached_name
 	* @param boolean $inline
 	*/
-	public function attach_file($file_name, $inline=false) {
+	public function attach_file($file_name, $attached_name=null, $inline=false) {
 		// encode data
 		$data = file_get_contents($file_name);
 		$data = base64_encode($data);
@@ -239,7 +240,7 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 		// create structure
 		$structure = array(
 				'type'		=> $mime_type,
-				'name'		=> basename($file_name),
+				'name'		=> is_null($attached_name) ? basename($file_name) : $attached_name,
 				'content'	=> $data
 			);
 

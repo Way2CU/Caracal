@@ -56,7 +56,7 @@ abstract class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	public function getLanguageConstant($constant, $language="") {
+	public function getLanguageConstant($constant, $language='') {
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
 		$result = $this->language->getText($constant, $language_in_use);
 
@@ -195,23 +195,29 @@ abstract class Module {
 	 */
 	public function loadTemplate($params, $default_file, $param_name='template') {
 		if (isset($params[$param_name])) {
+			$path = '';
+			$file_name = $params[$param_name];
+
 			if (isset($params['local']) && $params['local'] == 1) {
 				// load local template
-				$template = new TemplateHandler($params[$param_name], $this->path.'templates/');
-
+				$path = $this->path.'templates/';
 			} else if (isset($params['template_path'])) {
 				// load template from specified path
-				$template = new TemplateHandler($params[$param_name], $params['template_path']);
-
-			} else {
-				// load template from absolute path
-				$template = new TemplateHandler($params[$param_name]);
+				$path = $params['template_path'];
 			}
+
 		} else {
 			// load template from module path
-			$template = new TemplateHandler($default_file, $this->path.'templates/');
+			$path = $this->path.'templates/';
+			$file_name = $default_file;
 		}
 
+		// print debug statements
+		if (defined('DEBUG'))
+			trigger_error($this->name.': Load template: '.$path.$file_name, E_USER_NOTICE);
+
+		// load template
+		$template = new TemplateHandler($file_name, $path);
 		$template->setMappedModule($this->name);
 
 		return $template;

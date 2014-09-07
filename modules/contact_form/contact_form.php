@@ -28,9 +28,10 @@ class contact_form extends Module {
 	private $field_types = array(
 					'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
-					'time', 'week', 'url', 'number', 'range', 'honey-pot'
+					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param'
 				);
 	private $hidden_fields = array('hidden', 'honey-pot');
+	private $virtual_fields = array('transfer-param');
 
 	/**
 	 * Constructor
@@ -161,6 +162,9 @@ class contact_form extends Module {
 							'type'	=> 'text/css'
 						));
 		}
+
+		// collect transfer params
+		$this->collectTransferParams();
 	}
 
 	/**
@@ -189,6 +193,10 @@ class contact_form extends Module {
 
 				case 'submit':
 					$this->submitForm($params, $children);
+					break;
+
+				case 'amend_submission':
+					$this->amendSubmission($params, $children);
 					break;
 					
 				default:
@@ -450,6 +458,35 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Collect all the params to be transfered to form.
+	 */
+	private function collectTransferParams() {
+		$params = isset($_SESSION['contact_form_transfer_params']) ? $_SESSION['contact_form_transfer_params'] : array();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+
+		// get all transfer fields
+		$fields = $field_manager->getItems(
+				$field_manager->getFieldNames(),
+				array('type' => 'transfer-param')
+			);
+
+		// collect new data
+		if (count($fields) > 0)
+			foreach	($fields as $field) {
+				// skip fields that are not in request parameters
+				if (!isset($_REQUEST[$field->name]) || empty($_REQUEST[$field->name]))
+					continue;
+
+				// store parameter value
+				$value = fix_chars($_REQUEST[$field->name]);
+				$params[$field->id] = $value;
+			}
+
+		// store array to session
+		$_SESSION['contact_form_transfer_params'] = $params;
+	}
+
+	/**
 	 * Submit form.
 	 *
 	 * @param array $tag_params
@@ -492,6 +529,7 @@ class contact_form extends Module {
 		$attachments = array();
 		$missing_fields = array();
 		$messages = array();
+		$transfer_params = isset($_SESSION['contact_form_transfer_params']) ? $_SESSION['contact_form_transfer_params'] : array();
 
 		foreach ($fields as $field) {
 			$name = $field->name;
@@ -521,6 +559,18 @@ class contact_form extends Module {
 						trigger_error('ContactFrom: Honey-pot field populated. Ignoring submission!', E_USER_NOTICE);
 						return;
 					}
+					break;
+
+				case 'transfer-param':
+					if (isset($transfer_params[$field->id]))
+						$value = $transfer_params[$field->id]; else
+						$value = $field->value;
+
+					$data[] = array(
+							'field'	=> $field->id,
+							'value'	=> $value
+						);
+					$replacement_fields[$name] = $value;
 					break;
 
 				default:
@@ -624,6 +674,113 @@ class contact_form extends Module {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Modify previous submission based on one or more references. This function takes
+	 * parameters through children tags.
+	 */
+	public function amendSubmission($tag_params, $children) {
+		$submission_manager = ContactForm_SubmissionManager::getInstance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::getInstance();
+
+		$data = array();
+		$fields = array();
+		$field_ids = array();
+		$id_list = array();
+		$conditions = array();
+		$form_id = null;
+		$text_id = null;
+
+		// make sure we have form to work with
+		if (isset($tag_params['id']))
+			$form_id = fix_id($tag_params['id']);
+
+		if (isset($tag_params['text_id']))
+			$text_id = fix_chars($tag_params['text_id']);
+
+		if (is_null($form_id) && is_null($text_id))
+			return;
+
+		// parse children
+		foreach ($children as $child) {
+			switch ($child->tagName) {
+				case 'param':
+					$param_name = fix_chars($child->tagAttrs['name']);
+					$field_name = fix_chars($child->tagAttrs['field']);
+
+					if ($child->tagAttrs['type'] == 'request') {
+						$field_value = fix_chars($_REQUEST[$param_name]);
+					}
+
+					$fields[$field_name] = $field_value;
+					break;
+
+				case 'set':
+					$field_name = fix_chars($child->tagAttrs['field']);
+					$data[$field_name] = fix_chars($child->tagAttrs['value']);
+					break;
+			}
+		}
+
+		// get field ids
+		$raw_fields = $field_manager->getItems(
+				array('id', 'name'),
+				array('name' => array_keys($fields))
+			);
+
+		foreach ($raw_fields as $field)
+			$field_ids[$field->name] = $field->id;
+
+		// get all the submissions for current IP address
+		$conditions['address'] = $_SERVER['REMOTE_ADDR'];
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		if (!is_null($form_id))
+			$conditions['form'] = $form_id;
+
+		$score = array();
+		$submissions = $submission_manager->getItems(array('id'), $conditions);
+
+		if (count($submissions) > 0)
+			foreach ($submissions as $submission) {
+				$id_list[] = $submission->id;
+				$score[$submission->id] = 0;
+			}
+
+		// collect all the matching data
+		foreach ($fields as $name => $value) {
+			$conditions = array(
+				'submission'	=> $id_list,
+				'field'			=> $field_ids[$name],
+				'value'			=> $value
+			);
+
+			$data_list = $submission_field_manager->getItems(array('id', 'submission'), $conditions);
+
+			if (count($data_list) > 0)
+				$score[$data_list->submission]++;
+		}
+
+		// get the highest rated submission
+		rsort($score);
+		$submission_id = reset(array_keys($score));
+
+		// update submission
+		foreach ($data as $name => $value) {
+			$submission_field_manager->updateData(
+					array(
+						'submission'	=> $submission_id, 
+						'field'			=> $field_ids[$name]
+					),
+					array(
+						'value'			=> $value
+					)
+				);
+		}
 	}
 
 	/**
@@ -1015,7 +1172,8 @@ class contact_form extends Module {
 					array(
 						'submission'	=> $submission->id,
 						'field'			=> $field_ids
-					)
+					),
+					array('field'), true  // order by
 				);
 
 				// add ip address
@@ -1728,6 +1886,10 @@ class contact_form extends Module {
 		if (isset($tag_params['skip_hidden']))
 			$skip_hidden = $tag_params['skip_hidden'] == 1;
 
+		$skip_virtual = true;
+		if (isset($tag_params['skip_virtual']))
+			$skip_virtual = $tag_params['skip_virtual'] == 1;
+
 		$count = 0;
 		$limit = null;
 		if (isset($tag_params['limit']))
@@ -1752,6 +1914,10 @@ class contact_form extends Module {
 			foreach ($items as $item) {
 				// skip hidden fields
 				if ($skip_hidden && in_array($item->type, $this->hidden_fields))
+					continue;
+
+				// skip virtual fields
+				if ($skip_virtual && in_array($item->type, $this->virtual_fields))
 					continue;
 
 				// respect limit
@@ -2275,6 +2441,21 @@ class contact_form extends Module {
 			$result = $this->mailers[$name]; else
 			$result = array_shift(array_values($this->mailers));
 
+		return $result;
+	}
+
+	/**
+	 * Get mailer by name.
+	 *
+	 * @param string $name
+	 * @return object
+	 */
+	public function getMailerByName($name) {
+		$result = null;
+
+		if (array_key_exists($name, $this->mailers))
+			$result = $this->mailers[$name];
+		
 		return $result;
 	}
 

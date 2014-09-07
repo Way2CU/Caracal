@@ -67,8 +67,6 @@ function url_UnpackValues() {
  * @author Mladen Mijatov
  */
 function url_Make($action='', $section='') {
-	global $url_rewrite, $url_add_extension, $url_language_optional, $language;
-
 	$arguments = array();
 
 	// make sure we have all parameters
@@ -95,16 +93,19 @@ function url_Make($action='', $section='') {
 }
 
 /**
- * Forms URL from single parameter
+ * Forms URL from single specified parameter array. If html_ampersand is false
+ * simple `&` will be used instead of `&amp;`. In most cases later is more suitable
+ * for use in HTML code.
  *
  * @param array $params
+ * @param string $html_ampersand.
  * @return string
- * @author Mladen Mijatov
  */
-function url_MakeFromArray($params) {
+function url_MakeFromArray($params, $html_ampersand=true) {
 	global $url_rewrite, $url_add_extension, $url_language_optional, $language, $section, $action;
 
 	$arguments = $params;
+	$glue = $html_ampersand ? '&amp;' : '&';
 
 	// unset parameters we need to control order of
 	$section_argument = $section;
@@ -197,11 +198,11 @@ function url_MakeFromArray($params) {
 			$result .= '?section='.urlencode($section_argument);
 		
 		if ($action_argument != '_default') 
-			$result .= '&amp;action='.urlencode($action_argument);
+			$result .= $glue.'action='.urlencode($action_argument);
 
 		if (count($arguments) > 0)
 			foreach ($arguments as $key => $value)
-				$result .= '&amp;'.$key.'='.urlencode($value);
+				$result .= $glue.$key.'='.urlencode($value);
 	}
 
 	return $result;

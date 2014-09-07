@@ -112,8 +112,6 @@ class captcha extends Module {
 	 * Prints captcha image
 	 */
 	private function printImage() {
-		define('_OMIT_STATS', 1);
-
 		// check if referer is in allowed list
 		$value = $this->generateValue();
 		$referer = $_SERVER['HTTP_REFERER'];

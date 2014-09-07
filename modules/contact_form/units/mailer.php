@@ -96,9 +96,10 @@ abstract class ContactForm_Mailer {
 	 * <img src="cid:example_file.png">
 	 *
 	 * @param string $file_name
+	 * @param string $attached_name
 	 * @param boolean $inline
 	 */
-	abstract public function attach_file($file_name, $inline=false);
+	abstract public function attach_file($file_name, $attached_name=null, $inline=false);
 }
 
 ?>

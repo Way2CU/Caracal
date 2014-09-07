@@ -24,6 +24,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	protected $recipients_cc;
 	protected $recipients_bcc;
 	protected $attachments;
+	protected $attachment_names;
 	protected $inline_attachments;
 
 	public function __construct($language) {
@@ -148,6 +149,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$this->recipients_cc = array();
 		$this->recipients_bcc = array();
 		$this->attachments = array();
+		$this->attachment_names = array();
 		$this->inline_attachments = array();
 	}
 
@@ -256,7 +258,10 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 			// add attachments if needed
 			if (count($this->attachments) > 0)
 				foreach ($this->attachments as $file) {
-					$name = basename($file);
+					if (in_array($file, $this->attachment_names))
+						$name = $this->attachment_names[$file]; else
+						$name = basename($file);
+
 					$body .= $this->make_attachment($file, $name, $boundary);
 				}
 
@@ -370,12 +375,16 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	 * <img src="cid:example_file.png">
 	 *
 	 * @param string $file_name
+	 * @param string $attached_name
 	 * @param boolean $inline
 	 */
-	public function attach_file($file_name, $inline=false) {
+	public function attach_file($file_name, $attached_name=null, $inline=false) {
 		if (!$inline)
 			$this->attachments[] = $file_name; else
 			$this->inline_attachments[] = $file_name;
+
+		if (!is_null($attached_name))
+			$this->attachment_names[$file_name] = $attached_name;
 	}
 }
 

@@ -10,7 +10,7 @@
 		<label>
 			<span><_text constant="label_thumbnail" module="gallery"/></span>
 			<select name="thumbnail">
-				<_image_list template="thumbnail_change_item.xml" local="1"/>
+				<cms:image_list template="thumbnail_change_item.xml" local="1"/>
 			</select>
 		</label>
 		<div class="button_bar">

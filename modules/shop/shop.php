@@ -489,6 +489,11 @@ class shop extends Module {
 					$this->tag_RecurringPlan($params, $children);
 					break;
 
+				case 'show_transaction_list':
+					$handler = ShopTransactionsHandler::getInstance($this);
+					$handler->tag_TransactionList($params, $children);
+					break;
+
 				case 'configure_search':
 					$this->configureSearch($params, $children);
 					break;

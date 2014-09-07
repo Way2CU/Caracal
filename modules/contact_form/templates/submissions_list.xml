@@ -33,6 +33,7 @@
 					template="field_column.xml"
 					local="1"
 					skip_hidden="1"
+					skip_virtual="0"
 					cms:eval="form"
 					/>
 

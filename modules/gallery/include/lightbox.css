@@ -44,16 +44,18 @@ div#lightbox a.close_button {
 
 	float: right;
 
-	border-radius: 5px;
-	-moz-border-radius: 5px;
+	border-radius: 2px;
 	background-color: white;
-	background-image: url(../../backend/images/close_normal.gif);
+	background-image: url(../../collection/images/close_button.svg);
 	background-repeat: no-repeat;
 	background-position: center center;
+	background-size: 60% 60%;
 
 	color: #333333;
 	text-decoration: none;
 	cursor: pointer;
+
+	transition: all 0.3s;
 }
 
 body.rtl div#lightbox a.close_button {
@@ -62,7 +64,6 @@ body.rtl div#lightbox a.close_button {
 
 div#lightbox a.close_button:hover {
 	background-color: #999999;
-	background-image: url(../../backend/images/close_active.gif);
 }
 
 div#lightbox div.title {
@@ -73,8 +74,7 @@ div#lightbox div.title {
 	padding-left: 5px;
 	padding-right: 5px;
 
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	background-color: white;
 
 	color: #333333;
@@ -89,15 +89,13 @@ div#lightbox div.content {
 	padding: 5px;
 	margin-bottom: 5px;
 
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	background-color: white;
 
 	overflow: hidden;
 }
 
 div#lightbox div.content img {
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 
@@ -112,8 +110,7 @@ div#lightbox div.description {
 
 	padding: 5px;
 
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	background-color: white;
 
 	color: #555555;
@@ -139,14 +136,12 @@ div#lightbox a.button {
 
 div#lightbox a.button.next {
 	right: -35px;
-	-moz-border-radius: 0px 7px 7px 0px;
-	border-radius: 0px 7px 7px 0px;
+	border-radius: 0px 5px 5px 0px;
 	background-image: url(../images/next.png);
 }
 
 div#lightbox a.button.previous {
 	left: -35px;
-	-moz-border-radius: 7px 0px 0px 7px;
-	border-radius: 7px 0px 0px 7px;
+	border-radius: 5px 0px 0px 5px;
 	background-image: url(../images/previous.png);
 }

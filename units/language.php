@@ -18,7 +18,7 @@ class LanguageHandler {
 		global $data_path;
 
 		$this->active = false;
-		$file = (empty($file)) ? $data_path.'system_language.xml' : $file;
+		$file = (empty($file)) ? 'system/language.xml' : $file;
 
 		// make sure language file exists
 		if (!file_exists($file))
