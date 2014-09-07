@@ -111,7 +111,12 @@ class Manager {
 	 * Check if page is cached.
 	 */
 	public function isCached() {
-		return $this->provider->isCached();
+		$result = false;
+
+		if (!is_null($this->provider))
+			$result = $this->provider->isCached();
+
+		return $result;
 	}
 
 	/**
