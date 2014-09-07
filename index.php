@@ -35,7 +35,6 @@ require_once('units/xml_parser.php');
 require_once('units/markdown.php');
 require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
-require_once('units/cache/manager.php');
 require_once('units/page_switch.php');
 require_once('units/session.php');
 require_once('units/config.php');
@@ -47,6 +46,9 @@ if (file_exists($site_path.'config.php'))
 // include remaining units
 require_once('units/doctypes.php');
 require_once('units/gravatar.php');
+
+// make namespaces more friendly
+use Core\Cache\Manager as Cache;
 
 // set timezone as specificed in the config
 date_default_timezone_set(_TIMEZONE);
@@ -121,7 +123,7 @@ if ($db_use && !database_connect())
 	die('There was an error while trying to connect database.');
 
 // transfer display control
-$cache = CacheHandler::getInstance();
+$cache = Cache::getInstance();
 $module_handler = ModuleHandler::getInstance();
 
 if ($cache->isCached()) {

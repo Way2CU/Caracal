@@ -1,18 +1,34 @@
 <?php
 
 /**
- * Page Caching Mechanism
- * 
+ * Caching System
+ *
+ * This class provides global functions for page and system
+ * response cashing.
+ *
  * Author: Mladen Mijatov
  */
+namespace Core\Cache;
+
+require_once('base.php');
+require_once('file_provider.php');
+require_once('memcached_provider.php');
+
+use \Session as Session;
 
 
-class CacheHandler {
+class Type {
+	const NONE = 0;
+	const FILE_SYSTEM = 1;
+	const MEMCACHED = 2;
+}
+
+
+class Manager {
 	private static $_instance;
+	private $provider = null;
 
 	private $uid = null;
-	private $is_cached = false;
-	private $cache_file = '';
 	private $should_cache = true;
 	private $in_dirty_area = false;
 
@@ -32,15 +48,39 @@ class CacheHandler {
 	const TIMESTAMP_FORMAT = 'Y-m-d H:i:s';
 
 	private function __construct() {
-		global $cache_path, $cache_enabled, $section;
+		global $cache_path, $cache_method, $section;
 
-		//$manager = CacheManager();
+		// decide if we should cache current page
 		$this->should_cache = 
-					$cache_enabled && 
+					$cache_method != Type::NONE && 
 					!($section == 'backend' || $section == 'backend_module') && 
 					$_SERVER['REQUEST_METHOD'] == 'GET' &&
 					!_AJAX_REQUEST;
 
+		// create cache provider
+		switch ($cache_method) {
+			case Type::FILE_SYSTEM:
+				$this->provider = new FileProvider();
+				break;
+
+			case Type::MEMCACHED:
+				if (class_exists('Memcached')) {
+					// create memcache provider
+					$this->provider = new MemcachedProvider();
+
+				} else {
+					// fallback to file provider
+					$this->provider = new FileProvider();
+					trigger_error('Memcached not present. Falling back to file provider.', E_USER_NOTICE);
+				}
+				break;
+		}
+
+		// initialize cache provider
+		if (!is_null($this->provider))
+			$this->provider->initialize();
+
+		// prepare for caching
 		$this->uid = $this->generateUniqueID();
 		$this->cache_file = $cache_path.$this->uid.(_DESKTOP_VERSION ? '' : '_m');
 		$this->is_cached = file_exists($this->cache_file) && $this->should_cache;
@@ -72,77 +112,24 @@ class CacheHandler {
 	 * Store cached page to file.
 	 */
 	private function storeCache() {
-		global $cache_path, $cache_expire_period, $cache_max_pages;
-
-		$expires = date(self::TIMESTAMP_FORMAT, time() + $cache_expire_period);
-
-		// add database entry
-		$manager = CacheManager::getInstance();
-		$manager->insertData(array(
-						'uid'			=> $this->uid,
-						'url'			=> $_SERVER['REQUEST_URI'],
-						'times_used'	=> 0,
-						'times_renewed'	=> 0,
-						'expires'		=> $expires
-					));
-
-		// store content to disk
-		file_put_contents($this->cache_file, $this->cache);
-
-		// check if we reached maximum number of pages
-		$page_count = $manager->sqlResult('SELECT count(`uid`) FROM `system_cache`');
-		if ($page_count > $cache_max_pages) {
-			$entries_to_drop = $manager->getItems(
-								array('uid'), 
-								array(),
-								array('times_used'),
-								true,
-								10
-							);
-
-			$uid_list = array();
-
-			foreach($entries_to_drop as $entry) {
-				$uid_list[] = $entry->uid;
-				unlink($cache_path.$entry->uid.(_DESKTOP_VERSION ? '' : '_m'));
-			}
-
-			$manager->deleteData(array('uid' => $uid_list));
-		}
-	}
-
-	/**
-	 * Handle expired cache or update times_used counter
-	 */
-	private function validateCache() {
-		$manager = CacheManager::getInstance();
-		$today = date(self::TIMESTAMP_FORMAT);
-		$entry = $manager->getSingleItem(
-								array('uid'),
-								array(
-										'uid'		=> $this->uid,
-										'expires' 	=> array(
-											'operator'	=> '<',
-											'value'		=> $today
-										)
-								));
-
-		if (is_object($entry)) {
-			// object needs to be expired
-			unlink($this->cache_file);
-			$manager->deleteData(array('uid' => $this->uid));
-
-		} else {
-			// update times used
-			$manager->updateData(array('times_used' => '`times_used` + 1'), array('uid' => $this->uid));
-		}
+		global $cache_expire_period;
+		$this->provider->storeData(
+					$this->uid,
+					$this->cache,
+					time() + $cache_expire_period
+				);
 	}
 
 	/**
 	 * Check if page is cached.
 	 */
 	public function isCached() {
-		return $this->is_cached;
+		$result = false;
+
+		if (!is_null($this->provider))
+			$result = $this->provider->isCached($this->uid);
+
+		return $result;
 	}
 
 	/**
@@ -154,44 +141,19 @@ class CacheHandler {
 	}
 
 	/**
-	 * Print cached page
+	 * Print cached page. Function returns false in case cache data doesn't
+	 * exist or has been expired.
+	 *
+	 * @return boolean
 	 */
 	public function printCache() {
-		global $cache_path;
+		$data = $this->provider->getData($this->uid);
 
-		if (file_exists($this->cache_file)) { 
-			// get data from file and prepare for parsing
-			$data = file_get_contents($this->cache_file);
-			$template = new TemplateHandler();
-			$pattern = '/'.self::TAG_OPEN.'(.*?)'.self::TAG_CLOSE.'/u';
-
-			// get all dirty areas
-			preg_match_all($pattern, $data, $matches);
-	
-			if (count($matches) >= 2 && count($matches[1]) > 0)
-				foreach ($matches[1] as $match) {
-					// give template to handler
-					$template->setXML('<document>'.$match.'</document>');
-					
-					// start output buffer and get data
-					ob_start();
-					$template->parse();
-					$result = ob_get_contents();
-					ob_end_clean();
-
-					// replace output buffer with new data
-					$data = preg_replace($pattern, $result, $data, 1);
-				}
-
-			// make sure we have specified cache type
-			if (!_AJAX_REQUEST)
-				header('Content-Type: text/html; charset=UTF-8');
-
+		// show cached page
+		if (!is_null($data))
 			print $data;
 
-			// validate or expire cache entry
-			$this->validateCache();
-		}
+		return $data != null;
 	}
 
 	/**
@@ -286,6 +248,7 @@ class CacheHandler {
 	 * only in case of a problem or important update.
 	 */
 	public function clearCache() {
+		$this->provider->clearCache();
 	}
 
 	/**
