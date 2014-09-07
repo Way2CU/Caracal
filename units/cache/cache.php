@@ -10,6 +10,10 @@
  */
 namespace Core\Cache;
 
+require_once('file_provider.php');
+
+use \Session as Session;
+
 
 class Type {
 	const NONE = 0;
