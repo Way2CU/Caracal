@@ -35,6 +35,10 @@ $db_config = array(
 // cache
 $cache_method = CacheType::NONE;
 $cache_expire_period = 86400;
+$memcached_config = array(
+		'host'	=> 'localhost',
+		'port'	=> 11211
+	);
 
 // head tag
 $include_scripts = false;
