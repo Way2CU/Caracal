@@ -4,6 +4,8 @@
  * Main Configuration File
  */
 
+use Core\Cache\Type as CacheType;
+
 // paths
 $site_path = 'site/';
 $cache_path = 'cache/';
@@ -31,9 +33,8 @@ $db_config = array(
 	);
 
 // cache
-$cache_enabled = false;
+$cache_method = CacheType::NONE;
 $cache_expire_period = 86400;
-$cache_max_pages = 200;
 
 // head tag
 $include_scripts = false;
