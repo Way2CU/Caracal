@@ -20,12 +20,14 @@ class MemcachedProvider implements Provider {
 	public function initialize() {
 		global $memcached_config;
 
+		// create api object
+		$this->api = new Memcached();
+
 		// configure library
 		$this->api->setOption(Memcached::OPT_PREFIX_KEY, _DOMAIN);
 		$this->api->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
 
 		// connect to memcache server
-		$this->api = new Memcached();
 		$this->api->addServer(
 				$memcached_config['host'],
 				$memcached_config['port']
