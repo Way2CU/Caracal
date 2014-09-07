@@ -18,6 +18,8 @@ function PageControl(selector, page_selector) {
 	self.page_redirection = new Object();
 	self.form = null;
 	self.submit_on_end = false;
+	self.paused = false;
+	self.interval_id = null;
 
 	// signal handlers
 	self.on_page_flip = new Array();
@@ -28,6 +30,10 @@ function PageControl(selector, page_selector) {
 	 */
 	self.init = function() {
 		self.container = $(selector || 'div.pages');
+		self.container.hover(
+				self._handleContainerMouseEnter,
+				self._handleContainerMouseLeave
+			);
 
 		// get all pages
 		self.pages = self.container.find(page_selector || 'div.page');
@@ -76,6 +82,32 @@ function PageControl(selector, page_selector) {
 			self._switchContainer(self.current_page - 1);
 			event.preventDefault();
 		}
+	};
+
+	/**
+	 * Handle periodic switches.
+	 */
+	self._handleInterval = function() {
+		// skip change if paused
+		if (self.paused)
+			return;
+
+		// show next page
+		self._switchContainer(self.current_page + 1);
+	};
+
+	/**
+	 * Handle mouse entering container.
+	 */
+	self._handleContainerMouseEnter = function(event) {
+		self.paused = true;
+	};
+
+	/**
+	 * Handle mouse leaving container.
+	 */
+	self._handleContainerMouseLeave = function(event) {
+		self.paused = false;
 	};
 
 	/**
@@ -374,6 +406,20 @@ function PageControl(selector, page_selector) {
 	self.setAllowForward = function(allow) {
 		self.allow_forward = allow;
 		return self;
+	};
+
+	/**
+	 * Set automatic switch interval.
+	 *
+	 * @param integer interval
+	 */
+	self.setInterval = function(interval) {
+		// clear existing interval
+		if (self.interval_id != null)
+			clearInterval(self.interval_id);
+
+		// create interval
+		self.interval_id = setInterval(self._handleInterval, interval);
 	};
 
 	/**
