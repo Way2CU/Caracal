@@ -80,7 +80,7 @@ class FileProvider implements Provider {
 	 * @return boolean
 	 */
 	function isCached($uid) {
-		global $cache_path;
+		global $cache_path, $cache_expire_period;
 
 		$file_name = $cache_path.$uid.'.cache';
 		$time_limit = time() - $cache_expire_period;
