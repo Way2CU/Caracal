@@ -590,7 +590,7 @@ class TemplateHandler {
 							echo $tag->tagData;
 
 						// check if tag needs to be closed
-						if ($this->close_all_tags || $this->cache->inDirtyArea())
+						if ($this->close_all_tags)
 							$close_tag = true; else
 							$close_tag = !in_array($tag->tagName, $this->tags_without_end);
 						
