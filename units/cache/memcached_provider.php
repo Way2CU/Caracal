@@ -27,7 +27,7 @@ class MemcachedProvider implements Provider {
 
 		// configure library
 		$this->api->setOption(Memcached::OPT_PREFIX_KEY, _DOMAIN);
-		$this->api->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+		$this->api->setOption(Memcached::OPT_BINARY_PROTOCOL, false);
 
 		// connect to memcache server
 		$this->api->addServer(
