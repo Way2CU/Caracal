@@ -68,6 +68,12 @@ class TemplateHandler {
 	private $protected_variables = array('uid', 'logged', 'level', 'username', 'fullname', 'captcha');
 
 	/**
+	 * Cache handler.
+	 * @var object
+	 */
+	private $cache = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $file
@@ -81,6 +87,7 @@ class TemplateHandler {
 		$this->module = null;
 		$path = empty($path) ? $template_path : $path;
 		$this->file = $path.$file;
+		$this->cache = Cache::getInstance();
 
 		// record debug message
 		if (defined('DEBUG'))
@@ -244,18 +251,15 @@ class TemplateHandler {
 				// unset param
 				unset($tag->tagAttrs['cms:skip_cache']);
 
-				// get cache handler
-				$cache = Cache::getInstance();
-
 				// only if current URL is being cached, we start dirty area
-				if ($cache->isCaching()) {
-					$cache->startDirtyArea();
+				if ($this->cache->isCaching()) {
+					$this->cache->startDirtyArea();
 					$skip_cache = true;
 
 					// reconstruct template for cache,
 					// ugly but we are not doing it a lot
 					$data = $this->getDataForCache($tag);
-					$cache->setCacheForDirtyArea($data);
+					$this->cache->setCacheForDirtyArea($data);
 				}
 			}
 
@@ -585,8 +589,12 @@ class TemplateHandler {
 						if (count($tag->tagData) > 0)
 							echo $tag->tagData;
 
-						$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
+						// check if tag needs to be closed
+						if ($this->close_all_tags || $this->cache->inDirtyArea())
+							$close_tag = true; else
+							$close_tag = !in_array($tag->tagName, $this->tags_without_end);
 						
+						// close tag if needed
 						if ($close_tag)
 							echo '</'.$tag->tagName.'>';
 					}
@@ -595,7 +603,7 @@ class TemplateHandler {
 
 			// end cache dirty area if initialized
 			if ($skip_cache)
-				$cache->endDirtyArea();
+				$this->cache->endDirtyArea();
 		}
 	}
 

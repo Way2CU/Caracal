@@ -134,6 +134,15 @@ class Manager {
 	}
 
 	/**
+	 * Return state of dirty area.
+	 *
+	 * @return boolean
+	 */
+	public function inDirtyArea() {
+		return $this->in_dirty_area;
+	}
+
+	/**
 	 * Print cached page. Function returns false in case cache data doesn't
 	 * exist or has been expired.
 	 *
@@ -156,9 +165,11 @@ class Manager {
 					$template->setXML('<document>'.$match.'</document>');
 					
 					// start output buffer and get data
+					$this->in_dirty_area = true;
 					ob_start();
 					$template->parse();
 					$fresh_data = ob_get_clean();
+					$this->in_dirty_area = false;
 
 					// replace output buffer with new data
 					$data = preg_replace($pattern, $fresh_data, $data, 1);
