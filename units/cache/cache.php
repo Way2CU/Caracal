@@ -15,6 +15,7 @@ require_once('file_provider.php');
 require_once('memcached_provider.php');
 
 use \Session as Session;
+use \TemplateHandler as TemplateHandler;
 
 
 class Type {
