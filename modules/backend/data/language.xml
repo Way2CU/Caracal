@@ -13,6 +13,7 @@
 		<constant name="menu_change_password">Change password</constant>
 		<constant name="menu_report_bug">Report a bug</constant>
 		<constant name="menu_help">Help</constant>
+		<constant name="menu_clear_cache">Clear cache</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">Modules</constant>
@@ -26,6 +27,7 @@
 		<constant name="title_users_change">Users: Change user data</constant>
 		<constant name="title_users_delete">Users: Delete account</constant>
 		<constant name="title_email_templates">Users: Email Templates</constant>
+		<constant name="title_clear_cache">Clear cache</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module is now active.</constant>
@@ -61,6 +63,7 @@
 		<constant name="message_invalid_password">Invalid current password.</constant>
 		<constant name="message_password_recovery_email_sent">Email with instructions has been sent.</constant>
 		<constant name="message_password_reocvery_email_error">There was a problem sending recovery email. Please try again later.</constant>
+		<constant name="message_cleared_cache">System cache has been cleared!</constant>
 
 		<!-- Column Names -->
 		<constant name="column_module_name">Name</constant>
@@ -134,6 +137,7 @@
 		<constant name="menu_change_password">שנה סיסמא</constant>
 		<constant name="menu_report_bug">Report a bug</constant>
 		<constant name="menu_help">Help</constant>
+		<constant name="menu_clear_cache">Clear cache</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">מודולים</constant>
@@ -147,6 +151,7 @@
 		<constant name="title_users_change">משתמשים: שנה מידע</constant>
 		<constant name="title_users_delete">משתמשים: מחק חשבון</constant>
 		<constant name="title_email_templates">Users: Email Templates</constant>
+		<constant name="title_clear_cache">Clear cache</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">המודול פעיל</constant>
@@ -248,6 +253,9 @@
 		<constant name="menu_users">Administracija korisnika</constant>
 		<constant name="menu_logout">Odjava</constant>
 		<constant name="menu_change_password">Promena lozinke</constant>
+		<constant name="menu_report_bug">Report a bug</constant>
+		<constant name="menu_help">Help</constant>
+		<constant name="menu_clear_cache">Clear cache</constant>
 
 		<!-- Window Titles -->
 		<constant name="title_modules">Moduli</constant>
@@ -261,6 +269,7 @@
 		<constant name="title_users_change">Korisnici: Promena podataka</constant>
 		<constant name="title_users_delete">Korisnici: Brisanje naloga</constant>
 		<constant name="title_email_templates">Korisnici: Email Templates</constant>
+		<constant name="title_clear_cache">Clear cache</constant>
 
 		<!-- Messages -->
 		<constant name="message_module_activated">Module je aktiviran.</constant>

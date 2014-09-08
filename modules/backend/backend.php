@@ -10,6 +10,7 @@
  */
 use Core\Events;
 use Core\Module;
+use Core\Cache\Manager as Cache;
 
 define('_BACKEND_SECTION_', 'backend_module');
 define('_BACKEND_PATH_', dirname(__FILE__));
@@ -110,6 +111,18 @@ class backend extends Module {
 												$this->getLanguageConstant('title_users_manager'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'users')
+											),
+									$level=10
+								));
+			$system_menu->addChild(null, new backend_MenuItem(
+									$this->getLanguageConstant('menu_clear_cache'),
+									url_GetFromFilePath($this->path.'images/icons/16/clear_cache.svg'),
+									window_Open( // on click open window
+												'system_clear_cache',
+												350,
+												$this->getLanguageConstant('title_clear_cache'),
+												true, false, // disallow minimize, safety feature
+												backend_UrlMake($this->name, 'clear_cache')
 											),
 									$level=10
 								));
@@ -276,6 +289,10 @@ class backend extends Module {
 
 				case 'module_disable_commit':
 					$this->disableModule_Commit();
+					break;
+
+				case 'clear_cache':
+					$this->clearCache();
 					break;
 
 				// ---
@@ -605,6 +622,28 @@ class backend extends Module {
 		$params = array(
 					'message'		=> $message,
 					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Clear cache.
+	 */
+	private function clearCache() {
+		// clear cache
+		$cache = Cache::getInstance();
+		$cache->clearCache();
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_cleared_cache'),
+					'action'		=> window_Close('system_clear_cache')
 				);
 
 		$template->restoreXML();
