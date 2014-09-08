@@ -592,6 +592,10 @@ class shop extends Module {
 					$this->json_SaveRemark();
 					break;
 
+				case 'json_set_recurring_plan':
+					$this->json_SetRecurringPlan();
+					break;
+
 				default:
 					break;
 			}
@@ -1523,6 +1527,14 @@ class shop extends Module {
 	 */
 	private function json_GetCurrency() {
 		print json_encode($this->getDefaultCurrency());
+	}
+
+	/**
+	 * Set recurring plan.
+	 */
+	public function json_SetRecurringPlan() {
+		$recurring_plan = fix_chars($_REQUEST['plan']);
+		$_SESSION['recurring_plan'] = $recurring_plan;
 	}
 
 	/**
