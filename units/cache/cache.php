@@ -150,8 +150,30 @@ class Manager {
 		$data = $this->provider->getData($this->uid);
 
 		// show cached page
-		if (!is_null($data))
+		if (!is_null($data)) {
+			$template = new TemplateHandler();
+			$pattern = '/'.self::TAG_OPEN.'(.*?)'.self::TAG_CLOSE.'/u';
+
+			// get all dirty areas
+			preg_match_all($pattern, $data, $matches);
+	
+			if (count($matches) >= 2 && count($matches[1]) > 0)
+				foreach ($matches[1] as $match) {
+					// give template to handler
+					$template->setXML('<document>'.$match.'</document>');
+					
+					// start output buffer and get data
+					ob_start();
+					$template->parse();
+					$result = ob_get_contents();
+					ob_end_clean();
+
+					// replace output buffer with new data
+					$data = preg_replace($pattern, $result, $data, 1);
+				}
+
 			print $data;
+		}
 
 		return $data != null;
 	}
