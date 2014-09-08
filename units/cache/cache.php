@@ -158,11 +158,10 @@ class Manager {
 					// start output buffer and get data
 					ob_start();
 					$template->parse();
-					$result = ob_get_contents();
-					ob_end_clean();
+					$fresh_data = ob_get_clean();
 
 					// replace output buffer with new data
-					$data = preg_replace($pattern, $result, $data, 1);
+					$data = preg_replace($pattern, $fresh_data, $data, 1);
 				}
 
 			print $data;
