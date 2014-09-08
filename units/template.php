@@ -630,18 +630,20 @@ class TemplateHandler {
 	 * @return string
 	 */
 	private function getDataForCache($tag) {
-		$close_tag = $this->close_all_tags ? true : !in_array($tag->tagName, $this->tags_without_end);
+		// open tag
 		$result = '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
 
+		// get tag children
 		if (count($tag->tagChildren) > 0)
 			foreach($tag->tagChildren as $child)
 				$result .= $this->getDataForCache($child);
 
+		// show tag data
 		if (count($tag->tagData) > 0)
 			$result .= $tag->tagData;
 
-		if ($close_tag)
-			$result .= '</'.$tag->tagName.'>';
+		// close tag
+		$result .= '</'.$tag->tagName.'>';
 
 		return $result;
 	}
