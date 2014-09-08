@@ -36,17 +36,8 @@ class Manager {
 	private $cache = '';
 	private $output = '';
 
-	/**
-	 * Parameters to ignore when generating UID.
-	 * @var array
-	 */
-	private $ignored_params = array(
-			'gclid', '_rewrite', Session::COOKIE_ID, Session::COOKIE_TYPE
-		);
-
 	const TAG_OPEN = '{%{';
 	const TAG_CLOSE = '}%}';
-	const TIMESTAMP_FORMAT = 'Y-m-d H:i:s';
 
 	private function __construct() {
 		global $cache_path, $cache_method, $section;
@@ -94,13 +85,14 @@ class Manager {
 	 * @return string
 	 */
 	private function generateUniqueID($fields=null) {
+		global $cache_ignore_params;
 		$data = '';
 
 		if (is_null($fields))
 			$fields = $_REQUEST;
 
 		foreach ($fields as $key => $value)
-			if (!in_array($key, $this->ignored_params)) {
+			if (!in_array($key, $cache_ignore_params)) {
 				if (!is_array($value))
 					$data .= '/'.$key.'='.$value; else
 					$data .= '/'.$key.'='.$this->generateUniqueID($value);
