@@ -8,7 +8,7 @@ use Core\Cache\Type as CacheType;
 
 // paths
 $site_path = 'site/';
-$cache_path = 'cache/';
+$cache_path = $site_path.'cache/';
 
 $system_images_path = 'system/images/';
 $system_styles_path = 'system/styles/';

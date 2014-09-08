@@ -40,7 +40,7 @@ class Manager {
 	const TAG_CLOSE = '}%}';
 
 	private function __construct() {
-		global $cache_path, $cache_method, $section;
+		global $cache_path, $optimize_code, $cache_method, $section;
 
 		// decide if we should cache current page
 		$this->should_cache = 
@@ -48,6 +48,10 @@ class Manager {
 					!($section == 'backend' || $section == 'backend_module') && 
 					$_SERVER['REQUEST_METHOD'] == 'GET' &&
 					!_AJAX_REQUEST;
+
+		// make sure cache directory exists
+		if (($optimize_code || $cache_method != Type::NONE) && !file_exists($cache_path))
+			mkdir($cache_path);
 
 		// create cache provider
 		switch ($cache_method) {
