@@ -262,7 +262,8 @@ class Manager {
 	 * only in case of a problem or important update.
 	 */
 	public function clearCache() {
-		$this->provider->clearCache();
+		if (!is_null($this->provider))
+			$this->provider->clearCache();
 	}
 
 	/**
