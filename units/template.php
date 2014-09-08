@@ -3,10 +3,13 @@
 /**
  * Template Handler
  *
- * @author MeanEYE
+ * This class uses XML parser to create and show page content. In addition
+ * to standard tags some additional ones are provided for easier control.
+ *
+ * Author: Mladen Mijatov
  */
 
-use Core\Cache;
+use Core\Cache\Manager as Cache;
 
 
 class TemplateHandler {
