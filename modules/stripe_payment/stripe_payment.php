@@ -272,7 +272,7 @@ class stripe_payment extends Module {
 				$data = array(
 						'text_id'			=> $plan['id'],
 						'name'				=> $plan['name'],
-						'trial_days'		=> $plan['trial_period_days'],
+						'trial_days'		=> !is_null($plan['trial_period_days']) ? $plan['trial_period_days'] : 0,
 						'interval'			=> 0,
 						'interval_count'	=> $plan['interval_count'],
 						'price'				=> $plan['amount'] / 100,
