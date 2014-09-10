@@ -29,12 +29,6 @@ class stripe_payment extends Module {
 		// prepare API wrapper
 		Stripe::setApiKey($this->getPrivateKey());
 
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			$head_tag->addTag('script', array('src' => 'https://js.stripe.com/v2/', 'type' => 'text/javascript'));
-		}
-
 		// register backend
 		if (class_exists('backend') && class_exists('shop')) {
 			$backend = backend::getInstance();
