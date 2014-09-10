@@ -2960,6 +2960,10 @@ class shop extends Module {
 
 		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
 
+		// log bad fields if debugging is enabled
+		if (count($bad_fields) > 0 && defined('DEBUG'))
+			trigger_error('Checkout bad fields: '.implode(', ', $bad_fields), E_USER_NOTICE);
+
 		if ($info_available) {
 			$address_manager = ShopDeliveryAddressManager::getInstance();
 			$currency_manager = ShopCurrenciesManager::getInstance();
