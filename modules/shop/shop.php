@@ -1867,6 +1867,7 @@ class shop extends Module {
 	private function json_GetShoppingCartSummary() {
 		$result = array();
 		$uid = $_SESSION['transaction']['uid'];
+		$payment_method = $this->getPaymentMethod(null);
 		$update_delivery_method = isset($_REQUEST['delivery_method']);
 
 		// get managers
@@ -1901,7 +1902,7 @@ class shop extends Module {
 						);
 		}
 
-		$result = $this->getCartSummary(TransactionType::SHOPPING_CART, $recipient, $uid);
+		$result = $this->getCartSummary(TransactionType::SHOPPING_CART, $recipient, $uid, $payment_method);
 		unset($result['items_for_checkout']);
 
 		// add currency to result
@@ -1969,11 +1970,12 @@ class shop extends Module {
 	 * Get shopping cart summary.
 	 *
 	 * @param integer $type
-	 * @param string $transaction_id
 	 * @param array $recipient
+	 * @param string $transaction_id
+	 * @param object $payment_method
 	 * @return array
 	 */
-	private function getCartSummary($type, $recipient, $transaction_id) {
+	private function getCartSummary($type, $recipient, $transaction_id, $payment_method=null) {
 		$result = array();
 		$default_language = MainLanguageHandler::getInstance()->getDefaultLanguage();
 
@@ -1991,11 +1993,13 @@ class shop extends Module {
 
 		if (isset($_SESSION['recurring_plan'])) {
 			$plan_name = $_SESSION['recurring_plan'];
-			$payment_method = $this->getPaymentMethod(null);
 
 			// get selected recurring plan
-			$plans = $payment_method->get_recurring_plans();
+			$plans = array();
+			if (!is_null($payment_method))
+				$plans = $payment_method->get_recurring_plans();
 
+			// get recurring plan price
 			if (isset($plans[$plan_name])) {
 				$plan = $plans[$plan_name];
 
@@ -2441,7 +2445,7 @@ class shop extends Module {
 		if ($new_transaction) {
 			// get shopping cart summary
 			$uid = uniqid('', true);
-			$summary = $this->getCartSummary($type, $recipient, $uid);
+			$summary = $this->getCartSummary($type, $recipient, $uid, $payment_method);
 
 			$result['uid'] = $uid;
 			$result['type'] = $type;
@@ -2471,7 +2475,7 @@ class shop extends Module {
 
 		} else {
 			$uid = $_SESSION['transaction']['uid'];
-			$summary = $this->getCartSummary($type, $recipient, $uid);
+			$summary = $this->getCartSummary($type, $recipient, $uid, $payment_method);
 
 			// there's already an existing transaction
 			$result = $_SESSION['transaction'];
