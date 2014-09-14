@@ -251,6 +251,12 @@ class stripe_payment extends Module {
 		$uids = array();
 		$processed_plans = array();
 		$missing_plans = array();
+		$interval_map = array(
+				'day'	=> RecurringPayment::DAY,
+				'week'	=> RecurringPayment::WEEK,
+				'month'	=> RecurringPayment::MONTH,
+				'year'	=> RecurringPayment::YEAR
+			);
 
 		// load all plan unique ids
 		$plans = $manager->getItems(array('text_id'), array());
@@ -270,14 +276,6 @@ class stripe_payment extends Module {
 				$manager->updateData($data, array('text_id' => $plan['id']));
 
 			} else {
-				// get interval
-				$interval_map = array(
-						'day'	=> RecurringPayment::DAY,
-						'week'	=> RecurringPayment::WEEK,
-						'month'	=> RecurringPayment::MONTH,
-						'year'	=> RecurringPayment::YEAR
-					);
-
 				// this plan is not present in database, add it
 				$data = array(
 						'text_id'			=> $plan['id'],
