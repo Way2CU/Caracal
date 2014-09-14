@@ -18,7 +18,7 @@
 			<input name="subject" class="multi-language" type="text" maxlength="255" style="width: 600px"/>
 		</label>
 
-		<div id="contact_form_templates_notbook">
+		<div id="contact_form_templates_notebook">
 			<div>
 				<textarea
 					name="plain_text_content"
@@ -57,14 +57,14 @@
 		var converter = new Showdown.converter();
 
 		// create notebook
-		var notebook = new Notebook('contact_form_templates_notbook');
+		var notebook = new Notebook('contact_form_templates_notebook');
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_plain_text'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_html'))
 			.setPageTitle(2, language_handler.getText('contact_form', 'tab_preview'));
 
 		// update preview on blur
-		$('div#contact_form_templates_notbook textarea[name=html_content]').blur(function() {
+		$('div#contact_form_templates_notebook textarea[name=html_content]').blur(function() {
 			var preview = $('div#contact_form_template_preview');
 			preview.html(converter.makeHtml($(this).val()));
 		});
