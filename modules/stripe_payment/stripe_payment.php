@@ -101,6 +101,10 @@ class stripe_payment extends Module {
 					$this->subscribe();
 					break;
 
+				case 'show_plan_list':
+					$this->tag_PlanList($params, $children);
+					break;
+
 				default:
 					break;
 			}
