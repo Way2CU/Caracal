@@ -447,7 +447,7 @@ class stripe_payment extends Module {
 		$transaction_manager = ShopTransactionsManager::getInstance();
 		$customer_manager = Stripe_CustomerManager::getInstance();
 		$stripe_token = isset($_REQUEST['stripe_token']) ? fix_chars($_REQUEST['stripe_token']) : null;
-		$transaction_uid = fix_chars($_REQUEST['transaction_uid']);
+		$transaction_uid = fix_chars($_REQUEST['transaction']);
 		$plan_name = fix_chars($_REQUEST['plan_name']);
 
 		// get transaction
@@ -457,7 +457,7 @@ class stripe_payment extends Module {
 							);
 
 		if (!is_object($transaction)) {
-			trigger_error('Unable to subscribe unknown transaction!', E_USER_ERROR);
+			trigger_error('Unable to subscribe, unknown transaction!', E_USER_ERROR);
 			return;
 		}
 
