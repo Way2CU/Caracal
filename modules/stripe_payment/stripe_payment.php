@@ -266,18 +266,24 @@ class stripe_payment extends Module {
 
 			if (in_array($plan['id'], $uids)) {
 				// plan exists, update data
-				$data = array(
-						'name'				=> $plan['name'],
-					);
+				$data = array('name' => $plan['name']);
 				$manager->updateData($data, array('text_id' => $plan['id']));
 
 			} else {
+				// get interval
+				$interval_map = array(
+						'day'	=> RecurringPayment::DAY,
+						'week'	=> RecurringPayment::WEEK,
+						'month'	=> RecurringPayment::MONTH,
+						'year'	=> RecurringPayment::YEAR
+					);
+
 				// this plan is not present in database, add it
 				$data = array(
 						'text_id'			=> $plan['id'],
 						'name'				=> $plan['name'],
 						'trial_days'		=> !is_null($plan['trial_period_days']) ? $plan['trial_period_days'] : 0,
-						'interval'			=> 0,
+						'interval'			=> $interval_map[$plan['interval']],
 						'interval_count'	=> $plan['interval_count'],
 						'price'				=> $plan['amount'] / 100,
 						'currency'			=> $plan['currency']
