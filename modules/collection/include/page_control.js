@@ -19,8 +19,9 @@ function PageControl(selector, page_selector) {
 	self.form = null;
 	self.submit_on_end = false;
 	self.wrap_around = false;
-	self.paused = false;
+	self.pause_on_hover = false;
 	self.interval_id = null;
+	self.interval_time = 0;
 
 	// signal handlers
 	self.on_page_flip = new Array();
@@ -66,10 +67,8 @@ function PageControl(selector, page_selector) {
 	 * @return boolean
 	 */
 	self._handleNext = function(event) {
-		if (self.current_page + 1 < self.pages.length) {
-			self._switchContainer(self.current_page + 1);
-			event.preventDefault();
-		}
+		self._switchContainer(self.current_page + 1);
+		event.preventDefault();
 	};
 
 	/**
@@ -79,20 +78,14 @@ function PageControl(selector, page_selector) {
 	 * @return boolean
 	 */
 	self._handlePrevious = function(event) {
-		if (self.current_page - 1 >= 0) {
-			self._switchContainer(self.current_page - 1);
-			event.preventDefault();
-		}
+		self._switchContainer(self.current_page - 1);
+		event.preventDefault();
 	};
 
 	/**
 	 * Handle periodic switches.
 	 */
 	self._handleInterval = function() {
-		// skip change if paused
-		if (self.paused)
-			return;
-
 		// show next page
 		self._switchContainer(self.current_page + 1);
 	};
@@ -101,14 +94,24 @@ function PageControl(selector, page_selector) {
 	 * Handle mouse entering container.
 	 */
 	self._handleContainerMouseEnter = function(event) {
-		self.paused = true;
+		if (!self.pause_on_hover)
+			return;
+
+		if (self.interval_id != null)
+			clearInterval(self.interval_id);
+
+		self.interval_id = null;
 	};
 
 	/**
 	 * Handle mouse leaving container.
 	 */
 	self._handleContainerMouseLeave = function(event) {
-		self.paused = false;
+		if (!self.pause_on_hover)
+			return;
+
+		if (self.interval_id == null)
+			self.interval_id = setInterval(self._handleInterval, self.interval_time);
 	};
 
 	/**
@@ -424,12 +427,15 @@ function PageControl(selector, page_selector) {
 	 * @param integer interval
 	 */
 	self.setInterval = function(interval) {
+		// store interval timeout
+		self.interval_time = interval;
+
 		// clear existing interval
 		if (self.interval_id != null)
 			clearInterval(self.interval_id);
 
 		// create interval
-		self.interval_id = setInterval(self._handleInterval, interval);
+		self.interval_id = setInterval(self._handleInterval, self.interval_time);
 
 		return self;
 	};
@@ -502,6 +508,15 @@ function PageControl(selector, page_selector) {
 	self.setValidatorFunction = function(page, validator) {
 		self.pages.eq(page).data('validator', validator);
 		return self;
+	};
+
+	/**
+	 * Enable pausing interval based sliders when mouse hovers over container.
+	 *
+	 * @param boolean pause_on_hover
+	 */
+	self.setPauseOnHover = function(pause_on_hover) {
+		self.pause_on_hover = pause_on_hover;
 	};
 
 	// finish object initialization
