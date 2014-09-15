@@ -1191,6 +1191,9 @@ class gallery extends Module {
 		if (isset($tag_params['order_by']))
 			$order_by = fix_chars(explode(',', $tag_params['order_by']));
 
+		if (isset($tag_params['random']) && $tag_params['random'] == 1)
+			$order_by = array('RAND()');
+
 		if (isset($tag_params['order_asc']))
 			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
 
