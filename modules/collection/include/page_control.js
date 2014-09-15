@@ -522,6 +522,7 @@ function PageControl(selector, page_selector) {
 	 */
 	self.setPauseOnHover = function(pause_on_hover) {
 		self.pause_on_hover = pause_on_hover;
+		return self;
 	};
 
 	// finish object initialization
