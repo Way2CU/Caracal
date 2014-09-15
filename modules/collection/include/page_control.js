@@ -145,9 +145,14 @@ function PageControl(selector, page_selector) {
 			self.form.submit()
 		}
 
-		// start showing pages from start
-		if (self.wrap_around && new_page > self.pages.length - 1)
-			new_page = 0;
+		// support wrapping pages
+		if (self.wrap_around)
+			if (new_page > self.pages.length - 1) {
+				new_page = 0;
+
+			} else if (new_page < 0) {
+				new_page = self.pages.length - 1;
+			}
 
 		// redirect if needed
 		if (new_page in self.page_redirection) {
