@@ -750,32 +750,40 @@ class youtube extends Module {
 		// no id was specified
 		if (is_object($video))
 			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1') && class_exists('swfobject')) {
-				// query parameters
-				$query_params = array(
-						'rel'	=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
-						'showinfo'	=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0
+				// player parameters
+				$player_params = array(
+						'rel'			=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
+						'showinfo'		=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0
+						'autoplay'		=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
+						'autohide'		=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
+						'color'			=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
+						'origin'		=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : _DOMAIN,
+						'theme'			=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
+						'start'			=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
+						'loop'			=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
 					);
 
+				$params = array(
+						'width'		=> isset($tag_params['width']) ? fix_id($tag_params['width']) : 320,
+						'height'	=> isset($tag_params['height']) ? fix_id($tag_params['height']) : 240,
+					);
+
+				// prepare embedding URL
+				$query_data = http_build_query($player_params);
+
+				$url = _SECURE ? 'https' : 'http';
+				$url .= '://youtube.com/embed/'.$video->video_id;
+				$url .= '?'.$query_data;
+
+				$params['url'] = $url;
+
 				// embed video player
-				$module = swfobject::getInstance();
-				$module->embedSWF(
-								$this->getEmbedURL($video->video_id, $query_params),
-								$tag_params['target'],
-								isset($tag_params['width']) ? $tag_params['width'] : 320,
-								isset($tag_params['height']) ? $tag_params['height'] : 240,
-								array(
-									'autoplay'	=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
-									'autohide'	=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
-									'color'		=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
-									'origin'	=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : 'website',
-									'theme'		=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
-									'start'		=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
-									'loop'		=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
-								),
-								array(
-									'wmode'	=> 'opaque',
-								)
-							);
+				$template = $this->loadTemplate($tag_params, 'embed.xml');
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+
 			} else {
 				// parse specified template
 				$template = $this->loadTemplate($tag_params, 'video.xml');

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<iframe
+		type="text/html"
+		width="$params['width']"
+		height="$params['height']"
+		frameborder="_STANDARD != 'html5' ? 0 : false"
+		seamless="_STANDARD == 'html5' ? 'seamless' : false"
+		src="$params['url']"
+		cms:optional="frameborder,seamless"
+		cms:eval="width,height,src"
+		/>
+</document>
