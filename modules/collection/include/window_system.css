@@ -982,3 +982,10 @@ body.rtl [data-tooltip]:before {
 
 	transition-delay: 0.5s;
 }
+
+/**
+ * Video IFrame
+ */
+iframe.video {
+	border: 0px;
+}
