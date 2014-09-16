@@ -719,6 +719,8 @@ class youtube extends Module {
 	 * @param array $children
 	 */
 	public function tag_Video($tag_params, $children) {
+		global $language;
+
 		$video = null;
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -756,11 +758,13 @@ class youtube extends Module {
 						'showinfo'		=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0,
 						'autoplay'		=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
 						'autohide'		=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
+						'controls'		=> isset($tag_params['controls']) ? fix_id($tag_params['controls']) : 1,
 						'color'			=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
 						'origin'		=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : _DOMAIN,
 						'theme'			=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
 						'start'			=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
 						'loop'			=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
+						'hl'			=> $language,
 					);
 
 				$params = array(
