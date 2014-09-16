@@ -2,6 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<iframe
+		class="video"
 		type="text/html"
 		width="$params['width']"
 		height="$params['height']"

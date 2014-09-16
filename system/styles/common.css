@@ -317,3 +317,9 @@ p {
 	font-size: 1rem;
 }
 
+/**
+ * Video IFrame
+ */
+iframe.video {
+	border: 0px;
+}
