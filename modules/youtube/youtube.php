@@ -753,7 +753,7 @@ class youtube extends Module {
 				// player parameters
 				$player_params = array(
 						'rel'			=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
-						'showinfo'		=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0
+						'showinfo'		=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0,
 						'autoplay'		=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
 						'autohide'		=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
 						'color'			=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
