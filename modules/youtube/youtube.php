@@ -770,7 +770,7 @@ class youtube extends Module {
 				$params = array(
 						'width'		=> isset($tag_params['width']) ? fix_id($tag_params['width']) : 320,
 						'height'	=> isset($tag_params['height']) ? fix_id($tag_params['height']) : 240,
-						'player_id'	=> isset($tag_params['player_id'] ? fix_chars($tag_params['player_id']) : false
+						'player_id'	=> isset($tag_params['player_id']) ? fix_chars($tag_params['player_id']) : false
 					);
 
 				// prepare embedding URL
