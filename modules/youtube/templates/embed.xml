@@ -2,6 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<iframe
+		id="$params['player_id']"
 		class="video"
 		type="text/html"
 		width="$params['width']"
@@ -9,7 +10,7 @@
 		frameborder="_STANDARD != 'html5' ? 0 : false"
 		seamless="_STANDARD == 'html5' ? 'seamless' : false"
 		src="$params['url']"
-		cms:optional="frameborder,seamless"
+		cms:optional="frameborder,seamless,id"
 		cms:eval="width,height,src"
 		/>
 </document>
