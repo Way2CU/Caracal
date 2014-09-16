@@ -749,7 +749,7 @@ class youtube extends Module {
 
 		// no id was specified
 		if (is_object($video))
-			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1') && class_exists('swfobject')) {
+			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1')) {
 				// player parameters
 				$player_params = array(
 						'rel'			=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
