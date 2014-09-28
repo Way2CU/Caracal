@@ -203,7 +203,7 @@ class backend extends Module {
 					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->saveTimer();
 					break;
-				
+
 				case 'save_unpriviledged_user':
 					$user_manager = Backend_UserManager::getInstance();
 					$user_manager->saveUnpriviledgedUser($params, $children);
@@ -255,7 +255,7 @@ class backend extends Module {
 					}
 					break;
 
-				default: 
+				default:
 					// draw main backend as default
 					$this->showBackend();
 					break;
@@ -318,7 +318,7 @@ class backend extends Module {
 					break;
 			}
 	}
-	
+
 	/**
 	 * Redefine abstract methods
 	 */
@@ -370,7 +370,7 @@ class backend extends Module {
 		if (!is_null($name))
 			$this->registerNamedItem($name, $menu);
 	}
-	
+
 	/**
 	 * Register named item for easier retrieval later
 	 *
