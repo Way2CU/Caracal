@@ -458,12 +458,12 @@ class shop extends Module {
 					$handler = ShopItemHandler::getInstance($this);
 					$handler->tag_ItemList($params, $children);
 					break;
-					
+
 				case 'show_category':
 					$handler = ShopCategoryHandler::getInstance($this);
 					$handler->tag_Category($params, $children);
 					break;
-					
+
 				case 'show_category_list':
 					$handler = ShopCategoryHandler::getInstance($this);
 					$handler->tag_CategoryList($params, $children);
@@ -497,7 +497,7 @@ class shop extends Module {
 				case 'configure_search':
 					$this->configureSearch($params, $children);
 					break;
-					
+
 				case 'checkout':
 					$this->showCheckout();
 					break;
