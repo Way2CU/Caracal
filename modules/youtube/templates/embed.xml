@@ -4,7 +4,6 @@
 	<iframe
 		id="$params['player_id']"
 		class="video"
-		type="text/html"
 		width="$params['width']"
 		height="$params['height']"
 		frameborder="_STANDARD != 'html5' ? 0 : false"
