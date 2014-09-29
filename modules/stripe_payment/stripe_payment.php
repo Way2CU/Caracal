@@ -69,7 +69,7 @@ class stripe_payment extends Module {
 		// register payment method
 		if (class_exists('shop')) {
 			require_once("units/stripe_payment_method.php");
-			Stripe_PaymentMethod::getInstance($this); 		
+			Stripe_PaymentMethod::getInstance($this);
 		}
 	}
 
@@ -537,7 +537,7 @@ class stripe_payment extends Module {
 		} else {
 			// subscribe existing customer
 			$stripe_customer = Stripe_Customer::retrieve($customer->text_id);
-			
+
 			// make subscription
 			try {
 				$response = $stripe_customer->subscriptions->create(array('plan' => $plan_name));
@@ -559,6 +559,7 @@ class stripe_payment extends Module {
 	public function tag_PlanList($tag_params, $children) {
 		$manager = Stripe_PlansManager::getInstance();
 		$conditions = array();
+		$selected = isset($_SESSION['recurring_plan']) ? $_SESSION['recurring_plan'] : null;
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -577,7 +578,8 @@ class stripe_payment extends Module {
 					'interval'			=> $item->interval,
 					'interval_count'	=> $item->interval_count,
 					'price'				=> $item->price,
-					'currency'			=> $item->currency
+					'currency'			=> $item->currency,
+					'selected'			=> $selected == $item->name
 				);
 
 				$template->restoreXML();
