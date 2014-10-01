@@ -393,7 +393,7 @@ class Backend_UserManager {
 			$mailer->set_sender($sender['address'], $sender['name']);
 			$mailer->add_recipient($fields['email'], $fields['fullname']);
 
-			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_body($template['plain_body'], Markdown($template['html_body']));
 			$mailer->set_variables($fields);
 
 			// send email
@@ -599,7 +599,7 @@ class Backend_UserManager {
 			$mailer->set_sender($sender['address'], $sender['name']);
 			$mailer->add_recipient($fields['email'], $fields['fullname']);
 
-			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_body($template['plain_body'], Markdown($template['html_body']));
 			$mailer->set_variables($fields);
 
 			// send email
