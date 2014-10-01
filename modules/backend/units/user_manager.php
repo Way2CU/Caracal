@@ -385,16 +385,13 @@ class Backend_UserManager {
 			// get mailer
 			$mailer = $contact_form->getMailer();
 			$sender = $contact_form->getSender();
-			$recipients = $contact_form->getRecipients();
 			$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
 
 			// start creating message
 			$mailer->start_message();
 			$mailer->set_subject($template['subject']);
 			$mailer->set_sender($sender['address'], $sender['name']);
-
-			foreach ($recipients as $recipient)
-				$mailer->add_recipient($recipient['address'], $recipient['name']);
+			$mailer->add_recipient($fields['email'], $fields['fullname']);
 
 			$mailer->set_body($template['plain_body'], $template['html_body']);
 			$mailer->set_variables($fields);
@@ -420,7 +417,7 @@ class Backend_UserManager {
 		$manager = UserManager::getInstance();
 
 		// grab new user data
-		if (defined('_AJAX_REQUEST')) 
+		if (defined('_AJAX_REQUEST'))
 			$source = $_REQUEST; else
 			$source = $tag_params;
 
@@ -594,16 +591,13 @@ class Backend_UserManager {
 
 			$mailer = $contact_form->getMailer();
 			$sender = $contact_form->getSender();
-			$recipients = $contact_form->getRecipients();
 			$template = $contact_form->getTemplate($this->parent->settings['template_recovery']);
 
 			// start creating message
 			$mailer->start_message();
 			$mailer->set_subject($template['subject']);
 			$mailer->set_sender($sender['address'], $sender['name']);
-
-			foreach ($recipients as $recipient)
-				$mailer->add_recipient($field['email'], $recipient['fullname']);
+			$mailer->add_recipient($fields['email'], $fields['fullname']);
 
 			$mailer->set_body($template['plain_body'], $template['html_body']);
 			$mailer->set_variables($fields);
