@@ -541,7 +541,7 @@ class Backend_UserManager {
 		$email = null;
 		$captcha = null;
 		$conditions = array();
-	
+
 		// get username
 		if (array_key_exists('username', $tag_params))
 			$username = fix_chars($tag_params['username']);
@@ -603,7 +603,7 @@ class Backend_UserManager {
 			$mailer->set_sender($sender['address'], $sender['name']);
 
 			foreach ($recipients as $recipient)
-				$mailer->add_recipient($recipient['address'], $recipient['name']);
+				$mailer->add_recipient($field['email'], $recipient['fullname']);
 
 			$mailer->set_body($template['plain_body'], $template['html_body']);
 			$mailer->set_variables($fields);
