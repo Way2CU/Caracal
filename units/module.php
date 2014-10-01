@@ -212,10 +212,6 @@ abstract class Module {
 			$file_name = $default_file;
 		}
 
-		// print debug statements
-		if (defined('DEBUG'))
-			trigger_error($this->name.': Load template: '.$path.$file_name, E_USER_NOTICE);
-
 		// load template
 		$template = new TemplateHandler($file_name, $path);
 		$template->setMappedModule($this->name);
