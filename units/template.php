@@ -48,19 +48,19 @@ class TemplateHandler {
 	 * @var array
 	 */
 	private $handlers = array();
-	
+
 	/**
 	 * List of tags that shouldn't be closed
 	 * @var array
 	 */
 	private $tags_without_end = array('br', 'hr', 'img', 'base', 'input', 'link');
-	
+
 	/**
 	 * If we should close all tags
 	 * @var boolean
 	 */
 	private $close_all_tags = false;
-	
+
 	/**
 	 * List of session variables that we protect from setting
 	 * @var array
@@ -88,10 +88,6 @@ class TemplateHandler {
 		$path = empty($path) ? $template_path : $path;
 		$this->file = $path.$file;
 		$this->cache = Cache::getInstance();
-
-		// record debug message
-		if (defined('DEBUG'))
-			trigger_error('Template load: '.$this->file, E_USER_NOTICE);
 
 		// if file exits then load
 		if (!empty($this->file) && file_exists($this->file)) {
@@ -593,7 +589,7 @@ class TemplateHandler {
 						if ($this->close_all_tags)
 							$close_tag = true; else
 							$close_tag = !in_array($tag->tagName, $this->tags_without_end);
-						
+
 						// close tag if needed
 						if ($close_tag)
 							echo '</'.$tag->tagName.'>';
