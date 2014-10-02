@@ -66,8 +66,8 @@ define('_BASEURL', url_GetBaseURL());
 define('_LIBPATH', _BASEPATH.'/libraries/');
 define('_DESKTOP_VERSION', get_desktop_version());
 define('_MOBILE_VERSION', !_DESKTOP_VERSION);
-define('_AJAX_REQUEST', 
-			!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+define('_AJAX_REQUEST',
+			!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 		);
 define('_BROWSER_OK', is_browser_ok());

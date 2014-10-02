@@ -37,8 +37,9 @@ class gallery extends Module {
 
 		parent::__construct(__FILE__);
 
-		$this->image_path = $site_path.'gallery/images/';
-		$this->thumbnail_path = $site_path.'gallery/thumbnails/';
+		// make paths absolute so function can easily convert them to URL
+		$this->image_path = _BASEPATH.'/'.$site_path.'gallery/images/';
+		$this->thumbnail_path = _BASEPATH.'/'.$site_path.'gallery/thumbnails/';
 
 		// make sure storage path exists
 		if (!file_exists($this->image_path))
