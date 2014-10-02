@@ -2288,7 +2288,7 @@ class gallery extends Module {
 			$filename = $this->getFileName($file_names[$i]);
 
 			// try moving file to new destination
-			if (move_uploaded_file($file_temp_names[$i], $image_path.$filename)) {
+			if (move_uploaded_file($file_temp_names[$i], $this->image_path.$filename)) {
 				// store empty data in database
 				$manager = GalleryManager::getInstance();
 				$data = array(
