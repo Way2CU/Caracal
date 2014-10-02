@@ -26,34 +26,37 @@ class Thumbnail {
 class gallery extends Module {
 	private static $_instance;
 
+	private $image_path = null;
+	private $thumbnail_path = null;
+
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $section;
+		global $section, $site_path;
 
 		parent::__construct(__FILE__);
+
+		$this->image_path = $site_path.'gallery/images/';
+		$this->thumbnail_path = $site_path.'gallery/thumbnails/';
+
+		// make sure storage path exists
+		if (!file_exists($this->image_path))
+			if (mkdir($this->image_path, 0775, true) === false) {
+				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
+				return;
+			}
+
+		// make sure storage path exists
+		if (!file_exists($this->thumbnail_path))
+			if (mkdir($this->thumbnail_path, 0775, true) === false) {
+				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
+				return;
+			}
 
 		// load module style and scripts
 		if (class_exists('head_tag')) {
 			$head_tag = head_tag::getInstance();
-
-			$head_tag->addTag('script',
-						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/slideshow.js'),
-							'type'	=> 'text/javascript'
-						));
-			$head_tag->addTag('script',
-						array(
-							'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'),
-							'type'	=> 'text/javascript'
-						));
-			$head_tag->addTag('link',
-						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'),
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css'
-						));
 
 			// load backend files if needed
 			if ($section == 'backend') {
@@ -81,6 +84,25 @@ class gallery extends Module {
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
+
+			} else {
+				// load frontend scripts
+				$head_tag->addTag('script',
+							array(
+								'src'	=> url_GetFromFilePath($this->path.'include/slideshow.js'),
+								'type'	=> 'text/javascript'
+							));
+				$head_tag->addTag('script',
+							array(
+								'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'),
+								'type'	=> 'text/javascript'
+							));
+				$head_tag->addTag('link',
+							array(
+								'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'),
+								'rel'	=> 'stylesheet',
+								'type'	=> 'text/css'
+							));
 			}
 		}
 
@@ -414,7 +436,7 @@ class gallery extends Module {
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
-		
+
 		$link_new = url_MakeHyperlink(
 					$this->getLanguageConstant('upload_images'),
 					window_Open(
@@ -1992,7 +2014,7 @@ class gallery extends Module {
 			$item = $manager->getSingleItem(array('filename'), array('id' => $item));
 		}
 
-		return url_GetFromFilePath($this->path.'images/'.$item->filename);
+		return url_GetFromFilePath($this->image_path.$item->filename);
 	}
 
 	/**
@@ -2038,11 +2060,13 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public function getThumbnailURL($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+		global $site_path;
+
 		$result = '';
 
 		// prepare result
-		$image_file = $this->path.'images/'.$item->filename;
-		$thumbnail_file = $this->path.'thumbnails/'.$size.'_'.$constraint.'_'.$item->filename;
+		$image_file = $this->image_path.$item->filename;
+		$thumbnail_file = $this->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
 
 		if (!file_exists($thumbnail_file))
 			self::getInstance()->createThumbnail($image_file, $size, $constraint);
@@ -2091,10 +2115,10 @@ class gallery extends Module {
 
 		return $result;
 	}
-	
+
 	/**
-	 * Get gallery group thumbnail based on gallery id 
-	 * 
+	 * Get gallery group thumbnail based on gallery id
+	 *
 	 * @param integer $group_id
 	 * @param boolean $big_image
 	 * @return string
@@ -2102,11 +2126,11 @@ class gallery extends Module {
 	public function getGroupThumbnailURL($group_id, $big_image=false) {
 		$manager = GalleryGroupManager::getInstance();
 		$group = $manager->getSingleItem(array('thumbnail', 'id'), array('id' => $group_id));
-		
+
 		$result = '';
 		if (is_object($group))
 			$result = $this->getGroupImage($group, $big_image);
-		
+
 		return $result;
 	}
 
@@ -2199,6 +2223,9 @@ class gallery extends Module {
 	 * @return array
 	 */
 	public function createImage($field_name, $protected=0) {
+		global $site_path;
+
+		// prepare result
 		$result = array(
 					'error'		=> false,
 					'message'	=> '',
@@ -2219,7 +2246,7 @@ class gallery extends Module {
 			$multiple_upload = false;
 
 		}
-		
+
 		// filter out unwanted files
 		$allowed_extensions = explode(',', strtolower($this->settings['image_extensions']));
 		for ($i = count($file_names) - 1; $i >= 0; $i--) {
@@ -2254,14 +2281,14 @@ class gallery extends Module {
 				continue;
 			}
 		}
-		
+
 		// process uploaded images
 		for ($i = 0; $i < count($file_names); $i++) {
 			// get unique file name for this image to be stored
 			$filename = $this->getFileName($file_names[$i]);
 
 			// try moving file to new destination
-			if (move_uploaded_file($file_temp_names[$i], $this->path.'images/'.$filename)) {
+			if (move_uploaded_file($file_temp_names[$i], $image_path.$filename)) {
 				// store empty data in database
 				$manager = GalleryManager::getInstance();
 				$data = array(
@@ -2271,10 +2298,10 @@ class gallery extends Module {
 							'slideshow'		=> 0,
 							'protected'		=> $protected
 						);
-	
+
 				$manager->insertData($data);
 				$id = $manager->getInsertedID();
-				
+
 				$result['filename'] = $filename;
 				$result['message'] = $this->getLanguageConstant('message_image_uploaded');
 
@@ -2288,7 +2315,7 @@ class gallery extends Module {
 				} else {
 					$result['id'] = $id;
 				}
-				
+
 			} else {
 				$result['error'] = true;
 				$result['message'] = $this->getLanguageConstant('message_image_save_error');
@@ -2307,17 +2334,17 @@ class gallery extends Module {
 	public function createGallery($name) {
 		$image_manager = GalleryManager::getInstance();
 		$gallery_manager = GalleryGroupManager::getInstance();
-		
+
 		// create gallery
 		$gallery_manager->insertData(array('name' => $name));
 		$result = $gallery_manager->getInsertedID();
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Create empty gallery
-	 * 
+	 *
 	 * @param array $name Multi-language name
 	 * @return integer Id of newly created gallery
 	 */
@@ -2327,7 +2354,7 @@ class gallery extends Module {
 		// create gallery
 		$gallery_manager->insertData(array('name' => $name));
 		$result = $gallery_manager->getInsertedID();
-		
+
 		return $result;
 	}
 
@@ -2339,8 +2366,10 @@ class gallery extends Module {
 	 * @param integer $constraint
 	 */
 	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH) {
-		$img_source = null;
+		global $site_path;
 
+		// create image resource
+		$img_source = null;
 		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
 			case 'jpg':
 			case 'jpeg':
@@ -2389,7 +2418,7 @@ class gallery extends Module {
 		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
 		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
 
-		$save_function($thumbnail, $this->path.'thumbnails/'.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
+		$save_function($thumbnail, $thumbnail_path.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
 
 		return true;
 	}
