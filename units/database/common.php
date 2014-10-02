@@ -26,7 +26,7 @@ function database_connect() {
 			$result = $connected && $selected;
 
 			// connection was successful but database doesn't exist
-			if ($connected && (!$selected || ($selected && !ModuleManager::getInstance()->tableExists()))) 
+			if ($connected && (!$selected || ($selected && !ModuleManager::getInstance()->tableExists())))
 				$result = database_initialize(!$selected);
 
 			break;

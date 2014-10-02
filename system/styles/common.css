@@ -20,7 +20,7 @@ body {
 input,
 select,
 textarea,
-button { 
+button {
 	margin: 0px;
 
 	font-size: 1em;
@@ -31,7 +31,7 @@ a:focus,
 input:focus,
 select:focus,
 textarea:focus,
-button:focus { 
+button:focus {
 	outline: none;
 }
 
@@ -119,87 +119,6 @@ div.scrollbar_thumb:hover {
 
 div.scrollbar_thumb.active {
 	transition-property: none;
-}
-
-/**
- * Mobile menu
- */
-.mobile_menu {
-	display: block;
-	width: 200px;
-
-	position: fixed;
-	left: -200px;
-
-	background-color: white;
-	transition: all 0.5s;
-
-	/* improve performance on old Android browsers */
-	-webkit-backface-visibility: hidden;
-	backface-visibility: hidden;
-	perspective: 1000;
-
-	/* optimize crhome */
-	will-change: left;
-}
-
-.mobile_menu.visible {
-	left: 0px;
-}
-
-.mobile_menu a {
-	display: block;
-
-	padding: 0.5em;
-	padding-left: 1em;
-	padding-right: 1em;
-
-	color: #333333;
-	text-decoration: none;
-}
-
-.mobile_menu a:active {
-	color: white;
-	background-color: #333333;
-}
-
-.mobile_title {
-	display: block;
-	width: 100%;
-
-	position: fixed;
-	left: 0px;
-	top: 0px;
-
-	background-color: #303030;
-	background-position: 0px center;
-	background-repeat: no-repeat;
-	box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
-
-	color: white;
-
-	transition: 0.3s all;
-}
-
-.mobile_title.menu_visible {
-	background-position: -30px center;
-}
-
-body.rtl .mobile_menu {
-	left: auto;
-	right: -200px;
-}
-
-body.rtl .mobile_menu.visible {
-	right: 0px;
-}
-
-body.rtl .mobile_title {
-	background-position: right center;
-}
-
-body.rtl .mobile_title.visible {
-	background-position: 105% center;
 }
 
 /**

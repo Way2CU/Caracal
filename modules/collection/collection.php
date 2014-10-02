@@ -38,23 +38,14 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::WINDOW_SYSTEM		=> array(
-													'window_system.js',
-													'window_system.css'
-												),
-				collection::NOTEBOOK			=> array(
-													'notebook.js',
-													'notebook.css'
-												),
+				collection::WINDOW_SYSTEM		=> array('window_system.js', 'window_system.css'),
+				collection::NOTEBOOK			=> array('notebook.js', 'notebook.css'),
 				collection::TOOLBAR				=> 'toolbar.js',
 				collection::ANIMATION_CHAIN		=> 'animation_chain.js',
-				collection::DIALOG				=> array(
-													'dialog.js',
-													'dialog.css'
-												),
+				collection::DIALOG				=> array('dialog.js', 'dialog.css'),
 				collection::SCROLLBAR			=> 'scrollbar.js',
 				collection::PAGE_CONTROL		=> 'page_control.js',
-				collection::MOBILE_MENU			=> 'mobile_menu.js',
+				collection::MOBILE_MENU			=> array('mobile_menu.js', 'mobile_menu.css'),
 				collection::COMMUNICATOR		=> 'communicator.js',
 				collection::DYNAMIC_PAGE_CONTENT => 'dynamic_page_content.js',
 				collection::JQUERY				=> 'jquery.js',
