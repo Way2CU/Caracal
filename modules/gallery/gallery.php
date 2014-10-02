@@ -26,8 +26,8 @@ class Thumbnail {
 class gallery extends Module {
 	private static $_instance;
 
-	private $image_path = null;
-	private $thumbnail_path = null;
+	public $image_path = null;
+	public $thumbnail_path = null;
 
 	/**
 	 * Constructor
@@ -2104,8 +2104,10 @@ class gallery extends Module {
 		// prepare result
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
-			$image_file = $this->image_path.$item->filename;
-			$thumbnail_file = $this->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
+			$gallery = gallery::getInstance();
+
+			$image_file = $gallery->image_path.$item->filename;
+			$thumbnail_file = $gallery->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
 
 			if (!file_exists($thumbnail_file))
 				self::getInstance()->createThumbnail($image_file, $size, $constraint);
