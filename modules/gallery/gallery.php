@@ -2045,7 +2045,7 @@ class gallery extends Module {
 		// prepare result
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
-			$result = url_GetFromFilePath($path.'/images/'.$item->filename);
+			$result = url_GetFromFilePath($this->image_path.$item->filename);
 		}
 
 		return $result;
@@ -2104,8 +2104,8 @@ class gallery extends Module {
 		// prepare result
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
-			$image_file = $path.'/images/'.$item->filename;
-			$thumbnail_file = $path.'/thumbnails/'.$size.'_'.$constraint.'_'.$item->filename;
+			$image_file = $this->image_path.$item->filename;
+			$thumbnail_file = $this->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
 
 			if (!file_exists($thumbnail_file))
 				self::getInstance()->createThumbnail($image_file, $size, $constraint);
@@ -2366,8 +2366,6 @@ class gallery extends Module {
 	 * @param integer $constraint
 	 */
 	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH) {
-		global $site_path;
-
 		// create image resource
 		$img_source = null;
 		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
