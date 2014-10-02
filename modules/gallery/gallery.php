@@ -2418,7 +2418,7 @@ class gallery extends Module {
 		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
 		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
 
-		$save_function($thumbnail, $thumbnail_path.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
+		$save_function($thumbnail, $this->thumbnail_path.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
 
 		return true;
 	}
