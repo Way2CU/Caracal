@@ -35,6 +35,7 @@ class collection extends Module {
 	// other scripts
 	const LESS = 100;
 	const SHOWDOWN = 101;
+	const PREFIX_FREE = 102;
 
 	// script files
 	private $script_files = array(
@@ -54,6 +55,7 @@ class collection extends Module {
 				collection::JQUERY_EXTENSIONS	=> 'jquery.extensions.js',
 				collection::LESS				=> 'less.js',
 				collection::SHOWDOWN			=> 'showdown.js',
+				collection::PREFIX_FREE			=> 'prefixfree.js'
 			);
 
 	private $script_names = array(
@@ -73,6 +75,7 @@ class collection extends Module {
 				'jquery_extensions'		=> collection::JQUERY_EXTENSIONS,
 				'less'					=> collection::LESS,
 				'showdown'				=> collection::SHOWDOWN,
+				'prefix_free'			=> collection::PREFIX_FREE
 			);
 
 	// list of included scripts
@@ -91,8 +94,9 @@ class collection extends Module {
 		if (class_exists('head_tag'))
 			$this->head_tag = head_tag::getInstance();
 
-		// include jquery by default
+		// include scripts by default
 		$this->includeScriptById(collection::JQUERY);
+		$this->includeScriptById(collection::PREFIX_FREE);
 	}
 
 	/**
