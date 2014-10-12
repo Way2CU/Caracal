@@ -262,7 +262,6 @@ class TemplateHandler {
 			// now parse the tag
 			switch ($tag->tagName) {
 				// handle tag used for setting session variable
-				case '_session':
 				case 'cms:session':
 					$name = $tag->tagAttrs['name'];
 
@@ -272,15 +271,14 @@ class TemplateHandler {
 						$only_once = false;
 
 					$should_set = ($only_once && !isset($_SESSION[$name])) || !$only_once;
-					
+
 					// store value
-					if (!in_array($name, $this->protected_variables) && $should_set) 
+					if (!in_array($name, $this->protected_variables) && $should_set)
 						$_SESSION[$name] = $tag->tagAttrs['value'];
 
 					break;
-				
+
 				// transfer control to module
-				case '_module':
 				case 'cms:module':
 					if (class_exists($tag->tagAttrs['name'])) {
 						$module = call_user_func(array($tag->tagAttrs['name'], 'getInstance'));
@@ -289,7 +287,6 @@ class TemplateHandler {
 					break;
 
 				// load other template
-				case '_template':
 				case 'cms:template':
 					$file = $tag->tagAttrs['file'];
 					$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : '';
@@ -305,7 +302,6 @@ class TemplateHandler {
 					break;
 
 				// raw text copy
-				case '_raw':
 				case 'cms:raw':
 					if (key_exists('file', $tag->tagAttrs)) {
 						// if file attribute is specified
@@ -335,7 +331,6 @@ class TemplateHandler {
 					break;
 
 				// multi language constants
-				case '_text':
 				case 'cms:text':
 					$constant = $tag->tagAttrs['constant'];
 					$language = (key_exists('language', $tag->tagAttrs)) ? $tag->tagAttrs['language'] : $language;
@@ -381,7 +376,6 @@ class TemplateHandler {
 					break;
 
 				// call section specific data
-				case '_section_data':
 				case 'cms:section_data':
 					if (!is_null($this->module)) {
 						$file = $this->module->getSectionFile($section, $action, $language);
@@ -397,7 +391,6 @@ class TemplateHandler {
 					break;
 
 				// print multilanguage data
-				case '_language_data':
 				case 'cms:language_data':
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
 
@@ -420,7 +413,6 @@ class TemplateHandler {
 					break;
 
 				// replace tag data string with matching params
-				case '_replace':
 				case 'cms:replace':
 					$pool = isset($tag->tagAttrs['param']) ? $this->params[$tag->tagAttrs['param']] : $this->params;
 
@@ -431,7 +423,7 @@ class TemplateHandler {
 						$keys[$i] = "%{$key}%";
 
 					// we can't replact string with array, only matching data types
-					foreach($values as $i => $value) 
+					foreach($values as $i => $value)
 						if (is_array($value)) {
 							unset($keys[$i]);
 							unset($values[$i]);
@@ -497,7 +489,6 @@ class TemplateHandler {
 					break;
 
 				// variable
-				case '_var':
 				case 'cms:var':
 					$settings = array();
 					if (!is_null($this->module))
