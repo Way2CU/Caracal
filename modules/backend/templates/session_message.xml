@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div>
-		<_var name="$params['message']"/>
-		<_var name="$params['redirect_url']"/>
+		<cms:var name="$params['message']"/>
+		<cms:var name="$params['redirect_url']"/>
 	</div>
 </document>

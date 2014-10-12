@@ -3,30 +3,30 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="chat_room_add_form">
 		<label>
-			<span><_text constant="label_text_id" module="chat"/></span>
+			<span><cms:text constant="label_text_id" module="chat"/></span>
 			<input type="text" name="text_id" style="width: 270px;" maxlength="45"/>
 		</label>
 		<label>
-			<span><_text constant="label_room_name" module="chat"/></span>
+			<span><cms:text constant="label_room_name" module="chat"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="45"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="chat"/></span>
+			<span><cms:text constant="label_description" module="chat"/></span>
 			<textarea name="description" class="multi-language" style="width: 360px; height: 100px;"/>
 		</label>
 		<label>
-			<span><_text constant="label_limit" module="chat"/></span>
+			<span><cms:text constant="label_limit" module="chat"/></span>
 			<input type="text" name="limit" value="0" style="width: 70px;" maxlength="5"/>
 		</label>
 		<label>
-			<span><_text constant="label_room_password" module="chat"/></span>
+			<span><cms:text constant="label_room_password" module="chat"/></span>
 			<input type="text" name="password" style="width: 120px;"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

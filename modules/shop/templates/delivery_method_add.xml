@@ -3,22 +3,22 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_delivery_method_add_form">
 		<label>
-			<span><_text constant="label_name" module="shop"/></span>
+			<span><cms:text constant="label_name" module="shop"/></span>
 			<input class="multi-language" type="text" name="name" style="width: 270px;" maxlength="50"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_international" module="shop"/></span>
+			<span><cms:text constant="label_international" module="shop"/></span>
 			<input type="checkbox" name="international"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_domestic" module="shop"/></span>
+			<span><cms:text constant="label_domestic" module="shop"/></span>
 			<input type="checkbox" name="domestic"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

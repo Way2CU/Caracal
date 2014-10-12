@@ -5,33 +5,41 @@
 
 		<div style="margin-bottom: 10px;">
 			<label>
-				<span title="test"><_text constant="label_default_visibility" module="comments"/></span>
+				<span title="test"><cms:text constant="label_default_visibility" module="comments"/></span>
 				<select name="default_visibility" style="width: 200px;">
-					<_if condition="$params['default_visibility'] == 0">
-						<option value="0" selected="selected"><_text constant="option_hidden" module="comments"/></option>
-						<option value="1"><_text constant="option_visible" module="comments"/></option>
-					</_if>
-					<_if condition="$params['default_visibility'] == 1">
-						<option value="0"><_text constant="option_hidden" module="comments"/></option>
-						<option value="1" selected="selected"><_text constant="option_visible" module="comments"/></option>
-					</_if>
+					<option
+						value="0"
+						selected="$params['default_visibility'] ? 'selected' : false"
+						cms:optional="selected"
+						>
+						<cms:text constant="option_hidden" module="comments"/>
+					</option>
+					<option
+						value="1"
+						selected="!$params['default_visibility'] ? 'selected' : false"
+						cms:optional="selected"
+						>
+						<cms:text constant="option_visible" module="comments"/>
+					</option>
 				</select>
 			</label>
+
 			<label>
-				<span title="test"><_text constant="label_repost_time" module="comments"/></span>
+				<span title="test"><cms:text constant="label_repost_time" module="comments"/></span>
 				<input type="text" name="repost_time" value="$params['repost_time']" cms:eval="value" style="width: 250px;"/>
 			</label>
+
 			<label>
-				<span title="test"><_text constant="label_size_limit" module="comments"/></span>
+				<span title="test"><cms:text constant="label_size_limit" module="comments"/></span>
 				<input type="text" name="size_limit" value="$params['size_limit']" cms:eval="value" style="width: 250px;"/>
 			</label>
 		</div>
 
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 

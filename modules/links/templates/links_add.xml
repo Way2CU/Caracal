@@ -3,41 +3,41 @@
 <document>
 	<form id="link_add_form" action="$params['form_action']" cms:eval="action" method="POST" enctype="multipart/form-data" onsubmit="">
 		<label>
-			<span><_text constant="label_text" module="links"/></span>
+			<span><cms:text constant="label_text" module="links"/></span>
 			<input type="text" name="text" style="width: 270px;" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="links"/></span>
-			<textarea name="description" style="width: 575px; height: 200px;"><_raw/></textarea>
+			<span><cms:text constant="label_description" module="links"/></span>
+			<textarea name="description" style="width: 575px; height: 200px;"><cms:raw/></textarea>
 		</label>
 		<label>
-			<span><_text constant="label_url" module="links"/></span>
+			<span><cms:text constant="label_url" module="links"/></span>
 			<input type="text" name="url" style="width: 360px;" maxlength="255"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_external" module="links"/></span>
+			<span><cms:text constant="label_external" module="links"/></span>
 			<input type="checkbox" name="external" checked="checked"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_sponsored" module="links"/></span>
+			<span><cms:text constant="label_sponsored" module="links"/></span>
 			<input type="checkbox" name="sponsored"/>
 		</label>
 		<label>
-			<span><_text constant="label_display_limit" module="links"/></span>
+			<span><cms:text constant="label_display_limit" module="links"/></span>
 			<input type="text" name="display_limit" value="0" style="width: 50px;" maxlength="30"/>
 		</label>
-		<_if condition="$params['with_images'] == true">
+		<cms:if condition="$params['with_images'] == true">
 			<label>
-				<span><_text constant="label_image" module="links"/></span>
+				<span><cms:text constant="label_image" module="links"/></span>
 				<input type="file" name="image"/>
 			</label>
-		</_if>
+		</cms:if>
 
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

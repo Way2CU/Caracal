@@ -4,13 +4,13 @@
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 250px;">
-				<_text constant="column_name" module="shop"/>
+				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column" style="width: 60px;">
-				<_text constant="column_price" module="shop"/>
+				<cms:text constant="column_price" module="shop"/>
 			</span>
 			<span class="column" style="width: 50px;">
-				<_text constant="column_rating" module="shop"/>
+				<cms:text constant="column_rating" module="shop"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 340px" id="result_list">
@@ -21,19 +21,20 @@
 				cms:eval="filter"
 			/>
 		</div>
-		
+
 		<div class="button_bar">
-			<button 
+			<button
 				type="button"
 				onclick="javascript: shop_AddRelatedItems();"
 			>
-				<_text constant="add"/>
+				<cms:text constant="add"/>
 			</button>
-			<button 
+
+			<button
 				type="button"
 				onclick="javascript: window_system.closeWindow('shop_search_results');"
 			>
-				<_text constant="close"/>
+				<cms:text constant="close"/>
 			</button>
 		</div>
 	</div>

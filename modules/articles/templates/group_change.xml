@@ -4,24 +4,24 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="article_add_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_group_text_id" module="articles"/></span>
+			<span><cms:text constant="label_group_text_id" module="articles"/></span>
 			<input type="text" name="text_id" class="code" value="$params['text_id']" cms:eval="value" style="width: 270px;" maxlength="32"/>
 		</label>
 		<label>
-			<span><_text constant="label_group_title" module="articles"/></span>
+			<span><cms:text constant="label_group_title" module="articles"/></span>
 			<input type="text" class="multi-language" name="title" style="width: 370px;" maxlength="255"/>
-			<_language_data param="title"/>
+			<cms:language_data param="title"/>
 		</label>
 		<label>
-			<span><_text constant="label_group_description" module="articles"/></span>
+			<span><cms:text constant="label_group_description" module="articles"/></span>
 			<textarea class="multi-language" name="description" rows="5" cols="40" style="width: 370px; height: 150px;"/>
-			<_language_data param="description"/>
+			<cms:language_data param="description"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

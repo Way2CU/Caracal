@@ -3,15 +3,15 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="faq_new_question_form">
 		<label>
-			<span><_text constant="label_question" module="faq"/></span>
-			<textarea 
+			<span><cms:text constant="label_question" module="faq"/></span>
+			<textarea
 				class="multi-language"
 				name="question"
 				style="width: 450px; height: 100px;"
 			/>
 		</label>
 		<label>
-			<span><_text constant="label_answer" module="faq"/></span>
+			<span><cms:text constant="label_answer" module="faq"/></span>
 			<textarea
 				class="multi-language"
 				name="answer"
@@ -19,14 +19,14 @@
 			/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="faq"/></span>
+			<span><cms:text constant="label_visible" module="faq"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

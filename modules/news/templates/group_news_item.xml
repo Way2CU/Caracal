@@ -4,13 +4,15 @@
 	<div class="list_item">
 		<span class="column" style="width: 340px;">
 			<label style="vertical-align: middle;">
-				<_if condition="$params['in_group'] == 1">
-					<input type="checkbox" name="'news_id_'.$params['id']" cms:eval="name" value="1" checked="checked"/>
-				</_if>
-				<_if condition="$params['in_group'] == 0">
-					<input type="checkbox" name="'news_id_'.$params['id']" cms:eval="name" value="1"/>
-				</_if>
-				<_var name="$params['title'][$language]"/>
+				<input
+					type="checkbox"
+					name="'news_id_'.$params['id']"
+					value="1"
+					checked="$params['in_group'] ? 'checked' : false"
+					cms:eval="name"
+					cms:optional="checked"
+					/>
+				<cms:var name="$params['title'][$language]"/>
 			</label>
 		</span>
 	</div>

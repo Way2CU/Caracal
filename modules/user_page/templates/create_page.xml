@@ -3,34 +3,38 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="user_page_create_form">
 		<label>
-			<span><_text constant="label_title" module="user_page"/></span>
+			<span><cms:text constant="label_title" module="user_page"/></span>
 			<input type="text" class="multi-language" name="title" style="width: 690px;" maxlength="255"/>
 		</label>
+
 		<label>
-			<span><_text constant="label_content" module="user_page"/></span>
+			<span><cms:text constant="label_content" module="user_page"/></span>
 			<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 690px; height: 250px;"/>
 		</label>
-		<_if condition="$_SESSION['level'] >= 5">
+
+		<cms:if condition="$_SESSION['level'] >= 5">
 			<label>
-				<span><_text constant="label_owner" module="user_page"/></span>
+				<span><cms:text constant="label_owner" module="user_page"/></span>
 				<select name="owner" style="width: 270px;">
 					<_user_list template="users_option.xml" local="1"/>
 				</select>
 			</label>
 			<label class="checkbox">
-				<span><_text constant="label_editable" module="user_page"/></span>
+				<span><cms:text constant="label_editable" module="user_page"/></span>
 				<input type="checkbox" name="editable"/>
 			</label>
-		</_if>
+		</cms:if>
+
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="user_page"/></span>
+			<span><cms:text constant="label_visible" module="user_page"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
 		</label>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

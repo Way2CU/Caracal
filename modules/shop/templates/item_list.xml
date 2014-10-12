@@ -3,27 +3,27 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
-		<_var name="$params['link_categories']"/>
+		<cms:var name="$params['link_new']"/>
+		<cms:var name="$params['link_categories']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 250px;">
-				<_text constant="column_name" module="shop"/>
+				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column" style="width: 60px;">
-				<_text constant="column_price" module="shop"/>
+				<cms:text constant="column_price" module="shop"/>
 			</span>
 			<span class="column" style="width: 60px;">
-				<_text constant="column_views" module="shop"/>
+				<cms:text constant="column_views" module="shop"/>
 			</span>
 			<span class="column" style="width: 50px;">
-				<_text constant="column_rating" module="shop"/>
+				<cms:text constant="column_rating" module="shop"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

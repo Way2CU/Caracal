@@ -5,10 +5,10 @@
 		<div id="shop_settings_notebook">
 			<div>
 				<label>
-					<span><_text constant="label_fixed_country" module="shop"/></span>
+					<span><cms:text constant="label_fixed_country" module="shop"/></span>
 					<select name="fixed_country" style="width: 300px">
 						<option/>
-						<_module
+						<cms:module
 							name="country_list"
 							action="show"
 							template="country_option.xml"
@@ -19,10 +19,10 @@
 					</select>
 				</label>
 				<label>
-					<span><_text constant="label_shop_location" module="shop"/></span>
+					<span><cms:text constant="label_shop_location" module="shop"/></span>
 					<select name="shop_location" style="width: 300px">
 						<option/>
-						<_module
+						<cms:module
 							name="country_list"
 							action="show"
 							template="country_option.xml"
@@ -46,7 +46,7 @@
 
 			<div>
 				<label>
-					<span><_text constant="label_payment_completed" module="shop"/></span>
+					<span><cms:text constant="label_payment_completed" module="shop"/></span>
 					<select name="payment_completed_template" style="width: 300px">
 						<option/>
 						<cms:template_list
@@ -85,10 +85,10 @@
 		</div>
 
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

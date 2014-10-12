@@ -3,7 +3,7 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<span><_text constant="label_currency" module="shop"/></span>
+			<span><cms:text constant="label_currency" module="shop"/></span>
 			<select name="currency" style="width: 270px;">
 				<_currency_list
 					selected="$params['default']"
@@ -14,9 +14,9 @@
 			</select>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

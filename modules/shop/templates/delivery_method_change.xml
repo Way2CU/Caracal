@@ -4,36 +4,40 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_delivery_method_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_name" module="shop"/></span>
+			<span><cms:text constant="label_name" module="shop"/></span>
 			<input class="multi-language" type="text" name="name" style="width: 270px;" maxlength="50"/>
-			<_language_data param="name"/>
+			<cms:language_data param="name"/>
 		</label>
+
 		<label class="checkbox">
-			<span><_text constant="label_international" module="shop"/></span>
-			<_if condition="$params['international'] == 1">
-				<input type="checkbox" name="international" checked="checked"/>
-			</_if>
-			<_if condition="$params['international'] == 0">
-				<input type="checkbox" name="international"/>
-			</_if>
+			<span><cms:text constant="label_international" module="shop"/></span>
+			<input
+				type="checkbox"
+				name="international"
+				checked="$params['international'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
+
 		<label class="checkbox">
-			<span><_text constant="label_domestic" module="shop"/></span>
-			<_if condition="$params['domestic'] == 1">
-				<input type="checkbox" name="domestic" checked="checked"/>
-			</_if>
-			<_if condition="$params['domestic'] == 0">
-				<input type="checkbox" name="domestic"/>
-			</_if>
+			<span><cms:text constant="label_domestic" module="shop"/></span>
+			<input
+				type="checkbox"
+				name="domestic"
+				checked="$params['domestic'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>
+
 	<script type="text/javascript">
 		var selector = new LanguageSelector('shop_delivery_method_change_form');
 	</script>

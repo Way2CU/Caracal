@@ -3,11 +3,11 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 350px;">
-			<_var name="limit_words($params['content'][$language])"/>
+			<cms:var name="limit_words($params['content'][$language])"/>
 		</span>
 		<span class="column" style="vertical-align: top;">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

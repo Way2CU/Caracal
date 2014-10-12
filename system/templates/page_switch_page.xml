@@ -2,6 +2,6 @@
 <!DOCTYPE document SYSTEM "../schema/template.dtd">
 <document>
 	<a href="$params['link']" class="$params['class']" cms:eval="href,class">
-		<_var name="$params['number']"/>
+		<cms:var name="$params['number']"/>
 	</a>
 </document>

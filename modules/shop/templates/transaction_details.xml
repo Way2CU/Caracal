@@ -4,61 +4,65 @@
 	<div id="transaction_details_notebook" class="box left" style="width: 300px;">
 		<div>
 			<label>
-				<span><_text constant="label_full_name" module="shop"/></span>
+				<span><cms:text constant="label_full_name" module="shop"/></span>
 				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-				<input 
-					type="text" 
-					value="$params['first_name'].' '.$params['last_name']" 
-					cms:eval="value" 
+				<input
+					type="text"
+					value="$params['first_name'].' '.$params['last_name']"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
 				/>
 			</label>
 			<label>
-				<span><_text constant="label_email" module="shop"/></span>
-				<input 
-					type="text" 
-					value="$params['email']" 
-					cms:eval="value" 
+				<span><cms:text constant="label_email" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['email']"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
 				/>
 			</label>
+
 			<hr/>
+
 			<label>
-				<span><_text constant="label_status" module="shop"/></span>
+				<span><cms:text constant="label_status" module="shop"/></span>
 				<select name="status">
 					<_transaction_status active="$params['status']" cms:eval="active"/>
 				</select>
-				<button 
+				<button
 					type="button"
 					onclick="javascript: shop_UpdateTransactionStatus(this);"
 				>
-					<_text constant="save"/>
+					<cms:text constant="save"/>
 				</button>
 			</label>
+
 			<hr/>
+
 			<table>
 				<tr>
-					<td><_text constant="label_handling" module="shop"/></td>
+					<td><cms:text constant="label_handling" module="shop"/></td>
 					<td><input type="text" value="$params['handling']" cms:eval="value" readonly="readonly"/></td>
 				</tr>
 				<tr>
-					<td><_text constant="label_shipping" module="shop"/></td>
+					<td><cms:text constant="label_shipping" module="shop"/></td>
 					<td><input type="text" value="$params['shipping']" cms:eval="value" readonly="readonly"/></td>
 				</tr>
 				<tr>
-					<td><_text constant="label_total" module="shop"/></td>
+					<td><cms:text constant="label_total" module="shop"/></td>
 					<td><input type="text" value="$params['total']" cms:eval="value" readonly="readonly"/></td>
 				</tr>
 			</table>
 			<hr/>
 			<label>
-				<span><_text constant="label_timestamp" module="shop"/></span>
-				<input 
-					type="text" 
-					value="$params['timestamp']" 
-					cms:eval="value" 
+				<span><cms:text constant="label_timestamp" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['timestamp']"
+					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
 				/>
@@ -66,13 +70,13 @@
 		</div>
 		<div>
 			<label>
-				<span><_text constant="label_shipping_address" module="shop"/></span>
+				<span><cms:text constant="label_shipping_address" module="shop"/></span>
 				<textarea readonly="readonly" style="width: 270px; height: 70px;">
-					<_var name="$params['full_address']"/>
+					<cms:var name="$params['full_address']"/>
 				</textarea>
 			</label>
 			<label>
-				<span><_text constant="label_delivery_method" module="shop"/></span>
+				<span><cms:text constant="label_delivery_method" module="shop"/></span>
 				<input
 					type="text"
 					value="$params['delivery_method']"
@@ -82,9 +86,9 @@
 				/>
 			</label>
 			<label>
-				<span><_text constant="label_remark" module="shop"/></span>
+				<span><cms:text constant="label_remark" module="shop"/></span>
 				<textarea readonly="readonly" style="width: 270px; height: 70px;">
-					<_var name="$params['remark']"/>
+					<cms:var name="$params['remark']"/>
 				</textarea>
 			</label>
 		</div>
@@ -92,16 +96,16 @@
 	<div class="scrollable_list box right" style="width: 475px;">
 		<div class="list_header">
 			<span class="column" style="width: 190px;">
-				<_text constant="column_name" module="shop"/>
+				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column" style="width: 70px;">
-				<_text constant="column_count" module="shop"/>
+				<cms:text constant="column_count" module="shop"/>
 			</span>
 			<span class="column" style="width: 70px;">
-				<_text constant="column_price" module="shop"/>
+				<cms:text constant="column_price" module="shop"/>
 			</span>
 			<span class="column" style="width: 70px;">
-				<_text constant="column_total" module="shop"/>
+				<cms:text constant="column_total" module="shop"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 470px">

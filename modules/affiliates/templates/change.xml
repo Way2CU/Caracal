@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_user" module="affiliates"/></span>
+			<span><cms:text constant="label_user" module="affiliates"/></span>
 			<select name="user" style="width: 270px;">
 				<_user_list
 					template="users_option.xml"
@@ -15,23 +15,23 @@
 			</select>
 		</label>
 		<label>
-			<span><_text constant="label_name" module="affiliates"/></span>
+			<span><cms:text constant="label_name" module="affiliates"/></span>
 			<input type="text" name="name" style="width: 270px;" maxlength="50" value="$params['name']" cms:eval="value"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_active" module="affiliates"/></span>
-			<_if condition="$params['active'] == 1">
-				<input type="checkbox" name="active" checked="checked"/>
-			</_if>
-			<_if condition="$params['active'] == 0">
-				<input type="checkbox" name="active"/>
-			</_if>
+			<span><cms:text constant="label_active" module="affiliates"/></span>
+			<input
+				type="checkbox"
+				name="active"
+				checked="$params['active'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

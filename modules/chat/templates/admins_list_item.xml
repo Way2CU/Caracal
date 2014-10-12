@@ -3,13 +3,13 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 150px;">
-			<_var name="$params['display_name']"/>
+			<cms:var name="$params['display_name']"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['room_name'][$language]"/>
+			<cms:var name="$params['room_name'][$language]"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

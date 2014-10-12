@@ -3,12 +3,12 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="'width: '.(300-($params['level'] * 15)).'px;'" cms:eval="style">
-			<_var name="$params['title'][$language]"/>
+			<cms:var name="$params['title'][$language]"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/><_raw text=" "/>
-			<_var name="$params['item_add']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_add']"/>
 		</span>
 	</div>
 	<div style="($language_rtl ? 'padding-right' : 'padding-left').': 15px;'" cms:eval="style">

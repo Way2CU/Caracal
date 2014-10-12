@@ -7,6 +7,6 @@
 		style="display: none;"
 		cms:eval="field,language"
 	>
-		<_var name="$params['data']"/>
+		<cms:var name="$params['data']"/>
 	</data>
 </document>

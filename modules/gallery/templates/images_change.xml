@@ -4,52 +4,52 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="image_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_text_id" module="gallery"/></span>
+			<span><cms:text constant="label_text_id" module="gallery"/></span>
 			<input type="text" name="text_id" class="code" value="$params['text_id']" style="width: 270px;" maxlength="32" cms:eval="value"/>
 		</label>
 		<label>
-			<span><_text constant="label_title" module="gallery"/></span>
+			<span><cms:text constant="label_title" module="gallery"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 270px;" maxlength="255"/>
-			<_language_data param="title"/>
+			<cms:language_data param="title"/>
 		</label>
 		<label>
-			<span><_text constant="label_group" module="gallery"/></span>
+			<span><cms:text constant="label_group" module="gallery"/></span>
 			<select name="group" style="width: 270px;">
 				<option></option>
 				<cms:group_list template="groups_option.xml" selected="$params['group']" cms:eval="selected" local="1"/>
 			</select>
 		</label>
 		<label>
-			<span><_text constant="label_file" module="gallery"/></span>
-			<div><_var name="$params['filename']"/></div>
+			<span><cms:text constant="label_file" module="gallery"/></span>
+			<div><cms:var name="$params['filename']"/></div>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="gallery"/></span>
+			<span><cms:text constant="label_description" module="gallery"/></span>
 			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
-			<_language_data param="description"/>
+			<cms:language_data param="description"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="gallery"/></span>
-			<_if condition="$params['visible'] == 1">
-				<input type="checkbox" name="visible" checked="checked"/>
-			</_if>
-			<_if condition="$params['visible'] != 1">
-				<input type="checkbox" name="visible"/>
-			</_if>
+			<span><cms:text constant="label_visible" module="gallery"/></span>
+			<input
+				type="checkbox"
+				name="visible"
+				checked="$params['visible'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_slideshow" module="gallery"/></span>
-			<_if condition="$params['slideshow'] == 1">
-				<input type="checkbox" name="slideshow" checked="checked"/>
-			</_if>
-			<_if condition="$params['slideshow'] != 1">
-				<input type="checkbox" name="slideshow"/>
-			</_if>
+			<span><cms:text constant="label_slideshow" module="gallery"/></span>
+			<input
+				type="checkbox"
+				name="slideshow"
+				checked="$params['slideshow'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

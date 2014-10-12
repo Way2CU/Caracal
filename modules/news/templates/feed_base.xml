@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_var name="_XML_1"/>
+	<cms:var name="_XML_1"/>
 	<rss version="2.0">
 		<channel>
-			<title><_var name="$params['title'][$language]"/></title>
-			<description><_var name="$params['description'][$language]"/></description>
-			<link><_var name="url_Make('', 'home')"/></link>
-			<lastBuildDate><_var name="date('r', $params['build_date'])"/></lastBuildDate>
+			<title><cms:var name="$params['title'][$language]"/></title>
+			<description><cms:var name="$params['description'][$language]"/></description>
+			<link><cms:var name="url_Make('', 'home')"/></link>
+			<lastBuildDate><cms:var name="date('r', $params['build_date'])"/></lastBuildDate>
 
-			<_news_list group="$params['group']" limit="$params['news_count']" template="feed_item.xml" local="1" cms:eval="group,limit"/>
+			<_news_list
+				group="$params['group']"
+				limit="$params['news_count']"
+				template="feed_item.xml"
+				local="1"
+				cms:eval="group,limit"
+				/>
 		</channel>
 	</rss>
 </document>

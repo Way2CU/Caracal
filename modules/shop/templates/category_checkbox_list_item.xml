@@ -4,16 +4,19 @@
 	<div class="list_item">
 		<span class="column" style="display: block;">
 			<label>
-				<_if condition="$params['in_category'] == 1">
-					<input type="checkbox" name="'category_id_'.$params['id']" cms:eval="name" value="1" checked="checked"/>
-				</_if>
-				<_if condition="$params['in_category'] == 0">
-					<input type="checkbox" name="'category_id_'.$params['id']" cms:eval="name" value="1"/>
-				</_if>
-				<_var name="$params['title'][$language]"/>
+				<input
+					type="checkbox"
+					name="'category_id_'.$params['id']"
+					value="1"
+					checked="$params['in_category'] ? 'checked' : false"
+					cms:eval="name"
+					cms:optional="checked"
+					/>
+				<cms:var name="$params['title'][$language]"/>
 			</label>
 		</span>
 	</div>
+
 	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" cms:eval="style">
 		<_children
 			parent_id="$params['id']"
@@ -22,6 +25,6 @@
 			cms:eval="parent_id,level,item_id"
 			template="category_checkbox_list_item.xml"
 			local="1"
-		/>
+			/>
 	</div>
 </document>

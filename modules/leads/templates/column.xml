@@ -2,6 +2,6 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<span class="column" style="width: 150px;">
-		<_var name="$params['title']"/>
+		<cms:var name="$params['title']"/>
 	</span>
 </document>

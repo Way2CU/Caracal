@@ -4,7 +4,7 @@
 	<div id="affiliate_information_notebook">
 		<div>
 			<label>
-				<span><_text constant="label_uid" module="affiliates"/></span>
+				<span><cms:text constant="label_uid" module="affiliates"/></span>
 				<input
 					type="text"
 					name="uid"
@@ -15,7 +15,7 @@
 				/>
 			</label>
 			<label class="horizontal" style="width: 100px;">
-				<span><_text constant="label_clicks" module="affiliates"/></span>
+				<span><cms:text constant="label_clicks" module="affiliates"/></span>
 				<input
 					type="text"
 					name="clicks"
@@ -26,7 +26,7 @@
 				/>
 			</label>
 			<label class="horizontal" style="width: 100px;">
-				<span><_text constant="label_conversions" module="affiliates"/></span>
+				<span><cms:text constant="label_conversions" module="affiliates"/></span>
 				<input
 					type="text"
 					name="conversions"
@@ -37,7 +37,7 @@
 				/>
 			</label>
 			<label class="horizontal" style="width: 70px;">
-				<span><_text constant="label_rate" module="affiliates"/></span>
+				<span><cms:text constant="label_rate" module="affiliates"/></span>
 				<input
 					type="text"
 					name="rate"
@@ -48,7 +48,7 @@
 				/>
 			</label>
 			<label>
-				<span><_text constant="label_name" module="affiliates"/></span>
+				<span><cms:text constant="label_name" module="affiliates"/></span>
 				<input
 					type="text"
 					name="name"
@@ -61,11 +61,11 @@
 		</div>
 		<div>
 			<label>
-				<span><_text constant="label_url" module="affiliates"/></span>
+				<span><cms:text constant="label_url" module="affiliates"/></span>
 				<input type="text" name="url" style="width: 350px;"/>
 			</label>
 			<label>
-				<span><_text constant="label_url_output" module="affiliates"/></span>
+				<span><cms:text constant="label_url_output" module="affiliates"/></span>
 				<input type="text" name="url_output" style="width: 350px;" readonly="readonly"/>
 			</label>
 		</div>
@@ -73,12 +73,12 @@
 
 	<div class="button_bar">
 		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-			<_text constant="close"/>
+			<cms:text constant="close"/>
 		</button>
 	</div>
 
 	<script type="text/javascript">
-		<_replace>
+		<cms:replace>
 			var notebook = new Notebook('affiliate_information_notebook');
 			notebook
 				.setPageTitle(0, language_handler.getText('affiliates', 'tab_general'))
@@ -98,6 +98,6 @@
 					output.val(url + '/affiliate/' + uid);
 				}
 			});
-		</_replace>
+		</cms:replace>
 	</script>
 </document>

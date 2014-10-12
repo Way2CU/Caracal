@@ -4,32 +4,32 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_fullname" module="backend"/></span>
+			<span><cms:text constant="label_fullname" module="backend"/></span>
 			<input type="text" name="fullname" value="$params['fullname']" cms:eval="value" style="width: 330px;" maxlength="100"/>
 		</label>
 		<label>
-			<span><_text constant="label_username" module="backend"/></span>
+			<span><cms:text constant="label_username" module="backend"/></span>
 			<input type="text" name="username" value="$params['username']" cms:eval="value" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_new_password" module="backend"/></span>
+			<span><cms:text constant="label_new_password" module="backend"/></span>
 			<input type="text" name="new_password" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_email" module="backend"/></span>
+			<span><cms:text constant="label_email" module="backend"/></span>
 			<input type="text" name="email" style="width: 200px;" maxlength="200"/>
 		</label>
 		<label>
-			<span><_text constant="label_level" module="backend"/></span>
+			<span><cms:text constant="label_level" module="backend"/></span>
 			<select name="level" style="width: 100px;">
 				<_level selected="$params['level']" cms:eval="selected"/>
 			</select>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

@@ -4,7 +4,7 @@
 	<!-- Window Menu -->
 	<div class="main_menu">
 		<div class="floated">
-			<_text constant="type" module="survey"/>
+			<cms:text constant="type" module="survey"/>
 			<select onchange="javascript: submissions_update_result_list();" id="submission_form_list">
 				<option/>
 				<cms:form_list

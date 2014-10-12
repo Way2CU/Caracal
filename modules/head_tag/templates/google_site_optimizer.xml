@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<_if condition="$params['show_control']">
+	<cms:if condition="$params['show_control']">
 		<script type="text/javascript">
-			<_replace><![CDATA[
+			<cms:replace><![CDATA[
 function utmx_section(){}function utmx(){}
 (function(){var k='%key%',d=document,l=d.location,c=d.cookie;function f(n){
 if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.indexOf(';',i);return escape(c.substring(i+n.
@@ -13,13 +13,13 @@ d.write('<sc'+'ript src="'+
 +'/siteopt.js?v=1&utmxkey='+k+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='
 +new Date().valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
 '" type="text/javascript" charset="utf-8"></sc'+'ript>')})();]]>
-			</_replace>
+			</cms:replace>
 		</script>
 		<script type="text/javascript">utmx("url",'A/B');</script>
-	</_if>
+	</cms:if>
 
 	<script type="text/javascript">
-		<_replace>
+		<cms:replace>
 var _gaq = _gaq || [];
 _gaq.push(['gwo._setAccount', '%code%']);
 _gaq.push(['gwo._trackPageview', '/%key%/%page%']);
@@ -28,7 +28,7 @@ _gaq.push(['gwo._trackPageview', '/%key%/%page%']);
 	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();		
-		</_replace>
+})();
+		</cms:replace>
 	</script>
 </document>

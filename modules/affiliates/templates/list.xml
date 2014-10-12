@@ -3,26 +3,26 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
+		<cms:var name="$params['link_new']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 290px;">
-				<_text constant="column_name" module="affiliates"/>
+				<cms:text constant="column_name" module="affiliates"/>
 			</span>
 			<span class="column" style="width: 70px;">
-				<_text constant="column_clicks" module="affiliates"/>
-			</span> 
+				<cms:text constant="column_clicks" module="affiliates"/>
+			</span>
 			<span class="column" style="width: 80px;">
-				<_text constant="column_conversions" module="affiliates"/>
-			</span> 
+				<cms:text constant="column_conversions" module="affiliates"/>
+			</span>
 			<span class="column" style="width: 60px;">
-				<_text constant="column_rate" module="affiliates"/>
-			</span> 
+				<cms:text constant="column_rate" module="affiliates"/>
+			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

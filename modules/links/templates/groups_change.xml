@@ -4,26 +4,26 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
-			<span><_text constant="label_name" module="links"/></span>
+			<span><cms:text constant="label_name" module="links"/></span>
 			<input type="text" name="name" value="$params['name']" style="width: 360px;" maxlength="50" cms:eval="value"/>
 		</label>
 		<label>
-			<span><_text constant="label_text_id" module="links"/></span>
+			<span><cms:text constant="label_text_id" module="links"/></span>
 			<input
 				type="text"
 				name="text_id"
 				value="$params['text_id']"
 				style="width: 200px;"
-				maxlength="32" 
+				maxlength="32"
 				cms:eval="value"
 				class="code"
 			/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

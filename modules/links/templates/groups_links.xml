@@ -6,10 +6,10 @@
 			<input type="hidden" name="group" value="$params['group'];" cms:eval="value"/>
 			<div class="list_header">
 				<span class="column" style="width: 250px;">
-					<_text constant="column_text" module="links"/>
+					<cms:text constant="column_text" module="links"/>
 				</span>
 				<span class="column" style="width: 70px; text-align: center;">
-					<_text constant="column_sponsored" module="links"/>
+					<cms:text constant="column_sponsored" module="links"/>
 				</span>
 			</div>
 			<div class="list_content" style="height: 300px">
@@ -17,10 +17,10 @@
 			</div>
 		</div>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

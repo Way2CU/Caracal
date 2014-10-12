@@ -2,11 +2,11 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div style="margin-bottom: 10px;">
-		<_var name="$params['message']"/>
+		<cms:var name="$params['message']"/>
 	</div>
 	<div class="button_bar">
 		<button type="button" onclick="$params['action']" cms:eval="onclick">
-			<_var name="$params['button']"/>
+			<cms:var name="$params['button']"/>
 		</button>
 	</div>
 </document>

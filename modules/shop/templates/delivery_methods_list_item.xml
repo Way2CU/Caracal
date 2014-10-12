@@ -3,18 +3,18 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 160px;">
-			<_var name="$params['name'][$language]"/>
+			<cms:var name="$params['name'][$language]"/>
 		</span>
 		<span class="column" style="width: 90px;">
-			<_var name="$params['international_char']"/>
+			<cms:var name="$params['international_char']"/>
 		</span>
 		<span class="column" style="width: 90px;">
-			<_var name="$params['domestic_char']"/>
+			<cms:var name="$params['domestic_char']"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/><_raw text=" "/>
-			<_var name="$params['item_prices']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_prices']"/>
 		</span>
 	</div>
 </document>

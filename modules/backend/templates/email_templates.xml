@@ -28,9 +28,9 @@
 		</label>
 
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

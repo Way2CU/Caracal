@@ -14,7 +14,7 @@
 			onclick="$params['button_action']"
 			cms:eval="onclick"
 			>
-			<_text constant="close"/>
+			<cms:text constant="close"/>
 		</button>
 	</div>
 </document>

@@ -3,21 +3,21 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 290px;">
-			<_var name="$params['name']"/>
-			<small style="display: block;"><_var name="$params['uid']"/></small>
-		</span> 
+			<cms:var name="$params['name']"/>
+			<small style="display: block;"><cms:var name="$params['uid']"/></small>
+		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['clicks']"/><br/>
+			<cms:var name="$params['clicks']"/><br/>
 		</span>
 		<span class="column" style="width: 80px;">
-			<_var name="$params['conversions']"/>
-		</span> 
+			<cms:var name="$params['conversions']"/>
+		</span>
 		<span class="column" style="width: 60px;">
-			<_var name="$params['rate']"/><_raw text="%"/>
-		</span> 
+			<cms:var name="$params['rate']"/><cms:raw text="%"/>
+		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

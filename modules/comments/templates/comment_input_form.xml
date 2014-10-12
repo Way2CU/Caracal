@@ -6,19 +6,19 @@
 			<input type="hidden" name="module" value="$params['module']" cms:eval="value"/>
 			<input type="hidden" name="comment_section" value="$params['section']" cms:eval="value"/>
 
-			<span><_text constant="label_user" module="comments"/></span>
+			<span><cms:text constant="label_user" module="comments"/></span>
 			<input type="text" name="user" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_email" module="comments"/></span>
+			<span><cms:text constant="label_email" module="comments"/></span>
 			<input type="text" name="email" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_comment" module="comments"/></span>
+			<span><cms:text constant="label_comment" module="comments"/></span>
 			<textarea name="comment" rows="4" cols="40" maxlength="$params['size_limit']" cms:eval="maxlength"/>
 		</label>
 		<button type="submit">
-			<_text constant="save"/>
+			<cms:text constant="save"/>
 		</button>
 	</form>
 

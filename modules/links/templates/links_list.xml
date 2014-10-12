@@ -3,28 +3,28 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
-		<_var name="$params['link_groups']"/>
-		<_var name="$params['link_overview']"/>
+		<cms:var name="$params['link_new']"/>
+		<cms:var name="$params['link_groups']"/>
+		<cms:var name="$params['link_overview']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 250px;">
-				<_text constant="column_text" module="links"/>
+				<cms:text constant="column_text" module="links"/>
 			</span>
 			<span class="column" style="width: 70px; text-align: center;">
-				<_text constant="column_external" module="links"/>
+				<cms:text constant="column_external" module="links"/>
 			</span>
 			<span class="column" style="width: 70px; text-align: center;">
-				<_text constant="column_sponsored" module="links"/>
+				<cms:text constant="column_sponsored" module="links"/>
 			</span>
 			<span class="column" style="width: 90px; text-align: center;">
-				<_text constant="column_total_clicks" module="links"/>
+				<cms:text constant="column_total_clicks" module="links"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 400px">

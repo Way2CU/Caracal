@@ -28,14 +28,14 @@
 				<cms:if condition="$params['status'] != 'not_initialized'">
 					<!-- Module is initialised -->
 					<cms:if condition="$params['status'] == 'active'">
-						<cms:var name="$params['item_deactivate']"/><_raw text=" "/>
+						<cms:var name="$params['item_deactivate']"/><cms:raw text=" "/>
 					</cms:if>
 
 					<cms:if condition="$params['status'] == 'inactive'">
-						<cms:var name="$params['item_activate']"/><_raw text=" "/>
+						<cms:var name="$params['item_activate']"/><cms:raw text=" "/>
 					</cms:if>
 
-					<cms:var name="$params['item_disable']"/><_raw text=" "/>
+					<cms:var name="$params['item_disable']"/><cms:raw text=" "/>
 				</cms:if>
 			</span>
 	</div>

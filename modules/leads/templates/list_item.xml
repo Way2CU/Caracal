@@ -8,16 +8,16 @@
 		</span>
 		-->
 		<span class="column" style="width: 150px;">
-			<_var name="$params['field_0']"/>
+			<cms:var name="$params['field_0']"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['field_1']"/>
+			<cms:var name="$params['field_1']"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['field_2']"/>
+			<cms:var name="$params['field_2']"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['field_3']"/>
+			<cms:var name="$params['field_3']"/>
 		</span>
 	</div>
 </document>

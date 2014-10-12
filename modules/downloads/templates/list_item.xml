@@ -3,20 +3,20 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 70px;">
-			<_var name="$params['id']"/>
+			<cms:var name="$params['id']"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['name'][$language]"/>
+			<cms:var name="$params['name'][$language]"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['size']"/>
+			<cms:var name="$params['size']"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['count']"/>
+			<cms:var name="$params['count']"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

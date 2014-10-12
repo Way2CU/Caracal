@@ -4,24 +4,15 @@
 	<div class="list_item">
 		<span class="column" style="width: 360px;">
 			<label>
-				<_if condition="$params['selected'] == 1">
-					<input
-						type="radio"
-						name="'delivery_'.$params['method']"
-						cms:eval="name,value"
-						value="$params['id']"
-						checked="checked"
+				<input
+					type="radio"
+					name="'delivery_'.$params['method']"
+					value="$params['id']"
+					checked="$params['selected'] ? 'checked' : false"
+					cms:eval="name,value"
+					cms:optional="checked"
 					/>
-				</_if>
-				<_if condition="$params['selected'] == 0">
-					<input
-						type="radio"
-						name="'delivery_'.$params['method']"
-						cms:eval="name,value"
-						value="$params['id']"
-					/>
-				</_if>
-				<_var name="$params['value']"/>
+				<cms:var name="$params['value']"/>
 			</label>
 		</span>
 	</div>

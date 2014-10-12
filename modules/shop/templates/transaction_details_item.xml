@@ -3,22 +3,22 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 190px;">
-			<_var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
+			<cms:var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
 
-			<_if condition="!empty($params['description'])">
+			<cms:if condition="!empty($params['description'])">
 				<small style="display: block;">
-					<_var name="$params['description']"/>
+					<cms:var name="$params['description']"/>
 				</small>
-			</_if>
+			</cms:if>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['amount']"/>
+			<cms:var name="$params['amount']"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['price'].' '.$params['currency']"/>
+			<cms:var name="$params['price'].' '.$params['currency']"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['total'].' '.$params['currency']"/>
+			<cms:var name="$params['total'].' '.$params['currency']"/>
 		</span>
 	</div>
 </document>

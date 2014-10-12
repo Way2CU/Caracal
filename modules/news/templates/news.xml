@@ -3,15 +3,15 @@
 <document>
 	<div class="news">
 		<span class="date">
-			<_var name="$params['time']"/>
-			<_raw text=" "/>
-			<_var name="$params['date']"/>
+			<cms:var name="$params['time']"/>
+			<cms:raw text=" "/>
+			<cms:var name="$params['date']"/>
 		</span>
 		<span class="title">
-			<_var name="$params['title'][$language]"/>
+			<cms:var name="$params['title'][$language]"/>
 		</span>
 		<span class="content">
-			<_var name="Markdown($params['content'][$language])"/>
+			<cms:markdown param="content" multilanguage="yes"/>
 		</span>
 	</div>
 </document>

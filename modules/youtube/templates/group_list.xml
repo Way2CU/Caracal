@@ -2,19 +2,19 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
+		<cms:var name="$params['link_new']"/>
 	</div>
 
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 300px;">
-				<_text constant="column_name" module="youtube"/>
+				<cms:text constant="column_name" module="youtube"/>
 			</span>
 			<span class="column" style="width: 60px; text-align: center;">
-				<_text constant="column_visible" module="youtube"/>
+				<cms:text constant="column_visible" module="youtube"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

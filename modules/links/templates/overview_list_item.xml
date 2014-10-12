@@ -3,7 +3,7 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 300px;">
-			<_var name="$params['text']"/>
+			<cms:var name="$params['text']"/>
 		</span>
 		<span class="column" style="width: 100px;">
 			<div class="progress_bar" style="width: 90px;">
@@ -11,12 +11,12 @@
 			</div>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['sponsored_clicks']"/>
-			<_raw text="/"/>
-			<_var name="$params['display_limit']"/>
+			<cms:var name="$params['sponsored_clicks']"/>
+			<cms:raw text="/"/>
+			<cms:var name="$params['display_limit']"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<_var name="$params['item_change']"/>
+			<cms:var name="$params['item_change']"/>
 		</span>
 	</div>
 </document>

@@ -3,11 +3,11 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="downloads_upload_form" enctype="multipart/form-data">
 		<label>
-			<span><_text constant="label_name" module="downloads"/></span>
+			<span><cms:text constant="label_name" module="downloads"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="100"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="downloads"/></span>
+			<span><cms:text constant="label_description" module="downloads"/></span>
 			<textarea
 				name="description"
 				class="multi-language"
@@ -15,19 +15,19 @@
 			/>
 		</label>
 		<label>
-			<span><_text constant="label_file" module="downloads"/></span>
+			<span><cms:text constant="label_file" module="downloads"/></span>
 			<input type="hidden" name="MAX_FILE_SIZE" value="2000000000" />
 			<input type="file" name="file"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="downloads"/></span>
+			<span><cms:text constant="label_visible" module="downloads"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

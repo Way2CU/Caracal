@@ -3,18 +3,18 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_group_add_form">
 		<label>
-			<span><_text constant="label_text_id" module="news"/></span>
+			<span><cms:text constant="label_text_id" module="news"/></span>
 			<input type="text" name="text_id" class="code" style="width: 250px;" maxlength="32"/>
 		</label>
 		<label>
-			<span><_text constant="label_title" module="news"/></span>
+			<span><cms:text constant="label_title" module="news"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 360px;" maxlength="255"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

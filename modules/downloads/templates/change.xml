@@ -4,36 +4,39 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="downloads_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_name" module="downloads"/></span>
+			<span><cms:text constant="label_name" module="downloads"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="100"/>
-			<_language_data param="name"/>
+			<cms:language_data param="name"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="downloads"/></span>
+			<span><cms:text constant="label_description" module="downloads"/></span>
 			<textarea
 				name="description"
 				class="multi-language"
 				style="width: 360px; height: 100px;"
 			/>
-			<_language_data param="description"/>
+			<cms:language_data param="description"/>
 		</label>
+
 		<label>
-			<span><_text constant="label_file" module="downloads"/></span>
+			<span><cms:text constant="label_file" module="downloads"/></span>
 			<input type="text" name="file" readonly="readonly" style="width: 270px;"  value="$params['filename']" cms:eval="value"/>
 		</label>
+
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="downloads"/></span>
-			<_if condition="$params['visible'] == 1">
-				<input type="checkbox" name="visible" checked="checked"/>
-			</_if>
-			<_if condition="$params['visible'] != 1">
-				<input type="checkbox" name="visible"/>
-			</_if>
+			<span><cms:text constant="label_visible" module="downloads"/></span>
+			<input
+				type="checkbox"
+				name="visible"
+				checked="$params['visible'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

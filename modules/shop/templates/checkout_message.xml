@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div id="checkout"> 
+	<div id="checkout">
 		<div class="$params['redirect'] ? 'checkout_message redirect' : 'checkout_message'" cms:eval="class">
 			<h3><cms:text constant="title_checkout_message" module="shop"/></h3>
 			<p>

@@ -3,15 +3,15 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 300px;">
-			<_var name="$params['title'][$language]"/>
+			<cms:var name="$params['title'][$language]"/>
 		</span>
 		<span class="column" style="width: 150px;">
-			<_var name="$params['owner']"/>
+			<cms:var name="$params['owner']"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/><_raw text=" "/>
-			<_var name="$params['item_items']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_items']"/>
 		</span>
 	</div>
 </document>

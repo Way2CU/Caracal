@@ -9,8 +9,8 @@
 			<!-- Column 2 -->
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

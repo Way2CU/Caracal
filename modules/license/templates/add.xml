@@ -3,24 +3,24 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<span><_text constant="label_domain" module="license"/></span>
+			<span><cms:text constant="label_domain" module="license"/></span>
 			<input
 				type="text" name="domain" style="width: 300px;"
 				maxlength="100" onblur="javascript: license_UpdateKey(this);"
 			/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_active" module="license"/></span>
+			<span><cms:text constant="label_active" module="license"/></span>
 			<input type="checkbox" name="active" checked="checked"/>
 		</label>
 		<label>
-			<span><_text constant="label_license_key" module="license"/></span>
+			<span><cms:text constant="label_license_key" module="license"/></span>
 			<input id="license_key" type="text" name="license" style="width: 300px;" readonly="readonly"/>
 		</label>
 		<div class="scrollable_list">
 			<div class="list_header">
 				<span class="column" style="width: 250px;">
-					<_text constant="label_modules" module="license"/>
+					<cms:text constant="label_modules" module="license"/>
 				</span>
 			</div>
 			<div class="list_content" style="height: 200px">
@@ -28,10 +28,10 @@
 			</div>
 		</div>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

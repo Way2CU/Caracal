@@ -3,21 +3,21 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_users']"/>
-		<_var name="$params['link_rooms']"/>
-		<_var name="$params['link_admins']"/>
-		<_var name="$params['link_settings']"/>
+		<cms:var name="$params['link_users']"/>
+		<cms:var name="$params['link_rooms']"/>
+		<cms:var name="$params['link_admins']"/>
+		<cms:var name="$params['link_settings']"/>
 	</div>
 
 	<!-- Chat Log -->
 	<label>
 		<div style="width: 454px; float: left; margin-right: 5px;">
-			<span><_text constant="label_chat_log" module="chat"/></span>
+			<span><cms:text constant="label_chat_log" module="chat"/></span>
 			<div class="chat_log">
 			</div>
 		</div>
 		<div style="width: 180px; float: left;">
-			<span><_text constant="label_online_users" module="chat"/></span>
+			<span><cms:text constant="label_online_users" module="chat"/></span>
 			<div class="user_list">
 			</div>
 		</div>
@@ -26,7 +26,9 @@
 
 	<!-- Channel List -->
 	<label style="padding-top: 5px; margin-bottom: 5px;">
-		<span style="display: inline-block; width: 80px; text-align: right;"><_text constant="label_channel" module="chat"/></span>
+		<span style="display: inline-block; width: 80px; text-align: right;">
+			<cms:text constant="label_channel" module="chat"/>
+		</span>
 		<select name="channels" style="width: 200px;">
 			<option>Some channel</option>
 			<option>Different stuff</option>
@@ -36,7 +38,9 @@
 
 	<!-- Input Control -->
 	<label style="margin: 0px;">
-		<span style="display: inline-block; width: 80px; text-align: right;"><_text constant="label_message" module="chat"/></span>
+		<span style="display: inline-block; width: 80px; text-align: right;">
+			<cms:text constant="label_message" module="chat"/>
+		</span>
 		<input type="text" name="message" style="width: 358px;"/>
 	</label>
 

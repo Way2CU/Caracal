@@ -4,40 +4,44 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="faq_new_question_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_question" module="faq"/></span>
-			<textarea 
+			<span><cms:text constant="label_question" module="faq"/></span>
+			<textarea
 				class="multi-language"
 				name="question"
 				style="width: 450px; height: 100px;"
-			/>
-			<_language_data param="question"/>
+				/>
+			<cms:language_data param="question"/>
 		</label>
+
 		<label>
-			<span><_text constant="label_answer" module="faq"/></span>
+			<span><cms:text constant="label_answer" module="faq"/></span>
 			<textarea
 				class="multi-language"
 				name="answer"
 				style="width: 450px; height: 100px;"
-			/>
-			<_language_data param="answer"/>
+				/>
+			<cms:language_data param="answer"/>
 		</label>
+
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="faq"/></span>
-			<_if condition="$params['visible'] == 1">
-				<input type="checkbox" name="visible" checked="checked"/>
-			</_if>
-			<_if condition="$params['visible'] == 0">
-				<input type="checkbox" name="visible"/>
-			</_if>
+			<span><cms:text constant="label_visible" module="faq"/></span>
+			<input
+				type="checkbox"
+				name="visible"
+				checked="$params['visible'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>
+
 	<script type="text/javascript">
 		new LanguageSelector('faq_new_question_form');
 	</script>

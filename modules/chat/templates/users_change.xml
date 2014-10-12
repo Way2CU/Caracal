@@ -4,31 +4,45 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_username" module="chat"/></span>
-			<input type="text" name="username" value="$params['username']" cms:eval="value" style="width: 270px;" maxlength="45"/>
+			<span><cms:text constant="label_username" module="chat"/></span>
+			<input
+				type="text"
+				name="username"
+				value="$params['username']"
+				style="width: 270px;"
+				maxlength="45"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
-			<span><_text constant="label_display_name" module="chat"/></span>
-			<input type="text" name="display_name" value="$params['display_name']" cms:eval="value" style="width: 270px;" maxlength="45"/>
+			<span><cms:text constant="label_display_name" module="chat"/></span>
+			<input
+				type="text"
+				name="display_name"
+				value="$params['display_name']"
+				style="width: 270px;"
+				maxlength="45"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
-			<span><_text constant="label_change_password" module="chat"/></span>
+			<span><cms:text constant="label_change_password" module="chat"/></span>
 			<input type="text" name="password" style="width: 270px;" maxlength="45"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_temp" module="chat"/></span>
-			<_if condition="$params['temp'] == 1">
-				<input type="checkbox" name="temp" checked="checked"/>
-			</_if>
-			<_if condition="$params['temp'] != 1">
-				<input type="checkbox" name="temp"/>
-			</_if>
+			<span><cms:text constant="label_temp" module="chat"/></span>
+			<input
+				type="checkbox"
+				name="temp"
+				checked="$params['temp'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

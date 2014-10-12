@@ -3,23 +3,23 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
+		<cms:var name="$params['link_new']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 300px;">
-				<_text constant="column_title" module="articles"/>
+				<cms:text constant="column_title" module="articles"/>
 			</span>
 			<span class="column" style="width: 100px;">
-				<_text constant="column_author" module="articles"/>
+				<cms:text constant="column_author" module="articles"/>
 			</span>
 			<span class="column" style="width: 70px;">
-				<_text constant="column_rating" module="articles"/>
+				<cms:text constant="column_rating" module="articles"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

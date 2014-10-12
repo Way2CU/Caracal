@@ -4,24 +4,26 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="tips_change_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_content" module="tips"/></span>
+			<span><cms:text constant="label_content" module="tips"/></span>
 			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
-			<_language_data param="content"/>
+			<cms:language_data param="content"/>
 		</label>
+
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="tips"/></span>
-			<_if condition="$params['visible'] == 1">
-				<input type="checkbox" name="visible" checked="checked"/>
-			</_if>
-			<_if condition="$params['visible'] != 1">
-				<input type="checkbox" name="visible"/>
-			</_if>
+			<span><cms:text constant="label_visible" module="tips"/></span>
+			<input
+				type="checkbox"
+				name="visible"
+				checked="$params['visible'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
+
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

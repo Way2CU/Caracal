@@ -3,30 +3,30 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
-		<_var name="$params['link_templates']"/>
+		<cms:var name="$params['link_new']"/>
+		<cms:var name="$params['link_templates']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 200px;">
-				<_text constant="column_users_fullname" module="backend"/>
+				<cms:text constant="column_users_fullname" module="backend"/>
 			</span>
 			<span class="column" style="width: 150px;">
-				<_text constant="column_users_username" module="backend"/>
+				<cms:text constant="column_users_username" module="backend"/>
 			</span>
 			<span class="column" style="width: 50px; text-align: center;">
-				<_text constant="column_users_level" module="backend"/>
+				<cms:text constant="column_users_level" module="backend"/>
 			</span>
 			<span class="column" style="width: 60px; text-align: center;">
-				<_text constant="column_users_verified" module="backend"/>
+				<cms:text constant="column_users_verified" module="backend"/>
 			</span>
 			<span class="column" style="width: 60px; text-align: center;">
-				<_text constant="column_users_agreed" module="backend"/>
+				<cms:text constant="column_users_agreed" module="backend"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<item>
-		<title><_var name="$params['title'][$language]"/></title>
-		<description><_var name="$params['content'][$language]"/></description>
-		<guid><_var name="$params['id']"/></guid>
-		<pubDate><_var name="date('r', $params['timestamp'])"/></pubDate>
+		<title><cms:var name="$params['title'][$language]"/></title>
+		<description><cms:var name="$params['content'][$language]"/></description>
+		<guid><cms:var name="$params['id']"/></guid>
+		<pubDate><cms:var name="date('r', $params['timestamp'])"/></pubDate>
 	</item>
 </document>

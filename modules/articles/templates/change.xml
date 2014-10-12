@@ -6,36 +6,36 @@
 			<div>
 				<label>
 					<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-					<span><_text constant="label_text_id" module="articles"/></span>
+					<span><cms:text constant="label_text_id" module="articles"/></span>
 					<input type="text" name="text_id" class="code" value="$params['text_id']" cms:eval="value" style="width: 270px;" maxlength="32"/>
 				</label>
 				<label>
-					<span><_text constant="label_group" module="articles"/></span>
+					<span><cms:text constant="label_group" module="articles"/></span>
 					<select name="group" style="width: 270px;">
 						<option></option>
 						<_group_list template="group_option.xml" local="1" selected="$params['group']" cms:eval="selected"/>
 					</select>
 				</label>
 				<label>
-					<span><_text constant="label_title" module="articles"/></span>
+					<span><cms:text constant="label_title" module="articles"/></span>
 					<input type="text" class="multi-language" name="title" style="width: 400px;" maxlength="255"/>
-					<_language_data param="title"/>
+					<cms:language_data param="title"/>
 				</label>
 				<label class="checkbox">
-					<span><_text constant="label_visible" module="articles"/></span>
-					<_if condition="$params['visible'] == 1">
-						<input type="checkbox" name="visible" checked="checked"/>
-					</_if>
-					<_if condition="$params['visible'] == 0">
-						<input type="checkbox" name="visible"/>
-					</_if>
+					<span><cms:text constant="label_visible" module="articles"/></span>
+					<input
+						type="checkbox"
+						name="visible"
+						checked="$params['visible'] ? 'checked' : false"
+						cms:optional="checked"
+						/>
 				</label>
 			</div>
 			<div>
 				<label>
-					<span><_text constant="label_content" module="articles"/></span>
+					<span><cms:text constant="label_content" module="articles"/></span>
 					<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 685px; height: 250px;"/>
-					<_language_data param="content"/>
+					<cms:language_data param="content"/>
 				</label>
 			</div>
 			<div>
@@ -43,10 +43,10 @@
 			</div>
 		</div>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

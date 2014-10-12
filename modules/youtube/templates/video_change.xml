@@ -4,23 +4,23 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="video_change_form">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
-			<span><_text constant="label_text_id" module="youtube"/></span>
+			<span><cms:text constant="label_text_id" module="youtube"/></span>
 			<input type="text" name="text_id" class="code" style="width: 100px;" maxlength="32" value="$params['text_id']" cms:eval="value"/>
 		</label>
 		<label>
-			<span><_text constant="label_id" module="youtube"/></span>
+			<span><cms:text constant="label_id" module="youtube"/></span>
 			<input type="text" name="video_id" style="width: 100px;" maxlength="11" value="$params['video_id']" cms:eval="value"/>
 		</label>
 		<label>
-			<span><_text constant="label_title" module="youtube"/></span>
+			<span><cms:text constant="label_title" module="youtube"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 330px;" maxlength="255"/>
-			<_language_data param="title"/>
+			<cms:language_data param="title"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

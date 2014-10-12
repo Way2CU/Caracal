@@ -5,16 +5,16 @@
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<input type="hidden" name="definition" value="$params['definition']" cms:eval="value"/>
-			<span><_text constant="label_value" module="shop"/></span>
+			<span><cms:text constant="label_value" module="shop"/></span>
 			<input type="text" class="multi-language" name="value" style="width: 340px;" maxlength="25"/>
-			<_language_data param="value"/>
+			<cms:language_data param="value"/>
 		</label>
 
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

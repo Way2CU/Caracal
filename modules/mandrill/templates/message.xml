@@ -13,5 +13,5 @@
 		<script type="text/javascript">
 			<cms:var name="$params['on_show']"/>
 		</script>
-	</_if>
+	</cms:if>
 </document>

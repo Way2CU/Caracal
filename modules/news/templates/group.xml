@@ -3,10 +3,15 @@
 <document>
 	<div class="news_group">
 		<span class="group_title">
-			<_var name="$params['title'][$language]"/>
+			<cms:var name="$params['title'][$language]"/>
 		</span>
 		<div class="list">
-			<_module name="news" action="show_news_list" group="$params['text_id']" cms:eval="group"/>
+			<cms:module
+				name="news"
+				action="show_news_list"
+				group="$params['text_id']"
+				cms:eval="group"
+				/>
 		</div>
 	</div>
 </document>

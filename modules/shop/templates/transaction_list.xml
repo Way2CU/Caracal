@@ -5,16 +5,16 @@
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 160px;">
-				<_text constant="column_uid" module="shop"/>
+				<cms:text constant="column_uid" module="shop"/>
 			</span>
 			<span class="column" style="width: 190px;">
-				<_text constant="column_name" module="shop"/>
+				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column" style="width: 100px;">
-				<_text constant="column_total" module="shop"/>
+				<cms:text constant="column_total" module="shop"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

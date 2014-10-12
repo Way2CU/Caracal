@@ -3,16 +3,16 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 160px;">
-			<_var name="$params['uid']"/>
+			<cms:var name="$params['uid']"/>
 		</span>
 		<span class="column" style="width: 190px;">
-			<_var name="$params['buyer']"/>
+			<cms:var name="$params['buyer']"/>
 		</span>
 		<span class="column" style="width: 100px;">
-			<_var name="$params['total']"/>
+			<cms:var name="$params['total']"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_details']"/>
+			<cms:var name="$params['item_details']"/>
 		</span>
 	</div>
 </document>

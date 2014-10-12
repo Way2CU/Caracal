@@ -3,20 +3,20 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<_var name="$params['link_new']"/>
+		<cms:var name="$params['link_new']"/>
 	</div>
 
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
 			<span class="column" style="width: 170px;">
-				<_text constant="column_text_id" module="articles"/>
+				<cms:text constant="column_text_id" module="articles"/>
 			</span>
 			<span class="column" style="width: 300px;">
-				<_text constant="column_title" module="articles"/>
+				<cms:text constant="column_title" module="articles"/>
 			</span>
 			<span class="column">
-				<_text constant="column_options"/>
+				<cms:text constant="column_options"/>
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">

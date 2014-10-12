@@ -2,16 +2,16 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div style="margin-bottom: 10px;">
-		<_var name="$params['message']"/>
+		<cms:var name="$params['message']"/>
 	</div>
 	<div class="button_bar">
 		<button type="button" onclick="$params['action']" cms:eval="onclick">
-			<_var name="$params['button']"/>
+			<cms:var name="$params['button']"/>
 		</button>
 	</div>
-	<_if condition="isset($params['on_show'])">
+	<cms:if condition="isset($params['on_show'])">
 		<script type="text/javascript">
-			<_var name="$params['on_show']"/>
+			<cms:var name="$params['on_show']"/>
 		</script>
-	</_if>
+	</cms:if>
 </document>

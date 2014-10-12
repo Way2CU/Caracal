@@ -3,14 +3,14 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 250px; overflow: hidden;" title="$params['domain']" cms:eval="title">
-			<_var name="$params['domain']"/>
+			<cms:var name="$params['domain']"/>
 		</span>
 		<span class="column" style="width: 250px;">
-			<_var name="$params['license']"/>
+			<cms:var name="$params['license']"/>
 		</span>
 		<span class="column">
-			<_var name="$params['item_change']"/><_raw text=" "/>
-			<_var name="$params['item_delete']"/>
+			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
+			<cms:var name="$params['item_delete']"/>
 		</span>
 	</div>
 </document>

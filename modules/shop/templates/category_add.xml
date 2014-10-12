@@ -3,8 +3,8 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_category_add_form">
 		<label>
-			<span><_text constant="label_category_parent" module="shop"/></span>
-			<_if condition="!is_null($params['parent'])">
+			<span><cms:text constant="label_category_parent" module="shop"/></span>
+			<cms:if condition="!is_null($params['parent'])">
 				<input type="hidden" name="parent" value="fix_id($_REQUEST['parent'])" cms:eval="value"/>
 				<_category
 					id="$params['parent']"
@@ -12,8 +12,8 @@
 					template="category_readonly_input.xml"
 					local="1"
 				/>
-			</_if>
-			<_if condition="is_null($params['parent'])">
+			</cms:if>
+			<cms:if condition="is_null($params['parent'])">
 				<input type="hidden" name="parent" value="0"/>
 				<input
 					type="text"
@@ -23,23 +23,23 @@
 					readonly="readonly"
 					style="width: 375px;"
 				/>
-			</_if>
+			</cms:if>
 		</label>
 		<label>
-			<span><_text constant="label_text_id" module="shop"/></span>
+			<span><cms:text constant="label_text_id" module="shop"/></span>
 			<input type="text" name="text_id" class="code" style="width: 275px;" maxlength="32"/>
 		</label>
 		<label>
-			<span><_text constant="label_title" module="shop"/></span>
+			<span><cms:text constant="label_title" module="shop"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 375px;" maxlength="255"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="shop"/></span>
+			<span><cms:text constant="label_description" module="shop"/></span>
 			<textarea name="description" class="multi-language" style="width: 375px; height: 170px;"/>
 		</label>
-		<_if condition="class_exists('gallery')">
+		<cms:if condition="class_exists('gallery')">
 			<label>
-				<span><_text constant="label_category_image" module="shop"/></span>
+				<span><cms:text constant="label_category_image" module="shop"/></span>
 				<select name="image" style="width: 300px;">
 					<option></option>
 					<cms:image_list
@@ -48,12 +48,12 @@
 					/>
 				</select>
 			</label>
-		</_if>
+		</cms:if>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

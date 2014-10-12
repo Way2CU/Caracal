@@ -4,39 +4,39 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_feed_add_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_feed_group" module="news"/></span>
+			<span><cms:text constant="label_feed_group" module="news"/></span>
 			<select name="group" style="width: 250px;">
 				<_group_list template="group_select.xml" local="1" selected="$params['group']" cms:eval="selected"/>
 			</select>
 		</label>
 		<label>
-			<span><_text constant="label_news_count" module="news"/></span>
+			<span><cms:text constant="label_news_count" module="news"/></span>
 			<input type="text" name="news_count" value="$params['news_count']" cms:eval="value" style="width: 100px;" maxlength="2"/>
 		</label>
 		<label>
-			<span><_text constant="label_title" module="news"/></span>
+			<span><cms:text constant="label_title" module="news"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 360px;" maxlength="255"/>
-			<_language_data param="title"/>
+			<cms:language_data param="title"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="news"/></span>
+			<span><cms:text constant="label_description" module="news"/></span>
 			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
-			<_language_data param="description"/>
+			<cms:language_data param="description"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_active" module="news"/></span>
-			<_if condition="$params['active'] == 1">
-				<input type="checkbox" name="active" checked="checked"/>
-			</_if>
-			<_if condition="$params['active'] == 0">
-				<input type="checkbox" name="active"/>
-			</_if>
+			<span><cms:text constant="label_active" module="news"/></span>
+			<input
+				type="checkbox"
+				name="active"
+				checked="$params['active'] ? 'checked' : false"
+				cms:optiona="checked"
+				/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

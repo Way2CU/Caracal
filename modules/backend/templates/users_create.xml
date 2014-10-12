@@ -3,32 +3,32 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<span><_text constant="label_fullname" module="backend"/></span>
+			<span><cms:text constant="label_fullname" module="backend"/></span>
 			<input type="text" name="fullname" style="width: 330px;" maxlength="100"/>
 		</label>
 		<label>
-			<span><_text constant="label_username" module="backend"/></span>
+			<span><cms:text constant="label_username" module="backend"/></span>
 			<input type="text" name="username" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_password" module="backend"/></span>
+			<span><cms:text constant="label_password" module="backend"/></span>
 			<input type="text" name="password" style="width: 200px;" maxlength="50"/>
 		</label>
 		<label>
-			<span><_text constant="label_email" module="backend"/></span>
+			<span><cms:text constant="label_email" module="backend"/></span>
 			<input type="text" name="email" style="width: 200px;" maxlength="200"/>
 		</label>
 		<label>
-			<span><_text constant="label_level" module="backend"/></span>
+			<span><cms:text constant="label_level" module="backend"/></span>
 			<select name="level" style="width: 100px;">
 				<_level/>
 			</select>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

@@ -5,28 +5,28 @@
 		<div id="article_write_notebook">
 			<div>
 				<label>
-					<span><_text constant="label_text_id" module="articles"/></span>
+					<span><cms:text constant="label_text_id" module="articles"/></span>
 					<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
 				</label>
 				<label>
-					<span><_text constant="label_group" module="articles"/></span>
+					<span><cms:text constant="label_group" module="articles"/></span>
 					<select name="group" style="width: 270px;">
 						<option></option>
 						<_group_list template="group_option.xml" local="1"/>
 					</select>
 				</label>
 				<label>
-					<span><_text constant="label_title" module="articles"/></span>
+					<span><cms:text constant="label_title" module="articles"/></span>
 					<input type="text" class="multi-language" name="title" style="width: 400px;" maxlength="255"/>
 				</label>
 				<label class="checkbox">
-					<span><_text constant="label_visible" module="articles"/></span>
+					<span><cms:text constant="label_visible" module="articles"/></span>
 					<input type="checkbox" name="visible" checked="checked"/>
 				</label>
 			</div>
 			<div>
 				<label>
-					<span><_text constant="label_content" module="articles"/></span>
+					<span><cms:text constant="label_content" module="articles"/></span>
 					<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 680px; height: 250px;"/>
 				</label>
 			</div>
@@ -35,10 +35,10 @@
 			</div>
 		</div>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

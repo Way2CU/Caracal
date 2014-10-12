@@ -5,7 +5,7 @@
 		<input type="hidden" name="page" value="$params['page']" cms:eval="value"/>
 		<input type="hidden" name="type" value="user_page::VIDEO" cms:eval="value"/>
 		<label>
-			<span><_text constant="label_title" module="youtube"/></span>
+			<span><cms:text constant="label_title" module="youtube"/></span>
 			<select name="item" style="width: 270px;">
 				<_video_list
 					template="option_video.xml"
@@ -15,9 +15,9 @@
 			</select>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="add"/></button>
+			<button type="submit"><cms:text constant="add"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

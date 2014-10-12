@@ -4,29 +4,29 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_add_form">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-			<span><_text constant="label_title" module="news"/></span>
+			<span><cms:text constant="label_title" module="news"/></span>
 			<input type="text" name="title" class="multi-language" style="width: 460px;" maxlength="255"/>
-			<_language_data param="title"/>
+			<cms:language_data param="title"/>
 		</label>
 		<label>
-			<span><_text constant="label_content" module="news"/></span>
+			<span><cms:text constant="label_content" module="news"/></span>
 			<textarea name="content" class="multi-language" style="width: 460px; height: 150px;"/>
-			<_language_data param="content"/>
+			<cms:language_data param="content"/>
 		</label>
 		<label class="checkbox">
-			<span><_text constant="label_visible" module="news"/></span>
-			<_if condition="$params['visible'] == 1">
-				<input type="checkbox" name="visible" checked="checked"/>
-			</_if>
-			<_if condition="$params['visible'] == 0">
-				<input type="checkbox" name="visible"/>
-			</_if>
+			<span><cms:text constant="label_visible" module="news"/></span>
+			<input
+				type="checkbox"
+				name="visible"
+				checked="$params['visible'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

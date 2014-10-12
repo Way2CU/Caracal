@@ -4,24 +4,24 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="container_change_form">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
-			<span><_text constant="label_text_id" module="gallery"/></span>
+			<span><cms:text constant="label_text_id" module="gallery"/></span>
 			<input type="text" name="text_id" class="code" value="$params['text_id']" style="width: 360px;" maxlength="50" cms:eval="value"/>
 		</label>
 		<label>
-			<span><_text constant="label_name" module="gallery"/></span>
+			<span><cms:text constant="label_name" module="gallery"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 360px;" maxlength="50"/>
-			<_language_data param="name"/>
+			<cms:language_data param="name"/>
 		</label>
 		<label>
-			<span><_text constant="label_description" module="gallery"/></span>
+			<span><cms:text constant="label_description" module="gallery"/></span>
 			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
-			<_language_data param="description"/>
+			<cms:language_data param="description"/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
-			<button type="reset"><_text constant="reset"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

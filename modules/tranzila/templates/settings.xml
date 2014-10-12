@@ -3,44 +3,44 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
-			<span><_text constant="label_terminal" module="tranzila"/></span>
-			<input 
-				type="text" 
+			<span><cms:text constant="label_terminal" module="tranzila"/></span>
+			<input
+				type="text"
 				class="code"
-				name="terminal" 
-				value="$settings['terminal']" 
+				name="terminal"
+				value="$settings['terminal']"
 				cms:eval="value"
 				style="width: 260px;"
 			/>
 		</label>
 		<label>
-			<span><_text constant="label_url_confirm" module="tranzila"/></span>
-			<input 
-				type="text" 
+			<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
+			<input
+				type="text"
 				class="code"
-				name="confirm_url" 
-				value="$params['confirm_url']" 
+				name="confirm_url"
+				value="$params['confirm_url']"
 				cms:eval="value"
 				style="width: 360px;"
 				readonly="readonly"
 			/>
 		</label>
 		<label>
-			<span><_text constant="label_url_cancel" module="tranzila"/></span>
-			<input 
-				type="text" 
+			<span><cms:text constant="label_url_cancel" module="tranzila"/></span>
+			<input
+				type="text"
 				class="code"
-				name="confirm_url" 
-				value="$params['cancel_url']" 
+				name="confirm_url"
+				value="$params['cancel_url']"
 				cms:eval="value"
 				style="width: 360px;"
 				readonly="readonly"
 			/>
 		</label>
 		<div class="button_bar">
-			<button type="submit"><_text constant="save"/></button>
+			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<_text constant="cancel"/>
+				<cms:text constant="cancel"/>
 			</button>
 		</div>
 	</form>

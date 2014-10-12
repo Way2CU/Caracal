@@ -3,16 +3,16 @@
 <document>
 	<div class="result">
 		<div class="title">
-			<_var name="$params['title']"/>
+			<cms:var name="$params['title']"/>
 		</div>
 		<div class="score">
-			<_var name="$params['score']"/>
+			<cms:var name="$params['score']"/>
 		</div>
 		<div class="score">
-			<_var name="$params['title_score']"/>
+			<cms:var name="$params['title_score']"/>
 		</div>
 		<div>
-			<_var name="$params['description_score']"/>
+			<cms:var name="$params['description_score']"/>
 		</div>
 	</div>
 </document>
