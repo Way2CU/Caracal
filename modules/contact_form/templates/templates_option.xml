@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<cms:if condition="$params['selected'] == $params['text_id']">
-		<option
-			selected="selected"
-			value="$params['text_id']"
-			cms:eval="value"
+	<option
+		value="$params['text_id']"
+		selected="$params['selected'] == $params['text_id'] ? 'selected' : false"
+		cms:eval="value"
+		cms:optional="selected"
 		>
-			<cms:var name="$params['name'][$language]"/>
-		</option>
-	</cms:if>
-	<cms:if condition="$params['selected'] != $params['text_id']">
-		<option
-			value="$params['text_id']"
-			cms:eval="value"
-		>
-			<cms:var name="$params['name'][$language]"/>
-		</option>
-	</cms:if>
+		<cms:var name="$params['name'][$language]"/>
+	</option>
 </document>

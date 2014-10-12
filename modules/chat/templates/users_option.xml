@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<option value="$params['id']" cms:eval="value"><_var name="$params['display_name']"/></option>
+	<option value="$params['id']" cms:eval="value">
+		<cms:var name="$params['display_name']"/>
+	</option>
 </document>

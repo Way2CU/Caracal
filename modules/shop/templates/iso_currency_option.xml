@@ -2,6 +2,6 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<option value="$params['alphabetic_code']" cms:eval="value">
-		<_var name="$params['currency'].' ('.$params['alphabetic_code'].')'"/>
+		<cms:var name="$params['currency'].' ('.$params['alphabetic_code'].')'"/>
 	</option>
 </document>
