@@ -1,5 +1,7 @@
 <?php
 
+namespace Library\Closure;
+
 /**
  * Copyright 2010 Daniel Pupius (http://code.google.com/p/php-closure/)
  *
