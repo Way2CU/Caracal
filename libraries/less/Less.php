@@ -1,9 +1,6 @@
 <?php
 
-namespace Library\Less;
-use \Exception as Exception;
-
-require_once( dirname(__FILE__).'/Cache.php');
+require_once(dirname(__FILE__).'/Cache.php');
 
 /**
  * Class for parsing and compiling less files into css

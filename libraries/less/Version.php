@@ -1,7 +1,5 @@
 <?php
 
-namespace Library\Less;
-
 /**
  * Release numbers
  *
