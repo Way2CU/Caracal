@@ -91,7 +91,8 @@ class CodeOptimizer {
 				// compile files
 				try {
 					$file_name = path_GetFromURL($file_name);
-					$data = $this->less_compiler->parseFile($file_name);
+					$this->less_compiler->parseFile($file_name);
+					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
 					trigger_error('Error compiling: '.$file_name.' - '.$error, E_USER_NOTICE);
