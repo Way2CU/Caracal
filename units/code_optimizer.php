@@ -33,7 +33,12 @@ class CodeOptimizer {
 	 * Constructor
 	 */
 	protected function __construct() {
-		$this->less_compiler = new Less_Parser();
+		$less_options = array(
+				'compress'		=> defined('DEBUG') ? false : true,
+				'relativeUrls'	=> false,
+			);
+		$this->less_compiler = new Less_Parser($this->less_options);
+
 		$this->closure_compiler = new PhpClosure();
 	}
 
