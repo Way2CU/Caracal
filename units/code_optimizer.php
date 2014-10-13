@@ -8,8 +8,8 @@
  * module will automatically use this class if configured.
  */
 
-require_once(_LIBPATH.'/less/Less.php');
-require_once(_LIBPATH.'/closure/closure.php');
+require_once(_LIBPATH.'less/Less.php');
+require_once(_LIBPATH.'closure/closure.php');
 
 use Library\Less\Less_Parser as Less_Parser;
 use Library\Closure\PhpClosure as PhpClosure;
