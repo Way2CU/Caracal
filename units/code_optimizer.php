@@ -8,8 +8,11 @@
  * module will automatically use this class if configured.
  */
 
-require_once('closure.php');
-require_once('lessc.php');
+require_once(_LIBPATH.'/less/Less.php');
+require_once(_LIBPATH.'/closure/closure.php');
+
+use Library\Less\Less_Parser as Less_Parser;
+use Library\Closure\PhpClosure as PhpClosure;
 
 
 class CodeOptimizer {
@@ -20,8 +23,8 @@ class CodeOptimizer {
 	private $style_secondary_list = array();  // list populated with @import
 
 	// compilers
-	private $closure_compiler = null;
 	private $less_compiler = null;
+	private $closure_compiler = null;
 
 	const LEVEL_NONE = 0;
 	const LEVEL_BASIC = 1;
@@ -31,6 +34,7 @@ class CodeOptimizer {
 	 * Constructor
 	 */
 	protected function __construct() {
+		$this->less_compiler = new Less_Parser();
 		$this->closure_compiler = new PhpClosure();
 	}
 
@@ -62,7 +66,7 @@ class CodeOptimizer {
 
 		// check each individual file
 		if (!$result)
-			foreach ($list as $file) 
+			foreach ($list as $file)
 				if (filemtime(path_GetFromURL($file)) > $cache_time) {
 					$result = true;
 					break;
@@ -85,14 +89,10 @@ class CodeOptimizer {
 
 		switch ($extension) {
 			case 'less':
-				// create compiler if we need it
-				if (is_null($this->less_compiler))
-					$this->less_compiler = new lessc();
-
 				// compile files
 				try {
 					$file_name = path_GetFromURL($file_name);
-					$data = $this->less_compiler->compileFile($file_name);
+					$data = $this->less_compiler->parseFile($file_name);
 
 				} catch (Exception $error) {
 					trigger_error('Error compiling: '.$file_name.' - '.$error, E_USER_NOTICE);
