@@ -22,6 +22,9 @@
 
 define('_BASEPATH', dirname(__FILE__));
 define('_LIBPATH', _BASEPATH.'/libraries/');
+define('_DOMAIN', $_SERVER['SERVER_NAME']);
+define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
+define('_VERSION', 0.1);
 
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
@@ -62,8 +65,6 @@ if (!defined('DEBUG'))
 	error_reporting(E_ALL | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 
 // define constants
-define('_DOMAIN', $_SERVER['SERVER_NAME']);
-define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
 define('_BASEURL', url_GetBaseURL());
 define('_DESKTOP_VERSION', get_desktop_version());
 define('_MOBILE_VERSION', !_DESKTOP_VERSION);
@@ -72,7 +73,6 @@ define('_AJAX_REQUEST',
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
 		);
 define('_BROWSER_OK', is_browser_ok());
-define('_VERSION', 0.1);
 
 // start measuring time
 $time_start = explode(" ", microtime());
