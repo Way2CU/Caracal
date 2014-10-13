@@ -37,7 +37,7 @@ class CodeOptimizer {
 				'compress'		=> defined('DEBUG') ? false : true,
 				'relativeUrls'	=> false,
 			);
-		$this->less_compiler = new Less_Parser($this->less_options);
+		$this->less_compiler = new Less_Parser($less_options);
 
 		$this->closure_compiler = new PhpClosure();
 	}
