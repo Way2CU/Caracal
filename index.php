@@ -20,6 +20,9 @@
  * Author: Mladen Mijatov
  */
 
+define('_BASEPATH', dirname(__FILE__));
+define('_LIBPATH', _BASEPATH.'/libraries/');
+
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
@@ -61,9 +64,7 @@ if (!defined('DEBUG'))
 // define constants
 define('_DOMAIN', $_SERVER['SERVER_NAME']);
 define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
-define('_BASEPATH', dirname(__FILE__));
 define('_BASEURL', url_GetBaseURL());
-define('_LIBPATH', _BASEPATH.'/libraries/');
 define('_DESKTOP_VERSION', get_desktop_version());
 define('_MOBILE_VERSION', !_DESKTOP_VERSION);
 define('_AJAX_REQUEST',
