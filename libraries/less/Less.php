@@ -1,6 +1,7 @@
 <?php
 
 namespace Library\Less;
+use \Exception as Exception;
 
 require_once( dirname(__FILE__).'/Cache.php');
 
