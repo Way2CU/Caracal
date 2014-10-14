@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<option
+		value="$params['id']"
+		selected="$params['selected'] ? 'selected' : false"
+		cms:optional="selected"
+		cms:eval="value"
+		>
+		<cms:var name="$params['name']"/>
+	</option>
+</document>

@@ -18,6 +18,8 @@ class ContactForm_FormManager extends ItemManager {
 		$this->addProperty('show_submit', 'boolean');
 		$this->addProperty('show_reset', 'boolean');
 		$this->addProperty('show_cancel', 'boolean');
+		$this->addProperty('include_reply_to', 'boolean');
+		$this->addProperty('reply_to_field', 'int');
 	}
 
 	/**

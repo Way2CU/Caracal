@@ -38,7 +38,7 @@ class contact_form extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register events
@@ -57,7 +57,7 @@ class contact_form extends Module {
 					$this->settings['smtp_port'],
 					$this->settings['use_ssl']
 				);
-		
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -68,7 +68,7 @@ class contact_form extends Module {
 					'javascript:void(0);',
 					$level=5
 				);
-			
+
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_forms'),
 								url_GetFromFilePath($this->path.'images/forms.svg'),
@@ -81,7 +81,7 @@ class contact_form extends Module {
 											backend_UrlMake($this->name, 'forms_manage')
 										),
 								$level=5
-							));	
+							));
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_templates'),
 								url_GetFromFilePath($this->path.'images/templates.svg'),
@@ -94,7 +94,7 @@ class contact_form extends Module {
 											backend_UrlMake($this->name, 'templates_manage')
 										),
 								$level=5
-							));	
+							));
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
@@ -108,7 +108,7 @@ class contact_form extends Module {
 											backend_UrlMake($this->name, 'settings_show')
 										),
 								$level=5
-							));	
+							));
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_submissions'),
@@ -139,8 +139,9 @@ class contact_form extends Module {
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
-		}		
+		}
 
+		// include required scripts
 		if (class_exists('collection') && $section != 'backend') {
 			$collection = collection::getInstance();
 			$collection->includeScript(collection::DIALOG);
@@ -198,7 +199,7 @@ class contact_form extends Module {
 				case 'amend_submission':
 					$this->amendSubmission($params, $children);
 					break;
-					
+
 				default:
 					break;
 			}
@@ -301,7 +302,7 @@ class contact_form extends Module {
 				case 'fields_delete_commit':
 					$this->deleteField_Commit();
 					break;
-					
+
 				default:
 					break;
 			}
@@ -354,7 +355,7 @@ class contact_form extends Module {
 				`text_id` varchar(32) NULL,
 			";
 
-		foreach($list as $language) 
+		foreach($list as $language)
 			$sql .= "`name_{$language}` varchar(50) NOT NULL DEFAULT '',";
 
 		$sql .= "
@@ -364,6 +365,8 @@ class contact_form extends Module {
 				`show_submit` boolean NOT NULL DEFAULT '1',
 				`show_reset` boolean NOT NULL DEFAULT '1',
 				`show_cancel` boolean NOT NULL DEFAULT '0',
+				`include_reply_to` boolean NOT NULL DEFAULT '0',
+				`reply_to_field` int NULL,
 				PRIMARY KEY(`id`),
 				INDEX `contact_forms_by_text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -1457,11 +1460,14 @@ class contact_form extends Module {
 						'show_submit'		=> $item->show_submit,
 						'show_reset'		=> $item->show_reset,
 						'show_cancel'		=> $item->show_cancel,
+						'include_reply_to'	=> $item->include_reply_to,
+						'reply_to_field',	=> $item->reply_to_field,
 						'form_action'  		=> backend_UrlMake($this->name, 'forms_save'),
 						'cancel_action'		=> window_Close('contact_forms_edit')
 					);
 
 			$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
+			$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
@@ -1474,6 +1480,8 @@ class contact_form extends Module {
 	 */
 	private function saveForm() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$manager = ContactForm_FormManager::getInstance();
+
 		$data = array(
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'name'			=> $this->getMultilanguageField('name'),
@@ -1484,12 +1492,17 @@ class contact_form extends Module {
 				'show_reset'	=> isset($_REQUEST['show_reset']) && ($_REQUEST['show_reset'] == 'on' || $_REQUEST['show_reset'] == '1') ? 1 : 0,
 				'show_cancel'	=> isset($_REQUEST['show_cancel']) && ($_REQUEST['show_cancel'] == 'on' || $_REQUEST['show_cancel'] == '1') ? 1 : 0
 			);
-		$manager = ContactForm_FormManager::getInstance();
+
+		if (isset($_REQUEST['reply_to_field'])) {
+			$data['reply_to_field'] = fix_id($_REQUEST['reply_to_field']);
+			$data['include_reply_to'] = isset($_REQUEST['include_reply_to']) && ($_REQUEST['include_reply_to'] == 'on' || $_REQUEST['include_reply_to'] == '1') ? 1 : 0;
+		}
 
 		// insert or update data in database
 		if (is_null($id)) {
 			$window = 'contact_forms_add';
 			$manager->insertData($data);
+
 		} else {
 			$window = 'contact_forms_edit';
 			$manager->updateData($data,	array('id' => $id));
@@ -1785,7 +1798,7 @@ class contact_form extends Module {
 			$selected = fix_chars($tag_params['selected']);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'field_option.xml');
+		$template = $this->loadTemplate($tag_params, 'field_type_option.xml');
 
 		foreach ($this->field_types as $field) {
 			$params = array(
@@ -1876,6 +1889,7 @@ class contact_form extends Module {
 	 */
 	public function tag_FieldList($tag_params, $children) {
 		$conditions = array();
+		$selected = null;
 		$manager = ContactForm_FormFieldManager::getInstance();
 
 		// get parameters
@@ -1889,6 +1903,16 @@ class contact_form extends Module {
 		$skip_virtual = true;
 		if (isset($tag_params['skip_virtual']))
 			$skip_virtual = $tag_params['skip_virtual'] == 1;
+
+		if (isset($tag_params['types'])) {
+			$types = explode(',', $tag_params['types']);
+			$types = fix_chars($types);
+
+			$conditions['type'] = $types;
+		}
+
+		if (isset($tag_params['selected']))
+			$selected = fix_id($tag_params['selected']);
 
 		$count = 0;
 		$limit = null;
@@ -1940,6 +1964,7 @@ class contact_form extends Module {
 					'disabled'		=> $item->disabled,
 					'required'		=> $item->required,
 					'autocomplete'	=> $item->autocomplete,
+					'selected'		=> $selected == $id,
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(

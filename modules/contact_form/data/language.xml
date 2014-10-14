@@ -51,6 +51,8 @@
 		<constant name="tab_preview">Preview</constant>
 		<constant name="tab_export_options">Options</constant>
 		<constant name="tab_export_fields">Fields</constant>
+		<constant name="tab_submission">Submission</constant>
+		<constant name="tab_appearance">Appearance</constant>
 
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
@@ -103,6 +105,8 @@
 		<constant name="label_separator_semi">Semicolon</constant>
 		<constant name="label_separator_comma">Comma</constant>
 		<constant name="label_mailer">Mailing method:</constant>
+		<constant name="label_include_reply_to">Include reply-to field?</constant>
+		<constant name="label_reply_to">Field name:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -204,6 +208,8 @@
 		<constant name="tab_preview">عرض</constant>
 		<constant name="tab_export_options">خيارات</constant>
 		<constant name="tab_export_fields">نطاقات</constant>
+		<constant name="tab_submission">Submission</constant>
+		<constant name="tab_appearance">Appearance</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">اسم</constant>
@@ -354,6 +360,8 @@
 		<constant name="tab_preview">Preview</constant>
 		<constant name="tab_export_options">Options</constant>
 		<constant name="tab_export_fields">Fields</constant>
+		<constant name="tab_submission">Submission</constant>
+		<constant name="tab_appearance">Appearance</constant>
 
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
@@ -404,6 +412,8 @@
 		<constant name="label_separator_semi">Semicolon</constant>
 		<constant name="label_separator_comma">Comma</constant>
 		<constant name="label_mailer">Mailing method:</constant>
+		<constant name="label_include_reply_to">Include reply-to field?</constant>
+		<constant name="label_reply_to">Field name:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -505,6 +515,8 @@
 		<constant name="tab_preview">Preview</constant>
 		<constant name="tab_export_options">Options</constant>
 		<constant name="tab_export_fields">Fields</constant>
+		<constant name="tab_submission">Submission</constant>
+		<constant name="tab_appearance">Appearance</constant>
 
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
@@ -555,6 +567,8 @@
 		<constant name="label_separator_semi">Semicolon</constant>
 		<constant name="label_separator_comma">Comma</constant>
 		<constant name="label_mailer">Mailing method:</constant>
+		<constant name="label_include_reply_to">Include reply-to field?</constant>
+		<constant name="label_reply_to">Field name:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
