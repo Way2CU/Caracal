@@ -22,7 +22,7 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 
 	// socket connection timeout
 	const TIMEOUT = 10;
-	
+
 	public function __construct($language) {
 		parent::__construct($language);
 	}
