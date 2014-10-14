@@ -120,6 +120,7 @@
 		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
+		<constant name="tooltip_include_reply_to">Is checked reply address for message will be set to field selected below.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -272,6 +273,7 @@
 		<constant name="tooltip_recipient_name">اسم واحد أو أكثر من الأشخاص تلقي البريد الإلكتروني. لا يقل أهمية، ويمكن أن تترك فارغة .</constant>
 		<constant name="tooltip_recipient_address">قائمة مفصولة بفواصل من عنوان لتلقي شكل تقديم البيانات.</constant>
 		<constant name="tooltip_include_headers">إذا سيتضمن ملف CSV فحص الرؤوس. هذه يمكن أن تكون مخصصة من علامة التبويب النطاقات. من قبل النظام الافتراضي سوف تستخدم تسمية النطاق أو الاسم الحامل.</constant>
+		<constant name="tooltip_include_reply_to">Is checked reply address for message will be set to field selected below.</constant>
 
 		<constant name="field_hidden">مخفي</constant>
 		<constant name="field_radio">Radio زر</constant>
@@ -427,6 +429,7 @@
 		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
+		<constant name="tooltip_include_reply_to">Is checked reply address for message will be set to field selected below.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -582,6 +585,7 @@
 		<constant name="tooltip_recipient_name">Name of one or more persons receiving email. Not as important and can be left empty.</constant>
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
+		<constant name="tooltip_include_reply_to">Is checked reply address for message will be set to field selected below.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
