@@ -143,7 +143,7 @@
 		new LanguageSelector('contact_form_edit');
 
 		// create notebook
-		var notebook = new Notebook('contact_form_edit');
+		var notebook = new Notebook('contact_form_edit_notebook');
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
