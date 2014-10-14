@@ -106,7 +106,7 @@ class CodeOptimizer {
 
 			case 'css':
 			default:
-				$data = file_get_contents(url_GetFromURL($file_name));
+				$data = file_get_contents(path_GetFromURL($file_name));
 				break;
 		}
 
