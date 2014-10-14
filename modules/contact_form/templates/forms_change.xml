@@ -80,7 +80,7 @@
 
 				<label>
 					<span><cms:text constant="label_reply_to" module="contact_form"/></span>
-					<select name="reply_to_field">
+					<select name="reply_to_field" style="width: 250px;">
 						<cms:field_list
 							types="email"
 							selected="$params['reply_to_field']"
