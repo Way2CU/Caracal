@@ -35,7 +35,6 @@ class CodeOptimizer {
 	protected function __construct() {
 		$less_options = array(
 				'compress'		=> true,
-				'strictMath'	=> true,
 				'relativeUrls'	=> false,
 			);
 		$this->less_compiler = new Less_Parser($less_options);
