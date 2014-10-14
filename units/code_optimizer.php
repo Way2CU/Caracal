@@ -34,7 +34,6 @@ class CodeOptimizer {
 	 */
 	protected function __construct() {
 		$less_options = array(
-				'compress'		=> defined('DEBUG') ? false : true,
 				'relativeUrls'	=> false,
 			);
 		$this->less_compiler = new Less_Parser($less_options);
@@ -48,7 +47,7 @@ class CodeOptimizer {
 	 * @param array $list
 	 * @return string
 	 */
-	private function _getCachedName($list) {
+	private function getCachedName($list) {
 		$all_files = implode($list);
 		return md5($all_files);
 	}
@@ -60,7 +59,7 @@ class CodeOptimizer {
 	 * @param array $list
 	 * @return boolean
 	 */
-	private function _needsRecompile($file_name, $list) {
+	private function needsRecompile($file_name, $list) {
 		$result = false;
 
 		// check if file exists
@@ -87,7 +86,7 @@ class CodeOptimizer {
 	 * @param array $priority_commands
 	 * @return string
 	 */
-	private function _includeStyle($file_name, &$additional_imports, &$priority_commands) {
+	private function includeStyle($file_name, &$additional_imports, &$priority_commands) {
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
@@ -133,7 +132,7 @@ class CodeOptimizer {
 					if (substr($command[1], 0, 3) == 'url')
 						$priority_commands []= $line_data; else
 						$additional_imports []= dirname($file_name).'/'.trim($command[1], '\'";');
-						
+
 					break;
 
 				case '@charset':
@@ -154,7 +153,7 @@ class CodeOptimizer {
 	 * @param string $file_name
 	 * @param array $list
 	 */
-	private function _recompileStyles($file_name, $list) {
+	private function recompileStyles($file_name, $list) {
 		global $cache_path;
 
 		$result = array();
@@ -163,13 +162,13 @@ class CodeOptimizer {
 
 		// gather data
 		foreach($list as $original_file) {
-			$file_result = $this->_includeStyle($original_file, $additional_files, $priority_commands);
+			$file_result = $this->includeStyle($original_file, $additional_files, $priority_commands);
 			$result = array_merge($result, $file_result);
 		}
 
 		if (count($additional_files) > 0)
 			foreach($additional_files as $file) {
-				$file_result = $this->_includeStyle($file, $additional_files, $priority_commands);
+				$file_result = $this->includeStyle($file, $additional_files, $priority_commands);
 				$result = array_merge($result, $file_result);
 			}
 
@@ -243,9 +242,9 @@ class CodeOptimizer {
 		global $cache_path;
 
 		// compile styles if needed
-		$style_cache = $cache_path.$this->_getCachedName($this->style_list).'.css';
-		if ($this->_needsRecompile($style_cache, $this->style_list)) 
-			$this->_recompileStyles($style_cache, $this->style_list);
+		$style_cache = $cache_path.$this->getCachedName($this->style_list).'.css';
+		if ($this->needsRecompile($style_cache, $this->style_list)) 
+			$this->recompileStyles($style_cache, $this->style_list);
 
 		// compile scripts
 		$script_cache = $this->closure_compiler
