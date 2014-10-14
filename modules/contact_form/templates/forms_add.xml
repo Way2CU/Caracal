@@ -2,61 +2,64 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_add">
-		<!-- General options -->
-		<div>
-			<label cms:tooltip="tooltip_text_id">
-				<span><cms:text constant="label_text_id" module="contact_form"/></span>
-				<input name="text_id" class="code" type="text" maxlength="32"/>
-			</label>
-
-			<label cms:tooltip="tooltip_name">
-				<span><cms:text constant="label_name" module="contact_form"/></span>
-				<input name="name" class="multi-language" type="text" maxlength="50" style="width: 370px"/>
-			</label>
-		</div>
-
-		<!-- Submission options -->
-		<div>
-			<label cms:tooltip="tooltip_action">
-				<span><cms:text constant="label_action" module="contact_form"/></span>
-				<input name="action" class="code" type="text" maxlength="255" style="width: 370px;"/>
-			</label>
-
-			<label cms:tooltip="tooltip_email_template">
-				<span><cms:text constant="label_template" module="contact_form"/></span>
-				<select name="template" style="width: 300px;">
-					<option/>
-					<cms:template_list
-						template="templates_option.xml"
-						local="1"
-						/>
-				</select>
-			</label>
-
-			<label class="checkbox" cms:tooltip="tooltip_use_ajax">
-				<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
-				<input name="use_ajax" type="checkbox" checked="checked"/>
-			</label>
-		</div>
-
-		<div>
-			<fieldset>
-				<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
-				<label class="checkbox">
-					<span><cms:text constant="label_show_submit" module="contact_form"/></span>
-					<input name="show_submit" type="checkbox" checked="checked"/>
+		<div id="contact_form_add_notebook">
+			<!-- General options -->
+			<div>
+				<label cms:tooltip="tooltip_text_id">
+					<span><cms:text constant="label_text_id" module="contact_form"/></span>
+					<input name="text_id" class="code" type="text" maxlength="32"/>
 				</label>
 
-				<label class="checkbox">
-					<span><cms:text constant="label_show_reset" module="contact_form"/></span>
-					<input name="show_reset" type="checkbox" checked="checked"/>
+				<label cms:tooltip="tooltip_name">
+					<span><cms:text constant="label_name" module="contact_form"/></span>
+					<input name="name" class="multi-language" type="text" maxlength="50" style="width: 370px"/>
+				</label>
+			</div>
+
+			<!-- Submission options -->
+			<div>
+				<label cms:tooltip="tooltip_action">
+					<span><cms:text constant="label_action" module="contact_form"/></span>
+					<input name="action" class="code" type="text" maxlength="255" style="width: 370px;"/>
 				</label>
 
-				<label class="checkbox">
-					<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
-					<input name="show_cancel" type="checkbox"/>
+				<label cms:tooltip="tooltip_email_template">
+					<span><cms:text constant="label_template" module="contact_form"/></span>
+					<select name="template" style="width: 300px;">
+						<option/>
+						<cms:template_list
+							template="templates_option.xml"
+							local="1"
+							/>
+					</select>
 				</label>
-			</fieldset>
+
+				<label class="checkbox" cms:tooltip="tooltip_use_ajax">
+					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
+					<input name="use_ajax" type="checkbox" checked="checked"/>
+				</label>
+			</div>
+
+			<!-- Appearance options -->
+			<div>
+				<fieldset>
+					<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
+					<label class="checkbox">
+						<span><cms:text constant="label_show_submit" module="contact_form"/></span>
+						<input name="show_submit" type="checkbox" checked="checked"/>
+					</label>
+
+					<label class="checkbox">
+						<span><cms:text constant="label_show_reset" module="contact_form"/></span>
+						<input name="show_reset" type="checkbox" checked="checked"/>
+					</label>
+
+					<label class="checkbox">
+						<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
+						<input name="show_cancel" type="checkbox"/>
+					</label>
+				</fieldset>
+			</div>
 		</div>
 
 		<div class="button_bar">
@@ -72,7 +75,7 @@
 		new LanguageSelector('contact_form_add');
 
 		// create notebook
-		var notebook = new Notebook('contact_form_add');
+		var notebook = new Notebook('contact_form_add_notebook');
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))

@@ -2,123 +2,128 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_edit">
-		<div>
-			<label cms:tooltip="tooltip_text_id">
-				<span><cms:text constant="label_text_id" module="contact_form"/></span>
-				<input
-					name="text_id"
-					class="code"
-					type="text"
-					maxlength="32"
-					value="$params['text_id']"
-					cms:eval="value"
-					/>
-			</label>
-
-			<label cms:tooltip="tooltip_name">
-				<span><cms:text constant="label_name" module="contact_form"/></span>
-				<input
-					name="name"
-					class="multi-language"
-					type="text"
-					maxlength="50"
-					style="width: 370px"
-					/>
-				<cms:language_data param="name"/>
-			</label>
-		</div>
-
-		<div>
-			<label cms:tooltip="tooltip_action">
-				<span><cms:text constant="label_action" module="contact_form"/></span>
-				<input
-					name="action"
-					class="code"
-					type="text"
-					maxlength="255"
-					style="width: 370px;"
-					value="$params['action']"
-					cms:eval="value"
-					/>
-			</label>
-
-			<label cms:tooltip="tooltip_email_template">
-				<span><cms:text constant="label_template" module="contact_form"/></span>
-				<select name="template" style="width: 300px;">
-					<option/>
-					<cms:template_list
-						template="templates_option.xml"
-						local="1"
-						selected="$params['template']"
-						cms:eval="selected"
-						/>
-				</select>
-			</label>
-
-			<label class="checkbox" cms:tooltip="tooltip_use_ajax">
-				<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
-				<input
-					name="use_ajax"
-					type="checkbox"
-					checked="$params['use_ajax'] ? 'checked' : false"
-					cms:optional="checked"
-					/>
-			</label>
-
-			<hr/>
-
-			<label class="checkbox" cms:tooltip="tooltip_include_reply_to">
-				<span><cms:text constant="label_include_reply_to" module="contact_form"/></span>
-				<input name="include_reply_to" type="checkbox"/>
-			</label>
-
-			<label>
-				<span><cms:text constant="label_reply_to" module="contact_form"/></span>
-				<select name="reply_to_field">
-					<cms:field_list
-						types="email"
-						selected="$params['reply_to_field']"
-						template="field_option.xml"
-						local="1"
-						cms:eval="selected"
-						/>
-				</select>
-			</label>
-		</div>
-
-		<div>
-			<fieldset>
-				<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
-				<label class="checkbox">
-					<span><cms:text constant="label_show_submit" module="contact_form"/></span>
+		<div id="contact_form_edit_notebook">
+			<!-- General options -->
+			<div>
+				<label cms:tooltip="tooltip_text_id">
+					<span><cms:text constant="label_text_id" module="contact_form"/></span>
 					<input
-						name="show_submit"
+						name="text_id"
+						class="code"
+						type="text"
+						maxlength="32"
+						value="$params['text_id']"
+						cms:eval="value"
+						/>
+				</label>
+
+				<label cms:tooltip="tooltip_name">
+					<span><cms:text constant="label_name" module="contact_form"/></span>
+					<input
+						name="name"
+						class="multi-language"
+						type="text"
+						maxlength="50"
+						style="width: 370px"
+						/>
+					<cms:language_data param="name"/>
+				</label>
+			</div>
+
+			<!-- Submission options -->
+			<div>
+				<label cms:tooltip="tooltip_action">
+					<span><cms:text constant="label_action" module="contact_form"/></span>
+					<input
+						name="action"
+						class="code"
+						type="text"
+						maxlength="255"
+						style="width: 370px;"
+						value="$params['action']"
+						cms:eval="value"
+						/>
+				</label>
+
+				<label cms:tooltip="tooltip_email_template">
+					<span><cms:text constant="label_template" module="contact_form"/></span>
+					<select name="template" style="width: 300px;">
+						<option/>
+						<cms:template_list
+							template="templates_option.xml"
+							local="1"
+							selected="$params['template']"
+							cms:eval="selected"
+							/>
+					</select>
+				</label>
+
+				<label class="checkbox" cms:tooltip="tooltip_use_ajax">
+					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
+					<input
+						name="use_ajax"
 						type="checkbox"
-						checked="$params['show_submit'] ? 'checked' : false"
+						checked="$params['use_ajax'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
 				</label>
 
-				<label class="checkbox">
-					<span><cms:text constant="label_show_reset" module="contact_form"/></span>
-					<input
-						name="show_reset"
-						type="checkbox"
-						checked="$params['show_reset'] ? 'checkend' : false"
-						cms:optional="checked"
-						/>
+				<hr/>
+
+				<label class="checkbox" cms:tooltip="tooltip_include_reply_to">
+					<span><cms:text constant="label_include_reply_to" module="contact_form"/></span>
+					<input name="include_reply_to" type="checkbox"/>
 				</label>
 
-				<label class="checkbox">
-					<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
-					<input
-						name="show_cancel"
-						type="checkbox"
-						checked="$params['show_cancel'] ? 'checked' : false"
-						cms:optional="checked"
-						/>
+				<label>
+					<span><cms:text constant="label_reply_to" module="contact_form"/></span>
+					<select name="reply_to_field">
+						<cms:field_list
+							types="email"
+							selected="$params['reply_to_field']"
+							template="field_option.xml"
+							local="1"
+							cms:eval="selected"
+							/>
+					</select>
 				</label>
-			</fieldset>
+			</div>
+
+			<!-- Appearance options -->
+			<div>
+				<fieldset>
+					<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
+					<label class="checkbox">
+						<span><cms:text constant="label_show_submit" module="contact_form"/></span>
+						<input
+							name="show_submit"
+							type="checkbox"
+							checked="$params['show_submit'] ? 'checked' : false"
+							cms:optional="checked"
+							/>
+					</label>
+
+					<label class="checkbox">
+						<span><cms:text constant="label_show_reset" module="contact_form"/></span>
+						<input
+							name="show_reset"
+							type="checkbox"
+							checked="$params['show_reset'] ? 'checkend' : false"
+							cms:optional="checked"
+							/>
+					</label>
+
+					<label class="checkbox">
+						<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
+						<input
+							name="show_cancel"
+							type="checkbox"
+							checked="$params['show_cancel'] ? 'checked' : false"
+							cms:optional="checked"
+							/>
+					</label>
+				</fieldset>
+			</div>
 		</div>
 
 		<div class="button_bar">
