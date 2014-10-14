@@ -26,7 +26,7 @@ abstract class ContactForm_Mailer {
 
 	/**
 	 * Finalize message and send it to specified addresses.
-	 * 
+	 *
 	 * Note: Before sending, you *must* check if contact_form
 	 * function detectBots returns false.
 	 *
@@ -65,6 +65,14 @@ abstract class ContactForm_Mailer {
 	 * @param string $name
 	 */
 	abstract public function add_bcc_recipient($address, $name=null);
+
+	/**
+	 * Add custom header string.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 */
+	abstract public function add_header_string($key, $value);
 
 	/**
 	 * Set message subject.
