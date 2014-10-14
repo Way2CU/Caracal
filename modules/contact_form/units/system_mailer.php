@@ -26,6 +26,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	protected $attachments;
 	protected $attachment_names;
 	protected $inline_attachments;
+	protected $headers;
 
 	public function __construct($language) {
 		// store language handler for later use
@@ -151,6 +152,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$this->attachments = array();
 		$this->attachment_names = array();
 		$this->inline_attachments = array();
+		$this->headers = array();
 	}
 
 	/**
@@ -161,7 +163,6 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	public function send() {
 		$result = false;
 		$content = '';
-		$headers = array();
 		$contact_form = contact_form::getInstance();
 
 		// make sure we are not being scammed
@@ -199,24 +200,24 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$content_boundary = md5(time().'--content--'.(rand() * 10000));
 
 		// prepare headers
-		$headers['From'] = $this->sender;
-		$headers['Cc'] = implode(', ', $this->recipients_cc);
-		$headers['Bcc'] = implode(', ', $this->recipients_bcc);
+		$this->headers['From'] = $this->sender;
+		$this->headers['Cc'] = implode(', ', $this->recipients_cc);
+		$this->headers['Bcc'] = implode(', ', $this->recipients_bcc);
 
 		// add content type to headers
 		if (count($this->attachments) == 0) {
 			// no attachments available
 			if (is_null($this->html_body)) {
-				$headers['Content-Type'] = 'text/plain';
-				$headers['Content-Transfer-Encoding'] = 'base64';
+				$this->headers['Content-Type'] = 'text/plain';
+				$this->headers['Content-Transfer-Encoding'] = 'base64';
 
 			} else {
-				$headers['Content-Type'] = "multipart/alternative; boundary={$boundary}";
+				$this->headers['Content-Type'] = "multipart/alternative; boundary={$boundary}";
 			}
 
 		} else {
 			// set proper content type for message with attachments
-			$headers['Content-Type'] = "multipart/mixed; boundary={$boundary}";
+			$this->headers['Content-Type'] = "multipart/mixed; boundary={$boundary}";
 		}
 
 		// prepare content
@@ -225,7 +226,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$subject = $this->replace_fields($this->subject);
 
 		// create content
-		if ($headers['Content-Type'] == 'text/plain') {
+		if ($this->headers['Content-Type'] == 'text/plain') {
 			$content .= base64_encode($plain_text_content)."\n";
 
 		} else {
@@ -270,7 +271,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		}
 
 		// send email
-		$result = $this->perform_send($to, $subject, $headers, $content);
+		$result = $this->perform_send($to, $subject, $this->headers, $content);
 
 		// trigger event
 		if ($result)
@@ -335,6 +336,16 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 			$recipient = $this->encode_string($name).' <'.$address.'>';
 
 		$this->recipients_bcc[] = $recipient;
+	}
+
+	/**
+	 * Add custom header string.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function add_header_string($key, $value) {
+		$this->headers[$key] = $value;
 	}
 
 	/**
