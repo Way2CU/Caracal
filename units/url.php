@@ -16,12 +16,12 @@ function url_UnpackValues() {
 		// remove extensions if needed
 		if ($url_add_extension && substr($data, -5) == '.html')
 			$data = substr($data, 0, -5);
-			
+
 		// split data
 		$raw = explode('/', $data);
 
 		// get language
-		if (count($raw) > 0 && strlen($raw[0]) == 2) 
+		if (count($raw) > 0 && strlen($raw[0]) == 2)
 			$result['language'] = array_shift($raw);
 
 		// get section
@@ -138,7 +138,7 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 		}
 
 		// should we include section in URL
-		if ($section_argument != 'home') { 
+		if ($section_argument != 'home') {
 			$include_section = true;
 
 			if (!$url_language_optional)
@@ -160,15 +160,15 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 
 			// add language
 			if ($include_language)
-				$result .= '/'.$language_argument;	
+				$result .= '/'.$language_argument;
 
 			// add section
 			if ($include_section)
-				$result .= '/'.$section_argument;	
+				$result .= '/'.$section_argument;
 
 			// add action
 			if ($include_action)
-				$result .= '/'.$action_argument;	
+				$result .= '/'.$action_argument;
 
 			if (count($arguments) > 0)
 				foreach ($arguments as $key => $value)
@@ -178,7 +178,7 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 			// rare cases where we only need home page
 			$result = '/';
 		}
-		
+
 		// add relative path and domain
 		$base = dirname(_BASEURL);
 
@@ -196,8 +196,8 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 
 		if ($section_argument != 'home')
 			$result .= '?section='.urlencode($section_argument);
-		
-		if ($action_argument != '_default') 
+
+		if ($action_argument != '_default')
 			$result .= $glue.'action='.urlencode($action_argument);
 
 		if (count($arguments) > 0)
@@ -295,7 +295,7 @@ function path_GetFromURL($url, $base=_BASEURL) {
 
 /**
  * Form base URL
- * 
+ *
  * @return string
  */
 function url_GetBaseURL() {
