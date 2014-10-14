@@ -649,7 +649,7 @@ class contact_form extends Module {
 			foreach ($attachments as $attachment)
 				$mailer->add_attachment($attachment);
 
-			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_body($template['plain_body'], Markdown($template['html_body']));
 			$mailer->set_variables($replacement_fields);
 
 			// send email
