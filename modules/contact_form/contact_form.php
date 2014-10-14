@@ -1461,7 +1461,7 @@ class contact_form extends Module {
 						'show_reset'		=> $item->show_reset,
 						'show_cancel'		=> $item->show_cancel,
 						'include_reply_to'	=> $item->include_reply_to,
-						'reply_to_field',	=> $item->reply_to_field,
+						'reply_to_field'	=> $item->reply_to_field,
 						'form_action'  		=> backend_UrlMake($this->name, 'forms_save'),
 						'cancel_action'		=> window_Close('contact_forms_edit')
 					);
