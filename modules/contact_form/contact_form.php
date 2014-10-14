@@ -532,6 +532,7 @@ class contact_form extends Module {
 		$attachments = array();
 		$missing_fields = array();
 		$messages = array();
+		$reply_to_address = null;
 		$transfer_params = isset($_SESSION['contact_form_transfer_params']) ? $_SESSION['contact_form_transfer_params'] : array();
 
 		foreach ($fields as $field) {
@@ -588,11 +589,19 @@ class contact_form extends Module {
 							$messages[] = $message;
 					}
 
+					// prepare data for insertion
 					$data[] = array(
 							'field'	=> $field->id,
 							'value'	=> $value
 						);
+
+					// assign replacment key
 					$replacement_fields[$name] = $value;
+
+					// store reply-to value
+					if ($form->include_reply_to == 1 && $form->reply_to_field == $field->id)
+						$reply_to_address = $value;
+
 					break;
 			}
 		}
@@ -629,6 +638,10 @@ class contact_form extends Module {
 			$mailer->start_message();
 			$mailer->set_subject($template['subject']);
 			$mailer->set_sender($sender['address'], $sender['name']);
+
+			// set reply address if specified
+			if (!is_null($reply_to_address))
+				$mailer->add_header_string('Reply-To', $reply_to_address);
 
 			foreach ($recipients as $recipient)
 				$mailer->add_recipient($recipient['address'], $recipient['name']);
