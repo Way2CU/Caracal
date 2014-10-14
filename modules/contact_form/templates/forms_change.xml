@@ -24,7 +24,7 @@
 						class="multi-language"
 						type="text"
 						maxlength="50"
-						style="width: 370px"
+						style="width: 350px;"
 						/>
 					<cms:language_data param="name"/>
 				</label>
@@ -39,11 +39,23 @@
 						class="code"
 						type="text"
 						maxlength="255"
-						style="width: 370px;"
+						style="width: 350px;;"
 						value="$params['action']"
 						cms:eval="value"
 						/>
 				</label>
+
+				<label class="checkbox" cms:tooltip="tooltip_use_ajax">
+					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
+					<input
+						name="use_ajax"
+						type="checkbox"
+						checked="$params['use_ajax'] ? 'checked' : false"
+						cms:optional="checked"
+						/>
+				</label>
+
+				<hr/>
 
 				<label cms:tooltip="tooltip_email_template">
 					<span><cms:text constant="label_template" module="contact_form"/></span>
@@ -58,15 +70,6 @@
 					</select>
 				</label>
 
-				<label class="checkbox" cms:tooltip="tooltip_use_ajax">
-					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
-					<input
-						name="use_ajax"
-						type="checkbox"
-						checked="$params['use_ajax'] ? 'checked' : false"
-						cms:optional="checked"
-						/>
-				</label>
 
 				<hr/>
 
