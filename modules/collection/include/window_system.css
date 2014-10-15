@@ -398,6 +398,9 @@ body.rtl div.window div.button_bar {
 
 div.window hr,
 div.dialog hr {
+	margin-top: 15px;
+	margin-bottom: 15px;
+
 	border: 0px;
 	border-bottom: 1px solid #dadada;
 }
