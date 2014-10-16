@@ -178,7 +178,7 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 			// rare cases where we only need home page
 			$result = '/';
 
-			if ($include_language)
+			if (!$url_language_optional)
 				$result .= $language_argument;
 		}
 
