@@ -89,7 +89,7 @@ class Manager {
 	 * @return string
 	 */
 	private function generateUniqueID($fields=null) {
-		global $cache_ignore_params;
+		global $cache_ignore_params, $language;
 		$data = '';
 
 		if (is_null($fields))
@@ -102,7 +102,7 @@ class Manager {
 					$data .= '/'.$key.'='.$this->generateUniqueID($value);
 			}
 
-		return md5($data).(_DESKTOP_VERSION ? '_d' : '_m');
+		return md5($data).'_'.$language.'_'.(_DESKTOP_VERSION ? '_d' : '_m');
 	}
 
 	/**
