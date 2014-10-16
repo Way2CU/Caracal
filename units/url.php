@@ -177,6 +177,9 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 		} else {
 			// rare cases where we only need home page
 			$result = '/';
+
+			if ($include_language)
+				$result .= $language_argument;
 		}
 
 		// add relative path and domain
