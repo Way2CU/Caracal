@@ -133,7 +133,15 @@ class language_menu extends Module {
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 
 		// prepare params
-		$params = $_REQUEST;
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'POST':
+				$params = $_POST;
+				break;
+
+			case 'GET':
+			default:
+				$params = $_GET;
+		}
 		$link_params = array();
 
 		foreach($params as $key => $value)
