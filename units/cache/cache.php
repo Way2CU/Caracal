@@ -79,8 +79,7 @@ class Manager {
 
 		// prepare for caching
 		$this->uid = $this->generateUniqueID();
-		$this->cache_file = $cache_path.$this->uid.(_DESKTOP_VERSION ? '' : '_m');
-		$this->is_cached = file_exists($this->cache_file) && $this->should_cache;
+		$this->is_cached = file_exists($cache_path.$this->uid) && $this->should_cache;
 	}
 
 	/**
@@ -103,7 +102,7 @@ class Manager {
 					$data .= '/'.$key.'='.$this->generateUniqueID($value);
 			}
 
-		return md5($data);
+		return md5($data).(_DESKTOP_VERSION ? '_d' : '_m');
 	}
 
 	/**
@@ -154,12 +153,12 @@ class Manager {
 
 			// get all dirty areas
 			preg_match_all($pattern, $data, $matches);
-	
+
 			if (count($matches) >= 2 && count($matches[1]) > 0)
 				foreach ($matches[1] as $match) {
 					// give template to handler
 					$template->setXML('<document>'.$match.'</document>');
-					
+
 					// start output buffer and get data
 					ob_start();
 					$template->parse();
@@ -195,7 +194,7 @@ class Manager {
 	}
 
 	/**
-	 * Start capturing data globally again after 
+	 * Start capturing data globally again after
 	 * appending data to output buffer.
 	 */
 	public function endDirtyArea() {
@@ -216,7 +215,7 @@ class Manager {
 	/**
 	 * Set cached data for dirty area. This function can
 	 * only be called after calling startDirtyArea.
-	 * 
+	 *
 	 * @param string $data
 	 */
 	public function setCacheForDirtyArea($data) {
@@ -243,9 +242,9 @@ class Manager {
 
 		// get cache from handler
 		$data = ob_get_contents();
-		
+
 		// update local storage variables
-		$this->cache .= $data; 
+		$this->cache .= $data;
 		$this->output .= $data;
 
 		// end capture and clear buffer
@@ -260,7 +259,7 @@ class Manager {
 
 	/**
 	 * Clear all cache
-	 * 
+	 *
 	 * Please note that cached pages are automatically
 	 * invalidated after specified period of time. Manual
 	 * clearing of complete cache is recommended to be used
