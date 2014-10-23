@@ -79,29 +79,29 @@ class head_tag extends Module {
 	public function addTag($name, $params) {
 		$name = strtolower($name);
 		$data = array($name, $params);
-		
+
 		switch ($name) {
 			case 'meta':
 				$this->meta_tags[] = $data;
 				break;
-				
+
 			case 'link':
 				$this->link_tags[] = $data;
 				break;
-				
+
 			case 'script':
 				$this->script_tags[] = $data;
 				break;
-			
+
 			default:
 				$this->tags[] = $data;
 				break;
 		}
 	}
-	
+
 	/**
 	 * Add Google Analytics script to the page
-	 *  
+	 *
 	 * @param string $code
 	 * @param string $domain
 	 * @param string $version
@@ -129,7 +129,7 @@ class head_tag extends Module {
 
 	/**
 	 * Show specified tag.
-	 * 
+	 *
 	 * @param object $tag
 	 */
 	private function printTag($tag, $body=null) {
@@ -179,7 +179,7 @@ class head_tag extends Module {
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
-		
+
 		if (class_exists('CodeOptimizer') && $optimize_code && !in_array($section, array('backend', 'backend_module'))) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::getInstance();
@@ -220,32 +220,32 @@ class head_tag extends Module {
 		if (!is_null($this->analytics)) {
 			$template = new TemplateHandler("google_analytics_{$this->analytics_version}.xml", $this->path.'templates/');
 			$template->setMappedModule($this->name);
-	
+
 			$params = array(
 						'code'		=> $this->analytics,
 						'domain'	=> $this->analytics_domain
 					);
-	
+
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse();		
+			$template->parse();
 		}
 
 		// print google site optimizer code if needed
 		if (!is_null($this->optimizer)) {
 			$template = new TemplateHandler('google_site_optimizer.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
-	
+
 			$params = array(
 							'code'	=> $this->optimizer,
 							'key'	=> $this->optimizer_key,
 							'page'	=> $this->optimizer_page,
 							'show_control'	=> $this->optimizer_show_control
 						);
-	
+
 			$template->restoreXML();
 			$template->setLocalParams($params);
-			$template->parse();		
+			$template->parse();
 		}
 	}
 
