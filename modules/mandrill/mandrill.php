@@ -23,7 +23,7 @@ class mandrill extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register mailer

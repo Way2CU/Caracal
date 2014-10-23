@@ -21,7 +21,7 @@ class activity_tracker extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		if ($section == 'backend' && class_exists('backend')) {
@@ -118,7 +118,7 @@ class activity_tracker extends Module {
 				case 'save':
 					$this->saveActivity();
 					break;
-				
+
 				case 'delete':
 					$this->deleteActivity();
 					break;
@@ -266,7 +266,7 @@ class activity_tracker extends Module {
 				'timeout'			=> fix_id($_REQUEST['timeout']),
 				'ignore_address'	=> $ignore_address
 			);
-	
+
 		// update or insert new data
 		if (is_null($id)) {
 			$window = 'activities_new';
@@ -380,7 +380,7 @@ class activity_tracker extends Module {
 
 		// get activity
 		$activity = $manager->getSingleItem(
-								$manager->getFieldNames(), 
+								$manager->getFieldNames(),
 								array(
 									'activity'	=> $activity_name,
 									'function'	=> $function_name,
@@ -414,7 +414,7 @@ class activity_tracker extends Module {
 					);
 
 			$result = true;
-			
+
 		} else {
 			// create new log
 			$data = array(
@@ -432,13 +432,13 @@ class activity_tracker extends Module {
 
 		if (_AJAX_REQUEST)
 			print json_encode($result);
-		
+
 		return $result;
 	}
 
 	/**
 	 * Check if specified activity is alive.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isAlive() {
@@ -463,7 +463,7 @@ class activity_tracker extends Module {
 
 		// get activity
 		$activity = $manager->getSingleItem(
-								$manager->getFieldNames(), 
+								$manager->getFieldNames(),
 								array(
 									'activity'	=> $activity_name,
 									'function'	=> $function_name,
@@ -489,7 +489,7 @@ class activity_tracker extends Module {
 		// get logs from database
 		$logs = $log_manager->getItems(array('id'), $conditions);
 		$result = count($logs) > 0;
-	
+
 		// show result
 		if (_AJAX_REQUEST)
 			print json_encode($result);

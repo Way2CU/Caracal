@@ -6,10 +6,10 @@
 			<legend><cms:text constant="legend_account" module="callbox"/></legend>
 			<label>
 				<span><cms:text constant="label_account_id" module="callbox"/></span>
-				<input 
-					type="text" 
-					name="account_id" 
-					value="$settings['account_id']" 
+				<input
+					type="text"
+					name="account_id"
+					value="$settings['account_id']"
 					cms:eval="value"
 					style="width: 270px;"
 					class="code"
@@ -18,17 +18,17 @@
 			<label class="checkbox">
 				<span><cms:text constant="label_include_code" module="callbox"/></span>
 				<cms:if condition="$settings['include_code']">
-					<input 
-						type="checkbox" 
-						name="include_code" 
+					<input
+						type="checkbox"
+						name="include_code"
 						cms:eval="value"
 						checked="checked"
 					/>
 				</cms:if>
 				<cms:if condition="!$settings['include_code']">
-					<input 
-						type="checkbox" 
-						name="include_code" 
+					<input
+						type="checkbox"
+						name="include_code"
 						cms:eval="value"
 					/>
 				</cms:if>
@@ -39,10 +39,10 @@
 			<legend><cms:text constant="legend_api" module="callbox"/></legend>
 			<label>
 				<span><cms:text constant="label_account_key" module="callbox"/></span>
-				<input 
-					type="text" 
-					name="account_key" 
-					value="$settings['account_key']" 
+				<input
+					type="text"
+					name="account_key"
+					value="$settings['account_key']"
 					cms:eval="value"
 					style="width: 350px;"
 					class="code"
@@ -50,10 +50,10 @@
 			</label>
 			<label>
 				<span><cms:text constant="label_account_secret" module="callbox"/></span>
-				<input 
-					type="text" 
-					name="account_secret" 
-					value="$settings['account_secret']" 
+				<input
+					type="text"
+					name="account_secret"
+					value="$settings['account_secret']"
 					cms:eval="value"
 					style="width: 350px;"
 					class="code"

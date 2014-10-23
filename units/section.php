@@ -66,7 +66,7 @@ class SectionHandler {
 		if (!is_null($xml_languages) && count($xml_languages) > 0)
 			foreach ($xml_languages as $xml_language)
 				if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == 'all') {
-					if (array_key_exists('file', $xml_language->tagAttrs)) 
+					if (array_key_exists('file', $xml_language->tagAttrs))
 						$result = $xml_language->tagAttrs['file']; else
 						$xml_actions = $xml_language->action;
 

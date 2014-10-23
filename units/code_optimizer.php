@@ -244,7 +244,7 @@ class CodeOptimizer {
 
 		// compile styles if needed
 		$style_cache = $cache_path.$this->getCachedName($this->style_list).'.css';
-		if ($this->needsRecompile($style_cache, $this->style_list)) 
+		if ($this->needsRecompile($style_cache, $this->style_list))
 			$this->recompileStyles($style_cache, $this->style_list);
 
 		// compile scripts

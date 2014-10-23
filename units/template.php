@@ -612,7 +612,7 @@ class TemplateHandler {
 
 	/**
 	 * Reconstruct template for cache
-	 * 
+	 *
 	 * @param object $tag
 	 * @return string
 	 */

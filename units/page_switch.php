@@ -65,7 +65,7 @@ class PageSwitch {
 
 	/**
 	 * Set maximum number of pages to be displayed
-	 * 
+	 *
 	 * @param integer $number
 	 */
 	public function setMaxPages($number) {
@@ -102,7 +102,7 @@ class PageSwitch {
 		if ($total_pages == 0)
 			$total_pages = 1;
 
-		// determine start and ending, we never want 
+		// determine start and ending, we never want
 		// to show more than 10 pages at a time
 		if ($total_pages > $this->max_pages) {
 			if ($this->current_page - $this->max_pages < 1) {
@@ -117,10 +117,10 @@ class PageSwitch {
 				// we are in the middle
 				$start = $this->current_page - floor($this->max_pages / 2);
 			}
-			
+
 			$end = $start + $this->max_pages;
 
-		} else { 
+		} else {
 			// we only have a handful of pages, no need for calculation
 			$start = 1;
 			$end = $total_pages;
@@ -129,7 +129,7 @@ class PageSwitch {
 		// parse template
 		for ($page = $start; $page <= $end; $page++) {
 			$url_params = array_merge(
-							$this->url_params, 
+							$this->url_params,
 							array($this->param_name => $page)
 						);
 
@@ -182,7 +182,7 @@ class PageSwitch {
 
 		// create links for pages
 		if ($this->current_page > 1) {
-			$link_first = url_MakeFromArray($params_first); 
+			$link_first = url_MakeFromArray($params_first);
 			$link_previous = url_MakeFromArray($params_previous);
 
 		} else {
@@ -191,7 +191,7 @@ class PageSwitch {
 		}
 
 		if ($this->current_page < $total_pages) {
-			$link_last = url_MakeFromArray($params_last); 
+			$link_last = url_MakeFromArray($params_last);
 			$link_next = url_MakeFromArray($params_next);
 
 		} else {
@@ -256,7 +256,7 @@ class PageSwitch {
 		if (array_key_exists($this->param_name, $this->url_params))
 			unset($this->url_params[$this->param_name]);
 
-		if (array_key_exists('_rewrite', $this->url_params)) 
+		if (array_key_exists('_rewrite', $this->url_params))
 			unset($this->url_params['_rewrite']);
 
 		// go through the list of invalid params and remove them

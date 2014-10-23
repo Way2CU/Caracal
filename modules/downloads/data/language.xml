@@ -31,7 +31,7 @@
 
 		<constant name="toolbar_add_download">Add download link</constant>
 	</language>
-	
+
 	<language short="he">
 		<constant name="menu_downloads">הורדות</constant>
 		<constant name="menu_upload_file">העלה קובץ</constant>

@@ -229,7 +229,7 @@ class ShopDeliveryMethodsHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -263,7 +263,7 @@ class ShopDeliveryMethodsHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -418,7 +418,7 @@ class ShopDeliveryMethodsHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -443,7 +443,7 @@ class ShopDeliveryMethodsHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -485,7 +485,7 @@ class ShopDeliveryMethodsHandler {
 
 			// get item relations to delivery methods
 			$relations = $relations_manager->getItems(
-								$relations_manager->getFieldNames(), 
+								$relations_manager->getFieldNames(),
 								array('item' => $id_list)
 							);
 
@@ -493,7 +493,7 @@ class ShopDeliveryMethodsHandler {
 			$price_count = array();
 
 			if (count($relations) > 0)
-				foreach ($relations as $relation) { 
+				foreach ($relations as $relation) {
 					$price_list[] = $relation->price;
 
 					if (!array_key_exists($relation->price, $price_count))
@@ -524,11 +524,11 @@ class ShopDeliveryMethodsHandler {
 			$valid_methods = array();
 
 			if (count($method_count) > 0)
-				foreach ($method_count as $id => $count) 
+				foreach ($method_count as $id => $count)
 					if ($count == $border_count)
 						$valid_methods[] = $id;
 
-			if (count($valid_methods) > 0) 
+			if (count($valid_methods) > 0)
 				$conditions['id'] = $valid_methods; else
 				$conditions ['id'] = -1;
 
@@ -551,7 +551,7 @@ class ShopDeliveryMethodsHandler {
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		if (count($items) > 0) 
+		if (count($items) > 0)
 			foreach($items as $item) {
 				$params = array(
 					'id'					=> $item->id,
@@ -633,7 +633,7 @@ class ShopDeliveryMethodsHandler {
 		$relations = array();
 
 		// prepare filtering conditions
-		if (isset($tag_params['method'])) 
+		if (isset($tag_params['method']))
 			$conditions['method'] = fix_id($tag_params['method']);
 
 		if (isset($_REQUEST['method']))

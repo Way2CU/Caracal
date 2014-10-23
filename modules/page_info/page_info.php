@@ -77,7 +77,7 @@ class page_info extends Module {
 	public function transferControl($params, $children) {
 		// global control actions
 		if (isset($params['action']))
-			switch ($params['action']) { 
+			switch ($params['action']) {
 				case 'set_omit_elements':
 					$this->omit_elements = fix_chars(explode(',', $params['elements']));
 					break;
@@ -443,7 +443,7 @@ class page_info extends Module {
 		$versions = array();
 		$files = scandir(_BASEPATH.'/modules/head_tag/templates/');
 
-		foreach ($files as $file) 
+		foreach ($files as $file)
 			if (substr($file, 0, 16) == 'google_analytics')
 				$versions[] = substr(basename($file, '.xml'), 17);
 

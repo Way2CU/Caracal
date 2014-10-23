@@ -96,7 +96,7 @@ $language_handler = MainLanguageHandler::getInstance();
 
 if (!isset($_REQUEST['language'])) {
 	// no language change was specified, check session
-	if (!isset($_SESSION['language']) || empty($_SESSION['language'])) 
+	if (!isset($_SESSION['language']) || empty($_SESSION['language']))
 		$_SESSION['language'] = $language_handler->getDefaultLanguage();
 
 } else {

@@ -846,7 +846,7 @@ class Backend_UserManager {
 		if (is_object($user)) {
 			$salt = hash('sha256', UserManager::SALT.strval(time()));
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
-			
+
 			// generate hash from old password
 			if (!empty($user->salt))
 				$old_password_ok = hash_hmac('sha256', $old_password, $user->salt) == $user->password || empty($user->password); else
@@ -926,7 +926,7 @@ class Backend_UserManager {
 			$template->setLocalParams($params);
 			$template->parse();
 		}
-		
+
 	}
 
 	/**

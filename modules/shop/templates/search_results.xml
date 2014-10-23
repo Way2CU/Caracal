@@ -49,11 +49,11 @@
 				if (checkbox.is(':checked')) {
 					var new_item = $(this).clone();
 					var name = checkbox.attr('name');
-					
+
 					new_item
 						.appendTo(target)
 						.append(
-							$('<input>', 
+							$('<input>',
 							{
 								type: 'hidden',
 								name: name,

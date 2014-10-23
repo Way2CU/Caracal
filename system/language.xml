@@ -161,7 +161,7 @@
 		<constant name="format_time">H:i:s</constant>
 		<constant name="format_time_short">H:i:s</constant>
 	</language>
-	
+
 	<language name="االعربيه" short="ar" rtl="yes">
 		<constant name="backend_copyright"><![CDATA[Copyright &copy; by <a href="http://way2cu.com">Way2CU</a>. Icons by <a href="http://commons.wikimedia.org/wiki/User:Paintpot">Paintpot</a>. All rights reserved!"]]></constant>
 

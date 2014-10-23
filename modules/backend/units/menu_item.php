@@ -68,20 +68,20 @@ class backend_MenuItem {
 			$backend->registerNamedItem($name, $item);
 		}
 	}
-	
+
 	/**
 	 * Insert item to child list on specified location
-	 * 
+	 *
 	 * @param resource $item
 	 * @param integer $position
 	 */
 	function insertChild($item, $position=0) {
 		array_splice($this->children, $position, 0, array($item));
 	}
-	
+
 	/**
 	 * Add separator to child list
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	function addSeparator($level) {
@@ -93,7 +93,7 @@ class backend_MenuItem {
 	 */
 	function drawItem() {
 		if (!$this->isDrawable()) return;
-		
+
 		$icon = '<span style="background-image: url('.$this->icon.')"></span>';
 
 		if (!empty($this->action))
@@ -132,21 +132,21 @@ class backend_MenuSeparator{
 	 * @var integer
 	 */
 	var $level;
-	
+
 	function __construct($level) {
 		$this->level = $level;
 	}
-	
+
 	/**
 	 * Draw separator
-	 * 
+	 *
 	 * @param integer $level
 	 */
 	function drawItem() {
 		if (!$this->isDrawable()) return;
 		echo '<li class="separator"></li>';
 	}
-	
+
 	/**
 	 * Check if separator is available for current level
 	 *
@@ -154,7 +154,7 @@ class backend_MenuSeparator{
 	 */
 	function isDrawable() {
 		return $_SESSION['level'] >= $this->level;
-	}	
+	}
 }
 
 /**
@@ -180,13 +180,10 @@ function backend_UrlMake($module, $action, $sub_action=null) {
 				array('module', $module)
 			);
 	}
-	
+
 	return $result;
 }
 
-
-/****
- ****/
 
 function window_Open($id, $width, $title, $can_close, $can_minimize, $url) {
 	$can_close = $can_close ? 'true' : 'false';

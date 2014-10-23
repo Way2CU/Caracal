@@ -34,7 +34,7 @@ final class Events {
 		}
 
 		if (!isset(self::$event_names[$module][$event_name])) {
-			self::$event_names[$module][$event_name] = $required_param_count; 
+			self::$event_names[$module][$event_name] = $required_param_count;
 			self::$callbacks[$module][$event_name] = array();
 
 		} else {

@@ -48,7 +48,7 @@ class ShopTransactionsHandler {
 				break;
 		}
 	}
-	
+
 	/**
 	 * Show list of transactions
 	 */
@@ -72,14 +72,14 @@ class ShopTransactionsHandler {
 		$manager = ShopTransactionsManager::getInstance();
 		$buyer_manager = ShopBuyersManager::getInstance();
 		$address_manager = ShopDeliveryAddressManager::getInstance();
-		
+
 		$id = fix_id($_REQUEST['id']);
 		$transaction = $manager->getSingleItem(
-								$manager->getFieldNames(), 
+								$manager->getFieldNames(),
 								array('id' => $id)
 							);
 		$buyer = $buyer_manager->getSingleItem(
-								$buyer_manager->getFieldNames(), 
+								$buyer_manager->getFieldNames(),
 								array('id' => $transaction->buyer)
 							);
 		$address = $address_manager->getSingleItem(
@@ -91,7 +91,7 @@ class ShopTransactionsHandler {
 		$full_address .= "{$address->zip} {$address->city}\n";
 		if (empty($address->state))
 			$full_address .= $address->country; else
-			$full_address .= "{$address->state}, {$address->country}"; 
+			$full_address .= "{$address->state}, {$address->country}";
 
 		$params = array(
 				'id'				=> $transaction->id,
@@ -224,7 +224,7 @@ class ShopTransactionsHandler {
 		$items = array();
 		$raw_items = $manager->getItems($manager->getFieldNames(), array('transaction' => $id));
 
-		if (count($raw_items) > 0) 
+		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
 				$items[$item->item] = array(
 							'id'			=> $item->id,
@@ -327,7 +327,7 @@ class ShopTransactionsHandler {
 		if ($_SESSION['logged']) {
 			// get transaction
 			$transaction = $manager->getSingleItem(array('id'), array('id' => $id));
-			
+
 			// update status
 			if (is_object($transaction)) {
 				$manager->updateData(array('status' => $status), array('id' => $id));

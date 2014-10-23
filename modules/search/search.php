@@ -15,7 +15,7 @@ class search extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// load module style and scripts
@@ -112,7 +112,7 @@ class search extends Module {
 	 *			),
 	 *			...
 	 * 		);
-	 * 
+	 *
 	 * Resulting array doesn't need to be sorted.
 	 *
 	 * @param array $tag_params
@@ -125,7 +125,7 @@ class search extends Module {
 		$limit = 30;
 
 		// get query
-		if (isset($tag_params['query'])) 
+		if (isset($tag_params['query']))
 			$query_string = mb_strtolower(fix_chars($tag_params['query']));
 
 		if (isset($_REQUEST['query']) && is_null($query_string))
@@ -135,7 +135,7 @@ class search extends Module {
 			return;
 
 		// get threshold
-		if (isset($tag_params['threshold'])) 
+		if (isset($tag_params['threshold']))
 			$threshold = fix_chars($tag_params['threshold']);
 
 		if (isset($_REQUEST['threshold']) && is_null($threshold))
@@ -147,7 +147,7 @@ class search extends Module {
 
 		// get list of modules to search on
 		$module_list = null;
-	
+
 		if (isset($tag_params['module_list']))
 			$module_list = fix_chars(split(',', $tag_params['module_list']));
 
@@ -171,9 +171,9 @@ class search extends Module {
 
 		// sort results
 		usort($results, array($this, 'sortResults'));
-		
+
 		// apply limit
-		if ($limit > 0) 
+		if ($limit > 0)
 			$results = array_slice($results, 0, $limit);
 
 		// load template

@@ -255,7 +255,7 @@ div#shopping_cart div.container div.content div.item a.delete {
 	background-image: url(../images/item_delete.png);
 	background-position: center center;
 	background-repeat: no-repeat;
-	
+
 	text-decoration: none;
 	opacity: 0.7;
 }
@@ -265,7 +265,7 @@ div#shopping_cart div.container div.content div.item a.delete:hover {
 	opacity: 1;
 }
 
-div#shopping_cart div.container div.content div.item a.edit {	
+div#shopping_cart div.container div.content div.item a.edit {
 	right: 24px;
 	background-image: url(../images/item_edit.png);
 }
@@ -300,7 +300,7 @@ div#shopping_cart div.container div.summary div.total {
 	display: block;
 	margin-top: 5px;
 	padding-top: 3px;
-	
+
 	border-top: 1px solid white;
 	border-top: 1px solid rgba(255, 255, 255, 0.3);
 }

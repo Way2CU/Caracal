@@ -126,14 +126,14 @@ function Beacon(activity, function_name, license) {
 		if (callback !== undefined) {
 			params.success = callback;
 			params.async = true;
-		} 
+		}
 
 		// send notification
 		$.ajax(params);
 
 		return result;
 	};
-	
+
 	/**
 	 * Start the beacon.
 	 */

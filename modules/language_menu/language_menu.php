@@ -243,7 +243,7 @@ class language_menu extends Module {
 
 		// get constants
 		if (count($constants) > 0)
-			foreach ($constants as $constant) 
+			foreach ($constants as $constant)
 				$result['text'][$constant] = $language_handler->getText($constant);
 
 		print json_encode($result);

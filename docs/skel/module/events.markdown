@@ -7,7 +7,7 @@ Summary:
 
 ## 1. Event name: `event-name-in-module`
 
-Short description of event and when it happens. 
+Short description of event and when it happens.
 
 Parameters passed to callback function:
 

@@ -17,12 +17,12 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 		global $section;
 
 		parent::__construct($parent);
-		
+
 		// register payment method
 		$this->name = 'google_checkout';
 		$this->registerPaymentMethod();
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
@@ -32,7 +32,7 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 
 		return self::$_instance;
 	}
-	
+
 	/**
 	 * Whether this payment method is able to provide user information
 	 * @return boolean
@@ -52,7 +52,7 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
-	 * 
+	 *
 	 * @param array $data
 	 * @param array $items
 	 * @param string $return_url

@@ -545,7 +545,7 @@ class links extends Module {
 		$params = array(
 					'id'			=> $item->id,
 					'name'			=> $item->name,
-					'text_id'		=> $item->text_id, 
+					'text_id'		=> $item->text_id,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('groups_change')
 				);

@@ -17,7 +17,7 @@ class fedex extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register backend
@@ -25,7 +25,7 @@ class fedex extends Module {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_delivery_methods');
 
-			if (!is_null($method_menu)) 
+			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_fedex'),
 									url_GetFromFilePath($this->path.'images/icon.png'),

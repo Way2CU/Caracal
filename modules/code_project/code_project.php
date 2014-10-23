@@ -19,9 +19,9 @@ class code_project extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
-		
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -49,17 +49,17 @@ class code_project extends Module {
 			$backend->addMenu($this->name, $codes_menu);
 		}
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
-	
+
 	/**
 	 * Transfers control to module functions
 	 *
@@ -303,7 +303,7 @@ class code_project extends Module {
 	 */
 	private function redirect() {
 		define('_OMIT_STATS', 1);
-		
+
 		$code = fix_chars($_REQUEST['code']);
 		$manager = CodeManager::getInstance();
 		$url = $manager->getItemValue("url", array("code" => $code));
@@ -390,7 +390,7 @@ class code_project extends Module {
 
 class CodeManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -401,15 +401,15 @@ class CodeManager extends ItemManager {
 		$this->addProperty('code', 'varchar');
 		$this->addProperty('url', 'varchar');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 }
 

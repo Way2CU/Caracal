@@ -324,9 +324,9 @@ class SessionManager {
 		if (is_object($user) && $captcha_ok && $verified) {
 			// remove login retries
 			$retry_manager->clearAddress();
-			
+
 			// change session type
-			if ($lasting_session) 
+			if ($lasting_session)
 				Session::change_type(Session::TYPE_EXTENDED);
 
 			// set session variables

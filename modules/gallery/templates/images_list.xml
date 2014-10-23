@@ -6,7 +6,7 @@
 		<cms:var name="$params['link_new']"/>
 		<cms:var name="$params['link_new_bulk']"/>
 		<cms:var name="$params['link_groups']"/>
-		
+
 		<div class="floated">
 			<cms:text constant="group" module="gallery"/>
 			<select onchange="javascript: gallery_update_image_list();" id="gallery_images_group">
@@ -31,7 +31,7 @@
 		</div>
 		<div class="list_content thumbnails" style="height: 400px">
 			<!-- List Content -->
-			<cms:image_list 
+			<cms:image_list
 				show_invisible="1"
 				group_id="isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0"
 				cms:eval="group_id"

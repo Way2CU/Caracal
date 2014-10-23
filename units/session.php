@@ -25,7 +25,7 @@ class Session {
 	 * characters are allowed.
 	 */
 	public static function get_path() {
-		if (!isset(self::$path)) 
+		if (!isset(self::$path))
 			self::$path = urlencode(dirname($_SERVER['PHP_SELF']));
 
 		return self::$path;
@@ -59,7 +59,7 @@ class Session {
 			case Session::TYPE_BROWSER:
 				session_set_cookie_params(0, Session::get_path());
 				break;
-			
+
 			case Session::TYPE_NORMAL:
 			default:
 				$normal_duration = Session::DEFAULT_DURATION * 60;
@@ -98,11 +98,11 @@ class Session {
 
 				$timestamp = time() + ($duration * 60);
 				break;
-			
+
 			case Session::TYPE_BROWSER:
 				$timestamp = 0;
 				break;
-			
+
 			case Session::TYPE_NORMAL:
 			default:
 				$timestamp = time() + (Session::DEFAULT_DURATION * 60);

@@ -68,8 +68,8 @@ class ModuleHandler {
 				$xml = new XMLParser(@file_get_contents($file), $file);
 				$xml->Parse();
 
-				foreach ($xml->document->tagChildren as $xml_tag) 
-					if ($xml_tag->tagName == 'module') 
+				foreach ($xml->document->tagChildren as $xml_tag)
+					if ($xml_tag->tagName == 'module')
 						$normal_list[] = $xml_tag->tagAttrs['name'];
 			}
 		}
@@ -146,7 +146,7 @@ class ModuleHandler {
 	 */
 	private function _checkDependencies($name) {
 		global $module_path;
-	
+
 		$result = true;
 		$required = array();
 		$optional = array();
@@ -184,13 +184,13 @@ class ModuleHandler {
 
 			}
 
-			foreach ($required as $required_module) 
+			foreach ($required as $required_module)
 				if (!class_exists($required_module)) {
 					$result = false;
 					trigger_error("Module '{$name}' requires '{$required_module}' but it's not available!");
 					break;
 				}
-			
+
 		}
 
 		return $result;

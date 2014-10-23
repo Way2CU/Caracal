@@ -109,7 +109,7 @@ footer:before {
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	
+
 	background-image: url(../images/logo_text_white.svg);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -292,7 +292,7 @@ ul#navigation li a span {
 	display: block;
 	width: 24px;
 	height: 24px;
-	
+
 	position: absolute;
 	left: 10px;
 	top: 50%;
@@ -508,11 +508,11 @@ nav#language:hover a.active {
 	-moz-user-drag: none;
 	-webkit-user-drag: none;
 	user-drag: none;
-	
+
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
-	
+
 	cursor: default !important;
 }
 

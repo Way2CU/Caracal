@@ -203,7 +203,7 @@ final class PayPal_Helper {
 	/**
 	 * Method used during express checkout to redirect user to
 	 * PayPal web interface with specified command and token.
-	 * 
+	 *
 	 * @param string $command
 	 * @param string $token
 	 */

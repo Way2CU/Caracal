@@ -46,7 +46,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 					FedEx_DeliveryMethod::GLOBAL_SHIPPING_SERVICE	=> array(1, 0, 0),
 					FedEx_DeliveryMethod::PACKAGE_MOVEMENT_SERVICE	=> array(5, 0, 0),
 				);
-		
+
 		// form path where protocol definitions are stored
 		$wsdl_path = $this->parent->path.'wsdl/';
 		$this->wsdl = array (
@@ -125,7 +125,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 * @param string $transaction_id
 	 */
 	private function _populateTransactionDetails(&$request, $transaction_id) {
-		if (empty($transaction_id)) 
+		if (empty($transaction_id))
 			throw new Exception('Transaction id can not be empty!');
 
 		$request['TransactionDetail'] = array('CustomerTransactionId' => $transaction_id);
@@ -162,8 +162,8 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	/**
 	 * Get status of specified delivery. If available multiple statuses
 	 * should be provided last item being the current status of delivery.
-	 *                                       
-	 * @param string $delivery_id            
+	 *
+	 * @param string $delivery_id
 	 * @return array
 	 */
 	public function getDeliveryStatus($delivery_id) {

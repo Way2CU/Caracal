@@ -2,7 +2,7 @@
 
 /**
  * Shop Module
- * 
+ *
  * Complete online shopping solution integration. This module provides
  * only the basic framework for online shopps. Payment and delivery methods
  * need to be added additionally.
@@ -242,7 +242,7 @@ class shop extends Module {
 			$shop_menu->addChild('shop_delivery_methods', $delivery_menu);
 
 			$shop_menu->addSeparator(5);
-						
+
 			$shop_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_special_offers'),
 								url_GetFromFilePath($this->path.'images/special_offers.svg'),
@@ -332,7 +332,7 @@ class shop extends Module {
 											backend_UrlMake($this->name, 'settings')
 										),
 								$level=5
-							));	
+							));
 
 			$backend->addMenu($this->name, $shop_menu);
 		}
@@ -356,7 +356,7 @@ class shop extends Module {
 
 	/**
 	 * Get search results when asked by search module
-	 * 
+	 *
 	 * @param array $query
 	 * @param integer $threshold
 	 * @return array
@@ -391,9 +391,9 @@ class shop extends Module {
 					$category = -1;
 			}
 
-			// get list of item ids 
+			// get list of item ids
 			$membership_list = $membership_manager->getItems(
-											array('item'), 
+											array('item'),
 											array('category' => $category)
 										);
 
@@ -420,7 +420,7 @@ class shop extends Module {
 				$title = mb_strtolower($item->name[$language]);
 				$score = 0;
 
-				foreach ($query_words as $query_word) 
+				foreach ($query_words as $query_word)
 					if (is_numeric(mb_strpos($title, $query_word)))
 						$score += 10;
 
@@ -734,7 +734,7 @@ class shop extends Module {
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop item sizes table
 		$sql = "
 			CREATE TABLE `shop_item_sizes` (
@@ -743,16 +743,16 @@ class shop extends Module {
 				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop item size values table
 		$sql = "
 			CREATE TABLE `shop_item_size_values` (
 				`id` INT NOT NULL AUTO_INCREMENT,
 				`definition` INT NOT NULL,";
-				
+
 		foreach($list as $language)
 			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
-			
+
 		$sql .= "PRIMARY KEY ( `id` ),
 				KEY `definition` (`definition`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -778,7 +778,7 @@ class shop extends Module {
 				KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop buyers table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyers` (
 				  `id` INT NOT NULL AUTO_INCREMENT,
@@ -792,7 +792,7 @@ class shop extends Module {
 				  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop buyer addresses table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_delivery_address` (
 				  `id` INT NOT NULL AUTO_INCREMENT,
@@ -809,7 +809,7 @@ class shop extends Module {
 				  KEY `buyer` (`buyer`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop transactions table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
 				  `id` INT NOT NULL AUTO_INCREMENT,
@@ -833,9 +833,9 @@ class shop extends Module {
 				  KEY `buyer` (`buyer`),
 				  KEY `system_user` (`system_user`),
 				  KEY `address` (`address`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";		
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop transaction items table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_items` (
 				  `id` INT NOT NULL AUTO_INCREMENT,
@@ -873,13 +873,13 @@ class shop extends Module {
 				  `id` INT NOT NULL AUTO_INCREMENT,
 				  `plan` INT NOT NULL,
 				  `amount` DECIMAL(8,2) NOT NULL,
-				  `status` INT NOT NULL, 
+				  `status` INT NOT NULL,
 				  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				  PRIMARY KEY (`id`),
 				  KEY `index_by_plan` (`plan`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
-		
+
 		// create shop stock table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_warehouse` (
 				  `id` int NOT NULL AUTO_INCREMENT,
@@ -943,7 +943,7 @@ class shop extends Module {
 					'shop_related_items',
 					'shop_manufacturers'
 				);
-		
+
 		$db->drop_tables($tables);
 	}
 
@@ -1113,7 +1113,7 @@ class shop extends Module {
 	/**
 	 * Set content of a shopping cart from template
 	 *
-	 * @param 
+	 * @param
 	 */
 	private function setCartFromTemplate($params, $children) {
 		if (count($children) > 0) {
@@ -1218,7 +1218,7 @@ class shop extends Module {
 		$recurring_manager = ShopRecurringPaymentsManager::getInstance();
 
 		// try to get currently logged user
-		if (is_null($user_id) && $_SESSION['logged']) 
+		if (is_null($user_id) && $_SESSION['logged'])
 			$user_id = $_SESSION['uid'];
 
 		// we need to have a user
@@ -1284,7 +1284,7 @@ class shop extends Module {
 							array('id' => $transaction->id)
 						);
 			$result = true;
-		
+
 			// trigger event
 			switch ($status) {
 				case TransactionStatus::COMPLETED:
@@ -1562,7 +1562,7 @@ class shop extends Module {
 									array(
 										'email'		=> $email,
 										'password'	=> hash_hmac(
-															'sha256', 
+															'sha256',
 															$password,
 															shop::BUYER_SECRET
 														),
@@ -1685,7 +1685,7 @@ class shop extends Module {
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
 		$values = $values_manager->getItems($values_manager->getFieldNames(), array());
 
-		if (count($items) > 0) 
+		if (count($items) > 0)
 			foreach ($items as $item) {
 				// get item image url
 				$thumbnail_url = !is_null($gallery) ? $gallery->getGroupThumbnailURL($item->gallery) : '';
@@ -1710,15 +1710,15 @@ class shop extends Module {
 								);
 					}
 			}
-		
-		if (count($values) > 0) 
+
+		if (count($values) > 0)
 			foreach ($values as $value) {
 				$result['size_values'][$value->id] = array(
 											'definition'	=> $value->definition,
 											'value'			=> $value->value
 										);
 			}
-			
+
 		print json_encode($result);
 	}
 
@@ -1774,7 +1774,7 @@ class shop extends Module {
 			$thumbnail_url = null;
 			if (class_exists('gallery')) {
 				$gallery = gallery::getInstance();
-				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
 			}
 
 			// prepare result
@@ -1850,7 +1850,7 @@ class shop extends Module {
 		$result = array();
 
 		// prepare data for printing
-		foreach ($this->payment_methods as $payment_method)	
+		foreach ($this->payment_methods as $payment_method)
 			$result[] = array(
 					'name'	=> $payment_method->get_name(),
 					'title'	=> $payment_method->get_title(),
@@ -1924,7 +1924,7 @@ class shop extends Module {
 				);
 
 			$manager->updateData($data, array('uid' => $uid));
-		}	
+		}
 
 		print json_encode($result);
 	}
@@ -2070,8 +2070,8 @@ class shop extends Module {
 						$tax = $new_item['tax'];
 						$price = $new_item['price'];
 						$weight = $new_item['weight'];
-						
-						$total_money += ($price * (1 + ($tax / 100))) * $data['count']; 
+
+						$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 						$total_weight += $weight * $data['count'];
 					}
 			}
@@ -2080,7 +2080,7 @@ class shop extends Module {
 		// only get delivery method prices if request was made by client-side script
 		if (_AJAX_REQUEST) {
 			// get prefered method
-			if (isset($_SESSION['delivery_method']) && array_key_exists($_SESSION['delivery_method'], $this->delivery_methods)) 
+			if (isset($_SESSION['delivery_method']) && array_key_exists($_SESSION['delivery_method'], $this->delivery_methods))
 				$delivery_method = $this->delivery_methods[$_SESSION['delivery_method']];
 
 			// if there is a delivery method selected, get price estimation for items
@@ -2191,7 +2191,7 @@ class shop extends Module {
 		if (!$payment_method->provides_information()) {
 			$fields = array(
 				'billing_full_name', 'billing_card_type', 'billing_credit_card', 'billing_expire_month',
-				'billing_expire_year', 'billing_cvv' 
+				'billing_expire_year', 'billing_cvv'
 			);
 
 			foreach($fields as $field)
@@ -2320,7 +2320,7 @@ class shop extends Module {
 						$conditions['uid'] = $uid;
 						$data['uid'] = $uid;
 					}
-					
+
 					// include email if specified
 					if (!is_null($email)) {
 						$conditions['email'] = $email;
@@ -2506,7 +2506,7 @@ class shop extends Module {
 		$transaction_plans_manager->deleteData(array('transaction' => $result['id']));
 
 		// store items
-		if (count($summary['items_for_checkout']) > 0) 
+		if (count($summary['items_for_checkout']) > 0)
 			foreach($summary['items_for_checkout'] as $uid => $item) {
 				$transaction_items_manager->insertData(array(
 											'transaction'	=> $result['id'],
@@ -2709,7 +2709,7 @@ class shop extends Module {
 			$fields['user_email'] = $user->email;
 
 			if (is_null($email_address) || empty($email_address)) {
-				$email_address = $user->email; 
+				$email_address = $user->email;
 
 			} else if ($email_address != $user->email) {
 				$email_address = $email_address.','.$user->email;
@@ -2950,7 +2950,7 @@ class shop extends Module {
 			$billing_information = $this->getBillingInformation($payment_method);
 			$billing_required = array(
 				'billing_full_name', 'billing_card_type', 'billing_credit_card', 'billing_expire_month',
-				'billing_expire_year', 'billing_cvv' 
+				'billing_expire_year', 'billing_cvv'
 			);
 			$bad_fields = $this->checkFields($billing_information, $billing_required, $bad_fields);
 
@@ -2997,7 +2997,7 @@ class shop extends Module {
 			// emit signal and return if handled
 			if ($stage == 'set_info') {
 				$result_list = Events::trigger(
-						'shop', 
+						'shop',
 						'before-checkout',
 						$payment_method->get_name(),
 						$return_url,
@@ -3005,7 +3005,7 @@ class shop extends Module {
 					);
 
 				foreach ($result_list as $result)
-					if ($result) { 
+					if ($result) {
 						$this->showCheckoutRedirect();
 						return;
 					}
@@ -3174,7 +3174,7 @@ class shop extends Module {
 	public function tag_CompletedMessage($tag_params, $children) {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		
+
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_completed'),
 					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
@@ -3196,7 +3196,7 @@ class shop extends Module {
 	public function tag_CanceledMessage($tag_params, $children) {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		
+
 		$params = array(
 					'message'		=> $this->getLanguageConstant('message_checkout_canceled'),
 					'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
@@ -3220,7 +3220,7 @@ class shop extends Module {
 		$only_recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
 		if (count($this->payment_methods) > 0)
-			foreach ($this->payment_methods as $name => $module) 
+			foreach ($this->payment_methods as $name => $module)
 				if (($only_recurring && $module->supports_recurring()) || !$only_recurring) {
 					$params = array(
 								'name'					=> $name,

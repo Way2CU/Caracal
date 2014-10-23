@@ -67,7 +67,7 @@ function escape_chars($string) {
 		// remove tags
 		$string = strip_tags($string);
 
-		if ($db != null) 
+		if ($db != null)
 			$string = $db->escape_string($string);
 
 	} else {

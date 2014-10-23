@@ -102,7 +102,7 @@ function database_initialize($create_database) {
 		$data->parse();
 
 		// go over XML file and insert data
-		foreach ($data->document->tagChildren as $item) 
+		foreach ($data->document->tagChildren as $item)
 			switch ($item->tagName) {
 				case 'module':
 					// insert data
@@ -116,7 +116,7 @@ function database_initialize($create_database) {
 					// initialize module
 					$module = $module_handler->loadModule($item->tagAttrs['name']);
 
-					if (!is_null($module)) 
+					if (!is_null($module))
 						$module->onInit();
 
 					break;

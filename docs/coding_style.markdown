@@ -20,7 +20,7 @@ Suggested maximum line length is 120 pixels. If code is getting close to this li
 complex and can be changed to be much simpler.
 
 Long lines, complex flow control statements and variable definitions should be wrapped vertically. When using a
-hanging indent avoid arguments on first line. Closing brace/bracket/parenthesis in this case must be on a separate 
+hanging indent avoid arguments on first line. Closing brace/bracket/parenthesis in this case must be on a separate
 line with one less indent level.
 
 Good:
@@ -55,7 +55,7 @@ Good:
 Bad:
 
 	function long_function_name(
-		$parameter_with_long_name, 
+		$parameter_with_long_name,
 		$another_parameter,
 		$short_one,
 		$something_even_longer,
@@ -87,10 +87,10 @@ Good:
 		}
 	}
 
-Bad: 
+Bad:
 
 	namespace Text;
-	
+
 	abstract class NewClass
 	{
 		abstract public function test();
@@ -147,7 +147,7 @@ Avoid extraneous whitespace in following situations:
 - Immediately before open parenthesis for indexes or argument list of a function call:
 
 	Good:
-	
+
 		$something = $array[1];
 		$new_var = function_call($something);
 
@@ -186,7 +186,7 @@ Good:
 Other Recommendations
 ---------------------
 
-Always surround binary operators with a single space on either side: assignment (=), augmented assignment (+=, -=, 
+Always surround binary operators with a single space on either side: assignment (=), augmented assignment (+=, -=,
 etc.), comparisons (==, <, >, !=, <=, >=, etc.), booleans (&&, ||).
 
 
@@ -359,7 +359,7 @@ Good:
 			$result = 'b';
 			break;
 
-		default: 
+		default:
 			$result = null;
 			break;
 	}
@@ -375,7 +375,7 @@ Bad:
 		case 2:
 			return 'b';
 
-		default: 
+		default:
 			return null;
 	}
 

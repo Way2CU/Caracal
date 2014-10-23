@@ -64,7 +64,7 @@ class ShopManufacturerHandler {
 			case 'delete_commit':
 				$this->deleteManufacturer_Commit();
 				break;
-				
+
 			default:
 				$this->showManufacturers();
 				break;
@@ -166,7 +166,7 @@ class ShopManufacturerHandler {
 				'web_site'	=> escape_chars($_REQUEST['web_site']),
 			);
 
-		// store or update data in database			
+		// store or update data in database
 		if (is_null($id)) {
 			// get new image inserted
 			if (class_exists('gallery') && isset($_FILES['logo'])) {
@@ -222,7 +222,7 @@ class ShopManufacturerHandler {
 	 */
 	private function deleteManufacturer() {
 		global $language;
-		
+
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopManufacturerManager::getInstance();
 
@@ -252,7 +252,7 @@ class ShopManufacturerHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -277,7 +277,7 @@ class ShopManufacturerHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -321,11 +321,11 @@ class ShopManufacturerHandler {
 
 				if ($use_images && !empty($item->logo)) {
 					$image_item = $gallery_manager->getSingleItem(
-											$gallery_manager->getFieldNames(), 
+											$gallery_manager->getFieldNames(),
 											array('id' => $item->logo)
 										);
 
-					if (is_object($image_item)) 
+					if (is_object($image_item))
 						$image = $gallery->getImageURL($image_item);
 				}
 

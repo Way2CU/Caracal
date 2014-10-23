@@ -20,7 +20,7 @@ class affiliates extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register backend
@@ -490,7 +490,7 @@ class affiliates extends Module {
 		$affiliate = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $uid));
 
 		// if affiliate code is not valid, assign to default affiliate
-		if (!is_object($affiliate)) 
+		if (!is_object($affiliate))
 			$affiliate = $manager->getSingleItem($manager->getFieldNames(), array('default' => 1));
 
 		// if affiliate exists, update

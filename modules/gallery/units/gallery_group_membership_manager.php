@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class GalleryGroupMembershipManager extends ItemManager {
 	private static $_instance;

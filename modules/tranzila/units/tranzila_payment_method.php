@@ -30,12 +30,12 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		global $section;
 
 		parent::__construct($parent);
-		
+
 		// register payment method
 		$this->name = 'tranzila';
 		$this->registerPaymentMethod();
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
@@ -53,7 +53,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	public function provides_information() {
 		return false;
 	}
-	
+
 	/**
 	 * Return URL for checkout form
 	 * @return string
@@ -70,7 +70,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
-	 * 
+	 *
 	 * @param array $data
 	 * @param array $items
 	 * @param string $return_url
@@ -84,7 +84,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$tmp_items = array_slice($items, 0, 5);
 		$tmp_names = array();
 
-		foreach($tmp_items as $item) 
+		foreach($tmp_items as $item)
 			$tmp_names[] = $item['name'][$language];
 
 		$description = implode(', ', $tmp_names);

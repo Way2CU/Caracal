@@ -20,7 +20,7 @@ class page_speed extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register backend
@@ -240,7 +240,7 @@ class page_speed extends Module {
 				'bytes_css'			=> number_format($page_stats->cssResponseBytes / 1000, 2),
 				'bytes_javascript'	=> number_format($page_stats->javascriptResponseBytes / 1000, 2),
 				'bytes_other'		=> number_format($page_stats->otherResponseBytes / 1000, 2),
-				
+
 				'number_hosts'		=> $page_stats->numberHosts,
 				'number_resources'	=> $page_stats->numberResources,
 				'number_css'		=> $page_stats->numberCssResources,

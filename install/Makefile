@@ -21,7 +21,7 @@ all: build
 	$(embed_script) $(output_file)
 
 build: .prepare .embed
-	
+
 clean:
 	rm -Rf $(build_directory)
 

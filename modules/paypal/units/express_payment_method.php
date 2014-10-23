@@ -26,7 +26,7 @@ class PayPal_Express extends PaymentMethod {
 		global $section;
 
 		parent::__construct($parent);
-		
+
 		// register payment method
 		$this->name = 'paypal_express';
 		$this->registerPaymentMethod();
@@ -34,7 +34,7 @@ class PayPal_Express extends PaymentMethod {
 		// connect signal handler
 		Events::connect('shop', 'before-checkout', 'beforeCheckout', $this);
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
@@ -44,7 +44,7 @@ class PayPal_Express extends PaymentMethod {
 
 		return self::$_instance;
 	}
-	
+
 	/**
 	 * Whether this payment method is able to provide user information
 	 * @return boolean
@@ -138,7 +138,7 @@ class PayPal_Express extends PaymentMethod {
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
-	 * 
+	 *
 	 * @param array $data
 	 * @param array $billing_information
 	 * @param array $items

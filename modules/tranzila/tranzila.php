@@ -17,7 +17,7 @@ class tranzila extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register backend
@@ -25,7 +25,7 @@ class tranzila extends Module {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
-			if (!is_null($method_menu)) 
+			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_tranzila'),
 									url_GetFromFilePath($this->path.'images/icon.png'),
@@ -44,7 +44,7 @@ class tranzila extends Module {
 		// register payment method
 		if (class_exists('shop')) {
 			require_once("units/tranzila_payment_method.php");
-			Tranzila_PaymentMethod::getInstance($this); 		
+			Tranzila_PaymentMethod::getInstance($this);
 		}
 	}
 

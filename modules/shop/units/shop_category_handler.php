@@ -345,14 +345,14 @@ class ShopCategoryHandler {
 		// create conditions
 		if (isset($tag_params['parent_id'])) {
 			// set parent from tag parameter
-			$conditions['parent'] = fix_id($tag_params['parent_id']); 
+			$conditions['parent'] = fix_id($tag_params['parent_id']);
 
 		} else if (isset($tag_params['parent'])) {
 			// get parent id from specified text id
 			$text_id = fix_chars($tag_params['parent']);
 			$parent = $manager->getSingleItem(array('id'), array('text_id' => $text_id));
 
-			if (is_object($parent)) 
+			if (is_object($parent))
 				$conditions['parent'] = $parent->id; else
 				$conditions['parent'] = -1;
 
@@ -369,15 +369,15 @@ class ShopCategoryHandler {
 			$list = fix_id(explode(',', $tag_params['exclude']));
 			$conditions['id'] = array('operator' => 'NOT IN', 'value' => $list);
 		}
-		
+
 		if (!is_null($item_id)) {
 			$membership_manager = ShopItemMembershipManager::getInstance();
 			$membership_items = $membership_manager->getItems(
-												array('category'), 
+												array('category'),
 												array('item' => $item_id)
 											);
-											
-			if (count($membership_items) > 0) 
+
+			if (count($membership_items) > 0)
 				foreach($membership_items as $membership)
 					$item_category_ids[] = $membership->category;
 		}

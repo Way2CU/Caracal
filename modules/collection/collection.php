@@ -137,7 +137,7 @@ class collection extends Module {
 	private function getScriptId($script_name) {
 		$result = null;
 
-		if (in_array($script_name, $this->script_names)) 
+		if (in_array($script_name, $this->script_names))
 			$result = $this->script_names[$script_name];
 
 		return $result;

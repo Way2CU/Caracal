@@ -172,7 +172,7 @@ class ShopDiscountHandler {
 	 */
 	private function deleteDiscount() {
 		global $language;
-		
+
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemManager::getInstance();
 
@@ -202,7 +202,7 @@ class ShopDiscountHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**

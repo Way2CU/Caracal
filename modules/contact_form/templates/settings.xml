@@ -28,7 +28,7 @@
 					<label>
 						<span><cms:text constant="label_save_location" module="contact_form"/></span>
 						<input
-							type="text" 
+							type="text"
 							name="save_location"
 							value="$settings['save_location']"
 							cms:eval="value"
@@ -44,20 +44,20 @@
 					<legend><cms:text constant="legend_sender" module="contact_form"/></legend>
 					<label cms:tooltip="tooltip_sender_name">
 						<span><cms:text constant="label_name" module="contact_form"/></span>
-						<input 
-							type="text" 
-							name="sender_name" 
-							value="$settings['sender_name']" 
+						<input
+							type="text"
+							name="sender_name"
+							value="$settings['sender_name']"
 							cms:eval="value"
 							style="width: 250px;"
 						/>
 					</label>
 					<label cms:tooltip="tooltip_sender_address">
 						<span><cms:text constant="label_address" module="contact_form"/></span>
-						<input 
-							type="text" 
-							name="sender_address" 
-							value="$settings['sender_address']" 
+						<input
+							type="text"
+							name="sender_address"
+							value="$settings['sender_address']"
 							cms:eval="value"
 							style="width: 250px;"
 							class="code ltr"
@@ -69,20 +69,20 @@
 					<legend><cms:text constant="legend_recipient" module="contact_form"/></legend>
 					<label cms:tooltip="tooltip_recipient_name">
 						<span><cms:text constant="label_name" module="contact_form"/></span>
-						<input 
-							type="text" 
-							name="recipient_name" 
-							value="$settings['recipient_name']" 
+						<input
+							type="text"
+							name="recipient_name"
+							value="$settings['recipient_name']"
 							cms:eval="value"
 							style="width: 250px;"
 						/>
 					</label>
 					<label cms:tooltip="tooltip_recipient_address">
 						<span><cms:text constant="label_address" module="contact_form"/></span>
-						<input 
-							type="text" 
-							name="recipient_address" 
-							value="$settings['recipient_address']" 
+						<input
+							type="text"
+							name="recipient_address"
+							value="$settings['recipient_address']"
 							cms:eval="value"
 							style="width: 250px;"
 							class="code ltr"

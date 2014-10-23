@@ -4,7 +4,7 @@
  * Leads Module
  *
  * General leads module that can be used to gain response from users
- * or gather general data about them. 
+ * or gather general data about them.
  *
  * @author Mladen Mijatov
  */
@@ -25,7 +25,7 @@ class leads extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 
@@ -193,7 +193,7 @@ class leads extends Module {
 		$tables = array('leads_entries', 'leads_entry_data', 'leads_types');
 		$db->drop_tables($tables);
 	}
-	
+
 	/**
 	 * Show leads
 	 */
@@ -220,7 +220,7 @@ class leads extends Module {
 		$entries_manager = LeadsEntriesManager::getInstance();
 		$data_manager = LeadsEntryDataManager::getInstance();
 
-		if (is_null($type_id) || $type_id == 0) 
+		if (is_null($type_id) || $type_id == 0)
 			return;
 
 		// get type from database
@@ -259,7 +259,7 @@ class leads extends Module {
 			$fields = explode(',', $type->fields);
 			foreach ($rows as $id => $entry) {
 				$tmp = array();
-				
+
 				// add required fields
 				$tmp[] = $id;
 				$tmp[] = $entry['ip_address'];
@@ -491,7 +491,7 @@ class leads extends Module {
 		} else if (isset($_REQUEST['type_id'])) {
 			$type_id = fix_id($_REQUEST['type_id']);
 			$type = $type_manager->getSingleItem($type_manager->getFieldNames(), array('id' => $type_id));
-		} 
+		}
 
 		// we need a type in order to store data
 		if (is_null($type_id)) {
@@ -504,7 +504,7 @@ class leads extends Module {
 		$fields = explode(',', $type->fields);
 
 		if ($allow_only_one) {
-			// get existing entry from database 
+			// get existing entry from database
 			$entry = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
@@ -539,10 +539,10 @@ class leads extends Module {
 			$id = $manager->getInsertedID();
 			$entry = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 		}
-		
+
 		// prepare data for insertion
 		$data = array();
-		foreach ($_REQUEST as $key => $value) 
+		foreach ($_REQUEST as $key => $value)
 			if (in_array($key, $fields))
 				$data[$key] = fix_chars($value);
 
@@ -664,7 +664,7 @@ class leads extends Module {
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 
-		if (count($items) > 0) 
+		if (count($items) > 0)
 			// prepare list of entries
 			$item_ids = array();
 			$data = array();
@@ -674,11 +674,11 @@ class leads extends Module {
 
 			// get data from database
 			$raw_data = $data_manager->getItems(
-							$data_manager->getFieldNames(), 
+							$data_manager->getFieldNames(),
 							array('entry' => $item_ids)
 						);
 
-			// pack data 
+			// pack data
 			if (count($raw_data) > 0) {
 				foreach ($raw_data as $raw_item_data) {
 					$id = $raw_item_data->entry;

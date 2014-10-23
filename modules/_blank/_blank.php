@@ -20,7 +20,7 @@ class _blank extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// load module style and scripts

@@ -336,7 +336,7 @@
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
-		
+
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
 		<constant name="title_templates_edit">Contact form: Edit template</constant>
@@ -475,7 +475,7 @@
 		<constant name="menu_manage_templates">Manage templates</constant>
 		<constant name="menu_submissions">Form submissions</constant>
 		<constant name="menu_export">Export</constant>
-	
+
 		<constant name="message_sent">Podaci su uspešno poslati!</constant>
 		<constant name="message_error">Greška prilikom slanja podataka. Proverite sva polja i pokušajte opet.</constant>
 		<constant name="message_error_no_address">Greška prilikom slanja podataka. Sistem nema podešenog podrazumevanog primaoca.</constant>
@@ -492,7 +492,7 @@
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
-		
+
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
 		<constant name="title_templates_edit">Contact form: Edit template</constant>

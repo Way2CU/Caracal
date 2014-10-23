@@ -109,7 +109,7 @@ div#checkout div.delivery_provider label input[type=radio] + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	
+
 	position: absolute;
 	left: 50%;
 	bottom: -20px;
@@ -153,7 +153,7 @@ div#checkout div.overlay {
 	top: 0px;
 	left: 0px;
 
-	background-image: 
+	background-image:
 		url(../images/checkout_loading.gif),
 		radial-gradient(
 			center center,
@@ -227,7 +227,7 @@ div#checkout div.delivery_method label input + div:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	
+
 	margin-bottom: -12px;
 	margin-right: 6px;
 
@@ -320,7 +320,7 @@ div.transaction_details textarea {
 	outline: none;
 	background-color: white;
 	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
-	
+
 	color: #333333;
 
 	transition-property: all;
@@ -343,7 +343,7 @@ div#checkout.recurring div.transaction_details textarea {
  */
 div#recurring_summary {
 	display: block;
-	
+
 	margin-bottom: 20px;
 
 	border: 1px solid white;
@@ -419,7 +419,7 @@ body.rtl table.checkout_details thead td:first-child {
 table.checkout_details tbody td {
 	padding: 5px;
 	padding-left: 7px;
-	padding-right: 7px; 
+	padding-right: 7px;
 
 	font-size: 14px;
 }
@@ -479,14 +479,14 @@ table.checkout_details tfoot td.total-label {
 
 table.checkout_details tfoot td.total-label {
 	text-align: right;
-}	
+}
 
 table.checkout_details tfoot td.total-value {
 	font-weight: bold;
 }
 
 table.checkout_details tfoot td.total-value,
-table.checkout_details tfoot td.subtotal-value { 
+table.checkout_details tfoot td.subtotal-value {
 	padding-left: 7px;
 	padding-right: 7px;
 }
@@ -776,7 +776,7 @@ div#input_details label input {
 	outline: none;
 	background-color: white;
 	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
-	
+
 	color: #333333;
 
 	transition-property: all;
@@ -788,7 +788,7 @@ div#input_details label input {
 div#input_details label select.bad,
 div#input_details label input.bad {
 	border-color: red;
-	box-shadow: 
+	box-shadow:
 			inset 3px 3px 5px rgba(200, 200, 200, 0.4),
 			0px 0px 5px rgba(255, 0, 0, 0.6);
 }
@@ -812,7 +812,7 @@ div#input_details label.checkbox input + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	
+
 	margin-bottom: -3px;
 	margin-right: 4px;
 

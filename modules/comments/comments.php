@@ -18,9 +18,9 @@ class comments extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
-		
+
 		// register backend
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
@@ -59,7 +59,7 @@ class comments extends Module {
 							));
 
 			$backend->addMenu($this->name, $comments_menu);
-		}		
+		}
 	}
 
 	/**
@@ -68,13 +68,13 @@ class comments extends Module {
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
-	
+
 	/**
 	 * Transfers control to module functions
-	 * 
+	 *
 	 * @param array $params
 	 * @param array $children
 	 */
@@ -165,7 +165,7 @@ class comments extends Module {
 
 	/**
 	 * Show comments management form
-	 */	
+	 */
 	private function showComments() {
 		$comments_module = isset($_REQUEST['comments_module']) ? fix_chars($_REQUEST['comments_module']) : null;
 		$comments_section = isset($_REQUEST['comments_section']) ? fix_chars($_REQUEST['comments_section']) : null;
@@ -183,7 +183,7 @@ class comments extends Module {
 					'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 					'cancel_action'	=> window_Close('comments_settings')
 				);
-				
+
 		$params = array_merge($params, $this->settings);
 
 		$template->restoreXML();
@@ -220,7 +220,7 @@ class comments extends Module {
 
 	/**
 	 * Display comment input form
-	 * 
+	 *
 	 * @param array $tag_params
 	 */
 	private function showInputForm($tag_params) {
@@ -311,7 +311,7 @@ class comments extends Module {
 
 	/**
 	 * Print JSON object containing all the comments
-	 * 
+	 *
 	 * @param boolean $only_visible
 	 */
 	private function printCommentData($only_visible = true) {
@@ -374,7 +374,7 @@ class comments extends Module {
 
 	/**
 	 * Check if user can post comment. Users who are not logged are allowed one comment in specified period of time.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private function _canPostComment() {
@@ -402,7 +402,7 @@ class comments extends Module {
 
 class CommentManager extends ItemManager {
 	private static $_instance;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -419,15 +419,15 @@ class CommentManager extends ItemManager {
 		$this->addProperty('timestamp', 'timestamp');
 		$this->addProperty('visible', 'boolean');
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
-	}	
+	}
 }
 

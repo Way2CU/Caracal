@@ -21,14 +21,14 @@ class country_list extends Module {
 	protected function __construct() {
 		parent::__construct(__FILE__);
 	}
-	
+
 	/**
 	 * Public function that creates a single instance
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
-			
+
 		return self::$_instance;
 	}
 
@@ -94,7 +94,7 @@ class country_list extends Module {
 		$country_list = $this->country_list->document->tagChildren;
 		$state_list = $this->state_list->document->tagChildren;
 
-		foreach ($country_list as $country)  
+		foreach ($country_list as $country)
 			$country_manager->insertData(array(
 								'name'	=> escape_chars($country->tagData),
 								'short'	=> $country->tagAttrs['short']
@@ -145,7 +145,7 @@ class country_list extends Module {
 
 		// parse template
 		if (count($country_list) > 0)
-			foreach ($country_list as $country) { 
+			foreach ($country_list as $country) {
 				$params = array(
 							'selected'	=> $selected,
 							'name'		=> $country->name,
@@ -170,20 +170,20 @@ class country_list extends Module {
 
 		// get tag params
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
-		
+
 		if (isset($tag_params['country'])) {
 			// country is defined as a part of XML tag
-			$conditions['country'] = fix_chars($tag_params['country']); 
+			$conditions['country'] = fix_chars($tag_params['country']);
 
 		} else if (isset($_REQUEST['country'])) {
 			// country is defined in query
-			$conditions['country'] = fix_chars($_REQUEST['country']); 
+			$conditions['country'] = fix_chars($_REQUEST['country']);
 		}
 
 		$template = $this->loadTemplate($tag_params, 'state_option.xml');
 		$state_list = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		foreach ($state_list as $state) { 
+		foreach ($state_list as $state) {
 			$params = array(
 						'selected'	=> $selected,
 						'name'		=> $state->name,

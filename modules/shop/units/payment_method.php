@@ -6,8 +6,8 @@
 
 abstract class PaymentMethod {
 	protected $name;
-	protected $parent;	
-	
+	protected $parent;
+
 	protected function __construct($parent) {
 		$this->parent = $parent;
 	}
@@ -75,7 +75,7 @@ abstract class PaymentMethod {
 	 * $result = array(
 	 * 			'text_id' => array(
 	 * 				'name'				=> array(),
-	 * 				'trial'				=> RecurringPayment::DAY, 
+	 * 				'trial'				=> RecurringPayment::DAY,
 	 * 				'trial_count'		=> 7,
 	 * 				'interval'			=> RecurringPayment::MONTH,
 	 * 				'interval_count'	=> 1,
@@ -103,11 +103,11 @@ abstract class PaymentMethod {
 	 * @return array
 	 */
 	abstract public function get_information();
-	
+
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
-	 * 
+	 *
 	 * @param array $transaction_data
 	 * @param array $billing_information
 	 * @param array $items

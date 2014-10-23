@@ -54,8 +54,8 @@
 
 							<label class="checkbox">
 								<input
-									type="radio" 
-									name="existing_user" 
+									type="radio"
+									name="existing_user"
 									value="0"
 									checked="checked"
 								/>
@@ -66,9 +66,9 @@
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
-										type="text" 
-										name="sign_in_email" 
-										maxlength="127" 
+										type="text"
+										name="sign_in_email"
+										maxlength="127"
 										style="width: 270px;"
 										autocomplete="email"
 									/>
@@ -91,8 +91,8 @@
 
 							<label class="checkbox">
 								<input
-									type="radio" 
-									name="existing_user" 
+									type="radio"
+									name="existing_user"
 									value="1"
 								/>
 								<span><cms:text constant="label_new_user" module="shop"/></span>
@@ -130,10 +130,10 @@
 									<input
 										class="in_array('new_email', $params['bad_fields']) ? 'bad' : ''"
 										cms:eval="class,value"
-										type="text" 
-										name="new_email" 
+										type="text"
+										name="new_email"
 										value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
-										maxlength="127" 
+										maxlength="127"
 										style="width: 270px;"
 										data-required="1"
 										autocomplete="email"
@@ -142,9 +142,9 @@
 								<label>
 									<span><cms:text constant="label_password" module="shop"/></span>
 									<input
-										type="password" 
-										name="new_password" 
-										maxlength="127" 
+										type="password"
+										name="new_password"
+										maxlength="127"
 										style="width: 200px;"
 										data-required="1"
 										autocomplete="off"
@@ -153,9 +153,9 @@
 								<label>
 									<span><cms:text constant="label_confirm" module="shop"/></span>
 									<input
-										type="password" 
-										name="new_password_confirm" 
-										maxlength="127" 
+										type="password"
+										name="new_password_confirm"
+										maxlength="127"
 										style="width: 200px;"
 										data-required="1"
 										autocomplete="off"
@@ -167,8 +167,8 @@
 
 							<label class="checkbox">
 								<input
-									type="radio" 
-									name="existing_user" 
+									type="radio"
+									name="existing_user"
 									value="2"
 								/>
 								<span><cms:text constant="label_guest" module="shop"/></span>
@@ -203,12 +203,12 @@
 							<label>
 								<span><cms:text constant="label_email" module="shop"/></span>
 								<input
-									class="in_array('email', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="email" 
+									class="in_array('email', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="email"
 									value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-									maxlength="127" 
+									maxlength="127"
 									style="width: 270px;"
 									data-required="1"
 									autocomplete="email"
@@ -217,12 +217,12 @@
 							<label>
 								<span><cms:text constant="label_phone_number" module="shop"/></span>
 								<input
-									class="in_array('phone', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="phone" 
+									class="in_array('phone', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="phone"
 									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
-									maxlength="127" 
+									maxlength="127"
 									style="width: 270px;"
 									autocomplete="tel"
 								/>
@@ -230,13 +230,13 @@
 							<hr/>
 							<label>
 								<span><cms:text constant="label_street" module="shop"/></span>
-								<input 
-									class="in_array('street', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="street" 
+								<input
+									class="in_array('street', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="street"
 									value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-									maxlength="200" 
+									maxlength="200"
 									style="width: 300px;"
 									data-required="1"
 									autocomplete="address-line1"
@@ -244,24 +244,24 @@
 							</label>
 							<label class="separator">
 								<span></span>
-								<input 
-									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="street2" 
+								<input
+									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="street2"
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
-									maxlength="200" 
+									maxlength="200"
 									style="width: 300px;"
 									autocomplete="address-line2"
 								/>
 							</label>
 							<label>
 								<span><cms:text constant="label_city" module="shop"/></span>
-								<input 
-									class="in_array('city', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="city" 
+								<input
+									class="in_array('city', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="city"
 									value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
 									maxlength="40"
 									data-required="1"
@@ -270,13 +270,13 @@
 							</label>
 							<label>
 								<span><cms:text constant="label_zip" module="shop"/></span>
-								<input 
-									class="in_array('zip', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="zip" 
+								<input
+									class="in_array('zip', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="zip"
 									value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-									maxlength="20" 
+									maxlength="20"
 									style="width: 120px;"
 									data-required="1"
 									autocomplete="postal-code"
@@ -285,10 +285,10 @@
 							<label>
 								<span><cms:text constant="label_country" module="shop"/></span>
 								<cms:if condition="empty($params['fixed_country'])">
-									<select 
+									<select
 										name="country"
-										class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-										cms:eval="class" 
+										class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class"
 										data-required="1"
 										autocomplete="country"
 									>
@@ -302,10 +302,10 @@
 									</select>
 								</cms:if>
 								<cms:if condition="!empty($params['fixed_country'])">
-									<select 
+									<select
 										name="country"
-										class="in_array('country', $params['bad_fields']) ? 'bad' : ''" 
-										cms:eval="class" 
+										class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class"
 										data-required="1"
 										autocomplete="country"
 									>
@@ -320,11 +320,11 @@
 							</label>
 							<label>
 								<span><cms:text constant="label_state" module="shop"/></span>
-								<input 
-									class="in_array('state', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
-									name="state" 
+								<input
+									class="in_array('state', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="state"
 									value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
 									maxlength="40"
 									autocomplete="region"
@@ -389,12 +389,12 @@
 						<label>
 							<span><cms:text constant="label_credit_card" module="shop"/></span>
 							<input
-								class="in_array('billing_credit_card', $params['bad_fields']) ? 'bad' : ''" 
-								cms:eval="class,value" 
-								type="text" 
+								class="in_array('billing_credit_card', $params['bad_fields']) ? 'bad' : ''"
+								cms:eval="class,value"
+								type="text"
 								name="billing_credit_card"
 								value="isset($_POST['billing_credit_card']) ? fix_chars($_POST['billing_credit_card']) : ''"
-								maxlength="127" 
+								maxlength="127"
 								style="width: 170px;"
 								autocomplete="cc-number"
 								data-required="1"
@@ -404,12 +404,12 @@
 							<label>
 								<span><cms:text constant="label_expiration_date" module="shop"/></span>
 								<input
-									class="in_array('billing_expire_month', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
+									class="in_array('billing_expire_month', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
 									name="billing_expire_month"
 									value="isset($_POST['billing_expire_month']) ? fix_chars($_POST['billing_expire_month']) : ''"
-									maxlength="2" 
+									maxlength="2"
 									style="width: 30px;"
 									autocomplete="cc-exp-month"
 									placeholder="mm"
@@ -418,12 +418,12 @@
 							</label>
 							<label>
 								<input
-									class="in_array('billing_expire_year', $params['bad_fields']) ? 'bad' : ''" 
-									cms:eval="class,value" 
-									type="text" 
+									class="in_array('billing_expire_year', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
 									name="billing_expire_year"
 									value="isset($_POST['billing_expire_year']) ? fix_chars($_POST['billing_expire_year']) : ''"
-									maxlength="4" 
+									maxlength="4"
 									style="width: 50px;"
 									autocomplete="cc-exp-year"
 									placeholder="yyyy"
@@ -433,13 +433,13 @@
 						</div>
 						<label>
 							<span><cms:text constant="label_cvv" module="shop"/></span>
-							<input 
-								class="in_array('billing_cvv', $params['bad_fields']) ? 'bad' : ''" 
-								cms:eval="class,value" 
-								type="text" 
-								name="billing_cvv" 
+							<input
+								class="in_array('billing_cvv', $params['bad_fields']) ? 'bad' : ''"
+								cms:eval="class,value"
+								type="text"
+								name="billing_cvv"
 								value="isset($_POST['billing_cvv']) ? fix_chars($_POST['billing_cvv']) : ''"
-								maxlength="4" 
+								maxlength="4"
 								style="width: 50px;"
 								autocomplete="cc-csc"
 								data-required="1"

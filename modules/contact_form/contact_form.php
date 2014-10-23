@@ -789,7 +789,7 @@ class contact_form extends Module {
 		foreach ($data as $name => $value) {
 			$submission_field_manager->updateData(
 					array(
-						'submission'	=> $submission_id, 
+						'submission'	=> $submission_id,
 						'field'			=> $field_ids[$name]
 					),
 					array(
@@ -898,7 +898,7 @@ class contact_form extends Module {
 
 		return join("\r\n", $result);
 	}
-	
+
 	/**
 	 * Show settings form
 	 */
@@ -1179,7 +1179,7 @@ class contact_form extends Module {
 			if (count($form_fields) > 0)
 				foreach ($form_fields as $field)
 					$field_ids[] = $field->id;
-			
+
 			// append submission fields to data array
 			foreach ($submissions as $submission) {
 				$record = array();
@@ -2474,7 +2474,7 @@ class contact_form extends Module {
 	public function getMailer() {
 		$result = null;
 		$name = isset($this->settings['mailer']) ? $this->settings['mailer'] : null;
-		
+
 		if (isset($this->mailers[$name]))
 			$result = $this->mailers[$name]; else
 			$result = array_shift(array_values($this->mailers));
@@ -2493,7 +2493,7 @@ class contact_form extends Module {
 
 		if (array_key_exists($name, $this->mailers))
 			$result = $this->mailers[$name];
-		
+
 		return $result;
 	}
 

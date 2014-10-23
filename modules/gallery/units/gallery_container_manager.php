@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class GalleryContainerManager extends ItemManager {
 	private static $_instance;

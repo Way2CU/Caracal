@@ -23,7 +23,7 @@ class stripe_payment extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// prepare API wrapper
@@ -35,7 +35,7 @@ class stripe_payment extends Module {
 			$method_menu = $backend->getMenu('shop_payment_methods');
 			$plans_menu = $backend->getMenu('shop_recurring_plans');
 
-			if (!is_null($method_menu)) 
+			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_stripe'),
 									url_GetFromFilePath($this->path.'images/icon.svg'),
@@ -115,7 +115,7 @@ class stripe_payment extends Module {
 				case 'show_settings':
 					$this->showSettings();
 					break;
-					
+
 				case 'save_settings':
 					$this->saveSettings();
 					break;
@@ -192,7 +192,7 @@ class stripe_payment extends Module {
 		$template->restoreXML();
 		$template->parse();
 	}
-	
+
 	/**
 	 * Save settings
 	 */
@@ -434,7 +434,7 @@ class stripe_payment extends Module {
 		if (is_object($charge) && $charge->paid) {
 			$shop->setTransactionToken($transaction_uid, $charge->id);
 			$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
-				
+
 		} else {
 			// TODO: handle errors
 		}

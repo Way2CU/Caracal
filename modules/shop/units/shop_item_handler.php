@@ -122,7 +122,7 @@ class ShopItemHandler {
 		// register external tag handlers
 		$category_handler = ShopCategoryHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_category_list', $category_handler, 'tag_CategoryList');
-		
+
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_size_list', $size_handler, 'tag_SizeList');
 
@@ -156,7 +156,7 @@ class ShopItemHandler {
 			// register tag handlers
 			$category_handler = ShopCategoryHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_category_list', $category_handler, 'tag_CategoryList');
-			
+
 			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 			$template->registerTagHandler('_size_list', $size_handler, 'tag_SizeList');
 
@@ -224,7 +224,7 @@ class ShopItemHandler {
 				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'		=> isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0
 			);
-		
+
 		if ($new_item) {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
@@ -271,15 +271,15 @@ class ShopItemHandler {
 			$manager->updateData($data, array('id' => $id));
 			$window = 'shop_item_change';
 		}
-		
+
 		// update categories and delivery method selection
 		$category_ids = array();
 		$category_template = 'category_id';
 		$delivery_ids = array();
 		$delivery_template = 'delivery_';
-		
+
 		foreach ($_REQUEST as $key => $value) {
-			if (substr($key, 0, strlen($category_template)) == $category_template && $value == 1) 
+			if (substr($key, 0, strlen($category_template)) == $category_template && $value == 1)
 				$category_ids[] = fix_id(substr($key, strlen($category_template)-1));
 
 			if (substr($key, 0, strlen($delivery_template)) == $delivery_template)
@@ -297,7 +297,7 @@ class ShopItemHandler {
 
 		// update delivery methods
 		if (count($delivery_ids) > 0)
-			foreach ($delivery_ids as $delivery_id) 
+			foreach ($delivery_ids as $delivery_id)
 				if (!empty($delivery_id)) {
 					$delivery_item_relation_manager->insertData(array(
 											'item'		=> $id,
@@ -306,7 +306,7 @@ class ShopItemHandler {
 				}
 
 		// store related items
-		if (!$new_item) 
+		if (!$new_item)
 			$related_items_manager->deleteData(array('item' => $id));
 
 		$related = array();
@@ -338,13 +338,13 @@ class ShopItemHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Show confirmation form before removing item
 	 */
 	private function deleteItem() {
 		global $language;
-		
+
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemManager::getInstance();
 
@@ -374,9 +374,9 @@ class ShopItemHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
-	
+
 	/**
 	 * Mark item as deleted. We don't remove items in order
 	 * to preserve valid shopping logs.
@@ -400,7 +400,7 @@ class ShopItemHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -420,7 +420,7 @@ class ShopItemHandler {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
-		
+
 	}
 
 	/**
@@ -444,10 +444,10 @@ class ShopItemHandler {
 
 		return $uid;
 	}
-	
+
 	/**
 	 * Handle drawing shop item
-	 * 
+	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
@@ -459,7 +459,7 @@ class ShopItemHandler {
 		$conditions = array();
 
 		// prepare conditions
-		if (isset($tag_params['id'])) 
+		if (isset($tag_params['id']))
 			$id = fix_id($tag_params['id']);
 
 		if (isset($tag_params['random']) && isset($tag_params['category'])) {
@@ -470,11 +470,11 @@ class ShopItemHandler {
 				// specified id is actually text_id, get real one
 				$category_manager = ShopCategoryManager::getInstance();
 				$category = $category_manager->getSingleItem(
-												array('id'), 
+												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
 											);
 
-				if (!is_object($category)) 
+				if (!is_object($category))
 					return;
 
 				$category_id = $category->id;
@@ -500,25 +500,25 @@ class ShopItemHandler {
 
 		// get item from database
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-		
+
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
 		$template->setMappedModule($this->name);
-		
+
 		// register tag handlers
-		if (!is_null($gallery)) 
+		if (!is_null($gallery))
 			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template->registerTagHandler('_value_list', $size_handler, 'tag_ValueList');
 		$template->registerTagHandler('_color_list', $this, 'tag_ColorList');
-			
+
 		// parse template
 		if (is_object($item)) {
 			// get gallery module
 			if (class_exists('gallery'))
 				$gallery = gallery::getInstance();
-		
+
 			if (!is_null($gallery)) {
 				// get manufacturer logo
 				$manufacturer_logo_url = '';
@@ -529,13 +529,13 @@ class ShopItemHandler {
 													array('id' => $item->manufacturer)
 												);
 
-					if (is_object($manufacturer)) 
+					if (is_object($manufacturer))
 						$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
 				}
 
 				// get urls for image and thumbnail
 				$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
-				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
 
 			} else {
 				// default values if gallery is not enabled
@@ -545,7 +545,7 @@ class ShopItemHandler {
 			}
 
 			$rating = 0;
-			
+
 			$params = array(
 						'id'			=> $item->id,
 						'uid'			=> $item->uid,
@@ -585,7 +585,7 @@ class ShopItemHandler {
 	 * @param array $chilren
 	 */
 	public function tag_ItemList($tag_params, $children) {
-		global $language; 
+		global $language;
 
 		$manager = ShopItemManager::getInstance();
 		$conditions = array();
@@ -604,11 +604,11 @@ class ShopItemHandler {
 				// specified id is actually text_id, get real one
 				$category_manager = ShopCategoryManager::getInstance();
 				$category = $category_manager->getSingleItem(
-												array('id'), 
+												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
 											);
 
-				if (!is_object($category)) 
+				if (!is_object($category))
 					return;
 
 				$category_id = $category->id;
@@ -616,15 +616,15 @@ class ShopItemHandler {
 
 			$membership_manager = ShopItemMembershipManager::getInstance();
 			$membership_items = $membership_manager->getItems(
-												array('item'), 
+												array('item'),
 												array('category' => $category_id)
 											);
-				
-			$item_ids = array();							
+
+			$item_ids = array();
 			if (count($membership_items) > 0)
 				foreach($membership_items as $membership)
 					$item_ids[] = $membership->item;
-					
+
 			if (count($item_ids) > 0)
 				$conditions['id'] = $item_ids; else
 				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
@@ -645,7 +645,7 @@ class ShopItemHandler {
 				$conditions['id'] = $related_item_ids; else
 				$conditions['id'] = -1;
 		}
-		
+
 		if (!(isset($tag_params['show_deleted']) && $tag_params['show_deleted'] == 1)) {
 			// force hiding deleted items
 			$conditions['deleted'] = 0;
@@ -690,7 +690,7 @@ class ShopItemHandler {
 				$gallery = gallery::getInstance();
 
 			$manufacturer_manager = ShopManufacturerManager::getInstance();
-			
+
 			foreach ($items as $item) {
 				if (!is_null($gallery)) {
 					// get manufacturer logo
@@ -702,13 +702,13 @@ class ShopItemHandler {
 														array('id' => $item->manufacturer)
 													);
 
-						if (is_object($manufacturer)) 
+						if (is_object($manufacturer))
 							$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
 					}
 
 					// get urls for image and thumbnail
 					$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
-					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
 
 				} else {
 					// default values if gallery is not enabled
@@ -718,7 +718,7 @@ class ShopItemHandler {
 				}
 
 				$rating = 0;
-				
+
 				$params = array(
 							'id'			=> $item->id,
 							'uid'			=> $item->uid,
@@ -872,7 +872,7 @@ class ShopItemHandler {
 				$thumbnail_url = null;
 				if (class_exists('gallery')) {
 					$gallery = gallery::getInstance();
-					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery); 
+					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
 				}
 
 				$rating = 0;

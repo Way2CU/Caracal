@@ -51,7 +51,7 @@
 		<constant name="preview">Preview</constant>
 		<constant name="videos">Videos</constant>
 	</language>
-	
+
 	<language short="he">
 		<constant name="title">YouTube</constant>
 

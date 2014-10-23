@@ -8,9 +8,9 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	private static $_instance;
 
 	protected $name;
-	protected $parent;	
+	protected $parent;
 	protected $url;
-	
+
 	protected function __construct($parent) {
 		parent::__construct($parent);
 
@@ -157,7 +157,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	/**
 	 * Make new payment form with specified items and return
 	 * boolean stating the success of initial payment process.
-	 * 
+	 *
 	 * @param array $transaction_data
 	 * @param array $billing_information
 	 * @param array $items
@@ -232,7 +232,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 					'plan_name'		=> $plan_name
 				);
 		}
-		
+
 
 		// prepare elements
 		$elements = array();

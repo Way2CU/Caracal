@@ -9,7 +9,7 @@
 		</head>
 
 		<body class="MainLanguageHandler::getInstance()->isRTL() ? 'rtl' : 'ltr'" cms:eval="class">
-			<_completed_message/>	
+			<_completed_message/>
 		</body>
 	</html>
 </document>

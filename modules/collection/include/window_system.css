@@ -344,7 +344,7 @@ div.window button {
 
 	border: 1px solid #b0b0b0;
 	border-radius: 2px;
-	background-color: #cccccc; 
+	background-color: #cccccc;
 	background-image: linear-gradient(0deg, #d5d5d5, #ffffff 90%);
 
 	color: #333333;
@@ -476,7 +476,7 @@ div.window div.scrollable_list .column {
 div.dialog div.scrollable_list .column a,
 div.window div.scrollable_list .column a {
 	display: inline-block;
-	
+
 	position: relative;
 
 	margin-top: -4px;
@@ -866,14 +866,14 @@ div.window div.main_menu label {
 	padding-right: 5px;
 }
 
-div.window div.main_menu select, 
+div.window div.main_menu select,
 div.window div.main_menu input {
 	margin: 3px;
 	padding: 2px;
-	
+
 	border: 1px solid #929292;
 	background-color: #d5d5d5;
-	
+
 	color: black;
 }
 

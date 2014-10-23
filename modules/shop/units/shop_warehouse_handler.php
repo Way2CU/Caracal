@@ -227,7 +227,7 @@ class ShopWarehouseHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -251,7 +251,7 @@ class ShopWarehouseHandler {
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
-		$template->parse();		
+		$template->parse();
 	}
 
 	/**
@@ -277,7 +277,7 @@ class ShopWarehouseHandler {
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		if (count($items) > 0) 
+		if (count($items) > 0)
 			foreach ($items as $item) {
 				$params = array(
 						'name'		=> $item->name,

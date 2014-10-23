@@ -150,7 +150,7 @@ nav#steps a {
 	text-align: center;
 	cursor: pointer;
 	opacity: 0;
-	
+
 	transition: border 0.3s, opacity 0.5s;
 }
 
@@ -159,7 +159,7 @@ nav#steps.visible a {
 }
 
 nav#steps a:hover {
-	border-color: #E74C3C; 
+	border-color: #E74C3C;
 }
 
 nav#steps a:after {

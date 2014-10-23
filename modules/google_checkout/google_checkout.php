@@ -17,7 +17,7 @@ class google_checkout extends Module {
 	 */
 	protected function __construct() {
 		global $section;
-		
+
 		parent::__construct(__FILE__);
 
 		// register backend
@@ -25,7 +25,7 @@ class google_checkout extends Module {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
-			if (!is_null($method_menu)) 
+			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_google_checkout'),
 									url_GetFromFilePath($this->path.'images/icon.png'),
@@ -44,7 +44,7 @@ class google_checkout extends Module {
 		// register payment method
 		if (class_exists('shop')) {
 			require_once("units/google_checkout_payment_method.php");
-			GoogleCheckout_PaymentMethod::getInstance($this); 		
+			GoogleCheckout_PaymentMethod::getInstance($this);
 		}
 	}
 

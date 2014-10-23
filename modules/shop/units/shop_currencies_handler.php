@@ -3,7 +3,7 @@
 /**
  * Currency converter and manager
  */
- 
+
 require_once('shop_currencies_manager.php');
 
 

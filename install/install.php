@@ -13,7 +13,7 @@
 	<body>
 		<form action="" method="post">
 			<div id="main">
-				<header> 
+				<header>
 					<div class="logo">Development Framework</div>
 
 					<nav id="steps">
@@ -113,7 +113,7 @@
 					<div class="page">
 						<h1>Language selection</h1>
 					</div>
-					
+
 					<!-- Template page -->
 					<div class="page">
 						<h1>Starting template</h1>

@@ -83,7 +83,7 @@ class tips extends Module {
 				case 'show_list':
 					$this->tag_TipList($params, $children);
 					break;
-					
+
 				case 'json_tip':
 					$this->json_Tip();
 					break;
@@ -434,30 +434,30 @@ class tips extends Module {
 				$template->parse();
 			}
 	}
-	
+
 	/**
 	 * Generate JSON object for specified tip
 	 */
 	private function json_Tip() {
 		global $language;
-		
+
 		$conditions = array();
 		$order_by = isset($_REQUEST['random']) && $_REQUEST['random'] == 'yes' ? 'RAND()' : 'id';
 		$order_asc = isset($_REQUEST['order_asc']) && $_REQUEST['order_asc'] == 'yes';
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
-		
+
 		if (isset($_REQUEST['id']))
 			$conditions['id'] = fix_id(explode(',', $_REQUEST['id']));
-			
+
 		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
-			
+
 		$manager = TipManager::getInstance();
-		
+
 		$item = $manager->getSingleItem(
-								$manager->getFieldNames(), 
-								$conditions, 
-								array($order_by), 
+								$manager->getFieldNames(),
+								$conditions,
+								array($order_by),
 								$order_asc
 							);
 
@@ -474,7 +474,7 @@ class tips extends Module {
 							'visible'	=> $item->visible
 						);
 		}
-		
+
 		print json_encode($result);
 	}
 
@@ -483,28 +483,28 @@ class tips extends Module {
 	 */
 	public function json_TipList() {
 		global $language;
-		
+
 		$conditions = array();
 		$limit = null;
 		$order_by = isset($_REQUEST['random']) && $_REQUEST['random'] == 'yes' ? 'RAND()' : 'id';
 		$order_asc = isset($_REQUEST['order_asc']) && $_REQUEST['order_asc'] == 'yes';
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 'yes';
-		
+
 		if (isset($_REQUEST['id']))
 			$conditions['id'] = fix_id(explode(',', $_REQUEST['id']));
-			
+
 		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
 
 		if (isset($_REQUEST['limit']))
 			$limit = fix_id($_REQUEST['limit']);
-			
+
 		$manager = TipManager::getInstance();
-		
+
 		$items = $manager->getItems(
-								$manager->getFieldNames(), 
-								$conditions, 
-								array($order_by), 
+								$manager->getFieldNames(),
+								$conditions,
+								array($order_by),
 								$order_asc,
 								$limit
 							);
@@ -522,7 +522,7 @@ class tips extends Module {
 								'content'	=> $all_languages ? $item->content : $item->content[$language],
 								'visible'	=> $item->visible
 							);
-		
+
 		print json_encode($result);
 	}
 }

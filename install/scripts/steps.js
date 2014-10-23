@@ -46,7 +46,7 @@ function Steps() {
 		var index = $(this).data('index');
 		self.set_current(index);
 	};
-	
+
 	self._handle_next_click = function(event) {
 		// prevent default behavior
 		event.preventDefault();

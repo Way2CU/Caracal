@@ -6,8 +6,8 @@
 
 abstract class DeliveryMethod {
 	protected $name;
-	protected $parent;	
-	
+	protected $parent;
+
 	protected function __construct($parent) {
 		$this->parent = $parent;
 	}
@@ -24,7 +24,7 @@ abstract class DeliveryMethod {
 
 	/**
 	 * Get the name of the delivery method.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getName() {
@@ -80,9 +80,9 @@ abstract class DeliveryMethod {
 	 *					array('Departure', 1362240000),
 	 *					array('In transit', 1362440000),
 	 *					array('Delivered', 1363440000)
-	 *				);                       
-	 *                                       
-	 * @param string $delivery_id            
+	 *				);
+	 *
+	 * @param string $delivery_id
 	 * @return array
 	 */
 	abstract public function getDeliveryStatus($delivery_id);

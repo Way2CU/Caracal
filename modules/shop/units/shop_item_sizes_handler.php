@@ -11,7 +11,7 @@ class ShopItemSizesHandler {
 
 	/**
 	* Constructor
-	* 
+	*
 	* @param object $parent
 	*/
 	protected function __construct($parent) {
@@ -22,7 +22,7 @@ class ShopItemSizesHandler {
 
 	/**
 	* Public function that creates a single instance
-	* 
+	*
 	* @param object $parent
 	* @return ShopItemSizesHandler
 	*/
@@ -58,19 +58,19 @@ class ShopItemSizesHandler {
 			case 'delete_commit':
 				$this->deleteItem_Commit();
 				break;
-				
+
 			case 'values_show':
 				$this->showValues();
 				break;
-				
+
 			case 'value_add':
 				$this->addValue();
 				break;
-				
+
 			case 'value_change':
 				$this->changeValue();
 				break;
-				
+
 			case 'value_save':
 				$this->saveValue();
 				break;
@@ -78,11 +78,11 @@ class ShopItemSizesHandler {
 			case 'value_delete':
 				$this->deleteValue();
 				break;
-				
+
 			case 'value_delete_commit':
 				$this->deleteValue_Commit();
 				break;
-				
+
 			default:
 				$this->showItems();
 				break;
@@ -116,7 +116,7 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Show item size values management form
 	 */
@@ -151,7 +151,7 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Show form for adding new shop item size
 	 */
@@ -168,7 +168,7 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Show form for adding new shop item size value
 	 */
@@ -186,9 +186,9 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
-	 * Show form for editing existing size value 
+	 * Show form for editing existing size value
 	 */
 	private function changeValue() {
 		$id = fix_id($_REQUEST['id']);
@@ -214,7 +214,7 @@ class ShopItemSizesHandler {
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
-		}		
+		}
 	}
 
 	/**
@@ -248,31 +248,31 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
-	 * Save new or changed item size value 
+	 * Save new or changed item size value
 	 */
 	private function saveValue() {
 		$manager = ShopItemSizeValuesManager::getInstance();
-		
+
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$definition = isset($_REQUEST['definition']) ? fix_id($_REQUEST['definition']) : null;
 		$value = $this->_parent->getMultilanguageField('value');
-		
+
 		$data = array(
 					'definition'	=> $definition,
 					'value'			=> $value
 				);
-		
+
 		if (is_null($id)) {
 			$manager->insertData($data);
 			$window = 'shop_item_size_values_add';
-			
+
 		} else {
 			$manager->updateData($data, array('id' => $id));
 			$window = 'shop_item_size_values_change';
 		}
-		
+
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -286,9 +286,9 @@ class ShopItemSizesHandler {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
-		
+
 	}
-	
+
 	/**
 	 * Print confirmation form before removing size
 	 */
@@ -324,7 +324,7 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Perform size definition removal
 	 */
@@ -349,13 +349,13 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Print confirmation form before removing size value
 	 */
 	private function deleteValue() {
 		global $language;
-		
+
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemSizeValuesManager::getInstance();
 
@@ -387,7 +387,7 @@ class ShopItemSizesHandler {
 		$template->setLocalParams($params);
 		$template->parse();
 	}
-	
+
 	/**
 	 * Perform size value removal
 	 */
@@ -442,7 +442,7 @@ class ShopItemSizesHandler {
 	public function tag_SizeList($tag_params, $children) {
 		$manager = ShopItemSizesManager::getInstance();
 		$conditions = array();
-		
+
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
 		// get items
@@ -500,28 +500,28 @@ class ShopItemSizesHandler {
 				$template->parse();
 			}
 	}
-	
+
 	/**
 	 * Handle item size values tag
-	 * 
+	 *
 	 * @param array $tag_params
 	 * @param array $childen
 	 */
 	public function tag_ValueList($tag_params, $children) {
 		$manager = ShopItemSizeValuesManager::getInstance();
 		$conditions = array();
-		
+
 		// create conditions
-		if (isset($tag_params['definition'])) 
+		if (isset($tag_params['definition']))
 			$conditions['definition'] = fix_id($tag_params['definition']);
-			
+
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
-		
+
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'values_list_item.xml');
 		$template->setMappedModule($this->name);
-				
+
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
