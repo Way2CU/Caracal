@@ -17,7 +17,7 @@ class head_tag extends Module {
 	private $link_tags = array();
 	private $script_tags = array();
 	private $closeable_tags = array('script', 'style');
-	
+
 	private $analytics = null;
 	private $analytics_domain = null;
 	private $analytics_version = 'v1';

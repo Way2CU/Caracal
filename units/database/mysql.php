@@ -26,10 +26,10 @@ class Database_MySQL extends Database {
 		if (!mysqli_connect_error()) {
 			$result = true;
 			$this->active = true;
-			
+
 			// set default protocol encoding
 			$this->handle->set_charset('utf8');
-		} 
+		}
 
 		return $result;
 	}
@@ -43,7 +43,7 @@ class Database_MySQL extends Database {
 	public function select($database) {
 		$result = false;
 
-		if ($this->active) 
+		if ($this->active)
 			$result = $this->handle->select_db($database);
 
 		return $result;

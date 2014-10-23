@@ -28,7 +28,7 @@ class page_info extends Module {
 
 		// let the browser/crawler know we have different desktop/mobile styles
 		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-			header('Vary: User-Agent');  
+			header('Vary: User-Agent');
 
 		// change powered by header
 		header('X-Powered-By: Caracal/'._VERSION);
@@ -187,7 +187,7 @@ class page_info extends Module {
 		$template->parse();
 	}
 
-	/** 
+	/**
 	 * Method called by the page module to add elements before printing
 	 */
 	public function addElements() {
@@ -216,7 +216,7 @@ class page_info extends Module {
 						));
 		}
 
-		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION) 
+		if (!in_array('viewport', $this->omit_elements) && _MOBILE_VERSION)
 			$head_tag->addTag('meta',
 						array(
 							'name'		=> 'viewport',
@@ -294,7 +294,7 @@ class page_info extends Module {
 							'name'		=> 'copyright',
 							'content'	=> $copyright
 						));
-		}				
+		}
 
 		// favicon
 		if (file_exists(_BASEPATH.'/'.$images_path.'favicon.png')) {
