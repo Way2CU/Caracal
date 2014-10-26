@@ -259,6 +259,14 @@ class TemplateHandler {
 				}
 			}
 
+			// check if we should flush after tag is closed
+			$flush_data = false;
+
+			if (isset($tag->tagAttrs['cms:flush'])) {
+				unset($tag->tagAttrs['cms:skip_cache']);
+				$flush_data = false;
+			}
+
 			// now parse the tag
 			switch ($tag->tagName) {
 				// handle tag used for setting session variable
@@ -556,6 +564,12 @@ class TemplateHandler {
 
 					break;
 
+				// force flush on common elements
+				case 'head':
+				case 'header':
+				case 'footer':
+					$flush_data = true;
+
 				// default action for parser, draw tag
 				default:
 					if (in_array($tag->tagName, array_keys($this->handlers))) {
@@ -585,6 +599,10 @@ class TemplateHandler {
 						if ($close_tag)
 							echo '</'.$tag->tagName.'>';
 					}
+
+					if ($flush_data)
+						flush();
+
 					break;
 			}
 
