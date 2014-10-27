@@ -1977,7 +1977,7 @@ class contact_form extends Module {
 					'disabled'		=> $item->disabled,
 					'required'		=> $item->required,
 					'autocomplete'	=> $item->autocomplete,
-					'selected'		=> $selected == $id,
+					'selected'		=> $selected == $item->id,
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
