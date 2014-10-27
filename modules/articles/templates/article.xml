@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="article">
+	<article>
 		<h1><cms:var name="$params['title'][$language]"/></h1>
 		<cms:markdown param="content" multilanguage="yes"/>
-	</div>
+	</article>
 </document>
