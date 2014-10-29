@@ -53,7 +53,7 @@ class TemplateHandler {
 	 * List of tags that shouldn't be closed
 	 * @var array
 	 */
-	private $tags_without_end = array('br', 'hr', 'img', 'base', 'input', 'link', 'meta');
+	private $tags_without_end = array('br', 'wbr', 'hr', 'img', 'base', 'input', 'link', 'meta');
 
 	/**
 	 * If we should close all tags
