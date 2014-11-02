@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
- * 
+ *
  * This function creates helper object used for communication with backend.
  */
 
@@ -125,7 +125,7 @@ function Communicator(module_name) {
 			};
 
 		// add optional parameters
-		if (data !== undefined) 
+		if (data !== undefined)
 			$.extend(params.data, data);
 
 		if (response_type === undefined)
