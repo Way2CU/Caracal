@@ -33,6 +33,32 @@ class contact_form extends Module {
 	private $hidden_fields = array('hidden', 'honey-pot');
 	private $virtual_fields = array('transfer-param');
 
+	private $form_templates = array(
+					'empty'		=> null,
+					'default'	=> array(
+						'name'	=> array(
+							'type'			=> 'text',
+							'required'		=> true,
+							'autocomplete'	=> true
+						),
+						'email'	=> array(
+							'type'			=> 'email',
+							'required'		=> true,
+							'autocomplete'	=> true
+						),
+						'phone'	=> array(
+							'type'			=> 'email',
+							'required'		=> true,
+							'autocomplete'	=> true,
+							'pattern'		=> '\d+'
+						),
+						'verify_email' => array(
+							'type'			=> 'honey-pot'
+						)
+					)
+				);
+	private $form_template_names = array();
+
 	/**
 	 * Constructor
 	 */
@@ -62,6 +88,7 @@ class contact_form extends Module {
 		if ($section == 'backend' && class_exists('backend')) {
 			$backend = backend::getInstance();
 
+			// create menu
 			$contact_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_contact'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
@@ -139,6 +166,10 @@ class contact_form extends Module {
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
+
+			// get localized template names
+			foreach ($this->form_templates as $name => $fields)
+				$this->form_template_names[$name] = $this->getLanguageConstant('form_'.$name);
 		}
 
 		// include required scripts
@@ -1803,6 +1834,26 @@ class contact_form extends Module {
 		$template->parse();
 	}
 
+	/**
+	 * Register form field template.
+	 *
+	 * @param string $name
+	 * @param string $title
+	 * @param array $fields
+	 */
+	public function registerFormTemplate($name, $title, $fields) {
+		if (!array_key_exists($name, $this->form_templates)) {
+			$this->form_templates[$name] = $fields;
+			$this->form_template_names[$name] = $title;
+		}
+	}
+
+	/**
+	 * Handle field type tag.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
 	public function tag_FieldTypes($tag_params, $children) {
 		$selected = null;
 
@@ -1819,6 +1870,29 @@ class contact_form extends Module {
 				'type'		=> $field,
 				'name'		=> $this->getLanguageConstant('field_'.$field)
 			);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Handle drawing list of form field templates.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_FormTemplateList($tag_params, $children) {
+		$selected = is_set($tag_params['selected']) ? $tag_params['selected'] : null;
+		$template = $this->loadTemplate($tag_params, 'form_template_option.xml');
+
+		foreach ($this->form_templates as $name => $fields) {
+			$params = array(
+					'name'		=> $name,
+					'title'		=> $this->form_template_names[$name],
+					'selected'	=> $selected == $name
+				);
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
