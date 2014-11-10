@@ -110,7 +110,7 @@
 		<constant name="label_mailer">Mailing method:</constant>
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
-		<constant name="label_field_template">Fields template:</constant>
+		<constant name="label_fields_template">Fields template:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -425,7 +425,7 @@
 		<constant name="label_mailer">Mailing method:</constant>
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
-		<constant name="label_field_template">Fields template:</constant>
+		<constant name="label_fields_template">Fields template:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -586,7 +586,7 @@
 		<constant name="label_mailer">Mailing method:</constant>
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
-		<constant name="label_field_template">Fields template:</constant>
+		<constant name="label_fields_template">Fields template:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
