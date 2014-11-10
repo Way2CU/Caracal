@@ -57,6 +57,9 @@
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
 
+		<constant name="form_empty">Empty</constant>
+		<constant name="form_default">Default fields</constant>
+
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
 		<constant name="column_address">Address</constant>
@@ -107,6 +110,7 @@
 		<constant name="label_mailer">Mailing method:</constant>
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
+		<constant name="label_field_template">Fields template:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -121,6 +125,7 @@
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
 		<constant name="tooltip_include_reply_to">If checked reply address for message will be set to field selected below.</constant>
+		<constant name="tooltip_fields_template">Fields to be created with form automatically. Some templates are provided by other modules.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -265,7 +270,7 @@
 		<constant name="tooltip_name">مترجمة اسم النموذج للاستخدام في الخلفية.</constant>
 		<constant name="tooltip_action">موقع التعامل مع استمارة التقديم النصي. إذا تركت النظام فارغة سوف تتعامل مع بيانات النموذج تلقائيا.</constant>
 		<constant name="tooltip_email_template">قالب لاستخدامه عند تنسيق البريد الإلكتروني المرسلة إلى رسائل البريد الإلكتروني المحدد في الإعدادات العامة.</constant>
-		<constant name="tooltip_use_ajax">إذا كان نظام التحقق سوف تستخدم javascript لتقديم البيانات. لن يتم إعادة توجيه المستخدم إلى صفحة مختلفة.</constant>
+		<constant name="tooltip_use_ajax">إذا كان نظام التحقق سوف تستخدم JavaScript لتقديم البيانات. لن يتم إعادة توجيه المستخدم إلى صفحة مختلفة.</constant>
 		<constant name="tooltip_template_name">مترجمة اسم القالب للاستخدام في الخلفية.</constant>
 		<constant name="tooltip_template_subject">قالب موضوع البريد الإلكتروني. حقول النموذج يمكن referrenced بواسطة إحاطة اسم النطاق في علامة percenage (اسم على سبيل المثال٪٪).</constant>
 		<constant name="tooltip_sender_name">يظهر هذا الاسم كما المرسل في الرسائل المستلمة.</constant>
@@ -274,6 +279,7 @@
 		<constant name="tooltip_recipient_address">قائمة مفصولة بفواصل من عنوان لتلقي شكل تقديم البيانات.</constant>
 		<constant name="tooltip_include_headers">إذا سيتضمن ملف CSV فحص الرؤوس. هذه يمكن أن تكون مخصصة من علامة التبويب النطاقات. من قبل النظام الافتراضي سوف تستخدم تسمية النطاق أو الاسم الحامل.</constant>
 		<constant name="tooltip_include_reply_to">If checked reply address for message will be set to field selected below.</constant>
+		<constant name="tooltip_fields_template">Fields to be created with form automatically. Some templates are provided by other modules.</constant>
 
 		<constant name="field_hidden">مخفي</constant>
 		<constant name="field_radio">Radio زر</constant>
@@ -368,6 +374,9 @@
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
 
+		<constant name="form_empty">Empty</constant>
+		<constant name="form_default">Default fields</constant>
+
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
 		<constant name="column_address">Address</constant>
@@ -416,6 +425,7 @@
 		<constant name="label_mailer">Mailing method:</constant>
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
+		<constant name="label_field_template">Fields template:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -430,6 +440,7 @@
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
 		<constant name="tooltip_include_reply_to">If checked reply address for message will be set to field selected below.</constant>
+		<constant name="tooltip_fields_template">Fields to be created with form automatically. Some templates are provided by other modules.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
@@ -524,6 +535,9 @@
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
 
+		<constant name="form_empty">Empty</constant>
+		<constant name="form_default">Default fields</constant>
+
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">Name</constant>
 		<constant name="column_address">Address</constant>
@@ -572,6 +586,7 @@
 		<constant name="label_mailer">Mailing method:</constant>
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
+		<constant name="label_field_template">Fields template:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -586,6 +601,7 @@
 		<constant name="tooltip_recipient_address">Comma-separated list of address to receive form submission data.</constant>
 		<constant name="tooltip_include_headers">If checked CSV file will include headers. These can be customized from fields tab. By default system will use field label or placeholder.</constant>
 		<constant name="tooltip_include_reply_to">If checked reply address for message will be set to field selected below.</constant>
+		<constant name="tooltip_fields_template">Fields to be created with form automatically. Some templates are provided by other modules.</constant>
 
 		<constant name="field_hidden">Hidden</constant>
 		<constant name="field_radio">Radio button</constant>
