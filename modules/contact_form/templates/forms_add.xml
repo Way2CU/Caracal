@@ -14,6 +14,13 @@
 					<span><cms:text constant="label_name" module="contact_form"/></span>
 					<input name="name" class="multi-language" type="text" maxlength="50" style="width: 350px;"/>
 				</label>
+
+				<label cms:tooltip="tooltip_fields_template">
+					<span><cms:text constant="label_fields_template" module="contact_form"/></span>
+					<select name="field_template">
+						<cms:field_templates/>
+					</select>
+				</label>
 			</div>
 
 			<!-- Submission options -->
