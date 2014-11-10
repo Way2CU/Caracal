@@ -1475,6 +1475,7 @@ class contact_form extends Module {
 				);
 
 		$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
+		$template->registerTagHandler('cms:field_template_list', $this, 'tag_FormTemplateList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

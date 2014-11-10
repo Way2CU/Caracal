@@ -18,7 +18,7 @@
 				<label cms:tooltip="tooltip_fields_template">
 					<span><cms:text constant="label_fields_template" module="contact_form"/></span>
 					<select name="field_template" style="width: 300px">
-						<cms:field_templates/>
+						<cms:field_template_list/>
 					</select>
 				</label>
 			</div>
