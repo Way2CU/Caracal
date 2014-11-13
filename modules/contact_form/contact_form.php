@@ -1885,7 +1885,7 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_FormTemplateList($tag_params, $children) {
-		$selected = is_set($tag_params['selected']) ? $tag_params['selected'] : null;
+		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : null;
 		$template = $this->loadTemplate($tag_params, 'form_template_option.xml');
 
 		foreach ($this->form_templates as $name => $fields) {
