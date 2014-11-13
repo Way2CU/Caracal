@@ -533,7 +533,7 @@ class contact_form extends Module {
 
 		// we need form id
 		if (is_null($id))
-			return;
+			return $result;
 
 		// get managers
 		$manager = ContactForm_FormManager::getInstance();
@@ -1525,6 +1525,7 @@ class contact_form extends Module {
 	 */
 	private function saveForm() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$fields_template = isset($_REQUEST['fields_template']) ? fix_chars($_REQUEST['fields_template']) : null;
 		$manager = ContactForm_FormManager::getInstance();
 
 		$data = array(
@@ -1547,10 +1548,28 @@ class contact_form extends Module {
 		if (is_null($id)) {
 			$window = 'contact_forms_add';
 			$manager->insertData($data);
+			$id = $manager->getInsertedID();
 
 		} else {
 			$window = 'contact_forms_edit';
 			$manager->updateData($data,	array('id' => $id));
+		}
+
+		// create fields if needed
+		if (!is_null($fields_template) && array_key_exists($fields_template, $this->form_templates)) {
+			$field_manager = ContactForm_FormFieldManager::getInstance();
+			$field_list = $this->form_templates[$fields_template];
+
+			foreach ($field_list as $name => $field_data) {
+				$field_manager->insertData(array(
+					'form'		=> $id,
+					'name'		=> $name,
+					'type'		=> isset($field_data['type']) ? $field_data['type'] : 'text',
+					'required'	=> isset($field_data['required']) ? $field_data['required'] : 0,
+					'autocomplete'	=> isset($field_data['autocomplete']) ? $field_data['autocomplete'] : 0,
+					'pattern'	=> isset($field_data['pattern']) ? $field_data['pattern'] : '',
+				));
+			}
 		}
 
 		// show message
