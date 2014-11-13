@@ -1910,9 +1910,11 @@ class contact_form extends Module {
 		$template = $this->loadTemplate($tag_params, 'form_template_option.xml');
 
 		foreach ($this->form_templates as $name => $fields) {
+			$title = isset($this->form_template_names[$name]) ? $this->form_template_names[$name] : $name;
+
 			$params = array(
 					'name'		=> $name,
-					'title'		=> $this->form_template_names[$name],
+					'title'		=> $title,
 					'selected'	=> $selected == $name
 				);
 
