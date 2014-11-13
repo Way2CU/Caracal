@@ -166,8 +166,10 @@ class contact_form extends Module {
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
+		}
 
-			// get localized template names
+		// get localized template names
+		if ($section == 'backend_module') {
 			foreach ($this->form_templates as $name => $fields)
 				$this->form_template_names[$name] = $this->getLanguageConstant('form_'.$name);
 		}
