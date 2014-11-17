@@ -8,71 +8,71 @@
  */
 
 var Caracal = Caracal || {};
-Caracal.shop = Caracal.shop || {};
+Caracal.Shop = Caracal.Shop || {};
 
 /**
  * Shopping Cart
  */
-function ShoppingCart() {
+Caracal.Shop.Cart = function() {
 	var self = this;  // used in embeded functions
 
 	// create interface
-	this.main_container = $('<div>');
-	this.container = $('<div>');
+	self.main_container = $('<div>');
+	self.container = $('<div>');
 
-	this.toggle_button = $('<a>');
-	this.item_count = $('<span>');
+	self.toggle_button = $('<a>');
+	self.item_count = $('<span>');
 
-	this.top_menu = $('<div>');
-	this.checkout_button = $('<a>');
-	this.clear_button = $('<a>');
+	self.top_menu = $('<div>');
+	self.checkout_button = $('<a>');
+	self.clear_button = $('<a>');
 
-	this.content = $('<div>');
-	this.empty_cart = $('<div>');
+	self.content = $('<div>');
+	self.empty_cart = $('<div>');
 
-	this.summary = $('<div>');
+	self.summary = $('<div>');
 
-	this.total = $('<div>');
-	this.subtotal = $('<div>');
-	this.handling = $('<div>');
-	this.shipping = $('<div>');
+	self.total = $('<div>');
+	self.subtotal = $('<div>');
+	self.handling = $('<div>');
+	self.shipping = $('<div>');
 
-	this.label_total = $('<span>');
-	this.label_subtotal = $('<span>');
-	this.label_handling = $('<span>');
-	this.label_shipping = $('<span>');
+	self.label_total = $('<span>');
+	self.label_subtotal = $('<span>');
+	self.label_handling = $('<span>');
+	self.label_shipping = $('<span>');
 
-	this.value_total = $('<span>');
-	this.value_subtotal = $('<span>');
-	this.value_handling = $('<span>');
-	this.value_shipping = $('<span>');
+	self.value_total = $('<span>');
+	self.value_subtotal = $('<span>');
+	self.value_handling = $('<span>');
+	self.value_shipping = $('<span>');
 
-	this.checkout_menu = $('<ul>');
+	self.checkout_menu = $('<ul>');
 
 	// local variables
-	this._visible = false;
-	this._notification_active = false;
-	this._width = 0;
-	this._animation_time = 700;
-	this._blink_time = 400;
-	this._items = {};
-	this._item_count = 0;
-	this._default_currency = 'EUR';
-	this._payment_methods = {};
-	this._default_method = null;
-	this._selected_method = null;
-	this._checkout_menu_visible = false;
-	this._size_values = {};
-	this._shipping = 0;
-	this._handling = 0;
+	self._visible = false;
+	self._notification_active = false;
+	self._width = 0;
+	self._animation_time = 700;
+	self._blink_time = 400;
+	self._items = {};
+	self._item_count = 0;
+	self._default_currency = 'EUR';
+	self._payment_methods = {};
+	self._default_method = null;
+	self._selected_method = null;
+	self._checkout_menu_visible = false;
+	self._size_values = {};
+	self._shipping = 0;
+	self._handling = 0;
 
 	// get checkout form if it exists
-	this._checkout_form = $('div#checkout form');
-	this._on_checkout_page = this._checkout_form.length > 0;
+	self._checkout_form = $('div#checkout form');
+	self._on_checkout_page = self._checkout_form.length > 0;
 
 	// base url for this site
 	var base = $('base');
-	this._backend_url = base.attr('href') + '/index.php';
+	self._backend_url = base.attr('href') + '/index.php';
 
 	var constants = [
 				'checkout',
@@ -94,160 +94,160 @@ function ShoppingCart() {
 				'total_amount',
 			];
 
-
 	/**
 	 * Finish object initialization
 	 */
-	this.init = function() {
+	self.init = function() {
 
 		// configure main container
-		this.main_container
+		self.main_container
 				.attr('id', 'shopping_cart')
-				.append(this.container)
+				.append(self.container)
 				.appendTo($('body'));
 
 		// parse initial options
 		if (typeof Caracal.shop.config !== 'undefined') {
 			if ('visible' in Caracal.shop.config)
-				this.main_container.css('display', Caracal.shop.config.visible ? 'block' : 'none');
-	
+				self.main_container.css('display', Caracal.shop.config.visible ? 'block' : 'none');
+
 			if ('default_method' in Caracal.shop.config)
-				this._default_method = Caracal.shop.config.default_method;
+				self._default_method = Caracal.shop.config.default_method;
 		}
 
 		// configure container
-		this.container
+		self.container
 				.addClass('container')
-				.append(this.toggle_button)
-				.append(this.item_count)
-				.append(this.top_menu)
-				.append(this.checkout_menu)
-				.append(this.content)
-				.append(this.summary);
+				.append(self.toggle_button)
+				.append(self.item_count)
+				.append(self.top_menu)
+				.append(self.checkout_menu)
+				.append(self.content)
+				.append(self.summary);
 
 		// configure toggle button
-		this.toggle_button
+		self.toggle_button
 				.attr('href', 'javascript: void(0);')
 				.attr('title', language_handler.getText('shop', 'show_shopping_cart'))
-				.click(this.toggleVisibility)
+				.click(self.toggleVisibility)
 				.addClass('toggle_button');
 
 		// configure item count label
-		this.item_count
+		self.item_count
 				.addClass('item_count')
 				.html('-')
-				.click(this.toggleVisibility)
+				.click(self.toggleVisibility)
 
 		// configure top menu
-		this.top_menu
+		self.top_menu
 				.addClass('top_menu')
-				.append(this.clear_button)
-				.append(this.checkout_button);
+				.append(self.clear_button)
+				.append(self.checkout_button);
 
-		this.checkout_button
+		self.checkout_button
 				.addClass('checkout')
 				.html(language_handler.getText('shop', 'checkout'))
-				.click(this.showCheckoutMenu);
+				.click(self.showCheckoutMenu);
 
-		this.clear_button
+		self.clear_button
 				.html(language_handler.getText('shop', 'clear'))
-				.click(this._clearCart);
+				.click(self._clearCart);
 
 		// configure checkout menu
-		this.checkout_menu
+		self.checkout_menu
 				.addClass('checkout');
 
 		// configure content container
-		this.content
+		self.content
 				.addClass('content')
-				.append(this.empty_cart);
+				.append(self.empty_cart);
 
-		this.empty_cart
+		self.empty_cart
 				.addClass('empty')
 				.html(language_handler.getText('shop', 'empty_shopping_cart'));
 
 		// configure shopping cart summary container
-		this.summary
+		self.summary
 				.addClass('summary')
-				.append(this.subtotal)
-				.append(this.handling)
-				.append(this.shipping)
-				.append(this.total);
+				.append(self.subtotal)
+				.append(self.handling)
+				.append(self.shipping)
+				.append(self.total);
 
-		this.subtotal
+		self.subtotal
 				.addClass('subtotal')
-				.append(this.label_subtotal)
-				.append(this.value_subtotal);
+				.append(self.label_subtotal)
+				.append(self.value_subtotal);
 
-		this.handling
+		self.handling
 				.addClass('handling')
-				.append(this.label_handling)
-				.append(this.value_handling);
+				.append(self.label_handling)
+				.append(self.value_handling);
 
-		this.shipping
+		self.shipping
 				.addClass('shipping')
-				.append(this.label_shipping)
-				.append(this.value_shipping);
+				.append(self.label_shipping)
+				.append(self.value_shipping);
 
-		this.total
+		self.total
 				.addClass('total')
-				.append(this.label_total)
-				.append(this.value_total);
+				.append(self.label_total)
+				.append(self.value_total);
 
 		// configure values
-		this.value_subtotal.addClass('value');
-		this.value_handling.addClass('value');
-		this.value_shipping.addClass('value');
-		this.value_total.addClass('value');
+		self.value_subtotal.addClass('value');
+		self.value_handling.addClass('value');
+		self.value_shipping.addClass('value');
+		self.value_total.addClass('value');
 
 		// load summary labels
-		this.label_subtotal.html(language_handler.getText('shop', 'subtotal_amount'));
-		this.label_handling.html(language_handler.getText('shop', 'handling'));
-		this.label_shipping.html(language_handler.getText('shop', 'shipping'));
-		this.label_total.html(language_handler.getText('shop', 'total_amount'));
+		self.label_subtotal.html(language_handler.getText('shop', 'subtotal_amount'));
+		self.label_handling.html(language_handler.getText('shop', 'handling'));
+		self.label_shipping.html(language_handler.getText('shop', 'shipping'));
+		self.label_total.html(language_handler.getText('shop', 'total_amount'));
 
 		// connect events
-		$(window).resize(this.__handleWindowResize);
+		$(window).resize(self.__handleWindowResize);
 
 		// get container width for later use
-		this._width = this.main_container.width();
+		self._width = self.main_container.width();
 
 		// connect submit button on checkout form to our handler
-		if (this._on_checkout_page)
-			this._checkout_form.find('button[type=submit]').click(this._handleCheckout);
+		if (self._on_checkout_page)
+			self._checkout_form.find('button[type=submit]').click(self._handleCheckout);
 
 		// load cart items from cookies
-		this._loadContent();
-		this._loadPaymentMethods();
+		self._loadContent();
+		self._loadPaymentMethods();
 
 		// manually call event handler to
 		// calculate initial values
-		this.__handleWindowResize();
+		self.__handleWindowResize();
 	};
 
 	/**
 	 * Show shopping cart
 	 */
-	this.showCart = function() {
-		if (!this._visible) {
-			this.main_container.animate(
-						{right: 0},
-						this._animation_time,
-						function() {
-							self.toggle_button.attr(
-											'title',
-											language_handler.getText('shop', 'hide_shopping_cart')
-										);
-							self._visible = true;
-						}
-					);
-		}
+	self.showCart = function() {
+		if (self._visible)
+			return;
+
+		self.main_container.animate(
+					{right: 0},
+					self._animation_time,
+					function() {
+						self.toggle_button.attr(
+										'title',
+										language_handler.getText('shop', 'hide_shopping_cart')
+									);
+						self._visible = true;
+					}
+				);
 	};
 
 	/**
 	 * Show checkout menu
 	 */
-	this.showCheckoutMenu = function() {
+	self.showCheckoutMenu = function() {
 		var y_pos = self.checkout_button.offset().top + self.top_menu.height(); 
 
 		if (self._checkout_menu_visible) {
@@ -277,26 +277,27 @@ function ShoppingCart() {
 	/**
 	 * Hide shopping cart
 	 */
-	this.hideCart = function() {
-		if (this._visible) {
-			this.main_container.animate(
-						{right: -this._width},
-						this._animation_time,
-						function() {
-							self.toggle_button.attr(
-									'title',
-									language_handler.getText('shop', 'show_shopping_cart')
-								);
-							self._visible = false;
-						}
-					);
-		}
+	self.hideCart = function() {
+		if (!self._visible)
+			return;
+
+		self.main_container.animate(
+					{right: -self._width},
+					self._animation_time,
+					function() {
+						self.toggle_button.attr(
+								'title',
+								language_handler.getText('shop', 'show_shopping_cart')
+							);
+						self._visible = false;
+					}
+				);
 	};
 
 	/**
 	 * Toggle cart visibility
 	 */
-	this.toggleVisibility = function() {
+	self.toggleVisibility = function() {
 		if (self._visible)
 			self.hideCart(); else
 			self.showCart();
@@ -305,36 +306,36 @@ function ShoppingCart() {
 	/**
 	 * Blink shopping cart button
 	 */
-	this.notifyUser = function() {
-		if (this._notification_active)
+	self.notifyUser = function() {
+		if (self._notification_active)
 			return;
 
 		var chain_cart = new AnimationChain(null, false, 3);
 
 		chain_cart
 			.addAnimation(
-					this.toggle_button,
+					self.toggle_button,
 					{opacity: 0},
-					this._blink_time
+					self._blink_time
 			)
 			.addAnimation(
-					this.toggle_button,
+					self.toggle_button,
 					{opacity: 1},
-					this._blink_time
+					self._blink_time
 			)
 			.callback(function() {
 				self._notification_active = false;
 			});
 
-		this._notification_active = true;
+		self._notification_active = true;
 		chain_cart.start();
 	};
 
 	/**
 	 * Open checkout page
 	 */
-	this.checkout = function() {
-		var method_name = $(this).data('name');
+	self.checkout = function() {
+		var method_name = $(self).data('name');
 
 		// use default payment method if specified
 		if (!method_name && self._default_method)
@@ -368,13 +369,13 @@ function ShoppingCart() {
 	 *
 	 * @param integer delivery_method
 	 */
-	this.changeDeliveryMethod = function(delivery_method) {
-		this._updateCheckoutForm(false, delivery_method);
+	self.changeDeliveryMethod = function(delivery_method) {
+		self._updateCheckoutForm(false, delivery_method);
 
 		// enable or disable submit button on checkout form
 		if (delivery_method > 0)
-			this._checkout_form.find('button[type=submit]').removeAttr('disabled'); else
-			this._checkout_form.find('button[type=submit]').attr('disabled', 'disabled'); 
+			self._checkout_form.find('button[type=submit]').removeAttr('disabled'); else
+			self._checkout_form.find('button[type=submit]').attr('disabled', 'disabled'); 
 	};
 
 	/**
@@ -383,11 +384,11 @@ function ShoppingCart() {
 	 * @param integer size
 	 * @return string
 	 */
-	this.getSizeValue = function(size) {
+	self.getSizeValue = function(size) {
 		var result = '';
 
-		if (size in this._size_values) 
-			result = this._size_values[size]['value'][language_handler.current_language];
+		if (size in self._size_values) 
+			result = self._size_values[size]['value'][language_handler.current_language];
 
 		return result;
 	};
@@ -398,8 +399,8 @@ function ShoppingCart() {
 	 * @param boolean update_items
 	 * @param integer delivery_method
 	 */
-	this._updateCheckoutForm = function(update_items, delivery_method) {
-		if (!this._on_checkout_page) 
+	self._updateCheckoutForm = function(update_items, delivery_method) {
+		if (!self._on_checkout_page) 
 			return;
 
 		// load items table
@@ -410,12 +411,12 @@ function ShoppingCart() {
 					};
 
 			$.ajax({
-				url: this._getBackendURL(),
+				url: self._getBackendURL(),
 				type: 'POST',
 				async: true,
 				data: data,
 				dataType: 'html',
-				context: this,
+				context: self,
 				success: function(data) {
 					self._checkout_form.find('tbody').html(data);
 				}
@@ -432,28 +433,28 @@ function ShoppingCart() {
 			data['delivery_method'] = delivery_method;
 
 		$.ajax({
-			url: this._getBackendURL(),
+			url: self._getBackendURL(),
 			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
-			context: this,
+			context: self,
 			success: function(data) {
-				this._shipping = parseFloat(data.shipping);
-				this._handling = parseFloat(data.handling);
+				self._shipping = parseFloat(data.shipping);
+				self._handling = parseFloat(data.handling);
 
 				// update shopping cart
-				this._updateSummary();
+				self._updateSummary();
 
 				// update checkout form
-				this._checkout_form.find('.subtotal').html(parseFloat(data.total).toFixed(2));
-				this._checkout_form.find('.shipping').html(this._shipping.toFixed(2));
-				this._checkout_form.find('.handling').html(this._handling.toFixed(2));
-				this._checkout_form.find('.weight').html(parseFloat(data.weight).toFixed(2) + ' kg');
+				self._checkout_form.find('.subtotal').html(parseFloat(data.total).toFixed(2));
+				self._checkout_form.find('.shipping').html(self._shipping.toFixed(2));
+				self._checkout_form.find('.handling').html(self._handling.toFixed(2));
+				self._checkout_form.find('.weight').html(parseFloat(data.weight).toFixed(2) + ' kg');
 
 				// update total value
 				var total = parseFloat(data.total) + parseFloat(data.shipping) + parseFloat(data.handling);
-				this._checkout_form.find('.total-value').html(total.toFixed(2) + ' ' + this._default_currency);
+				self._checkout_form.find('.total-value').html(total.toFixed(2) + ' ' + self._default_currency);
 			}
 		});
 	};
@@ -464,10 +465,10 @@ function ShoppingCart() {
 	 * @param object event
 	 * @return boolean
 	 */
-	this._handleCheckout = function(event) {
+	self._handleCheckout = function(event) {
 		var remark = self._checkout_form.find('textarea[name=remarks]');
 
-		// if there's a remark on this form, process that first
+		// if there's a remark on self form, process that first
 		if (remark.length > 0 && remark.val().length > 0) {
 			// prevent browser from redirecting until we save remark
 			event.preventDefault();
@@ -500,63 +501,63 @@ function ShoppingCart() {
 	/**
 	 * Load cart content from server
 	 */
-	this._loadContent = function() {
+	self._loadContent = function() {
 		var data = {
 					section: 'shop',
 					action: 'json_get_shopping_cart',
 				};
 
 		$.ajax({
-			url: this._getBackendURL(),
+			url: self._getBackendURL(),
 			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
-			context: this,
-			success: this.__handleContentLoad,
-			error: this.__handleContentLoadError
+			context: self,
+			success: self.__handleContentLoad,
+			error: self.__handleContentLoadError
 		});
 	};
 
 	/**
 	 * Load default currency from server
 	 */
-	this._loadDefaultCurrency = function() {
+	self._loadDefaultCurrency = function() {
 		var data = {
 					section: 'shop',
 					action: 'json_get_currency',
 				};
 
 		$.ajax({
-			url: this._getBackendURL(),
+			url: self._getBackendURL(),
 			type: 'GET',
 			async: true,
 			data: data,
 			dataType: 'json',
-			context: this,
-			success: this.__handleCurrencyLoad,
-			error: this.__handleCurrencyLoadError
+			context: self,
+			success: self.__handleCurrencyLoad,
+			error: self.__handleCurrencyLoadError
 		});
 	};
 	
 	/**
 	 * Load payment methods from server
 	 */
-	this._loadPaymentMethods = function() {
+	self._loadPaymentMethods = function() {
 		var data = {
 					section: 'shop',
 					action: 'json_get_payment_methods',
 				};
 
 		$.ajax({
-			url: this._getBackendURL(),
+			url: self._getBackendURL(),
 			type: 'GET',
 			async: true,
 			data: data,
 			dataType: 'json',
-			context: this,
-			success: this.__handlePaymentMethodsLoad,
-			error: this.__handlePaymentMethodsLoadError
+			context: self,
+			success: self.__handlePaymentMethodsLoad,
+			error: self.__handlePaymentMethodsLoadError
 		});
 	};
 
@@ -564,45 +565,45 @@ function ShoppingCart() {
 	 * Method called by the shop item after initialization is completed.
 	 * @param object item
 	 */
-	this._addItem = function(item) {
+	self._addItem = function(item) {
 		var key = item._uid + '.' + item._variation_id;
 
-		this._item_count++;
-		this._items[key] = item;
+		self._item_count++;
+		self._items[key] = item;
 
-		if (this._item_count == 1)
-			this._hideEmptyMessage();
+		if (self._item_count == 1)
+			self._hideEmptyMessage();
 
-		this._updateSummary();
+		self._updateSummary();
 	};
 
 	/**
 	 * Add child container to content list
 	 * @param object container
 	 */
-	this._addChildContainer = function(container) {
-		this.content.append(container);
+	self._addChildContainer = function(container) {
+		self.content.append(container);
 	};
 
 	/**
 	 * Remove child object from local list
 	 * @param object item
 	 */
-	this._removeItem = function(item) {
+	self._removeItem = function(item) {
 		var key = item._uid + '.' + item._variation_id;
 
-		if (!key in this._items)
+		if (!key in self._items)
 			return;
 
 		// animate item removal
-		var container = this._items[key].getContainer();
+		var container = self._items[key].getContainer();
 		container.animate({opacity: 0, height: 0}, 300, function() {
-			$(this).remove();
+			$(self).remove();
 		});
 
 		// remove item from the list
-		delete this._items[key];
-		this._item_count--;
+		delete self._items[key];
+		self._item_count--;
 
 		// notify the server about removal
 		var data = {
@@ -613,7 +614,7 @@ function ShoppingCart() {
 				};
 
 		$.ajax({
-			url: this._getBackendURL(),
+			url: self._getBackendURL(),
 			type: 'POST',
 			async: true,
 			data: data,
@@ -626,17 +627,17 @@ function ShoppingCart() {
 		});
 
 		// show messages if needed
-		if (this._item_count <= 0)
-			this._showEmptyMessage();
+		if (self._item_count <= 0)
+			self._showEmptyMessage();
 
 		// update shopping cart summary
-		this._updateSummary();
+		self._updateSummary();
 	};
 
 	/**
 	 * Show empty cart message
 	 */
-	this._showEmptyMessage = function() {
+	self._showEmptyMessage = function() {
 		self.empty_cart
 				.css('display', 'block')
 				.css('opacity', 0)
@@ -646,50 +647,50 @@ function ShoppingCart() {
 	/**
 	 * Hide empty cart message
 	 */
-	this._hideEmptyMessage = function() {
+	self._hideEmptyMessage = function() {
 		self.empty_cart
 				.animate({opacity: 0, height: 0}, 500, function() {
-					$(this).css('display', 'none');
+					$(self).css('display', 'none');
 				});
 	};
 
 	/**
 	 * Update cart summary
 	 */
-	this._updateSummary = function() {
+	self._updateSummary = function() {
 		var text = language_handler.getText('shop', 'total_amount');
 		var amount = 0;
 
 		// calculate total price
-		for (var uid in this._items) {
-			var item = this._items[uid];
+		for (var uid in self._items) {
+			var item = self._items[uid];
 
 			amount += item._total;
 		}
 
 		// update shopping cart summary
-		this.value_subtotal.html(amount.toFixed(2));
-		this.value_handling.html(this._handling.toFixed(2));
-		this.value_shipping.html(this._shipping.toFixed(2));
+		self.value_subtotal.html(amount.toFixed(2));
+		self.value_handling.html(self._handling.toFixed(2));
+		self.value_shipping.html(self._shipping.toFixed(2));
 
-		this.value_total.html((amount + this._shipping + this._handling).toFixed(2) + ' ' + this._default_currency);
+		this.value_total.html((amount + self._shipping + self._handling).toFixed(2) + ' ' + self._default_currency);
 
 		// update item count
-		this.item_count.html(this._item_count);
+		self.item_count.html(self._item_count);
 	};
 
 	/**
 	 * Return backend URL
 	 * @return string
 	 */
-	this._getBackendURL = function() {
-		return this._backend_url;
+	self._getBackendURL = function() {
+		return self._backend_url;
 	};
 
 	/**
 	 * Clear shopping cart
 	 */
-	this._clearCart = function() {
+	self._clearCart = function() {
 		var text = language_handler.getText('shop', 'message_clear_cart');
 
 		if (confirm(text)) {
@@ -736,7 +737,7 @@ function ShoppingCart() {
 	 * @param object event
 	 * @return boolean
 	 */
-	this.__handleWindowResize = function(event) {
+	self.__handleWindowResize = function(event) {
 		var window_height = $(window).height();
 		var content_height = window_height - 20 - self.top_menu.height() - self.summary.height() - 15;
 
@@ -746,10 +747,10 @@ function ShoppingCart() {
 
 	/**
 	 * Handle shopping cart content
-	 * 
+	 *
 	 * @param object data
 	 */
-	this.__handleContentLoad = function(data) {
+	self.__handleContentLoad = function(data) {
 		var items = data.cart;
 		var total_items = data.count;
 
@@ -761,8 +762,8 @@ function ShoppingCart() {
 		for (var key in items) {
 			var data = items[key];
 			var uid = data['uid'];
-			var item = new ShopItem(uid, self);
-			
+			var item = new Caracal.Shop.Item(uid, self);
+
 			// set item data
 			item._setData(data);
 			item._updateInterface();
@@ -778,15 +779,15 @@ function ShoppingCart() {
 	 * @param string status
 	 * @param string error
 	 */
-	this.__handleContentLoadError = function(xhr, status, error) {
+	self.__handleContentLoadError = function(xhr, status, error) {
 	};
-	
+
 	/**
 	 * Load default currency from backend
 	 *
 	 * @param string data
 	 */
-	this.__handleCurrencyLoad = function(data) {
+	self.__handleCurrencyLoad = function(data) {
 		self._default_currency = data;
 		self._updateSummary();
 	};
@@ -798,7 +799,7 @@ function ShoppingCart() {
 	 * @param string status
 	 * @param string error
 	 */
-	this.__handleCurrencyLoadError = function(xhr, status, error) {
+	self.__handleCurrencyLoadError = function(xhr, status, error) {
 	};
 
 	/**
@@ -806,7 +807,7 @@ function ShoppingCart() {
 	 * 
 	 * @param object data
 	 */
-	this.__handlePaymentMethodsLoad = function(data) {
+	self.__handlePaymentMethodsLoad = function(data) {
 		self._payment_methods = data;
 
 		for (var i in data){
@@ -829,11 +830,11 @@ function ShoppingCart() {
 	 * @param string status
 	 * @param string error
 	 */
-	this.__handlePaymentMethodsLoadError = function(xhr, status, error) {
+	self.__handlePaymentMethodsLoadError = function(xhr, status, error) {
 	};
 
 	// initialize object
-	//this.init();
+	//self.init();
 	language_handler.getTextArrayAsync('shop', constants, function() { self.init(); });
 }
 
@@ -846,116 +847,116 @@ function ShoppingCart() {
  * @param string uid	Shop item unique id
  * @param object cart	Shopping cart
  */
-function ShopItem(uid, cart) {
+Caracal.Shop.Item = function(uid, cart) {
 	var self = this;  // used internally in nested functions
 
 	// create interface
-	this.container = $('<div>');
-	this.name = $('<div>');
-	this.count = $('<div>');
-	this.price = $('<div>');
-	this.thumbnail = $('<div>');
+	self.container = $('<div>');
+	self.name = $('<div>');
+	self.count = $('<div>');
+	self.price = $('<div>');
+	self.thumbnail = $('<div>');
 
-	this.label_price = $('<span>');
-	this.label_count = $('<span>');
+	self.label_price = $('<span>');
+	self.label_count = $('<span>');
 
-	this.button_edit = $('<a>');
-	this.button_delete = $('<a>');
+	self.button_edit = $('<a>');
+	self.button_delete = $('<a>');
 
 	// local variables
-	this._parent = cart;
-	this._uid = uid;
-	this._variation_id = null;
-	this._properties = {};
-	this._count = 0;
-	this._total = 0;  // total price
-	this._price = 0;
-	this._tax = 0;
-	this._name = '';
-	this._image_url = '';
+	self._parent = cart;
+	self._uid = uid;
+	self._variation_id = null;
+	self._properties = {};
+	self._count = 0;
+	self._total = 0;  // total price
+	self._price = 0;
+	self._tax = 0;
+	self._name = '';
+	self._image_url = '';
 
 	/**
 	 * Complete object initialization
 	 */
-	this.init = function() {
+	self.init = function() {
 		// configure container
-		this.container
+		self.container
 				.addClass('item')
 				.addClass('loading')
-				.append(this.name)
-				.append(this.thumbnail)
-				.append(this.count)
-				.append(this.price)
-				.append(this.button_edit)
+				.append(self.name)
+				.append(self.thumbnail)
+				.append(self.count)
+				.append(self.price)
+				.append(self.button_edit)
 				.append(this.button_delete)
 				.hide();
 
-		this.name
+		self.name
 				.addClass('name')
-				.html(this._uid);
+				.html(self._uid);
 
-		this.count
+		self.count
 				.addClass('count')
 				.hide();
 
-		this.price
+		self.price
 				.addClass('price')
 				.hide();
-				
-		this.thumbnail
+
+		self.thumbnail
 				.addClass('thumbnail')
 				.hide();
 
-		this.label_price.html(language_handler.getText('shop', 'label_price'));
-		this.label_count.html(language_handler.getText('shop', 'label_count'));
+		self.label_price.html(language_handler.getText('shop', 'label_price'));
+		self.label_count.html(language_handler.getText('shop', 'label_count'));
 
 		// configure buttons
-		this.button_edit
+		self.button_edit
 				.addClass('edit')
 				.attr('href', 'javascript: void(0)')
 				.attr('title', language_handler.getText('shop', 'edit_item'))
-				.click(this.changeCount);
+				.click(self.changeCount);
 
-		this.button_delete
+		self.button_delete
 				.addClass('delete')
 				.attr('href', 'javascript: void(0)')
 				.attr('title', language_handler.getText('shop', 'delete_item'))
-				.click(this.remove);
+				.click(self.remove);
 
 		// pack container
-		this._parent._addChildContainer(this.container);
+		self._parent._addChildContainer(self.container);
 
 		// show container
-		this._showContainer();
+		self._showContainer();
 	};
 
 	/**
 	 * Completes object initialization and loads data from the server
 	 */
-	this.complete = function() {
+	self.complete = function() {
 		var data = {
 					section: 'shop',
 					action: 'json_add_item_to_shopping_cart',
-					uid: this._uid,
-					properties: this._properties
+					uid: self._uid,
+					properties: self._properties
 				};
 
 		$.ajax({
-			url: this._parent._getBackendURL(),
+			url: self._parent._getBackendURL(),
 			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
-			context: this,
-			success: this.__handleInformationLoad,
-			error: this.__handleInformationLoadError
+			context: self,
+			success: self.__handleInformationLoad,
+			error: self.__handleInformationLoadError
 		});
 	};
 
 	/**
 	 * Decrease number of items
 	 */
-	this.changeCount = function() {
+	self.changeCount = function() {
 		var new_count = parseInt(prompt(
 						language_handler.getText('shop', 'message_edit_item_in_cart'),
 						self._count
@@ -963,7 +964,7 @@ function ShopItem(uid, cart) {
 
 		if (new_count <= 0) {
 			// if number of items is 0, call parent for removal
-			self._parent._removeItem(self); 
+			self._parent._removeItem(self);
 
 		} else {
 			// change item value
@@ -986,15 +987,15 @@ function ShopItem(uid, cart) {
 	 * Return item container
 	 * @return object
 	 */
-	this.getContainer = function() {
-		return this.container;
+	self.getContainer = function() {
+		return self.container;
 	};
 
 	/**
 	 * Remove item from shopping cart
 	 * @return boolean
 	 */
-	this.remove = function() {
+	self.remove = function() {
 		var text = language_handler.getText('shop', 'message_remove_item_from_cart');
 		var result = false;
 
@@ -1012,8 +1013,8 @@ function ShopItem(uid, cart) {
 	 *
 	 * @param integer size
 	 */
-	this.setProperty = function(property, value) {
-		this._properties[property] = value;
+	self.setProperty = function(property, value) {
+		self._properties[property] = value;
 	};
 
 	/**
@@ -1022,102 +1023,102 @@ function ShopItem(uid, cart) {
 	 * @param string property
 	 * @return string
 	 */
-	this.getProperty = function(property) {
-		return this._properties[property];
+	self.getProperty = function(property) {
+		return self._properties[property];
 	};
 
 	/**
 	 * Method used to set item coun initially
 	 * @param integer count
 	 */
-	this.setCount = function(count) {
-		this._count = count;
+	self.setCount = function(count) {
+		self._count = count;
 	};
 
 	/**
 	 * Increment item count by one.
 	 */
-	this.incrementCount = function() {
-		this._count++;
-		this._notifyCount();
+	self.incrementCount = function() {
+		self._count++;
+		self._notifyCount();
 
-		this._updateInformation();
-		this._parent._updateSummary();
-		this._parent.notifyUser();
+		self._updateInformation();
+		self._parent._updateSummary();
+		self._parent.notifyUser();
 	};
 
 	/**
 	 * Update item labels
 	 */
-	this._updateInformation = function() {
+	self._updateInformation = function() {
 		var current_language = language_handler.current_language;
 
 		// update total price
-		this._total = this._price * this._count;
+		self._total = self._price * self._count;
 
 		// set item name
-		this.name.html(this._name[current_language]); 
+		self.name.html(self._name[current_language]);
 
-		if ('size' in this._properties) {
+		if ('size' in self._properties) {
 			var size_container = $('<small>');
 
 			size_container
-				.html('&nbsp;(' + this._parent.getSizeValue(this._properties['size']) + ')')
-				.appendTo(this.name);
+				.html('&nbsp;(' + self._parent.getSizeValue(self._properties['size']) + ')')
+				.appendTo(self.name);
 		}
 
-		if ('color' in this._properties) {
+		if ('color' in self._properties) {
 			var color_container = $('<span>');
 
 			color_container
 				.addClass('color')
-				.css('background-color', this._properties['color_value'])
-				.attr('title', this._properties['color'])
-				.prependTo(this.name);
+				.css('background-color', self._properties['color_value'])
+				.attr('title', self._properties['color'])
+				.prependTo(self.name);
 		}
 
 		// set other fields
-		this.price.html(this._price);
-		this.price.prepend(this.label_price);
+		self.price.html(self._price);
+		self.price.prepend(self.label_price);
 
-		this.count.html(this._count);
-		this.count.prepend(this.label_count);
+		self.count.html(self._count);
+		self.count.prepend(self.label_count);
 	};
 
 	/**
 	 * Update interface after data is loaded
 	 */
-	this._updateInterface = function() {
+	self._updateInterface = function() {
 		// remove loading animation
-		this.container.removeClass('loading');
+		self.container.removeClass('loading');
 
 		// update labels
-		this._updateInformation();
+		self._updateInformation();
 
 		// animate labels
-		this._showLabels();
+		self._showLabels();
 	};
-	
+
 	/**
 	 * Notify server about changed item count
 	 */
-	this._notifyCount = function() {
+	self._notifyCount = function() {
 		// notify server about quantity change
 		var data = {
 					section: 'shop',
 					action: 'json_change_item_quantity',
-					uid: this._uid,
-					variation_id: this._variation_id,
-					count: this._count
+					uid: self._uid,
+					variation_id: self._variation_id,
+					count: self._count
 				};
 
 		$.ajax({
-			url: this._parent._getBackendURL(),
+			url: self._parent._getBackendURL(),
 			type: 'POST',
 			async: true,
 			data: data,
 			dataType: 'json',
-			context: this,
+			context: self,
 			success: function(data) {
 						if (!data)
 							alert('There was a problem with changing item quantity.');
@@ -1128,8 +1129,8 @@ function ShopItem(uid, cart) {
 	/**
 	 * Show item when parent adds it to the list
 	 */
-	this._showContainer = function() {
-		this.container
+	self._showContainer = function() {
+		self.container
 				.show()
 				.css('height', 0)
 				.animate({height: 20}, 300);
@@ -1138,21 +1139,21 @@ function ShopItem(uid, cart) {
 	/**
 	 * Show labels with animation
 	 */
-	this._showLabels = function() {
+	self._showLabels = function() {
 		// animate container
-		this.container
+		self.container
 				.animate({height: 50}, 300);
 
 		// show other labels
-		this.price
+		self.price
 				.css('display', 'block')
 				.animate({opacity: 1}, 500);
 
-		this.thumbnail
+		self.thumbnail
 				.css('display', 'block')
 				.animate({opacity: 1}, 500);
 
-		this.count
+		self.count
 				.css('display', 'block')
 				.animate({opacity: 1}, 500);
 	};
@@ -1161,20 +1162,20 @@ function ShopItem(uid, cart) {
 	 * Set item data from specified object
 	 * @param object data
 	 */
-	this._setData = function(data) {
-		this._name = data['name'];
-		this._price = parseFloat(data['price']).toFixed(2);
-		this._tax = parseFloat(data['tax']).toFixed(2);
-		this._weight = parseFloat(data['weight']).toFixed(2);
-		this._image_url = data['image'];
-		this._count = data['count'];
-		this._variation_id = data['variation_id'];
+	self._setData = function(data) {
+		self._name = data['name'];
+		self._price = parseFloat(data['price']).toFixed(2);
+		self._tax = parseFloat(data['tax']).toFixed(2);
+		self._weight = parseFloat(data['weight']).toFixed(2);
+		self._image_url = data['image'];
+		self._count = data['count'];
+		self._variation_id = data['variation_id'];
 
 		if ('properties' in data)
-			this._properties = data['properties'];
+			self._properties = data['properties'];
 
 		// add item to parent
-		this._parent._addItem(this);
+		self._parent._addItem(self);
 	};
 
 	/**
@@ -1183,18 +1184,18 @@ function ShopItem(uid, cart) {
 	 *
 	 * @param json data
 	 */
-	this.__handleInformationLoad = function(data) {
+	self.__handleInformationLoad = function(data) {
 		// assign data
-		this._setData(data);
+		self._setData(data);
 
 		// update interface
-		this._updateInterface();
+		self._updateInterface();
 
 		// tell parent to update totals
-		this._parent._updateSummary();
+		self._parent._updateSummary();
 
 		// notify user
-		this._parent.notifyUser();
+		self._parent.notifyUser();
 	};
 
 	/**
@@ -1204,16 +1205,16 @@ function ShopItem(uid, cart) {
 	 * @param string status
 	 * @param string error
 	 */
-	this.__handleInformationLoadError = function(xhr, status, error) {
-		this.container.removeClass('loading');
-		this.name.html(this._uid + ' <i><small>Error loading data!</small></i>');
+	self.__handleInformationLoadError = function(xhr, status, error) {
+		self.container.removeClass('loading');
+		self.name.html(self._uid + ' <i><small>Error loading data!</small></i>');
 	};
 
 	// finish object initialization
-	this.init();
+	self.init();
 }
 
 // create single instance of shopping cart
 $(function() {
-	Caracal.shop.cart = new ShoppingCart();
+	Caracal.Shop.cart = new Caracal.Shop.Cart();
 });
