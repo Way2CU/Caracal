@@ -106,12 +106,12 @@ Caracal.Shop.Cart = function() {
 				.appendTo($('body'));
 
 		// parse initial options
-		if (typeof Caracal.shop.config !== 'undefined') {
-			if ('visible' in Caracal.shop.config)
-				self.main_container.css('display', Caracal.shop.config.visible ? 'block' : 'none');
+		if (typeof Caracal.Shop.config !== 'undefined') {
+			if ('visible' in Caracal.Shop.config)
+				self.main_container.css('display', Caracal.Shop.config.visible ? 'block' : 'none');
 
-			if ('default_method' in Caracal.shop.config)
-				self._default_method = Caracal.shop.config.default_method;
+			if ('default_method' in Caracal.Shop.config)
+				self._default_method = Caracal.Shop.config.default_method;
 		}
 
 		// configure container
