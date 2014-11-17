@@ -6,9 +6,10 @@
  */
 
 var Caracal = Caracal || {};
-Caracal.shop = Caracal.shop || {};
+Caracal.Shop = Caracal.Shop || {};
 
-function BuyerInformationForm() {
+
+Caracal.Shop.BuyerInformationForm = function() {
 	var self = this;
 
 	self.backend_url = $('base').attr('href') + '/index.php';
@@ -77,7 +78,7 @@ function BuyerInformationForm() {
 
 	/**
 	 * Show password recovery dialog.
-	 * 
+	 *
 	 * @param object event
 	 */
 	self._show_password_dialog = function(event) {
@@ -154,8 +155,8 @@ function BuyerInformationForm() {
 
 		// set payment method before processing
 		self.method_field.val(method.data('name'));
-			
-		// add selection class to 
+
+		// add selection class to
 		self.methods.not(method).removeClass('active');
 		method.addClass('active');
 
@@ -164,8 +165,8 @@ function BuyerInformationForm() {
 
 		// disable billing information page if payment method provides info about buyer
 		if (method.data('provides-information') == 1)
-			self.page_control.disablePage(self.pages.BILLING_INFORMATION); else
-			self.page_control.enablePage(self.pages.BILLING_INFORMATION);
+			self.page_control.disablePage(self.billing_information_form); else
+			self.page_control.enablePage(self.billing_information_form);
 	};
 	/**
 	* Validate sign in page.
@@ -215,7 +216,7 @@ function BuyerInformationForm() {
 
 						// empty preset
 						var empty_option = $('<option>');
-						
+
 						empty_option
 								.html(language_handler.getText('shop', 'new_preset'))
 								.attr('value', 0)
@@ -420,7 +421,7 @@ function BuyerInformationForm() {
 /**
  * Checkout form implementation
  */
-function CheckoutForm() {
+Caracal.Shop.CheckoutForm = function() {
 	var self = this;
 
 	// cached response from server
@@ -581,11 +582,9 @@ function CheckoutForm() {
 
 
 $(function() {
-
 	if ($('div#input_details').length > 0) {
-		Caracal.shop.buyer_information_form = new BuyerInformationForm();
-
+		Caracal.Shop.buyer_information_form = new Caracal.Shop.BuyerInformationForm();
 	} else if ($('div#checkout').length > 0) {
-		Caracal.shop.checkout_form = new CheckoutForm();
+		Caracal.Shop.checkout_form = new Caracal.Shop.CheckoutForm();
 	}
 });
