@@ -164,9 +164,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.methods.removeClass('bad');
 
 		// disable billing information page if payment method provides info about buyer
+		var billing_page_index = self.billing_information_form.index();
 		if (method.data('provides-information') == 1)
-			self.page_control.disablePage(self.billing_information_form); else
-			self.page_control.enablePage(self.billing_information_form);
+			self.page_control.disablePage(billing_page_index); else
+			self.page_control.enablePage(billing_page_index);
 	};
 	/**
 	* Validate sign in page.
