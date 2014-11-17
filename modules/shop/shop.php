@@ -2232,13 +2232,13 @@ class shop extends Module {
 	 */
 	private function getUserAccount() {
 		$result = null;
+		$manager = ShopBuyersManager::getInstance();
 		$existing_user = isset($_POST['existing_user']) ? fix_id($_POST['existing_user']) : null;
 
 		// set proper account data based on users choice
 		if (!is_null($existing_user))
 			switch ($existing_user) {
 				case User::EXISTING:
-					$manager = ShopBuyersManager::getInstance();
 					$retry_manager = LoginRetryManager::getInstance();
 
 					$email = fix_chars($_REQUEST['sign_in_email']);
@@ -2298,6 +2298,7 @@ class shop extends Module {
 						$name = explode(' ', fix_chars($_REQUEST['name']), 1);
 						$first_name = $name[0];
 						$last_name = $name[1];
+
 					} else {
 						$first_name = fix_chars($_REQUEST['first_name']);
 						$last_name = fix_chars($_REQUEST['last_name']);
