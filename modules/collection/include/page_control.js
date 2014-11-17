@@ -128,7 +128,7 @@ function PageControl(selector, page_selector) {
 			return;
 
 		// skip page if specified one is disabled
-		if (self.isPageDisabled(page)) 
+		if (self.isPageDisabled(page))
 			new_page += page > self.current_page ? 1 : -1;
 
 		// submit on last page
@@ -343,7 +343,7 @@ function PageControl(selector, page_selector) {
 	/**
 	 * Enable previously disabled page.
 	 *
-	 * @param integer page
+	 * @param object page
 	 */
 	self.enablePage = function(page) {
 		var index = self.disabled_pages.indexOf(page);
@@ -367,7 +367,7 @@ function PageControl(selector, page_selector) {
 	/**
 	 * Disable page.
 	 *
-	 * @param integer page
+	 * @param object page
 	 */
 	self.disablePage = function(page) {
 		// add page to the list of disabled pages
