@@ -2297,7 +2297,7 @@ class shop extends Module {
 				if (isset($_REQUEST['name'])) {
 					$name = explode(' ', fix_chars($_REQUEST['name']), 1);
 					$first_name = $name[0];
-					$last_name = $name[1];
+					$last_name = count($name) > 1 ? $name[1] : '';
 
 				} else {
 					$first_name = fix_chars($_REQUEST['first_name']);
