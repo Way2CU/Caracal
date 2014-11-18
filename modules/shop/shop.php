@@ -2360,7 +2360,7 @@ class shop extends Module {
 
 		// try to associate address with transaction
 		$address = $address_manager->getSingleItem(
-			array('id'),
+			$address_manager->getFieldNames(),
 			array(
 				'buyer'		=> $buyer->id,
 				'name'		=> $shipping_information['name'],
@@ -2418,7 +2418,7 @@ class shop extends Module {
 		// generate recipient array for delivery method
 		if (!is_null($address)) {
 			$recipient = array(
-				'street'	=> array($address->street, ),
+				'street'	=> array($address->street),
 				'city'		=> $address->city,
 				'zip_code'	=> $address->zip,
 				'state'		=> $address->state,
@@ -2992,7 +2992,7 @@ class shop extends Module {
 
 			if ($include_shipping)
 				$address = $this->getAddress($buyer, $shipping_information); else
-					$address = null;
+				$address = null;
 
 			// update transaction
 			$transaction_type = $recurring ? TransactionType::SUBSCRIPTION : TransactionType::SHOPPING_CART;
