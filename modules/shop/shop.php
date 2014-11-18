@@ -2356,6 +2356,8 @@ class shop extends Module {
 	 * Get user's address.
 	 */
 	private function getAddress($buyer, $shipping_information) {
+		$address_manager = ShopDeliveryAddressManager::getInstance();
+
 		// try to associate address with transaction
 		$address = $address_manager->getSingleItem(
 			array('id'),
