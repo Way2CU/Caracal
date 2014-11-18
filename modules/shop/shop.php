@@ -2379,7 +2379,7 @@ class shop extends Module {
 		} else {
 			// create new address
 			$address_manager->insertData(array(
-				'buyer'		=> $transaction_data['buyer'],
+				'buyer'		=> $buyer->id,
 				'name'		=> $shipping_information['name'],
 				'street'	=> $shipping_information['street'],
 				'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
@@ -2389,6 +2389,7 @@ class shop extends Module {
 				'state'		=> $shipping_information['state'],
 				'country'	=> $shipping_information['country'],
 			));
+
 			$id = $address_manager->getInsertedID();
 			$result = $address_manager->getSingleItem($address_manager->getFieldNames(), array('id' => $id));
 		}
