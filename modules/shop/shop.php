@@ -2219,7 +2219,7 @@ class shop extends Module {
 
 		// get delivery information
 		foreach($fields as $field)
-			if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field]))
+			if (isset($_REQUEST[$field]))
 				$result[$field] = fix_chars($_REQUEST[$field]);
 
 		return $result;
