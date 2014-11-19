@@ -274,7 +274,18 @@ class PayPal_Express extends PaymentMethod {
 			}
 		}
 
-		// TODO: Add other shop items.
+		// add regular items
+		if (isset($_SESSION['transaction'])) {
+			$request_id++;
+			$transaction = $_SESSION['transaction'];
+
+			$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
+			$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+			$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction['uid'];
+			$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
+			$fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];
+			$fields["PAYMENTREQUEST_{$request_id}_SHIPPINGAMT"] = $transaction['shipping'];
+		}
 
 		$return_url = url_Make(
 							$action,
