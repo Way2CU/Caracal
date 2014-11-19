@@ -183,7 +183,7 @@ function url_MakeFromArray($params, $html_ampersand=true) {
 		}
 
 		// add relative path and domain
-		$base = dirname(_BASEURL);
+		$result = _BASEURL.$result;
 
 		// add extension in the end
 		if ($url_add_extension && $include_section)
