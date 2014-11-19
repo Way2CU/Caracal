@@ -229,6 +229,7 @@ class PayPal_Express extends PaymentMethod {
 	public function beforeCheckout($method, $return_url, $cancel_url) {
 		global $language, $section, $action;
 
+		$shop = shop::getInstance();
 		$result = false;
 		$fields = array();
 		$request_id = 0;
@@ -241,7 +242,6 @@ class PayPal_Express extends PaymentMethod {
 		// add recurring payment plan
 		if (!is_null($recurring_plan)) {
 			$manager = PayPal_PlansManager::getInstance();
-			$shop = shop::getInstance();
 			$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $recurring_plan));
 			$params = array(
 				'price'			=> $plan->price,
