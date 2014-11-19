@@ -261,22 +261,22 @@ class PayPal_Express extends PaymentMethod {
 				$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Authorization';
 				$fields['L_BILLINGTYPE'.$request_id] = 'RecurringPayments';
 				$fields['L_BILLINGAGREEMENTDESCRIPTION'.$request_id] = $shop->formatRecurring($params);
+				$request_id++;
 
 				// add one time payment
 				if ($plan->setup_price > 0) {
-					$request_id++;
 					$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
 					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
 					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
 					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 					$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
+					$request_id++;
 				}
 			}
 		}
 
 		// add regular items
 		if (isset($_SESSION['transaction'])) {
-			$request_id++;
 			$transaction = $_SESSION['transaction'];
 
 			$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
@@ -285,6 +285,7 @@ class PayPal_Express extends PaymentMethod {
 			$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 			$fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];
 			$fields["PAYMENTREQUEST_{$request_id}_SHIPPINGAMT"] = $transaction['shipping'];
+			$request_id++;
 		}
 
 		$return_url = url_Make(
