@@ -137,6 +137,7 @@ class ShopTransactionsHandler {
 	 */
 	public function tag_TransactionList($tag_params, $children) {
 		$manager = ShopTransactionsManager::getInstance();
+		$buyers_manager = ShopBuyersManager::getInstance();
 		$conditions = array();
 
 		// get conditionals
@@ -145,6 +146,14 @@ class ShopTransactionsHandler {
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
+
+		// get all buyers
+		$buyer_names = array();
+		$buyers = $buyers_manager->getItems(array('id', 'first_name', 'last_name'), array());
+
+		if (count($buyers) > 0)
+			foreach ($buyers as $buyer)
+				$buyer_names[$buyer->id] = $buyer->first_name.' '.$buyer->last_name;
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -157,6 +166,7 @@ class ShopTransactionsHandler {
 
 				$params = array(
 							'buyer'				=> $item->buyer,
+							'buyer_name'		=> $buyer_names[$item->buyer],
 							'system_user'		=> $item->system_user,
 							'address'			=> $item->address,
 							'uid'				=> $item->uid,

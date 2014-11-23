@@ -6,7 +6,7 @@
 			<cms:var name="$params['uid']"/>
 		</span>
 		<span class="column" style="width: 190px;">
-			<cms:var name="$params['buyer']"/>
+			<cms:var name="$params['buyer_name']"/>
 		</span>
 		<span class="column" style="width: 100px;">
 			<cms:var name="$params['total']"/>
