@@ -5,6 +5,10 @@
 	<html lang="$language" cms:eval="lang">
 		<head>
 			<title><cms:text constant="site_title" /></title>
+			<cms:module
+				name="shop"
+				action="include_scripts"
+			/>
 			<cms:module name="head_tag" action="print_tag"/>
 		</head>
 
