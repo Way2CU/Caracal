@@ -45,15 +45,39 @@
 			<table>
 				<tr>
 					<td><cms:text constant="label_handling" module="shop"/></td>
-					<td><input type="text" value="$params['handling']" cms:eval="value" readonly="readonly"/></td>
+					<td>
+						<input
+							type="text"
+							value="$params['handling']"
+							cms:eval="value"
+							readonly="readonly"
+							style="width: 100px"
+							/>
+					</td>
 				</tr>
 				<tr>
 					<td><cms:text constant="label_shipping" module="shop"/></td>
-					<td><input type="text" value="$params['shipping']" cms:eval="value" readonly="readonly"/></td>
+					<td>
+						<input
+							type="text"
+							value="$params['shipping']"
+							cms:eval="value"
+							readonly="readonly"
+							style="width: 100px"
+							/>
+					</td>
 				</tr>
 				<tr>
 					<td><cms:text constant="label_total" module="shop"/></td>
-					<td><input type="text" value="$params['total']" cms:eval="value" readonly="readonly"/></td>
+					<td>
+						<input
+							type="text"
+							value="$params['total']"
+							cms:eval="value"
+							readonly="readonly"
+							style="width: 100px"
+							/>
+					</td>
 				</tr>
 			</table>
 			<hr/>
