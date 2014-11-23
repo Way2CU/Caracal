@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 160px;">
+		<span class="column" style="width: 170px;">
 			<cms:var name="$params['uid']"/>
 		</span>
 		<span class="column" style="width: 190px;">
