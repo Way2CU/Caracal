@@ -356,7 +356,10 @@ class PayPal_Express extends PaymentMethod {
 		$request_id = 0;
 
 		// get buyer information
-		$fields = array('TOKEN' => $token);
+		$fields = array(
+			'TOKEN'		=> $token,
+			'PAYERID'	=> $payer_id
+		);
 		$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_GetExpressCheckoutDetails, $fields);
 
 		// update transaction status and buyer
@@ -434,7 +437,6 @@ class PayPal_Express extends PaymentMethod {
 				$start_timestamp = time();
 
 			$recurring_fields['PROFILESTARTDATE'] = strftime('%Y-%m-%dT%T%z', $start_timestamp);
-			$recurring_fields['PAYERID'] = $payer_id;
 
 			// set description
 			$recurring_fields['DESC'] = $shop->formatRecurring($plan_params);
@@ -495,12 +497,9 @@ class PayPal_Express extends PaymentMethod {
 
 			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
 				trigger_error(json_encode($response));
-				// update transaction token
-				/* $shop->setTransactionToken($transaction_uid, fix_chars($response['PROFILEID'])); */
-
-				// update transaction status
-				/* if ($response['PROFILESTATUS'] == 'ActiveProfile') */
-				/* 	$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED); */
+				// update transaction
+				$shop->setTransactionToken($transaction_uid, fix_chars($response['PAYMENTINFO_0_TRANSACTIONID']));
+				$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
 
 			} else {
 				// report error
@@ -510,6 +509,8 @@ class PayPal_Express extends PaymentMethod {
 				trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
 			}
 
+			// redirect user
+			header('Location: '.$return_url, true, 302);
 		}
 	}
 }
