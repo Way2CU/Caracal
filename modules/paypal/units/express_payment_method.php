@@ -136,8 +136,8 @@ class PayPal_Express extends PaymentMethod {
 	}
 
 	/**
-	 * Make new payment form with specified items and return
-	 * boolean stating the success of initial payment process.
+	 * Make new payment form with specified items and return hidden fields for final
+	 * checkout form. Receiving these values is PayPal module which charges specified token and payer.
 	 *
 	 * @param array $data
 	 * @param array $billing_information
@@ -147,10 +147,24 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_payment($data, $billing_information, $items, $return_url, $cancel_url) {
+		$result = '';
+
+		$params = array(
+				'token'			=> $_SESSION['paypal_token'],
+				'payer_id'		=> fix_chars($_REQUEST['PayerID']),
+				'return_url'	=> $return_url,
+				'type'			=> 'regular'
+			);
+
+		foreach ($params as $name => $value)
+			$result .= '<input type="hidden" name="'.$name.'" value="'.$value.'">';
+
+		return $result;
 	}
 
 	/**
-	 * Make new recurring payment based on named plan.
+	 * This function prepares hidden fields for final checkout form for recurring plan.
+	 * Receiving these values is PayPal module which theen charges specified token and payer.
 	 *
 	 * @param array $data
 	 * @param array $billing_information
@@ -339,6 +353,7 @@ class PayPal_Express extends PaymentMethod {
 		$return_url = fix_chars($_REQUEST['return_url']);
 		$recurring = isset($_REQUEST['type']) && $_REQUEST['type'] == 'recurring';
 		$transaction_uid = $_SESSION['transaction']['uid'];
+		$request_id = 0;
 
 		// get buyer information
 		$fields = array('TOKEN' => $token);
@@ -363,10 +378,8 @@ class PayPal_Express extends PaymentMethod {
 			trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
 		}
 
-
 		// create recurring profile
 		if ($recurring) {
-			$request_id = 0;
 			$plan_name = $_SESSION['recurring_plan'];
 
 			$manager = PayPal_PlansManager::getInstance();
@@ -465,6 +478,38 @@ class PayPal_Express extends PaymentMethod {
 
 			// redirect user
 			header('Location: '.$return_url, true, 302);
+
+		} else {
+			// charge regular
+			$payment_fields = $fields;
+			$transaction = $_SESSION['transaction'];
+
+			$payment_fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
+			$payment_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+			$payment_fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction['uid'];
+			$payment_fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
+			$payment_fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];
+			$payment_fields["PAYMENTREQUEST_{$request_id}_SHIPPINGAMT"] = $transaction['shipping'];
+
+			$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_DoExpressCheckoutPayment, $payment_fields);
+
+			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
+				trigger_error(json_encode($response));
+				// update transaction token
+				/* $shop->setTransactionToken($transaction_uid, fix_chars($response['PROFILEID'])); */
+
+				// update transaction status
+				/* if ($response['PROFILESTATUS'] == 'ActiveProfile') */
+				/* 	$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED); */
+
+			} else {
+				// report error
+				$error_code = urldecode($response['L_ERRORCODE0']);
+				$error_long = urldecode($response['L_LONGMESSAGE0']);
+
+				trigger_error("PayPal_Express: ({$error_code}) - {$error_long}", E_USER_ERROR);
+			}
+
 		}
 	}
 }

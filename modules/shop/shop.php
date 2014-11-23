@@ -3069,6 +3069,7 @@ class shop extends Module {
 					'trial_period'	=> $plan['trial_count'],
 					'trial_unit'	=> $plan['trial']
 				));
+
 			} else {
 				$params['sub-total'] = number_format($summary['total'], 2);
 				$params['shipping'] = number_format($summary['shipping'], 2);
