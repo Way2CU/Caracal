@@ -245,23 +245,36 @@ class ItemManager {
 
 			case DB_UPDATE:
 				$this->_expandMultilanguageFields($data);
-				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->_getDelimitedData($data).' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
-				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
+				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->_getDelimitedData($data)
+
+				if (count($conditionals) > 0)
+					$result .= ' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
+
+				if (!is_null($limit))
+					$result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 
 			case DB_DELETE:
 				$this->_expandMultilanguageFields($conditionals);
 				$result = 'DELETE FROM `'.$this->table_name.'` WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
-				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
+
+				if (!is_null($limit))
+					$result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 
 			case DB_SELECT:
 				$this->_expandMultilanguageFields($data, false);
 				$this->_expandMultilanguageFields($order_by, false, true);
 				$result = 'SELECT '.$this->_getFields($data).' FROM `'.$this->table_name.'`';
-				if (!empty($conditionals)) $result .= ' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
-				if (!is_null($order_by) && !empty($order_by)) $result .= ' ORDER BY '.$this->_getFields($order_by).($order_asc ? ' ASC' : ' DESC');
-				if (!is_null($limit)) $result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
+
+				if (!empty($conditionals))
+					$result .= ' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
+
+				if (!is_null($order_by) && !empty($order_by))
+					$result .= ' ORDER BY '.$this->_getFields($order_by).($order_asc ? ' ASC' : ' DESC');
+
+				if (!is_null($limit))
+					$result .= ' LIMIT '.(is_numeric($limit) ? $limit : $limit[1].' OFFSET '.$limit[0]);
 				break;
 		}
 
