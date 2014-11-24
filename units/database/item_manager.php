@@ -245,7 +245,7 @@ class ItemManager {
 
 			case DB_UPDATE:
 				$this->_expandMultilanguageFields($data);
-				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->_getDelimitedData($data)
+				$result = 'UPDATE `'.$this->table_name.'` SET '.$this->_getDelimitedData($data);
 
 				if (count($conditionals) > 0)
 					$result .= ' WHERE '.$this->_getDelimitedData($conditionals, ' AND ');
