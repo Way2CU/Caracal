@@ -1562,16 +1562,17 @@ class contact_form extends Module {
 			$field_manager = ContactForm_FormFieldManager::getInstance();
 			$field_list = $this->form_templates[$fields_template];
 
-			foreach ($field_list as $name => $field_data) {
-				$field_manager->insertData(array(
-					'form'		=> $id,
-					'name'		=> $name,
-					'type'		=> isset($field_data['type']) ? $field_data['type'] : 'text',
-					'required'	=> isset($field_data['required']) ? $field_data['required'] : 0,
-					'autocomplete'	=> isset($field_data['autocomplete']) ? $field_data['autocomplete'] : 0,
-					'pattern'	=> isset($field_data['pattern']) ? $field_data['pattern'] : '',
-				));
-			}
+			if (count($field_list) > 0)
+				foreach ($field_list as $name => $field_data) {
+					$field_manager->insertData(array(
+						'form'		=> $id,
+						'name'		=> $name,
+						'type'		=> isset($field_data['type']) ? $field_data['type'] : 'text',
+						'required'	=> isset($field_data['required']) ? $field_data['required'] : 0,
+						'autocomplete'	=> isset($field_data['autocomplete']) ? $field_data['autocomplete'] : 0,
+						'pattern'	=> isset($field_data['pattern']) ? $field_data['pattern'] : '',
+					));
+				}
 		}
 
 		// show message
