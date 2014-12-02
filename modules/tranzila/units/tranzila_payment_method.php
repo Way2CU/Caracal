@@ -72,12 +72,13 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * boolean stating the success of initial payment process.
 	 *
 	 * @param array $data
+	 * @param array $billing_information
 	 * @param array $items
 	 * @param string $return_url
 	 * @param string $cancel_url
 	 * @return string
 	 */
-	public function new_payment($data, $items, $return_url, $cancel_url) {
+	public function new_payment($data, $billing_information, $items, $return_url, $cancel_url) {
 		global $language;
 
 		$description = '';
@@ -125,5 +126,27 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$result .= "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\">";
 
 		return $result;
+	}
+
+	/**
+	 * Make new recurring payment based on named plan.
+	 *
+	 * @param array $transaction_data
+	 * @param array $billing_information
+	 * @param string $plan_name
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	public function new_recurring_payment($transaction_data, $billing_information, $plan_name, $return_url, $cancel_url) {
+	}
+
+	/**
+	 * Cancel existing recurring payment.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function cancel_recurring_payment($transaction) {
 	}
 }
