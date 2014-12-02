@@ -189,6 +189,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_recurring_payment($transaction_data, $billing_information, $plan_name, $return_url, $cancel_url) {
+		return '';
 	}
 
 	/**
@@ -198,5 +199,6 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function cancel_recurring_payment($transaction) {
+		return '';
 	}
 }
