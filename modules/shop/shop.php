@@ -1287,35 +1287,35 @@ class shop extends Module {
 
 			// trigger event
 			switch ($status) {
-			case TransactionStatus::COMPLETED:
-				Events::trigger('shop', 'transaction-completed', $transaction);
-				unset($_SESSION['transaction']);
+				case TransactionStatus::COMPLETED:
+					Events::trigger('shop', 'transaction-completed', $transaction);
+					unset($_SESSION['transaction']);
 
-				if ($transaction->type == TransactionType::SUBSCRIPTION) {
-					if (isset($this->settings['recurring_payment_started_template'])) {
-						$template = $this->settings['recurring_payment_started_template'];
-						$this->sendTransactionMail($transaction, $template);
+					if ($transaction->type == TransactionType::SUBSCRIPTION) {
+						if (isset($this->settings['recurring_payment_started_template'])) {
+							$template = $this->settings['recurring_payment_started_template'];
+							$this->sendTransactionMail($transaction, $template);
+						}
+
+					} else if ($transaction->type == TransactionType::SHOPPING_CART) {
+						if (isset($this->settings['payment_completed_template'])) {
+							$template = $this->settings['payment_completed_template'];
+							$this->sendTransactionMail($transaction, $template);
+						}
 					}
 
-				} else if ($transaction->type == TransactionType::SHOPPING_CART) {
-					if (isset($this->settings['payment_completed_template'])) {
-						$template = $this->settings['payment_completed_template'];
-						$this->sendTransactionMail($transaction, $template);
-					}
-				}
+					break;
 
-				break;
+				case TransactionStatus::CANCELED:
+					Events::trigger('shop', 'transaction-canceled', $transaction);
 
-			case TransactionStatus::CANCELED:
-				Events::trigger('shop', 'transaction-canceled', $transaction);
-
-				// send email notification
-				if ($transaction->type == TransactionType::SUBSCRIPTION)
-					if (isset($this->settings['recurring_payment_canceled_template'])) {
-						$template = $this->settings['recurring_payment_canceled_template'];
-						$this->sendTransactionMail($transaction, $template);
-					}
-				break;
+					// send email notification
+					if ($transaction->type == TransactionType::SUBSCRIPTION)
+						if (isset($this->settings['recurring_payment_canceled_template'])) {
+							$template = $this->settings['recurring_payment_canceled_template'];
+							$this->sendTransactionMail($transaction, $template);
+						}
+					break;
 			}
 		}
 
