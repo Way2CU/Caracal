@@ -55,6 +55,14 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
+	 * If recurring payments are supported by this payment method.
+	 * @return boolean
+	 */
+	public function supports_recurring() {
+		return false;
+	}
+
+	/**
 	 * Return URL for checkout form
 	 * @return string
 	 */
@@ -65,6 +73,48 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$url = str_replace('%terminal%', $terminal, $url);
 
 		return $url;
+	}
+
+	/**
+	 * Get display name of payment method
+	 * @return string
+	 */
+	public function get_title() {
+		return 'Tranzilla';
+	}
+
+	/**
+	 * Get icon URL for payment method
+	 * @return string
+	 */
+	public function get_icon_url() {
+		return url_GetFromFilePath($this->parent->path.'images/icon.svg');
+	}
+
+	/**
+	 * Get image URL for payment method
+	 * @return string
+	 */
+	public function get_image_url() {
+		return url_GetFromFilePath($this->parent->path.'images/image.png');
+	}
+
+	/**
+	 * Get list of plans for recurring payments.
+	 *
+	 * @return array
+	 */
+	public function get_recurring_plans() {
+		return array();
+	}
+
+	/**
+	 * Get billing information from payment method.
+	 *
+	 * @return array
+	 */
+	public function get_information() {
+		return array();
 	}
 
 	/**
