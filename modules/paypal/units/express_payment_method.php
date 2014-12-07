@@ -82,7 +82,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return url_GetFromFilePath($this->parent->path.'images/icon.svg');
 	}
 
 	/**
