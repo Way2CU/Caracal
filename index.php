@@ -91,29 +91,8 @@ if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
-// get main language handler instance
-$language_handler = MainLanguageHandler::getInstance();
-
-if (!isset($_REQUEST['language'])) {
-	// no language change was specified, check session
-	if (!isset($_SESSION['language']) || empty($_SESSION['language']))
-		$_SESSION['language'] = $language_handler->getDefaultLanguage();
-
-} else {
-	// language change was specified, make sure it's valid
-	if (array_key_exists($_REQUEST['language'], $language_handler->getLanguages())) {
-		$_SESSION['language'] = fix_chars($_REQUEST['language']);
-
-	} else {
-		// set language without asking if module is backend
-		if (in_array($section, array('backend', 'backend_module')))
-			$_SESSION['language'] = fix_chars($_REQUEST['language']); else
-			$_SESSION['language'] = $language_handler->getDefaultLanguage();
-	}
-}
-
-$language = $_SESSION['language'];
-$language_rtl = $language_handler->isRTL();
+// apply language selection
+Language::applyForSession();
 
 // turn off URL rewrite for backend
 if ($section == 'backend' || $section == 'backend_module')
