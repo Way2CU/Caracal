@@ -350,7 +350,6 @@ class contact_form extends Module {
 		$list = MainLanguageHandler::getInstance()->getLanguages(false);
 
 		// predefined settings stored in system wide tables
-		$this->saveSetting('use_smtp', 0);
 		$this->saveSetting('sender_name', '');
 		$this->saveSetting('sender_address', 'sample@email.com');
 		$this->saveSetting('recipient_name', '');
