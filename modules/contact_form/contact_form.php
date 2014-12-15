@@ -2288,7 +2288,7 @@ class contact_form extends Module {
 					'item_values'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('field_values'),
 											window_Open(
-												'contact_form_field_values', 	// window id
+												'contact_form_field_values_'.$item->id, 	// window id
 												450,				// width
 												$this->getLanguageConstant('title_field_values'), // title
 												true, false,
