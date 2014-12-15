@@ -1945,7 +1945,7 @@ class contact_form extends Module {
 		$params = array(
 					'field'			=> $field_id,
 					'form_action'	=> backend_UrlMake($this->name, 'values_save'),
-					'cancel_action'	=> window_Close('contact_form_fields_add')
+					'cancel_action'	=> window_Close('contact_form_field_value_add')
 				);
 
 		$template->restoreXML();
