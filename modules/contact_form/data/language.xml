@@ -145,6 +145,7 @@
 		<constant name="field_password">Password</constant>
 		<constant name="field_text">Text</constant>
 		<constant name="field_textarea">Multiline text</constant>
+		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
@@ -299,6 +300,7 @@
 		<constant name="field_password">كلمه المرور</constant>
 		<constant name="field_text">نص</constant>
 		<constant name="field_textarea">نص متعدد الأسطر</constant>
+		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
@@ -460,6 +462,7 @@
 		<constant name="field_password">Password</constant>
 		<constant name="field_text">Text</constant>
 		<constant name="field_textarea">Multiline text</constant>
+		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
@@ -621,6 +624,7 @@
 		<constant name="field_password">Password</constant>
 		<constant name="field_text">Text</constant>
 		<constant name="field_textarea">Multiline text</constant>
+		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 

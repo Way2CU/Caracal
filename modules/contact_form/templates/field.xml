@@ -247,6 +247,24 @@
 				</textarea>
 			</option>
 
+			<!-- Combobox -->
+			<option value="select" default="0">
+				<select
+					name="$params['name']"
+					placeholder="$params['placeholder'][$language]"
+					required="$params['required'] ? 'required' : false"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:optional="required,disabled"
+					cms:eval="name,placeholder"
+					>
+					<cms:values
+						field="$params['id']"
+						selected="$params['value']"
+						cms:eval="field,selected"
+						/>
+				</select>
+			</option>
+
 			<!-- Honey pot trap -->
 			<option value="honey-pot" default="0">
 				<input
