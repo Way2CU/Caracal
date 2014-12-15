@@ -13,6 +13,7 @@ use Core\Module;
 
 require_once('units/form_manager.php');
 require_once('units/form_field_manager.php');
+require_once('units/field_value_manager.php');
 require_once('units/template_manager.php');
 require_once('units/submission_manager.php');
 require_once('units/submission_field_manager.php');
@@ -26,7 +27,7 @@ class contact_form extends Module {
 
 	private $mailers = array();
 	private $field_types = array(
-					'text', 'email', 'textarea', 'hidden', 'checkbox', 'radio',
+					'text', 'email', 'textarea', 'select', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
 					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param'
 				);
@@ -336,6 +337,26 @@ class contact_form extends Module {
 					$this->deleteField_Commit();
 					break;
 
+				case 'values_manage':
+					$this->manageValues();
+					break;
+
+				case 'values_add':
+					$this->addValue();
+					break;
+
+				case 'values_edit':
+					$this->editValue();
+					break;
+
+				case 'values_delete':
+					$this->deleteValue();
+					break;
+
+				case 'values_delete_commit':
+					$this->deleteValue_Commit();
+					break;
+
 				default:
 					break;
 			}
@@ -377,7 +398,7 @@ class contact_form extends Module {
 		$sql .= "
 				PRIMARY KEY(`id`),
 				INDEX `contact_form_templates_by_text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// contact form table
@@ -401,7 +422,7 @@ class contact_form extends Module {
 				`reply_to_field` int NULL,
 				PRIMARY KEY(`id`),
 				INDEX `contact_forms_by_text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// table for storing contact form fields
@@ -430,7 +451,24 @@ class contact_form extends Module {
 				PRIMARY KEY(`id`),
 				INDEX `contact_form_fields_by_form` (`form`),
 				INDEX `contact_form_fields_by_form_and_type` (`form`, `type`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// table for storing contact field values
+		$sql = "
+			CREATE TABLE `contact_form_field_values` (
+				`id` int NOT NULL AUTO_INCREMENT,
+				`field` int NOT NULL,
+			";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` varchar(100) NOT NULL DEFAULT '',";
+
+		$sql .= "
+				`value` varchar(255) NOT NULL,
+				PRIMARY KEY(`id`),
+				INDEX `contact_form_values_by_field` (`field`),
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// form submissions table
@@ -441,7 +479,7 @@ class contact_form extends Module {
 				`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				`address` varchar(45) NOT NULL,
 				PRIMARY KEY(`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// form submission fields table
@@ -453,7 +491,7 @@ class contact_form extends Module {
 				`value` text NOT NULL,
 				PRIMARY KEY(`id`),
 				INDEX `contact_form_submissions` (`submission`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 	}
 
@@ -1857,6 +1895,76 @@ class contact_form extends Module {
 	}
 
 	/**
+ 	 * Show list of values for specified field.
+	 */
+	private function manageValues() {
+		$form_id = fix_id($_REQUEST['form']);
+		$template = new TemplateHandler('values_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form'		=> $form_id,
+					'link_new'	=> url_MakeHyperlink(
+										$this->getLanguageConstant('new'),
+										window_Open(
+											'contact_form_field_value_add', 	// window id
+											400,				// width
+											$this->getLanguageConstant('title_field_value_add'), // title
+											false, false,
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'values_add'),
+												array('form', $form_id)
+											)
+										)
+									)
+				);
+
+		$template->registerTagHandler('cms:list', $this, 'tag_FieldList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for adding new field value.
+	 */
+	private function addValue() {
+		// code...
+	}
+
+	/**
+	 * Show form for editing field value.
+	 */
+	private function editValue() {
+		// code...
+	}
+
+	/**
+	 * Save field value.
+	 */
+	private function saveValue() {
+		// code...
+	}
+
+	/**
+	 * Show confirmation dialog before removing field value.
+	 */
+	private function deleteValue() {
+		// code...
+	}
+
+	/**
+	 * Perform field value removal.
+	 */
+	private function deleteValue_Commit() {
+		// code...
+	}
+
+	/**
 	 * Register form field template.
 	 *
 	 * @param string $name
@@ -2040,6 +2148,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'field.xml');
+		$template->registerTagHandler('cms:values', $self, 'tag_FieldValueList');
 
 		// get fields
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
@@ -2110,6 +2219,80 @@ class contact_form extends Module {
 										)
 				);
 
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Handle drawing field values.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_FieldValueList($tag_params, $children) {
+		$manager = ContactForm_FieldValueManager::getInstance();
+		$selected = null;
+		$conditions = array();
+
+		// get parameters
+		if (isset($tag_params['field']))
+			$conditions = fix_id($tag_params['field']);
+
+		if (isset($tag_params['selected']))
+			$selected = fix_chars($tag_params['selected']);
+
+		// get items from the database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->load_template($tag_params, 'value_list_item.xml');
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				// prepare parameters for this item
+				$params = array(
+						'id'			=> $item->id,
+						'field'			=> $item->field,
+						'name'			=> $item->name,
+						'value'			=> $item->value,
+						'selected'		=> $selected == $item->value,
+						'item_change'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('change'),
+												window_Open(
+													'contact_form_field_value_edit', 	// window id
+													400,				// width
+													$this->getLanguageConstant('title_field_value_edit'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'values_edit'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete'	=> url_MakeHyperlink(
+												$this->getLanguageConstant('delete'),
+												window_Open(
+													'contact_form_field_value_delete', 	// window id
+													400,				// width
+													$this->getLanguageConstant('title_field_value_delete'), // title
+													false, false,
+													url_Make(
+														'transfer_control',
+														'backend_module',
+														array('module', $this->name),
+														array('backend_action', 'values_delete'),
+														array('id', $item->id)
+													)
+												)
+											)
+					);
+
+				// parse template
 				$template->restoreXML();
 				$template->setLocalParams($params);
 				$template->parse();
