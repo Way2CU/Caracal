@@ -8,6 +8,7 @@
 				type="text"
 				name="name"
 				class="mutli-language"
+				style="width: 370px"
 				/>
 		</label>
 
@@ -16,6 +17,7 @@
 			<input
 				type="text"
 				name="value"
+				style="width: 370px"
 				/>
 		</label>
 
