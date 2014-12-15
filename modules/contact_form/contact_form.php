@@ -1914,7 +1914,7 @@ class contact_form extends Module {
 											'contact_form_field_value_add', 	// window id
 											400,				// width
 											$this->getLanguageConstant('title_field_value_add'), // title
-											true, false,
+											false, false,
 											url_Make(
 												'transfer_control',
 												'backend_module',
@@ -2240,7 +2240,7 @@ class contact_form extends Module {
 												'contact_form_field_values', 	// window id
 												450,				// width
 												$this->getLanguageConstant('title_field_values'), // title
-												false, false,
+												true, false,
 												url_Make(
 													'transfer_control',
 													'backend_module',
