@@ -69,6 +69,7 @@
 		<constant name="column_address">Address</constant>
 		<constant name="column_field_name">Name</constant>
 		<constant name="column_header">Header value</constant>
+		<constant name="column_value">Value</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -233,6 +234,7 @@
 		<constant name="column_address">عنوان</constant>
 		<constant name="column_field_name">اسم</constant>
 		<constant name="column_header">Header value</constant>
+		<constant name="column_value">Value</constant>
 
 		<constant name="dialog_title">استماره الاتصال</constant>
 
@@ -400,6 +402,7 @@
 		<constant name="column_address">Address</constant>
 		<constant name="column_field_name">Name</constant>
 		<constant name="column_header">Header value</constant>
+		<constant name="column_value">Value</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -568,6 +571,7 @@
 		<constant name="column_address">Address</constant>
 		<constant name="column_field_name">Name</constant>
 		<constant name="column_header">Header value</constant>
+		<constant name="column_value">Value</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
