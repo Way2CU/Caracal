@@ -2074,7 +2074,7 @@ class contact_form extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_field_value_deleted'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close('contact_form_fields_delete').';'.window_ReloadContent('contact_form_field_values_'.$field)
+					'action'	=> window_Close('contact_form_field_value_delete').';'.window_ReloadContent('contact_form_field_values_'.$field)
 				);
 
 		$template->restoreXML();
