@@ -2301,7 +2301,7 @@ class contact_form extends Module {
 
 		// get parameters
 		if (isset($tag_params['field']))
-			$conditions = fix_id($tag_params['field']);
+			$conditions['field'] = fix_id($tag_params['field']);
 
 		if (isset($tag_params['selected']))
 			$selected = fix_chars($tag_params['selected']);
