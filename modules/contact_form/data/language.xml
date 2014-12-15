@@ -42,6 +42,10 @@
 		<constant name="title_submissions">Contact form: Submitted information</constant>
 		<constant name="title_submission_details">Contact form: Submission details</constant>
 		<constant name="title_export">Contact form: Export submissions</constant>
+		<constant name="title_field_values">Contact form: Field values</constant>
+		<constant name="title_field_value_add">Contact form: Add field value</constant>
+		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
+		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">General</constant>
@@ -149,7 +153,7 @@
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
-		<constant name="field_options">Options</constant>
+		<constant name="field_values">Values</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
@@ -208,6 +212,10 @@
 		<constant name="title_submissions">نموذج الاتصال: المعلومات المقدمة</constant>
 		<constant name="title_submission_details">نموذج الاتصال: تفاصيل التقديم</constant>
 		<constant name="title_export">نموذج الاتصال: عروض الاخراج</constant>
+		<constant name="title_field_values">Contact form: Field values</constant>
+		<constant name="title_field_value_add">Contact form: Add field value</constant>
+		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
+		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">عام</constant>
@@ -306,7 +314,7 @@
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
-		<constant name="field_options">Options</constant>
+		<constant name="field_values">Values</constant>
 
 		<constant name="legend_controls">ضوابط الاستماره</constant>
 		<constant name="legend_range">مدى</constant>
@@ -365,6 +373,10 @@
 		<constant name="title_submissions">Contact form: Submitted information</constant>
 		<constant name="title_submission_details">Contact form: Submission details</constant>
 		<constant name="title_export">Contact form: Export submissions</constant>
+		<constant name="title_field_values">Contact form: Field values</constant>
+		<constant name="title_field_value_add">Contact form: Add field value</constant>
+		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
+		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">כללי</constant>
@@ -470,7 +482,7 @@
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
-		<constant name="field_options">Options</constant>
+		<constant name="field_values">Values</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
@@ -529,6 +541,10 @@
 		<constant name="title_submissions">Contact form: Submitted information</constant>
 		<constant name="title_submission_details">Contact form: Submission details</constant>
 		<constant name="title_export">Contact form: Export submissions</constant>
+		<constant name="title_field_values">Contact form: Field values</constant>
+		<constant name="title_field_value_add">Contact form: Add field value</constant>
+		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
+		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">General</constant>
@@ -634,7 +650,7 @@
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
-		<constant name="field_options">Options</constant>
+		<constant name="field_values">Values</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
