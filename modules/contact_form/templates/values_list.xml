@@ -22,11 +22,8 @@
 
 		<div class="list_content" style="height: 350px">
 			<cms:list
-				template="fields_list_item.xml"
-				local="1"
-				skip_virtual="0"
-				form="$params['form']"
-				cms:eval="form"
+				field="$params['field']"
+				cms:eval="field"
 				/>
 		</div>
 	</div>

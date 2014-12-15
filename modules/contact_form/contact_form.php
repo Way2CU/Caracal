@@ -1902,12 +1902,12 @@ class contact_form extends Module {
  	 * Show list of values for specified field.
 	 */
 	private function manageValues() {
-		$form_id = fix_id($_REQUEST['form']);
+		$field_id = fix_id($_REQUEST['field']);
 		$template = new TemplateHandler('values_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'form'		=> $form_id,
+					'field'		=> $field_id,
 					'link_new'	=> url_MakeHyperlink(
 										$this->getLanguageConstant('new'),
 										window_Open(
