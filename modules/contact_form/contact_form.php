@@ -1920,7 +1920,7 @@ class contact_form extends Module {
 												'backend_module',
 												array('module', $this->name),
 												array('backend_action', 'values_add'),
-												array('form', $form_id)
+												array('field', $field_id)
 											)
 										)
 									)
@@ -2195,7 +2195,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'field.xml');
-		$template->registerTagHandler('cms:values', $self, 'tag_FieldValueList');
+		$template->registerTagHandler('cms:values', $this, 'tag_FieldValueList');
 
 		// get fields
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
