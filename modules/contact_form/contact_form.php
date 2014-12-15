@@ -1978,6 +1978,7 @@ class contact_form extends Module {
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
+		}
 	}
 
 	/**
