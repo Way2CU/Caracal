@@ -1967,7 +1967,7 @@ class contact_form extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
-			'field'	=> fix_id($_REQUEST['field_id']),
+			'field'	=> fix_id($_REQUEST['field']),
 			'name'	=> $this->getMultilanguageField('name'),
 			'value'	=> fix_chars($_REQUEST['value'])
 		);
