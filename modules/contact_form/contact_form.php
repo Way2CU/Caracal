@@ -1926,7 +1926,7 @@ class contact_form extends Module {
 									)
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_FieldList');
+		$template->registerTagHandler('cms:list', $this, 'tag_FieldValueList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
