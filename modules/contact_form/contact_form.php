@@ -2310,7 +2310,7 @@ class contact_form extends Module {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'value_list_item.xml');
+		$template = $this->loadTemplate($tag_params, 'values_list_item.xml');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
