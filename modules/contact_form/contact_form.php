@@ -2216,6 +2216,22 @@ class contact_form extends Module {
 													array('id', $item->id)
 												)
 											)
+										),
+					'item_values'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('field_values'),
+											window_Open(
+												'contact_form_field_values', 	// window id
+												400,				// width
+												$this->getLanguageConstant('title_field_values'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'values_manage'),
+													array('id', $item->id)
+												)
+											)
 										)
 				);
 
