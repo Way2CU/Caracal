@@ -1965,9 +1965,9 @@ class contact_form extends Module {
 	 */
 	private function saveValue() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$field_id = fix_id($_REQUEST['field_id']);
 
 		$data = array(
+			'field'	=> fix_id($_REQUEST['field_id']),
 			'name'	=> $this->getMultilanguageField('name'),
 			'value'	=> fix_chars($_REQUEST['value'])
 		);
