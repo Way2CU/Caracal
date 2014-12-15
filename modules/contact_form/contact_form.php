@@ -2406,7 +2406,7 @@ class contact_form extends Module {
 											$this->getLanguageConstant('fields'),
 											window_Open(
 												'contact_form_fields_'.$item->id, 	// window id
-												350,				// width
+												400,				// width
 												$this->getLanguageConstant('title_form_fields'), // title
 												true, false,
 												url_Make(
