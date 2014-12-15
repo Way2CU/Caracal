@@ -1964,7 +1964,37 @@ class contact_form extends Module {
 	 * Save field value.
 	 */
 	private function saveValue() {
-		// code...
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$field_id = fix_id($_REQUEST['field_id']);
+
+		$data = array(
+			'name'	=> $this->getMultilanguageField('name'),
+			'value'	=> fix_chars($_REQUEST['value'])
+		);
+		$manager = ContactForm_FieldValueManager::getInstance();
+
+		// insert or update data in database
+		if (is_null($id)) {
+			$window = 'contact_form_field_value_add';
+			$manager->insertData($data);
+		} else {
+			$window = 'contact_form_field_value_edit';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_field_value_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_field_values_'.$field_id),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
