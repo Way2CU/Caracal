@@ -349,6 +349,10 @@ class contact_form extends Module {
 					$this->editValue();
 					break;
 
+				case 'values_save':
+					$this->saveValue();
+					break;
+
 				case 'values_delete':
 					$this->deleteValue();
 					break;
@@ -1933,7 +1937,20 @@ class contact_form extends Module {
 	 * Show form for adding new field value.
 	 */
 	private function addValue() {
-		// code...
+		$field_id = fix_id($_REQUEST['field']);
+
+		$template = new TemplateHandler('values_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'field'			=> $field_id,
+					'form_action'	=> backend_UrlMake($this->name, 'values_save'),
+					'cancel_action'	=> window_Close('contact_form_fields_add')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -2221,7 +2238,7 @@ class contact_form extends Module {
 											$this->getLanguageConstant('field_values'),
 											window_Open(
 												'contact_form_field_values', 	// window id
-												400,				// width
+												450,				// width
 												$this->getLanguageConstant('title_field_values'), // title
 												false, false,
 												url_Make(
@@ -2229,7 +2246,7 @@ class contact_form extends Module {
 													'backend_module',
 													array('module', $this->name),
 													array('backend_action', 'values_manage'),
-													array('id', $item->id)
+													array('field', $item->id)
 												)
 											)
 										)
