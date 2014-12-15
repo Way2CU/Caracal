@@ -25,6 +25,7 @@
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
+		<constant name="message_field_value_saved">Field value was saved.</constant>
 
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -197,6 +198,7 @@
 		<constant name="message_upload_error">هنالك مشكله في رفع البيانات</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_no_form_selected">الرجاء اختيار النموذج من القائمة.</constant>
+		<constant name="message_field_value_saved">Field value was saved.</constant>
 
 		<constant name="title_settings">نموذج الاتصال: اعدادات</constant>
 		<constant name="title_templates_add">نموذج الاتصال: قالب جديد</constant>
@@ -360,6 +362,7 @@
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
+		<constant name="message_field_value_saved">Field value was saved.</constant>
 
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -530,6 +533,7 @@
 		<constant name="message_upload_error">There was a problem uploading file(s).</constant>
 		<constant name="message_missing_field">One or more required fields is missing.</constant>
 		<constant name="message_no_form_selected">Please select form from the menu.</constant>
+		<constant name="message_field_value_saved">Field value was saved.</constant>
 
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
