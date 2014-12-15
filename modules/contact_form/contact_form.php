@@ -1957,7 +1957,27 @@ class contact_form extends Module {
 	 * Show form for editing field value.
 	 */
 	private function editValue() {
-		// code...
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FieldValueManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			$template = new TemplateHandler('values_change.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+						'id'				=> $item->id,
+						'field'				=> $item->field,
+						'name'				=> $item->name,
+						'value'				=> $item->value,
+						'form_action'  		=> backend_UrlMake($this->name, 'values_save'),
+						'cancel_action'		=> window_Close('contact_form_field_value_edit')
+					);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
 	}
 
 	/**
