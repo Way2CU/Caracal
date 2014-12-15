@@ -7,7 +7,7 @@
 			<input
 				type="text"
 				name="name"
-				class="mutli-language"
+				class="multi-language"
 				style="width: 370px"
 				/>
 		</label>
