@@ -1880,9 +1880,11 @@ class contact_form extends Module {
 	private function deleteField_Commit() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormFieldManager::getInstance();
+		$value_manager = ContactForm_FieldValueManager::getInstance();
 
 		$form = $manager->getItemValue('form', array('id' => $id));
 		$manager->deleteData(array('id' => $id));
+		$value_manager->deleteData(array('field' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2023,14 +2025,61 @@ class contact_form extends Module {
 	 * Show confirmation dialog before removing field value.
 	 */
 	private function deleteValue() {
-		// code...
+		global $language;
+
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FieldValueManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_field_value_delete'),
+					'name'			=> $item->name[$language],
+					'yes_text'		=> $this->getLanguageConstant('delete'),
+					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_action'	=> window_LoadContent(
+											'contact_form_field_value_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'values_delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('contact_form_field_value_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
 	 * Perform field value removal.
 	 */
 	private function deleteValue_Commit() {
-		// code...
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FieldValueManager::getInstance();
+
+		$field = $manager->getItemValue('field', array('id' => $id));
+		$manager->deleteData(array('id' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_field_value_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('contact_form_fields_delete').';'.window_ReloadContent('contact_form_field_values_'.$field)
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
