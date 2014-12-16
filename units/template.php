@@ -503,8 +503,24 @@ class TemplateHandler {
 						$settings = $this->module->settings;
 
 					$params = $this->params;
-					$to_eval = $tag->tagAttrs['name'];
-					echo eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';');
+					$output = '';
+
+					if (isset($tag->tagAttrs['name'])) {
+						// old method with eval
+						$to_eval = $tag->tagAttrs['name'];
+						$output = eval('global $section, $action, $language, $language_rtl, $language_handler; return '.$to_eval.';');
+
+					} else if (isset($tag->tagAttrs['param'])) {
+						$param = $tag->tagAttrs['param'];
+						$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
+
+						if (isset($params[$param]))
+							if (!$multilanguage)
+								$output = $params[$param]; else
+								$output = $params[$param][$language]
+					}
+
+					echo $output;
 					break;
 
 				// support for script tag
