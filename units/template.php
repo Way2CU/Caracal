@@ -517,7 +517,7 @@ class TemplateHandler {
 						if (isset($params[$param]))
 							if (!$multilanguage)
 								$output = $params[$param]; else
-								$output = $params[$param][$language]
+								$output = $params[$param][$language];
 					}
 
 					echo $output;
