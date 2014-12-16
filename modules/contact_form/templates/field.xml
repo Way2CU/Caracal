@@ -260,6 +260,8 @@
 					<cms:values
 						field="$params['id']"
 						selected="$params['value']"
+						template="field_value.xml"
+						local="1"
 						cms:eval="field,selected"
 						/>
 				</select>
