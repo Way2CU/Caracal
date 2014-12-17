@@ -2148,6 +2148,19 @@ class contact_form extends Module {
 			$template->setLocalParams($params);
 			$template->parse();
 		}
+
+		if (count($this->foreign_fields) > 0)
+			foreach ($this->foreign_fields as $field => $data) {
+				$params = array(
+					'selected'	=> $field == $selected,
+					'type'		=> $field,
+					'name'		=> $data['name']
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 
 	/**
