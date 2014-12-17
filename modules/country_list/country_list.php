@@ -19,7 +19,25 @@ class country_list extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $section;
+
 		parent::__construct(__FILE__);
+
+		if (class_exists('contact_form')) {
+			$contact_form = contact_form::getInstance();
+			$contact_form->registerField(
+				'country_list',
+				$this->getLanguageConstant('country_field_name'),
+				$this,
+				'printCountryList'
+			);
+			$contact_form->registerField(
+				'state_list',
+				$this->getLanguageConstant('state_field_name'),
+				$this,
+				'printStateList'
+			);
+		}
 	}
 
 	/**
