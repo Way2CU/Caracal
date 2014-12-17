@@ -33,6 +33,7 @@ class contact_form extends Module {
 				);
 	private $hidden_fields = array('hidden', 'honey-pot');
 	private $virtual_fields = array('transfer-param');
+	private $foreign_fields = array();
 
 	private $form_templates = array(
 					'empty'		=> null,
@@ -2090,10 +2091,34 @@ class contact_form extends Module {
 	 * @param array $fields
 	 */
 	public function registerFormTemplate($name, $title, $fields) {
-		if (!array_key_exists($name, $this->form_templates)) {
-			$this->form_templates[$name] = $fields;
-			$this->form_template_names[$name] = $title;
-		}
+		if (array_key_exists($name, $this->form_templates))
+			return $result;
+
+		$this->form_templates[$name] = $fields;
+		$this->form_template_names[$name] = $title;
+	}
+
+	/**
+	 * Register foreign field type.
+	 *
+	 * @param string $type
+	 * @param string $name
+	 * @param object $object
+	 * @param string $function_name
+	 */
+	public function registerField($type, $name, $object, $function_name) {
+		if (array_key_exists($type, $this->foreign_fields))
+			return;
+
+		$field = array(
+				'name'		=> $name,
+				'handler'	=> array(
+					'object'	=> $object,
+					'function'	=> $function_name
+				)
+			);
+
+		$this->foreign_fields[$type] = $field;
 	}
 
 	/**
