@@ -33,6 +33,9 @@ class page_info extends Module {
 		// change powered by header
 		header('X-Powered-By: Caracal/'._VERSION);
 
+		// prevent easily embedding site as iframe
+		header('X-Frame-Options: DENY');
+
 		// send encoding
 		header('Content-Type: text/html; charset=UTF-8');
 
