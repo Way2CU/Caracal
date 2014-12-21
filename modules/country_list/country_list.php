@@ -146,7 +146,7 @@ class country_list extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function tag_CountryList($tag_params, $children) {
+	public function tag_CountryList($tag_params, $children) {
 		$manager = CountryManager::getInstance();
 		$conditions = array();
 
@@ -182,7 +182,7 @@ class country_list extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function tag_StateList($tag_params, $children) {
+	public function tag_StateList($tag_params, $children) {
 		$manager = CountryStateManager::getInstance();
 		$conditions = array();
 
