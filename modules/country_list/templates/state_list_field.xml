@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label>
+		<span><cms:var param="label" multilanguage="yes"/></span>
+		<select
+			name="$params['name']"
+			required="$params['required'] ? 'required' : false"
+			disabled="$params['disabled'] ? 'disabled' : false"
+			cms:optional="required,disabled"
+			cms:eval="name"
+			>
+			<cms:if condition="!empty($params['placeholder'][$language]) and empty($params['value'])">
+				<option
+					value=""
+					disabled="disabled"
+					selected="selected"
+					style="display: none"
+					>
+					<cms:var param="placeholder" multilanguage="yes"/>
+				</option>
+			</cms:if>
+			<cms:state_list
+				selected="$params['selected']"
+				template="state_option.xml"
+				local="1"
+				cms:eval="selected"
+				/>
+		</select>
+	</label>
+</document>
