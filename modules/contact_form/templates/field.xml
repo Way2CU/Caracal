@@ -251,12 +251,21 @@
 			<option value="select" default="0">
 				<select
 					name="$params['name']"
-					placeholder="$params['placeholder'][$language]"
 					required="$params['required'] ? 'required' : false"
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
-					cms:eval="name,placeholder"
+					cms:eval="name"
 					>
+					<cms:if condition="!empty($params['placeholder'][$language]) and empty($params['value'])">
+						<option
+							value=""
+							disabled="disabled"
+							selected="selected"
+							style="display: none"
+							>
+							<cms:var param="placeholder" multilanguage="yes"/>
+						</option>
+					</cms:if>
 					<cms:values
 						field="$params['id']"
 						selected="$params['value']"
