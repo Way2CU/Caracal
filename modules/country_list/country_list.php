@@ -29,13 +29,13 @@ class country_list extends Module {
 				'country_list',
 				$this->getLanguageConstant('country_field_name'),
 				$this,
-				'printCountryList'
+				'field_CountryList'
 			);
 			$contact_form->registerField(
 				'state_list',
 				$this->getLanguageConstant('state_field_name'),
 				$this,
-				'printStateList'
+				'field_StateList'
 			);
 		}
 	}
@@ -61,11 +61,11 @@ class country_list extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'show':
-					$this->printCountryList($params, $children);
+					$this->tag_CountryList($params, $children);
 					break;
 
 				case 'show_states':
-					$this->printStateList($params, $children);
+					$this->tag_StateList($params, $children);
 					break;
 
 				default:
@@ -146,7 +146,7 @@ class country_list extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function printCountryList($tag_params, $children) {
+	private function tag_CountryList($tag_params, $children) {
 		$manager = CountryManager::getInstance();
 		$conditions = array();
 
@@ -182,7 +182,7 @@ class country_list extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function printStateList($tag_params, $children) {
+	private function tag_StateList($tag_params, $children) {
 		$manager = CountryStateManager::getInstance();
 		$conditions = array();
 
@@ -212,6 +212,34 @@ class country_list extends Module {
 			$template->setLocalParams($params);
 			$template->parse();
 		}
+	}
+
+	/**
+	 * Handle contact form field for country list.
+	 *
+	 * @param array $params
+	 */
+	public function field_CountryList($params) {
+		$template = $this->loadTemplate($params, 'country_list_field.xml');
+		$template->registerTagHandler('cms:country_list', $this, 'tag_CountryList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Handle contact form field for state list.
+	 *
+	 * @param array $params
+	 */
+	public function field_StateList($params) {
+		$template = $this->loadTemplate($params, 'state_list_field.xml');
+		$template->registerTagHandler('cms:state_list', $this, 'tag_StateList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
