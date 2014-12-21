@@ -2284,7 +2284,7 @@ class contact_form extends Module {
 
 		$skip_foreign = true;
 		if (isset($tag_params['skip_foreign']))
-			$skip_virtual = $tag_params['skip_foreign'] == 1;
+			$skip_foreign = $tag_params['skip_foreign'] == 1;
 
 		if (isset($tag_params['types'])) {
 			$types = explode(',', $tag_params['types']);
