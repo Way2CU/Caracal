@@ -21,7 +21,7 @@
 				</option>
 			</cms:if>
 			<cms:state_list
-				selected="$params['selected']"
+				selected="$params['value']"
 				template="state_option.xml"
 				local="1"
 				cms:eval="selected"
