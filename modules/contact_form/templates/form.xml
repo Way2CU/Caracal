@@ -16,6 +16,7 @@
 		<!-- Fields -->
 		<cms:fields
 			form="$params['id']"
+			skip_foreign="0"
 			cms:eval="form"
 			/>
 
