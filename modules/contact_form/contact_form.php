@@ -2101,6 +2101,9 @@ class contact_form extends Module {
 	/**
 	 * Register foreign field type.
 	 *
+	 * Callback function needs to accept a single array containing
+	 * all field specific data.
+	 *
 	 * @param string $type
 	 * @param string $name
 	 * @param object $object
@@ -2279,6 +2282,10 @@ class contact_form extends Module {
 		if (isset($tag_params['skip_virtual']))
 			$skip_virtual = $tag_params['skip_virtual'] == 1;
 
+		$skip_foreign = true;
+		if (isset($tag_params['skip_foreign']))
+			$skip_virtual = $tag_params['skip_foreign'] == 1;
+
 		if (isset($tag_params['types'])) {
 			$types = explode(',', $tag_params['types']);
 			$types = fix_chars($types);
@@ -2312,6 +2319,8 @@ class contact_form extends Module {
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
+				$foreign_handler_missing = !array_key_exists($item->type, $this->foreign_fields);
+
 				// skip hidden fields
 				if ($skip_hidden && in_array($item->type, $this->hidden_fields))
 					continue;
@@ -2340,7 +2349,11 @@ class contact_form extends Module {
 					'disabled'		=> $item->disabled,
 					'required'		=> $item->required,
 					'autocomplete'	=> $item->autocomplete,
+				);
+
+				$backend_params = array(
 					'selected'		=> $selected == $item->id,
+					'skip_foreign'	=> $skip_foreign,
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
@@ -2391,9 +2404,21 @@ class contact_form extends Module {
 										)
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
-				$template->parse();
+				if (in_array($item->type, $this->field_types) || $skip_foreign || $foreign_handler_missing) {
+					// handle contact form field
+					$params = array_merge($params, $backend_params);
+					$template->restoreXML();
+					$template->setLocalParams($params);
+					$template->parse();
+
+				} else {
+					// handle foreign fields
+					$handler = $this->foreign_fields[$item->type]['handler'];
+					$object = $handler['object'];
+					$function = $handler['function'];
+
+					$object->$function($params);
+				}
 			}
 	}
 
