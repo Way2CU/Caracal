@@ -470,7 +470,7 @@
 		<constant name="tooltip_sender_name">שם זה יופיע בתור השולח בהודעות שישלחו.</constant>
 		<constant name="tooltip_sender_address">הודעות יתקבלו כנשלחות ממייל זה. כתובת זו תשמש גם למשלוח מייל חוזר.</constant>
 		<constant name="tooltip_recipient_name">שמות של מקבלי המייל, אופציונאלי ויכול להישאר ריק</constant>
-		<constant name="tooltip_recipient_address"כתובות מייל מופרדות בפסיקים של מקבלי המייל</constant>
+		<constant name="tooltip_recipient_address">כתובות מייל מופרדות בפסיקים של מקבלי המייל</constant>
 		<constant name="tooltip_include_headers">אם נבחר קובץ CSV יכיל כותרות. ניתן לערוך מטאב השדות. כברירת מחדל, המערכת תשתמש בתגית השדה.</constant>
 		<constant name="tooltip_include_reply_to">אם נבחר כתובת למשלוח מייל חוזר תהיה זו שנבחרה בשדה למטה</constant>
 		<constant name="tooltip_fields_template">שדות טופס אשר יווצרו בצורה אוטומאטית. חלק מהתבניות מסופקות ממודולים אחרים</constant>
