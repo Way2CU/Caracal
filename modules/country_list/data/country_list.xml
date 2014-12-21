@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE country_list SYSTEM "country_list.dtd">
 <country_list>
-	<country short="US">United States</country>
-	<country short="CA">Canada</country>
 	<country short="AF">Afghanistan</country>
 	<country short="AL">Albania</country>
 	<country short="DZ">Algeria</country>
@@ -40,6 +38,7 @@
 	<country short="BI">Burundi</country>
 	<country short="KH">Cambodia</country>
 	<country short="CM">Cameroon</country>
+	<country short="CA">Canada</country>
 	<country short="CV">Cape Verde</country>
 	<country short="KY">Cayman Islands</country>
 	<country short="CF">Central African Republic</country>
@@ -228,6 +227,7 @@
 	<country short="UA">Ukraine</country>
 	<country short="AE">United Arab Emirates</country>
 	<country short="GB">United Kingdom</country>
+	<country short="US">United States</country>
 	<country short="UY">Uruguay</country>
 	<country short="UM">USA Minor Outlying Islands</country>
 	<country short="UZ">Uzbekistan</country>
