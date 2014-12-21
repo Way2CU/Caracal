@@ -6,7 +6,7 @@
 		style="$params['type'] == 'honey-pot' ? 'display: none;' : false"
 		cms:optional="class,style"
 		>
-		<span><cms:var name="$params['label'][$language]"/></span>
+		<span><cms:var param="label" multilanguage="yes"/></span>
 		<cms:choice value="$params['type']" cms:eval="value">
 			<!-- Hidden -->
 			<option value="hidden" default="0">
