@@ -15,7 +15,7 @@
 					type="hidden"
 					value="$params['value']"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Radio button -->
@@ -29,7 +29,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="checked,required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Checkbox -->
@@ -42,7 +42,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="checked,required,disabled"
 					cms:eval="name"
-				/>
+					/>
 			</option>
 
 			<!-- Color -->
@@ -55,7 +55,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Date -->
@@ -68,7 +68,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Month and year -->
@@ -81,7 +81,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Date and time -->
@@ -94,7 +94,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Date and time (local) -->
@@ -107,7 +107,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Time -->
@@ -120,7 +120,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- Week -->
@@ -133,7 +133,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- File -->
@@ -146,7 +146,7 @@
 					disabled="$params['disabled'] ? 'disabled' : false"
 					cms:optional="required,disabled"
 					cms:eval="name,value"
-				/>
+					/>
 			</option>
 
 			<!-- URL -->
@@ -162,7 +162,7 @@
 					value="$params['value']"
 					cms:optional="required,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete,value"
-				/>
+					/>
 			</option>
 
 			<!-- email -->
@@ -178,7 +178,7 @@
 					value="$params['value']"
 					cms:optional="required,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete,value"
-				/>
+					/>
 			</option>
 
 			<!-- Number -->
@@ -195,7 +195,7 @@
 					value="$params['value']"
 					cms:optional="required,disabled"
 					cms:eval="name,placeholder,autocomplete,value,min,max"
-				/>
+					/>
 			</option>
 
 			<!-- Range -->
@@ -212,7 +212,7 @@
 					value="$params['value']"
 					cms:optional="required,disabled"
 					cms:eval="name,placeholder,autocomplete,value,min,max"
-				/>
+					/>
 			</option>
 
 			<!-- Password -->
@@ -227,7 +227,7 @@
 					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 					cms:optional="required,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete"
-				/>
+					/>
 			</option>
 
 			<!-- Text area -->
@@ -276,7 +276,7 @@
 					maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 					cms:optional="required,maxlength"
 					cms:eval="name"
-				/>
+					/>
 			</option>
 
 			<!-- Text input -->
@@ -293,7 +293,7 @@
 					pattern="!empty($params['pattern']) ? $params['pattern'] : false"
 					cms:optional="required,pattern,disabled,maxlength"
 					cms:eval="name,placeholder,autocomplete,value"
-				/>
+					/>
 			</option>
 		</cms:choice>
 	</label>
