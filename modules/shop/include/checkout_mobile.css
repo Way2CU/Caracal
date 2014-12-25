@@ -696,15 +696,8 @@ body.rtl div#input_details label {
 }
 
 div#input_details label span {
-	display: inline-block;
-	width: 150px;
-
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-body.rtl div#input_details label span {
-	text-align: left;
+	display: block;
+	padding-bottom: 2px;
 }
 
 div#input_details label select,
