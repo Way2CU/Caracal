@@ -980,10 +980,11 @@ class shop extends Module {
 
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
+		$css_file = _DESKTOP_VERSION ? 'checkout.css' : 'checkout_mobile.css';
 
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
-		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/checkout.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
 		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 	}
 
