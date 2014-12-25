@@ -48,7 +48,6 @@ table.checkout_details {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
 	color: #333333;
-	font-size: 13px;
 }
 
 /**
@@ -321,7 +320,6 @@ div#recurring_summary {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
 	color: #333333;
-	font-size: 13px;
 }
 
 div#recurring_summary div {
@@ -339,7 +337,7 @@ div#recurring_summary h1 {
 	background-color: #333333;
 
 	color: white;
-	font-size: 14px;
+	font-size: 1.1em;
 	font-weight: bold;
 }
 
@@ -361,7 +359,7 @@ table.checkout_details thead td {
 	background-color: #333333;
 
 	color: white;
-	font-size: 14px;
+	font-size: 1.1em;
 	font-weight: bold;
 }
 
@@ -389,15 +387,13 @@ table.checkout_details tbody td {
 	padding: 5px;
 	padding-left: 7px;
 	padding-right: 7px;
-
-	font-size: 14px;
 }
 
 table.checkout_details tbody td small {
 	display: block;
 
 	color: #909090;
-	font-size: 12px;
+	font-size: 0.8em;
 }
 
 table.checkout_details tbody tr td:last-child {
@@ -417,8 +413,6 @@ table.checkout_details tbody tr:nth-child(even) td:last-child {
  */
 table.checkout_details tfoot td {
 	padding: 4px;
-
-	font-size: 14px;
 }
 
 table.checkout_details tfoot tr.first td {
@@ -439,7 +433,7 @@ table.checkout_details tfoot td.total-label {
 	border-top: 1px solid #b0b0b0;
 	background-color: #F0F0F0;
 
-	font-size: 16px;
+	font-size: 1.2em;
 }
 
 table.checkout_details tfoot td.total-label {
@@ -495,7 +489,7 @@ div.checkout_controls button {
     			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	color: white;
-	font-size: 16px;
+	font-size: 1.1em;
 	font-weight: bold;
 	text-shadow: -1px -1px 0px #0b63ce;
 
@@ -545,7 +539,7 @@ div.checkout_controls button:disabled {
 div.checkout_controls button small {
 	display: block;
 
-	font-size: 12px;
+	font-size: 0.8em;
 	font-weight: normal;
 }
 
@@ -561,7 +555,6 @@ div.checkout_message {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
 	color: #333333;
-	font-size: 13px;
 }
 
 div.checkout_message h3 {
@@ -572,7 +565,7 @@ div.checkout_message h3 {
 	background-color: #333333;
 
 	color: white;
-	font-size: 14px;
+	font-size: 1.1em;
 	font-weight: bold;
 	text-align: center;
 }
@@ -596,7 +589,6 @@ div#input_details {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
 	color: #333333;
-	font-size: 16px;
 	text-align: center;
 }
 
@@ -616,7 +608,7 @@ div#input_details h1 {
 	background-color: #333333;
 
 	color: white;
-	font-size: 18px;
+	font-size: 1.3em;
 	font-weight: bold;
 }
 
@@ -823,7 +815,7 @@ div#checkout_stepps {
 	margin-bottom: 20px;
 
 	color: #505050;
-	font-size: 12px;
+	font-size: 0.7em;
 	text-align: left;
 }
 
@@ -856,7 +848,7 @@ div#checkout_stepps a span {
 	border-radius: 16px;
 
 	color: #333333;
-	font-size: 16px;
+	font-size: 1.2em;
 	font-weight: bold;
 
 	transition-property: all;
