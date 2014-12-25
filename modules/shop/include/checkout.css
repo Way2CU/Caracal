@@ -693,8 +693,7 @@ div#input_details a {
 	color: #0b6fd4;
 	text-decoration: none;
 
-	transition-property: all;
-	transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
 div#input_details a:hover {
@@ -703,19 +702,15 @@ div#input_details a:hover {
 
 div#input_details div.existing_account,
 div#input_details div.new_account {
-	height: 0px;
+	max-height: 0px;
 	overflow: hidden;
 
-	transition-property: all;
-	transition-duration: 0.5s;
+	transition: all 0.5s;
 }
 
-div#input_details div.existing_account.visible {
-	height: 120px;
-}
-
+div#input_details div.existing_account.visible,
 div#input_details div.new_account.visible {
-	height: 225px;
+	max-height: 300px;
 }
 
 div#input_details div.existing_account label:first-of-type,
