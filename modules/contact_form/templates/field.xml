@@ -256,11 +256,10 @@
 					cms:optional="required,disabled"
 					cms:eval="name"
 					>
-					<cms:if condition="!empty($params['placeholder'][$language]) and empty($params['value'])">
+					<cms:if condition="!empty($params['placeholder'][$language]) or $params['required']">
 						<option
 							value=""
 							disabled="disabled"
-							selected="selected"
 							style="display: none"
 							>
 							<cms:var param="placeholder" multilanguage="yes"/>
