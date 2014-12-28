@@ -349,7 +349,7 @@
 	<language short="he">
 		<constant name="menu_contact">טופס יצירת קשר</constant>
 		<constant name="menu_settings">הגדרת ברירת מחדל</constant>
-		<constant name="menu_manage_forms">נהל טפשים</constant>
+		<constant name="menu_manage_forms">נהל טפסים</constant>
 		<constant name="menu_manage_templates">נהל תבניות</constant>
 		<constant name="menu_submissions">טפסים שהוגשו</constant>
 		<constant name="menu_export">יצא</constant>
@@ -502,8 +502,8 @@
 		<constant name="field_transfer-param">העבר פרמטר URL</constant>
 
 		<constant name="field_values">ערכים</constant>
-		<constant name="field_value_desktop">Desktop</constant>
-		<constant name="field_value_mobile">Mobile</constant>
+		<constant name="field_value_desktop">דף נחיתה רגיל</constant>
+		<constant name="field_value_mobile">דף נחיתה נייד</constant>
 
 		<constant name="legend_controls">שליטה בטופס</constant>
 		<constant name="legend_range">טווח</constant>
