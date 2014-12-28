@@ -66,10 +66,9 @@
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
-										type="text"
+										type="email"
 										name="sign_in_email"
 										maxlength="127"
-										style="width: 270px;"
 										autocomplete="email"
 									/>
 								</label>
@@ -130,11 +129,10 @@
 									<input
 										class="in_array('new_email', $params['bad_fields']) ? 'bad' : ''"
 										cms:eval="class,value"
-										type="text"
+										type="email"
 										name="new_email"
 										value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
 										maxlength="127"
-										style="width: 270px;"
 										data-required="1"
 										autocomplete="email"
 									/>
@@ -145,7 +143,6 @@
 										type="password"
 										name="new_password"
 										maxlength="127"
-										style="width: 200px;"
 										data-required="1"
 										autocomplete="off"
 									/>
@@ -156,7 +153,6 @@
 										type="password"
 										name="new_password_confirm"
 										maxlength="127"
-										style="width: 200px;"
 										data-required="1"
 										autocomplete="off"
 									/>
@@ -205,11 +201,10 @@
 								<input
 									class="in_array('email', $params['bad_fields']) ? 'bad' : ''"
 									cms:eval="class,value"
-									type="text"
+									type="email"
 									name="email"
 									value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
 									maxlength="127"
-									style="width: 270px;"
 									data-required="1"
 									autocomplete="email"
 								/>
@@ -223,7 +218,6 @@
 									name="phone"
 									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
 									maxlength="127"
-									style="width: 270px;"
 									autocomplete="tel"
 								/>
 							</label>
@@ -237,7 +231,6 @@
 									name="street"
 									value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
 									maxlength="200"
-									style="width: 300px;"
 									data-required="1"
 									autocomplete="address-line1"
 								/>
@@ -251,7 +244,6 @@
 									name="street2"
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 									maxlength="200"
-									style="width: 300px;"
 									autocomplete="address-line2"
 								/>
 							</label>
@@ -277,7 +269,6 @@
 									name="zip"
 									value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
 									maxlength="20"
-									style="width: 120px;"
 									data-required="1"
 									autocomplete="postal-code"
 								/>
@@ -395,7 +386,6 @@
 								name="billing_credit_card"
 								value="isset($_POST['billing_credit_card']) ? fix_chars($_POST['billing_credit_card']) : ''"
 								maxlength="127"
-								style="width: 170px;"
 								autocomplete="cc-number"
 								data-required="1"
 							/>
@@ -410,7 +400,6 @@
 									name="billing_expire_month"
 									value="isset($_POST['billing_expire_month']) ? fix_chars($_POST['billing_expire_month']) : ''"
 									maxlength="2"
-									style="width: 30px;"
 									autocomplete="cc-exp-month"
 									placeholder="mm"
 									data-required="1"
@@ -424,7 +413,6 @@
 									name="billing_expire_year"
 									value="isset($_POST['billing_expire_year']) ? fix_chars($_POST['billing_expire_year']) : ''"
 									maxlength="4"
-									style="width: 50px;"
 									autocomplete="cc-exp-year"
 									placeholder="yyyy"
 									data-required="1"
@@ -440,7 +428,6 @@
 								name="billing_cvv"
 								value="isset($_POST['billing_cvv']) ? fix_chars($_POST['billing_cvv']) : ''"
 								maxlength="4"
-								style="width: 50px;"
 								autocomplete="cc-csc"
 								data-required="1"
 							/>

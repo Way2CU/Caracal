@@ -754,6 +754,37 @@ div#input_details label input {
 	transition-duration: 0.3s;
 }
 
+div#input_details label input[type=email],
+div#input_details label input[name=phone] {
+	width: 270px;
+}
+
+div#input_details label input[type=password] {
+	width: 200px;
+}
+
+div#input_details label input[name=street],
+div#input_details label input[name=street2] {
+	width: 300px;
+}
+
+div#input_details label input[name=zip] {
+	width: 120px;
+}
+
+div#input_details label input[name=billing_credit_card] {
+	width: 170px;
+}
+
+div#input_details label input[name=billing_expire_month] {
+	width: 30px;
+}
+
+div#input_details label input[name=billing_expire_year],
+div#input_details label input[name=billing_cvv] {
+	width: 50px;
+}
+
 div#input_details label select.bad,
 div#input_details label input.bad {
 	border-color: red;
