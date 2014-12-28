@@ -32,7 +32,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.page_control
 			.setAllowForward(false)
 			.setSubmitOnEnd(true)
-			.attachControls('div#checkout_stepps a')
+			.attachControls('div#checkout_steps a')
 			.attachForm('div#input_details form');
 
 		// load dialog titles from server

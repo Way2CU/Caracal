@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="checkout_container">
-		<div id="checkout_stepps" class="input_details">
+		<div id="checkout_steps" class="input_details">
 			<!-- Shipping included -->
 			<cms:if condition="$params['include_shipping']">
 				<a href="#" class="active">

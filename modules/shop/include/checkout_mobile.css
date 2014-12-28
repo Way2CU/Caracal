@@ -799,9 +799,9 @@ div#input_details div.checkout_controls {
 }
 
 /**
- * Stepps in checkout process
+ * Steps in checkout process
  */
-div#checkout_stepps {
+div#checkout_steps {
 	display: block;
 
 	margin-left: auto;
@@ -814,11 +814,11 @@ div#checkout_stepps {
 	text-align: left;
 }
 
-div#checkout_stepps.input_details {
+div#checkout_steps.input_details {
 	text-align: center;
 }
 
-div#checkout_stepps a {
+div#checkout_steps a {
 	display: inline-block;
 
 	margin-right: 5px;
@@ -832,7 +832,7 @@ div#checkout_stepps a {
 	transition-duration: 0.3s;
 }
 
-div#checkout_stepps a span {
+div#checkout_steps a span {
 	display: inline-block;
 	margin-right: 3px;
 	padding: 3px;
@@ -850,8 +850,8 @@ div#checkout_stepps a span {
 	transition-duration: 0.3s;
 }
 
-div#checkout_stepps a:not(:last-of-type):after,
-body.rtl div#checkout_stepps a:not(:last-of-type):before {
+div#checkout_steps a:not(:last-of-type):after,
+body.rtl div#checkout_steps a:not(:last-of-type):before {
 	display: inline-block;
 	width: 0px;
 	height: 0px;
@@ -869,20 +869,20 @@ body.rtl div#checkout_stepps a:not(:last-of-type):before {
 	border-left: 5px solid #606060;
 }
 
-body.rtl div#checkout_stepps a:not(:last-of-type):after {
+body.rtl div#checkout_steps a:not(:last-of-type):after {
 	content: none;
 }
 
-body.rtl div#checkout_stepps a:not(:last-of-type):before {
+body.rtl div#checkout_steps a:not(:last-of-type):before {
 	border-right: 5px solid #606060;
 }
 
-div#checkout_stepps a:hover span {
+div#checkout_steps a:hover span {
 	background-color: #0b6fd4;
 	background-color: rgba(11, 111, 212, 0.5);
 }
 
-div#checkout_stepps a.active span {
+div#checkout_steps a.active span {
 	border: 1px solid #0b63ce;
 	background-color: #0b6fd4;
 
@@ -895,15 +895,15 @@ div#checkout_stepps a.active span {
 	color: white;
 }
 
-div#checkout_stepps a.disabled {
+div#checkout_steps a.disabled {
 	color: #b0b0b0;
 }
 
-div#checkout_stepps a.disabled span {
+div#checkout_steps a.disabled span {
 	color: #b0b0b0;
 }
 
-div#checkout_stepps a.disabled:hover span {
+div#checkout_steps a.disabled:hover span {
 	border-color: #d0d0d0;
 	background-color: white;
 }
