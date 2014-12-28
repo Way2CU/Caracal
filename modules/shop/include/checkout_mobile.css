@@ -820,6 +820,7 @@ div#checkout_steps.input_details {
 
 div#checkout_steps a {
 	display: inline-block;
+	max-width: calc(2em + 5px);
 
 	margin-right: 5px;
 	border-radius: 5px;
@@ -830,6 +831,9 @@ div#checkout_steps a {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 div#checkout_steps a span {
@@ -880,6 +884,10 @@ body.rtl div#checkout_steps a:not(:last-of-type):before {
 div#checkout_steps a:hover span {
 	background-color: #0b6fd4;
 	background-color: rgba(11, 111, 212, 0.5);
+}
+
+div#checkout_steps a.active {
+	max-width: 200px;
 }
 
 div#checkout_steps a.active span {
