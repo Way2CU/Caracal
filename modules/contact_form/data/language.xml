@@ -157,6 +157,7 @@
 		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
+		<constant name="field_site-version">Site version</constant>
 
 		<constant name="field_values">Values</constant>
 		<constant name="field_value_desktop">Desktop</constant>
@@ -325,6 +326,7 @@
 		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
+		<constant name="field_site-version">Site version</constant>
 
 		<constant name="field_values">Values</constant>
 		<constant name="field_value_desktop">Desktop</constant>
@@ -500,6 +502,7 @@
 		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">טקסט מלכודת דבש</constant>
 		<constant name="field_transfer-param">העבר פרמטר URL</constant>
+		<constant name="field_site-version">Site version</constant>
 
 		<constant name="field_values">ערכים</constant>
 		<constant name="field_value_desktop">דף נחיתה רגיל</constant>
@@ -675,6 +678,7 @@
 		<constant name="field_select">Combobox</constant>
 		<constant name="field_honey-pot">Honey pot text</constant>
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
+		<constant name="field_site-version">Site version</constant>
 
 		<constant name="field_values">Values</constant>
 		<constant name="field_value_desktop">Desktop</constant>
