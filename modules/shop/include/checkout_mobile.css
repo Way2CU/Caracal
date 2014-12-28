@@ -670,7 +670,7 @@ div#input_details div.new_account {
 
 div#input_details div.existing_account.visible,
 div#input_details div.new_account.visible {
-	min-height: 300px;
+	max-height: 300px;
 }
 
 div#input_details div.existing_account label:first-of-type,
