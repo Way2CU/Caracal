@@ -689,7 +689,7 @@ div#input_details label span {
 
 div#input_details label select,
 div#input_details label input {
-	width: 80%;
+	width: 75%;
 	margin: 0px;
 	padding: 5px;
 
@@ -703,6 +703,37 @@ div#input_details label input {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+}
+
+div#input_details label input[type=email],
+div#input_details label input[name=phone] {
+	width: 85%;
+}
+
+div#input_details label input[type=password] {
+	width: 70%;
+}
+
+div#input_details label input[name=street],
+div#input_details label input[name=street2] {
+	width: 100%;
+}
+
+div#input_details label input[name=zip] {
+	width: 55%;
+}
+
+div#input_details label input[name=billing_credit_card] {
+	width: 60%;
+}
+
+div#input_details label input[name=billing_expire_month] {
+	width: 30px;
+}
+
+div#input_details label input[name=billing_expire_year],
+div#input_details label input[name=billing_cvv] {
+	width: 50px;
 }
 
 div#input_details label select.bad,
