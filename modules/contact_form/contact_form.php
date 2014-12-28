@@ -29,10 +29,11 @@ class contact_form extends Module {
 	private $field_types = array(
 					'text', 'email', 'textarea', 'select', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
-					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param'
+					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param',
+					'site-version'
 				);
 	private $hidden_fields = array('hidden', 'honey-pot');
-	private $virtual_fields = array('transfer-param');
+	private $virtual_fields = array('transfer-param', 'site-version');
 	private $foreign_fields = array();
 
 	private $form_templates = array(
@@ -645,6 +646,23 @@ class contact_form extends Module {
 						$value = $transfer_params[$field->id]; else
 						$value = $field->value;
 
+					// prepare data for insertion
+					$data[] = array(
+							'field'	=> $field->id,
+							'value'	=> $value
+						);
+					$replacement_fields[$name] = $value;
+					break;
+
+				case 'site-version':
+					// default computer parsable values
+					$value = _DESKTOP_VERSION ? 'desktop' : 'mobile';
+
+					// replace values with language specific
+					if (empty($field->value) || $field->value == 0)
+						$value = $this->getLanguageConstant('field_value_'.$value);
+
+					// prepare data for insertion
 					$data[] = array(
 							'field'	=> $field->id,
 							'value'	=> $value

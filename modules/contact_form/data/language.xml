@@ -159,6 +159,8 @@
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="field_values">Values</constant>
+		<constant name="field_value_desktop">Desktop</constant>
+		<constant name="field_value_mobile">Mobile</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
@@ -325,6 +327,8 @@
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="field_values">Values</constant>
+		<constant name="field_value_desktop">Desktop</constant>
+		<constant name="field_value_mobile">Mobile</constant>
 
 		<constant name="legend_controls">ضوابط الاستماره</constant>
 		<constant name="legend_range">مدى</constant>
@@ -498,6 +502,8 @@
 		<constant name="field_transfer-param">העבר פרמטר URL</constant>
 
 		<constant name="field_values">ערכים</constant>
+		<constant name="field_value_desktop">Desktop</constant>
+		<constant name="field_value_mobile">Mobile</constant>
 
 		<constant name="legend_controls">שליטה בטופס</constant>
 		<constant name="legend_range">טווח</constant>
@@ -671,6 +677,8 @@
 		<constant name="field_transfer-param">Transfer URL parameter</constant>
 
 		<constant name="field_values">Values</constant>
+		<constant name="field_value_desktop">Desktop</constant>
+		<constant name="field_value_mobile">Mobile</constant>
 
 		<constant name="legend_controls">Form controls</constant>
 		<constant name="legend_range">Range</constant>
