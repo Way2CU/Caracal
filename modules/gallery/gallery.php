@@ -1422,7 +1422,8 @@ class gallery extends Module {
 							'text_id'		=> $item->text_id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
-							'thumbnail'		=> $this->getGroupImage($item),
+							'thumbnail'		=> $item->thumbnail,
+							'thumbnail_url'	=> $this->getGroupImage($item),
 							'image'			=> $this->getGroupImage($item, true),
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
