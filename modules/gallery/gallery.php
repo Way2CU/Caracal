@@ -42,24 +42,18 @@ class gallery extends Module {
 		$this->thumbnail_path = _BASEPATH.'/'.$site_path.'gallery/thumbnails/';
 
 		// make sure storage path exists
-		if (!file_exists($this->image_path)) {
-			$old_mask = umask(0);
+		if (!file_exists($this->image_path))
 			if (mkdir($this->image_path, 0775, true) === false) {
 				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
 				return;
 			}
-			umask($old_mask);
-		}
 
 		// make sure storage path exists
-		if (!file_exists($this->thumbnail_path)) {
-			$old_mask = umask(0);
+		if (!file_exists($this->thumbnail_path))
 			if (mkdir($this->thumbnail_path, 0775, true) === false) {
 				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
 				return;
 			}
-			umask($old_mask);
-		}
 
 		// load module style and scripts
 		if (class_exists('head_tag')) {
