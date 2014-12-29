@@ -38,39 +38,28 @@ class gallery extends Module {
 		parent::__construct(__FILE__);
 
 		// make paths absolute so function can easily convert them to URL
-		$base_path = _BASEPATH.'/'.$site_path.'gallery/';
-		$this->image_path = $base_path.'images/';
-		$this->thumbnail_path = $base_path.'thumbnails/';
-
-		// make sure base path exists
-		if (!file_exists($base_path))
-			if (mkdir($base_path) === true) {
-				chmod($base_path, 0775);
-
-			} else {
-				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
-				return;
-			}
+		$this->image_path = _BASEPATH.'/'.$site_path.'gallery/images/';
+		$this->thumbnail_path = _BASEPATH.'/'.$site_path.'gallery/thumbnails/';
 
 		// make sure storage path exists
-		if (!file_exists($this->image_path))
-			if (mkdir($this->image_path) === true) {
-				chmod($this->image_path, 0775);
-
-			} else {
+		if (!file_exists($this->image_path)) {
+			$old_mask = umask(0);
+			if (mkdir($this->image_path, 0775, true) === false) {
 				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
 				return;
 			}
+			umask($old_mask);
+		}
 
 		// make sure storage path exists
-		if (!file_exists($this->thumbnail_path))
-			if (mkdir($this->thumbnail_path) === true) {
-				chmod($this->image_path, 0775);
-
-			} else {
+		if (!file_exists($this->thumbnail_path)) {
+			$old_mask = umask(0);
+			if (mkdir($this->thumbnail_path, 0775, true) === false) {
 				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
 				return;
 			}
+			umask($old_mask);
+		}
 
 		// load module style and scripts
 		if (class_exists('head_tag')) {
