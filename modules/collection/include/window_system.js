@@ -478,7 +478,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 					var temp_data = $(this).data('language');
 
 					for (var language in temp_data)
-						data[name + '_' + language] = temp_data[language];
+						data[name + '_' + language] = encodeURIComponent(temp_data[language]);
 
 				} else {
 					if ($(this).attr('type') == 'checkbox') {
@@ -489,8 +489,8 @@ function Window(id, width, title, can_close, url, existing_structure) {
 						// radio button
 						var group_name = $(this).attr('name');
 
-						if (data[group_name] == undefined) 
-							data[group_name] = $(form).find('input:radio[name='+group_name+']:checked').val();
+						if (data[group_name] == undefined)
+							data[group_name] = encodeURIComponent($(form).find('input:radio[name='+group_name+']:checked').val());
 
 					} else {
 						// all other components
