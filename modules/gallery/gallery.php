@@ -1125,24 +1125,65 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Image($tag_params, $children) {
-		$item = null;
 		$manager = GalleryManager::getInstance();
+
+		$item = null;
+		$order_by = array();
+		$order_asc = true;
+		$conditions = array();
+
+		if (!isset($tag_params['show_invisible']))
+			$conditions['visible'] = 1;
+
+		if (!isset($tag_params['show_protected']))
+			$conditions['protected'] = 0;
+
+		if (isset($tag_params['protected']))
+			$conditions['protected'] = fix_id($tag_params['protected']);
+
+		if (isset($tag_params['slideshow']))
+			$conditions['slideshow'] = fix_id($tag_params['slideshow']);
+
+		if (isset($tag_params['group_id']) && !($tag_params['group_id'] == 0))
+			$conditions['group'] = fix_id($tag_params['group_id']);
+
+		if (isset($tag_params['group'])) {
+			$group_manager = GalleryGroupManager::getInstance();
+
+			$group_id = $group_manager->getItemValue(
+												'id',
+												array('text_id' => fix_chars($tag_params['group']))
+											);
+
+			if (!empty($group_id))
+				$conditions['group'] = $group_id; else
+				$conditions['group'] = -1;
+		}
+
+		if (isset($tag_params['order_by']))
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
+
+		if (isset($tag_params['random']) && $tag_params['random'] == 1)
+			$order_by = array('RAND()');
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
 
 		if (isset($tag_params['id'])) {
 			// get specific image
-			$id = fix_id($tag_params['id']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$conditions['id'] = fix_id($tag_params['id']);
 
 		} else if (isset($tag_params['text_id'])) {
 			// get image using specified text_id
-			$text_id = fix_chars($tag_params['text_id']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
-
-		} else if (isset($tag_params['group_id'])) {
-			// get first image from group (useful for group thumbnails)
-			$id = fix_id($tag_params['group_id']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 		}
+
+		$item = $manager->getSingleItem(
+							$manager->getFieldNames(),
+							$conditions,
+							$order_by,
+							$order_asc,
+						);
 
 		// create template parser
 		$template = $this->loadTemplate($tag_params, 'image.xml');
