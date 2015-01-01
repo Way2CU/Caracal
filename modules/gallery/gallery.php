@@ -1125,6 +1125,7 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Image($tag_params, $children) {
+		$item = null;
 		$manager = GalleryManager::getInstance();
 
 		if (isset($tag_params['id'])) {
@@ -1137,9 +1138,9 @@ class gallery extends Module {
 			$text_id = fix_chars($tag_params['text_id']);
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
 
-		} else {
+		} else if (isset($tag_params['group_id'])) {
 			// get first image from group (useful for group thumbnails)
-			$id = fix_id($tag_params['group']);
+			$id = fix_id($tag_params['group_id']);
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
 		}
 
