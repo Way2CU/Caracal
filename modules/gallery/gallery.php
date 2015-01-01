@@ -1182,7 +1182,7 @@ class gallery extends Module {
 							$manager->getFieldNames(),
 							$conditions,
 							$order_by,
-							$order_asc,
+							$order_asc
 						);
 
 		// create template parser
