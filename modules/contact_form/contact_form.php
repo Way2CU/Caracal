@@ -2337,7 +2337,9 @@ class contact_form extends Module {
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				$foreign_handler_missing = !array_key_exists($item->type, $this->foreign_fields);
+				$foreign_handler_missing = false;
+				if (!in_array($item->type, $this->field_types))
+					$foreign_handler_missing = !array_key_exists($item->type, $this->foreign_fields);
 
 				// skip hidden fields
 				if ($skip_hidden && in_array($item->type, $this->hidden_fields))
