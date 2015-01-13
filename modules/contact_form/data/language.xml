@@ -74,6 +74,7 @@
 		<constant name="column_field_name">Name</constant>
 		<constant name="column_header">Header value</constant>
 		<constant name="column_value">Value</constant>
+		<constant name="column_domain">Domain</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -121,6 +122,7 @@
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
 		<constant name="label_fields_template">Fields template:</constant>
+		<constant name="label_domain">Domain:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -247,6 +249,7 @@
 		<constant name="column_field_name">اسم</constant>
 		<constant name="column_header">Header value</constant>
 		<constant name="column_value">Value</constant>
+		<constant name="column_domain">Domain</constant>
 
 		<constant name="dialog_title">استماره الاتصال</constant>
 
@@ -423,6 +426,7 @@
 		<constant name="column_field_name">שם</constant>
 		<constant name="column_header">ערך כותרת</constant>
 		<constant name="column_value">ערך</constant>
+		<constant name="column_domain">Domain</constant>
 
 		<constant name="dialog_title">טופס קשר</constant>
 
@@ -468,6 +472,7 @@
 		<constant name="label_include_reply_to">לכלול את שדה ה reply to?</constant>
 		<constant name="label_reply_to">שם השדה:</constant>
 		<constant name="label_fields_template">תבנית השדה:</constant>
+		<constant name="label_domain">Domain:</constant>
 
 		<constant name="tooltip_text_id">מזה טקסט חד ערכי לפניה נוחה לתבניות.</constant>
 		<constant name="tooltip_name">שם מקומי לטופס לשימוש בממשק האחורי.</constant>
@@ -600,6 +605,7 @@
 		<constant name="column_field_name">Name</constant>
 		<constant name="column_header">Header value</constant>
 		<constant name="column_value">Value</constant>
+		<constant name="column_domain">Domain</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -645,6 +651,7 @@
 		<constant name="label_include_reply_to">Include reply-to field?</constant>
 		<constant name="label_reply_to">Field name:</constant>
 		<constant name="label_fields_template">Fields template:</constant>
+		<constant name="label_domain">Domain:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>

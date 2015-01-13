@@ -72,6 +72,25 @@
 
 			<!-- Accepted domains -->
 			<div class="scrollable_list">
+				<label class="inline">
+					<span><cms:text constant="label_domain" module="contact_form"/></span>
+					<input name="domain" type="text"/>
+					<button type="button" onclick="javascript: contact_form_AddDomain();">
+						<cms:text constant="add"/>
+					</button>
+				</label>
+
+				<div class="list_header">
+					<span class="column" style="width: 150px;">
+						<cms:text constant="column_domain" module="contact_form"/>
+					</span>
+					<span class="column">
+						<cms:text constant="column_options"/>
+					</span>
+				</div>
+
+				<div class="list_content" style="height: 305px" id="contact_form_domain_list">
+				</div>
 			</div>
 		</div>
 
