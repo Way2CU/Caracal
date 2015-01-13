@@ -51,10 +51,17 @@ ContactForm.add_domain = function() {
 	var options = $('<div>');
 	var remove = $('<a>');
 	var field = $('<input>');
+	var field_name = 'domain_' + ContactForm.hash_code(domain.val());
+
+	// make sure domain is not already in the list
+	if ($('input[name=' + field_name + ']').length > 0) {
+		alert(language_handler.getText('contact_form', 'message_domain_already_in_list'));
+		return;
+	}
 
 	field
 		.attr('type', 'hidden')
-		.attr('name', 'domain_' + ContactForm.hash_code(domain.val()))
+		.attr('name', field_name)))
 		.attr('value', domain.val());
 
 	remove

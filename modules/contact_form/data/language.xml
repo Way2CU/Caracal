@@ -28,6 +28,7 @@
 		<constant name="message_field_value_saved">Field value was saved.</constant>
 		<constant name="message_field_value_delete">You are about to remove the following value from selected field. Are you sure?</constant>
 		<constant name="message_field_value_deleted">Field value was removed!</constant>
+		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -209,6 +210,7 @@
 		<constant name="message_field_value_saved">Field value was saved.</constant>
 		<constant name="message_field_value_delete">You are about to remove the following value from selected field. Are you sure?</constant>
 		<constant name="message_field_value_deleted">Field value was removed!</constant>
+		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 
 		<constant name="title_settings">نموذج الاتصال: اعدادات</constant>
 		<constant name="title_templates_add">نموذج الاتصال: قالب جديد</constant>
@@ -380,6 +382,7 @@
 		<constant name="message_field_value_saved">ערך השדה נשמר.</constant>
 		<constant name="message_field_value_delete">אתה עומד להסיר את הערך הבא מהשדה. האם אתה בטוח?</constant>
 		<constant name="message_field_value_deleted">ערך השדה הוסר.</constant>
+		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">טופס קשר: תבנית חדשה</constant>
@@ -559,6 +562,7 @@
 		<constant name="message_field_value_saved">Field value was saved.</constant>
 		<constant name="message_field_value_delete">You are about to remove the following value from selected field. Are you sure?</constant>
 		<constant name="message_field_value_deleted">Field value was removed!</constant>
+		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
