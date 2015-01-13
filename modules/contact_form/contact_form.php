@@ -1588,6 +1588,7 @@ class contact_form extends Module {
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('forms_change.xml', $this->path.'templates/');
+			$template->registerTagHandler('cms:domain_list', $this, 'tag_DomainList');
 			$template->setMappedModule($this->name);
 
 			$params = array(
@@ -2998,6 +2999,44 @@ class contact_form extends Module {
 			$template->setLocalParams($params);
 			$template->parse();
 		}
+	}
+
+	/**
+	 * Show list of domains for specified form.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_DomainList($tag_params, $children) {
+		$form_id = null;
+		$manager = ContactForm_DomainManager::getInstance();
+
+		// get form id
+		if (isset($tag_params['form']))
+			$form_id = fix_id($tag_params['form']);
+
+		// make sure form is specified
+		if (is_null($form_id))
+			return;
+
+		// get list of domains
+		$domain_list = $manager->getItems($manager->getFieldNames(), array('form' => $form_id));
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'domain_list_item.xml');
+
+		// draw domains
+		if (count($domain_list) > 0)
+			foreach ($domain_list as $record) {
+				$params = array(
+						'form'		=> $record->form,
+						'domain'	=> $record->domain
+					);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 
 	/**

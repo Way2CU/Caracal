@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 250px;">
+			<cms:var name="$params['domain']"/>
+			<input
+				type="hidden"
+				name="$params['field_name']"
+				value="$params['domain']"
+				cms:eval="name,value"
+				/>
+		</span>
+		<span class="column">
+			<a href="javascript: void(0);" onclick="ContactForm.remove_domain();"/>
+		</span>
+	</div>
+</document>
