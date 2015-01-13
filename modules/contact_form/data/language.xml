@@ -60,6 +60,7 @@
 		<constant name="tab_export_fields">Fields</constant>
 		<constant name="tab_submission">Submission</constant>
 		<constant name="tab_appearance">Appearance</constant>
+		<constant name="tab_domains">Domains</constant>
 
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>
@@ -238,6 +239,7 @@
 		<constant name="tab_export_fields">نطاقات</constant>
 		<constant name="tab_submission">Submission</constant>
 		<constant name="tab_appearance">Appearance</constant>
+		<constant name="tab_domains">Domains</constant>
 
 		<constant name="column_text_id">Text ID</constant>
 		<constant name="column_name">اسم</constant>
@@ -407,6 +409,7 @@
 		<constant name="tab_export_fields">שדות</constant>
 		<constant name="tab_submission">הגשה</constant>
 		<constant name="tab_appearance">מראה</constant>
+		<constant name="tab_domains">Domains</constant>
 
 		<constant name="mailer_system">מערכת</constant>
 		<constant name="mailer_smtp">SMTP</constant>
@@ -583,6 +586,7 @@
 		<constant name="tab_export_fields">Fields</constant>
 		<constant name="tab_submission">Submission</constant>
 		<constant name="tab_appearance">Appearance</constant>
+		<constant name="tab_domains">Domains</constant>
 
 		<constant name="mailer_system">System</constant>
 		<constant name="mailer_smtp">SMTP</constant>

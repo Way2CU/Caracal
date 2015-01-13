@@ -17,6 +17,7 @@ require_once('units/field_value_manager.php');
 require_once('units/template_manager.php');
 require_once('units/submission_manager.php');
 require_once('units/submission_field_manager.php');
+require_once('units/domain_manager.php');
 require_once('units/mailer.php');
 require_once('units/system_mailer.php');
 require_once('units/smtp_mailer.php');
@@ -575,6 +576,28 @@ class contact_form extends Module {
 	private function submitForm($tag_params, $children) {
 		$id = isset($_REQUEST['form_id']) ? fix_id($_REQUEST['form_id']) : null;
 		$result = false;
+
+		// allow cross domain posting
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS' && isset($_SERVER['HTTP_ORIGIN'])) {
+			// get list of allowed domains
+			$remote_domain = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
+			$domain_manager = ContactForm_DomainManager::getInstance();
+			$raw_list = $domain_manager->getInstance(array('domain'), array('id' => $id));
+			$domain_list = array();
+
+			if (count($raw_list) > 0)
+				foreach ($raw_list as $record)
+					$domain_list[] = $record->domain;
+
+			if (in_array($remote_domain, $domain_list)) {
+				header('Access-Control-Allow-Origin: ');
+				header('Access-Control-Allow-Methods: POST, OPTIONS');
+				header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+				header('Access-Control-Max-Age: 1000');
+			}
+
+			return;
+		}
 
 		// we need form id
 		if (is_null($id))

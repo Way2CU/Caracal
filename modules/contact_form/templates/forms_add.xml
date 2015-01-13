@@ -69,6 +69,10 @@
 					</label>
 				</fieldset>
 			</div>
+
+			<!-- Accepted domains -->
+			<div class="scrollable_list">
+			</div>
 		</div>
 
 		<div class="button_bar">
@@ -88,6 +92,7 @@
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_appearance'));
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_appearance'))
+			.setPageTitle(3, language_handler.getText('contact_form', 'tab_domains'));
 	</script>
 </document>
