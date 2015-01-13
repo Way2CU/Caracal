@@ -18,6 +18,27 @@ function submissions_update_result_list() {
 }
 
 /**
+ * Generate hash code from string.
+ *
+ * @param string value
+ * @return string
+ */
+ContactForm.hash_code = function(value) {
+    var result = 0;
+
+    if (value.length == 0)
+    	return result;
+
+    for (i = 0; i < value.length; i++) {
+        var char = value.charCodeAt(i);
+        result = ((result << 5) - result) + char;
+        result = result & result;
+    }
+
+    return result;
+};
+
+/**
  * Add domain to contact form domain list.
  */
 ContactForm.add_domain = function() {
@@ -29,6 +50,12 @@ ContactForm.add_domain = function() {
 	var name = $('<div>');
 	var options = $('<div>');
 	var remove = $('<a>');
+	var field = $('<input>');
+
+	field
+		.attr('type', 'hidden')
+		.attr('name', 'domain_' + ContactForm.hash_code(domain.val()))
+		.attr('value', domain.val());
 
 	remove
 		.attr('href', 'javascript: void(0);')
@@ -40,6 +67,7 @@ ContactForm.add_domain = function() {
 		.addClass('column')
 		.css('width', 250)
 		.html(domain.val())
+		.append(field)
 		.appendTo(item);
 
 	options
