@@ -1678,7 +1678,7 @@ class contact_form extends Module {
 		}
 
 		// remove existing domains from database
-		$domain_manager->delete(array('form' => $id));
+		$domain_manager->deleteData(array('form' => $id));
 
 		// insert all domains from list
 		if (count($domain_list) > 0)
