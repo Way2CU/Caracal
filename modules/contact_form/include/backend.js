@@ -31,8 +31,9 @@ ContactForm.add_domain = function() {
 	var remove = $('<a>');
 
 	remove
-		.attr('href', 'javascript: ContactForm.remove_domain();')
-		.html(language_handler.getText(null, 'remove'))
+		.attr('href', 'javascript: void(0);')
+		.click(ContactForm.remove_domain)
+		.html(language_handler.getText(null, 'delete'))
 		.appendTo(options);
 
 	name
