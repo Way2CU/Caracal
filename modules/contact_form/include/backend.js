@@ -61,7 +61,7 @@ ContactForm.add_domain = function() {
 
 	field
 		.attr('type', 'hidden')
-		.attr('name', field_name)))
+		.attr('name', field_name)
 		.attr('value', domain.val());
 
 	remove
