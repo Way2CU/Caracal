@@ -132,6 +132,30 @@
 					</label>
 				</fieldset>
 			</div>
+
+			<!-- Accepted domains -->
+			<div>
+				<label class="inline">
+					<span><cms:text constant="label_domain" module="contact_form"/></span>
+					<input name="domain" type="text"/>
+					<button type="button" onclick="javascript: ContactForm.add_domain();">
+						<cms:text constant="add"/>
+					</button>
+				</label>
+
+				<div class="list_header">
+					<span class="column" style="width: 250px;">
+						<cms:text constant="column_domain" module="contact_form"/>
+					</span>
+					<span class="column">
+						<cms:text constant="column_options"/>
+					</span>
+				</div>
+
+				<div class="list_content" style="height: 150px" id="contact_form_domain_list">
+					<cms:domain_list form="$params['id']" cms:eval="form"/>
+				</div>
+			</div>
 		</div>
 
 		<div class="button_bar">
@@ -152,6 +176,7 @@
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_appearance'));
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_appearance'))
+			.setPageTitle(3, language_handler.getText('contact_form', 'tab_domains'));
 	</script>
 </document>
