@@ -84,6 +84,9 @@ ContactForm.add_domain = function() {
 	item
 		.addClass('list_item')
 		.appendTo(list);
+
+	// clear input field
+	domain.val('');
 };
 
 /**
