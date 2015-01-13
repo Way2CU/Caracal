@@ -12,7 +12,9 @@
 				/>
 		</span>
 		<span class="column">
-			<a href="javascript: void(0);" onclick="ContactForm.remove_domain();"/>
+			<a href="javascript: void(0);" onclick="ContactForm.remove_domain();">
+				<cms:text constant="delete"/>
+			</a>
 		</span>
 	</div>
 </document>
