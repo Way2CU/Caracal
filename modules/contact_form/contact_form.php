@@ -1658,6 +1658,26 @@ class contact_form extends Module {
 				}
 		}
 
+		// gather domains in to list
+		$domain_list = array();
+		$domain_manager = ContactForm_DomainManager::getInstance();
+
+		foreach ($_REQUEST as $key => $value) {
+			if (strpos($key, 'domain_') === 0)
+				$domain_list[] = $value;
+		}
+
+		// remove existing domains from database
+		$domain_manager->delete(array('form' => $id));
+
+		// insert all domains from list
+		if (count($domain_list) > 0)
+			foreach ($domain_list as $domain)
+				$domain_manager->insert(array(
+					'form'		=> $id,
+					'domain'	=> $domain
+				));
+
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
