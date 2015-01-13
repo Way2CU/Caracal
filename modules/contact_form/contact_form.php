@@ -1752,7 +1752,7 @@ class contact_form extends Module {
 
 		$manager->deleteData(array('id' => $id));
 		$field_manager->deleteData(array('form' => $id));
-		$domain_manager->deleteField(array('form' => $id));
+		$domain_manager->deleteData(array('form' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
