@@ -32,6 +32,7 @@ ContactForm.add_domain = function() {
 
 	remove
 		.attr('href', 'javascript: ContactForm.remove_domain();')
+		.html(language_handler.getText(null, 'remove'))
 		.appendTo(options);
 
 	name
@@ -53,6 +54,6 @@ ContactForm.add_domain = function() {
  * Remove list item from domain list.
  */
 ContactForm.remove_domain = function() {
-	var list_item = $(this).parent('.list_item');
+	var list_item = $(this).closest('.list_item');
 	list_item.remove();
 };
