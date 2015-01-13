@@ -35,7 +35,7 @@ ContactForm.hash_code = function(value) {
         result = result & result;
     }
 
-    return result;
+    return Math.abs(result);
 };
 
 /**
