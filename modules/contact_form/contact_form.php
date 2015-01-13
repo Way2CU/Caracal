@@ -432,6 +432,15 @@ class contact_form extends Module {
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
+		// create table for contact form domains
+		$sql = "
+			CREATE TABLE `contact_form_domains` (
+				`form` int NOT NULL,
+				`domain` varchar(255) NOT NULL,
+				INDEX `contact_forms_domains_by_form` (`form`)
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
 		// table for storing contact form fields
 		$sql = "
 			CREATE TABLE `contact_form_fields` (
@@ -510,7 +519,8 @@ class contact_form extends Module {
 
 		$tables = array(
 			'contact_form_templates', 'contact_forms', 'contact_form_fields',
-			'contact_form_submissions', 'contact_form_submission_fields'
+			'contact_form_submissions', 'contact_form_submission_fields',
+			'contact_form_domains'
 		);
 		$db->drop_tables($tables);
 	}
