@@ -134,7 +134,7 @@
 			</div>
 
 			<!-- Accepted domains -->
-			<div>
+			<div class="scrollable_list">
 				<label class="inline">
 					<span><cms:text constant="label_domain" module="contact_form"/></span>
 					<input name="domain" type="text"/>
