@@ -1683,7 +1683,7 @@ class contact_form extends Module {
 		// insert all domains from list
 		if (count($domain_list) > 0)
 			foreach ($domain_list as $domain)
-				$domain_manager->insert(array(
+				$domain_manager->insertData(array(
 					'form'		=> $id,
 					'domain'	=> $domain
 				));
@@ -1748,9 +1748,11 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormManager::getInstance();
 		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$domain_manager = ContactForm_DomainManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 		$field_manager->deleteData(array('form' => $id));
+		$domain_manager->deleteField(array('form' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
