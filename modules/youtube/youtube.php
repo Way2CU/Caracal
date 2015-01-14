@@ -758,6 +758,7 @@ class youtube extends Module {
 						'start'			=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
 						'loop'			=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
 						'hl'			=> $language,
+						'fs'			=> 1
 					);
 
 				$params = array(
