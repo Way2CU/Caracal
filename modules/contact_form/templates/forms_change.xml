@@ -178,5 +178,8 @@
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
 			.setPageTitle(2, language_handler.getText('contact_form', 'tab_appearance'))
 			.setPageTitle(3, language_handler.getText('contact_form', 'tab_domains'));
+
+		// connect list item options
+		$('#contact_form_domain_list a').click(ContactForm.remove_domain);
 	</script>
 </document>
