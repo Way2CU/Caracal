@@ -3028,9 +3028,11 @@ class contact_form extends Module {
 		// draw domains
 		if (count($domain_list) > 0)
 			foreach ($domain_list as $record) {
+				$field_name = $this->hash_code($domain);
 				$params = array(
-						'form'		=> $record->form,
-						'domain'	=> $record->domain
+						'form'			=> $record->form,
+						'domain'		=> $record->domain,
+						'field_name'	=> $field_name
 					);
 
 				$template->restoreXML();
@@ -3161,5 +3163,26 @@ class contact_form extends Module {
 				);
 
 		return $result;
+	}
+
+	/**
+	 * Simple string hashing function.
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	private function hash_code($value) {
+		$result = 0;
+
+		if (mb_strlen($value) == 0)
+			return $result;
+
+		for ($i = 0; $i < strlen($value); $i++) {
+			$char = substr($value, $i, 1);
+			$result = (($result << 5) - $result) + ord($char);
+			$result = $result & $result;
+		}
+
+		return abs($result);
 	}
 }
