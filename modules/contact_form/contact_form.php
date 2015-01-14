@@ -3028,7 +3028,7 @@ class contact_form extends Module {
 		// draw domains
 		if (count($domain_list) > 0)
 			foreach ($domain_list as $record) {
-				$field_name = $this->hash_code($domain);
+				$field_name = 'domain_'.$this->hash_code($record->domain);
 				$params = array(
 						'form'			=> $record->form,
 						'domain'		=> $record->domain,
