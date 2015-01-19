@@ -96,7 +96,6 @@ class collection extends Module {
 
 		// include scripts by default
 		$this->includeScriptById(collection::JQUERY);
-		$this->includeScriptById(collection::PREFIX_FREE);
 	}
 
 	/**
