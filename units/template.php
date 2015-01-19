@@ -636,10 +636,13 @@ class TemplateHandler {
 	private function getTagParams($params) {
 		$result = "";
 
-		if (count($params))
-			foreach ($params as $param=>$value)
-				if ($param !== 'eval')
-					$result .= ' '.$param.'="'.$value.'"';
+		if (count($params) == 0)
+			return $result;
+
+		foreach ($params as $param=>$value)
+			if ($param !== $value && _STANDARD !== 'xml')
+				$result .= ' '.$param.'="'.$value.'"'; else
+				$result .= ' '.$param;
 
 		return $result;
 	}
