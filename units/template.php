@@ -56,6 +56,20 @@ class TemplateHandler {
 	private $tags_without_end = array('br', 'wbr', 'hr', 'img', 'base', 'input', 'link', 'meta');
 
 	/**
+	 * Summary list of HTML boolean attributes
+	 * @var array
+	 */
+	private $boolean_attributes = array(
+					'allowfullscreen', 'async', 'autofocus', 'autoplay', 'checked', 'compact', 'controls',
+					'declare', 'default', 'defaultchecked', 'defaultmuted', 'defaultselected', 'defer',
+					'disabled', 'draggable', 'enabled', 'formnovalidate', 'hidden', 'indeterminate', 'inert',
+					'ismap', 'itemscope', 'loop', 'multiple', 'muted', 'nohref', 'noresize', 'noshade',
+					'novalidate', 'nowrap', 'open', 'pauseonexit', 'readonly', 'required', 'reversed',
+					'scoped', 'seamless', 'selected', 'sortable', 'spellcheck', 'translate', 'truespeed',
+					'typemustmatch', 'visible'
+				);
+
+	/**
 	 * If we should close all tags
 	 * @var boolean
 	 */
@@ -639,10 +653,13 @@ class TemplateHandler {
 		if (count($params) == 0)
 			return $result;
 
-		foreach ($params as $param=>$value)
-			if ($param !== $value && _STANDARD !== 'xml')
+		foreach ($params as $param=>$value) {
+			$is_boolean = $param == $value && _STANDARD == 'xml' && in_array(strtolower($param), $this->boolean_attributes);
+
+			if (!$is_boolean)
 				$result .= ' '.$param.'="'.$value.'"'; else
 				$result .= ' '.$param;
+		}
 
 		return $result;
 	}
