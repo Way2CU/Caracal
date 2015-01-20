@@ -654,7 +654,7 @@ class TemplateHandler {
 			return $result;
 
 		foreach ($params as $param=>$value) {
-			$is_boolean = $param == $value && _STANDARD == 'xml' && in_array(strtolower($param), $this->boolean_attributes);
+			$is_boolean = $param == $value && _STANDARD !== 'xml' && in_array(strtolower($param), $this->boolean_attributes);
 
 			if (!$is_boolean)
 				$result .= ' '.$param.'="'.$value.'"'; else
