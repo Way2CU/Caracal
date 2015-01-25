@@ -96,6 +96,7 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 				'email-sent',
 				'mandrill',
 				$this->message['to'][0]['email'],
+				$this->message['subject'],
 				$this->variables
 			);
 
