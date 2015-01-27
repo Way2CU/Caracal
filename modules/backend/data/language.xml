@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/language.dtd">
 <document>
 	<language name="English" short="en">
@@ -242,6 +242,125 @@
 		<constant name="captcha">קוד אבטחה</constant>
 		<constant name="login">התחבר</constant>
 		<constant name="logout">התנתק</constant>
+	</language>
+
+	<language name="Arabic" short="ar" rtl="yes">
+		<constant name="title">إدارة الكراكال</constant>
+		<constant name="slogan">Development Framework</constant>
+
+		<!-- Menu Items -->
+		<constant name="menu_system">النظام</constant>
+		<constant name="menu_modules">مودولز</constant>
+		<constant name="menu_users">إدارة المستخدمين</constant>
+		<constant name="menu_logout">الخروج</constant>
+		<constant name="menu_change_password">تغيّير كلمة السر</constant>
+		<constant name="menu_report_bug">بلّغ عن مشكلة</constant>
+		<constant name="menu_help">المساعدة</constant>
+		<constant name="menu_clear_cache">Clear cache</constant>
+
+		<!-- Window Titles -->
+		<constant name="title_modules">مودولز</constant>
+		<constant name="title_module_activate">تشغيل المودول</constant>
+		<constant name="title_module_deactivate">إيقاف المودول</constant>
+		<constant name="title_module_initialise">إعادة تشغيل المودول</constant>
+		<constant name="title_module_disable">الغي المودول كلياً</constant>
+		<constant name="title_change_password">تغيير كلمة السر</constant>
+		<constant name="title_users_manager">إدارة المستخدمين</constant>
+		<constant name="title_users_create">اضف مستخدم جديد</constant>
+		<constant name="title_users_change">غيّر بيانات مستخدم</constant>
+		<constant name="title_users_delete">احذف حساب مستخدم</constant>
+		<constant name="title_email_templates">Users: Email Templates</constant>
+		<constant name="title_clear_cache">Clear cache</constant>
+
+		<!-- Messages -->
+		<constant name="message_module_activated">المودول</constant>
+		<constant name="message_module_deactivated">المودول لا يعمل</constant>
+		<constant name="message_module_initialise">سيتم اعادة تشغيل المودول وسيحصل على موافقة للدخول لقاعدة البيانات والملفات، هل انت متأكد؟</constant>
+		<constant name="message_module_initialised">المودول شغّال تمام التمام</constant>
+		<constant name="message_module_disable">سيتم الغاء المودول، هل أنت متأكد؟</constant>
+		<constant name="message_module_disabled">تم ايقاف المودول</constant>
+		<constant name="message_module_protected">المودول محمي من التغييرات، يعني لا تستطيع تغييره</constant>
+		<constant name="message_module_not_active">المودول لا يعمل لذلك لا داعي لايقافه‫!‬</constant>
+		<constant name="message_login">انت بحاجة لاسم مستخدم وكلمة مرور</constant>
+		<constant name="message_login_ok">هنالك موافقة لدخولك الى النظام، سيتم تحويلك</constant>
+		<constant name="message_login_error">اسم المستخدم او كلمة المرور غلط‫!‬</constant>
+		<constant name="message_logout">ستقوم بتسجيل الخروج، متأكد يا عم؟</constant>
+		<constant name="message_logout_ok">خرجتَ بنجاح، رافقتك السلامة‫!‬</constant>
+		<constant name="message_users_error_level_too_high">لا تستطيع انشاء مستخدم مع صلاحيات اعلى منك، بنفع الوزير يعيّن الملك؟</constant>
+		<constant name="message_users_error_user_level_higher">هنالك خطأ في تخزين بيانات المستخدم</constant>
+		<constant name="message_users_error_duplicate">استخدمت هذا الاسم من قبل‫!‬ لا يمكنك استعماله مرتين‫.‬</constant>
+		<constant name="message_users_error_captcha">Invalid captcha value!</constant>
+		<constant name="message_users_error_premature_submission">Unable to create account. Data was submitted too fast.</constant>
+		<constant name="message_users_created">تم انشاء مستخدم جديد‫.‬ عييش‫!‬</constant>
+		<constant name="message_users_data_saved">تم حفظ بيانات المستخدم</constant>
+		<constant name="message_users_delete">انت على بعد كليك من حذف المستخدم، كل بياناته ستحذف الى الأبد‫.‬ متأكد؟</constant>
+		<constant name="message_users_deleted">اسم المستخدم أعطاك عمره‫.‬ تم حذفه بنجاح</constant>
+		<constant name="message_users_account_not_verified">User account is not verified!</constant>
+		<constant name="message_no_contact_form">Contact form module is not active. In order for system to use email notifications you need to activate this module.</constant>
+		<constant name="message_no_captcha">Captcha module is not active. This module is required for low level access services exposed to the public.</constant>
+		<constant name="message_no_user">Specified user account could not be found on the system.</constant>
+		<constant name="message_invalid_code">Invalid verification code.</constant>
+		<constant name="message_template_selection_saved">Email template selection was saved!</constant>
+		<constant name="message_invalid_password">Invalid current password.</constant>
+		<constant name="message_password_recovery_email_sent">Email with instructions has been sent.</constant>
+		<constant name="message_password_reocvery_email_error">There was a problem sending recovery email. Please try again later.</constant>
+
+		<!-- Labels -->
+		<constant name="label_old_password">كلمة السر القديمة:</constant>
+		<constant name="label_new_password">كلمة السر الجديدة:</constant>
+		<constant name="label_repeat_password">اعد كتابة كلمة السر الجديدة:</constant>
+		<constant name="label_fullname">اسمك الكامل:</constant>
+		<constant name="label_username">اسم المستخدم:</constant>
+		<constant name="label_password">كلمة السر:</constant>
+		<constant name="label_email">Email:</constant>
+		<constant name="label_level">المستوى:</constant>
+		<constant name="label_link">ادخل URL:</constant>
+
+		<!-- Toolbar -->
+		<constant name="toolbar_markdown_bold">خط عريض</constant>
+		<constant name="toolbar_markdown_italic">خط مائل</constant>
+		<constant name="toolbar_markdown_link">اضف رابط</constant>
+		<constant name="toolbar_markdown_quote">اضف اقتباس</constant>
+		<constant name="toolbar_markdown_code">اضف فقرة كود</constant>
+		<constant name="toolbar_markdown_header">عنوان</constant>
+		<constant name="toolbar_markdown_ordered_list">قائمة مرتبة</constant>
+		<constant name="toolbar_markdown_unordered_list">قائمة غير مرتبة</constant>
+
+		<!-- Column Names -->
+		<constant name="column_module_name">الاسم</constant>
+		<constant name="column_module_order">اطلب</constant>
+		<constant name="column_module_preload">حمّل</constant>
+		<constant name="column_module_active">شغّل</constant>
+		<constant name="column_users_fullname">الاسم الكامل</constant>
+		<constant name="column_users_username">اسم المستخدم</constant>
+		<constant name="column_users_level">Level</constant>
+		<constant name="column_users_verified">Verified</constant>
+		<constant name="column_users_agreed">Agreed</constant>
+
+		<!-- General -->
+		<constant name="activate">شفّل</constant>
+		<constant name="deactivate">وقّف</constant>
+		<constant name="initialise">ري‫-‬ستارت</constant>
+		<constant name="disable">إلغي</constant>
+		<constant name="close">أغلق</constant>
+		<constant name="cancel">إلغي</constant>
+
+		<!-- User Manager Related -->
+		<constant name="create_user">انشىء مستخدم</constant>
+		<constant name="email_templates">Email templates</constant>
+		<constant name="group_guests">الضيوف الكرام</constant>
+		<constant name="group_users">المستخدمين النشامة</constant>
+		<constant name="group_admins">المدراء الكبار</constant>
+		<constant name="group_root">غير محدد</constant>
+
+		<!-- Login Related -->
+		<constant name="title_login">الدخول الى النظام ‫-‬ أفضل نظام</constant>
+		<constant name="title_logout">الخروج من النظام</constant>
+		<constant name="username">اسم المستخدم:</constant>
+		<constant name="password">كلمة السر:</constant>
+		<constant name="captcha">الكابتشا</constant>
+		<constant name="login">ادخل إلى النظام</constant>
+		<constant name="logout">أخرج من النظام</constant>
 	</language>
 
 	<language name="Srpski" short="sr">
