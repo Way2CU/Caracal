@@ -551,13 +551,18 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 	header {
 		position: absolute;
 		width: calc(200px - 20px + 1px);
+		z-index: 2;
+	}
+
+	div#logo {
+		font-size: 0.9em;
 	}
 
 	div#logo img {
 		height: 20px;
 	}
 
-	ul#navigation {
-		margin-top: 87px;
+	div#container {
+		z-index: 1;
 	}
 }
