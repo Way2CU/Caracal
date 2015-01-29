@@ -562,6 +562,14 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 		height: 20px;
 	}
 
+	nav#language {
+		position: fixed;
+	}
+
+	nav#language a.active {
+		color: #505050;
+	}
+
 	div#container {
 		z-index: 1;
 	}
