@@ -14,6 +14,15 @@ function update_backend_container_height(event) {
 		var header = $('header').height() + 20;
 		var footer = $('footer').height() + 2;
 
+		// optimize for small screen
+		if ($(window).height() <= 900) {
+			// fix navigation position
+			$('ul#navigation').css('margin-top', header);
+
+			// clear header's effect on container size
+			header = 0;
+		}
+
 		backend_element_size = header + footer;
 
 		// get container element
