@@ -542,3 +542,22 @@ body.rtl div.window div.scrollable_list.modules div.list_item span.icon {
 div.window div.scrollable_list.modules div.list_item:hover span.icon {
 	background-position: -24px 0px;
 }
+
+
+/**
+ * Support for smaller screens
+ */
+@media (max-height: 900px) {
+	header {
+		position: absolute;
+		width: calc(200px - 20px + 1px);
+	}
+
+	div#logo img {
+		height: 20px;
+	}
+
+	ul#navigation {
+		margin-top: 87px;
+	}
+}
