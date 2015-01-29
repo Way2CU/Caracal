@@ -52,10 +52,10 @@
 
 			<footer>
 				<nav id="common">
-					<a href="http://code.google.com/p/caracal" target="_blank">
+					<a href="https://github.com/Way2CU/Caracal/issues" target="_blank">
 						<cms:text constant="menu_report_bug" module="backend"/>
 					</a>
-					<a href="http://google.com" target="_blank">
+					<a href="http://webchat.freenode.net/?channels=%23caracal&uio=OT10cnVlJjEwPXRydWUmMTE9MjM218" target="_blank">
 						<cms:text constant="menu_help" module="backend"/>
 					</a>
 				</nav>
