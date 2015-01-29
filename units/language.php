@@ -363,7 +363,7 @@ final class Language {
 	 * language or use site's default.
 	 */
 	public static function applyForSession() {
-		global $language, $language_rtl;
+		global $section, $language, $language_rtl;
 
 		$default_language = self::getDefaultLanguage();
 		$supported_languages = self::getLanguages(false);
