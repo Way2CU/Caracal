@@ -61,14 +61,6 @@
 				</nav>
 				<div style="clear: both;"/>
 			</footer>
-
-			<!-- <div id="wrap"> -->
-			<!-- 	<div id="main_menu"> -->
-			<!-- 	</div> -->
-
-			<!-- <div id="copyright"> -->
-			<!-- 	<cms:text constant="backend_copyright"/> -->
-			<!-- </div> -->
 		</body>
 	</html>
 </document>
