@@ -1904,17 +1904,24 @@ class contact_form extends Module {
 
 		// insert or update data in database
 		if (is_null($id)) {
-			$window = 'contact_form_fieldsets_add';
+			$window = 'contact_form_fieldset_add';
 			$manager->insertData($data);
 			$id = $manager->getInsertedID();
 
 		} else {
-			$window = 'contact_form_fieldsets_edit';
+			$window = 'contact_form_fieldset_edit';
 			$manager->updateData($data,	array('id' => $id));
 		}
 
 		// update list assigned fields
-		trigger_error(json_encode($field_list));
+		$membership_manager->deleteData(array('fieldset' => $id));
+		if (count($field_list) > 0)
+			foreach ($field_list as $field_id) {
+				$membership_manager->insertData(array(
+									'fieldset'	=> $id,
+									'field'		=> $field_id
+								);
+			}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
