@@ -1888,7 +1888,7 @@ class contact_form extends Module {
 											'contact_form_fieldsets_'.$form_id, 	// window id
 											400,				// width
 											$this->getLanguageConstant('title_fieldsets_manage'), // title
-											false, false,
+											true, false,
 											url_Make(
 												'transfer_control',
 												'backend_module',
