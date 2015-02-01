@@ -35,11 +35,10 @@
 
 			<div class="list_content" style="height: 200px">
 				<cms:field_list
-					form="$params['form']"
 					fieldset="$params['id']"
 					template="field_checkbox_list_item.xml"
 					local="1"
-					cms:eval="form,fieldset"
+					cms:eval="fieldset"
 					/>
 			</div>
 		</div>
