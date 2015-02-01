@@ -1865,7 +1865,7 @@ class contact_form extends Module {
 		$params = array(
 					'form'			=> $form_id,
 					'form_action'	=> backend_UrlMake($this->name, 'fieldsets_save'),
-					'cancel_action'	=> window_Close('contact_forms_fieldset_add')
+					'cancel_action'	=> window_Close('contact_form_fieldset_add')
 				);
 
 		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
@@ -1879,6 +1879,29 @@ class contact_form extends Module {
 	 * Show form for editing fieldset.
 	 */
 	private function editFieldset() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FieldsetManager::getInstance();
+
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		if (is_object($item)) {
+			$template = new TemplateHandler('fieldsets_change.xml', $this->path.'templates/');
+			$template->setMappedModule($this->name);
+
+			$params = array(
+					'form'			=> $item->form,
+					'name'			=> $item->name,
+					'legend'		=> $item->legend,
+					'form_action'	=> backend_UrlMake($this->name, 'fieldsets_save'),
+					'cancel_action'	=> window_Close('contact_form_fieldset_edit')
+				);
+
+			$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
 	}
 
 	/**
