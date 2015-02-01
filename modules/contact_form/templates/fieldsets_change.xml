@@ -11,15 +11,17 @@
 				maxlength="50"
 				class="ltr code"
 				cms:value="name"
+				style="width: 250px;"
 				/>
 		</label>
 
 		<label>
-			<cms:text constant="label_legend" module="contact_form"/>
+			<span><cms:text constant="label_legend" module="contact_form"/></span>
 			<input
 				type="text"
 				name="legend"
 				class="multi-language"
+				style="width: 370px;"
 				/>
 			<cms:language_data param="legend"/>
 		</label>
