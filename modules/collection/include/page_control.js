@@ -41,7 +41,7 @@ function PageControl(selector, page_selector) {
 		self.pages = self.container.find(page_selector || 'div.page');
 		self.pages.each(self._connectButtonEvents);
 
-		self._switchContainer(0);
+		self.showPage(0);
 	};
 
 	/**
@@ -67,7 +67,7 @@ function PageControl(selector, page_selector) {
 	 * @return boolean
 	 */
 	self._handleNext = function(event) {
-		self._switchContainer(self.current_page + 1);
+		self.nextPage();
 		event.preventDefault();
 	};
 
@@ -78,7 +78,7 @@ function PageControl(selector, page_selector) {
 	 * @return boolean
 	 */
 	self._handlePrevious = function(event) {
-		self._switchContainer(self.current_page - 1);
+		self.previousPage();
 		event.preventDefault();
 	};
 
@@ -87,7 +87,7 @@ function PageControl(selector, page_selector) {
 	 */
 	self._handleInterval = function() {
 		// show next page
-		self._switchContainer(self.current_page + 1);
+		self.showPage(self.current_page + 1);
 	};
 
 	/**
@@ -119,7 +119,7 @@ function PageControl(selector, page_selector) {
 	 *
 	 * @param integer page
 	 */
-	self._switchContainer = function(page) {
+	self.showPage = function(page) {
 		var new_page = page;
 
 		// check if validator is set
@@ -242,6 +242,20 @@ function PageControl(selector, page_selector) {
 	};
 
 	/**
+	 * Switch to next page.
+	 */
+	self.nextPage = function() {
+		self.showPage(self.current_page + 1);
+	};
+
+	/**
+	 * Switch to previos page.
+	 */
+	self.previousPage = function() {
+		self.showPage(self.current_page - 1);
+	};
+
+	/**
 	 * Method that can be used to handle clicking on specified page or a button.
 	 * This method looks for HTML5 data-page parameter to determine which page to
 	 * show. If no page is defined event is ignored.
@@ -252,7 +266,7 @@ function PageControl(selector, page_selector) {
 		var page = $(this).data('page');
 
 		if (page != null)
-			self._switchContainer(page);
+			self.showPage(page);
 
 		event.preventDefault();
 	};
@@ -268,7 +282,7 @@ function PageControl(selector, page_selector) {
 
 		if (page != null)
 			if ((!self.allow_forward && page <= self.reached_page) || self.allow_forward)
-				self._switchContainer(page);
+				self.showPage(page);
 
 		event.preventDefault();
 	};
