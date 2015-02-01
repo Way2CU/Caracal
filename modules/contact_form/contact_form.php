@@ -1920,7 +1920,7 @@ class contact_form extends Module {
 				$membership_manager->insertData(array(
 									'fieldset'	=> $id,
 									'field'		=> $field_id
-								);
+								));
 			}
 
 		// show message
