@@ -14,6 +14,8 @@ use Core\Module;
 require_once('units/form_manager.php');
 require_once('units/form_field_manager.php');
 require_once('units/field_value_manager.php');
+require_once('units/fieldset_manager.php');
+require_once('units/fieldset_field_manager.php');
 require_once('units/template_manager.php');
 require_once('units/submission_manager.php');
 require_once('units/submission_field_manager.php');
@@ -316,6 +318,16 @@ class contact_form extends Module {
 					$this->deleteForm_Commit();
 					break;
 
+				case 'fieldsets_add':
+					$this->addFieldset();
+					break;
+
+				case 'fieldsets_edit':
+				case 'fieldsets_save':
+				case 'fieldsets_delete':
+				case 'fieldsets_delete_commit':
+					break;
+
 				case 'fields_manage':
 					$this->manageFields();
 					break;
@@ -432,12 +444,37 @@ class contact_form extends Module {
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		// create table for contact form domains
+		// table for contact form domains
 		$sql = "
 			CREATE TABLE `contact_form_domains` (
 				`form` int NOT NULL,
 				`domain` varchar(255) NOT NULL,
 				INDEX `contact_forms_domains_by_form` (`form`)
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// table for fieldsets
+		$sql = "
+			CREATE TABLE `contact_form_fieldsets` (
+				`id` int NOT NULL AUTO_INCREMENT,
+				`form` int NOT NULL,
+				`name` varchar(50) NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`legend_{$language}` varchar(250) NOT NULL DEFAULT '',";
+
+		$sql = "
+				PRIMARY KEY(`id`),
+				INDEX `contact_form_fieldsets_by_form` (`form`)
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// table for fieldset membership
+		$sql = "
+			CREATE TABLE `contact_form_fieldset_fields` (
+				`fieldset` int NOT NULL,
+				`field` int NOT NULL,
+				INDEX `contact_forms_fieldset_fields` (`fieldset`)
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1763,6 +1800,22 @@ class contact_form extends Module {
 					'button'	=> $this->getLanguageConstant('close'),
 					'action'	=> window_Close('contact_forms_delete').';'.window_ReloadContent('contact_forms')
 				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	private function addFieldset() {
+		$template = new TemplateHandler('fieldsets_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, 'fieldsets_save'),
+					'cancel_action'	=> window_Close('contact_forms_fieldset_add')
+				);
+
+		$template->registerTagHandler('cms:form_list', $this, 'tag_FormList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
