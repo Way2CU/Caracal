@@ -1861,6 +1861,62 @@ class contact_form extends Module {
 	}
 
 	/**
+	 * Show form for editing fieldset.
+	 */
+	private function editFieldset() {
+	}
+
+	/**
+	 * Save new or modified fieldset data.
+	 */
+	private function saveFieldset() {
+		$id = fix_id($_REQUEST['id']);
+		$form_id = fix_id($_REQUEST['form']);
+		$manager = ContactForm_FieldsetManager::getInstance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+
+		// collect data
+		$data = array(
+			'name'		=> fix_chars($_REQUEST['name']),
+			'legend'	=> $this->getMultilanguageField('legend'),
+			'form'		=> $form_id
+		);
+
+		// collect field ids
+		$field_list = array();
+		foreach ($_REQUEST as $key => $value)
+			if (substr($key, 0, 6) == 'field_')
+				$field_list[] = fix_id(substr($key, 6));
+
+		// insert or update data in database
+		if (is_null($id)) {
+			$window = 'contact_form_fieldsets_add';
+			$manager->insertData($data);
+
+		} else {
+			$window = 'contact_form_fieldsets_edit';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		// update list assigned fields
+		trigger_error(json_encode($field_list));
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_fieldset_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window)
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Show field management window.
 	 */
 	private function manageFields() {
