@@ -1991,7 +1991,7 @@ class contact_form extends Module {
 												'transfer_control',
 												'backend_module',
 												array('module', $this->name),
-												array('backend_action', 'fieldsets_delete'),
+												array('backend_action', 'fieldsets_delete_commit'),
 												array('id', $id)
 											)
 										),
