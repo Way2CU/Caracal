@@ -1821,14 +1821,22 @@ class contact_form extends Module {
 
 		$params = array(
 					'form'			=> $form_id,
-					'link_new'		=> window_OpenHyperlink(
+					'link_new'		=> url_MakeHyperlink(
 										$this->getLanguageConstant('new'),
-										'contact_forms_fieldset_add', 350,
-										$this->getLanguageConstant('title_fieldsets_add'),
-										true, false,
-										$this->name,
-										'fieldsets_add'
-									),
+										window_Open(
+											'contact_form_fieldset_add', 	// window id
+											350,				// width
+											$this->getLanguageConstant('title_fieldsets_add'), // title
+											true, false,
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'fieldsets_add'),
+												array('form', $form_id)
+											)
+										)
+									)
 				);
 
 		$template->registerTagHandler('cms:list', $this, 'tag_FieldsetList');
