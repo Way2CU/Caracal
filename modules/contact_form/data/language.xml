@@ -50,6 +50,10 @@
 		<constant name="title_field_value_add">Contact form: Add field value</constant>
 		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
 		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
+		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
+		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
+		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
+		<constant name="title_fieldsets_delete">Contact form: Delete fieldset</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">General</constant>
@@ -76,6 +80,7 @@
 		<constant name="column_header">Header value</constant>
 		<constant name="column_value">Value</constant>
 		<constant name="column_domain">Domain</constant>
+		<constant name="column_fields">Form fields</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -124,6 +129,7 @@
 		<constant name="label_reply_to">Field name:</constant>
 		<constant name="label_fields_template">Fields template:</constant>
 		<constant name="label_domain">Domain:</constant>
+		<constant name="label_legend">Legend:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -180,6 +186,7 @@
 		<constant name="fields">Fields</constant>
 		<constant name="details">Details</constant>
 		<constant name="export">Export</constant>
+		<constant name="fieldsets">Fieldsets</constant>
 		<constant name="selected_fields_export">Only selected fields will be exported. Header values will default to field label or placeholder unless otherwise specified.</constant>
 	</language>
 
@@ -232,6 +239,10 @@
 		<constant name="title_field_value_add">Contact form: Add field value</constant>
 		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
 		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
+		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
+		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
+		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
+		<constant name="title_fieldsets_delete">Contact form: Delete fieldset</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">عام</constant>
@@ -252,6 +263,7 @@
 		<constant name="column_header">Header value</constant>
 		<constant name="column_value">Value</constant>
 		<constant name="column_domain">Domain</constant>
+		<constant name="column_fields">Form fields</constant>
 
 		<constant name="dialog_title">استماره الاتصال</constant>
 
@@ -296,6 +308,12 @@
 		<constant name="label_separator_tab">Tab</constant>
 		<constant name="label_separator_semi">نقطه</constant>
 		<constant name="label_separator_comma">فاصله</constant>
+		<constant name="label_mailer">Mailing method:</constant>
+		<constant name="label_include_reply_to">Include reply-to field?</constant>
+		<constant name="label_reply_to">Field name:</constant>
+		<constant name="label_fields_template">Fields template:</constant>
+		<constant name="label_domain">Domain:</constant>
+		<constant name="label_legend">Legend:</constant>
 
 		<constant name="tooltip_text_id">معرف النصية فريدة من نوعها تستخدم في القوالب لتسهيل معالجة.</constant>
 		<constant name="tooltip_name">مترجمة اسم النموذج للاستخدام في الخلفية.</constant>
@@ -352,6 +370,7 @@
 		<constant name="fields">النطاقات</constant>
 		<constant name="details">تفاصيل</constant>
 		<constant name="export">اخراج</constant>
+		<constant name="fieldsets">Fieldsets</constant>
 		<constant name="selected_fields_export">وسيتم تصدير النطاقات المحددة فقط. قيم headers افتراضية تسمية النطاق أو الاسم الحامل حتى  ينص على خلاف ذلك.</constant>
 	</language>
 
@@ -404,6 +423,10 @@
 		<constant name="title_field_value_add">טופס קשר: הוסף ערך לשדה</constant>
 		<constant name="title_field_value_edit">טופס קשר: ערוך ערך שדה</constant>
 		<constant name="title_field_value_delete">טופס קשר: מחק ערך שדה</constant>
+		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
+		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
+		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
+		<constant name="title_fieldsets_delete">Contact form: Delete fieldset</constant>
 
 		<constant name="tab_identity">זהות</constant>
 		<constant name="tab_general">כללי</constant>
@@ -430,6 +453,7 @@
 		<constant name="column_header">ערך כותרת</constant>
 		<constant name="column_value">ערך</constant>
 		<constant name="column_domain">Domain</constant>
+		<constant name="column_fields">Form fields</constant>
 
 		<constant name="dialog_title">טופס קשר</constant>
 
@@ -476,6 +500,7 @@
 		<constant name="label_reply_to">שם השדה:</constant>
 		<constant name="label_fields_template">תבנית השדה:</constant>
 		<constant name="label_domain">Domain:</constant>
+		<constant name="label_legend">Legend:</constant>
 
 		<constant name="tooltip_text_id">מזה טקסט חד ערכי לפניה נוחה לתבניות.</constant>
 		<constant name="tooltip_name">שם מקומי לטופס לשימוש בממשק האחורי.</constant>
@@ -532,6 +557,7 @@
 		<constant name="fields">שדות</constant>
 		<constant name="details">פרטים</constant>
 		<constant name="export">יצוא</constant>
+		<constant name="fieldsets">Fieldsets</constant>
 		<constant name="selected_fields_export">רק שדות שנבחרו ייוצאו, ערכי הכותרות יהיו תגיות השדותת אלא אם צויין אחרת.</constant>
 	</language>
 
@@ -584,6 +610,10 @@
 		<constant name="title_field_value_add">Contact form: Add field value</constant>
 		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
 		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
+		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
+		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
+		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
+		<constant name="title_fieldsets_delete">Contact form: Delete fieldset</constant>
 
 		<constant name="tab_identity">Identity</constant>
 		<constant name="tab_general">General</constant>
@@ -610,6 +640,7 @@
 		<constant name="column_header">Header value</constant>
 		<constant name="column_value">Value</constant>
 		<constant name="column_domain">Domain</constant>
+		<constant name="column_fields">Form fields</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -656,6 +687,7 @@
 		<constant name="label_reply_to">Field name:</constant>
 		<constant name="label_fields_template">Fields template:</constant>
 		<constant name="label_domain">Domain:</constant>
+		<constant name="label_legend">Legend:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -712,6 +744,7 @@
 		<constant name="fields">Fields</constant>
 		<constant name="details">Details</constant>
 		<constant name="export">Export</constant>
+		<constant name="fieldsets">Fieldsets</constant>
 		<constant name="selected_fields_export">Only selected fields will be exported. Header values will default to field label or placeholder unless otherwise specified.</constant>
 	</language>
 </document>
