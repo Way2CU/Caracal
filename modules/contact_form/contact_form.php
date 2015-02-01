@@ -1850,7 +1850,7 @@ class contact_form extends Module {
 					'cancel_action'	=> window_Close('contact_forms_fieldset_add')
 				);
 
-		$template->registerTagHandler('cms:form_list', $this, 'tag_FormList');
+		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -2446,6 +2446,8 @@ class contact_form extends Module {
 	public function tag_FieldList($tag_params, $children) {
 		$conditions = array();
 		$selected = null;
+		$fieldset = null;
+		$fieldset_fields = array();
 		$manager = ContactForm_FormFieldManager::getInstance();
 
 		// get parameters
@@ -2473,6 +2475,16 @@ class contact_form extends Module {
 
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
+
+		if (isset($tag_params['fieldset'])) {
+			$fieldset = fix_id($tag_Params['fieldset']);
+			$manager = ContactForm_FieldsetFieldsManager::getInstance();
+			$raw_data = $manager->getItems(array('field'), array('fieldset' => $fieldset));
+
+			if (count($raw_data) > 0)
+				foreach ($raw_data as $data)
+					$fieldset_fields[] = $data->field;
+		}
 
 		$count = 0;
 		$limit = null;
@@ -2533,6 +2545,7 @@ class contact_form extends Module {
 
 				$backend_params = array(
 					'selected'		=> $selected == $item->id,
+					'in_fieldset'	=> in_array($item->id, $fieldset_fields),
 					'skip_foreign'	=> $skip_foreign,
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
