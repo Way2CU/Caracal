@@ -1889,6 +1889,7 @@ class contact_form extends Module {
 			$template->setMappedModule($this->name);
 
 			$params = array(
+					'id'			=> $item->id,
 					'form'			=> $item->form,
 					'name'			=> $item->name,
 					'legend'		=> $item->legend,

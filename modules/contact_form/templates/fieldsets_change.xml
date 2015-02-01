@@ -10,8 +10,8 @@
 				value="$params['name']"
 				maxlength="50"
 				class="ltr code"
-				cms:value="name"
 				style="width: 250px;"
+				cms:eval="name"
 				/>
 		</label>
 
