@@ -20,6 +20,7 @@
 		<div class="list_content" style="height: 250px">
 			<cms:list
 				template="fieldsets_list_item.xml"
+				local="1"
 				form="$params['form']"
 				cms:eval="form"
 				/>
