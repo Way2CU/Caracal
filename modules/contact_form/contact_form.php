@@ -2669,6 +2669,8 @@ class contact_form extends Module {
 			if (count($raw_data) > 0)
 				foreach ($raw_data as $data)
 					$fieldset_fields[] = $data->field;
+
+			$conditions['id'] = $fieldset_fields;
 		}
 
 		$fieldset_orphans = false;

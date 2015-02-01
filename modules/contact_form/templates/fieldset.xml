@@ -6,7 +6,7 @@
 		cms:eval="name"
 		>
 		<cms:if condition="!empty($params['legend'][$language])">
-			<cms:var param="legend" multilanguage="yes"/>
+			<legend><cms:var param="legend" multilanguage="yes"/></legend>
 		</cms:if>
 
 		<cms:field_list
