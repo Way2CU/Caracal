@@ -1887,7 +1887,7 @@ class contact_form extends Module {
 										$this->getLanguageConstant('fieldsets'),
 										window_Open(
 											'contact_form_fieldsets_'.$form_id, 	// window id
-											400,				// width
+											350,				// width
 											$this->getLanguageConstant('title_fieldsets_manage'), // title
 											true, false,
 											url_Make(
