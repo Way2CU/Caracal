@@ -2583,7 +2583,7 @@ class contact_form extends Module {
 			$selected = fix_id($tag_params['selected']);
 
 		if (isset($tag_params['fieldset'])) {
-			$fieldset = fix_id($tag_Params['fieldset']);
+			$fieldset = fix_id($tag_params['fieldset']);
 			$manager = ContactForm_FieldsetFieldsManager::getInstance();
 			$raw_data = $manager->getItems(array('field'), array('fieldset' => $fieldset));
 

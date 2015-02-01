@@ -11,7 +11,7 @@
 				maxlength="50"
 				class="ltr code"
 				style="width: 250px;"
-				cms:eval="name"
+				cms:eval="value"
 				/>
 		</label>
 
