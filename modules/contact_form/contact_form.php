@@ -327,7 +327,13 @@ class contact_form extends Module {
 					break;
 
 				case 'fieldsets_edit':
+					$this->editFieldset();
+					break;
+
 				case 'fieldsets_save':
+					$this->saveFieldset();
+					break;
+
 				case 'fieldsets_delete':
 				case 'fieldsets_delete_commit':
 					break;
