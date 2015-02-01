@@ -2584,8 +2584,8 @@ class contact_form extends Module {
 
 		if (isset($tag_params['fieldset'])) {
 			$fieldset = fix_id($tag_params['fieldset']);
-			$manager = ContactForm_FieldsetFieldsManager::getInstance();
-			$raw_data = $manager->getItems(array('field'), array('fieldset' => $fieldset));
+			$fieldset_manager = ContactForm_FieldsetFieldsManager::getInstance();
+			$raw_data = $fieldset_manager->getItems(array('field'), array('fieldset' => $fieldset));
 
 			if (count($raw_data) > 0)
 				foreach ($raw_data as $data)
