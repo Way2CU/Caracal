@@ -16,6 +16,7 @@
 				<input
 					type="text"
 					name="'header_'.$params['name']"
+					style="width: 170px;"
 					cms:eval="name"
 					/>
 			</span>
