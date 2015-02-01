@@ -318,6 +318,10 @@ class contact_form extends Module {
 					$this->deleteForm_Commit();
 					break;
 
+				case 'fieldsets':
+					$this->manageFieldsets();
+					break;
+
 				case 'fieldsets_add':
 					$this->addFieldset();
 					break;
@@ -1806,6 +1810,44 @@ class contact_form extends Module {
 		$template->parse();
 	}
 
+	/**
+	 * Show list of all fieldsets.
+	 */
+	private function manageFieldsets() {
+		$form = fix_id($_REQUEST['form']);
+
+		$template = new TemplateHandler('forms_list.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'link_new'		=> window_OpenHyperlink(
+										$this->getLanguageConstant('new'),
+										'contact_forms_add', 400,
+										$this->getLanguageConstant('title_forms_add'),
+										true, false,
+										$this->name,
+										'forms_add'
+									),
+					'link_fieldsets' => window_OpenHyperlink(
+										$this->getLanguageConstant('fieldsets'),
+										'contact_forms_fieldsets', 400,
+										$this->getLanguageConstant('title_fieldsets_manage'),
+										true, false,
+										$this->name,
+										'fieldsets'
+									),
+				);
+
+		$template->registerTagHandler('cms:list', $this, 'tag_FormList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for adding a new fieldset.
+	 */
 	private function addFieldset() {
 		$template = new TemplateHandler('fieldsets_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
