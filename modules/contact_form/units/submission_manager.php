@@ -7,7 +7,7 @@ class ContactForm_SubmissionManager extends ItemManager {
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('contact_form_submission');
+		parent::__construct('contact_form_submissions');
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('form', 'int');
