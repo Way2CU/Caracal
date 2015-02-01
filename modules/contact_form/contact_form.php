@@ -1828,14 +1828,6 @@ class contact_form extends Module {
 										$this->name,
 										'forms_add'
 									),
-					'link_fieldsets' => window_OpenHyperlink(
-										$this->getLanguageConstant('fieldsets'),
-										'contact_forms_fieldsets', 400,
-										$this->getLanguageConstant('title_fieldsets_manage'),
-										true, false,
-										$this->name,
-										'fieldsets'
-									),
 				);
 
 		$template->registerTagHandler('cms:list', $this, 'tag_FormList');
@@ -1889,7 +1881,23 @@ class contact_form extends Module {
 												array('form', $form_id)
 											)
 										)
-									)
+									),
+					'link_fieldsets' => url_MakeHyperlink(
+										$this->getLanguageConstant('fieldsets'),
+										window_Open(
+											'contact_form_fieldsets_'.$form_id, 	// window id
+											400,				// width
+											$this->getLanguageConstant('title_fieldsets_manage'), // title
+											false, false,
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'fieldsets'),
+												array('form', $form_id)
+											)
+										)
+									),
 				);
 
 		$template->registerTagHandler('cms:list', $this, 'tag_FieldList');
