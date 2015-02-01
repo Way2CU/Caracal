@@ -9,7 +9,7 @@
 			<cms:var param="legend" multilanguage="yes"/>
 		</cms:if>
 
-		<cms:fields
+		<cms:field_list
 			fieldset="$params['id']"
 			skip_foreign="0"
 			cms:eval="fieldset"
