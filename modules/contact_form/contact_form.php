@@ -335,7 +335,11 @@ class contact_form extends Module {
 					break;
 
 				case 'fieldsets_delete':
+					$this->deleteFieldset();
+					break;
+
 				case 'fieldsets_delete_commit':
+					$this->deleteFieldset_Commit();
 					break;
 
 				case 'fields_manage':
@@ -1956,6 +1960,67 @@ class contact_form extends Module {
 					'message'	=> $this->getLanguageConstant('message_fieldset_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
 					'action'	=> window_Close($window)
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show confirmation form before fieldset removal.
+	 */
+	private function deleteFieldset() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FieldsetManager::getInstance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'		=> $this->getLanguageConstant('message_fieldset_delete'),
+					'name'			=> $item->name,
+					'yes_text'		=> $this->getLanguageConstant('delete'),
+					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_action'	=> window_LoadContent(
+											'contact_form_fieldset_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'fieldsets_delete'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('contact_form_fieldset_delete')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Remove fieldset and associations.
+	 */
+	private function deleteFieldset_Commit() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = ContactForm_FieldsetManager::getInstance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+		$membership_manager->deleteData(array('fieldset' => $id));
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_fieldset_deleted'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('contact_form_fieldset_delete').';'.window_ReloadContent('contact_form_fieldsets_'.$form)
 				);
 
 		$template->restoreXML();

@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column">
+		<label class="column">
 			<input
 				type="checkbox"
 				name="'field_'.$params['id']"
@@ -11,6 +11,6 @@
 				cms:optional="checked"
 				/>
 			<cms:var name="$params['name']"/>
-		</span>
+		</label>
 	</div>
 </document>
