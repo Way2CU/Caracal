@@ -1842,10 +1842,13 @@ class contact_form extends Module {
 	 * Show form for adding a new fieldset.
 	 */
 	private function addFieldset() {
+		$form_id = fix_id($_REQUEST['form']);
+
 		$template = new TemplateHandler('fieldsets_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
+					'form'			=> $form_id,
 					'form_action'	=> backend_UrlMake($this->name, 'fieldsets_save'),
 					'cancel_action'	=> window_Close('contact_forms_fieldset_add')
 				);
