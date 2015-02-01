@@ -1814,23 +1814,24 @@ class contact_form extends Module {
 	 * Show list of all fieldsets.
 	 */
 	private function manageFieldsets() {
-		$form = fix_id($_REQUEST['form']);
+		$form_id = fix_id($_REQUEST['form']);
 
-		$template = new TemplateHandler('forms_list.xml', $this->path.'templates/');
+		$template = new TemplateHandler('fieldsets_list.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
+					'form'			=> $form_id,
 					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('new'),
-										'contact_forms_add', 400,
-										$this->getLanguageConstant('title_forms_add'),
+										'contact_forms_fieldset_add', 400,
+										$this->getLanguageConstant('title_fieldsets_add'),
 										true, false,
 										$this->name,
-										'forms_add'
+										'fieldsets_add'
 									),
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_FormList');
+		$template->registerTagHandler('cms:list', $this, 'tag_FieldsetList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -3142,6 +3143,24 @@ class contact_form extends Module {
 				$template->setLocalParams($params);
 				$template->parse();
 			}
+	}
+
+	/**
+	 * Handle drawing fieldset.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Fieldset($tag_params, $children) {
+	}
+
+	/**
+	 * Handle drawing list of fieldsets.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_FieldsetList($tag_params, $children) {
 	}
 
 	/**
