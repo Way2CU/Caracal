@@ -1884,7 +1884,7 @@ class contact_form extends Module {
 	 * Save new or modified fieldset data.
 	 */
 	private function saveFieldset() {
-		$id = fix_id($_REQUEST['id']);
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$form_id = fix_id($_REQUEST['form']);
 		$manager = ContactForm_FieldsetManager::getInstance();
 		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
@@ -1899,13 +1899,14 @@ class contact_form extends Module {
 		// collect field ids
 		$field_list = array();
 		foreach ($_REQUEST as $key => $value)
-			if (substr($key, 0, 6) == 'field_')
+			if (substr($key, 0, 6) == 'field_' && ($value == '1' || $value == 'on'))
 				$field_list[] = fix_id(substr($key, 6));
 
 		// insert or update data in database
 		if (is_null($id)) {
 			$window = 'contact_form_fieldsets_add';
 			$manager->insertData($data);
+			$id = $manager->getInsertedID();
 
 		} else {
 			$window = 'contact_form_fieldsets_edit';
