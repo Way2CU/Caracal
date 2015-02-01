@@ -1802,7 +1802,18 @@ class contact_form extends Module {
 		$manager = ContactForm_FormManager::getInstance();
 		$field_manager = ContactForm_FormFieldManager::getInstance();
 		$domain_manager = ContactForm_DomainManager::getInstance();
+		$fieldset_manager = ContactForm_FieldsetManager::getInstance();
+		$fieldset_membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
+		// remove all fieldsets
+		$fieldsets = $fieldset_manager->getItems(array('id'), array('form' => $id));
+		if (count($fieldsets) > 0)
+			foreach ($fieldsets as $fieldset) {
+				$fieldset_membership_manager->deleteData(array('fieldset' => $fieldset->id));
+				$fieldset_manager->deleteData(array('id' => $fieldset->id));
+			}
+
+		// remove rest of the data
 		$manager->deleteData(array('id' => $id));
 		$field_manager->deleteData(array('form' => $id));
 		$domain_manager->deleteData(array('form' => $id));
@@ -2232,10 +2243,12 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormFieldManager::getInstance();
 		$value_manager = ContactForm_FieldValueManager::getInstance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
 		$form = $manager->getItemValue('form', array('id' => $id));
 		$manager->deleteData(array('id' => $id));
 		$value_manager->deleteData(array('field' => $id));
+		$membership_manager->deleteData(array('field' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
