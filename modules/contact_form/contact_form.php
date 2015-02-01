@@ -3408,6 +3408,7 @@ class contact_form extends Module {
 		// parse template
 		if (is_object($item)) {
 			$params = array(
+				'id'		=> $item->id,
 				'form'		=> $item->form,
 				'name'		=> $item->name,
 				'legend'	=> $item->legend
