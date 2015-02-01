@@ -3,16 +3,6 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_fieldsets_add">
 		<label>
-			<span><cms:text constant="label_form" module="contact_form"/></span>
-			<select name="form">
-				<cms:form_list
-					template="form_option.xml"
-					local="1"
-					/>
-			</select>
-		</label>
-
-		<label>
 			<span><cms:text constant="label_name" module="contact_form"/></span>
 			<input
 				type="text"
@@ -31,7 +21,23 @@
 				/>
 		</label>
 
+		<div class="scrollable_list">
+			<div class="list_header">
+				<span class="column">
+					<cms:text constant="column_fields" module="contact_form"/>
+				</span>
+			</div>
+
+			<div class="list_content" style="height: 250px">
+				<cms:field_list
+					form="$params['form']"
+					cms:eval="form"
+					/>
+			</div>
+		</div>
+
 		<div class="button_bar">
+			<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
