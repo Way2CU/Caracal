@@ -2671,6 +2671,28 @@ class contact_form extends Module {
 					$fieldset_fields[] = $data->field;
 		}
 
+		$fieldset_orphans = false;
+		if (isset($tag_params['fieldset_orphans']) && isset($conditions['form'])) {
+			$fieldset_orphans = $tag_params['fieldset_orphans'] == 1;
+			$fieldset_manager = ContactForm_FieldsetManager::getInstance();
+			$fieldset_memebership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+
+			// get all fieldsets
+			$fieldsets = $fieldset_manager->getItems(array('id'), array('form' => $conditions['form']));
+			$fieldset_ids = array();
+
+			if (count($fieldsets) > 0)
+				foreach ($fieldsets as $fieldset)
+					$fieldset_ids[] = $fieldset->id;
+
+			// get all fields belonging to fieldset
+			$raw_data = $fieldset_memebership_manager->getItems(array('field'), array('fieldset' => $fieldset_ids));
+
+			if (count($raw_data) > 0)
+				foreach ($raw_data as $membership)
+					$fieldset_fields[] = $membership->field;
+		}
+
 		$count = 0;
 		$limit = null;
 		if (isset($tag_params['limit']))
@@ -2704,6 +2726,10 @@ class contact_form extends Module {
 
 				// skip virtual fields
 				if ($skip_virtual && in_array($item->type, $this->virtual_fields))
+					continue;
+
+				// skip if field is not orphaned
+				if ($fieldset_orphans && in_array($item->id, $fieldset_fields))
 					continue;
 
 				// respect limit
@@ -2892,9 +2918,14 @@ class contact_form extends Module {
 		if (isset($tag_params['id']))
 			$conditions['id'] = fix_id($tag_params['id']);
 
+		$show_fieldsets = true;
+		if (isset($tag_params['show_fieldsets']))
+			$show_fieldsets = $tag_params['show_fieldsets'] == 1;
+
 		// load template
 		$template = $this->loadTemplate($tag_params, 'form.xml');
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
+		$template->registerTagHandler('cms:fieldsets', $this, 'tag_FieldsetList');
 
 		// get form from the database
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
@@ -2919,6 +2950,7 @@ class contact_form extends Module {
 				'show_reset'	=> $item->show_reset,
 				'show_cancel'	=> $item->show_cancel,
 				'show_controls'	=> $item->show_submit || $item->show_reset || $item->show_cancel,
+				'show_fieldsets'	=> $show_fieldsets,
 				'has_files'		=> count($fields) > 0
 			);
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<fieldset
+		name="$params['name']"
+		cms:eval="name"
+		>
+		<cms:if condition="!empty($params['legend'][$language])">
+			<cms:var param="legend" multilanguage="yes"/>
+		</cms:if>
+
+		<cms:fields
+			fieldset="$params['id']"
+			skip_foreign="0"
+			cms:eval="fieldset"
+			/>
+	</fieldset>
+</document>

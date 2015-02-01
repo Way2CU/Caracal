@@ -14,11 +14,27 @@
 		<input type="hidden" name="form_id" value="$params['id']" cms:eval="value"/>
 
 		<!-- Fields -->
-		<cms:fields
-			form="$params['id']"
-			skip_foreign="0"
-			cms:eval="form"
-			/>
+		<cms:if condition="!$params['show_fieldsets']">
+			<cms:fields
+				form="$params['id']"
+				skip_foreign="0"
+				cms:eval="form"
+				/>
+		</cms:if>
+		<cms:if condition="$params['show_fieldsets']">
+			<cms:fieldsets
+				form="$params['id']"
+				template="fieldset.xml"
+				local="1"
+				cms:eval="form"
+				/>
+			<cms:fields
+				form="$params['id']"
+				skip_foreign="0"
+				fieldset_orphans="1"
+				cms:eval="form"
+				/>
+		</cms:if>
 
 		<!-- Controls -->
 		<cms:if condition="$params['show_controls']">
