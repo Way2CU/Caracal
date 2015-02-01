@@ -167,6 +167,8 @@
 						class="code rtl"
 					/>
 				</label>
+
+				<em><cms:text constant="message_smtp_password_warning" module="contact_form"/></em>
 			</div>
 		</div>
 
