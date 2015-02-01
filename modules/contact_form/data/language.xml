@@ -30,6 +30,9 @@
 		<constant name="message_field_value_deleted">Field value was removed!</constant>
 		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 		<constant name="message_smtp_password_warning">Note: Password is stored in clear text format in database!</constant>
+		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
+		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
+		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
 
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -220,6 +223,9 @@
 		<constant name="message_field_value_deleted">Field value was removed!</constant>
 		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 		<constant name="message_smtp_password_warning">Note: Password is stored in clear text format in database!</constant>
+		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
+		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
+		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
 
 		<constant name="title_settings">نموذج الاتصال: اعدادات</constant>
 		<constant name="title_templates_add">نموذج الاتصال: قالب جديد</constant>
@@ -405,6 +411,9 @@
 		<constant name="message_field_value_deleted">ערך השדה הוסר.</constant>
 		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 		<constant name="message_smtp_password_warning">Note: Password is stored in clear text format in database!</constant>
+		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
+		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
+		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
 
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">טופס קשר: תבנית חדשה</constant>
@@ -593,6 +602,9 @@
 		<constant name="message_field_value_deleted">Field value was removed!</constant>
 		<constant name="message_domain_already_in_list">Specified domain is already in the list.</constant>
 		<constant name="message_smtp_password_warning">Note: Password is stored in clear text format in database!</constant>
+		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
+		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
+		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
 
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
