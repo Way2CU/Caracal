@@ -1959,7 +1959,7 @@ class contact_form extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_fieldset_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close($window).';'.window_ReloadContent('contact_form_fieldsets_'.$form_id);
+					'action'	=> window_Close($window).';'.window_ReloadContent('contact_form_fieldsets_'.$form_id)
 				);
 
 		$template->restoreXML();
