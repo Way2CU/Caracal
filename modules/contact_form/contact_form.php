@@ -2011,6 +2011,7 @@ class contact_form extends Module {
 		$manager = ContactForm_FieldsetManager::getInstance();
 		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
+		$form = $manager->getItemValue('form', array('id' => $id));
 		$manager->deleteData(array('id' => $id));
 		$membership_manager->deleteData(array('fieldset' => $id));
 
