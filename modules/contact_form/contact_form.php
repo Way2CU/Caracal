@@ -475,7 +475,8 @@ class contact_form extends Module {
 
 		$sql .= "
 				PRIMARY KEY(`id`),
-				INDEX `contact_form_fieldsets_by_form` (`form`)
+				INDEX `contact_form_fieldsets_by_form` (`form`),
+				INDEX `contact_form_fieldsets_by_name` (`form`, `name`)
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1833,7 +1834,7 @@ class contact_form extends Module {
 											'contact_form_fieldset_add', 	// window id
 											350,				// width
 											$this->getLanguageConstant('title_fieldsets_add'), // title
-											true, false,
+											false, false,
 											url_Make(
 												'transfer_control',
 												'backend_module',
@@ -3246,6 +3247,39 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_Fieldset($tag_params, $children) {
+		$conditions = array();
+		$manager = ContactForm_FieldsetManager::getInstance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+
+		// get conditions
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		if (isset($tag_params['name']))
+			$conditions['name'] = fix_chars($tag_params['name']);
+
+		if (isset($tag_params['form']))
+			$conditions['form'] = fix_id($tag_params['form']);
+
+		// get fieldset from database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
+		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+
+		// parse template
+		if (is_object($item)) {
+			$params = array(
+				'form'		=> $item->form,
+				'name'		=> $item->name,
+				'legend'	=> $item->legend
+			);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
 	}
 
 	/**
@@ -3255,6 +3289,65 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_FieldsetList($tag_params, $children) {
+		$conditions = array();
+		$manager = ContactForm_FieldsetManager::getInstance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+
+		// get conditions
+		if (isset($tag_params['form']))
+			$conditions['form'] = fix_id($tag_params['form']);
+
+		// get fieldset from database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
+		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+					'form'			=> $item->form,
+					'name'			=> $item->name,
+					'legend'		=> $item->legend,
+					'item_change'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('change'),
+											window_Open(
+												'contact_form_fieldset_edit', 	// window id
+												350,				// width
+												$this->getLanguageConstant('title_fieldsets_edit'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'fieldsets_edit'),
+													array('id', $item->id)
+												)
+											)
+										),
+					'item_delete'	=> url_MakeHyperlink(
+											$this->getLanguageConstant('delete'),
+											window_Open(
+												'contact_form_fieldset_delete', 	// window id
+												400,				// width
+												$this->getLanguageConstant('title_fieldsets_delete'), // title
+												false, false,
+												url_Make(
+													'transfer_control',
+													'backend_module',
+													array('module', $this->name),
+													array('backend_action', 'fieldsets_delete'),
+													array('id', $item->id)
+												)
+											)
+										),
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
 	}
 
 	/**
