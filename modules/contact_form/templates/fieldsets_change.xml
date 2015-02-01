@@ -37,6 +37,8 @@
 				<cms:field_list
 					form="$params['form']"
 					fieldset="$params['id']"
+					template="field_checkbox_list_item.xml"
+					local="1"
 					cms:eval="form,fieldset"
 					/>
 			</div>

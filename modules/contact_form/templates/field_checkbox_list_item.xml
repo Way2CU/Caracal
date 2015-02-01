@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column">
+			<input
+				type="checkbox"
+				name="'field_'.$params['id']"
+				checked="$params['in_fieldset']"
+				cms:eval="name"
+				cms:optional="checked"
+				/>
+			<cms:var name="$params['name']"/>
+		</span>
+	</div>
+</document>
