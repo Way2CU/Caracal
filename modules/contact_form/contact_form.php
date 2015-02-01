@@ -557,7 +557,7 @@ class contact_form extends Module {
 		$tables = array(
 			'contact_form_templates', 'contact_forms', 'contact_form_fields',
 			'contact_form_submissions', 'contact_form_submission_fields',
-			'contact_form_domains'
+			'contact_form_domains', 'contact_form_fieldsets', 'contact_form_fieldset_fields'
 		);
 		$db->drop_tables($tables);
 	}
