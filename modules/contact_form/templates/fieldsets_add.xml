@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_fieldsets_add">
+		<label>
+			<span><cms:text constant="label_form" module="contact_form"/></span>
+			<select name="form">
+				<cms:form_list
+					template="form_option.xml"
+					local="1"
+					/>
+			</select>
+		</label>
+
+		<label>
+			<span><cms:text constant="label_name" module="contact_form"/></span>
+			<input
+				type="text"
+				name="name"
+				maxlength="50"
+				class="ltr code"
+				/>
+		</label>
+
+		<label>
+			<cms:text constant="label_legend" module="contact_form"/>
+			<input
+				type="text"
+				name="legend"
+				class="multi-language"
+				/>
+		</label>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		new LanguageSelector('contact_form_fieldsets_add');
+	</script>
+</document>
