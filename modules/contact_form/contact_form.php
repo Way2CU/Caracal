@@ -1823,7 +1823,7 @@ class contact_form extends Module {
 					'form'			=> $form_id,
 					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('new'),
-										'contact_forms_fieldset_add', 400,
+										'contact_forms_fieldset_add', 350,
 										$this->getLanguageConstant('title_fieldsets_add'),
 										true, false,
 										$this->name,

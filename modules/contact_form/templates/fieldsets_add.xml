@@ -19,7 +19,7 @@
 				type="text"
 				name="legend"
 				class="multi-language"
-				style="width: 370px;"
+				style="width: 320px;"
 				/>
 		</label>
 
@@ -30,7 +30,7 @@
 				</span>
 			</div>
 
-			<div class="list_content" style="height: 250px">
+			<div class="list_content" style="height: 200px">
 				<cms:field_list
 					form="$params['form']"
 					template="field_checkbox_list_item.xml"
