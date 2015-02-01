@@ -467,7 +467,7 @@ class contact_form extends Module {
 		foreach($list as $language)
 			$sql .= "`legend_{$language}` varchar(250) NOT NULL DEFAULT '',";
 
-		$sql = "
+		$sql .= "
 				PRIMARY KEY(`id`),
 				INDEX `contact_form_fieldsets_by_form` (`form`)
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
