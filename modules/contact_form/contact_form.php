@@ -3444,6 +3444,7 @@ class contact_form extends Module {
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				$params = array(
+					'id'			=> $item->id,
 					'form'			=> $item->form,
 					'name'			=> $item->name,
 					'legend'		=> $item->legend,
