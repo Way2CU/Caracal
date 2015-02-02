@@ -11,6 +11,7 @@
 
 		<cms:field_list
 			fieldset="$params['id']"
+			fieldset_members="1"
 			skip_foreign="0"
 			cms:eval="fieldset"
 			/>

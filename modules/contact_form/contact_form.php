@@ -2670,7 +2670,8 @@ class contact_form extends Module {
 				foreach ($raw_data as $data)
 					$fieldset_fields[] = $data->field;
 
-			$conditions['id'] = $fieldset_fields;
+			if (isset($tag_params['fieldset_members']) && $tag_params['fieldset_members'] == 1)
+				$conditions['id'] = $fieldset_fields;
 		}
 
 		$fieldset_orphans = false;
