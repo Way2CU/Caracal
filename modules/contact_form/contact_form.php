@@ -2661,6 +2661,7 @@ class contact_form extends Module {
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
+		// show fields from a fieldset or at least as members of one
 		if (isset($tag_params['fieldset'])) {
 			$fieldset = fix_id($tag_params['fieldset']);
 			$fieldset_manager = ContactForm_FieldsetFieldsManager::getInstance();
@@ -2670,10 +2671,12 @@ class contact_form extends Module {
 				foreach ($raw_data as $data)
 					$fieldset_fields[] = $data->field;
 
+			// if specified, limit displayed fields only to members
 			if (isset($tag_params['fieldset_members']) && $tag_params['fieldset_members'] == 1)
 				$conditions['id'] = $fieldset_fields;
 		}
 
+		// only show fields that are not in any fieldset
 		$fieldset_orphans = false;
 		if (isset($tag_params['fieldset_orphans']) && isset($conditions['form'])) {
 			$fieldset_orphans = $tag_params['fieldset_orphans'] == 1;
