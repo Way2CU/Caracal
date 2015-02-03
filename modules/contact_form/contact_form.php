@@ -33,7 +33,7 @@ class contact_form extends Module {
 					'text', 'email', 'textarea', 'select', 'hidden', 'checkbox', 'radio',
 					'password', 'file', 'color', 'date', 'month', 'datetime', 'datetime-local',
 					'time', 'week', 'url', 'number', 'range', 'honey-pot', 'transfer-param',
-					'site-version'
+					'site-version', 'button'
 				);
 	private $hidden_fields = array('hidden', 'honey-pot');
 	private $virtual_fields = array('transfer-param', 'site-version');
