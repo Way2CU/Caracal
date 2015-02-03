@@ -616,7 +616,7 @@ class TemplateHandler {
 
 						if (!array_key_exists($tag->tagName, $this->tag_children))
 							$obj->$function($tag->tagAttrs, $tag->tagChildren); else
-							$obj->$function($tag->tagAttrs, $this->tag_children[$tag->tagName]); else
+							$obj->$function($tag->tagAttrs, $this->tag_children[$tag->tagName]);
 
 					} else {
 						// default tag handler
