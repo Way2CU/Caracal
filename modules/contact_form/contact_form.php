@@ -53,7 +53,7 @@ class contact_form extends Module {
 							'autocomplete'	=> true
 						),
 						'phone'	=> array(
-							'type'			=> 'email',
+							'type'			=> 'text',
 							'required'		=> true,
 							'autocomplete'	=> true,
 							'pattern'		=> '\d+'
