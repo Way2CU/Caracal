@@ -9,6 +9,10 @@
 			<legend><cms:var param="legend" multilanguage="yes"/></legend>
 		</cms:if>
 
+		<cms:if condition="!empty($params['include'])">
+			<cms:template file="$params['include']" cms:eval="file"/>
+		</cms:if>
+
 		<cms:field_list
 			fieldset="$params['id']"
 			fieldset_members="1"
