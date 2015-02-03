@@ -2932,6 +2932,7 @@ class contact_form extends Module {
 		$template = $this->loadTemplate($tag_params, 'form.xml');
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
 		$template->registerTagHandler('cms:fieldsets', $this, 'tag_FieldsetList');
+		$template->setTagChildren('cms:fieldsets', $children);
 
 		// get form from the database
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
@@ -3439,6 +3440,17 @@ class contact_form extends Module {
 		if (isset($tag_params['form']))
 			$conditions['form'] = fix_id($tag_params['form']);
 
+		// collect transfered options from form
+		$fieldset_includes = array();
+
+		if (count($children) > 0)
+			foreach ($children as $tag) {
+				$name = $tag->tagAttrs['name'];
+				$template = $tag->tagAttrs['template'];
+
+				$fieldset_includes[$name] = $template;
+			}
+
 		// get fieldset from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
@@ -3453,6 +3465,7 @@ class contact_form extends Module {
 					'form'			=> $item->form,
 					'name'			=> $item->name,
 					'legend'		=> $item->legend,
+					'include'		=> array_key_exists($item->name, $fieldset_includes) ? $fieldset_includes[$item->name] : '',
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
