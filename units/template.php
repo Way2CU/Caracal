@@ -50,6 +50,12 @@ class TemplateHandler {
 	private $handlers = array();
 
 	/**
+	 * Tag children overrides.
+	 * @var array
+	 */
+	private $tag_children = array();
+
+	/**
 	 * List of tags that shouldn't be closed
 	 * @var array
 	 */
@@ -602,13 +608,15 @@ class TemplateHandler {
 
 				// default action for parser, draw tag
 				default:
-					if (in_array($tag->tagName, array_keys($this->handlers))) {
+					if (array_key_exists($tag->tagName, $this->handlers)) {
 						// custom tag handler is set...
 						$handle = $this->handlers[$tag->tagName];
 						$obj = $handle['object'];
 						$function = $handle['function'];
 
-						$obj->$function($tag->tagAttrs, $tag->tagChildren);
+						if (!array_key_exists($tag->tagName, $this->tag_children))
+							$obj->$function($tag->tagAttrs, $tag->tagChildren); else
+							$obj->$function($tag->tagAttrs, $this->tag_children[$tag->tagName]); else
 
 					} else {
 						// default tag handler
@@ -702,6 +710,19 @@ class TemplateHandler {
 					'object' 	=> $object,
 					'function'	=> $function_name
 				);
+	}
+
+	/**
+	 * Set tag children tags to be overriden.
+	 *
+	 * @param string $tag_name
+	 * @param array $children
+	 */
+	public function setTagChildren($tag_name, &$children) {
+		if (!array_key_exists($tag_name, $this->handlers))
+			return;
+
+		$this->tag_children[$tag_name] = $children;
 	}
 }
 
