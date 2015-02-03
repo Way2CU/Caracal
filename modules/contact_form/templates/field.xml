@@ -21,7 +21,7 @@
 			>
 
 			<!-- Label text -->
-			<cms:if condition="!empty($params['label'][$language]">
+			<cms:if condition="!empty($params['label'][$language])">
 				<span><cms:var param="label" multilanguage="yes"/></span>
 			</cms:if>
 
