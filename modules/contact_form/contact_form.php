@@ -3445,6 +3445,11 @@ class contact_form extends Module {
 
 		if (count($children) > 0)
 			foreach ($children as $tag) {
+				// skip tags that are not ours
+				if ($tag->tagName != 'fieldset')
+					continue;
+
+				// store template name
 				$name = $tag->tagAttrs['name'];
 				$template = $tag->tagAttrs['template'];
 
