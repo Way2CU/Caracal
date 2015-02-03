@@ -3451,9 +3451,9 @@ class contact_form extends Module {
 
 				// store template name
 				$name = $tag->tagAttrs['name'];
-				$template = $tag->tagAttrs['template'];
+				$template = $tag->tagAttrs['include'];
 
-				$fieldset_includes[$name] = $template;
+				$includes[$name] = $template;
 			}
 
 		// get fieldset from database
@@ -3470,7 +3470,7 @@ class contact_form extends Module {
 					'form'			=> $item->form,
 					'name'			=> $item->name,
 					'legend'		=> $item->legend,
-					'include'		=> array_key_exists($item->name, $fieldset_includes) ? $fieldset_includes[$item->name] : '',
+					'include'		=> array_key_exists($item->name, $includes) ? $includes[$item->name] : '',
 					'item_change'	=> url_MakeHyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
