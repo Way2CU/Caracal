@@ -13,6 +13,9 @@
 			<span class="column" style="width: 200px;">
 				<cms:text constant="column_name" module="contact_form"/>
 			</span>
+			<span class="column" style="width: 100px;">
+				<cms:text constant="column_type" module="contact_form"/>
+			</span>
 			<span class="column">
 				<cms:text constant="column_options"/>
 			</span>

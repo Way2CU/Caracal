@@ -85,6 +85,7 @@
 		<constant name="column_value">Value</constant>
 		<constant name="column_domain">Domain</constant>
 		<constant name="column_fields">Form fields</constant>
+		<constant name="column_type">Type</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 
@@ -273,6 +274,7 @@
 		<constant name="column_value">Value</constant>
 		<constant name="column_domain">Domain</constant>
 		<constant name="column_fields">Form fields</constant>
+		<constant name="column_type">Type</constant>
 
 		<constant name="dialog_title">استماره الاتصال</constant>
 
@@ -468,6 +470,7 @@
 		<constant name="column_value">ערך</constant>
 		<constant name="column_domain">Domain</constant>
 		<constant name="column_fields">Form fields</constant>
+		<constant name="column_type">Type</constant>
 
 		<constant name="dialog_title">טופס קשר</constant>
 
@@ -660,6 +663,7 @@
 		<constant name="column_value">Value</constant>
 		<constant name="column_domain">Domain</constant>
 		<constant name="column_fields">Form fields</constant>
+		<constant name="column_type">Type</constant>
 
 		<constant name="dialog_title">Contact Form</constant>
 

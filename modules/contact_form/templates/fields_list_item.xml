@@ -5,6 +5,9 @@
 		<span class="column" style="width: 200px;">
 			<cms:var name="$params['name']"/>
 		</span>
+		<span class="column" style="width: 100px;">
+			<cms:var name="$params['type']"/>
+		</span>
 		<span class="column">
 			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
 			<cms:var name="$params['item_delete']"/>
