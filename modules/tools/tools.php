@@ -41,6 +41,7 @@ class tools extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'check_domain':
+					$this->json_CheckDomain();
 					break;
 
 				default:
