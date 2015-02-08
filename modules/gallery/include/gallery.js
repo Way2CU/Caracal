@@ -174,7 +174,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// calculate starting position
 		if (self.center) {
 			if (self.spacing == null) {
-				result.spacing = result.negative_space / self.visible_items + 1;
+				result.spacing = result.negative_space / (self.visible_items + 1);
 				result.start_x = result.spacing;
 
 			} else {
@@ -184,7 +184,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		} else {
 			if (self.spacing == null)
-				result.spacing = result.negative_space / self.visible_items - 1; else
+				result.spacing = result.negative_space / (self.visible_items - 1); else
 				result.spacing = self.spacing;
 			result.start_x = 0;
 		}
