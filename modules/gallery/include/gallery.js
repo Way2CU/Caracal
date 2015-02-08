@@ -100,6 +100,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// make jquery set from array
 		self.images.list = $(images);
 
+		// perform update
+		self.images.update();
+	};
+
+	/**
+	 * Update image positions.
+	 */
+	self.images.update = function() {
 		// prepare for update
 		subset = self.images.list.slice(0, self.visible_items);
 		params = self.images._get_params(subset);
@@ -253,6 +261,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 */
 	self.images.set_center = function(center) {
 		self.center = center;
+		self.images.update();
 		return self;
 	};
 
@@ -265,6 +274,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 */
 	self.images.set_spacing = function(spacing) {
 		self.spacing = spacing;
+		self.images.update();
 		return self;
 	};
 
