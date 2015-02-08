@@ -152,6 +152,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		result.container_width = self.container.outerWidth();
 
 		// get total image width
+		result.total_width = 0;
 		image_set.each(function() {
 			result.total_width += $(this).outerWidth();
 		});
