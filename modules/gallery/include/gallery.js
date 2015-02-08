@@ -179,7 +179,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 			} else {
 				result.spacing = self.spacing;
-				result.start_x = Math.abs(result.negative_space - (result.spacing * (self.visible_items - 1)) / 2);
+				result.start_x = Math.abs((result.negative_space - (result.spacing * (self.visible_items - 1))) / 2);
 			}
 
 		} else {
