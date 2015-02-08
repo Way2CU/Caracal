@@ -102,7 +102,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		self.images.list = $(images);
 
 		// perform update
-		self.images.update();
+		self.images.update(real_direction);
 	};
 
 	/**
@@ -334,7 +334,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		if (self.timer_id != null)
 			return;
 
-		self.timer_id = setTimetou(self.next_step, self.timeout);
+		self.timer_id = setTimetout(self.next_step, self.timeout);
 	};
 
 	/**
