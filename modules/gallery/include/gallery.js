@@ -84,6 +84,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// shift images
 		var slice = null;
 		var images = self.images.list.toArray();
+		var subset = null;
 
 		if (real_direction > 0) {
 			// move portion of array to the end
@@ -97,13 +98,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 		}
 
 		self.images.list = $(images);
+		subset = self.images.slice(0, self.visible_items);
 
 		// update image positions
 		if (self.container != null)
-			self.images._update_position();
+			self.images._update_position(subset);
 
 		// update image visibility
-		self.images._update_visibility();
+		self.images._update_visibility(subset);
 	};
 
 	/**
