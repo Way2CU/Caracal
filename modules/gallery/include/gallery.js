@@ -169,7 +169,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return self
 	 */
 	self.images.set_container = function(container) {
-		self.container = container;
+		self.container = $(container);
 		return self;
 	};
 
@@ -181,7 +181,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return self
 	 */
 	self.images.add = function(images) {
-		$.extend(self.images.list, images);
+		$.extend(self.images.list, $(images));
 		return self;
 	};
 
@@ -312,7 +312,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 */
 	self.controls.attach_next = function(control) {
 		// add control to the list
-		$.extend(self.controls.next, control);
+		$.extend(self.controls.next, $(control));
 
 		// re-attach event handlers
 		self.controls._attach_handlers(true, false, false);
@@ -328,7 +328,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 */
 	self.controls.attach_previous = function(control) {
 		// add control to the list
-		$.extend(self.controls.previous, control);
+		$.extend(self.controls.previous, $(control));
 
 		// re-attach event handlers
 		self.controls._attach_handlers(false, true, false);
