@@ -113,7 +113,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// update image positions
 		if (self.container != null)
-			self.images._update_position(subset);
+			self.images._update_position(subset, params);
 	};
 
 	/**
