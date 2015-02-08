@@ -300,7 +300,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.images.set_step_size = function(step) {
 		self.step_size = step;
 		return self;
-	}:
+	};
 
 	/**
 	 * Set direction of moving images. Direction can be -1 or 1.
