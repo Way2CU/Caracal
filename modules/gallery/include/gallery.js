@@ -54,7 +54,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// create control containers
 		self.controls.next = $();
-		self.contrils.previous = $();
+		self.controls.previous = $();
 	};
 
 	/**
