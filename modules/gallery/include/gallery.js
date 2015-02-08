@@ -280,6 +280,29 @@ Caracal.Gallery.Slider = function(visible_items) {
 	};
 
 	/**
+	 * Set number of visible images.
+	 *
+	 * @param integer count
+	 * @return self
+	 */
+	self.images.set_visible_count = function(count) {
+		self.visible_items = count;
+		self.images.update();
+		return self;
+	};
+
+	/**
+	 * Set number of items to slide by.
+	 *
+	 * @param integer step
+	 * @return self
+	 */
+	self.images.set_step_size = function(step) {
+		self.step_size = step;
+		return self;
+	}:
+
+	/**
 	 * Set direction of moving images. Direction can be -1 or 1.
 	 *
 	 * @param integer direction
