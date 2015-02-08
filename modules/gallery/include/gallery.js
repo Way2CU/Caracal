@@ -131,15 +131,18 @@ Caracal.Gallery.Slider = function(visible_items) {
 			var incoming = self.images.list.slice(0, self.step_size);
 		}
 
-		// disable transitions for a moment
-		incoming.css('transition', 'none');
-
 		// position elements
 		if (direction == 1) {
-			incoming.css(params.property_name, params.container_width);
+			incoming.css({
+				transition: 'none',
+				params.property_name: params.container_width
+			});
 			outgoing.css(params.property_name, -100);
 		} else {
-			incoming.css(params.property_name, -100);
+			incoming.css({
+				transition: 'none',
+                params.property_name: -100
+			});
 			outgoing.css(params.property_name, params.container_width);
 		}
 
