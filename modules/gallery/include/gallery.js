@@ -387,8 +387,8 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		if (previous)
 			self.controls.previous
-				.off('click', self.controls._handle_next)
-				.on('click', self.controls._handle_next);
+				.off('click', self.controls._handle_previous)
+				.on('click', self.controls._handle_previous);
 
 		// reset hover handlers
 		controls
