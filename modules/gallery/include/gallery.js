@@ -106,7 +106,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// update image positions
 		if (self.container != null)
-			self.images._prepare_position(subset, params, real_direction);
+			self.images._prepare_position(params, real_direction);
 
 		// update image visibility
 		self.images._update_visibility(subset);
