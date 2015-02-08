@@ -90,7 +90,7 @@ class gallery extends Module {
 				// load frontend scripts
 				$head_tag->addTag('script',
 							array(
-								'src'	=> url_GetFromFilePath($this->path.'include/slideshow.js'),
+								'src'	=> url_GetFromFilePath($this->path.'include/gallery.js'),
 								'type'	=> 'text/javascript'
 							));
 				$head_tag->addTag('script',
