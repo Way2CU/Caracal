@@ -97,15 +97,88 @@ Caracal.Gallery.Slider = function(visible_items) {
 			images = slice.concat(images);
 		}
 
+		// make jquery set from array
 		self.images.list = $(images);
+
+		// prepare for update
 		subset = self.images.list.slice(0, self.visible_items);
+		params = self.images._get_params(subset);
+
+		// update image positions
+		if (self.container != null)
+			self.images._prepare_position(subset, params, real_direction);
+
+		// update image visibility
+		self.images._update_visibility(subset);
 
 		// update image positions
 		if (self.container != null)
 			self.images._update_position(subset);
+	};
 
-		// update image visibility
-		self.images._update_visibility(subset);
+	/**
+	 * Prepare element position before visibility update.
+	 *
+	 * @param object params
+	 * @param integer direction
+	 */
+	self.images._prepare_position = function(params, direction) {
+		var subset = null;
+
+		if (direction == 1) {
+			subset = self.images.list.slice(self.visible_items - self.step_size, self.visible_items);
+			subset.addClass('transit');
+			subset.css(params.property_name, params.container_width);
+			subset.removeClass('transit');
+
+		} else {
+			subset = self.images.list.slice(0, self.step_size);
+			subset.addClass('transit');
+			subset.css(params.property_name, '-100%');
+			subset.removeClass('transit');
+		}
+	};
+
+	/**
+	 * Get image spacing parameters.
+	 *
+	 * @param object image_set
+	 * @return object
+	 */
+	self.images._get_params = function(image_set) {
+		var result = {};
+
+		// get width of container
+		result.container_width = self.container.outerWidth();
+
+		// get total image width
+		image_set.each(function() {
+			result.total_width += $(this).outerWidth();
+		});
+		result.negative_space = container_width - total_width;
+
+		// calculate starting position
+		if (self.center) {
+			if (self.spacing == null) {
+				result.spacing = result.negative_space / self.visible_items + 1;
+				result.start_x = result.spacing;
+
+			} else {
+				result.spacing = self.spacing;
+				result.start_x = Math.abs(result.negative_space + (result.spacing * (self.visible_items - 1)) / 2);
+			}
+
+		} else {
+			if (self.spacing == null)
+				result.spacing = result.negative_space / self.visible_items - 1; else
+				result.spacing = self.spacing;
+			result.start_x = 0;
+		}
+
+		// store property name
+		result.property_name = self.direction == 1 ? 'left' : 'right';
+
+		return result;
 	};
 
 	/**
@@ -113,47 +186,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 *
 	 * @param object image_set
 	 */
-	self.images._update_position = function(image_set) {
-		var total_width = 0;
-		var container_width = self.container.outerWidth();
-		var negative_space = 0;
-		var pos_x = 0;
-		var spacing = 0;
+	self.images._update_position = function(image_set, params) {
+		var pos_x = params.start_x;
 
-		// get total image width
-		image_set.each(function() {
-			total_width += $(this).outerWidth();
-		});
-		negative_space = container_width - total_width;
-
-		// calculate starting position
-		if (self.center) {
-			if (self.spacing == null) {
-				spacing = negative_space / self.visible_items + 1;
-				pos_x = spacing;
-
-			} else {
-				spacing = self.spacing;
-				pos_x = Math.abs(negative_space + (spacing * (self.visible_items - 1)) / 2);
-			}
-
-		} else {
-			if (self.spacing == null)
-				spacing = negative_space / self.visible_items - 1; else
-				spacing = self.spacing;
-		}
-
-		// position images
-		var property = self.direction == 1 ? 'left' : 'right';
 		image_set.each(function() {
 			var item = $(this);
 			item.css(property, pos_x);
-			pos_x += item.outerWidth() + spacing;
+			pos_x += item.outerWidth() + params.spacing;
 		});
-
-		// position next element outside of container
-		if (self.images.list.length > self.visible_items)
-			self.images.list.eq(self.visible_items).css(property, container_width);
 	};
 
 	/**
