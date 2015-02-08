@@ -98,7 +98,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		}
 
 		self.images.list = $(images);
-		subset = self.images.slice(0, self.visible_items);
+		subset = self.images.list.slice(0, self.visible_items);
 
 		// update image positions
 		if (self.container != null)
