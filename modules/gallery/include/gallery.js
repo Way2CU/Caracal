@@ -155,7 +155,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		image_set.each(function() {
 			result.total_width += $(this).outerWidth();
 		});
-		result.negative_space = container_width - total_width;
+		result.negative_space = result.container_width - result.total_width;
 
 		// calculate starting position
 		if (self.center) {
