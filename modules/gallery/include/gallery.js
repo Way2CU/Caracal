@@ -31,8 +31,8 @@ Caracal.Gallery = Caracal.Gallery || {};
 Caracal.Gallery.Slider = function(visible_items) {
 	var self = this;
 
-	self.images = null;
-	self.controls = null;
+	self.images = {};
+	self.controls = {};
 	self.container = null;
 	self.direction = 1;
 	self.step_size = 1;
@@ -50,11 +50,9 @@ Caracal.Gallery.Slider = function(visible_items) {
 		self.visible_items = visible_items || 3;
 
 		// create image container
-		self.images = {};
 		self.images.list = $();
 
 		// create control containers
-		self.controls = {};
 		self.controls.next = $();
 		self.contrils.previous = $();
 	};
