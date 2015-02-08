@@ -133,7 +133,6 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// disable transitions for a moment
 		incoming.addClass('tranzit');
-		outgoing.addClass('tranzit');
 
 		// position elements
 		if (direction == 1) {
@@ -146,7 +145,6 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// enable transitions
 		incoming.removeClass('tranzit');
-		outgoing.removeClass('tranzit');
 	};
 
 	/**
