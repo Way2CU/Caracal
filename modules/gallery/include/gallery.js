@@ -334,7 +334,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		if (self.timer_id != null)
 			return;
 
-		self.timer_id = setTimetou(self.controls._handle_next, self.timeout);
+		self.timer_id = setTimetou(self.next_step, self.timeout);
 	};
 
 	/**
@@ -418,7 +418,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		self.timeout = timeout;
 
 		// start timer
-		self.timer_id = setInterval(self.controls._handle_next, self.timeout);
+		self.timer_id = setInterval(self.next_step, self.timeout);
 
 		// re-attach event handlers
 		self.controls._attach_handlers(false, false, true);
