@@ -56,6 +56,10 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// create control containers
 		self.controls.next = $();
 		self.controls.previous = $();
+
+		// detect list direction automatically
+		if ($('body').hasClass('rtl'))
+			self.direction = -1;
 	};
 
 	/**
