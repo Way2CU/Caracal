@@ -124,11 +124,11 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 */
 	self.images._prepare_position = function(params, direction) {
 		if (direction == 1) {
-			var outgoing = self.images.list.slice(self.visible_items - self.step_size, self.visible_items);
-			var incoming = self.images.list.slice(-self.step_size);
+			var incoming = self.images.list.slice(self.visible_items - self.step_size, self.visible_items);
+			var outgoing = self.images.list.slice(-self.step_size);
 		} else {
-			var incoming = self.images.list.slice(self.visible_items, self.visible_items + self.step_size);
-			var outgoing = self.images.list.slice(0, self.step_size);
+			var outgoing = self.images.list.slice(self.visible_items, self.visible_items + self.step_size);
+			var incoming = self.images.list.slice(0, self.step_size);
 		}
 
 		// disable transitions for a moment
