@@ -86,7 +86,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		var images = self.images.list.toArray();
 		var subset = null;
 
-		if (real_direction > 0) {
+		if (real_direction == 1) {
 			// move portion of array to the end
 			slice = images.splice(0, self.step_size);
 			images = images.concat(slice);
@@ -123,20 +123,30 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param integer direction
 	 */
 	self.images._prepare_position = function(params, direction) {
-		var subset = null;
-
 		if (direction == 1) {
-			subset = self.images.list.slice(self.visible_items - self.step_size, self.visible_items);
-			subset.addClass('transit');
-			subset.css(params.property_name, params.container_width);
-			subset.removeClass('transit');
-
+			var incoming = self.images.list.slice(self.visible_items - self.step_size, self.visible_items);
+			var outgoing = self.images.list.slice(-self.step_size);
 		} else {
-			subset = self.images.list.slice(0, self.step_size);
-			subset.addClass('transit');
-			subset.css(params.property_name, '-100%');
-			subset.removeClass('transit');
+			var outgoing = self.images.list.slice(self.visible_items, self.visible_items + self.step_size);
+			var incoming = self.images.list.slice(0, self.step_size);
 		}
+
+		// disable transitions for a moment
+		incoming.addClass('tranzit');
+		outgoing.addClass('tranzit');
+
+		// position elements
+		if (direction == 1) {
+			incoming.css(params.property_name, -100);
+			outgoing.css(params.property_name, params.container_width);
+		} else {
+			incomming.css(params.property_name, params.container_width);
+			outgoing.css(params.property_name, -100);
+		}
+
+		// enable transitions
+		incoming.removeClass('tranzit');
+		outgoing.removeClass('tranzit');
 	};
 
 	/**
