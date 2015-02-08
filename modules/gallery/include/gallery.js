@@ -150,6 +150,10 @@ Caracal.Gallery.Slider = function(visible_items) {
 			item.css(property, pos_x);
 			pos_x += item.outerWidth() + spacing;
 		});
+
+		// position next element outside of container
+		if (self.images.list.length > self.visible_items)
+			self.images.list.eq(self.visible_items).css(property, container_width);
 	};
 
 	/**
