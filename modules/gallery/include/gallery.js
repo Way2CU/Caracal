@@ -24,6 +24,7 @@ Caracal.Gallery = Caracal.Gallery || {};
  * gallery
  * 	.images.add('a.image')
  * 	.images.set_container('div.images')
+ * 	.images.update()
  * 	.controls.attach_next('a.next');
  *
  * @param integer visible_items
