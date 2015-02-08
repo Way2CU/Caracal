@@ -132,7 +132,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		}
 
 		// disable transitions for a moment
-		incoming.addClass('tranzit');
+		incoming.css('transition', 'none');
 
 		// position elements
 		if (direction == 1) {
@@ -144,7 +144,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		}
 
 		// enable transitions
-		incoming.removeClass('tranzit');
+		incoming.css('transition', '');
 	};
 
 	/**
