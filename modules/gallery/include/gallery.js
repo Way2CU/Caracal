@@ -191,7 +191,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		image_set.each(function() {
 			var item = $(this);
-			item.css(property, pos_x);
+			item.css(params.property_name, pos_x);
 			pos_x += item.outerWidth() + params.spacing;
 		});
 	};
