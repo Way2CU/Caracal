@@ -150,9 +150,9 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// position elements
 		if (direction == 1) {
 			incoming.css(params.property_name, params.container_width);
-			outgoing.css(params.property_name, -100);
+			outgoing.css(params.property_name, '-100%');
 		} else {
-			incoming.css(params.property_name, -100);
+			incoming.css(params.property_name, '-100%');
 			outgoing.css(params.property_name, params.container_width);
 		}
 
