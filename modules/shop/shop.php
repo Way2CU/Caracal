@@ -999,6 +999,7 @@ class shop extends Module {
 		$collection = collection::getInstance();
 
 		$collection->includeScript(collection::PAGE_CONTROL);
+		$collection->includeScript(collection::COMMUNICATOR);
 		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
 	}
@@ -1823,6 +1824,9 @@ class shop extends Module {
 		print json_encode($result);
 	}
 
+	/**
+	 * Change the amount of items in shopping cart for specified UID and variation id.
+	 */
 	private function json_ChangeItemQuantity() {
 		$uid = fix_chars($_REQUEST['uid']);
 		$variation_id = fix_chars($_REQUEST['variation_id']);

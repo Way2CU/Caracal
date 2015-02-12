@@ -248,7 +248,7 @@ Caracal.Shop.Cart = function() {
 	 * Show checkout menu
 	 */
 	self.showCheckoutMenu = function() {
-		var y_pos = self.checkout_button.offset().top + self.top_menu.height(); 
+		var y_pos = self.checkout_button.offset().top + self.top_menu.height();
 
 		if (self._checkout_menu_visible) {
 			// hide checkout menu
@@ -375,7 +375,7 @@ Caracal.Shop.Cart = function() {
 		// enable or disable submit button on checkout form
 		if (delivery_method > 0)
 			self._checkout_form.find('button[type=submit]').removeAttr('disabled'); else
-			self._checkout_form.find('button[type=submit]').attr('disabled', 'disabled'); 
+			self._checkout_form.find('button[type=submit]').attr('disabled', 'disabled');
 	};
 
 	/**
@@ -387,7 +387,7 @@ Caracal.Shop.Cart = function() {
 	self.getSizeValue = function(size) {
 		var result = '';
 
-		if (size in self._size_values) 
+		if (size in self._size_values)
 			result = self._size_values[size]['value'][language_handler.current_language];
 
 		return result;
@@ -400,7 +400,7 @@ Caracal.Shop.Cart = function() {
 	 * @param integer delivery_method
 	 */
 	self._updateCheckoutForm = function(update_items, delivery_method) {
-		if (!self._on_checkout_page) 
+		if (!self._on_checkout_page)
 			return;
 
 		// load items table
@@ -491,7 +491,7 @@ Caracal.Shop.Cart = function() {
 					// there was an error saving remark
 					if (!data)
 						alert('Error saving remark');
-					
+
 					self._checkout_form.submit();
 				}
 			});
@@ -539,7 +539,7 @@ Caracal.Shop.Cart = function() {
 			error: self.__handleCurrencyLoadError
 		});
 	};
-	
+
 	/**
 	 * Load payment methods from server
 	 */
@@ -635,6 +635,16 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Retrieve item from shopping cart by it's unique identifier.
+	 *
+	 * @param string uid
+	 * @return object
+	 */
+	self._getItemByUID = function(uid) {
+		// code
+	};
+
+	/**
 	 * Show empty cart message
 	 */
 	self._showEmptyMessage = function() {
@@ -695,7 +705,7 @@ Caracal.Shop.Cart = function() {
 
 		if (confirm(text)) {
 			// clear shopping cart
-			for (var key in self._items) 
+			for (var key in self._items)
 				self._removeItem(self._items[key]);
 
 			// let server know we cleared out cart
@@ -794,7 +804,7 @@ Caracal.Shop.Cart = function() {
 
 	/**
 	 * Handle error from currency loading procedure
-	 * 
+	 *
 	 * @param object xhr
 	 * @param string status
 	 * @param string error
@@ -804,7 +814,7 @@ Caracal.Shop.Cart = function() {
 
 	/**
 	 * Load payment methods from server
-	 * 
+	 *
 	 * @param object data
 	 */
 	self.__handlePaymentMethodsLoad = function(data) {
@@ -1212,6 +1222,15 @@ Caracal.Shop.Item = function(uid, cart) {
 
 	// finish object initialization
 	self.init();
+}
+
+
+/**
+ * Create new or increase ammount of existing item in shopping cart.
+ *
+ * @param string uid
+ */
+Caracal.Shop.add_item = function(uid) {
 }
 
 // create single instance of shopping cart
