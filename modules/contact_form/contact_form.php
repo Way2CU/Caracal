@@ -3432,6 +3432,7 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_FieldsetList($tag_params, $children) {
+		$includes = array();
 		$conditions = array();
 		$manager = ContactForm_FieldsetManager::getInstance();
 		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
