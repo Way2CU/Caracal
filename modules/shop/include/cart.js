@@ -91,6 +91,15 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Add constructor function for item view. This function
+	 * needs to be descendant from `Caracal.Shop.ItemView` function.
+	 *
+	 * @param callable constructor
+	 */
+	self.add_item_view = function(constructor) {
+	};
+
+	/**
 	 * Add new item with specified CID to the shopping cart.
 	 *
 	 * @param string cid
