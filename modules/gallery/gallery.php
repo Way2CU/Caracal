@@ -1336,6 +1336,8 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Group($tag_params, $children) {
+		global $language;
+
 		$manager = GalleryGroupManager::getInstance();
 
 		$conditions = array();
