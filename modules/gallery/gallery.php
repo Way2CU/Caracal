@@ -1336,26 +1336,59 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Group($tag_params, $children) {
-		if (!isset($tag_params['id'])) return;
+		$manager = GalleryGroupManager::getInstance();
 
-		if (isset($tag_params['id'])) {
-			// display a specific group
-			$id = fix_id($tag_params['id']);
+		$conditions = array();
+		$order_by = array();
+		$order_asc = true;
 
-		} else if (isset($tag_params['container'])) {
-			// display first group in specific container
-			$container = fix_id($tag_params['container']);
-			$manager = GalleryGroupManager::getInstance();
+		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
+			$order_by[] = fix_chars($tag_params['order_by']); else
+			$order_by[] = 'name_'.$language;
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
+
+		if (isset($tag_params['container']) || isset($tag_params['container_id'])) {
+			$container_manager = GalleryContainerManager::getInstance();
 			$membership_manager = GalleryGroupMembershipManager::getInstance();
+			$container_id = null;
 
-			$id = $membership_manager->getSingleItem('group', array('container' => $container));
-		} else {
-			// no container nor group id was specified
-			return;
+			if (isset($tag_params['container_id'])) {
+				// container ID was specified
+				$container_id = fix_id($tag_params['container_id']);
+
+			} else {
+				// container text_id was specified, get ID
+				$container = $container_manager->getSingleItem(
+													array('id'),
+													array('text_id' => fix_chars($tag_params['container']))
+												);
+
+				if (is_object($container))
+					$container_id = $container->id; else
+					$container_id = -1;
+			}
+
+			// grab all groups for specified container
+			if (!is_null($container_id)) {
+				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+
+				// extract object values
+				$list = array();
+				if (count($memberships) > 0)
+					foreach($memberships as $membership)
+						$list[] = $membership->group;
+
+				// add array as condition value (will be parsed as SQL list)
+				if (!empty($list))
+					$conditions['id'] = $list; else
+					$conditions['id'] = -1;  // ensure no groups are selected
+			}
 		}
 
-		$manager = GalleryGroupManager::getInstance();
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		// get group from database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
@@ -1422,7 +1455,6 @@ class gallery extends Module {
 					$container_id = $container->id; else
 					$container_id = -1;
 			}
-
 
 			// grab all groups for specified container
 			if (!is_null($container_id)) {
