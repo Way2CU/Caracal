@@ -998,10 +998,8 @@ class shop extends Module {
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
 
-		$collection->includeScript(collection::PAGE_CONTROL);
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/cart.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
