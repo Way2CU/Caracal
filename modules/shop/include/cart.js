@@ -357,7 +357,7 @@ Caracal.Shop.Cart = function() {
 Caracal.Shop.Item = function(cart) {
 	var self = this;
 
-	self.cart = null;
+	self.cart = cart;
 	self.name = '';
 	self.count = 0;
 	self.price = 0;
