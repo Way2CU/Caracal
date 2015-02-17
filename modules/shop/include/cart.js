@@ -28,12 +28,13 @@ Caracal.Shop = Caracal.Shop || {};
 Caracal.Shop.Cart = function() {
 	var self = this;
 
-	self.items = null;
+	self.items = {};
 	self.default_currency = 'EUR';
 	self.handling = 0;
-	self.ui = null;
-	self.events = null;
+	self.ui = {};
+	self.events = {};
 	self.handlers = {};
+	self.item_views = new Array();
 
 	/**
 	 * Complete object initialization.
@@ -41,18 +42,13 @@ Caracal.Shop.Cart = function() {
 	self._init = function() {
 		self._communicator = new Communicator('shop');
 
-		// create item container
-		self.items = {};
-
 		// create user interface containers
-		self.ui = {};
 		self.ui.item_list = $();
 		self.ui.total_count = $();
 		self.ui.total_cost = $();
 		self.ui.checkout_button = $();
 
 		// create event containers
-		self.events = {};
 		self.events.on_item_added = new Array();
 		self.events.on_item_removed = new Array();
 		self.events.on_item_amount_change = new Array();
@@ -88,15 +84,6 @@ Caracal.Shop.Cart = function() {
 		}
 
 		return result;
-	};
-
-	/**
-	 * Add constructor function for item view. This function
-	 * needs to be descendant from `Caracal.Shop.ItemView` function.
-	 *
-	 * @param callable constructor
-	 */
-	self.add_item_view = function(constructor) {
 	};
 
 	/**
@@ -188,6 +175,34 @@ Caracal.Shop.Cart = function() {
 	 * @param string payment_method
 	 */
 	self.checkout = function(payment_method) {
+	};
+
+	/**
+	 * Add constructor function for item view. This function
+	 * needs to be descendant from `Caracal.Shop.ItemView` function.
+	 *
+	 * @param callable constructor
+	 */
+	self.add_item_view = function(constructor) {
+		self.item_views.push(constructor);
+	};
+
+	/**
+	 * Get all item view constructors.
+	 *
+	 * @return array
+	 */
+	self.get_item_views = function() {
+		return self.item_views;
+	};
+
+	/**
+	 * Retrieve jQuery set of list container objects.
+	 *
+	 * @return object
+	 */
+	self.get_list_container = function() {
+		return self.ui.item_list;
 	};
 
 	/**
@@ -352,11 +367,19 @@ Caracal.Shop.Item = function(cart) {
 	self.variation_id = '';
 	self.properties = {};
 	self.handlers = {};
+	self.views = new Array();
 
 	/**
 	 * Complete object initialization.
 	 */
 	self._init = function() {
+		// create item views
+		var constructors = self.cart.get_item_views();
+
+		for (var i=0, count=constructors.length; i<count; i++) {
+			var ItemView = constructors[i];
+			self.views.push(new ItemView(self));
+		}
 	};
 
 	/**
@@ -390,7 +413,13 @@ Caracal.Shop.Item = function(cart) {
 		var result = false;
 
 		if (self.cart.events.emit_signal('item-amount-change', self.cart, self, count)) {
+			// update count
 			self.count = Math.abs(count);
+
+			// update views
+			for (var i=0, count=self.views.length; i<count; i++)
+				self.views[i].handle_change();
+
 			result = true;
 		}
 
@@ -411,6 +440,10 @@ Caracal.Shop.Item = function(cart) {
 			// make sure number is not negative
 			if (self.count < 0)
 				self.count = 0;
+
+			// update views
+			for (var i=0, count=self.views.length; i<count; i++)
+				self.views[i].handle_change();
 		}
 
 		return self.count;
@@ -430,6 +463,10 @@ Caracal.Shop.Item = function(cart) {
 		self.tax = data.tax || self.tax;
 		self.weight = data.weight || self.weight;
 		self.properties = data.properties || self.properties;
+
+		// update views
+		for (var i=0, count=self.views.length; i<count; i++)
+			self.views[i].handle_change();
 	};
 
 	/**
@@ -452,9 +489,6 @@ Caracal.Shop.Item = function(cart) {
 		self.uid = id_list[0];
 		self.variation_id = id_list[1] || '';
 
-		// mark item as busy
-		// TODO: Add UI elements
-
 		// load data from server
 		var data = {
 			uid: self.uid,
@@ -476,9 +510,6 @@ Caracal.Shop.Item = function(cart) {
 		// apply received data
 		self.apply_data(data);
 
-		// mark item as not busy anymore
-		// TODO: Add user interface
-
 		// notify cart about added item
 		self.cart.handlers.item_added(item);
 	};
@@ -499,8 +530,14 @@ Caracal.Shop.Item = function(cart) {
 	 * @param boolean success
 	 */
 	self.handlers.remove_success = function(success) {
-		if (success)
+		if (success) {
+			// notify shopping cart
 			self.cart.handlers.item_removed(self);
+
+			// update item views
+			for (var i=0, count=self.views.length; i<count; i++)
+				self.views[i].handle_remove();
+		}
 	};
 
 	/**
@@ -519,14 +556,89 @@ Caracal.Shop.Item = function(cart) {
 
 
 /**
- * Base item view object. This object is used to display shopping cart item
- * and its data. After creating your own class based on `ItemView` it needs to
- * be added to shopping cart with `add_item_view`.
+ * Default item view adapter. This adapter will show elementary information
+ * about item in shopping cart such as name, price, amount and some related
+ * functions.
  *
- * For each item in the shopping cart all registered item views will be created
- * and updated accordingly.
+ * @param object item
  */
-Caracal.Shop.ItemView = function() {};
-Caracal.Shop.ItemView.prototype.item_added = function() {};
-Caracal.Shop.ItemView.prototype.item_changed = function() {};
-Caracal.Shop.ItemView.prototype.item_removed = function() {};
+Caracal.Shop.ItemView = function(item) {
+	var self = this;
+
+	self.item = item;
+	self.cart = item.cart;
+
+	self.container = null;
+	self.label_name = null;
+	self.label_count = null;
+	self.label_total = null;
+	self.option_remove = null;
+
+	/**
+	 * Complete object initialization.
+	 */
+	self._init = function() {
+		// get list containers
+		var item_list = self.cart.get_list_container();
+
+		// create labels
+		self.label_name = $('<span>');
+		self.label_name
+				.html(self.item.name)
+				.addClass('name');
+
+		self.label_count = $('<span>');
+		self.label_count
+				.html(self.item.count)
+				.addClass('count');
+
+		self.label_total = $('<span>');
+		self.label_total
+				.addClass('total')
+				.attr('data-currency', self.cart.get_currency());
+
+		// create options
+		self.option_remove = $('<a>');
+		self.option_remove
+				.attr('href', 'javascript: void(0);')
+				.on('click', self._handle_remove)
+				.html(language_handler.getText('shop', 'remove');
+
+		// create container
+		self.container = $('<li>');
+		self.container
+				.addClass('item')
+				.append(self.label_name)
+				.append(self.label_count)
+				.append(self.label_total)
+				.append(self.option_remove)
+				.appendTo(item_list);
+	};
+
+	/**
+	 * Handle clicking on remove item.
+	 *
+	 * @param object event
+	 */
+	self._handle_remove = function(event) {
+		event.preventDefault();
+	};
+
+	/**
+	 * Handler externally called when item count has changed.
+	 */
+	self.handle_change = function() {
+		self.label_count.html(self.item.count);
+		self.label_total.html(self.item.count * self.item.price);
+	};
+
+	/**
+	 * Handler externally called before item removal.
+	 */
+	self.handle_remove = function() {
+		self.container.remove();
+	};
+
+	// finalize object
+	self._init();
+}
