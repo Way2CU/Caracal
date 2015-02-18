@@ -604,7 +604,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.label_total = $('<span>');
 		self.label_total
 				.addClass('total')
-				.attr('data-currency', self.cart.get_currency());
+				.attr('data-currency', self.cart.currency);
 
 		// create options
 		self.option_remove = $('<a>');
