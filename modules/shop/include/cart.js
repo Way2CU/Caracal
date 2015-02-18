@@ -429,7 +429,7 @@ Caracal.Shop.Item = function(cart) {
 	self.remove = function() {
 		var result = false;
 
-		if (self.cart.events.emit_signal('item-removed', self, item)) {
+		if (self.cart.events.emit_signal('item-removed', self.cart, self)) {
 			var data = {
 				uid: self.uid,
 				variation_id: self.variation_id
