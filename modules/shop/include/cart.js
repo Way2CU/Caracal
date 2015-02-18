@@ -723,34 +723,28 @@ Caracal.Shop.ItemView = function(item) {
 		// get list containers
 		var item_list = self.cart.get_list_container();
 
+		// create container
+		self.container = $('<li>').appendTo(item_list);
+		self.container.addClass('item');
+
 		// create labels
-		self.label_name = $('<span>');
+		self.label_name = $('<span>').appendTo(self.container);
 		self.label_name.addClass('name');
 
-		self.label_count = $('<span>');
+		self.label_count = $('<span>').appendTo(self.container);
 		self.label_count.addClass('count');
 
-		self.label_total = $('<span>');
+		self.label_total = $('<span>').appendTo(self.container);
 		self.label_total
 				.addClass('total')
 				.attr('data-currency', self.cart.currency);
 
 		// create options
-		self.option_remove = $('<a>');
+		self.option_remove = $('<a>').appendTo(self.container);
 		self.option_remove
 				.attr('href', 'javascript: void(0);')
 				.on('click', self._handle_remove)
 				.html(language_handler.getText('shop', 'remove'));
-
-		// create container
-		self.container = $('<li>');
-		self.container
-				.addClass('item')
-				.append(self.label_name)
-				.append(self.label_count)
-				.append(self.label_total)
-				.append(self.option_remove)
-				.appendTo(item_list);
 	};
 
 	/**
