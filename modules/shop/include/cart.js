@@ -101,7 +101,7 @@ Caracal.Shop.Cart = function() {
 
 		} else {
 			// load data from server
-			var cid_data = cid.split('/', 1);
+			var cid_data = cid.split('/', 2);
 			var data = {
 				uid: cid_data[0],
 				variation_id: cid_data[1]
@@ -531,7 +531,7 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self.set_cid = function(cid) {
 		// store combination id
-		var cid_data = cid.split('/', 1);
+		var cid_data = cid.split('/', 2);
 		self.uid = cid_data[0];
 		self.variation_id = cid_data[1] || '';
 	};
