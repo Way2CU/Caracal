@@ -726,9 +726,6 @@ Caracal.Shop.ItemView = function(item) {
 		var item_list = self.cart.get_list_container();
 
 		// create labels
-		self.label_name = $('<span>');
-		self.label_name.addClass('name');
-
 		self.label_count = $('<span>');
 		self.label_count.addClass('count');
 
@@ -748,11 +745,16 @@ Caracal.Shop.ItemView = function(item) {
 		self.container = $('<li>');
 		self.container
 				.addClass('item')
-				.append(self.label_name)
 				.append(self.label_count)
 				.append(self.label_total)
 				.append(self.option_remove)
 				.appendTo(item_list);
+
+		self.label_name = $('<span>');
+		self.label_name
+				.addClass('name')
+				.appendTo(self.container);
+
 	};
 
 	/**
