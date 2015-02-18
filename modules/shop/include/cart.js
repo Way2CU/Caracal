@@ -223,6 +223,7 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.add_item_view = function(constructor) {
 		self.item_views.push(constructor);
+		return self;
 	};
 
 	/**
