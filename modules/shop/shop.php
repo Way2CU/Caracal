@@ -1065,7 +1065,7 @@ class shop extends Module {
 	 * @param array $properties
 	 * @return string
 	 */
-	private function generateVariationId($uid, $properties) {
+	public function generateVariationId($uid, $properties) {
 		$data = $uid;
 
 		ksort($properties);
