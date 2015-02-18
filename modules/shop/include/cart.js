@@ -255,6 +255,9 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.handlers.item_removed = function(item) {
 		var cid = item.get_cid();
+
+		if (cid in self.items)
+			delete self.items[cid];
 	};
 
 	/**
@@ -543,12 +546,12 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self.handlers.remove_success = function(success) {
 		if (success) {
-			// notify shopping cart
-			self.cart.handlers.item_removed(self);
-
 			// update item views
 			for (var i=0, count=self.views.length; i<count; i++)
 				self.views[i].handle_remove();
+
+			// notify shopping cart
+			self.cart.handlers.item_removed(self);
 		}
 	};
 
