@@ -772,6 +772,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.label_name.text(self.item.name[language_handler.current_language]);
 		self.label_count.text(self.item.count);
 		self.label_total.text(self.item.count * self.item.price);
+		console.log(self.label_name);
 	};
 
 	/**
