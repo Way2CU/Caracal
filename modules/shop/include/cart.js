@@ -162,6 +162,12 @@ Caracal.Shop.Cart = function() {
 	 * @return object
 	 */
 	self.get_item_by_cid = function(cid) {
+		var result = null;
+
+		if (cid in self.items)
+			result = self.items[cid];
+
+		return result;
 	};
 
 	/**
@@ -236,6 +242,9 @@ Caracal.Shop.Cart = function() {
 			// add item to the list
 			self.items[item.get_cid()] = item;
 		}
+
+		// update totals
+		self.ui.update_totals();
 	};
 
 	/**
@@ -249,6 +258,15 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Handle change in item numbers.
+	 *
+	 * @param object item
+	 */
+	self.handlers.item_count_changed = function(item) {
+		self.ui.update_totals();
+	};
+
+	/**
 	 * Handle item removal from shopping cart.
 	 *
 	 * @param object item
@@ -256,8 +274,12 @@ Caracal.Shop.Cart = function() {
 	self.handlers.item_removed = function(item) {
 		var cid = item.get_cid();
 
+		// remove item from the list
 		if (cid in self.items)
 			delete self.items[cid];
+
+		// update totals
+		self.ui.update_totals();
 	};
 
 	/**
@@ -273,6 +295,9 @@ Caracal.Shop.Cart = function() {
 
 		// add item to the list
 		self.items[item.get_cid()] = item;
+
+		// update totals
+		self.ui.update_totals();
 	};
 
 	/**
@@ -331,6 +356,12 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Recalculate total values.
+	 */
+	self.ui.update_totals = function() {
+	};
+
+	/**
 	 * Connect function to be called when specified signal is emitted.
 	 *
 	 * @param string signal_name
@@ -364,6 +395,8 @@ Caracal.Shop.Cart = function() {
 		var result = true;
 		var params = new Array();
 		var list = null;
+
+		console.log(signal_name);
 
 		// prepare arguments
 		for (var index in arguments)
