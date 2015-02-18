@@ -593,7 +593,7 @@ Caracal.Shop.ItemView = function(item) {
 		// create labels
 		self.label_name = $('<span>');
 		self.label_name
-				.html(self.item.name)
+				.html(self.item.name[language_handler.current_language])
 				.addClass('name');
 
 		self.label_count = $('<span>');
