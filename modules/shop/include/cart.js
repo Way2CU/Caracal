@@ -12,7 +12,7 @@ Caracal.Shop = Caracal.Shop || {};
 /**
  * Constructor function for Shopping Cart integration.
  *
- * Note: When dealing with items, CID refers to combination id which is item UID
+ * Note: When dealing with items, CID refers to combination id which is item ID
  * and variation id combined.
  *
  * Signals fired by this object:
@@ -439,6 +439,8 @@ Caracal.Shop.Item = function(cart) {
 				.on_error(self.handlers.remove_error)
 				.on_success(self.handlers.remove_success)
 				.get('json_remove_item_from_shopping_cart', data);
+
+			result = true;
 		}
 
 		return result;
@@ -592,13 +594,10 @@ Caracal.Shop.ItemView = function(item) {
 
 		// create labels
 		self.label_name = $('<span>');
-		self.label_name
-				.addClass('name');
+		self.label_name.addClass('name');
 
 		self.label_count = $('<span>');
-		self.label_count
-				.html(self.item.count)
-				.addClass('count');
+		self.label_count.addClass('count');
 
 		self.label_total = $('<span>');
 		self.label_total
@@ -630,6 +629,7 @@ Caracal.Shop.ItemView = function(item) {
 	 */
 	self._handle_remove = function(event) {
 		event.preventDefault();
+		self.item.remove();
 	};
 
 	/**
