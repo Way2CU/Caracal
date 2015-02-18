@@ -523,6 +523,10 @@ Caracal.Shop.Item = function(cart) {
 			for (var i=0, count=self.views.length; i<count; i++)
 				self.views[i].handle_change();
 
+			// remove item if count is zero
+			if (self.count == 0)
+				self.remove();
+
 			result = true;
 		}
 
@@ -547,6 +551,10 @@ Caracal.Shop.Item = function(cart) {
 			// update views
 			for (var i=0, count=self.views.length; i<count; i++)
 				self.views[i].handle_change();
+
+			// remove item if count is zero
+			if (self.count == 0)
+				self.remove();
 		}
 
 		return self.count;
