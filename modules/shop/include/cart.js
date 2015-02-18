@@ -19,7 +19,6 @@ Caracal.Shop = Caracal.Shop || {};
  * 	item-added
  * 	item-removed
  * 	item-amount-change
- * 	ui-update
  * 	before-checkout
  * 	checkout
  *
@@ -132,7 +131,31 @@ Caracal.Shop.Cart = function() {
 		var item = self.items[cid];
 		result = item.set_count(count);
 
+		// update totals
+		self.ui.update_totals();
+
 		return result;
+	};
+
+	/**
+	 * Alter item count by certain value.
+	 *
+	 * @param string cid
+	 * @param integer difference
+	 */
+	self.alter_item_count_by_cid = function(cid, difference) {
+		if (!(cid in self.items) && difference > 0) {
+			// create new item
+			self.add_item_by_cid(cid);
+
+		} else if (cid in self.items) {
+			// alter amount of existing item
+			var item = self.items[cid];
+			item.alter_count(difference);
+
+			// update totals
+			self.ui.update_totals();
+		}
 	};
 
 	/**
