@@ -637,7 +637,11 @@ Caracal.Shop.Item = function(cart) {
 	 * @param integer old_count
 	 */
 	self.handlers.change_success = function(success, old_count) {
-		if (!success) {
+		if (success) {
+			// notify cart about successful change
+			self.cart.handlers.item_count_changed(self);
+
+		} else {
 			// revert count to old value
 			self.count = old_count;
 
