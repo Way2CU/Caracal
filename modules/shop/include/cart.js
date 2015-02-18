@@ -93,7 +93,7 @@ Caracal.Shop.Cart = function() {
 	 *
 	 * @param string cid
 	 */
-	self.add_item_by_cid = function(cid, properties) {
+	self.add_item_by_cid = function(cid) {
 		if (cid in self.items) {
 			// item already exists, increase count
 			var item = self.items[cid];
@@ -101,9 +101,10 @@ Caracal.Shop.Cart = function() {
 
 		} else {
 			// load data from server
+			var cid_data = cid.split('/', 1);
 			var data = {
-				uid: cid,
-				properties: properties
+				uid: cid_data[0],
+				variation_id: cid_data[1]
 			};
 
 			new Communicator('shop')
@@ -530,9 +531,9 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self.set_cid = function(cid) {
 		// store combination id
-		var id_list = cid.split('/', 1);
-		self.uid = id_list[0];
-		self.variation_id = id_list[1] || '';
+		var cid_data = cid.split('/', 1);
+		self.uid = cid_data[0];
+		self.variation_id = cid_data[1] || '';
 	};
 
 	/**
