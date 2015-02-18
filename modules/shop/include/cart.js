@@ -464,6 +464,7 @@ Caracal.Shop.Item = function(cart) {
 	self.price = 0;
 	self.tax = 0;
 	self.weight = 0;
+	self.image = '';
 	self.uid = '';
 	self.variation_id = '';
 	self.properties = {};
@@ -574,6 +575,7 @@ Caracal.Shop.Item = function(cart) {
 		self.tax = data.tax || self.tax;
 		self.weight = data.weight || self.weight;
 		self.properties = data.properties || self.properties;
+		self.image = data.image || self.image;
 		self.uid = data.uid || self.uid;
 		self.variation_id = data.variation_id || self.variation_id;
 
