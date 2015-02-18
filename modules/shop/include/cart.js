@@ -107,8 +107,8 @@ Caracal.Shop.Cart = function() {
 			};
 
 			new Communicator('shop')
-				.on_error(self.handlers.item_add_error)
 				.on_success(self.handlers.item_add_success)
+				.on_error(self.handlers.item_add_error)
 				.send('json_add_item_to_shopping_cart', data);
 		}
 	};
@@ -486,6 +486,43 @@ Caracal.Shop.Item = function(cart) {
 	};
 
 	/**
+	 * Notify server about item count change.
+	 *
+	 * @param integer new_count
+	 * @return boolean
+	 */
+	self._notify_count_change = function(new_count) {
+		var result = false;
+
+		// check if signal handlers permit the change
+		if (!self.cart.events.emit_signal('item-amount-change', self.cart, self, new_count))
+			return result;
+
+		// update views
+		for (var i=0, count=self.views.length; i<count; i++)
+			self.views[i].handle_change();
+
+		if (self.count > 0) {
+			// notify server about the change
+			var data = {
+					uid: self.uid,
+					variation_id: self.variation_id,
+					count: new_count
+				};
+
+			new Communicator('shop')
+				.set_callback_data(self.count)
+				.on_success(self.handlers.change_success)
+				.on_error(self.handlers.change_error)
+				.send('json_change_item_quantity', data);
+
+		} else {
+			// if amount is zero of lower remove item
+			self.remove();
+		}
+	};
+
+	/**
 	 * Remove item from cart.
 	 */
 	self.remove = function() {
@@ -498,8 +535,8 @@ Caracal.Shop.Item = function(cart) {
 			};
 
 			new Communicator('shop')
-				.on_error(self.handlers.remove_error)
 				.on_success(self.handlers.remove_success)
+				.on_error(self.handlers.remove_error)
 				.get('json_remove_item_from_shopping_cart', data);
 
 			result = true;
@@ -516,21 +553,10 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self.set_count = function(count) {
 		var result = false;
+		var new_count = Math.abs(count);
 
-		if (self.cart.events.emit_signal('item-amount-change', self.cart, self, count)) {
-			// update count
-			self.count = Math.abs(count);
-
-			// update views
-			for (var i=0, count=self.views.length; i<count; i++)
-				self.views[i].handle_change();
-
-			// remove item if count is zero
-			if (self.count == 0)
-				self.remove();
-
-			result = true;
-		}
+		// notify server
+		result = self._notify_count_change(new_count);
 
 		return result;
 	};
@@ -540,26 +566,20 @@ Caracal.Shop.Item = function(cart) {
 	 * item count.
 	 *
 	 * @param integer difference
-	 * @return integer
+	 * @return boolean
 	 */
 	self.alter_count = function(difference) {
-		if (self.cart.events.emit_signal('item-amount-change', self.cart, self, count)) {
-			self.count += difference;
+		var result = false;
+		var new_count = self.count + difference;
 
-			// make sure number is not negative
-			if (self.count < 0)
-				self.count = 0;
+		// make sure number is not negative
+		if (new_count < 0)
+			new_count = 0;
 
-			// update views
-			for (var i=0, count=self.views.length; i<count; i++)
-				self.views[i].handle_change();
+		// notify server
+		result = self._notify_count_change(new_count);
 
-			// remove item if count is zero
-			if (self.count == 0)
-				self.remove();
-		}
-
-		return self.count;
+		return result;
 	};
 
 	/**
@@ -604,6 +624,40 @@ Caracal.Shop.Item = function(cart) {
 		var cid_data = cid.split('/', 2);
 		self.uid = cid_data[0];
 		self.variation_id = cid_data[1] || '';
+	};
+
+	/**
+	 * Handle successful change in item count.
+	 *
+	 * @param boolean success
+	 * @param integer old_count
+	 */
+	self.handlers.change_success = function(success, old_count) {
+		if (!success) {
+			// revert count to old value
+			self.count = old_count;
+
+			// update views
+			for (var i=0, count=self.views.length; i<count; i++)
+				self.views[i].handle_change();
+		}
+	};
+
+	/**
+	 * Handle server side error during item count change.
+	 *
+	 * @param object xhr
+	 * @param string transfer_status
+	 * @param string description
+	 * @param integer old_count
+	 */
+	self.handlers.change_error = function(xhr, transfer_status, description, old_count) {
+		// revert count to old value
+		self.count = old_count;
+
+		// update views
+		for (var i=0, count=self.views.length; i<count; i++)
+			self.views[i].handle_change();
 	};
 
 	/**
