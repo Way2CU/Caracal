@@ -30,7 +30,9 @@ Caracal.Shop.Cart = function() {
 
 	self.items = {};
 	self.default_currency = 'EUR';
+	self.currency = self.default_currency;
 	self.handling = 0;
+	self.shipping = 0;
 	self.ui = {};
 	self.events = {};
 	self.handlers = {};
@@ -91,17 +93,23 @@ Caracal.Shop.Cart = function() {
 	 *
 	 * @param string cid
 	 */
-	self.add_item_by_cid = function(cid) {
+	self.add_item_by_cid = function(cid, properties) {
 		if (cid in self.items) {
+			// item already exists, increase count
 			var item = self.items[cid];
 			item.alter_count(1);
 
 		} else {
-			// create new item
-			var item = new Caracal.Shop.Item(self);
-			item.set_cid(cid);
+			// load data from server
+			var data = {
+				uid: cid,
+				properties: properties
+			};
 
-			self.add_item(item);
+			new Communicator('shop')
+				.on_error(self.handlers.item_add_error)
+				.on_success(self.handlers.item_add_success)
+				.send('json_add_item_to_shopping_cart', data);
 		}
 	};
 
@@ -211,6 +219,22 @@ Caracal.Shop.Cart = function() {
 	 * @param object data
 	 */
 	self.handlers.cart_load_success = function(data) {
+		// apply data
+		self.handling = data.handling || self.handling;
+		self.shipping = data.shipping || self.shipping;
+		self.currency = data.currency || self.currency;
+
+		// create items handlers
+		for (var i=0, count=data.cart.length; i<count; i++) {
+			var item_data = data.cart[i];
+			var item = new Caracal.Shop.Item(self);
+
+			// configure item
+			item.apply_data(item_data);
+
+			// add item to the list
+			self.items[item.get_cid()] = item;
+		}
 	};
 
 	/**
@@ -235,9 +259,26 @@ Caracal.Shop.Cart = function() {
 	/**
 	 * Handle item added to shopping cart.
 	 *
-	 * @param object item
+	 * @param object data
 	 */
-	self.handlers.item_added = function(item) {
+	self.handlers.item_add_success = function(data) {
+		var item = new Caracal.Shop.Item(self);
+
+		// configure item
+		item.apply_data(data);
+
+		// add item to the list
+		self.items[item.get_cid()] = item;
+	};
+
+	/**
+	 * Handle server or communication error during item add.
+	 *
+	 * @param object xhr
+	 * @param string transfer_status
+	 * @param string description
+	 */
+	self.handlers.item_add_error = function(xhr, transfer_status, description) {
 	};
 
 	/**
@@ -463,6 +504,7 @@ Caracal.Shop.Item = function(cart) {
 		self.tax = data.tax || self.tax;
 		self.weight = data.weight || self.weight;
 		self.properties = data.properties || self.properties;
+		self.uid = data.uid || self.uid;
 		self.variation_id = data.variation_id || self.variation_id;
 
 		// update views
@@ -489,41 +531,7 @@ Caracal.Shop.Item = function(cart) {
 		var id_list = cid.split('/', 1);
 		self.uid = id_list[0];
 		self.variation_id = id_list[1] || '';
-
-		// load data from server
-		var data = {
-			uid: self.uid,
-			properties: self.properties
-		};
-
-		new Communicator('shop')
-			.on_error(self.handlers.add_error)
-			.on_success(self.handlers.add_success)
-			.send('json_add_item_to_shopping_cart', data);
 	};
-
-	/**
-	 * Handle successful call for addition to shopping cart.
-	 *
-	 * @param object data
-	 */
-	self.handlers.add_success = function(data) {
-		// apply received data
-		self.apply_data(data);
-
-		// notify cart about added item
-		self.cart.handlers.item_added(self);
-	};
-
-	/**
-	 * Handle error when adding new item to shopping cart.
-	 *
-	 * @param object xhr
-	 * @param string transfer_status
-	 * @param string description
-	 */
-	self.handlers.add_error = function(xhr, transfer_status, description) {
-	}
 
 	/**
 	 * Handle successful call for removal of item from shopping cart.
