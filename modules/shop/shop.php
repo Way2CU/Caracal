@@ -1737,9 +1737,15 @@ class shop extends Module {
 	 */
 	private function json_AddItemToCart() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
-		$variation_id = $this->generateVariationId($uid, $properties);
+
+		if (isset($_REQUEST['properties'])) {
+			$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
+			$variation_id = $this->generateVariationId($uid, $properties);
+
+		} elif ($_REQUEST['variation_id']) {
+			$variation_id = fix_chars($_REQUEST['variation_id']);
+		}
 
 		// try to get item from database
 		$manager = ShopItemManager::getInstance();
