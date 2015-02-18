@@ -593,7 +593,6 @@ Caracal.Shop.ItemView = function(item) {
 		// create labels
 		self.label_name = $('<span>');
 		self.label_name
-				.html(self.item.name[language_handler.current_language])
 				.addClass('name');
 
 		self.label_count = $('<span>');
@@ -637,6 +636,7 @@ Caracal.Shop.ItemView = function(item) {
 	 * Handler externally called when item count has changed.
 	 */
 	self.handle_change = function() {
+		self.label_name.html(self.item.name[language_handler.current_language]);
 		self.label_count.html(self.item.count);
 		self.label_total.html(self.item.count * self.item.price);
 	};
