@@ -1791,6 +1791,7 @@ class shop extends Module {
 				'tax'			=> $item->tax,
 				'image'			=> $thumbnail_url,
 				'count'			=> $cart[$uid]['variations'][$variation_id]['count'],
+				'uid'			=> $item->uid,
 				'variation_id'	=> $variation_id
 			);
 
