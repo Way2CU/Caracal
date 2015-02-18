@@ -463,6 +463,7 @@ Caracal.Shop.Item = function(cart) {
 		self.tax = data.tax || self.tax;
 		self.weight = data.weight || self.weight;
 		self.properties = data.properties || self.properties;
+		self.variation_id = data.variation_id || self.variation_id;
 
 		// update views
 		for (var i=0, count=self.views.length; i<count; i++)
@@ -511,7 +512,7 @@ Caracal.Shop.Item = function(cart) {
 		self.apply_data(data);
 
 		// notify cart about added item
-		self.cart.handlers.item_added(item);
+		self.cart.handlers.item_added(self);
 	};
 
 	/**
