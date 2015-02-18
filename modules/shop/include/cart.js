@@ -79,9 +79,9 @@ Caracal.Shop.Cart = function() {
 			return result;
 
 		// add item if all signal handlers permit it
-		if (self.events.emit_signal('item-added', self, item)) {
-			var key = item.get_cid();
-			self.items[key] = item;
+		var cid = item.get_cid();
+		if (self.events.emit_signal('item-added', self, cid)) {
+			self.items[cid] = item;
 			result = true;
 		}
 
@@ -99,7 +99,7 @@ Caracal.Shop.Cart = function() {
 			var item = self.items[cid];
 			item.alter_count(1);
 
-		} else {
+		} else if (self.events.emit_signal('item-added', self, cid)) {
 			// load data from server
 			var cid_data = cid.split('/', 2);
 			var data = {
