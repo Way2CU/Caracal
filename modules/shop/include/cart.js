@@ -493,16 +493,20 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self._notify_count_change = function(new_count) {
 		var result = false;
+		var old_count = self.count;
 
 		// check if signal handlers permit the change
 		if (!self.cart.events.emit_signal('item-amount-change', self.cart, self, new_count))
 			return result;
 
+		// update count
+		self.count = new_count;
+
 		// update views
 		for (var i=0, count=self.views.length; i<count; i++)
 			self.views[i].handle_change();
 
-		if (self.count > 0) {
+		if (new_count > 0) {
 			// notify server about the change
 			var data = {
 					uid: self.uid,
@@ -511,7 +515,7 @@ Caracal.Shop.Item = function(cart) {
 				};
 
 			new Communicator('shop')
-				.set_callback_data(self.count)
+				.set_callback_data(old_count)
 				.on_success(self.handlers.change_success)
 				.on_error(self.handlers.change_error)
 				.send('json_change_item_quantity', data);
