@@ -1743,7 +1743,7 @@ class shop extends Module {
 			$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
 			$variation_id = $this->generateVariationId($uid, $properties);
 
-		} elif ($_REQUEST['variation_id']) {
+		} else if ($_REQUEST['variation_id']) {
 			$variation_id = fix_chars($_REQUEST['variation_id']);
 		}
 
