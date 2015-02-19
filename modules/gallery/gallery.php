@@ -2448,6 +2448,7 @@ class gallery extends Module {
 	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH) {
 		// create image resource
 		$img_source = null;
+		$has_alpha = false;
 		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
 			case 'jpg':
 			case 'jpeg':
@@ -2460,6 +2461,7 @@ class gallery extends Module {
 				$img_source = imagecreatefrompng($filename);
 				$save_function = @imagepng;
 				$save_quality = 9;
+				$has_alpha = true;
 				break;
 		}
 
@@ -2494,8 +2496,12 @@ class gallery extends Module {
 
 		// create thumbnail
 		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
-		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
+		if ($has_alpha) {
+			imagealphablending($thumbnail, false);
+			imagesavealpha($thumbnail, true);
+		}
 
+		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
 		$save_function($thumbnail, $this->thumbnail_path.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
 
 		return true;
