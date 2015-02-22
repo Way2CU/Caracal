@@ -18,6 +18,7 @@ Caracal.Gallery = Caracal.Gallery || {};
  * If number of images is smaller or equal to number of visible items,
  * gallery animation will be disabled.
  *
+ *
  * Example usage:
  *
  * var gallery = new Caracal.Gallery.Slider(3);
@@ -26,6 +27,15 @@ Caracal.Gallery = Caracal.Gallery || {};
  * 	.images.set_container('div.images')
  * 	.images.update()
  * 	.controls.attach_next('a.next');
+ *
+ *
+ * Example loading from server:
+ *
+ * var gallery = new Caracal.Gallery.Slider(3);
+ * gallery
+ * 	.controls.attach_next('a.next')
+ * 	.images.set_thumbnail_size(150)
+ * 	.images.load(null, 'gallery');
  *
  * @param integer visible_items
  */
@@ -37,11 +47,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.container = null;
 	self.direction = 1;
 	self.step_size = 1;
+	self.thumbnail_size = 100;
+	self.constraint = 2;
 	self.center = false;
 	self.spacing = null;
 	self.timer_id = null;
 	self.timeout = null;
 	self.visible_items = null;
+	self.create_image = null;
 
 	/**
 	 * Complete object initialization.
@@ -107,26 +120,6 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// perform update
 		self.images.update(real_direction);
-	};
-
-	/**
-	 * Update image positions.
-	 */
-	self.images.update = function(direction) {
-		// prepare for update
-		subset = self.images.list.slice(0, self.visible_items);
-		params = self.images._get_params(subset);
-
-		// update image positions
-		if (self.container != null && direction)
-			self.images._prepare_position(params, direction);
-
-		// update image visibility
-		self.images._update_visibility(subset);
-
-		// update image positions
-		if (self.container != null)
-			self.images._update_position(subset, params);
 	};
 
 	/**
@@ -234,6 +227,69 @@ Caracal.Gallery.Slider = function(visible_items) {
 	};
 
 	/**
+	 * Handle image load from server.
+	 *
+	 * @param object data
+	 * @param object callback_data
+	 */
+	self.images._handle_load_success = function(data, callback_data) {
+		if (!data.error) {
+			// clear image list
+			self.images.list.remove();
+			self.images.list = $();
+
+			// create images
+			for (var i=0, count=data.items.length; i<count; i++) {
+				var image = null;
+				var image_data = data.items[i];
+
+				if (self.create_image != null)
+					image = self.create_image(image_data, self.container); else
+					image = Caracal.Gallery.create_image(image_data, self.container);
+
+				$.extend(self.images.list, image);
+			}
+
+			// update image display
+			self.images.update();
+		}
+
+		self.container.removeClass('loading');
+	};
+
+	/**
+	 * Handle server side error when loading image list.
+	 *
+	 * @param object xhr
+	 * @param string transfer_status
+	 * @param string description
+	 * @param object callback_data
+	 */
+	self.images._handle_load_error = function(xhr, transfer_status, description, callback_data) {
+		self.container.removeClass('loading');
+	};
+
+	/**
+	 * Update image positions.
+	 */
+	self.images.update = function(direction) {
+		// prepare for update
+		subset = self.images.list.slice(0, self.visible_items);
+		params = self.images._get_params(subset);
+
+		// update image positions
+		if (self.container != null && direction)
+			self.images._prepare_position(params, direction);
+
+		// update image visibility
+		self.images._update_visibility(subset);
+
+		// update image positions
+		if (self.container != null)
+			self.images._update_position(subset, params);
+	};
+
+	/**
 	 * Set specified jQuery object or selector as image container. Unless
 	 * container is specified gallery will only apply `visible` class to elements instead
 	 * of actually specifying their position.
@@ -303,6 +359,76 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 */
 	self.images.set_step_size = function(step) {
 		self.step_size = step;
+		return self;
+	};
+
+	/**
+	 * Set thumbnail size when loading images from server.
+	 *
+	 * @param integer size
+	 * @param integer constraint
+	 * @return self
+	 */
+	self.images.set_thumbnail_size = function(size, constraint) {
+		if (size)
+			self.thumbnail_size = size;
+
+		if (constraint)
+			self.constraint = constraint;
+
+		return self;
+	};
+
+	/**
+	 * Set constructor function for images after they are received
+	 * from server using `load_from_group` function. If you don't specify
+	 * constructor function default `Caracal.Gallery.create_image` function
+	 * will be called.
+	 *
+	 * @param function callable
+	 * @return self
+	 */
+	self.images.set_constructor = function(callable) {
+		self.create_image = callable;
+		return self;
+	};
+
+	/**
+	 * Load images from gallery with specified id or text_id. If specified
+	 * only images marked as slideshow will be included.
+	 *
+	 * @param integer group_id
+	 * @param string group_text_id
+	 * @param boolean slideshow
+	 * @return self
+	 */
+	self.images.load_from_group = function(group_id, group_text_id, slideshow) {
+		if (typeof Communicator == 'function') {
+			// set container as busy
+			self.container.addClass('loading');
+
+			// prepare data
+			var data = {
+					thumbnail_size: self.thumbnail_size,
+					constraint: self.constraint
+				};
+
+			if (group_id)
+				data.group_id = group_id;
+
+			if (group_text_id)
+				data.group = group_text_id;
+
+			if (slideshow)
+				data.slideshow = 1;
+
+			// create communicator and send request
+			new Communicator('gallery')
+					.on_error(self.images._handle_load_error)
+					.on_success(self.images._handle_load_success)
+					.get('json_image_list', data);
+		}
+
 		return self;
 	};
 
@@ -463,4 +589,30 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 	// finalize object
 	self._init();
+}
+
+
+/**
+ * Default image constructor function. This function accepts 2 parameters
+ * `data` received from server and container for image to be added to. This
+ * function is used only when images are loaded from the server to construct
+ * image container.
+ *
+ * @param object data
+ * @param object container
+ * @return object
+ */
+Caracal.Gallery.create_image = function(data, container) {
+	var link = $('<a>').appendTo(container);
+	link
+		.addClass('image')
+		.data('id', data.id)
+		.attr('href', data.image);
+
+	var thumbnail = $('<img>').appendTo(link);
+	thumbnail
+		.attr('src', data.thumbnail)
+		.attr('alt', data.title);
+
+	return link;
 }

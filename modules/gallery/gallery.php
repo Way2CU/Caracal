@@ -1803,20 +1803,34 @@ class gallery extends Module {
 		$order_by = array();
 		$order_asc = true;
 		$limit = null;
+		$thumbnail_size = null;
+		$constraint = Thumbnail::CONSTRAIN_BOTH;
 
+		// if specified invisible images will be shown as well
 		if (!isset($_REQUEST['show_invisible']))
 			$conditions['visible'] = 1;
 
+		// include protected images in list
 		if (!isset($_REQUEST['show_protected']))
 			$conditions['protected'] = 0;
 
+		// include only images marked for slideshow
 		if (isset($_REQUEST['slideshow']))
 			$conditions['slideshow'] = fix_id($_REQUEST['slideshow']);
+
+		// specify thumbnail size
+		if (isset($_REQUEST['thumbnail_size']))
+			$thumbnail_size = fix_id($_REQUEST['thumbnail_size']);
+
+		// change size constraint of thumbnail
+		if (isset($_REQUEST['constraint']))
+			$constraint = fix_id($_REQUEST['constraint']);
 
 		// raw group id was specified
 		if (isset($_REQUEST['group_id']))
 			$conditions['group'] = fix_id($_REQUEST['group_id']);
 
+		// include all languages or just currently selected one
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
 
 		// group text_id was specified, get group ID
@@ -1855,6 +1869,12 @@ class gallery extends Module {
 
 		if (count($items) > 0) {
 			foreach ($items as $item) {
+				// generate thumbnail if specified
+				$thumbnail_url = '';
+				if (!is_null($thumbnail_size))
+					$thumbnail_url = $this->getThumbnailURL($item, $thumbnail_size, $constraint);
+
+				// add image to result list
 				$result['items'][] = array(
 							'id'			=> $item->id,
 							'group'			=> $item->group,
@@ -1864,6 +1884,7 @@ class gallery extends Module {
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
 							'image'			=> $this->getImageURL($item),
+							'thumbnail'		=> $thumbnail_url
 						);
 			}
 		} else {
