@@ -221,7 +221,7 @@ Caracal.Shop.Cart = function() {
 		} else {
 			// foreign currency, request exchange rate
 			$.ajax({
-				url: 'rate-exchange.appspot.com/currency',
+				url: window.location.protocol + '//rate-exchange.appspot.com/currency',
 				data: {
 						from: self.default_currency,
 						to: currency
