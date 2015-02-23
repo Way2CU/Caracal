@@ -47,6 +47,7 @@ Caracal.Shop.Cart = function() {
 		self.ui.item_list = $();
 		self.ui.total_count = $();
 		self.ui.total_cost = $();
+		self.ui.total_weight = $();
 		self.ui.checkout_button = $();
 
 		// create event containers
@@ -368,6 +369,17 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Add total weight label to shopping cart.
+	 *
+	 * @param object label
+	 * @return object
+	 */
+	self.ui.add_total_weight_label = function(label) {
+		$.extend(self.ui.total_weight, label);
+		return self;
+	};
+
+	/**
 	 * Connect checkout button for shopping cart.
 	 *
 	 * @param object button
@@ -383,6 +395,23 @@ Caracal.Shop.Cart = function() {
 	 * Recalculate total values.
 	 */
 	self.ui.update_totals = function() {
+		var total_weight = 0;
+		var total_cost = 0;
+		var total_count = 0;
+
+		// summarize information
+		for (var cid in self.items.list) {
+			var item = self.items.list[cid];
+
+			total_weight += item.get_total_weight();
+			total_cost += item.get_total_cost();
+			total_count += item.count;
+		}
+
+		// update labels
+		self.ui.total_count.text(total_count);
+		self.ui.total_cost.text(total_cost);
+		self.ui.total_weight.text(total_weight);
 	};
 
 	/**
@@ -626,6 +655,24 @@ Caracal.Shop.Item = function(cart) {
 		var cid_data = cid.split('/', 2);
 		self.uid = cid_data[0];
 		self.variation_id = cid_data[1] || '';
+	};
+
+	/**
+	 * Return total cost of this item.
+	 *
+	 * @return float
+	 */
+	self.get_total_cost = function() {
+		return self.count * self.price;
+	};
+
+	/**
+	 * Return total weight of this item.
+	 *
+	 * @return float
+	 */
+	self.get_total_weight = function() {
+		return self.count * self.weight;
 	};
 
 	/**
