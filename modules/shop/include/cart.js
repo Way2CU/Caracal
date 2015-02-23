@@ -62,7 +62,6 @@ Caracal.Shop.Cart = function() {
 		// load shopping cart from server
 		new Communicator('shop')
 			.on_success(self.handlers.cart_load_success)
-			.on_error(self.handlers.cart_load_error)
 			.get('json_get_shopping_cart');
 	};
 
@@ -199,6 +198,9 @@ Caracal.Shop.Cart = function() {
 	 * Remove all items from shopping cart.
 	 */
 	self.clear_cart = function() {
+		new Communicator('shop')
+				.on_success(self.handlers.cart_clear_success)
+				.send('json_clear_shopping_cart', null);
 	};
 
 	/**
@@ -297,6 +299,18 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Handle successful cart clearing process.
+	 *
+	 * @param object success
+	 */
+	self.handlers.cart_clear_success = function(success) {
+		if (!success)
+			return;
+
+
+	};
+
+	/**
 	 * Handle shopping cart load event.
 	 *
 	 * @param object data
@@ -323,16 +337,6 @@ Caracal.Shop.Cart = function() {
 
 		// update totals
 		self.ui.update_totals();
-	};
-
-	/**
-	 * Handle shopping cart load error.
-	 *
-	 * @param object xhr
-	 * @param string transfer_status
-	 * @param string description
-	 */
-	self.handlers.cart_load_error = function(xhr, transfer_status, description) {
 	};
 
 	/**
@@ -417,7 +421,12 @@ Caracal.Shop.Cart = function() {
 	 * @return object
 	 */
 	self.ui.add_total_cost_label = function(label) {
+		// add label to list
 		$.extend(self.ui.total_cost, label);
+
+		// create attribute with currency
+		self.ui.total_cost.attr('data-currency', self.currency);
+
 		return self;
 	};
 
@@ -463,7 +472,9 @@ Caracal.Shop.Cart = function() {
 
 		// update labels
 		self.ui.total_count.text(total_count);
-		self.ui.total_cost.text(total_cost.toFixed(2));
+		self.ui.total_cost
+			.text(total_cost.toFixed(2))
+			.attr('data-currency', self.currency);
 		self.ui.total_weight.text(total_weight.toFixed(2));
 	};
 
