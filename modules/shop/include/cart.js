@@ -215,6 +215,12 @@ Caracal.Shop.Cart = function() {
 			self.currency = self.default_currency;
 			self.exchange_rate = 1;
 
+			// update items
+			for (var cid in self.items) {
+				var item = self.items[cid];
+				item.handlers.currency_change(self.currency, self.exchange_rate);
+			}
+
 			// update totals
 			self.ui.update_totals();
 
