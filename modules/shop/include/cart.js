@@ -457,8 +457,8 @@ Caracal.Shop.Cart = function() {
 
 		// update labels
 		self.ui.total_count.text(total_count);
-		self.ui.total_cost.text(total_cost);
-		self.ui.total_weight.text(total_weight);
+		self.ui.total_cost.text(total_cost.toFixed(2));
+		self.ui.total_weight.text(total_weight.toFixed(2));
 	};
 
 	/**
@@ -877,7 +877,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.label_name.text(self.item.name[language_handler.current_language]);
 		self.label_count.text(self.item.count);
 		self.label_total
-				.text(self.item.count * self.item.price * self.exchange_rate)
+				.text((self.item.count * self.item.price * self.exchange_rate).toFixed(2))
 				.attr('data-currency', self.currency);
 	};
 
