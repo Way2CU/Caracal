@@ -30,7 +30,7 @@ Caracal.Shop.Cart = function() {
 	self.items = {};
 	self.default_currency = 'EUR';
 	self.currency = self.default_currency;
-	self.conversion_rate = 1;
+	self.exchange_rate = 1;
 	self.handling = 0;
 	self.shipping = 0;
 	self.ui = {};
@@ -213,7 +213,7 @@ Caracal.Shop.Cart = function() {
 		if (currency == self.default_currency) {
 			// set default currency
 			self.currency = self.default_currency;
-			self.conversion_rate = 1;
+			self.exchange_rate = 1;
 
 			// update totals
 			self.ui.update_totals();
@@ -278,7 +278,7 @@ Caracal.Shop.Cart = function() {
 	self.handlers.currency_change_success = function(data, new_currency) {
 		// store new data
 		self.currency = new_currency;
-		self.conversion_rate = data;
+		self.exchange_rate = data;
 
 		// update items
 		for (var cid in self.items.list) {
@@ -301,7 +301,7 @@ Caracal.Shop.Cart = function() {
 		self.shipping = data.shipping || self.shipping;
 		self.default_currency = data.currency || self.default_currency;
 		self.currency = self.default_currency;
-		self.conversion_rate = 1;
+		self.exchange_rate = 1;
 
 		// create items handlers
 		for (var i=0, count=data.cart.length; i<count; i++) {
@@ -537,7 +537,7 @@ Caracal.Shop.Item = function(cart) {
 	self.name = '';
 	self.count = 0;
 	self.price = 0;
-	self.rate = 1;
+	self.exchange_rate = 1;
 	self.tax = 0;
 	self.weight = 0;
 	self.image = '';
@@ -711,7 +711,7 @@ Caracal.Shop.Item = function(cart) {
 	 * @return float
 	 */
 	self.get_total_cost = function() {
-		return self.count * self.price * self.rate;
+		return self.count * self.price * self.exchange_rate;
 	};
 
 	/**
@@ -731,7 +731,7 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self.handlers.currency_change = function(currency, rate) {
 		// store rate for later calculation
-		self.rate = rate;
+		self.exchange_rate = rate;
 
 		// update views
 		for (var i=0, count=self.views.length; i<count; i++)
@@ -820,7 +820,7 @@ Caracal.Shop.ItemView = function(item) {
 	self.item = item;
 	self.cart = item.cart;
 	self.currency = null;
-	self.rate = 1;
+	self.exchange_rate = 1;
 
 	self.container = null;
 	self.label_name = null;
@@ -877,7 +877,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.label_name.text(self.item.name[language_handler.current_language]);
 		self.label_count.text(self.item.count);
 		self.label_total
-				.text(self.item.count * self.item.price * self.rate)
+				.text(self.item.count * self.item.price * self.exchange_rate)
 				.attr('data-currency', self.currency);
 	};
 
@@ -890,7 +890,7 @@ Caracal.Shop.ItemView = function(item) {
 	self.handle_currency_change = function(currency, rate) {
 		// store values
 		self.currency = currency;
-		self.rate = rate;
+		self.exchange_rate = rate;
 
 		// update labels
 		self.handle_change();
