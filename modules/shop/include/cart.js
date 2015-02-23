@@ -30,6 +30,7 @@ Caracal.Shop.Cart = function() {
 	self.items = {};
 	self.default_currency = 'EUR';
 	self.currency = self.default_currency;
+	self.exchange_rate = 1;
 	self.handling = 0;
 	self.shipping = 0;
 	self.ui = {};
@@ -206,6 +207,30 @@ Caracal.Shop.Cart = function() {
 	 * @param string currency
 	 */
 	self.set_currency = function(currency) {
+		if (currency == self.currency)
+			return;
+
+		if (currency == self.default_currency) {
+			// set default currency
+			self.currency = self.default_currency;
+			self.exchange_rate = 1;
+
+			// update totals
+			self.ui.update_totals();
+
+		} else {
+			// foreign currency, request exchange rate
+			$.ajax({
+				url: 'rate-exchange.appspot.com/currency',
+				data: {
+						from: self.default_currency,
+						to: currency
+					},
+				cache: true,
+				async: true,
+				success: self.handlers.currency_change_success
+			});
+		}
 	};
 
 	/**
@@ -246,6 +271,18 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Handle successful currency change.
+	 *
+	 * @param object data
+	 */
+	self.handlers.currency_change_success = function(data) {
+		console.log(data);
+
+		// update totals
+		self.ui.update_totals();
+	};
+
+	/**
 	 * Handle shopping cart load event.
 	 *
 	 * @param object data
@@ -254,7 +291,7 @@ Caracal.Shop.Cart = function() {
 		// apply data
 		self.handling = data.handling || self.handling;
 		self.shipping = data.shipping || self.shipping;
-		self.currency = data.currency || self.currency;
+		self.default_currency = data.currency || self.default_currency;
 
 		// create items handlers
 		for (var i=0, count=data.cart.length; i<count; i++) {
