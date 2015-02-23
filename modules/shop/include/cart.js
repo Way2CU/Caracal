@@ -30,7 +30,7 @@ Caracal.Shop.Cart = function() {
 	self.items = {};
 	self.default_currency = 'EUR';
 	self.currency = self.default_currency;
-	self.exchange_rate = 1;
+	self.conversion_rate = 1;
 	self.handling = 0;
 	self.shipping = 0;
 	self.ui = {};
@@ -213,7 +213,7 @@ Caracal.Shop.Cart = function() {
 		if (currency == self.default_currency) {
 			// set default currency
 			self.currency = self.default_currency;
-			self.exchange_rate = 1;
+			self.conversion_rate = 1;
 
 			// update totals
 			self.ui.update_totals();
@@ -228,6 +228,7 @@ Caracal.Shop.Cart = function() {
 			new Communicator('shop')
 					.on_success(self.handlers.currency_change_success)
 					.set_callback_data(currency)
+					.use_cache(true)
 					.get('json_get_conversion_rate', data);
 		}
 	};
@@ -274,8 +275,16 @@ Caracal.Shop.Cart = function() {
 	 *
 	 * @param object data
 	 */
-	self.handlers.currency_change_success = function(data) {
-		console.log(data);
+	self.handlers.currency_change_success = function(data, new_currency) {
+		// store new data
+		self.currency = new_currency;
+		self.conversion_rate = data;
+
+		// update items
+		for (var cid in self.items.list) {
+			var item = self.items.list[cid];
+			item.handlers.currency_change(new_currency, data);
+		}
 
 		// update totals
 		self.ui.update_totals();
@@ -291,6 +300,8 @@ Caracal.Shop.Cart = function() {
 		self.handling = data.handling || self.handling;
 		self.shipping = data.shipping || self.shipping;
 		self.default_currency = data.currency || self.default_currency;
+		self.currency = self.default_currency;
+		self.conversion_rate = 1;
 
 		// create items handlers
 		for (var i=0, count=data.cart.length; i<count; i++) {
@@ -526,6 +537,7 @@ Caracal.Shop.Item = function(cart) {
 	self.name = '';
 	self.count = 0;
 	self.price = 0;
+	self.rate = 1;
 	self.tax = 0;
 	self.weight = 0;
 	self.image = '';
@@ -699,7 +711,7 @@ Caracal.Shop.Item = function(cart) {
 	 * @return float
 	 */
 	self.get_total_cost = function() {
-		return self.count * self.price;
+		return self.count * self.price * self.rate;
 	};
 
 	/**
@@ -709,6 +721,21 @@ Caracal.Shop.Item = function(cart) {
 	 */
 	self.get_total_weight = function() {
 		return self.count * self.weight;
+	};
+
+	/**
+	 * Handle currency change in shopping cart.
+	 *
+	 * @param string currency
+	 * @param float rate
+	 */
+	self.handlers.currency_change = function(currency, rate) {
+		// store rate for later calculation
+		self.rate = rate;
+
+		// update views
+		for (var i=0, count=self.views.length; i<count; i++)
+			self.views[i].handle_currency_change(currency, rate);
 	};
 
 	/**
@@ -792,6 +819,8 @@ Caracal.Shop.ItemView = function(item) {
 
 	self.item = item;
 	self.cart = item.cart;
+	self.currency = null;
+	self.rate = 1;
 
 	self.container = null;
 	self.label_name = null;
@@ -805,6 +834,7 @@ Caracal.Shop.ItemView = function(item) {
 	self._init = function() {
 		// get list containers
 		var item_list = self.cart.get_list_container();
+		self.currency = self.cart.default_currency;
 
 		// create container
 		self.container = $('<li>').appendTo(item_list);
@@ -820,7 +850,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.label_total = $('<span>').appendTo(self.container);
 		self.label_total
 				.addClass('total')
-				.attr('data-currency', self.cart.currency);
+				.attr('data-currency', self.currency);
 
 		// create options
 		self.option_remove = $('<a>').appendTo(self.container);
@@ -846,7 +876,24 @@ Caracal.Shop.ItemView = function(item) {
 	self.handle_change = function() {
 		self.label_name.text(self.item.name[language_handler.current_language]);
 		self.label_count.text(self.item.count);
-		self.label_total.text(self.item.count * self.item.price);
+		self.label_total
+				.text(self.item.count * self.item.price * self.rate)
+				.attr('data-currency', self.currency);
+	};
+
+	/**
+	 * Handle shopping cart currency change.
+	 *
+	 * @param string currency
+	 * @param float rate
+	 */
+	self.handle_currency_change = function(currency, rate) {
+		// store values
+		self.currency = currency;
+		self.rate = rate;
+
+		// update labels
+		self.handle_change();
 	};
 
 	/**
