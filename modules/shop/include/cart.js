@@ -281,8 +281,8 @@ Caracal.Shop.Cart = function() {
 		self.exchange_rate = data;
 
 		// update items
-		for (var cid in self.items.list) {
-			var item = self.items.list[cid];
+		for (var cid in self.items) {
+			var item = self.items[cid];
 			item.handlers.currency_change(new_currency, data);
 		}
 
@@ -447,8 +447,8 @@ Caracal.Shop.Cart = function() {
 		var total_count = 0;
 
 		// summarize information
-		for (var cid in self.items.list) {
-			var item = self.items.list[cid];
+		for (var cid in self.items) {
+			var item = self.items[cid];
 
 			total_weight += item.get_total_weight();
 			total_cost += item.get_total_cost();
