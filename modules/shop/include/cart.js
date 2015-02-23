@@ -220,16 +220,15 @@ Caracal.Shop.Cart = function() {
 
 		} else {
 			// foreign currency, request exchange rate
-			$.ajax({
-				url: window.location.protocol + '//rate-exchange.appspot.com/currency',
-				data: {
-						from: self.default_currency,
-						to: currency
-					},
-				cache: true,
-				async: true,
-				success: self.handlers.currency_change_success
-			});
+			data = {
+					from: self.default_currency,
+					to: currency
+				};
+
+			new Communicator('shop')
+					.on_success(self.handlers.currency_change_success)
+					.set_callback_data(currency)
+					.get('json_get_conversion_rate', data);
 		}
 	};
 

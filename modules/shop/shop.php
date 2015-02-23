@@ -547,6 +547,10 @@ class shop extends Module {
 				$this->json_GetCurrency();
 				break;
 
+			case 'json_get_conversion_rate':
+				$this->json_GetConversionRate();
+				break;
+
 			case 'json_get_account_info':
 				$this->json_GetAccountInfo();
 				break;
@@ -1527,6 +1531,21 @@ class shop extends Module {
 	 */
 	private function json_GetCurrency() {
 		print json_encode($this->getDefaultCurrency());
+	}
+
+	/**
+	 * Return conversion rate from two currencies.
+	 */
+	private function json_GetConversionRate() {
+		$from = fix_chars($_REQUEST['from']);
+		$to = fix_chars($_REQUEST['to']);
+		$rate = 0;
+
+		$url = "http://rate-exchange.appspot.com/currency?from=$from&to=$to";
+		$data = json_decode(file_get_contents($url));
+		$rate = $data->rate;
+
+		print json_encode($rate);
 	}
 
 	/**
