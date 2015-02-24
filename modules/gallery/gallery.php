@@ -1348,7 +1348,7 @@ class gallery extends Module {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		if (isset($tag_params['text_id']))
-			$conditions['text_id'] = fix_id($tag_params['text_id']);
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
