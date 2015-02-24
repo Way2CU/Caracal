@@ -107,9 +107,14 @@ Caracal.Shop.Cart = function() {
 				variation_id: cid_data[1]
 			};
 
+			// reserve space in item list
+			self.items[cid] = null;
+
+			// add item through server
 			new Communicator('shop')
 				.on_success(self.handlers.item_add_success)
 				.on_error(self.handlers.item_add_error)
+				.set_callback_data(cid)
 				.send('json_add_item_to_shopping_cart', data);
 		}
 	};
@@ -372,15 +377,21 @@ Caracal.Shop.Cart = function() {
 	 * Handle item added to shopping cart.
 	 *
 	 * @param object data
+	 * @param string original_cid
 	 */
-	self.handlers.item_add_success = function(data) {
+	self.handlers.item_add_success = function(data, original_cid) {
 		var item = new Caracal.Shop.Item(self);
 
 		// configure item
 		item.apply_data(data);
 
 		// add item to the list
-		self.items[item.get_cid()] = item;
+		var cid = item.get_cid();
+		self.items[cid] = item;
+
+		// remove reserved space if cid is different
+		if (cid != original_cid)
+			delete self.items[original_cid];
 
 		// update totals
 		self.ui.update_totals();
@@ -392,8 +403,11 @@ Caracal.Shop.Cart = function() {
 	 * @param object xhr
 	 * @param string transfer_status
 	 * @param string description
+	 * @param string cid
 	 */
-	self.handlers.item_add_error = function(xhr, transfer_status, description) {
+	self.handlers.item_add_error = function(xhr, transfer_status, description, cid) {
+		if (cid in self.items)
+			delete self.items[cid];
 	};
 
 	/**
@@ -453,7 +467,6 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.ui.connect_checkout_button = function(button) {
 		$.extend(self.ui.checkout_button, button);
-		// TODO: Re-apply event handlers.
 		return self;
 	};
 
