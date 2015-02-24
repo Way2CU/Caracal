@@ -307,7 +307,11 @@ Caracal.Shop.Cart = function() {
 		if (!success)
 			return;
 
-
+		// tell items to clean up
+		for (var cid in self.items) {
+			var item = self.items[cid];
+			item.handlers.remove_success(true);
+		}
 	};
 
 	/**
