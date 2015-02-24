@@ -28,7 +28,7 @@ Caracal.Shop.Cart = function() {
 	var self = this;
 
 	self.items = {};
-	self.default_currency = 'EUR';
+	self.default_currency = '';
 	self.currency = self.default_currency;
 	self.exchange_rate = 1;
 	self.handling = 0;
