@@ -97,7 +97,8 @@ Caracal.Shop.Cart = function() {
 		if (cid in self.items) {
 			// item already exists, increase count
 			var item = self.items[cid];
-			item.alter_count(1);
+			if (item != null)
+				item.alter_count(1);
 
 		} else if (self.events.emit_signal('item-added', self, cid)) {
 			// load data from server
@@ -130,15 +131,12 @@ Caracal.Shop.Cart = function() {
 		var result = false;
 
 		// check if item exists
-		if (!(cid in self.items))
+		if (!(cid in self.items) || self.items[cid] == null)
 			return result;
 
 		// find item and remove it
 		var item = self.items[cid];
 		result = item.set_count(count);
-
-		// update totals
-		self.ui.update_totals();
 
 		return result;
 	};
@@ -157,10 +155,9 @@ Caracal.Shop.Cart = function() {
 		} else if (cid in self.items) {
 			// alter amount of existing item
 			var item = self.items[cid];
-			item.alter_count(difference);
 
-			// update totals
-			self.ui.update_totals();
+			if (item != null)
+				item.alter_count(difference);
 		}
 	};
 
