@@ -35,6 +35,7 @@ Caracal.Gallery = Caracal.Gallery || {};
  * gallery
  * 	.controls.attach_next('a.next')
  * 	.images.set_thumbnail_size(150)
+ * 	.images.set_container('div.images')
  * 	.images.load(null, 'gallery');
  *
  * @param integer visible_items
