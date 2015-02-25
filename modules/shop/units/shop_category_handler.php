@@ -276,12 +276,15 @@ class ShopCategoryHandler {
 	 * @param arrat $children
 	 */
 	public function tag_Category($tag_params, $children) {
-		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : -1;
 		$manager = ShopCategoryManager::getInstance();
 		$conditions = array();
 
 		// create conditions
-		$conditions['id'] = $id;
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item from database
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
