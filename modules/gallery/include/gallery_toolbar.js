@@ -69,7 +69,8 @@ function ToolbarExtension_Gallery() {
 					data: {
 						section: 'gallery',
 						action: 'json_image_list',
-						thumbnail_size: 100
+						thumbnail_size: 100,
+						all_languages: 1
 					},
 					dataType: 'json',
 					context: $component.get(0),
