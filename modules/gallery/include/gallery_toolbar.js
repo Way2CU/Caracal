@@ -68,7 +68,8 @@ function ToolbarExtension_Gallery() {
 					type: 'GET',
 					data: {
 						section: 'gallery',
-						action: 'json_image_list'
+						action: 'json_image_list',
+						thumbnail_size: 100
 					},
 					dataType: 'json',
 					context: $component.get(0),
@@ -86,7 +87,8 @@ function ToolbarExtension_Gallery() {
 	 */
 	this.loaded_ArticleImage = function(data) {
 		var $component = $(this);
-		var language_selector = $component.data('selector');
+		var component_window = $component.closest('div.window');
+		var language_selector = component_window.find('div.language_selector').data('selector');
 
 		if (!data.error) {
 			var $list = $('<div>');
