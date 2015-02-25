@@ -4,7 +4,7 @@
  * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
  *
- * You need to create new language selector for each window. 
+ * You need to create new language selector for each window.
  *
  * Requires jQuery 1.4.2+
  */
@@ -27,7 +27,9 @@ function LanguageSelector(id) {
 	 */
 	self.init = function() {
 		self.container.prepend(self.button_container);
-		self.button_container.addClass('loading');
+		self.button_container
+				.addClass('loading')
+				.data('selector', self);
 
 		// find fields
 		self.fields = self.container.find('input.multi-language, textarea.multi-language');
@@ -56,7 +58,7 @@ function LanguageSelector(id) {
 				default_language = language.short;
 			}
 		}
-		
+
 		// make sure we have default language to set
 		if (default_language === null)
 			default_language = languages[0].short;
