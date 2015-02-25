@@ -394,8 +394,10 @@ class ShopCategoryHandler {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// create template handler
+		// TODO: Remove outdated tag name
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
 		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
+		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// initialize index
 		$index = 0;
