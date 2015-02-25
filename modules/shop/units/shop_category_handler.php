@@ -292,6 +292,7 @@ class ShopCategoryHandler {
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
 		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
+		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// parse template
 		if (is_object($item)) {
