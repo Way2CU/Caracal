@@ -11,6 +11,200 @@ Caracal.Gallery = Caracal.Gallery || {};
 
 
 /**
+ * Loader object provides menu handling and image loading functions. It's
+ * designed to be used in conjecture with other image handlers and galleries.
+ */
+Caracal.Gallery.Loader = function() {
+	var self = this;
+
+	self.handlers = {};
+	self.galleries = null;
+	self.constructor = null;
+	self.thumbnail_size = 100;
+	self.constraint = 2;
+
+	/**
+	 * Complete object initialization.
+	 */
+	self._init = function() {
+		self.galleries = new Array();
+	};
+
+	/**
+	 * Add gallery to control image loading of.
+	 *
+	 * @param object gallery
+	 * @return object
+	 */
+	self.add_gallery = function(gallery) {
+		self.galleries.push(gallery);
+		return self;
+	};
+
+	/**
+	 * Set image constructor function. This function is called for every image
+	 * after loading and needs to return jQuery object. Loader itself handlers
+	 * insertion to DOM tree.
+	 *
+	 * @param callable constructor
+	 * @return object
+	 */
+	self.set_constructor = function(constructor) {
+		if (typeof constructor == 'function)
+			self.constructor = constructor;
+		return self;
+	};
+
+	/**
+	 * Set thumbnail size when loading images from server.
+	 *
+	 * @param integer size
+	 * @param integer constraint
+	 * @return self
+	 */
+	self.images.set_thumbnail_size = function(size, constraint) {
+		if (size)
+			self.thumbnail_size = size;
+
+		if (constraint)
+			self.constraint = constraint;
+
+		return self;
+	};
+
+	/**
+	 * Asynchronously load images from the gallery with specified numberical
+	 * unique id. If load is successful constructor function will be used to
+	 * create each image in all of the galleries added to loader.
+	 *
+	 * @param integer id
+	 * @param boolean slideshow
+	 * @return object
+	 */
+	self.load_by_group_id = function(id, slideshow) {
+		// make sure communicator is loaded
+		if (typeof Communicator != 'function')
+			return self;
+
+		// set container as busy
+		for (var i=0, count=self.galleries.length; i<count; i++)
+			self.galleries[i].images.set_container_status(true);
+
+		// prepare data
+		var data = {
+				group_id: id,
+				thumbnail_size: self.thumbnail_size,
+				constraint: self.constraint
+			};
+
+		if (slideshow)
+			data.slideshow = slideshow ? 1 : 0;
+
+		// create communicator and send request
+		new Communicator('gallery')
+				.on_error(self.handlers.load_error)
+				.on_success(self.handlers.load_success)
+				.get('json_image_list', data);
+
+		return self;
+	};
+
+	/**
+	 * Asynchronously load images from image group with specified text id. If
+	 * load is successful constructor function will be used to create each image
+	 * all of the galleries added to loader.
+	 *
+	 * @param string text_id
+	 * @param boolean slideshow
+	 * @return object
+	 */
+	self.load_by_group_text_id = function(text_id, slideshow) {
+		// make sure communicator is loaded
+		if (typeof Communicator != 'function')
+			return self;
+
+		// set container as busy
+		for (var i=0, count=self.galleries.length; i<count; i++)
+			self.galleries[i].images.set_container_status(true);
+
+		// prepare data
+		var data = {
+				group: text_id,
+				thumbnail_size: self.thumbnail_size,
+				constraint: self.constraint
+			};
+
+		if (slideshow)
+			data.slideshow = slideshow ? 1 : 0;
+
+		// create communicator and send request
+		new Communicator('gallery')
+				.on_error(self.handlers.load_error)
+				.on_success(self.handlers.load_success)
+				.get('json_image_list', data);
+
+		return self;
+	};
+
+	/**
+	 * Handle successful load of data from the server.
+	 *
+	 * @param object data
+	 * @param mixed callback_data
+	 */
+	self.handlers.load_success = function(data, callback_data) {
+		if (!data.error) {
+			// create image storage array
+			var images = new Array();
+
+			// clear image list
+			for (var i=0, count=self.galleries.length; i<count; i++)
+				self.galleries[i].images.clear();
+
+			// create images
+			for (var i=0, count=data.items.length; i<count; i++) {
+				var image = null;
+				var image_data = data.items[i];
+
+				if (self.create_image != null)
+					image = self.constructor(image_data); else
+					image = Caracal.Gallery.create_image(image_data);
+
+				images.push(image);
+			}
+
+			// add images to every gallery
+			for (var i=0, count=self.galleries.length; i<count; i++)
+				self.galleries[i]
+						.images.add(images)
+						.images.update();
+		}
+
+		// clear container as busy
+		for (var i=0, count=self.galleries.length; i<count; i++)
+			self.galleries[i].images.set_container_status(false);
+	};
+
+	/**
+	 * Handle server-side error when trying to load data.
+	 *
+	 * @param object xhr
+	 * @param string transfer_status
+	 * @param string description
+	 * @param mixed callback_data
+	 */
+	self.handlers.load_error = function(xhr, transfer_status, description, callback_data) {
+		// clear container as busy
+		for (var i=0, count=self.galleries.length; i<count; i++)
+			self.galleries[i].images.set_container_status(false);
+	};
+
+	// finalize object
+	self._init();
+}
+
+
+/**
  * Slider type gallery provides horizontal gallery with specified number
  * of visible items. This object only controls the position of images and doesn't
  * provide transitions or other styling.
@@ -48,14 +242,11 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.container = null;
 	self.direction = 1;
 	self.step_size = 1;
-	self.thumbnail_size = 100;
-	self.constraint = 2;
 	self.center = false;
 	self.spacing = null;
 	self.timer_id = null;
 	self.timeout = null;
 	self.visible_items = null;
-	self.create_image = null;
 
 	/**
 	 * Complete object initialization.
@@ -228,49 +419,6 @@ Caracal.Gallery.Slider = function(visible_items) {
 	};
 
 	/**
-	 * Handle image load from server.
-	 *
-	 * @param object data
-	 * @param object callback_data
-	 */
-	self.images._handle_load_success = function(data, callback_data) {
-		if (!data.error) {
-			// clear image list
-			self.images.list.remove();
-			self.images.list = $();
-
-			// create images
-			for (var i=0, count=data.items.length; i<count; i++) {
-				var image = null;
-				var image_data = data.items[i];
-
-				if (self.create_image != null)
-					image = self.create_image(image_data, self.container); else
-					image = Caracal.Gallery.create_image(image_data, self.container);
-
-				$.extend(self.images.list, image);
-			}
-
-			// update image display
-			self.images.update();
-		}
-
-		self.container.removeClass('loading');
-	};
-
-	/**
-	 * Handle server side error when loading image list.
-	 *
-	 * @param object xhr
-	 * @param string transfer_status
-	 * @param string description
-	 * @param object callback_data
-	 */
-	self.images._handle_load_error = function(xhr, transfer_status, description, callback_data) {
-		self.container.removeClass('loading');
-	};
-
-	/**
 	 * Update image positions.
 	 */
 	self.images.update = function(direction) {
@@ -296,10 +444,24 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * of actually specifying their position.
 	 *
 	 * @param mixed container
-	 * @return self
+	 * @return object
 	 */
 	self.images.set_container = function(container) {
 		self.container = $(container);
+		return self;
+	};
+
+	/**
+	 * Set or clear container status as busy.
+	 *
+	 * @param boolean busy
+	 * @return object
+	 */
+	self.images.set_container_status = function(busy) {
+		if (busy)
+			self.container.addClass('loading'); else
+			self.container.removeClass('loading');
+
 		return self;
 	};
 
@@ -308,10 +470,28 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * will be positioned.
 	 *
 	 * @param mixed images
-	 * @return self
+	 * @return object
 	 */
 	self.images.add = function(images) {
-		$.extend(self.images.list, $(images));
+		var image_list = $(images);
+
+		// check if images are inside of container
+		if (!self.container.is(image_list))
+			self.container.append(image_list);
+
+		// add images to the list
+		$.extend(self.images.list, image_list);
+		return self;
+	};
+
+	/**
+	 * Remove all the images from DOM tree.
+	 *
+	 * @return object
+	 */
+	self.images.clear = function() {
+		self.images.list.remove();
+		self.images.list = $();
 		return self;
 	};
 
@@ -319,7 +499,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * Set images to be centered in container.
 	 *
 	 * @param boolean center
-	 * @return self
+	 * @return object
 	 */
 	self.images.set_center = function(center) {
 		self.center = center;
@@ -332,7 +512,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * will default back to zero.
 	 *
 	 * @param integer spacing
-	 * @return self
+	 * @return object
 	 */
 	self.images.set_spacing = function(spacing) {
 		self.spacing = spacing;
@@ -344,7 +524,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * Set number of visible images.
 	 *
 	 * @param integer count
-	 * @return self
+	 * @return object
 	 */
 	self.images.set_visible_count = function(count) {
 		self.visible_items = count;
@@ -356,7 +536,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * Set number of items to slide by.
 	 *
 	 * @param integer step
-	 * @return self
+	 * @return object
 	 */
 	self.images.set_step_size = function(step) {
 		self.step_size = step;
@@ -364,80 +544,10 @@ Caracal.Gallery.Slider = function(visible_items) {
 	};
 
 	/**
-	 * Set thumbnail size when loading images from server.
-	 *
-	 * @param integer size
-	 * @param integer constraint
-	 * @return self
-	 */
-	self.images.set_thumbnail_size = function(size, constraint) {
-		if (size)
-			self.thumbnail_size = size;
-
-		if (constraint)
-			self.constraint = constraint;
-
-		return self;
-	};
-
-	/**
-	 * Set constructor function for images after they are received
-	 * from server using `load_from_group` function. If you don't specify
-	 * constructor function default `Caracal.Gallery.create_image` function
-	 * will be called.
-	 *
-	 * @param function callable
-	 * @return self
-	 */
-	self.images.set_constructor = function(callable) {
-		self.create_image = callable;
-		return self;
-	};
-
-	/**
-	 * Load images from gallery with specified id or text_id. If specified
-	 * only images marked as slideshow will be included.
-	 *
-	 * @param integer group_id
-	 * @param string group_text_id
-	 * @param boolean slideshow
-	 * @return self
-	 */
-	self.images.load_from_group = function(group_id, group_text_id, slideshow) {
-		if (typeof Communicator == 'function') {
-			// set container as busy
-			self.container.addClass('loading');
-
-			// prepare data
-			var data = {
-					thumbnail_size: self.thumbnail_size,
-					constraint: self.constraint
-				};
-
-			if (group_id)
-				data.group_id = group_id;
-
-			if (group_text_id)
-				data.group = group_text_id;
-
-			if (slideshow)
-				data.slideshow = 1;
-
-			// create communicator and send request
-			new Communicator('gallery')
-					.on_error(self.images._handle_load_error)
-					.on_success(self.images._handle_load_success)
-					.get('json_image_list', data);
-		}
-
-		return self;
-	};
-
-	/**
 	 * Set direction of moving images. Direction can be -1 or 1.
 	 *
 	 * @param integer direction
-	 * @return self
+	 * @return object
 	 */
 	self.controls.set_direction = function(direction) {
 		if (Math.abs(direction) == 1)
@@ -533,7 +643,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * Make specified jQuery object behave as previous button.
 	 *
 	 * @param object control
-	 * @return self
+	 * @return object
 	 */
 	self.controls.attach_next = function(control) {
 		// add control to the list
@@ -549,7 +659,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * Make specified jQuery object behave as previous button.
 	 *
 	 * @param object control
-	 * @return self
+	 * @return object
 	 */
 	self.controls.attach_previous = function(control) {
 		// add control to the list
@@ -565,7 +675,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * Turn on auto-scrolling with specified timeout.
 	 *
 	 * @param integer timeout
-	 * @return self
+	 * @return object
 	 */
 	self.controls.set_auto = function(timeout) {
 		// store timeout for later use
@@ -594,17 +704,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 
 /**
- * Default image constructor function. This function accepts 2 parameters
- * `data` received from server and container for image to be added to. This
- * function is used only when images are loaded from the server to construct
- * image container.
+ * Default image constructor function. This function is used only when
+ * images are loaded from the server to construct image container.
  *
  * @param object data
- * @param object container
  * @return object
  */
-Caracal.Gallery.create_image = function(data, container) {
-	var link = $('<a>').appendTo(container);
+Caracal.Gallery.create_image = function(data) {
+	var link = $('<a>');
 	link
 		.addClass('image')
 		.data('id', data.id)
