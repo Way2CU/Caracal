@@ -19,6 +19,7 @@ Caracal.Gallery.Loader = function() {
 
 	self.handlers = {};
 	self.galleries = null;
+	self.callbacks = null;
 	self.constructor = null;
 	self.thumbnail_size = 100;
 	self.constraint = 2;
@@ -28,6 +29,7 @@ Caracal.Gallery.Loader = function() {
 	 */
 	self._init = function() {
 		self.galleries = new Array();
+		self.callbacks = new Array();
 	};
 
 	/**
@@ -38,6 +40,18 @@ Caracal.Gallery.Loader = function() {
 	 */
 	self.add_gallery = function(gallery) {
 		self.galleries.push(gallery);
+		return self;
+	};
+
+	/**
+	 * Add callback function when images are loaded.
+	 *
+	 * @param callable callback
+	 * @return object
+	 */
+	self.add_callback = function(callback) {
+		if (typeof callback == 'function')
+			self.callbacks.push(callback);
 		return self;
 	};
 
@@ -182,6 +196,10 @@ Caracal.Gallery.Loader = function() {
 		// clear container as busy
 		for (var i=0, count=self.galleries.length; i<count; i++)
 			self.galleries[i].images.set_container_status(false);
+
+		// call all function and notify them about load
+		for (var i=0, count=self.callbacks.length; i<count; i++)
+			self.callbacks[i]();
 	};
 
 	/**
