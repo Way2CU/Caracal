@@ -62,7 +62,7 @@ Caracal.Gallery.Loader = function() {
 	 * @param integer constraint
 	 * @return self
 	 */
-	self.images.set_thumbnail_size = function(size, constraint) {
+	self.set_thumbnail_size = function(size, constraint) {
 		if (size)
 			self.thumbnail_size = size;
 
