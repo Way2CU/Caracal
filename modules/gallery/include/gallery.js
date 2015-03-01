@@ -471,7 +471,8 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.add = function(images) {
-		$.extend(self.images.list, images);
+		var list = typeof images == 'string' ? $(images) : images;
+		$.extend(self.images.list, list);
 		return self;
 	};
 
