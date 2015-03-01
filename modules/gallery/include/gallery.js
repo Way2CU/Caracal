@@ -50,7 +50,7 @@ Caracal.Gallery.Loader = function() {
 	 * @return object
 	 */
 	self.set_constructor = function(constructor) {
-		if (typeof constructor == 'function)
+		if (typeof constructor == 'function')
 			self.constructor = constructor;
 		return self;
 	};
