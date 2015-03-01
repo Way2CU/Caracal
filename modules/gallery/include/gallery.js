@@ -155,7 +155,7 @@ Caracal.Gallery.Loader = function() {
 	self.handlers.load_success = function(data, callback_data) {
 		if (!data.error) {
 			// create image storage array
-			var images = new Array();
+			var images = $();
 
 			// create images
 			for (var i=0, count=data.items.length; i<count; i++) {
@@ -166,7 +166,7 @@ Caracal.Gallery.Loader = function() {
 					image = self.constructor(image_data); else
 					image = Caracal.Gallery.create_image(image_data);
 
-				images.push(image);
+				$.extend(images, image);
 			}
 
 			// add images to every gallery
@@ -471,8 +471,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.add = function(images) {
-		var list = typeof images == 'array' ? images : $(images);
-		$.extend(self.images.list, list);
+		$.extend(self.images.list, images);
 		return self;
 	};
 
