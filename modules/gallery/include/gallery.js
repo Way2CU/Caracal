@@ -166,7 +166,7 @@ Caracal.Gallery.Loader = function() {
 				var image = null;
 				var image_data = data.items[i];
 
-				if (self.create_image != null)
+				if (self.constructor != null)
 					image = self.constructor(image_data); else
 					image = Caracal.Gallery.create_image(image_data);
 
