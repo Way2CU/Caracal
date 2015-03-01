@@ -166,7 +166,8 @@ Caracal.Gallery.Loader = function() {
 					image = self.constructor(image_data); else
 					image = Caracal.Gallery.create_image(image_data);
 
-				$.extend(images, image);
+				if (image != null)
+					images = images.add(image);
 			}
 
 			// add images to every gallery
