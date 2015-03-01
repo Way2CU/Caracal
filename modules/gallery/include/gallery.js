@@ -176,6 +176,7 @@ Caracal.Gallery.Loader = function() {
 			// add images to every gallery
 			for (var i=0, count=self.galleries.length; i<count; i++)
 				self.galleries[i]
+						.images.append(images)
 						.images.add(images)
 						.images.update();
 		}
@@ -473,14 +474,18 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.add = function(images) {
-		var image_list = $(images);
+		$.extend(self.images.list, $(images));
+		return self;
+	};
 
-		// check if images are inside of container
-		if (!self.container.is(image_list))
-			self.container.append(image_list);
-
-		// add images to the list
-		$.extend(self.images.list, image_list);
+	/**
+	 * Append list of images to container.
+	 *
+	 * @param array images
+	 * @return object
+	 */
+	self.images.append = function(images) {
+		self.container.append(images);
 		return self;
 	};
 
