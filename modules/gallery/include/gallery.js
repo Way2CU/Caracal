@@ -174,6 +174,7 @@ Caracal.Gallery.Loader = function() {
 				self.galleries[i]
 						.images.clear()
 						.images.append(images)
+						.images.add(images)
 						.images.update();
 		}
 
@@ -481,7 +482,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.append = function(images) {
-		$.extend(self.images.list, self.container.append(images));
+		self.container.append($(images));
 		return self;
 	};
 
