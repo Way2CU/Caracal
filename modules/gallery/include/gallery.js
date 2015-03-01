@@ -586,7 +586,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param object event
 	 */
 	self.controls._handle_mouse_enter = function(event) {
-		if (self.timer_id == null)
+		if (self.timer_id == null || self.timeout == null)
 			return;
 
 		clearInterval(self.timer_id);
@@ -599,7 +599,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param object event
 	 */
 	self.controls._handle_mouse_leave = function(event) {
-		if (self.timer_id != null)
+		if (self.timer_id != null || self.timeout == null)
 			return;
 
 		self.timer_id = setInterval(self.next_step, self.timeout);
