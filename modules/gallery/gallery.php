@@ -2246,7 +2246,7 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get group from database
-		$group = $manager->getSingleItem(array('thumbnail'), $conditions);
+		$group = $manager->getSingleItem(array('id', 'thumbnail'), $conditions);
 
 		// specified group doesn't exist
 		if (!is_object($group))
