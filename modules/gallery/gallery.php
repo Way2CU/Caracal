@@ -2224,6 +2224,58 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Get group thumbnail URL based on one of the specified ids.
+	 *
+	 * @param integer $id
+	 * @param string $text_id
+	 * @param integer $size
+	 * @param integer $constraint
+	 * @return string
+	 */
+	public static function getGroupThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+		$manager = GalleryGroupManager::getInstance();
+		$image_manager = GalleryManager::getInstance();
+		$conditions = array();
+		$result = '';
+
+		// prepare conditions
+		if (!is_null($id))
+			$conditions['id'] = $id;
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		// get group from database
+		$group = $manager->getSingleItem(array('thumbnail'), $conditions);
+
+		// specified group doesn't exist
+		if (!is_object($group))
+			return $result;
+
+		if (empty($group->thumbnail)) {
+			// no image was set as thumbnail, get one at random
+			$image = $image_manager->getSingleItem(
+										array('id'),
+										array(
+											'group' 	=> $group->id,
+											'protected'	=> 0,
+											'visible'	=> 1
+										),
+										array('RAND()')
+									);
+
+			if (is_object($image))
+				$result = self::getThumbnailById($image->id, null, $size, $constraint);
+
+		} else {
+			// return thumbnail from specified image
+			$result = self::getThumbnailById($group->thumbnail, null, $size, $constraint);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Get gallery group thumbnail based on gallery id
 	 *
 	 * @param integer $group_id
