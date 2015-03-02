@@ -230,15 +230,11 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$value = @eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$value = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 
-					if ($value !== false) {
-						if ($value == false)
-							unset($tag->tagAttrs[$param]); else
-							$tag->tagAttrs[$param] = $value;
-					} else {
-						trigger_error('Error while trying to `cms:optional` "'.$to_eval.'" in file: '.$this->file, E_USER_WARNING);
-					}
+					if ($value == false)
+						unset($tag->tagAttrs[$param]); else
+						$tag->tagAttrs[$param] = $value;
 				}
 
 				// unset param
