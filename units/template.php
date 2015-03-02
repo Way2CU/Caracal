@@ -206,7 +206,11 @@ class TemplateHandler {
 					$params = $this->params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$tag->tagAttrs[$param] = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$response = @eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+
+					if ($response !== false)
+						$tag->tagAttrs[$param] = $response; else
+						trigger_error('Error while trying to `cms:eval` "'.$to_eval.'" in file: '.$this->file, E_USER_WARNING);
 				}
 
 				// unset param
