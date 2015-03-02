@@ -16,6 +16,7 @@ function Communicator(module_name) {
 	self._headers = {};
 	self._callback_success = null;
 	self._callback_error = null;
+	self._callback_data = null;
 	self._cache_response = false;
 	self._asynchronous = true;
 
@@ -35,7 +36,7 @@ function Communicator(module_name) {
 	 */
 	self._handle_error = function(xhr, transfer_status, error_description) {
 		if (self._callback_error !== null)
-			self._callback_error(xhr, transfer_status, error_description);
+			self._callback_error(xhr, transfer_status, error_description, self._callback_data);
 	};
 
 	/**
@@ -45,13 +46,14 @@ function Communicator(module_name) {
 	 */
 	self._handle_success = function(data) {
 		if (self._callback_success !== null)
-			self._callback_success(data);
+			self._callback_success(data, self._callback_data);
 	};
 
 	/**
 	 * Assign success handler.
 	 *
 	 * @param function callback
+	 * @return self
 	 */
 	self.on_success = function(callback) {
 		self._callback_success = callback;
@@ -62,6 +64,7 @@ function Communicator(module_name) {
 	 * Assign error handler.
 	 *
 	 * @param function callback
+	 * @return self
 	 */
 	self.on_error = function(callback) {
 		self._callback_error = callback;
@@ -72,6 +75,7 @@ function Communicator(module_name) {
 	 * If we should use cached version of response.
 	 *
 	 * @param boolean use_cache
+	 * @return self
 	 */
 	self.use_cache = function(use_cache) {
 		self._cache_response = use_cache;
@@ -84,6 +88,7 @@ function Communicator(module_name) {
 	 * note that by changing this value CMS will not recognize request as AJAX!
 	 *
 	 * @param object headers
+	 * @return self
 	 */
 	self.add_headers = function(headers) {
 		self._headers = headers;
@@ -94,9 +99,21 @@ function Communicator(module_name) {
 	 * Should request be sent in asynchronous manner.
 	 *
 	 * @param boolean async
+	 * @return self
 	 */
 	self.set_asynchronous = function(async) {
 		self._asynchronous = async;
+		return self;
+	};
+
+	/**
+	 * Set data to be passed in callback.
+	 *
+	 * @param mixed
+	 * @return self
+	 */
+	self.set_callback_data = function(data) {
+		self._callback_data = data;
 		return self;
 	};
 

@@ -276,12 +276,15 @@ class ShopCategoryHandler {
 	 * @param arrat $children
 	 */
 	public function tag_Category($tag_params, $children) {
-		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : -1;
 		$manager = ShopCategoryManager::getInstance();
 		$conditions = array();
 
 		// create conditions
-		$conditions['id'] = $id;
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item from database
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
@@ -289,6 +292,7 @@ class ShopCategoryHandler {
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
 		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
+		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// parse template
 		if (is_object($item)) {
@@ -394,8 +398,10 @@ class ShopCategoryHandler {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// create template handler
+		// TODO: Remove outdated tag name
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
 		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
+		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// initialize index
 		$index = 0;

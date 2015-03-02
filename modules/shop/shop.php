@@ -547,6 +547,10 @@ class shop extends Module {
 				$this->json_GetCurrency();
 				break;
 
+			case 'json_get_conversion_rate':
+				$this->json_GetConversionRate();
+				break;
+
 			case 'json_get_account_info':
 				$this->json_GetAccountInfo();
 				break;
@@ -998,9 +1002,8 @@ class shop extends Module {
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
 
-		$collection->includeScript(collection::PAGE_CONTROL);
-		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/shopping_cart.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/shopping_cart.js'), 'type'=>'text/javascript'));
+		$collection->includeScript(collection::COMMUNICATOR);
+		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/cart.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -1066,7 +1069,7 @@ class shop extends Module {
 	 * @param array $properties
 	 * @return string
 	 */
-	private function generateVariationId($uid, $properties) {
+	public function generateVariationId($uid, $properties=array()) {
 		$data = $uid;
 
 		ksort($properties);
@@ -1531,6 +1534,21 @@ class shop extends Module {
 	}
 
 	/**
+	 * Return conversion rate from two currencies.
+	 */
+	private function json_GetConversionRate() {
+		$from = fix_chars($_REQUEST['from']);
+		$to = fix_chars($_REQUEST['to']);
+		$rate = 0;
+
+		$url = "http://rate-exchange.appspot.com/currency?from=$from&to=$to";
+		$data = json_decode(file_get_contents($url));
+		$rate = $data->rate;
+
+		print json_encode($rate);
+	}
+
+	/**
 	 * Set recurring plan.
 	 */
 	public function json_SetRecurringPlan() {
@@ -1738,9 +1756,15 @@ class shop extends Module {
 	 */
 	private function json_AddItemToCart() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
-		$variation_id = $this->generateVariationId($uid, $properties);
+
+		if (isset($_REQUEST['properties'])) {
+			$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
+			$variation_id = $this->generateVariationId($uid, $properties);
+
+		} else if ($_REQUEST['variation_id']) {
+			$variation_id = fix_chars($_REQUEST['variation_id']);
+		}
 
 		// try to get item from database
 		$manager = ShopItemManager::getInstance();
@@ -1786,6 +1810,7 @@ class shop extends Module {
 				'tax'			=> $item->tax,
 				'image'			=> $thumbnail_url,
 				'count'			=> $cart[$uid]['variations'][$variation_id]['count'],
+				'uid'			=> $item->uid,
 				'variation_id'	=> $variation_id
 			);
 
@@ -1823,6 +1848,9 @@ class shop extends Module {
 		print json_encode($result);
 	}
 
+	/**
+	 * Change the amount of items in shopping cart for specified UID and variation id.
+	 */
 	private function json_ChangeItemQuantity() {
 		$uid = fix_chars($_REQUEST['uid']);
 		$variation_id = fix_chars($_REQUEST['variation_id']);
@@ -2098,7 +2126,7 @@ class shop extends Module {
 				);
 				if (is_object($currency))
 					$preferred_currency = $currency->currency; else
-						$preferred_currency = 'EUR';
+					$preferred_currency = 'EUR';
 
 				if (is_object($warehouse)) {
 					$shipper = array(
@@ -2679,18 +2707,19 @@ class shop extends Module {
 		// get currency
 		$currency_manager = ShopCurrenciesManager::getInstance();
 		$currency = $currency_manager->getSingleItem(
-			$currency_manager->getFieldNames(),
-			array('id' => $transaction->currency)
-		);
+				$currency_manager->getFieldNames(),
+				array('id' => $transaction->currency)
+			);
+
 		if (is_object($currency))
 			$fields['currency'] = $currency->currency;
 
 		// add buyer information
 		$buyer_manager = ShopBuyersManager::getInstance();
 		$buyer = $buyer_manager->getSingleItem(
-			$buyer_manager->getFieldNames(),
-			array('id' => $transaction->buyer)
-		);
+				$buyer_manager->getFieldNames(),
+				array('id' => $transaction->buyer)
+			);
 
 		if (is_object($buyer)) {
 			$fields['buyer_first_name'] = $buyer->first_name;
@@ -2741,124 +2770,124 @@ class shop extends Module {
 
 		// create item table
 		switch ($transaction->type) {
-		case TransactionType::SHOPPING_CART:
-			$item_manager = ShopTransactionItemsManager::getInstance();
-			$items = $item_manager->getItems(
-				$item_manager->getFieldNames(),
-				array('transaction' => $transaction->id)
-			);
+			case TransactionType::SHOPPING_CART:
+				$item_manager = ShopTransactionItemsManager::getInstance();
+				$items = $item_manager->getItems(
+					$item_manager->getFieldNames(),
+					array('transaction' => $transaction->id)
+				);
 
-			if (count($items) > 0) {
-				// create items table
-				$text_table = str_pad($this->getLanguageConstant('column_name'), 40);
-				$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
-				$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
-				$text_table .= str_pad($this->getLanguageConstant('column_item_total'), 8);
-				$text_table .= "\n" . str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+				if (count($items) > 0) {
+					// create items table
+					$text_table = str_pad($this->getLanguageConstant('column_name'), 40);
+					$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
+					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
+					$text_table .= str_pad($this->getLanguageConstant('column_item_total'), 8);
+					$text_table .= "\n" . str_repeat('-', 40 + 8 + 6 + 8) . "\n";
 
-				$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
-				$html_table .= '<thead><tr>';
-				$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
-				$html_table .= '<td>'.$this->getLanguageConstant('column_price').'</td>';
-				$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
-				$html_table .= '<td>'.$this->getLanguageConstant('column_item_total').'</td>';
-				$html_table .= '</td></thead><tbody>';
+					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
+					$html_table .= '<thead><tr>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_price').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_item_total').'</td>';
+					$html_table .= '</td></thead><tbody>';
 
-				foreach ($items as $item) {
-					// append item name with description
-					if (empty($data['description']))
-						$line = $item->name[$language] . ' (' . $item->description . ')'; else
+					foreach ($items as $item) {
+						// append item name with description
+						if (empty($data['description']))
+							$line = $item->name[$language] . ' (' . $item->description . ')'; else
 							$line = $item->name[$language];
 
-					$line = utf8_wordwrap($line, 40, "\n", true);
-					$line = mb_split("\n", $line);
+						$line = utf8_wordwrap($line, 40, "\n", true);
+						$line = mb_split("\n", $line);
 
-					// append other columns
-					$line[0] = $line[0] . str_pad($item->price, 8, ' ', STR_PAD_LEFT);
-					$line[0] = $line[0] . str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
-					$line[0] = $line[0] . str_pad($item->total, 8, ' ', STR_PAD_LEFT);
+						// append other columns
+						$line[0] = $line[0] . str_pad($item->price, 8, ' ', STR_PAD_LEFT);
+						$line[0] = $line[0] . str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
+						$line[0] = $line[0] . str_pad($item->total, 8, ' ', STR_PAD_LEFT);
 
-					// add this item to text table
-					$text_table .= implode("\n", $line) . "\n\n";
+						// add this item to text table
+						$text_table .= implode("\n", $line) . "\n\n";
 
-					// form html row
-					$row = '<tr><td>' . $item->name[$language];
+						// form html row
+						$row = '<tr><td>' . $item->name[$language];
 
-					if (!empty($item->description))
-						$row .= ' <small>' . $item->description . '</small>';
+						if (!empty($item->description))
+							$row .= ' <small>' . $item->description . '</small>';
 
-					$row .= '</td><td>' . $item->price . '</td>';
-					$row .= '<td>' . $item->amount . '</td>';
-					$row .= '<td>' . $item->total . '</td></tr>';
+						$row .= '</td><td>' . $item->price . '</td>';
+						$row .= '<td>' . $item->amount . '</td>';
+						$row .= '<td>' . $item->total . '</td></tr>';
 
-					// update subtotal
-					$subtotal += $item->total;
+						// update subtotal
+						$subtotal += $item->total;
+					}
+
+					// close text table
+					$text_table .= str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+					$html_table .= '</tbody>';
+
+					// create totals
+					$text_table .= str_pad($this->getLanguageConstant('column_subtotal'), 15);
+					$text_table .= str_pad($subtotal, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_repeat('-', 25);
+					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$html_table .= '<tfoot>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_subtotal') . '</td>';
+					$html_table .= '<td>' . $subtotal . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
+
+					$html_table .= '</tfoot>';
+
+					// close table
+					$html_table .= '</table>';
+
+					// add field
+					$fields['item_table'] = $text_table;
+				}
+				break;
+
+			case TransactionType::SUBSCRIPTION:
+				$plan_manager = ShopTransactionPlansManager::getInstance();
+				$plan = $plan_manager->getSingleItem(
+					$plan_manager->getFieldNames(),
+					array('transaction' => $transaction->id)
+				);
+
+				// get payment method
+				$plan_data = null;
+				if (isset($this->payment_methods[$transaction->payment_method])) {
+					$payment_method = $this->payment_methods[$transaction->payment_method];
+					$plans = $payment_method->get_recurring_plans();
+
+					if (isset($plans[$plan->plan_name]))
+						$plan_data = $plans[$plan->plan_name];
 				}
 
-				// close text table
-				$text_table .= str_repeat('-', 40 + 8 + 6 + 8) . "\n";
-				$html_table .= '</tbody>';
-
-				// create totals
-				$text_table .= str_pad($this->getLanguageConstant('column_subtotal'), 15);
-				$text_table .= str_pad($subtotal, 10, ' ', STR_PAD_LEFT) . "\n";
-
-				$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
-				$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
-
-				$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
-				$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
-
-				$text_table .= str_repeat('-', 25);
-				$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
-				$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
-
-				$html_table .= '<tfoot>';
-				$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_subtotal') . '</td>';
-				$html_table .= '<td>' . $subtotal . '</td></tr>';
-
-				$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
-				$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
-
-				$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
-				$html_table .= '<td>' . $transaction->handling . '</td></tr>';
-
-				$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
-				$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
-
-				$html_table .= '</tfoot>';
-
-				// close table
-				$html_table .= '</table>';
-
-				// add field
-				$fields['item_table'] = $text_table;
-			}
-			break;
-
-		case TransactionType::SUBSCRIPTION:
-			$plan_manager = ShopTransactionPlansManager::getInstance();
-			$plan = $plan_manager->getSingleItem(
-				$plan_manager->getFieldNames(),
-				array('transaction' => $transaction->id)
-			);
-
-			// get payment method
-			$plan_data = null;
-			if (isset($this->payment_methods[$transaction->payment_method])) {
-				$payment_method = $this->payment_methods[$transaction->payment_method];
-				$plans = $payment_method->get_recurring_plans();
-
-				if (isset($plans[$plan->plan_name]))
-					$plan_data = $plans[$plan->plan_name];
-			}
-
-			// populate fields with plan params
-			if (is_object($plan) && !is_null($plan_data)) {
-				$fields['plan_text_id'] = $plan->plan_name;
-				$fields['plan_name'] = $plan_data['name'][$language];
-			}
-			break;
+				// populate fields with plan params
+				if (is_object($plan) && !is_null($plan_data)) {
+					$fields['plan_text_id'] = $plan->plan_name;
+					$fields['plan_name'] = $plan_data['name'][$language];
+				}
+				break;
 		}
 
 		// we require email address for sending

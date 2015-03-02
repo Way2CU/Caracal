@@ -25,7 +25,7 @@ class ShopItemHandler {
 	*/
 	public static function getInstance($parent) {
 		if (!isset(self::$_instance))
-		self::$_instance = new self($parent);
+			self::$_instance = new self($parent);
 
 		return self::$_instance;
 	}
@@ -452,6 +452,7 @@ class ShopItemHandler {
 	 * @param array $children
 	 */
 	public function tag_Item($tag_params, $children) {
+		$shop = shop::getInstance();
 		$manager = ShopItemManager::getInstance();
 		$manufacturer_manager = ShopManufacturerManager::getInstance();
 		$id = null;
@@ -545,10 +546,13 @@ class ShopItemHandler {
 			}
 
 			$rating = 0;
+			$variation_id = $shop->generateVariationId($item->uid);
 
 			$params = array(
 						'id'			=> $item->id,
 						'uid'			=> $item->uid,
+						'variation_id'	=> $variation_id,
+						'cid'			=> $item->uid.'/'.$variation_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
 						'gallery'		=> $item->gallery,
@@ -587,6 +591,7 @@ class ShopItemHandler {
 	public function tag_ItemList($tag_params, $children) {
 		global $language;
 
+		$shop = shop::getInstance();
 		$manager = ShopItemManager::getInstance();
 		$conditions = array();
 		$page_switch = null;
@@ -718,10 +723,13 @@ class ShopItemHandler {
 				}
 
 				$rating = 0;
+				$variation_id = $shop->generateVariationId($item->uid);
 
 				$params = array(
 							'id'			=> $item->id,
 							'uid'			=> $item->uid,
+							'variation_id'	=> $variation_id,
+							'cid'			=> $item->uid.'/'.$variation_id,
 							'name'			=> $item->name,
 							'description'	=> $item->description,
 							'gallery'		=> $item->gallery,
