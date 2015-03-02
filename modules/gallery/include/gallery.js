@@ -11,6 +11,16 @@ Caracal.Gallery = Caracal.Gallery || {};
 
 
 /**
+ * Thumbnail constraint constants.
+ */
+Caracal.Gallery.Constraint = {
+	WIDTH: 0,
+	HEIGHT: 1,
+	BOTH: 2
+};
+
+
+/**
  * Loader object provides menu handling and image loading functions. It's
  * designed to be used in conjecture with other image handlers and galleries.
  */
