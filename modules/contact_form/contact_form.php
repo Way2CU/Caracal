@@ -2413,6 +2413,20 @@ class contact_form extends Module {
 	 * Show template for importing values to specified field.
 	 */
 	private function importValues() {
+		$field_id = fix_id($_REQUEST['field']);
+
+		$template = new TemplateHandler('values_import.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'field'			=> $field_id,
+					'form_action'	=> backend_UrlMake($this->name, 'values_import_commit'),
+					'cancel_action'	=> window_Close('contact_form_field_value_import')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
