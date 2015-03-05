@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
+	<cms:text constant="message_value_import" module="contact_form"/>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_field_values_add_form">
-		<div><cms:text constant="message_value_import" module="contact_form"/></div>
 		<label class="checkbox">
 			<span><cms:text constant="label_remove_existing" module="contact_form"/></span>
 			<input
