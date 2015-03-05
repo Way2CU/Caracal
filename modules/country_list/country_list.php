@@ -12,6 +12,10 @@ use Core\Module;
 
 class country_list extends Module {
 	private static $_instance;
+
+	private static $update_url = 'http://ec2-54-201-183-195.us-west-2.compute.amazonaws.com/cow/cow.csv';
+	private static $csv_language = 'en-iso';
+
 	public $country_list = null;
 	public $state_list = null;
 
