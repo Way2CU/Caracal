@@ -3,21 +3,21 @@
 <document>
 	<cms:text constant="message_value_import" module="contact_form"/>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_field_values_add_form">
-		<label class="checkbox">
-			<span><cms:text constant="label_remove_existing" module="contact_form"/></span>
-			<input
-				type="checkbox"
-				name="remove_existing"
-				checked="checked"
-				/>
-		</label>
-
 		<label>
 			<span><cms:text constant="label_file" module="contact_form"/></span>
 			<input
 				type="file"
 				name="file"
 				style="width: 370px"
+				/>
+		</label>
+
+		<label class="checkbox">
+			<span><cms:text constant="label_remove_existing" module="contact_form"/></span>
+			<input
+				type="checkbox"
+				name="remove_existing"
+				checked="checked"
 				/>
 		</label>
 
