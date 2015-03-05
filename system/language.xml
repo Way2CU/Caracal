@@ -10,6 +10,8 @@
 		<!-- Buttons -->
 		<constant name="add">Unos</constant>
 		<constant name="new">Novo</constant>
+		<constant name="import">Import</constant>
+		<constant name="export">Export</constant>
 		<constant name="change">Izmena</constant>
 		<constant name="delete">Brisanje</constant>
 		<constant name="save">Snimi</constant>
@@ -51,6 +53,8 @@
 		<!-- Buttons -->
 		<constant name="add">Add</constant>
 		<constant name="new">New</constant>
+		<constant name="import">Import</constant>
+		<constant name="export">Export</constant>
 		<constant name="change">Change</constant>
 		<constant name="delete">Delete</constant>
 		<constant name="save">Save</constant>
@@ -92,6 +96,8 @@
 		<!-- Buttons -->
 		<constant name="add">Add</constant>
 		<constant name="new">New</constant>
+		<constant name="import">Import</constant>
+		<constant name="export">Export</constant>
 		<constant name="change">Change</constant>
 		<constant name="delete">Delete</constant>
 		<constant name="save">Save</constant>
@@ -129,6 +135,8 @@
 		<!-- Buttons -->
 		<constant name="add">הוסף</constant>
 		<constant name="new">חדש</constant>
+		<constant name="import">Import</constant>
+		<constant name="export">Export</constant>
 		<constant name="change">שנה</constant>
 		<constant name="delete">מחק</constant>
 		<constant name="save">שמור</constant>
@@ -171,6 +179,8 @@
 		<!-- Buttons -->
 		<constant name="add">اضف</constant>
 		<constant name="new">جديد</constant>
+		<constant name="import">Import</constant>
+		<constant name="export">Export</constant>
 		<constant name="change">تحرير</constant>
 		<constant name="delete">حذف</constant>
 		<constant name="save">حفظ</constant>
