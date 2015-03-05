@@ -4,6 +4,7 @@
 	<!-- Window Menu -->
 	<div class="main_menu">
 		<cms:var name="$params['link_new']"/>
+		<cms:var name="$params['link_import']"/>
 	</div>
 
 	<!-- Header -->
