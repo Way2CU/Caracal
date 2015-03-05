@@ -382,6 +382,14 @@ class contact_form extends Module {
 					$this->saveValue();
 					break;
 
+				case 'values_import':
+					$this->importValues();
+					break;
+
+				case 'values_import_commit':
+					$this->importValues_Commit();
+					break;
+
 				case 'values_delete':
 					$this->deleteValue();
 					break;
@@ -2289,7 +2297,23 @@ class contact_form extends Module {
 												array('field', $field_id)
 											)
 										)
-									)
+									),
+					'link_import'	=> url_MakeHyperlink(
+										$this->getLanguageConstant('import'),
+										window_Open(
+											'contact_form_field_value_import', 	// window id
+											400,				// width
+											$this->getLanguageConstant('title_field_value_import'), // title
+											false, false,
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', 'values_import'),
+												array('field', $field_id)
+											)
+										)
+									),
 				);
 
 		$template->registerTagHandler('cms:list', $this, 'tag_FieldValueList');
@@ -2383,6 +2407,18 @@ class contact_form extends Module {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+	 * Show template for importing values to specified field.
+	 */
+	private function importValues() {
+	}
+
+	/**
+	 * Import options to specified field.
+	 */
+	private function importValues_Commit() {
 	}
 
 	/**
