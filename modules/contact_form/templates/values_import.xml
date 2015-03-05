@@ -2,6 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_field_values_add_form">
+		<p><cms:text constant="message_value_import" module="contact_form"/></p>
 		<label class="checkbox">
 			<span><cms:text constant="label_remove_existing" module="contact_form"/></span>
 			<input
