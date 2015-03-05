@@ -33,6 +33,7 @@
 		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
 		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
 		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
+		<constant name="message_value_import">Please select CSV file to import. File needs to contain `value` column as well as column for every language in main language file (eg. `en`, `he`).</constant>
 
 		<constant name="title_settings">Contact form: Settings</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -54,6 +55,7 @@
 		<constant name="title_field_value_add">Contact form: Add field value</constant>
 		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
 		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
+		<constant name="title_field_value_import">Contact form: Import values</constant>
 		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
 		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
 		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
@@ -135,6 +137,8 @@
 		<constant name="label_fields_template">Fields template:</constant>
 		<constant name="label_domain">Domain:</constant>
 		<constant name="label_legend">Legend:</constant>
+		<constant name="label_remove_existing">Remove existing values?</constant>
+		<constant name="label_file">CSV file to import:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
@@ -228,6 +232,7 @@
 		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
 		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
 		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
+		<constant name="message_value_import">Please select CSV file to import. File needs to contain `value` column as well as column for every language in main language file (eg. `en`, `he`).</constant>
 
 		<constant name="title_settings">نموذج الاتصال: اعدادات</constant>
 		<constant name="title_templates_add">نموذج الاتصال: قالب جديد</constant>
@@ -249,6 +254,7 @@
 		<constant name="title_field_value_add">Contact form: Add field value</constant>
 		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
 		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
+		<constant name="title_field_value_import">Contact form: Import values</constant>
 		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
 		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
 		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
@@ -325,6 +331,8 @@
 		<constant name="label_fields_template">Fields template:</constant>
 		<constant name="label_domain">Domain:</constant>
 		<constant name="label_legend">Legend:</constant>
+		<constant name="label_remove_existing">Remove existing values?</constant>
+		<constant name="label_file">CSV file to import:</constant>
 
 		<constant name="tooltip_text_id">معرف النصية فريدة من نوعها تستخدم في القوالب لتسهيل معالجة.</constant>
 		<constant name="tooltip_name">مترجمة اسم النموذج للاستخدام في الخلفية.</constant>
@@ -418,6 +426,7 @@
 		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
 		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
 		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
+		<constant name="message_value_import">Please select CSV file to import. File needs to contain `value` column as well as column for every language in main language file (eg. `en`, `he`).</constant>
 
 		<constant name="title_settings">טופס יצירת קשר: הגדרות</constant>
 		<constant name="title_templates_add">טופס קשר: תבנית חדשה</constant>
@@ -439,6 +448,7 @@
 		<constant name="title_field_value_add">טופס קשר: הוסף ערך לשדה</constant>
 		<constant name="title_field_value_edit">טופס קשר: ערוך ערך שדה</constant>
 		<constant name="title_field_value_delete">טופס קשר: מחק ערך שדה</constant>
+		<constant name="title_field_value_import">Contact form: Import values</constant>
 		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
 		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
 		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
@@ -518,6 +528,8 @@
 		<constant name="label_fields_template">תבנית השדה:</constant>
 		<constant name="label_domain">Domain:</constant>
 		<constant name="label_legend">Legend:</constant>
+		<constant name="label_remove_existing">Remove existing values?</constant>
+		<constant name="label_file">CSV file to import:</constant>
 
 		<constant name="tooltip_text_id">מזה טקסט חד ערכי לפניה נוחה לתבניות.</constant>
 		<constant name="tooltip_name">שם מקומי לטופס לשימוש בממשק האחורי.</constant>
@@ -611,6 +623,7 @@
 		<constant name="message_fieldset_saved">Fieldset data was saved.</constant>
 		<constant name="message_fieldset_delete">You are about to remove the following fieldset from this form. Associated fields will not be affected. Are you sure?</constant>
 		<constant name="message_fieldset_deleted">Fieldset and field associations were removed.</constant>
+		<constant name="message_value_import">Please select CSV file to import. File needs to contain `value` column as well as column for every language in main language file (eg. `en`, `he`).</constant>
 
 		<constant name="title_settings">Kontakt: Podešavanje formulara</constant>
 		<constant name="title_templates_add">Contact form: New template</constant>
@@ -632,6 +645,7 @@
 		<constant name="title_field_value_add">Contact form: Add field value</constant>
 		<constant name="title_field_value_edit">Contact form: Edit field value</constant>
 		<constant name="title_field_value_delete">Contact form: Delete field value</constant>
+		<constant name="title_field_value_import">Contact form: Import values</constant>
 		<constant name="title_fieldsets_manage">Contact form: Manage fieldsets</constant>
 		<constant name="title_fieldsets_add">Contact form: Add fieldset</constant>
 		<constant name="title_fieldsets_edit">Contact form: Edit fieldset</constant>
@@ -711,6 +725,8 @@
 		<constant name="label_fields_template">Fields template:</constant>
 		<constant name="label_domain">Domain:</constant>
 		<constant name="label_legend">Legend:</constant>
+		<constant name="label_remove_existing">Remove existing values?</constant>
+		<constant name="label_file">CSV file to import:</constant>
 
 		<constant name="tooltip_text_id">Unique textual identifier used in templates for easier addressing.</constant>
 		<constant name="tooltip_name">Localized form name for use in backend.</constant>
