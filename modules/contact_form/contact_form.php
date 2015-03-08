@@ -2458,7 +2458,7 @@ class contact_form extends Module {
 
 			// read rows and parse them
 			while (($row = fgetcsv($handle)) !== false) {
-				$data_row = array(
+				$data = array(
 						'field'	=> $field_id,
 					);
 
@@ -2472,10 +2472,10 @@ class contact_form extends Module {
 						$name = 'name_'.$name;
 
 					// add field to row data
-					$data_row[$name] = fix_chars($value);
+					$data[$name] = fix_chars($value);
 				}
 
-				$data[] = $data_row;
+				$values[] = $data;
 			}
 
 			// close file
