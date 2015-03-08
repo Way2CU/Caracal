@@ -2433,6 +2433,75 @@ class contact_form extends Module {
 	 * Import options to specified field.
 	 */
 	private function importValues_Commit() {
+		$field_id = fix_id($_REQUEST['field']);
+		$manager = ContactForm_FieldValueManager::getInstance();
+		$remove_existing = isset($_REQUEST['remove_existing']) && ($_REQUEST['remove_existing'] == 'on' || $_REQUEST['remove_existing'] == '1') ? true : false;
+		$languages = Language::getLanguages(false);
+
+		// make sure uploaded file is good
+		if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
+			trigger_error('Contact form: Import values: No file uploaded.', E_USER_WARNING);
+			return;
+		}
+
+		// load csv file
+		$values = array();
+		$columns = array();
+		$headers = array('value');
+		$headers = array_merge($headers, Language::getLanguages(false));
+
+		if (($handle = fopen($_FILES['file']['tmp_name'], 'r')) !== false) {
+			// get headers
+			$row = fgetcsv($handle);
+			if ($row !== false)
+				$columns = $row;
+
+			// read rows and parse them
+			while (($row = fgetcsv($handle)) !== false) {
+				$data_row = array();
+
+				// collect data
+				for ($i=0; $i<count($row); $i++) {
+					$name = trim($columns[$i]);
+					$value = $row[$i];
+
+					if (in_array($name, $headers))
+						$data_row[$name] = fix_chars($value);
+				}
+
+				$data[] = $data_row;
+			}
+
+			// close file
+			fclose($handle);
+		}
+
+		// remove existing if needed
+		if ($remove_existing)
+			$manager->deleteData(array('field' => $field_id));
+
+		// insert data to database
+		foreach ($values as $data)
+			$manager->insertData($data);
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$message = $this->getLanguageConstant('message_import_complete');
+		$message = str_replace('%s', count($data), $message);
+		$import_window = 'contact_form_field_value_import';
+		$field_window = 'contact_form_field_values_'.$field_id;
+
+		$params = array(
+					'message'	=> $message,
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($import_window).';'.window_ReloadContent($field_window)
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
