@@ -221,6 +221,8 @@ if (strcasecmp(substr(__FILE__, -16), "classTextile.php") == 0) {
 #
 
 class Markdown_Parser {
+	var $gallery_module = null;
+	var $gallery_manager = null;
 
 	### Configuration Variables ###
 
@@ -256,6 +258,11 @@ class Markdown_Parser {
 	#
 	# Constructor function. Initialize appropriate member variables.
 	#
+		if (class_exists('gallery')) {
+			$this->gallery_module = call_user_func(array('gallery', 'getInstance'));
+			$this->gallery_manager = GalleryManager::getInstance();
+		}
+
 		$this->_initDetab();
 		$this->prepareItalicsAndBold();
 
@@ -876,6 +883,13 @@ class Markdown_Parser {
 		$alt_text = $this->encodeAttribute($alt_text);
 		if (isset($this->urls[$link_id])) {
 			$url = $this->encodeAttribute($this->urls[$link_id]);
+
+			// support for internal gallery image IDs
+			if (is_numeric($url) && !is_null($this->gallery_manager)) {
+				$image = $this->gallery_manager->getSingleItem(array('filename'), array('id' => $url));
+				$url = $this->gallery_module->getImageURL($image);
+			}
+
 			$result = "<img src=\"$url\" alt=\"$alt_text\"";
 			if (isset($this->titles[$link_id])) {
 				$title = $this->titles[$link_id];
@@ -900,6 +914,13 @@ class Markdown_Parser {
 
 		$alt_text = $this->encodeAttribute($alt_text);
 		$url = $this->encodeAttribute($url);
+
+		// support for internal gallery image IDs
+		if (is_numeric($url) && !is_null($this->gallery_manager)) {
+			$image = $this->gallery_manager->getSingleItem(array('filename'), array('id' => $url));
+			$url = $this->gallery_module->getImageURL($image);
+		}
+
 		$result = "<img src=\"$url\" alt=\"$alt_text\"";
 		if (isset($title)) {
 			$title = $this->encodeAttribute($title);
