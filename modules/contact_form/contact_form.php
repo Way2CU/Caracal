@@ -2495,7 +2495,7 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$message = $this->getLanguageConstant('message_import_complete');
-		$message = str_replace('%s', count($data), $message);
+		$message = str_replace('%s', count($values), $message);
 		$import_window = 'contact_form_field_value_import';
 		$field_window = 'contact_form_field_values_'.$field_id;
 
