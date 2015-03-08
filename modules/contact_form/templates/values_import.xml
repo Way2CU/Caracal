@@ -2,7 +2,13 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<cms:text constant="message_value_import" module="contact_form"/>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_field_values_add_form">
+	<form
+		action="$params['form_action']"
+		cms:eval="action"
+		method="POST"
+		id="contact_form_field_values_add_form"
+		enctype="multipart/form-data"
+		>
 		<div style="padding: 10px;">
 			<label>
 				<span><cms:text constant="label_file" module="contact_form"/></span>
