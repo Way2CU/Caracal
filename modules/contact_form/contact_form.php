@@ -2458,15 +2458,21 @@ class contact_form extends Module {
 
 			// read rows and parse them
 			while (($row = fgetcsv($handle)) !== false) {
-				$data_row = array();
+				$data_row = array(
+						'field'	=> $field_id,
+					);
 
 				// collect data
 				for ($i=0; $i<count($row); $i++) {
 					$name = trim($columns[$i]);
 					$value = $row[$i];
 
-					if (in_array($name, $headers))
-						$data_row[$name] = fix_chars($value);
+					// prefix language params
+					if ($name != 'value')
+						$name = 'name_'.$name;
+
+					// add field to row data
+					$data_row[$name] = fix_chars($value);
 				}
 
 				$data[] = $data_row;
