@@ -26,7 +26,7 @@
 					name="$params['name']"
 					type="checkbox"
 					checked="$params['value'] == '1' ? 'checked' : false"
-					readonly="readonly"
+					onclick="javascript: return false;"
 					cms:optional="checked"
 					cms:eval="name"
 				/>
