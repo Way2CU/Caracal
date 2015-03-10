@@ -9,7 +9,7 @@ form.submission_details {
 	padding-bottom: 10px;
 }
 
-form.submission_details input {
+form.submission_details input:not([type=checkbox]) {
 	width: 350px;
 }
 
