@@ -5,15 +5,15 @@
  * Authors: Mladen Mijatov
  */
 
-div.submission_details {
+form.submission_details {
 	padding-bottom: 10px;
 }
 
-div.submission_details input {
+form.submission_details input {
 	width: 350px;
 }
 
-div.submission_details textarea {
+form.submission_details textarea {
 	width: 400px;
 	height: 150px;
 }
