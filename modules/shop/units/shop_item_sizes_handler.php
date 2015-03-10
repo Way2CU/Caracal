@@ -510,10 +510,19 @@ class ShopItemSizesHandler {
 	public function tag_ValueList($tag_params, $children) {
 		$manager = ShopItemSizeValuesManager::getInstance();
 		$conditions = array();
+		$selected = null;
 
 		// create conditions
 		if (isset($tag_params['definition']))
 			$conditions['definition'] = fix_id($tag_params['definition']);
+
+		// selected value
+		if (isset($tag_params['selected']))
+			$selected = fix_id($tag_params['selected']);
+
+		// if no selected value was specified, select first element
+		if (isset($tag_params['select_first']))
+			$selected = 0;
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -523,11 +532,23 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->name);
 
 		// parse template
+		$counter = 0;
 		if (count($items) > 0)
 			foreach ($items as $item) {
+				$counter++;
+
+				// check if value should be selected
+				$selected_value = false;
+
+				if ($selected > 0)
+					$selected_value = $item->id == $selected; else
+					$selected_value = $selected == 0 && $counter == 0;
+
+				// prepare parameters
 				$params = array(
 							'id'			=> $item->id,
 							'value'			=> $item->value,
+							'selected'		=> $selected_value,
 							'item_change'	=> url_MakeHyperlink(
 													$this->_parent->getLanguageConstant('change'),
 													window_Open(
