@@ -686,8 +686,10 @@ class ShopItemHandler {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
 		// create template
+		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
 		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
+		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
 
 		if (count($items) > 0) {
 			$gallery = null;
