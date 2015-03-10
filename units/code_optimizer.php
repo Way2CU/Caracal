@@ -63,18 +63,17 @@ class CodeOptimizer {
 	private function needsRecompile($file_name, $list) {
 		$result = false;
 
-		// check if file exists
-		if (!file_exists($file_name))
-			$result = true; else
-			$cache_time = filemtime($file_name);
+		if (!file_exists($file_name)) {
+			$result = true;
 
-		// check each individual file
-		if (!$result)
+		} else {
+			$cache_time = filemtime($file_name);
 			foreach ($list as $file)
 				if (filemtime(path_GetFromURL($file)) > $cache_time) {
 					$result = true;
 					break;
 				}
+		}
 
 		return $result;
 	}
