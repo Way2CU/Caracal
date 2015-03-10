@@ -542,7 +542,7 @@ class ShopItemSizesHandler {
 
 				if ($selected > 0)
 					$selected_value = $item->id == $selected; else
-					$selected_value = $selected == 0 && $counter == 0;
+					$selected_value = $selected == 0 && $counter == 1;
 
 				// prepare parameters
 				$params = array(
