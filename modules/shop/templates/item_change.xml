@@ -17,7 +17,7 @@
 						<span><cms:text constant="label_manufacturer" module="shop"/></span>
 						<select name="manufacturer" style="width: 160px;">
 							<option/>
-							<_manufacturer_list
+							<cms:manufacturer_list
 								template="manufacturer_option.xml"
 								local="1"
 								selected="$params['manufacturer']"
@@ -49,7 +49,7 @@
 						<span><cms:text constant="label_size_definition" module="shop"/></span>
 						<select name="size_definition" style="width: 200px;">
 							<option></option>
-							<_size_list
+							<cms:size_list
 								template="size_option.xml"
 								local="1"
 								selected="$params['size_definition']"
@@ -116,7 +116,7 @@
 					<cms:text constant="label_categories" module="shop"/>
 				</div>
 				<div class="list_content" style="height: 350px">
-					<_category_list
+					<cms:category_list
 						template="category_checkbox_list_item.xml"
 						local="1"
 						item_id="$params['id']"
@@ -151,7 +151,7 @@
 					</span>
 				</div>
 				<div class="list_content" style="height: 340px" id="related_items">
-					<_item_list
+					<cms:item_list
 						related="$params['id']"
 						cms:eval="related"
 						template="item_list_option.xml"
@@ -167,7 +167,7 @@
 					</span>
 				</div>
 				<div class="list_content" style="height: 370px" id="related_items">
-					<_delivery_methods
+					<cms:delivery_methods
 						template="item_delivery_list.xml"
 						local="1"
 						item="$params['id']"

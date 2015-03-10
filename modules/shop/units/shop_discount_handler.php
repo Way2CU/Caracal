@@ -96,7 +96,7 @@ class ShopDiscountHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
+		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

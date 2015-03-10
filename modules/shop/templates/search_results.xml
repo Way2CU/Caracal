@@ -14,7 +14,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 340px" id="result_list">
-			<_item_list
+			<cms:item_list
 				template="item_list_search_result.xml"
 				local="1"
 				filter="$params['query']"

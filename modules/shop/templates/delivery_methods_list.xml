@@ -23,7 +23,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_delivery_methods/>
+			<cms:delivery_methods/>
 		</div>
 	</div>
 </document>

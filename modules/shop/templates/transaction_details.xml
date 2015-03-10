@@ -30,7 +30,7 @@
 			<label>
 				<span><cms:text constant="label_status" module="shop"/></span>
 				<select name="status">
-					<_transaction_status active="$params['status']" cms:eval="active"/>
+					<cms:transaction_status active="$params['status']" cms:eval="active"/>
 				</select>
 				<button
 					type="button"
@@ -133,7 +133,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 470px">
-			<_item_list/>
+			<cms:item_list/>
 		</div>
 	</div>
 	<div style="clear: both;"/>

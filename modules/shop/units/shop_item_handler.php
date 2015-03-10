@@ -100,7 +100,7 @@ class ShopItemHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
+		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -121,18 +121,18 @@ class ShopItemHandler {
 
 		// register external tag handlers
 		$category_handler = ShopCategoryHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_category_list', $category_handler, 'tag_CategoryList');
+		$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_size_list', $size_handler, 'tag_SizeList');
+		$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
 
 		$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+		$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
 		$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
+		$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
-		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
+		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -155,18 +155,18 @@ class ShopItemHandler {
 
 			// register tag handlers
 			$category_handler = ShopCategoryHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_category_list', $category_handler, 'tag_CategoryList');
+			$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
 
 			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_size_list', $size_handler, 'tag_SizeList');
+			$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
 
 			$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+			$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
 			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
-			$template->registerTagHandler('_delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
+			$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
-			$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
+			$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
 
 			// prepare parameters
 			$params = array(
@@ -415,7 +415,7 @@ class ShopItemHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('_item_list', $this, 'tag_ItemList');
+		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -511,8 +511,8 @@ class ShopItemHandler {
 			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-		$template->registerTagHandler('_value_list', $size_handler, 'tag_ValueList');
-		$template->registerTagHandler('_color_list', $this, 'tag_ColorList');
+		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
+		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
 
 		// parse template
 		if (is_object($item)) {
@@ -687,7 +687,7 @@ class ShopItemHandler {
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
-		$template->registerTagHandler('_color_list', $this, 'tag_ColorList');
+		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
 
 		if (count($items) > 0) {
 			$gallery = null;

@@ -1475,7 +1475,7 @@ class shop extends Module {
 		$params = array();
 
 		// register tag handler
-		$template->registerTagHandler('_checkout_form', $this, 'tag_CheckoutForm');
+		$template->registerTagHandler('cms:checkout_form', $this, 'tag_CheckoutForm');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -1488,7 +1488,7 @@ class shop extends Module {
 	private function showCheckoutCompleted() {
 		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_completed_message', $this, 'tag_CompletedMessage');
+		$template->registerTagHandler('cms:completed_message', $this, 'tag_CompletedMessage');
 
 		$template->restoreXML();
 		$template->parse();
@@ -1519,7 +1519,7 @@ class shop extends Module {
 	private function showCheckoutCanceled() {
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_canceled_message', $this, 'tag_CanceledMessage');
+		$template->registerTagHandler('cms:canceled_message', $this, 'tag_CanceledMessage');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

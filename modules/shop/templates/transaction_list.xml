@@ -18,7 +18,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_transaction_list/>
+			<cms:transaction_list/>
 		</div>
 	</div>
 </document>

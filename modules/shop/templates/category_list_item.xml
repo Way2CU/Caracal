@@ -12,7 +12,7 @@
 		</span>
 	</div>
 	<div style="($language_rtl ? 'padding-right' : 'padding-left').': 15px;'" cms:eval="style">
-		<_children
+		<cms:children
 			parent_id="$params['id']"
 			level="$params['level'] + 1"
 			cms:eval="parent_id,level"

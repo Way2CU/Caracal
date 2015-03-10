@@ -13,7 +13,7 @@
 					<cms:text constant="no_parent_category" module="shop"/>
 				</option>
 
-				<_category_list
+				<cms:category_list
 					show_all="1"
 					template="category_option.xml"
 					local="1"

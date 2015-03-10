@@ -6,7 +6,7 @@
 			<span><cms:text constant="label_category_parent" module="shop"/></span>
 			<cms:if condition="!is_null($params['parent'])">
 				<input type="hidden" name="parent" value="fix_id($_REQUEST['parent'])" cms:eval="value"/>
-				<_category
+				<cms:category
 					id="$params['parent']"
 					cms:eval="id"
 					template="category_readonly_input.xml"

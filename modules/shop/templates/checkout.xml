@@ -9,7 +9,7 @@
 		</head>
 
 		<body class="$language_rtl ? 'rtl' : 'ltr'" cms:eval="class">
-			<_checkout_form/>
+			<cms:checkout_form/>
 		</body>
 	</html>
 </document>

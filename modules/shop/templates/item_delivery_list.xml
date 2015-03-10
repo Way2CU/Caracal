@@ -20,7 +20,7 @@
 			</span>
 		</div>
 
-		<_price_list
+		<cms:price_list
 			template="item_delivery_list_item.xml"
 			local="1"
 			item="$params['item']"

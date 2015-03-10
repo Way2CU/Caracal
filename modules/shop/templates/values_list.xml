@@ -18,7 +18,7 @@
 		</div>
 		<div class="list_content" style="height: 250px">
 			<!-- List Content -->
-			<_value_list
+			<cms:value_list
 				definition="$_REQUEST['definition']"
 				cms:eval="definition"
 			/>

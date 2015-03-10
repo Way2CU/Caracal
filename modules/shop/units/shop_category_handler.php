@@ -88,8 +88,8 @@ class ShopCategoryHandler {
 									)
 				);
 
- 		$template->registerTagHandler('_category', $this, 'tag_Category');
- 		$template->registerTagHandler('_category_list', $this, 'tag_CategoryList');
+ 		$template->registerTagHandler('cms:category', $this, 'tag_Category');
+ 		$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -109,8 +109,8 @@ class ShopCategoryHandler {
 				);
 
 		// register tag handlers
-		$template->registerTagHandler('_category', $this, 'tag_Category');
-		$template->registerTagHandler('_category_list', $this, 'tag_CategoryList');
+		$template->registerTagHandler('cms:category', $this, 'tag_Category');
+		$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
 
 		if (class_exists('gallery')) {
 			$gallery = gallery::getInstance();
@@ -137,7 +137,7 @@ class ShopCategoryHandler {
 			$template->setMappedModule($this->name);
 
 			// register tag handlers
-			$template->registerTagHandler('_category_list', $this, 'tag_CategoryList');
+			$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
 
 			if (class_exists('gallery')) {
 				$gallery = gallery::getInstance();
@@ -291,7 +291,6 @@ class ShopCategoryHandler {
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
-		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
 		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// parse template
@@ -398,9 +397,7 @@ class ShopCategoryHandler {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// create template handler
-		// TODO: Remove outdated tag name
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
-		$template->registerTagHandler('_children', $this, 'tag_CategoryList');
 		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// initialize index

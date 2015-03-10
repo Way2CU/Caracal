@@ -22,7 +22,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_currency_list level="0"/>
+			<cms:currency_list level="0"/>
 		</div>
 	</div>
 </document>

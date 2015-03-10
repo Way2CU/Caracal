@@ -5,7 +5,7 @@
 		<label>
 			<span><cms:text constant="label_currency" module="shop"/></span>
 			<select name="currency" style="width: 270px;">
-				<_currency_list template="iso_currency_option.xml" local="1" unique="1"/>
+				<cms:currency_list template="iso_currency_option.xml" local="1" unique="1"/>
 			</select>
 		</label>
 		<div class="button_bar">
