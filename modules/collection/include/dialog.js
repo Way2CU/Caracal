@@ -1,13 +1,13 @@
 /**
  * Universal Dialog Component
- * 
+ *
  * Copyright (c) 2014. by Way2CU
  * Author: Mladen Mijatov
  */
 
 function Dialog() {
 	var self = this;
-	
+
 	self._background = null;
 	self._container = $('<div>');
 	self._title = $('<div>');
@@ -20,7 +20,7 @@ function Dialog() {
 	self._show_on_load = false;
 	self._content_loaded = false;
 	self._command_bar = $('<div>');
-	
+
 	/**
 	 * Complete object initialization
 	 */
@@ -41,7 +41,7 @@ function Dialog() {
 		self._title
 				.addClass('title')
 				.appendTo(self._container);
-		
+
 		self._title_text
 				.appendTo(self._title);
 
@@ -109,10 +109,10 @@ function Dialog() {
 		// set content state flag
 		self._content_loaded = true;
 	};
-	
+
 	/**
 	 * Set dialog content from specified URL
-	 * 
+	 *
 	 * @param string url
 	 * @param string container
 	 */
@@ -130,15 +130,15 @@ function Dialog() {
 
 		return self;
 	};
-	
+
 	/**
 	 * Set dialog content from DOM element retrieved by jQuery selection
-	 * 
+	 *
 	 * @param string selection
 	 */
 	self.setContentFromDOM = function(selection) {
 		var element = $(selection).eq(0);
-		
+
 		// detach and reattach content
 		element.detach();
 		self._inner_content
@@ -150,10 +150,10 @@ function Dialog() {
 
 		return self;
 	};
-	
+
 	/**
 	 * Set dialog size
-	 * 
+	 *
 	 * @param integer width
 	 * @param integer height
 	 */
@@ -167,7 +167,7 @@ function Dialog() {
 
 		return self;
 	};
-	
+
 	/**
 	 * Set dialog title
 	 *
@@ -177,7 +177,7 @@ function Dialog() {
 		self._title_text.html(title);
 		return self;
 	};
-	
+
 	/**
 	 * Set scrollbar visibility
 	 *
@@ -211,7 +211,7 @@ function Dialog() {
 			self._container.addClass('error'); else
 			self._container.removeClass('error');
 	};
-	
+
 	/**
 	 * Show dialog
 	 */
@@ -238,7 +238,7 @@ function Dialog() {
 			self.show(); else
 			self._show_on_load = true;
 	};
-	
+
 	/**
 	 * Hide dialog
 	 */
@@ -256,7 +256,7 @@ function Dialog() {
 			self._content_loaded = false;
 		}
 	};
-	
+
 	/**
 	 * Handle clicking on close button
 	 *
@@ -282,7 +282,7 @@ function Dialog() {
 		if (self._show_on_load)
 			self.show();
 	};
-	
+
 	// finish object initialization
 	self.init();
 }
