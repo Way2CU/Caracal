@@ -20,7 +20,7 @@ function LanguageHandler() {
 
 	// base url for this site
 	var base = $('base');
-	this.backend_url = base.attr('href') + '/index.php'; 
+	this.backend_url = base.attr('href') + '/index.php';
 
 	// local language constant cache
 	this.cache = {};
