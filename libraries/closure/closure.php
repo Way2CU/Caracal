@@ -290,7 +290,7 @@ class PhpClosure {
     // If this script calling the compiler is newer than the cache file,
     // recompile.  Note, this might not be accurate if the file doing the
     // compilation is loaded via an include().
-    if (filemtime($_SERVER["SCRIPT_FILENAME"]) > $cache_mtime) return true;
+    //if (filemtime($_SERVER["SCRIPT_FILENAME"]) > $cache_mtime) return true;
 
     // Cache is up to date.
     return false;
