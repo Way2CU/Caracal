@@ -1,5 +1,8 @@
 <?php
 
+namespace Library\Closure;
+use \SimpleXMLElement as SimpleXMLElement;
+
 /**
  * Copyright 2012 Alex Kennberg (https://github.com/kennberg/php-closure)
  * Extended under the same license: Apache License 2.0.
