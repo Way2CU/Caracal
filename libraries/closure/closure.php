@@ -1,9 +1,15 @@
 <?php
 
-namespace Library\Closure;
-use \SimpleXMLElement as SimpleXMLElement;
-
 /**
+ * Copyright 2012 Alex Kennberg (https://github.com/kennberg/php-closure)
+ * Extended under the same license: Apache License 2.0.
+ *
+ * New features:
+ * - Compile locally using Google Closure Compiler
+ * - Support for Google Closure Templates and Soy-To-Js Compiler
+ * - Add directories with source files.
+ *
+ * Original notice:
  * Copyright 2010 Daniel Pupius (http://code.google.com/p/php-closure/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,29 +37,37 @@ use \SimpleXMLElement as SimpleXMLElement;
  *
  * Example usage:
  *
- * include("php-closure.php");
+ * define('LIB_DIR', getcwd() . 'lib/');
+ *
+ * include(LIB_DIR . 'third-party/php-closure.php');
  *
  * $c = new PhpClosure();
- * $c->add("my-app.js")
- *   ->add("popup.js")
+ * $c->add('my-app.js')
+ *   ->addDir('/js/') // new
+ *   ->add('popup.js')
+ *   ->add('popup.soy') // new
+ *   ->addExternsDir('/js/externs/') // new
  *   ->advancedMode()
- *   ->useClosureLibrary()
- *   ->cacheDir("/tmp/js-cache/")
+ *   ->cacheDir('/tmp/js-cache/')
+ *   ->localCompile() // new
  *   ->write();
- *
+ * 
  * See http://code.google.com/closure/compiler/docs/api-ref.html for more
  * details on the compiler options.
  */
 class PhpClosure {
 
   var $_srcs = array();
+  var $_externs = array();
   var $_mode = "WHITESPACE_ONLY";
   var $_warning_level = "DEFAULT";
   var $_use_closure_library = false;
   var $_pretty_print = false;
+  var $_local_compile = false;
   var $_debug = true;
   var $_cache_dir = "";
   var $_code_url_prefix = "";
+  var $_output_wrapper = false;
 
   function PhpClosure() { }
 
@@ -63,6 +77,60 @@ class PhpClosure {
    */
   function add($file) {
     $this->_srcs[] = $file;
+    return $this;
+  }
+
+  /**
+   * Search directory for source files and add them automatically.
+   * Not recursive.
+   */
+  function addDir($directory) {
+    $iterator = new DirectoryIterator($directory);
+    foreach ($iterator as $fileinfo) {
+      if (!$fileinfo->isFile())
+        continue;
+
+      // Skip backup files that start with "._".
+      if (substr($fileinfo->getFilename(), 0, 2) == '._')
+        continue;
+
+      // Make sure extension is one of 'js' or 'soy'.
+      $ext = $fileinfo->getFilename();
+      $i = strrpos($ext, '.');
+      if ($i >= 0)
+        $ext = substr($ext, $i + 1);
+      if ($ext != 'js' && $ext != 'soy')
+        continue;
+
+      $this->add($fileinfo->getPathname());
+    }
+    return $this;
+  }
+
+  /**
+   * Search directory for extern files and add them automatically.
+   * Not recursive.
+   */
+  function addExternsDir($directory) {
+    $iterator = new DirectoryIterator($directory);
+    foreach ($iterator as $fileinfo) {
+      if (!$fileinfo->isFile())
+        continue;
+
+      // Skip backup files that start with "._".
+      if (substr($fileinfo->getFilename(), 0, 2) == '._')
+        continue;
+
+      // Make sure extension is 'js'.
+      $ext = $fileinfo->getFilename();
+      $i = strrpos($ext, '.');
+      if ($i >= 0)
+        $ext = substr($ext, $i + 1);
+      if ($ext != 'js')
+        continue;
+
+      $this->_externs[] = $fileinfo->getPathname();
+    }
     return $this;
   }
 
@@ -113,10 +181,26 @@ class PhpClosure {
   }
 
   /**
+   * Tells the compiler to wrap output by default with anonymous function.
+   */
+  function wrapOutput($wrapper = '(function(){%output%})();') {
+    $this->_output_wrapper = $wrapper;
+    return $this;
+  }
+
+  /**
    * Tells the compiler to pretty print the output.
    */
   function prettyPrint() {
     $this->_pretty_print = true;
+    return $this;
+  }
+
+  /**
+   * Tells the compiler to use local compiler.
+   */
+  function localCompile() {
+    $this->_local_compile = true;
     return $this;
   }
 
@@ -144,7 +228,7 @@ class PhpClosure {
     $this->_mode = "SIMPLE_OPTIMIZATIONS";
     return $this;
   }
-
+  
   /**
    * Sets the compilation mode to advanced optimizations (recommended).
    */
@@ -203,74 +287,23 @@ class PhpClosure {
       $cache_file = $this->_getCacheFileName();
       if ($this->_isRecompileNeeded($cache_file)) {
         $result = $this->_compile();
-        file_put_contents($cache_file, $result);
+        if ($result !== false)
+          file_put_contents($cache_file, $result);
         echo $result;
       } else {
         // No recompile needed, but see if we can send a 304 to the browser.
         $cache_mtime = filemtime($cache_file);
         $etag = md5_file($cache_file);
-        header("Last-Modified: ".gmdate("D, d M Y H:i:s", $cache_mtime)." GMT");
-        header("Etag: $etag");
-        if (@strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime ||
-            @trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
-          header("HTTP/1.1 304 Not Modified");
+        header("Last-Modified: ".gmdate("D, d M Y H:i:s", $cache_mtime)." GMT"); 
+        header("Etag: $etag"); 
+        if (@strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime || 
+            @trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+          header("HTTP/1.1 304 Not Modified"); 
         } else {
           // Read the cache file and send it to the client.
           echo file_get_contents($cache_file);
         }
       }
-    }
-  }
-
-  /**
-   * Same function as write but instead of printing, returns content.
-   */
-  function compile() {
-    // No cache directory so just dump the output.
-    if ($this->_cache_dir == "") {
-      return $this->_compile();
-
-    } else {
-      $cache_file = $this->_getCacheFileName();
-      if ($this->_isRecompileNeeded($cache_file)) {
-        $result = $this->_compile();
-        file_put_contents($cache_file, $result);
-        return $result;
-      } else {
-        // No recompile needed, but see if we can send a 304 to the browser.
-        $cache_mtime = filemtime($cache_file);
-        $etag = md5_file($cache_file);
-        header("Last-Modified: ".gmdate("D, d M Y H:i:s", $cache_mtime)." GMT");
-        header("Etag: $etag");
-        if (@strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime ||
-            @trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
-          header("HTTP/1.1 304 Not Modified");
-        } else {
-          // Read the cache file and send it to the client.
-          return file_get_contents($cache_file);
-        }
-      }
-    }
-  }
-
-  /**
-   * Compile function to a file and return file name.
-   *
-   * @return string
-   */
-  function compileToFile() {
-    if ($this->_cache_dir == "") {
-      return null;
-
-    } else {
-      $cache_file = $this->_getCacheFileName();
-
-      if ($this->_isRecompileNeeded($cache_file)) {
-        $result = $this->_compile();
-        file_put_contents($cache_file, $result);
-      }
-
-	  return $cache_file;
     }
   }
 
@@ -296,7 +329,89 @@ class PhpClosure {
     return false;
   }
 
+  function _exec($cmd, &$stdout, &$stderr) {
+    $process = proc_open($cmd, array(
+      0 => array('pipe', 'r'),
+      1 => array('pipe', 'w'),
+      2 => array('pipe', 'w')), $pipes); 
+
+    fclose($pipes[0]); 
+    $stdout = stream_get_contents($pipes[1]);
+    fclose($pipes[1]); 
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[2]); 
+    proc_close($process);
+  }
+
+  function _localCompile() {
+    $js_cmd = 'java -jar ' . LIB_DIR . 'third-party/compiler.jar';
+    $js_cmd .= ' --compilation_level ' . $this->_mode;
+    $js_cmd .= ' --warning_level ' . $this->_warning_level;
+    if ($this->_pretty_print) {
+      $js_cmd .= ' --formatting pretty_print';
+    }
+    if ($this->_output_wrapper) {
+      $js_cmd .= ' --output_wrapper "' . $this->_output_wrapper . '"';
+    }
+
+    $soy_cmd = 'java -jar ' . LIB_DIR . 'third-party/SoyToJsSrcCompiler.jar';
+    $soy_js_filepath = $this->_cache_dir . 'soy-' . md5(uniqid()) . '.js';
+    $soy_cmd .= " --outputPathFormat $soy_js_filepath";
+    $soy_file_count = 0;
+
+    foreach ($this->_srcs as $src) {
+      // Determine if this is soy or js by file extension.
+      $i = strrpos($src, '.');
+      if ($i > 0 && substr($src, $i + 1) === 'soy') {
+        $soy_cmd .= " $src";
+        $soy_file_count++;
+      }
+      else {
+        $js_cmd .= " --js $src";
+      }
+    }
+
+    // Run soy compiler.
+    if ($soy_file_count > 0) {
+      $this->_exec($soy_cmd, $stdout, $stderr);
+      if (!strlen($stderr)) {
+        $js_cmd .= ' --js ' . LIB_DIR . 'third-party/soyutils.js';
+        $js_cmd .= " --js $soy_js_filepath";
+      }
+      else {
+        error_log($soy_cmd . "\n");
+        error_log($stderr);
+        return $this->_debug ? false : 'window.console.error(\'Unexpected error\');';
+      }
+    }
+
+    // Add externs.
+    foreach ($this->_externs as $src) {
+      $js_cmd .= " --externs $src";
+    }
+
+    // Run JS compiler.
+    $this->_exec($js_cmd, $result, $stderr);
+    if (strlen($stderr)) {
+      foreach (explode("\n", $stderr) as $line) {
+        $line = addslashes(trim($line));
+        if (strlen($line))
+          $result .= "\r\nwindow.console.error('$line');";
+      }
+
+      error_log($js_cmd . "\n");
+      error_log($stderr);
+      return $this->_debug ? false : 'window.console.error(\'Unexpected error\');';
+    }
+
+    return $result;
+  }
+
   function _compile() {
+    if ($this->_local_compile) {
+      return $this->_localCompile();
+    }
+
     // Quieten strict notices.
     $code = $originalSize = $originalGzipSize = $compressedSize = $compressedGzipSize = $compileTime = '';
 
@@ -321,7 +436,7 @@ class PhpClosure {
           break;
       }
     }
-
+    
     $result = "";
     if ($this->_debug) {
       $result = "if(window.console&&window.console.log){\r\n" .
@@ -341,7 +456,7 @@ class PhpClosure {
 
     return $result;
   }
-
+    
   function _printWarnings($warnings, $level="log") {
     $result = "";
     foreach ($warnings as $warning) {
@@ -365,6 +480,7 @@ class PhpClosure {
         $this->_warning_level . "-" .
         $this->_use_closure_library . "-" .
         $this->_pretty_print . "-" .
+        $this->_local_compile . "-" .
         $this->_debug);
   }
 
@@ -390,7 +506,6 @@ class PhpClosure {
     }
     $params["compilation_level"] = $this->_mode;
     $params["output_format"] = "xml";
-	$params["language"] = "ECMASCRIPT5";
     $params["warning_level"] = $this->_warning_level;
     if ($this->_pretty_print) $params["formatting"] = "pretty_print";
     if ($this->_use_closure_library) $params["use_closure_library"] = "true";
@@ -422,9 +537,9 @@ class PhpClosure {
       fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
       fputs($fp, "Content-length: ". strlen($data) ."\r\n");
       fputs($fp, "Connection: close\r\n\r\n");
-      fputs($fp, $data);
+      fputs($fp, $data); 
 
-      $result = "";
+      $result = ""; 
       while (!feof($fp)) {
         $result .= fgets($fp, 128);
       }
