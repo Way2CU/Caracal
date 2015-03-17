@@ -34,15 +34,21 @@ class CodeOptimizer {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $scripts_path;
+
 		$less_options = array(
 				'compress'		=> true,
 				'relativeUrls'	=> false,
 			);
 		$this->less_compiler = new Less_Parser($less_options);
 
+		// configure JavaScript compiler
 		$this->closure_compiler = new Closure();
 		$this->closure_compiler->set_secure(true);
 		$this->closure_compiler->set_level(ClosureLevel::SIMPLE);
+
+		if (file_exists($scripts_path.'externals.js'))
+			$this->closure_compiler->set_externals(file_get_contents($scripts_path.'externals.js'));
 	}
 
 	/**
