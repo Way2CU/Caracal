@@ -1,0 +1,3 @@
+[submodule "libraries/closure"]
+	path = libraries/closure
+	url = git@github.com:Way2CU/Closure-Compiler.git
