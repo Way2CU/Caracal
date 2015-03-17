@@ -251,17 +251,19 @@ class CodeOptimizer {
 
 		// compile scripts
 		$script_cache = $cache_path.$this->getCachedName($this->script_list).'.js';
-		if ($this->needsRecompile($script_cache, $this->script_list))
-			$result = $this->closure_compiler->compile_and_save($script_cache);
+		if ($this->needsRecompile($script_cache, $this->script_list)) {
+			$this->closure_compiler->compile_and_save($script_cache);
 
-		// report script errors
-		if (!$result) {
-			$input_list = $this->closure_compiler->get_input_list();
+			// report script errors
+			$error_list = $this->closure_compiler->get_errors();
+			if (count($error_list) > 0) {
+				$input_list = $this->closure_compiler->get_input_list();
 
-			foreach ($this->closure_compiler->get_errors() as $error) {
-				$file = $input_list[$error->file];
-				$message = "JavaScript compile error in {$file} on line {$error->lineno}: {$error->error}";
-				trigger_error($message, E_USER_NOTICE);
+				foreach ($error_list as $error) {
+					$file = $input_list[$error->file];
+					$message = "JavaScript compile error in {$file} on line {$error->lineno}: {$error->error}";
+					trigger_error($message, E_USER_NOTICE);
+				}
 			}
 		}
 
