@@ -11,7 +11,8 @@
 require_once(_LIBPATH.'less/Less.php');
 require_once(_LIBPATH.'closure/closure.php');
 
-use Library\Closure\PhpClosure as PhpClosure;
+use Library\Closure\Compiler as Closure;
+use Library\Closure\Level as ClosureLevel;
 
 
 class CodeOptimizer {
@@ -39,7 +40,9 @@ class CodeOptimizer {
 			);
 		$this->less_compiler = new Less_Parser($less_options);
 
-		$this->closure_compiler = new PhpClosure();
+		$this->closure_compiler = new Closure();
+		$this->closure_compiler->set_secure(true);
+		$this->closure_compiler->set_level(ClosureLevel::SIMPLE);
 	}
 
 	/**
@@ -205,7 +208,7 @@ class CodeOptimizer {
 		// add script to be compiled
 		if ($data['host'] == _DOMAIN) {
 			$this->script_list []= $url;
-			$this->closure_compiler->add(path_GetFromURL($url));
+			$this->closure_compiler->add_file(path_GetFromURL($url));
 			$result = true;
 		}
 
@@ -247,12 +250,9 @@ class CodeOptimizer {
 			$this->recompileStyles($style_cache, $this->style_list);
 
 		// compile scripts
-		$script_cache = $this->closure_compiler
-				->quiet()
-				->hideDebugInfo()
-	 			->simpleMode()
-				->cacheDir($cache_path)
-				->compileToFile();
+		$script_cache = $cache_path.$this->getCachedName($this->script_list).'.js';
+		if ($this->needsRecompile($script_cache, $this->script_list))
+			$this->closure_compiler->compile_and_save($script_cache);
 
 		print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'">';
 		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"></script>';
