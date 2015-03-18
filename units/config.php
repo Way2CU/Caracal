@@ -21,6 +21,10 @@ $scripts_path = $site_path.'scripts/';
 $styles_path = $site_path.'styles/';
 $images_path = $site_path.'images/';
 
+// language configuration
+$available_languages = array('en');
+$default_language = 'en';
+
 // database
 $db = null;
 $db_use = false;
