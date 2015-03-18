@@ -1,0 +1,148 @@
+[main]
+host = https://www.transifex.com
+
+[caracal.system]
+file_filter = system/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.comments]
+file_filter = modules/comments/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.fedex]
+file_filter = modules/fedex/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.tranzila]
+file_filter = modules/tranzila/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.callbox]
+file_filter = modules/callbox/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.backend]
+file_filter = modules/backend/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.mandrill]
+file_filter = modules/mandrill/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.faq]
+file_filter = modules/faq/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.articles]
+file_filter = modules/articles/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.captcha]
+file_filter = modules/captcha/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.license]
+file_filter = modules/license/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.news]
+file_filter = modules/news/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.tips]
+file_filter = modules/tips/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.paypal]
+file_filter = modules/paypal/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.shop]
+file_filter = modules/shop/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.downloads]
+file_filter = modules/downloads/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.links]
+file_filter = modules/links/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.page-speed]
+file_filter = modules/page_speed/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.activity-tracker]
+file_filter = modules/activity_tracker/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.contact-form]
+file_filter = modules/contact_form/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.page-info]
+file_filter = modules/page_info/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.youtube]
+file_filter = modules/youtube/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.gallery]
+file_filter = modules/gallery/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.mailchimp]
+file_filter = modules/mailchimp/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.google-checkout]
+file_filter = modules/google_checkout/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.stripe-payment]
+file_filter = modules/stripe_payment/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.feedback]
+file_filter = modules/feedback/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.country-list]
+file_filter = modules/country_list/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
+[caracal.affiliates]
+file_filter = modules/affiliates/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
