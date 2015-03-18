@@ -1,0 +1,20 @@
+{
+    "anonymous": "אנונימי", 
+    "label_comment": "הערה:", 
+    "label_default_visibility": "Default visibility:", 
+    "label_email": "דואל:", 
+    "label_repost_time": "Repost timeout (minutes):", 
+    "label_size_limit": "גודל תגובה מקסימאלי:", 
+    "label_user": "שם:", 
+    "menu_administration": "ניהול", 
+    "menu_comments": "הערות", 
+    "menu_settings": "הדגרות", 
+    "message_error": "לא נשמרה ההודעה!", 
+    "message_error_data": "סופק מידע לא נכון", 
+    "message_error_repost_time": "אתה יכול לפרסם כל %t דקות!", 
+    "message_saved": "פורסמה תגובה!", 
+    "message_settings_saved": "הגדרות נשמרו!", 
+    "option_hidden": "מוחבא", 
+    "option_visible": "מוצג", 
+    "title_settings": "הערות: הגדרת המודול"
+}

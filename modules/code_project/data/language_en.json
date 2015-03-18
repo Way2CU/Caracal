@@ -1,0 +1,14 @@
+{
+    "column_code": "Code", 
+    "label_code": "Code:", 
+    "label_url": "URL:", 
+    "menu_codes": "Projects", 
+    "menu_codes_manage": "Manage project codes", 
+    "message_code_delete": "Are you sure about removing the following code?", 
+    "message_code_deleted": "Specified code was removed.", 
+    "message_code_saved": "Code data is saved!", 
+    "title_codes_add": "Add new project code", 
+    "title_codes_change": "Change project code", 
+    "title_codes_delete": "Delete project code", 
+    "title_codes_manage": "Manage project codes"
+}

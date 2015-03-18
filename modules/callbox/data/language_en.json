@@ -1,0 +1,12 @@
+{
+    "label_account_id": "Account id:", 
+    "label_account_key": "Account key:", 
+    "label_account_secret": "Account secret:", 
+    "label_include_code": "Include JavaScript code.", 
+    "legend_account": "Account", 
+    "legend_api": "API", 
+    "menu_callbox": "Callbox", 
+    "menu_settings": "Settings", 
+    "message_saved": "Account settings were saved.", 
+    "title_settings": "Callbox: Settings"
+}

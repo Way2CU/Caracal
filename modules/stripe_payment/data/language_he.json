@@ -1,0 +1,10 @@
+{
+    "label_public_key": "Publishable key:", 
+    "label_secret_key": "Secret key:", 
+    "menu_stripe": "Stripe", 
+    "message_missing_api_keys": "No API keys were provided. Please configure API access first!", 
+    "message_settings_saved": "Stripe keys were saved!", 
+    "payment_method_title": "Stripe", 
+    "title_recurring_plans": "Stripe: Recurring payment plans", 
+    "title_settings": "הגדרות"
+}

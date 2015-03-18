@@ -1,0 +1,21 @@
+{
+    "column_activity": "Activity", 
+    "column_function": "Function", 
+    "column_ignore_address": "Ignore address", 
+    "column_timeout": "Timeout", 
+    "label_activity": "Activity:", 
+    "label_function": "Function:", 
+    "label_ignore_address": "Ignore IP address?", 
+    "label_timeout": "Timeout <small>(seconds)</small>:", 
+    "menu_activities": "Activity Tracker", 
+    "menu_log": "Activity logs", 
+    "menu_manage": "Manage activities", 
+    "message_activity_delete": "You are about to remove the following activity and all of its logs. Are you sure?", 
+    "message_activity_deleted": "Activity was removed.", 
+    "message_activity_saved": "Activity data was saved!", 
+    "title_activity_change": "Activity Tracker: Change activity", 
+    "title_activity_delete": "Activity Tracker: Delete activity", 
+    "title_activity_new": "Activity Tracker: New activity", 
+    "title_log": "Activity Tracker: Logs", 
+    "title_manage": "Activity Tracker"
+}

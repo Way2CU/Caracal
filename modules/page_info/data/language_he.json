@@ -1,0 +1,16 @@
+{
+    "label_analytics": "Analytics ID:", 
+    "label_analytics_domain": "Domain:", 
+    "label_analytics_version": "Code version:", 
+    "label_bing_wm_tools": "Bing webmaster tools:", 
+    "label_description": "תאור עמוד (between 70 and 160 characters):", 
+    "label_optimizer": "Google website optimizer:", 
+    "label_optimizer_key": "Key:", 
+    "label_wm_tools": "Google webmaster tools:", 
+    "menu_page_info": "הגדרות עמוד", 
+    "message_saved": "הגדרות עמוד נשמרו!", 
+    "tab_general": "General", 
+    "tab_google_analytics": "Google Analytics", 
+    "tab_google_webmasters_tools": "Webmasters Tools", 
+    "title_page_info": "הגדרות עמוד"
+}
