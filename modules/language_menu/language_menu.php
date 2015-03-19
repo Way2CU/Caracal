@@ -87,9 +87,8 @@ class language_menu extends Module {
 
 	public function addMeta() {
 		$head_tag = head_tag::getInstance();
-		$language_handler = MainLanguageHandler::getInstance();
-		$language_list = $language_handler->getLanguages(false);
-		$default_language = $language_handler->getDefaultLanguage();
+		$language_list = Language::getLanguages(false);
+		$default_language = Language::getDefaultLanguage();
 
 		// prepare params
 		$params = $_REQUEST;
@@ -127,7 +126,7 @@ class language_menu extends Module {
 			$list = $module->language->getLanguages(true);
 
 		} else {
-			$list = MainLanguageHandler::getInstance()->getLanguages(true);
+			$list = Language::getLanguages(true);
 		}
 
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
@@ -211,8 +210,9 @@ class language_menu extends Module {
 		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
+
 		} else {
-			$text = MainLanguageHandler::getInstance()->getText(escape_chars($_REQUEST['constant']));
+			$text = Language::getText(escape_chars($_REQUEST['constant']));
 		}
 
 		$result = array(

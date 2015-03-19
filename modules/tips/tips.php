@@ -134,7 +134,7 @@ class tips extends Module {
 	public function onInit() {
 		global $db;
 
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		$sql = "
 			CREATE TABLE `tips` (

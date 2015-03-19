@@ -243,7 +243,7 @@ class news extends Module {
 	public function onInit() {
 		global $db;
 
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		// News
 		$sql = "

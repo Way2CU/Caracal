@@ -177,9 +177,6 @@ class TemplateHandler {
 		if ((!$this->active) && empty($tags))
 			return;
 
-		// get language handler for later
-		$language_handler = MainLanguageHandler::getInstance();
-
 		// take the tag list for parsing
 		$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
 
@@ -245,7 +242,7 @@ class TemplateHandler {
 			if (isset($tag->tagAttrs['cms:tooltip'])) {
 				if (!is_null($this->module))
 					$value = $this->module->getLanguageConstant($tag->tagAttrs['cms:tooltip']); else
-					$value = $language_handler->getText($tag->tagAttrs['cms:tooltip']);
+					$value = Language::getText($tag->tagAttrs['cms:tooltip']);
 
 				$tag->tagAttrs['data-tooltip'] = $value;
 				unset($tag->tagAttrs['cms:tooltip']);
@@ -259,7 +256,7 @@ class TemplateHandler {
 					foreach ($params as $param)
 						if (!is_null($this->module))
 							$tag->tagAttrs[$param] = $this->module->getLanguageConstant($tag->tagAttrs[$param]); else
-							$tag->tagAttrs[$param] = $language_handler->getText($tag->tagAttrs[$param]);
+							$tag->tagAttrs[$param] = Language::getText($tag->tagAttrs[$param]);
 
 				unset($tag->tagAttrs['cms:constant']);
 			}
@@ -376,7 +373,7 @@ class TemplateHandler {
 						}
 					} else {
 						// use default language handler
-						$text = MainLanguageHandler::getInstance()->getText($constant, $language);
+						$text = Language::getText($constant, $language);
 					}
 
 					echo $text;

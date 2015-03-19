@@ -192,7 +192,7 @@ class youtube extends Module {
 	public function onInit() {
 		global $db;
 
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		// create videos table
 		$sql = "

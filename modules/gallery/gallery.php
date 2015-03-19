@@ -78,7 +78,7 @@ class gallery extends Module {
 							'type'	=> 'text/javascript'
 						));
 
-				if (MainLanguageHandler::getInstance()->isRTL())
+				if (Language::isRTL())
 					$head_tag->addTag('link',
 						array(
 							'href'	=> url_GetFromFilePath($this->path.'include/gallery_rtl.css'),
@@ -337,7 +337,7 @@ class gallery extends Module {
 	public function onInit() {
 		global $db;
 
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		$sql = "
 			CREATE TABLE `gallery` (

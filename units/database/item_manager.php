@@ -60,7 +60,7 @@ class ItemManager {
 	 */
 	protected function __construct($table_name) {
 		$this->table_name = $table_name;
-		$this->languages = MainLanguageHandler::getInstance()->getLanguages(false);
+		$this->languages = Language::getLanguages(false);
 
 		sort($this->languages, SORT_STRING);
 	}

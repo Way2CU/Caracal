@@ -670,7 +670,7 @@ class shop extends Module {
 	public function onInit() {
 		global $db;
 
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		// set shop in testing mode by default
 		$this->saveSetting('testing_mode', 1);
@@ -2007,7 +2007,7 @@ class shop extends Module {
 	 */
 	private function getCartSummary($type, $recipient, $transaction_id, $payment_method=null) {
 		$result = array();
-		$default_language = MainLanguageHandler::getInstance()->getDefaultLanguage();
+		$default_language = Language::getDefaultLanguage();
 
 		// prepare params
 		$shipping = 0;

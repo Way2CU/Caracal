@@ -409,7 +409,7 @@ class contact_form extends Module {
 	public function onInit() {
 		global $db;
 
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		// predefined settings stored in system wide tables
 		$this->saveSetting('sender_name', '');

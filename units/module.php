@@ -11,7 +11,6 @@ namespace Core;
 use \LanguageHandler as LanguageHandler;
 use \SettingsManager as SettingsManager;
 use \TemplateHandler as TemplateHandler;
-use \MainLanguageHandler as MainLanguageHandler;
 
 
 abstract class Module {
@@ -61,7 +60,7 @@ abstract class Module {
 		$result = $this->language->getText($constant, $language_in_use);
 
 		if (empty($result))
-			$result = MainLanguageHandler::getInstance()->getText($constant, $language_in_use);
+			$result = Language::getText($constant, $language_in_use);
 
 		return $result;
 	}
@@ -76,7 +75,7 @@ abstract class Module {
 		global $db;
 
 		$result = array();
-		$list = MainLanguageHandler::getInstance()->getLanguages(false);
+		$list = Language::getLanguages(false);
 
 		foreach($list as $lang) {
 			$value = '';

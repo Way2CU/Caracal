@@ -106,8 +106,8 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return array
 	 */
 	public function get_recurring_plans() {
-		$language_list = MainLanguageHandler::getInstance()->getLanguages(false);
 		$result = array();
+		$language_list = Language::getLanguages(false);
 		$manager = Stripe_PlansManager::getInstance();
 
 		// get recurring payment plans from database
