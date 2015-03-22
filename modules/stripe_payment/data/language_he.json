@@ -1,13 +1,13 @@
 {
-    "column_name": "Name",
-    "column_price": "Price",
-    "column_text_id": "ID",
-    "label_public_key": "Publishable key:",
-    "label_secret_key": "Secret key:",
+    "column_name": "שם",
+    "column_price": "מחיר",
+    "column_text_id": "מזהה",
+    "label_public_key": "מפתח ניתן להפצה:",
+    "label_secret_key": "מפתח סודי:",
     "menu_stripe": "Stripe",
-    "message_missing_api_keys": "No API keys were provided. Please configure API access first!",
-    "message_settings_saved": "Stripe keys were saved!",
+    "message_missing_api_keys": "לא סופקו מפתחות API. אנא הגדירו גישת API קודם!",
+    "message_settings_saved": "מפתחות Stripe נשמרו!",
     "payment_method_title": "Stripe",
-    "title_recurring_plans": "Stripe: Recurring payment plans",
-    "title_settings": "Stripe Settings"
+    "title_recurring_plans": "Stripe: תוכניות תשלום מתחדש",
+    "title_settings": "הגדרות Stripe"
 }
