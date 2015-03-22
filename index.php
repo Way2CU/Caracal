@@ -91,7 +91,8 @@ if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
-// apply language selection
+// initialize language system and apply language
+Language::initialize();
 Language::applyForSession();
 
 // turn off URL rewrite for backend
