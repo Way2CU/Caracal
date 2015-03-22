@@ -13,7 +13,7 @@ class LanguageHandler {
 	 *
 	 * @return LanguageHandler
 	 */
-	public function __construct($path=null) {
+	public function __construct($path) {
 		global $data_path, $language;
 
 		// decide which file to load
@@ -41,16 +41,14 @@ class LanguageHandler {
 	 * @param string $specified_language
 	 * @return string
 	 */
-	private function get_language_file($path=null, $specified_language=null) {
-		global $language, $system_path;
+	private function get_language_file($path, $specified_language=null) {
+		global $language;
 
 		// detect which language to load
 		$language_to_load = is_null($specified_language) ? $language : $specified_language;
 
 		// prepare path
-		if (!is_null($path))
-			$result = $path.'language_'.$language_to_load.'.json'; else
-			$result = $system_path.'language_'.$language_to_load.'.json';
+		$result = $path.'language_'.$language_to_load.'.json';
 
 		return $result;
 	}
@@ -131,7 +129,7 @@ final class Language {
 		self::$list = json_decode(file_get_contents($system_path.'languages.json'));
 
 		// create language handlers
-		self::$system_handler = new LanguageHandler();
+		self::$system_handler = new LanguageHandler($system_path);
 		self::$site_handler = new LanguageHandler($data_path);
 	}
 
