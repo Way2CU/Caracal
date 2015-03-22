@@ -42,7 +42,7 @@ class LanguageHandler {
 	 * @return string
 	 */
 	private function get_language_file($path=null, $specified_language=null) {
-		global $language;
+		global $language, $system_path;
 
 		// detect which language to load
 		$language_to_load = is_null($specified_language) ? $language : $specified_language;
@@ -50,7 +50,7 @@ class LanguageHandler {
 		// prepare path
 		if (!is_null($path))
 			$result = $path.'language_'.$language_to_load.'.json'; else
-			$result = 'system/language_'.$language_to_load.'.json';
+			$result = $system_path.'language_'.$language_to_load.'.json';
 
 		return $result;
 	}
