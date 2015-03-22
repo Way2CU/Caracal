@@ -16,19 +16,13 @@ class LanguageHandler {
 	public function __construct($path=null) {
 		global $data_path, $language;
 
-		// check which file to load
-		if (!is_null($path)) {
-			$this->file = $path.'language_'.$language.'.json';
-
-		} else {
-			$this->file = 'system/language_'.$language.'.json';
-			$this->system = true;
-		}
+		// decide which file to load
+		$this->file = $this->get_language_file($path);
 
 		// make sure language file exists
 		if (!file_exists($this->file)) {
-			trigger_error('Missing language file: '.$this->file, E_USER_ERROR);
-			return;
+			trigger_error('Missing language file: '.$this->file.'. Defaulting to English!', E_USER_WARNING);
+			$this->file = $this->get_language_file($path, 'en');
 		}
 
 		// load language file
@@ -38,6 +32,27 @@ class LanguageHandler {
 		// report error
 		if (is_null($this->data))
 			trigger_error('Invalid language file: '.$this->file, E_USER_WARNING);
+	}
+
+	/**
+	 * Load language file data from specified patha and for specified language.
+	 *
+	 * @param string $path
+	 * @param string $specified_language
+	 * @return string
+	 */
+	private function get_language_file($path=null, $specified_language=null) {
+		global $language;
+
+		// detect which language to load
+		$language_to_load = is_null($specified_language) ? $language : $specified_language;
+
+		// prepare path
+		if (!is_null($path))
+			$result = $path.'language_'.$language_to_load.'.json'; else
+			$result = 'system/language_'.$language_to_load.'.json';
+
+		return $result;
 	}
 
 	/**
