@@ -56,7 +56,7 @@ abstract class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	public function getLanguageConstant($constant, $language='') {
+	public function getLanguageConstant($constant, $language=null) {
 		// make sure language is loaded
 		if (is_null($this->language)) {
 			trigger_error("Requested '{$constant}' but language file was not loaded for module '{$this->name}'.", E_USER_WARNING);
