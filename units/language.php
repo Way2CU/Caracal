@@ -253,25 +253,23 @@ final class Language {
 	 * language or use site's default.
 	 */
 	public static function applyForSession() {
-		global $section, $language, $default_language, $language_rtl;
-
-		$supported_languages = self::getLanguages(false);
+		global $section, $language, $default_language, $available_languages, $language_rtl;
 
 		if (!isset($_REQUEST['language'])) {
 			// no language change was specified, check session
 			if (!isset($_SESSION['language']) || empty($_SESSION['language']))
-				$_SESSION['language'] = self::matchBrowserLanguage($supported_languages, $default_language);
+				$_SESSION['language'] = self::matchBrowserLanguage($available_languages, $default_language);
 
 		} else {
 			// language change was specified, make sure it's valid
-			if (in_array($_REQUEST['language'], $supported_languages)) {
+			if (in_array($_REQUEST['language'], $available_languages)) {
 				$_SESSION['language'] = fix_chars($_REQUEST['language']);
 
 			} else {
 				// set language without asking if module is backend
 				if (in_array($section, array('backend', 'backend_module')))
 					$_SESSION['language'] = fix_chars($_REQUEST['language']); else
-					$_SESSION['language'] = self::matchBrowserLanguage($supported_languages, $default_language);
+					$_SESSION['language'] = self::matchBrowserLanguage($available_languages, $default_language);
 			}
 		}
 
