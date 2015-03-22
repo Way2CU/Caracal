@@ -110,10 +110,10 @@ final class Language {
 	 * Load data and prepare language class.
 	 */
 	public static function initialize() {
-		global $data_path;
+		global $system_path;
 
 		// load language definitions
-		self::$list = json_decode(file_get_contents($data_path.'languages.json'));
+		self::$list = json_decode(file_get_contents($system_path.'languages.json'));
 
 		// create language handlers
 		self::$system_handler = LanguageHandler::getInstance();
