@@ -10,9 +10,10 @@ use Core\Cache\Type as CacheType;
 $site_path = 'site/';
 $cache_path = $site_path.'cache/';
 
-$system_images_path = 'system/images/';
-$system_styles_path = 'system/styles/';
-$system_template_path = 'system/templates/';
+$system_path = 'system/';
+$system_images_path = $system_path.'images/';
+$system_styles_path = $system_path.'styles/';
+$system_template_path = $system_path.'templates/';
 
 $data_path = $site_path.'data/';
 $module_path = $site_path.'modules/';
