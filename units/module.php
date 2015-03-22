@@ -15,7 +15,7 @@ use \TemplateHandler as TemplateHandler;
 
 
 abstract class Module {
-	protected $language;
+	protected $language = null;
 	protected $file;
 
 	public $name;
@@ -32,7 +32,9 @@ abstract class Module {
 		$this->name = get_class($this);
 
 		// load language file if present
-		$this->language = new LanguageHandler($this->path.'data/');
+		$data_path = $this->path.'data/';
+		if (file_exists($data_path))
+			$this->language = new LanguageHandler($data_path);
 
 		// load settings from database
 		if ($load_settings)
@@ -55,6 +57,12 @@ abstract class Module {
 	 * @return string
 	 */
 	public function getLanguageConstant($constant, $language='') {
+		// make sure language is loaded
+		if (is_null($this->language)) {
+			trigger_error("Requested '{$constant}' but language file was not loaded for module '{$this->name}'.", E_USER_WARNING);
+			return '';
+		}
+
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
 		$result = $this->language->getText($constant, $language_in_use);
 
