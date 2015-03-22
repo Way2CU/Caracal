@@ -25,6 +25,11 @@ class LanguageHandler {
 			$this->file = $this->get_language_file($path, 'en');
 		}
 
+		if (!file_exists($this->file)) {
+			trigger_error('English version wasn\'t found either.', E_USER_NOTICE);
+			return;
+		}
+
 		// load language file
 		$this->data = json_decode(file_get_contents($this->file));
 		$this->active = !is_null($this->data);
