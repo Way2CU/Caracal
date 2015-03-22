@@ -86,9 +86,10 @@ class language_menu extends Module {
 	}
 
 	public function addMeta() {
+		global $default_language;
+
 		$head_tag = head_tag::getInstance();
 		$language_list = Language::getLanguages(false);
-		$default_language = Language::getDefaultLanguage();
 
 		// prepare params
 		$params = $_REQUEST;
@@ -169,27 +170,24 @@ class language_menu extends Module {
 	 * Print JSON object for usage by the backend API
 	 */
 	private function json_Menu() {
-		global $action, $section, $language;
+		global $action, $section, $language, $default_language;
 
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
-			$language_handler = $module->language;
+			$list = $module->language->getLanguages(true);
 
 		} else {
-			$language_handler = MainLanguageHandler::getInstance();
+			$list = Language::getLanguages(true);
 		}
 
-		$rtl = $language_handler->getRTL();
-		$list = $language_handler->getLanguages(true);
-		$default = $language_handler->getDefaultLanguage();
-
+		$rtl = Language::getRTL();
 		$result = array(
 					'error'				=> false,
 					'error_message'		=> '',
 					'items'				=> array(),
 					'rtl'				=> $rtl,
-					'default_language'	=> $default,
+					'default_language'	=> $default_language,
 					'current_language'	=> $language
 				);
 
@@ -227,12 +225,10 @@ class language_menu extends Module {
 	 */
 	private function json_GetTextArray() {
 		// check if we were asked to get languages from specific module
+		$language_handler = null;
 		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 			$language_handler = $module->language;
-
-		} else {
-			$language_handler = MainLanguageHandler::getInstance();
 		}
 
 		// prepare variables
@@ -244,7 +240,9 @@ class language_menu extends Module {
 		// get constants
 		if (count($constants) > 0)
 			foreach ($constants as $constant)
-				$result['text'][$constant] = $language_handler->getText($constant);
+				if (!is_null($language_handler))
+					$result['text'][$constant] = $language_handler->getText($constant); else
+					$result['text'][$constant] = Language::getText($constant);
 
 		print json_encode($result);
 	}
