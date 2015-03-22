@@ -71,9 +71,13 @@ class LanguageHandler {
 		// prepare default result
 		$result = '';
 
-		if (is_null($specified_language) || $specified_language == $language)
-			$result = $this->data->{$constant}; else
+		// warn user about deprecating feature
+		if (!is_null($specified_language) || $specified_language != $language)
 			trigger_error("Asked for '{$constant}' in '{$specified_language}' from {$this->file}.", E_USER_WARNING);
+
+		// get value
+		if (property_exists($this->data, $constant))
+			$result = $this->data->$constant;
 
 		return $result;
 	}
