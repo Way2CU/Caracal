@@ -26,7 +26,7 @@ class LanguageHandler {
 		}
 
 		// load language file
-		$this->data = json_decode(file_get_contents($data_path.'languages.json'));
+		$this->data = json_decode(file_get_contents($this->file));
 		$this->active = !is_null($this->data);
 
 		// report error
