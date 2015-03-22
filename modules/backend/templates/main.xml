@@ -30,7 +30,6 @@
 					<cms:module
 						name="language_menu"
 						action="print"
-						from_module="backend"
 						/>
 				</nav>
 			</header>
