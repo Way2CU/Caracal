@@ -173,7 +173,12 @@ final class Language {
 	 * @return string
 	 */
 	public static function getPrintable($code) {
-		return self::$list->list[$code];
+		$result = '';
+
+		if (property_exists(self::$list->list, $code))
+ 			$result = self::$list->list->$code;
+
+		return $result;
 	}
 
 	/**
