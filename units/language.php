@@ -20,13 +20,13 @@ class LanguageHandler {
 		$this->file = $this->get_language_file($path);
 
 		// make sure language file exists
-		if (!file_exists($this->file)) {
+		if (!file_exists($this->file) && $language != 'en') {
 			trigger_error('Missing language file: '.$this->file.'. Defaulting to English!', E_USER_WARNING);
 			$this->file = $this->get_language_file($path, 'en');
 		}
 
 		if (!file_exists($this->file)) {
-			trigger_error('English version wasn\'t found either.', E_USER_NOTICE);
+			trigger_error('English version wasn\'t found.', E_USER_NOTICE);
 			return;
 		}
 
