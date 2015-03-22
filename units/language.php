@@ -71,7 +71,7 @@ class LanguageHandler {
 		// prepare default result
 		$result = '';
 
-		if (is_null($specified_language))
+		if (is_null($specified_language) || $specified_language == $language)
 			$result = $this->data->{$constant}; else
 			trigger_error("Asked for '{$constant}' in '{$specified_language}' from {$this->file}.", E_USER_WARNING);
 
