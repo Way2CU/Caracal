@@ -855,18 +855,6 @@ class backend extends Module {
 		$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
 		return html_entity_decode($str, null, 'UTF-8');;
 	}
-
-	/**
-	 * Check if backend supports specified language
-	 *
-	 * @param string $language
-	 */
-	public function languageExists($language) {
-		$languages = $this->language->getLanguages(false);
-		$result = in_array($language, $languages);
-
-		return $result;
-	}
 }
 
 ?>
