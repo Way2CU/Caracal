@@ -29,11 +29,9 @@ abstract class Module {
 	protected function __construct($file, $load_settings=True) {
 		$this->path = dirname($file).'/';
 		$this->name = get_class($this);
-		$language_file = $this->path.'data/language.xml';
 
 		// load language file if present
-		if (file_exists($language_file))
-			$this->language = new LanguageHandler($language_file);
+		$this->language = new LanguageHandler($this->path.'data/');
 
 		// load settings from database
 		if ($load_settings)
