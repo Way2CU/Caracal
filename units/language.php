@@ -125,20 +125,6 @@ final class Language {
 	private static $list;
 
 	/**
-	 * Load data and prepare language class.
-	 */
-	public static function initialize() {
-		global $system_path, $data_path;
-
-		// load language definitions
-		self::$list = json_decode(file_get_contents($system_path.'languages.json'));
-
-		// create language handlers
-		self::$system_handler = new LanguageHandler($system_path);
-		self::$site_handler = new LanguageHandler($data_path);
-	}
-
-	/**
 	 * Get localized value for specified constant and language.
 	 *
 	 * @param string $constant
@@ -271,7 +257,8 @@ final class Language {
 	 * language or use site's default.
 	 */
 	public static function applyForSession() {
-		global $section, $language, $default_language, $available_languages, $language_rtl;
+		global $section, $language, $default_language, $available_languages, $language_rtl,
+	 		$data_path, $system_path;
 
 		if (!isset($_REQUEST['language'])) {
 			// no language change was specified, check session
@@ -291,9 +278,16 @@ final class Language {
 			}
 		}
 
+		// load language definitions
+		self::$list = json_decode(file_get_contents($system_path.'languages.json'));
+
 		// store language to global variable
 		$language = $_SESSION['language'];
 		$language_rtl = self::isRTL($language);
+
+		// create language handlers
+		self::$system_handler = new LanguageHandler($system_path);
+		self::$site_handler = new LanguageHandler($data_path);
 	}
 }
 
