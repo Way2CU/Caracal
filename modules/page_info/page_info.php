@@ -192,11 +192,11 @@ class page_info extends Module {
 	 */
 	public function addElements() {
 		global $section, $db_use, $optimize_code, $url_rewrite, $styles_path,
-			$images_path, $scripts_path, $system_styles_path, $system_images_path;
+			$images_path, $scripts_path, $system_styles_path, $system_images_path,
+			$default_language;
 
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
-		$default_language = Language::getDefaultLanguage();
 		$language_list = Language::getLanguages(false);
 
 		// add base url tag
