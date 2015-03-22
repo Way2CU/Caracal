@@ -149,7 +149,7 @@ final class Language {
 	 * @return array
 	 */
 	public static function getLanguages($printable=true) {
-		$result = array()
+		$result = array();
 
 		// get site specific constant
 		if (!is_null(self::$site_handler))
