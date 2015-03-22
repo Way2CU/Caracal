@@ -2,67 +2,42 @@
 
 
 class LanguageHandler {
-	private $active;
-
-	private $rtl_languages = array();
-	private $languages = array();
+	private $active = false;
+	private $system = false;
 	private $data = array();
-	private $default = null;
+	private $list = null;
+	private $file;
 
 	/**
 	 * Constructor
 	 *
 	 * @return LanguageHandler
 	 */
-	public function __construct($file='') {
-		global $data_path;
+	public function __construct($path=null) {
+		global $data_path, $language;
 
-		$this->active = false;
-		$file = (empty($file)) ? 'system/language.xml' : $file;
+		// check which file to load
+		if (!is_null($path)) {
+			$this->file = $path.'language_'.$language.'.json';
 
-		// make sure language file exists
-		if (!file_exists($file))
-			return;
-
-		// parse language file
-		$engine = new XMLParser(@file_get_contents($file), $file);
-		$engine->Parse();
-		$this->active = true;
-
-		// make sure language file is not empty
-		if (!isset($engine->document) || !isset($engine->document->language))
-			return;
-
-		foreach ($engine->document->language as $xml_language) {
-			$short_name = $xml_language->tagAttrs['short'];
-			$full_name = isset($xml_language->tagAttrs['name']) ? $xml_language->tagAttrs['name'] : '';
-			$is_rtl = isset($xml_language->tagAttrs['rtl']) && $xml_language->tagAttrs['rtl'] == 'yes';
-			$default = isset($xml_language->tagAttrs['default']);
-
-			// add to language list
-			$this->languages[$short_name] = $full_name;
-
-			// create storage for constants
-			$this->data[$short_name] = array();
-
-			// mark as RTL
-			if ($is_rtl)
-				$this->rtl_languages[] = $short_name;
-
-			// set as default
-			if (is_null($this->default) && $default)
-				$this->default = $short_name;
-
-			// parse language constants
-			foreach ($xml_language->constant as $xml_constant) {
-				$constant_name = $xml_constant->tagAttrs['name'];
-				$value = $xml_constant->tagData;
-				$this->data[$short_name][$constant_name] = $value;
-			}
+		} else {
+			$this->file = 'system/language_'.$language.'.json';
+			$this->system = true;
 		}
 
-		// remove parser
-		unset($engine);
+		// make sure language file exists
+		if (!file_exists($this->file)) {
+			trigger_error('Missing language file: '.$this->file, E_USER_ERROR);
+			return;
+		}
+
+		// load language file
+		$this->data = json_decode(file_get_contents($data_path.'languages.json'));
+		$this->active = !is_null($this->data);
+
+		// report error
+		if (is_null($this->data))
+			trigger_error('Invalid language file: '.$this->file, E_USER_WARNING);
 	}
 
 	/**
@@ -72,14 +47,15 @@ class LanguageHandler {
 	 * @param string $specified_language
 	 * @return string
 	 */
-	public function getText($constant, $specified_language='') {
+	public function getText($constant, $specified_language=null) {
 		global $language;
 
+		// prepare default result
 		$result = '';
-		$lang = empty($specified_language) ? $language : $specified_language;
 
-		if ($this->active && isset($this->data[$lang][$constant]))
-			$result = $this->data[$lang][$constant];
+		if (is_null($specified_language))
+			$result = $this->data->{$constant}; else
+			trigger_error("Asked for '{$constant}' in '{$specified_language}' from {$this->file}.", E_USER_WARNING);
 
 		return $result;
 	}
@@ -91,38 +67,22 @@ class LanguageHandler {
 	 * @return array
 	 */
 	public function getLanguages($printable=true) {
-		if (!$this->active)
-			return;
+		global $available_languages;
+		$result = array();
 
-		if ($printable)
-			$result = $this->languages; else
-			$result = array_keys($this->languages);
+		if ($printable) {
+			// there's no cached result, prepare one
+			if (is_null($this->list)) {
+				$this->list = array();
 
-		return $result;
-	}
+				foreach ($available_languages as $code)
+					$this->list[$code] = Language::getPrintable($code);
+			}
+			$result = $this->list;
 
-	/**
-	 * Return only short list of RTL languages
-	 *
-	 * @return array
-	 */
-	public function getRTL() {
-		if (!$this->active)
-			return;
-
-		return $this->rtl_languages;
-	}
-
-	/**
-	 * Returns default language
-	 *
-	 * @return string
-	 */
-	public function getDefaultLanguage() {
-		$result = 'en';
-
-		if (!is_null($this->default))
-			$result = $this->default;
+		} else {
+			$result = $available_languages;
+		}
 
 		return $result;
 	}
@@ -134,117 +94,7 @@ class LanguageHandler {
 	 * @return boolean
 	 */
 	public function isRTL($specified_language=null) {
-		global $language;
-
-		$language_to_check = is_null($specified_language) ? $language : $specified_language;
-		return in_array($language_to_check, $this->rtl_languages);
-	}
-}
-
-class MainLanguageHandler {
-	private static $_instance;
-
-	/**
-	 * Core system language definitions
-	 * @var resource
-	 */
-	var $language_system = null;
-
-	/**
-	 * Per-site language definitions
-	 * @var resource
-	 */
-	var $language_local = null;
-
-	private function __construct() {
-		global $data_path;
-
-		$this->language_system = new LanguageHandler();
-
-		if (file_exists($data_path."language.xml"))
-			$this->language_local = new LanguageHandler($data_path."language.xml");
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-
-	/**
-	 * Returns localised text for given constant
-	 *
-	 * @param string $constant
-	 * @param string $language
-	 * @return string
-	 */
-	public function getText($constant, $language='') {
-		$result = "";
-		if (!is_null($this->language_local))
-			$result = $this->language_local->getText($constant, $language);
-
-		if (empty($result))
-			$result = $this->language_system->getText($constant, $language);
-
-		return $result;
-	}
-
-	/**
-	 * Returns list of languages available
-	 *
-	 * @param boolean $printable What list should contain, printable text or language code
-	 * @return array
-	 */
-	public function getLanguages($printable=true) {
-		if (!is_null($this->language_local))
-			$result = $this->language_local->getLanguages($printable); else
-			$result = $this->language_system->getLanguages($printable);
-
-		return $result;
-	}
-
-	/**
-	 * Return short list of RTL languages on the system
-	 *
-	 * @return array
-	 */
-	public function getRTL() {
-		if (!is_null($this->language_local))
-			$result = $this->language_local->getRTL(); else
-			$result = $this->language_system->getRTL();
-
-		return $result;
-	}
-
-	/**
-	 * Returns default language
-	 *
-	 * @return string
-	 */
-	public function getDefaultLanguage() {
-		if (!is_null($this->language_local))
-			$result = $this->language_local->getDefaultLanguage(); else
-			$result = $this->language_system->getDefaultLanguage();
-
-		return $result;
-	}
-
-	/**
-	 * Check if current language is RTL (right-to-left)
-	 *
-	 * @param string $language
-	 * @return boolean
-	 */
-	public function isRTL($language=null) {
-		if (!is_null($this->language_local))
-			$result = $this->language_local->isRTL($language); else
-			$result = $this->language_system->isRTL($language);
-
-		return $result;
+		return Language::isRTL($specified_language);
 	}
 }
 
@@ -252,7 +102,23 @@ class MainLanguageHandler {
  * Helper class for language handling.
  */
 final class Language {
-	private static $handler;
+	private static $system_handler = null;
+	private static $site_handler = null;
+	private static $list;
+
+	/**
+	 * Load data and prepare language class.
+	 */
+	public static function initialize() {
+		global $data_path;
+
+		// load language definitions
+		self::$list = json_decode(file_get_contents($data_path.'languages.json'));
+
+		// create language handlers
+		self::$system_handler = LanguageHandler::getInstance();
+		self::$site_handler = LanguageHandler::getInstance();
+	}
 
 	/**
 	 * Get localized value for specified constant and language.
@@ -262,47 +128,71 @@ final class Language {
 	 * @return string
 	 */
 	public static function getText($constant, $language='') {
-		if (!isset(self::$handler))
-			self::$handler = MainLanguageHandler::getInstance();
+		$result = '';
 
-		return self::$handler->getText($constant, $language);
+		// get site specific constant
+		if (!is_null(self::$site_handler))
+			$result = self::$site_handler->getText($constant, $language);
+
+		// get system constant
+		if (empty($result))
+			$result = self::$system_handler->getText($constant, $language);
+
+		return $result;
 	}
 
 	/**
-	 * Returns list of languages available
+	 * Returns list of languages available. You can optionally specify to get
+	 * associative array of languages as keys and its full name.
 	 *
-	 * @param boolean $printable What list should contain, printable text or language code
+	 * @param boolean $printable
 	 * @return array
 	 */
 	public static function getLanguages($printable=true) {
-		if (!isset(self::$handler))
-			self::$handler = MainLanguageHandler::getInstance();
+		$result = array()
 
-		return self::$handler->getLanguages($printable);
+		// get site specific constant
+		if (!is_null(self::$site_handler))
+			$result = self::$site_handler->getLanguages($printable);
+
+		// get system constant
+		if (empty($result))
+			$result = self::$system_handler->getLanguages($printable);
+
+		return $result;
 	}
 
 	/**
-	 * Returns default language
+	 * Get full language name form specified code.
 	 *
+	 * @param string $code
 	 * @return string
 	 */
-	public static function getDefaultLanguage() {
-		if (!isset(self::$handler))
-			self::$handler = MainLanguageHandler::getInstance();
-
-		return self::$handler->getDefaultLanguage();
+	public static function getPrintable($code) {
+		return self::$list->list{$code};
 	}
 
 	/**
- 	 * Check if currently selected language is right-to-left.
+	 * Check if currently selected language or specified language is
+	 * written from right to left.
 	 *
+	 * @param string $specified_language
 	 * @return boolean
 	 */
-	public static function isRTL($language=null) {
-		if (!isset(self::$handler))
-			self::$handler = MainLanguageHandler::getInstance();
+	public static function isRTL($specified_language=null) {
+		global $language;
+		$language_to_check = is_null($specified_language) ? $language : $specified_language;
 
-		return self::$handler->isRTL($language);
+		return in_array($language_to_check, self::$list->rtl);
+	}
+
+	/**
+	 * Get list of RTL languages.
+	 *
+	 * @return array
+	 */
+	public static function getRTL() {
+		return self::$list->rtl;
 	}
 
 	/**
@@ -363,9 +253,8 @@ final class Language {
 	 * language or use site's default.
 	 */
 	public static function applyForSession() {
-		global $section, $language, $language_rtl;
+		global $section, $language, $default_language, $language_rtl;
 
-		$default_language = self::getDefaultLanguage();
 		$supported_languages = self::getLanguages(false);
 
 		if (!isset($_REQUEST['language'])) {
