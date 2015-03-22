@@ -131,7 +131,7 @@ final class Language {
 	 * @param string $language
 	 * @return string
 	 */
-	public static function getText($constant, $language='') {
+	public static function getText($constant, $language=null) {
 		$result = '';
 
 		// get site specific constant
