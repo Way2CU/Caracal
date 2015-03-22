@@ -93,7 +93,6 @@ $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_defaul
 
 // initialize language system and apply language
 Language::applyForSession();
-Language::initialize();
 
 // turn off URL rewrite for backend
 if ($section == 'backend' || $section == 'backend_module')
