@@ -8,6 +8,7 @@
 namespace Core;
 
 // temporary fallbacks
+use \Language as Language;
 use \LanguageHandler as LanguageHandler;
 use \SettingsManager as SettingsManager;
 use \TemplateHandler as TemplateHandler;
