@@ -173,7 +173,7 @@ final class Language {
 	 * @return string
 	 */
 	public static function getPrintable($code) {
-		return self::$list->list{$code};
+		return self::$list->list[$code];
 	}
 
 	/**
