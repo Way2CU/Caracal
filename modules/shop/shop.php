@@ -2006,10 +2006,10 @@ class shop extends Module {
 	 * @return array
 	 */
 	private function getCartSummary($type, $recipient, $transaction_id, $payment_method=null) {
-		$result = array();
-		$default_language = Language::getDefaultLanguage();
+		global $default_language;
 
 		// prepare params
+		$result = array();
 		$shipping = 0;
 		$handling = 0;
 		$total_money = 0;
@@ -2148,8 +2148,7 @@ class shop extends Module {
 					);
 
 					// convert prices and format timestamps
-					$language_handler = MainLanguageHandler::getInstance();
-					$date_format = $language_handler->getText('format_date');
+					$date_format = Language::getText('format_date');
 
 					if (count($delivery_prices) > 0)
 						for ($i = 0; $i < count($delivery_prices); $i++) {
