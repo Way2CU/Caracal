@@ -181,6 +181,7 @@
     "set_default_currency": "Set default", 
     "shipping": "Shipping:", 
     "show_shopping_cart": "Show shopping cart", 
+    "images": "Images",
     "status_canceled": "Canceled", 
     "status_completed": "Completed", 
     "status_delivered": "Delivered", 
