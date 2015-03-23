@@ -696,7 +696,7 @@ class shop extends Module {
 				`views` INT NOT NULL,
 				`price` DECIMAL(8,2) NOT NULL,
 				`tax` DECIMAL(3,2) NOT NULL,
-				`weight` DECIMAL(8,2) NOT NULL,
+				`weight` DECIMAL(8,5) NOT NULL,
 				`votes_up` INT NOT NULL,
 				`votes_down` INT NOT NULL,
 				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
