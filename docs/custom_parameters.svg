@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="custom_parameters.svg">
   <defs
      id="defs4">
     <marker
@@ -100,22 +100,27 @@
          id="tspan4211"
          x="24.893661"
          y="181.40509"
-         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'">&lt;document&gt;</tspan><tspan
+         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium';fill:#4d4d4d">site/data/section.xml</tspan><tspan
          sodipodi:role="line"
          x="24.893661"
          y="198.90509"
+         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'"
+         id="tspan4576">&lt;document&gt;</tspan><tspan
+         sodipodi:role="line"
+         x="24.893661"
+         y="216.40509"
          id="tspan4213"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'"> &lt;section name=&quot;<tspan
    style="font-size:14px;fill:#0000ff"
    id="tspan4263">contact</tspan>&quot;&gt;</tspan><tspan
          sodipodi:role="line"
          x="24.893661"
-         y="216.40509"
+         y="233.90509"
          id="tspan4215"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'">  &lt;language name=&quot;all&quot;&gt;</tspan><tspan
          sodipodi:role="line"
          x="24.893661"
-         y="233.90509"
+         y="251.40509"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'"
          id="tspan4245">    &lt;action name=&quot;<tspan
    style="font-size:14px;fill:#ff0000"
@@ -124,17 +129,17 @@
    id="tspan4273">contact_form.xml</tspan>&quot;/&gt;</tspan><tspan
          sodipodi:role="line"
          x="24.893661"
-         y="251.40509"
+         y="268.90509"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'"
          id="tspan4243">  &lt;/language&gt;</tspan><tspan
          sodipodi:role="line"
          x="24.893661"
-         y="268.90509"
+         y="286.40509"
          id="tspan4217"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'"> &lt;/section&gt;</tspan><tspan
          sodipodi:role="line"
          x="24.893661"
-         y="286.40509"
+         y="303.90509"
          style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'"
          id="tspan4219">&lt;/document&gt;</tspan></text>
     <text
@@ -167,7 +172,7 @@
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Lend)"
-       d="m 283.36044,253.43048 0,209.96319"
+       d="m 283.36044,266.93048 0,196.46319"
        id="path4279"
        inkscape:connector-curvature="0" />
     <text
