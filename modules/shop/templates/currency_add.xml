@@ -4,7 +4,7 @@
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_currency" module="shop"/></span>
-			<select name="currency" style="width: 270px;">
+			<select name="currency" style="width: 270px;" class="ltr">
 				<cms:currency_list template="iso_currency_option.xml" local="1" unique="1"/>
 			</select>
 		</label>
