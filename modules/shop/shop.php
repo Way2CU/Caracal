@@ -155,7 +155,7 @@ class shop extends Module {
 			Events::register('shop', $signal_name);
 
 		// connect to search module
-		Events::connect('search', 'get-result', 'getSearchResults', $this);
+		Events::connect('search', 'get-results', 'getSearchResults', $this);
 
 		// register backend
 		if (class_exists('backend') && $section == 'backend') {
