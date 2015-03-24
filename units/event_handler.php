@@ -4,7 +4,9 @@
  * Event Handler
  *
  * Provides simple and effective way of communication between
- * modules by providing plugin-like interface.
+ * modules by providing plugin-like interface. Register and connect
+ * calls can be made asynchronously however calling trigger before
+ * register will throw and exception.
  *
  * Author: Mladen Mijatov
  */
