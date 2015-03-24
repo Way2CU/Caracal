@@ -154,6 +154,9 @@ class shop extends Module {
 		foreach (RecurringPayment::$signals as $status => $signal_name)
 			Events::register('shop', $signal_name);
 
+		// connect to search module
+		Events::connect('search', 'get-result', 'getSearchResults', $this);
+
 		// register backend
 		if (class_exists('backend') && $section == 'backend') {
 			$head_tag = head_tag::getInstance();
@@ -336,12 +339,6 @@ class shop extends Module {
 
 			$backend->addMenu($this->name, $shop_menu);
 		}
-
-		// register search
-		if (class_exists('search')) {
-			$search = search::getInstance();
-			$search->registerModule('shop', $this);
-		}
 	}
 
 	/**
@@ -357,13 +354,19 @@ class shop extends Module {
 	/**
 	 * Get search results when asked by search module
 	 *
-	 * @param array $query
+	 * @param array $module_list
+	 * @param string $query
 	 * @param integer $threshold
 	 * @return array
 	 */
-	public function getSearchResults($query, $threshold) {
+	public function getSearchResults($module_list, $query, $threshold) {
 		global $language;
 
+		// make sure shop is in list of modules requested
+		if (!in_array($this->name, $module_list))
+			return array();
+
+		// initialize managers and data
 		$manager = ShopItemManager::getInstance();
 		$result = array();
 		$conditions = array(
