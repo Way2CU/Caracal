@@ -187,7 +187,7 @@ Caracal.Shop.Cart = function() {
 	self.alter_item_count_by_cid = function(cid, difference) {
 		var cid_data = cid.split('/', 2);
 
-		if (!(cid in self.items) && difference > 0 && self.reservations.indexOf(cid_data[0]) > -1) {
+		if (!(cid in self.items) && difference > 0 && self.reservations.indexOf(cid_data[0]) == -1) {
 			// create new item
 			self.add_item_by_cid(cid);
 
