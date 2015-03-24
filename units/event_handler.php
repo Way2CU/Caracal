@@ -91,7 +91,7 @@ final class Events {
 			);
 
 		// call all callback methods
-		if (isset(self::callbacks[$module][$event_name]))
+		if (isset(self::$callbacks[$module][$event_name]))
 			foreach (self::$callbacks[$module][$event_name] as $callable)
 				$result[] = call_user_func_array($callable, $params);
 
