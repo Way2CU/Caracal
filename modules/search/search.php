@@ -2,33 +2,29 @@
 
 /**
  * Search Module
+ *
+ * This module provides unified mechanism of collecting and presenting search
+ * results from various modules. It operates through Events system to seamlessly
+ * communicate with other modules without exlicitly them requiring to depend on
+ * this module being enabled.
+ *
+ * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
 class search extends Module {
 	private static $_instance;
-	private $modules = array();
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $section;
-
 		parent::__construct(__FILE__);
 
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
-		// register backend
-		if (class_exists('backend')) {
-			$backend = backend::getInstance();
-		}
+		// create events
+		Events::register('search', 'get-results', 3);  // module list, query, threshold
 	}
 
 	/**
@@ -71,30 +67,12 @@ class search extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db;
-
-		/* $sql = ""; */
-		/* $db->query($sql); */
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db;
-
-		/* $sql = ""; */
-		/* $db->query($sql); */
-	}
-
-	/**
-	 * Register module to be included in search
-	 *
-	 * @param string $name
-	 * @param object $module
-	 */
-	public function registerModule($name, $module) {
-		$this->modules[$name] = $module;
 	}
 
 	/**
@@ -146,31 +124,17 @@ class search extends Module {
 			$limit = fix_id($tag_params['limit']);
 
 		// get list of modules to search on
-		$module_list = null;
-
+		$module_list = array();
 		if (isset($tag_params['module_list']))
 			$module_list = fix_chars(explode(',', $tag_params['module_list']));
 
-		if (isset($_REQUEST['module_list']) && is_null($module_list))
-			$module_list = fix_chars(explode(',', $_REQUEST['module_list']));
-
-		if (is_null($module_list))
-			$module_list = array_keys($this->modules);
-
-		// get intersection of available and specified modules
-		$available_modules = array_keys($this->modules);
-		$module_list = array_intersect($available_modules, $module_list);
-
-		// get results from modules
-		$results = array();
-		if (count($module_list) > 0)
-			foreach ($module_list as $name) {
-				$module = $this->modules[$name];
-				$results = array_merge($results, $module->getSearchResults($query_string, $threshold));
-			}
+		// get search results
+		$raw_results = Events::trigger('search', 'get-results', $module_list, $query, $threshold);
+		foreach ($raw_results as $result)
+			$results = array_merge($results, $result);
 
 		// sort results
-		usort($results, array($this, 'sortResults'));
+		usort($results, array($this, 'sort_results'));
 
 		// apply limit
 		if ($limit > 0)
@@ -195,7 +159,7 @@ class search extends Module {
 	 * @param array $item2
 	 * @return integer
 	 */
-	private function sortResults($item1, $item2) {
+	private function sort_results($item1, $item2) {
 		$result = 0;
 
 		if ($item1['score'] != $item2['score'])
