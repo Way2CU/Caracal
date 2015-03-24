@@ -366,6 +366,10 @@ class shop extends Module {
 		if (!in_array($this->name, $module_list))
 			return array();
 
+		// don't bother searching for empty query string
+		if (empty($query))
+			return array();
+
 		// initialize managers and data
 		$manager = ShopItemManager::getInstance();
 		$result = array();
