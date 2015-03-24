@@ -16,9 +16,9 @@ Caracal.Shop = Caracal.Shop || {};
  * and variation id combined.
  *
  * Signals fired by this object:
- * 	item-added
- * 	item-removed
- * 	item-amount-change
+ * 	item-added (cart, uid, variation id, properties)
+ * 	item-removed (cart, item)
+ * 	item-amount-change (cart, item, new amount)
  * 	before-checkout
  * 	checkout
  *
@@ -28,6 +28,7 @@ Caracal.Shop.Cart = function() {
 	var self = this;
 
 	self.items = {};
+	self.reservations = [];
 	self.default_currency = '';
 	self.currency = self.default_currency;
 	self.exchange_rate = 1;
@@ -79,8 +80,8 @@ Caracal.Shop.Cart = function() {
 			return result;
 
 		// add item if all signal handlers permit it
-		var cid = item.get_cid();
-		if (self.events.emit_signal('item-added', self, cid)) {
+		if (self.events.emit_signal('item-added', self, item.uid, item.variation_id, item.properties)) {
+			var cid = item.get_cid();
 			self.items[cid] = item;
 			result = true;
 		}
@@ -94,22 +95,26 @@ Caracal.Shop.Cart = function() {
 	 * @param string cid
 	 */
 	self.add_item_by_cid = function(cid) {
+		// prepare server data
+		var cid_data = cid.split('/', 2);
+		var data = {
+			uid: cid_data[0],
+			variation_id: cid_data[1]
+		};
+
+		// check if item is reserved
+		if (self.reservations.indexOf(data.uid) > -1)
+			return;
+
 		if (cid in self.items) {
 			// item already exists, increase count
 			var item = self.items[cid];
 			if (item != null)
 				item.alter_count(1);
 
-		} else if (self.events.emit_signal('item-added', self, cid)) {
-			// load data from server
-			var cid_data = cid.split('/', 2);
-			var data = {
-				uid: cid_data[0],
-				variation_id: cid_data[1]
-			};
-
-			// reserve space in item list
-			self.items[cid] = null;
+		} else if (self.events.emit_signal('item-added', self, data.uid, data.variation_id, null)) {
+			// temporarily prevent modifications of this item
+			self.reservations.push(data.uid);
 
 			// add item through server
 			new Communicator('shop')
@@ -121,6 +126,33 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Add new item with specified unique id and a set of properties. Properties will
+	 * be used to generate variation id.
+	 *
+	 * @param string uid
+	 * @param object properties
+	 */
+	self.add_item_by_uid = function(uid, properties) {
+		// check if item is reserved
+		if (self.reservations.indexOf(uid) > -1)
+			return;
+
+		// check if signal handlers allow adding this item
+		if (!self.events.emit_signal('item-added', self, uid, null, properties))
+			return;
+
+		// temporarily prevent modifications of this item
+		self.reservations.push(uid);
+
+		// add item through server
+		new Communicator('shop')
+			.on_success(self.handlers.item_add_success)
+			.on_error(self.handlers.item_add_error)
+			.set_callback_data(uid + '/')
+			.send('json_add_item_to_shopping_cart', data);
+	};
+
+	/**
 	 * Set number of items specified by CID in shopping cart.
 	 *
 	 * @param string cid
@@ -129,9 +161,14 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.set_item_count_by_cid = function(cid, count) {
 		var result = false;
+		var cid_data = cid.split('/', 2);
+
+		// check if item is reserved
+		if (self.reservations.indexOf(cid_data[0]) > -1)
+			return result;
 
 		// check if item exists
-		if (!(cid in self.items) || self.items[cid] == null)
+		if (!(cid in self.items))
 			return result;
 
 		// find item and remove it
@@ -148,7 +185,9 @@ Caracal.Shop.Cart = function() {
 	 * @param integer difference
 	 */
 	self.alter_item_count_by_cid = function(cid, difference) {
-		if (!(cid in self.items) && difference > 0) {
+		var cid_data = cid.split('/', 2);
+
+		if (!(cid in self.items) && difference > 0 && self.reservations.indexOf(cid_data[0]) > -1) {
 			// create new item
 			self.add_item_by_cid(cid);
 
@@ -182,6 +221,28 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Remove all items with matching unique id. Function returns
+	 * number of items removed. If no items were removed, result is zero.
+	 *
+	 * @param string uid
+	 * @return integer
+	 */
+	self.remove_item_by_uid = function(uid) {
+		var result = 0;
+
+		for (var cid in self.items) {
+			var cid_data = cid.split('/', 2);
+
+			if (cid_data[0] == uid) {
+				self.items[cid].remove();
+				result++;
+			}
+		}
+
+		return result;
+	};
+
+	/**
 	 * Get item object with specified CID.
 	 *
 	 * @param string cid
@@ -192,6 +253,49 @@ Caracal.Shop.Cart = function() {
 
 		if (cid in self.items)
 			result = self.items[cid];
+
+		return result;
+	};
+
+	/**
+	 * Get first item with matching unique id. This function does not take
+	 * into account any properties set. If there's no item with specified
+	 * id, null is returned.
+	 *
+	 * @param string uid
+	 * @return object
+	 */
+	self.get_item_by_uid = function(uid) {
+		var result = null;
+
+		for (var cid in self.items) {
+			var cid_data = cid.split('/', 2);
+
+			if (cid_data[0] == uid) {
+				result = self.items[cid];
+				break;
+			}
+		}
+
+		return result;
+	};
+
+	/**
+	 * Get all item variations in cart. Result is an array with items matching
+	 * specified unique id. If no items match specified id empty list is returned.
+	 *
+	 * @param string uid
+	 * @return array
+	 */
+	self.get_item_list_by_uid = function(uid) {
+		var result = new Array();
+
+		for (var cid in self.items) {
+			var cid_data = cid.split('/', 2);
+
+			if (cid_data[0] == uid)
+				result.push(self.items[cid]);
+		}
 
 		return result;
 	};
@@ -390,6 +494,11 @@ Caracal.Shop.Cart = function() {
 		if (cid != original_cid)
 			delete self.items[original_cid];
 
+		// clear item reservation
+		var index = self.reservations.index(data.uid);
+		if (index > -1)
+			self.reservations.splice(index, 1);
+
 		// update totals
 		self.ui.update_totals();
 	};
@@ -403,8 +512,12 @@ Caracal.Shop.Cart = function() {
 	 * @param string cid
 	 */
 	self.handlers.item_add_error = function(xhr, transfer_status, description, cid) {
-		if (cid in self.items)
-			delete self.items[cid];
+		var cid_data = cid.split('/', 2);
+		var index = self.reservations.index(cid_data[0]);
+
+		// remove item reservation
+		if (index > -1)
+			self.reservations.splice(index, 1);
 	};
 
 	/**
