@@ -54,8 +54,7 @@ final class Events {
 		$callable = is_null($object) ? $callback : array($object, $callback);
 
 		if (isset(self::$event_names[$module][$event_name]))
-			self::$callbacks[$module][$event_name][] = $callable; else
-			throw new UnknownEventError("Unable to connect to module's '{$module}' event '{$event_name}'.");
+			self::$callbacks[$module][$event_name][] = $callable;
 	}
 
 	/**
