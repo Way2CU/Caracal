@@ -28,14 +28,12 @@ final class Events {
 	 */
 	public static function register($module, $event_name, $required_param_count=0) {
 		// create storage for module
-		if (!isset(self::$event_names[$module])) {
+		if (!isset(self::$event_names[$module]))
 			self::$event_names[$module] = array();
-			self::$callbacks[$module] = array();
-		}
 
+		// add event definition
 		if (!isset(self::$event_names[$module][$event_name])) {
 			self::$event_names[$module][$event_name] = $required_param_count;
-			self::$callbacks[$module][$event_name] = array();
 
 		} else {
 			throw new EventAlreadyExistsError("Unable to register module '{$module}' eventl '{$event_name}'.");
@@ -53,8 +51,15 @@ final class Events {
 	public static function connect($module, $event_name, $callback, $object=null) {
 		$callable = is_null($object) ? $callback : array($object, $callback);
 
-		if (isset(self::$event_names[$module][$event_name]))
-			self::$callbacks[$module][$event_name][] = $callable;
+		// create storage for callbacks
+		if (!isset(self::$callbacks[$module]))
+			self::$callbacks[$module] = array();
+
+		if (!isset(self::$callbacks[$module][$event_name]))
+			self::$callbacks[$module][$event_name] = array();
+
+		// add callback to list
+		self::$callbacks[$module][$event_name][] = $callable;
 	}
 
 	/**
@@ -86,8 +91,9 @@ final class Events {
 			);
 
 		// call all callback methods
-		foreach (self::$callbacks[$module][$event_name] as $callable)
-			$result[] = call_user_func_array($callable, $params);
+		if (isset(self::callbacks[$module][$event_name]))
+			foreach (self::$callbacks[$module][$event_name] as $callable)
+				$result[] = call_user_func_array($callable, $params);
 
 		return $result;
 	}
