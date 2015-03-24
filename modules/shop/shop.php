@@ -416,7 +416,8 @@ class shop extends Module {
 		$items = $manager->getItems(
 			array(
 				'id',
-				'name'
+				'name',
+				'description'
 			),
 			$conditions
 		);
