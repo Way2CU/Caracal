@@ -129,6 +129,7 @@ class search extends Module {
 			$module_list = fix_chars(explode(',', $tag_params['module_list']));
 
 		// get search results
+		$results = array();
 		$raw_results = Events::trigger('search', 'get-results', $module_list, $query_string, $threshold);
 		foreach ($raw_results as $result)
 			$results = array_merge($results, $result);
