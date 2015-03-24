@@ -149,10 +149,10 @@ class search extends Module {
 		$module_list = null;
 
 		if (isset($tag_params['module_list']))
-			$module_list = fix_chars(split(',', $tag_params['module_list']));
+			$module_list = fix_chars(explode(',', $tag_params['module_list']));
 
 		if (isset($_REQUEST['module_list']) && is_null($module_list))
-			$module_list = fix_chars(split(',', $_REQUEST['module_list']));
+			$module_list = fix_chars(explode(',', $_REQUEST['module_list']));
 
 		if (is_null($module_list))
 			$module_list = array_keys($this->modules);
