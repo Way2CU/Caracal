@@ -500,7 +500,7 @@ Caracal.Shop.Cart = function() {
 			delete self.items[original_cid];
 
 		// clear item reservation
-		var index = self.reservations.index(data.uid);
+		var index = self.reservations.indexOf(data.uid);
 		if (index > -1)
 			self.reservations.splice(index, 1);
 
