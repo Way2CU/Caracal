@@ -518,7 +518,7 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.handlers.item_add_error = function(xhr, transfer_status, description, cid) {
 		var cid_data = cid.split('/', 2);
-		var index = self.reservations.index(cid_data[0]);
+		var index = self.reservations.indexOf(cid_data[0]);
 
 		// remove item reservation
 		if (index > -1)
