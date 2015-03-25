@@ -913,6 +913,11 @@ div#checkout_steps a {
 	transition-duration: 0.3s;
 }
 
+body.rtl div#checkout_steps a {
+	margin-right: auto;
+	margin-left: 5px;
+}
+
 div#checkout_steps a span {
 	display: inline-block;
 	margin-right: 3px;
@@ -931,8 +936,12 @@ div#checkout_steps a span {
 	transition-duration: 0.3s;
 }
 
-div#checkout_steps a:not(:last-of-type):after,
-body.rtl div#checkout_steps a:not(:last-of-type):after {
+body.rtl div#checkout_steps a span {
+	margin-right: auto;
+	margin-left: 3px;
+}
+
+div#checkout_steps a:not(:last-of-type):after {
 	display: inline-block;
 	width: 0px;
 	height: 0px;
