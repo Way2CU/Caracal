@@ -393,7 +393,7 @@ Caracal.Shop.Cart = function() {
 		}
 
 		// redirect to checkout
-		window.location.replace(url);
+		window.location.href = url;
 	};
 
 	/**
