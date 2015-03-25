@@ -1733,7 +1733,7 @@ class shop extends Module {
 							'uid'			=> $item->uid,
 							'variation_id'	=> $variation_id,
 							'count'			=> $properties['count'],
-							'properties'	=> $new_properties,
+							'properties'	=> unfix_chars($new_properties),
 							'size_definition'	=> $item->size_definition
 						);
 					}
