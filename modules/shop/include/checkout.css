@@ -951,10 +951,6 @@ body.rtl div#checkout_steps a:not(:last-of-type):after {
 }
 
 body.rtl div#checkout_steps a:not(:last-of-type):after {
-	content: none;
-}
-
-body.rtl div#checkout_steps a:not(:last-of-type):after {
 	border-left-width: 0px;
 	border-right: 5px solid #606060;
 }
