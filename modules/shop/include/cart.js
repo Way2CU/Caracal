@@ -372,6 +372,10 @@ Caracal.Shop.Cart = function() {
 	 * @param string payment_method
 	 */
 	self.checkout = function(payment_method) {
+		// ensure there are items for checkout
+		if (Object.keys(self.items).length == 0)
+			return;
+
 		// make sure we have absolute path to checkout
 		var url = self.checkout_url;
 
