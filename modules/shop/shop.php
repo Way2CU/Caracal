@@ -1821,7 +1821,7 @@ class shop extends Module {
 				'count'			=> $cart[$uid]['variations'][$variation_id]['count'],
 				'uid'			=> $item->uid,
 				'variation_id'	=> $variation_id,
-				'properties'	=> $properties
+				'properties'	=> unfix_chars($properties)
 			);
 
 			// update shopping cart
