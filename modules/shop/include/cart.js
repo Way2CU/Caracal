@@ -145,6 +145,11 @@ Caracal.Shop.Cart = function() {
 		self.reservations.push(uid);
 
 		// add item through server
+		var data = {
+				'uid': uid,
+				'properties': properties
+			};
+
 		new Communicator('shop')
 			.on_success(self.handlers.item_add_success)
 			.on_error(self.handlers.item_add_error)
