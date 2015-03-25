@@ -1820,7 +1820,8 @@ class shop extends Module {
 				'image'			=> $thumbnail_url,
 				'count'			=> $cart[$uid]['variations'][$variation_id]['count'],
 				'uid'			=> $item->uid,
-				'variation_id'	=> $variation_id
+				'variation_id'	=> $variation_id,
+				'properties'	=> $properties
 			);
 
 			// update shopping cart
