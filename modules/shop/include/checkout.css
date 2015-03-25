@@ -960,6 +960,8 @@ div#checkout_steps a:not(:last-of-type):after {
 }
 
 body.rtl div#checkout_steps a:not(:last-of-type):after {
+	left: auto;
+	right: 3px;
 	border-left-width: 0px;
 	border-right: 5px solid #606060;
 }
