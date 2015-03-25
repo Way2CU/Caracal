@@ -38,6 +38,7 @@ Caracal.Shop.Cart = function() {
 	self.events = {};
 	self.handlers = {};
 	self.item_views = new Array();
+	self.checkout_url = '/shop/checkout';
 
 	/**
 	 * Complete object initialization.
@@ -353,11 +354,42 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Set checkout URL or path. If URL does not contain 'http' or 'https' schema
+	 * in the beginning system will assume it's relative path and will use base tag
+	 * to determine absolute URL.
+	 *
+	 * @param string url
+	 * @return object
+	 */
+	self.set_checkout_url = function(url) {
+		self.checkout_url = url;
+		return self;
+	};
+
+	/**
 	 * Go to checkout page and optionally pre-select payment method.
 	 *
 	 * @param string payment_method
 	 */
 	self.checkout = function(payment_method) {
+		// make sure we have absolute path to checkout
+		var url = self.checkout_url;
+
+		if (url.indexOf('http://') == -1 && url.indexOf('https://') == -1) {
+			if (url[0] != '/')
+				url = '/' + url;
+
+			url = $('base').attr('href') + url;
+		}
+
+		// add payment method if specified
+		if (payment_method) {
+			var glue = url.indexOf('?') > -1 ? '&' : '?';
+			url = url + glue + 'payment_method=' + escape(payment_method);
+		}
+
+		// redirect to checkout
+		window.location.replace(url);
 	};
 
 	/**
@@ -526,6 +558,16 @@ Caracal.Shop.Cart = function() {
 	};
 
 	/**
+	 * Handle clicking on checkout button.
+	 *
+	 * @param object event
+	 */
+	self.handlers.checkout_click = function(event) {
+		event.preventDefault();
+		self.checkout();
+	};
+
+	/**
 	 * Add item list to shopping cart.
 	 *
 	 * @param object item_list
@@ -581,7 +623,13 @@ Caracal.Shop.Cart = function() {
 	 * @return object
 	 */
 	self.ui.connect_checkout_button = function(button) {
+		// extend set
 		$.extend(self.ui.checkout_button, button);
+
+		// re-attach handlers
+		self.ui.checkout_button.off('click', self.handlers.checkout_click);
+		self.ui.checkout_button.on('click', self.handlers.checkout_click);
+
 		return self;
 	};
 
