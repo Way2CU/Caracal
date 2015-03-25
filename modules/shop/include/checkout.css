@@ -829,6 +829,11 @@ div#input_details label.checkbox input + span:before {
 	transition-duration: 0.3s;
 }
 
+body.rtl div#input_details label.checkbox input + span:before {
+	margin-right: auto;
+	margin-left: 4px;
+}
+
 div#input_details label.checkbox input:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
