@@ -2276,32 +2276,55 @@ class gallery extends Module {
 	}
 
 	/**
-	 * Get gallery group thumbnail based on gallery id
+	 * Get group image URL based on one of the specified ids.
 	 *
-	 * @param integer $group_id
-	 * @param boolean $big_image
+	 * @param integer $id
+	 * @param string $text_id
+	 * @param integer $size
+	 * @param integer $constraint
 	 * @return string
 	 */
-	public function getGroupThumbnailURL($group_id, $big_image=false) {
+	public static function getGroupImageById($id=null, $text_id=null) {
 		$manager = GalleryGroupManager::getInstance();
-		$group = $manager->getSingleItem(array('thumbnail', 'id'), array('id' => $group_id));
-
+		$image_manager = GalleryManager::getInstance();
+		$conditions = array();
 		$result = '';
-		if (is_object($group))
-			$result = $this->getGroupImage($group, $big_image);
+
+		// prepare conditions
+		if (!is_null($id))
+			$conditions['id'] = $id;
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		// get group from database
+		$group = $manager->getSingleItem(array('id', 'thumbnail'), $conditions);
+
+		// specified group doesn't exist
+		if (!is_object($group))
+			return $result;
+
+		if (empty($group->thumbnail)) {
+			// no image was set as thumbnail, get one at random
+			$image = $image_manager->getSingleItem(
+										array('id'),
+										array(
+											'group' 	=> $group->id,
+											'protected'	=> 0,
+											'visible'	=> 1
+										),
+										array('RAND()')
+									);
+
+			if (is_object($image))
+				$result = self::getImageById($image->id, null, $size, $constraint);
+
+		} else {
+			// return thumbnail from specified image
+			$result = self::getImageById($group->thumbnail, null, $size, $constraint);
+		}
 
 		return $result;
-	}
-
-	/**
-	 * Get image ID by filename
-	 *
-	 * @param string $filename
-	 * @return integer
-	 */
-	public function getImageIdByFileName($filename) {
-		$manager = GalleryManager::getInstance();
-		return $manager->getItemValue('id', array('filename' => $filename));
 	}
 
 	/**
