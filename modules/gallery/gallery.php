@@ -2150,7 +2150,7 @@ class gallery extends Module {
 		// prepare result
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
-			$result = url_GetFromFilePath($this->image_path.$item->filename);
+			$result = url_GetFromFilePath(self::$image_path.$item->filename);
 		}
 
 		return $result;
@@ -2317,11 +2317,11 @@ class gallery extends Module {
 									);
 
 			if (is_object($image))
-				$result = self::getImageById($image->id, null, $size, $constraint);
+				$result = self::getImageById($image->id, null);
 
 		} else {
 			// return thumbnail from specified image
-			$result = self::getImageById($group->thumbnail, null, $size, $constraint);
+			$result = self::getImageById($group->thumbnail, null);
 		}
 
 		return $result;
