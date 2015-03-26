@@ -1715,7 +1715,7 @@ class shop extends Module {
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				// get item image url
-				$thumbnail_url = !is_null($gallery) ? $gallery->getGroupThumbnailURL($item->gallery) : '';
+				$thumbnail_url = class_exists('gallery') ? gallery::getGroupThumbnailById($item->gallery) : '';
 
 				$uid = $item->uid;
 
@@ -1767,6 +1767,7 @@ class shop extends Module {
 		$uid = fix_chars($_REQUEST['uid']);
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 
+		// get variation id
 		if (isset($_REQUEST['properties'])) {
 			$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
 			$variation_id = $this->generateVariationId($uid, $properties);
@@ -1774,6 +1775,10 @@ class shop extends Module {
 		} else if ($_REQUEST['variation_id']) {
 			$variation_id = fix_chars($_REQUEST['variation_id']);
 		}
+
+		// get thumbnail options
+		$thumbnail_size = isset($_REQUEST['thumbnail_size']) ? fix_id($_REQUEST['thumbnail_size']) : 100;
+		$thumbnail_constraint = isset($_REQUEST['thumbnail_constraint']) ? fix_id($_REQUEST['thumbnail_constraint']) : Thumbnail::CONSTRAIN_BOTH;
 
 		// try to get item from database
 		$manager = ShopItemManager::getInstance();
@@ -1806,10 +1811,13 @@ class shop extends Module {
 
 			// get item image url
 			$thumbnail_url = null;
-			if (class_exists('gallery')) {
-				$gallery = gallery::getInstance();
-				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
-			}
+			if (class_exists('gallery'))
+				$thumbnail_url = gallery::getGroupThumbnailById(
+										$item->gallery,
+										null,
+										$thumbnail_size,
+										$thumbnail_constraint
+									);
 
 			// prepare result
 			$result = array(

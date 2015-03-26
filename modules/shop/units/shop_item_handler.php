@@ -535,13 +535,11 @@ class ShopItemHandler {
 				}
 
 				// get urls for image and thumbnail
-				$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
-				$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
+				$image_url = gallery::getGroupImageById($item->gallery);
 
 			} else {
 				// default values if gallery is not enabled
 				$image_url = '';
-				$thumbnail_url = '';
 				$manufacturer_logo_url = '';
 			}
 
@@ -557,7 +555,6 @@ class ShopItemHandler {
 						'description'	=> $item->description,
 						'gallery'		=> $item->gallery,
 						'image'			=> $image_url,
-						'thumbnail'		=> $thumbnail_url,
 						'manufacturer_logo_url' => $manufacturer_logo_url,
 						'size_definition' => $item->size_definition,
 						'colors'		=> $item->colors,
@@ -714,13 +711,11 @@ class ShopItemHandler {
 					}
 
 					// get urls for image and thumbnail
-					$image_url = $gallery->getGroupThumbnailURL($item->gallery, true);
-					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
+					$image_url = gallery::getGroupImageById($item->gallery);
 
 				} else {
 					// default values if gallery is not enabled
 					$image_url = '';
-					$thumbnail_url = '';
 					$manufacturer_logo_url = '';
 				}
 
@@ -752,7 +747,6 @@ class ShopItemHandler {
 							'size_definition'=> $item->size_definition,
 							'colors'		=> $item->colors,
 							'image'			=> $image_url,
-							'thumbnail'		=> $thumbnail_url,
 							'manufacturer_logo_url'	=> $manufacturer_logo_url,
 							'author'		=> $item->author,
 							'views'			=> $item->views,
@@ -878,6 +872,10 @@ class ShopItemHandler {
 		$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
 		$manager = ShopItemManager::getInstance();
 
+		// get thumbnail options
+		$thumbnail_size = isset($_REQUEST['thumbnail_size']) ? fix_id($_REQUEST['thumbnail_size']) : 100;
+		$thumbnail_constraint = isset($_REQUEST['thumbnail_constraint']) ? fix_id($_REQUEST['thumbnail_constraint']) : Thumbnail::CONSTRAIN_BOTH;
+
 		// prepare result
 		$result = array(
 					'error'			=> false,
@@ -898,10 +896,13 @@ class ShopItemHandler {
 			if (is_object($item)) {
 				// get item image url
 				$thumbnail_url = null;
-				if (class_exists('gallery')) {
-					$gallery = gallery::getInstance();
-					$thumbnail_url = $gallery->getGroupThumbnailURL($item->gallery);
-				}
+				if (class_exists('gallery'))
+					$thumbnail_url = gallery::getGroupThumbnailById(
+											$item->gallery,
+											null,
+											$thumbnail_size,
+											$thumbnail_constraint
+										);
 
 				$rating = 0;
 
