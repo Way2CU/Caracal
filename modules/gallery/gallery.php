@@ -2148,10 +2148,8 @@ class gallery extends Module {
 			);
 
 		// prepare result
-		if (is_object($item)) {
-			$path = dirname(__FILE__);
-			$result = url_GetFromFilePath(self::$image_path.$item->filename);
-		}
+		if (is_object($item))
+			$result = url_GetFromFilePath(self::getInstance()->image_path.$item->filename);
 
 		return $result;
 	}
