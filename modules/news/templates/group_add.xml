@@ -18,6 +18,7 @@
 			</button>
 		</div>
 	</form>
+
 	<script type="text/javascript">
 		new LanguageSelector('news_group_add_form');
 	</script>

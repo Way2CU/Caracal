@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_group_change_form">
 		<label>
-			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_text_id" module="news"/></span>
-			<input type="text" name="text_id" class="code" style="width: 250px;" value="$params['text_id']" cms:eval="value" maxlength="32"/>
+			<input
+				type="text"
+				name="text_id"
+				class="code"
+				style="width: 250px;"
+				value="$params['text_id']"
+				cms:eval="value"
+				maxlength="32"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_title" module="news"/></span>
@@ -13,6 +20,7 @@
 			<cms:language_data param="title"/>
 		</label>
 		<div class="button_bar">
+			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
@@ -20,7 +28,8 @@
 			</button>
 		</div>
 	</form>
+
 	<script type="text/javascript">
-		new LanguageSelector('news_add_form');
+		new LanguageSelector('news_group_change_form');
 	</script>
 </document>
