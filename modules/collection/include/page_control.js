@@ -54,10 +54,10 @@ function PageControl(selector, page_selector) {
 		var button_previous = $(this).find('button.previous, input[type=button].previous, input[type=submit].previous');
 
 		if (button_next.length > 0)
-			button_next.click(self._handleNext);
+			button_next.on('click', self._handleNext);
 
 		if (button_previous.length > 0)
-			button_previous.click(self._handlePrevious);
+			button_previous.on('click', self._handlePrevious);
 	};
 
 	/**
@@ -306,7 +306,10 @@ function PageControl(selector, page_selector) {
 			});
 
 			// conect event handler
-			self.controls.click(self.handleControlClick);
+			self.controls.on('click', self.handleControlClick);
+
+			// highlight selected control
+			self.controls.eq(self.current_page).addClass('active');
 		}
 
 		return self;
@@ -318,7 +321,7 @@ function PageControl(selector, page_selector) {
 	 * @param object control
 	 */
 	self.attachPreviousControl = function(control) {
-		control.click(self._handlePrevious);
+		control.on('click', self._handlePrevious);
 		return self;
 	};
 
@@ -328,7 +331,7 @@ function PageControl(selector, page_selector) {
 	 * @param object control
 	 */
 	self.attachNextControl = function(control) {
-		control.click(self._handleNext);
+		control.on('click', self._handleNext);
 		return self;
 	};
 
