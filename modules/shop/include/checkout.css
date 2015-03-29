@@ -1,7 +1,7 @@
 /**
  * Checkout Style Sheet
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2015. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -30,7 +30,7 @@ div#checkout.recurring {
 
 div#checkout div.container {
 	display: block;
-	height: 130px;
+	min-height: 130px;
 
 	position: relative;
 }
@@ -895,8 +895,10 @@ div#checkout_steps {
 	margin-bottom: 20px;
 
 	color: #505050;
-	font-size: 0.7em;
+	font-size: 0.8em;
 	text-align: left;
+
+	counter-reset: checkout-steps;
 }
 
 div#checkout_steps.input_details {
@@ -916,6 +918,7 @@ div#checkout_steps a {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+	counter-increment: checkout-steps;
 }
 
 body.rtl div#checkout_steps a {
@@ -923,8 +926,9 @@ body.rtl div#checkout_steps a {
 	margin-left: 5px;
 }
 
-div#checkout_steps a span {
+div#checkout_steps a:before {
 	display: inline-block;
+	content: counter(checkout-steps);
 	margin-right: 3px;
 	padding: 3px;
 	padding-left: 9px;
@@ -941,7 +945,7 @@ div#checkout_steps a span {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#checkout_steps a span {
+body.rtl div#checkout_steps a:before {
 	margin-right: auto;
 	margin-left: 3px;
 }
