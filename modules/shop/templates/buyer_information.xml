@@ -3,52 +3,32 @@
 <document>
 	<div id="checkout_container">
 		<div id="checkout_steps" class="input_details">
-			<!-- Shipping included -->
-			<cms:if condition="$params['include_shipping']">
-				<a href="#" class="active">
-					<span>1</span>
+			<cms:guest>
+				<a href="javascript:void(0);" class="active">
 					<cms:text constant="title_sign_in" module="shop"/>
 				</a>
-				<a href="#">
-					<span>2</span>
+			</cms:guest>
+			<cms:if condition="$params['include_shipping']">
+				<a href="javascript:void(0);">
 					<cms:text constant="title_shipping_information" module="shop"/>
 				</a>
-				<a href="#">
-					<span>3</span>
-					<cms:text constant="title_payment_method" module="shop"/>
-				</a>
-				<a href="#">
-					<span>4</span>
-					<cms:text constant="title_billing_information" module="shop"/>
-				</a>
-				<a href="#">
-					<span>5</span>
-					<cms:text constant="title_checkout" module="shop"/>
-				</a>
 			</cms:if>
-
-			<!-- No shipping included -->
-			<cms:if condition="!$params['include_shipping']">
-				<a href="#" class="active">
-					<span>1</span>
-					<cms:text constant="title_payment_method" module="shop"/>
-				</a>
-				<a href="#">
-					<span>2</span>
-					<cms:text constant="title_billing_information" module="shop"/>
-				</a>
-				<a href="#">
-					<span>3</span>
-					<cms:text constant="title_checkout" module="shop"/>
-				</a>
-			</cms:if>
+			<a href="javascript:void(0);">
+				<cms:text constant="title_payment_method" module="shop"/>
+			</a>
+			<a href="javascript:void(0);">
+				<cms:text constant="title_billing_information" module="shop"/>
+			</a>
+			<a href="javascript:void(0);">
+				<cms:text constant="title_checkout" module="shop"/>
+			</a>
 		</div>
 
 		<div id="input_details" cms:skip_cache="1">
 			<form method="POST" action="">
 				<div class="pages">
-					<cms:if condition="$params['include_shipping']">
-						<!-- Sign In -->
+					<!-- Sign In -->
+					<cms:guest>
 						<div class="page" id="sign_in">
 							<h1><cms:text constant="title_sign_in" module="shop"/></h1>
 
@@ -58,7 +38,7 @@
 									name="existing_user"
 									value="0"
 									checked="checked"
-								/>
+									/>
 								<span><cms:text constant="label_existing_user" module="shop"/></span>
 							</label>
 
@@ -70,7 +50,7 @@
 										name="sign_in_email"
 										maxlength="127"
 										autocomplete="email"
-									/>
+										/>
 								</label>
 								<label>
 									<span><cms:text constant="label_password" module="shop"/></span>
@@ -79,7 +59,7 @@
 										name="sign_in_password"
 										maxlength="127"
 										autocomplete="off"
-									/>
+										/>
 								</label>
 								<a href="javascript:void();" class="password_recovery">
 									<cms:text constant="label_password_recovery" module="shop"/>
@@ -93,7 +73,7 @@
 									type="radio"
 									name="existing_user"
 									value="1"
-								/>
+									/>
 								<span><cms:text constant="label_new_user" module="shop"/></span>
 							</label>
 
@@ -109,7 +89,7 @@
 										maxlength="64"
 										data-required="1"
 										autocomplete="given-name"
-									/>
+										/>
 								</label>
 								<label class="separator">
 									<span><cms:text constant="label_last_name" module="shop"/></span>
@@ -122,7 +102,7 @@
 										maxlength="64"
 										data-required="1"
 										autocomplete="family-name"
-									/>
+										/>
 								</label>
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
@@ -135,7 +115,7 @@
 										maxlength="127"
 										data-required="1"
 										autocomplete="email"
-									/>
+										/>
 								</label>
 								<label>
 									<span><cms:text constant="label_password" module="shop"/></span>
@@ -145,7 +125,7 @@
 										maxlength="127"
 										data-required="1"
 										autocomplete="off"
-									/>
+										/>
 								</label>
 								<label>
 									<span><cms:text constant="label_confirm" module="shop"/></span>
@@ -155,7 +135,7 @@
 										maxlength="127"
 										data-required="1"
 										autocomplete="off"
-									/>
+										/>
 								</label>
 							</div>
 
@@ -166,7 +146,7 @@
 									type="radio"
 									name="existing_user"
 									value="2"
-								/>
+									/>
 								<span><cms:text constant="label_guest" module="shop"/></span>
 							</label>
 
@@ -174,8 +154,10 @@
 								<button class="next"><cms:text constant="next"/></button>
 							</div>
 						</div>
+					</cms:guest>
 
-						<!-- Shipping Information -->
+					<!-- Shipping Information -->
+					<cms:if condition="$params['include_shipping']">
 						<div class="page" id="shipping_information">
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
 							<label>
@@ -193,7 +175,7 @@
 									maxlength="64"
 									data-required="1"
 									autocomplete="name"
-								/>
+									/>
 							</label>
 							<hr/>
 							<label>
@@ -207,7 +189,7 @@
 									maxlength="127"
 									data-required="1"
 									autocomplete="email"
-								/>
+									/>
 							</label>
 							<label>
 								<span><cms:text constant="label_phone_number" module="shop"/></span>
@@ -219,7 +201,7 @@
 									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
 									maxlength="127"
 									autocomplete="tel"
-								/>
+									/>
 							</label>
 							<hr/>
 							<label>
@@ -233,7 +215,7 @@
 									maxlength="200"
 									data-required="1"
 									autocomplete="address-line1"
-								/>
+									/>
 							</label>
 							<label class="separator">
 								<span></span>
@@ -245,7 +227,7 @@
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 									maxlength="200"
 									autocomplete="address-line2"
-								/>
+									/>
 							</label>
 							<label>
 								<span><cms:text constant="label_city" module="shop"/></span>
@@ -258,7 +240,7 @@
 									maxlength="40"
 									data-required="1"
 									autocomplete="locality"
-								/>
+									/>
 							</label>
 							<label>
 								<span><cms:text constant="label_zip" module="shop"/></span>
@@ -271,7 +253,7 @@
 									maxlength="20"
 									data-required="1"
 									autocomplete="postal-code"
-								/>
+									/>
 							</label>
 							<label>
 								<span><cms:text constant="label_country" module="shop"/></span>
@@ -282,14 +264,14 @@
 										cms:eval="class"
 										data-required="1"
 										autocomplete="country"
-									>
+										>
 										<option/>
 										<cms:module
 											name="country_list"
 											action="show"
 											selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
 											cms:eval="selected"
-										/>
+											/>
 									</select>
 								</cms:if>
 								<cms:if condition="!empty($params['fixed_country'])">
@@ -299,13 +281,13 @@
 										cms:eval="class"
 										data-required="1"
 										autocomplete="country"
-									>
+										>
 										<cms:module
 											name="country_list"
 											action="show"
 											filter="$params['fixed_country']"
 											cms:eval="filter"
-										/>
+											/>
 									</select>
 								</cms:if>
 							</label>
@@ -319,7 +301,7 @@
 									value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
 									maxlength="40"
 									autocomplete="region"
-								/>
+									/>
 							</label>
 
 							<div class="checkout_controls">
@@ -341,13 +323,11 @@
 							<cms:module
 								name="shop"
 								action="show_payment_methods"
-							/>
+								/>
 						</div>
 
 						<div class="checkout_controls">
-							<cms:if condition="$params['include_shipping']">
-								<button class="previous"><cms:text constant="back"/></button>
-							</cms:if>
+							<button class="previous"><cms:text constant="back"/></button>
 							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</div>
@@ -367,7 +347,7 @@
 								maxlength="64"
 								autocomplete="cc-name"
 								data-required="1"
-							/>
+								/>
 						</label>
 						<hr/>
 						<label>
@@ -388,7 +368,7 @@
 								maxlength="127"
 								autocomplete="cc-number"
 								data-required="1"
-							/>
+								/>
 						</label>
 						<div class="horizontal">
 							<label>
@@ -403,7 +383,7 @@
 									autocomplete="cc-exp-month"
 									placeholder="mm"
 									data-required="1"
-								/>
+									/>
 							</label>
 							<label>
 								<input
@@ -416,7 +396,7 @@
 									autocomplete="cc-exp-year"
 									placeholder="yyyy"
 									data-required="1"
-								/>
+									/>
 							</label>
 						</div>
 						<label>
@@ -430,7 +410,7 @@
 								maxlength="4"
 								autocomplete="cc-csc"
 								data-required="1"
-							/>
+								/>
 							<cms:raw><![CDATA[&nbsp;]]></cms:raw>
 							<a href="javascript: void();" class="what_is_cvv">
 								<cms:text constant="label_cvv_question" module="shop"/>
@@ -440,7 +420,7 @@
 								src="_BASEURL.'/modules/shop/images/security_code.png'"
 								alt="CVV2"
 								cms:eval="src"
-							/>
+								/>
 						</label>
 						<div class="checkout_controls">
 							<button class="previous"><cms:text constant="back"/></button>
