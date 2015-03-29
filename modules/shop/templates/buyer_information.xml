@@ -4,7 +4,7 @@
 	<div id="checkout_container">
 		<div id="checkout_steps" class="input_details">
 			<cms:guest>
-				<a href="javascript:void(0);" class="active">
+				<a href="javascript:void(0);">
 					<cms:text constant="title_sign_in" module="shop"/>
 				</a>
 			</cms:guest>
