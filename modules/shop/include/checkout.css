@@ -975,12 +975,12 @@ body.rtl div#checkout_steps a:not(:last-of-type):after {
 	border-right: 5px solid #606060;
 }
 
-div#checkout_steps a:hover span {
+div#checkout_steps a:hover:before {
 	background-color: #0b6fd4;
 	background-color: rgba(11, 111, 212, 0.5);
 }
 
-div#checkout_steps a.active span {
+div#checkout_steps a.active:before {
 	border: 1px solid #0b63ce;
 	background-color: #0b6fd4;
 
@@ -997,7 +997,7 @@ div#checkout_steps a.disabled {
 	color: #b0b0b0;
 }
 
-div#checkout_steps a.disabled span {
+div#checkout_steps a.disabled:before {
 	color: #b0b0b0;
 }
 
