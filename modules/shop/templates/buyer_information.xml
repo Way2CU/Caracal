@@ -305,6 +305,9 @@
 							</label>
 
 							<div class="checkout_controls">
+								<cms:guest>
+									<button class="previous"><cms:text constant="back"/></button>
+								</cms:guest>
 								<button class="next"><cms:text constant="next"/></button>
 							</div>
 
