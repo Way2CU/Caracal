@@ -12,7 +12,7 @@
 					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
-				/>
+					/>
 			</label>
 			<label>
 				<span><cms:text constant="label_email" module="shop"/></span>
@@ -22,22 +22,7 @@
 					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
-				/>
-			</label>
-
-			<hr/>
-
-			<label>
-				<span><cms:text constant="label_status" module="shop"/></span>
-				<select name="status">
-					<cms:transaction_status active="$params['status']" cms:eval="active"/>
-				</select>
-				<button
-					type="button"
-					onclick="javascript: shop_UpdateTransactionStatus(this);"
-				>
-					<cms:text constant="save"/>
-				</button>
+					/>
 			</label>
 
 			<hr/>
@@ -50,8 +35,9 @@
 							type="text"
 							value="$params['handling']"
 							cms:eval="value"
-							readonly="readonly"
+							readonly="$params['type'] != TransactionType::DELAYED ? 'readonly': false"
 							style="width: 100px"
+							cms:optional="readonly"
 							/>
 					</td>
 				</tr>
@@ -77,10 +63,37 @@
 							readonly="readonly"
 							style="width: 100px"
 							/>
+
+						<!-- Show save button on delayed payment transactions -->
+						<cms:if condition="$params['type'] == TransactionType::DELAYED">
+							<button
+								type="button"
+								onclick="javascript: void();"
+								>
+								<cms:text constant="save"/>
+							</button>
+						</cms:if>
 					</td>
 				</tr>
 			</table>
+
 			<hr/>
+
+			<label>
+				<span><cms:text constant="label_status" module="shop"/></span>
+				<select name="status">
+					<cms:transaction_status active="$params['status']" cms:eval="active"/>
+				</select>
+				<button
+					type="button"
+					onclick="javascript: shop_UpdateTransactionStatus(this);"
+					>
+					<cms:text constant="save"/>
+				</button>
+			</label>
+
+			<hr/>
+
 			<label>
 				<span><cms:text constant="label_timestamp" module="shop"/></span>
 				<input
@@ -89,7 +102,7 @@
 					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
-				/>
+					/>
 			</label>
 		</div>
 		<div>
@@ -107,7 +120,7 @@
 					cms:eval="value"
 					readonly="readonly"
 					style="width: 270px;"
-				/>
+					/>
 			</label>
 			<label>
 				<span><cms:text constant="label_remark" module="shop"/></span>
@@ -140,7 +153,7 @@
 	<script type="text/javascript">
 		var notebook = new Notebook('transaction_details_notebook');
 		notebook
-			.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_shipping'));
+		.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
+		.setPageTitle(1, language_handler.getText('shop', 'tab_shipping'));
 	</script>
 </document>
