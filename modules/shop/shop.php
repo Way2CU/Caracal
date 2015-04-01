@@ -559,6 +559,10 @@ class shop extends Module {
 				$this->cancelRecurringPlan($params, $children);
 				break;
 
+			case 'set_transaction_type':
+				$this->setTransactionType($params, $children);
+				break;
+
 			case 'include_scripts':
 				$this->includeScripts();
 				break;
@@ -1235,6 +1239,20 @@ class shop extends Module {
 	}
 
 	/**
+	 * Set current transaction type.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function setTransactionType($tag_params, $children) {
+		$type = TransactionType::REGULAR;
+		if (isset($tag_params['type']) && array_key_exists($tag_params['type'], TransactionType::$reverse))
+			$type = fix_id($tag_params['type']);
+
+		$_SESSION['transaction_type'] = $type;
+	}
+
+	/**
 	 * Get recurring payment plan associated with specified user. If no
 	 * user id is specified system will try to find payment plan associated
 	 * with currently logged in user.
@@ -1324,19 +1342,21 @@ class shop extends Module {
 					Events::trigger('shop', 'transaction-completed', $transaction);
 					unset($_SESSION['transaction']);
 
-					if ($transaction->type == TransactionType::SUBSCRIPTION) {
-						if (isset($this->settings['recurring_payment_started_template'])) {
-							$template = $this->settings['recurring_payment_started_template'];
-							$this->sendTransactionMail($transaction, $template);
-						}
+					switch ($transaction->type) {
+						case TransactionType::SUBSCRIPTION:
+							if (isset($this->settings['recurring_payment_started_template'])) {
+								$template = $this->settings['recurring_payment_started_template'];
+								$this->sendTransactionMail($transaction, $template);
+							}
+							break;
 
-					} else if ($transaction->type == TransactionType::REGULAR) {
-						if (isset($this->settings['payment_completed_template'])) {
-							$template = $this->settings['payment_completed_template'];
-							$this->sendTransactionMail($transaction, $template);
-						}
+						case TransactionType::REGULAR:
+							if (isset($this->settings['payment_completed_template'])) {
+								$template = $this->settings['payment_completed_template'];
+								$this->sendTransactionMail($transaction, $template);
+							}
+							break;
 					}
-
 					break;
 
 				case TransactionStatus::CANCELED:
@@ -1970,7 +1990,7 @@ class shop extends Module {
 				);
 		}
 
-		$result = $this->getCartSummary(TransactionType::REGULAR, $recipient, $uid, $payment_method);
+		$result = $this->getCartSummary($recipient, $uid, $payment_method);
 		unset($result['items_for_checkout']);
 
 		// add currency to result
@@ -2037,13 +2057,12 @@ class shop extends Module {
 	/**
 	 * Get shopping cart summary.
 	 *
-	 * @param integer $type
 	 * @param array $recipient
 	 * @param string $transaction_id
 	 * @param object $payment_method
 	 * @return array
 	 */
-	private function getCartSummary($type, $recipient, $transaction_id, $payment_method=null) {
+	private function getCartSummary($recipient, $transaction_id, $payment_method=null) {
 		global $default_language;
 
 		// prepare params
@@ -2516,7 +2535,7 @@ class shop extends Module {
 		if ($new_transaction) {
 			// get shopping cart summary
 			$uid = uniqid('', true);
-			$summary = $this->getCartSummary($type, $recipient, $uid, $payment_method);
+			$summary = $this->getCartSummary($recipient, $uid, $payment_method);
 
 			$result['uid'] = $uid;
 			$result['type'] = $type;
@@ -2546,7 +2565,7 @@ class shop extends Module {
 
 		} else {
 			$uid = $_SESSION['transaction']['uid'];
-			$summary = $this->getCartSummary($type, $recipient, $uid, $payment_method);
+			$summary = $this->getCartSummary($recipient, $uid, $payment_method);
 
 			// there's already an existing transaction
 			$result = $_SESSION['transaction'];
@@ -3005,7 +3024,7 @@ class shop extends Module {
 		// decide whether to include shipping and account information
 		if (isset($tag_params['include_shipping']))
 			$include_shipping = fix_id($tag_params['include_shipping']) == 1; else
-				$include_shipping = true;
+			$include_shipping = true;
 
 		$bad_fields = array();
 		$info_available = false;
@@ -3063,7 +3082,7 @@ class shop extends Module {
 				$address = null;
 
 			// update transaction
-			$transaction_type = $recurring ? TransactionType::SUBSCRIPTION : TransactionType::REGULAR;
+			$transaction_type = isset($_SESSION['transaction_type']) ? $_SESSION['transaction_type'] : TransactionType::REGULAR;
 			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 			// emit signal and return if handled
