@@ -60,8 +60,10 @@
 							type="text"
 							value="$params['total']"
 							cms:eval="value"
-							readonly="readonly"
+							readonly="$params['type'] != TransactionType::DELAYED ? 'readonly': false"
 							style="width: 100px"
+							cms:tooltip="tooltip_total_money"
+							cms:optional="readonly"
 							/>
 					</td>
 					<td>

@@ -259,5 +259,6 @@
 	"type_subscription": "Subscription",
 	"type_regular": "Regular",
 	"type_donation": "Donation",
-	"type_delayed": "Delayed"
+	"type_delayed": "Delayed",
+	"tooltip_total_money": "Total price without handling and shipping."
 }
