@@ -468,7 +468,7 @@ table.checkout_details tfoot td.total-label {
 
 body.rtl table.checkout_details tfoot td.total-label {
 	border-left-width: 0px;
-	border-right-width: 0px;
+	border-right-width: 1px;
 }
 
 table.checkout_details tfoot td.total-label {
