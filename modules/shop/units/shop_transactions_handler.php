@@ -156,6 +156,7 @@ class ShopTransactionsHandler {
 	public function tag_TransactionList($tag_params, $children) {
 		$manager = ShopTransactionsManager::getInstance();
 		$buyers_manager = ShopBuyersManager::getInstance();
+		$user_manager = UserManager::getInstance();
 		$conditions = array();
 
 		// get conditionals
@@ -173,18 +174,37 @@ class ShopTransactionsHandler {
 			foreach ($buyers as $buyer)
 				$buyer_names[$buyer->id] = $buyer->first_name.' '.$buyer->last_name;
 
+		// get all system users
+		$system_users = array();
+		$users = $user_manager->getItems(array('id', 'fullname'), array());
+
+		if (count($users))
+			foreach ($users as $user)
+				$system_users[$user->id] = $user->fullname;
+
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
+				// prepare window parameters
 				$title = $this->_parent->getLanguageConstant('title_transaction_details');
 				$title .= ' '.$item->uid;
 				$window = 'shop_transation_details_'.$item->id;
 
+				// prepare buyer name
+				$name = '';
+				if ($item->system_user > 0)
+					$name = $system_users[$item->system_user];
+
+				if ($item->buyer > 0)
+					$name = $buyer_names[$item->buyer];
+
+				// prepare template parameters
 				$params = array(
 							'buyer'				=> $item->buyer,
-							'buyer_name'		=> $buyer_names[$item->buyer],
+							'system_user'		=> $item->system_user,
+							'buyer_name'		=> $name,
 							'system_user'		=> $item->system_user,
 							'address'			=> $item->address,
 							'uid'				=> $item->uid,
