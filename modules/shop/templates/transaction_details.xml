@@ -64,20 +64,21 @@
 							style="width: 100px"
 							/>
 					</td>
+					<td>
+						<!-- Show save button on delayed payment transactions -->
+						<cms:if condition="$params['type'] == TransactionType::DELAYED">
+							<label>
+								<button
+									type="button"
+									onclick="javascript: void();"
+									>
+									<cms:text constant="save"/>
+								</button>
+							</label>
+						</cms:if>
+					</td>
 				</tr>
 			</table>
-
-			<!-- Show save button on delayed payment transactions -->
-			<cms:if condition="$params['type'] == TransactionType::DELAYED">
-				<label>
-					<button
-						type="button"
-						onclick="javascript: void();"
-						>
-						<cms:text constant="save"/>
-					</button>
-				</label>
-			</cms:if>
 
 			<hr/>
 
