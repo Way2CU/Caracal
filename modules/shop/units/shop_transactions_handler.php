@@ -201,8 +201,8 @@ class ShopTransactionsHandler {
 					$name = $buyer_names[$item->buyer];
 
 				// prepare language constants
-				$transaction_status = $this->getLanguageConstant(TransactionStatus::$reverse[$item->status]);
-				$transaction_type = $this->getLanguageConstant(TransactionType::$reverse[$item->type]);
+				$transaction_status = $this->_parent->getLanguageConstant(TransactionStatus::$reverse[$item->status]);
+				$transaction_type = $this->_parent->getLanguageConstant(TransactionType::$reverse[$item->type]);
 
 				// prepare template parameters
 				$params = array(
