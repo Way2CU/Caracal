@@ -4,6 +4,9 @@
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
+			<span class="column" style="width: 100px;">
+				<cms:text constant="column_type" module="shop"/>
+			</span>
 			<span class="column" style="width: 170px;">
 				<cms:text constant="column_uid" module="shop"/>
 			</span>
@@ -12,6 +15,9 @@
 			</span>
 			<span class="column" style="width: 100px;">
 				<cms:text constant="column_total" module="shop"/>
+			</span>
+			<span class="column" style="width: 100px;">
+				<cms:text constant="column_status" module="shop"/>
 			</span>
 			<span class="column">
 				<cms:text constant="column_options"/>
