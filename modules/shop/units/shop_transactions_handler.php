@@ -340,20 +340,9 @@ class ShopTransactionsHandler {
 	 */
 	public function tag_TransactionStatus($tag_params, $children) {
 		$active = isset($tag_params['active']) ? fix_id($tag_params['active']) : -1;
-		$constants = array(
-				TransactionStatus::PENDING 		=> 'status_pending',
-				TransactionStatus::DENIED		=> 'status_denied',
-				TransactionStatus::COMPLETED	=> 'status_completed',
-				TransactionStatus::CANCELED		=> 'status_canceled',
-				TransactionStatus::SHIPPING		=> 'status_shipping',
-				TransactionStatus::SHIPPED		=> 'status_shipped',
-				TransactionStatus::LOST			=> 'status_lost',
-				TransactionStatus::DELIVERED	=> 'status_delivered'
-			);
-
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_status_option.xml');
 
-		foreach ($constants as $id => $constant) {
+		foreach (TransactionStatus::$reverse as $id => $constant) {
 			$params = array(
 					'id'		=> $id,
 					'text'		=> $this->_parent->getLanguageConstant($constant),
