@@ -38,6 +38,8 @@
     "column_views": "צפיות",
     "column_warehouse": "מחסן",
     "column_weight": "משקל",
+    "column_status": "סטטוס",
+    "column_type": "סוג",
     "cycle_day": "Day",
     "cycle_month": "חודש(ים)",
     "cycle_week": "שבוע(ות)",
@@ -73,7 +75,7 @@
     "label_first_name": "שם פרטי:",
     "label_fixed_country": "הגסל משלוח למדינה זו:",
     "label_full_name": "שם מלא:",
-    "label_guest": "תשלום כאורח",
+    "label_guest": "תשלום כאורח:",
     "label_handling": "טיפול:",
     "label_images": "תמונות המוצר:",
     "label_international": "מיועד למשלוח בינלאומי",
@@ -253,5 +255,9 @@
     "total_amount": "סהכ:",
     "update_currencies": "עדכן רשימת מטבעות",
     "values": "ערכים",
-    "with": "עם"
+    "with": "עם",
+    "type_subscription": "Subscription",
+    "type_regular": "Regular",
+    "type_donation": "Donation",
+    "type_delayed": "Delayed"
 }
