@@ -476,12 +476,14 @@ div.window div.scrollable_list .list_content .list_item:hover {
 div.dialog div.scrollable_list .column,
 div.window div.scrollable_list .column {
 	display: inline-block;
+	vertical-align: top;
 	margin-right: 3px;
 }
 
 div.dialog div.scrollable_list .column a,
 div.window div.scrollable_list .column a {
 	display: inline-block;
+	vertical-align: top;
 
 	position: relative;
 
