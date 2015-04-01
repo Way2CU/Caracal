@@ -72,15 +72,12 @@ class ShopTransactionsHandler {
 		$manager = ShopTransactionsManager::getInstance();
 		$buyer_manager = ShopBuyersManager::getInstance();
 		$address_manager = ShopDeliveryAddressManager::getInstance();
+		$user_manager = UserManager::getInstance();
 
 		$id = fix_id($_REQUEST['id']);
 		$transaction = $manager->getSingleItem(
 								$manager->getFieldNames(),
 								array('id' => $id)
-							);
-		$buyer = $buyer_manager->getSingleItem(
-								$buyer_manager->getFieldNames(),
-								array('id' => $transaction->buyer)
 							);
 		$address = $address_manager->getSingleItem(
 								$address_manager->getFieldNames(),
@@ -106,9 +103,6 @@ class ShopTransactionsHandler {
 				'delivery_method'	=> $transaction->delivery_method,
 				'remark'			=> $transaction->remark,
 				'total'				=> $transaction->total,
-				'first_name'		=> $buyer->first_name,
-				'last_name'			=> $buyer->last_name,
-				'email'				=> $buyer->email,
 				'address_name'		=> $address->name,
 				'address_street'	=> $address->street,
 				'address_city'		=> $address->city,
@@ -117,6 +111,30 @@ class ShopTransactionsHandler {
 				'address_country'	=> $address->country,
 				'full_address'		=> $full_address
 			);
+
+		if ($transaction->system_user > 0) {
+			// system user
+			$system_user = $user_manager->getSingleItem(
+									$user_manager->getFieldNames(),
+									array('id' => $transaction->system_user)
+								);
+			$name = explode(' ', $system_user->fullname);
+
+			$params['first_name'] = isset($name[0]) ? $name[0] : '';
+			$params['last_name'] = isset($name[1]) ? $name[1] : '';
+			$params['email'] = $system_user->email;
+
+		} else if ($transaction->buyer > 0) {
+			// regular or guest buyer
+			$buyer = $buyer_manager->getSingleItem(
+									$buyer_manager->getFieldNames(),
+									array('id' => $transaction->buyer)
+								);
+
+			$params['first_name'] = $buyer->first_name;
+			$params['last_name'] = $buyer->last_name;
+			$params['email'] = $buyer->email;
+		}
 
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
 
