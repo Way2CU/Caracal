@@ -38,6 +38,8 @@
 	"column_views": "Views",
 	"column_warehouse": "Warehouse",
 	"column_weight": "Weight",
+	"column_status": "Status",
+	"column_type": "Type",
 	"cycle_day": "Day(s)",
 	"cycle_month": "Month(s)",
 	"cycle_week": "Week(s)",
