@@ -261,5 +261,9 @@
 	"status_shipping": "Shipping",
 	"status_shipped": "Shipped",
 	"status_lost": "Lost",
-	"status_delivered": "Delivered"
+	"status_delivered": "Delivered",
+	"type_subscription": "Subscription",
+	"type_regular": "Regular",
+	"type_donation": "Donation",
+	"type_delayed": "Delayed"
 }
