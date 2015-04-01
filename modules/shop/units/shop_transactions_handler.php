@@ -200,6 +200,10 @@ class ShopTransactionsHandler {
 				if ($item->buyer > 0)
 					$name = $buyer_names[$item->buyer];
 
+				// prepare language constants
+				$transaction_status = $this->getLanguageConstant(TransactionStatus::$reverse[$item->status]);
+				$transaction_type = $this->getLanguageConstant(TransactionType::$reverse[$item->type]);
+
 				// prepare template parameters
 				$params = array(
 							'buyer'				=> $item->buyer,
@@ -209,9 +213,9 @@ class ShopTransactionsHandler {
 							'address'			=> $item->address,
 							'uid'				=> $item->uid,
 							'type'				=> $item->type,
-							'type_value'		=> '',
+							'type_value'		=> $transaction_type,
 							'status'			=> $item->status,
-							'status_value'		=> '',
+							'status_value'		=> $transaction_status,
 							'currency'			=> $item->currency,
 							'currency_value'	=> '',
 							'handling'			=> $item->handling,
