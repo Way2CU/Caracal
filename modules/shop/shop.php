@@ -1253,6 +1253,15 @@ class shop extends Module {
 	}
 
 	/**
+	 * Get transaction type.
+	 *
+	 * @return integer
+	 */
+	public function getTransactionType() {
+		return isset($_SESSION['transaction_type']) ? $_SESSION['transaction_type'] : TransactionType::REGULAR;
+	}
+
+	/**
 	 * Get recurring payment plan associated with specified user. If no
 	 * user id is specified system will try to find payment plan associated
 	 * with currently logged in user.
@@ -3082,7 +3091,7 @@ class shop extends Module {
 				$address = null;
 
 			// update transaction
-			$transaction_type = isset($_SESSION['transaction_type']) ? $_SESSION['transaction_type'] : TransactionType::REGULAR;
+			$transaction_type = $this->getTransactionType();
 			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 			// emit signal and return if handled
@@ -3137,6 +3146,7 @@ class shop extends Module {
 				'currency'			=> $this->getDefaultCurrency(),
 				'recurring'			=> $recurring,
 				'include_shipping'	=> $include_shipping,
+				'type'				=> $transaction_type
 			);
 
 			// for recurring plans add additional params
@@ -3204,6 +3214,7 @@ class shop extends Module {
 		$manager = ShopItemManager::getInstance();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$ids = array_keys($cart);
+		$transaction_type = $this->getTransactionType();
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
@@ -3239,6 +3250,7 @@ class shop extends Module {
 					$new_item['tax'] = number_format($new_item['price'], 2);
 					$new_item['price'] = number_format($new_item['tax'], 2);
 					$new_item['weight'] = number_format($new_item['weight'], 2);
+					$new_item['transaction_type'] = $transaction_type;
 
 					// add item to the list
 					$items_for_checkout[] = $new_item;

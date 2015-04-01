@@ -11,25 +11,37 @@
 							<tr>
 								<td><cms:text constant="column_name" module="shop"/></td>
 								<td style="width: 70px"><cms:text constant="column_quantity" module="shop"/></td>
-								<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
-								<td style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
+								<cms:if condition="$type != TransactionType::DELAYED">
+									<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
+									<td style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
+								</cms:if>
 								<td style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
-								<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
+								<cms:if condition="$type != TransactionType::DELAYED">
+									<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
+								</cms:if>
 							</tr>
 						</thead>
 
 						<!-- Summary -->
 						<tfoot>
-							<tr class="first">
-								<td colspan="3" rowspan="5" style="padding: 20px;">
-								</td>
-								<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
-								<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
-							</tr>
-							<tr>
-								<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
-								<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
-							</tr>
+							<cms:if condition="$type != TransactionType::DELAYED">
+								<tr class="first">
+									<td colspan="3" rowspan="5" style="padding: 20px;">
+									</td>
+									<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
+									<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
+								</tr>
+								<tr>
+									<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
+									<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
+								</tr>
+							</cms:if>
+							<cms:if condition="$type == TransactionType::DELAYED">
+								<tr class="first">
+									<td colspan="2" class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
+									<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
+								</tr>
+							</cms:if>
 							<tr>
 								<td colspan="2" class="subtotal-label"><cms:text constant="column_handling" module="shop"/></td>
 								<td class="subtotal-value handling"><cms:var name="$params['handling']"/></td>
@@ -41,14 +53,16 @@
 									<cms:raw text=" kg"/>
 								</td>
 							</tr>
-							<tr>
-								<td colspan="2" class="total-label"><cms:text constant="column_total" module="shop"/></td>
-								<td class="total-value">
-									<cms:var name="$params['total']"/>
-									<cms:raw text=" "/>
-									<cms:var name="$params['currency']"/>
-								</td>
-							</tr>
+							<cms:if condition="$type != TransactionType::DELAYED">
+								<tr>
+									<td colspan="2" class="total-label"><cms:text constant="column_total" module="shop"/></td>
+									<td class="total-value">
+										<cms:var name="$params['total']"/>
+										<cms:raw text=" "/>
+										<cms:var name="$params['currency']"/>
+									</td>
+								</tr>
+							</cms:if>
 						</tfoot>
 
 						<!-- Shooping cart contents -->
@@ -83,7 +97,7 @@
 								shopping_cart="1"
 								template="delivery_checkout.xml"
 								local="1"
-							/>
+								/>
 							<div class="overlay"/>
 						</div>
 					</cms:if>
