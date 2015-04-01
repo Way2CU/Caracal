@@ -53,7 +53,7 @@
 
 		<label class="pattern">
 			<span><cms:text constant="label_pattern" module="contact_form"/></span>
-			<input type="text" name="pattern" class="code" maxlength="255" style="width: 370px"/>
+			<input type="text" name="pattern" class="code ltr" maxlength="255" style="width: 370px"/>
 		</label>
 
 		<label class="checkbox">

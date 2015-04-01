@@ -108,7 +108,7 @@
 			<input
 				type="text"
 				name="pattern"
-				class="code"
+				class="code ltr"
 				maxlength="255"
 				style="width: 370px"
 				value="$params['pattern']"
