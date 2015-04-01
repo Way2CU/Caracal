@@ -33,23 +33,23 @@ require_once('units/shop_manufacturer_handler.php');
 require_once('units/shop_delivery_methods_handler.php');
 
 
-class TransactionType {
+final class TransactionType {
 	const SUBSCRIPTION = 0;
 	const REGULAR = 1;
 	const DONATION = 2;
 	const DELAYED = 3;
 
 	// language constant mapping
-	$reverse = array(
-		SUBSCRIPTION => 'type_subscription',
-		REGULAR => 'type_regular',
-		DONATION => 'type_donation',
-		DELAYED => 'type_delayed'
+	public static $reverse = array(
+		self::SUBSCRIPTION => 'type_subscription',
+		self::REGULAR => 'type_regular',
+		self::DONATION => 'type_donation',
+		self::DELAYED => 'type_delayed'
 	);
 }
 
 
-class TransactionStatus {
+final class TransactionStatus {
 	const PENDING = 0;
 	const DENIED = 1;
 	const COMPLETED = 2;
@@ -60,20 +60,20 @@ class TransactionStatus {
 	const DELIVERED = 7;
 
 	// language constant mapping
-	$reverse = array(
-		PENDING => 'status_pending',
-		DENIED => 'status_denied',
-		COMPLETED => 'status_completed',
-		CANCELED => 'status_canceled',
-		SHIPPING => 'status_shipping',
-		SHIPPED => 'status_shipped',
-		LOST => 'status_lost',
-		DELIVERED => 'status_delivered'
+	public static $reverse = array(
+		self::PENDING => 'status_pending',
+		self::DENIED => 'status_denied',
+		self::COMPLETED => 'status_completed',
+		self::CANCELED => 'status_canceled',
+		self::SHIPPING => 'status_shipping',
+		self::SHIPPED => 'status_shipped',
+		self::LOST => 'status_lost',
+		self::DELIVERED => 'status_delivered'
 	);
 }
 
 
-class PackageType {
+final class PackageType {
 	const BOX_10 = 0;
 	const BOX_20 = 1;
 	const BOX = 2;
@@ -84,14 +84,14 @@ class PackageType {
 }
 
 
-class User {
+final class User {
 	const EXISTING = 0;
 	const CREATE = 1;
 	const GUEST = 2;
 }
 
 
-class RecurringPayment {
+final class RecurringPayment {
 	// interval units
 	const DAY = 0;
 	const WEEK = 1;
