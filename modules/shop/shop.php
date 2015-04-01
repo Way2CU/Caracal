@@ -35,8 +35,17 @@ require_once('units/shop_delivery_methods_handler.php');
 
 class TransactionType {
 	const SUBSCRIPTION = 0;
-	const SHOPPING_CART = 1;
+	const REGULAR = 1;
 	const DONATION = 2;
+	const DELAYED = 3;
+
+	// language constant mapping
+	$reverse = array(
+		SUBSCRIPTION => 'type_subscription',
+		REGULAR => 'type_regular',
+		DONATION => 'type_donation',
+		DELAYED => 'type_delayed'
+	);
 }
 
 
@@ -49,6 +58,18 @@ class TransactionStatus {
 	const SHIPPED = 5;
 	const LOST = 6;
 	const DELIVERED = 7;
+
+	// language constant mapping
+	$reverse = array(
+		PENDING => 'status_pending',
+		DENIED => 'status_denied',
+		COMPLETED => 'status_completed',
+		CANCELED => 'status_canceled',
+		SHIPPING => 'status_shipping',
+		SHIPPED => 'status_shipped',
+		LOST => 'status_lost',
+		DELIVERED => 'status_delivered'
+	);
 }
 
 
@@ -1309,7 +1330,7 @@ class shop extends Module {
 							$this->sendTransactionMail($transaction, $template);
 						}
 
-					} else if ($transaction->type == TransactionType::SHOPPING_CART) {
+					} else if ($transaction->type == TransactionType::REGULAR) {
 						if (isset($this->settings['payment_completed_template'])) {
 							$template = $this->settings['payment_completed_template'];
 							$this->sendTransactionMail($transaction, $template);
@@ -1949,7 +1970,7 @@ class shop extends Module {
 				);
 		}
 
-		$result = $this->getCartSummary(TransactionType::SHOPPING_CART, $recipient, $uid, $payment_method);
+		$result = $this->getCartSummary(TransactionType::REGULAR, $recipient, $uid, $payment_method);
 		unset($result['items_for_checkout']);
 
 		// add currency to result
@@ -2787,7 +2808,7 @@ class shop extends Module {
 
 		// create item table
 		switch ($transaction->type) {
-			case TransactionType::SHOPPING_CART:
+			case TransactionType::REGULAR:
 				$item_manager = ShopTransactionItemsManager::getInstance();
 				$items = $item_manager->getItems(
 					$item_manager->getFieldNames(),
@@ -3042,7 +3063,7 @@ class shop extends Module {
 				$address = null;
 
 			// update transaction
-			$transaction_type = $recurring ? TransactionType::SUBSCRIPTION : TransactionType::SHOPPING_CART;
+			$transaction_type = $recurring ? TransactionType::SUBSCRIPTION : TransactionType::REGULAR;
 			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 			// emit signal and return if handled
