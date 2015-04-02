@@ -20,6 +20,7 @@ function Dialog() {
 	self._show_on_load = false;
 	self._content_loaded = false;
 	self._command_bar = $('<div>');
+	self._close_callback = null;
 
 	/**
 	 * Complete object initialization
@@ -115,6 +116,7 @@ function Dialog() {
 	 *
 	 * @param string url
 	 * @param string container
+	 * @return object
 	 */
 	self.setContentFromURL = function(url, container) {
 		// reset content state flag
@@ -135,6 +137,7 @@ function Dialog() {
 	 * Set dialog content from DOM element retrieved by jQuery selection
 	 *
 	 * @param string selection
+	 * @return object
 	 */
 	self.setContentFromDOM = function(selection) {
 		var element = $(selection).eq(0);
@@ -156,6 +159,7 @@ function Dialog() {
 	 *
 	 * @param integer width
 	 * @param integer height
+	 * @return object
 	 */
 	self.setSize = function(width, height) {
 		// set dialog size
@@ -172,6 +176,7 @@ function Dialog() {
 	 * Set dialog title
 	 *
 	 * @param string title
+	 * @return object
 	 */
 	self.setTitle = function(title) {
 		self._title_text.html(title);
@@ -182,6 +187,7 @@ function Dialog() {
 	 * Set scrollbar visibility
 	 *
 	 * @param string show_scrollbar
+	 * @return object
 	 */
 	self.setScroll = function(show_scrollbar) {
 		if (show_scrollbar)
@@ -195,9 +201,23 @@ function Dialog() {
 	 * Whether content of dialog should be cleared on close.
 	 *
 	 * @param boolean clear
+	 * @return object
 	 */
 	self.setClearOnClose = function(clear) {
 		self._clear_on_close = clear;
+		return self;
+	};
+
+	/**
+	 * Set function to be executed on close.
+	 *
+	 * @param callable callback
+	 * @return object
+	 */
+	self.setCloseCallback = function(callback) {
+		if (typeof callback = 'function')
+			self._close_callback = callback;
+
 		return self;
 	};
 
@@ -243,6 +263,10 @@ function Dialog() {
 	 * Hide dialog
 	 */
 	self.hide = function() {
+		// call function if configured
+		if (self._close_callback != null)
+			self._close_callback(self);
+
 		// remove classes
 		self._background.removeClass('visible');
 		self._container.removeClass('visible');
