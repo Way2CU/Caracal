@@ -338,6 +338,9 @@ class SessionManager {
 
 			$result['logged_in'] = true;
 
+			// return message
+			$result['message'] = $this->parent->getLanguageConstant('message_login_ok');
+
 		} elseif (is_object($user) && $captcha_ok && !$verified) {
 			// user is logged but account is not verified
 			$result['message'] = $this->parent->getLanguageConstant('message_users_account_not_verified');
