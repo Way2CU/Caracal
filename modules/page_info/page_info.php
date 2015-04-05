@@ -53,7 +53,7 @@ class page_info extends Module {
 													true, false, // disallow minimize, safety feature
 													backend_UrlMake($this->name, 'show')
 												),
-										$level=5
+										$level=6
 									), 1);
 		}
 	}
