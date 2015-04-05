@@ -229,6 +229,16 @@ function Dialog() {
 	};
 
 	/**
+	 * Clear close function callback.
+	 *
+	 * @return object
+	 */
+	self.clearCloseCallback = function() {
+		self._close_callback == null;
+		return self;
+	};
+
+	/**
 	 * Set dialog as error report.
 	 *
 	 * @param boolean error
