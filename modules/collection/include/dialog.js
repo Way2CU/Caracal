@@ -82,24 +82,29 @@ function Dialog() {
 	 * Add additional class to dialog.
 	 *
 	 * @param string class_name
+	 * @return object
 	 */
 	self.addClass = function(class_name) {
 		self._container.addClass(class_name);
+		return self;
 	};
 
 	/**
 	 * Add control to command bar.
 	 *
 	 * @param object control
+	 * @return object
 	 */
 	self.addControl = function(control) {
 		self._command_bar.prepend(control);
+		return self;
 	};
 
 	/**
 	 * Set dialog content from jQuery object or string
 	 *
 	 * @param mixed content
+	 * @return object
 	 */
 	self.setContent = function(content) {
 		// set specified content
@@ -109,6 +114,8 @@ function Dialog() {
 
 		// set content state flag
 		self._content_loaded = true;
+
+		return self;
 	};
 
 	/**
