@@ -708,7 +708,7 @@ class Backend_UserManager {
 							array(
 								'verified'	=> 1,
 								'password'	=> $password,
-								'sald'		=> $salt
+								'salt'		=> $salt
 							),
 							array('id' => $user->id)
 						);
