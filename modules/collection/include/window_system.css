@@ -255,15 +255,15 @@ div.window div.content select,
 div.window div.content input,
 div.window div.content textarea {
 	margin: 0px;
-	padding: 5px;
+	padding: 5px calc(1.2em + 10px) 5px 5px;
 
 	border: 1px solid #999999;
 	outline: 0px;
 	background-color: #ffffff;
 	background-image: url(../images/multilanguage_field.svg);
-	background-position: right center;
+	background-position: calc(100% - 5px - 1em) center;
 	background-repeat: no-repeat;
-	background-size: 1em 1em;
+	background-size: 1.2em 1.2em;
 
 	color: #444444;
 	font-size: 1em;
@@ -272,10 +272,18 @@ div.window div.content textarea {
 	transition: all 0.3s;
 }
 
+body.rtl div.window div.content select,
+body.rtl div.window div.content input,
+body.rtl div.window div.content textarea {
+	padding: 5px 5px 5px calc(1.2em + 10px);
+	background-position: 5px center;
+}
+
 div.window div.content select.ltr,
 div.window div.content input.ltr,
 div.window div.content textarea.ltr {
 	direction: ltr;
+	background-position: calc(100% - 5px - 1em) center;
 }
 
 div.window div.content input[type=radio],
