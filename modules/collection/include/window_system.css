@@ -533,8 +533,9 @@ div.window div.language_selector.loading {
 
 div.window div.language_selector span {
 	display: inline-block;
-	border-radius: 1px;
 	padding: 5px;
+	border-radius: 1px;
+	line-height: 100%;
 }
 
 div.window div.language_selector span:hover {
