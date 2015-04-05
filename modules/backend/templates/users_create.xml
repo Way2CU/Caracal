@@ -21,9 +21,10 @@
 		<label>
 			<span><cms:text constant="label_level" module="backend"/></span>
 			<select name="level" style="width: 100px;">
-				<_level/>
+				<cms:level/>
 			</select>
 		</label>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>

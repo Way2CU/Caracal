@@ -5,26 +5,56 @@
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_fullname" module="backend"/></span>
-			<input type="text" name="fullname" value="$params['fullname']" cms:eval="value" style="width: 330px;" maxlength="100"/>
+			<input
+				type="text"
+				name="fullname"
+				value="$params['fullname']"
+				style="width: 330px;"
+				maxlength="100"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_username" module="backend"/></span>
-			<input type="text" name="username" value="$params['username']" cms:eval="value" style="width: 200px;" maxlength="50"/>
+			<input
+				type="text"
+				name="username"
+				value="$params['username']"
+				style="width: 200px;"
+				maxlength="50"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_new_password" module="backend"/></span>
-			<input type="text" name="new_password" style="width: 200px;" maxlength="50"/>
+			<input
+				type="text"
+				name="new_password"
+				style="width: 200px;"
+				maxlength="50"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_email" module="backend"/></span>
-			<input type="text" name="email" style="width: 200px;" maxlength="200"/>
+			<input
+				type="text"
+				name="email"
+				value="$params['email']"
+				style="width: 200px;"
+				maxlength="200"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_level" module="backend"/></span>
 			<select name="level" style="width: 100px;">
-				<_level selected="$params['level']" cms:eval="selected"/>
+				<cms:level
+					selected="$params['level']"
+					cms:eval="selected"
+					/>
 			</select>
 		</label>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
