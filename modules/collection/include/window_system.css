@@ -260,6 +260,10 @@ div.window div.content textarea {
 	border: 1px solid #999999;
 	outline: 0px;
 	background-color: #ffffff;
+	background-image: url(../images/multilanguage_field.svg);
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-size: 1em 1em;
 
 	color: #444444;
 	font-size: 1em;
