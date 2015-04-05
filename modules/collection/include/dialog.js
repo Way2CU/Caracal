@@ -225,11 +225,14 @@ function Dialog() {
 	 * Set dialog as error report.
 	 *
 	 * @param boolean error
+	 * @return object
 	 */
 	self.setError = function(error) {
 		if (error)
 			self._container.addClass('error'); else
 			self._container.removeClass('error');
+
+		return self;
 	};
 
 	/**
