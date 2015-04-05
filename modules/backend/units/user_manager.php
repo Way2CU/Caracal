@@ -174,20 +174,20 @@ class Backend_UserManager {
 		// grab new user data
 		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
-				'fullname'	=> fix_chars($_REQUEST['fullname']),
-				'username'	=> fix_chars($_REQUEST['username']),
-				'email'		=> fix_chars($_REQUEST['email']),
+				'fullname'	=> escape_chars($_REQUEST['fullname']),
+				'username'	=> escape_chars($_REQUEST['username']),
+				'email'		=> escape_chars($_REQUEST['email']),
 				'level'		=> fix_id($_REQUEST['level']),
 				'verified'	=> 1
 			);
 
 		if (isset($_REQUEST['password'])) {
-			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['password']), $salt);
+			$data['password'] = hash_hmac('sha256', escape_chars($_REQUEST['password']), $salt);
 			$data['salt'] = $salt;
 		}
 
 		if (isset($_REQUEST['new_password']) && !empty($_REQUEST['new_password'])) {
-			$data['password'] = hash_hmac('sha256', fix_chars($_REQUEST['new_password']), $salt);
+			$data['password'] = hash_hmac('sha256', escape_chars($_REQUEST['new_password']), $salt);
 			$data['salt'] = $salt;
 		}
 
@@ -270,11 +270,11 @@ class Backend_UserManager {
 
 		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
-				'fullname'	=> fix_chars($source['fullname']),
-				'username'	=> fix_chars($source['username']),
+				'fullname'	=> escape_chars($source['fullname']),
+				'username'	=> escape_chars($source['username']),
 				'password'	=> hash_hmac('sha256', $source['password'], $salt),
-				'email'		=> fix_chars($source['email']),
-				'level'		=> 0,
+				'email'		=> escape_chars($source['email']),
+				'level'		=> escape
 				'salt'		=> $salt,
 				'agreed'	=> $agreed
 			);
@@ -377,8 +377,8 @@ class Backend_UserManager {
 			$fields = array(
 					'fullname'		=> $data['fullname'],
 					'username'		=> $data['username'],
-					'password'		=> fix_chars($source['password']),
-					'email'			=> $data['email'],
+					'password'		=> escape_chars($source['password']),
+					'email'			=> escapeta['email'],
 					'verify_code'	=> $verification_code
 				);
 
@@ -541,24 +541,24 @@ class Backend_UserManager {
 
 		// get username
 		if (array_key_exists('username', $tag_params))
-			$username = fix_chars($tag_params['username']);
+			$username = escape_chars($tag_params['username']);
 
 		if (is_null($username) && array_key_exists('username', $_REQUEST))
-			$username = fix_chars($_REQUEST['username']);
+			$username = escape_chars($_REQUEST['username']);
 
 		// get email
 		if (array_key_exists('email', $tag_params))
-			$email = fix_chars($tag_params['email']);
+			$email = escape_chars($tag_params['email']);
 
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
-			$email = fix_chars($_REQUEST['email']);
+			$email = escape_chars($_REQUEST['email']);
 
 		// get captcha value
 		if (array_key_exists('captcha', $tag_params))
-			$captcha = fix_chars($tag_params['captcha']);
+			$captcha = escape_chars($tag_params['captcha']);
 
 		if (is_null($captcha) && array_key_exists('captcha', $_REQUEST))
-			$captcha = fix_chars($_REQUEST['captcha']);
+			$captcha = escape_chars($_REQUEST['captcha']);
 
 		// get user from the database
 		if (!is_null($username))
@@ -652,17 +652,17 @@ class Backend_UserManager {
 
 		// get username
 		if (array_key_exists('username', $tag_params))
-			$username = fix_chars($tag_params['username']);
+			$username = escape_chars($tag_params['username']);
 
 		if (is_null($username) && array_key_exists('username', $_REQUEST))
-			$username = fix_chars($_REQUEST['username']);
+			$username = escape_chars($_REQUEST['username']);
 
 		// get email
 		if (array_key_exists('email', $tag_params))
-			$email = fix_chars($tag_params['email']);
+			$email = escape_chars($tag_params['email']);
 
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
-			$email = fix_chars($_REQUEST['email']);
+			$email = escape_chars($_REQUEST['email']);
 
 		// prepare salt
 		$salt = hash('sha256', UserManager::SALT.strval(time()));
@@ -676,10 +676,10 @@ class Backend_UserManager {
 
 		// get code
 		if (array_key_exists('code', $tag_params))
-			$code = fix_chars($tag_params['code']);
+			$code = escape_chars($tag_params['code']);
 
 		if (is_null($code) && array_key_exists('code', $_REQUEST))
-			$code = fix_chars($_REQUEST['code']);
+			$code = escape_chars($_REQUEST['code']);
 
 		// get user with specified data
 		if (!is_null($username))
@@ -934,8 +934,8 @@ class Backend_UserManager {
 	 */
 	private function saveTemplateSelection() {
 		// save configuration
-		$template_verify = fix_chars($_REQUEST['template_verify']);
-		$template_recovery = fix_chars($_REQUEST['template_recovery']);
+		$template_verify = escape_chars($_REQUEST['template_verify']);
+		$template_recovery = escape_chars($_REQUEST['template_recovery']);
 
 		$this->parent->saveTemplateSelection(
 							$template_verify,
@@ -1091,17 +1091,17 @@ class Backend_UserManager {
 
 		// get username
 		if (isset($tag_params['username']))
-			$username = fix_chars($tag_params['username']);
+			$username = escape_chars($tag_params['username']);
 
 		if (isset($_REQUEST['username']) && is_null($username))
-			$username = fix_chars($_REQUEST['username']);
+			$username = escape_chars($_REQUEST['username']);
 
 		// get verification code
 		if (isset($tag_params['code']))
-			$code = fix_chars($tag_params['code']);
+			$code = escape_chars($tag_params['code']);
 
 		if (isset($_REQUEST['code']) && is_null($code))
-			$code = fix_chars($_REQUEST['code']);
+			$code = escape_chars($_REQUEST['code']);
 
 		if (is_null($username) || is_null($code))
 			return;
