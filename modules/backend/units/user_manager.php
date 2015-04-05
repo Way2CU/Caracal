@@ -378,7 +378,7 @@ class Backend_UserManager {
 					'fullname'		=> $data['fullname'],
 					'username'		=> $data['username'],
 					'password'		=> escape_chars($source['password']),
-					'email'			=> escapeta['email'],
+					'email'			=> $data['email'],
 					'verify_code'	=> $verification_code
 				);
 
