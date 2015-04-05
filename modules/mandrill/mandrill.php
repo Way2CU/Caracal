@@ -48,7 +48,7 @@ class mandrill extends Module {
 								true, true,
 								backend_UrlMake($this->name, 'settings')
 							),
-					$level=5
+					$level=6
 				);
 
 			$backend->addMenu($this->name, $mandrill_menu);
