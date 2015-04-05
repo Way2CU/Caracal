@@ -128,7 +128,7 @@ class contact_form extends Module {
 										),
 								$level=5
 							));
-			$contact_menu->addSeparator(5);
+			$contact_menu->addSeparator(6);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.svg'),
@@ -140,7 +140,7 @@ class contact_form extends Module {
 											true, true,
 											backend_UrlMake($this->name, 'settings_show')
 										),
-								$level=5
+								$level=6
 							));
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
