@@ -274,7 +274,7 @@ class Backend_UserManager {
 				'username'	=> escape_chars($source['username']),
 				'password'	=> hash_hmac('sha256', $source['password'], $salt),
 				'email'		=> escape_chars($source['email']),
-				'level'		=> escape
+				'level'		=> 0,
 				'salt'		=> $salt,
 				'agreed'	=> $agreed
 			);
