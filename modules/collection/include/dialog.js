@@ -215,7 +215,7 @@ function Dialog() {
 	 * @return object
 	 */
 	self.setCloseCallback = function(callback) {
-		if (typeof callback = 'function')
+		if (typeof callback == 'function')
 			self._close_callback = callback;
 
 		return self;
