@@ -176,10 +176,22 @@ class backend extends Module {
 		// dead lock protection for backend module
 		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
 		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
-			$params['backend_action'] = fix_chars($_REQUEST['backend_action']);
+			// skip module redirect
+			$params['backend_action'] = escape_chars($_REQUEST['backend_action']);
 
 			unset($_REQUEST['module']);
 			unset($params['action']);
+
+			// if user is not logged, redirect him to a proper place
+			if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
+				$session_manager = SessionManager::getInstance($this);
+				$session_manager->transferControl();
+				return;
+			}
+
+			// fix input parameters
+			foreach($_REQUEST as $key => $value)
+				$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
 		}
 
 		if (isset($params['action']))
@@ -241,13 +253,13 @@ class backend extends Module {
 						$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
 
 					// transfer control
-					$action = fix_chars($_REQUEST['backend_action']);
-					$module_name = fix_chars($_REQUEST['module']);
+					$action = escape_chars($_REQUEST['backend_action']);
+					$module_name = escape_chars($_REQUEST['module']);
 					$params['backend_action'] = $action;
 
 					// add sub-action if specified
 					if (isset($_REQUEST['sub_action']))
-						$params['sub_action'] = fix_chars($_REQUEST['sub_action']);
+						$params['sub_action'] = escape_chars($_REQUEST['sub_action']);
 
 					if (class_exists($module_name)) {
 						$module = call_user_func(array($module_name, 'getInstance'));
@@ -412,7 +424,7 @@ class backend extends Module {
 	 * Activates specified module
 	 */
 	private function activateModule() {
-		$module_name = fix_chars($_REQUEST['module_name']);
+		$module_name = escape_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
@@ -444,7 +456,7 @@ class backend extends Module {
 	 * Deactivates specified module
 	 */
 	private function deactivateModule() {
-		$module_name = fix_chars($_REQUEST['module_name']);
+		$module_name = escape_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
@@ -476,7 +488,7 @@ class backend extends Module {
 	 * Print confirmation form before initialising module
 	 */
 	private function initialiseModule() {
-		$module_name = fix_chars($_REQUEST['module_name']);
+		$module_name = escape_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -508,7 +520,7 @@ class backend extends Module {
 	 * Initialise and activate module
 	 */
 	private function initialiseModule_Commit() {
-		$module_name = fix_chars($_REQUEST['module_name']);
+		$module_name = escape_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
@@ -557,7 +569,7 @@ class backend extends Module {
 	 * Print confirmation dialog before disabling module
 	 */
 	private function disableModule() {
-		$module_name = fix_chars($_REQUEST['module_name']);
+		$module_name = escape_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -589,7 +601,7 @@ class backend extends Module {
 	 * Disable specified module and remove it's settings
 	 */
 	private function disableModule_Commit() {
-		$module_name = fix_chars($_REQUEST['module_name']);
+		$module_name = escape_chars($_REQUEST['module_name']);
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected

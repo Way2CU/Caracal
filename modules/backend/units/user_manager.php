@@ -835,10 +835,10 @@ class Backend_UserManager {
 	private function savePassword() {
 		$manager = UserManager::getInstance();
 
-		$old_password = $_REQUEST['old_password'];
-		$new_password = $_REQUEST['new_password'];
-		$repeat_password = $_REQUEST['repeat_password'];
-		$user_id = $_SESSION['uid'];
+		$old_password = escape_chars($_REQUEST['old_password']);
+		$new_password = escape_chars($_REQUEST['new_password']);
+		$repeat_password = escape_chars($_REQUEST['repeat_password']);
+		$user_id = fix_id($_SESSION['uid']);
 
 		// get existing user entry
 		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user_id));
