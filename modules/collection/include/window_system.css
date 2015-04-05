@@ -268,17 +268,9 @@ div.window div.content textarea {
 	transition: all 0.3s;
 }
 
-div.window div.content input.multi-language,
-div.window div.content textarea.multi-language {
-	background-image: url(../images/multilanguage_field.svg);
-	background-position: calc(100% - 5px) 5px;
-	background-repeat: no-repeat;
-	background-size: 1.2em 1.2em;
-}
-
-body.rtl div.window div.content input.multi-language,
-body.rtl div.window div.content textarea.multi-language {
-	background-position: 5px top;
+div.window div.language_selector:hover ~ * input.multi-language,
+div.window div.language_selector:hover ~ * textarea.multi-language {
+	border-color: blue;
 }
 
 div.window div.content select.ltr,
