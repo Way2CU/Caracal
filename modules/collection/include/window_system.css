@@ -271,6 +271,7 @@ div.window div.content textarea {
 div.window div.language_selector:hover ~ * input.multi-language,
 div.window div.language_selector:hover ~ * textarea.multi-language {
 	border-color: blue;
+	box-shadow: inset blue 0px 0px 3px;
 }
 
 div.window div.content select.ltr,
