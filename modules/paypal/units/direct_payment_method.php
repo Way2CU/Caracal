@@ -67,6 +67,14 @@ class PayPal_Direct extends PaymentMethod {
 	}
 
 	/**
+	 * If delayed payments are supported by this payment method.
+	 * @return boolean
+	 */
+	public function supports_delayed() {
+		return false;
+	}
+
+	/**
 	 * Return URL for checkout form
 	 * @return string
 	 */
