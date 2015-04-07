@@ -2195,7 +2195,7 @@ class shop extends Module {
 		// only get delivery method prices if request was made by client-side script
 		if (_AJAX_REQUEST) {
 			// get prefered method
-			$delivery_method = Delivery::get_current_name();
+			$delivery_method = Delivery::get_current();
 
 			// if there is a delivery method selected, get price estimation for items
 			// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
