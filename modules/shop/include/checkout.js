@@ -241,7 +241,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 								.data('country', address.country)
 								.appendTo(presets);
 						}
-					}, 
+					},
 					error: function(request, text_status, error) {
 						// add "bad" class to input fields
 						email_field.addClass('bad');
@@ -272,7 +272,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				fields.each(function(index) {
 					var field = $(this);
 
-					if (field.data('required') == 1 && field.val() == '') 
+					if (field.data('required') == 1 && field.val() == '')
 						field.addClass('bad'); else
 						field.removeClass('bad');
 				});
@@ -349,7 +349,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		fields.each(function(index) {
 			var field = $(this);
 
-			if (field.data('required') == 1 && field.is(':visible') && field.val() == '') 
+			if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
 				field.addClass('bad'); else
 				field.removeClass('bad');
 		});
@@ -383,7 +383,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		fields.each(function(index) {
 			var field = $(this);
 
-			if (field.data('required') == 1 && field.val() == '') 
+			if (field.data('required') == 1 && field.val() == '')
 				field.addClass('bad'); else
 				field.removeClass('bad');
 		});
