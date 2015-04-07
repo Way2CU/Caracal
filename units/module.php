@@ -28,7 +28,9 @@ abstract class Module {
 	 * @return Module
 	 */
 	protected function __construct($file, $load_settings=True) {
-		$this->path = dirname($file).'/';
+		if (substr($file, 0, strlen(_BASEPATH)) == _BASEPATH)
+			$this->path = dirname($file).'/'; else
+			$this->path = $module_path.'/'.get_class($this).'/';
 		$this->name = get_class($this);
 
 		// load language file if present
