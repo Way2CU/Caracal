@@ -30,7 +30,7 @@ final class Transaction {
 	 *
 	 * @return object
 	 */
-	private static function get_current() {
+	public static function get_current() {
 		$id = null;
 		$result = null;
 
