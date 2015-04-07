@@ -66,7 +66,9 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 
 		// register delivery method
 		$this->name = 'fedex';
-		$this->registerDeliveryMethod();
+
+		if (class_exists('shop'))
+			Shop\Delivery::register_method($this->name, $this);
 	}
 
 	/**
