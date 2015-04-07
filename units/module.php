@@ -33,7 +33,7 @@ abstract class Module {
 		// detect module path
 		if (substr($file, 0, strlen(_BASEPATH)) == _BASEPATH)
 			$this->path = dirname($file).'/'; else
-			$this->path = _BASEPATH.$module_path.'/'.get_class($this).'/';
+			$this->path = _BASEPATH.'/'.$module_path.'/'.get_class($this).'/';
 
 		// store class name
 		$this->name = get_class($this);
