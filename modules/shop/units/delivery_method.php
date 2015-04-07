@@ -4,22 +4,15 @@
  * Delivery method base class
  */
 
+use Shop\Delivery as Delivery;
+
+
 abstract class DeliveryMethod {
 	protected $name;
 	protected $parent;
 
 	protected function __construct($parent) {
 		$this->parent = $parent;
-	}
-
-	/**
-	 * Register delivery method with main shop module.
-	 */
-	protected function registerDeliveryMethod() {
-		if (class_exists('shop')) {
-			$shop = shop::getInstance();
-			$shop->registerDeliveryMethod($this->name, $this);
-		}
 	}
 
 	/**
