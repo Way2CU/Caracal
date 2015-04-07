@@ -578,7 +578,7 @@ Caracal.Shop.Cart = function() {
 	 * @return object
 	 */
 	self.ui.add_item_list = function(item_list) {
-		$.extend(self.ui.item_list, item_list);
+		self.ui.item_list = self.ui.item_list.add(item_list);
 		return self;
 	};
 
@@ -589,7 +589,7 @@ Caracal.Shop.Cart = function() {
 	 * @return object
 	 */
 	self.ui.add_total_count_label = function(label) {
-		$.extend(self.ui.total_count, label);
+		self.ui.total_count = self.ui.total_count.add(label);
 		return self;
 	};
 
@@ -601,7 +601,7 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.ui.add_total_cost_label = function(label) {
 		// add label to list
-		$.extend(self.ui.total_cost, label);
+		self.ui.total_cost = self.ui.total_cost.add(label);
 
 		// create attribute with currency
 		self.ui.total_cost.attr('data-currency', self.currency);
@@ -616,7 +616,7 @@ Caracal.Shop.Cart = function() {
 	 * @return object
 	 */
 	self.ui.add_total_weight_label = function(label) {
-		$.extend(self.ui.total_weight, label);
+		self.ui.total_weight = self.ui.total_weight.add(label);
 		return self;
 	};
 
@@ -628,7 +628,7 @@ Caracal.Shop.Cart = function() {
 	 */
 	self.ui.connect_checkout_button = function(button) {
 		// extend set
-		$.extend(self.ui.checkout_button, button);
+		self.ui.checkout_button = self.ui.checkout_button.add(button);
 
 		// re-attach handlers
 		self.ui.checkout_button.off('click', self.handlers.checkout_click);
