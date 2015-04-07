@@ -34,7 +34,7 @@ final class Delivery {
 		}
 
 		// register new method
-		self::$methods[$name] = $module;
+		self::$methods[$name] = $method;
 		$result = true;
 
 		return $result;
