@@ -13,6 +13,10 @@ namespace Shop;
 final class Delivery {
 	private static $methods = array();
 
+	const ALL = 0;
+	const INTERNATIONAL = 1;
+	const DOMESTIC = 2;
+
 	/**
 	 * Register delivery method to be used in shop.
 	 *
@@ -63,6 +67,60 @@ final class Delivery {
 	}
 
 	/**
+	 * Return total number registered delivery methods.
+	 *
+	 * @return integer
+	 */
+	public static function method_count() {
+		return count(self::$methods);
+	}
+
+	/**
+	 * Get printable list of methods and their properties. If specified
+	 * only delivery methods of certain type will be returned.
+	 *
+	 * Example response:
+	 *
+	 * $result = array(
+	 * 		'method_name'	=> array(
+	 * 				'title'	=> 'localized method name',
+	 * 				'icon'	=> 'http://domain.com/url/to/icon.png',
+	 * 				'image'	=> 'http://domain.com/url/to/image_200x55.png',
+	 * 				'small_image'	=> 'http://domain.com/url/to/image_100x28.png',
+	 * 				'international'	=> false
+	 * 			)
+	 * );
+	 *
+	 * @param integer $type
+	 * @return array
+	 */
+	public static function get_printable_list($type=self::ALL) {
+		$result = array();
+
+		if (count(self::$methods) > 0)
+			foreach (self::$methods as $name => $method) {
+				$international = $module->isInternational();
+				$data = array(
+					'title'			=> $module->getTitle(),
+					'icon'			=> $module->getIcon(),
+					'image'			=> $module->getImage(),
+					'small_image'	=> $module->getSmallImage(),
+					'international'	=> $international
+				);
+
+				// add method data to result
+				if (
+					($international && $type == self::INTERNATIONAL) ||
+					(!$international && $type == self::DOMESTIC) ||
+					$type == self::ALL
+				)
+					$result[] = $data;
+			}
+
+		return $result;
+	}
+
+	/**
 	 * Set delivery method for current transaction and optionally set
 	 * delivery type.
 	 *
@@ -101,7 +159,7 @@ final class Delivery {
 	 *
 	 * @return string
 	 */
-	public static function get_current_method() {
+	public static function get_current_name() {
 		$result = '';
 		$transaction = Transaction::get_current();
 
@@ -120,7 +178,7 @@ final class Delivery {
 	 *
 	 * @return string
 	 */
-	public static function get_current_method_type() {
+	public static function get_current_type() {
 		$result = '';
 		$transaction = Transaction::get_current();
 
