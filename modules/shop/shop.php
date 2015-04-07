@@ -31,6 +31,11 @@ require_once('units/shop_delivery_address_manager.php');
 require_once('units/shop_related_items_manager.php');
 require_once('units/shop_manufacturer_handler.php');
 require_once('units/shop_delivery_methods_handler.php');
+require_once('units/delivery.php');
+require_once('units/transaction.php');
+
+use Shop\Delivery as Delivery;
+use Shop\Transaction as Transaction;
 
 
 final class TransactionType {
@@ -633,6 +638,10 @@ class shop extends Module {
 				$this->json_SetRecurringPlan();
 				break;
 
+			case 'json_set_delivery_method':
+				$this->json_SetDeliveryMethod();
+				break;
+
 			default:
 				break;
 			}
@@ -994,18 +1003,6 @@ class shop extends Module {
 		if (!array_key_exists($name, $this->payment_methods))
 			$this->payment_methods[$name] = $module; else
 				throw new Exception("Payment method '{$name}' is already registered with the system.");
-	}
-
-	/**
-	 * Method used by delivery providers to register with main module.
-	 *
-	 * @param string $name
-	 * @param object $module
-	 */
-	public function registerDeliveryMethod($name, &$module) {
-		if (!array_key_exists($name, $this->delivery_methods))
-			$this->delivery_methods[$name] = $module; else
-				throw new Exception("Delivery method '{$name}' is already registered with the system.");
 	}
 
 	/**
@@ -1612,6 +1609,13 @@ class shop extends Module {
 	public function json_SetRecurringPlan() {
 		$recurring_plan = fix_chars($_REQUEST['plan']);
 		$_SESSION['recurring_plan'] = $recurring_plan;
+	}
+
+	/**
+	 * Set delivery method and return updated information about cart totals.
+	 */
+	private function json_SetDeliveryMethod() {
+		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
 	}
 
 	/**
