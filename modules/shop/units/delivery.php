@@ -99,12 +99,12 @@ final class Delivery {
 
 		if (count(self::$methods) > 0)
 			foreach (self::$methods as $name => $method) {
-				$international = $module->isInternational();
+				$international = $method->isInternational();
 				$data = array(
-					'title'			=> $module->getTitle(),
-					'icon'			=> $module->getIcon(),
-					'image'			=> $module->getImage(),
-					'small_image'	=> $module->getSmallImage(),
+					'title'			=> $method->getTitle(),
+					'icon'			=> $method->getIcon(),
+					'image'			=> $method->getImage(),
+					'small_image'	=> $method->getSmallImage(),
 					'international'	=> $international
 				);
 
