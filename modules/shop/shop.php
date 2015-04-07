@@ -2084,6 +2084,26 @@ class shop extends Module {
 		$delivery_prices = array();
 		$map_id_to_uid = array();
 
+		// get currency associated with transaction
+		$transaction_manager = ShopTransactionsManager::getInstance();
+		$currency_manager = ShopCurrenciesManager::getInstance();
+
+		$transaction = $transaction_manager->getSingleItem(
+							array('currency'),
+							array('uid' => $transaction_id)
+						);
+
+		if (is_object($transaction))
+				$currency = $currency_manager->getSingleItem(
+				$currency_manager->getFieldNames(),
+				array('id' => $transaction->currency)
+			);
+
+		if (is_object($currency))
+			$preferred_currency = $currency->currency; else
+			$preferred_currency = 'EUR';
+
+		// get cart summary
 		if (isset($_SESSION['recurring_plan'])) {
 			$plan_name = $_SESSION['recurring_plan'];
 
@@ -2179,24 +2199,9 @@ class shop extends Module {
 			// if there is a delivery method selected, get price estimation for items
 			// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
 			if (!is_null($delivery_method)) {
-				$transaction_manager = ShopTransactionsManager::getInstance();
-				$currency_manager = ShopCurrenciesManager::getInstance();
+
 				$warehouse_manager = ShopWarehouseManager::getInstance();
 				$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
-
-				// get currency associated with transaction
-				$transaction = $transaction_manager->getSingleItem(array('currency'), array('uid' => $transaction_id));
-
-				if (is_object($transaction)) {
-					$currency = $currency_manager->getSingleItem(
-						$currency_manager->getFieldNames(),
-						array('id' => $transaction->currency)
-					);
-				}
-
-				if (is_object($currency))
-					$preferred_currency = $currency->currency; else
-					$preferred_currency = 'EUR';
 
 				if (is_object($warehouse)) {
 					$shipper = array(
@@ -2244,6 +2249,7 @@ class shop extends Module {
 			'handling'				=> $handling,
 			'weight'				=> $total_weight,
 			'total'					=> $total_money,
+			'currency'				=> $preferred_currency,
 			'delivery_method'		=> is_null($delivery_method) ? '' : $delivery_method->getName(),
 			'delivery_prices'		=> $delivery_prices
 		);
