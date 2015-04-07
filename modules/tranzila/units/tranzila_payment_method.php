@@ -63,6 +63,14 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
+	 * If delayed payments are supported by this payment method.
+	 * @return boolean
+	 */
+	public function supports_delayed() {
+		return true;
+	}
+
+	/**
 	 * Return URL for checkout form
 	 * @return string
 	 */
