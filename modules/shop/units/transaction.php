@@ -9,6 +9,8 @@
 
 namespace Shop;
 
+use \ShopTransactionsManager as ShopTransactionsManager;
+
 
 final class Transaction {
 	private static $manager = null;
