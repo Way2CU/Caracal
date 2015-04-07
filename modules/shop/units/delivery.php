@@ -53,6 +53,16 @@ final class Delivery {
 	}
 
 	/**
+	 * Check if delivery method exists.
+	 *
+	 * @param string $name
+	 * @return boolean
+	 */
+	public static function exists($name) {
+		return array_key_exists($name, self::$methods);
+	}
+
+	/**
 	 * Set delivery method for current transaction and optionally set
 	 * delivery type.
 	 *
