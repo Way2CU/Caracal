@@ -35,6 +35,13 @@ abstract class PaymentMethod {
 	abstract public function supports_recurring();
 
 	/**
+	 * If delayed payments are supported by this payment method.
+	 *
+	 * @return boolean
+	 */
+	abstract public function supports_delayed();
+
+	/**
 	 * Get URL to be used in checkout form.
 	 * @return string
 	 */
