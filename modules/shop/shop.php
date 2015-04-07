@@ -148,7 +148,6 @@ class PaymentMethodError extends Exception {};
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
-	private $delivery_methods;
 
 	private $excluded_properties = array(
 		'size_value', 'color_value', 'count'
@@ -168,7 +167,6 @@ class shop extends Module {
 
 		// create methods storage
 		$this->payment_methods = array();
-		$this->delivery_methods = array();
 
 		// create events
 		Events::register('shop', 'shopping-cart-changed');
@@ -1979,7 +1977,7 @@ class shop extends Module {
 		if ($update_delivery_method) {
 			$method = fix_chars($_REQUEST['delivery_method']);
 
-			if (array_key_exists($method, $this->delivery_methods))
+			if (Delivery::exists($method))
 				$_SESSION['delivery_method'] = $method;
 		}
 
@@ -2197,8 +2195,7 @@ class shop extends Module {
 		// only get delivery method prices if request was made by client-side script
 		if (_AJAX_REQUEST) {
 			// get prefered method
-			if (isset($_SESSION['delivery_method']) && array_key_exists($_SESSION['delivery_method'], $this->delivery_methods))
-				$delivery_method = $this->delivery_methods[$_SESSION['delivery_method']];
+			$delivery_method = Delivery::get_current_name();
 
 			// if there is a delivery method selected, get price estimation for items
 			// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
@@ -3361,18 +3358,13 @@ class shop extends Module {
 	 */
 	public function tag_DeliveryMethodsList($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'delivery_method.xml');
+		$selected = Delivery::get_current_name();
 
-		if (count($this->delivery_methods) > 0)
-			foreach($this->delivery_methods as $name => $module) {
-				$params = array(
-					'selected'				=> isset($_SESSION['delivery_method']) && $_SESSION['delivery_method'] == $name,
-					'name'					=> $name,
-					'title'					=> $module->getTitle(),
-					'icon'					=> $module->getIcon(),
-					'image'					=> $module->getImage(),
-					'small_image'			=> $module->getSmallImage(),
-					'is_international'		=> $module->isInternational()
-				);
+		if (Delivery::method_count() > 0)
+			foreach(Delivery::get_printable_list() as $name => $data) {
+				$params = $data;
+				$params['selected'] = ($selected == $name);
+				$params['name'] = $name;
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
