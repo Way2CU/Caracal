@@ -46,6 +46,14 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
+	 * If delayed payments are supported by this payment method.
+	 * @return boolean
+	 */
+	public function supports_delayed() {
+		return false;
+	}
+
+	/**
 	 * Get URL to be used in checkout form.
 	 *
 	 * Note: Stripe is a JavaScript based payment method. This means that
