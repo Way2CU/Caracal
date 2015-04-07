@@ -2002,9 +2002,6 @@ class shop extends Module {
 		$result = $this->getCartSummary($recipient, $uid, $payment_method);
 		unset($result['items_for_checkout']);
 
-		// add currency to result
-		$result['currency'] = $this->getDefaultCurrency();
-
 		// add language constants
 		$result['label_no_estimate'] = $this->getLanguageConstant('label_no_estimate');
 		$result['label_estimated_time'] = $this->getLanguageConstant('label_estimated_time');
@@ -2182,15 +2179,21 @@ class shop extends Module {
 			// if there is a delivery method selected, get price estimation for items
 			// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
 			if (!is_null($delivery_method)) {
+				$transaction_manager = ShopTransactionsManager::getInstance();
 				$currency_manager = ShopCurrenciesManager::getInstance();
 				$warehouse_manager = ShopWarehouseManager::getInstance();
 				$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
 
 				// get currency associated with transaction
-				$currency = $currency_manager->getSingleItem(
-					$currency_manager->getFieldNames(),
-					array('id' => $currency_id)
-				);
+				$transaction = $transaction_manager->getSingleItem(array('currency'), array('uid' => $transaction_id));
+
+				if (is_object($transaction)) {
+					$currency = $currency_manager->getSingleItem(
+						$currency_manager->getFieldNames(),
+						array('id' => $transaction->currency)
+					);
+				}
+
 				if (is_object($currency))
 					$preferred_currency = $currency->currency; else
 					$preferred_currency = 'EUR';
