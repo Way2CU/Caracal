@@ -535,8 +535,8 @@ Caracal.Shop.CheckoutForm = function() {
 
 		var data = {
 				section: 'shop',
-				action: 'json_get_shopping_cart_summary',
-				delivery_method: selected
+				action: 'json_set_delivery_method',
+				method: selected
 			};
 
 		// show loading overlay
