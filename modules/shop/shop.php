@@ -1613,7 +1613,59 @@ class shop extends Module {
 	 * Set delivery method and return updated information about cart totals.
 	 */
 	private function json_SetDeliveryMethod() {
+		$result = array();
 		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
+		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
+
+		// get prefered method
+		$delivery_method = Delivery::get_current();
+
+		if (is_null($delivery_method))
+			return;
+
+		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
+		$warehouse_manager = ShopWarehouseManager::getInstance();
+		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
+
+		if (is_object($warehouse)) {
+			$shipper = array(
+				'street'	=> array($warehouse->street, $warehouse->street2),
+				'city'		=> $warehouse->city,
+				'zip_code'	=> $warehouse->zip,
+				'state'		=> $warehouse->state,
+				'country'	=> $warehouse->country
+			);
+
+			// get types and prices from delivery method provider
+			$delivery_prices = $delivery_method->getDeliveryTypes(
+				$delivery_items,
+				$shipper,
+				$recipient,
+				$transaction_id,
+				$preferred_currency
+			);
+
+			// convert prices and format timestamps
+			$date_format = Language::getText('format_date');
+
+			if (count($delivery_prices) > 0)
+				for ($i = 0; $i < count($delivery_prices); $i++) {
+					$delivery = $delivery_prices[$i];
+
+					// format starting date
+					if (!is_null($delivery[3]))
+						$delivery[3] = date($date_format, $delivery[3]);
+
+					// format ending date
+					if (!is_null($delivery[4]))
+						$delivery[4] = date($date_format, $delivery[4]);
+
+					// store delivery back to the original array
+					$delivery_prices[$i] = $delivery;
+				}
+		}
+
+		print json_encode($result);
 	}
 
 	/**
@@ -2189,58 +2241,6 @@ class shop extends Module {
 						$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 						$total_weight += $weight * $data['count'];
 					}
-			}
-		}
-
-		// only get delivery method prices if request was made by client-side script
-		if (_AJAX_REQUEST) {
-			// get prefered method
-			$delivery_method = Delivery::get_current();
-
-			// if there is a delivery method selected, get price estimation for items
-			// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
-			if (!is_null($delivery_method)) {
-
-				$warehouse_manager = ShopWarehouseManager::getInstance();
-				$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
-
-				if (is_object($warehouse)) {
-					$shipper = array(
-						'street'	=> array($warehouse->street, $warehouse->street2),
-						'city'		=> $warehouse->city,
-						'zip_code'	=> $warehouse->zip,
-						'state'		=> $warehouse->state,
-						'country'	=> $warehouse->country
-					);
-
-					// get types and prices from delivery method provider
-					$delivery_prices = $delivery_method->getDeliveryTypes(
-						$delivery_items,
-						$shipper,
-						$recipient,
-						$transaction_id,
-						$preferred_currency
-					);
-
-					// convert prices and format timestamps
-					$date_format = Language::getText('format_date');
-
-					if (count($delivery_prices) > 0)
-						for ($i = 0; $i < count($delivery_prices); $i++) {
-							$delivery = $delivery_prices[$i];
-
-							// format starting date
-							if (!is_null($delivery[3]))
-								$delivery[3] = date($date_format, $delivery[3]);
-
-							// format ending date
-							if (!is_null($delivery[4]))
-								$delivery[4] = date($date_format, $delivery[4]);
-
-							// store delivery back to the original array
-							$delivery_prices[$i] = $delivery;
-						}
-				}
 			}
 		}
 
