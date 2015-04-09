@@ -155,6 +155,16 @@ final class Delivery {
 	}
 
 	/**
+	 * Get method object for currently selected name.
+	 *
+	 * @return object
+	 */
+	public static function get_current() {
+		$name = self::get_current_name();
+		return self::get_method($name);
+	}
+
+	/**
 	 * Return delivery method for current transaction.
 	 *
 	 * @return string
