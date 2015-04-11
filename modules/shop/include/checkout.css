@@ -59,7 +59,7 @@ table.checkout_details {
 /**
  * Delivery method selection
  */
-div#checkout div.delivery_provider {
+div#checkout div.delivery_method {
 	display: block;
 	width: 550px;
 	height: 90px;
@@ -73,20 +73,20 @@ div#checkout div.delivery_provider {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 }
 
-body.rtl div#checkout div.delivery_provider {
+body.rtl div#checkout div.delivery_method {
 	float: left;
 }
 
-div#checkout.recurring div.delivery_provider {
+div#checkout.recurring div.delivery_method {
 	float: none;
 }
 
-div#checkout div.delivery_provider span.title {
+div#checkout div.delivery_method span.title {
 	display: block;
 	padding-bottom: 5px;
 }
 
-div#checkout div.delivery_provider label {
+div#checkout div.delivery_method label {
 	display: inline-block;
 	width: 100px;
 	height: 55px;
@@ -96,15 +96,15 @@ div#checkout div.delivery_provider label {
 	margin-top: 10px;
 }
 
-div#checkout div.delivery_provider label input[type=radio] {
+div#checkout div.delivery_method label input[type=radio] {
 	display: none;
 }
 
-div#checkout div.delivery_provider label input[type=radio] + span {
+div#checkout div.delivery_method label input[type=radio] + span {
 	position: relative;
 }
 
-div#checkout div.delivery_provider label input[type=radio] + span:before {
+div#checkout div.delivery_method label input[type=radio] + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -130,7 +130,7 @@ div#checkout div.delivery_provider label input[type=radio] + span:before {
 	transition-duration: 0.3s;
 }
 
-div#checkout div.delivery_provider label input[type=radio]:checked + span:before {
+div#checkout div.delivery_method label input[type=radio]:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
