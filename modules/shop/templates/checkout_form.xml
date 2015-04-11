@@ -106,7 +106,7 @@
 					</div>
 
 					<cms:if condition="$params['include_shipping']">
-						<div class="delivery_provider">
+						<div class="delivery_method">
 							<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
 							<cms:delivery_methods shopping_cart="1"
 								template="delivery_checkout.xml"
