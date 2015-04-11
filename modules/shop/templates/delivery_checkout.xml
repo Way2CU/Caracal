@@ -4,7 +4,7 @@
 	<label>
 		<input
 			type="radio"
-			name="delivery_method"
+			name="delivery_provider"
 			value="$params['name']"
 			cms:eval="value"
 		/>
