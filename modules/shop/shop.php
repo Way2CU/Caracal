@@ -3364,10 +3364,9 @@ class shop extends Module {
 		$selected = Delivery::get_current_name();
 
 		if (Delivery::method_count() > 0)
-			foreach(Delivery::get_printable_list() as $name => $data) {
+			foreach(Delivery::get_printable_list() as $data) {
 				$params = $data;
 				$params['selected'] = ($selected == $name);
-				$params['name'] = $name;
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
