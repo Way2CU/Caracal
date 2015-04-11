@@ -101,6 +101,7 @@ final class Delivery {
 			foreach (self::$methods as $name => $method) {
 				$international = $method->isInternational();
 				$data = array(
+					'name'			=> $name,
 					'title'			=> $method->getTitle(),
 					'icon'			=> $method->getIcon(),
 					'image'			=> $method->getImage(),
