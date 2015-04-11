@@ -23,7 +23,7 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_country" module="shop"/></span>
-			<select name="country" style="width: 150px;">
+			<select name="country" style="width: 150px;" class="ltr">
 				<option/>
 				<cms:module
 					name="country_list"
