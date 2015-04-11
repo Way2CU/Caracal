@@ -869,6 +869,7 @@ class shop extends Module {
 			`weight` decimal(4,2) NOT NULL,
 			`payment_method` varchar(255) NOT NULL,
 			`delivery_method` varchar(255) NOT NULL,
+			`delivery_type` varchar(255) NOT NULL,
 			`remark` text NOT NULL,
 			`token` varchar(255) NOT NULL,
 			`total` decimal(8,2) NOT NULL,
@@ -1614,7 +1615,7 @@ class shop extends Module {
 	 */
 	private function json_SetDeliveryMethod() {
 		$result = array();
-		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
+		$method = isset($_REQUEST['method']) ? fix_id($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
 
 		// get prefered method
@@ -1663,6 +1664,8 @@ class shop extends Module {
 					// store delivery back to the original array
 					$delivery_prices[$i] = $delivery;
 				}
+		} else {
+			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
 		}
 
 		print json_encode($result);
