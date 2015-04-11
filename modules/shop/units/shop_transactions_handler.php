@@ -101,6 +101,7 @@ class ShopTransactionsHandler {
 				'shipping'			=> $transaction->shipping,
 				'timestamp'			=> $transaction->timestamp,
 				'delivery_method'	=> $transaction->delivery_method,
+				'delivery_type'		=> $transaction->delivery_type,
 				'remark'			=> $transaction->remark,
 				'total'				=> $transaction->total,
 				'address_name'		=> $address->name,
@@ -222,6 +223,7 @@ class ShopTransactionsHandler {
 							'shipping'			=> $item->shipping,
 							'total'				=> $item->total,
 							'delivery_method'	=> $item->delivery_method,
+							'delivery_type'		=> $item->delivery_type,
 							'remark'			=> $item->remark,
 							'timestamp'			=> $item->timestamp,
 							'item_details'		=> url_MakeHyperlink(
