@@ -1622,7 +1622,8 @@ class shop extends Module {
 	private function json_SetDeliveryMethod() {
 		$result = array(
 				'error'		=> false,
-				'message'	=> ''
+				'message'	=> '',
+				'delivery_prices'	=> array()
 			);
 		$method = isset($_REQUEST['method']) ? fix_id($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
