@@ -273,6 +273,10 @@ div#checkout div.delivery_method label > span {
 	font-size: 0.9em;
 }
 
+div#checkout div.delivery_method label > span:after {
+	content: ' ' attr(data-currency);
+}
+
 body.rtl div#checkout div.delivery_method label > span {
 	padding-left: 0px;
 	padding-right: 24px;

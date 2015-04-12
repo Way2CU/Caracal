@@ -476,7 +476,9 @@ Caracal.Shop.CheckoutForm = function() {
 				.change(self._handle_delivery_method_click)
 				.appendTo(entry);
 
-			price.html(method[1] + ' ' + method[2]);
+			price
+				.html(method[1])
+				.attr('data-currency', method[2]);
 
 			name
 				.html(method[0])
