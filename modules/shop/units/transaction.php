@@ -9,11 +9,13 @@
 
 namespace Shop;
 
-use \ShopTransactionsManager as ShopTransactionsManager;
+use \ShopTransactionsManager as TransactionsManager;
+use \ShopDeliveryAddressManager as DeliveryAddressManager;
 
 
 final class Transaction {
 	private static $manager = null;
+	private static $address_manager = null;
 
 	/**
 	 * Get transaction manager.
@@ -22,9 +24,21 @@ final class Transaction {
 	 */
 	public static function get_manager() {
 		if (is_null(self::$manager))
-			self::$manager = ShopTransactionsManager::getInstance();
+			self::$manager = TransactionsManager::getInstance();
 
 		return self::$manager;
+	}
+
+	/**
+	 * Get delivery address manager.
+	 *
+	 * @return object
+	 */
+	public static function get_address_manager() {
+		if (is_null(self::$address_manager))
+			self::$address_manager = DeliveryAddressManager::getInstance();
+
+		return self::$address_manager;
 	}
 
 	/**
@@ -50,6 +64,28 @@ final class Transaction {
 		return $result;
 	}
 
+	/**
+	 * Get address associated with currently active transaction.
+	 *
+	 * @return object
+	 */
+	public static function get_address() {
+		$result = array();
+		$transaction = self::get_current();
+
+		// make sure transaction is set
+		if (is_null($transaction))
+			return $result;
+
+		// get address
+		$manager = self::get_address_manager();
+		$address = $manager->getSingleItem($manager->getFieldNames(), array('id' => $transaction->address));
+
+		if (is_object($address))
+			$result = $address;
+
+		return $result;
+	}
 }
 
 ?>
