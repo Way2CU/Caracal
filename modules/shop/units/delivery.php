@@ -9,6 +9,10 @@
 
 namespace Shop;
 
+use \PackageType as PackageType;
+use \UnitType as UnitType;
+use \ShopItemManager as ItemManager;
+
 
 final class Delivery {
 	private static $methods = array();
@@ -199,6 +203,68 @@ final class Delivery {
 
 		// prepare result
 		$result = $transaction->delivery_type;
+
+		return $result;
+	}
+
+	/**
+	 * Create array containing item specification to be used by delivery
+	 * methods when estimating delivery costs.
+	 *
+	 * @return array
+	 */
+	public static function get_items_for_estimate() {
+		$result = array();
+		$uid_list = array();
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+
+		// prepare result structure
+		foreach ($cart as $uid => $item)
+			if (count($item['variations']) > 0)
+				foreach ($item['variations'] as $variation_id => $data) {
+					// remember uid for later data retrieval
+					if (!in_array($uid, $uid_list))
+						$uid_list[] = $uid;
+
+					// add partial result
+					$result[] = array(
+						'uid'			=> $uid,
+						'package'		=> 1,
+						'package_type'	=> PackageType::USER_PACKAGING,
+						'properties'	=> array(),
+						'width'			=> 0,
+						'height'		=> 0,
+						'length'		=> 0,
+						'units'			=> UnitType::METRIC,
+						'count'			=> $data['count'],
+						'weight'		=> 0,
+						'price'			=> 0
+					);
+				}
+
+		// populate missing fields
+		$manager = ItemManager::getInstance();
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
+		$item_map = array();
+
+		// cache item data
+		if (count($items) > 0)
+			foreach ($items as $item)
+				$item_map[$item->uid] = $item;
+
+		// update missing data
+		foreach ($result as $item_data) {
+			// get item unique id
+			$uid = $item_data['uid'];
+			unset($item_data['uid']);
+
+			// get cached item data
+			$db_data = $item_map[$uid];
+
+			// update missing
+			$item_data['weight'] = $db_data->weight;
+			$item_data['price'] = $db_data->price;
+		}
 
 		return $result;
 	}
