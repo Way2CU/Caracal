@@ -1625,7 +1625,7 @@ class shop extends Module {
 				'message'	=> '',
 				'delivery_prices'	=> array()
 			);
-		$method = isset($_REQUEST['method']) ? fix_id($_REQUEST['method']) : null;
+		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
 
 		if (!is_null($method))
