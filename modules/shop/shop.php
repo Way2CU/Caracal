@@ -1658,6 +1658,10 @@ class shop extends Module {
 					);
 		unset($result['items_for_checkout']);
 
+		// add language constants
+		$result['label_no_estimate'] = $this->getLanguageConstant('label_no_estimate');
+		$result['label_estimated_time'] = $this->getLanguageConstant('label_estimated_time');
+
 		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
 		$warehouse_manager = ShopWarehouseManager::getInstance();
 		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
