@@ -89,13 +89,14 @@ abstract class DeliveryMethod {
 	 * 					array(
 	 * 						'package'		=> 0, // number identifying package
 	 * 						'properties'	=> array(),
-	 * 						'package_type'	=> 0,
+	 * 						'package_type'	=> PackageType::USER_PACKAGING,
 	 * 						'width'			=> 0.2,
 	 * 						'height'		=> 0.5,
 	 * 						'length'		=> 1,
 	 * 						'weight'		=> 0,
-	 * 						'units'			=> 1,
-	 * 						'count'			=> 1
+	 * 						'units'			=> UnitType::METRIC,
+	 * 						'count'			=> 1,
+	 * 						'price'			=> 5.0
 	 * 					)
 	 * 				);
 	 *
