@@ -154,6 +154,8 @@
 	"message_error_account_exists": "Account with specified email address already exists on this system. Please select different email address or try recovering your password and signing in with existing account.",
 	"message_error_exceeded_attempts": "Exceeded number of retries for the day!",
 	"message_error_invalid_credentials": "Invalid username and/or password.",
+	"message_error_transaction": "There's no currently active transaction!",
+	"message_error_delivery_method": "There's no delivery method selected!",
 	"message_images_upload": "Once saved system will automatically create new gallery and assign it to this item. If, later, you wish to add or remove images for this shop item you will need to use gallery module.",
 	"message_item_delete": "You are about to mark selected item as deleted and remove memberships from all categories. Images and gallery are not automatically removed. Are you sure you want to this?",
 	"message_item_deleted": "Item was delete!",

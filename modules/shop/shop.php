@@ -1620,7 +1620,10 @@ class shop extends Module {
 	 * Set delivery method and return updated information about cart totals.
 	 */
 	private function json_SetDeliveryMethod() {
-		$result = array();
+		$result = array(
+				'error'		=> false,
+				'message'	=> ''
+			);
 		$method = isset($_REQUEST['method']) ? fix_id($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
 
@@ -1630,13 +1633,20 @@ class shop extends Module {
 		// get current transaction
 		$transaction = Transaction::get_current();
 
-		if (is_null($transaction))
+		if (is_null($transaction)) {
+			$result['error'] = true;
+			$result['message'] = $this->getLanguageConstant('message_error_transaction');
+			print json_encode($result);
 			return;
+		}
 
 		// get prefered method
 		$delivery_method = Delivery::get_current();
 
-		if (is_null($delivery_method))
+		if (is_null($delivery_method)) {
+			$result['error'] = true;
+			$result['message'] = $this->getLanguageConstant('message_error_delivery_method');
+			print json_encode($result);
 			return;
 
 		// get cart summary
