@@ -153,13 +153,13 @@ div#checkout div.overlay {
 	left: 0px;
 
 	background-image:
-		url(../images/checkout_loading.gif),
-		radial-gradient(
-			center center,
-			circle cover,
-			rgba(255, 255, 255, 0.9) 30%,
-			rgba(255, 255, 255, 0) 100%
-		);
+	url(../images/checkout_loading.gif),
+	radial-gradient(
+	center center,
+	circle cover,
+	rgba(255, 255, 255, 0.9) 30%,
+	rgba(255, 255, 255, 0) 100%
+	);
 	background-position: center center, center center;
 	background-repeat: no-repeat, no-repeat;
 }
@@ -208,12 +208,17 @@ div#checkout div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
+body.rtl div#checkout div.delivery_method label {
+	margin-right: 0px;
+	margin-left: 40px;
+}
+
 div#checkout div.delivery_method label:hover {
 	background-color: #e0e0e0;
 }
 
 div#checkout div.delivery_method label input {
-    position: absolute;
+	position: absolute;
 }
 
 div#checkout div.delivery_method label input[type=radio] {
@@ -242,21 +247,35 @@ div#checkout div.delivery_method label input + div:before {
 	transition-duration: 0.3s;
 }
 
+body.rtl div#checkout div.delivery_method label input + div:before {
+	margin-left: 6px;
+	margin-right: 0px;
+}
+
 div#checkout div.delivery_method label input:checked + div:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
 
 div#checkout div.delivery_method label > div span {
-    float: right;
+	float: right;
+}
+
+body.rtl div#checkout div.delivery_method label > div span {
+	float: left;
 }
 
 div#checkout div.delivery_method label > span {
-    display: block;
-    padding-left: 24px;
+	display: block;
+	padding-left: 24px;
 
-    color: #909090;
-    font-size: 0.9em;
+	color: #909090;
+	font-size: 0.9em;
+}
+
+body.rtl div#checkout div.delivery_method label > span {
+	padding-left: 0px;
+	padding-right: 24px;
 }
 
 div#checkout div.delivery_method div.delivery_methods {
@@ -514,10 +533,10 @@ div.checkout_controls button {
 	background-repeat: repeat-x;
 	background-positiont: left top;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-				inset 0 1px rgba(255, 255, 255, 0.3),
-				inset 0 10px rgba(255, 255, 255, 0.2),
-    			inset 0 10px 20px rgba(255, 255, 255, 0.25),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	inset 0 1px rgba(255, 255, 255, 0.3),
+	inset 0 10px rgba(255, 255, 255, 0.2),
+	inset 0 10px 20px rgba(255, 255, 255, 0.25),
+	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	color: white;
 	font-size: 1.1em;
@@ -548,7 +567,7 @@ div.checkout_controls button:active {
 	background-image: linear-gradient(top, #0c70d5 0%, #47a0f3 75%, #0d9ed5 100%);
 
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 }
 
 div.checkout_controls button:disabled {
@@ -556,10 +575,10 @@ div.checkout_controls button:disabled {
 	background-image: none;
 	background-color: #909090;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-				inset 0 1px rgba(255, 255, 255, 0.3),
-				inset 0 10px rgba(255, 255, 255, 0.2),
-    			inset 0 10px 20px rgba(255, 255, 255, 0.25),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	inset 0 1px rgba(255, 255, 255, 0.3),
+	inset 0 10px rgba(255, 255, 255, 0.2),
+	inset 0 10px 20px rgba(255, 255, 255, 0.25),
+	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	text-shadow: -1px -1px 0px #606060;
 }
@@ -795,8 +814,8 @@ div#input_details label select.bad,
 div#input_details label input.bad {
 	border-color: red;
 	box-shadow:
-			inset 3px 3px 5px rgba(200, 200, 200, 0.4),
-			0px 0px 5px rgba(255, 0, 0, 0.6);
+	inset 3px 3px 5px rgba(200, 200, 200, 0.4),
+	0px 0px 5px rgba(255, 0, 0, 0.6);
 }
 
 div#input_details label select:focus,
@@ -991,10 +1010,10 @@ div#checkout_steps a.active:before {
 	background-color: #0b6fd4;
 
 	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2),
-				inset 0 1px rgba(255, 255, 255, 0.3),
-				inset 0 7px rgba(255, 255, 255, 0.2),
-    			inset 0 7px 10px rgba(255, 255, 255, 0.25),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	inset 0 1px rgba(255, 255, 255, 0.3),
+	inset 0 7px rgba(255, 255, 255, 0.2),
+	inset 0 7px 10px rgba(255, 255, 255, 0.25),
+	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	color: white;
 }
