@@ -1652,7 +1652,10 @@ class shop extends Module {
 		}
 
 		// get cart summary
-		$result = $this->getCartSummary($transaction->uid, $this->methods[$transaction->payment_method]);
+		$result = $this->getCartSummary(
+						$transaction->uid,
+						$this->payment_methods[$transaction->payment_method]
+					);
 		unset($result['items_for_checkout']);
 
 		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
