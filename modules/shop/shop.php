@@ -1688,6 +1688,7 @@ class shop extends Module {
 				$transaction->uid,
 				$transaction->currency
 			);
+			$result['delivery_prices'] = $delivery_prices;
 
 			// convert prices and format timestamps
 			$date_format = Language::getText('format_date');
