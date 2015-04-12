@@ -1648,6 +1648,7 @@ class shop extends Module {
 			$result['message'] = $this->getLanguageConstant('message_error_delivery_method');
 			print json_encode($result);
 			return;
+		}
 
 		// get cart summary
 		$result = $this->getCartSummary($transaction->uid, $payment_method);
