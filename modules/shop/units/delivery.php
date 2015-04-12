@@ -148,7 +148,7 @@ final class Delivery {
 			// prepare data
 			$data = array(
 				'delivery_method'	=> $method,
-				'delivery_type'		=> $type
+				'delivery_type'		=> is_null($type) ? '' : $type
 			);
 
 			// update data
