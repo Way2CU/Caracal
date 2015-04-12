@@ -29,5 +29,7 @@
     "search": "بحث",
     "send": "ارسال",
     "submit": "اعتماد",
-    "upload": "رفع"
+    "upload": "رفع",
+    "refresh": "Refresh",
+    "reload": "Reload"
 }

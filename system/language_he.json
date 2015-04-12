@@ -7,13 +7,13 @@
     "close": "סגור",
     "column_options": "אפשרויות",
     "delete": "מחק",
-    "export": "Export",
+    "export": "ייצא",
     "filter": "לסנן",
     "format_date": "d.m.Y.",
     "format_date_short": "d.m.Y.",
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
-    "import": "Import",
+    "import": "ייבא",
     "message_license_error": "אינך מורשה לקבל שירותים מאתר זה",
     "message_server_error": "השרת חווה את הבעיה הבאה:",
     "new": "חדש",
@@ -29,5 +29,7 @@
     "search": "לחפש",
     "send": "שלח",
     "submit": "עדכן",
-    "upload": "העלה"
+    "upload": "העלה",
+    "refresh": "רענן",
+    "reload": "טען מחדש"
 }

@@ -40,7 +40,7 @@
     "column_weight": "משקל",
     "column_status": "סטטוס",
     "column_type": "סוג",
-    "cycle_day": "Day",
+    "cycle_day": "יום(מים)",
     "cycle_month": "חודש(ים)",
     "cycle_week": "שבוע(ות)",
     "cycle_year": "שנה(ים)",
@@ -154,6 +154,8 @@
     "message_error_account_exists": "חשבון עם אותו מייל כבר קיים במערכת. אנא בחרו במייל אחר או נסו לשחזר את הסיסמה ולהיכנס מהחשבון הקיים.",
     "message_error_exceeded_attempts": "אין יותר ניסיונות להיום!",
     "message_error_invalid_credentials": "שם משתמש וסיסמה לא חוקיים.",
+    "message_error_transaction": "There's no currently active transaction!",
+    "message_error_delivery_method": "There's no delivery method selected!",
     "message_images_upload": "ברגע שתשמור, המערכת תייצר גלרית תמונות מיוחדת למוצר. אם לאחר מכן תרצה להסיר תמונה מהמוצ, אנא עשה זאת דרך מודול הגלריה",
     "message_item_delete": "אתה עומד למחוק מוצר, המוצר ימחק מכל הקטגוריות אליהן הוא מקושר, התמונות בגלריה לא ימחקו",
     "message_item_deleted": "המוצר נמחק!",
@@ -256,8 +258,9 @@
     "update_currencies": "עדכן רשימת מטבעות",
     "values": "ערכים",
     "with": "עם",
-    "type_subscription": "Subscription",
-    "type_regular": "Regular",
-    "type_donation": "Donation",
-    "type_delayed": "Delayed"
+    "type_subscription": "מנוי",
+    "type_regular": "רגיל",
+    "type_donation": "תרומה",
+    "type_delayed": "עיכוב",
+    "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח"
 }

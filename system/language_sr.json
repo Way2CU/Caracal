@@ -29,5 +29,7 @@
     "search": "Pronađi",
     "send": "Pošalji",
     "submit": "Pošalji",
-    "upload": "Pošalji"
+    "upload": "Pošalji",
+    "refresh": "Refresh",
+    "reload": "Reload"
 }

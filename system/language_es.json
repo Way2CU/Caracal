@@ -29,5 +29,7 @@
     "search": "Search",
     "send": "Enviar",
     "submit": "Submit",
-    "upload": "Upload"
+    "upload": "Upload",
+    "refresh": "Refresh",
+    "reload": "Reload"
 }
