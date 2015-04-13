@@ -460,8 +460,8 @@ Caracal.Shop.CheckoutForm = function() {
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
 
-		for (var i=0, count=data.delivery_prices.length; i<count; i++) {
-			var method = data.delivery_prices[i];
+		for (var id in data.delivery_prices) {
+			var method = data.delivery_prices[id];
 			var entry = $('<label>');
 			var name = $('<div>');
 			var price = $('<span>');
@@ -471,7 +471,7 @@ Caracal.Shop.CheckoutForm = function() {
 			checkbox
 				.attr('type', 'radio')
 				.attr('name', 'delivery_method')
-				.attr('value', i)
+				.attr('value', id)
 				.data('method', method)
 				.change(self._handle_delivery_method_click)
 				.appendTo(entry);
