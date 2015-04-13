@@ -1698,9 +1698,7 @@ class shop extends Module {
 			$date_format = Language::getText('format_date');
 
 			if (count($delivery_prices) > 0)
-				for ($i = 0; $i < count($delivery_prices); $i++) {
-					$delivery = $delivery_prices[$i];
-
+				foreach ($delivery_prices as $name => $delivery) {
 					// format starting date
 					if (!is_null($delivery[3]))
 						$delivery[3] = date($date_format, $delivery[3]);
@@ -1708,9 +1706,6 @@ class shop extends Module {
 					// format ending date
 					if (!is_null($delivery[4]))
 						$delivery[4] = date($date_format, $delivery[4]);
-
-					// store delivery back to the original array
-					$delivery_prices[$i] = $delivery;
 				}
 		} else {
 			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
