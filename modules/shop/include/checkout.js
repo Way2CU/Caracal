@@ -468,6 +468,10 @@ Caracal.Shop.CheckoutForm = function() {
 			var time = $('<span>');
 			var checkbox = $('<input>');
 
+			// add method name to object
+			method.push(data.delivery_method);
+
+			// create interface
 			checkbox
 				.attr('type', 'radio')
 				.attr('name', 'delivery_method')
@@ -568,7 +572,8 @@ Caracal.Shop.CheckoutForm = function() {
 	 * @param object event
 	 */
 	self._handle_delivery_method_click = function(event) {
-		var method = $(this).data('method');
+		var item = $(this);
+		var method = item.data('method');
 		var total = self.cached_data.total + self.cached_data.handling + parseFloat(method[1]);
 
 		// update checkout table
@@ -577,6 +582,23 @@ Caracal.Shop.CheckoutForm = function() {
 
 		// enable checkout button
 		self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
+
+		// send selection to server
+		var data = {
+				section: 'shop',
+				action: 'json_set_delivery_method',
+				method: method[5],
+				type: item.attr('value')
+			};
+
+		// send data to server
+		$.ajax({
+			url: self.backend_url,
+			type: 'GET',
+			async: true,
+			data: data,
+			dataType: 'json'
+		});
 	};
 
 	// complete object initialization
