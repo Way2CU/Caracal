@@ -195,9 +195,8 @@ div#checkout.recurring div.delivery_method.visible {
 
 div#checkout div.delivery_method label {
 	display: inline-block;
-	width: 250px;
+	width: calc((100% / 3) - 20px);
 
-	margin-right: 40px;
 	margin-top: 15px;
 	padding: 10px;
 
@@ -208,13 +207,8 @@ div#checkout div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
-div#checkout div.delivery_method label:nth-child(-n + 3) {
+div#checkout div.delivery_method label:nth-child(-n + 4) {
 	margin-top: 0px;
-}
-
-body.rtl div#checkout div.delivery_method label {
-	margin-right: 0px;
-	margin-left: 40px;
 }
 
 div#checkout div.delivery_method label:hover {
