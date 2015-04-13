@@ -195,16 +195,28 @@ div#checkout.recurring div.delivery_method.visible {
 
 div#checkout div.delivery_method label {
 	display: inline-block;
-	width: calc((100% / 3) - 20px);
+	width: calc(((100% - 10px) / 3) - 22px);
 
 	margin-top: 5px;
+	margin-right: 5px;
 	padding: 10px;
 
+	border: 1px solid #B9B9B9;
 	border-radius: 3px;
 	vertical-align: top;
 
 	transition-property: all;
 	transition-duration: 0.3s;
+}
+
+body.rtl div#checkout div.delivery_method label {
+	margin-left: 5px;
+	margin-right: 0px;
+}
+
+div#checkout div.delivery_method label:nth-child(3n + 1),
+body.rtl div#checkout div.delivery_method label:nth-child(3n + 1) {
+	margin-left: 0px;
 }
 
 div#checkout div.delivery_method label:nth-child(-n + 3) {
