@@ -444,6 +444,10 @@ Caracal.Shop.CheckoutForm = function() {
 		self.delivery_provider_list
 				.find('input[name=delivery_provider]')
 				.change(self._handle_delivery_provider_change);
+
+		// disable checkout button
+		if (self.delivery_provider_list.length > 0)
+			self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
 	};
 
 	/**
