@@ -198,7 +198,7 @@ div#checkout div.delivery_method label {
 	width: 250px;
 
 	margin-right: 40px;
-	margin-bottom: 15px;
+	margin-top: 15px;
 	padding: 10px;
 
 	border-radius: 3px;
@@ -206,6 +206,10 @@ div#checkout div.delivery_method label {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+}
+
+div#checkout div.delivery_method label:nth-child(-n + 3) {
+	margin-top: 0px;
 }
 
 body.rtl div#checkout div.delivery_method label {
