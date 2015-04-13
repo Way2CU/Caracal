@@ -197,7 +197,7 @@ div#checkout div.delivery_method label {
 	display: inline-block;
 	width: calc((100% / 3) - 20px);
 
-	margin-top: 15px;
+	margin-top: 5px;
 	padding: 10px;
 
 	border-radius: 3px;
@@ -207,7 +207,7 @@ div#checkout div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
-div#checkout div.delivery_method label:nth-child(-n + 4) {
+div#checkout div.delivery_method label:nth-child(-n + 3) {
 	margin-top: 0px;
 }
 
