@@ -214,8 +214,8 @@ body.rtl div#checkout div.delivery_method label {
 	margin-right: 0px;
 }
 
-div#checkout div.delivery_method label:nth-child(3n + 1),
-body.rtl div#checkout div.delivery_method label:nth-child(3n + 1) {
+div#checkout div.delivery_method label:nth-child(3n + 0),
+body.rtl div#checkout div.delivery_method label:nth-child(3n + 0) {
 	margin-left: 0px;
 }
 
