@@ -156,16 +156,16 @@ div#checkout div.overlay {
 				url(../images/checkout_loading.gif),
 				-webkit-radial-gradient(
 					center center,
-					circle closest-side,
-					rgba(255, 255, 255, 0.9) 30%,
+					circle cover,
+					rgba(255, 255, 255, 1) 30%,
 					rgba(255, 255, 255, 0) 100%
 				);
 	background-image:
 				url(../images/checkout_loading.gif),
 				radial-gradient(
 					center center,
-					circle closest-side,
-					rgba(255, 255, 255, 0.9) 30%,
+					circle cover,
+					rgba(255, 255, 255, 1) 30%,
 					rgba(255, 255, 255, 0) 100%
 				);
 	background-position: center center, center center;
