@@ -1662,6 +1662,10 @@ class shop extends Module {
 		$result['label_no_estimate'] = $this->getLanguageConstant('label_no_estimate');
 		$result['label_estimated_time'] = $this->getLanguageConstant('label_estimated_time');
 
+		// add delivery method related values
+		$result['delivery_method'] = Delivery::get_current_name();
+		$result['delivery_type'] = Delivery::get_current_type();
+
 		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
 		$warehouse_manager = ShopWarehouseManager::getInstance();
 		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
@@ -2125,11 +2129,9 @@ class shop extends Module {
 		$handling = 0;
 		$total_money = 0;
 		$total_weight = 0;
-		$delivery_method = null;
 		$items_by_uid = array();
 		$items_for_checkout = array();
 		$delivery_items = array();
-		$delivery_prices = array();
 		$map_id_to_uid = array();
 
 		// get currency associated with transaction
@@ -2244,9 +2246,7 @@ class shop extends Module {
 			'handling'				=> $handling,
 			'weight'				=> $total_weight,
 			'total'					=> $total_money,
-			'currency'				=> $preferred_currency,
-			'delivery_method'		=> is_null($delivery_method) ? '' : $delivery_method->getName(),
-			'delivery_prices'		=> $delivery_prices
+			'currency'				=> $preferred_currency
 		);
 
 		return $result;
