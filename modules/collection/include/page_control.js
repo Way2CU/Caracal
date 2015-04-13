@@ -5,6 +5,12 @@
  * Author: Mladen Mijatov
  */
 
+/**
+ * Constructor function for page control object.
+ *
+ * @param string selector		selector for page container
+ * @param string page_selector	selector for individual pages
+ */
 function PageControl(selector, page_selector) {
 	var self = this;
 
