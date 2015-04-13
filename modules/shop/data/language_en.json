@@ -66,6 +66,7 @@
 	"label_cvv": "Security code:",
 	"label_cvv_question": "What is this?",
 	"label_delivery_method": "Delivery method:",
+	"label_delivery_type": "Delivery type:",
 	"label_description": "Description:",
 	"label_domestic": "Available for domestic shipping",
 	"label_email": "E-Mail:",

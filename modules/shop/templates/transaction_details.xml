@@ -128,6 +128,16 @@
 					/>
 			</label>
 			<label>
+				<span><cms:text constant="label_delivery_type" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['delivery_type']"
+					cms:eval="value"
+					readonly="readonly"
+					style="width: 270px;"
+					/>
+			</label>
+			<label>
 				<span><cms:text constant="label_remark" module="shop"/></span>
 				<textarea readonly="readonly" style="width: 270px; height: 70px;">
 					<cms:var name="$params['remark']"/>
