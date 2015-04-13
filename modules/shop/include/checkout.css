@@ -261,6 +261,7 @@ div#checkout div.delivery_method label > div span {
 
 div#checkout div.delivery_method label > div span:after {
 	content: ' ' attr(data-currency);
+	font-size: 0.9em;
 }
 
 body.rtl div#checkout div.delivery_method label > div span {
