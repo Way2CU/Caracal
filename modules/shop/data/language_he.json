@@ -66,6 +66,7 @@
     "label_cvv": "3 ספרות CVV:",
     "label_cvv_question": "מה זה?",
     "label_delivery_method": "שיטת משלוח:",
+    "label_delivery_type": "Delivery type:",
     "label_description": "תיאור:",
     "label_domestic": "מיועד למשלוח מקומי",
     "label_email": "דואל:",
