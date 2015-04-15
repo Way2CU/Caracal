@@ -28,7 +28,7 @@ final class Markdown {
 	private static function get_parser() {
 		if (is_null(self::$parser)) {
 			self::$parser = new ExtendedParsedown();
-			self::$parser->setBreaksEnabled(false);
+			self::$parser->setBreaksEnabled(true);
 		}
 
 		return self::$parser;
