@@ -39,7 +39,7 @@ final class Markdown {
 	 * @return string
 	 */
 	public static function parse($text) {
-		return self::get_parser->text($text);
+		return self::get_parser()->text($text);
 	}
 }
 
