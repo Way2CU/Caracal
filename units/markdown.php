@@ -10,7 +10,7 @@
  * Author: Mladen Mijatov
  */
 
-namespace Core\Markdown;
+namespace Core;
 
 require_once(_LIBPATH.'parsedown/Parsedown.php');
 

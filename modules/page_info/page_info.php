@@ -9,6 +9,7 @@
  * Author: Mladen Mijatov
  */
 use Core\Module;
+use Core\Markdown;
 
 
 class page_info extends Module {

@@ -10,6 +10,7 @@
  */
 use Core\Events;
 use Core\Module;
+use Core\Markdown;
 
 require_once('units/form_manager.php');
 require_once('units/form_field_manager.php');

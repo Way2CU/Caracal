@@ -9,6 +9,7 @@
  * Author: Mladen Mijatov
  */
 
+use Core\Markdown;
 use Core\Cache\Manager as Cache;
 
 

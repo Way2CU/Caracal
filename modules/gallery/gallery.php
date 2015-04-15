@@ -9,6 +9,8 @@
  * Author: Mladen Mijatov
  */
 use Core\Module;
+use Core\Markdown;
+
 
 require_once('units/gallery_manager.php');
 require_once('units/gallery_group_manager.php');
