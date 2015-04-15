@@ -14,8 +14,6 @@ namespace Core;
 
 require_once(_LIBPATH.'parsedown/Parsedown.php');
 
-use \Parsedown as Parsedown;
-
 
 final class Markdown {
 	private static $parser = null;
@@ -46,7 +44,7 @@ final class Markdown {
 }
 
 
-final class ExtendedParsedown extends Parsedown {
+final class ExtendedParsedown extends \Parsedown {
 	/**
 	 * Modify inline image behavior.
 	 *
