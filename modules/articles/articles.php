@@ -1092,7 +1092,7 @@ class articles extends Module {
 								'date'			=> $date,
 								'time'			=> $time,
 								'title'			=> $all_languages ? $item->title : $item->title[$language],
-								'content'		=> $all_languages ? $item->content : Markdown($item->content[$language]),
+								'content'		=> $all_languages ? $item->content : Markdown::parse($item->content[$language]),
 								'author'		=> $admin_manager->getItemValue(
 																	'fullname',
 																	array('id' => $item->author)

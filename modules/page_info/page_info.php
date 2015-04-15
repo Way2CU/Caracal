@@ -417,7 +417,7 @@ class page_info extends Module {
 			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
 
 			if (is_object($item)) {
-				$content = strip_tags(Markdown($item->content[$language]));
+				$content = strip_tags(Markdown::parse($item->content[$language]));
 				$data = explode("\n", utf8_wordwrap($content, 150, "\n", true));
 
 				if (count($data) > 0)

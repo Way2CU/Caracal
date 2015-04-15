@@ -389,10 +389,10 @@ class TemplateHandler {
 					// get content for parsing
 					if (is_null($name))
 						$content = $tag->tagData;
-						$content = $multilanguage ? $this->params[$name][$language] : $this->params[$name];
+					$content = $multilanguage ? $this->params[$name][$language] : $this->params[$name];
 
 					// convert to HTML
-					$content = Markdown($content);
+					$content = Markdown::parse($content);
 
 					// limit words if specified
 					if (!is_null($char_count)) {

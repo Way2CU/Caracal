@@ -1235,7 +1235,7 @@ class links extends Module {
 			$result['item'] = array(
 								'id'				=> $item->id,
 								'text'				=> $item->text,
-								'description'		=> Markdown($item->description),
+								'description'		=> Markdown::parse($item->description),
 								'url'				=> $item->url,
 								'redirect_url'		=> url_Make('redirect', $this->name, array('id', $item->id)),
 								'external'			=> $item->external,

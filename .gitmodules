@@ -1,3 +1,6 @@
 [submodule "libraries/closure"]
 	path = libraries/closure
 	url = https://github.com/Way2CU/Closure-Compiler.git
+[submodule "libraries/parsedown"]
+	path = libraries/parsedown
+	url = https://github.com/erusev/parsedown
