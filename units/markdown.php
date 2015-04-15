@@ -61,19 +61,19 @@ final class ExtendedParsedown extends Parsedown {
 				// shorthand gallery image
 				$gallery = \gallery::getInstance();
 				$manager = \GalleryManager::getInstance();
-				$image = $manager->getSingleItem(
+				$gallery_image = $manager->getSingleItem(
 					array('title', 'filename', 'visible'),
 					array('id' => fix_id($original_source))
 				);
 
 				// don't show invisible images
-				if (is_object($image) && !$image->visible)
+				if (is_object($gallery_image) && !$gallery_image->visible)
 					return;
 
 				// replace values
-				if (is_object($image)) {
-					$image['element']['attributes']['src'] = $gallery->getImageURL($image);
-					$image['element']['attributes']['alt'] = $image->title[$language];
+				if (is_object($gallery_image)) {
+					$image['element']['attributes']['src'] = $gallery->getImageURL($gallery_image);
+					$image['element']['attributes']['alt'] = $gallery_image->title[$language];
 				}
 
 			} else {
