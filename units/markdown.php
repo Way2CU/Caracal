@@ -50,12 +50,44 @@ final class ExtendedParsedown extends Parsedown {
 	 * @param array $excerpt
 	 * @return array
 	 */
-    protected function inlineImage($excerpt) {
-        $image = parent::inlineImage($excerpt);
-        $image['element']['attributes']['src'] = _BASEURL.$image['element']['attributes']['src'];
+	protected function inlineImage($excerpt) {
+		global $language;
 
-        return $image;
-    }
+		$image = parent::inlineImage($excerpt);
+		$original_source = $image['element']['attributes']['src'];
+
+		if (is_numberic($original_source)) {
+			if (class_exists('\gallery')) {
+				// shorthand gallery image
+				$gallery = \gallery::getInstance();
+				$manager = \GalleryManager::getInstance();
+				$image = $manager->getSingleItem(
+					array('title', 'filename', 'visible'),
+					array('id' => fix_id($original_source))
+				);
+
+				// don't show invisible images
+				if (is_object($image) && !$image->visible)
+					return;
+
+				// replace values
+				if (is_object($image)) {
+					$image['element']['attributes']['src'] = $gallery->getImageURL($image);
+					$image['element']['attributes']['alt'] = $image->title[$language];
+				}
+
+			} else {
+				// don't show gallery images if gallery is not loaded
+				return;
+			}
+
+		} else {
+			// external image or full url
+			$image['element']['attributes']['src'] = _BASEURL.'/'.$original_source;
+		}
+
+		return $image;
+	}
 }
 
 ?>
