@@ -56,7 +56,7 @@ final class ExtendedParsedown extends Parsedown {
 		$image = parent::inlineImage($excerpt);
 		$original_source = $image['element']['attributes']['src'];
 
-		if (is_numberic($original_source)) {
+		if (is_numeric($original_source)) {
 			if (class_exists('\gallery')) {
 				// shorthand gallery image
 				$gallery = \gallery::getInstance();
