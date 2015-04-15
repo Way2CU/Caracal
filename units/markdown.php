@@ -17,7 +17,7 @@ require_once(_LIBPATH.'parsedown/Parsedown.php');
 use \Parsedown as Parsedown;
 
 
-final class Markdown extends Parsedown {
+class Markdown extends Parsedown {
 	private static $parser = null;
 
 	/**
