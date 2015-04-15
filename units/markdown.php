@@ -27,10 +27,9 @@ final class Markdown {
 	 */
 	private static function get_parser() {
 		if (is_null(self::$parser))
-			self::$parser = ExtendedParsedown();
+			self::$parser = new ExtendedParsedown();
 
-		return self::$parser;
-	}
+		return self::$parser; }
 
 	/**
 	 * Parse markdown text and return HTML.
