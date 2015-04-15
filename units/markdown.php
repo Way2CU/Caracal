@@ -17,8 +17,20 @@ require_once(_LIBPATH.'parsedown/Parsedown.php');
 use \Parsedown as Parsedown;
 
 
-class Markdown extends Parsedown {
+final class Markdown {
 	private static $parser = null;
+
+	/**
+	 * Get markdown parser.
+	 *
+	 * @return object
+	 */
+	private static function get_parser() {
+		if (is_null(self::$parser))
+			self::$parser = ExtendedParsedown();
+
+		return self::$parser;
+	}
 
 	/**
 	 * Parse markdown text and return HTML.
@@ -27,12 +39,18 @@ class Markdown extends Parsedown {
 	 * @return string
 	 */
 	public static function parse($text) {
-		if (is_null(self::$parser))
-			self::$parser = Parsedown();
-
-		return self::$parser->text($text);
+		return self::get_parser->text($text);
 	}
+}
 
+
+final class ExtendedParsedown extends Parsedown {
+	/**
+	 * Modify inline image behavior.
+	 *
+	 * @param array $excerpt
+	 * @return array
+	 */
     protected function inlineImage($excerpt) {
         $image = parent::inlineImage($excerpt);
         $image['element']['attributes']['src'] = _BASEURL.$image['element']['attributes']['src'];
