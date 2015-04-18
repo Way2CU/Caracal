@@ -54,7 +54,13 @@ final class ExtendedParsedown extends \Parsedown {
 	protected function inlineImage($excerpt) {
 		global $language;
 
+		// call parent to parse image
 		$image = parent::inlineImage($excerpt);
+
+		// make sure there's image to work with
+		if (is_null($image))
+			return;
+
 		$original_source = $image['element']['attributes']['src'];
 
 		if (is_numeric($original_source)) {
