@@ -13,7 +13,7 @@
 	RewriteRule (.*) index.php?_rewrite=$1 [QSA,L]
 </IfModule>
 
-<FilesMatch "\.(xml)$">
+<FilesMatch "\.(xml|json)$">
 	Deny from all
 </FilesMatch>
 
