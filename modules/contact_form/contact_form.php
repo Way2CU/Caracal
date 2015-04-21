@@ -843,6 +843,15 @@ class contact_form extends Module {
 			$result = $mailer->send();
 		}
 
+		// get messages
+		$message_sent = Language::getText('message_sent');
+		if (empty($message_sent))
+			$message_sent = $this->getLanguageConstant('message_sent');
+
+		$message_form_error = Language::getText('message_form_error');
+		if (empty($message_form_error))
+			$message_form_error = $this->getLanguageConstant('message_form_error');
+
 		// show result
 		if (_AJAX_REQUEST) {
 			// return JSON object as reponse
@@ -853,8 +862,8 @@ class contact_form extends Module {
 				);
 
 			if ($result)
-				$response['message'] = $this->getLanguageConstant('message_sent'); else
-				$response['message'] = $this->getLanguageConstant('message_form_error');
+				$response['message'] = $message_sent; else
+				$response['message'] = $message_form_error;
 
 			print json_encode($response);
 
@@ -867,9 +876,10 @@ class contact_form extends Module {
 					'messages'			=> $messages,
 					'missing_fields'	=> $missing_fields
 				);
+
 			if ($result)
-				$params['message'] = $this->getLanguageConstant('message_sent'); else
-				$params['message'] = $this->getLanguageConstant('message_error');
+				$params['message'] = $message_sent; else
+				$params['message'] = $message_form_error;
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
