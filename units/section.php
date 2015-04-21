@@ -91,9 +91,11 @@ class SectionHandler {
 	 * @param string $language
 	 */
 	public function transferControl($section, $action, $language='') {
-		$file = $this->getFile($section, $action, $language);
+		$file = '';
+		if (!_AJAX_REQUEST)
+			$file = $this->getFile($section, $action, $language);
 
-		if (empty($file)) {
+		if (_AJAX_REQUEST || empty($file)) {
 			// if no section is defined, check for module with the same name
 			if (class_exists($section)) {
 				$module = call_user_func(array(escape_chars($section), 'getInstance'));
