@@ -3,6 +3,8 @@ CREATE TABLE `system_access` (
 	`username` varchar(50) COLLATE utf8_bin NOT NULL,
 	`password` varchar(64) COLLATE utf8_bin NOT NULL,
 	`fullname` varchar(100) COLLATE utf8_bin DEFAULT NULL,
+	`first_name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+	`last_name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
 	`email` varchar(200) COLLATE utf8_bin NOT NULL,
 	`level` smallint NOT NULL DEFAULT '1',
 	`verified` boolean NOT NULL DEFAULT FALSE,

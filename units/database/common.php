@@ -124,14 +124,35 @@ function database_initialize($create_database) {
 				case 'user':
 					$salt = hash('sha256', UserManager::SALT.strval(time()));
 					$password = hash_hmac('sha256', $item->tagAttrs['password'], $salt);
-					$admin_manager->insertData(array(
-									'username'	=> $item->tagAttrs['username'],
-									'password'	=> $password,
-									'fullname'	=> $item->tagAttrs['fullname'],
-									'level'		=> $item->tagAttrs['level'],
-									'verified'	=> 1,
-									'salt'		=> $salt
-								));
+					$data = array(
+							'username'	=> $item->tagAttrs['username'],
+							'password'	=> $password,
+							'level'		=> $item->tagAttrs['level'],
+							'verified'	=> 1,
+							'salt'		=> $salt
+						);
+
+					// prepare user's name
+					if (isset($item->tagAttrs['fullname'])) {
+						$data['fullname'] = $item->tagAttrs['fullname'];
+						$raw_data = explode(' ', $data['fullname'], 1);
+
+						if (count($raw_data) == 2) {
+							$data['first_name'] = $raw_data[0];
+							$data['last_name'] = $raw_data[1];
+
+						} else {
+							$data['first_name'] = $data['fullname'];
+							$data['last_name'] = '';
+						}
+
+					} else if (isset($item->tagAttrs['first_name'])) {
+						$data['first_name'] = $item->tagAttrs['first_name'];
+						$data['last_name'] = $item->tagAttrs['last_name'];
+						$data['fullname'] = $data['first_name'].' '.$data['last_name'];
+					}
+
+					$admin_manager->insertData($data);
 					break;
 			}
 

@@ -48,6 +48,8 @@ class UserManager extends ItemManager {
 		$this->addProperty('username', 'varchar');
 		$this->addProperty('password', 'varchar');
 		$this->addProperty('fullname', 'varchar');
+		$this->addProperty('first_name', 'varchar');
+		$this->addProperty('last_name', 'varchar');
 		$this->addProperty('email', 'varchar');
 		$this->addProperty('level', 'int');
 		$this->addProperty('verified', 'boolean');

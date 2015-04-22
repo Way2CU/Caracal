@@ -175,12 +175,31 @@ class Backend_UserManager {
 		// grab new user data
 		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
-				'fullname'	=> escape_chars($_REQUEST['fullname']),
 				'username'	=> escape_chars($_REQUEST['username']),
 				'email'		=> escape_chars($_REQUEST['email']),
 				'level'		=> fix_id($_REQUEST['level']),
 				'verified'	=> 1
 			);
+
+		// prepare user's name
+		if (isset($_REQUEST['fullname'])) {
+			$data['fullname'] = escape_chars($_REQUEST['fullname']);
+			$raw_data = explode(' ', $data['fullname'], 1);
+
+			if (count($raw_data) == 2) {
+				$data['first_name'] = $raw_data[0];
+				$data['last_name'] = $raw_data[1];
+
+			} else {
+				$data['first_name'] = $data['fullname'];
+				$data['last_name'] = '';
+			}
+
+		} else if (isset($_REQUEST['first_name'])) {
+			$data['first_name'] = escape_chars($_REQUEST['first_name']);
+			$data['last_name'] = escape_chars($_REQUEST['last_name']);
+			$data['fullname'] = $data['first_name'].' '.$data['last_name'];
+		}
 
 		if (isset($_REQUEST['password'])) {
 			$data['password'] = hash_hmac('sha256', escape_chars($_REQUEST['password']), $salt);
@@ -271,7 +290,6 @@ class Backend_UserManager {
 
 		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
-				'fullname'	=> escape_chars($source['fullname']),
 				'username'	=> escape_chars($source['username']),
 				'password'	=> hash_hmac('sha256', $source['password'], $salt),
 				'email'		=> escape_chars($source['email']),
@@ -279,6 +297,26 @@ class Backend_UserManager {
 				'salt'		=> $salt,
 				'agreed'	=> $agreed
 			);
+
+		// prepare user's name
+		if (isset($source['fullname'])) {
+			$data['fullname'] = escape_chars($source['fullname']);
+			$raw_data = explode(' ', $data['fullname'], 1);
+
+			if (count($raw_data) == 2) {
+				$data['first_name'] = $raw_data[0];
+				$data['last_name'] = $raw_data[1];
+
+			} else {
+				$data['first_name'] = $data['fullname'];
+				$data['last_name'] = '';
+			}
+
+		} else if (isset($source['first_name'])) {
+			$data['first_name'] = escape_chars($source['first_name']);
+			$data['last_name'] = escape_chars($source['last_name']);
+			$data['fullname'] = $data['first_name'].' '.$data['last_name'];
+		}
 
 		// check for duplicates
 		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
