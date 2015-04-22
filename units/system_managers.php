@@ -47,6 +47,7 @@ class UserManager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('username', 'varchar');
 		$this->addProperty('password', 'varchar');
+		// TODO: Get rid of `fullname` sometime.
 		$this->addProperty('fullname', 'varchar');
 		$this->addProperty('first_name', 'varchar');
 		$this->addProperty('last_name', 'varchar');
