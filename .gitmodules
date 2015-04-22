@@ -4,3 +4,6 @@
 [submodule "libraries/parsedown"]
 	path = libraries/parsedown
 	url = https://github.com/erusev/parsedown
+[submodule "libraries/stripe"]
+	path = libraries/stripe
+	url = https://github.com/stripe/stripe-php.git
