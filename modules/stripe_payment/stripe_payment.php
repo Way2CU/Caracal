@@ -27,7 +27,7 @@ class stripe_payment extends Module {
 		parent::__construct(__FILE__);
 
 		// prepare API wrapper
-		Stripe::setApiKey($this->getPrivateKey());
+		\Stripe\Stripe::setApiKey($this->getPrivateKey());
 
 		// register backend
 		if (class_exists('backend') && class_exists('shop')) {
