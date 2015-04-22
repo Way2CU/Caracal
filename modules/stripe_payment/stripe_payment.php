@@ -7,7 +7,7 @@
  * Author: Mladen Mijatov
  */
 
-require_once(_LIBPATH.'/stripe/Stripe.php');
+require_once(_LIBPATH.'/stripe/init.php');
 require_once('units/stripe_payment_method.php');
 require_once('units/plans_manager.php');
 require_once('units/customer_manager.php');
