@@ -27,7 +27,7 @@
 
 				<div id="pages">
 					<!-- Main page -->
-					<div class="page active">
+					<section class="active">
 						<h1>Welcome to installation script!</h1>
 						<p>
 						During this process we will download, install and configure
@@ -46,10 +46,10 @@
 						make any changes to your server until you click <em>Finish</em> button.
 						If you wish to abort installation at any point just close this window/tab.
 						</p>
-					</div>
+					</section>
 
 					<!-- General page -->
-					<div class="page">
+					<section>
 						<h1>General information</h1>
 
 						<label>
@@ -69,10 +69,10 @@
 							<input type="text" name="site_copyright">
 							<dfn data-tooltip="Text displayed at the bottom of page."></dfn>
 						</label>
-					</div>
+					</section>
 
 					<!-- Administrator page -->
-					<div class="page">
+					<section>
 						<h1>Administrator account</h1>
 
 						<label>
@@ -102,27 +102,27 @@
 							<span>Repeat password:</span>
 							<input type="text" name="admin_password_repeat">
 						</label>
-					</div>
+					</section>
 
 					<!-- Database page -->
-					<div class="page">
+					<section>
 						<h1>Database information</h1>
-					</div>
+					</section>
 
 					<!-- Languages page -->
-					<div class="page">
+					<section>
 						<h1>Language selection</h1>
-					</div>
+					</section>
 
 					<!-- Template page -->
-					<div class="page">
+					<section>
 						<h1>Starting template</h1>
-					</div>
+					</section>
 
 					<!-- Summary page -->
-					<div class="page">
+					<section>
 						<h1>Summary</h1>
-					</div>
+					</section>
 				</div>
 
 				<footer>

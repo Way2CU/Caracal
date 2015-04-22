@@ -12,7 +12,7 @@ function Steps() {
 	self._step_container = $('nav#steps');
 	self._page_container = $('div#pages');
 	self._steps = self._step_container.find('a');
-	self._pages = self._page_container.find('div.page');
+	self._pages = self._page_container.find('section');
 	self._buttons = $('footer button');
 
 	self._current_step = 0;
