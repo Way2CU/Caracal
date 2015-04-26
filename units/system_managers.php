@@ -155,6 +155,8 @@ final class UserManager extends ItemManager {
 			$_SESSION['level'] = $user->level;
 			$_SESSION['username'] = $user->username;
 			$_SESSION['fullname'] = $user->fullname;
+			$_SESSION['first_name'] = $user->first_name;
+			$_SESSION['last_name'] = $user->last_name;
 			$result = true;
 		}
 
