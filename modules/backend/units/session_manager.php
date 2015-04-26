@@ -80,7 +80,7 @@ class SessionManager {
 
 		$params = array(
 					'show_captcha'	=> $show_captcha,
-					'username'		=> isset($_REQUEST['username']) ? fix_chars($_REQUEST['username']) : '',
+					'username'		=> isset($_REQUEST['username']) ? escape_chars($_REQUEST['username']) : '',
 					'image'			=> url_GetFromFilePath($this->parent->path.'images/icons/login.png'),
 					'message'		=> $message
 				);
@@ -95,9 +95,9 @@ class SessionManager {
 	 */
 	private function login_commit() {
 		$captcha_ok = false;
-		$username = fix_chars($_REQUEST['username']);
-		$password = fix_chars($_REQUEST['password']);
-		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
+		$username = escape_chars($_REQUEST['username']);
+		$password = escape_chars($_REQUEST['password']);
+		$captcha = isset($_REQUEST['captcha']) ? escape_chars($_REQUEST['captcha']) : '';
 		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
 
 		// get managers
@@ -231,9 +231,9 @@ class SessionManager {
 	 */
 	private function json_Login() {
 		$captcha_ok = false;
-		$username = fix_chars($_REQUEST['username']);
-		$password = fix_chars($_REQUEST['password']);
-		$captcha = isset($_REQUEST['captcha']) ? fix_chars($_REQUEST['captcha']) : '';
+		$username = escape_chars($_REQUEST['username']);
+		$password = escape_chars($_REQUEST['password']);
+		$captcha = isset($_REQUEST['captcha']) ? escape_chars($_REQUEST['captcha']) : '';
 		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
 
 		$result = array(
