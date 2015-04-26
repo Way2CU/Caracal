@@ -67,6 +67,146 @@ final class UserManager extends ItemManager {
 
 		return self::$_instance;
 	}
+
+	/**
+	 * Create new user on the system with specified data. Password is provided
+	 * in clear text and will be hashed and salted.
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @param string $email
+	 * @param integer $level
+	 * @return boolean
+	 */
+	public function save_user($username, $password, $email, $level=0) {
+		$result = false;
+
+
+		return $result;
+	}
+
+	/**
+	 * Check if specified user credentials are valid.
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function check_credentials($username, $password) {
+		$result = false;
+
+		// get salt for user
+		$test_user = $this->getSingleItem(array('salt'), array('username' => $username));
+
+		// check credentials
+		if (is_object($test_user)) {
+			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
+			$user = $this->getSingleItem(
+						array('id'),
+						array(
+							'username'	=> $username,
+							'password'	=> $hashed_password
+						)
+					);
+
+			$result = is_object($user);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Log user in by checking credentials, and storing information
+	 * in current session container.
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function login_user($username, $password) {
+		$result = false;
+		$valid_credentials = $this->check_credentials($username, $password);
+
+		// check credentials
+		if (!$valid_credentials)
+			return $result;
+
+		// get user from the database
+		$user = $this->getSingleItem($this->getFieldNames(), array('username' => $username));
+
+		// set session variables
+		if (is_object($user)) {
+			$_SESSION['uid'] = $user->id;
+			$_SESSION['logged'] = true;
+			$_SESSION['level'] = $user->level;
+			$_SESSION['username'] = $user->username;
+			$_SESSION['fullname'] = $user->fullname;
+			$result = true;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Log currently logged user out and clear session variables.
+	 *
+	 * @return boolean
+	 */
+	public function logout_user() {
+		$result = false;
+
+		if (!$_SESSION['logged'])
+			return $result;
+
+		// kill session variables
+		unset($_SESSION['uid']);
+		unset($_SESSION['username']);
+		unset($_SESSION['fullname']);
+		$_SESSION['level'] = 0;
+		$_SESSION['logged'] = false;
+		$result = true;
+
+		return $result;
+	}
+
+	/**
+	 * Set user as verified.
+	 *
+	 * @param string $username
+	 * @param boolean $verified
+	 * @return boolean
+	 */
+	public function verify_user($username, $verified=true) {
+		$result = false;
+
+		// get user object to play with
+		$user = $this->getSingleItem(array('id', 'verified'), array('username' => $username));
+
+		// set user as verified
+		if (is_object($user) && !$user->verified) {
+			$this->updateData(
+				array('verified' => $verified ? 1 : 0),
+				array('id' => $user->id)
+			);
+
+			$result = true;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Check if specified user is verified.
+	 *
+	 * @param string $username
+	 * @return boolean
+	 */
+	public function is_user_verified($username) {
+		$user = $this->getSingleItem(array('verified'), array('username' => $username));
+		$result = is_object($user) && $user->verified;
+
+		return $result;
+	}
 }
 
 
