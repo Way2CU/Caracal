@@ -36,7 +36,7 @@
 								<input
 									type="radio"
 									name="existing_user"
-									value="0"
+									value="log_in"
 									checked="checked"
 									/>
 								<span><cms:text constant="label_existing_user" module="shop"/></span>
@@ -72,7 +72,7 @@
 								<input
 									type="radio"
 									name="existing_user"
-									value="1"
+									value="sign_up"
 									/>
 								<span><cms:text constant="label_new_user" module="shop"/></span>
 							</label>
@@ -145,7 +145,7 @@
 								<input
 									type="radio"
 									name="existing_user"
-									value="2"
+									value="guest"
 									/>
 								<span><cms:text constant="label_guest" module="shop"/></span>
 							</label>
