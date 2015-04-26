@@ -7,7 +7,6 @@
  */
 
 
-class UserExistsError extends Exception {}
 class InvalidUserError extends Exception {}
 
 
