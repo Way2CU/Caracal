@@ -6,6 +6,11 @@
  * Author: Mladen Mijatov
  */
 
+
+class UserExistsError extends Exception {}
+class InvalidUserError extends Exception {}
+
+
 class ModuleManager extends ItemManager {
 	private static $_instance;
 
@@ -74,13 +79,82 @@ final class UserManager extends ItemManager {
 	 *
 	 * @param string $username
 	 * @param string $password
+	 * @param mixed $name 	Either array containing first and last name, or string
 	 * @param string $email
 	 * @param integer $level
+	 * @param boolean $verified
 	 * @return boolean
+	 * @throws UserExistsError
 	 */
-	public function save_user($username, $password, $email, $level=0) {
+	public function save_user($username, $password, $name, $email, $level=0, $verified=true) {
 		$result = false;
 
+		// check if user already exists
+		$user = $this->getSingleItem(array('id'), array('username' => $username));
+		if (is_object($user))
+			throw new UserExistsError('Unable to save user data!');
+
+		// prepare password
+		$salt = hash('sha256', self::SALT.strval(time()));
+		$hashed_password = hash_hmac('sha256', $password, $salt);
+
+		// prepare data
+		$data = array(
+				'username'	=> $username,
+				'password'	=> $hashed_password,
+				'email'		=> $email,
+				'level'		=> $level,
+				'verified'	=> $verified ? 1 : 0
+			);
+
+		if (is_array($name)) {
+			$data['first_name'] = $name[0];
+			$data['last_name'] = $name[1];
+			$data['fullname'] = $name[0].' '.$name[1];
+
+		} else {
+			$raw_name = explode(' ', $name);
+			$data['first_name'] = $raw_name[0];
+			$data['last_name'] = $raw_name[1];
+			$data['fullname'] = $name;
+		}
+
+		// insert data
+		$this->insertData($data);
+		$result = true;
+
+		return $result;
+	}
+
+	/**
+	 * Change specified user's password.
+	 *
+	 * @param string $username
+	 * @param string $new_password
+	 * @return boolean
+	 * @throws InvalidUserError
+	 */
+	public function change_password($username, $new_password) {
+		$result = false;
+
+		// get user
+		$user = $this->getSingleItem(array('id'), array('username' => $username));
+		if (!is_object($user))
+			throw new InvalidUserError('Unable to change password!');
+
+		// prepare password
+		$salt = hash('sha256', self::SALT.strval(time()));
+		$hashed_password = hash_hmac('sha256', $password, $salt);
+
+		// update password
+		$this->updateData(
+				array(
+					'password'	=> $hashed_password,
+					'salt'		=> $salt
+				),
+				array('id' => $user->id)
+			);
+		$result = true;
 
 		return $result;
 	}
