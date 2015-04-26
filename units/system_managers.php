@@ -34,7 +34,7 @@ class ModuleManager extends ItemManager {
 }
 
 
-class UserManager extends ItemManager {
+final class UserManager extends ItemManager {
 	private static $_instance;
 	const SALT = '5sWeaGqp53loh7hYFDEjBi6VHMYDznrx5ITUF9Bzni7WXU9IJOBmr/80u2vjklSfhK+lvPBel/T9';
 
@@ -70,7 +70,7 @@ class UserManager extends ItemManager {
 }
 
 
-class UserDataManager extends ItemManager {
+final class UserDataManager extends ItemManager {
 	private static $_instance;
 
 	/**
@@ -97,7 +97,7 @@ class UserDataManager extends ItemManager {
 }
 
 
-class UserVerificationManager extends ItemManager {
+final class UserVerificationManager extends ItemManager {
 	private static $_instance;
 
 	/**
@@ -123,7 +123,7 @@ class UserVerificationManager extends ItemManager {
 }
 
 
-class LoginRetryManager extends ItemManager {
+final class LoginRetryManager extends ItemManager {
 	private static $_instance;
 
 	/**
@@ -256,4 +256,5 @@ class SettingsManager extends ItemManager {
 		return self::$_instance;
 	}
 }
+
 ?>
