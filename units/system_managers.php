@@ -74,59 +74,6 @@ final class UserManager extends ItemManager {
 	}
 
 	/**
-	 * Create new user on the system with specified data. Password is provided
-	 * in clear text and will be hashed and salted.
-	 *
-	 * @param string $username
-	 * @param string $password
-	 * @param mixed $name 	Either array containing first and last name, or string
-	 * @param string $email
-	 * @param integer $level
-	 * @param boolean $verified
-	 * @return boolean
-	 * @throws UserExistsError
-	 */
-	public function save_user($username, $password, $name, $email, $level=0, $verified=true) {
-		$result = false;
-
-		// check if user already exists
-		$user = $this->getSingleItem(array('id'), array('username' => $username));
-		if (is_object($user))
-			throw new UserExistsError('Unable to save user data!');
-
-		// prepare password
-		$salt = hash('sha256', self::SALT.strval(time()));
-		$hashed_password = hash_hmac('sha256', $password, $salt);
-
-		// prepare data
-		$data = array(
-				'username'	=> $username,
-				'password'	=> $hashed_password,
-				'email'		=> $email,
-				'level'		=> $level,
-				'verified'	=> $verified ? 1 : 0
-			);
-
-		if (is_array($name)) {
-			$data['first_name'] = $name[0];
-			$data['last_name'] = $name[1];
-			$data['fullname'] = $name[0].' '.$name[1];
-
-		} else {
-			$raw_name = explode(' ', $name);
-			$data['first_name'] = $raw_name[0];
-			$data['last_name'] = $raw_name[1];
-			$data['fullname'] = $name;
-		}
-
-		// insert data
-		$this->insertData($data);
-		$result = true;
-
-		return $result;
-	}
-
-	/**
 	 * Change specified user's password.
 	 *
 	 * @param string $username
@@ -194,16 +141,10 @@ final class UserManager extends ItemManager {
 	 * in current session container.
 	 *
 	 * @param string $username
-	 * @param string $password
 	 * @return boolean
 	 */
-	public function login_user($username, $password) {
+	public function login_user($username) {
 		$result = false;
-		$valid_credentials = $this->check_credentials($username, $password);
-
-		// check credentials
-		if (!$valid_credentials)
-			return $result;
 
 		// get user from the database
 		$user = $this->getSingleItem($this->getFieldNames(), array('username' => $username));
