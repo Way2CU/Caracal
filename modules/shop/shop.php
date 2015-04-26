@@ -835,9 +835,8 @@ class shop extends Module {
 			`first_name` varchar(64) NOT NULL,
 			`last_name` varchar(64) NOT NULL,
 			`email` varchar(127) NOT NULL,
-			`password` varchar(200) NOT NULL,
-			`validated` BOOLEAN NOT NULL DEFAULT '0',
 			`guest` BOOLEAN NOT NULL DEFAULT '0',
+			`system_user` int NULL,
 			`uid` varchar(50) NOT NULL,
 			PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -864,7 +863,6 @@ class shop extends Module {
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`buyer` INT NOT NULL,
-			`system_user` int NULL,
 			`address` INT NOT NULL,
 			`uid` varchar(30) NOT NULL,
 			`type` smallint(6) NOT NULL,
@@ -881,9 +879,8 @@ class shop extends Module {
 			`total` decimal(8,2) NOT NULL,
 			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
-				  KEY `buyer` (`buyer`),
-				  KEY `system_user` (`system_user`),
-				  KEY `address` (`address`)
+			KEY `buyer` (`buyer`),
+			KEY `address` (`address`)
 			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1023,6 +1020,7 @@ class shop extends Module {
 
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
+		$collection->includeScript(collection::COMMUNICATOR);
 		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
 		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 	}
@@ -1724,31 +1722,18 @@ class shop extends Module {
 	private function json_GetAccountInfo() {
 		$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
 		$password = isset($_REQUEST['password']) ? fix_chars($_REQUEST['password']) : null;
-		$valid_user = false;
 
 		// get managers
-		$retry_manager = LoginRetryManager::getInstance();
 		$buyer_manager = ShopBuyersManager::getInstance();
 		$delivery_address_manager = ShopDeliveryAddressManager::getInstance();
 		$transaction_manager = ShopTransactionsManager::getInstance();
 
-		if ($retry_manager->getRetryCount() > 3) {
-			header('HTTP/1.1 401 '.$this->getLanguageConstant('message_error_exceeded_attempts'));
-			return;
-		}
-
-		// check user credentials
+		// get buyer from specified email
 		$buyer = $buyer_manager->getSingleItem(
 			$buyer_manager->getFieldNames(),
 			array(
 				'email'		=> $email,
-				'password'	=> hash_hmac(
-					'sha256',
-					$password,
-					shop::BUYER_SECRET
-				),
-				'guest'		=> 0,
-				// 'validated'	=> 1
+				'guest'		=> 0
 			)
 		);
 
@@ -2337,115 +2322,115 @@ class shop extends Module {
 		// set proper account data based on users choice
 		if (!is_null($existing_user))
 			switch ($existing_user) {
-			case User::EXISTING:
-				$retry_manager = LoginRetryManager::getInstance();
+				case User::EXISTING:
+					$retry_manager = LoginRetryManager::getInstance();
 
-				$email = fix_chars($_REQUEST['sign_in_email']);
-				$password = hash_hmac(
-					'sha256',
-					$_REQUEST['sign_in_password'],
-					shop::BUYER_SECRET
-				);
-
-				// get account from database
-				$account = $manager->getSingleItem(
-					$manager->getFieldNames(),
-					array(
-						'email'		=> $email,
-						'password'	=> $password,
-						'guest'		=> 0,
-						// 'validated'	=> 1
-					));
-
-				// if account exists pass it as result
-				if (is_object($account))
-					$result = $account;
-
-				break;
-
-			case User::CREATE:
-				$data = array(
-					'first_name'	=> fix_chars($_REQUEST['first_name']),
-					'last_name'		=> fix_chars($_REQUEST['last_name']),
-					'email'			=> fix_chars($_REQUEST['new_email']),
-					'uid'			=> isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : '',
-					'validated'		=> 0,
-					'guest'			=> 0
-				);
-
-				if ($_REQUEST['new_password'] == $_REQUEST['new_password_confirm'] || empty($_REQUEST['new_password'])) {
-					// password fields match, salt and hash password
-					$data['password'] = hash_hmac(
+					$email = fix_chars($_REQUEST['sign_in_email']);
+					$password = hash_hmac(
 						'sha256',
-						$_REQUEST['new_password'],
+						$_REQUEST['sign_in_password'],
 						shop::BUYER_SECRET
 					);
 
-					// create new account
-					$manager->insertData($data);
+					// get account from database
+					$account = $manager->getSingleItem(
+						$manager->getFieldNames(),
+						array(
+							'email'		=> $email,
+							'password'	=> $password,
+							'guest'		=> 0,
+							// 'validated'	=> 1
+						));
 
-					// get account object
-					$id = $manager->getInsertedID();
-					$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-				}
-
-				break;
-
-			case User::GUEST:
-				// collect data
-				if (isset($_REQUEST['name'])) {
-					$name = explode(' ', fix_chars($_REQUEST['name']), 1);
-					$first_name = $name[0];
-					$last_name = count($name) > 1 ? $name[1] : '';
-
-				} else {
-					$first_name = fix_chars($_REQUEST['first_name']);
-					$last_name = fix_chars($_REQUEST['last_name']);
-				}
-
-				$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
-				$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
-
-				$conditions = array();
-				$data = array(
-					'first_name'	=> $first_name,
-					'last_name'		=> $last_name,
-					'password'		=> '',
-					'validated'		=> 0,
-					'guest'			=> 1
-				);
-
-				// include uid if specified
-				if (!is_null($uid)) {
-					$conditions['uid'] = $uid;
-					$data['uid'] = $uid;
-				}
-
-				// include email if specified
-				if (!is_null($email)) {
-					$conditions['email'] = $email;
-					$data['email'] = $email;
-				}
-
-				// try finding existing account
-				if (count($conditions) > 0) {
-					$account = $manager->getSingleItem($manager->getFieldNames(), $conditions);
-
+					// if account exists pass it as result
 					if (is_object($account))
 						$result = $account;
-				}
 
-				// create new account
-				if (is_null($result)) {
+					break;
+
+				case User::CREATE:
+					$data = array(
+						'first_name'	=> fix_chars($_REQUEST['first_name']),
+						'last_name'		=> fix_chars($_REQUEST['last_name']),
+						'email'			=> fix_chars($_REQUEST['new_email']),
+						'uid'			=> isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : '',
+						'validated'		=> 0,
+						'guest'			=> 0
+					);
+
+					if ($_REQUEST['new_password'] == $_REQUEST['new_password_confirm'] || empty($_REQUEST['new_password'])) {
+						// password fields match, salt and hash password
+						$data['password'] = hash_hmac(
+							'sha256',
+							$_REQUEST['new_password'],
+							shop::BUYER_SECRET
+						);
+
+						// create new account
+						$manager->insertData($data);
+
+						// get account object
+						$id = $manager->getInsertedID();
+						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+					}
+
+					break;
+
+				case User::GUEST:
+					// collect data
+					if (isset($_REQUEST['name'])) {
+						$name = explode(' ', fix_chars($_REQUEST['name']), 1);
+						$first_name = $name[0];
+						$last_name = count($name) > 1 ? $name[1] : '';
+
+					} else {
+						$first_name = fix_chars($_REQUEST['first_name']);
+						$last_name = fix_chars($_REQUEST['last_name']);
+					}
+
+					$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
+					$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
+
+					$conditions = array();
+					$data = array(
+						'first_name'	=> $first_name,
+						'last_name'		=> $last_name,
+						'password'		=> '',
+						'validated'		=> 0,
+						'guest'			=> 1
+					);
+
+					// include uid if specified
+					if (!is_null($uid)) {
+						$conditions['uid'] = $uid;
+						$data['uid'] = $uid;
+					}
+
+					// include email if specified
+					if (!is_null($email)) {
+						$conditions['email'] = $email;
+						$data['email'] = $email;
+					}
+
+					// try finding existing account
+					if (count($conditions) > 0) {
+						$account = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+						if (is_object($account))
+							$result = $account;
+					}
+
 					// create new account
-					$manager->insertData($data);
+					if (is_null($result)) {
+						// create new account
+						$manager->insertData($data);
 
-					// get account object
-					$id = $manager->getInsertedID();
-					$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-				}
+						// get account object
+						$id = $manager->getInsertedID();
+						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+					}
 
-				break;
+					break;
 			}
 
 		return $result;
@@ -2547,10 +2532,6 @@ class shop extends Module {
 			// add address if needed
 			if (!is_null($address))
 				$result['address'] = $address->id;
-
-			// assign system user
-			if ($_SESSION['logged'])
-				$result['system_user'] = $_SESSION['uid'];
 
 			// create new transaction
 			$transactions_manager->insertData($result);
