@@ -173,7 +173,6 @@ class Backend_UserManager {
 		$manager = UserManager::getInstance();
 
 		// grab new user data
-		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
 				'username'	=> escape_chars($_REQUEST['username']),
 				'email'		=> escape_chars($_REQUEST['email']),
@@ -201,14 +200,17 @@ class Backend_UserManager {
 			$data['fullname'] = $data['first_name'].' '.$data['last_name'];
 		}
 
+		// check if password needs updating
+		$password = '';
+		$update_password = false;
 		if (isset($_REQUEST['password'])) {
-			$data['password'] = hash_hmac('sha256', escape_chars($_REQUEST['password']), $salt);
-			$data['salt'] = $salt;
+			$password = $_REQUEST['password'];
+			$update_password = true;
 		}
 
 		if (isset($_REQUEST['new_password']) && !empty($_REQUEST['new_password'])) {
-			$data['password'] = hash_hmac('sha256', escape_chars($_REQUEST['new_password']), $salt);
-			$data['salt'] = $salt;
+			$password = $_REQUEST['new_password'];
+			$update_password = true;
 		}
 
 		// test level is ok to ensure security is on right level
@@ -225,6 +227,9 @@ class Backend_UserManager {
 				// save changed user data
 				$message = $this->parent->getLanguageConstant('message_users_data_saved');
 				$manager->updateData($data, array('id' => $id));
+
+				if ($update_password)
+					$manager->change_password($data['username'], $password);
 
 				// trigger event
 				Events::trigger('backend', 'user-change', $user);
@@ -245,6 +250,9 @@ class Backend_UserManager {
 										$manager->getFieldNames(),
 										array('id' => $manager->getInsertedID())
 									);
+
+				if ($update_password)
+					$manager->change_password($data['username'], $password);
 
 				// trigger event
 				Events::trigger('backend', 'user-create', $user);
@@ -288,10 +296,8 @@ class Backend_UserManager {
 			$source = $_REQUEST; else
 			$source = $tag_params;
 
-		$salt = hash('sha256', UserManager::SALT.strval(time()));
 		$data = array(
 				'username'	=> escape_chars($source['username']),
-				'password'	=> hash_hmac('sha256', $source['password'], $salt),
 				'email'		=> escape_chars($source['email']),
 				'level'		=> 0,
 				'salt'		=> $salt,
@@ -352,17 +358,13 @@ class Backend_UserManager {
 				// insert data
 				$manager->insertData($data);
 				$user_id = $manager->getInsertedID();
+				$manager->change_password($data['username'], $source['password']);
 
 				// log user in
 				$validation_required = $this->parent->settings['require_verified'];
 
-				if (!$validation_required) {
-					$_SESSION['uid'] = $user_id;
-					$_SESSION['logged'] = true;
-					$_SESSION['level'] = $data['level'];
-					$_SESSION['username'] = $data['username'];
-					$_SESSION['fullname'] = $data['fullname'];
-				}
+				if (!$validation_required)
+					$manager->login_user($data['username']);
 
 				// assign message
 				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
@@ -483,18 +485,8 @@ class Backend_UserManager {
 			$old_password = hash_hmac('sha256', $source['current_password'], $user->salt);
 
 			if ($old_password == $user->password) {
-				// generate new salt
-				$salt = hash('sha256', UserManager::SALT.strval(time()));
-				$password = hash_hmac('sha256', $new_password, $salt);
-
-				// update data
-				$manager->updateData(
-								array(
-									'password'	=> $password,
-									'salt'		=> $salt
-								),
-								array('id' => $user->id)
-							);
+				// update password
+				$manager->change_password($user->username, $new_password);
 
 				// prepare result
 				$result['error'] = false;
@@ -703,15 +695,12 @@ class Backend_UserManager {
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
 			$email = escape_chars($_REQUEST['email']);
 
-		// prepare salt
-		$salt = hash('sha256', UserManager::SALT.strval(time()));
-
 		// get password
 		if (array_key_exists('password', $tag_params))
-			$password = hash_hmac('sha256', $tag_params['password'], $salt);
+			$password = $tag_params['password'];
 
 		if (is_null($password) && array_key_exists('password', $_REQUEST))
-			$password = hash_hmac('sha256', $_REQUEST['password'], $salt);
+			$password = $_REQUEST['password'];
 
 		// get code
 		if (array_key_exists('code', $tag_params))
@@ -743,24 +732,14 @@ class Backend_UserManager {
 				$verification_manager->deleteData(array('user' => $verification->user));
 
 				// store new password and mark account as verified
-				$manager->updateData(
-							array(
-								'verified'	=> 1,
-								'password'	=> $password,
-								'salt'		=> $salt
-							),
-							array('id' => $user->id)
-						);
+				$manager->verify_user($user->username);
+				$manager->change_password($user->username, $password);
 
 				// prepare response
 				$result['error'] = false;
 				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
 
 				// trigger event
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array('id' => $user->id)
-									);
 				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
@@ -883,24 +862,12 @@ class Backend_UserManager {
 		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user_id));
 
 		if (is_object($user)) {
-			$salt = hash('sha256', UserManager::SALT.strval(time()));
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
-
-			// generate hash from old password
-			if (!empty($user->salt))
-				$old_password_ok = hash_hmac('sha256', $old_password, $user->salt) == $user->password || empty($user->password); else
-				$old_password_ok = hash_hmac('sha256', $old_password, UserManager::SALT) == $user->password || empty($user->password);  // compatibility
+			$old_password_ok = hash_hmac('sha256', $old_password, $user->salt) == $user->password;
 
 			if ($new_password_ok && $old_password_ok) {
 				// all conditions are met, change password
-				$password = hash_hmac('sha256', $new_password, $salt);
-				$manager->updateData(
-							array(
-								'password'	=> $password,
-								'salt'		=> $salt
-							),
-							array('id' => $user->id)
-						);
+				$manager->change_password_window($user->username, $new_password);
 
 				// prepare response
 				$message = $this->parent->getLanguageConstant('message_password_changed');
@@ -1158,15 +1125,11 @@ class Backend_UserManager {
 
 		// data matches, mark account as verified
 		if (is_object($verification)) {
-			$manager->updateData(array('verified' => 1), array('id' => $user->id));
+			$manager->verify_user($user->username);
 			$verification_manager->deleteData(array('user' => $user->id));
 
 			// automatically log user in
-			$_SESSION['uid'] = $user->id;
-			$_SESSION['logged'] = true;
-			$_SESSION['level'] = $user->level;
-			$_SESSION['username'] = $user->username;
-			$_SESSION['fullname'] = $user->fullname;
+			$manager->login_user($user->username);
 		}
 	}
 }

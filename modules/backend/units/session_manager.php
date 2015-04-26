@@ -104,29 +104,7 @@ class SessionManager {
 		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
 
-		// prepare hashed password
-		$test_user = $manager->getSingleItem(
-									array('salt'),
-									array('username' => $username)
-								);
-
-		if (is_object($test_user) && !empty($test_user->salt)) {
-			// hash password using stored salt
-			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
-
-		} else {
-			// old salting method
-			$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
-		}
-
-		// get user based with password
-		$user = $manager->getSingleItem(
-									$manager->getFieldNames(),
-									array(
-										'username'	=> $username,
-										'password'	=> array($password, $hashed_password)
-									));
-
+		// get retry count for client IP address
 		$retry_count = $retry_manager->getRetryCount();
 
 		// check captcha
@@ -144,7 +122,7 @@ class SessionManager {
 		}
 
 		// check user data
-		if (is_object($user) && $captcha_ok) {
+		if ($manager->check_credentials($username, $password) && $captcha_ok) {
 			// remove login retries
 			$retry_manager->deleteData(array('address' => $_SERVER['REMOTE_ADDR']));
 
@@ -153,11 +131,7 @@ class SessionManager {
 				Session::change_type(Session::TYPE_EXTENDED);
 
 			// set session variables
-			$_SESSION['uid'] = $user->id;
-			$_SESSION['logged'] = true;
-			$_SESSION['level'] = $user->level;
-			$_SESSION['username'] = $user->username;
-			$_SESSION['fullname'] = $user->fullname;
+			$manager->login_user($username);
 
 			// check if we need to make redirect URL
 			if (isset($_SESSION['redirect_url']))
@@ -220,12 +194,8 @@ class SessionManager {
 		// change session type to default
 		Session::change_type();
 
-		// kill session variables
-		unset($_SESSION['uid']);
-		unset($_SESSION['logged']);
-		unset($_SESSION['level']);
-		unset($_SESSION['username']);
-		unset($_SESSION['fullname']);
+		// log user out
+		UserManager::getInstance()->logout_user();
 
 		// get message
 		$message = $this->parent->getLanguageConstant('message_logout_ok');
@@ -275,29 +245,7 @@ class SessionManager {
 		$manager = UserManager::getInstance();
 		$retry_manager = LoginRetryManager::getInstance();
 
-		// prepare hashed password
-		$test_user = $manager->getSingleItem(
-									array('salt'),
-									array('username' => $username)
-								);
-
-		if (is_object($test_user) && !empty($test_user->salt)) {
-			// hash password using stored salt
-			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
-
-		} else {
-			// old salting method
-			$hashed_password = hash_hmac('sha256', $password, UserManager::SALT);
-		}
-
-		// get user based with password
-		$user = $manager->getSingleItem(
-									$manager->getFieldNames(),
-									array(
-										'username'	=> $username,
-										'password'	=> array($password, $hashed_password)
-									));
-
+		// get number of retries for client IP address
 		$retry_count = $retry_manager->getRetryCount();
 
 		// check captcha
@@ -315,13 +263,14 @@ class SessionManager {
 		}
 
 		// check if account is verified and verification is required
-		if (is_object($user)) {
-			$required = $this->parent->settings['require_verified'];
-			$verified = ($required == 1 && $user->verified) || $required == 0;
-		}
+		$required = $this->parent->settings['require_verified'];
+		$verified = ($required == 1 && $manager->is_user_verified($username)) || $required == 0;
+
+		// check user credentials
+		$credentials_ok = $manager->check_credentials($username, $password);
 
 		// check user data
-		if (is_object($user) && $captcha_ok && $verified) {
+		if ($verified && $credentials_ok && $captcha_ok) {
 			// remove login retries
 			$retry_manager->clearAddress();
 
@@ -330,18 +279,13 @@ class SessionManager {
 				Session::change_type(Session::TYPE_EXTENDED);
 
 			// set session variables
-			$_SESSION['uid'] = $user->id;
-			$_SESSION['logged'] = true;
-			$_SESSION['level'] = $user->level;
-			$_SESSION['username'] = $user->username;
-			$_SESSION['fullname'] = $user->fullname;
-
-			$result['logged_in'] = true;
+			$manager->login_user($username);
 
 			// return message
 			$result['message'] = $this->parent->getLanguageConstant('message_login_ok');
+			$result['logged_in'] = true;
 
-		} elseif (is_object($user) && $captcha_ok && !$verified) {
+		} elseif ($credentials_ok && $captcha_ok && !$verified) {
 			// user is logged but account is not verified
 			$result['message'] = $this->parent->getLanguageConstant('message_users_account_not_verified');
 
@@ -365,11 +309,7 @@ class SessionManager {
 		Session::change_type();
 
 		// kill session variables
-		unset($_SESSION['uid']);
-		unset($_SESSION['logged']);
-		unset($_SESSION['level']);
-		unset($_SESSION['username']);
-		unset($_SESSION['fullname']);
+		UserManager::getInstance()->logout_user();
 
 		// get message
 		$message = $this->parent->getLanguageConstant('message_logout_ok');
