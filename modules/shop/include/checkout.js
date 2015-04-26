@@ -5,6 +5,8 @@
  * Author: Mladen Mijatov
  */
 
+// create namespaces if needed
+var Site = Site || {};
 var Caracal = Caracal || {};
 Caracal.Shop = Caracal.Shop || {};
 
@@ -23,6 +25,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self.page_control = new PageControl('div#input_details div.pages');
 	self.password_dialog = new Dialog();
 	self.cvv_dialog = new Dialog();
+
+	// local namespaces
+	self.handler = {};
+	self.validator = {};
 
 	/**
 	 * Complete object initialization.
@@ -55,17 +61,17 @@ Caracal.Shop.BuyerInformationForm = function() {
 				.setContentFromDOM('img#what_is_cvv');
 
 		// set validators used by page control
-		self.sign_in_form.data('validator', self._validate_sign_in_page);
-		self.shipping_information_form.data('validator', self._validate_shipping_information_page);
-		self.billing_information_form.data('validator', self._validate_billing_information_page);
-		self.payment_method_form.data('validator', self._validate_payment_method_page);
+		self.sign_in_form.data('validator', self.validator.sign_in_page);
+		self.shipping_information_form.data('validator', self.validator.shipping_information_page);
+		self.billing_information_form.data('validator', self.validator.billing_information_page);
+		self.payment_method_form.data('validator', self.validator.payment_method_page);
 
 		// connect events
-		self.sign_in_form.find('input[name=existing_user]').change(self._handle_account_type_change);
-		self.shipping_information_form.find('select[name=presets]').change(self._handle_shipping_information_preset_change);
+		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);
+		self.shipping_information_form.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
 		self.sign_in_form.find('a.password_recovery').click(self._show_password_dialog);
 		self.billing_information_form.find('a.what_is_cvv').click(self._show_cvv_dialog);
-		self.methods.click(self._handle_payment_method_click);
+		self.methods.click(self.handler.payment_method_click);
 	};
 
 	/**
@@ -101,24 +107,24 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 *
 	 * @param object event
 	 */
-	self._handle_account_type_change = function(event) {
+	self.handler.account_type_change = function(event) {
 		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
 
-		switch (parseInt(selection)) {
+		switch (selection) {
 			// existing account
-			case 0:
+			case 'log_in':
 				self.sign_in_form.find('div.new_account').removeClass('visible');
 				self.sign_in_form.find('div.existing_account').addClass('visible');
 				break;
 
 			// new account
-			case 1:
+			case 'sign_up':
 				self.sign_in_form.find('div.new_account').addClass('visible');
 				self.sign_in_form.find('div.existing_account').removeClass('visible');
 				break;
 
 			// checkout as guest
-			case 2:
+			case 'guest':
 			default:
 				self.sign_in_form.find('div.new_account').removeClass('visible');
 				self.sign_in_form.find('div.existing_account').removeClass('visible');
@@ -131,7 +137,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 *
 	 * @param object event
 	 */
-	self._handle_shipping_information_preset_change = function(event) {
+	self.handler.shipping_information_preset_change = function(event) {
 		var control = $(this);
 		var option = control.find('option[value='+control.val()+']');
 
@@ -150,7 +156,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 *
 	 * @param object event
 	 */
-	self._handle_payment_method_click = function(event) {
+	self.handler.payment_method_click = function(event) {
 		var method = $(this);
 
 		// set payment method before processing
@@ -169,99 +175,130 @@ Caracal.Shop.BuyerInformationForm = function() {
 			self.page_control.disablePage(billing_page_index); else
 			self.page_control.enablePage(billing_page_index);
 	};
+
+	/**
+	 * Handle account data loading.
+	 *
+	 * @param object data
+	 */
+	self.handler.account_load_success = function(data) {
+		var presets = self.shipping_information_form.find('select[name=presets]');
+		var email_field = self.sign_in_form.find('input[name=sign_in_email]');
+		var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+
+		// reset presets
+		presets.html('');
+
+		// clear bad state from fields
+		email_field.removeClass('bad');
+		password_field.removeClass('bad');
+
+		// populate shipping information with data received from the server
+		self.shipping_information_form.find('input[name=first_name]').val(data.information.first_name);
+		self.shipping_information_form.find('input[name=last_name]').val(data.information.last_name);
+		self.shipping_information_form.find('input[name=email]').val(data.information.email);
+
+		// empty preset
+		var empty_option = $('<option>');
+
+		empty_option
+			.html(language_handler.getText('shop', 'new_preset'))
+			.attr('value', 0)
+			.appendTo(presets);
+
+		// add different presets of data
+		for (var index in data.delivery_addresses) {
+			var address = data.delivery_addresses[index];
+			var option = $('<option>');
+
+			option
+				.html(address.name)
+				.attr('value', address.id)
+				.data('name', address.name)
+				.data('street', address.street)
+				.data('street2', address.street2)
+				.data('phone', address.phone)
+				.data('city', address.city)
+				.data('zip', address.zip)
+				.data('state', address.state)
+				.data('country', address.country)
+				.appendTo(presets);
+		}
+
+		// alter field visibility
+		self.shipping_information_form.find('select[name=presets]').parent().show();
+		self.shipping_information_form.find('input[name=name]').parent().show();
+		self.shipping_information_form.find('input[name=email]').parent().hide();
+		self.shipping_information_form.find('hr').eq(0).show();
+	};
+
+	/**
+	 * Handle server side error during account load process.
+	 *
+	 * @param object xhr
+	 * @param string transfer_status
+	 * @param string description
+	 */
+	self.handler.account_load_error = function(xhr, transfer_status, description) {
+		var email_field = self.sign_in_form.find('input[name=sign_in_email]');
+		var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+
+		// add "bad" class to input fields
+		email_field.addClass('bad');
+		password_field.addClass('bad');
+
+		// show error message to user
+		alert(description);
+	};
+
 	/**
 	* Validate sign in page.
 	*
 	* @return boolean
 	*/
-	self._validate_sign_in_page = function () {
+	self.validator.sign_in_page = function() {
 		var result = false;
 		var next_button = self.sign_in_form.find('button.next');
 
 		// check which option is selected
-		var selection = parseInt(self.sign_in_form.find('input[name=existing_user]:checked').val());
+		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
 
 		switch (selection) {
-			case 0:
-				var presets = self.shipping_information_form.find('select[name=presets]');
+			case 'log_in':
 				var email_field = self.sign_in_form.find('input[name=sign_in_email]');
 				var password_field = self.sign_in_form.find('input[name=sign_in_password]');
 
-				// reset presets
-				presets.html('');
-
 				// prepare data
 				var data = {
-						section: 'shop',
-						action: 'json_get_account_info',
-						email: email_field.val(),
+						username: email_field.val(),
 						password: password_field.val()
 					};
 
-				// check with server if provided information is correct
-				$.ajax({
-					url: self.backend_url,
-					type: 'GET',
-					async: false,
-					data: data,
-					dataType: 'json',
-					context: this,
-					success: function(data) {
-						email_field.removeClass('bad');
-						password_field.removeClass('bad');
+				new Communicator('backend')
+						.on_success(function(data) {
+							// load account information
+							if (data.logged_in)
+								new Communicator('shop')
+									.on_success(self.handler.account_load_success)
+									.on_error(self.handler.account_load_error)
+									.get('json_get_account_info', null);
 
-						// populate shipping information with data received from the server
-						self.shipping_information_form.find('input[name=first_name]').val(data.information.first_name);
-						self.shipping_information_form.find('input[name=last_name]').val(data.information.last_name);
-						self.shipping_information_form.find('input[name=email]').val(data.information.email);
+							// allow page switch
+							result = data.logged_in;
+						})
+						.on_error(function() {
+							// don't allow page switch
+							result = false;
 
-						// empty preset
-						var empty_option = $('<option>');
-
-						empty_option
-								.html(language_handler.getText('shop', 'new_preset'))
-								.attr('value', 0)
-								.appendTo(presets);
-
-						// add different presets of data
-						for (var index in data.delivery_addresses) {
-							var address = data.delivery_addresses[index];
-							var option = $('<option>');
-
-							option
-								.html(address.name)
-								.attr('value', address.id)
-								.data('name', address.name)
-								.data('street', address.street)
-								.data('street2', address.street2)
-								.data('phone', address.phone)
-								.data('city', address.city)
-								.data('zip', address.zip)
-								.data('state', address.state)
-								.data('country', address.country)
-								.appendTo(presets);
-						}
-					},
-					error: function(request, text_status, error) {
-						// add "bad" class to input fields
-						email_field.addClass('bad');
-						password_field.addClass('bad');
-
-						// show error message to user
-						alert(error);
-					}
-				});
-
-				// alter field visibility
-				self.shipping_information_form.find('select[name=presets]').parent().show();
-				self.shipping_information_form.find('input[name=name]').parent().show();
-				self.shipping_information_form.find('input[name=email]').parent().hide();
-				self.shipping_information_form.find('hr').eq(0).show();
-
-				result = !(email_field.hasClass('bad') || password_field.hasClass('bad'));
+							// mark fields as bad
+							email_field.addClass('bad');
+							password_field.addClass('bad');
+						})
+						.set_asynchronous(false)
+						.get('json_login', data);
 				break;
 
-			case 1:
+			case 'sign_up':
 				// get new account section
 				var container = self.sign_in_form.find('div.new_account');
 				var fields = container.find('input');
@@ -323,7 +360,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				result = !(password.hasClass('bad') || password_confirm.hasClass('bad') || email_field.hasClass('bad'));
 				break;
 
-			case 2:
+			case 'guest':
 			default:
 				// hide unneeded fields
 				self.shipping_information_form.find('select[name=presets]').parent().hide();
@@ -342,7 +379,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	*
 	* @return boolean
 	*/
-	self._validate_shipping_information_page = function () {
+	self.validator.shipping_information_page = function() {
 		var fields = self.shipping_information_form.find('input,select');
 
 		// add "bad" class to every required field which is empty
@@ -362,7 +399,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	*
 	* @return boolean
 	*/
-	self._validate_payment_method_page = function () {
+	self.validator.payment_method_page = function() {
 		var result = self.methods.filter('.active').length > 0;
 
 		if (!result)
@@ -376,7 +413,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	*
 	* @return boolean
 	*/
-	self._validate_billing_information_page = function () {
+	self.validator.billing_information_page = function() {
 		var fields = self.billing_information_form.find('input,select');
 		var method = self.methods.filter('.active');
 
@@ -437,13 +474,16 @@ Caracal.Shop.CheckoutForm = function() {
 	self.delivery_method_list = self.checkout.find('div.delivery_method');
 	self.overlay = self.delivery_provider_list.find('div.overlay');
 
+	// handler functions namespace
+	self.handler = {};
+
 	/**
 	 * Complete object initialization.
 	 */
 	self.init = function() {
 		self.delivery_provider_list
 				.find('input[name=delivery_provider]')
-				.change(self._handle_delivery_provider_change);
+				.change(self.handler.delivery_provider_change);
 
 		// disable checkout button
 		if (self.delivery_provider_list.length > 0)
@@ -455,7 +495,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 *
 	 * @param object data
 	 */
-	self._handle_delivery_providers_load = function(data) {
+	self.handler.delivery_providers_load = function(data) {
 		self.cached_data = data;
 		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(data.shipping).toFixed(2));
 		self.checkout_details.find('.subtotal-value.handling').html(parseFloat(data.handling).toFixed(2));
@@ -481,7 +521,7 @@ Caracal.Shop.CheckoutForm = function() {
 				.attr('name', 'delivery_method')
 				.attr('value', id)
 				.data('method', method)
-				.change(self._handle_delivery_method_click)
+				.change(self.handler.delivery_method_click)
 				.appendTo(entry);
 
 			price
@@ -520,7 +560,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 *
 	 * @param object error
 	 */
-	self._handle_delivery_providers_error = function(error) {
+	self.handler.delivery_providers_error = function(error) {
 		// disable checkout button
 		self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
 
@@ -540,7 +580,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 *
 	 * @param object event
 	 */
-	self._handle_delivery_provider_change = function(event) {
+	self.handler.delivery_provider_change = function(event) {
 		var selected = self.delivery_provider_list.find('input[name=delivery_provider]:checked').val();
 
 		var data = {
@@ -565,8 +605,8 @@ Caracal.Shop.CheckoutForm = function() {
 			data: data,
 			dataType: 'json',
 			context: this,
-			success: self._handle_delivery_providers_load,
-			error: self._handle_delivery_providers_error
+			success: self.handler.delivery_providers_load,
+			error: self.handler.delivery_providers_error
 		});
 	};
 
@@ -575,7 +615,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 *
 	 * @param object event
 	 */
-	self._handle_delivery_method_click = function(event) {
+	self.handler.delivery_method_click = function(event) {
 		var item = $(this);
 		var method = item.data('method');
 		var total = self.cached_data.total + self.cached_data.handling + parseFloat(method[1]);
@@ -612,8 +652,9 @@ Caracal.Shop.CheckoutForm = function() {
 
 $(function() {
 	if ($('div#input_details').length > 0) {
-		Caracal.Shop.buyer_information_form = new Caracal.Shop.BuyerInformationForm();
+		Site.buyer_information_form = new Caracal.Shop.BuyerInformationForm();
+
 	} else if ($('div#checkout').length > 0) {
-		Caracal.Shop.checkout_form = new Caracal.Shop.CheckoutForm();
+		Site.checkout_form = new Caracal.Shop.CheckoutForm();
 	}
 });
