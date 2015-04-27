@@ -96,9 +96,9 @@ final class UnitType {
 
 
 final class User {
-	const EXISTING = 0;
-	const CREATE = 1;
-	const GUEST = 2;
+	const EXISTING = 'log_in';
+	const CREATE = 'sign_in';
+	const GUEST = 'guest';
 }
 
 
@@ -2317,7 +2317,7 @@ class shop extends Module {
 	private function getUserAccount() {
 		$result = null;
 		$manager = ShopBuyersManager::getInstance();
-		$existing_user = isset($_POST['existing_user']) ? fix_id($_POST['existing_user']) : null;
+		$existing_user = isset($_POST['existing_user']) ? escape_chars($_POST['existing_user']) : null;
 
 		// set proper account data based on users choice
 		if (!is_null($existing_user))
@@ -2401,6 +2401,7 @@ class shop extends Module {
 					break;
 
 				case User::GUEST:
+				default:
 					// collect data
 					if (isset($_REQUEST['name'])) {
 						$name = explode(' ', fix_chars($_REQUEST['name']), 1);
