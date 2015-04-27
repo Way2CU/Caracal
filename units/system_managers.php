@@ -178,6 +178,8 @@ final class UserManager extends ItemManager {
 		unset($_SESSION['uid']);
 		unset($_SESSION['username']);
 		unset($_SESSION['fullname']);
+		unset($_SESSION['first_name']);
+		unset($_SESSION['last_name']);
 		$_SESSION['level'] = 0;
 		$_SESSION['logged'] = false;
 		$result = true;
