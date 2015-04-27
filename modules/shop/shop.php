@@ -2323,48 +2323,72 @@ class shop extends Module {
 		if (!is_null($existing_user))
 			switch ($existing_user) {
 				case User::EXISTING:
+					// get managers
+					$user_manager = UserManager::getInstance();
 					$retry_manager = LoginRetryManager::getInstance();
 
-					$email = fix_chars($_REQUEST['sign_in_email']);
-					$password = hash_hmac(
-						'sha256',
-						$_REQUEST['sign_in_password'],
-						shop::BUYER_SECRET
-					);
+					// get user data
+					$email = escape_chars($_REQUEST['sign_in_email']);
+					$password = $_REQUEST['sign_in_password'];
 
-					// get account from database
-					$account = $manager->getSingleItem(
-						$manager->getFieldNames(),
-						array(
-							'email'		=> $email,
-							'password'	=> $password,
-							'guest'		=> 0,
-							// 'validated'	=> 1
-						));
+					// check credentials
+					$retry_count = $retry_manager->getRetryCount();
+					$credentials_ok = $user_manager->check_credentials($email, $password);
 
-					// if account exists pass it as result
-					if (is_object($account))
-						$result = $account;
+					// get user account if sign in is valid
+					if ($credentials_ok && $retry_count <= 3)
+						$result = $manager->getSingleItem(
+								$manager->getFieldNames(),
+								array('email' => $email)
+							);
 
 					break;
 
 				case User::CREATE:
+					// get manager
+					$user_manager = UserManager::getInstance();
+					$retry_manager = LoginRetryManager::getInstance();
+
+					// get user data
 					$data = array(
-						'first_name'	=> fix_chars($_REQUEST['first_name']),
-						'last_name'		=> fix_chars($_REQUEST['last_name']),
-						'email'			=> fix_chars($_REQUEST['new_email']),
-						'uid'			=> isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : '',
-						'validated'		=> 0,
+						'first_name'	=> escape_chars($_REQUEST['first_name']),
+						'last_name'		=> escape_chars($_REQUEST['last_name']),
+						'email'			=> escape_chars($_REQUEST['new_email']),
+						'uid'			=> isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
 						'guest'			=> 0
 					);
 
-					if ($_REQUEST['new_password'] == $_REQUEST['new_password_confirm'] || empty($_REQUEST['new_password'])) {
-						// password fields match, salt and hash password
-						$data['password'] = hash_hmac(
-							'sha256',
-							$_REQUEST['new_password'],
-							shop::BUYER_SECRET
-						);
+					$password = $_REQUEST['new_password'];
+					$password_confirm = $_REQUEST['new_password_confirm'];
+
+					// check if system user already exists
+					$user = $user_manager->getSingleItem(array('id'), array('email' => $data['email']));
+
+					if (is_object($user)) {
+						// assign system user to buyer
+						$data['system_user'] = $user->id;
+
+						// create new account
+						$manager->insertData($data);
+
+						// get account object
+						$id = $manager->getInsertedID();
+						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+					} else if ($password == $password_confirm) {
+						$user_data = array(
+								'username'		=> $data['email'],
+								'email'			=> $data['email'],
+								'fullname'		=> $data['first_name'].' '.$data['last_name'],
+								'first_name'	=> $data['first_name'],
+								'last_name'		=> $data['last_name'],
+								'level'			=> 0,
+								'verified'		=> 0,
+								'agreed'		=> 0  // TODO: Check for parameter
+							);
+						$user_manager->insertData($user_data);
+						$data['system_user'] = $user_manager->getInsertedID();
+						$user_manager->change_password($user_data['username'], $password);
 
 						// create new account
 						$manager->insertData($data);
@@ -2396,8 +2420,8 @@ class shop extends Module {
 						'first_name'	=> $first_name,
 						'last_name'		=> $last_name,
 						'password'		=> '',
-						'validated'		=> 0,
-						'guest'			=> 1
+						'guest'			=> 1,
+						'system_user'	=> 0
 					);
 
 					// include uid if specified
@@ -2422,7 +2446,6 @@ class shop extends Module {
 
 					// create new account
 					if (is_null($result)) {
-						// create new account
 						$manager->insertData($data);
 
 						// get account object
@@ -2762,26 +2785,6 @@ class shop extends Module {
 			$fields['buyer_uid'] = $buyer->uid;
 
 			$email_address = $buyer->email;
-		}
-
-		// add system user information
-		$user_manager = UserManager::getInstance();
-		$user = $user_manager->getSingleItem(
-			$user_manager->getFieldNames(),
-			array('id' => $transaction->system_user)
-		);
-
-		if (is_object($user)) {
-			$fields['user_name'] = $user->username;
-			$fields['user_fullname'] = $user->fullname;
-			$fields['user_email'] = $user->email;
-
-			if (is_null($email_address) || empty($email_address)) {
-				$email_address = $user->email;
-
-			} else if ($email_address != $user->email) {
-				$email_address = $email_address.','.$user->email;
-			}
 		}
 
 		// add buyer address
