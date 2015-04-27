@@ -97,7 +97,7 @@ final class UnitType {
 
 final class User {
 	const EXISTING = 'log_in';
-	const CREATE = 'sign_in';
+	const CREATE = 'sign_up';
 	const GUEST = 'guest';
 }
 
@@ -2404,23 +2404,22 @@ class shop extends Module {
 				default:
 					// collect data
 					if (isset($_REQUEST['name'])) {
-						$name = explode(' ', fix_chars($_REQUEST['name']), 1);
+						$name = explode(' ', escape_chars($_REQUEST['name']), 1);
 						$first_name = $name[0];
 						$last_name = count($name) > 1 ? $name[1] : '';
 
 					} else {
-						$first_name = fix_chars($_REQUEST['first_name']);
-						$last_name = fix_chars($_REQUEST['last_name']);
+						$first_name = escape_chars($_REQUEST['first_name']);
+						$last_name = escape_chars($_REQUEST['last_name']);
 					}
 
-					$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
-					$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
+					$uid = isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : null;
+					$email = isset($_REQUEST['email']) ? escape_chars($_REQUEST['email']) : null;
 
 					$conditions = array();
 					$data = array(
 						'first_name'	=> $first_name,
 						'last_name'		=> $last_name,
-						'password'		=> '',
 						'guest'			=> 1,
 						'system_user'	=> 0
 					);
