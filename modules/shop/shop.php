@@ -2365,15 +2365,27 @@ class shop extends Module {
 					$user = $user_manager->getSingleItem(array('id'), array('email' => $data['email']));
 
 					if (is_object($user)) {
-						// assign system user to buyer
-						$data['system_user'] = $user->id;
+						// check if buyer exists
+						$buyer = $manager->getSingleItem(
+									$manager->getFieldNames(),
+									array('system_user' => $user->id)
+								);
 
-						// create new account
-						$manager->insertData($data);
+						if (is_object($buyer)) {
+							// buyer already exists, no need to create new
+							$result = $buyer;
 
-						// get account object
-						$id = $manager->getInsertedID();
-						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+						} else {
+							// assign system user to buyer
+							$data['system_user'] = $user->id;
+
+							// create new account
+							$manager->insertData($data);
+
+							// get account object
+							$id = $manager->getInsertedID();
+							$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+						}
 
 					} else if ($password == $password_confirm) {
 						$user_data = array(
