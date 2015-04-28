@@ -399,47 +399,79 @@ class Backend_UserManager {
 			}
 
 		// send notification email
-		if (!$result['error'] && class_exists('contact_form') && !is_null($user_id)) {
-			$verification_manager = UserVerificationManager::getInstance();
-			$contact_form = contact_form::getInstance();
-			$verification_code = $contact_form->generateVerificationCode(
-											$data['username'],
-											$data['email']
-										);
+		if (!$result['error'] && !is_null($user_id))
+			$this->sendNotificationEmail($user_id);
+	}
 
-			// insert verification code
-			$verification_data = array(
-						'user'	=> $user_id,
-						'code'	=> $verification_code
-					);
-			$verification_manager->insertData($verification_data);
+	/**
+	 * Send notification email for specified user.
+	 *
+	 * @param integer $user_id
+	 * @return boolean
+	 */
+	public function sendNotificationEmail($user_id) {
+		$result = false;
 
-			// prepare email
-			$fields = array(
-					'fullname'		=> $data['fullname'],
-					'username'		=> $data['username'],
-					'password'		=> escape_chars($source['password']),
-					'email'			=> $data['email'],
-					'verify_code'	=> $verification_code
+		// make sure contact form is available
+		if (!class_exists('contact_form'))
+			return $result;
+
+		// get managers
+		$user_manager = UserManager::getInstance();
+		$verification_manager = UserVerificationManager::getInstance();
+		$contact_form = contact_form::getInstance();
+
+		// get user for specified id
+		$user = $user_manager->getSingleItem(
+					$user_manager->getFieldNames(),
+					array('id' => $user_id)
 				);
 
-			// get mailer
-			$mailer = $contact_form->getMailer();
-			$sender = $contact_form->getSender();
-			$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
+		if (!is_object($user))
+			return $result;
 
-			// start creating message
-			$mailer->start_message();
-			$mailer->set_subject($template['subject']);
-			$mailer->set_sender($sender['address'], $sender['name']);
-			$mailer->add_recipient($fields['email'], $fields['fullname']);
+		// get new verification code
+		$verification_code = $contact_form->generateVerificationCode(
+										$user->username,
+										$user->email
+									);
 
-			$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
-			$mailer->set_variables($fields);
+		// insert verification code
+		$verification_data = array(
+					'user'	=> $user_id,
+					'code'	=> $verification_code
+				);
+		$verification_manager->insertData($verification_data);
 
-			// send email
-			$mailer->send();
-		}
+		// prepare email
+		$fields = array(
+				'fullname'		=> $user->fullname,
+				'first_name'	=> $user->first_name,
+				'last_name'		=> $user->last_name,
+				'username'		=> $user->username,
+				'password'		=> escape_chars($source['password']),
+				'email'			=> $user->email,
+				'verify_code'	=> $verification_code
+			);
+
+		// get mailer
+		$mailer = $contact_form->getMailer();
+		$sender = $contact_form->getSender();
+		$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
+
+		// start creating message
+		$mailer->start_message();
+		$mailer->set_subject($template['subject']);
+		$mailer->set_sender($sender['address'], $sender['name']);
+		$mailer->add_recipient($fields['email'], $fields['fullname']);
+
+		$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
+		$mailer->set_variables($fields);
+
+		// send email
+		$result = $mailer->send();
+
+		return $result;
 	}
 
 	/**
