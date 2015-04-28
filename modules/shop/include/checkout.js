@@ -353,7 +353,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 				// alter field visibility
 				self.shipping_information_form.find('select[name=presets]').parent().hide();
-				self.shipping_information_form.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().hide();
+				self.shipping_information_form.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().show();
 				self.shipping_information_form.find('input[name=email]').val(email_field.val()).parent().hide();
 				self.shipping_information_form.find('hr').eq(0).hide();
 
