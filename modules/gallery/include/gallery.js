@@ -45,6 +45,13 @@ Caracal.Gallery.Loader = function() {
 	/**
 	 * Add gallery to control image loading of.
 	 *
+	 * Required gallery object functions:
+	 * .images.set_container_status
+	 * .images.clear
+	 * .images.append
+	 * .images.add
+	 * .images.update
+	 *
 	 * @param object gallery
 	 * @return object
 	 */
@@ -728,6 +735,97 @@ Caracal.Gallery.Slider = function(visible_items) {
 		self.controls._attach_handlers(false, false, true);
 
 		return self;
+	};
+
+	// finalize object
+	self._init();
+}
+
+
+/**
+ * Simple gallery container. This container doesn't provide any special
+ * behavior other than support for Gallery.Loader and container status.
+ */
+Caracal.Gallery.Container = function() {
+	var self = this;
+
+	self.images = {};
+	self.container = null;
+
+	/**
+	 * Complete object initialization.
+	 */
+	self._init = function() {
+		// create image container
+		self.images.list = $();
+	};
+
+	/**
+	 * Set specified jQuery object or selector as image container. Unless
+	 * container is specified gallery will only apply `visible` class to elements instead
+	 * of actually specifying their position.
+	 *
+	 * @param mixed container
+	 * @return object
+	 */
+	self.images.set_container = function(container) {
+		self.container = $(container);
+		return self;
+	};
+
+	/**
+	 * Set or clear container status as busy.
+	 *
+	 * @param boolean busy
+	 * @return object
+	 */
+	self.images.set_container_status = function(busy) {
+		if (busy)
+			self.container.addClass('loading'); else
+			self.container.removeClass('loading');
+
+		return self;
+	};
+
+	/**
+	 * Add images from jQuery set or from specified selector to the list. Only added images
+	 * will be positioned.
+	 *
+	 * @param mixed images
+	 * @return object
+	 */
+	self.images.add = function(images) {
+		var list = typeof images == 'string' ? $(images) : images;
+		$.extend(self.images.list, list);
+		return self;
+	};
+
+	/**
+	 * Append list of images to container.
+	 *
+	 * @param array images
+	 * @return object
+	 */
+	self.images.append = function(images) {
+		self.container.append(images);
+		return self;
+	};
+
+	/**
+	 * Remove all the images from DOM tree.
+	 *
+	 * @return object
+	 */
+	self.images.clear = function() {
+		self.images.list.remove();
+		self.images.list = $();
+		return self;
+	};
+
+	/**
+	 * This function does nothing but is required by the loader class.
+	 */
+	self.images.update = function() {
 	};
 
 	// finalize object
