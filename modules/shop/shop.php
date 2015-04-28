@@ -2385,6 +2385,12 @@ class shop extends Module {
 							// get account object
 							$id = $manager->getInsertedID();
 							$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+							// send notification email
+							if (class_exists('Backend_UserManager')) {
+								$backed_user_manager = Backend_UserManager::getInstance();
+								$backed_user_manager->sendNotificationEmail($user->id);
+							}
 						}
 
 					} else if ($password == $password_confirm) {
