@@ -884,6 +884,7 @@ div#input_details label.checkbox input + span:before {
 }
 
 div#input_details label.checkbox input + span:before {
+	border-radius: 0px;
 	background-image: url(../images/checkbox.png);
 }
 
