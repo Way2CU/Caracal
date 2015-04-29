@@ -272,7 +272,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 				// prepare data
 				var data = {
 						username: email_field.val(),
-						password: password_field.val()
+						password: password_field.val(),
+						captcha: captcha_field.find('input').val()
 					};
 
 				new Communicator('backend')
