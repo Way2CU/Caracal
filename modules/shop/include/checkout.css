@@ -749,7 +749,8 @@ div#input_details a:hover {
 }
 
 div#input_details div.existing_account,
-div#input_details div.new_account {
+div#input_details div.new_account,
+div#input_details div.guest_checkout {
 	max-height: 0px;
 	overflow: hidden;
 
@@ -757,12 +758,14 @@ div#input_details div.new_account {
 }
 
 div#input_details div.existing_account.visible,
-div#input_details div.new_account.visible {
+div#input_details div.new_account.visible,
+div#input_details div.guest_checkout.visible {
 	max-height: 300px;
 }
 
 div#input_details div.existing_account label:first-of-type,
-div#input_details div.new_account label:first-of-type {
+div#input_details div.new_account label:first-of-type,
+div#input_details div.guest_checkout label:first-of-type {
 	margin-top: 3px;
 }
 
