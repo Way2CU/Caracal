@@ -748,14 +748,16 @@ div#input_details a:hover {
 	text-decoration: underline;
 }
 
-div#input_details label.radio + div.group {
+div#input_details div.existing_account,
+div#input_details div.new_account {
 	max-height: 0px;
 	overflow: hidden;
 
 	transition: all 0.5s;
 }
 
-div#input_details label.radio:checked + div.group {
+div#input_details div.existing_account.visible,
+div#input_details div.new_account.visible {
 	max-height: 300px;
 }
 

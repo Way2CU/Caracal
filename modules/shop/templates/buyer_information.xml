@@ -42,7 +42,7 @@
 								<span><cms:text constant="label_existing_user" module="shop"/></span>
 							</label>
 
-							<div class="existing_account group">
+							<div class="existing_account visible">
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
@@ -93,7 +93,7 @@
 								<span><cms:text constant="label_new_user" module="shop"/></span>
 							</label>
 
-							<div class="new_account group">
+							<div class="new_account">
 								<label>
 									<span><cms:text constant="label_first_name" module="shop"/></span>
 									<input
@@ -185,7 +185,7 @@
 								<span><cms:text constant="label_guest" module="shop"/></span>
 							</label>
 
-							<div class="guest_checkout group">
+							<div class="guest_checkout">
 								<cms:if condition="!is_null($params['terms_link'])">
 									<label class="checkbox">
 										<input
