@@ -32,7 +32,7 @@
 						<div class="page" id="sign_in">
 							<h1><cms:text constant="title_sign_in" module="shop"/></h1>
 
-							<label class="checkbox">
+							<label class="radio">
 								<input
 									type="radio"
 									name="existing_user"
@@ -84,7 +84,7 @@
 
 							<hr/>
 
-							<label class="checkbox">
+							<label class="radio">
 								<input
 									type="radio"
 									name="existing_user"
@@ -176,7 +176,7 @@
 
 							<hr/>
 
-							<label class="checkbox">
+							<label class="radio">
 								<input
 									type="radio"
 									name="existing_user"
