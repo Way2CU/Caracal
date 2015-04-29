@@ -156,7 +156,7 @@
 								<cms:if condition="!is_null($params['terms_link'])">
 									<label class="checkbox">
 										<input
-											type="radio"
+											type="checkbox"
 											name="agree_to_terms"
 											data-required="1"
 											/>
@@ -189,7 +189,7 @@
 								<cms:if condition="!is_null($params['terms_link'])">
 									<label class="checkbox">
 										<input
-											type="radio"
+											type="checkbox"
 											name="agree_to_terms"
 											data-required="1"
 											/>
