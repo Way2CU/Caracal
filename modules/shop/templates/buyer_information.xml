@@ -162,6 +162,7 @@
 											/>
 										<span>
 											<cms:text constant="label_agree_to_terms1" module="shop"/>
+											<cms:raw text=" "/>
 											<a
 												href="$params['terms_link']"
 												cms:eval="href"
@@ -194,6 +195,7 @@
 											/>
 										<span>
 											<cms:text constant="label_agree_to_terms1" module="shop"/>
+											<cms:raw text=" "/>
 											<a
 												href="$params['terms_link']"
 												cms:eval="href"
