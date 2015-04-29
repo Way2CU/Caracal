@@ -115,12 +115,14 @@ Caracal.Shop.BuyerInformationForm = function() {
 			case 'log_in':
 				self.sign_in_form.find('div.new_account').removeClass('visible');
 				self.sign_in_form.find('div.existing_account').addClass('visible');
+				self.sign_in_form.find('div.guest_checkout').removeClass('visible');
 				break;
 
 			// new account
 			case 'sign_up':
 				self.sign_in_form.find('div.new_account').addClass('visible');
 				self.sign_in_form.find('div.existing_account').removeClass('visible');
+				self.sign_in_form.find('div.guest_checkout').removeClass('visible');
 				break;
 
 			// checkout as guest
@@ -128,6 +130,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			default:
 				self.sign_in_form.find('div.new_account').removeClass('visible');
 				self.sign_in_form.find('div.existing_account').removeClass('visible');
+				self.sign_in_form.find('div.guest_checkout').addClass('visible');
 				break;
 		}
 	};
