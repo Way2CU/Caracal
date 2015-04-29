@@ -889,7 +889,7 @@ div#input_details label.checkbox input:checked + span:before {
 }
 
 div#input_details label.captcha img {
-	vertical-align: middle;
+	vertical-align: top;
 	max-height: calc(1em + 14px);
 	margin-left: 10px;
 	border-radius: 3px;
