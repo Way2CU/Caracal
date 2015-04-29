@@ -852,7 +852,9 @@ div#input_details label input:focus {
 }
 
 div#input_details label.radio span,
-div#input_details label.radio input {
+div#input_details label.radio input,
+div#input_details label.checkbox span,
+div#input_details label.checkbox input {
 	width: auto;
 }
 
