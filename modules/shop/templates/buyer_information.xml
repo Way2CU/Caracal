@@ -161,8 +161,13 @@
 											data-required="1"
 											/>
 										<span>
-											<cms:text constant="label_agree_to_terms" module="shop"/>
-											<cms:var param="terms_link"/>
+											<cms:text constant="label_agree_to_terms1" module="shop"/>
+											<a
+												href="$params['terms_link']"
+												cms:eval="href"
+												>
+												<cms:text constant="label_agree_to_terms2" module="shop"/>
+											</a>
 										</span>
 									</label>
 								</cms:if>
@@ -188,8 +193,13 @@
 											data-required="1"
 											/>
 										<span>
-											<cms:text constant="label_agree_to_terms" module="shop"/>
-											<cms:var param="terms_link"/>
+											<cms:text constant="label_agree_to_terms1" module="shop"/>
+											<a
+												href="$params['terms_link']"
+												cms:eval="href"
+												>
+												<cms:text constant="label_agree_to_terms2" module="shop"/>
+											</a>
 										</span>
 									</label>
 								</cms:if>
