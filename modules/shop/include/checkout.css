@@ -856,11 +856,13 @@ div#input_details label.radio input {
 	width: auto;
 }
 
-div#input_details label.radio input[type=radio] {
+div#input_details label.radio input[type=radio],
+div#input_details label.checkbox input[type=checkbox] {
 	display: none;
 }
 
-div#input_details label.radio input + span:before {
+div#input_details label.radio input + span:before,
+div#input_details label.checkbox input + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -881,12 +883,18 @@ div#input_details label.radio input + span:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#input_details label.radio input + span:before {
+div#input_details label.checkbox input + span:before {
+	background-image: url(../images/checkbox.png);
+}
+
+body.rtl div#input_details label.radio input + span:before,
+body.rtl div#input_details label.checkbox input + span:before {
 	margin-right: auto;
 	margin-left: 4px;
 }
 
-div#input_details label.radio input:checked + span:before {
+div#input_details label.radio input:checked + span:before,
+div#input_details label.checkbox input:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
