@@ -2366,13 +2366,19 @@ class shop extends Module {
 					$user_manager = UserManager::getInstance();
 					$retry_manager = LoginRetryManager::getInstance();
 
+					// check if user agrees
+					$agree_to_terms = false;
+					if (isset($_REQUEST['agree_to_terms']))
+					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
+
 					// get user data
 					$data = array(
 						'first_name'	=> escape_chars($_REQUEST['first_name']),
 						'last_name'		=> escape_chars($_REQUEST['last_name']),
 						'email'			=> escape_chars($_REQUEST['new_email']),
 						'uid'			=> isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
-						'guest'			=> 0
+						'guest'			=> 0,
+						'agreed'		=> $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1'
 					);
 
 					$password = $_REQUEST['new_password'];
@@ -2419,7 +2425,7 @@ class shop extends Module {
 								'last_name'		=> $data['last_name'],
 								'level'			=> 0,
 								'verified'		=> 0,
-								'agreed'		=> 0  // TODO: Check for parameter
+								'agreed'		=> 0
 							);
 						$user_manager->insertData($user_data);
 						$data['system_user'] = $user_manager->getInsertedID();
@@ -2437,6 +2443,11 @@ class shop extends Module {
 
 				case User::GUEST:
 				default:
+					// check if user agrees
+					$agree_to_terms = false;
+					if (isset($_REQUEST['agree_to_terms']))
+					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
+
 					// collect data
 					if (isset($_REQUEST['name'])) {
 						$name = explode(' ', escape_chars($_REQUEST['name']), 1);
@@ -2456,7 +2467,8 @@ class shop extends Module {
 						'first_name'	=> $first_name,
 						'last_name'		=> $last_name,
 						'guest'			=> 1,
-						'system_user'	=> 0
+						'system_user'	=> 0,
+						'agreed'		=> $agree_to_terms
 					);
 
 					// include uid if specified
