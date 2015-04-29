@@ -572,6 +572,10 @@ class shop extends Module {
 				$this->setTransactionType($params, $children);
 				break;
 
+			case 'set_terms':
+				$this->setTermsLink($params, $children);
+				break;
+
 			case 'include_scripts':
 				$this->includeScripts();
 				break;
@@ -835,8 +839,9 @@ class shop extends Module {
 			`first_name` varchar(64) NOT NULL,
 			`last_name` varchar(64) NOT NULL,
 			`email` varchar(127) NOT NULL,
-			`guest` BOOLEAN NOT NULL DEFAULT '0',
+			`guest` boolean NOT NULL DEFAULT '0',
 			`system_user` int NULL,
+			`agreed` boolean NOT NULL DEFAULT '0',
 			`uid` varchar(50) NOT NULL,
 			PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
@@ -1250,6 +1255,18 @@ class shop extends Module {
 			$type = fix_id($tag_params['type']);
 
 		$_SESSION['transaction_type'] = $type;
+	}
+
+	/**
+	 * Set terms of use link to be displayed in the shop checkout
+	 * page. If link is not specified, no checkbox will appear on checkout.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function setTermsLink($tag_params, $children) {
+		if (isset($tag_params['link']))
+			$_SESSION['buyer_terms_link'] = $link;
 	}
 
 	/**
@@ -3187,7 +3204,8 @@ class shop extends Module {
 				'fixed_country'		=> $fixed_country,
 				'bad_fields'		=> $bad_fields,
 				'recurring'			=> $recurring,
-				'show_captcha'		=> $count > 3
+				'show_captcha'		=> $count > 3,
+				'terms_link'		=> isset($_SESSION['buyer_terms_link']) ? $_SESSION['buyer_terms_link'] : null
 			);
 
 			$template->restoreXML();

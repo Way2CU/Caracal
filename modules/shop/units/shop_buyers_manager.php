@@ -22,6 +22,7 @@ class ShopBuyersManager extends ItemManager {
 		$this->addProperty('email', 'varchar');
 		$this->addProperty('guest', 'boolean');
 		$this->addProperty('system_user', 'int');
+		$this->addProperty('agreed', 'boolean');
 		$this->addProperty('uid', 'varchar');
 	}
 

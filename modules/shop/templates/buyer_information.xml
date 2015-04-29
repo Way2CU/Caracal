@@ -75,7 +75,7 @@
 									<cms:module
 										name="captcha"
 										action="print_image_tag"
-									/>
+										/>
 								</label>
 								<a href="javascript:void();" class="password_recovery">
 									<cms:text constant="label_password_recovery" module="shop"/>
@@ -153,6 +153,19 @@
 										autocomplete="off"
 										/>
 								</label>
+								<cms:if condition="!is_null($params['terms_link'])">
+									<label class="checkbox">
+										<input
+											type="radio"
+											name="agree_to_terms"
+											data-required="1"
+											/>
+										<span>
+											<cms:text constant="label_agree_to_terms" module="shop"/>
+											<cms:var param="terms_link"/>
+										</span>
+									</label>
+								</cms:if>
 							</div>
 
 							<hr/>
@@ -165,6 +178,22 @@
 									/>
 								<span><cms:text constant="label_guest" module="shop"/></span>
 							</label>
+
+							<div class="guest_checkout">
+								<cms:if condition="!is_null($params['terms_link'])">
+									<label class="checkbox">
+										<input
+											type="radio"
+											name="agree_to_terms"
+											data-required="1"
+											/>
+										<span>
+											<cms:text constant="label_agree_to_terms" module="shop"/>
+											<cms:var param="terms_link"/>
+										</span>
+									</label>
+								</cms:if>
+							</div>
 
 							<div class="checkout_controls">
 								<button class="next"><cms:text constant="next"/></button>
