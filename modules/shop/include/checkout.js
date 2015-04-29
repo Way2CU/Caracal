@@ -387,6 +387,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				// get agree checkbox
 				var agree_to_terms = self.sign_in_form.find('input[name=agree_to_terms]');
 
+				result = true;
 				if (agree_to_terms.length > 0)
 					result = agree_to_terms.is(':checked');
 
@@ -400,8 +401,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 				self.shipping_information_form.find('input[name=name]').parent().show();
 				self.shipping_information_form.find('input[name=email]').parent().show();
 				self.shipping_information_form.find('hr').eq(0).show();
-
-				result = true;
 		}
 
 		return result;
