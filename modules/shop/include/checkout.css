@@ -829,6 +829,7 @@ div#input_details label input[name=billing_expire_month] {
 }
 
 div#input_details label input[name=billing_expire_year],
+div#input_details label input[name=captcha],
 div#input_details label input[name=billing_cvv] {
 	width: 50px;
 }
