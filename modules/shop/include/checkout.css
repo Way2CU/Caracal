@@ -888,6 +888,18 @@ div#input_details label.checkbox input:checked + span:before {
 	box-shadow: none;
 }
 
+div#input_details label.captcha img {
+	vertical-align: middle;
+	max-height: calc(1em + 12px);
+	margin-left: 10px;
+	border-radius: 3px;
+}
+
+body.rtl div#input_details label.captcha img {
+	margin-right: 10px;
+	margin-left: 0px;
+}
+
 div#input_details div.horizontal {
 	text-align: left;
 }
