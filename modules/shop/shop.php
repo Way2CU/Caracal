@@ -1266,7 +1266,7 @@ class shop extends Module {
 	 */
 	private function setTermsLink($tag_params, $children) {
 		if (isset($tag_params['link']))
-			$_SESSION['buyer_terms_link'] = $link;
+			$_SESSION['buyer_terms_link'] = $tag_params['link'];
 	}
 
 	/**
