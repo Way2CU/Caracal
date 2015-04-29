@@ -888,6 +888,15 @@ div#input_details label.checkbox input:checked + span:before {
 	box-shadow: none;
 }
 
+div#input_details label.captcha {
+	overflow: hidden;
+	max-height: 50px;
+}
+
+div#input_details label.captcha.hidden {
+	max-height: 0px;
+}
+
 div#input_details label.captcha img {
 	vertical-align: top;
 	max-height: calc(1em + 14px);

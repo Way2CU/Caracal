@@ -3178,11 +3178,16 @@ class shop extends Module {
 			if (isset($this->settings['fixed_country']))
 				$fixed_country = $this->settings['fixed_country'];
 
+			// get login retry count
+			$retry_manager = LoginRetryManager::getInstance();
+			$count = $retry_manager->getRetryCount();
+
 			$params = array(
 				'include_shipping'	=> $include_shipping,
 				'fixed_country'		=> $fixed_country,
 				'bad_fields'		=> $bad_fields,
-				'recurring'			=> $recurring
+				'recurring'			=> $recurring,
+				'show_captcha'		=> $count > 3
 			);
 
 			$template->restoreXML();

@@ -61,7 +61,10 @@
 										autocomplete="off"
 										/>
 								</label>
-								<label class="captcha">
+								<label
+									class="$params['show_captcha'] ? 'captcha' : 'captcha hidden'"
+									cms:eval="class"
+									>
 									<span><cms:text constant="label_captcha" module="shop"/></span>
 									<input
 										type="text"
