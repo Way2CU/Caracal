@@ -267,6 +267,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			case 'log_in':
 				var email_field = self.sign_in_form.find('input[name=sign_in_email]');
 				var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+				var captcha_field = self.sign_in_form.find('label.captcha');
 
 				// prepare data
 				var data = {
@@ -277,11 +278,24 @@ Caracal.Shop.BuyerInformationForm = function() {
 				new Communicator('backend')
 						.on_success(function(data) {
 							// load account information
-							if (data.logged_in)
+							if (data.logged_in) {
 								new Communicator('shop')
 									.on_success(self.handler.account_load_success)
 									.on_error(self.handler.account_load_error)
 									.get('json_get_account_info', null);
+
+								// hide captcha field
+								captcha_field.addClass('hidden');
+
+							} else {
+								// failed login
+								email_field.addClass('bad');
+								password_field.addClass('bad');
+
+								// show captcha if required
+								if (data.show_captcha)
+									captcha_field.removeClass('hidden');
+							}
 
 							// allow page switch
 							result = data.logged_in;
