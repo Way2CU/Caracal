@@ -165,6 +165,7 @@
 											<cms:raw text=" "/>
 											<a
 												href="$params['terms_link']"
+												target="_blank"
 												cms:eval="href"
 												>
 												<cms:text constant="label_agree_to_terms2" module="shop"/>
@@ -198,6 +199,7 @@
 											<cms:raw text=" "/>
 											<a
 												href="$params['terms_link']"
+												target="_blank"
 												cms:eval="href"
 												>
 												<cms:text constant="label_agree_to_terms2" module="shop"/>
