@@ -327,7 +327,11 @@ Caracal.Shop.BuyerInformationForm = function() {
 				fields.each(function(index) {
 					var field = $(this);
 
-					if (field.data('required') == 1 && field.val() == '')
+					if (field.attr('type') != 'checkbox')
+						value_is_good = field.val() != ''; else
+						value_is_good = field.is(':checked');
+
+					if (field.data('required') == 1 && !value_is_good)
 						field.addClass('bad'); else
 						field.removeClass('bad');
 				});
@@ -380,6 +384,17 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 			case 'guest':
 			default:
+				// get agree checkbox
+				var agree_to_terms = self.sign_in_form.find('input[name=agree_to_terms]');
+
+				if (agree_to_terms.length > 0)
+					result = agree_to_terms.is(':checked');
+
+				// set class
+				if (result)
+					agree_to_terms.removeClass('bad'); else
+					agree_to_terms.addClass('bad');
+
 				// hide unneeded fields
 				self.shipping_information_form.find('select[name=presets]').parent().hide();
 				self.shipping_information_form.find('input[name=name]').parent().show();
