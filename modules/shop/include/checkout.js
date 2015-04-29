@@ -67,7 +67,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.payment_method_form.data('validator', self.validator.payment_method_page);
 
 		// connect events
-		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);
 		self.shipping_information_form.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
 		self.sign_in_form.find('a.password_recovery').click(self._show_password_dialog);
 		self.billing_information_form.find('a.what_is_cvv').click(self._show_cvv_dialog);
@@ -100,36 +99,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self._show_cvv_dialog = function(event) {
 		event.preventDefault();
 		self.cvv_dialog.show();
-	};
-
-	/**
-	 * Handle changing type of account for buyers information.
-	 *
-	 * @param object event
-	 */
-	self.handler.account_type_change = function(event) {
-		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
-
-		switch (selection) {
-			// existing account
-			case 'log_in':
-				self.sign_in_form.find('div.new_account').removeClass('visible');
-				self.sign_in_form.find('div.existing_account').addClass('visible');
-				break;
-
-			// new account
-			case 'sign_up':
-				self.sign_in_form.find('div.new_account').addClass('visible');
-				self.sign_in_form.find('div.existing_account').removeClass('visible');
-				break;
-
-			// checkout as guest
-			case 'guest':
-			default:
-				self.sign_in_form.find('div.new_account').removeClass('visible');
-				self.sign_in_form.find('div.existing_account').removeClass('visible');
-				break;
-		}
 	};
 
 	/**
