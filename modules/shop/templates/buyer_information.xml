@@ -61,6 +61,19 @@
 										autocomplete="off"
 										/>
 								</label>
+								<label class="captcha">
+									<span><cms:text constant="label_captcha" module="shop"/></span>
+									<input
+										type="text"
+										name="captcha"
+										maxlength="4"
+										autocomplete="off"
+										/>
+									<cms:module
+										name="captcha"
+										action="print_image_tag"
+									/>
+								</label>
 								<a href="javascript:void();" class="password_recovery">
 									<cms:text constant="label_password_recovery" module="shop"/>
 								</a>
