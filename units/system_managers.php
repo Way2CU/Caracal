@@ -90,7 +90,7 @@ final class UserManager extends ItemManager {
 
 		// prepare password
 		$salt = hash('sha256', self::SALT.strval(time()));
-		$hashed_password = hash_hmac('sha256', $password, $salt);
+		$hashed_password = hash_hmac('sha256', $new_password, $salt);
 
 		// update password
 		$this->updateData(
