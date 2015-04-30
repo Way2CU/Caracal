@@ -1800,7 +1800,6 @@ class shop extends Module {
 				$result['last_payment_method'] = $transaction->payment_method;
 				$result['last_delivery_method'] = $transaction->delivery_method;
 			}
-			$retry_manager->clearAddress();
 
 			print json_encode($result);
 		}
