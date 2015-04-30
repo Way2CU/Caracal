@@ -1737,22 +1737,20 @@ class shop extends Module {
 	 * Return user information if email and password are correct.
 	 */
 	private function json_GetAccountInfo() {
-		$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
-		$password = isset($_REQUEST['password']) ? fix_chars($_REQUEST['password']) : null;
-
 		// get managers
 		$buyer_manager = ShopBuyersManager::getInstance();
 		$delivery_address_manager = ShopDeliveryAddressManager::getInstance();
 		$transaction_manager = ShopTransactionsManager::getInstance();
 
 		// get buyer from specified email
-		$buyer = $buyer_manager->getSingleItem(
-			$buyer_manager->getFieldNames(),
-			array(
-				'email'		=> $email,
-				'guest'		=> 0
-			)
-		);
+		if ($_SESSION['logged'])
+			$buyer = $buyer_manager->getSingleItem(
+				$buyer_manager->getFieldNames(),
+				array(
+					'guest'			=> 0,
+					'system_user'	=> $_SESSION['uid']
+				)
+			);
 
 		if (is_object($buyer)) {
 			$result = array(
@@ -1805,13 +1803,6 @@ class shop extends Module {
 			$retry_manager->clearAddress();
 
 			print json_encode($result);
-
-		} else {
-			// user didn't supply the right username/password
-			header('HTTP/1.1 401 '.$this->getLanguageConstant('message_error_invalid_credentials'));
-
-			// record bad attempt
-			$retry_manager->increaseCount();
 		}
 	}
 
