@@ -13,7 +13,7 @@
 					<cms:text constant="title_shipping_information" module="shop"/>
 				</a>
 			</cms:if>
-			<cms:if condition="!is_null($params['payment_method'])">
+			<cms:if condition="is_null($params['payment_method'])">
 				<a href="javascript:void(0);">
 					<cms:text constant="title_payment_method" module="shop"/>
 				</a>
