@@ -65,8 +65,20 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.shipping_information_form.data('validator', self.validator.shipping_information_page);
 		self.billing_information_form.data('validator', self.validator.billing_information_page);
 
-		if (self.payment_method_form.length > 0)
+		if (self.payment_method_form.length > 0) {
+			// no payment method was preselected, we need validator
 			self.payment_method_form.data('validator', self.validator.payment_method_page);
+
+		} else {
+			// payment method was preselected, prepare billing page
+			var method = $('div#input_details input[name=payment_method]');
+			var billing_page_index = self.billing_information_form.index();
+
+			// set billing page state
+			if (method.data('provides-information') == 1)
+				self.page_control.disablePage(billing_page_index); else
+				self.page_control.enablePage(billing_page_index);
+		}
 
 		// connect events
 		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);
