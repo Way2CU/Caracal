@@ -13,9 +13,11 @@
 					<cms:text constant="title_shipping_information" module="shop"/>
 				</a>
 			</cms:if>
-			<a href="javascript:void(0);">
-				<cms:text constant="title_payment_method" module="shop"/>
-			</a>
+			<cms:if condition="$params['choose_method']">
+				<a href="javascript:void(0);">
+					<cms:text constant="title_payment_method" module="shop"/>
+				</a>
+			</cms:if>
 			<a href="javascript:void(0);">
 				<cms:text constant="title_billing_information" module="shop"/>
 			</a>
@@ -377,22 +379,24 @@
 					</cms:if>
 
 					<!-- Payment Method Selection -->
-					<div class="page" id="payment_method">
-						<h1><cms:text constant="title_payment_method" module="shop"/></h1>
-						<input type="hidden" name="payment_method" value=""/>
-						<input type="hidden" name="stage" value="set_info"/>
-						<div class="payment_methods">
-							<cms:module
-								name="shop"
-								action="show_payment_methods"
-								/>
-						</div>
+					<cms:if condition="$params['choose_method']">
+						<div class="page" id="payment_method">
+							<h1><cms:text constant="title_payment_method" module="shop"/></h1>
+							<input type="hidden" name="payment_method" value=""/>
+							<input type="hidden" name="stage" value="set_info"/>
+							<div class="payment_methods">
+								<cms:module
+									name="shop"
+									action="show_payment_methods"
+									/>
+							</div>
 
-						<div class="checkout_controls">
-							<button class="previous"><cms:text constant="back"/></button>
-							<button class="next"><cms:text constant="next"/></button>
+							<div class="checkout_controls">
+								<button class="previous"><cms:text constant="back"/></button>
+								<button class="next"><cms:text constant="next"/></button>
+							</div>
 						</div>
-					</div>
+					</cms:if>
 
 					<!-- Billing Information -->
 					<div class="page" id="billing_information">

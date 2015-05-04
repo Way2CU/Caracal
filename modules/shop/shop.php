@@ -2431,7 +2431,7 @@ class shop extends Module {
 						// send notification email
 						if (class_exists('Backend_UserManager')) {
 							$backed_user_manager = Backend_UserManager::getInstance();
-							$backed_user_manager->sendNotificationEmail($data['system_user']);
+							$backed_user_manager->sendNotificationEmail($result->system_user);
 						}
 					}
 
@@ -3213,7 +3213,8 @@ class shop extends Module {
 				'bad_fields'		=> $bad_fields,
 				'recurring'			=> $recurring,
 				'show_captcha'		=> $count > 3,
-				'terms_link'		=> isset($_SESSION['buyer_terms_link']) ? $_SESSION['buyer_terms_link'] : null
+				'terms_link'		=> isset($_SESSION['buyer_terms_link']) ? $_SESSION['buyer_terms_link'] : null,
+				'choose_method'		=> !isset($tag_params['payment_method'])
 			);
 
 			$template->restoreXML();
