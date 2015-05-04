@@ -64,7 +64,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.sign_in_form.data('validator', self.validator.sign_in_page);
 		self.shipping_information_form.data('validator', self.validator.shipping_information_page);
 		self.billing_information_form.data('validator', self.validator.billing_information_page);
-		self.payment_method_form.data('validator', self.validator.payment_method_page);
+
+		if (self.payment_method_form.length > 0)
+			self.payment_method_form.data('validator', self.validator.payment_method_page);
 
 		// connect events
 		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);

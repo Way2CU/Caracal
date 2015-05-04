@@ -3197,6 +3197,8 @@ class shop extends Module {
 			// no information available, show form
 			$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
 			$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
+			$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
+			$template->registerTagHandler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
 
 			// get fixed country if set
 			$fixed_country = '';
@@ -3214,7 +3216,7 @@ class shop extends Module {
 				'recurring'			=> $recurring,
 				'show_captcha'		=> $count > 3,
 				'terms_link'		=> isset($_SESSION['buyer_terms_link']) ? $_SESSION['buyer_terms_link'] : null,
-				'choose_method'		=> !isset($tag_params['payment_method'])
+				'payment_method'	=> isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null
 			);
 
 			$template->restoreXML();
@@ -3329,6 +3331,48 @@ class shop extends Module {
 			'redirect'		=> false
 		);
 
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show currently selected or specified payment method.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_PaymentMethod($tag_params, $children) {
+		$method = null;
+		$only_recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
+
+		// get predefined method
+		$name = null;
+
+		if (isset($tag_params['name']))
+			$name = escape_chars($tag_params['name']);
+
+		// make sure method exists
+		if (!isset($this->payment_methods[$name]))
+			return;
+
+		$method = $this->payment_methods[$name];
+
+		// make sure method fits requirement
+		if ($only_recurring && !$method->supports_recurring())
+			return;
+
+		// prepare parameters
+		$params = array(
+			'name'					=> $method->get_name(),
+			'title'					=> $method->get_title(),
+			'icon'					=> $method->get_icon_url(),
+			'image'					=> $method->get_image_url(),
+			'provides_information'	=> $method->provides_information()
+		);
+
+		// load and parse template
+		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
