@@ -379,15 +379,6 @@
 					</cms:if>
 
 					<!-- Payment Method Selection -->
-					<cms:if condition="!is_null($params['payment_method'])">
-						<cms:payment_method
-							name="$params['payment_method']"
-							template="hidden_payment_method.xml"
-							local="1"
-							cms:eval="name"
-							/>
-						<input type="hidden" name="stage" value="set_info"/>
-					</cms:if>
 					<cms:if condition="is_null($params['payment_method'])">
 						<div class="page" id="payment_method">
 							<h1><cms:text constant="title_payment_method" module="shop"/></h1>
@@ -500,6 +491,17 @@
 						</div>
 					</div>
 					<div class="page" id="checkout"/>
+
+					<!-- Static payment method information -->
+					<cms:if condition="!is_null($params['payment_method'])">
+						<cms:payment_method
+							name="$params['payment_method']"
+							template="hidden_payment_method.xml"
+							local="1"
+							cms:eval="name"
+							/>
+						<input type="hidden" name="stage" value="set_info"/>
+					</cms:if>
 				</div>
 			</form>
 		</div>
