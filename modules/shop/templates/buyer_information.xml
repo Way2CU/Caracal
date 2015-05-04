@@ -382,8 +382,11 @@
 					<cms:if condition="!is_null($params['payment_method'])">
 						<cms:payment_method
 							name="$params['payment_method']"
+							template="hidden_payment_method.xml"
+							local="1"
 							cms:eval="name"
 							/>
+						<input type="hidden" name="stage" value="set_info"/>
 					</cms:if>
 					<cms:if condition="is_null($params['payment_method'])">
 						<div class="page" id="payment_method">
