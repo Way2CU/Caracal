@@ -379,13 +379,13 @@
 					</cms:if>
 
 					<!-- Payment Method Selection -->
-					<cms:if condition="!is_null($params['choose_method'])">
+					<cms:if condition="!is_null($params['payment_method'])">
 						<cms:payment_method
 							name="$params['payment_method']"
 							cms:eval="name"
 							/>
 					</cms:if>
-					<cms:if condition="is_null($params['choose_method'])">
+					<cms:if condition="is_null($params['payment_method'])">
 						<div class="page" id="payment_method">
 							<h1><cms:text constant="title_payment_method" module="shop"/></h1>
 							<input type="hidden" name="payment_method" value=""/>
