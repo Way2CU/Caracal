@@ -20,8 +20,8 @@
 			cms:optional="class,style"
 			>
 
-			<!-- Label text -->
-			<cms:if condition="!empty($params['label'][$language])">
+			<!-- Label text for other elements -->
+			<cms:if condition="!empty($params['label'][$language]) and !in_array($params['type'], array('checkbox', 'radio'))">
 				<span><cms:var param="label" multilanguage="yes"/></span>
 			</cms:if>
 
@@ -322,6 +322,11 @@
 						/>
 				</option>
 			</cms:choice>
+
+			<!-- Label text for radio and checkbox buttons -->
+			<cms:if condition="!empty($params['label'][$language]) and in_array($params['type'], array('checkbox', 'radio'))">
+				<span><cms:var param="label" multilanguage="yes"/></span>
+			</cms:if>
 		</label>
 	</cms:if>
 </document>
