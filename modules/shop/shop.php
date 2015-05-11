@@ -31,11 +31,16 @@ require_once('units/shop_delivery_address_manager.php');
 require_once('units/shop_related_items_manager.php');
 require_once('units/shop_manufacturer_handler.php');
 require_once('units/shop_delivery_methods_handler.php');
+require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
+require_once('units/token.php');
 
-use Shop\Delivery as Delivery;
-use Shop\Transaction as Transaction;
+use Modules\Shop\Delivery as Delivery;
+use Modules\Shop\Transaction as Transaction;
+use Modules\Shop\Token as Token;
+
+use Modules\Shop\TokenManager as TokenManager;
 
 
 final class TransactionType {
@@ -891,16 +896,32 @@ class shop extends Module {
 
 		// create shop transaction items table
 		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_items` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`transaction` INT NOT NULL,
-			`item` INT NOT NULL,
-			`price` DECIMAL(8,2) NOT NULL,
-			`tax` DECIMAL(8,2) NOT NULL,
-			`amount` INT NOT NULL,
+			`id` int NOT NULL AUTO_INCREMENT,
+			`transaction` int NOT NULL,
+			`item` int NOT NULL,
+			`price` decimal(8,2) NOT NULL,
+			`tax` decimal(8,2) NOT NULL,
+			`amount` int NOT NULL,
 			`description` varchar(500) NOT NULL,
 			PRIMARY KEY (`id`),
-				  KEY `transaction` (`transaction`),
-				  KEY `item` (`item`)
+			KEY `transaction` (`transaction`),
+			KEY `item` (`item`)
+			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop payment tokens table
+		$sql = "CREATE TABLE IF NOT EXISTS `shop_payment_tokens` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`payment_method` varchar(64) NOT NULL,
+			`buyer` int NOT NULL,
+			`name` varchar(50) NOT NULL,
+			`token` varchar(200) NOT NULL,
+			`expires` boolean NOT NULL DEFAULT '0',
+			`expiration_month` int NOT NULL,
+			`expiration_year` int NOT NULL,
+			PRIMARY KEY (`id`),
+			KEY `index_by_name` (`payment_method`, `buyer`, `name`),
+			KEY `index_by_buyer` (`payment_method`, `buyer`)
 			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -994,7 +1015,8 @@ class shop extends Module {
 			'shop_warehouse',
 			'shop_stock',
 			'shop_related_items',
-			'shop_manufacturers'
+			'shop_manufacturers',
+			'shop_payment_tokens'
 		);
 
 		$db->drop_tables($tables);
