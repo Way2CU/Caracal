@@ -7,7 +7,7 @@
  * Author: Mladen Mijatov
  */
 
-namespace Shop;
+namespace Modules\Shop;
 
 use \ShopTransactionsManager as TransactionsManager;
 use \ShopDeliveryAddressManager as DeliveryAddressManager;

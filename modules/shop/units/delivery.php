@@ -7,7 +7,7 @@
  * Author: Mladen Mijatov
  */
 
-namespace Shop;
+namespace Modules\Shop;
 
 use \PackageType as PackageType;
 use \UnitType as UnitType;

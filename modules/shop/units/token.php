@@ -7,7 +7,7 @@
  * Author: Mladen Mijatov
  */
 
-namespace Shop;
+namespace Modules\Shop;
 
 
 final class TokenExistsError extends \Exception {}
@@ -30,28 +30,56 @@ final class Token {
 	}
 
 	/**
+	 * Get token for specified details.
+	 *
+	 * @param string $payment_method
+	 * @param integer/object $buyer
+	 * @param string $name
+	 * @return object
+	 * @throws UnknownTokenError
+	 */
+	public static function get($payment_method, $buyer, $name) {
+		$manager = self::get_manager();
+
+		// try to get item
+		$result = $manager->getSingleItem(
+			$manager->getFieldNames(),
+			array(
+				'method'	=> $payment_method,
+				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
+				'name'		=> $name
+			));
+
+		// make sure token is real
+		if (!is_object($result))
+			throw new UnknownTokenError('Unable to get specified token!');
+
+		return $result;
+	}
+
+	/**
 	 * Save new token for specified user and payment method.
 	 *
 	 * @param string $payment_method
 	 * @param integer/object $buyer
 	 * @param string $name
 	 * @param string $token
+	 * @param array $expires
 	 * @param boolean $default
 	 * @throws TokenExistsError
 	 */
-	public static function save($payment_method, $buyer, $name, $token, $default=false) {
+	public static function save($payment_method, $buyer, $name, $token, $expires=null, $default=false) {
 		$manager = self::get_manager();
 
 		// check if token with specified name already exists
-		$item = $manager->getSingleItem(
-				array('id'),
-				array(
-					'method'	=> $payment_method,
-					'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
-					'name'		=> $name
-				));
+		try {
+			$item = self::get($payment_method, $buyer, $name);
+		catch (UnknownTokenError $error) {
+			$item = null;
+		}
 
-		if (is_object($item))
+		// make sure token with specified name doesn't already exist
+		if (!is_null($item))
 			throw new TokenExistsError('Unable to save!');
 
 		// prepare data
@@ -59,8 +87,15 @@ final class Token {
 				'method'	=> $payment_method,
 				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
 				'name'		=> $name,
-				'token'		=> $token
+				'token'		=> $token,
+				'expires'	=> 0
 			);
+
+		if (!is_null($expires)) {
+			$data['expires'] = 1;
+			$data['expiration_month'] = $expires[0];
+			$data['expiration_year'] = $expires[1];
+		}
 
 		// insert new data
 		$manager->insertData($data);
@@ -134,17 +169,11 @@ final class Token {
 		$manager = self::get_manager();
 
 		// get token that will be set as default
-		$new_default = $manager->getSingleItem(
-			array('id'),
-			array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
-				'name'		=> $name
-			));
-
-		// make sure it's valid
-		if (!is_object($new_default))
+		try {
+			$new_default = self::get($payment_method, $buyer, $name);
+		} catch (UnknownTokenError $error) {
 			throw new UnknownTokenError('Unable to set default token!');
+		}
 
 		// clear all tokens for specifed method and buyer
 		$manager->updateData(
@@ -172,17 +201,11 @@ final class Token {
 		$manager = self::get_manager();
 
 		// find id for specified token
-		$token = $manager->getSingleItem(
-			array('id'),
-			array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
-				'name'		=> $name
-			));
-
-		// make sure token exists
-		if (!is_object($token))
+		try {
+			$token = self::get($payment_method, $buyer, $name);
+		} catch (UnknownTokenError $error) {
 			throw new UnknownTokenError('Unable to remove token!');
+		}
 
 		// remove token
 		self::delete_by_id($token->id);
@@ -196,6 +219,20 @@ final class Token {
 	public static function delete_by_id($id) {
 		$manager = self::get_manager();
 		$manager->deleteData(array('id' => $id));
+	}
+
+	/**
+	 * Check if token has expired.
+	 *
+	 * @param object $token
+	 * @return boolean
+	 */
+	public static function has_expired($token) {
+		$expiration_time = mktime(0, 0, 0, $token->expiration_month + 1, 0, $token->expiration_year);
+		$can_expire = $token->expires;
+		$date_expired = time() > $expiration_time;
+
+		return $can_expire && $date_expired;
 	}
 }
 
