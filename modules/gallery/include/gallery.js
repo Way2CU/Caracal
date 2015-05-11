@@ -244,7 +244,7 @@ Caracal.Gallery.Loader = function() {
  * provide transitions or other styling.
  *
  * If number of images is smaller or equal to number of visible items,
- * gallery animation will be disabled.
+ * gallery animation will be disabled. Default number of visible items is 3.
  *
  *
  * Example usage:
@@ -277,6 +277,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.direction = 1;
 	self.step_size = 1;
 	self.center = false;
+	self.show_direct_controls = false;
 	self.spacing = null;
 	self.timer_id = null;
 	self.timeout = null;
@@ -295,6 +296,8 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// create control containers
 		self.controls.next = $();
 		self.controls.previous = $();
+		self.controls.direct = null;
+		self.controls.constructor = null;
 
 		// detect list direction automatically
 		if ($('body').hasClass('rtl'))
@@ -448,8 +451,22 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param object image_set
 	 */
 	self.images._update_visibility = function(image_set) {
+		// update image visibility
 		self.images.list.not(image_set).removeClass('visible');
 		image_set.addClass('visible');
+
+		// update direct controls if they are used
+		if (self.show_direct_controls) {
+			// get controls for active image set
+			var control_set = $();
+			image_set.each(function(index) {
+				$.extend(control_set, $(this).data('control'))
+			});
+
+			// update controls
+			self.controls.direct.not(control_set).removeClass('active');
+			control_set.addClass('active');
+		}
 	};
 
 	/**
@@ -507,8 +524,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.add = function(images) {
+		// add images to container
 		var list = typeof images == 'string' ? $(images) : images;
 		$.extend(self.images.list, list);
+
+		// create direct controls if needed
+		if (self.show_direct_controls)
+			self.controls._create(list);
+
 		return self;
 	};
 
@@ -519,7 +542,13 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.append = function(images) {
+		// add images to container
 		self.container.append(images);
+
+		// create direct controls if needed
+		if (self.show_direct_controls)
+			self.controls._create(images);
+
 		return self;
 	};
 
@@ -529,8 +558,14 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.images.clear = function() {
+		// remove images
 		self.images.list.remove();
 		self.images.list = $();
+
+		// remove direct controls if they are visible
+		if (self.show_direct_controls)
+			self.controls._clear();
+
 		return self;
 	};
 
@@ -593,6 +628,65 @@ Caracal.Gallery.Slider = function(visible_items) {
 			self.direction = direction;
 
 		return self;
+	};
+
+	/**
+	 * Set constructor function for direct controls.
+	 *
+	 * @param function constructor
+	 * @return object
+	 */
+	self.controls.set_constructor = function(constructor) {
+		self.controls.constructor = constructor;
+		return self;
+	};
+
+	/**
+	 * Set container for direct controls.
+	 *
+	 * @param string/object container
+	 * @return object
+	 */
+	self.controls.set_direct_container = function(container) {
+		// assign container
+		var new_container = typeof container == 'string' ? $(container) : container;
+		self.controls.direct = new_container;
+
+		return self;
+	};
+
+	/**
+	 * Turn on or off showing of direct controls.
+	 *
+	 * @param boolean show_direct_controls
+	 * @return object
+	 */
+	self.controls.set_show_direct_controls = function(show_direct_controls) {
+		self.show_direct_controls = show_direct_controls;
+		return self;
+	};
+
+	/**
+	 * Create controls for specified images.
+	 *
+	 * @param array images
+	 */
+	self.controls._create = function(images) {
+		// prepare constructor function
+		var create_control = self.controls.constructor || Caracal.Gallery.create_control;
+
+		// create controls
+		images.each(function(index) {
+			var control = create_control($(this));
+			self.controls.direct.append(control);
+		});
+	};
+
+	/**
+	 * Remove all controls from container.
+	 */
+	self.controls._clear = function() {
+		self.controls.direct.empty();
 	};
 
 	/**
@@ -854,3 +948,23 @@ Caracal.Gallery.create_image = function(data) {
 
 	return link;
 }
+
+
+/**
+ * Default control constructor function. This function is used only when
+ * images are loaded from server and created in order to provide user with
+ * list of controls for easy and fast switching.
+ *
+ * Please note that event handlers will be added by the gallery handler
+ * itself. You are free however to add any local handlers if they are required.
+ *
+ * @param object image
+ * @return object
+ */
+Caracal.Gallery.create_control = function(image) {
+	var link = $('<a>');
+
+	link.data('tooltip', image.attr('alt'));
+
+	return link;
+};
