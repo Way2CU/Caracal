@@ -207,6 +207,15 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function cancel_recurring_payment($transaction) {
-		return '';
+		return false;
+	}
+
+	/**
+	 * Charge delayed transaction.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function charge_transaction($transaction) {
 	}
 }
