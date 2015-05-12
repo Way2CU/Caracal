@@ -79,7 +79,7 @@ final class TransactionStatus {
 		self::SHIPPING => 'status_shipping',
 		self::SHIPPED => 'status_shipped',
 		self::LOST => 'status_lost',
-		self::DELIVERED => 'status_delivered'
+		self::DELIVERED => 'status_delivered',
 		self::PROCESSED => 'status_processed'
 	);
 
