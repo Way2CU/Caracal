@@ -68,6 +68,7 @@ final class TransactionStatus {
 	const SHIPPED = 5;
 	const LOST = 6;
 	const DELIVERED = 7;
+	const PROCESSED = 8;
 
 	// language constant mapping
 	public static $reverse = array(
@@ -79,6 +80,21 @@ final class TransactionStatus {
 		self::SHIPPED => 'status_shipped',
 		self::LOST => 'status_lost',
 		self::DELIVERED => 'status_delivered'
+		self::PROCESSED => 'status_processed'
+	);
+
+	// list of statuses available for manual setting based on current transaction status
+	public static $flow = array(
+		TransactionType::REGULAR => array(
+			self::COMPLETED	=> array(self::COMPLETED, self::SHIPPING),
+			self::SHIPPING	=> array(self::SHIPPING, self::SHIPPED),
+			self::SHIPPED	=> array(self::LOST, self::DELIVERED)
+		),
+		TransactionType::DELAYED => array(
+			self::PENDING	=> array(self::PENDING, self::PROCESSED),
+			self::COMPLETED	=> array(self::COMPLETED, self::SHIPPING),
+			self::SHIPPED	=> array(self::LOST, self::DELIVERED)
+		)
 	);
 }
 
@@ -1032,7 +1048,7 @@ class shop extends Module {
 	public function registerPaymentMethod($name, &$module) {
 		if (!array_key_exists($name, $this->payment_methods))
 			$this->payment_methods[$name] = $module; else
-				throw new Exception("Payment method '{$name}' is already registered with the system.");
+			throw new Exception("Payment method '{$name}' is already registered with the system.");
 	}
 
 	/**
@@ -1406,6 +1422,18 @@ class shop extends Module {
 							}
 							break;
 					}
+					break;
+
+				case TransactionStatus::PROCESSED:
+					// get payment method
+					if (!array_key_exists($transaction->payment_method, $this->payment_methods)) {
+						trigger_error('Unable to update transaction status. Missing payment method!', E_USER_NOTICE);
+						break;
+					}
+					$payment_method = $this->payment_methods[$transaction->payment_method];
+
+					// charge transaction
+					$payment_method->charge_transaction($transaction);
 					break;
 
 				case TransactionStatus::CANCELED:
