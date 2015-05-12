@@ -198,6 +198,7 @@
 	"status_pending": "Pending",
 	"status_shipped": "Shipped",
 	"status_shipping": "Shipping",
+	"status_processed": "Processed",
 	"subtotal_amount": "Sub-total:",
 	"tab_category": "Categories",
 	"tab_colors": "Colors",
