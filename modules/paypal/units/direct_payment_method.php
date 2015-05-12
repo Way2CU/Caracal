@@ -305,6 +305,15 @@ class PayPal_Direct extends PaymentMethod {
 			header('Location: '.$return_url, true, 302);
 		}
 	}
+
+	/**
+	 * Charge delayed transaction.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function charge_transaction($transaction) {
+	}
 }
 
 ?>

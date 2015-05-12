@@ -259,4 +259,15 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	public function cancel_recurring_payment($transaction) {
 		return false;
 	}
+
+	/**
+	 * Charge delayed transaction.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	public function charge_transaction($transaction) {
+	}
 }
+
+?>

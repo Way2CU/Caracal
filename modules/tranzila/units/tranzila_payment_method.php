@@ -219,3 +219,5 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	public function charge_transaction($transaction) {
 	}
 }
+
+?>
