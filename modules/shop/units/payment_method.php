@@ -143,4 +143,12 @@ abstract class PaymentMethod {
 	 * @return boolean
 	 */
 	abstract public function cancel_recurring_payment($transaction);
+
+	/**
+	 * Charge delayed transaction.
+	 *
+	 * @param object $transaction
+	 * @return boolean
+	 */
+	abstract public function charge_transaction($transaction);
 }
