@@ -882,6 +882,7 @@ class shop extends Module {
 			`shipping` decimal(8,2) NOT NULL,
 			`weight` decimal(4,2) NOT NULL,
 			`payment_method` varchar(255) NOT NULL,
+			`payment_token` int NOT NULL DEFAULT '0',
 			`delivery_method` varchar(255) NOT NULL,
 			`delivery_type` varchar(255) NOT NULL,
 			`remark` text NOT NULL,

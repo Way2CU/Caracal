@@ -17,7 +17,6 @@ class ShopTransactionsManager extends ItemManager {
 
 		$this->addProperty('id', 'int');
 		$this->addProperty('buyer', 'int');
-		$this->addProperty('system_user', 'int');
 		$this->addProperty('address', 'int');
 		$this->addProperty('uid', 'varchar');
 		$this->addProperty('type', 'smallint');
@@ -27,6 +26,7 @@ class ShopTransactionsManager extends ItemManager {
 		$this->addProperty('shipping', 'decimal');
 		$this->addProperty('weight', 'decimal');
 		$this->addProperty('payment_method', 'varchar');
+		$this->addProperty('payment_token', 'int');
 		$this->addProperty('delivery_method', 'varchar');
 		$this->addProperty('delivery_type', 'varchar');
 		$this->addProperty('remark', 'text');
