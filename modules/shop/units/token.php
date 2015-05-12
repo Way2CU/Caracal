@@ -74,7 +74,7 @@ final class Token {
 		// check if token with specified name already exists
 		try {
 			$item = self::get($payment_method, $buyer, $name);
-		catch (UnknownTokenError $error) {
+		} catch (UnknownTokenError $error) {
 			$item = null;
 		}
 
