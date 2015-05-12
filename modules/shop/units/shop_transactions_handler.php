@@ -113,19 +113,7 @@ class ShopTransactionsHandler {
 				'full_address'		=> $full_address
 			);
 
-		if ($transaction->system_user > 0) {
-			// system user
-			$system_user = $user_manager->getSingleItem(
-									$user_manager->getFieldNames(),
-									array('id' => $transaction->system_user)
-								);
-			$name = explode(' ', $system_user->fullname);
-
-			$params['first_name'] = isset($name[0]) ? $name[0] : '';
-			$params['last_name'] = isset($name[1]) ? $name[1] : '';
-			$params['email'] = $system_user->email;
-
-		} else if ($transaction->buyer > 0) {
+		if ($transaction->buyer > 0) {
 			// regular or guest buyer
 			$buyer = $buyer_manager->getSingleItem(
 									$buyer_manager->getFieldNames(),
@@ -161,8 +149,8 @@ class ShopTransactionsHandler {
 		$conditions = array();
 
 		// get conditionals
-		if (isset($tag_params['system_user']))
-			$conditions['system_user'] = fix_id($tag_params['system_user']);
+		if (isset($tag_params['buyer']))
+			$conditions['buyer'] = fix_id($tag_params['buyer']);
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
@@ -174,14 +162,6 @@ class ShopTransactionsHandler {
 		if (count($buyers) > 0)
 			foreach ($buyers as $buyer)
 				$buyer_names[$buyer->id] = $buyer->first_name.' '.$buyer->last_name;
-
-		// get all system users
-		$system_users = array();
-		$users = $user_manager->getItems(array('id', 'fullname'), array());
-
-		if (count($users))
-			foreach ($users as $user)
-				$system_users[$user->id] = $user->fullname;
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -195,9 +175,6 @@ class ShopTransactionsHandler {
 
 				// prepare buyer name
 				$name = '';
-				if ($item->system_user > 0)
-					$name = $system_users[$item->system_user];
-
 				if ($item->buyer > 0)
 					$name = $buyer_names[$item->buyer];
 
@@ -208,9 +185,7 @@ class ShopTransactionsHandler {
 				// prepare template parameters
 				$params = array(
 							'buyer'				=> $item->buyer,
-							'system_user'		=> $item->system_user,
 							'buyer_name'		=> $name,
-							'system_user'		=> $item->system_user,
 							'address'			=> $item->address,
 							'uid'				=> $item->uid,
 							'type'				=> $item->type,
