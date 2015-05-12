@@ -127,9 +127,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 	/**
 	 * Make new payment form with specified items and return
-	 * boolean stating the success of initial payment process.
+	 * hidden elements for posting to URL.
 	 *
-	 * @param array $data
+	 * @param array $transaction_data
 	 * @param array $billing_information
 	 * @param array $items
 	 * @param string $return_url
@@ -169,7 +169,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 				'TranzilaToken'	=> $data['uid'],
 				'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
 				'cred_type'		=> 1,
-				'pdesc'			=> $description
+				'pdesc'			=> $description,
+				'tranmode'		=> 'A'
 			);
 
 		// prepare items for checkout
@@ -187,7 +188,23 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
-	 * Make new recurring payment based on named plan.
+ 	 * Make nwe delayed payment form with specified items and return
+	 * hidden elements for posting to URL.
+	 *
+	 * @param array $transaction_data
+	 * @param array $billing_information
+	 * @param array $items
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	public function new_delayed_payment($data, $billing_information, $items, $return_url, $cancel_url) {
+		return '';
+	}
+
+	/**
+	 * Make new recurring payment based on named plan and return
+	 * hidden elements for posting to URL.
 	 *
 	 * @param array $transaction_data
 	 * @param array $billing_information

@@ -139,6 +139,21 @@ class PayPal_Direct extends PaymentMethod {
 	}
 
 	/**
+ 	 * Make nwe delayed payment form with specified items and return
+	 * hidden elements for posting to URL.
+	 *
+	 * @param array $transaction_data
+	 * @param array $billing_information
+	 * @param array $items
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	public function new_delayed_payment($data, $billing_information, $items, $return_url, $cancel_url) {
+		return '';
+	}
+
+	/**
 	 * Make new recurring payment based on named plan.
 	 *
 	 * @param array $data

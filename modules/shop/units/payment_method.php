@@ -113,7 +113,7 @@ abstract class PaymentMethod {
 
 	/**
 	 * Make new payment form with specified items and return
-	 * boolean stating the success of initial payment process.
+	 * hidden elements for posting to URL.
 	 *
 	 * @param array $transaction_data
 	 * @param array $billing_information
@@ -125,7 +125,21 @@ abstract class PaymentMethod {
 	abstract public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url);
 
 	/**
-	 * Make new recurring payment based on named plan.
+ 	 * Make nwe delayed payment form with specified items and return
+	 * hidden elements for posting to URL.
+	 *
+	 * @param array $transaction_data
+	 * @param array $billing_information
+	 * @param array $items
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	abstract public function new_delayed_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url);
+
+	/**
+	 * Make new recurring payment based on named plan and return
+	 * hidden elements for posting to URL.
 	 *
 	 * @param array $transaction_data
 	 * @param array $billing_information

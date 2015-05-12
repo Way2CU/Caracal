@@ -171,6 +171,21 @@ class PayPal_Express extends PaymentMethod {
 	}
 
 	/**
+ 	 * Make nwe delayed payment form with specified items and return
+	 * hidden elements for posting to URL.
+	 *
+	 * @param array $transaction_data
+	 * @param array $billing_information
+	 * @param array $items
+	 * @param string $return_url
+	 * @param string $cancel_url
+	 * @return string
+	 */
+	public function new_delayed_payment($data, $billing_information, $items, $return_url, $cancel_url) {
+		return '';
+	}
+
+	/**
 	 * This function prepares hidden fields for final checkout form for recurring plan.
 	 * Receiving these values is PayPal module which theen charges specified token and payer.
 	 *
