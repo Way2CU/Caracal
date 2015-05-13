@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Modules\Shop\Transaction;
 
 class PayPal_Direct extends PaymentMethod {
 	private static $_instance;
@@ -302,7 +303,7 @@ class PayPal_Direct extends PaymentMethod {
 
 			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
 				// update transaction token
-				$shop->setTransactionToken($transaction_uid, fix_chars($response['PROFILEID']));
+				Transaction::set_remote_id_by_uid($transaction_uid, fix_chars($response['PROFILEID']));
 
 				// update transaction status
 				if ($response['PROFILESTATUS'] == 'ActiveProfile')

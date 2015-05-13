@@ -6,7 +6,9 @@
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
  */
+
 use Core\Events;
+use Modules\Shop\Transaction;
 
 
 class PayPal_Express extends PaymentMethod {
@@ -487,7 +489,7 @@ class PayPal_Express extends PaymentMethod {
 
 			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
 				// update transaction token
-				$shop->setTransactionToken($transaction_uid, fix_chars($response['PROFILEID']));
+				Transaction::set_remote_id_by_uid($transaction_uid, fix_chars($response['PROFILEID']));
 
 				// update transaction status
 				if ($response['PROFILESTATUS'] == 'ActiveProfile')
@@ -521,7 +523,7 @@ class PayPal_Express extends PaymentMethod {
 			if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
 				trigger_error(json_encode($response));
 				// update transaction
-				$shop->setTransactionToken($transaction_uid, fix_chars($response['PAYMENTINFO_0_TRANSACTIONID']));
+				Transaction::set_remote_id_by_uid($transaction_uid, fix_chars($response['PAYMENTINFO_0_TRANSACTIONID']));
 				$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
 
 			} else {
