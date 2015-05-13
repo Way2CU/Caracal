@@ -66,6 +66,7 @@ final class Token {
 	 * @param string $token
 	 * @param array $expires
 	 * @param boolean $default
+	 * @return object
 	 * @throws TokenExistsError
 	 */
 	public static function save($payment_method, $buyer, $name, $token, $expires=null, $default=false) {
@@ -99,10 +100,14 @@ final class Token {
 
 		// insert new data
 		$manager->insertData($data);
+		$id = $manager->getInsertedID();
+		$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 		// set as default
 		if ($default)
 			self::set_default($payment_method, $buyer, $name);
+
+		return $result;
 	}
 
 	/**
