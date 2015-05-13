@@ -805,6 +805,11 @@ div#input_details label input {
 	transition-duration: 0.3s;
 }
 
+div#input_details label select.ltr,
+div#input_details label input.ltr {
+	direction: ltr;
+}
+
 div#input_details label input[type=email],
 div#input_details label input[name=phone] {
 	width: 270px;
