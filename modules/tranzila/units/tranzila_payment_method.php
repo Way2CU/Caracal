@@ -52,7 +52,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function provides_information() {
-		return false;
+		return true;
 	}
 
 	/**
