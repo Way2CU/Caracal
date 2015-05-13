@@ -925,7 +925,7 @@ class shop extends Module {
 			`delivery_method` varchar(255) NOT NULL,
 			`delivery_type` varchar(255) NOT NULL,
 			`remark` text NOT NULL,
-			`token` varchar(255) NOT NULL,
+			`remote_id` varchar(255) NOT NULL,
 			`total` decimal(8,2) NOT NULL,
 			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
