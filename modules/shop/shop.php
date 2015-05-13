@@ -207,6 +207,7 @@ class shop extends Module {
 
 		// connect to search module
 		Events::connect('search', 'get-results', 'getSearchResults', $this);
+		Events::connect('backend', 'user-create', 'handleUserCreate', $this);
 
 		// register backend
 		if (class_exists('backend') && $section == 'backend') {
@@ -496,6 +497,28 @@ class shop extends Module {
 			}
 
 		return $result;
+	}
+
+	/**
+	 * Handle creating system user.
+	 *
+	 * @param object $user
+	 */
+	public function handleUserCreate($user) {
+		$manager = ShopBuyersManager::getInstance();
+
+		// get user data
+		$data = array(
+			'first_name'	=> $user->first_name,
+			'last_name'		=> $user->last_name,
+			'email'			=> $user->email,
+			'guest'			=> 0,
+			'system_user'	=> $user->id,
+			'agreed'		=> $user->agreed
+		);
+
+		// create new buyer
+		$manager->insertData($data);
 	}
 
 	/**
@@ -3151,6 +3174,9 @@ class shop extends Module {
 
 			// get buyer
 			$buyer = $this->getUserAccount();
+
+			if (is_null($buyer))
+				trigger_error('Unknown, unable to proceed with checkout.', E_USER_ERROR);
 
 			if ($include_shipping)
 				$address = $this->getAddress($buyer, $shipping_information); else
