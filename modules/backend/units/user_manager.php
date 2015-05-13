@@ -300,7 +300,6 @@ class Backend_UserManager {
 				'username'	=> escape_chars($source['username']),
 				'email'		=> escape_chars($source['email']),
 				'level'		=> 0,
-				'salt'		=> $salt,
 				'agreed'	=> $agreed
 			);
 
@@ -449,7 +448,6 @@ class Backend_UserManager {
 				'first_name'	=> $user->first_name,
 				'last_name'		=> $user->last_name,
 				'username'		=> $user->username,
-				'password'		=> escape_chars($source['password']),
 				'email'			=> $user->email,
 				'verify_code'	=> $verification_code
 			);
