@@ -761,6 +761,10 @@ class youtube extends Module {
 						'fs'			=> 1
 					);
 
+				// looping requires playlist
+				if ($player_params['loop'] > 0 && !isset($player_params['playlist']))
+					$player_params['playlist'] = $video->video_id;
+
 				$params = array(
 						'width'		=> isset($tag_params['width']) ? fix_id($tag_params['width']) : 320,
 						'height'	=> isset($tag_params['height']) ? fix_id($tag_params['height']) : 240,
