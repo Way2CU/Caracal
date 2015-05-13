@@ -3093,7 +3093,6 @@ class shop extends Module {
 		$billing_information = array();
 		$payment_method = null;
 		$stage = isset($_REQUEST['stage']) ? fix_chars($_REQUEST['stage']) : null;
-		$recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
 		// decide whether to include shipping and account information
 		if (isset($tag_params['include_shipping']))
@@ -3157,6 +3156,7 @@ class shop extends Module {
 
 			// update transaction
 			$transaction_type = $this->getTransactionType();
+			$recurring = $transaction_type == TransactionType::SUBSCRIPTION;
 			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 			// emit signal and return if handled
@@ -3177,25 +3177,40 @@ class shop extends Module {
 			}
 
 			// create new payment
-			if ($recurring) {
-				// recurring payment
-				$checkout_fields = $payment_method->new_recurring_payment(
-					$summary,
-					$billing_information,
-					$_SESSION['recurring_plan'],
-					$return_url,
-					$cancel_url
-				);
+			switch ($transaction_type) {
+				case TransactionType::SUBSCRIPTION:
+					// recurring payment
+					$checkout_fields = $payment_method->new_recurring_payment(
+						$summary,
+						$billing_information,
+						$_SESSION['recurring_plan'],
+						$return_url,
+						$cancel_url
+					);
+					break;
 
-			} else {
-				// regular payment
-				$checkout_fields = $payment_method->new_payment(
-					$summary,
-					$billing_information,
-					$summary['items_for_checkout'],
-					$return_url,
-					$cancel_url
-				);
+				case TransactionType::DELAYED:
+					// regular payment
+					$checkout_fields = $payment_method->new_delayed_payment(
+						$summary,
+						$billing_information,
+						$summary['items_for_checkout'],
+						$return_url,
+						$cancel_url
+					);
+					break;
+
+				case TransactionType::REGULAR:
+				default:
+					// regular payment
+					$checkout_fields = $payment_method->new_payment(
+						$summary,
+						$billing_information,
+						$summary['items_for_checkout'],
+						$return_url,
+						$cancel_url
+					);
+					break;
 			}
 
 			// load template
