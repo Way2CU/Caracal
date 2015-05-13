@@ -3249,7 +3249,6 @@ class shop extends Module {
 
 				case TransactionType::DELAYED:
 					// regular payment
-					trigger_error(json_encode(array_keys($summary)));
 					$checkout_fields = $payment_method->new_delayed_payment(
 						$summary,
 						$billing_information,
