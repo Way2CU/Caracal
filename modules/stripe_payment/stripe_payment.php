@@ -13,6 +13,7 @@ require_once('units/plans_manager.php');
 require_once('units/customer_manager.php');
 
 use Core\Module;
+use Modules\Shop\Transaction;
 
 
 class stripe_payment extends Module {
@@ -432,7 +433,7 @@ class stripe_payment extends Module {
 
 		// update transaction status
 		if (is_object($charge) && $charge->paid) {
-			$shop->setTransactionToken($transaction_uid, $charge->id);
+			Transaction::set_remote_id($transaction, $charge->id);
 			$shop->setTransactionStatus($transaction_uid, TransactionStatus::COMPLETED);
 
 		} else {
@@ -527,7 +528,7 @@ class stripe_payment extends Module {
 			// make subscription
 			try {
 				$response = $stripe_customer->subscriptions->create(array('plan' => $plan_name));
-				$shop->setTransactionToken($transaction->uid, $response->id);
+				Transaction::set_remote_id($transaction, $response->id);
 				$shop->setTransactionStatus($transaction->uid, TransactionStatus::COMPLETED);
 
 			} catch (Stripe_Error $error) {
@@ -541,7 +542,7 @@ class stripe_payment extends Module {
 			// make subscription
 			try {
 				$response = $stripe_customer->subscriptions->create(array('plan' => $plan_name));
-				$shop->setTransactionToken($transaction->uid, $response->id);
+				Transaction::set_remote_id($transaction, $response->id);
 				$shop->setTransactionStatus($transaction->uid, TransactionStatus::COMPLETED);
 
 			} catch (Stripe_Error $error) {
