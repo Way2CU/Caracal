@@ -2755,6 +2755,8 @@ class shop extends Module {
 				));
 			}
 
+		$result['items_for_checkout'] = $summary['items_for_checkout'];
+
 		// create plan entry
 		if (isset($_SESSION['recurring_plan'])) {
 			$plan_name = $_SESSION['recurring_plan'];
@@ -3247,6 +3249,7 @@ class shop extends Module {
 
 				case TransactionType::DELAYED:
 					// regular payment
+					trigger_error(json_encode(array_keys($summary)));
 					$checkout_fields = $payment_method->new_delayed_payment(
 						$summary,
 						$billing_information,
