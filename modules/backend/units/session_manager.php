@@ -124,7 +124,7 @@ class SessionManager {
 		// check user data
 		if ($manager->check_credentials($username, $password) && $captcha_ok) {
 			// remove login retries
-			$retry_manager->deleteData(array('address' => $_SERVER['REMOTE_ADDR']));
+			$retry_manager->clearAddress();
 
 			// reset session
 			if ($lasting_session)
