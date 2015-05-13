@@ -55,10 +55,10 @@ class backend extends Module {
 		parent::__construct(__FILE__);
 
 		// create events
-		Events::register('backend', 'user-create');
-		Events::register('backend', 'user-change');
-		Events::register('backend', 'user-delete');
-		Events::register('backend', 'user-password-change');
+		Events::register('backend', 'user-create', 1);
+		Events::register('backend', 'user-change', 1);
+		Events::register('backend', 'user-delete', 1);
+		Events::register('backend', 'user-password-change', 1);
 
 		// load CSS and JScript
 		if (class_exists('head_tag') && $section == 'backend') {
