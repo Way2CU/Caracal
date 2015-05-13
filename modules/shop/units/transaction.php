@@ -13,6 +13,9 @@ use \ShopTransactionsManager as TransactionsManager;
 use \ShopDeliveryAddressManager as DeliveryAddressManager;
 
 
+class UnknownTransactionError extends \Exception {}
+
+
 final class Transaction {
 	private static $manager = null;
 	private static $address_manager = null;
@@ -39,6 +42,29 @@ final class Transaction {
 			self::$address_manager = DeliveryAddressManager::getInstance();
 
 		return self::$address_manager;
+	}
+
+	/**
+	 * Get transaction object based on specified unique id.
+	 *
+	 * @param string $transaction_id
+	 * @return object
+	 * @throws UnknownTransactionError
+	 */
+	public static function get($transaction_id) {
+		$manager = self::get_manager();
+
+		// get transaction
+		$transaction = $manager->getSingleItem(
+			$manager->getFieldNames(),
+			array('uid' => $transaction_id)
+		);
+
+		// make sure transaction is valid
+		if (!is_object($transaction))
+			throw new UnknownTransactionError('Unable to get transaction!');
+
+		return $transaction;
 	}
 
 	/**
@@ -85,6 +111,55 @@ final class Transaction {
 			$result = $address;
 
 		return $result;
+	}
+
+	/**
+	 * Set remote id for specified transaction.
+	 *
+	 * @param string $transaction_id
+	 * @param string $remote_id
+	 * @throws UnknownTransactionError
+	 */
+	public static function set_remote_id_by_uid($transaction_id, $remote_id) {
+		try {
+			// get transaction
+			$transaction = self::get($transaction_id);
+
+		} catch (UnknownTransactionError $error) {
+			// throw new error
+			throw new UnknownTransactionError('Unable to set remote id for transaction.');
+		}
+
+		// set remote id
+		self::set_remote_id($transaction, $remote_id);
+	}
+
+	/**
+	 * Set remote id for specified transaction.
+	 *
+	 * @param object $transaction
+	 * @param string $remote_id
+	 */
+	public static function set_remote_id($transaction, $remote_id) {
+		$manager = self::get_manager();
+		$manager->updateData(
+			array('remote_id' => $remote_id),
+			array('id' => $transaction->id)
+		);
+	}
+
+	/**
+	 * Associate token with specified transaction.
+	 *
+	 * @param object $transaction
+	 * @param object $token
+	 */
+	public static function set_token($transaction, $token) {
+		$manager = self::get_manager();
+		$manager->updateData(
+			array('payment_token' => $token->id),
+			array('id' => $transaction->id)
+		);
 	}
 }
 

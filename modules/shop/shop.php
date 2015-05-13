@@ -1476,28 +1476,6 @@ class shop extends Module {
 	}
 
 	/**
-	 * Set token from payment method for specified transaction.
-	 *
-	 * @param string $transaction_id
-	 * @param string $token
-	 */
-	public function setTransactionToken($transaction_id, $token) {
-		$result = false;
-		$manager = ShopTransactionsManager::getInstance();
-
-		// try to get transaction with specified id
-		$transaction = $manager->getSingleItem(array('id'), array('uid' => $transaction_id));
-
-		// set token for transaction
-		if (is_object($transaction)) {
-			$manager->updateData(array('token' => $token), array('id' => $transaction->id));
-			$result = true;
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Cancel specified transaction.
 	 *
 	 * @param integer $id
@@ -1671,7 +1649,6 @@ class shop extends Module {
 		$template->registerTagHandler('cms:canceled_message', $this, 'tag_CanceledMessage');
 
 		$template->restoreXML();
-		$template->setLocalParams($params);
 		$template->parse();
 	}
 
@@ -2902,7 +2879,7 @@ class shop extends Module {
 			'payment_method'				=> $transaction->payment_method,
 			'delivery_method'				=> $transaction->delivery_method,
 			'remark'						=> $transaction->remark,
-			'token'							=> $transaction->token,
+			'remote_id'						=> $transaction->remote_id,
 			'timestamp'						=> $transaction->timestamp
 		);
 
