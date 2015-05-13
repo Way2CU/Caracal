@@ -255,7 +255,7 @@
 							<label>
 								<span><cms:text constant="label_phone_number" module="shop"/></span>
 								<input
-									class="in_array('phone', $params['bad_fields']) ? 'bad' : ''"
+									class="in_array('phone', $params['bad_fields']) ? 'ltr bad' : 'ltr'"
 									cms:eval="class,value"
 									type="text"
 									name="phone"
