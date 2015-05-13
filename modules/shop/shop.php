@@ -3093,6 +3093,8 @@ class shop extends Module {
 		$billing_information = array();
 		$payment_method = null;
 		$stage = isset($_REQUEST['stage']) ? fix_chars($_REQUEST['stage']) : null;
+		$transaction_type = $this->getTransactionType();
+		$recurring = $transaction_type == TransactionType::SUBSCRIPTION;
 
 		// decide whether to include shipping and account information
 		if (isset($tag_params['include_shipping']))
@@ -3155,8 +3157,6 @@ class shop extends Module {
 				$address = null;
 
 			// update transaction
-			$transaction_type = $this->getTransactionType();
-			$recurring = $transaction_type == TransactionType::SUBSCRIPTION;
 			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 			// emit signal and return if handled
