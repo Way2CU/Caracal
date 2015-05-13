@@ -2401,7 +2401,7 @@ class shop extends Module {
 		$existing_user = isset($_POST['existing_user']) ? escape_chars($_POST['existing_user']) : null;
 
 		// set proper account data based on users choice
-		if (!is_null($existing_user))
+		if (!is_null($existing_user)) {
 			switch ($existing_user) {
 				case User::EXISTING:
 					// get managers
@@ -2572,6 +2572,17 @@ class shop extends Module {
 
 					break;
 			}
+
+		} else if ($_SESSION['logged']) {
+			// user is already logged in, get associated buyer
+			$buyer = $manager->getSingleItem(
+				$manager->getFieldNames(),
+				array('system_user' => $_SESSION['uid'])
+			);
+
+			if (is_object($buyer))
+				$result = $buyer;
+		}
 
 		return $result;
 	}
@@ -3176,7 +3187,7 @@ class shop extends Module {
 			$buyer = $this->getUserAccount();
 
 			if (is_null($buyer))
-				trigger_error('Unknown, unable to proceed with checkout.', E_USER_ERROR);
+				trigger_error('Unknown buyer, unable to proceed with checkout.', E_USER_ERROR);
 
 			if ($include_shipping)
 				$address = $this->getAddress($buyer, $shipping_information); else
