@@ -9,12 +9,12 @@
 			</cms:if>
 		</td>
 		<td><cms:var name="$params['count']"/></td>
-		<cms:if condition="$params['transaction_type != TransactionType::DELAYED">
+		<cms:if condition="$params['transaction_type'] != TransactionType::DELAYED">
 			<td><cms:var name="$params['price']"/></td>
 			<td><cms:var name="$params['tax']"/></td>
 		</cms:if>
 		<td><cms:var name="$params['weight']"/></td>
-		<cms:if condition="$params['transaction_type != TransactionType::DELAYED">
+		<cms:if condition="$params['transaction_type'] != TransactionType::DELAYED">
 			<td><cms:var name="$params['total']"/></td>
 		</cms:if>
 	</tr>
