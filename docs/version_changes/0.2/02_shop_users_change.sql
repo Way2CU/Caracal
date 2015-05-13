@@ -6,3 +6,4 @@ ALTER TABLE `shop_buyers` ADD COLUMN `agreed` boolean DEFAULT '0' AFTER `system_
 ALTER TABLE `shop_buyers` DROP COLUMN `validated`;
 ALTER TABLE `shop_buyers` DROP COLUMN `password`;
 ALTER TABLE `shop_transactions` DROP COLUMN `system_user`;
+ALTER TABLE `shop_transactions` ADD COLUMN `payment_token` int NOT NULL DEFAULT '0' AFTER `payment_method`;
