@@ -44,7 +44,7 @@ class tranzila extends Module {
 
 		// register payment method
 		if (class_exists('shop')) {
-			require_once("units/tranzila_payment_method.php");
+			require_once('units/tranzila_payment_method.php');
 			$this->method = Tranzila_PaymentMethod::getInstance($this);
 		}
 	}

@@ -345,7 +345,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * Handle callback from Tranzila about confirmed payment.
 	 */
 	public function handle_confirm_payment() {
-		trigger_error(array_keys($_REQUEST), E_USER_NOTICE);
+		trigger_error(json_encode(array_keys($_REQUEST)), E_USER_NOTICE);
 	}
 
 	/**
