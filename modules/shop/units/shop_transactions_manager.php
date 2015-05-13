@@ -30,7 +30,7 @@ class ShopTransactionsManager extends ItemManager {
 		$this->addProperty('delivery_method', 'varchar');
 		$this->addProperty('delivery_type', 'varchar');
 		$this->addProperty('remark', 'text');
-		$this->addProperty('token', 'varchar');
+		$this->addProperty('remote_id', 'varchar');
 		$this->addProperty('total', 'decimal');
 		$this->addProperty('timestamp', 'timestamp');
 	}
