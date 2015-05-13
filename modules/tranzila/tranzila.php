@@ -11,6 +11,7 @@ use Core\Module;
 
 class tranzila extends Module {
 	private static $_instance;
+	private $method = null;
 
 	/**
 	 * Constructor
@@ -44,7 +45,7 @@ class tranzila extends Module {
 		// register payment method
 		if (class_exists('shop')) {
 			require_once("units/tranzila_payment_method.php");
-			Tranzila_PaymentMethod::getInstance($this);
+			$this->method = Tranzila_PaymentMethod::getInstance($this);
 		}
 	}
 
@@ -68,6 +69,16 @@ class tranzila extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
+				case 'payment_confirm':
+					if (!is_null($this->method))
+						$this->method->handle_confirm_payment();
+					break;
+
+				case 'payment_cancel':
+					if (!is_null($this->method))
+						$this->method->handle_cancel_payment();
+					break;
+
 				default:
 					break;
 			}
@@ -115,8 +126,8 @@ class tranzila extends Module {
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 				'cancel_action'	=> window_Close('tranzila'),
-				'confirm_url'	=> url_Make('checkout_completed', 'shop', array('method', 'tranzila')),
-				'cancel_url'	=> url_Make('checkout_canceled', 'shop', array('method', 'tranzila')),
+				'confirm_url'	=> url_Make('payment_confirm', $this->name),
+				'cancel_url'	=> url_Make('payment_cancel', $this->name),
 			);
 
 		$template->restoreXML();

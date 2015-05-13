@@ -4,24 +4,25 @@
 class Tranzila_PaymentMethod extends PaymentMethod {
 	private static $_instance;
 
-	private $url = 'https://direct.tranzila.com/%terminal%/';
+	private $url = 'https://direct.tranzila.com/%terminal%';
+	private $token_url = 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi';
 
 	private $currency = array(
-					'ILS'	=> 1,
-					'USD'	=> 2,
-					'GBP'	=> 3,
-					'HKD'	=> 5,
-					'JPY'	=> 6,
-					'EUR'	=> 7
-				);
+		'ILS'	=> 1,
+		'USD'	=> 2,
+		'GBP'	=> 3,
+		'HKD'	=> 5,
+		'JPY'	=> 6,
+		'EUR'	=> 7
+	);
 
 	private $currency_aliases = array(
-					'₪'	=> 'ILS',
-					'$'	=> 'USD',
-					'£'	=> 'GBP',
-					'¥'	=> 'JPY',
-					'€'	=> 'EUR',
-				);
+		'₪'	=> 'ILS',
+		'$'	=> 'USD',
+		'£'	=> 'GBP',
+		'¥'	=> 'JPY',
+		'€'	=> 'EUR',
+	);
 
 	/**
 	 * Constructor
@@ -165,18 +166,13 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// prepare basic parameters
 		$params = array(
-				'currency'		=> $currency_code,
-				'TranzilaToken'	=> $data['uid'],
-				'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
-				'cred_type'		=> 1,
-				'pdesc'			=> $description,
-				'tranmode'		=> 'A'
-			);
-
-		// prepare items for checkout
-		foreach ($items as $item) {
-			$item = array_shift($items);
-		}
+			'currency'		=> $currency_code,
+			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
+			'cred_type'		=> 1,
+			'pdesc'			=> $description,
+			'tranmode'		=> 'AK',
+			'myid'			=> $data['uid']
+		);
 
 		// create HTML form
 		$result = '';
@@ -188,7 +184,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
- 	 * Make nwe delayed payment form with specified items and return
+	 * Make nwe delayed payment form with specified items and return
 	 * hidden elements for posting to URL.
 	 *
 	 * @param array $transaction_data
@@ -199,7 +195,48 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_delayed_payment($data, $billing_information, $items, $return_url, $cancel_url) {
-		return '';
+		global $language;
+
+		$description = '';
+		$tmp_items = array_slice($items, 0, 5);
+		$tmp_names = array();
+
+		foreach($tmp_items as $item)
+			$tmp_names[] = $item['name'][$language];
+
+		$description = implode(', ', $tmp_names);
+
+		// add dots if there are more than 5 items
+		if (count($items) > 5)
+			$description .= ', ...';
+
+		// get proper currency code
+		$shop_module = shop::getInstance();
+		$currency = $shop_module->getDefaultCurrency();
+
+		if (array_key_exists($currency, $this->currency_aliases))
+			$currency = $this->currency_aliases[$currency];
+
+		$currency_code = -1;
+		if (array_key_exists($currency, $this->currency))
+			$currency_code = $this->currency[$currency];
+
+		// prepare basic parameters
+		$params = array(
+			'currency'		=> $currency_code,
+			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
+			'pdesc'			=> $description,
+			'tranmode'		=> 'K',
+			'myid'			=> $data['uid']
+		);
+
+		// create HTML form
+		$result = '';
+
+		foreach ($params as $key => $value)
+			$result .= "<input type=\"hidden\" name=\"{$key}\" value=\"{$value}\">";
+
+		return $result;
 	}
 
 	/**
@@ -234,6 +271,87 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return boolean
 	 */
 	public function charge_transaction($transaction) {
+		$result = false;
+
+		// make sure transaction has token associated
+		if ($transaction->payment_token == 0)
+			return $result;
+
+		// get token
+		$token_manager = Modules\Shop\TokenManager::getInstance();
+		$token = $token_manager->getSingleItem(
+			$token_manager->getFieldNames(),
+			array('id' => $transaction->payment_token)
+		);
+
+		// make sure token is valid
+		if (!is_object($token))
+			return $result;
+
+		// prepare expiration date
+		$expiration_month = (string) $token->expiration_month;
+		$expiration_year = substr((string) $token->expiration_year, -2);
+		$expiration_date = str_pad($expiration_month.$expiration_year, 4, '0', STR_PAD_LEFT);
+
+		// prepare currency
+		$currency_manager = ShopCurrenciesManager::getInstance();
+		$currency = $currency_manager->getSingleItem(
+			$currency_manager->getFieldNames(),
+			array('id' => $transaction->currency)
+		);
+
+		if (!is_object($currency))
+			return $result;
+
+		$currency_code = -1;
+		if (array_key_exists($currency->currency, $this->currency))
+			$currency_code = $this->currency[$currency];
+
+		// prepare parameters
+		$params = array(
+			'supplier'		=> 'balishuk',
+			'sum'			=> $transaction->total + $transaction->shipping + $transaction->handling,
+			'currency'		=> $currency_code,
+			'TranzilaPW'	=> $terminal_password,
+			'expdate'		=> $expiration_date,
+			'tranmode'		=> 'A',
+			'TranzilaTK'	=> $token->value
+		);
+
+		$query = http_build_query($params);
+		$url = $this->token_url.'?'.$query;
+
+		// get response from server
+		$response_data = file_get_contents($url);
+
+		if (!empty($response_data)) {
+			$response = array();
+			parse_str($response_data, $response);
+
+			$result = $response['Response'] == '000';
+		}
+
+		// update transaction status
+		$shop = shop::getInstance();
+
+		if ($result)
+			$shop->setTransactionStatus($transaction->uid, TransactionStatus::COMPLETED); else
+				$shop->setTransactionStatus($transaction->uid, TransactionStatus::DENIED);
+
+		return $result;
+	}
+
+	/**
+	 * Handle callback from Tranzila about confirmed payment.
+	 */
+	public function handle_confirm_payment() {
+		trigger_error(array_keys($_REQUEST), E_USER_NOTICE);
+	}
+
+	/**
+	 * Handle callback from Tranzila about canceled payment.
+	 */
+	public function handle_cancel_payment() {
 	}
 }
 
