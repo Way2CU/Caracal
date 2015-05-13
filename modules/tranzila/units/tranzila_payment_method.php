@@ -1,10 +1,14 @@
 <?php
 
+use Modules\Shop\Token;
+use Modules\Shop\Transaction;
+use Modules\Shop\UnknownTransactionError;
+
 
 class Tranzila_PaymentMethod extends PaymentMethod {
 	private static $_instance;
 
-	private $url = 'https://direct.tranzila.com/%terminal%';
+	private $url = 'https://direct.tranzila.com/%terminal%/iframe.php';
 	private $token_url = 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi';
 
 	private $currency = array(
@@ -171,7 +175,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'cred_type'		=> 1,
 			'pdesc'			=> $description,
 			'tranmode'		=> 'AK',
-			'myid'			=> $data['uid']
+			'transaction_id' => $data['uid']
 		);
 
 		// create HTML form
@@ -227,7 +231,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
 			'pdesc'			=> $description,
 			'tranmode'		=> 'K',
-			'myid'			=> $data['uid']
+			'transaction_id' => $data['uid']
 		);
 
 		// create HTML form
@@ -345,13 +349,61 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * Handle callback from Tranzila about confirmed payment.
 	 */
 	public function handle_confirm_payment() {
-		trigger_error(json_encode(array_keys($_REQUEST)), E_USER_NOTICE);
+		$id = escape_chars($_REQUEST['transaction_id']);
+		$response = escape_chars($_REQUEST['Response']);
+		$token_name = '****-****-****-'.escape_chars($_REQUEST['ccno']);
+		$mode = escape_chars($_REQUEST['tranmode']);
+		$shop = shop::getInstance();
+
+		try {
+			// get transaction
+			$transaction = Transaction::get($id);
+
+		} catch (UnknownTransactionError $error) {
+			// redirect user to error page
+			$return_url = url_Make('checkout_error', 'shop');
+			header('Location: '.$return_url, true, 302);
+			return;
+		}
+
+		// prepare token data
+		$token = Token::get($this->name, $transaction->buyer, $token_name);
+
+		if (!is_object($token)) {
+			$token = Token::save(
+				$this->name,
+				$transaction->buyer,
+				$token_name,
+				escape_chars($_REQUEST['TranzilaTK']),
+				array(fix_id($_REQUEST['expmonth']), fix_id($_REQUEST['expyear']) + 2000)
+			);
+		}
+
+		// associate token with transaction
+		Transaction::set_token($transaction, $token);
+
+		// only regular payments require status change
+		if ($mode == 'AK')
+			$shop->setTransactionStatus($id, TransactionStatus::COMPLETED);
+
+		// redirect browser
+		$return_url = url_Make('checkout_completed', 'shop');
+		header('Location: '.$return_url, true, 302);
 	}
 
 	/**
 	 * Handle callback from Tranzila about canceled payment.
 	 */
 	public function handle_cancel_payment() {
+		$id = escape_chars($_REQUEST['transaction_id']);
+		$shop = shop::getInstance();
+
+		// set transaction status
+		$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
+
+		// redirect browser
+		$return_url = url_Make('checkout_canceled', 'shop');
+		header('Location: '.$return_url, true, 302);
 	}
 }
 
