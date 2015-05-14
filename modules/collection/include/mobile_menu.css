@@ -62,13 +62,10 @@
 	transition: 0.3s all;
 }
 
-.mobile_title.menu_visible {
-	background-position: -30px center;
-}
-
 body.rtl .mobile_menu {
 	left: auto;
 	right: -200px;
+	will-change: right;
 }
 
 body.rtl .mobile_menu.visible {
