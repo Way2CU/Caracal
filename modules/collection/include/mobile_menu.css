@@ -21,7 +21,7 @@
 	perspective: 1000;
 
 	/* optimize crhome */
-	will-change: left;
+	transform: translateZ(0);
 }
 
 .mobile_menu.visible {
@@ -60,12 +60,12 @@
 	color: white;
 
 	transition: 0.3s all;
+	transform: translateZ(0);
 }
 
 body.rtl .mobile_menu {
 	left: auto;
 	right: -200px;
-	will-change: right;
 }
 
 body.rtl .mobile_menu.visible {
