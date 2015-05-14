@@ -174,7 +174,9 @@ function Dialog() {
 					width: width,
 					height: height,
 				});
-		self._container.css('margin-left', -Math.round(width/2));
+
+		if (typeof width == 'number')
+			self._container.css('margin-left', -Math.round(width / 2));
 
 		return self;
 	};
