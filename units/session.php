@@ -79,8 +79,8 @@ class Session {
 		session_name(Session::COOKIE_ID);
 		session_start();
 
+		// extend expiration for all types other than browser
 		if ($type == Session::TYPE_NORMAL || $type == Session::TYPE_EXTENDED) {
-			// extend expiration for normal type
 			setcookie(Session::COOKIE_ID, session_id(), time() + $duration, Session::get_path());
 			setcookie(Session::COOKIE_TYPE, $type, time() + $duration, Session::get_path());
 		}
