@@ -84,7 +84,7 @@ Caracal.MobileMenu = function() {
 	 */
 	self.show_menu = function() {
 		self._menu.addClass('visible');
-		self._top_bar.addClass('menu_visible');
+		self._top_bar.addClass('visible');
 		self._visible = true;
 	};
 
@@ -93,7 +93,7 @@ Caracal.MobileMenu = function() {
 	 */
 	self.hide_menu = function() {
 		self._menu.removeClass('visible');
-		self._top_bar.removeClass('menu_visible');
+		self._top_bar.removeClass('visible');
 		self._visible = false;
 	};
 
