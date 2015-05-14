@@ -5,7 +5,10 @@
  * Author: Mladen Mijatov
  */
 
-function MobileMenu() {
+var Caracal = Caracal || {};
+
+
+Caracal.MobileMenu = function() {
 	var self = this;
 
 	self._visible = false;
@@ -197,10 +200,4 @@ function MobileMenu() {
 	self._init();
 }
 
-window['MobileMenu'] = MobileMenu;
-
-// try to automatically create mobile menu
-$(function() {
-	if ($('.mobile_menu').length > 0 && $('.mobile_title').length > 0)
-		new MobileMenu();
-});
+window['MobileMenu'] = Caracal.MobileMenu;
