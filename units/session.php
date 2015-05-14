@@ -55,7 +55,8 @@ class Session {
 
 		// get current session type
 		if (isset($_COOKIE[Session::COOKIE_TYPE]))
-			$type = fix_id($_COOKIE[Session::COOKIE_TYPE]);
+			$type = fix_id($_COOKIE[Session::COOKIE_TYPE]); else
+			setcookie(Session::COOKIE_TYPE, $type, 0, Session::get_path());
 
 		// configure default duration
 		switch ($type) {
