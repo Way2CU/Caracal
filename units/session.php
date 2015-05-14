@@ -12,6 +12,7 @@ class Session {
 	const TYPE_EXTENDED = 2;
 
 	const DEFAULT_DURATION = 15;
+	const EXTENDED_DURATION = 43200;  // 30 days
 
 	private static $path;
 
@@ -25,8 +26,10 @@ class Session {
 	 * characters are allowed.
 	 */
 	public static function get_path() {
-		if (!isset(self::$path))
-			self::$path = urlencode(dirname($_SERVER['PHP_SELF']));
+		if (!isset(self::$path)) {
+			$path = dirname($_SERVER['PHP_SELF']);
+			self::$path = join('/', array_map('rawurlencode', explode('/', $path)));
+		}
 
 		return self::$path;
 	}
@@ -48,7 +51,7 @@ class Session {
 		global $session_type;
 
 		$type = $session_type;
-		$normal_duration = null;
+		$duration = 0;
 
 		// get current session type
 		if (isset($_COOKIE[Session::COOKIE_TYPE]))
@@ -60,10 +63,15 @@ class Session {
 				session_set_cookie_params(0, Session::get_path());
 				break;
 
+			case Session::TYPE_EXTENDED:
+				$duration = Session::EXTENDED_DURATION * 60;
+				session_set_cookie_params($duration, Session::get_path());
+				break;
+
 			case Session::TYPE_NORMAL:
 			default:
-				$normal_duration = Session::DEFAULT_DURATION * 60;
-				session_set_cookie_params($normal_duration, Session::get_path());
+				$duration = Session::DEFAULT_DURATION * 60;
+				session_set_cookie_params($duration, Session::get_path());
 				break;
 		}
 
@@ -71,10 +79,10 @@ class Session {
 		session_name(Session::COOKIE_ID);
 		session_start();
 
-		// extend expiration for normal type
-		if ($type == Session::TYPE_NORMAL) {
-			setcookie(Session::COOKIE_ID, session_id(), time() + $normal_duration, Session::get_path());
-			setcookie(Session::COOKIE_TYPE, Session::TYPE_NORMAL, time() + $normal_duration, Session::get_path());
+		if ($type == Session::TYPE_NORMAL || $type == Session::TYPE_EXTENDED) {
+			// extend expiration for normal type
+			setcookie(Session::COOKIE_ID, session_id(), time() + $duration, Session::get_path());
+			setcookie(Session::COOKIE_TYPE, $type, time() + $duration, Session::get_path());
 		}
 	}
 
@@ -94,7 +102,8 @@ class Session {
 		switch ($type) {
 			case Session::TYPE_EXTENDED:
 				if (is_null($duration))
-					$duration = 30 * 24 * 60;
+					$duration = 30 * 24 * 60; else
+					$duration = Session::EXTENDED_DURATION;
 
 				$timestamp = time() + ($duration * 60);
 				break;
