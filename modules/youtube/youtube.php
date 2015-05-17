@@ -104,6 +104,10 @@ class youtube extends Module {
 					$this->tag_GroupList($params, $children);
 					break;
 
+				case 'include_api_script':
+					$this->includeApiScript();
+					break;
+
 				case 'json_video':
 					$this->json_Video();
 					break;
@@ -250,6 +254,21 @@ class youtube extends Module {
 
 		$tables = array('youtube_video', 'youtube_groups', 'youtube_group_membership');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Include YouTube IFrame API script.
+	 */
+	private function includeApiScript() {
+		if (!class_exists('head_tag'))
+			return;
+
+		head_tag::getInstance()->addTag(
+			'script',
+			array(
+				'src'	=> 'https://www.youtube.com/iframe_api',
+				'type'	=> 'text/javascript'
+			));
 	}
 
 	/**
