@@ -794,8 +794,7 @@ class youtube extends Module {
 				// prepare embedding URL
 				$query_data = http_build_query($player_params, '', '&amp;');
 
-				$url = _SECURE ? 'https' : 'http';
-				$url .= '://youtube.com/embed/'.$video->video_id;
+				$url = 'https://youtube.com/embed/'.$video->video_id;
 				$url .= '?'.$query_data;
 
 				$params['url'] = $url;
