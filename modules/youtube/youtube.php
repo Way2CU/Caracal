@@ -266,7 +266,7 @@ class youtube extends Module {
 		head_tag::getInstance()->addTag(
 			'script',
 			array(
-				'src'	=> 'https://www.youtube.com/iframe_api',
+				'src'	=> 'https://youtube.com/iframe_api',
 				'type'	=> 'text/javascript'
 			));
 	}
