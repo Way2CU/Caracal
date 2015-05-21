@@ -91,7 +91,7 @@
     "label_type": "Field type:",
     "label_use_ajax": "Use AJAX for submitting data?",
     "label_use_ssl": "Use SSL encryption?",
-    "label_value": "Predefined value <small>(use 0 or 1 for checkboxes)</small>:",
+    "label_value": "Predefined value:",
     "legend_backup": "Backup",
     "legend_controls": "Form controls",
     "legend_range": "Range",
