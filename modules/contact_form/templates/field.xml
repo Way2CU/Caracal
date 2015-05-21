@@ -55,7 +55,7 @@
 					<input
 						name="$params['name']"
 						type="checkbox"
-						checked="$params['value'] == '1' ? 'checked' : false"
+						checked="$params['checked'] ? 'checked' : false"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						cms:optional="checked,required,disabled"
