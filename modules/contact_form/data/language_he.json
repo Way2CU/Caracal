@@ -69,6 +69,7 @@
     "label_remove_existing": "להסיר ערך נוכחי?",
     "label_reply_to": "שם שדה:",
     "label_required": "לדרוש הזנת ערך?",
+    "label_checked": "Field is checked.",
     "label_save_copy": "שמור העתק של פרטים שנשלחו",
     "label_save_location": "מיקום של מיילים שנשלחו: <small>(when empty defaults to: site/data/)</small>",
     "label_separator_comma": "פסיק",

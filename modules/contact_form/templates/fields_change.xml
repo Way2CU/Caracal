@@ -137,6 +137,16 @@
 		</label>
 
 		<label class="checkbox">
+			<span><cms:text constant="label_checked" module="contact_form"/></span>
+			<input
+				type="checkbox"
+				name="checked"
+				checked="$params['checked'] ? 'checked' : false"
+				cms:optional="checked"
+				/>
+		</label>
+
+		<label class="checkbox">
 			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 			<input
 				type="checkbox"

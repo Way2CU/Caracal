@@ -67,6 +67,11 @@
 		</label>
 
 		<label class="checkbox">
+			<span><cms:text constant="label_checked" module="contact_form"/></span>
+			<input type="checkbox" name="checked"/>
+		</label>
+
+		<label class="checkbox">
 			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 			<input type="checkbox" name="autocomplete" checked="checked"/>
 		</label>

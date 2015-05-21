@@ -524,6 +524,7 @@ class contact_form extends Module {
 				`pattern` varchar(255) NOT NULL,
 				`disabled` boolean NOT NULL DEFAULT '0',
 				`required` boolean NOT NULL DEFAULT '0',
+				`checked` boolean NOT NULL DEFAULT '0',
 				`autocomplete` boolean NOT NULL DEFAULT '0',
 				PRIMARY KEY(`id`),
 				INDEX `contact_form_fields_by_form` (`form`),
@@ -2159,6 +2160,7 @@ class contact_form extends Module {
 						'pattern'			=> $item->pattern,
 						'disabled'			=> $item->disabled,
 						'required'			=> $item->required,
+						'checked'			=> $item->checked,
 						'autocomplete'		=> $item->autocomplete,
 						'form_action'  		=> backend_UrlMake($this->name, 'fields_save'),
 						'cancel_action'		=> window_Close('contact_form_fields_edit')
@@ -2192,6 +2194,7 @@ class contact_form extends Module {
 			'pattern'		=> escape_chars($_REQUEST['pattern']),
 			'disabled'		=> isset($_REQUEST['disabled']) && ($_REQUEST['disabled'] == 'on' || $_REQUEST['disabled'] == '1') ? 1 : 0,
 			'required'		=> isset($_REQUEST['required']) && ($_REQUEST['required'] == 'on' || $_REQUEST['required'] == '1') ? 1 : 0,
+			'checked'		=> isset($_REQUEST['checked']) && ($_REQUEST['checked'] == 'on' || $_REQUEST['checked'] == '1') ? 1 : 0,
 			'autocomplete'	=> isset($_REQUEST['autocomplete']) && ($_REQUEST['autocomplete'] == 'on' || $_REQUEST['autocomplete'] == '1') ? 1 : 0
 		);
 		$manager = ContactForm_FormFieldManager::getInstance();
@@ -2893,6 +2896,7 @@ class contact_form extends Module {
 					'pattern'		=> $item->pattern,
 					'disabled'		=> $item->disabled,
 					'required'		=> $item->required,
+					'checked'		=> $item->checked,
 					'autocomplete'	=> $item->autocomplete,
 				);
 

@@ -69,6 +69,7 @@
     "label_remove_existing": "Remove existing values?",
     "label_reply_to": "Field name:",
     "label_required": "Require user to enter value?",
+    "label_checked": "Field is checked.",
     "label_save_copy": "Save copy of sent emails",
     "label_save_location": "Location for saved emails: <small>(when empty defaults to: site/data/)</small>",
     "label_separator_comma": "Comma",
