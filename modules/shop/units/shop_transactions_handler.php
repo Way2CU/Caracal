@@ -155,7 +155,8 @@ class ShopTransactionsHandler {
 			$buyer = $buyers_manager->getSingleItem(array('id'), array('system_user' => $user_id));
 
 			if (is_object($buyer))
-				$conditions['buyer'] = $buyer->id;
+				$conditions['buyer'] = $buyer->id; else
+				$conditions['buyer'] = -1;
 		}
 
 		// load template
