@@ -91,7 +91,7 @@
     "label_type": "סוג שדה:",
     "label_use_ajax": "להשתמש ב AJAX לשליחת המידע?",
     "label_use_ssl": "להצפין ב SSL?",
-    "label_value": "ערך מוגדר מראש <small>(השתמש 0 או 1 לתיבות סימון)</small>:",
+    "label_value": "Predefined value:",
     "legend_backup": "גיבוי",
     "legend_controls": "פקדי טופס",
     "legend_range": "טווח",
