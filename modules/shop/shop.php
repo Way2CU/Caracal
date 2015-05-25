@@ -28,6 +28,7 @@ require_once('units/shop_transaction_plans_manager.php');
 require_once('units/shop_recurring_payments_manager.php');
 require_once('units/shop_buyers_manager.php');
 require_once('units/shop_delivery_address_manager.php');
+require_once('units/shop_delivery_address_handler.php');
 require_once('units/shop_related_items_manager.php');
 require_once('units/shop_manufacturer_handler.php');
 require_once('units/shop_delivery_methods_handler.php');
@@ -903,6 +904,7 @@ class shop extends Module {
 			`zip` varchar(20) NOT NULL,
 			`state` varchar(40) NOT NULL,
 			`country` varchar(64) NOT NULL,
+			`access_code` varchar(100) NOT NULL,
 			PRIMARY KEY (`id`),
 				  KEY `buyer` (`buyer`)
 			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";

@@ -162,6 +162,7 @@ class ShopTransactionsHandler {
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
 		$template->registerTagHandler('cms:items', $this, 'tag_TransactionItemList');
+		// $template->registerTagHandler('cms:address', $this, 'tag_DeliveryAddress');
 
 		// get all buyers
 		$buyer_names = array();

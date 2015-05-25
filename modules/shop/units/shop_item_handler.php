@@ -5,6 +5,7 @@ require_once('shop_item_membership_manager.php');
 require_once('shop_category_manager.php');
 require_once('shop_related_items_manager.php');
 
+
 class ShopItemHandler {
 	private static $_instance;
 	private $_parent;
@@ -12,8 +13,8 @@ class ShopItemHandler {
 	private $path;
 
 	/**
-	* Constructor
-	*/
+	 * Constructor
+	 */
 	protected function __construct($parent) {
 		$this->_parent = $parent;
 		$this->name = $this->_parent->name;
@@ -21,8 +22,8 @@ class ShopItemHandler {
 	}
 
 	/**
-	* Public function that creates a single instance
-	*/
+	 * Public function that creates a single instance
+	 */
 	public static function getInstance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);

@@ -25,6 +25,7 @@ class ShopDeliveryAddressManager extends ItemManager {
 		$this->addProperty('zip', 'varchar');
 		$this->addProperty('state', 'varchar');
 		$this->addProperty('country', 'varchar');
+		$this->addProperty('access_code', 'varchar');
 	}
 
 	/**
