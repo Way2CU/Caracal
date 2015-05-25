@@ -203,6 +203,7 @@ class ShopTransactionsHandler {
 							'handling'			=> $item->handling,
 							'shipping'			=> $item->shipping,
 							'total'				=> $item->total,
+							'summary'			=> $item->total + $item->shipping + $item->handling,
 							'delivery_method'	=> $item->delivery_method,
 							'delivery_type'		=> $item->delivery_type,
 							'remark'			=> $item->remark,
