@@ -113,17 +113,15 @@ class ShopTransactionsHandler {
 				'full_address'		=> $full_address
 			);
 
-		if ($transaction->buyer > 0) {
-			// regular or guest buyer
-			$buyer = $buyer_manager->getSingleItem(
-									$buyer_manager->getFieldNames(),
-									array('id' => $transaction->buyer)
-								);
+		// regular or guest buyer
+		$buyer = $buyer_manager->getSingleItem(
+								$buyer_manager->getFieldNames(),
+								array('id' => $transaction->buyer)
+							);
 
-			$params['first_name'] = $buyer->first_name;
-			$params['last_name'] = $buyer->last_name;
-			$params['email'] = $buyer->email;
-		}
+		$params['first_name'] = $buyer->first_name;
+		$params['last_name'] = $buyer->last_name;
+		$params['email'] = $buyer->email;
 
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
 
