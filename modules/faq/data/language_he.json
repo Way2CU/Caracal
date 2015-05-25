@@ -1,0 +1,16 @@
+{
+    "column_question": "שאלה",
+    "label_answer": "תשובה:",
+    "label_question": "שאלה:",
+    "label_visible": "השאלה נראית",
+    "menu_faq": "שאלות נפוצות",
+    "menu_manage_questions": "נהל שאלות",
+    "message_question_delete": "אתם עומדים להסיר את השאלה הבאה. האם אתם בטוחים?",
+    "message_question_deleted": "השאלה נמחקה!",
+    "message_question_saved": "מידע השאלה נשמר",
+    "new_question": "שאלה חדשה",
+    "title_question_change": "שאלות נפוצות: שנה שאלה",
+    "title_question_delete": "שאלות נפוצות: מחק שאלה",
+    "title_question_new": "שאלות נפוצות: שאלה חדשה",
+    "title_questions": "שאלות נפוצות"
+}
