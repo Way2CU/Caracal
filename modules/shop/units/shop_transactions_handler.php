@@ -160,9 +160,11 @@ class ShopTransactionsHandler {
 		}
 
 		// load template
+		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::getInstance($this->_parent);
+
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
 		$template->registerTagHandler('cms:items', $this, 'tag_TransactionItemList');
-		// $template->registerTagHandler('cms:address', $this, 'tag_DeliveryAddress');
+		$template->registerTagHandler('cms:address', $delivery_address_handler, 'tag_DeliveryAddress');
 
 		// get all buyers
 		$buyer_names = array();
