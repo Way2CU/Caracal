@@ -152,6 +152,14 @@ class ShopTransactionsHandler {
 		if (isset($tag_params['buyer']))
 			$conditions['buyer'] = fix_id($tag_params['buyer']);
 
+		if (isset($tag_params['system_user']) && $_SESSION['logged']) {
+			$user_id = fix_id($tag_params['system_user']);
+			$buyer = $buyers_manager->getSingleItem(array('id'), array('system_user' => $user_id));
+
+			if (is_object($buyer))
+				$conditions['buyer'] = $buyer->id;
+		}
+
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
 
