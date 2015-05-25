@@ -1,0 +1,17 @@
+{
+    "column_domain": "Domain",
+    "column_license_key": "License key",
+    "label_active": "License is active",
+    "label_domain": "Domain:",
+    "label_license_key": "License key:",
+    "label_modules": "Grant access to selected modules:",
+    "menu_license": "Licenses",
+    "message_license_delete": "You are about to revoke access from specified URL to your modules. Are you sure?",
+    "message_license_deleted": "Access to modules revoked.",
+    "message_license_saved": "License data was saved!",
+    "message_no_access": "You don't have access to this API. Please contact site administrator.",
+    "title_licenses": "Licenses",
+    "title_licenses_change": "Licenses: Change license data",
+    "title_licenses_delete": "Licenses: Delete",
+    "title_licenses_new": "Licenses: Create new"
+}

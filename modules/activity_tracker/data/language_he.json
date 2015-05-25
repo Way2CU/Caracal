@@ -1,0 +1,21 @@
+{
+    "column_activity": "פעילות",
+    "column_function": "פונקציה",
+    "column_ignore_address": "התעלם מכתובת",
+    "column_timeout": "פסק זמן",
+    "label_activity": "פעילות:",
+    "label_function": "פונקציה:",
+    "label_ignore_address": "להתעלם מכתובת IP?",
+    "label_timeout": "פסק זמן <small>(שניות)</small>:",
+    "menu_activities": "מעקב פעילויות",
+    "menu_log": "לוג פעילויות",
+    "menu_manage": "נהל פעילויות",
+    "message_activity_delete": "אתם עומדים להסיר את הפעילות והלוג שלה, האם אתם בטוחים?",
+    "message_activity_deleted": "פעילות הוסרה",
+    "message_activity_saved": "מידע פעילות נשמר!",
+    "title_activity_change": "מעקב פעילות: שנה פעילות",
+    "title_activity_delete": "מעקב פעילות: מחק פעילות",
+    "title_activity_new": "מעקב פעילות: פעילות חדשה",
+    "title_log": "מעקב פעילות: לוג",
+    "title_manage": "מעקב פעילות"
+}
