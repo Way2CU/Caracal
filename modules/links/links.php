@@ -1215,24 +1215,35 @@ class links extends Module {
 			}
 	}
 
+	/**
+	 * Get single link through AJAX request.
+	 */
 	private function json_Link() {
-		define('_OMIT_STATS', 1);
-
-		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-
-		$item = null;
+		$conditions = array();
 		$manager = LinksManager::getInstance();
-
-		if (!is_null($id))
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-
 		$result = array(
-					'error'			=> false,
-					'error_message'	=> '',
+					'error'			=> true,
 					'item'			=> array()
 				);
 
+		// get conditions
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id($_REQUEST['id']);
+
+		// get link from the database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		// make sure link exists
+		if (is_null($id)) {
+			print json_encode($result);
+			return;
+		}
+
+		// prepare response
 		if (is_object($item)) {
+			$image_url = null;
+
+			$result['error'] = false;
 			$result['item'] = array(
 								'id'				=> $item->id,
 								'text'				=> $item->text,
@@ -1246,8 +1257,6 @@ class links extends Module {
 								'total_clicks'		=> $item->total_clicks,
 								'image'				=> null
 							);
-		} else {
-
 		}
 
 		print json_encode($result);
@@ -1257,8 +1266,6 @@ class links extends Module {
 	 * Create JSON object containing links with specified characteristics
 	 */
 	private function json_LinkList() {
-		define('_OMIT_STATS', 1);
-
 		$groups = array();
 		$conditions = array();
 
@@ -1353,8 +1360,6 @@ class links extends Module {
 	 * Create JSON object containing group items
 	 */
 	private function json_GroupList() {
-		define('_OMIT_STATS', 1);
-
 		$groups = array();
 		$conditions = array();
 
@@ -1418,6 +1423,7 @@ class LinksManager extends ItemManager {
 	}
 }
 
+
 class LinkGroupsManager extends ItemManager {
 	private static $_instance;
 
@@ -1442,6 +1448,7 @@ class LinkGroupsManager extends ItemManager {
 		return self::$_instance;
 	}
 }
+
 
 class LinkMembershipManager extends ItemManager {
 	private static $_instance;
