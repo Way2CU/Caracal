@@ -195,6 +195,7 @@ class ShopTransactionsHandler {
 
 				// prepare template parameters
 				$params = array(
+							'id'				=> $item->id,
 							'buyer'				=> $item->buyer,
 							'buyer_name'		=> $name,
 							'address'			=> $item->address,
