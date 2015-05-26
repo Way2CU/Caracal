@@ -272,6 +272,8 @@ class ShopTransactionsHandler {
 							'uid' 			=> '',
 							'name'			=> '',
 							'gallery'		=> '',
+							'size_definition'=> '',
+							'colors'		=> '',
 							'manufacturer'	=> '',
 							'author' 		=> '',
 							'views' 		=> '',
@@ -297,6 +299,8 @@ class ShopTransactionsHandler {
 				$items[$id]['uid'] = $item->uid;
 				$items[$id]['name'] = $item->name;
 				$items[$id]['gallery'] = $item->gallery;
+				$items[$id]['size_definition'] = $item->size_definition;
+				$items[$id]['colors'] = $item->colors;
 				$items[$id]['manufacturer'] = $item->manufacturer;
 				$items[$id]['author'] = $item->author;
 				$items[$id]['views'] = $item->views;
