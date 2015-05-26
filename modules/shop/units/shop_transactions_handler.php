@@ -310,7 +310,9 @@ class ShopTransactionsHandler {
 			}
 
 		if (count($items) > 0) {
+			$sizes_handler = ShopItemSizesHandler::getInstance($this->_parent);
 			$template = $this->_parent->loadTemplate($tag_params, 'transaction_details_item.xml');
+			$template->registerTagHandler('cms:value_list', $sizes_handler, 'tag_ValueList');
 
 			foreach ($items as $id => $params) {
 				$template->setLocalParams($params);
