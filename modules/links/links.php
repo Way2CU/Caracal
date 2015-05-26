@@ -1234,7 +1234,7 @@ class links extends Module {
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// make sure link exists
-		if (is_null($id)) {
+		if (is_null($item)) {
 			print json_encode($result);
 			return;
 		}
