@@ -1242,6 +1242,8 @@ class links extends Module {
 		// prepare response
 		if (is_object($item)) {
 			$image_url = null;
+			if (class_exists('gallery'))
+				$image_url = gallery::getImageById($item->image);
 
 			$result['error'] = false;
 			$result['item'] = array(
@@ -1255,7 +1257,7 @@ class links extends Module {
 								'display_limit'		=> $item->display_limit,
 								'sponsored_clicks'	=> $item->sponsored_clicks,
 								'total_clicks'		=> $item->total_clicks,
-								'image'				=> null
+								'image'				=> $image_url
 							);
 		}
 
