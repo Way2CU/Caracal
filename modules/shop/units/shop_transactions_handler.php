@@ -163,7 +163,7 @@ class ShopTransactionsHandler {
 		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::getInstance($this->_parent);
 
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
-		$template->registerTagHandler('cms:items', $this, 'tag_TransactionItemList');
+		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
 		$template->registerTagHandler('cms:address', $delivery_address_handler, 'tag_DeliveryAddress');
 
 		// get all buyers
@@ -243,19 +243,14 @@ class ShopTransactionsHandler {
 		$item_manager = ShopItemManager::getInstance();
 		$transaction_manager = ShopTransactionsManager::getInstance();
 		$currency_manager = ShopCurrenciesManager::getInstance();
-		$id = null;
+		$conditions = array();
 
-		if (isset($tag_params['id'])) {
-			// get id from tag params
-			$id = fix_id($tag_params['id']);
+		// get conditions
+		if (isset($tag_params['transaction']))
+			$conditions['transaction'] = fix_id($tag_params['id']);
 
-		} else if (isset($_REQUEST['id'])) {
-			// get id from request params
-			$id = fix_id($_REQUEST['id']);
-		}
-
-		// if we don't have transaction Id, get out
-		if (is_null($id))
+		// if we don't have transaction id, get out
+		if (!isset($conditions['transaction']))
 			return;
 
 		$currency_id = $transaction_manager->getItemValue('currency', array('id' => $id));
@@ -263,7 +258,7 @@ class ShopTransactionsHandler {
 
 		// get items from database
 		$items = array();
-		$raw_items = $manager->getItems($manager->getFieldNames(), array('transaction' => $id));
+		$raw_items = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
@@ -314,10 +309,7 @@ class ShopTransactionsHandler {
 			}
 
 		if (count($items) > 0) {
-			$item_handler = ShopItemHandler::getInstance($this->_parent);
-
 			$template = $this->_parent->loadTemplate($tag_params, 'transaction_details_item.xml');
-			$template->registerTagHandler('cms:item', $item_handler, 'tag_Item');
 
 			foreach ($items as $id => $params) {
 				$template->setLocalParams($params);

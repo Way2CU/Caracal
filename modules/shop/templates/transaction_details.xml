@@ -161,14 +161,17 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 470px">
-			<cms:item_list/>
+			<cms:item_list
+				transaction="$params['id']"
+				cms:eval="transaction"
+				/>
 		</div>
 	</div>
 	<div style="clear: both;"/>
 	<script type="text/javascript">
 		var notebook = new Notebook('transaction_details_notebook');
 		notebook
-		.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
-		.setPageTitle(1, language_handler.getText('shop', 'tab_shipping'));
+			.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
+			.setPageTitle(1, language_handler.getText('shop', 'tab_shipping'));
 	</script>
 </document>
