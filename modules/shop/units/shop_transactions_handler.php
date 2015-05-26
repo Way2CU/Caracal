@@ -247,13 +247,13 @@ class ShopTransactionsHandler {
 
 		// get conditions
 		if (isset($tag_params['transaction']))
-			$conditions['transaction'] = fix_id($tag_params['id']);
+			$conditions['transaction'] = fix_id($tag_params['transaction']);
 
 		// if we don't have transaction id, get out
 		if (!isset($conditions['transaction']))
 			return;
 
-		$currency_id = $transaction_manager->getItemValue('currency', array('id' => $id));
+		$currency_id = $transaction_manager->getItemValue('currency', array('id' => $conditions['transaction']));
 		$currency = $currency_manager->getItemValue('currency', array('id' => $currency_id));
 
 		// get items from database
