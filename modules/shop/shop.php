@@ -2032,7 +2032,7 @@ class shop extends Module {
 		// prepare new items
 		$cart = array();
 		foreach ($items as $item) {
-			$properties = json_decode($description_list[$item->id], true);
+			$properties = unserialize($description_list[$item->id]);
 			$variation_id = $this->generateVariationId($item->uid, $properties);
 
 			if (array_key_exists($item->uid, $cart)) {
@@ -2374,7 +2374,7 @@ class shop extends Module {
 
 							$new_item = $items_by_uid[$uid];
 							$new_item['count'] = $data['count'];
-							$new_item['description'] = json_encode($properties, JSON_UNESCAPED_UNICODE);
+							$new_item['description'] = serialize($properties);
 
 							// add item to list for delivery estimation
 							$delivery_items []= array(
@@ -3060,7 +3060,7 @@ class shop extends Module {
 
 					foreach ($items as $item) {
 						// append item name with description
-						$description = json_decode($item->description);
+						$description = unserialize($item->description);
 
 						if (!empty($description)) {
 							$description_text = implode(', ', array_values($description));
