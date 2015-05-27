@@ -2034,12 +2034,20 @@ class shop extends Module {
 		foreach ($items as $item) {
 			$properties = json_decode($description_list[$item->id], true);
 			$variation_id = $this->generateVariationId($item->uid, $properties);
-			$cart[$item->uid] = array(
-					'uid'			=> $item->uid,
-					'quantity'		=> $amount_list[$item->id],
-					'variations'	=> array()
-				);
-			$cart[$item->uid]['variations'][$variation_id] = array('count' => $amount_list[$item->id]);
+
+			if (array_key_exists($item->uid, $cart)) {
+				$cart[$item->uid]['quantity'] += $amount_list[$item->id];
+
+			} else {
+				$cart[$item->uid] = array(
+						'uid'			=> $item->uid,
+						'quantity'		=> $amount_list[$item->id],
+						'variations'	=> array()
+					);
+			}
+
+			$cart[$item->uid]['variations'][$variation_id] = $properties;
+			$cart[$item->uid]['variations'][$variation_id]['count'] = $amount_list[$item->id];
 		}
 
 		// assign new cart to session
