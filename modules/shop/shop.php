@@ -2031,12 +2031,12 @@ class shop extends Module {
 		$cart = array();
 		foreach ($items as $item) {
 			$variation_id = $this->generateVariationId($item->uid, array());
-			$cart[$uid] = array(
+			$cart[$item->uid] = array(
 					'uid'			=> $item->uid,
 					'quantity'		=> $amount_list[$item->id],
 					'variations'	=> array()
 				);
-			$cart[$uid]['variations'][$variation_id] = array('count' => $amount_list[$item->id]);
+			$cart[$item->uid]['variations'][$variation_id] = array('count' => $amount_list[$item->id]);
 		}
 
 		// assign new cart to session
