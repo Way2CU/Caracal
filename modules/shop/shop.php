@@ -1992,8 +1992,8 @@ class shop extends Module {
 		}
 
 		// get transaction items
-		$items = $transaction_items_manager->getItems(
-			$transaction_items_manager->getFieldNames(),
+		$items = $transaction_item_manager->getItems(
+			$transaction_item_manager->getFieldNames(),
 			array('transaction' => $transaction->id)
 		);
 
