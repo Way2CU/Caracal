@@ -1978,7 +1978,10 @@ class shop extends Module {
 				array('id'),
 				array(
 					'uid'	=> $uid,
-					'type'	=> TransactionType::REGULAR
+					'type'	=> array(
+						TransactionType::REGULAR,
+						TransactionType::DELAYED
+					)
 				)
 			);
 
