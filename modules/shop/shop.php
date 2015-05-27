@@ -2032,7 +2032,7 @@ class shop extends Module {
 		// prepare new items
 		$cart = array();
 		foreach ($items as $item) {
-			$properties = json_decode($description_list[$item->id]);
+			$properties = json_decode($description_list[$item->id], true);
 			$variation_id = $this->generateVariationId($item->uid, $properties);
 			$cart[$item->uid] = array(
 					'uid'			=> $item->uid,
