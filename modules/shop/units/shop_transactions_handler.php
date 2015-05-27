@@ -263,12 +263,13 @@ class ShopTransactionsHandler {
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
+				$description = implode(', ', array_values(unserialize($item->description)));
 				$items[$item->item] = array(
 							'id'			=> $item->id,
 							'price'			=> $item->price,
 							'tax'			=> $item->tax,
 							'amount'		=> $item->amount,
-							'description'	=> $item->description,
+							'description'	=> $description,
 							'uid' 			=> '',
 							'name'			=> '',
 							'gallery'		=> '',
