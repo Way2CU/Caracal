@@ -44,8 +44,6 @@ Caracal.Shop.Cart = function() {
 	 * Complete object initialization.
 	 */
 	self._init = function() {
-		self._communicator = new Communicator('shop');
-
 		// create user interface containers
 		self.ui.item_list = $();
 		self.ui.total_count = $();
@@ -156,6 +154,19 @@ Caracal.Shop.Cart = function() {
 			.on_error(self.handlers.item_add_error)
 			.set_callback_data(uid + '/')
 			.send('json_add_item_to_shopping_cart', data);
+	};
+
+	/**
+	 * Add all items to cart from previous transaction.
+	 *
+	 * @param string transaction_uid
+	 */
+	self.add_items_from_transaction = function(transaction_uid) {
+		var data = {'uid': transaction_uid};
+
+		new Communicator('shop')
+			.on_success(self.handlers.cart_load_success)
+			.get('json_set_cart_from_transaction', data);
 	};
 
 	/**
@@ -467,6 +478,9 @@ Caracal.Shop.Cart = function() {
 	 * @param object data
 	 */
 	self.handlers.cart_load_success = function(data) {
+		// clear cart first
+		self.handlers.cart_clear_success(true);
+
 		// apply data
 		self.handling = data.handling || self.handling;
 		self.shipping = data.shipping || self.shipping;
