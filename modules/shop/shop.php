@@ -2010,7 +2010,7 @@ class shop extends Module {
 		foreach ($items as $item) {
 			$id_list[] = $item->item;
 			$amount_list[$item->item] = $item->amount;
-			$amount_list[$item->item] = $item->description;
+			$description_list[$item->item] = $item->description;
 		}
 
 		// get active shop items
