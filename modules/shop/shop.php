@@ -695,6 +695,10 @@ class shop extends Module {
 				$this->json_SetDeliveryMethod();
 				break;
 
+			case 'json_set_cart_from_transaction':
+				$this->json_SetCartFromTransaction();
+				break;
+
 			default:
 				break;
 			}
@@ -1958,6 +1962,88 @@ class shop extends Module {
 		Events::trigger('shop', 'shopping-cart-changed');
 
 		print json_encode(true);
+	}
+
+	/**
+	 * Set shopping cart from previous transaction.
+	 */
+	private function json_SetCartFromTransaction() {
+		$uid = fix_chars($_REQUEST['uid']);
+		$item_manager = ShopItemManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::getInstance();
+		$transaction_item_manager = ShopTransactionItemsManager::getInstance();
+
+		// find specified transaction
+		$transaction = $transaction_manager->getSingleItem(
+				array('id'),
+				array(
+					'uid'	=> $uid,
+					'type'	=> TransactionType::REGULAR
+				)
+			);
+
+		// no transaction was found, show current cart and return
+		if (!is_object($transaction)) {
+			$this->json_ShowCart();
+			return;
+		}
+
+		// get transaction items
+		$items = $transaction_items_manager->getItems(
+			$transaction_items_manager->getFieldNames(),
+			array('transaction' => $transaction->id)
+		);
+
+		// no items in this transaction, show current cart and return
+		if (count($items) == 0) {
+			$this->json_ShowCart();
+			return;
+		}
+
+		// parse transaction item list
+		$id_list = array();
+		$amount_list = array();
+		foreach ($items as $item) {
+			$id_list[] = $item->item;
+			$amount_list[$item->item] = $item->amount;
+		}
+
+		// get active shop items
+		$items = $item_manager->getItems(
+			$item_manager->getFieldNames(),
+			array(
+				'deleted'	=> 0,
+				'visible'	=> 1,
+				'id'		=> $id_list
+			)
+		);
+
+		// no visible and active items, show current cart and return
+		if (count($items) == 0) {
+			$this->json_ShowCart();
+			return;
+		}
+
+		// prepare new items
+		$cart = array();
+		foreach ($items as $item) {
+			$variation_id = $this->generateVariationId($item->uid, array());
+			$cart[$uid] = array(
+					'uid'			=> $item->uid,
+					'quantity'		=> $amount_list[$item->id],
+					'variations'	=> array()
+				);
+			$cart[$uid]['variations'][$variation_id] = array('count' => $amount_list[$item->id]);
+		}
+
+		// assign new cart to session
+		$_SESSION['shopping_cart'] = $cart;
+
+		// trigger an event
+		Events::trigger('shop', 'shopping-cart-changed');
+
+		// return response
+		$this->json_ShowCart();
 	}
 
 	/**
