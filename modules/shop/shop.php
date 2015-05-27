@@ -2374,7 +2374,7 @@ class shop extends Module {
 
 							$new_item = $items_by_uid[$uid];
 							$new_item['count'] = $data['count'];
-							$new_item['description'] = json_encode($properties);
+							$new_item['description'] = json_encode($properties, JSON_UNESCAPED_UNICODE);
 
 							// add item to list for delivery estimation
 							$delivery_items []= array(
