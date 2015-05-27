@@ -2006,9 +2006,11 @@ class shop extends Module {
 		// parse transaction item list
 		$id_list = array();
 		$amount_list = array();
+		$description_list = array();
 		foreach ($items as $item) {
 			$id_list[] = $item->item;
 			$amount_list[$item->item] = $item->amount;
+			$amount_list[$item->item] = $item->description;
 		}
 
 		// get active shop items
@@ -2030,7 +2032,8 @@ class shop extends Module {
 		// prepare new items
 		$cart = array();
 		foreach ($items as $item) {
-			$variation_id = $this->generateVariationId($item->uid, array());
+			$properties = json_decode($description_list[$item->id]);
+			$variation_id = $this->generateVariationId($item->uid, $properties);
 			$cart[$item->uid] = array(
 					'uid'			=> $item->uid,
 					'quantity'		=> $amount_list[$item->id],
@@ -2363,7 +2366,7 @@ class shop extends Module {
 
 							$new_item = $items_by_uid[$uid];
 							$new_item['count'] = $data['count'];
-							$new_item['description'] = implode(', ', array_values($properties));
+							$new_item['description'] = json_encode($properties);
 
 							// add item to list for delivery estimation
 							$delivery_items []= array(
@@ -3049,9 +3052,14 @@ class shop extends Module {
 
 					foreach ($items as $item) {
 						// append item name with description
-						if (empty($data['description']))
-							$line = $item->name[$language] . ' (' . $item->description . ')'; else
+						$description = json_decode($item->description);
+
+						if (!empty($description)) {
+							$description_text = implode(', ', array_values($description));
+							$line = $item->name[$language] . ' (' . $description . ')';
+						} else {
 							$line = $item->name[$language];
+						}
 
 						$line = utf8_wordwrap($line, 40, "\n", true);
 						$line = mb_split("\n", $line);
@@ -3067,8 +3075,8 @@ class shop extends Module {
 						// form html row
 						$row = '<tr><td>' . $item->name[$language];
 
-						if (!empty($item->description))
-							$row .= ' <small>' . $item->description . '</small>';
+						if (!empty($description))
+							$row .= ' <small>' . $description_text . '</small>';
 
 						$row .= '</td><td>' . $item->price . '</td>';
 						$row .= '<td>' . $item->amount . '</td>';
