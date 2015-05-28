@@ -1041,13 +1041,21 @@ class youtube extends Module {
 	public function tag_GroupList($tag_params, $children) {
 		$manager = YouTube_GroupManager::getInstance();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 
 		// gather all the parameters
 		if (isset($tag_params['visible_only']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', fix_chars($tag_params['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
+
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// create template handler
 		if (isset($tag_params['template'])) {
