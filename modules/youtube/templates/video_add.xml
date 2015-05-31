@@ -8,7 +8,7 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_id" module="youtube"/></span>
-			<input type="text" name="video_id" style="width: 100px;" maxlength="11"/>
+			<input type="text" name="video_id" style="width: 100px;" maxlength="50"/>
 		</label>
 		<label>
 			<span><cms:text constant="label_title" module="youtube"/></span>

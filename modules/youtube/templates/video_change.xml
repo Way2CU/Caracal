@@ -9,7 +9,7 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_id" module="youtube"/></span>
-			<input type="text" name="video_id" style="width: 100px;" maxlength="11" value="$params['video_id']" cms:eval="value"/>
+			<input type="text" name="video_id" style="width: 100px;" maxlength="50" value="$params['video_id']" cms:eval="value"/>
 		</label>
 		<label>
 			<span><cms:text constant="label_title" module="youtube"/></span>

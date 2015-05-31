@@ -203,7 +203,7 @@ class youtube extends Module {
 			CREATE TABLE IF NOT EXISTS `youtube_video` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`text_id` VARCHAR (32) NULL ,
-				`video_id` varchar(11) COLLATE utf8_bin NOT NULL,
+				`video_id` varchar(50) COLLATE utf8_bin NOT NULL,
 			";
 
 		foreach($list as $language)
