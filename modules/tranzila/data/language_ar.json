@@ -1,5 +1,6 @@
 {
     "label_terminal": "Terminal name:",
+    "label_terminal2": "Terminal for charging tokens:",
     "label_url_cancel": "Cancel URL:",
     "label_url_confirm": "Confirmation URL:",
     "menu_tranzila": "Tranzila",
