@@ -677,7 +677,7 @@ Caracal.Shop.Cart = function() {
 		self.ui.total_weight.text(total_weight.toFixed(2));
 
 		// emit signal
-		self.events.emit_signal('totals-updated', cart, total_count, total_cost, total_weight);
+		self.events.emit_signal('totals-updated', self, total_count, total_cost, total_weight);
 	};
 
 	/**
