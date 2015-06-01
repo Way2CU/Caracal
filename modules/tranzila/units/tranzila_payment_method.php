@@ -351,7 +351,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	public function handle_confirm_payment() {
 		$id = escape_chars($_REQUEST['transaction_id']);
 		$response = escape_chars($_REQUEST['Response']);
-		$token_name = '****-****-****-'.escape_chars($_REQUEST['ccno']);
+		$token_name = '****-****-****-'.substr(escape_chars($_REQUEST['TranzilaTK']), -4);
 		$mode = escape_chars($_REQUEST['tranmode']);
 		$shop = shop::getInstance();
 
