@@ -1,9 +1,10 @@
 {
-    "label_terminal": "Terminal name:", 
-    "label_url_cancel": "Cancel URL:", 
-    "label_url_confirm": "Confirmation URL:", 
-    "menu_tranzila": "Tranzila", 
-    "message_settings_saved": "New settings were saved.", 
-    "payment_method_title": "Tranzila", 
+    "label_terminal": "Terminal name:",
+    "label_terminal": "Terminal for charging tokens:",
+    "label_url_cancel": "Cancel URL:",
+    "label_url_confirm": "Confirmation URL:",
+    "menu_tranzila": "Tranzila",
+    "message_settings_saved": "New settings were saved.",
+    "payment_method_title": "Tranzila",
     "title_settings": "Tranzila Settings"
 }

@@ -14,6 +14,17 @@
 			/>
 		</label>
 		<label>
+			<span><cms:text constant="label_terminal2" module="tranzila"/></span>
+			<input
+				type="text"
+				class="code"
+				name="terminal2"
+				value="$settings['terminal2']"
+				cms:eval="value"
+				style="width: 260px;"
+			/>
+		</label>
+		<label>
 			<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
 			<input
 				type="text"

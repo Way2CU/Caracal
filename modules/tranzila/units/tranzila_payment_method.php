@@ -313,7 +313,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// prepare parameters
 		$params = array(
-			'supplier'		=> 'balishuk',
+			'supplier'		=> $this->parent->settings['terminal2'],
 			'sum'			=> $transaction->total + $transaction->shipping + $transaction->handling,
 			'currency'		=> $currency_code,
 			'TranzilaPW'	=> $terminal_password,

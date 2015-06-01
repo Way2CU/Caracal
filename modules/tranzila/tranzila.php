@@ -103,10 +103,8 @@ class tranzila extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function onInit() {
-		global $db;
-
-		/* $sql = ""; */
-		/* $db->query($sql); */
+		$this->saveSetting('terminal', '');
+		$this->saveSetting('terminal2', '');
 	}
 
 	/**
