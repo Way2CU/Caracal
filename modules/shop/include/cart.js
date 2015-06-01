@@ -59,6 +59,7 @@ Caracal.Shop.Cart = function() {
 		self.events.on_ui_update = new Array();
 		self.events.on_before_checkout = new Array();
 		self.events.on_checkout = new Array();
+		self.events.on_totals_updated = new Array();
 
 		// load shopping cart from server
 		new Communicator('shop')
