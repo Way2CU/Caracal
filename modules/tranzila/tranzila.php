@@ -135,7 +135,9 @@ class tranzila extends Module {
 
 	private function saveSettings() {
 		$terminal_name = fix_chars($_REQUEST['terminal']);
+		$terminal2_name = fix_chars($_REQUEST['terminal2']);
 		$this->saveSetting('terminal', $terminal_name);
+		$this->saveSetting('terminal2', $terminal2_name);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
