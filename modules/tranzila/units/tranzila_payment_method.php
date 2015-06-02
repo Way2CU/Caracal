@@ -3,6 +3,7 @@
 use Modules\Shop\Token;
 use Modules\Shop\Transaction;
 use Modules\Shop\UnknownTransactionError;
+use Modules\Shop\UnknownTokenError;
 
 
 class Tranzila_PaymentMethod extends PaymentMethod {
@@ -230,7 +231,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'currency'		=> $currency_code,
 			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
 			'pdesc'			=> $description,
-			'tranmode'		=> 'K',
+			'tranmode'		=> 'VK',
 			'transaction_id' => $data['uid']
 		);
 
@@ -340,7 +341,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		if ($result)
 			$shop->setTransactionStatus($transaction->uid, TransactionStatus::COMPLETED); else
-				$shop->setTransactionStatus($transaction->uid, TransactionStatus::DENIED);
+			$shop->setTransactionStatus($transaction->uid, TransactionStatus::DENIED);
 
 		return $result;
 	}
@@ -351,7 +352,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	public function handle_confirm_payment() {
 		$id = escape_chars($_REQUEST['transaction_id']);
 		$response = escape_chars($_REQUEST['Response']);
-		$token_name = '****-****-****-'.substr(escape_chars($_REQUEST['TranzilaTK']), -4);
+		$token = escape_chars($_REQUEST['TranzilaTK']);
+		$token_name = '****-****-****-'.substr($token, -4);
 		$mode = escape_chars($_REQUEST['tranmode']);
 		$shop = shop::getInstance();
 
@@ -367,14 +369,17 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		}
 
 		// prepare token data
-		$token = Token::get($this->name, $transaction->buyer, $token_name);
+		try {
+			// try to get existing token
+			$token = Token::get($this->name, $transaction->buyer, $token_name);
 
-		if (!is_object($token)) {
+		} catch (UnknownTokenError $error) {
+			// save new token
 			$token = Token::save(
 				$this->name,
 				$transaction->buyer,
 				$token_name,
-				escape_chars($_REQUEST['TranzilaTK']),
+				$token,
 				array(fix_id($_REQUEST['expmonth']), fix_id($_REQUEST['expyear']) + 2000)
 			);
 		}
