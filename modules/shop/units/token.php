@@ -45,9 +45,9 @@ final class Token {
 		$result = $manager->getSingleItem(
 			$manager->getFieldNames(),
 			array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
-				'name'		=> $name
+				'payment_method'	=> $payment_method,
+				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer,
+				'name'				=> $name
 			));
 
 		// make sure token is real
@@ -85,11 +85,11 @@ final class Token {
 
 		// prepare data
 		$data = array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
-				'name'		=> $name,
-				'token'		=> $token,
-				'expires'	=> 0
+				'payment_method'	=> $payment_method,
+				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer,
+				'name'				=> $name,
+				'token'				=> $token,
+				'expires'			=> 0
 			);
 
 		if (!is_null($expires)) {
@@ -125,9 +125,9 @@ final class Token {
 		$item = $manager->getSingleItem(
 			$manager->getFieldNames(),
 			array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer,
-				'default'	=> 1
+				'payment_method'	=> $payment_method,
+				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer,
+				'default'			=> 1
 			));
 
 		if (is_object($item))
@@ -151,8 +151,8 @@ final class Token {
 		$items = $manager->getItems(
 			$manager->getFieldNames(),
 			array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer
+				'payment_method'	=> $payment_method,
+				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer
 			));
 
 		if (count($items) > 0)
@@ -186,8 +186,8 @@ final class Token {
 				'default' => 0
 			),
 			array(
-				'method'	=> $payment_method,
-				'buyer'		=> is_object($buyer) ? $buyer->id : $buyer
+				'payment_method'	=> $payment_method,
+				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer
 			));
 
 		// set specified token as default
