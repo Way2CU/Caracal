@@ -123,7 +123,8 @@ function database_initialize($create_database) {
 
 				case 'user':
 					$salt = hash('sha256', UserManager::SALT.strval(time()));
-					$password = hash_hmac('sha256', $item->tagAttrs['password'], $salt);
+					$raw_password = !empty($item->tagAttrs['password']) ? $item->tagAttrs['password'] : strval(time());
+					$password = hash_hmac('sha256', $raw_password, $salt);
 					$data = array(
 							'username'	=> $item->tagAttrs['username'],
 							'password'	=> $password,
