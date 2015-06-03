@@ -970,7 +970,7 @@ class articles extends Module {
 						'id'			=> $item->id,
 						'text_id'		=> $item->text_id,
 						'title'			=> $item->title,
-						'desciption'	=> $item->description,
+						'description'	=> $item->description,
 					);
 
 			$template->restoreXML();
