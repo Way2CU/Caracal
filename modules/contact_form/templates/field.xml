@@ -194,7 +194,8 @@
 						disabled="$params['disabled'] ? 'disabled' : false"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 						value="$params['value']"
-						cms:optional="required,disabled,maxlength"
+						pattern="!empty($params['pattern']) ? $params['pattern'] : false"
+						cms:optional="required,disabled,maxlength,pattern"
 						cms:eval="name,placeholder,autocomplete,value"
 						/>
 				</option>
