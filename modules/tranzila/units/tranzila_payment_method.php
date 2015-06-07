@@ -352,13 +352,18 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	public function handle_confirm_payment() {
 		$id = escape_chars($_REQUEST['transaction_id']);
 		$response = escape_chars($_REQUEST['Response']);
-		$token = escape_chars($_REQUEST['TranzilaTK']);
-		$token_name = '****-****-****-'.substr($token, -4);
 		$mode = escape_chars($_REQUEST['tranmode']);
 		$shop = shop::getInstance();
 
+		// make sure response is good
+		if ($response != '000') {
+			$return_url = url_Make('checkout_error', 'shop');
+			header('Location: '.$return_url, true, 302);
+			return;
+		}
+
+		// get transaction
 		try {
-			// get transaction
 			$transaction = Transaction::get($id);
 
 		} catch (UnknownTransactionError $error) {
@@ -368,28 +373,35 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			return;
 		}
 
-		// prepare token data
-		try {
-			// try to get existing token
-			$token = Token::get($this->name, $transaction->buyer, $token_name);
+		switch ($mode) {
+			case 'VK':  // verified token
+				$token = escape_chars($_REQUEST['TranzilaTK']);
+				$token_name = '****-****-****-'.substr($token, -4);
 
-		} catch (UnknownTokenError $error) {
-			// save new token
-			$token = Token::save(
-				$this->name,
-				$transaction->buyer,
-				$token_name,
-				$token,
-				array(fix_id($_REQUEST['expmonth']), fix_id($_REQUEST['expyear']) + 2000)
-			);
+				try {
+					// try to get existing token
+					$token = Token::get($this->name, $transaction->buyer, $token_name);
+
+				} catch (UnknownTokenError $error) {
+					// save new token
+					$token = Token::save(
+						$this->name,
+						$transaction->buyer,
+						$token_name,
+						$token,
+						array(fix_id($_REQUEST['expmonth']), fix_id($_REQUEST['expyear']) + 2000)
+					);
+				}
+
+				// associate token with transaction
+				Transaction::set_token($transaction, $token);
+				break;
+
+			case 'AK':  // regular charge
+				// only regular payments require status change
+				$shop->setTransactionStatus($id, TransactionStatus::COMPLETED);
+				break;
 		}
-
-		// associate token with transaction
-		Transaction::set_token($transaction, $token);
-
-		// only regular payments require status change
-		if ($mode == 'AK')
-			$shop->setTransactionStatus($id, TransactionStatus::COMPLETED);
 
 		// redirect browser
 		$return_url = url_Make('checkout_completed', 'shop');
