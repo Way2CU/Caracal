@@ -91,12 +91,8 @@ class SectionHandler {
 	 * @param string $language
 	 */
 	public function transferControl($section, $action, $language='') {
-		$file = '';
-		if (!_AJAX_REQUEST)
-			$file = $this->getFile($section, $action, $language);
-
-		if (_AJAX_REQUEST || empty($file)) {
-			// if no section is defined, check for module with the same name
+		if (_AJAX_REQUEST) {
+			// request came from script, transfer control to modules
 			if (class_exists($section)) {
 				$module = call_user_func(array(escape_chars($section), 'getInstance'));
 				$params = array('action' => $action);
@@ -105,17 +101,33 @@ class SectionHandler {
 				$module->transferControl($params, array());
 
 			} else if ($section == 'backend_module' && class_exists('backend')) {
+				// transfer control to backend modules
 				$module = backend::getInstance();
 				$params = array('action' => 'transfer_control');
 
 				// transfer control to module
 				$module->transferControl($params, array());
+
+			} else {
+				// in the end if no module exist, try loading template
+				$file = $this->getFile($section, $action, $language);
+
+				// parse template
+				if (!empty($file)) {
+					$template = new TemplateHandler($file);
+					$template->parse();
+				}
 			}
 
 		} else {
 			// section file is defined, load and parse it
-			$template = new TemplateHandler($file);
-			$template->parse();
+			$file = $this->getFile($section, $action, $language);
+
+			// parse template
+			if (!empty($file)) {
+				$template = new TemplateHandler($file);
+				$template->parse();
+			}
 		}
 	}
 }
