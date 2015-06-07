@@ -91,7 +91,9 @@ class SectionHandler {
 	 * @param string $language
 	 */
 	public function transferControl($section, $action, $language='') {
-		if (_AJAX_REQUEST) {
+		$file = $this->getFile($section, $action, $language);
+
+		if (_AJAX_REQUEST || empty($file)) {
 			// request came from script, transfer control to modules
 			if (class_exists($section)) {
 				$module = call_user_func(array(escape_chars($section), 'getInstance'));
@@ -110,24 +112,14 @@ class SectionHandler {
 
 			} else {
 				// no matching module exist, try loading template
-				$file = $this->getFile($section, $action, $language);
-
-				// parse template
-				if (!empty($file)) {
-					$template = new TemplateHandler($file);
-					$template->parse();
-				}
+				$template = new TemplateHandler($file);
+				$template->parse();
 			}
 
 		} else {
 			// section file is defined, load and parse it
-			$file = $this->getFile($section, $action, $language);
-
-			// parse template
-			if (!empty($file)) {
-				$template = new TemplateHandler($file);
-				$template->parse();
-			}
+			$template = new TemplateHandler($file);
+			$template->parse();
 		}
 	}
 }
