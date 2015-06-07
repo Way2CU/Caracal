@@ -15,7 +15,7 @@ class TokenManager extends ItemManager {
 		parent::__construct('shop_payment_tokens');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('payment_method', 'string');
+		$this->addProperty('payment_method', 'varchar');
 		$this->addProperty('buyer', 'int');
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('token', 'varchar');
