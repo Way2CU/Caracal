@@ -109,7 +109,7 @@ class SectionHandler {
 				$module->transferControl($params, array());
 
 			} else {
-				// in the end if no module exist, try loading template
+				// no matching module exist, try loading template
 				$file = $this->getFile($section, $action, $language);
 
 				// parse template
