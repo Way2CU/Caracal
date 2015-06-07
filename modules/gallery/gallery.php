@@ -1560,20 +1560,22 @@ class gallery extends Module {
 	public function tag_Container($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
-		$id = fix_id($tag_params['id']);
+		$conditions = array();
 		$manager = GalleryContainerManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		// get conditions
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('container.xml', $this->path.'templates/');
-		}
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
-		$template->setMappedModule($this->name);
+		// get container
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'container.xml');
+
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
 		$template->registerTagHandler('cms:group', $this, 'tag_Group');
