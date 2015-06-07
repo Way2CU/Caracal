@@ -836,7 +836,10 @@ class youtube extends Module {
 		$conditions = array();
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
-		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
+		
+		$order_asc = true;
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 'yes';
 
 		// grab parameters
 		if (isset($tag_params['group_id']) || isset($tag_params['group_text_id'])) {
@@ -1052,7 +1055,7 @@ class youtube extends Module {
 			$order_by = explode(',', fix_chars($tag_params['order_by']));
 
 		if (isset($tag_params['order_asc']))
-			$order_asc = $tag_params['order_asc'] == 1;
+			$order_asc = $tag_params['order_asc'] == 'yes';
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
