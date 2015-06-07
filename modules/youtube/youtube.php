@@ -741,7 +741,7 @@ class youtube extends Module {
 			$video = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
-										'id' => $tag_params['id']
+										'id' => fix_id($tag_params['id'])
 									));
 
 		} else if (isset($tag_params['text_id'])) {
@@ -749,7 +749,7 @@ class youtube extends Module {
 			$video = $manager->getSingleItem(
 									$manager->getFieldNames(),
 									array(
-										'text_id' => $tag_params['text_id']
+										'text_id' => fix_chars($tag_params['text_id'])
 									));
 
 		} else if (isset($tag_params['random'])) {
