@@ -355,19 +355,23 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$mode = escape_chars($_REQUEST['tranmode']);
 		$shop = shop::getInstance();
 
-		// make sure response is good
-		if ($response != '000') {
-			$return_url = url_Make('checkout_error', 'shop');
-			header('Location: '.$return_url, true, 302);
-			return;
-		}
-
 		// get transaction
 		try {
 			$transaction = Transaction::get($id);
 
 		} catch (UnknownTransactionError $error) {
 			// redirect user to error page
+			$return_url = url_Make('checkout_error', 'shop');
+			header('Location: '.$return_url, true, 302);
+			return;
+		}
+
+		// make sure response is good
+		if ($response != '000') {
+			// mark transaction as canceled
+			$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
+
+			// redirect buyer
 			$return_url = url_Make('checkout_error', 'shop');
 			header('Location: '.$return_url, true, 302);
 			return;
