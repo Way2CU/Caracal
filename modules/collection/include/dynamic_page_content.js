@@ -64,9 +64,9 @@ function DynamicPageContent(container_id, link_selector, switch_delay, change_ur
 					url: url,
 					async: true,
 					dataType: 'html',
-					headers: {'X-Requested-With': 'DynamicContent'}
+					headers: {'X-Requested-With': 'DynamicContent'},
 					success: self._handle_content_load,
-					error: self._handle_content_load_error,
+					error: self._handle_content_load_error
 				});
 			});
 	};
