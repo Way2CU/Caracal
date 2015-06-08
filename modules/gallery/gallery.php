@@ -2276,6 +2276,48 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Get container thumbnail URL based on one of the specified ids.
+	 *
+	 * @param integer $id
+	 * @param string $text_id
+	 * @param integer $size
+	 * @param integer $constraint
+	 * @return string
+	 */
+	public static function getContainerThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+		$manager = GalleryContainerManager::getInstance();
+		$membership_manager = GalleryGroupMembershipManager::getInstance();
+		$conditions = array();
+		$result = '';
+
+		// prepare conditions
+		if (!is_null($id))
+			$conditions['id'] = $id;
+
+		if (!is_null($text_id))
+			$conditions['text_id'] = $text_id;
+
+		// get container
+		$container = $manager->getSingleItem(array('id'), $conditions);
+
+		if (!is_object($container))
+			return $result;
+
+		// get random group for container
+		$membership = $membership_manager->getSingleItem(
+				array('group'),
+				array('container' => $container->id),
+				array('RAND()')  // order by
+			);
+
+		// get thumbnail url for specified group
+		if (is_object($membership))
+			$result = self::getGroupThumbnailById($membership->group, null, $size, $constraint);
+
+		return $result;
+	}
+
+	/**
 	 * Get group image URL based on one of the specified ids.
 	 *
 	 * @param integer $id
