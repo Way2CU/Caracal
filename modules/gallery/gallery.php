@@ -1558,8 +1558,6 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Container($tag_params, $children) {
-		if (!isset($tag_params['id'])) return;
-
 		$conditions = array();
 		$manager = GalleryContainerManager::getInstance();
 
