@@ -43,6 +43,10 @@ class ShopTransactionsHandler {
 				$this->showTransactionDetails();
 				break;
 
+			case 'json_update_status':
+				$this->json_UpdateTransactionStatus();
+				break;
+
 			default:
 				$this->showTransactions();
 				break;

@@ -674,11 +674,6 @@ class shop extends Module {
 				$this->json_ShowCart();
 				break;
 
-			case 'json_update_transaction_status':
-				$handler = ShopTransactionsHandler::getInstance($this);
-				$handler->json_UpdateTransactionStatus();
-				break;
-
 			case 'json_get_shopping_cart_summary':
 				$this->json_GetShoppingCartSummary();
 				break;

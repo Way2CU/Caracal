@@ -80,7 +80,7 @@ function shop_AddColor() {
 	var colors = $('input[name=colors]');
 	var color_name = $('input[name=color_name]');
 	var color_value = $('input[name=color_value]');
-	
+
 	// append color to list
 	if (colors.val() != '')
 		colors.val(colors.val() + ',' + color_name.val() + ':' + color_value.val()); else
@@ -103,7 +103,7 @@ function shop_DeleteColor(event) {
 	var color_values = colors.val().split(',');
 	var new_values = [];
 	var excluded_value = parent.data('name') + ':' + parent.data('value');
-	
+
 	for (var i=0; i<color_values.length; i++) {
 		if (color_values[i] != excluded_value)
 			new_values.push(color_values[i]);
@@ -137,8 +137,11 @@ function shop_UpdateTransactionStatus(button) {
 	var transaction_id = backend_window.find('input[name=id]').eq(0).val();
 
 	var data = {
-		section: 'shop',
-		action: 'json_update_transaction_status',
+		section: 'backend_module',
+		action: 'transfer_control',
+		module: 'shop',
+		backend_action: 'transactions',
+		sub_action: 'json_update_status',
 		id: transaction_id,
 		status: transaction_status
 	};
