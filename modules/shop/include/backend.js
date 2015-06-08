@@ -134,7 +134,8 @@ function shop_UpdateTransactionStatus(button) {
 	var backend_window = $(button).closest('.window');
 	var select = backend_window.find('select[name=status]').eq(0)
 	var transaction_status = select.val();
-	var transaction_id = backend_window.find('input[name=id]').eq(0).val();
+	var transaction_id = backend_window.find('input[name=uid]').eq(0).val();
+	var update_button = $(button);
 
 	var data = {
 		section: 'backend_module',
@@ -147,7 +148,7 @@ function shop_UpdateTransactionStatus(button) {
 	};
 
 	// disable button and select
-	$(button).attr('disabled', 'disabled');
+	update_button.attr('disabled', 'disabled');
 	select.attr('disabled', 'disabled');
 
 	// send data to server
@@ -160,7 +161,7 @@ function shop_UpdateTransactionStatus(button) {
 		async: false,
 		success: function(result) {
 			// enable button and select
-			$(button).removeAttribute('disabled');
+			update_button.removeAttribute('disabled');
 			select.removeAttribute('disabled');
 		}
 	});

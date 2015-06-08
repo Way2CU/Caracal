@@ -6,6 +6,7 @@
 			<label>
 				<span><cms:text constant="label_full_name" module="shop"/></span>
 				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+				<input type="hidden" name="uid" value="$params['uid']" cms:eval="value"/>
 				<input
 					type="text"
 					value="$params['first_name'].' '.$params['last_name']"
