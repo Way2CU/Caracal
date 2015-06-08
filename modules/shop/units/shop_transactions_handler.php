@@ -355,7 +355,7 @@ class ShopTransactionsHandler {
 	 * Handle updating transaction status through AJAX request
 	 */
 	public function json_UpdateTransactionStatus() {
-		$id = fix_id($_REQUEST['id']);
+		$id = escape_chars($_REQUEST['id']);
 		$status = fix_id($_REQUEST['status']);
 		$result = false;
 
