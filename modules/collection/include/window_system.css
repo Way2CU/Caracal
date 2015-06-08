@@ -382,7 +382,7 @@ div.window button:active {
 }
 
 div.window button:disabled {
-	background-color: #b0b0b0;
+	background-color: #cccccc;
 	background-image: none;
 }
 
