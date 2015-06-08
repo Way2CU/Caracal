@@ -122,17 +122,20 @@ function Dialog() {
 	 * Set dialog content from specified URL
 	 *
 	 * @param string url
-	 * @param string container
 	 * @return object
 	 */
-	self.setContentFromURL = function(url, container) {
+	self.setContentFromURL = function(url) {
 		// reset content state flag
 		self._content_loaded = false;
 
 		// initiate loading process
-		if (container != null)
-			self._inner_content.load(url + ' #' + container, self.__handle_content_load); else
-			self._inner_content.load(url, self.__handle_content_load);
+		$.ajax({
+			url: url,
+			async: true,
+			dataType: 'html',
+			headers: {'X-Requested-With': 'Dialog'}
+			success: self.__handle_content_load,
+		});
 
 		// reset scroll position
 		self._inner_content.css('top', 0);

@@ -60,13 +60,20 @@ function DynamicPageContent(container_id, link_selector, switch_delay, change_ur
 			.data('activated-url', url)
 			.data('activated-link', activated_link)
 			.animate({opacity: 0}, self._switch_delay, function() {
-				$.get(url, self._handle_content_load).fail(self._handle_content_load_error);
+				$.ajax({
+					url: url,
+					async: true,
+					dataType: 'html',
+					headers: {'X-Requested-With': 'DynamicContent'}
+					success: self._handle_content_load,
+					error: self._handle_content_load_error,
+				});
 			});
 	};
 
 	/**
 	 * Handle event after content has been loaded.
-	 * 
+	 *
 	 * @param string data
 	 */
 	self._handle_content_load = function(data) {
