@@ -355,22 +355,12 @@ class ShopTransactionsHandler {
 	 * Handle updating transaction status through AJAX request
 	 */
 	public function json_UpdateTransactionStatus() {
-		$manager = ShopTransactionsManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 		$status = fix_id($_REQUEST['status']);
 		$result = false;
-		$transaction = null;
 
-		if ($_SESSION['logged']) {
-			// get transaction
-			$transaction = $manager->getSingleItem(array('id'), array('id' => $id));
-
-			// update status
-			if (is_object($transaction)) {
-				$manager->updateData(array('status' => $status), array('id' => $id));
-				$result = true;
-			}
-		}
+		// set transaction status
+		$result = shop::getInstance()->setTransactionStatus($id, $status);
 
 		print json_encode($result);
 	}

@@ -159,9 +159,9 @@ function shop_UpdateTransactionStatus(button) {
 		data: data,
 		async: false,
 		success: function(result) {
-			if (!result) {
-			} else {
-			}
+			// enable button and select
+			$(button).removeAttribute('disabled');
+			select.removeAttribute('disabled');
 		}
 	});
 }
