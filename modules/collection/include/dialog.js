@@ -133,8 +133,8 @@ function Dialog() {
 			url: url,
 			async: true,
 			dataType: 'html',
-			headers: {'X-Requested-With': 'Dialog'}
-			success: self.__handle_content_load,
+			headers: {'X-Requested-With': 'Dialog'},
+			success: self.__handle_content_load
 		});
 
 		// reset scroll position
