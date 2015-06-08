@@ -161,8 +161,8 @@ function shop_UpdateTransactionStatus(button) {
 		async: false,
 		success: function(result) {
 			// enable button and select
-			update_button.removeAttribute('disabled');
-			select.removeAttribute('disabled');
+			update_button.removeAttr('disabled');
+			select.removeAttr('disabled');
 		}
 	});
 }
