@@ -161,6 +161,29 @@ final class Transaction {
 			array('id' => $transaction->id)
 		);
 	}
+
+	/**
+	 * Set transaction totals.
+	 *
+	 * @param object $transaction
+	 * @param float $total
+	 * @param float $handling
+	 */
+	public static function set_totals($transaction, $total=null, $handling=null) {
+		$manager = self::get_manager();
+
+		// prepare data
+		$data = array();
+
+		if (!is_null($total))
+			$data['total'] = $total;
+
+		if (!is_null($handling))
+			$data['handling'] = $handling;
+
+		// update data
+		$manager->updateData($data, array('id' => $transaction->id));
+	}
 }
 
 ?>

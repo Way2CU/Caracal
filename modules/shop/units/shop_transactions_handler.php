@@ -47,6 +47,10 @@ class ShopTransactionsHandler {
 				$this->json_UpdateTransactionStatus();
 				break;
 
+			case 'json_update_total':
+				$this->json_UpdateTransactionTotal();
+				break;
+
 			default:
 				$this->showTransactions();
 				break;
@@ -352,9 +356,9 @@ class ShopTransactionsHandler {
 	}
 
 	/**
-	 * Handle updating transaction status through AJAX request
+	 * Handle updating transaction status through AJAX request.
 	 */
-	public function json_UpdateTransactionStatus() {
+	private function json_UpdateTransactionStatus() {
 		$id = escape_chars($_REQUEST['id']);
 		$status = fix_id($_REQUEST['status']);
 		$result = false;
@@ -362,6 +366,28 @@ class ShopTransactionsHandler {
 		// set transaction status
 		$result = shop::getInstance()->setTransactionStatus($id, $status);
 
+		print json_encode($result);
+	}
+
+	/**
+ 	 * Update handling and total amount for specified transaction through AJAX request.
+	 */
+	private function json_UpdateTransactionTotal() {
+		$id = escape_chars($_REQUEST['id']);
+		$total = fix_id($_REQUEST['total']);
+		$handling = fix_id($_REQUEST['handling']);
+		$result = false;
+
+		try {
+			$transaction = Transaction::get($id);
+
+		} catch (UnknownTransactionError $error) {
+			trigger_error('Unable to change transaction totals.', E_USER_NOTICE);
+			print json_encode($result);
+			return;
+		}
+
+		Transaction::set_totals($transaction, $total, $handling);
 		print json_encode($result);
 	}
 }
