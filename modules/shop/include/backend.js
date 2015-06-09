@@ -210,7 +210,6 @@ Caracal.Shop.update_total_amount = function(button) {
 	var backend_window = $(button).closest('.window');
 	var handling = backend_window.find('input[name=handling]').eq(0);
 	var total = backend_window.find('input[name=total]').eq(0);
-	var transaction_status = select.val();
 	var transaction_id = backend_window.find('input[name=uid]').eq(0).val();
 	var update_button = $(button);
 
