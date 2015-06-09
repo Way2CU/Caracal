@@ -1,6 +1,7 @@
 {
     "label_terminal": "שם מסוף:",
     "label_terminal2": "Terminal for charging tokens:",
+    "label_terminal_password": "Terminal password:",
     "label_url_cancel": "כתובת ביטול:",
     "label_url_confirm": "כתובת אישור:",
     "menu_tranzila": "טרנזילה",
