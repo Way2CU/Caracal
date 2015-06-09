@@ -78,7 +78,7 @@
 				<label class="inline">
 					<span><cms:text constant="label_color_name" module="shop"/></span>
 					<input name="color_name" type="text"/>
-					<button type="button" onclick="javascript: shop_AddColor();">
+					<button type="button" onclick="javascript: Caracal.Shop.add_color();">
 						<cms:text constant="add"/>
 					</button>
 				</label>
@@ -115,7 +115,7 @@
 					<input name="search_query" type="text"/>
 					<button
 						type="button"
-						onclick="javascript: shop_OpenItemSearch();"
+						onclick="javascript: Caracal.Caracal.open_item_search();"
 					>
 						<cms:text constant="search"/>
 					</button>

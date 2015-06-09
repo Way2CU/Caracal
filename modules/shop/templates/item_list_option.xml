@@ -13,7 +13,7 @@
 			<cms:var name="$params['rating']"/>
 		</span>
 		<span class="column">
-			<a href="javascript: void(0);" onclick="javascript: shop_RemoveRelatedItem(this);">
+			<a href="javascript: void(0);" onclick="javascript: Caracal.Shop.remove_related_item(this);">
 				<cms:text constant="delete"/>
 			</a>
 		</span>
