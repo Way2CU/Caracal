@@ -229,7 +229,6 @@ Caracal.Shop.update_total_amount = function(button) {
 
 	// disable button and select
 	update_button.attr('disabled', 'disabled');
-	select.attr('disabled', 'disabled');
 
 	// send data to server
 	$.ajax({
@@ -242,7 +241,6 @@ Caracal.Shop.update_total_amount = function(button) {
 		success: function(result) {
 			// enable button and select
 			update_button.removeAttr('disabled');
-			select.removeAttr('disabled');
 		}
 	});
 };
