@@ -4,6 +4,9 @@
  * Handler for shop transactions
  */
 
+use Modules\Shop\Transaction;
+
+
 class ShopTransactionsHandler {
 	private static $_instance;
 	private $_parent;
