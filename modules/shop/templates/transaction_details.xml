@@ -75,7 +75,7 @@
 							<label>
 								<button
 									type="button"
-									onclick="Caracal.Shop.update_total_amount();"
+									onclick="Caracal.Shop.update_total_amount(this);"
 									>
 									<cms:text constant="save"/>
 								</button>
