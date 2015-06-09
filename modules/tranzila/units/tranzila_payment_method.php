@@ -277,10 +277,13 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 */
 	public function charge_transaction($transaction) {
 		$result = false;
+		$terminal_password = $this->parent->settings['terminal_password'];
 
 		// make sure transaction has token associated
-		if ($transaction->payment_token == 0)
+		if ($transaction->payment_token == 0) {
+			trigger_error('Invalid token. Can\'t charge transaction!', E_USER_NOTICE);
 			return $result;
+		}
 
 		// get token
 		$token_manager = Modules\Shop\TokenManager::getInstance();
@@ -310,7 +313,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		$currency_code = -1;
 		if (array_key_exists($currency->currency, $this->currency))
-			$currency_code = $this->currency[$currency];
+			$currency_code = $this->currency[$currency->currency];
 
 		// prepare parameters
 		$params = array(
@@ -320,7 +323,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'TranzilaPW'	=> $terminal_password,
 			'expdate'		=> $expiration_date,
 			'tranmode'		=> 'A',
-			'TranzilaTK'	=> $token->value
+			'TranzilaTK'	=> $token->token
 		);
 
 		$query = http_build_query($params);
@@ -333,7 +336,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$response = array();
 			parse_str($response_data, $response);
 
-			$result = $response['Response'] == '000';
+			if (array_key_exists('Response', $response))
+				$result = $response['Response'] == '000'; else
+				$result = false;
 		}
 
 		// update transaction status
