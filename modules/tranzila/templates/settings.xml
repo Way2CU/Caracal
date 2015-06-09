@@ -25,6 +25,17 @@
 			/>
 		</label>
 		<label>
+			<span><cms:text constant="label_terminal_password" module="tranzila"/></span>
+			<input
+				type="text"
+				class="code"
+				name="terminal_password"
+				value="$settings['terminal_password']"
+				cms:eval="value"
+				style="width: 260px;"
+			/>
+		</label>
+		<label>
 			<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
 			<input
 				type="text"
