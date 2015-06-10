@@ -344,8 +344,42 @@ class ShopTransactionsHandler {
 	public function tag_TransactionStatus($tag_params, $children) {
 		$active = isset($tag_params['active']) ? fix_id($tag_params['active']) : -1;
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_status_option.xml');
+		$transaction = null;
 
-		foreach (TransactionStatus::$reverse as $id => $constant) {
+		// get transaction id
+		if (isset($tag_params['transaction']) {
+			$manager = ShopTransactionsManager::getInstance();
+			$conditions = array();
+
+			if (is_numeric($tag_params['transaction']))
+				$conditions['id'] = fix_id($tag_params['transaction']); else
+				$conditions['uid'] = escape_chars($tag_params['transaction']);
+
+			$transaction = $manager->getSingleItem(array('type', 'status'), $conditions);
+		}
+
+		// prepare available statuses
+		if (is_object($transaction) && array_key_exists($transaction->type, TransactionStatus::$flow)) {
+			$transaction_flow = TransactionStatus::$flow[$transaction->type];
+
+			// get list of codes available for this transaction
+			$code_list = array();
+			if (isset($transaction_flow[$transaction->status]))
+				$code_list = $transaction_flow[$transaction->status];
+
+			// prepare status list
+			$status_list = array();
+			if (count($code_list) > 0)
+				foreach($code_list as $code)
+					$status_list[$code] = TransactionStatus::$reverse[$code];
+
+		} else {
+			// default complete status list
+			$status_list = TransactionStatus::$reverse;
+		}
+
+		// parse templates
+		foreach ($status_list as $id => $constant) {
 			$params = array(
 					'id'		=> $id,
 					'text'		=> $this->_parent->getLanguageConstant($constant),

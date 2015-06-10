@@ -90,7 +90,11 @@
 			<label>
 				<span><cms:text constant="label_status" module="shop"/></span>
 				<select name="status">
-					<cms:transaction_status active="$params['status']" cms:eval="active"/>
+					<cms:transaction_status
+						active="$params['status']"
+						transaction="$params['id']"
+						cms:eval="active,id"
+						/>
 				</select>
 				<button
 					type="button"
