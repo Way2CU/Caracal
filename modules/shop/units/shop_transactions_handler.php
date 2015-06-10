@@ -347,7 +347,7 @@ class ShopTransactionsHandler {
 		$transaction = null;
 
 		// get transaction id
-		if (isset($tag_params['transaction']) {
+		if (isset($tag_params['transaction'])) {
 			$manager = ShopTransactionsManager::getInstance();
 			$conditions = array();
 
