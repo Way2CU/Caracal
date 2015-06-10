@@ -93,7 +93,7 @@
 					<cms:transaction_status
 						active="$params['status']"
 						transaction="$params['id']"
-						cms:eval="active,id"
+						cms:eval="active,transaction"
 						/>
 				</select>
 				<button

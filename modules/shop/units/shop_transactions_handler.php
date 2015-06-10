@@ -359,7 +359,7 @@ class ShopTransactionsHandler {
 		}
 
 		// prepare available statuses
-		if (is_object($transaction) && array_key_exists($transaction->type, TransactionStatus::$flow)) {
+		if (is_object($transaction) && isset(TransactionStatus::$flow[$transaction->type])) {
 			$transaction_flow = TransactionStatus::$flow[$transaction->type];
 
 			// get list of codes available for this transaction
