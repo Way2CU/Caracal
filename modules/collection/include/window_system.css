@@ -713,26 +713,17 @@ div.dialog div.container div.content {
  * Floated boxes
  */
 div.window div.box {
-	display: block;
+	display: inline-block;
+	vertical-align: top;
 }
 
 div.window div.box.left {
-	float: left;
 	margin-right: 7px;
 }
 
-div.window div.box.right {
-	float: left;
-}
-
 body.rtl div.window div.box.left {
-	float: right;
 	margin-left: 7px;
 	margin-right: 0px;
-}
-
-body.rtl div.window div.box.right {
-	float: right;
 }
 
 /**
