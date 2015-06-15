@@ -17,7 +17,7 @@ class ItemManager {
 	 * @var array
 	 */
 	protected $string_fields = array(
-							'CHAR', 'TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP',
+							'CHAR', 'TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP', 'TIME',
 							'ML_VARCHAR', 'ML_TEXT', 'ML_CHAR'
 						);
 
