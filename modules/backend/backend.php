@@ -860,12 +860,23 @@ class backend extends Module {
 	/**
 	 * This function decodes characters encoded by JavaScript
 	 *
-	 * @param string $str
-	 * @return string
+	 * @param string/array $str
+	 * @return string/array
 	 */
 	private function utf8_urldecode($str) {
-		$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
-		return html_entity_decode($str, null, 'UTF-8');;
+		$result = '';
+
+		if (!is_array($str)) {
+			$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
+			$result = html_entity_decode($str, null, 'UTF-8');;
+
+		} else {
+			$result = array();
+			foreach ($str as $index => $value)
+				$result[$index] = utf8_urldecode($value);
+		}
+
+		return $result;
 	}
 }
 
