@@ -473,6 +473,11 @@ function Window(id, width, title, can_close, url, existing_structure) {
 
 			$(form).find(type).each(function() {
 				var name = $(this).attr('name');
+
+				// we ignore fields without name
+				if (name == undefined)
+					return;
+
 				var is_list = name.substring(name.length - 2) == '[]';
 
 				if ($(this).hasClass('multi-language')) {
