@@ -1770,8 +1770,13 @@ class shop extends Module {
 			$time_format = $this->getLanguageConstant('format_time_short');
 
 			foreach ($delivery_prices as $key => $delivery_data) {
-				$start_date = date($date_format.' '.$time_format, $delivery_data[3]);
-				$end_date = date($date_format.' '.$time_format, $delivery_data[4]);
+				if ($delivery_data[3] != null)
+					$start_date = date($date_format.' '.$time_format, $delivery_data[3]); else
+					$start_date = '';
+
+				if ($delivery_data[4] != null)
+					$end_date = date($date_format.' '.$time_format, $delivery_data[4]); else
+					$end_date = '';
 
 				$delivery_prices[$key][] = $start_date;
 				$delivery_prices[$key][] = $end_date;
