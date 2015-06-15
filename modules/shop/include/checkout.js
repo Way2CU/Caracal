@@ -579,9 +579,15 @@ Caracal.Shop.CheckoutForm = function() {
 				.append(price)
 				.appendTo(entry);
 
-			if (method[4] === null)
-				time.html(self.cached_data.label_no_estimate); else
-				time.html(self.cached_data.label_estimated_time + ' ' + (method[3] == null ? method[4] : method[3] + ' - ' + method[4]));
+			if (method[4] === null) {
+				// no estimate available
+				time.html(self.cached_data.label_no_estimate);
+
+			} else {
+				var start = method[3] != null ? method[5] + ' - ' : '';
+				var end = method[6];
+				time.html(self.cached_data.label_estimated_time + ' ' + start + end);
+			}
 
 			time.appendTo(entry);
 
