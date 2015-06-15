@@ -470,10 +470,11 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		// collect data from from
 		for (var index in field_types) {
 			var type = field_types[index];
-			var name = $(this).attr('name');
-			var is_list = name.substring(name.length - 2) == '[]';
 
 			$(form).find(type).each(function() {
+				var name = $(this).attr('name');
+				var is_list = name.substring(name.length - 2) == '[]';
+
 				if ($(this).hasClass('multi-language')) {
 					// multi-language input field, we need to gather other data
 					var temp_data = $(this).data('language');
