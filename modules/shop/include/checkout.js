@@ -586,7 +586,7 @@ Caracal.Shop.CheckoutForm = function() {
 			} else {
 				var start = method[3] != null ? method[5] + ' - ' : '';
 				var end = method[6];
-				time.html(self.cached_data.label_estimated_time + ' ' + start + end);
+				time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
 			}
 
 			time.appendTo(entry);
