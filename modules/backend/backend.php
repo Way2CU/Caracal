@@ -873,7 +873,7 @@ class backend extends Module {
 		} else {
 			$result = array();
 			foreach ($str as $index => $value)
-				$result[$index] = utf8_urldecode($value);
+				$result[$index] = $this->utf8_urldecode($value);
 		}
 
 		return $result;
