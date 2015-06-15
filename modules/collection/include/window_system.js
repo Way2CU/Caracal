@@ -468,33 +468,49 @@ function Window(id, width, title, can_close, url, existing_structure) {
 		var field_types = ['input', 'select', 'textarea'];
 
 		// collect data from from
-		for(var index in field_types) {
+		for (var index in field_types) {
 			var type = field_types[index];
+			var name = $(this).attr('name');
+			var is_list = name.substring(name.length - 2) == '[]';
 
 			$(form).find(type).each(function() {
 				if ($(this).hasClass('multi-language')) {
 					// multi-language input field, we need to gather other data
-					var name = $(this).attr('name');
 					var temp_data = $(this).data('language');
 
 					for (var language in temp_data)
 						data[name + '_' + language] = encodeURIComponent(temp_data[language]);
 
 				} else {
-					if ($(this).attr('type') == 'checkbox') {
+					var field_type = $(this).attr('type');
+
+					if (field_type == 'checkbox') {
 						// checkbox
-						data[$(this).attr('name')] = this.checked ? 1 : 0;
+						data[name] = this.checked ? 1 : 0;
 
-					} else if ($(this).attr('type') == 'radio') {
+					} else if (field_type == 'radio') {
 						// radio button
-						var group_name = $(this).attr('name');
-
-						if (data[group_name] == undefined)
-							data[group_name] = encodeURIComponent($(form).find('input:radio[name='+group_name+']:checked').val());
+						if (data[name] == undefined) {
+							var value = $(form).find('input:radio[name='+name+']:checked').val();
+							data[name] = encodeURIComponent(value);
+						}
 
 					} else {
 						// all other components
-						data[$(this).attr('name')] = encodeURIComponent($(this).val());
+						var value = encodeURIComponent($(this).val());
+
+						if (!is_list) {
+							// store regular field value
+							data[name] = value;
+
+						} else {
+							// create list storage
+							if (data[name] == undefined)
+								data[name] = new Array();
+
+							// add value to the list
+							data[name].push(value);
+						}
 					}
 				}
 			});
