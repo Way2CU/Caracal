@@ -319,13 +319,14 @@ function Dialog() {
 	/**
 	 * Handle content load from URL.
 	 *
-	 * @param string response
-	 * @param string status
-	 * @param object xhr
+	 * @param mixed data
 	 */
-	self.__handle_content_load = function(response, status, xhr) {
+	self.__handle_content_load = function(data) {
 		// update content state flag
 		self._content_loaded = true;
+
+		// set dialog content
+		self._inner_content.html(data)
 
 		// show dialog if needed
 		if (self._show_on_load)
