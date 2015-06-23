@@ -607,9 +607,11 @@ div.checkout_controls button:disabled {
 }
 
 
-div.checkout_controls button small {
+div.checkout_controls small {
 	display: block;
+	padding-top: 5px;
 
+	color: #909090;
 	font-size: 0.8em;
 	font-weight: normal;
 }
