@@ -129,6 +129,13 @@
 				<cms:var name="$params['checkout_fields']"/>
 
 				<div class="checkout_controls">
+					<!-- Show checkout method -->
+					<small>
+						<cms:text constant="label_checkout_method" module="shop"/>
+						<cms:raw text="&amp;nbsp;"/>
+						<cms:var name="$params['checkout_name']"/>
+					</small>
+
 					<button
 						type="button"
 						onclick="javascript:window.history.back()"
@@ -138,13 +145,6 @@
 					<button type="submit">
 						<cms:text constant="checkout" module="shop"/>
 					</button>
-
-					<!-- Show checkout method -->
-					<small>
-						<cms:text constant="label_checkout_method" module="shop"/>
-						<cms:raw text="&amp;nbsp;"/>
-						<cms:var name="$params['checkout_name']"/>
-					</small>
 				</div>
 
 				<div class="clear_float"/>
