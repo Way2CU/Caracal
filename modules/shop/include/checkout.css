@@ -542,8 +542,7 @@ body.rtl div.checkout_controls {
 }
 
 div.checkout_controls button {
-	margin-left: 5px;
-	margin-right: 5px;
+	margin-left: 10px;
 	padding: 10px;
 	padding-left: 30px;
 	padding-right: 30px;
@@ -555,11 +554,12 @@ div.checkout_controls button {
 	background-image: linear-gradient(0deg, #47a0f3 0%, #0c70d5 75%, #0b6fd4 100%);
 	background-repeat: repeat-x;
 	background-positiont: left top;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-	inset 0 1px rgba(255, 255, 255, 0.3),
-	inset 0 10px rgba(255, 255, 255, 0.2),
-	inset 0 10px 20px rgba(255, 255, 255, 0.25),
-	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 1px rgba(255, 255, 255, 0.3),
+		inset 0 10px rgba(255, 255, 255, 0.2),
+		inset 0 10px 20px rgba(255, 255, 255, 0.25),
+		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	color: white;
 	font-size: 1.1em;
@@ -570,6 +570,11 @@ div.checkout_controls button {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+}
+
+body.rtl div.checkout_controls button {
+	margin-left: 0px;
+	margin-right: 10px;
 }
 
 div#checkout div.checkout_controls button {
