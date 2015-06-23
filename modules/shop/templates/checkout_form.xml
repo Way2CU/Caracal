@@ -137,12 +137,14 @@
 					</button>
 					<button type="submit">
 						<cms:text constant="checkout" module="shop"/>
-						<small>
-							<cms:text constant="with" module="shop"/>
-							<cms:raw text=" "/>
-							<cms:var name="$params['checkout_name']"/>
-						</small>
 					</button>
+
+					<!-- Show checkout method -->
+					<small>
+						<cms:text constant="label_checkout_method" module="shop"/>
+						<cms:raw text="&amp;nbsp;"/>
+						<cms:var name="$params['checkout_name']"/>
+					</small>
 				</div>
 
 				<div class="clear_float"/>
