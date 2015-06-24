@@ -536,7 +536,7 @@ Caracal.Shop.CheckoutForm = function() {
 			self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
 
 		// connect events
-		self.checkout.find('textarea[name=remarks]').on('focuslost', self.handler.remarks_focus_lost);
+		self.checkout.find('textarea[name=remarks]').on('blur', self.handler.remarks_focus_lost);
 	};
 
 	/**
