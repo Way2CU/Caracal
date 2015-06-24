@@ -534,6 +534,22 @@ Caracal.Shop.CheckoutForm = function() {
 		// disable checkout button
 		if (self.delivery_provider_list.length > 0)
 			self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
+
+		// connect events
+		self.checkout.find('textarea[name=remarks]').on('focuslost', self.handler.remarks_focus_lost);
+	};
+
+	/**
+	 * Save remarks when they loose focus.
+	 *
+	 * @param object event
+	 */
+	self.handler.remarks_focus_lost = function(event) {
+		var textarea = $(this);
+
+		// send data to server
+		new Communicator('shop')
+			.send('json_save_remark', {remark: textarea.val()});
 	};
 
 	/**

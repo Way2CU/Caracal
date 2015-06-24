@@ -2258,7 +2258,7 @@ class shop extends Module {
 
 			// get data
 			$uid = $_SESSION['transaction']['uid'];
-			$remark = fix_chars($_REQUEST['remark']);
+			$remark = escape_chars($_REQUEST['remark']);
 
 			// store remark
 			$manager->updateData(array('remark' => $remark), array('uid' => $uid));
