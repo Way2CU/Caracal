@@ -245,10 +245,10 @@ div#checkout div.delivery_method label input[type=radio] {
 
 div#checkout div.delivery_method label input + div:before {
 	display: inline-block;
+	vertical-align: middle;
 	width: 16px;
 	height: 16px;
 
-	margin-bottom: -12px;
 	margin-right: 6px;
 
 	border: 1px solid #b0b0b0;
