@@ -29,6 +29,10 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		'€'	=> 'EUR',
 	);
 
+	private $language_aliases = array(
+		'he'	=> 'il'
+	);
+
 	/**
 	 * Constructor
 	 */
@@ -176,7 +180,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'cred_type'		=> 1,
 			'pdesc'			=> $description,
 			'tranmode'		=> 'AK',
-			'transaction_id' => $data['uid']
+			'transaction_id' => $data['uid'],
+			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
 		);
 
 		// create HTML form
@@ -232,7 +237,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
 			'pdesc'			=> $description,
 			'tranmode'		=> 'VK',
-			'transaction_id' => $data['uid']
+			'transaction_id' => $data['uid'],
+			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
 		);
 
 		// create HTML form
