@@ -2635,7 +2635,7 @@ class shop extends Module {
 					// check if user wants to receive promotional emails
 					$want_promotions = false;
 					if (isset($_REQUEST['want_promotions']))
-						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1'
+						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
 
 					// collect data
 					if (isset($_REQUEST['name'])) {
