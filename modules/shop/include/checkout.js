@@ -166,6 +166,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.shipping_information_form.find('input[name=zip]').val(option.data('zip'));
 		self.shipping_information_form.find('select[name=country]').val(option.data('country'));
 		self.shipping_information_form.find('input[name=state]').val(option.data('state'));
+		self.shipping_information_form.find('input[name=access_code]').val(option.data('access_code'));
 	};
 
 	/**

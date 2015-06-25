@@ -111,7 +111,7 @@
     "label_state": "מדינה:",
     "label_status": "סטטוס:",
     "label_street": "רחוב:",
-    "label_security_code": "Security access code:",
+    "label_access_code": "Security access code:",
     "label_tax": "מעמ (%):",
     "label_testing_mode": "לאתחל מצב בדיקה?",
     "label_text_id": "מזהה טקסט:",
@@ -271,5 +271,5 @@
     "tooltip_street": "Street address, P.O. box, company name",
     "tooltip_street2": "Apartment, suite, unit, building, floor, etc.",
     "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח",
-    "tooltip_security_code": "For buildings and gated communities."
+    "tooltip_access_code": "For buildings and gated communities."
 }

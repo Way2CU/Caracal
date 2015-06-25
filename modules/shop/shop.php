@@ -1857,7 +1857,8 @@ class shop extends Module {
 						'city'		=> $address->city,
 						'zip'		=> $address->zip,
 						'state'		=> $address->state,
-						'country'	=> $address->country
+						'country'	=> $address->country,
+						'access_code'	=> $address->access_code
 					);
 				}
 
