@@ -111,6 +111,7 @@
 	"label_state": "State:",
 	"label_status": "Status:",
 	"label_street": "Street:",
+	"label_security_code": "Security access code:",
 	"label_tax": "Tax (%):",
 	"label_testing_mode": "Enable testing mode?",
 	"label_text_id": "Text ID:",
@@ -267,5 +268,8 @@
 	"type_regular": "Regular",
 	"type_donation": "Donation",
 	"type_delayed": "Delayed",
-	"tooltip_total_money": "Total price without handling and shipping."
+	"tooltip_street": "Street address, P.O. box, company name",
+	"tooltip_street2": "Apartment, suite, unit, building, floor, etc.",
+	"tooltip_total_money": "Total price without handling and shipping.",
+	"tooltip_security_code": "For buildings and gated communities."
 }

@@ -175,6 +175,13 @@
 										</span>
 									</label>
 								</cms:if>
+								<label class="checkbox">
+									<input
+										type="checkbox"
+										name="agree_to_promotion"
+										/>
+									<span><cms:text constant="label_agree_to_promotions" module="shop"/></span>
+								</label>
 							</div>
 
 							<hr/>
@@ -209,6 +216,13 @@
 										</span>
 									</label>
 								</cms:if>
+								<label class="checkbox">
+									<input
+										type="checkbox"
+										name="agree_to_promotion"
+										/>
+									<span><cms:text constant="label_agree_to_promotions" module="shop"/></span>
+								</label>
 							</div>
 
 							<div class="checkout_controls">
@@ -276,9 +290,10 @@
 									maxlength="200"
 									data-required="1"
 									autocomplete="on"
+									cms:tooltip="tooltip_street"
 									/>
 							</label>
-							<label class="separator">
+							<label>
 								<span></span>
 								<input
 									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
@@ -288,6 +303,20 @@
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 									maxlength="200"
 									autocomplete="on"
+									cms:tooltip="tooltip_street2"
+									/>
+							</label>
+							<label class="separator">
+								<span><cms:text constant="label_security_code" module="shop"/></span>
+								<input
+									class="in_array('security_code', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="security_code"
+									value="isset($_POST['security_code']) ? fix_chars($_POST['security_code']) : ''"
+									maxlength="40"
+									autocomplete="on"
+									cms:tooltip="tooltip_security_code"
 									/>
 							</label>
 							<label>
