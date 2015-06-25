@@ -178,9 +178,9 @@
 								<label class="checkbox">
 									<input
 										type="checkbox"
-										name="agree_to_promotion"
+										name="want_promotions"
 										/>
-									<span><cms:text constant="label_agree_to_promotions" module="shop"/></span>
+									<span><cms:text constant="label_want_promotions" module="shop"/></span>
 								</label>
 							</div>
 
