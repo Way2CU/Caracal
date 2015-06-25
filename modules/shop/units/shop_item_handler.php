@@ -760,6 +760,7 @@ class ShopItemHandler {
 							'rating'		=> $rating,
 							'priority'		=> $item->priority,
 							'timestamp'		=> $item->timestamp,
+							'unix_timestamp'=> strtotime($item->timestamp),
 							'visible'		=> $item->visible,
 							'deleted'		=> $item->deleted,
 							'item_change'	=> url_MakeHyperlink(
