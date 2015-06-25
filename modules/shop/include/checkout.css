@@ -744,6 +744,29 @@ div#input_details label:last-of-type {
 	margin-bottom: 15px;
 }
 
+div#input_details label[data-tooltip]:before {
+	left: 215px;
+}
+
+div#input_details label[data-tooltip]:after {
+	left: 200px;
+	width: auto;
+}
+
+body.rtl div#input_details label {
+	text-align: right;
+}
+
+body.rtl div#input_details label[data-tooltip]:before {
+	left: auto;
+	right: 215px;
+}
+
+body.rtl div#input_details label[data-tooltip]:after {
+	left: auto;
+	right: 200px;
+}
+
 div#input_details a {
 	color: #0b6fd4;
 	text-decoration: none;
@@ -774,10 +797,6 @@ div#input_details div.existing_account label:first-of-type,
 div#input_details div.new_account label:first-of-type,
 div#input_details div.guest_checkout label:first-of-type {
 	margin-top: 3px;
-}
-
-body.rtl div#input_details label {
-	text-align: right;
 }
 
 div#input_details label span {

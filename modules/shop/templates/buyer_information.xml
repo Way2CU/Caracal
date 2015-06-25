@@ -292,7 +292,7 @@
 									autocomplete="on"
 									/>
 							</label>
-							<label cms:tooltip="tooltip_street2">
+							<label class="separator" cms:tooltip="tooltip_street2">
 								<span></span>
 								<input
 									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
@@ -301,18 +301,6 @@
 									name="street2"
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 									maxlength="200"
-									autocomplete="on"
-									/>
-							</label>
-							<label class="separator" cms:tooltip="tooltip_security_code">
-								<span><cms:text constant="label_security_code" module="shop"/></span>
-								<input
-									class="in_array('security_code', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="security_code"
-									value="isset($_POST['security_code']) ? fix_chars($_POST['security_code']) : ''"
-									maxlength="40"
 									autocomplete="on"
 									/>
 							</label>
@@ -386,6 +374,18 @@
 									type="text"
 									name="state"
 									value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
+									maxlength="40"
+									autocomplete="on"
+									/>
+							</label>
+							<label cms:tooltip="tooltip_security_code">
+								<span><cms:text constant="label_security_code" module="shop"/></span>
+								<input
+									class="in_array('security_code', $params['bad_fields']) ? 'bad' : ''"
+									cms:eval="class,value"
+									type="text"
+									name="security_code"
+									value="isset($_POST['security_code']) ? fix_chars($_POST['security_code']) : ''"
 									maxlength="40"
 									autocomplete="on"
 									/>
