@@ -698,8 +698,8 @@ class ShopItemHandler {
 
 			// time marker after which all added items are considered new
 			$days_until_old = 7;
-			if (isset($this->_parent->settings['days_until_old']))
-				$days_until_old = $this->_parent->settings['days_until_old'];
+			if (isset($tag_params['days_until_old']))
+				$days_until_old = fix_id($tag_params['days_until_old']);
 			$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
 
 			foreach ($items as $item) {
