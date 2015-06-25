@@ -1232,7 +1232,7 @@ class links extends Module {
 		if (isset($_REQUEST['id']))
 			$conditions['id'] = fix_id($_REQUEST['id']);
 
-		if (isset($_REQUEST['order_by'])
+		if (isset($_REQUEST['order_by']))
 			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
 
 		if (isset($_REQUEST['order_asc']))
