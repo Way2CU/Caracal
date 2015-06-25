@@ -696,6 +696,12 @@ class ShopItemHandler {
 
 			$manufacturer_manager = ShopManufacturerManager::getInstance();
 
+			// time marker after which all added items are considered new
+			$days_until_old = 7;
+			if (isset($this->_parent->settings['days_until_old']))
+				$days_until_old = $this->_parent->settings['days_until_old'];
+			$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
+
 			foreach ($items as $item) {
 				if (!is_null($gallery)) {
 					// get manufacturer logo
@@ -760,7 +766,7 @@ class ShopItemHandler {
 							'rating'		=> $rating,
 							'priority'		=> $item->priority,
 							'timestamp'		=> $item->timestamp,
-							'unix_timestamp'=> strtotime($item->timestamp),
+							'is_new'		=> strtotime($item->timestamp) >= $new_timestamp,
 							'visible'		=> $item->visible,
 							'deleted'		=> $item->deleted,
 							'item_change'	=> url_MakeHyperlink(
