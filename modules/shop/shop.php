@@ -2555,7 +2555,8 @@ class shop extends Module {
 						'email'			=> escape_chars($_REQUEST['new_email']),
 						'uid'			=> isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
 						'guest'			=> 0,
-						'agreed'		=> $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1'
+						'agreed'		=> $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
+						'promotions'	=> $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1'
 					);
 
 					$password = $_REQUEST['new_password'];
@@ -2631,6 +2632,11 @@ class shop extends Module {
 					if (isset($_REQUEST['agree_to_terms']))
 					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
 
+					// check if user wants to receive promotional emails
+					$want_promotions = false;
+					if (isset($_REQUEST['want_promotions']))
+						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1'
+
 					// collect data
 					if (isset($_REQUEST['name'])) {
 						$name = explode(' ', escape_chars($_REQUEST['name']), 1);
@@ -2651,7 +2657,8 @@ class shop extends Module {
 						'last_name'		=> $last_name,
 						'guest'			=> 1,
 						'system_user'	=> 0,
-						'agreed'		=> $agree_to_terms
+						'agreed'		=> $agree_to_terms,
+						'promotions'	=> $want_promotions
 					);
 
 					// include uid if specified
