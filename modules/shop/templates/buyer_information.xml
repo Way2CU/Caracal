@@ -378,6 +378,7 @@
 									autocomplete="on"
 									/>
 							</label>
+							<hr/>
 							<label cms:tooltip="tooltip_security_code">
 								<span><cms:text constant="label_security_code" module="shop"/></span>
 								<input
