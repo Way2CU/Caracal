@@ -1220,6 +1220,8 @@ class links extends Module {
 	 */
 	private function json_Link() {
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 		$manager = LinksManager::getInstance();
 		$result = array(
 					'error'			=> true,
@@ -1230,8 +1232,14 @@ class links extends Module {
 		if (isset($_REQUEST['id']))
 			$conditions['id'] = fix_id($_REQUEST['id']);
 
+		if (isset($_REQUEST['order_by'])
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
+
+		if (isset($_REQUEST['order_asc']))
+			$order_asc = $_REQUEST['order_asc'] == 1;
+
 		// get link from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// make sure link exists
 		if (is_null($item)) {
