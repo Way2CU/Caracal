@@ -172,6 +172,7 @@
 												>
 												<cms:text constant="label_agree_to_terms2" module="shop"/>
 											</a>
+											<cms:raw text="."/>
 										</span>
 									</label>
 								</cms:if>
@@ -213,6 +214,7 @@
 												>
 												<cms:text constant="label_agree_to_terms2" module="shop"/>
 											</a>
+											<cms:raw text="."/>
 										</span>
 									</label>
 								</cms:if>
