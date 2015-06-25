@@ -245,7 +245,8 @@ class TemplateHandler {
 					$value = $this->module->getLanguageConstant($tag->tagAttrs['cms:tooltip']); else
 					$value = Language::getText($tag->tagAttrs['cms:tooltip']);
 
-				$tag->tagAttrs['data-tooltip'] = $value;
+				if (!empty($value))
+					$tag->tagAttrs['data-tooltip'] = $value;
 				unset($tag->tagAttrs['cms:tooltip']);
 			}
 
