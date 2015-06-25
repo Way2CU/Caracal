@@ -2736,6 +2736,7 @@ class shop extends Module {
 				'zip'		=> $shipping_information['zip'],
 				'state'		=> $shipping_information['state'],
 				'country'	=> $shipping_information['country'],
+				'access_code'	=> $shipping_information['access_code']
 			));
 
 			$id = $address_manager->getInsertedID();
