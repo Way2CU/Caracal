@@ -239,7 +239,11 @@
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
 							<label>
 								<span><cms:text constant="label_presets" module="shop"/></span>
-								<select name="presets"/>
+								<select
+									name="presets"
+									data-autoload="$_SESSION['logged'] ? 1 : 0"
+									cms:eval="data-autoload"
+									/>
 							</label>
 							<label>
 								<span><cms:text constant="label_full_name" module="shop"/></span>

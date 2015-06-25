@@ -80,6 +80,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 				self.page_control.enablePage(billing_page_index);
 		}
 
+		// check if user is already logged
+		if (self.shipping_information_form.find('select[name=presets]').data('autoload') == 1)
+			self._load_account_information();
+
 		// connect events
 		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);
 		self.shipping_information_form.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
@@ -114,6 +118,16 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self._show_cvv_dialog = function(event) {
 		event.preventDefault();
 		self.cvv_dialog.show();
+	};
+
+	/**
+	 * Load account information from backend.
+	 */
+	self._load_account_information = function() {
+		new Communicator('shop')
+			.on_success(self.handler.account_load_success)
+			.on_error(self.handler.account_load_error)
+			.get('json_get_account_info', null);
 	};
 
 	/**
@@ -298,10 +312,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 						.on_success(function(data) {
 							// load account information
 							if (data.logged_in) {
-								new Communicator('shop')
-									.on_success(self.handler.account_load_success)
-									.on_error(self.handler.account_load_error)
-									.get('json_get_account_info', null);
+								self._load_account_information();
 
 								// hide captcha field
 								captcha_field.addClass('hidden');
