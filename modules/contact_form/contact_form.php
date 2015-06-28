@@ -21,6 +21,7 @@ require_once('units/template_manager.php');
 require_once('units/submission_manager.php');
 require_once('units/submission_field_manager.php');
 require_once('units/domain_manager.php');
+require_once('units/mailer_manager.php');
 require_once('units/mailer.php');
 require_once('units/system_mailer.php');
 require_once('units/smtp_mailer.php');
@@ -467,6 +468,15 @@ class contact_form extends Module {
 			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
+		// selected mailers per form
+		$sql = "
+			CREATE TABLE `contact_form_mailers` (
+				`form` int NOT NULL,
+				`mailer` varchar(100) NOT NULL,
+				INDEX `contact_form_mailers_by_form` (`form`)
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
+		$db->query($sql);
+
 		// table for contact form domains
 		$sql = "
 			CREATE TABLE `contact_form_domains` (
@@ -582,7 +592,8 @@ class contact_form extends Module {
 		$tables = array(
 			'contact_form_templates', 'contact_forms', 'contact_form_fields',
 			'contact_form_submissions', 'contact_form_submission_fields', 'contact_form_field_values',
-			'contact_form_domains', 'contact_form_fieldsets', 'contact_form_fieldset_fields'
+			'contact_form_domains', 'contact_form_fieldsets', 'contact_form_fieldset_fields',
+			'contact_form_mailers'
 		);
 		$db->drop_tables($tables);
 	}
