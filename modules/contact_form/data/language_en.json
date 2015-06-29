@@ -8,7 +8,7 @@
     "column_text_id": "Text ID",
     "column_type": "Type",
     "column_value": "Value",
-    "column_value": "Enabled mailers for this form",
+    "column_mailer": "Enabled mailers for this form",
     "details": "Details",
     "dialog_title": "Contact Form",
     "export": "Export",
