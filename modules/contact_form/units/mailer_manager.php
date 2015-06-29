@@ -1,6 +1,6 @@
 <?php
 
-class Manager extends ItemManager {
+class ContactForm_MailerManager extends ItemManager {
 	private static $_instance;
 
 	/**

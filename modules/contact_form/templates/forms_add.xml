@@ -49,6 +49,21 @@
 				</label>
 			</div>
 
+			<!-- Mailer selection -->
+			<div class="scrollable_list">
+				<div class="list_header">
+					<span class="column">
+						<cms:text constant="column_mailer" module="contact_form"/>
+					</span>
+				</div>
+				<div class="list_content" style="height: 250px">
+					<cms:mailer_list
+						template="mailer_list_item.xml"
+						local="1"
+						/>
+				</div>
+			</div>
+
 			<!-- Appearance options -->
 			<div>
 				<fieldset>
@@ -111,7 +126,8 @@
 		notebook
 			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
 			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_appearance'))
-			.setPageTitle(3, language_handler.getText('contact_form', 'tab_domains'));
+			.setPageTitle(2, language_handler.getText('contact_form', 'tab_mailers'))
+			.setPageTitle(3, language_handler.getText('contact_form', 'tab_appearance'))
+			.setPageTitle(4, language_handler.getText('contact_form', 'tab_domains'));
 	</script>
 </document>

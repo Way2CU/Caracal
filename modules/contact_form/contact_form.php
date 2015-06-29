@@ -1654,6 +1654,7 @@ class contact_form extends Module {
 
 		$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
 		$template->registerTagHandler('cms:field_template_list', $this, 'tag_FormTemplateList');
+		$template->registerTagHandler('cms:mailer_list', $this, 'tag_MailerList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -1672,6 +1673,7 @@ class contact_form extends Module {
 		if (is_object($item)) {
 			$template = new TemplateHandler('forms_change.xml', $this->path.'templates/');
 			$template->registerTagHandler('cms:domain_list', $this, 'tag_DomainList');
+			$template->registerTagHandler('cms:mailer_list', $this, 'tag_MailerList');
 			$template->setMappedModule($this->name);
 
 			$params = array(
@@ -1771,6 +1773,29 @@ class contact_form extends Module {
 					'form'		=> $id,
 					'domain'	=> $domain
 				));
+
+		// gather mailer list
+		$mailer_list = array();
+		$mailer_manager = ContactForm_MailerManager::getInstance();
+
+		foreach ($_REQUEST as $key => $value) {
+			if (!strpos($key, 'mailer_') === 0 || $value != 1)
+				continue;
+
+			$mailer_list[] = substr($key, 7);
+		}
+
+		// remove existing mailer associations
+		$mailer_manager->deleteForm(array('form' => $id));
+
+		// record mailer associations
+		if (count($mailer_list) > 0)
+			foreach ($mailer_list as $mailer)
+				$mailer_manager->insertData(array(
+						'form'		=> $id,
+						'mailer'	=> $mailer
+					));
+
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
