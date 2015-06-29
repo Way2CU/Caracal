@@ -50,10 +50,10 @@
     "empty_shopping_cart": "אין מוצרים בעגלת הקניות.",
     "handling": "טיפול:",
     "hide_shopping_cart": "הסתר עגלת קניות",
-    "label_checkout_method": "Payment processed by",
+    "label_checkout_method": "הסליקה מתבצעת ע\"י",
     "label_agree_to_terms1": "אני מאשר\\ת את",
     "label_agree_to_terms2": "תנאי ההסכם",
-    "label_want_promotions": "I would like to receive promotional emails.",
+    "label_want_promotions": "רוצה לשמוע על מבצעים",
     "label_categories": "קטגוריות:",
     "label_category": "קטגוריה:",
     "label_category_image": "תמונת הקטגוריה:",
@@ -112,7 +112,7 @@
     "label_state": "מדינה:",
     "label_status": "סטטוס:",
     "label_street": "רחוב:",
-    "label_access_code": "Security access code:",
+    "label_access_code": "קוד כניסה\\אינטרקום:",
     "label_tax": "מעמ (%):",
     "label_testing_mode": "לאתחל מצב בדיקה?",
     "label_text_id": "מזהה טקסט:",
@@ -269,8 +269,8 @@
     "type_regular": "רגיל",
     "type_donation": "תרומה",
     "type_delayed": "עיכוב",
-    "tooltip_street": "Street address, P.O. box, company name",
-    "tooltip_street2": "Apartment, suite, unit, building, floor, etc.",
+    "tooltip_street": "כתובת, רחוב, ת.ד, שם חברה",
+    "tooltip_street2": "דירה, יחידה, בניין, קומה וכו'.",
     "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח",
-    "tooltip_access_code": "For buildings and gated communities."
+    "tooltip_access_code": "לבניינים ושערי כניסה."
 }
