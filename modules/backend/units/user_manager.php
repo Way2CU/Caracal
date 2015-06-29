@@ -453,23 +453,31 @@ class Backend_UserManager {
 			);
 
 		// get mailer
-		$mailer = $contact_form->getMailer();
+		$mailers = $contact_form->getMailers();
 		$sender = $contact_form->getSender();
 		$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
 
 		// start creating message
-		$mailer->start_message();
-		$mailer->set_subject($template['subject']);
-		$mailer->set_sender($sender['address'], $sender['name']);
-		$mailer->add_recipient($fields['email'], $fields['fullname']);
+		$end_result = true;
+		foreach ($mailers as $mailer_name => $mailer) {
+			$mailer->start_message();
+			$mailer->set_subject($template['subject']);
+			$mailer->set_sender($sender['address'], $sender['name']);
+			$mailer->add_recipient($fields['email'], $fields['fullname']);
 
-		$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
-		$mailer->set_variables($fields);
+			$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
+			$mailer->set_variables($fields);
 
-		// send email
-		$result = $mailer->send();
+			// send email
+			$result = $mailer->send();
+			$end_result &= $result;
 
-		return $result;
+			// report error with mailer in case it failed
+			if (!$result)
+				trigger_error('Failed sending notification message with "'.$mailer_name.'".', E_USER_WARNING);
+		}
+
+		return $end_result;
 	}
 
 	/**
@@ -650,21 +658,31 @@ class Backend_UserManager {
 					'code'			=> $code
 				);
 
-			$mailer = $contact_form->getMailer();
+			$mailers = $contact_form->getMailers();
 			$sender = $contact_form->getSender();
 			$template = $contact_form->getTemplate($this->parent->settings['template_recovery']);
 
 			// start creating message
-			$mailer->start_message();
-			$mailer->set_subject($template['subject']);
-			$mailer->set_sender($sender['address'], $sender['name']);
-			$mailer->add_recipient($fields['email'], $fields['fullname']);
+			$end_result = true;
+			foreach ($mailers as $mailer_name => $mailer) {
+				$mailer->start_message();
+				$mailer->set_subject($template['subject']);
+				$mailer->set_sender($sender['address'], $sender['name']);
+				$mailer->add_recipient($fields['email'], $fields['fullname']);
 
-			$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
-			$mailer->set_variables($fields);
+				$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
+				$mailer->set_variables($fields);
+
+				$result = $mailer->send();
+				$end_result &= $result;
+
+				// report error with mailer in case it failed
+				if (!$result)
+					trigger_error('Failed sending password recovery message with "'.$mailer_name.'".', E_USER_WARNING);
+			}
 
 			// send email
-			$result['error'] = !$mailer->send();
+			$result['error'] = !$end_result;
 
 			if (!$result['error'])
 				$result['message'] = $this->parent->getLanguageConstant('message_password_recovery_email_sent'); else

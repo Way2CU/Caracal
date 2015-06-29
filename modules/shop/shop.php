@@ -3188,21 +3188,23 @@ class shop extends Module {
 			return $result;
 
 		// get mailer
-		$mailer = $contact_form->getMailer();
+		$mailers = $contact_form->getMailers();
 		$sender = $contact_form->getSender();
 		$template = $contact_form->getTemplate($template);
 
 		// start creating message
-		$mailer->start_message();
-		$mailer->set_subject($template['subject']);
-		$mailer->set_sender($sender['address'], $sender['name']);
-		$mailer->add_recipient($email_address);
+		foreach ($mailers as $mailer_name => $mailer) {
+			$mailer->start_message();
+			$mailer->set_subject($template['subject']);
+			$mailer->set_sender($sender['address'], $sender['name']);
+			$mailer->add_recipient($email_address);
 
-		$mailer->set_body($template['plain_body'], $template['html_body']);
-		$mailer->set_variables($fields);
+			$mailer->set_body($template['plain_body'], $template['html_body']);
+			$mailer->set_variables($fields);
 
-		// send email
-		$mailer->send();
+			// send email
+			$mailer->send();
+		}
 
 		return $result;
 	}

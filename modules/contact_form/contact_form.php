@@ -828,31 +828,39 @@ class contact_form extends Module {
 			// TODO: Store files somewhere after submission, if needed.
 
 			// get mailer
-			$mailer = $this->getMailer();
+			$mailers = $this->getMailers($form->id);
 			$sender = $this->getSender();
 			$recipients = $this->getRecipients();
 			$template = $this->getTemplate($form->template);
 
 			// start creating message
-			$mailer->start_message();
-			$mailer->set_subject($template['subject']);
-			$mailer->set_sender($sender['address'], $sender['name']);
+			$end_result = true;
+			foreach ($mailers as $mailer_name => $mailer) {
+				$mailer->start_message();
+				$mailer->set_subject($template['subject']);
+				$mailer->set_sender($sender['address'], $sender['name']);
 
-			// set reply address if specified
-			if (!is_null($reply_to_address))
-				$mailer->add_header_string('Reply-To', $reply_to_address);
+				// set reply address if specified
+				if (!is_null($reply_to_address))
+					$mailer->add_header_string('Reply-To', $reply_to_address);
 
-			foreach ($recipients as $recipient)
-				$mailer->add_recipient($recipient['address'], $recipient['name']);
+				foreach ($recipients as $recipient)
+					$mailer->add_recipient($recipient['address'], $recipient['name']);
 
-			foreach ($attachments as $attachment)
-				$mailer->add_attachment($attachment);
+				foreach ($attachments as $attachment)
+					$mailer->add_attachment($attachment);
 
-			$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
-			$mailer->set_variables($replacement_fields);
+				$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
+				$mailer->set_variables($replacement_fields);
 
-			// send email
-			$result = $mailer->send();
+				// send email
+				$result = $mailer->send();
+				$end_result &= $result;
+
+				// report error with mailer in case it failed
+				if (!$result)
+					trigger_error('Form submission failed with "'.$mailer_name.'".', E_USER_WARNING);
+			}
 		}
 
 		// get messages
@@ -3710,15 +3718,35 @@ class contact_form extends Module {
 	/**
 	 * Get selected mailer object.
 	 *
-	 * @return object
+	 * @param integer $form
+	 * @return array
 	 */
-	public function getMailer() {
-		$result = null;
-		$name = isset($this->settings['mailer']) ? $this->settings['mailer'] : null;
+	public function getMailers($form=null) {
+		$result = array();
+		$applicable = array();
 
-		if (isset($this->mailers[$name]))
-			$result = $this->mailers[$name]; else
-			$result = array_shift(array_values($this->mailers));
+		// add default mailer if no others were provided
+		if (!is_null($form)) {
+			$manager = ContactForm_MailerManager::getInstance();
+			$association_list = $manager->getItems(array('mailer'), array('form' => $form));
+
+			if (count($association_list) > 0)
+				foreach ($association_list as $association)
+					$applicable[] = $association->mailer;
+		}
+
+		// make sure result is not empty
+		if (empty($applicable)) {
+			$name = isset($this->settings['mailer']) ? $this->settings['mailer'] : null;
+			if (isset($this->mailers[$name]))
+				$applicable[] = $name; else
+				$applicable[] = array_shift(array_keys($this->mailers));
+		}
+
+		// prepare results array
+		foreach ($applicable as $name)
+			if (isset($this->mailer[$name]))
+				$result[] = $this->mailers[$name];
 
 		return $result;
 	}
