@@ -1787,7 +1787,7 @@ class contact_form extends Module {
 		$mailer_manager = ContactForm_MailerManager::getInstance();
 
 		foreach ($_REQUEST as $key => $value) {
-			if (!strpos($key, 'mailer_') === 0 || $value != 1)
+			if (strpos($key, 'mailer_') === -1 || $value != 1)
 				continue;
 
 			$mailer_list[] = substr($key, 7);
