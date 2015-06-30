@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label class="list_item">
+		<input
+			type="checkbox"
+			name="'mailer_'.$params['name']"
+			checked="$params['selected'] ? 'checked' : false"
+			cms:eval="name"
+			cms:optional="checked"
+			/>
+		<span><cms:var param="title"/></span>
+	</label>
+</document>
