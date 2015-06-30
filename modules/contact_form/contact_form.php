@@ -1794,7 +1794,7 @@ class contact_form extends Module {
 		}
 
 		// remove existing mailer associations
-		$mailer_manager->deleteForm(array('form' => $id));
+		$mailer_manager->deleteData(array('form' => $id));
 
 		// record mailer associations
 		if (count($mailer_list) > 0)
