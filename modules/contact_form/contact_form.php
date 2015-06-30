@@ -1787,7 +1787,7 @@ class contact_form extends Module {
 		$mailer_manager = ContactForm_MailerManager::getInstance();
 
 		foreach ($_REQUEST as $key => $value) {
-			if (strpos($key, 'mailer_') === -1)
+			if (strpos($key, 'mailer_') !== 0)
 				continue;
 
 			if ($value != 1)
@@ -3514,13 +3514,27 @@ class contact_form extends Module {
 	 * @param array $childen
 	 */
 	public function tag_MailerList($tag_params, $children) {
+		$selected = array();
 		$template = $this->loadTemplate($tag_params, 'mailer_option.xml');
+
+		if (isset($tag_params['form'])) {
+			$form = fix_id($tag_params['form']);
+			$manager = ContactForm_MailerManager::getInstance();
+			$associations = $manager->getItems(array('mailer'), array('form' => $form));
+
+			if (count($associations) > 0)
+				foreach ($associations as $association)
+					$selected[] = $association->mailer;
+
+		} else {
+			$selected[] = $this->settings['mailer'];
+		}
 
 		foreach ($this->mailers as $name => $mailer) {
 			$params = array(
 				'name'		=> $name,
 				'title'		=> $mailer->get_title(),
-				'selected'	=> isset($this->settings['mailer']) && $this->settings['mailer'] == $name
+				'selected'	=> in_array($name, $selected)
 			);
 
 			$template->restoreXML();
