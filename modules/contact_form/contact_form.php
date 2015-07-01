@@ -421,8 +421,6 @@ class contact_form extends Module {
 		$this->saveSetting('smtp_server', 'smtp.gmail.com');
 		$this->saveSetting('smtp_port', '465');
 		$this->saveSetting('use_ssl', 1);
-		$this->saveSetting('save_copy', 0);
-		$this->saveSetting('save_location', '');
 
 		// templates table
 		$sql = "
@@ -1140,12 +1138,9 @@ class contact_form extends Module {
 	private function saveSettings() {
 		// grab parameters
 		$use_ssl = isset($_REQUEST['use_ssl']) && ($_REQUEST['use_ssl'] == 'on' || $_REQUEST['use_ssl'] == '1') ? 1 : 0;
-		$save_copy = isset($_REQUEST['save_copy']) && ($_REQUEST['save_copy'] == 'on' || $_REQUEST['save_copy'] == '1') ? 1 : 0;
-
 		$params = array(
 			'mailer', 'sender_name', 'sender_address', 'recipient_name', 'recipient_address',
-			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password',
-			'save_location'
+			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password'
 		);
 
 		// save settings
@@ -1155,7 +1150,6 @@ class contact_form extends Module {
 		}
 
 		$this->saveSetting('use_ssl', $use_ssl);
-		$this->saveSetting('save_copy', $save_copy);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');

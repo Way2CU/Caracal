@@ -13,30 +13,6 @@
 							/>
 					</select>
 				</label>
-
-				<fieldset>
-					<legend><cms:text constant="legend_backup" module="contact_form"/></legend>
-					<label class="checkbox">
-						<span><cms:text constant="label_save_copy" module="contact_form"/></span>
-						<cms:if condition="$settings['save_copy']">
-							<input type="checkbox" name="save_copy" checked="checked"/>
-						</cms:if>
-						<cms:if condition="!$settings['save_copy']">
-							<input type="checkbox" name="save_copy"/>
-						</cms:if>
-					</label>
-					<label>
-						<span><cms:text constant="label_save_location" module="contact_form"/></span>
-						<input
-							type="text"
-							name="save_location"
-							value="$settings['save_location']"
-							cms:eval="value"
-							class="code ltr"
-							style="width: 320px;"
-						/>
-					</label>
-				</fieldset>
 			</div>
 
 			<div>
