@@ -458,7 +458,6 @@ class Backend_UserManager {
 		$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
 
 		// start creating message
-		$end_result = true;
 		foreach ($mailers as $mailer_name => $mailer) {
 			$mailer->start_message();
 			$mailer->set_subject($template['subject']);
@@ -469,15 +468,15 @@ class Backend_UserManager {
 			$mailer->set_variables($fields);
 
 			// send email
-			$result = $mailer->send();
-			$end_result &= $result;
+			$send_result = $mailer->send();
+			$result &= $send_result;
 
 			// report error with mailer in case it failed
-			if (!$result)
+			if (!$send_result)
 				trigger_error('Failed sending notification message with "'.$mailer_name.'".', E_USER_WARNING);
 		}
 
-		return $end_result;
+		return $result;
 	}
 
 	/**
@@ -663,7 +662,6 @@ class Backend_UserManager {
 			$template = $contact_form->getTemplate($this->parent->settings['template_recovery']);
 
 			// start creating message
-			$end_result = true;
 			foreach ($mailers as $mailer_name => $mailer) {
 				$mailer->start_message();
 				$mailer->set_subject($template['subject']);
@@ -673,16 +671,16 @@ class Backend_UserManager {
 				$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
 				$mailer->set_variables($fields);
 
-				$result = $mailer->send();
-				$end_result &= $result;
+				$send_result = $mailer->send();
+				$result &= $send_result;
 
 				// report error with mailer in case it failed
-				if (!$result)
+				if (!$send_result)
 					trigger_error('Failed sending password recovery message with "'.$mailer_name.'".', E_USER_WARNING);
 			}
 
 			// send email
-			$result['error'] = !$end_result;
+			$result['error'] = !$result;
 
 			if (!$result['error'])
 				$result['message'] = $this->parent->getLanguageConstant('message_password_recovery_email_sent'); else

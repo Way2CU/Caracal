@@ -834,7 +834,6 @@ class contact_form extends Module {
 			$template = $this->getTemplate($form->template);
 
 			// start creating message
-			$end_result = true;
 			foreach ($mailers as $mailer_name => $mailer) {
 				$mailer->start_message();
 				$mailer->set_subject($template['subject']);
@@ -854,11 +853,11 @@ class contact_form extends Module {
 				$mailer->set_variables($replacement_fields);
 
 				// send email
-				$result = $mailer->send();
-				$end_result &= $result;
+				$send_result = $mailer->send();
+				$result &= $send_result;
 
 				// report error with mailer in case it failed
-				if (!$result)
+				if (!$send_result)
 					trigger_error('Form submission failed with "'.$mailer_name.'".', E_USER_WARNING);
 			}
 		}
