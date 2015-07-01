@@ -711,7 +711,7 @@ Caracal.Shop.CheckoutForm = function() {
 		var data = {
 				section: 'shop',
 				action: 'json_set_delivery_method',
-				method: method[5],
+				method: method[7],
 				type: item.attr('value')
 			};
 
