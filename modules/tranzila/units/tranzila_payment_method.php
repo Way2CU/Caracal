@@ -181,6 +181,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'pdesc'			=> $description,
 			'tranmode'		=> 'AK',
 			'transaction_id' => $data['uid'],
+			'nologo'		=> 1,
 			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
 		);
 
@@ -238,6 +239,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'pdesc'			=> $description,
 			'tranmode'		=> 'VK',
 			'transaction_id' => $data['uid'],
+			'hidesum'		=> 1,
+			'nologo'		=> 1,
 			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
 		);
 
