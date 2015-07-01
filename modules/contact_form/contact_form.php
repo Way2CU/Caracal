@@ -834,6 +834,7 @@ class contact_form extends Module {
 			$template = $this->getTemplate($form->template);
 
 			// start creating message
+			$result = true;
 			foreach ($mailers as $mailer_name => $mailer) {
 				$mailer->start_message();
 				$mailer->set_subject($template['subject']);

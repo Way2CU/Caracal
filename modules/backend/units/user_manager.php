@@ -458,6 +458,7 @@ class Backend_UserManager {
 		$template = $contact_form->getTemplate($this->parent->settings['template_verify']);
 
 		// start creating message
+		$result = true;
 		foreach ($mailers as $mailer_name => $mailer) {
 			$mailer->start_message();
 			$mailer->set_subject($template['subject']);
@@ -662,6 +663,7 @@ class Backend_UserManager {
 			$template = $contact_form->getTemplate($this->parent->settings['template_recovery']);
 
 			// start creating message
+			$result = true;
 			foreach ($mailers as $mailer_name => $mailer) {
 				$mailer->start_message();
 				$mailer->set_subject($template['subject']);
