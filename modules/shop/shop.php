@@ -2801,6 +2801,14 @@ class shop extends Module {
 			$result['remark'] = '';
 			$result['total'] = $summary['total'];
 
+			// get default currency
+			$currency_manager = ShopCurrenciesManager::getInstance();
+			$default_currency = $this->settings['default_currency'];
+			$currency = $currency_manager->getSingleItem(array('id'), array('currency' => $default_currency));
+
+			if (is_object($currency))
+				$result['currency'] = $currency->id;
+
 			// add address if needed
 			if (!is_null($address))
 				$result['address'] = $address->id;
