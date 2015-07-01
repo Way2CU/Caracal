@@ -1627,7 +1627,7 @@ class contact_form extends Module {
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
 										$this->getLanguageConstant('new'),
-										'contact_forms_add', 400,
+										'contact_forms_add', 430,
 										$this->getLanguageConstant('title_forms_add'),
 										true, false,
 										$this->name,
@@ -3201,7 +3201,7 @@ class contact_form extends Module {
 											$this->getLanguageConstant('change'),
 											window_Open(
 												'contact_forms_edit', 	// window id
-												400,				// width
+												430,				// width
 												$this->getLanguageConstant('title_forms_edit'), // title
 												false, false,
 												url_Make(
