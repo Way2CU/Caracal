@@ -15,7 +15,8 @@ $(function() {
 	iframe
 		.attr('id', 'tranzila_checkout')
 		.attr('name', 'tranzila_checkout')
-		.attr('seamless', 'seamless');
+		.attr('seamless', 'seamless')
+		.attr('scrolling', 'no');
 
 	// make form submit to iframe
 	form.attr('target', 'tranzila_checkout');
