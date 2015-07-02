@@ -42,10 +42,16 @@ class tranzila extends Module {
 								));
 		}
 
-		// register payment method
+		// integrate tranzila in to shop
 		if (class_exists('shop')) {
+			// register payment method
 			require_once('units/tranzila_payment_method.php');
 			$this->method = Tranzila_PaymentMethod::getInstance($this);
+
+			// add tranzila scripts to checkout page
+			$shop = shop::getInstance();
+			$shop->addCheckoutScript(url_GetFromFilePath($this->path.'include/checkout.js'));
+			$shop->addCheckoutStyle(url_GetFromFilePath($this->path.'include/checkout.css'));
 		}
 	}
 
