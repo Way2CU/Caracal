@@ -13,6 +13,7 @@ $(function() {
 	// configure iframe
 	iframe
 		.attr('id', 'tranzila_checkout')
+		.attr('name', 'tranzila_checkout')
 		.appendTo(form);
 
 	// make form submit to iframe
