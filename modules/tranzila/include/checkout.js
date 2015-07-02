@@ -15,6 +15,9 @@ $(function() {
 		.attr('id', 'tranzila_checkout')
 		.appendTo(form);
 
+	// make form submit to iframe
+	form.attr('target', 'tranzila_checkout');
+
 	form.on('submit', function() {
 	});
 });
