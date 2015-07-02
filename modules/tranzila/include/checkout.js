@@ -22,7 +22,7 @@ $(function() {
 
 	// configure dialog
 	dialog
-		.setSize(400, 300)
+		.setSize(400, 250)
 		.setTitle(language_handler.getText('tranzila', 'payment_method_title'))
 		.setContent(iframe);
 
