@@ -8,7 +8,8 @@
 
 iframe#tranzila_checkout {
 	display: none;
+	width: 400px;
+	height: 300px;
 
-	border: 1px solid #909090;
-	border-radius: 5px;
+	overflow-y: hidden;
 }

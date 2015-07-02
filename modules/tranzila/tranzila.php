@@ -50,6 +50,9 @@ class tranzila extends Module {
 
 			// add tranzila scripts to checkout page
 			$shop = shop::getInstance();
+			$collection = collection::getInstance();
+
+			$collection->includeScript(collection::DIALOG);
 			$shop->addCheckoutScript(url_GetFromFilePath($this->path.'include/checkout.js'));
 			$shop->addCheckoutStyle(url_GetFromFilePath($this->path.'include/checkout.css'));
 		}

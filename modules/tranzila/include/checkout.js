@@ -9,16 +9,25 @@
 $(function() {
 	var form = $('div#checkout form');
 	var iframe = $('<iframe>');
+	var dialog = new Dialog();
 
 	// configure iframe
 	iframe
 		.attr('id', 'tranzila_checkout')
 		.attr('name', 'tranzila_checkout')
-		.appendTo(form);
+		.attr('seamless', 'seamless');
 
 	// make form submit to iframe
 	form.attr('target', 'tranzila_checkout');
 
+	// configure dialog
+	dialog
+		.setSize(400, 300)
+		.setTitle(language_handler.getText('tranzila', 'payment_method_title'))
+		.setContent(iframe);
+
+	// show dialog when form is submitted
 	form.on('submit', function() {
+		dialog.show();
 	});
 });
