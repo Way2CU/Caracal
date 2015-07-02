@@ -7,9 +7,9 @@
  */
 
 iframe#tranzila_checkout {
-	display: none;
 	width: 400px;
-	height: 300px;
+	height: 250px;
 
+	border: 0px;
 	overflow-y: hidden;
 }
