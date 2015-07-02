@@ -176,6 +176,8 @@ class PaymentMethodError extends Exception {};
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
+	private $checkout_scripts = array();
+	private $checkout_styles = array();
 
 	private $excluded_properties = array(
 		'size_value', 'color_value', 'count'
@@ -1076,6 +1078,26 @@ class shop extends Module {
 	}
 
 	/**
+	 * Add script to be included with other checkout scripts.
+	 *
+	 * @param string $url
+	 */
+	public function addCheckoutScript($url) {
+		if (!in_array($url, $this->checkout_scripts))
+			$this->checkout_scripts[] = $url;
+	}
+
+	/**
+	 * Add checkout style to be included with other checkout styles.
+	 *
+	 * @param string $url
+	 */
+	public function addCheckoutStyle($url) {
+		if (!in_array($url, $this->checkout_styles))
+			$this->checkout_styles[] = $url;
+	}
+
+	/**
 	 * Include buyer information and checkout form scripts.
 	 */
 	public function includeScripts() {
@@ -1091,6 +1113,16 @@ class shop extends Module {
 		$collection->includeScript(collection::COMMUNICATOR);
 		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
 		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
+
+		// add custom scripts
+		if (count($this->checkout_scripts) > 0)
+			foreach ($this->checkout_scripts as $script_url)
+				$head_tag->addTag('script', array( 'src' => $script_url, 'type' => 'text/javascript'));
+
+		// add custom styles
+		if (count($this->checkout_styles) > 0)
+			foreach ($this->checkout_styles as $style_url)
+				$head_tag->addTag('link', array('href' => $style_url, 'rel' => 'stylesheet', 'type' => 'text/css'));
 	}
 
 	/**
