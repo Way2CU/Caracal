@@ -3033,10 +3033,12 @@ class shop extends Module {
 		$contact_form = contact_form::getInstance();
 
 		// template replacement data
+		$status_text = $this->getLanguageConstant(TransactionStatus::$reverse[$transaction->status]);
 		$fields = array(
 			'transaction_id'				=> $transaction->id,
 			'transaction_uid'				=> $transaction->uid,
 			'status'						=> $transaction->status,
+			'status_text'					=> $status_text,
 			'handling'						=> $transaction->handling,
 			'shipping'						=> $transaction->shipping,
 			'total'							=> $transaction->total,
