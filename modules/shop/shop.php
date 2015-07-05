@@ -3155,7 +3155,7 @@ class shop extends Module {
 						$text_table .= implode("\n", $line) . "\n\n";
 
 						// form html row
-						$row = '<tr><td>' . $item->name[$language];
+						$row = '<tr><td>' . $item_names[$item->item];
 
 						if (!empty($description))
 							$row .= ' <small>' . $description_text . '</small>';
@@ -3165,7 +3165,7 @@ class shop extends Module {
 						$row .= '<td>' . ($item->price * $item->amount) . '</td></tr>';
 
 						// update subtotal
-						$subtotal += $item->total;
+						$subtotal += $item->price * $item->amount;
 					}
 
 					// close text table
