@@ -3113,7 +3113,7 @@ class shop extends Module {
 						$id_list[] = $item->item;
 
 					$item_names = array();
-					$item_list = $item_manager->getItems(array('name'), array('id' => $id_list));
+					$item_list = $item_manager->getItems(array('id', 'name'), array('id' => $id_list));
 					foreach ($item_list as $item)
 						$item_names[$item->id] = $item->name[$language];
 
