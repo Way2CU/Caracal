@@ -46,11 +46,11 @@
 
 			<div>
 				<label>
-					<span><cms:text constant="label_payment_completed" module="shop"/></span>
-					<select name="payment_completed_template" style="width: 300px">
+					<span><cms:text constant="label_regular_template" module="shop"/></span>
+					<select name="regular_template" style="width: 300px">
 						<option/>
 						<cms:template_list
-							selected="$settings['payment_completed_template']"
+							selected="$settings['regular_template']"
 							template="templates_option.xml"
 							local="1"
 							cms:eval="selected"
@@ -58,11 +58,11 @@
 					</select>
 				</label>
 				<label>
-					<span><cms:text constant="label_recurring_payment_started" module="shop"/></span>
-					<select name="recurring_payment_started_template" style="width: 300px;">
+					<span><cms:text constant="label_recurring_template" module="shop"/></span>
+					<select name="recurring_template" style="width: 300px;">
 						<option/>
 						<cms:template_list
-							selected="$settings['recurring_payment_started_template']"
+							selected="$settings['recurring_template']"
 							template="templates_option.xml"
 							local="1"
 							cms:eval="selected"
@@ -70,11 +70,11 @@
 					</select>
 				</label>
 				<label>
-					<span><cms:text constant="label_recurring_payment_canceled" module="shop"/></span>
-					<select name="recurring_payment_canceled_template" style="width: 300px;">
+					<span><cms:text constant="label_delayed_template" module="shop"/></span>
+					<select name="delayed_template" style="width: 300px;">
 						<option/>
 						<cms:template_list
-							selected="$settings['recurring_payment_canceled_template']"
+							selected="$settings['delayed_template']"
 							template="templates_option.xml"
 							local="1"
 							cms:eval="selected"

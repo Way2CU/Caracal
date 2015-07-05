@@ -1166,16 +1166,16 @@ class shop extends Module {
 	 */
 	private function saveSettings() {
 		// save new settings
-		$payment_completed = fix_chars($_REQUEST['payment_completed_template']);
-		$recurring_started = fix_chars($_REQUEST['recurring_payment_started_template']);
-		$recurring_canceled = fix_chars($_REQUEST['recurring_payment_canceled_template']);
+		$regular_template = fix_chars($_REQUEST['regular_template']);
+		$recurring_template = fix_chars($_REQUEST['recurring_template']);
+		$delayed_template = fix_chars($_REQUEST['delayed_template']);
 		$shop_location = fix_chars($_REQUEST['shop_location']);
 		$fixed_country = fix_chars($_REQUEST['fixed_country']);
 		$testing_mode = fix_id($_REQUEST['testing_mode']);
 
-		$this->saveSetting('payment_completed_template', $payment_completed);
-		$this->saveSetting('recurring_payment_started_template', $recurring_started);
-		$this->saveSetting('recurring_payment_canceled_template', $recurring_canceled);
+		$this->saveSetting('regular_template', $regular_template);
+		$this->saveSetting('recurring_template', $recurring_template);
+		$this->saveSetting('delayed_template', $delayed_template);
 		$this->saveSetting('shop_location', $shop_location);
 		$this->saveSetting('fixed_country', $fixed_country);
 		$this->saveSetting('testing_mode', $testing_mode);
@@ -1457,27 +1457,27 @@ class shop extends Module {
 			);
 			$result = true;
 
+			// get template based on transaction type
+			switch ($transaction->type) {
+				case TransactionType::SUBSCRIPTION:
+					$template_name = $this->settings['recurring_template'];
+					break;
+
+				case TransactionType::DELAYED:
+					$template_name = $this->settings['delayed_template'];
+					break;
+
+				case TransactionType::REGULAR:
+				default:
+					$template_name = $this->settings['regular_template'];
+					break;
+			}
+
 			// trigger event
 			switch ($status) {
 				case TransactionStatus::COMPLETED:
 					Events::trigger('shop', 'transaction-completed', $transaction);
 					unset($_SESSION['transaction']);
-
-					switch ($transaction->type) {
-						case TransactionType::SUBSCRIPTION:
-							if (isset($this->settings['recurring_payment_started_template'])) {
-								$template = $this->settings['recurring_payment_started_template'];
-								$this->sendTransactionMail($transaction, $template);
-							}
-							break;
-
-						case TransactionType::REGULAR:
-							if (isset($this->settings['payment_completed_template'])) {
-								$template = $this->settings['payment_completed_template'];
-								$this->sendTransactionMail($transaction, $template);
-							}
-							break;
-					}
 					break;
 
 				case TransactionStatus::PROCESSED:
@@ -1486,23 +1486,19 @@ class shop extends Module {
 						trigger_error('Unable to update transaction status. Missing payment method!', E_USER_NOTICE);
 						break;
 					}
-					$payment_method = $this->payment_methods[$transaction->payment_method];
 
 					// charge transaction
+					$payment_method = $this->payment_methods[$transaction->payment_method];
 					$payment_method->charge_transaction($transaction);
 					break;
 
 				case TransactionStatus::CANCELED:
 					Events::trigger('shop', 'transaction-canceled', $transaction);
-
-					// send email notification
-					if ($transaction->type == TransactionType::SUBSCRIPTION)
-						if (isset($this->settings['recurring_payment_canceled_template'])) {
-							$template = $this->settings['recurring_payment_canceled_template'];
-							$this->sendTransactionMail($transaction, $template);
-						}
 					break;
 			}
+
+			// send notification email
+			$this->sendTransactionMail($transaction, $template_name);
 		}
 
 		return $result;
