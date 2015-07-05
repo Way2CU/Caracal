@@ -92,9 +92,10 @@ final class TransactionStatus {
 			self::SHIPPED	=> array(self::LOST, self::DELIVERED)
 		),
 		TransactionType::DELAYED => array(
-			self::PENDING	=> array(self::PENDING, self::PROCESSED),
+			self::PENDING	=> array(self::PENDING, self::PROCESSED, self::CANCELED),
 			self::COMPLETED	=> array(self::COMPLETED, self::SHIPPING),
-			self::SHIPPED	=> array(self::LOST, self::DELIVERED)
+			self::SHIPPED	=> array(self::LOST, self::DELIVERED),
+			self::CANCELED  => array(self::CANCELED)
 		)
 	);
 }
@@ -3097,13 +3098,25 @@ class shop extends Module {
 		// create item table
 		switch ($transaction->type) {
 			case TransactionType::REGULAR:
-				$item_manager = ShopTransactionItemsManager::getInstance();
-				$items = $item_manager->getItems(
-					$item_manager->getFieldNames(),
+			case TransactionType::DELAYED:
+				$item_manager = ShopItemManager::getInstance();
+				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
+				$items = $transaction_item_manager->getItems(
+					$transaction_item_manager->getFieldNames(),
 					array('transaction' => $transaction->id)
 				);
 
 				if (count($items) > 0) {
+					// prepare item names
+					$id_list = array();
+					foreach ($items as $item)
+						$id_list[] = $item->item;
+
+					$item_names = array();
+					$item_list = $item_manager->getItems(array('name'), array('id' => $id_list));
+					foreach ($item_list as $item)
+						$item_names[$item->id] = $item->name[$language];
+
 					// create items table
 					$text_table = str_pad($this->getLanguageConstant('column_name'), 40);
 					$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
@@ -3125,9 +3138,9 @@ class shop extends Module {
 
 						if (!empty($description)) {
 							$description_text = implode(', ', array_values($description));
-							$line = $item->name[$language] . ' (' . $description . ')';
+							$line = $item_names[$item->item]. ' (' . $description . ')';
 						} else {
-							$line = $item->name[$language];
+							$line = $item_names[$item->item];
 						}
 
 						$line = utf8_wordwrap($line, 40, "\n", true);
@@ -3136,7 +3149,7 @@ class shop extends Module {
 						// append other columns
 						$line[0] = $line[0] . str_pad($item->price, 8, ' ', STR_PAD_LEFT);
 						$line[0] = $line[0] . str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
-						$line[0] = $line[0] . str_pad($item->total, 8, ' ', STR_PAD_LEFT);
+						$line[0] = $line[0] . str_pad($item->price * $item->amount, 8, ' ', STR_PAD_LEFT);
 
 						// add this item to text table
 						$text_table .= implode("\n", $line) . "\n\n";
@@ -3149,7 +3162,7 @@ class shop extends Module {
 
 						$row .= '</td><td>' . $item->price . '</td>';
 						$row .= '<td>' . $item->amount . '</td>';
-						$row .= '<td>' . $item->total . '</td></tr>';
+						$row .= '<td>' . ($item->price * $item->amount) . '</td></tr>';
 
 						// update subtotal
 						$subtotal += $item->total;
@@ -3192,7 +3205,8 @@ class shop extends Module {
 					$html_table .= '</table>';
 
 					// add field
-					$fields['item_table'] = $text_table;
+					$fields['html_item_table'] = $html_table;
+					$fields['text_item_table'] = $text_table;
 				}
 				break;
 
