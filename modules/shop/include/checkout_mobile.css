@@ -748,7 +748,8 @@ div#input_details label input[name=billing_cvv] {
 }
 
 div#input_details label select.bad,
-div#input_details label input.bad {
+div#input_details label input.bad,
+div#input_details label input.bad[type=checkbox] + span:before {
 	border-color: red;
 	box-shadow:
 			inset 3px 3px 5px rgba(200, 200, 200, 0.4),
