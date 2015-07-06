@@ -585,10 +585,6 @@ body.rtl div.checkout_controls button {
 	margin-right: 10px;
 }
 
-div#checkout div.checkout_controls button {
-	height: 3.5em;
-}
-
 div.checkout_controls button:focus {
 	outline: none;
 }

@@ -501,10 +501,6 @@ div.checkout_controls button {
 	transition-duration: 0.3s;
 }
 
-div#checkout div.checkout_controls button {
-	height: 3.5em;
-}
-
 div.checkout_controls button:focus {
 	outline: none;
 }
