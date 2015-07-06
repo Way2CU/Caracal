@@ -773,7 +773,7 @@ div#input_details label.checkbox input + span:before {
 
 	border: 1px solid #b0b0b0;
 	border-radius: 9px;
-	background-image: url(../images/checkbox.png);
+	background-image: url(../images/radio.png);
 	background-position: 0px 0px;
 	background-repeat: no-repeat;
 	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
@@ -782,6 +782,11 @@ div#input_details label.checkbox input + span:before {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+}
+
+div#input_details label.checkbox input + span:before {
+	border-radius: 0px;
+	background-image: url(../images/checkbox.png);
 }
 
 body.rtl div#input_details label.radio input + span:before,
