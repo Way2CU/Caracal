@@ -49,7 +49,7 @@ div#checkout div.clear_float {
 table.checkout_details {
 	width: 100%;
 
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 
 	border: 1px solid white;
 	border-radius: 8px 8px 0px 0px;
@@ -69,18 +69,9 @@ div#checkout div.delivery_provider {
 	padding: 10px;
 
 	position: relative;
-	float: right;
 
 	background-color: white;
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-}
-
-body.rtl div#checkout div.delivery_provider {
-	float: left;
-}
-
-div#checkout.recurring div.delivery_provider {
-	float: none;
 }
 
 div#checkout div.delivery_provider span.title {
@@ -282,6 +273,7 @@ div.transaction_details {
 	display: block;
 	height: 90px;
 
+	margin-bottom: 10px;
 	padding: 10px;
 
 	background-color: white;
