@@ -236,6 +236,11 @@ div#checkout div.delivery_method label input + div:before {
 	transition-duration: 0.3s;
 }
 
+body.rtl div#checkout div.delivery_method label input + div:before {
+	margin-left: 6px;
+	margin-right: 0px;
+}
+
 div#checkout div.delivery_method label input:checked + div:before {
 	background-position: -16px 0px;
 	box-shadow: none;
