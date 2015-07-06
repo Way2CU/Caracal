@@ -245,6 +245,10 @@ div#checkout div.delivery_method label > div span {
     float: right;
 }
 
+body.rtl div#checkout div.delivery_method label > div span {
+	float: left;
+}
+
 div#checkout div.delivery_method label > span {
     display: block;
     padding-left: 24px;
