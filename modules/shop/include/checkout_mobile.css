@@ -661,7 +661,8 @@ div#input_details a:hover {
 }
 
 div#input_details div.existing_account,
-div#input_details div.new_account {
+div#input_details div.new_account,
+div#input_details div.guest_checkout {
 	max-height: 0px;
 	overflow: hidden;
 
@@ -669,12 +670,14 @@ div#input_details div.new_account {
 }
 
 div#input_details div.existing_account.visible,
-div#input_details div.new_account.visible {
+div#input_details div.new_account.visible,
+div#input_details div.guest_checkout.visible {
 	max-height: 350px;
 }
 
 div#input_details div.existing_account label:first-of-type,
-div#input_details div.new_account label:first-of-type {
+div#input_details div.new_account label:first-of-type,
+div#input_details div.guest_checkout label:first-of-type {
 	margin-top: 3px;
 }
 
@@ -891,7 +894,6 @@ div#checkout_steps.input_details {
 
 div#checkout_steps a {
 	display: inline-block;
-	max-width: calc(2em + 5px);
 
 	margin-right: 5px;
 	border-radius: 5px;
@@ -903,7 +905,6 @@ div#checkout_steps a {
 	transition-property: all;
 	transition-duration: 0.3s;
 
-	overflow: hidden;
 	white-space: nowrap;
 	counter-increment: checkout-steps;
 }
@@ -918,8 +919,8 @@ div#checkout_steps a:before {
 	content: counter(checkout-steps);
 	margin-right: 3px;
 	padding: 3px;
-	padding-left: 9px;
-	padding-right: 9px;
+	padding-left: 7px;
+	padding-right: 7px;
 
 	border: 1px solid transparent;
 	border-radius: 16px;
