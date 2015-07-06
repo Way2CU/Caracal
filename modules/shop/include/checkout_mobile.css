@@ -245,6 +245,11 @@ div#checkout div.delivery_method label > div span {
     float: right;
 }
 
+div#checkout div.delivery_method label > div span:after {
+	content: ' ' attr(data-currency);
+	font-size: 0.9em;
+}
+
 body.rtl div#checkout div.delivery_method label > div span {
 	float: left;
 }
@@ -254,7 +259,12 @@ div#checkout div.delivery_method label > span {
     padding-left: 24px;
 
     color: #909090;
-    font-size: 0.9em;
+    font-size: 0.8em;
+}
+
+body.rtl div#checkout div.delivery_method label > span {
+	padding-left: 0px;
+	padding-right: 24px;
 }
 
 div#checkout div.delivery_method div.delivery_methods {
