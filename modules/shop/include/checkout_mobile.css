@@ -467,11 +467,7 @@ div.checkout_controls {
 	display: block;
 	margin-top: 20px;
 
-	text-align: right;
-}
-
-body.rtl div.checkout_controls {
-	text-align: left;
+	text-align: center;
 }
 
 div.checkout_controls button {
