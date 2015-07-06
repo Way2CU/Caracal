@@ -3143,16 +3143,16 @@ class shop extends Module {
 							$line = $item_names[$item->item];
 						}
 
-						$line = utf8_wordwrap($line, 40, "\n", true);
+						$line = utf8_wordwrap($line, 60, "\n", true);
 						$line = mb_split("\n", $line);
 
 						// append other columns
-						$line[0] = $line[0] . str_pad($item->price, 8, ' ', STR_PAD_LEFT);
-						$line[0] = $line[0] . str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
-						$line[0] = $line[0] . str_pad($item->price * $item->amount, 8, ' ', STR_PAD_LEFT);
+						$line .= str_pad($item->price, 8, ' ', STR_PAD_LEFT);
+						$line .= str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
+						$line .= str_pad($item->price * $item->amount, 8, ' ', STR_PAD_LEFT);
 
 						// add this item to text table
-						$text_table .= implode("\n", $line) . "\n\n";
+						$text_table .= $line."\n\n";
 
 						// form html row
 						$row = '<tr><td>' . $item_names[$item->item];
