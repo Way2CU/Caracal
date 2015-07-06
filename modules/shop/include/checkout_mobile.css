@@ -876,6 +876,8 @@ div#checkout_steps {
 	color: #505050;
 	font-size: 0.7em;
 	text-align: left;
+
+	counter-reset: checkout-steps;
 }
 
 div#checkout_steps.input_details {
@@ -898,10 +900,17 @@ div#checkout_steps a {
 
 	overflow: hidden;
 	white-space: nowrap;
+	counter-increment: checkout-steps;
 }
 
-div#checkout_steps a span {
+body.rtl div#checkout_steps a {
+	margin-right: auto;
+	margin-left: 5px;
+}
+
+div#checkout_steps a:before {
 	display: inline-block;
+	content: counter(checkout-steps);
 	margin-right: 3px;
 	padding: 3px;
 	padding-left: 9px;
@@ -918,8 +927,12 @@ div#checkout_steps a span {
 	transition-duration: 0.3s;
 }
 
-div#checkout_steps a:not(:last-of-type):after,
-body.rtl div#checkout_steps a:not(:last-of-type):before {
+body.rtl div#checkout_steps a:before {
+	margin-right: auto;
+	margin-left: 3px;
+}
+
+div#checkout_steps a:not(:last-of-type):after {
 	display: inline-block;
 	width: 0px;
 	height: 0px;
@@ -938,31 +951,26 @@ body.rtl div#checkout_steps a:not(:last-of-type):before {
 }
 
 body.rtl div#checkout_steps a:not(:last-of-type):after {
-	content: none;
-}
-
-body.rtl div#checkout_steps a:not(:last-of-type):before {
+	left: auto;
+	right: 3px;
+	border-left-width: 0px;
 	border-right: 5px solid #606060;
 }
 
-div#checkout_steps a:hover span {
+div#checkout_steps a:hover:before {
 	background-color: #0b6fd4;
 	background-color: rgba(11, 111, 212, 0.5);
 }
 
-div#checkout_steps a.active {
-	max-width: 200px;
-}
-
-div#checkout_steps a.active span {
+div#checkout_steps a.active:before {
 	border: 1px solid #0b63ce;
 	background-color: #0b6fd4;
 
 	box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2),
-				inset 0 1px rgba(255, 255, 255, 0.3),
-				inset 0 7px rgba(255, 255, 255, 0.2),
-    			inset 0 7px 10px rgba(255, 255, 255, 0.25),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	inset 0 1px rgba(255, 255, 255, 0.3),
+	inset 0 7px rgba(255, 255, 255, 0.2),
+	inset 0 7px 10px rgba(255, 255, 255, 0.25),
+	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	color: white;
 }
@@ -971,7 +979,7 @@ div#checkout_steps a.disabled {
 	color: #b0b0b0;
 }
 
-div#checkout_steps a.disabled span {
+div#checkout_steps a.disabled:before {
 	color: #b0b0b0;
 }
 
