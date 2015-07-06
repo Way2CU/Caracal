@@ -189,12 +189,12 @@ div#checkout.recurring div.delivery_method.visible {
 
 div#checkout div.delivery_method label {
 	display: inline-block;
-	width: 250px;
+	width: calc(100% - 20px);
 
-	margin-right: 40px;
-	margin-bottom: 15px;
+	margin-top: 5px;
 	padding: 10px;
 
+	border: 1px solid #CFCFCF;
 	border-radius: 3px;
 	vertical-align: top;
 
