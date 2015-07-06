@@ -290,8 +290,12 @@ div.transaction_details {
 	color: #333333;
 }
 
+div.transaction_details span {
+	display: block;
+}
+
 div.transaction_details textarea {
-	max-width: 356px;
+	width: calc(100% - 10px);
 	height: 60px;
 	resize: none;
 
