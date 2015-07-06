@@ -7,9 +7,18 @@
 
 div#checkout_container {
 	display: block;
+	min-height: 600px;
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-bottom: 100px;
+}
+
+div#checkout_container div.page {
+	display: none;
+}
+
+div#checkout_container div.page.visible {
+	display: block;
 }
 
 /**
