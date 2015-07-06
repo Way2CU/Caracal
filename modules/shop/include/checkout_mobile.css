@@ -872,11 +872,11 @@ div#input_details div.message {
 }
 
 div#input_details div.checkout_controls {
-	margin: 0px;
-
 	position: absolute;
+	width: 100%;
 	bottom: -70px;
 	right: 0px;
+	margin: 0px;
 }
 
 /**
