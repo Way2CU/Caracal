@@ -112,7 +112,7 @@ div#checkout div.delivery_provider label input[type=radio] + span:before {
 
 	border: 1px solid #b0b0b0;
 	border-radius: 9px;
-	background-image: url(../images/checkbox.png);
+	background-image: url(../images/radio.png);
 	background-position: 0px 0px;
 	background-repeat: no-repeat;
 	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
