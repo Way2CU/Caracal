@@ -763,6 +763,7 @@ Caracal.Shop.Item = function(cart) {
 	self.image = '';
 	self.uid = '';
 	self.variation_id = '';
+	self.size_definition = 0;
 	self.properties = {};
 	self.handlers = {};
 	self.views = new Array();
@@ -898,6 +899,7 @@ Caracal.Shop.Item = function(cart) {
 		self.image = data.image || self.image;
 		self.uid = data.uid || self.uid;
 		self.variation_id = data.variation_id || self.variation_id;
+		self.size_definition = data.size_definition || self.size_definition;
 
 		// update views
 		for (var i=0, count=self.views.length; i<count; i++)

@@ -2165,15 +2165,16 @@ class shop extends Module {
 
 			// prepare result
 			$result = array(
-				'name'			=> $item->name,
-				'weight'		=> $item->weight,
-				'price'			=> $item->price,
-				'tax'			=> $item->tax,
-				'image'			=> $thumbnail_url,
-				'count'			=> $cart[$uid]['variations'][$variation_id]['count'],
-				'uid'			=> $item->uid,
-				'variation_id'	=> $variation_id,
-				'properties'	=> unfix_chars($properties)
+				'name'				=> $item->name,
+				'weight'			=> $item->weight,
+				'price'				=> $item->price,
+				'tax'				=> $item->tax,
+				'size_definition'	=> $item->size_definition,
+				'image'				=> $thumbnail_url,
+				'count'				=> $cart[$uid]['variations'][$variation_id]['count'],
+				'uid'				=> $item->uid,
+				'variation_id'		=> $variation_id,
+				'properties'		=> unfix_chars($properties)
 			);
 
 			// update shopping cart
