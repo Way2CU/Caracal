@@ -10,6 +10,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	private static $_instance;
 
 	private $url = 'https://direct.tranzila.com/%terminal%/iframe.php';
+	private $mobile_url = 'https://direct.tranzila.com/%terminal%/mobile.php';
 	private $token_url = 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi';
 
 	private $currency = array(
@@ -85,7 +86,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		$url = $this->url;
+		$url = defined('_DESKTOP') ? $this->url : $this->mobile_url;
 		$terminal = $this->parent->settings['terminal'];
 
 		$url = str_replace('%terminal%', $terminal, $url);

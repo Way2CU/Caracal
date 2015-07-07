@@ -23,9 +23,12 @@ $(function() {
 
 	// configure dialog
 	dialog
-		.setSize(400, 250)
 		.setTitle(language_handler.getText('tranzila', 'payment_method_title'))
 		.setContent(iframe);
+
+	if (!Site.is_mobile())
+		dialog.setSize(400, 250); else
+		dialog.setSize('90vw', 250);
 
 	// show dialog when form is submitted
 	form.on('submit', function() {
