@@ -3,9 +3,9 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<cms:var name="$params['link_new']"/>
-		<cms:var name="$params['link_new_bulk']"/>
-		<cms:var name="$params['link_groups']"/>
+		<cms:var param="link_new"/>
+		<cms:var param="link_new_bulk"/>
+		<cms:var param="link_groups"/>
 
 		<div class="floated">
 			<cms:text constant="group" module="gallery"/>
