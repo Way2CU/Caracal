@@ -2578,6 +2578,8 @@ class shop extends Module {
 					if (isset($_REQUEST['agree_to_terms']))
 					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
 
+					$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+
 					// get user data
 					$data = array(
 						'first_name'	=> escape_chars($_REQUEST['first_name']),
@@ -2586,7 +2588,7 @@ class shop extends Module {
 						'uid'			=> isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
 						'guest'			=> 0,
 						'agreed'		=> $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
-						'promotions'	=> $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1'
+						'promotions'	=> $want_promotions ? 1 : 0
 					);
 
 					$password = $_REQUEST['new_password'];
