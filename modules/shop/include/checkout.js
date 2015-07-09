@@ -623,6 +623,9 @@ Caracal.Shop.CheckoutForm = function() {
 				entry
 					.addClass('method')
 					.appendTo(self.delivery_method_list);
+
+				// show list of delivery methods
+				self.delivery_method_list.addClass('visible');
 			}
 
 		// hide overlay
@@ -631,9 +634,6 @@ Caracal.Shop.CheckoutForm = function() {
 			.animate({opacity: 0}, 500, function() {
 				$(this).css('display', 'none');
 			});
-
-		// show list of delivery methods
-		self.delivery_method_list.addClass('visible');
 	};
 
 	/**
