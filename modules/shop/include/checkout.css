@@ -70,7 +70,7 @@ table.checkout_details {
 div#checkout div.delivery_provider {
 	display: block;
 	width: 550px;
-	height: 90px;
+	min-height: 90px;
 
 	padding: 10px;
 
@@ -109,7 +109,11 @@ div#checkout div.delivery_provider label input[type=radio] {
 }
 
 div#checkout div.delivery_provider label input[type=radio] + span {
+	display: inline-block;
 	position: relative;
+
+	padding-bottom: 20px;
+	text-align: center;
 }
 
 div#checkout div.delivery_provider label input[type=radio] + span:before {
@@ -119,7 +123,7 @@ div#checkout div.delivery_provider label input[type=radio] + span:before {
 
 	position: absolute;
 	left: 50%;
-	bottom: -20px;
+	bottom: 0px;
 
 	margin-left: -8px;
 	margin-bottom: -3px;
