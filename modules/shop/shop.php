@@ -2669,7 +2669,7 @@ class shop extends Module {
 
 					// collect data
 					if (isset($_REQUEST['name'])) {
-						$name = explode(' ', escape_chars($_REQUEST['name']), 1);
+						$name = explode(' ', escape_chars($_REQUEST['name']), 2);
 						$first_name = $name[0];
 						$last_name = count($name) > 1 ? $name[1] : '';
 
@@ -2688,7 +2688,7 @@ class shop extends Module {
 						'guest'			=> 1,
 						'system_user'	=> 0,
 						'agreed'		=> $agree_to_terms,
-						'promotions'	=> $want_promotions
+						'promotions'	=> $want_promotions ? 1 : 0
 					);
 
 					// include uid if specified
@@ -2712,7 +2712,7 @@ class shop extends Module {
 					}
 
 					// create new account
-					if (is_null($result)) {
+					if (!is_object($result)) {
 						$manager->insertData($data);
 
 						// get account object
