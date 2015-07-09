@@ -244,3 +244,9 @@ Caracal.Shop.update_total_amount = function(button) {
 		}
 	});
 };
+
+/**
+ * Handle changing filter in transaction lists.
+ */
+Caracal.Shop.handler_filter_change = function() {
+};

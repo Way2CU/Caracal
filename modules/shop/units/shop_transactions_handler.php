@@ -66,10 +66,13 @@ class ShopTransactionsHandler {
 	private function showTransactions() {
 		$template = new TemplateHandler('transaction_list.xml', $this->path.'templates/');
 
-		$params = array();
+		$params = array(
+				'link_reload'	=> window_ReloadContent('shop_transactions')
+			);
 
-		// register tag handler
+		// register tag handlers
 		$template->registerTagHandler('cms:transaction_list', $this, 'tag_TransactionList');
+		$template->registerTagHandler('cms:status_list', $this, 'tag_TransactionList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);

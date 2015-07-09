@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
+	<!-- Window menu -->
+	<div class="main_menu">
+		<cms:var param="link_reload"/>
+		<label>
+			<span><cms:text constant="label_status" module="shop"/></span>
+			<select
+				name="status"
+				on_change="javascript:Caracal.Shop.handle_filter_change();"
+				>
+				<option/>
+				<cms:status_list/>
+			</select>
+		</label>
+	</div>
+
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
