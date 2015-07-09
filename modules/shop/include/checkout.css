@@ -68,25 +68,15 @@ table.checkout_details {
  * Delivery method selection
  */
 div#checkout div.delivery_provider {
-	display: block;
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
 	width: 550px;
 	min-height: 90px;
-
 	padding: 10px;
-
-	position: relative;
-	float: right;
 
 	background-color: white;
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-}
-
-body.rtl div#checkout div.delivery_provider {
-	float: left;
-}
-
-div#checkout.recurring div.delivery_provider {
-	float: none;
 }
 
 div#checkout div.delivery_provider span.title {
@@ -330,12 +320,10 @@ div#checkout div.delivery_method div.services {
  * Transaction details
  */
 div.transaction_details {
-	display: block;
+	display: inline-block;
+	vertical-align: top;
 	width: 368px;
-	height: 90px;
-
-	float: left;
-
+	margin-right: 20px;
 	padding: 10px;
 
 	background-color: white;
@@ -345,13 +333,12 @@ div.transaction_details {
 }
 
 body.rtl div.transaction_details {
-	float: right;
+	margin-right: 0px;
+	margin-left: 20px;
 }
 
 div#checkout.recurring div.transaction_details {
 	width: 550px;
-	float: none;
-
 	margin-bottom: 20px;
 }
 
