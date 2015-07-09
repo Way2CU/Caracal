@@ -16,6 +16,7 @@
 				width="100"
 				height="28"
 			/>
+			<cms:var param="title"/>
 		</span>
 	</label>
 </document>
