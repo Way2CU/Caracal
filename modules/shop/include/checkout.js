@@ -578,7 +578,7 @@ Caracal.Shop.CheckoutForm = function() {
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
 
-		if (data.delivery_prices && data.delivery_prices.length > 0)
+		if (data.delivery_prices)
 			for (var id in data.delivery_prices) {
 				var method = data.delivery_prices[id];
 				var entry = $('<label>');
