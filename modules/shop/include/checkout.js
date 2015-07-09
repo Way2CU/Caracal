@@ -578,51 +578,52 @@ Caracal.Shop.CheckoutForm = function() {
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
 
-		for (var id in data.delivery_prices) {
-			var method = data.delivery_prices[id];
-			var entry = $('<label>');
-			var name = $('<div>');
-			var price = $('<span>');
-			var time = $('<span>');
-			var checkbox = $('<input>');
+		if (data.delivery_prices.length > 0)
+			for (var id in data.delivery_prices) {
+				var method = data.delivery_prices[id];
+				var entry = $('<label>');
+				var name = $('<div>');
+				var price = $('<span>');
+				var time = $('<span>');
+				var checkbox = $('<input>');
 
-			// add method name to object
-			method.push(data.delivery_method);
+				// add method name to object
+				method.push(data.delivery_method);
 
-			// create interface
-			checkbox
-				.attr('type', 'radio')
-				.attr('name', 'delivery_method')
-				.attr('value', id)
-				.data('method', method)
-				.change(self.handler.delivery_method_click)
-				.appendTo(entry);
+				// create interface
+				checkbox
+					.attr('type', 'radio')
+					.attr('name', 'delivery_method')
+					.attr('value', id)
+					.data('method', method)
+					.change(self.handler.delivery_method_click)
+					.appendTo(entry);
 
-			price
-				.html(method[1])
-				.attr('data-currency', method[2]);
+				price
+					.html(method[1])
+					.attr('data-currency', method[2]);
 
-			name
-				.html(method[0])
-				.append(price)
-				.appendTo(entry);
+				name
+					.html(method[0])
+					.append(price)
+					.appendTo(entry);
 
-			if (method[4] === null) {
-				// no estimate available
-				time.html(self.cached_data.label_no_estimate);
+				if (method[4] === null) {
+					// no estimate available
+					time.html(self.cached_data.label_no_estimate);
 
-			} else {
-				var start = method[3] != null ? method[5] + ' - ' : '';
-				var end = method[6];
-				time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
+				} else {
+					var start = method[3] != null ? method[5] + ' - ' : '';
+					var end = method[6];
+					time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
+				}
+
+				time.appendTo(entry);
+
+				entry
+					.addClass('method')
+					.appendTo(self.delivery_method_list);
 			}
-
-			time.appendTo(entry);
-
-			entry
-				.addClass('method')
-				.appendTo(self.delivery_method_list);
-		}
 
 		// hide overlay
 		self.overlay
