@@ -67,7 +67,10 @@ class ShopTransactionsHandler {
 		$template = new TemplateHandler('transaction_list.xml', $this->path.'templates/');
 
 		$params = array(
-				'link_reload'	=> window_ReloadContent('shop_transactions')
+			'link_reload'	=> url_MakeHyperlink(
+							$this->getLanguageConstant('reload'),
+							window_ReloadContent('shop_transactions')
+						)
 			);
 
 		// register tag handlers
