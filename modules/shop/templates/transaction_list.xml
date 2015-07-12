@@ -4,8 +4,8 @@
 	<!-- Window menu -->
 	<div class="main_menu">
 		<cms:var param="link_reload"/>
-		<label>
-			<span><cms:text constant="label_status" module="shop"/></span>
+		<label class="floated">
+			<cms:text constant="label_status" module="shop"/>
 			<select
 				name="status"
 				on_change="javascript:Caracal.Shop.handle_filter_change();"
