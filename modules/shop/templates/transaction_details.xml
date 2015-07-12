@@ -152,7 +152,7 @@
 			</div>
 			<label>
 				<span><cms:text constant="label_shipping_address" module="shop"/></span>
-				<textarea readonly="readonly" style="width: 270px; height: 3em;">
+				<textarea readonly="readonly" style="width: 270px; height: calc(3em + 10px);">
 					<cms:var name="$params['full_address']"/>
 				</textarea>
 			</label>
