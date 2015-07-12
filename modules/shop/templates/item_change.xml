@@ -58,7 +58,7 @@
 						</select>
 					</label>
 				</div>
-				<div style="clear: both; padding-top: 10px;">
+				<div style="clear: both; padding-top: 10px; padding-bottom: 10px;">
 					<div class="box left" style="width: 120px;">
 						<label>
 							<span><cms:text constant="label_tax" module="shop"/></span>
@@ -87,7 +87,7 @@
 						cms:optional="checked"
 						/>
 				</label>
-				<div style="clear: both; padding-top: 10px; padding-bottom: 25px;">
+				<div style="clear: both; padding-bottom: 25px;">
 					<cms:text constant="message_images_upload" module="shop"/>
 				</div>
 			</div>
