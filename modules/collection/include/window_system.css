@@ -223,7 +223,8 @@ body.rtl div.window div.content label.horizontal {
 	margin-right: 0px;
 }
 
-div.window div.content label.horizontal:last-of-type {
+div.window div.content label.horizontal:last-of-type,
+body.rtl div.window div.content label.horizontal:last-of-type {
 	margin-left: 0px;
 	margin-right: 0px;
 }
