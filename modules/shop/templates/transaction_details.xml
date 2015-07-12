@@ -135,7 +135,7 @@
 						type="text"
 						value="$params['address_phone']"
 						readonly="readonly"
-						style="width: 150px;"
+						style="width: 120px;"
 						cms:eval="value"
 						/>
 				</label>
@@ -145,7 +145,7 @@
 						type="text"
 						value="$params['address_access_code']"
 						readonly="readonly"
-						style="width: 130px;"
+						style="width: 115px;"
 						cms:eval="value"
 						/>
 				</label>
