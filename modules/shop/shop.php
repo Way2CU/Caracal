@@ -3101,7 +3101,7 @@ class shop extends Module {
 		// create item table
 		switch ($transaction->type) {
 			case TransactionType::REGULAR:
-			case TransactionType::DELAYED:
+				$subtotal = 0;
 				$item_manager = ShopItemManager::getInstance();
 				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
 				$items = $transaction_item_manager->getItems(
@@ -3121,11 +3121,11 @@ class shop extends Module {
 						$item_names[$item->id] = $item->name[$language];
 
 					// create items table
-					$text_table = str_pad($this->getLanguageConstant('column_name'), 40);
+					$text_table = str_pad($this->getLanguageConstant('column_name'), 60);
 					$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
 					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
 					$text_table .= str_pad($this->getLanguageConstant('column_item_total'), 8);
-					$text_table .= "\n" . str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+					$text_table .= "\n" . str_repeat('-', 60 + 8 + 6 + 8) . "\n";
 
 					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
 					$html_table .= '<thead><tr>';
@@ -3172,7 +3172,7 @@ class shop extends Module {
 					}
 
 					// close text table
-					$text_table .= str_repeat('-', 40 + 8 + 6 + 8) . "\n";
+					$text_table .= str_repeat('-', 60 + 8 + 6 + 8) . "\n";
 					$html_table .= '</tbody>';
 
 					// create totals
@@ -3193,6 +3193,102 @@ class shop extends Module {
 					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_subtotal') . '</td>';
 					$html_table .= '<td>' . $subtotal . '</td></tr>';
 
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
+
+					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
+
+					$html_table .= '</tfoot>';
+
+					// close table
+					$html_table .= '</table>';
+
+					// add field
+					$fields['html_item_table'] = $html_table;
+					$fields['text_item_table'] = $text_table;
+				}
+				break;
+
+			case TransactionType::DELAYED:
+				$subtotal = 0;
+				$item_manager = ShopItemManager::getInstance();
+				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
+				$items = $transaction_item_manager->getItems(
+					$transaction_item_manager->getFieldNames(),
+					array('transaction' => $transaction->id)
+				);
+
+				if (count($items) > 0) {
+					// prepare item names
+					$id_list = array();
+					foreach ($items as $item)
+						$id_list[] = $item->item;
+
+					$item_names = array();
+					$item_list = $item_manager->getItems(array('id', 'name'), array('id' => $id_list));
+					foreach ($item_list as $item)
+						$item_names[$item->id] = $item->name[$language];
+
+					// create items table
+					$text_table = str_pad($this->getLanguageConstant('column_name'), 60);
+					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
+					$text_table .= "\n" . str_repeat('-', 60 + 6) . "\n";
+
+					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
+					$html_table .= '<thead><tr>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
+					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
+					$html_table .= '</td></thead><tbody>';
+
+					foreach ($items as $item) {
+						// append item name with description
+						$description = unserialize($item->description);
+
+						if (!empty($description)) {
+							$description_text = implode(', ', array_values($description));
+							$line = $item_names[$item->item]. ' (' . $description . ')';
+						} else {
+							$line = $item_names[$item->item];
+						}
+
+						$line = utf8_wordwrap($line, 60, "\n", true);
+						$line = mb_split("\n", $line);
+
+						// append other columns
+						$line .= str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
+
+						// add this item to text table
+						$text_table .= $line."\n\n";
+
+						// form html row
+						$row = '<tr><td>' . $item_names[$item->item];
+
+						if (!empty($description))
+							$row .= ' <small>' . $description_text . '</small>';
+
+						$row .= '<td>' . $item->amount . '</td></tr>';
+					}
+
+					// close text table
+					$text_table .= str_repeat('-', 60 + 6) . "\n";
+					$html_table .= '</tbody>';
+
+					// create totals
+					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$text_table .= str_repeat('-', 25);
+					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
+
+					$html_table .= '<tfoot>';
 					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
 					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
 
