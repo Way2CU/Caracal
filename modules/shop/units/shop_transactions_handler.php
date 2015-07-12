@@ -414,8 +414,8 @@ class ShopTransactionsHandler {
 	 */
 	private function json_UpdateTransactionTotal() {
 		$id = escape_chars($_REQUEST['id']);
-		$total = fix_id($_REQUEST['total']);
-		$handling = fix_id($_REQUEST['handling']);
+		$total = is_numeric($_REQUEST['total']) ? $_REQUEST['total'] : 0;
+		$handling = is_numeric($_REQUEST['handling']) ? $_REQUEST['handling'];
 		$result = false;
 
 		try {
