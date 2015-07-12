@@ -78,6 +78,15 @@
 						</label>
 					</div>
 				</div>
+				<label class="checkbox" cms:tooltip="tooltip_item_visible">
+					<span><cms:text constant="label_item_visible" module="shop"/></span>
+					<input
+						type="checkbox"
+						name="visible"
+						checked="$params['visible'] ? 'checked' : false"
+						cms:optional="checked"
+						/>
+				</label>
 				<div style="clear: both; padding-top: 10px; padding-bottom: 25px;">
 					<cms:text constant="message_images_upload" module="shop"/>
 				</div>

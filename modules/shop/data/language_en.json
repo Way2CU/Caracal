@@ -124,6 +124,7 @@
 	"label_web_site": "Web site:",
 	"label_weight": "Weight (kg):",
 	"label_zip": "ZIP code:",
+	"label_item_visible": "Item is visible?",
 	"manage_categories": "Manage categories",
 	"menu_categories": "Manage categories",
 	"menu_currencies": "Currencies",
@@ -273,5 +274,6 @@
 	"tooltip_street": "Street address, P.O. box, company name",
 	"tooltip_street2": "Apartment, suite, unit, building, floor, etc.",
 	"tooltip_total_money": "Total price without handling and shipping.",
-	"tooltip_access_code": "For buildings and gated communities."
+	"tooltip_access_code": "For buildings and gated communities.",
+	"tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results."
 }
