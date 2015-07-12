@@ -68,7 +68,7 @@ class ShopTransactionsHandler {
 
 		$params = array(
 			'link_reload'	=> url_MakeHyperlink(
-							$this->getLanguageConstant('reload'),
+							$this->_parent->getLanguageConstant('reload'),
 							window_ReloadContent('shop_transactions')
 						)
 			);
