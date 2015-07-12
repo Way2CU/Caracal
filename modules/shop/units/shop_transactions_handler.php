@@ -98,7 +98,7 @@ class ShopTransactionsHandler {
 								array('id' => $transaction->address)
 							);
 
-		$full_address = "{$address->name}\n\n{$address->street}\n";
+		$full_address = "{$address->street}\n";
 		$full_address .= "{$address->zip} {$address->city}\n";
 		if (empty($address->state))
 			$full_address .= $address->country; else
@@ -124,6 +124,8 @@ class ShopTransactionsHandler {
 				'address_zip'		=> $address->zip,
 				'address_state'		=> $address->state,
 				'address_country'	=> $address->country,
+				'address_phone'		=> $address->phone,
+				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address
 			);
 

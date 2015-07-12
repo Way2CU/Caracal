@@ -119,10 +119,40 @@
 		</div>
 		<div>
 			<label>
+				<span><cms:text constant="label_shipping_recipient" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['address_name']"
+					readonly="readonly"
+					style="width: 270px;"
+					cms:eval="value"
+					/>
+			</label>
+			<label>
+				<span><cms:text constant="label_phone_number" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['address_phone']"
+					readonly="readonly"
+					style="width: 270px;"
+					cms:eval="value"
+					/>
+			</label>
+			<label>
 				<span><cms:text constant="label_shipping_address" module="shop"/></span>
 				<textarea readonly="readonly" style="width: 270px; height: 70px;">
 					<cms:var name="$params['full_address']"/>
 				</textarea>
+			</label>
+			<label>
+				<span><cms:text constant="label_access_code" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['address_access_code']"
+					readonly="readonly"
+					style="width: 270px;"
+					cms:eval="value"
+					/>
 			</label>
 			<label>
 				<span><cms:text constant="label_delivery_method" module="shop"/></span>
