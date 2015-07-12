@@ -4,7 +4,7 @@
 	<!-- Window menu -->
 	<div class="main_menu">
 		<cms:var param="link_reload"/>
-		<label class="floated">
+		<div class="floated">
 			<cms:text constant="label_status" module="shop"/>
 			<select
 				name="status"
@@ -13,7 +13,7 @@
 				<option/>
 				<cms:status_list/>
 			</select>
-		</label>
+		</div>
 	</div>
 
 	<!-- Header -->
