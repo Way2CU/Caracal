@@ -1798,18 +1798,19 @@ class shop extends Module {
 			$date_format = $this->getLanguageConstant('format_date_short');
 			$time_format = $this->getLanguageConstant('format_time_short');
 
-			foreach ($delivery_prices as $key => $delivery_data) {
-				if ($delivery_data[3] != null)
-					$start_date = date($date_format.' '.$time_format, $delivery_data[3]); else
-					$start_date = '';
+			if (count($delivery_prices) > 0)
+				foreach ($delivery_prices as $key => $delivery_data) {
+					if ($delivery_data[3] != null)
+						$start_date = date($date_format.' '.$time_format, $delivery_data[3]); else
+						$start_date = '';
 
-				if ($delivery_data[4] != null)
-					$end_date = date($date_format.' '.$time_format, $delivery_data[4]); else
-					$end_date = '';
+					if ($delivery_data[4] != null)
+						$end_date = date($date_format.' '.$time_format, $delivery_data[4]); else
+						$end_date = '';
 
-				$delivery_prices[$key][] = $start_date;
-				$delivery_prices[$key][] = $end_date;
-			}
+					$delivery_prices[$key][] = $start_date;
+					$delivery_prices[$key][] = $end_date;
+				}
 
 			// assign delivery intervals to result
 			$result['delivery_prices'] = $delivery_prices;
@@ -3045,6 +3046,7 @@ class shop extends Module {
 			'weight'						=> $transaction->weight,
 			'payment_method'				=> $transaction->payment_method,
 			'delivery_method'				=> $transaction->delivery_method,
+			'delivery_type'					=> $transaction->delivery_type,
 			'remark'						=> $transaction->remark,
 			'remote_id'						=> $transaction->remote_id,
 			'timestamp'						=> $transaction->timestamp
