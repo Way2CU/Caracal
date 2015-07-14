@@ -412,11 +412,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 						$exp_year = is_numeric($exp_date) ? 2000 + (int) substr($exp_date, -2) : 2000;
 
 					} else {
-						// default date
 						$exp_month = 1;
 						$exp_year = 2000;
 					}
-
 
 					// save new token
 					$token = Token::save(
