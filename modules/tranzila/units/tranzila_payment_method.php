@@ -402,8 +402,21 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 					$token = Token::get($this->name, $transaction->buyer, $token_name);
 
 				} catch (UnknownTokenError $error) {
-					$exp_month = is_numeric($_REQUEST['expmonth']) ? $_REQUEST['expmonth'] : 1;
-					$exp_year = is_numeric($_REQUEST['expyear']) ? 2000 + (int) $_REQUEST['expyear'] : 2000;
+					if (isset($_REQUEST['expmonth']) && isset($_REQUEST['expyear'])) {
+						$exp_month = is_numeric($_REQUEST['expmonth']) ? (int) $_REQUEST['expmonth'] : 1;
+						$exp_year = is_numeric($_REQUEST['expyear']) ? 2000 + (int) $_REQUEST['expyear'] : 2000;
+
+					} else if (isset($_REQUEST['expdate'])) {
+						$exp_date = $_REQUEST['expdate'];
+						$exp_month = is_numeric($exp_date) ? (int) substr($exp_date, 0, 2): 1;
+						$exp_year = is_numeric($exp_date) ? 2000 + (int) substr($exp_date, -2) : 2000;
+
+					} else {
+						// default date
+						$exp_month = 1;
+						$exp_year = 2000;
+					}
+
 
 					// save new token
 					$token = Token::save(
