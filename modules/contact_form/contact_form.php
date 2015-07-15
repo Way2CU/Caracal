@@ -3757,7 +3757,7 @@ class contact_form extends Module {
 		// prepare results array
 		foreach ($applicable as $name)
 			if (isset($this->mailers[$name]))
-				$result[] = $this->mailers[$name];
+				$result[$name] = $this->mailers[$name];
 
 		return $result;
 	}
