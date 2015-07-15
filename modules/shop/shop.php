@@ -3299,13 +3299,13 @@ class shop extends Module {
 					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$html_table .= '<tfoot>';
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<tr><td></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
 					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<tr><td></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
 					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<tr><td></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
 					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
 
 					$html_table .= '</tfoot>';
