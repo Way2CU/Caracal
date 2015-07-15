@@ -3143,7 +3143,7 @@ class shop extends Module {
 
 						if (!empty($description)) {
 							$description_text = implode(', ', array_values($description));
-							$line = $item_names[$item->item]. ' (' . $description . ')';
+							$line = $item_names[$item->item]. ' (' . $description_text . ')';
 						} else {
 							$line = $item_names[$item->item];
 						}
@@ -3152,12 +3152,15 @@ class shop extends Module {
 						$line = mb_split("\n", $line);
 
 						// append other columns
-						$line .= str_pad($item->price, 8, ' ', STR_PAD_LEFT);
-						$line .= str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
-						$line .= str_pad($item->price * $item->amount, 8, ' ', STR_PAD_LEFT);
+						$line[0] = str_pad($line[0], 60, ' ', STR_PAD_RIGHT);
+						$line[0] .= str_pad($item->price, 8, ' ', STR_PAD_LEFT);
+						$line[0] .= str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
+						$line[0] .= str_pad($item->price * $item->amount, 8, ' ', STR_PAD_LEFT);
 
 						// add this item to text table
-						$text_table .= $line."\n\n";
+						foreach ($line as $row)
+							$text_table .= $row;
+						$text_table .= "\n\n";
 
 						// form html row
 						$row = '<tr><td>' . $item_names[$item->item];
@@ -3252,7 +3255,7 @@ class shop extends Module {
 
 						if (!empty($description)) {
 							$description_text = implode(', ', array_values($description));
-							$line = $item_names[$item->item]. ' (' . $description . ')';
+							$line = $item_names[$item->item]. ' (' . $description_text . ')';
 						} else {
 							$line = $item_names[$item->item];
 						}
@@ -3260,11 +3263,14 @@ class shop extends Module {
 						$line = utf8_wordwrap($line, 60, "\n", true);
 						$line = mb_split("\n", $line);
 
-						// append other columns
-						$line .= str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
+						// correct columns
+						$line[0] = str_pad($line[0], 60, ' ', STR_PAD_RIGHT);
+						$line[0] .= str_pad($item->amount, 6, ' ', STR_PAD_LEFT);
 
 						// add this item to text table
-						$text_table .= $line."\n\n";
+						foreach ($line as $row)
+							$text_table .= $row;
+						$text_table .= "\n\n";
 
 						// form html row
 						$row = '<tr><td>' . $item_names[$item->item];
@@ -3272,7 +3278,7 @@ class shop extends Module {
 						if (!empty($description))
 							$row .= ' <small>' . $description_text . '</small>';
 
-						$row .= '<td>' . $item->amount . '</td></tr>';
+						$row .= '</td><td>' . $item->amount . '</td></tr>';
 					}
 
 					// close text table
