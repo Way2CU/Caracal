@@ -3171,6 +3171,7 @@ class shop extends Module {
 						$row .= '</td><td>' . $item->price . '</td>';
 						$row .= '<td>' . $item->amount . '</td>';
 						$row .= '<td>' . ($item->price * $item->amount) . '</td></tr>';
+						$html_table .= $row;
 
 						// update subtotal
 						$subtotal += $item->price * $item->amount;
@@ -3279,6 +3280,7 @@ class shop extends Module {
 							$row .= ' <small>' . $description_text . '</small>';
 
 						$row .= '</td><td>' . $item->amount . '</td></tr>';
+						$html_table .= $row;
 					}
 
 					// close text table
