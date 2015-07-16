@@ -632,6 +632,10 @@ class shop extends Module {
 				$this->includeCartScripts();
 				break;
 
+			case 'include_redirect_script':
+				$this->includeRedirectScript();
+				break;
+
 			case 'json_get_item':
 				$handler = ShopItemHandler::getInstance($this);
 				$handler->json_GetItem();
@@ -1137,7 +1141,18 @@ class shop extends Module {
 		$collection = collection::getInstance();
 
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/cart.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('script', array('src' => url_GetFromFilePath($this->path.'include/cart.js'), 'type'=>'text/javascript'));
+	}
+
+	/**
+ 	 * Include script that makes sure page is not running in iframe.
+	 */
+	public function includeRedirectScript() {
+		if (!class_exists('head_tag'))
+			return;
+
+		$head_tag = head_tag::getInstance();
+		$head_tag->addTag('script', array('src' => url_GetFromFilePath($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
