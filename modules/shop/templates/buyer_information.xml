@@ -309,7 +309,7 @@
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 									maxlength="200"
 									autocomplete="on"
-									>
+									/>
 								<small><cms:text constant="tooltip_street2" module="shop"/></small>
 							</label>
 							<label>
