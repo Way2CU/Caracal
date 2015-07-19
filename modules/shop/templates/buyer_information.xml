@@ -285,7 +285,7 @@
 									/>
 							</label>
 							<hr/>
-							<label cms:tooltip="tooltip_street">
+							<label>
 								<span><cms:text constant="label_street" module="shop"/></span>
 								<input
 									class="in_array('street', $params['bad_fields']) ? 'bad' : ''"
@@ -297,8 +297,9 @@
 									data-required="1"
 									autocomplete="on"
 									/>
+								<small><cms:text constant="tooltip_street" module="shop"/></small>
 							</label>
-							<label class="separator" cms:tooltip="tooltip_street2">
+							<label class="separator">
 								<span></span>
 								<input
 									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
@@ -308,7 +309,8 @@
 									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 									maxlength="200"
 									autocomplete="on"
-									/>
+									>
+								<small><cms:text constant="tooltip_street2" module="shop"/></small>
 							</label>
 							<label>
 								<span><cms:text constant="label_city" module="shop"/></span>
@@ -385,7 +387,7 @@
 									/>
 							</label>
 							<hr/>
-							<label cms:tooltip="tooltip_access_code">
+							<label>
 								<span><cms:text constant="label_access_code" module="shop"/></span>
 								<input
 									class="in_array('access_code', $params['bad_fields']) ? 'bad' : ''"
@@ -396,6 +398,7 @@
 									maxlength="40"
 									autocomplete="on"
 									/>
+								<small><cms:text constant="tooltip_access_code" module="shop"/></small>
 							</label>
 
 							<div class="checkout_controls">
