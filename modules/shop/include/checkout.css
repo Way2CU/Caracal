@@ -753,14 +753,14 @@ body.rtl div#input_details label {
 	text-align: right;
 }
 
-body.rtl div#input_details label[data-tooltip]:before {
-	left: auto;
-	right: 215px;
+div#input_details label small {
+	display: block;
+	padding-left: 170px;
 }
 
-body.rtl div#input_details label[data-tooltip]:after {
-	left: auto;
-	right: 200px;
+body.rtl div#input_details label small {
+	padding-left: 0px;
+	padding-right: 170px;
 }
 
 div#input_details a {

@@ -672,6 +672,10 @@ div#input_details label:last-of-type {
 	margin-bottom: 15px;
 }
 
+div#input_details label small {
+	display: block;
+}
+
 div#input_details a {
 	color: #0b6fd4;
 	text-decoration: none;
