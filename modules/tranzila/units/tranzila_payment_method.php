@@ -236,7 +236,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		// prepare basic parameters
 		$params = array(
 			'currency'		=> $currency_code,
-			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
+			'sum'			=> 1,
 			'pdesc'			=> $description,
 			'tranmode'		=> 'VK',
 			'transaction_id' => $data['uid'],
