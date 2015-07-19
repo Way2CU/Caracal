@@ -271,9 +271,9 @@
     "type_regular": "רגיל",
     "type_donation": "תרומה",
     "type_delayed": "עיכוב",
-    "tooltip_street": "כתובת, רחוב, ת.ד, שם חברה",
+    "tooltip_street": "כתובת, רחוב, ת.ד, שם חברה.",
     "tooltip_street2": "דירה, יחידה, בניין, קומה וכו'.",
-    "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח",
+    "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח.",
     "tooltip_access_code": "לבניינים ושערי כניסה.",
     "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results."
 }
