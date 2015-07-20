@@ -29,7 +29,7 @@
 				type="checkbox"
 				name="active"
 				checked="$params['active'] ? 'checked' : false"
-				cms:optiona="checked"
+				cms:optional="checked"
 				/>
 		</label>
 		<div class="button_bar">
