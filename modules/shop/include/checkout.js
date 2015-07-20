@@ -578,7 +578,7 @@ Caracal.Shop.CheckoutForm = function() {
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
 
-		if (data.delivery_prices)
+		if (data.delivery_prices) {
 			for (var id in data.delivery_prices) {
 				var method = data.delivery_prices[id];
 				var entry = $('<label>');
@@ -627,6 +627,11 @@ Caracal.Shop.CheckoutForm = function() {
 				// show list of delivery methods
 				self.delivery_method_list.addClass('visible');
 			}
+
+		} else {
+			// no prices specified, enable checkout button
+			self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
+		}
 
 		// hide overlay
 		self.overlay
