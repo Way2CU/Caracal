@@ -54,9 +54,10 @@ function fix_chars($string, $strip_tags=true) {
  * Strip tags and escape the rest of the string
  *
  * @param mixed $string
+ * @param boolean $strip_tags
  * @return mixed
  */
-function escape_chars($string) {
+function escape_chars($string, $strip_tags=true) {
 	global $db;
 
 	if (!is_array($string)) {
@@ -65,10 +66,13 @@ function escape_chars($string) {
 			$string = stripcslashes($string);
 
 		// remove tags
-		$string = strip_tags($string);
+		if ($strip_tags)
+			$string = strip_tags($string);
 
-		if ($db != null)
-			$string = $db->escape_string($string);
+		// esape the rest of the string
+		if ($db->is_active())
+			$string = $db->escape_string($string); else
+			$string = mysql_real_escape_string($string);
 
 	} else {
 		foreach($string as $key => $value)
