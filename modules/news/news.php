@@ -172,8 +172,6 @@ class news extends Module {
 					$this->deleteNews_Commit();
 					break;
 
-				// ---
-
 				case 'groups':
 					$this->showGroups();
 					break;
@@ -205,8 +203,6 @@ class news extends Module {
 				case 'group_items_save':
 					$this->groupItems_Save();
 					break;
-
-				// ---
 
 				case 'feeds':
 					$this->showFeeds();
