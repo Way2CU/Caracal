@@ -174,6 +174,9 @@ class ShopTransactionsHandler {
 		if (isset($tag_params['buyer']))
 			$conditions['buyer'] = fix_id($tag_params['buyer']);
 
+		if (isset($_REQUEST['status']))
+			$conditions['status'] = fix_id($_REQUEST['status']);
+
 		if (isset($tag_params['system_user']) && $_SESSION['logged']) {
 			$user_id = fix_id($tag_params['system_user']);
 			$buyer = $buyers_manager->getSingleItem(array('id'), array('system_user' => $user_id));
