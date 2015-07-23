@@ -248,7 +248,7 @@ Caracal.Shop.update_total_amount = function(button) {
 /**
  * Handle changing filter in transaction lists.
  */
-Caracal.Shop.handler_filter_change = function() {
+Caracal.Shop.handle_filter_change = function() {
 	var transactions_window = window_system.getWindow('shop_transactions');
 	var selected_status = window_system.container.find('select[name=status]');
 
