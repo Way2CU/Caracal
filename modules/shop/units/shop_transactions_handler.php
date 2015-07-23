@@ -174,7 +174,7 @@ class ShopTransactionsHandler {
 		if (isset($tag_params['buyer']))
 			$conditions['buyer'] = fix_id($tag_params['buyer']);
 
-		if (isset($_REQUEST['status']) && !empty($_REQUEST['status']))
+		if (isset($_REQUEST['status']) && $_REQUEST['status'] != '')
 			$conditions['status'] = fix_id($_REQUEST['status']);
 
 		if (isset($tag_params['system_user']) && $_SESSION['logged']) {
@@ -365,7 +365,7 @@ class ShopTransactionsHandler {
 		$active = -1;
 		if (isset($tag_params['active']))
 			$active = fix_id($tag_params['active']);
-		if (isset($_REQUEST['status']) && !empty($_REQUEST['status']))
+		if (isset($_REQUEST['status']) && $_REQUEST['status'] != '')
 			$active = fix_id($_REQUEST['status']);
 
 		// get transaction id
