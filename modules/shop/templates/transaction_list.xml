@@ -8,7 +8,7 @@
 			<cms:text constant="label_status" module="shop"/>
 			<select
 				name="status"
-				on_change="javascript:Caracal.Shop.handle_filter_change();"
+				onchange="javascript:Caracal.Shop.handle_filter_change();"
 				>
 				<option/>
 				<cms:status_list/>
