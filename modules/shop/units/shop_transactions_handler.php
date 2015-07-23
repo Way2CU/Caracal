@@ -358,9 +358,15 @@ class ShopTransactionsHandler {
 	 * Print transaction status
 	 */
 	public function tag_TransactionStatus($tag_params, $children) {
-		$active = isset($tag_params['active']) ? fix_id($tag_params['active']) : -1;
 		$template = $this->_parent->loadTemplate($tag_params, 'transaction_status_option.xml');
 		$transaction = null;
+
+		// get selected
+		$active = -1;
+		if (isset($tag_params['active']))
+			$active = fix_id($tag_params['active']);
+		if (isset($_REQUEST['status']))
+			$active = fix_id($_REQUEST['status']);
 
 		// get transaction id
 		if (isset($tag_params['transaction'])) {
