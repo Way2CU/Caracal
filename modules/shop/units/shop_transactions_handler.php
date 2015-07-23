@@ -365,7 +365,7 @@ class ShopTransactionsHandler {
 		$active = -1;
 		if (isset($tag_params['active']))
 			$active = fix_id($tag_params['active']);
-		if (isset($_REQUEST['status']))
+		if (isset($_REQUEST['status']) && !empty($_REQUEST['status']))
 			$active = fix_id($_REQUEST['status']);
 
 		// get transaction id
