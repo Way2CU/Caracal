@@ -75,7 +75,7 @@ class ShopTransactionsHandler {
 
 		// register tag handlers
 		$template->registerTagHandler('cms:transaction_list', $this, 'tag_TransactionList');
-		$template->registerTagHandler('cms:status_list', $this, 'tag_TransactionList');
+		$template->registerTagHandler('cms:status_list', $this, 'tag_TransactionStatus');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
