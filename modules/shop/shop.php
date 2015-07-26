@@ -74,6 +74,7 @@ final class TransactionStatus {
 
 	// language constant mapping
 	public static $reverse = array(
+		self::UNKNOWN => 'status_unknown',
 		self::PENDING => 'status_pending',
 		self::DENIED => 'status_denied',
 		self::COMPLETED => 'status_completed',
