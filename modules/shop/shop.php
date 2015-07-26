@@ -61,6 +61,7 @@ final class TransactionType {
 
 
 final class TransactionStatus {
+	const UNKNOWN = -1;
 	const PENDING = 0;
 	const DENIED = 1;
 	const COMPLETED = 2;
@@ -2838,9 +2839,15 @@ class shop extends Module {
 			$uid = uniqid('', true);
 			$summary = $this->getCartSummary($uid, $type, $payment_method);
 
+			// decide on new transaction status
+			$new_status = TransactionStatus::PENDING;
+			if ($type == TransactionType::DELAYED)
+				$new_status = TransactionStatus::UNKNOWN;
+
+			// prepare data
 			$result['uid'] = $uid;
 			$result['type'] = $type;
-			$result['status'] = TransactionStatus::PENDING;
+			$result['status'] = $new_status;
 			$result['handling'] = $summary['handling'];
 			$result['shipping'] = $summary['shipping'];
 			$result['weight'] = $summary['weight'];

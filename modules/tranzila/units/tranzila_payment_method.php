@@ -428,6 +428,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 				// associate token with transaction
 				Transaction::set_token($transaction, $token);
+				$shop->setTransactionStatus($id, TransactionStatus::PENDING);
 				break;
 
 			case 'AK':  // regular charge
