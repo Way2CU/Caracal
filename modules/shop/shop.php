@@ -1491,6 +1491,9 @@ class shop extends Module {
 					break;
 			}
 
+			// whether we should send email notification
+			$send_email = true;
+
 			// trigger event
 			switch ($status) {
 				case TransactionStatus::COMPLETED:
@@ -1508,15 +1511,25 @@ class shop extends Module {
 					// charge transaction
 					$payment_method = $this->payment_methods[$transaction->payment_method];
 					$payment_method->charge_transaction($transaction);
+
+					// we don't send emails for delayed transactions
+					$send_email = $transaction->type != TransactionType::DELAYED;
 					break;
 
 				case TransactionStatus::CANCELED:
 					Events::trigger('shop', 'transaction-canceled', $transaction);
 					break;
+
+				case TransactionStatus::UNKNOWN:
+				case TransactionStatus::PENDING:
+					// we don't send emails for delayed transactions
+					$send_email = $transaction->type != TransactionType::DELAYED;
+					break;
 			}
 
 			// send notification email
-			$this->sendTransactionMail($transaction, $template_name);
+			if ($send_email)
+				$this->sendTransactionMail($transaction, $template_name);
 		}
 
 		return $result;
