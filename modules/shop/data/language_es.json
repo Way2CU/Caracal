@@ -195,6 +195,7 @@
     "shipping": "Shipping:",
     "show_shopping_cart": "Show shopping cart",
     "images": "Images",
+    "status_unknonw": "Unknown",
     "status_canceled": "Canceled",
     "status_completed": "Completed",
     "status_delivered": "Delivered",
