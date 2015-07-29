@@ -730,20 +730,6 @@ class ShopItemHandler {
 				$rating = 0;
 				$variation_id = $shop->generateVariationId($item->uid);
 
-				$open_gallery_window = window_Open(
-									'gallery_images',
-									670,
-									$gallery->getLanguageConstant('title_images'),
-									true, true,
-									url_Make(
-										'transfer_control',
-										'backend_module',
-										array('backend_action', 'images'),
-										array('module', 'gallery'),
-										array('group', $item->gallery)
-									)
-								);
-
 				$params = array(
 							'id'			=> $item->id,
 							'uid'			=> $item->uid,
@@ -804,11 +790,30 @@ class ShopItemHandler {
 														)
 													)
 												),
-							'item_images'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('images'),
-													$open_gallery_window
-												)
 						);
+
+				// add images link
+				if (!is_null($gallery)) {
+					$open_gallery_window = window_Open(
+										'gallery_images',
+										670,
+										$gallery->getLanguageConstant('title_images'),
+										true, true,
+										url_Make(
+											'transfer_control',
+											'backend_module',
+											array('backend_action', 'images'),
+											array('module', 'gallery'),
+											array('group', $item->gallery)
+										)
+									);
+					$params['item_images'] = url_MakeHyperlink(
+														$this->_parent->getLanguageConstant('images'),
+														$open_gallery_window
+													);
+				} else {
+					$params['item_images'] = '';
+				}
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
