@@ -13,11 +13,11 @@ use Core\Module;
 use Core\Cache\Manager as Cache;
 
 define('_BACKEND_SECTION_', 'backend_module');
-define('_BACKEND_PATH_', dirname(__FILE__));
 
 define('CHAR_CHECKED', '✔');
 define('CHAR_UNCHECKED', '');
 
+require_once('units/action.php');
 require_once('units/menu_item.php');
 require_once('units/session_manager.php');
 require_once('units/user_manager.php');
