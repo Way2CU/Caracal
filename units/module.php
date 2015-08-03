@@ -12,11 +12,18 @@ use \Language as Language;
 use \LanguageHandler as LanguageHandler;
 use \SettingsManager as SettingsManager;
 use \TemplateHandler as TemplateHandler;
+use \Exception as Exception;
+
+
+class AddActionError extends Exception {}
 
 
 abstract class Module {
 	protected $language = null;
 	protected $file;
+
+	private $actions = array();
+	private $backend_actions = array();
 
 	public $name;
 	public $path;
@@ -54,7 +61,64 @@ abstract class Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	abstract public function transferControl($params, $children);
+	public function transferControl($params, $children) {
+		$result = false;
+		$action = isset($params['action']) ? $params['action'] : null;
+		$backend_action = isset($params['backend_action']) ? $params['backend_action'] : null;
+
+		// call frontend action if defined
+		if (!is_null($action) && array_key_exists($action, $this->actions)) {
+			$callable = $this->actions[$action];
+			call_user_func_array($callable, array($params, $children));
+			$result = true;
+		}
+
+		// call backend action if defined
+		if ($_SESSION['logged'] && !is_null($backend_action) && array_key_exists($backend_action, $this->backend_actions)) {
+			$callable = $this->backend_actions[$backend_action];
+			call_user_func_array($callable, array($params, $children));
+			$result = true;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Add new action with specified name.
+	 *
+	 * @param string $name
+	 * @param string/array $callable
+	 * @throws AddActionError
+	 */
+	protected function addAction($name, $callable) {
+		if (array_key_exists($name, $this->actions))
+			throw new AddActionError("Action '{$name}' is already defined!");
+
+		$this->actions[$name] = $callable;
+	}
+
+	/**
+	 * Add backend only action with specified name.
+	 *
+	 * @param string $name
+	 * @param string/array $callable
+	 * @throws AddActionError
+	 */
+	protected function addBackendAction($name, $callable) {
+		if (array_key_exists($name, $this->backend_actions))
+			throw new AddActionError("Backend action '{$name}' is already defined!");
+
+		$this->backend_actions[$name] = $callable;
+	}
+
+	/**
+	 * Return list of defined backend actions.
+	 *
+	 * @return array
+	 */
+	public function getBackendActions() {
+		return array_keys($this->backend_actions);
+	}
 
 	/**
 	 * Returns text for given module specific constant
