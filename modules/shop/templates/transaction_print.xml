@@ -37,12 +37,12 @@
 				<address><cms:var param="full_address"/></address>
 				<span>
 					<cms:text constant="label_access_code" module="shop"/>
-					<cms:raw text=":&amp;nbsp;"/>
+					<cms:raw text="&amp;nbsp;"/>
 					<cms:var param="address_access_code"/>
 				</span>
 				<span>
 					<cms:text constant="label_phone_number" module="shop"/>
-					<cms:raw text=":&amp;nbsp;"/>
+					<cms:raw text="&amp;nbsp;"/>
 					<cms:var param="address_phone"/>
 				</span>
 			</div>

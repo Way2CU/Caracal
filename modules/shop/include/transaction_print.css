@@ -29,6 +29,10 @@ body.rtl div#buyer {
 	right: 0cm;
 }
 
+div#buyer span {
+	display: block;
+}
+
 /**
  * Delivery method
  */
