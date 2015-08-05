@@ -46,6 +46,10 @@ class ShopTransactionsHandler {
 				$this->showTransactionDetails();
 				break;
 
+			case 'print':
+				$this->printTransaction();
+				break;
+
 			case 'json_update_status':
 				$this->json_UpdateTransactionStatus();
 				break;
@@ -148,6 +152,84 @@ class ShopTransactionsHandler {
 		$params['email'] = $buyer->email;
 
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
+
+		// register tag handler
+		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
+		$template->registerTagHandler('cms:transaction_status', $this, 'tag_TransactionStatus');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show template for printing and automatically show print dialog.
+	 */
+	private function printTransaction() {
+		$manager = ShopTransactionsManager::getInstance();
+		$buyer_manager = ShopBuyersManager::getInstance();
+		$address_manager = ShopDeliveryAddressManager::getInstance();
+		$user_manager = UserManager::getInstance();
+
+		$id = fix_id($_REQUEST['id']);
+		$transaction = $manager->getSingleItem(
+								$manager->getFieldNames(),
+								array('id' => $id)
+							);
+		$address = $address_manager->getSingleItem(
+								$address_manager->getFieldNames(),
+								array('id' => $transaction->address)
+							);
+
+		$full_address = $address->street."\n";
+
+		if (!empty($address->street2))
+			$full_address .= $address->street2."\n";
+
+		$full_address .= "{$address->zip} {$address->city}\n";
+
+		if (empty($address->state))
+			$full_address .= $address->country; else
+			$full_address .= "{$address->state}, {$address->country}";
+
+		$params = array(
+				'id'				=> $transaction->id,
+				'uid'				=> $transaction->uid,
+				'type'				=> $transaction->type,
+				'type_string'		=> '',
+				'status'			=> $transaction->status,
+				'currency'			=> $transaction->currency,
+				'handling'			=> $transaction->handling,
+				'shipping'			=> $transaction->shipping,
+				'timestamp'			=> $transaction->timestamp,
+				'delivery_method'	=> $transaction->delivery_method,
+				'delivery_type'		=> $transaction->delivery_type,
+				'remark'			=> $transaction->remark,
+				'total'				=> $transaction->total,
+				'address_name'		=> $address->name,
+				'address_street'	=> $address->street,
+				'address_city'		=> $address->city,
+				'address_zip'		=> $address->zip,
+				'address_state'		=> $address->state,
+				'address_country'	=> $address->country,
+				'address_phone'		=> $address->phone,
+				'address_access_code'	=> $address->access_code,
+				'full_address'		=> $full_address,
+				'style_url'			=> url_GetFromFilePath($this->_parent->path.'include/transaction_print.css'),
+				'script_url'		=> url_GetFromFilePath($this->_parent->path.'include/transaction_print.js')
+			);
+
+		// regular or guest buyer
+		$buyer = $buyer_manager->getSingleItem(
+								$buyer_manager->getFieldNames(),
+								array('id' => $transaction->buyer)
+							);
+
+		$params['first_name'] = $buyer->first_name;
+		$params['last_name'] = $buyer->last_name;
+		$params['email'] = $buyer->email;
+
+		$template = new TemplateHandler('transaction_print.xml', $this->path.'templates/');
 
 		// register tag handler
 		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
