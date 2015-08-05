@@ -1,0 +1,57 @@
+/**
+ * Transaction Print Style Sheet
+ * Caracal Development Framework
+ *
+ * Copyright (c) 2015. by Way2CU, http://way2cu.com
+ * Authors: Mladen Mijatov
+ */
+
+body {
+	position: relative;
+	padding-top: 5cm;
+
+	color: black;
+	font-family: serif;
+	font-size: 14pt;
+}
+
+/**
+ * Buyer information
+ */
+div#buyer {
+	position: absolute;
+	top: 0cm;
+	left: 0cm;
+}
+
+body.rtl div#buyer {
+	left: auto;
+	right: 0cm;
+}
+
+/**
+ * Delivery method
+ */
+div#delivery {
+	position: absolute;
+	top: 0cm;
+	right: 0cm;
+}
+
+body.rtl div#delivery {
+	right: auto;
+	left: 0cm;
+}
+
+/**
+ * Content
+ */
+h1 {
+	margin: 0px;
+	margin-bottom: 1cm;
+	padding: 0px;
+}
+
+h1 small {
+	font-size: 14pt;
+}
