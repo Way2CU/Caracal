@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../units/schema/language.dtd">
+<document>
+	<cms:var name="_DOCTYPE"/>
+	<html lang="$language" cms:eval="lang">
+		<head>
+			<title>
+				<cms:text constant="site_title"/>
+				<cms:raw text=" - "/>
+				<cms:text constant="menu_shop" module="shop"/>
+				<cms:raw text=" - "/>
+				<cms:var param="uid"/>
+			</title>
+			<link
+				rel="stylesheet"
+				href="$params['style_url']"
+				type="text/css"
+				media="print"
+				charset="utf-8"
+				/>
+			<script
+				src="$params['script_url']"
+				type="text/javascript"
+				charset="utf-8"
+				/>
+		</head>
+
+		<body>
+			<section id="buyer">
+				<h2>
+					<cms:var param="first_name"/>
+					<cms:raw text="&amp;nbsp;"/>
+					<cms:var param="last_name"/>
+				</h2>
+				<address><cms:var param="full_address"/></address>
+				<span>
+					<cms:text constant="label_access_code" module="shop"/>
+					<cms:raw text=":&amp;nbsp;"/>
+					<cms:var param="address_access_code"/>
+				</span>
+				<span>
+					<cms:text constant="label_phone_number" module="shop"/>
+					<cms:raw text=":&amp;nbsp;"/>
+					<cms:var param="address_phone"/>
+				</span>
+			</section>
+
+			<div id="delivery">
+			</div>
+
+			<h1>
+				<cms:text constant="transaction" module="shop"/>
+				<small><cms:var param="uid"/></small>
+			</h1>
+
+			<table>
+				<thead>
+				</thead>
+			</table>
+
+			<div id="packager"><cms:text constant="label_packaged_by"/></div>
+			<div id="recipient"><cms:text constant="label_received_by"/></div>
+		</body>
+	</html>
+</document>
