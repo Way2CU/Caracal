@@ -34,6 +34,12 @@ body.rtl div#buyer {
 	right: 0cm;
 }
 
+div#buyer h2 {
+	margin: 0px;
+	margin-bottom: 0.5cm;
+	padding: 0px;
+}
+
 div#buyer span {
 	display: block;
 }
@@ -59,6 +65,8 @@ h1 {
 	margin: 0px;
 	margin-bottom: 1cm;
 	padding: 0px;
+
+	text-align: center;
 }
 
 h1 small {
