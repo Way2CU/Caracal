@@ -25,8 +25,8 @@
 				/>
 		</head>
 
-		<body>
-			<section id="buyer">
+		<body class="$language_rtl ? 'rtl' : 'ltr'" cms:eval="class">
+			<div id="buyer">
 				<h2>
 					<cms:var param="first_name"/>
 					<cms:raw text="&amp;nbsp;"/>
@@ -43,9 +43,10 @@
 					<cms:raw text=":&amp;nbsp;"/>
 					<cms:var param="address_phone"/>
 				</span>
-			</section>
+			</div>
 
 			<div id="delivery">
+				<h3><cms:text constant="delivery" module="module"/></h3>
 			</div>
 
 			<h1>
