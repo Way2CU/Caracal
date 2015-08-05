@@ -13,6 +13,11 @@ body {
 	color: black;
 	font-family: serif;
 	font-size: 14pt;
+	direction: ltr;
+}
+
+body.rtl {
+	direction: rtl;
 }
 
 /**
