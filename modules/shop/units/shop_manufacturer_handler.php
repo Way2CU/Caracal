@@ -287,6 +287,33 @@ class ShopManufacturerHandler {
 	 * @param array $children
 	 */
 	public function tag_Manufacturer($tag_params, $children) {
+		$manager = ShopManufacturerManager::getInstance();
+		$conditions = array();
+
+		// collect params
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		// get single item from database
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
+
+		if (is_object($item)) {
+			// prepare parameters
+			$params = array(
+					'id'		=> $item->id,
+					'name'		=> $item->name,
+					'web_site'	=> $item->web_site,
+					'logo'		=> $item->logo
+				);
+
+			// parse template
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
 	}
 
 	/**

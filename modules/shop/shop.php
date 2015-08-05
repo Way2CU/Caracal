@@ -557,6 +557,16 @@ class shop extends Module {
 				$handler->tag_CategoryList($params, $children);
 				break;
 
+			case 'show_manufacturer':
+				$handler = ShopManufacturerHandler::getInstance($this);
+				$handler->tag_Manufacturer($params, $children);
+				break;
+
+			case 'show_manufacturer_list':
+				$handler = ShopManufacturerHandler::getInstance($this);
+				$handler->tag_ManufacturerList($params, $children);
+				break;
+
 			case 'show_completed_message':
 				$this->tag_CompletedMessage($params, $children);
 				break;
