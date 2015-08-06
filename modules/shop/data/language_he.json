@@ -50,6 +50,8 @@
     "empty_shopping_cart": "אין מוצרים בעגלת הקניות.",
     "handling": "טיפול:",
     "hide_shopping_cart": "הסתר עגלת קניות",
+    "label_packaged_by": "Packaged by:",
+    "label_received_by": "Received by:",
     "label_checkout_method": "הסליקה מתבצעת ע\"י",
     "label_agree_to_terms1": "אני מאשר\\ת את",
     "label_agree_to_terms2": "תנאי ההסכם",

@@ -50,6 +50,8 @@
 	"empty_shopping_cart": "There are no items in shopping cart.",
 	"handling": "Handling:",
 	"hide_shopping_cart": "Hide shopping cart",
+	"label_packaged_by": "Packaged by:",
+	"label_received_by": "Received by:",
 	"label_checkout_method": "Payment processed by",
 	"label_agree_to_terms1": "I agree to",
 	"label_agree_to_terms2": "terms of use.",
