@@ -138,7 +138,15 @@ class ShopTransactionsHandler {
 				'address_country'	=> $address->country,
 				'address_phone'		=> $address->phone,
 				'address_access_code'	=> $address->access_code,
-				'full_address'		=> $full_address
+				'full_address'		=> $full_address,
+				'print_url'			=> url_Make(
+											'transfer_control',
+											'backend_module',
+											array('module', $this->_parent->name),
+											array('backend_action', 'transactions'),
+											array('sub_action', 'print'),
+											array('id', $item->id)
+										)
 			);
 
 		// regular or guest buyer
@@ -216,7 +224,7 @@ class ShopTransactionsHandler {
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
 				'style_url'			=> url_GetFromFilePath($this->path.'include/transaction_print.css'),
-				'script_url'		=> url_GetFromFilePath($this->path.'include/transaction_print.js')
+				'script_url'		=> url_GetFromFilePath($this->path.'include/transaction_print.js'),
 			);
 
 		// regular or guest buyer

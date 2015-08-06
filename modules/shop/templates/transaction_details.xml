@@ -214,6 +214,8 @@
 		<button
 			type="button"
 			onclick="javascript:Caracal.Shop.print_transaction(this);"
+			data-print-url="$params['print_url']"
+			cms:eval="data-print-url"
 			>
 			<cms:text constant="print"/>
 		</button>
