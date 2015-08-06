@@ -282,13 +282,12 @@ Caracal.Shop.print_transaction = function(button) {
 		iframe
 			.addClass('print')
 			.css('display', 'none')
-			.appendTo(backend_window);
+			.appendTo(backend_window)
+			.on('load', function(event) {
+				iframe[0].contentWindow.print();
+			});
 	}
 
 	// show print dialog
-	iframe
-		.on('load', function(event) {
-			iframe[0].contentWindow.print();
-		})
-		.attr('src', $(button).data('print-url') + Date.now().toString());
+	iframe.attr('src', $(button).data('print-url') + '&timestamp=' + Date.now().toString());
 };
