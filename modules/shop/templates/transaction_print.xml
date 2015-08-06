@@ -55,7 +55,33 @@
 
 			<table>
 				<thead>
+					<tr>
+						<td><cms:text constant="column_name" module="shop"/></td>
+						<td><cms:text constant="column_amount" module="shop"/></td>
+						<cms:if condition="$params['status'] == TransactionStatus::COMPLETED">
+							<td><cms:text constant="column_weight" module="shop"/></td>
+							<td><cms:text constant="column_price" module="shop"/></td>
+						</cms:if>
+					</tr>
 				</thead>
+
+				<tfoot>
+					<tr>
+						<td colspan="2">
+						</td>
+						<cms:if condition="$params['status'] == TransactionStatus::COMPLETED">
+							<td></td>
+							<td></td>
+						</cms:if>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<cms:item_list
+						transaction="$params['id']"
+						cms:eval="transaction"
+						/>
+				</tbody>
 			</table>
 
 			<div id="packager"><cms:text constant="label_packaged_by"/></div>
