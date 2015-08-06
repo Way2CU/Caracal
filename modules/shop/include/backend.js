@@ -281,11 +281,14 @@ Caracal.Shop.print_transaction = function(button) {
 
 		iframe
 			.addClass('print')
-			.attr('src', $(button).data('print-url'))
 			.css('display', 'none')
 			.appendTo(backend_window);
 	}
 
 	// show print dialog
-	iframe[0].contentWindow.print();
+	iframe
+		.on('load', function(event) {
+			iframe[0].contentWindow.print();
+		})
+		.attr('src', $(button).data('print-url') + Date.now().toString());
 };
