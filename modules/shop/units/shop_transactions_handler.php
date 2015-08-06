@@ -299,7 +299,7 @@ class ShopTransactionsHandler {
 				// prepare window parameters
 				$title = $this->_parent->getLanguageConstant('title_transaction_details');
 				$title .= ' '.$item->uid;
-				$window = 'shop_transation_details_'.$item->id;
+				$window = 'shop_transaction_details_'.$item->id;
 
 				// prepare buyer name
 				$name = '';
