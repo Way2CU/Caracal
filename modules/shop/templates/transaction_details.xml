@@ -210,7 +210,7 @@
 	</div>
 	<div style="clear: both;"/>
 
-	<div class="controls">
+	<div class="button_bar">
 		<button
 			type="button"
 			onclick="javascript:Caracal.Shop.print_transaction(this);"
