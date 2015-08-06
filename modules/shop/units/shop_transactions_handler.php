@@ -139,6 +139,7 @@ class ShopTransactionsHandler {
 				'address_phone'		=> $address->phone,
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
+				'cancel_action'		=> window_Close('show_transaction_details_'.$transaction->id),
 				'print_url'			=> url_Make(
 											'transfer_control',
 											'backend_module',
