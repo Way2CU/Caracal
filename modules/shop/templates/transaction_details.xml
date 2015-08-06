@@ -209,6 +209,23 @@
 		</div>
 	</div>
 	<div style="clear: both;"/>
+
+	<div class="controls">
+		<button
+			type="button"
+			onclick="javascript:Caracal.Shop.print_transaction()"
+			>
+			<cms:text constant="print"/>
+		</button>
+		<button
+			type="button"
+			onclick="$params['cancel_action']"
+			cms:eval="onclick"
+			>
+			<cms:text constant="close"/>
+		</button>
+	</div>
+
 	<script type="text/javascript">
 		var notebook = new Notebook('transaction_details_notebook');
 		notebook
