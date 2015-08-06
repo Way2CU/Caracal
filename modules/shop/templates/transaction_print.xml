@@ -48,7 +48,10 @@
 			</div>
 
 			<div id="delivery">
-				<h3><cms:text constant="delivery" module="module"/></h3>
+				<h5><cms:text constant="label_delivery_method" module="shop"/></h5>
+				<cms:var param="delivery_method"/>
+				<h5><cms:text constant="label_delivery_type" module="shop"/></h5>
+				<cms:var param="delivery_type"/>
 			</div>
 
 			<h1>

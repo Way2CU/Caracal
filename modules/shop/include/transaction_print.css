@@ -6,6 +6,10 @@
  * Authors: Mladen Mijatov
  */
 
+@page {
+	size: A4 portrait;
+}
+
 body {
 	position: relative;
 	padding-top: 5cm;
