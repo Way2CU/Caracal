@@ -285,4 +285,7 @@ Caracal.Shop.print_transaction = function(button) {
 			.css('display', 'none')
 			.appendTo(backend_window);
 	}
+
+	// show print dialog
+	iframe[0].contentWindow.print();
 };

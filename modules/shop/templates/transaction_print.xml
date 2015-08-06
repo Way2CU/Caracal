@@ -19,12 +19,6 @@
 				charset="utf-8"
 				cms:eval="href"
 				/>
-			<script
-				src="$params['script_url']"
-				type="text/javascript"
-				charset="utf-8"
-				cms:eval="src"
-				/>
 		</head>
 
 		<body class="$language_rtl ? 'rtl' : 'ltr'" cms:eval="class">
