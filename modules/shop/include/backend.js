@@ -265,3 +265,24 @@ Caracal.Shop.handle_filter_change = function() {
 	// reload content
 	transactions_window.loadContent(transactions_window.original_url + '&' + query);
 };
+
+/**
+ * Show print dialog for selected transaction.
+ *
+ * @param object button
+ */
+Caracal.Shop.print_transaction = function(button) {
+	var backend_window = $(button).closest('.window');
+
+	// get print iframe
+	var iframe = backend_window.find('iframe.print');
+	if (iframe.length == 0) {
+		var iframe = $('<iframe>');
+
+		iframe
+			.addClass('print')
+			.attr('src', $(button).data('print-url'))
+			.css('display', 'none')
+			.appendTo(backend_window);
+	}
+};

@@ -213,7 +213,7 @@
 	<div class="controls">
 		<button
 			type="button"
-			onclick="javascript:Caracal.Shop.print_transaction()"
+			onclick="javascript:Caracal.Shop.print_transaction(this);"
 			>
 			<cms:text constant="print"/>
 		</button>
