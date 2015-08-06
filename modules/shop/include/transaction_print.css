@@ -74,5 +74,6 @@ h1 {
 }
 
 h1 small {
+	display: block;
 	font-size: 14pt;
 }
