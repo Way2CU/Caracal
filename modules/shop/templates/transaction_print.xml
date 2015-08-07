@@ -58,7 +58,7 @@
 					<tr>
 						<td><cms:text constant="column_name" module="shop"/></td>
 						<td><cms:text constant="column_amount" module="shop"/></td>
-						<cms:if condition="$params['status'] == TransactionStatus::COMPLETED">
+						<cms:if condition="$params['type'] == TransactionType::REGULAR">
 							<td><cms:text constant="column_weight" module="shop"/></td>
 							<td><cms:text constant="column_price" module="shop"/></td>
 						</cms:if>
@@ -69,7 +69,7 @@
 					<tr>
 						<td colspan="2">
 						</td>
-						<cms:if condition="$params['status'] == TransactionStatus::COMPLETED">
+						<cms:if condition="$params['type'] == TransactionType::REGULAR">
 							<td></td>
 							<td></td>
 						</cms:if>
@@ -77,10 +77,23 @@
 				</tfoot>
 
 				<tbody>
-					<cms:item_list
-						transaction="$params['id']"
-						cms:eval="transaction"
-						/>
+					<cms:if condition="$params['type'] == TransactionType::DELAYED">
+						<cms:item_list
+							transaction="$params['id']"
+							template="transaction_delayed_print_item.xml"
+							local="1"
+							cms:eval="transaction"
+							/>
+					</cms:if>
+
+					<cms:if condition="$params['status'] == TransactionStatus::REGULAR">
+						<cms:item_list
+							transaction="$params['id']"
+							template="transaction_print_item.xml"
+							local="1"
+							cms:eval="transaction"
+							/>
+					</cms:if>
 				</tbody>
 			</table>
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<tr>
+		<td>
+			<cms:var param="name"/>
+			<small><cms:var param="description"/></small>
+		</td>
+		<td><cms:var param="amount"/></td>
+		<td><cms:var param="weight"/></td>
+		<td><cms:var param="price"/></td>
+	</tr>
+</document>
