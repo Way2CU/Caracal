@@ -90,23 +90,23 @@ h1 small {
 table {
 	width: 100%;
 	margin-bottom: 2cm;
+	border-collapse: collapse;
 }
 
 table td {
-	padding: 0.3cm;
+	padding: 0.1cm;
 }
 
 table thead {
 	border-bottom: 1px solid black;
-	border-collapse: collapse;
 }
 
 table thead td {
+	padding: 0.2cm 0.1cm;
 	font-weight: bold;
 }
 
 table tfoot {
 	border-top: 1px solid black;
-	border-collapse: collapse;
 	font-weight: bold;
 }
