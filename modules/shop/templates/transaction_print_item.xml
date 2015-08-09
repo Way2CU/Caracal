@@ -2,10 +2,8 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<tr>
-		<td>
-			<cms:var param="name" multilanguage="yes"/>
-			<small><cms:var param="description"/></small>
-		</td>
+		<td><cms:var param="name" multilanguage="yes"/></td>
+		<td><cms:var param="description"/></td>
 		<td><cms:var param="amount"/></td>
 		<td><cms:var param="weight"/></td>
 		<td><cms:var param="price"/></td>

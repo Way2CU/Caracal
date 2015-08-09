@@ -57,6 +57,7 @@
 				<thead>
 					<tr>
 						<td><cms:text constant="column_name" module="shop"/></td>
+						<td><cms:text constant="column_properties" module="shop"/></td>
 						<td><cms:text constant="column_quantity" module="shop"/></td>
 						<cms:if condition="$params['type'] != TransactionType::DELAYED">
 							<td><cms:text constant="column_weight" module="shop"/></td>

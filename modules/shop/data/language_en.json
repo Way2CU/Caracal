@@ -40,6 +40,7 @@
 	"column_weight": "Weight",
 	"column_status": "Status",
 	"column_type": "Type",
+	"column_properties": "Properties",
 	"cycle_day": "Day(s)",
 	"cycle_month": "Month(s)",
 	"cycle_week": "Week(s)",

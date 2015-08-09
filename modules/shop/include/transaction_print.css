@@ -97,10 +97,6 @@ table td {
 	padding: 0.1cm;
 }
 
-table td small {
-	display: block;
-}
-
 table thead {
 	border-bottom: 1px solid black;
 }
