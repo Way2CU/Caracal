@@ -99,8 +99,8 @@
 				</tbody>
 			</table>
 
-			<div id="packager"><cms:text constant="label_packaged_by"/></div>
-			<div id="recipient"><cms:text constant="label_received_by"/></div>
+			<div id="packager"><cms:text constant="label_packaged_by" module="shop"/></div>
+			<div id="recipient"><cms:text constant="label_received_by" module="shop"/></div>
 		</body>
 	</html>
 </document>
