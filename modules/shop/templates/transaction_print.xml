@@ -88,7 +88,7 @@
 							/>
 					</cms:if>
 
-					<cms:if condition="$params['status'] != TransactionType::DELAYED">
+					<cms:if condition="$params['type'] != TransactionType::DELAYED">
 						<cms:item_list
 							transaction="$params['id']"
 							template="transaction_print_item.xml"
