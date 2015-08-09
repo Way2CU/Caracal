@@ -3,7 +3,7 @@
 <document>
 	<tr>
 		<td>
-			<cms:var param="name"/>
+			<cms:var param="name" multilanguage="yes"/>
 			<small><cms:var param="description"/></small>
 		</td>
 		<td><cms:var param="amount"/></td>
