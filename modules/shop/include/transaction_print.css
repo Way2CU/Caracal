@@ -86,3 +86,23 @@ h1 small {
 	display: block;
 	font-size: 14pt;
 }
+
+table {
+	margin-bottom: 2cm;
+}
+
+table td {
+	padding: 0.3cm;
+}
+
+table thead td {
+	background-color: black;
+
+	color: white;
+	font-weight: bold;
+}
+
+table tfoot {
+	border-top: 1px solid black;
+	font-weight: bold;
+}
