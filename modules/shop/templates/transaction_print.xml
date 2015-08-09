@@ -69,6 +69,7 @@
 				<tfoot>
 					<tr>
 						<td/>
+						<td/>
 						<td><cms:var param="total_count"/></td>
 						<cms:if condition="$params['type'] != TransactionType::DELAYED">
 							<td><cms:text constant="weight" module="shop"/></td>
