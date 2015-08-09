@@ -179,6 +179,7 @@ class ShopTransactionsHandler {
 		$buyer_manager = ShopBuyersManager::getInstance();
 		$address_manager = ShopDeliveryAddressManager::getInstance();
 		$user_manager = UserManager::getInstance();
+		$item_manager = ShopTransactionItemsManager::getInstance();
 
 		$id = fix_id($_REQUEST['id']);
 		$transaction = $manager->getSingleItem(
@@ -237,6 +238,17 @@ class ShopTransactionsHandler {
 		$params['last_name'] = $buyer->last_name;
 		$params['email'] = $buyer->email;
 
+		// calculate total count
+		$total_count = 0;
+		$item_list = $item_manager->getItems(array('amount'), array('transaction' => $transaction->id));
+
+		if (count($item_list) > 0)
+			foreach ($item_list as $item)
+				$total_count += $item->amount;
+
+		$params['total_count'] = $total_count;
+
+		// load template
 		$template = new TemplateHandler('transaction_print.xml', $this->path.'templates/');
 
 		// register tag handler
