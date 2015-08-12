@@ -102,7 +102,7 @@ class Manager {
 					$data .= '/'.$key.'='.$this->generateUniqueID($value);
 			}
 
-		return md5($data).'_'.$language.'_'.(_DESKTOP_VERSION ? '_d' : '_m');
+		return md5($data).'_'.$language.'_'.(_DESKTOP_VERSION ? 'd' : 'm');
 	}
 
 	/**

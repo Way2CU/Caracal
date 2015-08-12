@@ -23,9 +23,10 @@ class FileProvider implements Provider {
 		$time_limit = time() - $cache_expire_period;
 
 		// remove files which passed the limit
-		foreach ($file_list as $file_name)
-			if (filemtime($file_name) < $time_limit)
-				unlink($file_name);
+		if (count($file_list) > 0)
+			foreach ($file_list as $file_name)
+				if (filemtime($file_name) < $time_limit)
+					unlink($file_name);
 	}
 
 	/**
