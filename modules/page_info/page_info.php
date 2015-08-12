@@ -434,13 +434,15 @@ class page_info extends Module {
 	 * @param array $children
 	 */
 	public function tag_AnalyticsVersions($tag_params, $children) {
+		global $system_module_path;
+
 		// load template
 		$template = $this->loadTemplate($tag_params, 'analytics_version.xml');
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : '0';
 
 		// get available versions
 		$versions = array();
-		$files = scandir(_BASEPATH.'/modules/head_tag/templates/');
+		$files = scandir(_BASEPATH.'/'.$system_module_path.'head_tag/templates/');
 
 		foreach ($files as $file)
 			if (substr($file, 0, 16) == 'google_analytics')

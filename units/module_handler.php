@@ -97,11 +97,11 @@ class ModuleHandler {
 	 * @return resource
 	 */
 	public function loadModule($name) {
-		global $module_path;
+		global $module_path, $system_module_path;
 
 		$result = null;
 		$filename = $module_path.$name.'/'.$name.'.php';
-		$system_filename = 'modules/'.$name.'/'.$name.'.php';
+		$system_filename = $system_module_path.$name.'/'.$name.'.php';
 
 		// try to load user define plugin
 		if (file_exists($filename)) {
@@ -127,10 +127,10 @@ class ModuleHandler {
 	 * @param string $filename
 	 */
 	public function includeModule($name) {
-		global $module_path;
+		global $module_path, $system_module_path;
 
 		$filename = $module_path.$name.'/'.$name.'.php';
-		$system_filename = 'modules/'.$name.'/'.$name.'.php';
+		$system_filename = $system_module_path.$name.'/'.$name.'.php';
 
 		if (file_exists($filename) && $this->_checkDependencies($name)) {
 			include_once($filename);
@@ -145,7 +145,7 @@ class ModuleHandler {
 	 * @param string $name
 	 */
 	private function _checkDependencies($name) {
-		global $module_path;
+		global $module_path, $system_module_path;
 
 		$result = true;
 		$required = array();
@@ -157,7 +157,7 @@ class ModuleHandler {
 
 		// try system module
 		if (!file_exists($filename))
-			$filename = 'modules/'.$name.'/depends';
+			$filename = $system_module_path.$name.'/depends';
 
 		// check dependencies
 		if (file_exists($filename)) {

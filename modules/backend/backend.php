@@ -670,7 +670,7 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function tag_ModuleList($params, $children) {
-		global $module_path;
+		global $module_path, $system_module_path;
 
 		$list = array();
 		$raw_list = $this->getModuleList();
@@ -723,7 +723,7 @@ class backend extends Module {
 			$icon_file = null;
 			if (file_exists(_BASEPATH.'/'.$module_path.$name))
 				$icon_file = _BASEPATH.'/'.$module_path.$name.'/images/icon.svg'; else
-				$icon_file = _BASEPATH.'/modules/'.$name.'/images/icon.svg';
+				$icon_file = _BASEPATH.'/'.$system_module_path.$name.'/images/icon.svg';
 
 			if (file_exists($icon_file))
 				$icon = url_GetFromFilePath($icon_file); else
@@ -816,7 +816,7 @@ class backend extends Module {
 	 * @return array
 	 */
 	public function getModuleList() {
-		global $module_path;
+		global $module_path, $system_module_path;
 
 		$result = array();
 
@@ -832,8 +832,8 @@ class backend extends Module {
 		}
 
 		// load system module list
-		if (file_exists('modules/')) {
-			$directory = dir('modules/');
+		if (file_exists($system_module_path)) {
+			$directory = dir($system_module_path);
 
 			while (false !== ($entry = $directory->read()))
 				if (is_dir($directory->path.DIRECTORY_SEPARATOR.$entry) && $entry[0] != '.' && $entry[0] != '_')
