@@ -3742,12 +3742,18 @@ class shop extends Module {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
 
+		// get message to show
+		$message = Language::getText('message_checkout_completed');
+		if (empty($message))
+			$message = $this->getLanguageConstant('message_checkout_completed');
+
+		// prepare template parameters
 		$params = array(
-			'message'		=> $this->getLanguageConstant('message_checkout_completed'),
-			'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-			'button_action'	=> url_Make('', 'home'),
-			'redirect'		=> false
-		);
+				'message'		=> $message,
+				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+				'button_action'	=> url_Make('', 'home'),
+				'redirect'		=> false
+			);
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -3764,12 +3770,18 @@ class shop extends Module {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
 
+		// get message to show
+		$message = Language::getText('message_checkout_canceled');
+		if (empty($message))
+			$message = $this->getLanguageConstant('message_checkout_canceled');
+
+		// prepare template parameters
 		$params = array(
-			'message'		=> $this->getLanguageConstant('message_checkout_canceled'),
-			'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-			'button_action'	=> url_Make('', 'home'),
-			'redirect'		=> false
-		);
+				'message'		=> $message,
+				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+				'button_action'	=> url_Make('', 'home'),
+				'redirect'		=> false
+			);
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
