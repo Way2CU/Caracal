@@ -845,7 +845,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @return object
 	 */
 	self.controls.set_pause_on_hover = function(pause_on_hover) {
-		self.set_pause_on_hover = pause_on_hover;
+		self.pause_on_hover = pause_on_hover;
 		return self;
 	};
 
