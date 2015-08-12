@@ -96,6 +96,8 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	private function includeStyle($file_name, &$additional_imports, &$priority_commands) {
+		global $system_module_path;
+
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
@@ -114,9 +116,20 @@ class CodeOptimizer {
 
 			case 'css':
 			default:
-				$data = file_get_contents(path_GetFromURL($file_name));
+				$directory_url = dirname(dirname($file_name)).'/';
+				$file_name = path_GetFromURL($file_name);
+				$module_directory = _BASEPATH.'/'.$system_module_path;
+				$data = file_get_contents($file_name);
+
+				// change path for module urls
+				if (substr($file_name, 0, strlen($modules_directory)) == $modules_directory)
+					$data = preg_replace('/url\(.*\.\.\/(.*)\)[;,]/ium', 'url('.$directory_url.'$1);', $data);
+
 				break;
 		}
+
+		// remove comments
+		$data = preg_replace('/\/\*.*?(?=\*\/)\*\//imus', '', $data);
 
 		// parse most important
 		$data = str_replace("\r", "", $data);
