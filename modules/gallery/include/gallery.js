@@ -281,6 +281,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.spacing = null;
 	self.timer_id = null;
 	self.timeout = null;
+	self.pause_on_hover = true;
 	self.visible_items = null;
 
 	/**
@@ -715,6 +716,9 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param object event
 	 */
 	self.controls._handle_mouse_enter = function(event) {
+		if (!self.pause_on_hover)
+			return;
+
 		if (self.timer_id == null || self.timeout == null)
 			return;
 
@@ -728,6 +732,9 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param object event
 	 */
 	self.controls._handle_mouse_leave = function(event) {
+		if (!self.pause_on_hover)
+			return;
+
 		if (self.timer_id != null || self.timeout == null)
 			return;
 
@@ -828,6 +835,17 @@ Caracal.Gallery.Slider = function(visible_items) {
 		// re-attach event handlers
 		self.controls._attach_handlers(false, false, true);
 
+		return self;
+	};
+
+	/**
+	 * Set option to control whether sliding is paused on mouse hover or not.
+	 *
+	 * @param boolean pause_on_hover
+	 * @return object
+	 */
+	self.controls.set_pause_on_hover = function(pause_on_hover) {
+		self.set_pause_on_hover = pause_on_hover;
 		return self;
 	};
 
