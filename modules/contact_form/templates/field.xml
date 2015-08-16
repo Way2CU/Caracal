@@ -280,6 +280,7 @@
 								value=""
 								disabled="disabled"
 								style="display: none"
+								selected="selected"
 								>
 								<cms:var param="placeholder" multilanguage="yes"/>
 							</option>
