@@ -25,6 +25,9 @@ abstract class Module {
 	private $actions = array();
 	private $backend_actions = array();
 
+	const PARAMS_NONE = 0;
+	const PARAMS_XML = 1;
+
 	public $name;
 	public $path;
 	public $settings;
@@ -68,15 +71,37 @@ abstract class Module {
 
 		// call frontend action if defined
 		if (!is_null($action) && array_key_exists($action, $this->actions)) {
-			$callable = $this->actions[$action];
-			call_user_func_array($callable, array($params, $children));
+			$config = $this->actions[$action];
+
+			switch ($config[1]) {
+				case self::PARAMS_XML:
+					call_user_func_array($callable, array($params, $children));
+					break;
+
+				case self::PARAMS_NONE:
+				default:
+					call_user_func($callable);
+					break;
+			}
+
 			$result = true;
 		}
 
 		// call backend action if defined
 		if ($_SESSION['logged'] && !is_null($backend_action) && array_key_exists($backend_action, $this->backend_actions)) {
-			$callable = $this->backend_actions[$backend_action];
-			call_user_func_array($callable, array($params, $children));
+			$config = $this->backend_actions[$backend_action];
+
+			switch ($config[1]) {
+				case self::PARAMS_XML:
+					call_user_func_array($config[0], array($params, $children));
+					break;
+
+				case self::PARAMS_NONE:
+				default:
+					call_user_func($config[0]);
+					break;
+			}
+
 			$result = true;
 		}
 
@@ -88,13 +113,14 @@ abstract class Module {
 	 *
 	 * @param string $name
 	 * @param string/array $callable
+	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function addAction($name, $callable) {
+	protected function addAction($name, $callable, $params) {
 		if (array_key_exists($name, $this->actions))
 			throw new AddActionError("Action '{$name}' is already defined!");
 
-		$this->actions[$name] = $callable;
+		$this->actions[$name] = array($callable, $params);
 	}
 
 	/**
@@ -102,13 +128,14 @@ abstract class Module {
 	 *
 	 * @param string $name
 	 * @param string/array $callable
+	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function addBackendAction($name, $callable) {
+	protected function addBackendAction($name, $callable, $params) {
 		if (array_key_exists($name, $this->backend_actions))
 			throw new AddActionError("Backend action '{$name}' is already defined!");
 
-		$this->backend_actions[$name] = $callable;
+		$this->backend_actions[$name] = array($callable, $params);
 	}
 
 	/**
