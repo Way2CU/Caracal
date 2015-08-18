@@ -51,11 +51,6 @@ file_filter = modules/captcha/data/language_<lang>.json
 source_lang = en
 type = KEYVALUEJSON
 
-[caracal.license]
-file_filter = modules/license/data/language_<lang>.json
-source_lang = en
-type = KEYVALUEJSON
-
 [caracal.news]
 file_filter = modules/news/data/language_<lang>.json
 source_lang = en
