@@ -13,7 +13,7 @@
  * Copyright © 2015 Mladen Mijatov. All Rights Reserved.
  */
 
-namespace Modules\Backend;
+namespace Core;
 
 
 class Action {
@@ -21,6 +21,9 @@ class Action {
 	protected $name;
 	protected $sub_action;
 	protected $callable;
+
+	const PARAMS_NONE = 0;
+	const PARAMS_XML = 1;
 
 	/**
 	 * Create new backend action for specified module and name.
