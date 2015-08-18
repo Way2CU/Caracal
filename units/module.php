@@ -3,8 +3,13 @@
 /**
  * Base Module Class
  *
+ * This class provides basic functions required for module to function. All modules
+ * should extend this class and provide methods required.
+ *
+ * Copyright © 2015 Way2CU. All Rights Reserved.
  * Author: Mladen Mijatov
  */
+
 namespace Core;
 
 // temporary fallbacks
