@@ -56,7 +56,7 @@ abstract class Module {
 
 		// load settings from database
 		if ($load_settings)
-			$this->settings = $this->getSettings();
+			$this->settings = $this->loadSettings();
 	}
 
 	/**
@@ -224,20 +224,21 @@ abstract class Module {
 	}
 
 	/**
-	 * Returns module defined variables
+	 * Load and return module settings from database.
 	 *
 	 * @return array
 	 */
-	protected function getSettings() {
+	protected function loadSettings() {
 		global $db, $db_use;
 
-		// this method is only meant to be used with database
+		$result = array();
+
+		// make sure we have database connection
 		if (!$db_use)
-			return;
+			return $result;
 
 		// get manager
 		$manager = SettingsManager::getInstance();
-		$result = array();
 
 		// get values from the database
 		$settings = $manager->getItems($manager->getFieldNames(), array('module' => $this->name));
