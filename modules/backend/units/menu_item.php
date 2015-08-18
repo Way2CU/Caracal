@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Backend Menu Item
- */
+
 
 class backend_MenuItem {
 	/**
