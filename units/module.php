@@ -12,10 +12,9 @@ use \Language as Language;
 use \LanguageHandler as LanguageHandler;
 use \SettingsManager as SettingsManager;
 use \TemplateHandler as TemplateHandler;
-use \Exception as Exception;
 
 
-class AddActionError extends Exception {}
+class AddActionError extends \Exception {}
 
 
 abstract class Module {
@@ -24,9 +23,6 @@ abstract class Module {
 
 	private $actions = array();
 	private $backend_actions = array();
-
-	const PARAMS_NONE = 0;
-	const PARAMS_XML = 1;
 
 	public $name;
 	public $path;
