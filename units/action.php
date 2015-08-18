@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Backend Action Class
+ * Action Class
  *
  * This class provides easy way of registering and managing
- * actions in backend. Integration with backend menu items is
- * also provided.
+ * actions in modules. It provides basic functions to avoid
+ * unnecessary work with flow of control.
  *
  * This class will check for access rights for currently
  * logged in user before transfering control to specified module.
  *
- * Copyright © 2015 Mladen Mijatov. All Rights Reserved.
+ * Copyright © 2015 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
  */
 
 namespace Core;
@@ -46,7 +47,7 @@ class Action {
 	 *
 	 * @param string $name;
 	 */
-	public function setSubAction($name) {
+	public function setSubaction($name) {
 		$this->sub_action = $name;
 	}
 
@@ -75,7 +76,7 @@ class Action {
 	 *
 	 * @return string
 	 */
-	public function getUrl() {
+	public function getURL() {
 		$params = array(
 				'transfer_control',  // action
 				'backend_module',  // section

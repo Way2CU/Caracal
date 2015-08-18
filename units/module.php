@@ -31,7 +31,7 @@ abstract class Module {
 
 	public $name;
 	public $path;
-	public $settings;
+	public $settings = null;
 
 	/**
 	 * Constructor
@@ -251,7 +251,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Updates or creates new variable in module settings
+	 * Updates or creates new setting variable.
 	 *
 	 * @param string $var
 	 * @param string $value
@@ -263,7 +263,7 @@ abstract class Module {
 		if (!$db_use)
 			return;
 
-		// get manager
+		// get settings manager
 		$manager = SettingsManager::getInstance();
 
 		// check if specified setting already exists
