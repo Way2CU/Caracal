@@ -67,21 +67,26 @@ abstract class Module {
 	 */
 	public function transferControl($params, $children) {
 		$result = false;
-		$action = isset($params['action']) ? $params['action'] : null;
+		$action_name = isset($params['action']) ? $params['action'] : null;
 		$backend_action = isset($params['backend_action']) ? $params['backend_action'] : null;
 
+		// cache checks
+		$action_exists = !is_null($action_name) && array_key_exists($action_name, $this->actions);
+		$backend_action_exists = !is_null($backend_action) && array_key_exists($backend_action, $this->backend_actions);
+
 		// call frontend action if defined
-		if (!is_null($action) && array_key_exists($action, $this->actions)) {
-			$config = $this->actions[$action];
+		if ($action_exists && $this->checkLicense()) {
+			$config = $this->actions[$action_name];
+			$action = $config[0];
 
 			switch ($config[1]) {
 				case self::PARAMS_XML:
-					call_user_func_array($callable, array($params, $children));
+					call_user_func_array($action->getCallable(), array($params, $children));
 					break;
 
 				case self::PARAMS_NONE:
 				default:
-					call_user_func($callable);
+					call_user_func($action->getCallable());
 					break;
 			}
 
@@ -89,17 +94,18 @@ abstract class Module {
 		}
 
 		// call backend action if defined
-		if ($_SESSION['logged'] && !is_null($backend_action) && array_key_exists($backend_action, $this->backend_actions)) {
+		if ($backend_action_exists && $_SESSION['logged']) {
 			$config = $this->backend_actions[$backend_action];
+			$action = $config[0];
 
 			switch ($config[1]) {
 				case self::PARAMS_XML:
-					call_user_func_array($config[0], array($params, $children));
+					call_user_func_array($action->getCallable(), array($params, $children));
 					break;
 
 				case self::PARAMS_NONE:
 				default:
-					call_user_func($config[0]);
+					call_user_func($action->getCallable());
 					break;
 			}
 
@@ -110,14 +116,14 @@ abstract class Module {
 	}
 
 	/**
-	 * Add new action with specified name.
+	 * Create new action with specified name and add it to module.
 	 *
 	 * @param string $name
 	 * @param string/array $callable
 	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function addAction($name, $callable, $params) {
+	protected function createAction($name, $callable, $params) {
 		if (array_key_exists($name, $this->actions))
 			throw new AddActionError("Action '{$name}' is already defined!");
 
@@ -125,27 +131,18 @@ abstract class Module {
 	}
 
 	/**
-	 * Add backend only action with specified name.
+	 * Create new backend only action with specified name.
 	 *
 	 * @param string $name
 	 * @param string/array $callable
 	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function addBackendAction($name, $callable, $params) {
+	protected function createBackendAction($name, $callable, $params) {
 		if (array_key_exists($name, $this->backend_actions))
 			throw new AddActionError("Backend action '{$name}' is already defined!");
 
 		$this->backend_actions[$name] = array($callable, $params);
-	}
-
-	/**
-	 * Return list of defined backend actions.
-	 *
-	 * @return array
-	 */
-	public function getBackendActions() {
-		return array_keys($this->backend_actions);
 	}
 
 	/**
@@ -172,7 +169,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Extracts multi-language field data and pack them in array
+	 * Extracts multi-language field data and pack them in array.
 	 *
 	 * @param string $name
 	 * @return array
@@ -184,22 +181,6 @@ abstract class Module {
 		foreach($list as $lang) {
 			$param_name = "{$name}_{$lang}";
 			$result[$lang] = escape_chars($_REQUEST[$param_name], false);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Check license for current module
-	 * @return boolean
-	 */
-	protected function checkLicense() {
-		$result = false;
-		$license = isset($_REQUEST['key']) ? fix_chars($_REQUEST['key']) : null;
-
-		if (class_exists('license')) {
-			$license = license::getInstance();
-			$result = $license->isLicenseValid($this->name, $license);
 		}
 
 		return $result;
