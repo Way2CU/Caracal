@@ -206,14 +206,22 @@ abstract class Module {
 	}
 
 	/**
-	 * Event called upon module initialisation
+	 * This function is called every time module is initialized. Function
+	 * is not called when module is temporarily turned off and then turned back
+	 * on.
+	 *
+	 * Function should be use to create tables and files specific to module
+	 * in question.
 	 */
-	abstract public function onInit();
+	public function onInit() {
+	}
 
 	/**
-	 * Event called upon module removal
+	 * Function called when module is disabled. This function should be used to
+	 * clean up database and other module specific parts of the system.
 	 */
-	abstract public function onDisable();
+	public function onDisable() {
+	}
 
 	/**
 	 * Returns module defined variables
