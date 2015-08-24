@@ -3023,6 +3023,8 @@ class contact_form extends Module {
 		$manager = ContactForm_FieldValueManager::getInstance();
 		$selected = null;
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 
 		// get parameters
 		if (isset($tag_params['field']))
@@ -3032,7 +3034,7 @@ class contact_form extends Module {
 			$selected = fix_chars($tag_params['selected']);
 
 		// get items from the database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'values_list_item.xml');

@@ -187,7 +187,7 @@ function PageControl(selector, page_selector) {
 		}
 
 		// update controls if available
-		if (self.controls != null && self.controls.length > 0) 
+		if (self.controls != null && self.controls.length > 0)
 			self.controls.each(function() {
 				var control = $(this);
 
