@@ -97,7 +97,8 @@ final class TransactionStatus {
 			self::PENDING	=> array(self::PENDING, self::PROCESSED, self::CANCELED),
 			self::COMPLETED	=> array(self::COMPLETED, self::SHIPPING),
 			self::SHIPPED	=> array(self::LOST, self::DELIVERED),
-			self::CANCELED  => array(self::CANCELED)
+			self::CANCELED  => array(self::CANCELED),
+			self::DENIED	=> array(self::DENIED, self::PROCESSED)
 		)
 	);
 }
