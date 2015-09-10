@@ -1885,6 +1885,7 @@ class gallery extends Module {
 				// add image to result list
 				$result['items'][] = array(
 							'id'			=> $item->id,
+							'text_id'		=> $item->text_id,
 							'group'			=> $item->group,
 							'title'			=> $all_languages ? $item->title : $item->title[$language],
 							'description'	=> $all_languages ? $item->description : Markdown::parse($item->description[$language]),
