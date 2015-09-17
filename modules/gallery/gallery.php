@@ -2173,10 +2173,7 @@ class gallery extends Module {
 
 		// prepare result
 		$image_file = $this->image_path.$item->filename;
-		$thumbnail_file = $this->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
-
-		if (!file_exists($thumbnail_file))
-			self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
+		$thumbnail_file = self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
 
 		return url_GetFromFilePath($thumbnail_file);
 	}
@@ -2213,13 +2210,9 @@ class gallery extends Module {
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
 			$gallery = gallery::getInstance();
-
 			$image_file = $gallery->image_path.$item->filename;
-			$thumbnail_file = $gallery->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
 
-			if (!file_exists($thumbnail_file))
-				self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
-
+			$thumbnail_file = self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
 			$result = url_GetFromFilePath($thumbnail_file);
 		}
 
@@ -2594,8 +2587,17 @@ class gallery extends Module {
 	 * @param integer $thumb_size
 	 * @param integer $constraint
 	 * @param ingeger $crop_size
+	 * @return string
 	 */
 	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		// prepare thumbnail file name
+		$addon = is_null($crop_size) ? '' : '_'.$crop_size;
+		$target_file = $this->thumbnail_path.$thumb_size.$addon.'_'.$constraint;
+		$target_file .= '_'.pathinfo($filename, PATHINFO_BASENAME);
+
+		if (file_exists($target_file))
+			return $target_file;
+
 		// create image resource
 		$img_source = null;
 		$has_alpha = false;
@@ -2617,7 +2619,7 @@ class gallery extends Module {
 
 		// we failed to load image, exit
 		if (is_null($img_source))
-			return false;
+			return null;
 
 		// calculate width to height ratio
 		$source_width = imagesx($img_source);
@@ -2667,12 +2669,9 @@ class gallery extends Module {
 		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
 
 		// save image to file
-		$addon = is_null($crop_size) ? '' : '_'.$crop_size;
-		$target_file = $this->thumbnail_path.$thumb_size.$addon.'_'.$constraint;
-		$target_file .= '_'.pathinfo($filename, PATHINFO_BASENAME);
 		$save_function($thumbnail, $target_file, $save_quality);
 
-		return true;
+		return $target_file;
 	}
 }
 
