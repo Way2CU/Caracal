@@ -2163,9 +2163,10 @@ class gallery extends Module {
 	 * @param resource $item
 	 * @param integer $size
 	 * @param integer $constraint
+	 * @param integer $crop_size
 	 * @return string
 	 */
-	public function getThumbnailURL($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+	public function getThumbnailURL($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 		global $site_path;
 
 		$result = '';
@@ -2175,7 +2176,7 @@ class gallery extends Module {
 		$thumbnail_file = $this->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
 
 		if (!file_exists($thumbnail_file))
-			self::getInstance()->createThumbnail($image_file, $size, $constraint);
+			self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
 
 		return url_GetFromFilePath($thumbnail_file);
 	}
@@ -2187,9 +2188,10 @@ class gallery extends Module {
 	 * @param string $text_id
 	 * @param integer $size
 	 * @param integer $constraint
+	 * @param integer $crop_size
 	 * @return string
 	 */
-	public static function getThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+	public static function getThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 		$result = '';
 		$conditions = array();
 		$manager = GalleryManager::getInstance();
@@ -2216,7 +2218,7 @@ class gallery extends Module {
 			$thumbnail_file = $gallery->thumbnail_path.$size.'_'.$constraint.'_'.$item->filename;
 
 			if (!file_exists($thumbnail_file))
-				self::getInstance()->createThumbnail($image_file, $size, $constraint);
+				self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
 
 			$result = url_GetFromFilePath($thumbnail_file);
 		}
@@ -2231,9 +2233,10 @@ class gallery extends Module {
 	 * @param string $text_id
 	 * @param integer $size
 	 * @param integer $constraint
+	 * @param integer $crop_size
 	 * @return string
 	 */
-	public static function getGroupThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+	public static function getGroupThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 		$manager = GalleryGroupManager::getInstance();
 		$image_manager = GalleryManager::getInstance();
 		$conditions = array();
@@ -2266,11 +2269,11 @@ class gallery extends Module {
 									);
 
 			if (is_object($image))
-				$result = self::getThumbnailById($image->id, null, $size, $constraint);
+				$result = self::getThumbnailById($image->id, null, $size, $constraint, $crop_size);
 
 		} else {
 			// return thumbnail from specified image
-			$result = self::getThumbnailById($group->thumbnail, null, $size, $constraint);
+			$result = self::getThumbnailById($group->thumbnail, null, $size, $constraint, $crop_size);
 		}
 
 		return $result;
@@ -2283,9 +2286,10 @@ class gallery extends Module {
 	 * @param string $text_id
 	 * @param integer $size
 	 * @param integer $constraint
+	 * @param integer $crop_size
 	 * @return string
 	 */
-	public static function getContainerThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+	public static function getContainerThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 		$manager = GalleryContainerManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 		$conditions = array();
@@ -2313,7 +2317,7 @@ class gallery extends Module {
 
 		// get thumbnail url for specified group
 		if (is_object($membership))
-			$result = self::getGroupThumbnailById($membership->group, null, $size, $constraint);
+			$result = self::getGroupThumbnailById($membership->group, null, $size, $constraint, $crop_size);
 
 		return $result;
 	}
@@ -2589,8 +2593,9 @@ class gallery extends Module {
 	 * @param string $filename
 	 * @param integer $thumb_size
 	 * @param integer $constraint
+	 * @param ingeger $crop_size
 	 */
-	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH) {
+	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 		// create image resource
 		$img_source = null;
 		$has_alpha = false;
@@ -2617,14 +2622,20 @@ class gallery extends Module {
 		// calculate width to height ratio
 		$source_width = imagesx($img_source);
 		$source_height = imagesy($img_source);
+		$max_width = null;
+		$max_height = null;
 
 		switch ($constraint) {
 			case Thumbnail::CONSTRAIN_WIDTH:
 				$scale = $thumb_size / $source_height;
+				if (!is_null($crop_size))
+					$max_height = $crop_size;
 				break;
 
 			case Thumbnail::CONSTRAIN_HEIGHT:
 				$scale = $thumb_size / $source_width;
+				if (!is_null($crop_size))
+					$max_width = $crop_size;
 				break;
 
 			case Thumbnail::CONSTRAIN_BOTH:
@@ -2639,6 +2650,12 @@ class gallery extends Module {
 		$thumb_width = floor($scale * $source_width);
 		$thumb_height = floor($scale * $source_height);
 
+		if (!is_null($max_width) && $thumb_width > $max_width)
+			$thumb_width = $max_width;
+
+		if (!is_null($max_height) && $thumb_height > $max_height)
+			$thumb_height = $max_height;
+
 		// create thumbnail
 		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
 		if ($has_alpha) {
@@ -2646,8 +2663,14 @@ class gallery extends Module {
 			imagesavealpha($thumbnail, true);
 		}
 
+		// resize image
 		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
-		$save_function($thumbnail, $this->thumbnail_path.$thumb_size.'_'.$constraint.'_'.pathinfo($filename, PATHINFO_BASENAME), $save_quality);
+
+		// save image to file
+		$addon = is_null($crop_size) ? '' : '_'.$crop_size;
+		$target_file = $this->thumbnail_path.$thumb_size.$addon.'_'.$constraint;
+		$target_file .= '_'.pathinfo($filename, PATHINFO_BASENAME);
+		$save_function($thumbnail, $target_file, $save_quality);
 
 		return true;
 	}
