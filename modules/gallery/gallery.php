@@ -2652,14 +2652,8 @@ class gallery extends Module {
 		$thumb_width = floor($scale * $source_width);
 		$thumb_height = floor($scale * $source_height);
 
-		if (!is_null($max_width) && $thumb_width > $max_width)
-			$thumb_width = $max_width;
-
-		if (!is_null($max_height) && $thumb_height > $max_height)
-			$thumb_height = $max_height;
-
 		// create thumbnail
-		$thumbnail = imagecreatetruecolor($thumb_width, $thumb_height);
+		$thumbnail = imagecreatetruecolor($max_width || $thumb_width, $max_height || $thumb_height);
 		if ($has_alpha) {
 			imagealphablending($thumbnail, false);
 			imagesavealpha($thumbnail, true);
