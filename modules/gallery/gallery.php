@@ -2664,7 +2664,15 @@ class gallery extends Module {
 		}
 
 		// resize image
-		imagecopyresampled($thumbnail, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $source_width, $source_height);
+		imagecopyresampled(
+				$thumbnail,
+				$img_source,
+				0, 0, 0, 0,
+				$thumb_width,
+				$thumb_height,
+				$source_width,
+				$source_height
+			);
 
 		// save image to file
 		$save_function($thumbnail, $target_file, $save_quality);
