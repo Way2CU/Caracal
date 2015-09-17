@@ -2631,13 +2631,13 @@ class gallery extends Module {
 			case Thumbnail::CONSTRAIN_WIDTH:
 				$scale = $thumb_size / $source_height;
 				if (!is_null($crop_size))
-					$max_height = $crop_size;
+					$max_width = $crop_size;
 				break;
 
 			case Thumbnail::CONSTRAIN_HEIGHT:
 				$scale = $thumb_size / $source_width;
 				if (!is_null($crop_size))
-					$max_width = $crop_size;
+					$max_height = $crop_size;
 				break;
 
 			case Thumbnail::CONSTRAIN_BOTH:
