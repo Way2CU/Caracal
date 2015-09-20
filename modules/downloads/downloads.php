@@ -13,20 +13,24 @@ use Core\Module;
 class downloads extends Module {
 	private static $_instance;
 
+	public $file_path = null;
+
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $section;
+		global $section, $site_path;
 
 		parent::__construct(__FILE__);
 
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
+		// create directories for storing files
+		$this->file_path = _BASEPATH.'/'.$site_path.'downloads/';
+
+		if (!file_exists($this->file_path))
+			if (mkdir($this->file_path, 0775, true) === false) {
+				trigger_error('Downloads: Error creating storage directory.', E_USER_WARNING);
+				return;
+			}
 
 		// register backend
 		if (class_exists('backend')) {
@@ -232,8 +236,7 @@ class downloads extends Module {
 	 * Save uploaded file to database and rename it (if needed)
 	 */
 	private function uploadFile_Save() {
-
-		$result = $this->_saveUpload('file');
+		$result = $this->saveUpload('file');
 
 		if (!$result['error']) {
 			$manager =  DownloadsManager::getInstance();
@@ -587,7 +590,7 @@ class downloads extends Module {
 	/**
 	 * Store file in new location
 	 */
-	private function _saveUpload($field_name) {
+	private function saveUpload($field_name) {
 		$result = array(
 					'error'		=> false,
 					'message'	=> '',
@@ -597,7 +600,7 @@ class downloads extends Module {
 			// prepare data for recording
 			$file_name = $this->_getFileName(fix_chars(basename($_FILES[$field_name]['name'])));
 
-			if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->path.'files/'.$file_name)) {
+			if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->file_path.$file_name)) {
 				// file was moved properly, record new data
 				$result['filename'] = $file_name;
 				$result['message'] = $this->getLanguageConstant('message_file_uploaded');
@@ -647,7 +650,7 @@ class DownloadsManager extends ItemManager {
 	function deleteData($conditionals, $limit=null) {
 		$items = $this->getItems(array('filename'), $conditionals);
 
-		$path = dirname(__FILE__).'/files/';
+		$path = downloads::getInstance()->file_path;
 
 		if (count($items) > 0)
 			foreach ($items as $item)
