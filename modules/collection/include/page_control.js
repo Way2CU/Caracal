@@ -26,12 +26,14 @@ function PageControl(selector, page_selector) {
 	self.submit_on_end = false;
 	self.wrap_around = false;
 	self.pause_on_hover = false;
+	self.auto_resize = false;
 	self.interval_id = null;
 	self.interval_time = 0;
 
 	// signal handlers
 	self.on_page_flip = new Array();
 	self.on_submit = new Array();
+	self.on_container_resize = new Array();
 
 	/**
 	 * Finalize object initalization.
@@ -121,6 +123,90 @@ function PageControl(selector, page_selector) {
 	};
 
 	/**
+	 * Emit signal with specified parameters. This function accepts more than one
+	 * parameter. All except first parameter will be passed to callback function.
+	 *
+	 * @param string signal_name
+	 * @param ...
+	 * @return mixed
+	 */
+	self._emitSignal = function(signal_name) {
+		var list = null;
+		var result = null;
+		var result_is_object = false;
+		var params = new Array();
+
+		// prepare arguments
+		for (var index in arguments)
+			params.push(arguments[index]);
+		params = params.slice(1);
+
+		// get list of functions to call
+		switch (signal_name) {
+			case 'page-flip':
+				list = self.on_page_flip;
+				result = false;
+				break;
+
+			case 'submit':
+				list = self.on_submit;
+				result = false;
+				break;
+
+			case 'update-size':
+				list = self.on_container_resize;
+				result = [];
+				result_is_object = true;
+				break;
+		}
+
+		// emit signal
+		if (list != null && list.length > 0)
+			for (var i=0, length=list.length; i < length; i++) {
+				var callback = list[i];
+
+				// get response from callback
+				response = callback.apply(this, params);
+
+				// response is boolean
+				if (!result_is_object && !response)
+					result = false;
+					break;
+
+				// response is an array
+				} else if (result_is_object) {
+					result.push(response);
+				}
+			}
+
+		return result;
+	};
+
+	/**
+	 * Manually invoke container size update. This will emit `update-size` signal.
+	 */
+	self.updateSize = function() {
+		var size = 0;
+
+		// get size from pages
+		self.pages.each(function() {
+				var height = $(this).height();
+				if (height > size)
+					size = height;
+			});
+
+		// get size from event handlers
+		var response = self._emitSignal('update-size', size);
+		max_size = Math.max.apply(null, response);
+
+		if (max_size > size)
+			size = max_size;
+
+		// set container size
+		self.container.css('height', size);
+	};
+
+	/**
 	 * Change active page.
 	 *
 	 * @param integer page
@@ -205,49 +291,6 @@ function PageControl(selector, page_selector) {
 	};
 
 	/**
-	 * Emit signal with specified parameters. This function accepts more than one
-	 * parameter. All except first parameter will be passed to callback function.
-	 *
-	 * @param string signal_name
-	 * @param ...
-	 * @return boolean
-	 */
-	self._emitSignal = function(signal_name) {
-		var result = true;
-		var params = new Array();
-		var list = null;
-
-		// prepare arguments
-		for (var index in arguments)
-			params.push(arguments[index]);
-		params = params.slice(1);
-
-		// get list of functions to call
-		switch(signal_name) {
-			case 'page-flip':
-				list = self.on_page_flip;
-				break;
-
-			case 'submit':
-				list = self.on_submit;
-				break;
-		}
-
-		// emit signal
-		if (list != null && list.length > 0)
-			for (var i=0, length=list.length; i < length; i++) {
-				var callback = list[i];
-
-				if (!callback.apply(this, params)) {
-					result = false;
-					break;
-				}
-			}
-
-		return result;
-	};
-
-	/**
 	 * Switch to next page.
 	 */
 	self.nextPage = function() {
@@ -298,6 +341,7 @@ function PageControl(selector, page_selector) {
 	 * do not specify data-page their indexes will be applied.
 	 *
 	 * @param string selector
+	 * @return object
 	 */
 	self.attachControls = function(selector) {
 		self.controls = $(selector);
@@ -325,6 +369,7 @@ function PageControl(selector, page_selector) {
 	 * Attach click event for previous page control.
 	 *
 	 * @param object control
+	 * @return object
 	 */
 	self.attachPreviousControl = function(control) {
 		control.on('click', self._handlePrevious);
@@ -335,6 +380,7 @@ function PageControl(selector, page_selector) {
 	 * Attach click event for next page control.
 	 *
 	 * @param object control
+	 * @return object
 	 */
 	self.attachNextControl = function(control) {
 		control.on('click', self._handleNext);
@@ -347,6 +393,7 @@ function PageControl(selector, page_selector) {
 	 * will receive submit signal.
 	 *
 	 * @param string selector
+	 * @return object
 	 */
 	self.attachForm = function(selector) {
 		self.form = $(selector);
@@ -357,6 +404,7 @@ function PageControl(selector, page_selector) {
 	 * Make page control submit specified form when all pages have been flipped.
 	 *
 	 * @param boolean submit_on_end
+	 * @return object
 	 */
 	self.setSubmitOnEnd = function(submit_on_end) {
 		self.submit_on_end = submit_on_end;
@@ -367,6 +415,7 @@ function PageControl(selector, page_selector) {
 	 * Enable previously disabled page.
 	 *
 	 * @param object page
+	 * @return object
 	 */
 	self.enablePage = function(page) {
 		var index = self.disabled_pages.indexOf(page);
@@ -391,6 +440,7 @@ function PageControl(selector, page_selector) {
 	 * Disable page.
 	 *
 	 * @param object page
+	 * @return object
 	 */
 	self.disablePage = function(page) {
 		// add page to the list of disabled pages
@@ -443,6 +493,7 @@ function PageControl(selector, page_selector) {
 	 * reached yet. This does not apply to next/previous buttons only on controls.
 	 *
 	 * @param boolean allow
+	 * @return object
 	 */
 	self.setAllowForward = function(allow) {
 		self.allow_forward = allow;
@@ -453,6 +504,7 @@ function PageControl(selector, page_selector) {
 	 * Set automatic switch interval.
 	 *
 	 * @param integer interval
+	 * @return object
 	 */
 	self.setInterval = function(interval) {
 		// store interval timeout
@@ -472,9 +524,26 @@ function PageControl(selector, page_selector) {
 	 * Configure page control to start pages from beginning once last is reached.
 	 *
 	 * @param boolean wrap
+	 * @return object
 	 */
 	self.setWrapAround = function(wrap) {
 		self.wrap_around = wrap;
+
+		return self;
+	};
+
+	/**
+	 * Set whether container size should match largest page or value provided
+	 * by the handler functions. By default this option is turned off.
+	 *
+	 * @param boolean auto_resize
+	 * @return object
+	 */
+	self.setAutoResize = function(auto_resize) {
+		self.auto_resize = auto_resize;
+
+		if (self.auto_resize)
+			self.updateSize();
 
 		return self;
 	};
@@ -485,8 +554,23 @@ function PageControl(selector, page_selector) {
 	 * Callback for page-flip:
 	 * 		function (current_page, new_page), returns boolean
 	 *
+	 * 		Returning false will prevent page from switching. This should
+	 * 		not be used to validate content of certain page as order might
+	 * 		change. Instead validator property should be used.
+
+	 *
 	 * Callback for submit:
 	 * 		function (current_page), returns boolean
+	 *
+	 * 		Returning false will prevent form submission.
+	 *
+	 *
+	 * Callback for update-size:
+	 * 		function (new_size), returns integer
+	 *
+	 * 		Returning value is the size to be applied. If there's
+	 * 		more than one handler for this signal, largest value
+	 * 		will be used.
 	 *
 	 * @param string signal_name
 	 * @param function callback
@@ -506,6 +590,12 @@ function PageControl(selector, page_selector) {
 					self.on_submit.push(callback); else
 					self.on_submit.splice(0, 0, callback);
 
+				break;
+
+			case 'update-size':
+				if (!top)
+					self.on_container_resize.push(callback); else
+					self.on_container_resize.splice(0, 0, callback);
 				break;
 
 			default:
