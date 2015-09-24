@@ -145,12 +145,12 @@ function PageControl(selector, page_selector) {
 		switch (signal_name) {
 			case 'page-flip':
 				list = self.on_page_flip;
-				result = false;
+				result = true;
 				break;
 
 			case 'submit':
 				list = self.on_submit;
-				result = false;
+				result = true;
 				break;
 
 			case 'update-size':
