@@ -169,7 +169,7 @@ function PageControl(selector, page_selector) {
 				response = callback.apply(this, params);
 
 				// response is boolean
-				if (!result_is_object && !response)
+				if (!result_is_object && !response) {
 					result = false;
 					break;
 
