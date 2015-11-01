@@ -17,6 +17,11 @@
 	Deny from all
 </FilesMatch>
 
+<FilesMatch "site/\.(php|php3|asp|sh|py)$">
+	Deny from all
+</FilesMatch>
+
+
 <FilesMatch "sitemap\.xml$">
 	Allow from all
 </FilesMatch>
