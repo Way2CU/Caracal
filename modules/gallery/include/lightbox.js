@@ -60,10 +60,8 @@ function LightBox(selector, show_title, show_description, show_controls) {
 		this._images = $(this._selector);
 
 		// make sure we have at least one image
-		if (this._images.length == 0) {
-			if (window.console)	console.log('LightBox: No images found!', this._selector);
+		if (this._images.length == 0)
 			return;
-		}
 
 		// get element that will contain all the lightbox stuff
 		var container = $('body');

@@ -21,7 +21,6 @@
 	Deny from all
 </FilesMatch>
 
-
 <FilesMatch "sitemap\.xml$">
 	Allow from all
 </FilesMatch>
