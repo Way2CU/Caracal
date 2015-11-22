@@ -12,7 +12,7 @@
  */
 
 var Caracal = Caracal || {};
-var Caracal.WindowSystem = Caracal.WindowSystem || {};
+Caracal.WindowSystem = Caracal.WindowSystem || {};
 
 
 /**
