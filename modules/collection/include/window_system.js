@@ -923,5 +923,5 @@ Caracal.WindowSystem.System = function(container, list_container) {
 }
 
 $(function() {
-	Caracal.window_system = new Caracal.WindowSystem.WindowSystem('div#container', 'footer');
+	Caracal.window_system = new Caracal.WindowSystem.System('div#container', 'footer');
 });
