@@ -13,7 +13,7 @@
 function ToolbarExtension_Downloads() {
 	var self = this;
 
-	this.dialog = new Dialog();
+	this.dialog = new Caracal.WindowSystem.Dialog();
 	this.dialog.setTitle(language_handler.getText('downloads', 'toolbar_add_download'));
 
 	// register extension to mail API
@@ -21,7 +21,7 @@ function ToolbarExtension_Downloads() {
 
 	// base url for this site
 	var base = $('base');
-	this.backend_url = base.attr('href') + '/index.php'; 
+	this.backend_url = base.attr('href') + '/index.php';
 
 	/**
 	 * Function used to add control on specified toolbar
@@ -217,7 +217,7 @@ function ToolbarExtension_Downloads() {
 
 		// base url for this site
 		var base = $('base');
-		base_url = base.attr('href') + '/'; 
+		base_url = base.attr('href') + '/';
 
 		return base_url + path.join('/');
 	};

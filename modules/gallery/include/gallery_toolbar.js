@@ -13,7 +13,7 @@
 function ToolbarExtension_Gallery() {
 	var self = this;
 
-	this.dialog = new Dialog();
+	this.dialog = new Caracal.WindowSystem.Dialog();
 	this.dialog.setTitle(language_handler.getText('gallery', 'title_insert_image'));
 
 	// base url for this site

@@ -117,7 +117,7 @@ class WindowItem implements Item {
 		}
 
 		// prepare action
-		$action = 'javascript: window_system.openWindow(';
+		$action = 'javascript: Caracal.window_system.openWindow(';
 		$action .= "'{$this->window}',";
 		$action .= $this->window_width.',';
 		$action .= '\''.$this->window_title.'\',';

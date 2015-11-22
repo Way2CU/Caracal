@@ -187,7 +187,7 @@ function window_Open($id, $width, $title, $can_close, $can_minimize, $url) {
 	$can_close = $can_close ? 'true' : 'false';
 	$can_minimize = $can_minimize ? 'true' : 'false';
 
-	return "javascript: window_system.openWindow('{$id}', {$width}, '{$title}', {$can_close}, '{$url}', this);";
+	return "javascript: Caracal.window_system.openWindow('{$id}', {$width}, '{$title}', {$can_close}, '{$url}', this);";
 }
 
 function window_OpenHyperlink($text, $id, $width, $title, $can_close, $can_minimize, $module, $action) {
@@ -197,15 +197,15 @@ function window_OpenHyperlink($text, $id, $width, $title, $can_close, $can_minim
 }
 
 function window_Close($window) {
-	return "javascript: window_system.closeWindow('{$window}');";
+	return "javascript: Caracal.window_system.closeWindow('{$window}');";
 }
 
 function window_LoadContent($window, $url) {
-	return "javascript: window_system.loadWindowContent('{$window}', '{$url}');";
+	return "javascript: Caracal.window_system.loadWindowContent('{$window}', '{$url}');";
 }
 
 function window_ReloadContent($window) {
-	return "javascript: window_system.loadWindowContent('{$window}');";
+	return "javascript: Caracal.window_system.loadWindowContent('{$window}');";
 }
 
 function window_Resize($window, $size) {

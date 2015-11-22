@@ -11,12 +11,14 @@
  * Requires jQuery 1.4.2+
  */
 
-var window_system = null;
+var Caracal = Caracal || {};
+var Caracal.WindowSystem = Caracal.WindowSystem || {};
+
 
 /**
  * Dialog Constructor
  */
-function Dialog() {
+Caracal.WindowSystem.Dialog = function() {
 	var self = this;
 
 	self.cover = $('<div>');
@@ -185,7 +187,7 @@ function Dialog() {
  * @param string url
  * @param boolean existing_structure Allow creating window from existing structure
  */
-function Window(id, width, title, can_close, url, existing_structure) {
+Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existing_structure) {
 	var self = this;
 
 	self.id = id;
@@ -700,7 +702,7 @@ function Window(id, width, title, can_close, url, existing_structure) {
 /**
  * Window System
  */
-function WindowSystem(container, list_container) {
+Caracal.WindowSystem.System = function(container, list_container) {
 	var self = this;  // used internally for events
 
 	self.modal_dialog = null;
@@ -766,7 +768,7 @@ function WindowSystem(container, list_container) {
 
 		} else {
 			// window does not exist, create it
-			var window = new Window(id, width, title, can_close, url, false);
+			var window = new Caracal.WindowSystem.Window(id, width, title, can_close, url, false);
 
 			// preconfigure window
 			self.list[id] = window;
@@ -921,5 +923,5 @@ function WindowSystem(container, list_container) {
 }
 
 $(function() {
-	window_system = new WindowSystem('div#container', 'footer');
+	Caracal.window_system = new Caracal.WindowSystem.WindowSystem('div#container', 'footer');
 });

@@ -44,7 +44,7 @@
 				<div id="container" class="guest"/>
 				<script type="text/javascript">
 					$(document).ready(function() {
-						window_system.showLoginWindow();
+						Caracal.window_system.showLoginWindow();
 					});
 				</script>
 			</cms:guest>
