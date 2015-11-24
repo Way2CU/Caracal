@@ -5,11 +5,13 @@
  * Authors: Mladen Mijatov
  */
 
+var Caracal = Caracal || {};
 var ContactForm = ContactForm || {};
+
 
 function submissions_update_result_list() {
 	var list = $('select#submission_form_list');
-	var submissions_window = window_system.getWindow('contact_form_submissions');
+	var submissions_window = Caracal.window_system.getWindow('contact_form_submissions');
 
 	if (submissions_window.original_url == undefined)
 		submissions_window.original_url = submissions_window.url;

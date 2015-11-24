@@ -24,7 +24,7 @@ Caracal.Shop.open_item_search = function() {
 		};
 	var url = backend_url + '?' + $.param(data);
 
-	window_system.openWindow(
+	Caracal.window_system.openWindow(
 					'shop_search_results',
 					450,
 					language_handler.getText('shop', 'title_search_results'),
@@ -249,8 +249,8 @@ Caracal.Shop.update_total_amount = function(button) {
  * Handle changing filter in transaction lists.
  */
 Caracal.Shop.handle_filter_change = function() {
-	var transactions_window = window_system.getWindow('shop_transactions');
-	var selected_status = window_system.container.find('select[name=status]');
+	var transactions_window = Caracal.window_system.getWindow('shop_transactions');
+	var selected_status = Caracal.window_system.container.find('select[name=status]');
 
 	// store original URL for later use
 	if (transactions_window.original_url == undefined)
