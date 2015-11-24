@@ -81,7 +81,7 @@ function ContactForm(form_object) {
 
 				case 'radio':
 					if (result[name] == undefined) {
-						var selected_radio = self._fields.find('input:radio[name=' + name + ']:checked');
+						var selected_radio = self._fields.filter('input:radio[name=' + name + ']:checked');
 						if (selected_radio.length > 0)
 							result[name] = selected_radio.val()
 					}
