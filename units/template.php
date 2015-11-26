@@ -39,6 +39,12 @@ class TemplateHandler {
 	private $params;
 
 	/**
+	 * Transfer params when invoking template load from another template.
+	 * @var array
+	 */
+	private $template_params;
+
+	/**
 	 * Handling module name
 	 * @var object
 	 */
@@ -152,6 +158,15 @@ class TemplateHandler {
 	}
 
 	/**
+	 * Sets template parameters.
+	 *
+	 * @param array $params;
+	 */
+	public function setTemplateParams($params) {
+		$this->template_params = $params;
+	}
+
+	/**
 	 * Sets mapped module name for section content parsing
 	 *
 	 * @param string $module
@@ -202,6 +217,7 @@ class TemplateHandler {
 						$settings = $this->module->settings;
 
 					$params = $this->params;
+					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
 
 					$response = @eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
@@ -226,6 +242,7 @@ class TemplateHandler {
 						$settings = $this->module->settings;
 
 					$params = $this->params;
+					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
 
 					$value = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
@@ -322,13 +339,25 @@ class TemplateHandler {
 					$file = $tag->tagAttrs['file'];
 					$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : '';
 
-					if (!is_null($this->module)) {
-						$path = preg_replace('/^%module%/i', $this->module->path, $path);
-						$path = preg_replace('/^%templates%/i', $template_path, $path);
+					// create new template handler
+					$new = new TemplateHandler($file, $path);
+
+					// collect template specific parameters
+					if (count($tag->tagChildren) > 0) {
+						$template_params = array();
+
+						foreach ($tag->tagChildren as $child)
+							if ($child->tagName == 'param')
+								$template_params[$child->tagAttrs['name']] = $child->tagAttrs['value'];
+
+						// set params
+						$new->setTemplateParams($template_params);
 					}
 
-					$new = new TemplateHandler($file, $path);
+					// transfer local params to new template handler
 					$new->setLocalParams($this->params);
+
+					// parse new template
 					$new->parse();
 					break;
 
