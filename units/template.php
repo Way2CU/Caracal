@@ -497,6 +497,7 @@ class TemplateHandler {
 				case 'cms:if':
 					$settings = !is_null($this->module) ? $this->module->settings : array();
 					$params = $this->params;
+					$template = $this->template_params;
 					$condition = true;
 
 					// check if section is specified and matches
