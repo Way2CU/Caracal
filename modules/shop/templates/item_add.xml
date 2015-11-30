@@ -22,6 +22,12 @@
 						</select>
 					</label>
 				</div>
+
+				<label style="clear: both; padding-top: 10px;">
+					<span><cms:text constant="label_uid" module="shop"/></span>
+					<input name="uid" class="code ltr" type="text" value="$params['uid']" cms:eval="value"/>
+				</label>
+
 				<label style="clear: both; padding-top: 10px;">
 					<span><cms:text constant="label_description" module="shop"/></span>
 					<textarea name="description" class="multi-language" style="width: 460px; height: 155px;"/>

@@ -116,6 +116,7 @@ class ShopItemHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
+					'uid'			=> $this->generateUID(),
 					'form_action'	=> backend_UrlMake($this->name, 'items', 'save'),
 					'cancel_action'	=> window_Close('shop_item_add')
 				);
@@ -230,7 +231,9 @@ class ShopItemHandler {
 		if ($new_item) {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
-			$data['uid'] = $this->generateUID();
+			if (isset($_REQUEST['uid']) && !empty($_REQUEST['uid']))
+				$data['uid'] = fix_chars($_REQUEST['uid']); else
+				$data['uid'] = $this->generateUID();
 
 			if (class_exists('gallery')) {
 				$gallery = gallery::getInstance();
