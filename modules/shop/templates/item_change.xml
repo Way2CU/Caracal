@@ -34,7 +34,7 @@
 						class="code ltr"
 						type="text"
 						value="$params['uid']"
-						readonly="readonly"
+						maxlength="13"
 						cms:eval="value"
 						/>
 				</label>

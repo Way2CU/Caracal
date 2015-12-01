@@ -225,15 +225,13 @@ class ShopItemHandler {
 				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
 				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'		=> isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
-				'visible'			=> $_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1' ? 1 : 0
+				'visible'			=> $_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1' ? 1 : 0,
+				'uid'				=> isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
 			);
 
 		if ($new_item) {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
-			if (isset($_REQUEST['uid']) && !empty($_REQUEST['uid']))
-				$data['uid'] = fix_chars($_REQUEST['uid']); else
-				$data['uid'] = $this->generateUID();
 
 			if (class_exists('gallery')) {
 				$gallery = gallery::getInstance();
