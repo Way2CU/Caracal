@@ -464,7 +464,10 @@ class ShopItemHandler {
 
 		// prepare conditions
 		if (isset($tag_params['id']))
-			$id = fix_id($tag_params['id']);
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		if (isset($tag_params['uid']))
+			$conditions['uid'] = fix_id($tag_params['uid']);
 
 		if (isset($tag_params['random']) && isset($tag_params['category'])) {
 			if (is_numeric($tag_params['category'])) {
@@ -496,14 +499,14 @@ class ShopItemHandler {
 
 			// get random id from the list
 			if (count($id_list) > 0)
-				$id = $id_list[array_rand($id_list)];
+				$conditions['id'] = $id_list[array_rand($id_list)];
 		}
 
-		if (is_null($id))
+		if (empty($conditions))
 			return;
 
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
