@@ -467,7 +467,7 @@ class ShopItemHandler {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		if (isset($tag_params['uid']))
-			$conditions['uid'] = fix_id($tag_params['uid']);
+			$conditions['uid'] = fix_chars($tag_params['uid']);
 
 		if (isset($tag_params['random']) && isset($tag_params['category'])) {
 			if (is_numeric($tag_params['category'])) {
