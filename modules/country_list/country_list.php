@@ -163,6 +163,7 @@ class country_list extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'country_option.xml');
+		$template->setTemplateParamsFromArray($children);
 		$country_list = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		// parse template
@@ -203,6 +204,7 @@ class country_list extends Module {
 		}
 
 		$template = $this->loadTemplate($tag_params, 'state_option.xml');
+		$template->setTemplateParamsFromArray($children);
 		$state_list = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		foreach ($state_list as $state) {

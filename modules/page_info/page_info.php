@@ -438,6 +438,7 @@ class page_info extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'analytics_version.xml');
+		$template->setTemplateParamsFromArray($children);
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : '0';
 
 		// get available versions

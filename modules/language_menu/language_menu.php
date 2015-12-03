@@ -55,7 +55,7 @@ class language_menu extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print':
-					$this->printMenus($params);
+					$this->printMenus($params, $children);
 					break;
 
 				case 'json':
@@ -116,9 +116,10 @@ class language_menu extends Module {
 	/**
 	 * Prints language menu using OL
 	 *
-	 * @param array $global_params
+	 * @param array $tag_params
+	 * @param array $children
 	 */
-	private function printMenus($tag_params) {
+	private function printMenus($tag_params, $children) {
 		global $action, $section;
 
 		// check if we were asked to get languages from specific module
@@ -131,6 +132,7 @@ class language_menu extends Module {
 		}
 
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// prepare params
 		switch ($_SERVER['REQUEST_METHOD']) {

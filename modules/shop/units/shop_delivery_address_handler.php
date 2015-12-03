@@ -63,6 +63,7 @@ class DeliveryAddressHandler {
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'address.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// parse template
 		if (is_object($address)) {

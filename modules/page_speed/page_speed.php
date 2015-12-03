@@ -227,6 +227,7 @@ class page_speed extends Module {
 	 */
 	public function tag_GeneralInformation($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'general_information.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$page_stats = $this->data_cache->pageStats;
 

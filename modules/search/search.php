@@ -143,6 +143,7 @@ class search extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'result.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// parse results
 		if (count($results) > 0)

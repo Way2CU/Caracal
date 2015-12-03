@@ -681,6 +681,7 @@ class articles extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'article.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
 
@@ -785,6 +786,7 @@ class articles extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article', $this, 'tag_Article');
 		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
@@ -958,6 +960,7 @@ class articles extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
 
@@ -996,6 +999,7 @@ class articles extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
 

@@ -343,7 +343,7 @@ class tips extends Module {
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, false);
 
 		$template = $this->loadTemplate($tag_params, 'tip.xml');
-		$template->setMappedModule($this->name);
+		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -384,6 +384,7 @@ class tips extends Module {
 			$limit = fix_id($tag_params['limit']);
 
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 
 		// get items

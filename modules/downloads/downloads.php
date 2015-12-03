@@ -418,6 +418,7 @@ class downloads extends Module {
 		$order_asc = true;
 
 		$template = $this->loadTemplate($tag_params, 'download.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (isset($tag_params['latest']) && $tag_params['latest'] == 1) {
 			$order_by = array('id');

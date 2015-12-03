@@ -969,6 +969,7 @@ class news extends Module {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array(), array('timestamp'), False);
 
 		$template = $this->loadTemplate($tag_params, 'news.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
@@ -1045,6 +1046,7 @@ class news extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'news_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// parse items
 		if (count($items) > 0)
@@ -1127,6 +1129,7 @@ class news extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -1162,6 +1165,7 @@ class news extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// parse items
 		if (count($items) > 0)

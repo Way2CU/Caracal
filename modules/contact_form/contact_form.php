@@ -888,6 +888,7 @@ class contact_form extends Module {
 		} else {
 			// show response from template
 			$template = $this->loadTemplate($tag_params, 'reponse.xml');
+			$template->setTemplateParamsFromArray($children);
 
 			$params = array(
 					'error'				=> !$result,
@@ -2682,6 +2683,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'field_type_option.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		foreach ($this->field_types as $field) {
 			$params = array(
@@ -2718,6 +2720,7 @@ class contact_form extends Module {
 	public function tag_FormTemplateList($tag_params, $children) {
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : null;
 		$template = $this->loadTemplate($tag_params, 'form_template_option.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		foreach ($this->form_templates as $name => $fields) {
 			$title = isset($this->form_template_names[$name]) ? $this->form_template_names[$name] : $name;
@@ -2747,6 +2750,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'templates_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
@@ -2894,6 +2898,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'field.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:values', $this, 'tag_FieldValueList');
 
 		// get fields
@@ -3038,6 +3043,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'values_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -3113,6 +3119,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'form.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
 		$template->registerTagHandler('cms:fieldsets', $this, 'tag_FieldsetList');
 		$template->setTagChildren('cms:fieldsets', $children);
@@ -3165,6 +3172,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'forms_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
 
 		// get items from database
@@ -3259,6 +3267,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'submission.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submission
@@ -3340,6 +3349,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'submissions_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submissions
@@ -3473,6 +3483,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'submission_field.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -3512,6 +3523,7 @@ class contact_form extends Module {
 	public function tag_MailerList($tag_params, $children) {
 		$selected = array();
 		$template = $this->loadTemplate($tag_params, 'mailer_option.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (isset($tag_params['form'])) {
 			$form = fix_id($tag_params['form']);
@@ -3562,6 +3574,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'domain_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// draw domains
 		if (count($domain_list) > 0)
@@ -3605,6 +3618,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 
 		// parse template
@@ -3659,6 +3673,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 
 		if (count($items) > 0)

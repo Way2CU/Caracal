@@ -574,6 +574,7 @@ class Backend_UserManager {
 
 			} else {
 				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+				$template->setTemplateParamsFromArray($children);
 				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
 
 				$template->restoreXML();
@@ -590,6 +591,7 @@ class Backend_UserManager {
 
 			} else {
 				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+				$template->setTemplateParamsFromArray($children);
 				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
 
 				$template->restoreXML();
@@ -701,6 +703,7 @@ class Backend_UserManager {
 
 		} else {
 			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+			$template->setTemplateParamsFromArray($children);
 
 			$template->restoreXML();
 			$template->setLocalParams($result);
@@ -806,6 +809,7 @@ class Backend_UserManager {
 
 		} else {
 			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+			$template->setTemplateParamsFromArray($children);
 
 			$template->restoreXML();
 			$template->setLocalParams($result);

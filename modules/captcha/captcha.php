@@ -274,6 +274,7 @@ class captcha extends Module {
 	 */
 	private function printImageTag($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'image.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$params = array(
 				'url'	=> $this->getImageURL(),

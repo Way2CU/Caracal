@@ -291,6 +291,7 @@ class ShopCategoryHandler {
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// parse template
@@ -398,6 +399,7 @@ class ShopCategoryHandler {
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
 		// initialize index

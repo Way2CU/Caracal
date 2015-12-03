@@ -801,6 +801,7 @@ class youtube extends Module {
 
 				// embed video player
 				$template = $this->loadTemplate($tag_params, 'embed.xml');
+				$template->setTemplateParamsFromArray($children);
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
@@ -809,6 +810,7 @@ class youtube extends Module {
 			} else {
 				// parse specified template
 				$template = $this->loadTemplate($tag_params, 'video.xml');
+				$template->setTemplateParamsFromArray($children);
 
 				$params = array(
 								'id'			=> $video->id,
@@ -901,6 +903,7 @@ class youtube extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'video_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('_video', $this, 'tag_Video');
 		$template->registerTagHandler('_thumbnail', $this, 'tag_Thumbnail');
 
@@ -1002,7 +1005,7 @@ class youtube extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'video_thumbnail.xml');
-		$template->setMappedModule($this->name);
+		$template->setTemplateParamsFromArray($children);
 
 		// parse template
 		if (!is_null($video))

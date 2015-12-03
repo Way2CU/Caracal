@@ -299,6 +299,7 @@ class ShopManufacturerHandler {
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
 			// prepare parameters
@@ -340,6 +341,7 @@ class ShopManufacturerHandler {
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {

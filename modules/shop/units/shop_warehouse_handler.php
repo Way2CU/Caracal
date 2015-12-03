@@ -274,6 +274,7 @@ class ShopWarehouseHandler {
 		$conditions = array();
 
 		$template = $this->_parent->loadTemplate($tag_params, 'warehouse_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 

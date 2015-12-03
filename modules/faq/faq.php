@@ -329,6 +329,7 @@ class faq extends Module {
 
 		if (is_object($id)) {
 			$template = $this->loadTemplate($tag_params, 'list_item.xml');
+			$template->setTemplateParamsFromArray($children);
 
 			$params = array(
 					'id'		=> $item->id,
@@ -357,6 +358,7 @@ class faq extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {

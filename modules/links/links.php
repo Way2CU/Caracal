@@ -933,6 +933,7 @@ class links extends Module {
 							);
 
 		$template = $this->loadTemplate($tag_params, 'links_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('_link', $this, 'tag_Link');
 		$template->registerTagHandler('_link_group', $this, 'tag_LinkGroupList');
 

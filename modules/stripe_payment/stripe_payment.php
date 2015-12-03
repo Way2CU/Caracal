@@ -567,6 +567,7 @@ class stripe_payment extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'plans_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// parse template
 		if (count($items) > 0)

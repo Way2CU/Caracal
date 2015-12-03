@@ -510,6 +510,7 @@ class ShopItemHandler {
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 
 		// register tag handlers
@@ -692,6 +693,7 @@ class ShopItemHandler {
 		// create template
 		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
 		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
 		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
 
@@ -865,6 +867,7 @@ class ShopItemHandler {
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'color_preview.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (empty($item->colors))
 			return;

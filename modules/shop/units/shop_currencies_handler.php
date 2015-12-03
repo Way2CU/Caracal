@@ -355,6 +355,7 @@ class ShopCurrenciesHandler {
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'currency_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;

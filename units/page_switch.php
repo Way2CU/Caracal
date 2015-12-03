@@ -95,6 +95,7 @@ class PageSwitch {
 	 */
 	public function tag_Pages($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'page_switch_page.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// calculate number of total pages
 		$total_pages = ceil($this->total_items / $this->per_page);
@@ -154,6 +155,7 @@ class PageSwitch {
 	public function tag_PageSwitch($tag_params, $children) {
 		// create template handler
 		$template = $this->loadTemplate($tag_params, 'page_switch.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('_pages', $this, 'tag_Pages');
 
 		// calculate number of total pages
@@ -215,37 +217,6 @@ class PageSwitch {
 		$template->setLocalParams($params);
 		$template->restoreXML();
 		$template->parse();
-	}
-
-	/**
-	 * Create TemplateHandler object from specified tag params
-	 *
-	 * @param array $params
-	 * @param string $default_file
-	 * @return TemplateHandler
-	 */
-	private function loadTemplate($params, $default_file) {
-		global $system_template_path;
-
-		if (isset($params['template'])) {
-			if (isset($params['local']) && $params['local'] == 1) {
-				// load local template
-				$template = new TemplateHandler($params['template'], $system_template_path);
-
-			} else if (isset($params['template_path'])) {
-				// load template from specified path
-				$template = new TemplateHandler($params['template'], $params['template_path']);
-
-			} else {
-				// load template from absolute path
-				$template = new TemplateHandler($params['template']);
-			}
-		} else {
-			// load template from module path
-			$template = new TemplateHandler($default_file, $system_template_path);
-		}
-
-		return $template;
 	}
 
 	/**

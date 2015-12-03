@@ -3442,6 +3442,7 @@ class shop extends Module {
 		// show plan
 		if (count($plans) > 0 && !is_null($plan_name) && isset($plans[$plan_name])) {
 			$template = $this->loadTemplate($tag_params, 'plan.xml');
+			$template->setTemplateParamsFromArray($children);
 			$current_plan = $this->getRecurringPlan();
 
 			$params = $plans[$plan_name];
@@ -3591,6 +3592,7 @@ class shop extends Module {
 
 			// load template
 			$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
+			$template->setTemplateParamsFromArray($children);
 			$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
 			$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 
@@ -3638,6 +3640,7 @@ class shop extends Module {
 		} else {
 			// no information available, show form
 			$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
+			$template->setTemplateParamsFromArray($children);
 			$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
 			$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
 			$template->registerTagHandler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
@@ -3724,6 +3727,7 @@ class shop extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// parse template
 		if (count($items_for_checkout) > 0)
@@ -3743,6 +3747,7 @@ class shop extends Module {
 	public function tag_CompletedMessage($tag_params, $children) {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// get message to show
 		$message = Language::getText('message_checkout_completed');
@@ -3771,6 +3776,7 @@ class shop extends Module {
 	public function tag_CanceledMessage($tag_params, $children) {
 		// show message
 		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// get message to show
 		$message = Language::getText('message_checkout_canceled');
@@ -3827,6 +3833,7 @@ class shop extends Module {
 
 		// load and parse template
 		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -3840,6 +3847,7 @@ class shop extends Module {
 	 */
 	public function tag_PaymentMethodsList($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
+		$template->setTemplateParamsFromArray($children);
 		$only_recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
 		if (count($this->payment_methods) > 0)
@@ -3867,6 +3875,7 @@ class shop extends Module {
 	 */
 	public function tag_DeliveryMethodsList($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'delivery_method.xml');
+		$template->setTemplateParamsFromArray($children);
 		$selected = Delivery::get_current_name();
 
 		if (Delivery::method_count() > 0)
@@ -3896,6 +3905,7 @@ class shop extends Module {
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : null;
 		$template = $this->loadTemplate($tag_params, 'cycle_unit_option.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		foreach($units as $id => $text) {
 			$params = array(
@@ -3918,6 +3928,7 @@ class shop extends Module {
 	 */
 	public function tag_CardType($tag_params, $children) {
 		$template = $this->loadTemplate($tag_params, 'card_type.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		foreach (CardType::$names as $id => $name) {
 			$params = array(

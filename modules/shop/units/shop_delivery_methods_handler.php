@@ -546,6 +546,7 @@ class ShopDeliveryMethodsHandler {
 
 		// get template
 		$template = $this->_parent->loadTemplate($tag_params, 'delivery_methods_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:price_list', $this, 'tag_DeliveryPricesList');
 
 		// get items from database
@@ -653,6 +654,7 @@ class ShopDeliveryMethodsHandler {
 
 		// get template
 		$template = $this->_parent->loadTemplate($tag_params, 'delivery_method_prices_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);

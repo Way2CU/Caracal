@@ -557,6 +557,7 @@ class paypal extends Module {
 		$conditions = array();
 
 		$template = $this->loadTemplate($tag_params, 'plans_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 

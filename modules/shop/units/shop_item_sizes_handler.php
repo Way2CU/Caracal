@@ -450,7 +450,7 @@ class ShopItemSizesHandler {
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'size_list_item.xml');
-		$template->setMappedModule($this->name);
+		$template->setTemplateParamsFromArray($children);
 
 		// parse template
 		if (count($items) > 0)
@@ -529,7 +529,7 @@ class ShopItemSizesHandler {
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'values_list_item.xml');
-		$template->setMappedModule($this->name);
+		$template->setTemplateParamsFromArray($children);
 
 		// parse template
 		$counter = 0;

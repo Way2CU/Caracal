@@ -169,6 +169,7 @@ class feedback extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		// get items from the database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);

@@ -1189,6 +1189,7 @@ class gallery extends Module {
 
 		// create template parser
 		$template = $this->loadTemplate($tag_params, 'image.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -1273,6 +1274,7 @@ class gallery extends Module {
 						);
 
 		$template = $this->loadTemplate($tag_params, 'images_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 
@@ -1402,6 +1404,7 @@ class gallery extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
@@ -1493,6 +1496,7 @@ class gallery extends Module {
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'groups_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
@@ -1573,6 +1577,7 @@ class gallery extends Module {
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'container.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
@@ -1624,6 +1629,7 @@ class gallery extends Module {
 							);
 
 		$template = $this->loadTemplate($tag_params, 'containers_list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
 		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
