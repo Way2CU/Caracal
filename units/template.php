@@ -167,6 +167,26 @@ class TemplateHandler {
 	}
 
 	/**
+ 	 * Allows setting template params from tag children array.
+	 *
+	 * @param array $children
+	 */
+	public function setTemplateParamsFromArray($children) {
+		if (count($children) == 0)
+			return;
+
+		// collect params
+		$template_params = array();
+
+		foreach ($tag->tagChildren as $child)
+			if ($child->tagName == 'param')
+				$template_params[$child->tagAttrs['name']] = $child->tagAttrs['value'];
+
+		// set params
+		$this->setTemplateParams($template_params);
+	}
+
+	/**
 	 * Sets mapped module name for section content parsing
 	 *
 	 * @param string $module
@@ -342,20 +362,9 @@ class TemplateHandler {
 					// create new template handler
 					$new = new TemplateHandler($file, $path);
 
-					// collect template specific parameters
-					if (count($tag->tagChildren) > 0) {
-						$template_params = array();
-
-						foreach ($tag->tagChildren as $child)
-							if ($child->tagName == 'param')
-								$template_params[$child->tagAttrs['name']] = $child->tagAttrs['value'];
-
-						// set params
-						$new->setTemplateParams($template_params);
-					}
-
 					// transfer local params to new template handler
 					$new->setLocalParams($this->params);
+					$new->setTemplateParamsFromArray($tag->tagChildren);
 
 					// parse new template
 					$new->parse();
