@@ -178,7 +178,7 @@ class TemplateHandler {
 		// collect params
 		$template_params = array();
 
-		foreach ($tag->tagChildren as $child)
+		foreach ($children as $child)
 			if ($child->tagName == 'param')
 				$template_params[$child->tagAttrs['name']] = $child->tagAttrs['value'];
 
