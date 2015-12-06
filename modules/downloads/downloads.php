@@ -108,6 +108,10 @@ class downloads extends Module {
 					$this->tag_Download($params, $children);
 					break;
 
+				case 'show_list':
+					$this->tag_DownloadsList($params, $children);
+					break;
+
 				case 'json_list':
 					$this->json_DownloadsList();
 					break;
@@ -461,16 +465,10 @@ class downloads extends Module {
 		// get items from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('list_item.xml', $this->path.'templates/');
-		}
-
-		$template->setMappedModule($this->name);
+		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('_download', $this, 'tag_Download');
+		$template->registerTagHandler('cms:download', $this, 'tag_Download');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
