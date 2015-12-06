@@ -585,7 +585,7 @@ class downloads extends Module {
 	 * @return string
 	 */
 	private function _getDownloadURL($item) {
-		return url_GetFromFilePath($this->path.'files/'.$item->filename);
+		return url_GetFromFilePath($this->file_path.$item->filename);
 	}
 
 	/**
