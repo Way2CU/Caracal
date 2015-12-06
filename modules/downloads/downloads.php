@@ -441,6 +441,7 @@ class downloads extends Module {
 						'count'			=> $item->count,
 						'visible'		=> $item->visible,
 						'timestamp'		=> $item->timestamp,
+						'url'			=> url_Make('get', $this->name, array('id', $item->id))
 					);
 
 			$template->setLocalParams($params);
@@ -481,6 +482,7 @@ class downloads extends Module {
 							'count'			=> $item->count,
 							'visible'		=> $item->visible,
 							'timestamp'		=> $item->timestamp,
+							'url'			=> url_Make('get', $this->name, array('id', $item->id)),
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
