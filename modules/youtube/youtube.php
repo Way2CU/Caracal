@@ -839,7 +839,7 @@ class youtube extends Module {
 		$conditions = array();
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
-		
+
 		$order_asc = true;
 		if (isset($tag_params['order_asc']))
 			$order_asc = $tag_params['order_asc'] == 'yes';
@@ -905,8 +905,8 @@ class youtube extends Module {
 		// create template
 		$template = $this->loadTemplate($tag_params, 'video_item.xml');
 		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('_video', $this, 'tag_Video');
-		$template->registerTagHandler('_thumbnail', $this, 'tag_Thumbnail');
+		$template->registerTagHandler('cms:video', $this, 'tag_Video');
+		$template->registerTagHandler('cms:thumbnail', $this, 'tag_Thumbnail');
 
 		// parse template
 		if (count($items) > 0)
