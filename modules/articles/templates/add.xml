@@ -27,7 +27,13 @@
 			<div>
 				<label>
 					<span><cms:text constant="label_content" module="articles"/></span>
-					<textarea class="multi-language" name="content" rows="5" cols="40" style="width: 680px; height: 250px;"/>
+					<textarea
+						class="multi-language code"
+						name="content"
+						rows="5"
+						cols="40"
+						style="width: 680px; height: 250px;"
+						/>
 				</label>
 			</div>
 			<div>
