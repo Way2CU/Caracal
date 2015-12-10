@@ -92,11 +92,10 @@ class CodeOptimizer {
 	 * Inlude style file.
 	 *
 	 * @param string $file_name
-	 * @param array $additional_imports
 	 * @param array $priority_commands
 	 * @return string
 	 */
-	private function includeStyle($file_name, &$additional_imports, &$priority_commands) {
+	private function includeStyle($file_name, &$priority_commands) {
 		global $system_module_path, $styles_path;
 
 		$result = array();
@@ -151,9 +150,15 @@ class CodeOptimizer {
 			// handle each command individually
 			switch (strtolower($command[0])) {
 				case '@import':
-					if (substr($command[1], 0, 3) == 'url')
-						$priority_commands []= $line_data; else
-						$additional_imports []= trim($command[1], '\'";');
+					if (substr($command[1], 0, 3) == 'url') {
+						// add import to the top of the file
+						$priority_commands []= $line_data;
+
+					} else {
+						// in place import of styles
+						$data = $this->includeStyle(trim($command[1], '\'";'), $priority_commands);
+						$result = array_merge($result, $data);
+					}
 
 					break;
 
@@ -179,20 +184,13 @@ class CodeOptimizer {
 		global $cache_path;
 
 		$result = array();
-		$additional_files = array();
 		$priority_commands = array();
 
 		// gather data
 		foreach($list as $original_file) {
-			$file_result = $this->includeStyle($original_file, $additional_files, $priority_commands);
+			$file_result = $this->includeStyle($original_file, $priority_commands);
 			$result = array_merge($result, $file_result);
 		}
-
-		if (count($additional_files) > 0)
-			foreach($additional_files as $file) {
-				$file_result = $this->includeStyle($file, $additional_files, $priority_commands);
-				$result = array_merge($result, $file_result);
-			}
 
 		// insert priority commands at the top of the file
 		$result = array_merge($priority_commands, $result);
