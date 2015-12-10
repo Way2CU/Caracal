@@ -37,7 +37,7 @@ class CodeOptimizer {
 		global $scripts_path;
 
 		$less_options = array(
-				'compress'		=> true,
+				'compress'		=> false,
 				'relativeUrls'	=> false,
 			);
 		Less_Autoloader::register();
