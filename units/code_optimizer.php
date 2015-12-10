@@ -103,7 +103,7 @@ class CodeOptimizer {
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
 		// get absolute local path
-		if (substr($file_name, 'http://') == 0 || substr($file_name, 'https://') == 0)
+		if (strpos($file_name, 'http://') == 0 || strpos($file_name, 'https://') == 0)
 			$file_name = path_GetFromURL($file_name);
 
 		switch ($extension) {
