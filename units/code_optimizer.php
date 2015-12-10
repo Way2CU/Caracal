@@ -97,10 +97,11 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	private function includeStyle($file_name, &$additional_imports, &$priority_commands) {
-		global $system_module_path;
+		global $system_module_path, $styles_path;
 
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
+		$directory_url = dirname(dirname($file_name)).'/';
 
 		// get absolute local path
 		if (strpos($file_name, 'http://') == 0 || strpos($file_name, 'https://') == 0)
@@ -110,7 +111,7 @@ class CodeOptimizer {
 			case 'less':
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name);
+					$this->less_compiler->parseFile($file_name, $styles_path);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
@@ -120,7 +121,6 @@ class CodeOptimizer {
 
 			case 'css':
 			default:
-				$directory_url = dirname(dirname($file_name)).'/';
 				$module_directory = _BASEPATH.'/'.$system_module_path;
 				$data = file_get_contents($file_name);
 
