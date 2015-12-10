@@ -8,7 +8,7 @@
  * module will automatically use this class if configured.
  */
 
-require_once(_LIBPATH.'less/Less.php');
+require_once(_LIBPATH.'less/lib/Less/Autoloader.php');
 require_once(_LIBPATH.'closure/closure.php');
 
 use Library\Closure\Compiler as Closure;
@@ -40,6 +40,7 @@ class CodeOptimizer {
 				'compress'		=> true,
 				'relativeUrls'	=> false,
 			);
+		Less_Autoloader::register();
 		$this->less_compiler = new Less_Parser($less_options);
 
 		// configure JavaScript compiler
