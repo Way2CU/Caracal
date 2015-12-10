@@ -102,11 +102,14 @@ class CodeOptimizer {
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
+		// get absolute local path
+		if (substr($file_name, 'http://') == 0 || substr($file_name, 'https://') == 0)
+			$file_name = path_GetFromURL($file_name);
+
 		switch ($extension) {
 			case 'less':
 				// compile files
 				try {
-					$file_name = path_GetFromURL($file_name);
 					$this->less_compiler->parseFile($file_name, dirname($file_name));
 					$data = $this->less_compiler->getCss();
 
@@ -118,7 +121,6 @@ class CodeOptimizer {
 			case 'css':
 			default:
 				$directory_url = dirname(dirname($file_name)).'/';
-				$file_name = path_GetFromURL($file_name);
 				$module_directory = _BASEPATH.'/'.$system_module_path;
 				$data = file_get_contents($file_name);
 
@@ -149,9 +151,6 @@ class CodeOptimizer {
 			// handle each command individually
 			switch (strtolower($command[0])) {
 				case '@import':
-					if ($extension == 'less')
-						continue;
-
 					if (substr($command[1], 0, 3) == 'url')
 						$priority_commands []= $line_data; else
 						$additional_imports []= dirname($file_name).'/'.trim($command[1], '\'";');
