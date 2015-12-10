@@ -4,3 +4,6 @@
 [submodule "libraries/parsedown"]
 	path = libraries/parsedown
 	url = https://github.com/erusev/parsedown
+[submodule "libraries/less"]
+	path = libraries/less
+	url = https://github.com/oyejorge/less.php.git
