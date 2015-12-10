@@ -134,7 +134,7 @@ class CodeOptimizer {
 		$data = preg_replace('/\/\*.*?(?=\*\/)\*\//imus', '', $data);
 
 		// fix relative paths
-		$data = preg_replace('/url\((..\/){2,}(.*)\)/imus', 'url(\2)', $data);
+		$data = preg_replace('/url\s*\(\s*(..\/){2,}/imus', 'url(../', $data);
 
 		// parse most important
 		$data = str_replace("\r", "", $data);
