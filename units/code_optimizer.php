@@ -104,14 +104,14 @@ class CodeOptimizer {
 		$directory_url = dirname(dirname($file_name)).'/';
 
 		// get absolute local path
-		if (strpos($file_name, 'http://') == 0 || strpos($file_name, 'https://') == 0)
+		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0)
 			$file_name = path_GetFromURL($file_name);
 
 		switch ($extension) {
 			case 'less':
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name, '/'.$styles_path);
+					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
@@ -153,7 +153,7 @@ class CodeOptimizer {
 				case '@import':
 					if (substr($command[1], 0, 3) == 'url')
 						$priority_commands []= $line_data; else
-						$additional_imports []= dirname($file_name).'/'.trim($command[1], '\'";');
+						$additional_imports []= trim($command[1], '\'";');
 
 					break;
 
