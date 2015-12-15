@@ -293,6 +293,12 @@ function url_GetFromFilePath($path) {
  * @return string
  */
 function path_GetFromURL($url, $base=_BASEURL) {
+	// shorten the base URL for protocol relative links
+	if (substr($url, 0, 2) == '//') {
+		$length = strpos($base, '://');
+		$base = substr($base, $length + 1);
+	}
+
 	return _BASEPATH.substr($url, strlen($base));
 }
 
