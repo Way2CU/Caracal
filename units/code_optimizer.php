@@ -103,7 +103,7 @@ class CodeOptimizer {
 		$directory_url = dirname(dirname($file_name)).'/';
 
 		// get absolute local path
-		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0)
+		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
 			$file_name = path_GetFromURL($file_name);
 
 		switch ($extension) {
