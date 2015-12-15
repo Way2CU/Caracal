@@ -1,9 +1,15 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
+	# store protocol in environment variable
+	RewriteCond %{HTTPS} =on
+	RewriteRule ^(.*)$ - [env=protocol:https]
+	RewriteCond %{HTTPS} !=on
+	RewriteRule ^(.*)$ - [env=protocol:http]
+
 	# make sure we point to the same content
 	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+	RewriteRule ^(.*)$ %{ENV:protocol}://%1/$1 [R=301,L]
 
 	# make sure requested file name is not directory or file name
 	RewriteCond %{REQUEST_FILENAME} !-f
