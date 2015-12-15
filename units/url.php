@@ -304,7 +304,8 @@ function path_GetFromURL($url, $base=_BASEURL) {
 function url_GetBaseURL() {
 	$base = (_SECURE ? 'https://' : 'http://')._DOMAIN;
 
-	if ($_SERVER['SERVER_PORT'] != 80)
+	$port = $_SERVER['SERVER_PORT'];
+	if (!((_SECURE && $port === 443) || (!_SECURE && $port === 80)))
 		$base .= ':'.$_SERVER['SERVER_PORT'];
 
 	$result = dirname($base.$_SERVER['PHP_SELF']);
