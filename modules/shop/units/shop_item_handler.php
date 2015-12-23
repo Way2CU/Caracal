@@ -82,7 +82,7 @@ class ShopItemHandler {
 										$this->_parent->getLanguageConstant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
-											505,
+											550,
 											$this->_parent->getLanguageConstant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, 'items', 'add')
@@ -768,7 +768,7 @@ class ShopItemHandler {
 													$this->_parent->getLanguageConstant('change'),
 													window_Open(
 														'shop_item_change', 	// window id
-														505,				// width
+														550,				// width
 														$this->_parent->getLanguageConstant('title_item_change'), // title
 														true, true,
 														url_Make(
