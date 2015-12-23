@@ -129,7 +129,7 @@
 						<cms:text constant="column_options"/>
 					</span>
 				</div>
-				<div class="list_content" style="height: 305px" id="color_list">
+				<div class="list_content" style="height: 415px" id="color_list">
 				</div>
 			</div>
 
@@ -137,7 +137,7 @@
 				<div class="list_header">
 					<cms:text constant="label_categories" module="shop"/>
 				</div>
-				<div class="list_content" style="height: 350px">
+				<div class="list_content" style="height: 480px">
 					<cms:category_list
 						template="category_checkbox_list_item.xml"
 						local="1"
@@ -172,7 +172,7 @@
 						<cms:text constant="column_options"/>
 					</span>
 				</div>
-				<div class="list_content" style="height: 340px" id="related_items">
+				<div class="list_content" style="height: 440px" id="related_items">
 					<cms:item_list
 						related="$params['id']"
 						cms:eval="related"
