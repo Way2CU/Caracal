@@ -494,23 +494,6 @@ div.dialog div.scrollable_list .column,
 div.window div.scrollable_list .column {
 	display: inline-block;
 	vertical-align: top;
-	margin-right: 3px;
-}
-
-body.rtl div.dialog div.scrollable_list .column,
-body.rtl div.window div.scrollable_list .column {
-	margin-right: 0;
-	margin-left: 3px;
-}
-
-div.dialog div.scrollable_list .column:last-of-type,
-div.window div.scrollable_list .column:last-of-type {
-	margin-right: 0;
-}
-
-body.rtl div.dialog div.scrollable_list .column:last-of-type,
-body.rtl div.window div.scrollable_list .column:last-of-type {
-	margin-left: 0;
 }
 
 div.dialog div.scrollable_list .column a,
