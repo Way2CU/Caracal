@@ -228,9 +228,9 @@
 
 		// create toolbar
 		toolbar_api
-				.createToolbar('shop_item_change_form', '[name=description]:input')
-				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image')
-				.addControl('downloads', 'link');
+			.createToolbar('shop_item_change_form', '[name=description]:input')
+			.addControl('common', 'markdown')
+			.addControl('gallery', 'article_image')
+			.addControl('downloads', 'link');
 	</script>
 </document>
