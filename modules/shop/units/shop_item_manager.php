@@ -45,7 +45,7 @@ class ShopItemManager extends ItemManager {
 	 */
 	public static function getInstance() {
 		if (!isset(self::$_instance))
-		self::$_instance = new self();
+			self::$_instance = new self();
 
 		return self::$_instance;
 	}
