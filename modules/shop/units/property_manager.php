@@ -10,7 +10,7 @@ namespace Modules\Shop\Managers;
 use \ItemManager as ItemManager;
 
 
-final class PropertyManager extends ItemManager {
+final class Property extends ItemManager {
 	private static $_instance;
 
 	/**
