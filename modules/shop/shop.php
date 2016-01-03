@@ -44,6 +44,7 @@ use Modules\Shop\Token as Token;
 
 use Modules\Shop\Handlers\Property as PropertyHandler;
 use Modules\Shop\TokenManager as TokenManager;
+use Modules\Shop\Handlers\Item as ShopItemHandler;
 
 
 final class TransactionType {
