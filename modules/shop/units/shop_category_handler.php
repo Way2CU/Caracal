@@ -299,6 +299,10 @@ class ShopCategoryHandler {
 			$image_url = '';
 			$thumbnail_url = '';
 
+			// get number of children for this category
+			$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
+
+			// get image urls
 			if (class_exists('gallery')) {
 				$gallery = gallery::getInstance();
 				$gallery_manager = GalleryManager::getInstance();
@@ -321,7 +325,8 @@ class ShopCategoryHandler {
 						'thumbnail'		=> $thumbnail_url,
 						'text_id'		=> $item->text_id,
 						'title'			=> $item->title,
-						'description'	=> $item->description
+						'description'	=> $item->description,
+						'has_children'	=> $child_count > 0
 					);
 
 			$template->restoreXML();
@@ -411,6 +416,10 @@ class ShopCategoryHandler {
 				$image_url = '';
 				$thumbnail_url = '';
 
+				// get number of children for this category
+				$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
+
+				// get image urls
 				if (class_exists('gallery')) {
 					$gallery = gallery::getInstance();
 					$gallery_manager = GalleryManager::getInstance();
@@ -436,6 +445,7 @@ class ShopCategoryHandler {
 							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
 							'description'	=> $item->description,
+							'has_children'	=> $child_count > 0,
 							'level'			=> $level,
 							'in_category'	=> in_array($item->id, $item_category_ids) ? 1 : 0,
 							'selected'		=> isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,

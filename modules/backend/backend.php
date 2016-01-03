@@ -526,7 +526,7 @@ class backend extends Module {
 			// module is not protected
 			$manager = ModuleManager::getInstance();
 			$max_order = $manager->getItemValue(
-										"MAX(`order`)",
+										'MAX(`order`)',
 										array('preload' => 0)
 									);
 
@@ -607,7 +607,7 @@ class backend extends Module {
 			// module is not protected
 			$manager = ModuleManager::getInstance();
 			$max_order = $manager->getItemValue(
-										"MAX(`order`)",
+										'MAX(`order`)',
 										array('preload' => 0)
 									);
 
