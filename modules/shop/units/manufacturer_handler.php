@@ -7,7 +7,7 @@
  * Author: Mladen Mijatov
  */
 
-require_once('shop_manufacturer_manager.php');
+require_once('manufacturer_manager.php');
 
 
 class ShopManufacturerHandler {
