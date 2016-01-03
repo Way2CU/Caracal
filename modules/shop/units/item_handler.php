@@ -8,10 +8,10 @@
  */
 namespace Modules\Shop\Handlers;
 
-require_once('shop_item_manager.php');
-require_once('shop_item_membership_manager.php');
-require_once('shop_category_manager.php');
-require_once('shop_related_items_manager.php');
+require_once('item_manager.php');
+require_once('item_membership_manager.php');
+require_once('category_manager.php');
+require_once('related_items_manager.php');
 
 
 class Item {

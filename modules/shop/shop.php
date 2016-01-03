@@ -55,9 +55,9 @@ final class TransactionType {
 	// language constant mapping
 	public static $reverse = array(
 		self::SUBSCRIPTION => 'type_subscription',
-		self::REGULAR => 'type_regular',
-		self::DONATION => 'type_donation',
-		self::DELAYED => 'type_delayed'
+		self::REGULAR      => 'type_regular',
+		self::DONATION     => 'type_donation',
+		self::DELAYED      => 'type_delayed'
 	);
 }
 
@@ -76,14 +76,14 @@ final class TransactionStatus {
 
 	// language constant mapping
 	public static $reverse = array(
-		self::UNKNOWN => 'status_unknown',
-		self::PENDING => 'status_pending',
-		self::DENIED => 'status_denied',
+		self::UNKNOWN   => 'status_unknown',
+		self::PENDING   => 'status_pending',
+		self::DENIED    => 'status_denied',
 		self::COMPLETED => 'status_completed',
-		self::CANCELED => 'status_canceled',
-		self::SHIPPING => 'status_shipping',
-		self::SHIPPED => 'status_shipped',
-		self::LOST => 'status_lost',
+		self::CANCELED  => 'status_canceled',
+		self::SHIPPING  => 'status_shipping',
+		self::SHIPPED   => 'status_shipped',
+		self::LOST      => 'status_lost',
 		self::DELIVERED => 'status_delivered',
 		self::PROCESSED => 'status_processed'
 	);
