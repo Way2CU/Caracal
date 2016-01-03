@@ -32,8 +32,7 @@ require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
 require_once('units/delivery_methods_handler.php');
-require_once('units/property_manager.php');
-require_once('units/property_membership_manager.php');
+require_once('units/property_handler.php');
 require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
@@ -43,6 +42,7 @@ use Modules\Shop\Delivery as Delivery;
 use Modules\Shop\Transaction as Transaction;
 use Modules\Shop\Token as Token;
 
+use Modules\Shop\Handlers\Property as PropertyHandler;
 use Modules\Shop\TokenManager as TokenManager;
 
 
