@@ -467,7 +467,7 @@ class Item {
 	 * @param array $children
 	 */
 	public function tag_Item($tag_params, $children) {
-		$shop = shop::getInstance();
+		$shop = \shop::getInstance();
 		$manager = \ShopItemManager::getInstance();
 		$manufacturer_manager = \ShopManufacturerManager::getInstance();
 		$id = null;
@@ -608,7 +608,7 @@ class Item {
 	public function tag_ItemList($tag_params, $children) {
 		global $language;
 
-		$shop = shop::getInstance();
+		$shop = \shop::getInstance();
 		$manager = \ShopItemManager::getInstance();
 		$conditions = array();
 		$page_switch = null;
