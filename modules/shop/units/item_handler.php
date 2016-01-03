@@ -13,6 +13,8 @@ require_once('item_membership_manager.php');
 require_once('category_manager.php');
 require_once('related_items_manager.php');
 
+use \TemplateHandler as TemplateHandler;
+
 
 class Item {
 	private static $_instance;
