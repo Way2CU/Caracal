@@ -273,7 +273,7 @@ class Property {
 		} else if (isset($tag_params['text_id'])) {
 			$conditions['text_id'] = fix_id($tag_params['text_id']);
 
-		} else if (isset($tag_params['item']) {
+		} else if (isset($tag_params['item'])) {
 			$list = $membership_manager->getItems(
 					array('property'),
 					array('item' => fix_id($tag_params['item']))
