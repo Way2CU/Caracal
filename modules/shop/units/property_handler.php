@@ -267,7 +267,7 @@ class Property {
 		$conditions = array();
 
 		// get id or one of the properties associated with item
-		if (isset($tag_params['id']) {
+		if (isset($tag_params['id'])) {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		} else if (isset($tag_params['text_id'])) {
