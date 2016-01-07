@@ -224,6 +224,13 @@ class shop extends Module {
 			$head_tag = head_tag::getInstance();
 			$backend = backend::getInstance();
 
+			// include collection scripts
+			if (class_exists('collection')) {
+				$collection = collection::getInstance();
+				$collection->includeScript(collection::PROPERTY_EDITOR);
+			}
+
+			// include local scripts
 			if (class_exists('head_tag')) {
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
