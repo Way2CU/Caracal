@@ -1036,7 +1036,8 @@ div.window div.property-editor.focused {
 
 div.window div.property-editor input,
 div.window div.property-editor input:focus {
-	border: 0px;
+	padding: 0;
+	border: 0;
 }
 
 div.window div.property-editor input:not(.input) {
