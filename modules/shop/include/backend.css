@@ -6,8 +6,8 @@
  * Authors: Mladen Mijatov
  */
 
-div.window div.property-container {
-	margin-right: 20px;
+div.window div.property-container.box.left {
+	margin-left: 20px;
 }
 
 div.window div.property-container label.property {
