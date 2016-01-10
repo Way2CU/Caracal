@@ -148,7 +148,7 @@
 					</label>
 					<label class="property ml_array">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_ml_array"/>
+						<input type="text" name="property_ml_array" class="multi-language"/>
 					</label>
 				</div>
 			</div>
