@@ -99,6 +99,7 @@
 						type="text"
 						class="code ltr"
 						name="property_text_id"
+						maxlength="32"
 						/>
 				</label>
 				<label class="horizontal">
@@ -107,6 +108,7 @@
 						type="text"
 						class="multi-language"
 						name="property_name"
+						maxlength="100"
 						/>
 				</label>
 				<label class="horizontal property-selector">
@@ -122,6 +124,28 @@
 				</label>
 				<div class="property-container box left">
 					<label class="property number">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input type="text" name="property_number" maxlength="200"/>
+					</label>
+					<label class="property decimal">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input type="text" name="property_decimal" maxlength="200"/>
+					</label>
+					<label class="property text">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input type="text" name="property_text" maxlength="200"/>
+					</label>
+					<label class="property ml_text">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input type="text" name="property_ml_text" maxlength="200"/>
+					</label>
+					<label class="property array">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input type="text" name="property_array"/>
+					</label>
+					<label class="property ml_array">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input type="text" name="property_ml_array"/>
 					</label>
 				</div>
 			</div>
