@@ -1034,7 +1034,8 @@ div.window div.property-editor.focused {
 	transition: all 0.3s;
 }
 
-div.window div.property-editor input {
+div.window div.property-editor input,
+div.window div.property-editor input:focus {
 	border: 0px;
 }
 
@@ -1044,8 +1045,9 @@ div.window div.property-editor input:not(.input) {
 
 div.window div.property-editor span.property {
 	display: inline-block;
-	padding: 5px;
+	margin: 0;
 	margin-right: 3px;
+	padding: 3px;
 
 	border-radius: 3px;
 	background-color: #c5c5c5;
@@ -1055,6 +1057,7 @@ div.window div.property-editor span.property a {
 	display: inline-block;
 	width: 1em;
 	height: 1em;
+	padding: 3px;
 	margin-left: 3px;
 
 	border-radius: 1px;
