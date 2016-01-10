@@ -129,28 +129,33 @@
 					<label class="horizontal property number">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_number" maxlength="200"/>
+						<button type="button"><cms:text constant="add"/></button>
 					</label>
 					<label class="horizontal property decimal">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_decimal" maxlength="200"/>
+						<button type="button"><cms:text constant="add"/></button>
 					</label>
 					<label class="horizontal property text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_text" maxlength="200"/>
+						<button type="button"><cms:text constant="add"/></button>
 					</label>
 					<label class="horizontal property ml_text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_ml_text" maxlength="200"/>
+						<button type="button"><cms:text constant="add"/></button>
 					</label>
 					<label class="horizontal property array">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_array"/>
+						<button type="button"><cms:text constant="add"/></button>
 					</label>
 					<label class="horizontal property ml_array">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_ml_array" class="multi-language"/>
+						<button type="button"><cms:text constant="add"/></button>
 					</label>
-					<button type="button"><cms:text constant="add"/></button>
 				</div>
 				<div class="scrollable_list">
 					<div class="list_header">
@@ -265,12 +270,12 @@
 		var selector = new LanguageSelector('shop_item_add_form');
 		var notebook = new Notebook('shop_add_item_notebook');
 		notebook
-			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_properties'))
-			.setPageTitle(2, language_handler.getText('shop', 'tab_colors'))
-			.setPageTitle(3, language_handler.getText('shop', 'tab_category'))
-			.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
-			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
+		.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
+		.setPageTitle(1, language_handler.getText('shop', 'tab_properties'))
+		.setPageTitle(2, language_handler.getText('shop', 'tab_colors'))
+		.setPageTitle(3, language_handler.getText('shop', 'tab_category'))
+		.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
+		.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
 
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
@@ -278,9 +283,9 @@
 
 		// create toolbar
 		toolbar_api
-			.createToolbar('shop_item_add_form', '[name=description]:input')
-			.addControl('common', 'markdown')
-			.addControl('gallery', 'article_image')
-			.addControl('downloads', 'link');
+		.createToolbar('shop_item_add_form', '[name=description]:input')
+		.addControl('common', 'markdown')
+		.addControl('gallery', 'article_image')
+		.addControl('downloads', 'link');
 	</script>
 </document>
