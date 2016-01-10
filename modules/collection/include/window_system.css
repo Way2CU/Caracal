@@ -1055,9 +1055,9 @@ div.window div.property-editor span.property {
 
 div.window div.property-editor span.property a {
 	display: inline-block;
+	vertical-align: baseline;
 	width: 1em;
 	height: 1em;
-	padding: 3px;
 	margin-left: 3px;
 
 	border-radius: 1px;
