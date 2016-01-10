@@ -1008,3 +1008,52 @@ body.rtl [data-tooltip]:before {
 iframe.video {
 	border: 0px;
 }
+
+/**
+ * Property editors
+ */
+div.window div.property_editor {
+	margin: 0px;
+	padding: 5px;
+
+	border: 1px solid #999999;
+	outline: 0px;
+	background-color: #ffffff;
+
+	color: #444444;
+	font-size: 1em;
+	font-family: Ubuntu, sans-serif, Arial, Tahoma;
+
+	transition: all 0.3s;
+}
+
+div.window div.property_editor.focused {
+	border: 1px solid #345DC9;
+	color: #000000;
+
+	transition: all 0.3s;
+}
+
+div.window div.property_editor span.property {
+	display: inline-block;
+	background-color: #c5c5c5;
+}
+
+div.window div.property_editor span.property a.remove {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+
+	border-radius: 1px;
+	background-image: url(../images/close_button.svg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 10px;
+	color: white;
+
+	transition: all 0.3s;
+}
+
+div.window div.property_editor span.property a.remove:hover {
+	background-color: #4d4d4d;
+}
