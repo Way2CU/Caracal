@@ -111,7 +111,7 @@
 						maxlength="100"
 						/>
 				</label>
-				<label class="horizontal property-selector">
+				<label class="property-selector">
 					<span><cms:text constant="label_property_type" module="shop"/></span>
 					<select
 						name="property_type"
@@ -125,7 +125,7 @@
 						<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
 					</select>
 				</label>
-				<div class="property-container box left">
+				<div class="property-container">
 					<label class="property number">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_number" maxlength="200"/>
