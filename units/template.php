@@ -425,6 +425,7 @@ class TemplateHandler {
 					$end_with = isset($tag->tagAttrs['end_with']) ? fix_id($tag->tagAttrs['end_with']) : null;
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;
 					$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
+					$clear_text = isset($tag->tagAttrs['clear_text']) ? $tag->tagAttrs['clear_text'] == 'yes' : false;
 
 					// get content for parsing
 					if (is_null($name))
@@ -433,6 +434,10 @@ class TemplateHandler {
 
 					// convert to HTML
 					$content = Markdown::parse($content);
+
+					// strip tags if needed
+					if ($clear_text)
+						$content = strip_tags($content);
 
 					// limit words if specified
 					if (!is_null($char_count)) {
