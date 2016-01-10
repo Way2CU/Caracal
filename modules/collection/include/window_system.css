@@ -1012,7 +1012,7 @@ iframe.video {
 /**
  * Property editors
  */
-div.window div.property_editor {
+div.window div.property-editor {
 	margin: 0px;
 	padding: 5px;
 
@@ -1027,19 +1027,19 @@ div.window div.property_editor {
 	transition: all 0.3s;
 }
 
-div.window div.property_editor.focused {
+div.window div.property-editor.focused {
 	border: 1px solid #345DC9;
 	color: #000000;
 
 	transition: all 0.3s;
 }
 
-div.window div.property_editor span.property {
+div.window div.property-editor span.property {
 	display: inline-block;
 	background-color: #c5c5c5;
 }
 
-div.window div.property_editor span.property a.remove {
+div.window div.property-editor span.property a.remove {
 	display: inline-block;
 	width: 1em;
 	height: 1em;
@@ -1054,6 +1054,6 @@ div.window div.property_editor span.property a.remove {
 	transition: all 0.3s;
 }
 
-div.window div.property_editor span.property a.remove:hover {
+div.window div.property-editor span.property a.remove:hover {
 	background-color: #4d4d4d;
 }
