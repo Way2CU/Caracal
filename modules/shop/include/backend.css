@@ -6,15 +6,15 @@
  * Authors: Mladen Mijatov
  */
 
-div.property-container label.property {
+div.window div.property-container label.property {
 	display: none;
 }
 
-label.property-selector.number ~ div.property-container label.property.number,
-label.property-selector.decimal ~ div.property-container label.property.decimal,
-label.property-selector.text ~ div.property-container label.property.text,
-label.property-selector.ml_text ~ div.property-container label.property.ml_text,
-label.property-selector.array ~ div.property-container label.property.array,
-label.property-selector.ml_array ~ div.property-container label.property.ml_array {
+div.window label.property-selector.number ~ div.property-container label.property.number,
+div.window label.property-selector.decimal ~ div.property-container label.property.decimal,
+div.window label.property-selector.text ~ div.property-container label.property.text,
+div.window label.property-selector.ml_text ~ div.property-container label.property.ml_text,
+div.window label.property-selector.array ~ div.property-container label.property.array,
+div.window label.property-selector.ml_array ~ div.property-container label.property.ml_array {
 	display: block;
 }
