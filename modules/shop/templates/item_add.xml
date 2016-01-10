@@ -93,7 +93,7 @@
 
 			<!-- Properties -->
 			<div>
-				<label class="box left">
+				<label class="horizontal">
 					<span><cms:text constant="label_text_id" module="shop"/></span>
 					<input
 						type="text"
@@ -101,7 +101,7 @@
 						name="property_text_id"
 						/>
 				</label>
-				<label class="box left">
+				<label class="horizontal">
 					<span><cms:text constant="label_property_name" module="shop"/></span>
 					<input
 						type="text"
@@ -109,7 +109,7 @@
 						name="property_name"
 						/>
 				</label>
-				<label class="box left property-selector" style="clear: both;">
+				<label class="horizontal property-selector">
 					<span><cms:text constant="label_property_type" module="shop"/></span>
 					<select name="property_type" onchange="this.parentNode.className = this.value">
 						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
@@ -120,7 +120,7 @@
 						<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
 					</select>
 				</label>
-				<div class="property-container">
+				<div class="property-container box left">
 					<label class="property number">
 					</label>
 				</div>
