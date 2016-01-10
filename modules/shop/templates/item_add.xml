@@ -257,6 +257,10 @@
 			.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
 			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
 
+		// create property editors
+		new PropertyEditor('#shop_item_add_form input[name=array]');
+		new PropertyEditor('#shop_item_add_form input[name=ml_array]');
+
 		// create toolbar
 		toolbar_api
 			.createToolbar('shop_item_add_form', '[name=description]:input')
