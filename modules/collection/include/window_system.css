@@ -1047,7 +1047,10 @@ div.window div.property-editor input:not(.input) {
 div.window div.property-editor span.property {
 	display: inline-block;
 	margin: 0;
-	margin-right: 5px;
+	margin-right: 10px;
+	padding: 3px;
+
+	background-color: #c5c5c5;
 }
 
 div.window div.property-editor span.property a {
@@ -1062,7 +1065,6 @@ div.window div.property-editor span.property a {
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 0.7em;
-	background-color: #c5c5c5;
 	color: white;
 
 	transition: all 0.3s;
