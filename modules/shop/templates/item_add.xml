@@ -143,7 +143,7 @@
 					</label>
 					<label class="horizontal property ml_text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_ml_text" maxlength="200"/>
+						<input type="text" name="property_ml_text" class="multi-language" maxlength="200"/>
 						<button type="button"><cms:text constant="add"/></button>
 					</label>
 					<label class="horizontal property array">
