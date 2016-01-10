@@ -105,7 +105,7 @@
 					<span><cms:text constant="shop" module="label_property_name"/></span>
 					<input
 						type="text"
-						class="multilanguage"
+						class="multi-language"
 						name="property_name"
 						/>
 				</label>
