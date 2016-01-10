@@ -151,6 +151,20 @@
 						<input type="text" name="property_ml_array" class="multi-language"/>
 					</label>
 				</div>
+				<div class="scrollable_list">
+					<div class="list_header">
+						<span class="column" style="width: 250px;">
+							<cms:text constant="column_name" module="shop"/>
+						</span>
+						<span class="column" style="width: 60px;">
+							<cms:text constant="column_price" module="shop"/>
+						</span>
+						<span class="column">
+							<cms:text constant="column_options" module="shop"/>
+						</span>
+					</div>
+					<div class="list_content" style="height: 300px" id="item_properties"/>
+				</div>
 			</div>
 
 			<!-- Colors -->
