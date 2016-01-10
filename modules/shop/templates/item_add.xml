@@ -173,11 +173,11 @@
 			<!-- Colors -->
 			<div class="scrollable_list">
 				<input name="colors" type="hidden"/>
-				<label class="inline">
+				<label class="horizontal inline">
 					<span><cms:text constant="label_color_value" module="shop"/></span>
 					<input name="color_value" class="code" type="color" style="width: 60px;"/>
 				</label>
-				<label class="inline">
+				<label class="horizontal inline">
 					<span><cms:text constant="label_color_name" module="shop"/></span>
 					<input name="color_name" type="text"/>
 					<button type="button" onclick="javascript: Caracal.Shop.add_color();">
