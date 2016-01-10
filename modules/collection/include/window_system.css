@@ -1048,9 +1048,6 @@ div.window div.property-editor span.property {
 	display: inline-block;
 	margin: 0;
 	margin-right: 10px;
-	padding: 3px;
-
-	background-color: #c5c5c5;
 }
 
 div.window div.property-editor span.property a {
