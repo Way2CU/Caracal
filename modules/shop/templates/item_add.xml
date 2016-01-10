@@ -150,7 +150,7 @@
 						<span><cms:text constant="label_property_value" module="shop"/></span>
 						<input type="text" name="property_ml_array" class="multi-language"/>
 					</label>
-					<div>
+					<div style="margin-bottom: 10px;">
 						<button type="button"><cms:text constant="add"/></button>
 					</div>
 				</div>
