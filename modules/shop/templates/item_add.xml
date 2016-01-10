@@ -113,11 +113,11 @@
 					<span><cms:text constant="shop" module="label_property_type"/></span>
 					<select name="property_type" onchange="this.parentNode.className = this.value">
 						<option value="number"><cms:text constant="shop" module="property_type_number"/></option>
-						<option value="decimal"><cms:text constant="shop" module="property_type_number"/></option>
-						<option value="text"><cms:text constant="shop" module="property_type_number"/></option>
-						<option value="ml_text"><cms:text constant="shop" module="property_type_number"/></option>
-						<option value="array"><cms:text constant="shop" module="property_type_number"/></option>
-						<option value="ml_array"><cms:text constant="shop" module="property_type_number"/></option>
+						<option value="decimal"><cms:text constant="shop" module="property_type_decimal"/></option>
+						<option value="text"><cms:text constant="shop" module="property_type_text"/></option>
+						<option value="ml_text"><cms:text constant="shop" module="property_type_ml_text"/></option>
+						<option value="array"><cms:text constant="shop" module="property_type_array"/></option>
+						<option value="ml_array"><cms:text constant="shop" module="property_type_ml_array"/></option>
 					</select>
 				</label>
 				<div class="property-container">
