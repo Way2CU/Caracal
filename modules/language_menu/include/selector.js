@@ -182,7 +182,7 @@ function LanguageSelector(id) {
 			field.data('language', data);
 
 			// emit signal to let other scripts know value has been changed
-			field.trigger('changed');
+			field.trigger('change');
 
 			// apply proper direction
 			if (!language_handler.isRTL(language))
