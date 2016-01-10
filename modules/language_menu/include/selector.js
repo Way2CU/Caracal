@@ -156,7 +156,7 @@ function LanguageSelector(id) {
 	 * @param string language
 	 */
 	self.set_language = function(language) {
-		if (self.current_language == language) 
+		if (self.current_language == language)
 			return;
 
 		// change active button
@@ -180,6 +180,9 @@ function LanguageSelector(id) {
 
 			// save old data once we switched everything
 			field.data('language', data);
+
+			// emit signal to let other scripts know value has been changed
+			field.trigger('changed');
 
 			// apply proper direction
 			if (!language_handler.isRTL(language))
