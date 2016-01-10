@@ -128,19 +128,19 @@
 				<div class="property-container">
 					<label class="horizontal property number">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_number" maxlength="200" style="width: 502px"/>
+						<input type="text" name="property_number" maxlength="200" style="width: 500px"/>
 					</label>
 					<label class="horizontal property decimal">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_decimal" maxlength="200" style="width: 502px"/>
+						<input type="text" name="property_decimal" maxlength="200" style="width: 500px"/>
 					</label>
 					<label class="horizontal property text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_text" maxlength="200" style="width: 502px"/>
+						<input type="text" name="property_text" maxlength="200" style="width: 500px"/>
 					</label>
 					<label class="horizontal property ml_text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_ml_text" class="multi-language" maxlength="200" style="width: 502px"/>
+						<input type="text" name="property_ml_text" class="multi-language" maxlength="200" style="width: 500px"/>
 					</label>
 					<label class="horizontal property array">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
