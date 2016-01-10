@@ -132,6 +132,7 @@
 	"label_property_text_id": "Textual id:",
 	"label_property_name": "Name:",
 	"label_property_type": "Type:",
+	"label_property_value": "Value:",
 	"manage_categories": "Manage categories",
 	"menu_categories": "Manage categories",
 	"menu_currencies": "Currencies",
