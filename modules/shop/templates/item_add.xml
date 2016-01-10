@@ -94,7 +94,7 @@
 			<!-- Properties -->
 			<div>
 				<label class="box left">
-					<span><cms:text constant="shop" module="label_text_id"/></span>
+					<span><cms:text constant="label_text_id" module="shop"/></span>
 					<input
 						type="text"
 						class="code ltr"
@@ -102,7 +102,7 @@
 						/>
 				</label>
 				<label class="box left">
-					<span><cms:text constant="shop" module="label_property_name"/></span>
+					<span><cms:text constant="label_property_name" module="shop"/></span>
 					<input
 						type="text"
 						class="multi-language"
@@ -110,14 +110,14 @@
 						/>
 				</label>
 				<label class="box left property-selector" style="clear: both;">
-					<span><cms:text constant="shop" module="label_property_type"/></span>
+					<span><cms:text constant="label_property_type" module="shop"/></span>
 					<select name="property_type" onchange="this.parentNode.className = this.value">
-						<option value="number"><cms:text constant="shop" module="property_type_number"/></option>
-						<option value="decimal"><cms:text constant="shop" module="property_type_decimal"/></option>
-						<option value="text"><cms:text constant="shop" module="property_type_text"/></option>
-						<option value="ml_text"><cms:text constant="shop" module="property_type_ml_text"/></option>
-						<option value="array"><cms:text constant="shop" module="property_type_array"/></option>
-						<option value="ml_array"><cms:text constant="shop" module="property_type_ml_array"/></option>
+						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
+						<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
+						<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
+						<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
+						<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
+						<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
 					</select>
 				</label>
 				<div class="property-container">
