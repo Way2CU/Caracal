@@ -113,7 +113,10 @@
 				</label>
 				<label class="horizontal property-selector">
 					<span><cms:text constant="label_property_type" module="shop"/></span>
-					<select name="property_type" onchange="this.parentNode.className = this.value">
+					<select
+						name="property_type"
+						onchange="this.parentNode.className = 'horizontal property-selector ' + this.value"
+						>
 						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
 						<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
 						<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
