@@ -111,7 +111,7 @@
 						maxlength="100"
 						/>
 				</label>
-				<label class="property-selector">
+				<label class="property-selector number">
 					<span><cms:text constant="label_property_type" module="shop"/></span>
 					<select
 						name="property_type"
