@@ -373,6 +373,16 @@ div.window button {
 	transition: all 0.3s;
 }
 
+div.window button:first-child,
+body.rtl div.window button:last-child {
+	margin-left: 0;
+}
+
+div.window button:last-child,
+body.rtl div.window button:first-child {
+	margin-right: 0;
+}
+
 div.window button:focus {
 	outline: none;
 }
