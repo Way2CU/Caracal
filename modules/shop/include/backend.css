@@ -18,3 +18,12 @@ div.window label.property-selector.array ~ div.property-container label.property
 div.window label.property-selector.ml_array ~ div.property-container label.property.ml_array {
 	display: block;
 }
+
+div.window label.property-selector.number ~ div.property-container label.horizontal.property.number,
+div.window label.property-selector.decimal ~ div.property-container label.horizontal.property.decimal,
+div.window label.property-selector.text ~ div.property-container label.horizontal.property.text,
+div.window label.property-selector.ml_text ~ div.property-container label.horizontal.property.ml_text,
+div.window label.property-selector.array ~ div.property-container label.horizontal.property.array,
+div.window label.property-selector.ml_array ~ div.property-container label.horizontal.property.ml_array {
+	display: inline-block;
+}
