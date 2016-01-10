@@ -258,8 +258,8 @@
 			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
 
 		// create property editors
-		new PropertyEditor('#shop_item_add_form input[name=array]');
-		new PropertyEditor('#shop_item_add_form input[name=ml_array]');
+		new Caracal.PropertyEditor('#shop_item_add_form input[name=array]');
+		new Caracal.PropertyEditor('#shop_item_add_form input[name=ml_array]');
 
 		// create toolbar
 		toolbar_api
