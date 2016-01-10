@@ -36,6 +36,7 @@ Caracal.PropertyEditor = function(selector) {
 		// create input field
 		self._input = $('<input>');
 		self._input
+				.addClass('input')
 				.attr('type', self._component.attr('type'))
 				.on('focus', self._handlers.input_focus_gained)
 				.on('blur', self._handlers.input_focus_lost)
