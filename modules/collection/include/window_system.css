@@ -1062,6 +1062,7 @@ div.window div.property-editor span.property a {
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 0.7em;
+	background-color: #c5c5c5;
 	color: white;
 
 	transition: all 0.3s;
