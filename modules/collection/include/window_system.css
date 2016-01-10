@@ -1047,25 +1047,22 @@ div.window div.property-editor input:not(.input) {
 div.window div.property-editor span.property {
 	display: inline-block;
 	margin: 0;
-	margin-right: 3px;
-	padding: 3px;
-
-	border-radius: 3px;
-	background-color: #c5c5c5;
+	margin-right: 5px;
 }
 
 div.window div.property-editor span.property a {
 	display: inline-block;
-	vertical-align: baseline;
+	vertical-align: text-bottom;
 	width: 1em;
 	height: 1em;
 	margin-left: 3px;
 
-	border-radius: 1px;
+	border-radius: 2px;
 	background-image: url(../images/close_button.svg);
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-size: 10px;
+	background-size: 0.7em;
+	background-color: #c5c5c5;
 	color: white;
 
 	transition: all 0.3s;

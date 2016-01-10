@@ -91,6 +91,7 @@ Caracal.PropertyEditor = function(selector) {
 
 		// remove property
 		if (self._property_exists(value)) {
+			var properties = JSON.parse(self._component.val());
 			result = properties.splice(index, 1).length == 1;
 			if (result)
 				self._component.val(JSON.stringify(properties));
