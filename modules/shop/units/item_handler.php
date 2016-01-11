@@ -12,6 +12,8 @@ require_once('item_manager.php');
 require_once('item_membership_manager.php');
 require_once('category_manager.php');
 require_once('related_items_manager.php');
+require_once('property_manager.php');
+require_once('property_membership_manager.php');
 
 use \TemplateHandler as TemplateHandler;
 
