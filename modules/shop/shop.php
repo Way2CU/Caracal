@@ -836,13 +836,41 @@ class shop extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		// create shop currencies table
+		// create shop item membership table
 		$sql = "
 			CREATE TABLE `shop_item_membership` (
 				`category` INT NOT NULL,
 				`item` INT NOT NULL,
 				KEY `category` (`category`),
 				KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop item properties table
+		$sql = "
+			CREATE TABLE `shop_item_properties` (
+				`id` INT NOT NULL,
+				`text_id` VARCHAR(32) NOT NULL,
+				`type` INT NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
+
+		$sql .= "
+				`value` TEXT NOT NULL,
+				PRIMARY KEY ( `id` ),
+				KEY `item` (`item`),
+				KEY `text_id` (`text_id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop item properties membership table
+		$sql = "
+			CREATE TABLE `shop_item_property_membership` (
+				`item` INT NOT NULL,
+				`property` INT NOT NULL,
+				KEY `item` (`item`),
+				KEY `property` (`property`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1089,7 +1117,9 @@ class shop extends Module {
 			'shop_stock',
 			'shop_related_items',
 			'shop_manufacturers',
-			'shop_payment_tokens'
+			'shop_payment_tokens',
+			'shop_item_properties',
+			'shop_item_property_membership'
 		);
 
 		$db->drop_tables($tables);
