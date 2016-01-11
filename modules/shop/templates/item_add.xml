@@ -108,14 +108,14 @@
 						type="text"
 						class="multi-language"
 						name="property_name"
-						maxlength="100"
+						maxlength="255"
 						/>
 				</label>
 				<label class="property-selector number">
 					<span><cms:text constant="label_property_type" module="shop"/></span>
 					<select
 						name="property_type"
-						onchange="this.parentNode.className = 'horizontal property-selector ' + this.value"
+						onchange="this.parentNode.className = 'property-selector ' + this.value"
 						>
 						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
 						<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
@@ -128,27 +128,51 @@
 				<div class="property-container">
 					<label class="horizontal property number">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_number" maxlength="200" style="width: 500px"/>
+						<input
+							type="text"
+							name="property_number"
+							style="width: 500px"
+							/>
 					</label>
 					<label class="horizontal property decimal">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_decimal" maxlength="200" style="width: 500px"/>
+						<input
+							type="text"
+							name="property_decimal"
+							style="width: 500px"
+							/>
 					</label>
 					<label class="horizontal property text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_text" maxlength="200" style="width: 500px"/>
+						<input
+							type="text"
+							name="property_text"
+							style="width: 500px"
+							/>
 					</label>
 					<label class="horizontal property ml_text">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_ml_text" class="multi-language" maxlength="200" style="width: 500px"/>
+						<input
+							type="text"
+							name="property_ml_text"
+							class="multi-language"
+							style="width: 500px"
+							/>
 					</label>
 					<label class="horizontal property array">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_array"/>
+						<input
+							type="text"
+							name="property_array"
+							/>
 					</label>
 					<label class="horizontal property ml_array">
 						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input type="text" name="property_ml_array" class="multi-language"/>
+						<input
+							type="text"
+							name="property_ml_array"
+							class="multi-language"
+							/>
 					</label>
 					<div style="margin-bottom: 10px;">
 						<button type="button"><cms:text constant="add"/></button>
