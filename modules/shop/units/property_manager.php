@@ -23,7 +23,7 @@ final class Property extends ItemManager {
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('type', 'int');
-		$this->addProperty('values', 'text');
+		$this->addProperty('value', 'text');
 	}
 
 	/**
