@@ -190,7 +190,7 @@
 							<cms:text constant="column_options" module="shop"/>
 						</span>
 					</div>
-					<div class="list_content" style="height: 300px" id="item_properties"/>
+					<div class="list_content" style="height: 250px" id="item_properties"/>
 				</div>
 			</div>
 
