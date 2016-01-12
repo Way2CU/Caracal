@@ -175,7 +175,20 @@
 							/>
 					</label>
 					<div style="margin-bottom: 10px;">
-						<button type="button"><cms:text constant="add"/></button>
+						<button
+							type="button"
+							name="add"
+							onclick="Caracal.Shop.add_property(this)"
+							>
+							<cms:text constant="add"/>
+						</button>
+						<button
+							type="button"
+							name="save"
+							onclick="Caracal.Shop.save_property(this)"
+							>
+							<cms:text constant="save"/>
+						</button>
 					</div>
 				</div>
 				<div class="scrollable_list">

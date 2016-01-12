@@ -291,3 +291,127 @@ Caracal.Shop.print_transaction = function(button) {
 	// show print dialog
 	iframe.attr('src', $(button).data('print-url') + '&timestamp=' + Date.now().toString());
 };
+
+/**
+ * Commit entered data to the property list.
+ *
+ * @param object button
+ */
+Caracal.Shop.add_property = function(button) {
+	var current_window = $(button).closes('.window');
+	var property_list = current_window.find('#item_properties');
+
+	// find input fields
+	var input_name = current_window.find('input[name=property_name]');
+	var input_text_id = current_window.find('input[name=property_text_id]');
+	var input_type = current_window.find('input[name=property_type]');
+	var input_value = current_window.find('input[name=property_value]');
+
+	// find property id
+	var properties = property_list.find('input[name^=property_data_]');
+	var property_id = properties.length;  // initially get just the number
+
+	var existing_property = properties.filter('input[name=property_data_' + property_id + ']');
+	while (existing_property.length > 0) {
+		property_id++;
+		existing_property = properties.filter('input[name=property_data_' + property_id + ']');
+	}
+
+	// collect data
+	var prepared_value = '';
+
+	switch (input_type.val()) {
+		case 'number':
+		case 'decimal':
+		case 'text':
+			prepared_value = input_value.val();
+			break;
+
+		case 'ml_text':
+			prepared_value = input_value.data('language');
+			break;
+
+		case 'array':
+			prepared_value = JSON.parse(input_value.val());
+			break;
+
+		case 'ml_array':
+			var language_data = input_value.data('language');
+
+			prepared_value = {};
+			for (var language in language_data)
+				prepared_value[language] = JSON.parse(language_data[language]);
+
+			break;
+	}
+
+	var data = {
+			text_id: input_text_id.val(),
+			name: input_name.data('language'),
+			type: input_type.val(),
+			value: prepared_value
+		};
+
+	// create and configure item property row
+	var row = $('<div>');
+	row
+		.addClass('list_item')
+		.appendTo(property_list);
+
+	var data_field = $('<input>');
+	data_field
+		.attr('type', 'hidden')
+		.attr('name', 'property_data_' + property_id)
+		.val(JSON.stringify(data))
+		.appendTo(row);
+
+	// create columns
+	var column_name = $('<span class="column">');
+	var column_type = $('<span class="column">');
+	var column_options = $('<span class="column">');
+
+	column_name
+		.html(data.name[language_handler.current_language])
+		.attr('style', 'width: 250px')
+		.appendTo(row);
+
+	column_type
+		.html(data.type)
+		.attr('style', 'width: 60px')
+		.appendTo(row);
+
+	column_options.appendTo(row);
+
+	// create options
+	var option_edit = $('<a>');
+	var option_remove = $('<a>');
+
+	option_edit
+		.on('click', Caracal.Shop.edit_property)
+		.appendTo(column_options);
+
+	option_remove
+		.on('click', Caracal.Shop.delete_property)
+		.appendTo(column_options);
+
+	// load language constants for options
+	language_handler.getTextArrayAsync(null, ['edit', 'delete'], function(data) {
+			option_edit.html(data['edit']);
+			option_remove.html(data['delete']);
+		});
+
+	// clear input fields
+	current_window.find('input[name^=property_]').val('').trigger('change');
+};
+
+/**
+ * Save changed property data to the property list.
+ */
+Caracal.Shop.save_property = function(button) {
+};
+
+/**
+ * Open item property from the list for editing.
+ */
+Caracal.Shop.edit_property = function(row) {
+};
