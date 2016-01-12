@@ -371,7 +371,7 @@ Caracal.Shop.add_property = function(button) {
 	data_field
 		.attr('type', 'hidden')
 		.attr('name', 'property_data_' + property_id)
-		.val(JSON.stringify(data))
+		.attr('value', JSON.stringify(data))
 		.appendTo(row);
 
 	// create columns
