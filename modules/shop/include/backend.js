@@ -298,7 +298,7 @@ Caracal.Shop.print_transaction = function(button) {
  * @param object button
  */
 Caracal.Shop.add_property = function(button) {
-	var current_window = $(button).closes('.window');
+	var current_window = $(button).closest('.window');
 	var property_list = current_window.find('#item_properties');
 
 	// find input fields
