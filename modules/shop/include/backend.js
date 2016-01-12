@@ -304,8 +304,7 @@ Caracal.Shop.add_property = function(button) {
 	// find input fields
 	var input_name = current_window.find('input[name=property_name]');
 	var input_text_id = current_window.find('input[name=property_text_id]');
-	var input_type = current_window.find('input[name=property_type]');
-	var input_value = current_window.find('input[name=property_value]');
+	var input_type = current_window.find('select[name=property_type]');
 
 	// find property id
 	var properties = property_list.find('input[name^=property_data_]');
@@ -324,18 +323,22 @@ Caracal.Shop.add_property = function(button) {
 		case 'number':
 		case 'decimal':
 		case 'text':
+			var input_value = current_window.find('input[name=property_' + input_type.val() + ']');
 			prepared_value = input_value.val();
 			break;
 
 		case 'ml_text':
+			var input_value = current_window.find('input[name=property_ml_text]');
 			prepared_value = input_value.data('language');
 			break;
 
 		case 'array':
+			var input_value = current_window.find('input[name=property_array]');
 			prepared_value = JSON.parse(input_value.val());
 			break;
 
 		case 'ml_array':
+			var input_value = current_window.find('input[name=property_ml_array]');
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
