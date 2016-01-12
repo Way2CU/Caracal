@@ -329,7 +329,12 @@ Caracal.Shop.add_property = function(button) {
 
 		case 'ml_text':
 			var input_value = current_window.find('input[name=property_ml_text]');
-			prepared_value = input_value.data('language');
+			var language_data = input_value.data('language');
+
+			prepared_value = {};
+			for (var language in language_data)
+				prepared_value = language_data[language];
+
 			break;
 
 		case 'array':
