@@ -383,10 +383,10 @@ Caracal.Shop.add_property = function(button) {
 	column_options.appendTo(row);
 
 	// create options
-	var option_edit = $('<a>');
+	var option_change = $('<a>');
 	var option_remove = $('<a>');
 
-	option_edit
+	option_change
 		.on('click', Caracal.Shop.edit_property)
 		.appendTo(column_options);
 
@@ -395,8 +395,8 @@ Caracal.Shop.add_property = function(button) {
 		.appendTo(column_options);
 
 	// load language constants for options
-	language_handler.getTextArrayAsync(null, ['edit', 'delete'], function(data) {
-			option_edit.html(data['edit']);
+	language_handler.getTextArrayAsync(null, ['change', 'delete'], function(data) {
+			option_change.html(data['change']);
 			option_remove.html(data['delete']);
 		});
 
