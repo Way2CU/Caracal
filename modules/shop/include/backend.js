@@ -317,6 +317,7 @@ Caracal.Shop.add_property = function(button) {
 	}
 
 	// collect data
+	var languages = language_handler.getLanguages();
 	var prepared_value = '';
 
 	switch (input_type.val()) {
@@ -332,8 +333,8 @@ Caracal.Shop.add_property = function(button) {
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
-			for (var language in language_data)
-				prepared_value = language_data[language];
+			for (var language in languages)
+				prepared_value = language_data[language] || '';
 
 			break;
 
@@ -347,8 +348,8 @@ Caracal.Shop.add_property = function(button) {
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
-			for (var language in language_data)
-				prepared_value[language] = JSON.parse(language_data[language]);
+			for (var language in languages)
+				prepared_value[language] = JSON.parse(language_data[language]) || '';
 
 			break;
 	}
