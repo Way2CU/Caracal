@@ -529,7 +529,7 @@ Caracal.Shop.reset_property_fields = function(button) {
 	var current_window = $(button).closest('.window');
 
 	// find input fields
-	var regular_inputs = current_window.find('input[name=^property_]');
+	var regular_inputs = current_window.find('input[name^=property_]');
 	var multilanguage_inputs = regular_inputs.filter('.multi-language');
 	var input_type = current_window.find('select[name=property_type]');
 
