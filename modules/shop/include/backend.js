@@ -335,7 +335,7 @@ Caracal.Shop.add_property = function(button) {
 			prepared_value = {};
 			for (var index in languages) {
 				var language = languages[index];
-				prepared_value = language_data[language] || '';
+				prepared_value = language_data[language.short] || '';
 			}
 
 			break;
@@ -352,7 +352,7 @@ Caracal.Shop.add_property = function(button) {
 			prepared_value = {};
 			for (var index in languages) {
 				var language = languages[index];
-				prepared_value[language] = JSON.parse(language_data[language]) || '';
+				prepared_value[language.short] = JSON.parse(language_data[language.short]) || '';
 			}
 
 			break;
@@ -417,7 +417,7 @@ Caracal.Shop.add_property = function(button) {
 	var empty_language_data = {};
 	for (var index in languages) {
 		var language = languages[index];
-		empty_language_data[language] = '';
+		empty_language_data[language.short] = '';
 	}
 
 	current_window
