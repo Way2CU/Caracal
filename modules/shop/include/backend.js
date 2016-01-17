@@ -446,6 +446,7 @@ Caracal.Shop.edit_property = function(event) {
 	input_type.val(data.type);
 
 	input_name.data('language', data.name);
+	input_name.data('original_data', data.name);
 
 	// configure data
 	switch(data.type) {
@@ -460,6 +461,7 @@ Caracal.Shop.edit_property = function(event) {
 			var input_value = current_window.find('input[name=property_ml_text]');
 			input_value
 				.data('language', data.value)
+				.data('original_data', data.value)
 				.val(data.value[selector.current_language]);
 
 			break;
@@ -475,6 +477,7 @@ Caracal.Shop.edit_property = function(event) {
 			var input_value = current_window.find('input[name=property_ml_array]');
 			input_value
 				.data('language', data.value)
+				.data('original_data', data.value)
 				.val(data.value[selector.current_language])
 				.trigger('change');
 
