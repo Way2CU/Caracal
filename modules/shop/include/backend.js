@@ -410,11 +410,15 @@ Caracal.Shop.add_property = function(button) {
 		});
 
 	// clear input fields
+	var empty_language_data = {};
+	for (var language in language_handler.languages)
+		empty_language_data[language] = '';
+
 	current_window
 		.find('input[name^=property_]').not('[name^=property_data_]')
 		.val('')
-		.data('language', {})
-		.data('original_data', {})
+		.data('language', empty_language_data)
+		.data('original_data', empty_language_data)
 		.trigger('change');
 };
 
