@@ -417,18 +417,19 @@ Caracal.Shop.add_property = function(button) {
 		});
 
 	// clear input fields
-	var empty_language_data = {};
-	for (var index in languages_short) {
-		var language = languages_short[index];
-		empty_language_data[language] = '';
-	}
+	current_window.find('input[name^=property_]').not('[name^=property_data_]').each(function() {
+		var field = $(this);
 
-	current_window
-		.find('input[name^=property_]').not('[name^=property_data_]')
-		.val('')
-		.data('language', empty_language_data)
-		.data('original_data', empty_language_data)
-		.trigger('change');
+		// reset language data
+		if (field.hasClass('multi-language')) {
+			var language_data = field.data('language');
+			for (var index in language_data)
+				language_data[index] = '';
+		}
+
+		// reset value
+		field.val('').trigger('change');
+	});
 };
 
 /**
