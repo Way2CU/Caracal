@@ -189,6 +189,13 @@
 							>
 							<cms:text constant="save"/>
 						</button>
+						<button
+							type="button"
+							name="reset"
+							onclick="Caracal.Shop.reset_property_fields(this)"
+							>
+							<cms:text constant="reset"/>
+						</button>
 					</div>
 				</div>
 				<div class="scrollable_list">
