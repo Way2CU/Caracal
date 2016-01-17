@@ -437,7 +437,7 @@ Caracal.Shop.edit_property = function(event) {
 	var input_type = current_window.find('select[name=property_type]');
 
 	// get data
-	var data_field = row.find('input[name^=property_data_');
+	var data_field = row.find('input[name^=property_data_]');
 	var data = JSON.parse(data_field.val());
 
 	// configure type
