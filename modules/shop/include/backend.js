@@ -317,8 +317,13 @@ Caracal.Shop.add_property = function(button) {
 	}
 
 	// collect data
-	var languages = language_handler.getLanguages();
 	var prepared_value = '';
+	var languages = language_handler.getLanguages();
+	var languages_short = new Array();
+
+	// prepare short language list
+	for (var index in languages)
+		languages_short.push(languages[index].short);
 
 	switch (input_type.val()) {
 		case 'number':
@@ -333,11 +338,10 @@ Caracal.Shop.add_property = function(button) {
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
-			for (var index in languages) {
-				var language = languages[index];
-				prepared_value = language_data[language.short] || '';
+			for (var index in languages_short) {
+				var language = languages_short[index];
+				prepared_value = language_data[language] || '';
 			}
-
 			break;
 
 		case 'array':
@@ -350,11 +354,10 @@ Caracal.Shop.add_property = function(button) {
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
-			for (var index in languages) {
-				var language = languages[index];
-				prepared_value[language.short] = JSON.parse(language_data[language.short]) || '';
+			for (var index in languages_short) {
+				var language = languages_short[index];
+				prepared_value[language] = JSON.parse(language_data[language]) || '';
 			}
-
 			break;
 	}
 
@@ -415,9 +418,9 @@ Caracal.Shop.add_property = function(button) {
 
 	// clear input fields
 	var empty_language_data = {};
-	for (var index in languages) {
-		var language = languages[index];
-		empty_language_data[language.short] = '';
+	for (var index in languages_short) {
+		var language = languages_short[index];
+		empty_language_data[language] = '';
 	}
 
 	current_window
