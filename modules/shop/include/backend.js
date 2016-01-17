@@ -539,7 +539,7 @@ Caracal.Shop.reset_property_fields = function(button) {
 		var language_data = field.data('language');
 		for (var language in language_data)
 			language_data[language] = '';
-	}
+	});
 
 	// clear regular fields
 	regular_inputs.val('').trigger('change');
