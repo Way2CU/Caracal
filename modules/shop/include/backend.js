@@ -333,8 +333,10 @@ Caracal.Shop.add_property = function(button) {
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
-			for (var language in languages)
+			for (var index in languages) {
+				var language = languages[index];
 				prepared_value = language_data[language] || '';
+			}
 
 			break;
 
@@ -348,8 +350,10 @@ Caracal.Shop.add_property = function(button) {
 			var language_data = input_value.data('language');
 
 			prepared_value = {};
-			for (var language in languages)
+			for (var index in languages) {
+				var language = languages[index];
 				prepared_value[language] = JSON.parse(language_data[language]) || '';
+			}
 
 			break;
 	}
@@ -411,8 +415,10 @@ Caracal.Shop.add_property = function(button) {
 
 	// clear input fields
 	var empty_language_data = {};
-	for (var language in languages)
+	for (var index in languages) {
+		var language = languages[index];
 		empty_language_data[language] = '';
+	}
 
 	current_window
 		.find('input[name^=property_]').not('[name^=property_data_]')
