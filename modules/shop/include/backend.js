@@ -591,7 +591,7 @@ Caracal.Shop.delete_property = function(event) {
  *
  * @param object window
  */
-Caraca.Shop.cancel_property_edit = function(button) {
+Caracal.Shop.cancel_property_edit = function(button) {
 	var current_window = $(button).closest('.window');
 
 	// remove editing row
