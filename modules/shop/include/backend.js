@@ -463,7 +463,6 @@ Caracal.Shop.edit_property = function(event) {
 				.data('language', data.value)
 				.data('original_data', data.value)
 				.val(data.value[selector.current_language]);
-
 			break;
 
 		case 'array':
@@ -480,7 +479,12 @@ Caracal.Shop.edit_property = function(event) {
 				.data('original_data', data.value)
 				.val(data.value[selector.current_language])
 				.trigger('change');
-
 			break;
 	}
+
+	// set data for unused mutli-language fields
+	var other_inputs = current_window.find('input[name=property_].multi-language').not(input_value);
+	other_inputs
+		.data('language', {})
+		.data('original_data', {});
 };
