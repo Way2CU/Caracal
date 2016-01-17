@@ -425,7 +425,7 @@ Caracal.Shop.save_property = function(button) {
  * Open item property from the list for editing.
  */
 Caracal.Shop.edit_property = function(event) {
-	if (event instanceof Event)
+	if (event instanceof Event || event instanceof jQuery.Event)
 		var row = $(this).closest('.list_item'); else
 		var row = $(event).closest('.list_item');
 	var current_window = row.closest('.window');
