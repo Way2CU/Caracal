@@ -465,8 +465,10 @@ Caracal.Shop.edit_property = function(event) {
 		.trigger('change');
 
 	input_name.val(data.name[selector.current_language]);
-	input_name.data('language', data.name);
-	input_name.data('original_data', data.name);
+	var language_data = input_name.data('language');
+
+	for (var language in language_data)
+		language_data[language] = data.name[language];
 
 	// configure data
 	switch(data.type) {
