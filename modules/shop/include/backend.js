@@ -411,7 +411,7 @@ Caracal.Shop.add_property = function(button) {
 
 	// clear input fields
 	var empty_language_data = {};
-	for (var language in language_handler.languages)
+	for (var language in languages)
 		empty_language_data[language] = '';
 
 	current_window
