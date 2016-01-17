@@ -426,6 +426,9 @@ Caracal.Shop.save_property = function(button) {
 
 		// update column
 		row.find('span.column').eq(0).html(data.name[language_handler.current_language]);
+
+		// remove editing row indicator
+		current_window.removeData('editing_row');
 	}
 
 	// clear input fields
@@ -445,7 +448,9 @@ Caracal.Shop.save_property = function(button) {
 
 	// show and hide buttons
 	current_window.find('button[name=add]').show();
+	current_window.find('button[name=reset]').show();
 	current_window.find('button[name=save]').hide();
+	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
 };
@@ -536,7 +541,9 @@ Caracal.Shop.edit_property = function(event) {
 
 	// show and hide buttons
 	current_window.find('button[name=add]').hide();
+	current_window.find('button[name=reset]').hide();
 	current_window.find('button[name=save]').show();
+	current_window.find('button[name=cancel]').show();
 	input_type.attr('disabled', 'disabled');
 };
 
@@ -577,4 +584,33 @@ Caracal.Shop.delete_property = function(event) {
 		var row = $(event).closest('.list_item');
 
 	row.remove();
+};
+
+/**
+ * Cancel currently editing property.
+ *
+ * @param object window
+ */
+Caraca.Shop.cancel_property_edit = function(button) {
+	var current_window = $(button).closest('.window');
+
+	// remove editing row
+	current_window.removeData('editing_row');
+
+	// find input fields
+	var regular_inputs = current_window.find('input[name^=property_]');
+	var multilanguage_inputs = regular_inputs.filter('.multi-language');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// clear multilanguage inputs
+	multilanguage_inputs.each(function() {
+		var field = $(this);
+		var language_data = field.data('language');
+		for (var language in language_data)
+			language_data[language] = '';
+	});
+
+	// clear regular fields
+	regular_inputs.val('').trigger('change');
+	input_type.val('number').trigger('change');
 };

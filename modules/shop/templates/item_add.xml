@@ -184,6 +184,13 @@
 						</button>
 						<button
 							type="button"
+							name="reset"
+							onclick="Caracal.Shop.reset_property_fields(this)"
+							>
+							<cms:text constant="reset"/>
+						</button>
+						<button
+							type="button"
 							name="save"
 							onclick="Caracal.Shop.save_property(this)"
 							style="display: none;"
@@ -192,10 +199,11 @@
 						</button>
 						<button
 							type="button"
-							name="reset"
-							onclick="Caracal.Shop.reset_property_fields(this)"
+							name="cancel"
+							onclick="Caracal.Shop.cancel_property_edit(this)"
+							style="display: none;"
 							>
-							<cms:text constant="reset"/>
+							<cms:text constant="cancel"/>
 						</button>
 					</div>
 				</div>
