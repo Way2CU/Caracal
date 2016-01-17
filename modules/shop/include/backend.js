@@ -519,3 +519,29 @@ Caracal.Shop.edit_property = function(event) {
 			language_data[language] = '';
 	});
 };
+
+/**
+ * Reset input fields for property editing.
+ *
+ * @param object button
+ */
+Caracal.Shop.reset_property_fields = function(button) {
+	var current_window = $(button).closest('.window');
+
+	// find input fields
+	var regular_inputs = current_window.find('input[name=^property_]');
+	var multilanguage_inputs = regular_inputs.filter('.multi-language');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// clear multilanguage inputs
+	multilanguage_inputs.each(function() {
+		var field = $(this);
+		var language_data = field.data('language');
+		for (var language in language_data)
+			language_data[language] = '';
+	}
+
+	// clear regular fields
+	regular_inputs.val('').trigger('change');
+	input_type.val('number').trigger('change');
+};
