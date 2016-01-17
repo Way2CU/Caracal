@@ -191,14 +191,6 @@
 						</button>
 						<button
 							type="button"
-							name="save"
-							onclick="Caracal.Shop.save_property(this)"
-							style="display: none;"
-							>
-							<cms:text constant="save"/>
-						</button>
-						<button
-							type="button"
 							name="cancel"
 							onclick="Caracal.Shop.cancel_property_edit(this)"
 							style="display: none;"

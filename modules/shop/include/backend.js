@@ -370,7 +370,7 @@ Caracal.Shop.save_property = function(button) {
 		};
 
 	// create and configure item property row
-	if (button.attr('name') == 'add') {
+	if (current_window.data('editing_row') == undefined) {
 		var row = $('<div>');
 		row
 			.addClass('list_item')
@@ -444,9 +444,8 @@ Caracal.Shop.save_property = function(button) {
 	});
 
 	// show and hide buttons
-	current_window.find('button[name=add]').show();
+	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
 	current_window.find('button[name=reset]').show();
-	current_window.find('button[name=save]').hide();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
@@ -537,9 +536,8 @@ Caracal.Shop.edit_property = function(event) {
 	});
 
 	// show and hide buttons
-	current_window.find('button[name=add]').hide();
+	current_window.find('button[name=add]').html(language_handler.getText(null, 'save'));
 	current_window.find('button[name=reset]').hide();
-	current_window.find('button[name=save]').show();
 	current_window.find('button[name=cancel]').show();
 	input_type.attr('disabled', 'disabled');
 };
@@ -612,9 +610,8 @@ Caracal.Shop.cancel_property_edit = function(button) {
 	input_type.val('number').trigger('change');
 
 	// show and hide buttons
-	current_window.find('button[name=add]').show();
+	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
 	current_window.find('button[name=reset]').show();
-	current_window.find('button[name=save]').hide();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
