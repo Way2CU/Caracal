@@ -446,7 +446,9 @@ Caracal.Shop.edit_property = function(event) {
 
 	// configure input elements
 	input_text_id.val(data.text_id);
-	input_type.val(data.type);
+	input_type
+		.val(data.type)
+		.trigger('change');
 
 	input_name.val(data.name[selector.current_language]);
 	input_name.data('language', data.name);
