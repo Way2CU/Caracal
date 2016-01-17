@@ -518,6 +518,10 @@ Caracal.Shop.edit_property = function(event) {
 		for (var language in language_data)
 			language_data[language] = '';
 	});
+
+	// show and hide buttons
+	current_window.find('button[name=add]').hide();
+	current_window.find('button[name=save]').show();
 };
 
 /**
@@ -544,4 +548,17 @@ Caracal.Shop.reset_property_fields = function(button) {
 	// clear regular fields
 	regular_inputs.val('').trigger('change');
 	input_type.val('number').trigger('change');
+};
+
+/**
+ * Remove current row from the list of properties.
+ *
+ * @param object event
+ */
+Caracal.Shop.delete_property = function(event) {
+	if (event instanceof Event || event instanceof jQuery.Event)
+		var row = $(this).closest('.list_item'); else
+		var row = $(event).closest('.list_item');
+
+	row.remove();
 };

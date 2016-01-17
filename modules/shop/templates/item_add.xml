@@ -186,6 +186,7 @@
 							type="button"
 							name="save"
 							onclick="Caracal.Shop.save_property(this)"
+							style="display: none;"
 							>
 							<cms:text constant="save"/>
 						</button>
