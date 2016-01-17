@@ -423,8 +423,8 @@ Caracal.Shop.add_property = function(button) {
 		// reset language data
 		if (field.hasClass('multi-language')) {
 			var language_data = field.data('language');
-			for (var index in language_data)
-				language_data[index] = '';
+			for (var language in language_data)
+				language_data[language] = '';
 		}
 
 		// reset value
@@ -479,10 +479,14 @@ Caracal.Shop.edit_property = function(event) {
 
 		case 'ml_text':
 			var input_value = current_window.find('input[name=property_ml_text]');
-			input_value
-				.data('language', data.value)
-				.data('original_data', data.value)
-				.val(data.value[selector.current_language]);
+			var language_data = input_value.data('language')
+
+			// set current value
+			input_value.val(data.value[selector.current_language]);
+
+			// restore language data
+			for (var language in language_data)
+				language_data[language] = data.value[language] || '';
 			break;
 
 		case 'array':
@@ -494,17 +498,22 @@ Caracal.Shop.edit_property = function(event) {
 
 		case 'ml_array':
 			var input_value = current_window.find('input[name=property_ml_array]');
-			input_value
-				.data('language', data.value)
-				.data('original_data', data.value)
-				.val(data.value[selector.current_language])
-				.trigger('change');
+			var language_data = input_value.data('language');
+
+			// change value
+			input_value.val(data.value[selector.current_language]).trigger('change');
+
+			// restore language data
+			for (var language in language_data)
+				language_data[language] = JSON.stringify(data.value[language]) || '';
 			break;
 	}
 
 	// set data for unused mutli-language fields
-	var other_inputs = current_window.find('input[name=property_].multi-language').not(input_value);
-	other_inputs
-		.data('language', {})
-		.data('original_data', {});
+	current_window.find('input[name=property_].multi-language').not(input_value).each(function() {
+		var field = $(this);
+		var language_data = field.data('language');
+		for (var language in language_data)
+			language_data[language] = '';
+	});
 };
