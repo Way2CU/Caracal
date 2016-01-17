@@ -412,7 +412,7 @@ Caracal.Shop.add_property = function(button) {
 	// clear input fields
 	current_window
 		.find('input[name^=property_]').not('[name^=property_data_]')
-		.val('').trigger('change');
+		.val('').removeData('language').trigger('change');
 };
 
 /**
@@ -429,6 +429,7 @@ Caracal.Shop.edit_property = function(event) {
 		var row = $(this).closest('.list_item'); else
 		var row = $(event).closest('.list_item');
 	var current_window = row.closest('.window');
+	var selector = current_window.find('.language_selector').data('selector');
 	var property_list = current_window.find('#item_properties');
 
 	// find input fields
@@ -444,7 +445,7 @@ Caracal.Shop.edit_property = function(event) {
 	input_text_id.val(data.text_id);
 	input_type.val(data.type);
 
-	input_name.val(data.name[language_handler.current_language]);
+	input_name.val(data.name[selector.current_language]);
 	input_name.data('language', data.name);
 
 	// configure data
@@ -460,7 +461,7 @@ Caracal.Shop.edit_property = function(event) {
 			var input_value = current_window.find('input[name=property_ml_text]');
 			input_value
 				.data('language', data.value)
-				.val(data.value[language_handler.current_language]);
+				.val(data.value[selector.current_language]);
 
 			break;
 
@@ -475,7 +476,7 @@ Caracal.Shop.edit_property = function(event) {
 			var input_value = current_window.find('input[name=property_ml_array]');
 			input_value
 				.data('language', data.value)
-				.val(data.value[language_handler.current_language])
+				.val(data.value[selector.current_language])
 				.trigger('change');
 
 			break;
