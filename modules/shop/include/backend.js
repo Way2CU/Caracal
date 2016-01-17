@@ -340,7 +340,7 @@ Caracal.Shop.add_property = function(button) {
 			prepared_value = {};
 			for (var index in languages_short) {
 				var language = languages_short[index];
-				prepared_value = language_data[language] || '';
+				prepared_value[language] = language_data[language] || '';
 			}
 			break;
 
