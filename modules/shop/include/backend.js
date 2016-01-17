@@ -424,5 +424,54 @@ Caracal.Shop.save_property = function(button) {
 /**
  * Open item property from the list for editing.
  */
-Caracal.Shop.edit_property = function(row) {
+Caracal.Shop.edit_property = function(button) {
+	var row = $(button).closest('.list_item');
+	var current_window = row.closest('.window');
+	var property_list = current_window.find('#item_properties');
+
+	// find input fields
+	var input_name = current_window.find('input[name=property_name]');
+	var input_text_id = current_window.find('input[name=property_text_id]');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// get data
+	var data_field = row.find('input[name^=property_data_');
+	var data = JSON.parse(data_field.val());
+
+	// configure type
+	input_type.val(data.type);
+
+	// configure input elements
+	switch(data.type) {
+		case 'number':
+		case 'decimal':
+		case 'text':
+			var input_value = current_window.find('input[name=property_' + input_type.val() + ']');
+			input_value.val(data.value);
+			break;
+
+		case 'ml_text':
+			var input_value = current_window.find('input[name=property_ml_text]');
+			input_value
+				.data('language', data.value)
+				.val(data.value[language_handler.current_language]);
+
+			break;
+
+		case 'array':
+			var input_value = current_window.find('input[name=property_array]');
+			input_value
+				.val(JSON.stringify(data.value))
+				.trigger('change');
+			break;
+
+		case 'ml_array':
+			var input_value = current_window.find('input[name=property_ml_array]');
+			input_value
+				.data('language', data.value)
+				.val(data.value[language_handler.current_language])
+				.trigger('change');
+
+			break;
+	}
 };
