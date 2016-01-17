@@ -440,10 +440,12 @@ Caracal.Shop.edit_property = function(event) {
 	var data_field = row.find('input[name^=property_data_]');
 	var data = JSON.parse(data_field.val());
 
-	// configure type
+	// configure input elements
+	input_name.val(data.name);
+	input_text_id.val(data.text_id);
 	input_type.val(data.type);
 
-	// configure input elements
+	// configure data
 	switch(data.type) {
 		case 'number':
 		case 'decimal':
