@@ -178,7 +178,7 @@
 						<button
 							type="button"
 							name="add"
-							onclick="Caracal.Shop.add_property(this)"
+							onclick="Caracal.Shop.save_property(this)"
 							>
 							<cms:text constant="add"/>
 						</button>

@@ -297,8 +297,9 @@ Caracal.Shop.print_transaction = function(button) {
  *
  * @param object button
  */
-Caracal.Shop.add_property = function(button) {
-	var current_window = $(button).closest('.window');
+Caracal.Shop.save_property = function(button) {
+	var button = $(button);
+	var current_window = button.closest('.window');
 	var property_list = current_window.find('#item_properties');
 
 	// find input fields
@@ -369,52 +370,59 @@ Caracal.Shop.add_property = function(button) {
 		};
 
 	// create and configure item property row
-	var row = $('<div>');
-	row
-		.addClass('list_item')
-		.appendTo(property_list);
+	if (button.attr('name') == 'add') {
+		var row = $('<div>');
+		row
+			.addClass('list_item')
+			.appendTo(property_list);
 
-	var data_field = $('<input>');
-	data_field
-		.attr('type', 'hidden')
-		.attr('name', 'property_data_' + property_id)
-		.val(JSON.stringify(data))
-		.appendTo(row);
+		var data_field = $('<input>');
+		data_field
+			.attr('type', 'hidden')
+			.attr('name', 'property_data_' + property_id)
+			.val(JSON.stringify(data))
+			.appendTo(row);
 
-	// create columns
-	var column_name = $('<span class="column">');
-	var column_type = $('<span class="column">');
-	var column_options = $('<span class="column">');
+		// create columns
+		var column_name = $('<span class="column">');
+		var column_type = $('<span class="column">');
+		var column_options = $('<span class="column">');
 
-	column_name
-		.html(data.name[language_handler.current_language])
-		.attr('style', 'width: 250px')
-		.appendTo(row);
+		column_name
+			.html(data.name[language_handler.current_language])
+			.attr('style', 'width: 250px')
+			.appendTo(row);
 
-	column_type
-		.html(data.type)
-		.attr('style', 'width: 60px')
-		.appendTo(row);
+		column_type
+			.html(data.type)
+			.attr('style', 'width: 60px')
+			.appendTo(row);
 
-	column_options.appendTo(row);
+		column_options.appendTo(row);
 
-	// create options
-	var option_change = $('<a>');
-	var option_remove = $('<a>');
+		// create options
+		var option_change = $('<a>');
+		var option_remove = $('<a>');
 
-	option_change
-		.on('click', Caracal.Shop.edit_property)
-		.appendTo(column_options);
+		option_change
+			.on('click', Caracal.Shop.edit_property)
+			.appendTo(column_options);
 
-	option_remove
-		.on('click', Caracal.Shop.delete_property)
-		.appendTo(column_options);
+		option_remove
+			.on('click', Caracal.Shop.delete_property)
+			.appendTo(column_options);
 
-	// load language constants for options
-	language_handler.getTextArrayAsync(null, ['change', 'delete'], function(data) {
-			option_change.html(data['change']);
-			option_remove.html(data['delete']);
-		});
+		// load language constants for options
+		language_handler.getTextArrayAsync(null, ['change', 'delete'], function(data) {
+				option_change.html(data['change']);
+				option_remove.html(data['delete']);
+			});
+
+	} else {
+		// update existing field
+		var data_field = current_window.data('editing_row').find('input[name^=property_data_]');
+		data_field.val(JSON.stringify(data));
+	}
 
 	// clear input fields
 	current_window.find('input[name^=property_]').not('[name^=property_data_]').each(function() {
@@ -430,12 +438,12 @@ Caracal.Shop.add_property = function(button) {
 		// reset value
 		field.val('').trigger('change');
 	});
-};
 
-/**
- * Save changed property data to the property list.
- */
-Caracal.Shop.save_property = function(button) {
+	// show and hide buttons
+	current_window.find('button[name=add]').show();
+	current_window.find('button[name=save]').hide();
+	current_window.removeData('editing_row');
+	input_type.attr('disabled', null);
 };
 
 /**
@@ -448,6 +456,9 @@ Caracal.Shop.edit_property = function(event) {
 	var current_window = row.closest('.window');
 	var selector = current_window.find('.language_selector').data('selector');
 	var property_list = current_window.find('#item_properties');
+
+	// store editing property
+	current_window.data('editing_row', row);
 
 	// find input fields
 	var input_name = current_window.find('input[name=property_name]');
@@ -522,6 +533,7 @@ Caracal.Shop.edit_property = function(event) {
 	// show and hide buttons
 	current_window.find('button[name=add]').hide();
 	current_window.find('button[name=save]').show();
+	input_type.attr('disabled', 'disabled');
 };
 
 /**
