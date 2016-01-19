@@ -32,7 +32,6 @@ require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
 require_once('units/delivery_methods_handler.php');
-require_once('units/property_handler.php');
 require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
@@ -42,7 +41,6 @@ use Modules\Shop\Delivery as Delivery;
 use Modules\Shop\Transaction as Transaction;
 use Modules\Shop\Token as Token;
 
-use Modules\Shop\Handlers\Property as PropertyHandler;
 use Modules\Shop\TokenManager as TokenManager;
 use Modules\Shop\Handlers\Item as ShopItemHandler;
 
@@ -850,6 +848,7 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_item_properties` (
 				`id` INT NOT NULL,
+				`item` INT NOT NULL,
 				`text_id` VARCHAR(32) NOT NULL,
 				`type` INT NOT NULL,";
 
@@ -861,16 +860,6 @@ class shop extends Module {
 				PRIMARY KEY ( `id` ),
 				KEY `item` (`item`),
 				KEY `text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item properties membership table
-		$sql = "
-			CREATE TABLE `shop_item_property_membership` (
-				`item` INT NOT NULL,
-				`property` INT NOT NULL,
-				KEY `item` (`item`),
-				KEY `property` (`property`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1118,8 +1107,7 @@ class shop extends Module {
 			'shop_related_items',
 			'shop_manufacturers',
 			'shop_payment_tokens',
-			'shop_item_properties',
-			'shop_item_property_membership'
+			'shop_item_properties'
 		);
 
 		$db->drop_tables($tables);

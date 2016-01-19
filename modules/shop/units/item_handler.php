@@ -12,8 +12,7 @@ require_once('item_manager.php');
 require_once('item_membership_manager.php');
 require_once('category_manager.php');
 require_once('related_items_manager.php');
-require_once('property_manager.php');
-require_once('property_membership_manager.php');
+require_once('property_handler.php');
 
 use \TemplateHandler as TemplateHandler;
 
@@ -340,6 +339,10 @@ class Item {
 										'related'	=> $related_id
 									));
 		}
+
+		// store properties
+		$properties_handler = Handlers\Property::getInstance($this->parent);
+		$properties_handler->save_properties($id);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');

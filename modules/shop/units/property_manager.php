@@ -20,6 +20,7 @@ final class Property extends ItemManager {
 		parent::__construct('shop_item_properties');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('item', 'int');
 		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('name', 'ml_varchar');
 		$this->addProperty('type', 'int');
