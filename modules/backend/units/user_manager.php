@@ -919,7 +919,7 @@ class Backend_UserManager {
 
 			if ($new_password_ok && $old_password_ok) {
 				// all conditions are met, change password
-				$manager->change_password_window($user->username, $new_password);
+				$manager->change_password($user->username, $new_password);
 
 				// prepare response
 				$message = $this->parent->getLanguageConstant('message_password_changed');
