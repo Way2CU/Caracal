@@ -1,7 +1,7 @@
 <?php
 
-require_once('shop_item_sizes_manager.php');
-require_once('shop_item_size_values_manager.php');
+require_once('item_sizes_manager.php');
+require_once('item_size_values_manager.php');
 
 class ShopItemSizesHandler {
 	private static $_instance;

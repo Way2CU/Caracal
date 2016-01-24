@@ -1,6 +1,6 @@
 <?php
 
-require_once('shop_delivery_methods_manager.php');
+require_once('delivery_methods_manager.php');
 
 class ShopDeliveryMethodsHandler {
 	private static $_instance;

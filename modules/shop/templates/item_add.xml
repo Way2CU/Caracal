@@ -3,6 +3,7 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_item_add_form">
 		<div id="shop_add_item_notebook">
+			<!-- Generic -->
 			<div>
 				<div class="box left" style="width: 290px;">
 					<label>
@@ -90,16 +91,138 @@
 				</div>
 			</div>
 
+			<!-- Properties -->
 			<div>
+				<label class="horizontal">
+					<span><cms:text constant="label_text_id" module="shop"/></span>
+					<input
+						type="text"
+						class="code ltr"
+						name="property_text_id"
+						maxlength="32"
+						/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_property_name" module="shop"/></span>
+					<input
+						type="text"
+						class="multi-language"
+						name="property_name"
+						maxlength="255"
+						/>
+				</label>
+				<label class="property-selector number">
+					<span><cms:text constant="label_property_type" module="shop"/></span>
+					<select
+						name="property_type"
+						onchange="this.parentNode.className = 'property-selector ' + this.value"
+						>
+						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
+						<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
+						<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
+						<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
+						<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
+						<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
+					</select>
+				</label>
+				<div class="property-container">
+					<label class="horizontal property number">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_number"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property decimal">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_decimal"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property text">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_text"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property ml_text">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_ml_text"
+							class="multi-language"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property array">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_array"
+							/>
+					</label>
+					<label class="horizontal property ml_array">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_ml_array"
+							class="multi-language"
+							/>
+					</label>
+					<div style="margin-bottom: 10px;">
+						<button
+							type="button"
+							name="add"
+							onclick="Caracal.Shop.save_property(this)"
+							>
+							<cms:text constant="add"/>
+						</button>
+						<button
+							type="button"
+							name="reset"
+							onclick="Caracal.Shop.reset_property_fields(this)"
+							>
+							<cms:text constant="reset"/>
+						</button>
+						<button
+							type="button"
+							name="cancel"
+							onclick="Caracal.Shop.cancel_property_edit(this)"
+							style="display: none;"
+							>
+							<cms:text constant="cancel"/>
+						</button>
+					</div>
+				</div>
+				<div class="scrollable_list">
+					<div class="list_header">
+						<span class="column" style="width: 250px;">
+							<cms:text constant="column_name" module="shop"/>
+						</span>
+						<span class="column" style="width: 60px;">
+							<cms:text constant="column_price" module="shop"/>
+						</span>
+						<span class="column">
+							<cms:text constant="column_options" module="shop"/>
+						</span>
+					</div>
+					<div class="list_content" style="height: 250px" id="item_properties"/>
+				</div>
 			</div>
 
+			<!-- Colors -->
 			<div class="scrollable_list">
 				<input name="colors" type="hidden"/>
-				<label class="inline">
+				<label class="horizontal inline">
 					<span><cms:text constant="label_color_value" module="shop"/></span>
 					<input name="color_value" class="code" type="color" style="width: 60px;"/>
 				</label>
-				<label class="inline">
+				<label class="horizontal inline">
 					<span><cms:text constant="label_color_name" module="shop"/></span>
 					<input name="color_name" type="text"/>
 					<button type="button" onclick="javascript: Caracal.Shop.add_color();">
@@ -121,6 +244,7 @@
 				</div>
 			</div>
 
+			<!-- Categories -->
 			<div class="scrollable_list">
 				<div class="list_header">
 					<cms:text constant="column_categories" module="shop"/>
@@ -133,6 +257,7 @@
 				</div>
 			</div>
 
+			<!-- Related items -->
 			<div class="scrollable_list">
 				<label class="inline">
 					<span><cms:text constant="label_search_query" module="shop"/></span>
@@ -159,6 +284,7 @@
 				</div>
 			</div>
 
+			<!-- Delivery methods -->
 			<div class="scrollable_list">
 				<div class="list_header">
 					<span class="column" style="width: 360px;">
@@ -183,22 +309,25 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		var backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 		var selector = new LanguageSelector('shop_item_add_form');
 		var notebook = new Notebook('shop_add_item_notebook');
 		notebook
-		.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
-		.setPageTitle(1, language_handler.getText('shop', 'tab_properties'))
-		.setPageTitle(2, language_handler.getText('shop', 'tab_colors'))
-		.setPageTitle(3, language_handler.getText('shop', 'tab_category'))
-		.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
-		.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
+			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
+			.setPageTitle(1, language_handler.getText('shop', 'tab_properties'))
+			.setPageTitle(2, language_handler.getText('shop', 'tab_colors'))
+			.setPageTitle(3, language_handler.getText('shop', 'tab_category'))
+			.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
+			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
+
+		// create property editors
+		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
+		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_ml_array]');
 
 		// create toolbar
 		toolbar_api
-		.createToolbar('shop_item_add_form', '[name=description]:input')
-		.addControl('common', 'markdown')
-		.addControl('gallery', 'article_image')
-		.addControl('downloads', 'link');
+			.createToolbar('shop_item_add_form', '[name=description]:input')
+			.addControl('common', 'markdown')
+			.addControl('gallery', 'article_image')
+			.addControl('downloads', 'link');
 	</script>
 </document>

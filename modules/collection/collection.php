@@ -25,6 +25,7 @@ class collection extends Module {
 	const MOBILE_MENU = 7;
 	const COMMUNICATOR = 8;
 	const DYNAMIC_PAGE_CONTENT = 9;
+	const PROPERTY_EDITOR = 10;
 
 	// jQuery and its extensions
 	const JQUERY = 50;
@@ -40,45 +41,47 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::WINDOW_SYSTEM		=> array('window_system.js', 'window_system.css'),
-				collection::NOTEBOOK			=> array('notebook.js', 'notebook.css'),
-				collection::TOOLBAR				=> 'toolbar.js',
-				collection::ANIMATION_CHAIN		=> 'animation_chain.js',
-				collection::DIALOG				=> array('dialog.js', 'dialog.css'),
-				collection::SCROLLBAR			=> 'scrollbar.js',
-				collection::PAGE_CONTROL		=> 'page_control.js',
-				collection::MOBILE_MENU			=> array('mobile_menu.js', 'mobile_menu.css'),
-				collection::COMMUNICATOR		=> 'communicator.js',
+				collection::WINDOW_SYSTEM        => array('window_system.js', 'window_system.css'),
+				collection::NOTEBOOK             => array('notebook.js', 'notebook.css'),
+				collection::TOOLBAR              => 'toolbar.js',
+				collection::ANIMATION_CHAIN      => 'animation_chain.js',
+				collection::DIALOG               => array('dialog.js', 'dialog.css'),
+				collection::SCROLLBAR            => 'scrollbar.js',
+				collection::PAGE_CONTROL         => 'page_control.js',
+				collection::MOBILE_MENU          => array('mobile_menu.js', 'mobile_menu.css'),
+				collection::COMMUNICATOR         => 'communicator.js',
 				collection::DYNAMIC_PAGE_CONTENT => 'dynamic_page_content.js',
-				collection::JQUERY				=> 'jquery.js',
-				collection::JQUERY_EVENT_DRAG	=> 'jquery.event.drag.js',
-				collection::JQUERY_EVENT_SCROLL	=> 'jquery.mousewheel.js',
+				collection::PROPERTY_EDITOR      => 'property_editor.js',
+				collection::JQUERY               => 'jquery.js',
+				collection::JQUERY_EVENT_DRAG    => 'jquery.event.drag.js',
+				collection::JQUERY_EVENT_SCROLL  => 'jquery.mousewheel.js',
 				collection::JQUERY_EVENT_OUTSIDE => 'jquery.event.outside.js',
-				collection::JQUERY_EXTENSIONS	=> 'jquery.extensions.js',
-				collection::LESS				=> 'less.js',
-				collection::SHOWDOWN			=> 'showdown.js',
-				collection::PREFIX_FREE			=> 'prefixfree.js'
+				collection::JQUERY_EXTENSIONS    => 'jquery.extensions.js',
+				collection::LESS                 => 'less.js',
+				collection::SHOWDOWN             => 'showdown.js',
+				collection::PREFIX_FREE          => 'prefixfree.js'
 			);
 
 	private $script_names = array(
-				'window_system'			=> collection::WINDOW_SYSTEM,
-				'notebook'				=> collection::NOTEBOOK,
-				'toolbar'				=> collection::TOOLBAR,
-				'animation_chain'		=> collection::ANIMATION_CHAIN,
-				'dialog'				=> collection::DIALOG,
-				'scrollbar'				=> collection::SCROLLBAR,
-				'page_control'			=> collection::PAGE_CONTROL,
-				'mobile_menu'			=> collection::MOBILE_MENU,
-				'communicator'			=> collection::COMMUNICATOR,
-				'dynamic_page_content'	=> collection::DYNAMIC_PAGE_CONTENT,
-				'jquery'				=> collection::JQUERY,
-				'jquery_event_drag'		=> collection::JQUERY_EVENT_DRAG,
-				'jquery_event_scroll'	=> collection::JQUERY_EVENT_SCROLL,
-				'jquery_event_outside'	=> collection::JQUERY_EVENT_OUTSIDE,
-				'jquery_extensions'		=> collection::JQUERY_EXTENSIONS,
-				'less'					=> collection::LESS,
-				'showdown'				=> collection::SHOWDOWN,
-				'prefix_free'			=> collection::PREFIX_FREE
+				'window_system'        => collection::WINDOW_SYSTEM,
+				'notebook'             => collection::NOTEBOOK,
+				'toolbar'              => collection::TOOLBAR,
+				'animation_chain'      => collection::ANIMATION_CHAIN,
+				'dialog'               => collection::DIALOG,
+				'scrollbar'            => collection::SCROLLBAR,
+				'page_control'         => collection::PAGE_CONTROL,
+				'mobile_menu'          => collection::MOBILE_MENU,
+				'communicator'         => collection::COMMUNICATOR,
+				'dynamic_page_content' => collection::DYNAMIC_PAGE_CONTENT,
+				'property_editor'      => collection::PROPERTY_EDITOR,
+				'jquery'               => collection::JQUERY,
+				'jquery_event_drag'    => collection::JQUERY_EVENT_DRAG,
+				'jquery_event_scroll'  => collection::JQUERY_EVENT_SCROLL,
+				'jquery_event_outside' => collection::JQUERY_EVENT_OUTSIDE,
+				'jquery_extensions'    => collection::JQUERY_EXTENSIONS,
+				'less'                 => collection::LESS,
+				'showdown'             => collection::SHOWDOWN,
+				'prefix_free'          => collection::PREFIX_FREE
 			);
 
 	// list of included scripts

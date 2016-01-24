@@ -1,24 +1,37 @@
 <?php
 
-require_once('shop_item_manager.php');
-require_once('shop_item_membership_manager.php');
-require_once('shop_category_manager.php');
-require_once('shop_related_items_manager.php');
+/**
+ * Shop item handler class. This class manages all the operatiosn on shop items
+ * and displaying them.
+ *
+ * Author: Mladen Mijatov
+ */
+namespace Modules\Shop\Handlers;
+
+require_once('item_manager.php');
+require_once('item_membership_manager.php');
+require_once('category_manager.php');
+require_once('related_items_manager.php');
+require_once('property_handler.php');
+
+use \TemplateHandler as TemplateHandler;
 
 
-class ShopItemHandler {
+class Item {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
+
+	const SUB_ACTION = 'items';
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -79,21 +92,21 @@ class ShopItemHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_item'),
+										$this->parent->getLanguageConstant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
 											550,
-											$this->_parent->getLanguageConstant('title_item_add'),
+											$this->parent->getLanguageConstant('title_item_add'),
 											true, true,
-											backend_UrlMake($this->name, 'items', 'add')
+											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
 										)
 									),
 					'link_categories' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('manage_categories'),
+										$this->parent->getLanguageConstant('manage_categories'),
 										window_Open( // on click open window
 											'shop_categories',
 											580,
-											$this->_parent->getLanguageConstant('title_manage_categories'),
+											$this->parent->getLanguageConstant('title_manage_categories'),
 											true, true,
 											backend_UrlMake($this->name, 'categories')
 										)
@@ -117,21 +130,21 @@ class ShopItemHandler {
 
 		$params = array(
 					'uid'			=> $this->generateUID(),
-					'form_action'	=> backend_UrlMake($this->name, 'items', 'save'),
+					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
 					'cancel_action'	=> window_Close('shop_item_add')
 				);
 
 		// register external tag handlers
-		$category_handler = ShopCategoryHandler::getInstance($this->_parent);
+		$category_handler = \ShopCategoryHandler::getInstance($this->parent);
 		$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
 
-		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
+		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
 		$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
 
-		$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
+		$manufacturer_handler = \ShopManufacturerHandler::getInstance($this->parent);
 		$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
-		$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
+		$delivery_handler = \ShopDeliveryMethodsHandler::getInstance($this->parent);
 		$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
 		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
@@ -146,7 +159,7 @@ class ShopItemHandler {
 	 */
 	private function changeItem() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemManager::getInstance();
+		$manager = \ShopItemManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -156,16 +169,16 @@ class ShopItemHandler {
 			$template->setMappedModule($this->name);
 
 			// register tag handlers
-			$category_handler = ShopCategoryHandler::getInstance($this->_parent);
+			$category_handler = \ShopCategoryHandler::getInstance($this->parent);
 			$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
 
-			$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
+			$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
 			$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
 
-			$manufacturer_handler = ShopManufacturerHandler::getInstance($this->_parent);
+			$manufacturer_handler = \ShopManufacturerHandler::getInstance($this->parent);
 			$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
-			$delivery_handler = ShopDeliveryMethodsHandler::getInstance($this->_parent);
+			$delivery_handler = \ShopDeliveryMethodsHandler::getInstance($this->parent);
 			$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
 			$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
@@ -191,7 +204,7 @@ class ShopItemHandler {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'deleted'		=> $item->deleted,
-						'form_action'	=> backend_UrlMake($this->name, 'items', 'save'),
+						'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
 						'cancel_action'	=> window_Close('shop_item_change')
 					);
 
@@ -207,17 +220,17 @@ class ShopItemHandler {
 	 */
 	private function saveItem() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = ShopItemManager::getInstance();
-		$membership_manager = ShopItemMembershipManager::getInstance();
-		$related_items_manager = ShopRelatedItemsManager::getInstance();
-		$delivery_item_relation_manager = ShopDeliveryItemRelationsManager::getInstance();
-		$open_editor = "";
+		$manager = \ShopItemManager::getInstance();
+		$membership_manager = \ShopItemMembershipManager::getInstance();
+		$related_items_manager = \ShopRelatedItemsManager::getInstance();
+		$delivery_item_relation_manager = \ShopDeliveryItemRelationsManager::getInstance();
+		$open_editor = '';
 
 		$new_item = is_null($id);
 
 		$data = array(
-				'name'				=> $this->_parent->getMultilanguageField('name'),
-				'description'		=> $this->_parent->getMultilanguageField('description'),
+				'name'				=> $this->parent->getMultilanguageField('name'),
+				'description'		=> $this->parent->getMultilanguageField('description'),
 				'price'				=> isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
 				'colors'			=> fix_chars($_REQUEST['colors']),
 				'tax'				=> isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
@@ -327,14 +340,18 @@ class ShopItemHandler {
 									));
 		}
 
+		// store properties
+		$properties_handler = Handlers\Property::getInstance($this->parent);
+		$properties_handler->save_properties($id);
+
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_item_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
-					'action'	=> window_Close($window).";".window_ReloadContent('shop_items').';'.$open_editor
+					'message'	=> $this->parent->getLanguageConstant('message_item_saved'),
+					'button'	=> $this->parent->getLanguageConstant('close'),
+					'action'	=> window_Close($window).';'.window_ReloadContent('shop_items').';'.$open_editor
 				);
 
 		$template->restoreXML();
@@ -349,25 +366,25 @@ class ShopItemHandler {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemManager::getInstance();
+		$manager = \ShopItemManager::getInstance();
 
 		$item = $manager->getSingleItem(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->setMappedModule($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_item_delete"),
+					'message'		=> $this->parent->getLanguageConstant('message_item_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->parent->getLanguageConstant('delete'),
+					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_delete',
 											url_Make(
 												'transfer_control',
 												'backend_module',
 												array('module', $this->name),
-												array('backend_action', 'items'),
+												array('backend_action', self::SUB_ACTION),
 												array('sub_action', 'delete_commit'),
 												array('id', $id)
 											)
@@ -386,19 +403,19 @@ class ShopItemHandler {
 	 */
 	private function deleteItem_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemManager::getInstance();
-		$membership_manager = ShopItemMembershipManager::getInstance();
+		$manager = \ShopItemManager::getInstance();
+		$membership_manager = \ShopItemMembershipManager::getInstance();
 
 		$manager->updateData(array('deleted' => 1), array('id' => $id));
 		$membership_manager->deleteData(array('item' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->setMappedModule($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_item_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
-					'action'	=> window_Close('shop_item_delete').";".window_ReloadContent('shop_items')
+					'message'	=> $this->parent->getLanguageConstant('message_item_deleted'),
+					'button'	=> $this->parent->getLanguageConstant('close'),
+					'action'	=> window_Close('shop_item_delete').';'.window_ReloadContent('shop_items')
 				);
 
 		$template->restoreXML();
@@ -432,7 +449,7 @@ class ShopItemHandler {
 	 * @return string
 	 */
 	private function generateUID() {
-		$manager = ShopItemManager::getInstance();
+		$manager = \ShopItemManager::getInstance();
 
 		// generate Id
 		$uid = uniqid();
@@ -455,9 +472,9 @@ class ShopItemHandler {
 	 * @param array $children
 	 */
 	public function tag_Item($tag_params, $children) {
-		$shop = shop::getInstance();
-		$manager = ShopItemManager::getInstance();
-		$manufacturer_manager = ShopManufacturerManager::getInstance();
+		$shop = \shop::getInstance();
+		$manager = \ShopItemManager::getInstance();
+		$manufacturer_manager = \ShopManufacturerManager::getInstance();
 		$id = null;
 		$gallery = null;
 		$conditions = array();
@@ -475,7 +492,7 @@ class ShopItemHandler {
 
 			} else {
 				// specified id is actually text_id, get real one
-				$category_manager = ShopCategoryManager::getInstance();
+				$category_manager = \ShopCategoryManager::getInstance();
 				$category = $category_manager->getSingleItem(
 												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
@@ -487,7 +504,7 @@ class ShopItemHandler {
 				$category_id = $category->id;
 			}
 
-			$membership_manager = ShopItemMembershipManager::getInstance();
+			$membership_manager = \ShopItemMembershipManager::getInstance();
 
 			// get all associated items
 			$id_list = array();
@@ -509,7 +526,7 @@ class ShopItemHandler {
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// create template handler
-		$template = $this->_parent->loadTemplate($tag_params, 'item.xml');
+		$template = $this->parent->loadTemplate($tag_params, 'item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 
@@ -517,7 +534,7 @@ class ShopItemHandler {
 		if (!is_null($gallery))
 			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 
-		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
+		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
 		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
 		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
 
@@ -570,7 +587,7 @@ class ShopItemHandler {
 						'views'			=> $item->views,
 						'price'			=> $item->price,
 						'tax'			=> $item->tax,
-						'currency'		=> $this->_parent->settings['default_currency'],
+						'currency'		=> $this->parent->settings['default_currency'],
 						'weight'		=> $item->weight,
 						'votes_up'		=> $item->votes_up,
 						'votes_down'	=> $item->votes_down,
@@ -596,8 +613,8 @@ class ShopItemHandler {
 	public function tag_ItemList($tag_params, $children) {
 		global $language;
 
-		$shop = shop::getInstance();
-		$manager = ShopItemManager::getInstance();
+		$shop = \shop::getInstance();
+		$manager = \ShopItemManager::getInstance();
 		$conditions = array();
 		$page_switch = null;
 		$order_by = array('id');
@@ -612,7 +629,7 @@ class ShopItemHandler {
 
 			} else {
 				// specified id is actually text_id, get real one
-				$category_manager = ShopCategoryManager::getInstance();
+				$category_manager = \ShopCategoryManager::getInstance();
 				$category = $category_manager->getSingleItem(
 												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
@@ -624,7 +641,7 @@ class ShopItemHandler {
 				$category_id = $category->id;
 			}
 
-			$membership_manager = ShopItemMembershipManager::getInstance();
+			$membership_manager = \ShopItemMembershipManager::getInstance();
 			$membership_items = $membership_manager->getItems(
 												array('item'),
 												array('category' => $category_id)
@@ -641,7 +658,7 @@ class ShopItemHandler {
 		}
 
 		if (isset($tag_params['related'])) {
-			$relation_manager = ShopRelatedItemsManager::getInstance();
+			$relation_manager = \ShopRelatedItemsManager::getInstance();
 			$item_id = fix_id($tag_params['related']);
 
 			$related_items = $relation_manager->getItems(array('related'), array('item' => $item_id));
@@ -691,8 +708,8 @@ class ShopItemHandler {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
 		// create template
-		$size_handler = ShopItemSizesHandler::getInstance($this->_parent);
-		$template = $this->_parent->loadTemplate($tag_params, 'item_list_item.xml');
+		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
+		$template = $this->parent->loadTemplate($tag_params, 'item_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
 		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
@@ -702,7 +719,7 @@ class ShopItemHandler {
 			if (class_exists('gallery'))
 				$gallery = gallery::getInstance();
 
-			$manufacturer_manager = ShopManufacturerManager::getInstance();
+			$manufacturer_manager = \ShopManufacturerManager::getInstance();
 
 			// time marker after which all added items are considered new
 			$days_until_old = 7;
@@ -754,7 +771,7 @@ class ShopItemHandler {
 							'views'			=> $item->views,
 							'price'			=> $item->price,
 							'tax'			=> $item->tax,
-							'currency'		=> $this->_parent->settings['default_currency'],
+							'currency'		=> $this->parent->settings['default_currency'],
 							'weight'		=> $item->weight,
 							'votes_up'		=> $item->votes_up,
 							'votes_down'	=> $item->votes_down,
@@ -765,34 +782,34 @@ class ShopItemHandler {
 							'visible'		=> $item->visible,
 							'deleted'		=> $item->deleted,
 							'item_change'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('change'),
+													$this->parent->getLanguageConstant('change'),
 													window_Open(
 														'shop_item_change', 	// window id
 														550,				// width
-														$this->_parent->getLanguageConstant('title_item_change'), // title
+														$this->parent->getLanguageConstant('title_item_change'), // title
 														true, true,
 														url_Make(
 															'transfer_control',
 															'backend_module',
 															array('module', $this->name),
-															array('backend_action', 'items'),
+															array('backend_action', self::SUB_ACTION),
 															array('sub_action', 'change'),
 															array('id', $item->id)
 														)
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('delete'),
+													$this->parent->getLanguageConstant('delete'),
 													window_Open(
 														'shop_item_delete', 	// window id
 														400,				// width
-														$this->_parent->getLanguageConstant('title_item_delete'), // title
+														$this->parent->getLanguageConstant('title_item_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
 															'backend_module',
 															array('module', $this->name),
-															array('backend_action', 'items'),
+															array('backend_action', self::SUB_ACTION),
 															array('sub_action', 'delete'),
 															array('id', $item->id)
 														)
@@ -816,7 +833,7 @@ class ShopItemHandler {
 										)
 									);
 					$params['item_images'] = url_MakeHyperlink(
-														$this->_parent->getLanguageConstant('images'),
+														$this->parent->getLanguageConstant('images'),
 														$open_gallery_window
 													);
 				} else {
@@ -851,7 +868,7 @@ class ShopItemHandler {
 	 */
 	public function tag_ColorList($tag_params, $children) {
 		$id = null;
-		$manager = ShopItemManager::getInstance();
+		$manager = \ShopItemManager::getInstance();
 
 		if (isset($tag_params['id']))
 			$id = fix_id($tag_params['id']);
@@ -866,7 +883,7 @@ class ShopItemHandler {
 			return;
 
 		// load template
-		$template = $this->_parent->loadTemplate($tag_params, 'color_preview.xml');
+		$template = $this->parent->loadTemplate($tag_params, 'color_preview.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (empty($item->colors))
@@ -893,7 +910,7 @@ class ShopItemHandler {
 	 */
 	public function json_GetItem() {
 		$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
-		$manager = ShopItemManager::getInstance();
+		$manager = \ShopItemManager::getInstance();
 
 		// get thumbnail options
 		$thumbnail_size = isset($_REQUEST['thumbnail_size']) ? fix_id($_REQUEST['thumbnail_size']) : 100;
@@ -949,13 +966,13 @@ class ShopItemHandler {
 			} else {
 				// there was a problem with reading item from database
 				$result['error'] = true;
-				$result['error_message'] = $this->_parent->getLanguageConstant('message_error_getting_item');
+				$result['error_message'] = $this->parent->getLanguageConstant('message_error_getting_item');
 			}
 
 		} else {
 			// invalid ID was specified
 			$result['error'] = true;
-			$result['error_message'] = $this->_parent->getLanguageConstant('message_error_invalid_id');
+			$result['error_message'] = $this->parent->getLanguageConstant('message_error_invalid_id');
 		}
 
 		// create JSON object and print it

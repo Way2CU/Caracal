@@ -4,7 +4,7 @@
  * Currency converter and manager
  */
 
-require_once('shop_currencies_manager.php');
+require_once('currencies_manager.php');
 
 
 class ShopCurrenciesHandler {

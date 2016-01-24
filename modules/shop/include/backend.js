@@ -291,3 +291,328 @@ Caracal.Shop.print_transaction = function(button) {
 	// show print dialog
 	iframe.attr('src', $(button).data('print-url') + '&timestamp=' + Date.now().toString());
 };
+
+/**
+ * Commit entered data to the property list.
+ *
+ * @param object button
+ */
+Caracal.Shop.save_property = function(button) {
+	var button = $(button);
+	var current_window = button.closest('.window');
+	var property_list = current_window.find('#item_properties');
+
+	// find input fields
+	var input_name = current_window.find('input[name=property_name]');
+	var input_text_id = current_window.find('input[name=property_text_id]');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// find property id
+	var properties = property_list.find('input[name^=property_data_]');
+	var property_id = properties.length;  // initially get just the number
+
+	var existing_property = properties.filter('input[name=property_data_' + property_id + ']');
+	while (existing_property.length > 0) {
+		property_id++;
+		existing_property = properties.filter('input[name=property_data_' + property_id + ']');
+	}
+
+	// collect data
+	var prepared_value = '';
+	var languages = language_handler.getLanguages();
+	var languages_short = new Array();
+
+	// prepare short language list
+	for (var index in languages)
+		languages_short.push(languages[index].short);
+
+	switch (input_type.val()) {
+		case 'number':
+		case 'decimal':
+		case 'text':
+			var input_value = current_window.find('input[name=property_' + input_type.val() + ']');
+			prepared_value = input_value.val();
+			break;
+
+		case 'ml_text':
+			var input_value = current_window.find('input[name=property_ml_text]');
+			var language_data = input_value.data('language');
+
+			prepared_value = {};
+			for (var index in languages_short) {
+				var language = languages_short[index];
+				prepared_value[language] = language_data[language] || '';
+			}
+			break;
+
+		case 'array':
+			var input_value = current_window.find('input[name=property_array]');
+			prepared_value = JSON.parse(input_value.val());
+			break;
+
+		case 'ml_array':
+			var input_value = current_window.find('input[name=property_ml_array]');
+			var language_data = input_value.data('language');
+
+			prepared_value = {};
+			for (var index in languages_short) {
+				var language = languages_short[index];
+				prepared_value[language] = JSON.parse(language_data[language]) || '';
+			}
+			break;
+	}
+
+	var data = {
+			text_id: input_text_id.val(),
+			name: input_name.data('language'),
+			type: input_type.val(),
+			value: prepared_value
+		};
+
+	// create and configure item property row
+	if (current_window.data('editing_row') == undefined) {
+		var row = $('<div>');
+		row
+			.addClass('list_item')
+			.appendTo(property_list);
+
+		var data_field = $('<input>');
+		data_field
+			.attr('type', 'hidden')
+			.attr('name', 'property_data_' + property_id)
+			.val(JSON.stringify(data))
+			.appendTo(row);
+
+		// create columns
+		var column_name = $('<span class="column">');
+		var column_type = $('<span class="column">');
+		var column_options = $('<span class="column">');
+
+		column_name
+			.html(data.name[language_handler.current_language])
+			.attr('style', 'width: 250px')
+			.appendTo(row);
+
+		column_type
+			.html(data.type)
+			.attr('style', 'width: 60px')
+			.appendTo(row);
+
+		column_options.appendTo(row);
+
+		// create options
+		var option_change = $('<a>');
+		var option_remove = $('<a>');
+
+		option_change
+			.on('click', Caracal.Shop.edit_property)
+			.appendTo(column_options);
+
+		option_remove
+			.on('click', Caracal.Shop.delete_property)
+			.appendTo(column_options);
+
+		// load language constants for options
+		language_handler.getTextArrayAsync(null, ['change', 'delete'], function(data) {
+				option_change.html(data['change']);
+				option_remove.html(data['delete']);
+			});
+
+	} else {
+		// update existing field
+		var row = current_window.data('editing_row');
+		var data_field = row.find('input[name^=property_data_]');
+		data_field.val(JSON.stringify(data));
+
+		// update column
+		row.find('span.column').eq(0).html(data.name[language_handler.current_language]);
+	}
+
+	// clear input fields
+	current_window.find('input[name^=property_]').not('[name^=property_data_]').each(function() {
+		var field = $(this);
+
+		// reset language data
+		if (field.hasClass('multi-language')) {
+			var language_data = field.data('language');
+			for (var language in language_data)
+				language_data[language] = '';
+		}
+
+		// reset value
+		field.val('').trigger('change');
+	});
+
+	// show and hide buttons
+	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
+	current_window.find('button[name=reset]').show();
+	current_window.find('button[name=cancel]').hide();
+	current_window.removeData('editing_row');
+	input_type.attr('disabled', null);
+};
+
+/**
+ * Open item property from the list for editing.
+ */
+Caracal.Shop.edit_property = function(event) {
+	if (event instanceof Event || event instanceof jQuery.Event)
+		var row = $(this).closest('.list_item'); else
+		var row = $(event).closest('.list_item');
+	var current_window = row.closest('.window');
+	var selector = current_window.find('.language_selector').data('selector');
+	var property_list = current_window.find('#item_properties');
+
+	// store editing property
+	current_window.data('editing_row', row);
+
+	// find input fields
+	var input_name = current_window.find('input[name=property_name]');
+	var input_text_id = current_window.find('input[name=property_text_id]');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// get data
+	var data_field = row.find('input[name^=property_data_]');
+	var data = JSON.parse(data_field.val());
+
+	// configure input elements
+	input_text_id.val(data.text_id);
+	input_type
+		.val(data.type)
+		.trigger('change');
+
+	input_name.val(data.name[selector.current_language]);
+	var language_data = input_name.data('language');
+
+	for (var language in language_data)
+		language_data[language] = data.name[language];
+
+	// configure data
+	switch(data.type) {
+		case 'number':
+		case 'decimal':
+		case 'text':
+			var input_value = current_window.find('input[name=property_' + input_type.val() + ']');
+			input_value.val(data.value);
+			break;
+
+		case 'ml_text':
+			var input_value = current_window.find('input[name=property_ml_text]');
+			var language_data = input_value.data('language')
+
+			// set current value
+			input_value.val(data.value[selector.current_language]);
+
+			// restore language data
+			for (var language in language_data)
+				language_data[language] = data.value[language] || '';
+			break;
+
+		case 'array':
+			var input_value = current_window.find('input[name=property_array]');
+			input_value
+				.val(JSON.stringify(data.value))
+				.trigger('change');
+			break;
+
+		case 'ml_array':
+			var input_value = current_window.find('input[name=property_ml_array]');
+			var language_data = input_value.data('language');
+
+			// change value
+			input_value.val(data.value[selector.current_language]).trigger('change');
+
+			// restore language data
+			for (var language in language_data)
+				language_data[language] = JSON.stringify(data.value[language]) || '';
+			break;
+	}
+
+	// set data for unused mutli-language fields
+	current_window.find('input[name=property_].multi-language').not(input_value).each(function() {
+		var field = $(this);
+		var language_data = field.data('language');
+		for (var language in language_data)
+			language_data[language] = '';
+	});
+
+	// show and hide buttons
+	current_window.find('button[name=add]').html(language_handler.getText(null, 'save'));
+	current_window.find('button[name=reset]').hide();
+	current_window.find('button[name=cancel]').show();
+	input_type.attr('disabled', 'disabled');
+};
+
+/**
+ * Reset input fields for property editing.
+ *
+ * @param object button
+ */
+Caracal.Shop.reset_property_fields = function(button) {
+	var current_window = $(button).closest('.window');
+
+	// find input fields
+	var regular_inputs = current_window.find('input[name^=property_]').not('[name^=property_data_]');
+	var multilanguage_inputs = regular_inputs.filter('.multi-language');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// clear multilanguage inputs
+	multilanguage_inputs.each(function() {
+		var field = $(this);
+		var language_data = field.data('language');
+		for (var language in language_data)
+			language_data[language] = '';
+	});
+
+	// clear regular fields
+	regular_inputs.val('').trigger('change');
+	input_type.val('number').trigger('change');
+};
+
+/**
+ * Remove current row from the list of properties.
+ *
+ * @param object event
+ */
+Caracal.Shop.delete_property = function(event) {
+	if (event instanceof Event || event instanceof jQuery.Event)
+		var row = $(this).closest('.list_item'); else
+		var row = $(event).closest('.list_item');
+
+	row.remove();
+};
+
+/**
+ * Cancel currently editing property.
+ *
+ * @param object window
+ */
+Caracal.Shop.cancel_property_edit = function(button) {
+	var current_window = $(button).closest('.window');
+
+	// remove editing row
+	current_window.removeData('editing_row');
+
+	// find input fields
+	var regular_inputs = current_window.find('input[name^=property_]').not('[name^=property_data_]');
+	var multilanguage_inputs = regular_inputs.filter('.multi-language');
+	var input_type = current_window.find('select[name=property_type]');
+
+	// clear multilanguage inputs
+	multilanguage_inputs.each(function() {
+		var field = $(this);
+		var language_data = field.data('language');
+		for (var language in language_data)
+			language_data[language] = '';
+	});
+
+	// clear regular fields
+	regular_inputs.val('').trigger('change');
+	input_type.val('number').trigger('change');
+
+	// show and hide buttons
+	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
+	current_window.find('button[name=reset]').show();
+	current_window.find('button[name=cancel]').hide();
+	current_window.removeData('editing_row');
+	input_type.attr('disabled', null);
+};

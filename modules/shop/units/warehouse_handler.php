@@ -4,7 +4,7 @@
  * Handle shop warehouses
  */
 
-require_once('shop_warehouse_manager.php');
+require_once('warehouse_manager.php');
 
 
 class ShopWarehouseHandler {

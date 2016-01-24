@@ -15,23 +15,23 @@ use Core\Module;
 
 require_once('units/payment_method.php');
 require_once('units/delivery_method.php');
-require_once('units/shop_item_handler.php');
-require_once('units/shop_category_handler.php');
-require_once('units/shop_currencies_handler.php');
-require_once('units/shop_item_sizes_handler.php');
-require_once('units/shop_item_size_values_manager.php');
-require_once('units/shop_transactions_manager.php');
-require_once('units/shop_transactions_handler.php');
-require_once('units/shop_warehouse_handler.php');
-require_once('units/shop_transaction_items_manager.php');
-require_once('units/shop_transaction_plans_manager.php');
-require_once('units/shop_recurring_payments_manager.php');
-require_once('units/shop_buyers_manager.php');
-require_once('units/shop_delivery_address_manager.php');
-require_once('units/shop_delivery_address_handler.php');
-require_once('units/shop_related_items_manager.php');
-require_once('units/shop_manufacturer_handler.php');
-require_once('units/shop_delivery_methods_handler.php');
+require_once('units/item_handler.php');
+require_once('units/category_handler.php');
+require_once('units/currencies_handler.php');
+require_once('units/item_sizes_handler.php');
+require_once('units/item_size_values_manager.php');
+require_once('units/transactions_manager.php');
+require_once('units/transactions_handler.php');
+require_once('units/warehouse_handler.php');
+require_once('units/transaction_items_manager.php');
+require_once('units/transaction_plans_manager.php');
+require_once('units/recurring_payments_manager.php');
+require_once('units/buyers_manager.php');
+require_once('units/delivery_address_manager.php');
+require_once('units/delivery_address_handler.php');
+require_once('units/related_items_manager.php');
+require_once('units/manufacturer_handler.php');
+require_once('units/delivery_methods_handler.php');
 require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
@@ -42,6 +42,7 @@ use Modules\Shop\Transaction as Transaction;
 use Modules\Shop\Token as Token;
 
 use Modules\Shop\TokenManager as TokenManager;
+use Modules\Shop\Handlers\Item as ShopItemHandler;
 
 
 final class TransactionType {
@@ -53,9 +54,9 @@ final class TransactionType {
 	// language constant mapping
 	public static $reverse = array(
 		self::SUBSCRIPTION => 'type_subscription',
-		self::REGULAR => 'type_regular',
-		self::DONATION => 'type_donation',
-		self::DELAYED => 'type_delayed'
+		self::REGULAR      => 'type_regular',
+		self::DONATION     => 'type_donation',
+		self::DELAYED      => 'type_delayed'
 	);
 }
 
@@ -74,14 +75,14 @@ final class TransactionStatus {
 
 	// language constant mapping
 	public static $reverse = array(
-		self::UNKNOWN => 'status_unknown',
-		self::PENDING => 'status_pending',
-		self::DENIED => 'status_denied',
+		self::UNKNOWN   => 'status_unknown',
+		self::PENDING   => 'status_pending',
+		self::DENIED    => 'status_denied',
 		self::COMPLETED => 'status_completed',
-		self::CANCELED => 'status_canceled',
-		self::SHIPPING => 'status_shipping',
-		self::SHIPPED => 'status_shipped',
-		self::LOST => 'status_lost',
+		self::CANCELED  => 'status_canceled',
+		self::SHIPPING  => 'status_shipping',
+		self::SHIPPED   => 'status_shipped',
+		self::LOST      => 'status_lost',
 		self::DELIVERED => 'status_delivered',
 		self::PROCESSED => 'status_processed'
 	);
@@ -221,9 +222,17 @@ class shop extends Module {
 			$head_tag = head_tag::getInstance();
 			$backend = backend::getInstance();
 
+			// include collection scripts
+			if (class_exists('collection')) {
+				$collection = collection::getInstance();
+				$collection->includeScript(collection::PROPERTY_EDITOR);
+			}
+
+			// include local scripts
 			if (class_exists('head_tag')) {
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 
 			$shop_menu = new backend_MenuItem(
@@ -714,6 +723,16 @@ class shop extends Module {
 				$this->json_SetCartFromTransaction();
 				break;
 
+			case 'json_get_property':
+				$handler = Handlers\Property::getInstance();
+				$handler->json_GetProperty();
+				break;
+
+			case 'json_get_property_list':
+				$handler = Handlers\Property::getInstance();
+				$handler->json_GetPropertyList();
+				break;
+
 			default:
 				break;
 			}
@@ -825,13 +844,32 @@ class shop extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		// create shop currencies table
+		// create shop item membership table
 		$sql = "
 			CREATE TABLE `shop_item_membership` (
 				`category` INT NOT NULL,
 				`item` INT NOT NULL,
 				KEY `category` (`category`),
 				KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop item properties table
+		$sql = "
+			CREATE TABLE `shop_item_properties` (
+				`id` INT NOT NULL,
+				`item` INT NOT NULL,
+				`text_id` VARCHAR(32) NOT NULL,
+				`type` INT NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
+
+		$sql .= "
+				`value` TEXT NOT NULL,
+				PRIMARY KEY ( `id` ),
+				KEY `item` (`item`),
+				KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1078,7 +1116,8 @@ class shop extends Module {
 			'shop_stock',
 			'shop_related_items',
 			'shop_manufacturers',
-			'shop_payment_tokens'
+			'shop_payment_tokens',
+			'shop_item_properties'
 		);
 
 		$db->drop_tables($tables);
