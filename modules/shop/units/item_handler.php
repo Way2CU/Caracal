@@ -14,6 +14,7 @@ require_once('category_manager.php');
 require_once('related_items_manager.php');
 require_once('property_handler.php');
 
+use \gallery as gallery;
 use \TemplateHandler as TemplateHandler;
 
 
