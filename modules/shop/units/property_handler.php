@@ -74,6 +74,48 @@ class Property {
 	}
 
 	/**
+	 * Get specified item property.
+	 */
+	public function json_GetProperty() {
+		$manager = Managers\Property::getInstance();
+		$conditions = array();
+		$result = false;
+
+		// prepare conditions for manager
+		if (isset($_REQUEST['item']))
+			$conditions['item'] = fix_id($_REQUEST['item']);
+
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id($_REQUEST['id']);
+
+		// get property from the database
+		$property = $manager->getSingleItem($conditions);
+
+		// bail if no property was found
+		if (!is_object($property)) {
+			print json_encode($result);
+			return;
+		}
+
+		// prepare output
+		$result = array(
+				'id'      => $property->id,
+				'text_id' => $property->text_id,
+				'name'    => $property->name,
+				'type'    => $property->type,
+				'value'   => unserialize($property->value)
+			);
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Get property list for specified item as JSON object.
+	 */
+	private function json_GetPropertyList() {
+	}
+
+	/**
 	 * Tag handler for list of item properties.
 	 *
 	 * @param array $tag_params

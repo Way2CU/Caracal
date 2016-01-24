@@ -723,6 +723,16 @@ class shop extends Module {
 				$this->json_SetCartFromTransaction();
 				break;
 
+			case 'json_get_property':
+				$handler = Handlers\Property::getInstance();
+				$handler->json_GetProperty();
+				break;
+
+			case 'json_get_property_list':
+				$handler = Handlers\Property::getInstance();
+				$handler->json_GetPropertyList();
+				break;
+
 			default:
 				break;
 			}
