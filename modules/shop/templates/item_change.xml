@@ -3,6 +3,7 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_item_change_form">
 		<div id="shop_change_item_notebook">
+			<!-- Generic -->
 			<div>
 				<div class="box left" style="width: 290px;">
 					<label>
@@ -22,7 +23,7 @@
 								local="1"
 								selected="$params['manufacturer']"
 								cms:eval="selected"
-							/>
+								/>
 						</select>
 					</label>
 				</div>
@@ -54,7 +55,7 @@
 							cms:eval="value"
 							style="width: 100px;"
 							maxlength="30"
-						/>
+							/>
 					</label>
 				</div>
 				<div class="box left" style="width: 120px;">
@@ -67,7 +68,7 @@
 								local="1"
 								selected="$params['size_definition']"
 								cms:eval="selected"
-							/>
+								/>
 						</select>
 					</label>
 				</div>
@@ -105,9 +106,131 @@
 				</div>
 			</div>
 
+			<!-- Properties -->
 			<div>
+				<label class="horizontal">
+					<span><cms:text constant="label_text_id" module="shop"/></span>
+					<input
+						type="text"
+						class="code ltr"
+						name="property_text_id"
+						maxlength="32"
+						/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_property_name" module="shop"/></span>
+					<input
+						type="text"
+						class="multi-language"
+						name="property_name"
+						maxlength="255"
+						/>
+				</label>
+				<label class="property-selector number">
+					<span><cms:text constant="label_property_type" module="shop"/></span>
+					<select
+						name="property_type"
+						onchange="this.parentNode.className = 'property-selector ' + this.value"
+						>
+						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
+						<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
+						<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
+						<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
+						<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
+						<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
+					</select>
+				</label>
+				<div class="property-container">
+					<label class="horizontal property number">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_number"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property decimal">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_decimal"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property text">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_text"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property ml_text">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_ml_text"
+							class="multi-language"
+							style="width: 500px"
+							/>
+					</label>
+					<label class="horizontal property array">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_array"
+							/>
+					</label>
+					<label class="horizontal property ml_array">
+						<span><cms:text constant="label_property_value" module="shop"/></span>
+						<input
+							type="text"
+							name="property_ml_array"
+							class="multi-language"
+							/>
+					</label>
+					<div style="margin-bottom: 10px;">
+						<button
+							type="button"
+							name="add"
+							onclick="Caracal.Shop.save_property(this)"
+							>
+							<cms:text constant="add"/>
+						</button>
+						<button
+							type="button"
+							name="reset"
+							onclick="Caracal.Shop.reset_property_fields(this)"
+							>
+							<cms:text constant="reset"/>
+						</button>
+						<button
+							type="button"
+							name="cancel"
+							onclick="Caracal.Shop.cancel_property_edit(this)"
+							style="display: none;"
+							>
+							<cms:text constant="cancel"/>
+						</button>
+					</div>
+				</div>
+				<div class="scrollable_list">
+					<div class="list_header">
+						<span class="column" style="width: 250px;">
+							<cms:text constant="column_name" module="shop"/>
+						</span>
+						<span class="column" style="width: 60px;">
+							<cms:text constant="column_price" module="shop"/>
+						</span>
+						<span class="column">
+							<cms:text constant="column_options" module="shop"/>
+						</span>
+					</div>
+					<div class="list_content" style="height: 250px" id="item_properties"/>
+				</div>
 			</div>
 
+			<!-- Colors -->
 			<div class="scrollable_list">
 				<input name="colors" type="hidden" value="$params['colors']" cms:eval="value"/>
 				<label class="horizontal inline">
@@ -136,6 +259,7 @@
 				</div>
 			</div>
 
+			<!-- Categories -->
 			<div class="scrollable_list">
 				<div class="list_header">
 					<cms:text constant="label_categories" module="shop"/>
@@ -146,10 +270,11 @@
 						local="1"
 						item_id="$params['id']"
 						cms:eval="item_id"
-					/>
+						/>
 				</div>
 			</div>
 
+			<!-- Related items -->
 			<div class="scrollable_list">
 				<label class="inline">
 					<span><cms:text constant="label_search_query" module="shop"/></span>
@@ -157,7 +282,7 @@
 					<button
 						type="button"
 						onclick="javascript: Caracal.Shop.open_item_search();"
-					>
+						>
 						<cms:text constant="search"/>
 					</button>
 				</label>
@@ -181,10 +306,11 @@
 						cms:eval="related"
 						template="item_list_option.xml"
 						local="1"
-					/>
+						/>
 				</div>
 			</div>
 
+			<!-- Delivery methods -->
 			<div class="scrollable_list">
 				<div class="list_header">
 					<span class="column" style="width: 360px;">
@@ -197,7 +323,7 @@
 						local="1"
 						item="$params['id']"
 						cms:eval="item"
-					/>
+						/>
 				</div>
 			</div>
 		</div>
@@ -222,6 +348,10 @@
 			.setPageTitle(3, language_handler.getText('shop', 'tab_category'))
 			.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
 			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
+
+		// create property editors
+		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
+		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_ml_array]');
 
 		// add colors
 		Caracal.Shop.parse_colors();

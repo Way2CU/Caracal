@@ -33,7 +33,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	/**
 	 * Complete object initialization.
 	 */
-	self.init = function() {
+	self._init = function() {
 		// implement page control
 		self.page_control
 			.setAllowForward(false)
@@ -510,7 +510,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	// finalize object
-	self.init();
+	self._init();
 }
 
 
@@ -538,7 +538,7 @@ Caracal.Shop.CheckoutForm = function() {
 	/**
 	 * Complete object initialization.
 	 */
-	self.init = function() {
+	self._init = function() {
 		self.delivery_provider_list
 				.find('input[name=delivery_provider]')
 				.change(self.handler.delivery_provider_change);
@@ -732,7 +732,7 @@ Caracal.Shop.CheckoutForm = function() {
 	};
 
 	// complete object initialization
-	self.init();
+	self._init();
 }
 
 
