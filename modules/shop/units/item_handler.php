@@ -659,8 +659,20 @@ class Item {
 		}
 
 		if (isset($tag_params['related'])) {
+			$item_id = -1;
 			$relation_manager = \ShopRelatedItemsManager::getInstance();
-			$item_id = fix_id($tag_params['related']);
+
+			if (is_numeric($tag_params['related'])) {
+				// get item id as is
+				$item_id = fix_id($tag_params['related']);
+
+			} else {
+				// find item id based on specified text id
+				$item = $manager->getSingleItem(array('id'), array('text_id' => fix_chars($tag_params['related'])));
+
+				if (is_object($item))
+					$item_id = $item->id;
+			}
 
 			$related_items = $relation_manager->getItems(array('related'), array('item' => $item_id));
 			$related_item_ids = array();
