@@ -123,7 +123,6 @@ class Handler {
 	 */
 	public function tag_PropertyList($tag_params, $children) {
 		$manager = Manager::getInstance();
-		$membership_manager = Managers\PropertyMembership::getInstance();
 		$conditions = array();
 
 		// get item properties from database
