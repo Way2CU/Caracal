@@ -357,8 +357,8 @@
 			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
 
 		// create property editors
-		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
-		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_ml_array]');
+		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_array]');
+		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_ml_array]');
 
 		// add colors
 		Caracal.Shop.parse_colors();
