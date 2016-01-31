@@ -7,7 +7,7 @@
 				type="hidden"
 				name="'property_data_'.$params['index']"
 				value="$params['value']"
-				cms:eval="name"
+				cms:eval="name,value"
 				/>
 			<cms:var param="name" multilanguage="yes"/>
 		</span>
