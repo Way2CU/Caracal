@@ -342,7 +342,7 @@ class Handler {
 		}
 
 		// store properties
-		$properties_handler = Modules\Shop\Property\Handler::getInstance($this->parent);
+		$properties_handler = \Modules\Shop\Property\Handler::getInstance($this->parent);
 		$properties_handler->save_properties($id);
 
 		// show message
