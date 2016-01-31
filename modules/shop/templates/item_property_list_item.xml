@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 250px;">
+			<input
+				type="hidden"
+				name="'property_data_'.$params['index']"
+				value="$params['value']"
+				cms:eval="name"
+				/>
+			<cms:var param="name" multilanguage="yes"/>
+		</span>
+		<span class="column" style="width: 60px;">
+
+		</span>
+		<span class="column">
+			<a href="javascript: Caracal.Shop.edit_property(this)">
+				<cms:text constant="change" module="module"/>
+			</a>
+			<cms:raw text=" "/>
+			<a href="javascript: Caracal.Shop.delete_property(this)">
+				<cms:text constant="delete" module="module"/>
+			</a>
+		</span>
+	</div>
+</document>

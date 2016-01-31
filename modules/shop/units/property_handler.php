@@ -138,12 +138,12 @@ class Handler {
 		foreach ($items as $item) {
 			// prepare parameters
 			$params = array(
-				'id'         => $item->id,
-				'text_id'    => $item->text_id,
-				'name'       => $item->name,
-				'type'       => $item->type,
-				'values'     => unserialize($item->values),
-				'raw_values' => $item->values
+				'id'        => $item->id,
+				'text_id'   => $item->text_id,
+				'name'      => $item->name,
+				'type'      => $item->type,
+				'value'     => json_encode(unserialize($item->value)),
+				'raw_value' => $item->value
 			);
 
 			$template->restoreXML();
