@@ -135,18 +135,21 @@ class Handler {
 		// create template
 		$template = $this->parent->loadTemplate($tag_params, 'item_property_list_item.xml');
 
+		$index = 0;
 		foreach ($items as $item) {
 			// prepare parameters
 			$params = array(
 				'id'        => $item->id,
+				'index'     => $index,
 				'text_id'   => $item->text_id,
 				'name'      => $item->name,
 				'type'      => $item->type,
-				'type_string' => $this->types[$item->type],
 				'value'     => json_encode(unserialize($item->value)),
 				'raw_value' => $item->value
 			);
+			$index++;
 
+			// parse template
 			$template->restoreXML();
 			$template->setLocalParams($params);
 			$template->parse();
