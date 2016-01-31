@@ -23,8 +23,8 @@ class Handler {
 	 */
 	protected function __construct($parent) {
 		$this->parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
