@@ -403,10 +403,13 @@ Caracal.Shop.save_property = function(button) {
 		// create options
 		var option_change = $('<a>');
 		var option_remove = $('<a>');
+		var space = document.createTextNode(' ');
 
 		option_change
 			.on('click', Caracal.Shop.edit_property)
 			.appendTo(column_options);
+
+		column_options.append(space);
 
 		option_remove
 			.on('click', Caracal.Shop.delete_property)
