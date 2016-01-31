@@ -137,16 +137,24 @@ class Handler {
 
 		$index = 0;
 		foreach ($items as $item) {
+			// prepare data
+			$data = array(
+					'text_id' => $item->text_id,
+					'name'    => $item->name,
+					'type'    => $item->type,
+					'value'   => unserialize($item->value)
+				);
+
 			// prepare parameters
 			$params = array(
-				'id'        => $item->id,
-				'index'     => $index,
-				'text_id'   => $item->text_id,
-				'name'      => $item->name,
-				'type'      => $item->type,
-				'value'     => json_encode(unserialize($item->value)),
-				'raw_value' => $item->value
-			);
+					'id'        => $item->id,
+					'index'     => $index,
+					'text_id'   => $item->text_id,
+					'name'      => $item->name,
+					'type'      => $item->type,
+					'value' => $item->value,
+					'data'      => json_encode($data)
+				);
 			$index++;
 
 			// parse template
