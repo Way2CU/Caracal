@@ -44,7 +44,7 @@ class Property {
 	 * @return integer
 	 */
 	public function save_properties($item_id) {
-		$manager = Managers\Property::getInstance();
+		$manager = ..\Managers\Property::getInstance();
 
 		// remove existing properties
 		$manager->deleteData(array('item' => $item_id));
