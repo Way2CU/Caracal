@@ -568,8 +568,8 @@ class shop extends Module {
 				break;
 
 			case 'show_property_list':
-				$handler = \Modules\Shop\Property\Handler::getInstance();
-				$handler->tag_PropertyList($params, $childre);
+				$handler = \Modules\Shop\Property\Handler::getInstance($this);
+				$handler->tag_PropertyList($params, $children);
 				break;
 
 			case 'show_manufacturer':
@@ -729,12 +729,12 @@ class shop extends Module {
 				break;
 
 			case 'json_get_property':
-				$handler = \Modules\Property\Handler::getInstance();
+				$handler = \Modules\Property\Handler::getInstance($this);
 				$handler->json_GetProperty();
 				break;
 
 			case 'json_get_property_list':
-				$handler = \Modules\Property\Handler::getInstance();
+				$handler = \Modules\Property\Handler::getInstance($this);
 				$handler->json_GetPropertyList();
 				break;
 
