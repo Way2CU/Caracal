@@ -42,7 +42,7 @@ use Modules\Shop\Transaction as Transaction;
 use Modules\Shop\Token as Token;
 
 use Modules\Shop\TokenManager as TokenManager;
-use Modules\Shop\Handlers\Item as ShopItemHandler;
+use Modules\Shop\Item\Handler as ShopItemHandler;
 
 
 final class TransactionType {
@@ -724,12 +724,12 @@ class shop extends Module {
 				break;
 
 			case 'json_get_property':
-				$handler = Handlers\Property::getInstance();
+				$handler = Property\Handler::getInstance();
 				$handler->json_GetProperty();
 				break;
 
 			case 'json_get_property_list':
-				$handler = Handlers\Property::getInstance();
+				$handler = Property\Handler::getInstance();
 				$handler->json_GetPropertyList();
 				break;
 

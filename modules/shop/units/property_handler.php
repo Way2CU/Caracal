@@ -5,14 +5,14 @@
  *
  * Author: Mladen Mijatov
  */
-namespace Modules\Shop\Handlers;
+namespace Modules\Shop\Property;
 
 require_once('property_manager.php');
 
 use \TemplateHandler as TemplateHandler;
 
 
-class Property {
+class Handler {
 	private static $instance;
 	private $parent;
 	private $name;
@@ -44,7 +44,7 @@ class Property {
 	 * @return integer
 	 */
 	public function save_properties($item_id) {
-		$manager = Modules\Shop\Managers\Property::getInstance();
+		$manager = Manager::getInstance();
 
 		// remove existing properties
 		$manager->deleteData(array('item' => $item_id));
@@ -77,7 +77,7 @@ class Property {
 	 * Get specified item property.
 	 */
 	public function json_GetProperty() {
-		$manager = Managers\Property::getInstance();
+		$manager = Manager::getInstance();
 		$conditions = array();
 		$result = false;
 
@@ -122,7 +122,7 @@ class Property {
 	 * @param array $children
 	 */
 	public function tag_PropertyList($tag_params, $children) {
-		$manager = Managers\Property::getInstance();
+		$manager = Manager::getInstance();
 		$membership_manager = Managers\PropertyMembership::getInstance();
 		$conditions = array();
 

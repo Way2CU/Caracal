@@ -6,7 +6,7 @@
  *
  * Author: Mladen Mijatov
  */
-namespace Modules\Shop\Handlers;
+namespace Modules\Shop\Item;
 
 require_once('item_manager.php');
 require_once('item_membership_manager.php');
@@ -18,7 +18,7 @@ use \gallery as gallery;
 use \TemplateHandler as TemplateHandler;
 
 
-class Item {
+class Handler {
 	private static $_instance;
 	private $parent;
 	private $name;
@@ -342,7 +342,7 @@ class Item {
 		}
 
 		// store properties
-		$properties_handler = Property::getInstance($this->parent);
+		$properties_handler = Modules\Shop\Property\Handler::getInstance($this->parent);
 		$properties_handler->save_properties($id);
 
 		// show message
