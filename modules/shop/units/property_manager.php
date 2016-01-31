@@ -5,12 +5,12 @@
  *
  * Author: Mladen Mijatov
  */
-namespace Modules\Shop\Managers;
+namespace Modules\Shop\Property;
 
 use \ItemManager as ItemManager;
 
 
-final class Property extends ItemManager {
+final class Manager extends ItemManager {
 	private static $_instance;
 
 	/**
