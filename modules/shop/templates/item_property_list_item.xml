@@ -16,11 +16,11 @@
 		</span>
 		<span class="column">
 			<a href="javascript: Caracal.Shop.edit_property(this)">
-				<cms:text constant="change" module="module"/>
+				<cms:text constant="change"/>
 			</a>
 			<cms:raw text=" "/>
 			<a href="javascript: Caracal.Shop.delete_property(this)">
-				<cms:text constant="delete" module="module"/>
+				<cms:text constant="delete"/>
 			</a>
 		</span>
 	</div>
