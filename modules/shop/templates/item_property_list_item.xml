@@ -12,14 +12,14 @@
 			<cms:var param="name" multilanguage="yes"/>
 		</span>
 		<span class="column" style="width: 60px;">
-
+			<cms:var param="type"/>
 		</span>
 		<span class="column">
-			<a href="javascript: Caracal.Shop.edit_property(this)">
+			<a onclick="javascript: Caracal.Shop.edit_property(this)">
 				<cms:text constant="change"/>
 			</a>
 			<cms:raw text=" "/>
-			<a href="javascript: Caracal.Shop.delete_property(this)">
+			<a onclick="javascript: Caracal.Shop.delete_property(this)">
 				<cms:text constant="delete"/>
 			</a>
 		</span>

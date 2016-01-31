@@ -62,7 +62,7 @@ class Handler {
 					'item'    => $item_id,
 					'text_id' => $decoded['text_id'],
 					'name'    => $decoded['name'],
-					'type'    => fix_id($decoded['type']),
+					'type'    => $decoded['type'],
 					'value'   => serialize($decoded['value'])
 				);
 
@@ -142,6 +142,7 @@ class Handler {
 				'text_id'   => $item->text_id,
 				'name'      => $item->name,
 				'type'      => $item->type,
+				'type_string' => $this->types[$item->type],
 				'value'     => json_encode(unserialize($item->value)),
 				'raw_value' => $item->value
 			);

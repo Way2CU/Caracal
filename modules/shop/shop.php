@@ -865,7 +865,7 @@ class shop extends Module {
 				`id` INT NOT NULL,
 				`item` INT NOT NULL,
 				`text_id` VARCHAR(32) NOT NULL,
-				`type` INT NOT NULL,";
+				`type` VARCHAR(32) NOT NULL";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
