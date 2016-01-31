@@ -567,6 +567,11 @@ class shop extends Module {
 				$handler->tag_CategoryList($params, $children);
 				break;
 
+			case 'show_property_list':
+				$handler = Property\Handler::getInstance();
+				$handler->tag_PropertyList($params, $childre);
+				break;
+
 			case 'show_manufacturer':
 				$handler = ShopManufacturerHandler::getInstance($this);
 				$handler->tag_Manufacturer($params, $children);

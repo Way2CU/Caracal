@@ -226,7 +226,14 @@
 							<cms:text constant="column_options" module="shop"/>
 						</span>
 					</div>
-					<div class="list_content" style="height: 250px" id="item_properties"/>
+					<div class="list_content" style="height: 250px" id="item_properties">
+						<cms:module
+							name="shop"
+							action="show_property_list"
+							item="$params['id']"
+							cms:eval="item"
+						/>
+					</div>
 				</div>
 			</div>
 
