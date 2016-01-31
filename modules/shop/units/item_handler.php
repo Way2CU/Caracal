@@ -342,7 +342,7 @@ class Item {
 		}
 
 		// store properties
-		$properties_handler = Handlers\Property::getInstance($this->parent);
+		$properties_handler = Property::getInstance($this->parent);
 		$properties_handler->save_properties($id);
 
 		// show message
