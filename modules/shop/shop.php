@@ -729,12 +729,12 @@ class shop extends Module {
 				break;
 
 			case 'json_get_property':
-				$handler = \Modules\Property\Handler::getInstance($this);
+				$handler = \Modules\Shop\Property\Handler::getInstance($this);
 				$handler->json_GetProperty();
 				break;
 
 			case 'json_get_property_list':
-				$handler = \Modules\Property\Handler::getInstance($this);
+				$handler = \Modules\Shop\Property\Handler::getInstance($this);
 				$handler->json_GetPropertyList();
 				break;
 
