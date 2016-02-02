@@ -86,10 +86,10 @@ class Handler {
 		if (isset($_REQUEST['item']))
 			$conditions['item'] = fix_id($_REQUEST['item']);
 
-		if (isset($_REQUEST['item_text_id'])) {
+		if (isset($_REQUEST['item_uid'])) {
 			$item = $item_manager->getSingleItem(
 					array('id'),
-					array('text_id' => fix_chars($_REQUEST['item_text_id']))
+					array('uid' => fix_chars($_REQUEST['item_uid']))
 				);
 
 			if (is_object($item))
