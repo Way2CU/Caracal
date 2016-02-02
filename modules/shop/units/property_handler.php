@@ -104,7 +104,7 @@ class Handler {
 			$conditions['text_id'] = fix_chars($_REQUEST['text_id']);
 
 		// get property from the database
-		$property = $manager->getSingleItem($conditions);
+		$property = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// bail if no property was found
 		if (!is_object($property)) {
