@@ -668,7 +668,7 @@ class Handler {
 
 			} else {
 				// find item id based on specified text id
-				$item = $manager->getSingleItem(array('id'), array('text_id' => fix_chars($tag_params['related'])));
+				$item = $manager->getSingleItem(array('id'), array('uid' => fix_chars($tag_params['related'])));
 
 				if (is_object($item))
 					$item_id = $item->id;
