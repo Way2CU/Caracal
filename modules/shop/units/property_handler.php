@@ -78,6 +78,7 @@ class Handler {
 	 */
 	public function json_GetProperty() {
 		$manager = Manager::getInstance();
+		$item_manager = \ShopItemManager::getInstance();
 		$conditions = array();
 		$result = false;
 
@@ -85,8 +86,22 @@ class Handler {
 		if (isset($_REQUEST['item']))
 			$conditions['item'] = fix_id($_REQUEST['item']);
 
+		if (isset($_REQUEST['item_text_id'])) {
+			$item = $item_manager->getSingleItem(
+					array('id'),
+					array('text_id' => fix_chars($_REQUEST['item_text_id']))
+				);
+
+			if (is_object($item))
+				$conditions['item'] = $item->id; else
+				$conditions['item'] = -1;
+		}
+
 		if (isset($_REQUEST['id']))
 			$conditions['id'] = fix_id($_REQUEST['id']);
+
+		if (isset($_REQUEST['text_id']))
+			$conditions['text_id'] = fix_chars($_REQUEST['text_id']);
 
 		// get property from the database
 		$property = $manager->getSingleItem($conditions);
@@ -113,6 +128,12 @@ class Handler {
 	 * Get property list for specified item as JSON object.
 	 */
 	private function json_GetPropertyList() {
+		$manager = Manager::getInstance();
+		$item_manager = \ShopItemManager::getInstance();
+		$conditions = array();
+		$result = false;
+
+		print json_encode($result);
 	}
 
 	/**
