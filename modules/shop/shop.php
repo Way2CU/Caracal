@@ -884,7 +884,7 @@ class shop extends Module {
 				`item` INT NOT NULL,
 				`related` INT NOT NULL,
 				KEY `item` (`item`,`related`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 		$db->query($sql);
 
 		// create shop currencies tableshop_related_items
