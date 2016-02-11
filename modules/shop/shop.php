@@ -2197,6 +2197,7 @@ class shop extends Module {
 	private function json_AddItemToCart() {
 		$uid = fix_chars($_REQUEST['uid']);
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
+		$price_property = isset($_REQUEST['price_property']) ? fix_chars($_REQUEST['price_property']) : null;
 
 		// get variation id
 		if (isset($_REQUEST['properties'])) {
@@ -2250,18 +2251,36 @@ class shop extends Module {
 										$thumbnail_constraint
 									);
 
+			// get item price
+			if (!is_null($price_property)) {
+				$properties_manager = \Modules\Shop\Property\Manager::getInstance();
+				$property = $properties_manager->getSingleItem(
+						array('value'),
+						array(
+							'item'    => $item->id,
+							'text_id' => $price_property
+						));
+
+				if (is_object($property))
+					$item_price = floatval($property->value); else
+					$item_price = $item->price;  // fallback, better charge regular than nothing
+
+			} else {
+				$item_price = $item->price;
+			}
+
 			// prepare result
 			$result = array(
-				'name'				=> $item->name,
-				'weight'			=> $item->weight,
-				'price'				=> $item->price,
-				'tax'				=> $item->tax,
-				'size_definition'	=> $item->size_definition,
-				'image'				=> $thumbnail_url,
-				'count'				=> $cart[$uid]['variations'][$variation_id]['count'],
-				'uid'				=> $item->uid,
-				'variation_id'		=> $variation_id,
-				'properties'		=> unfix_chars($properties)
+				'name'            => $item->name,
+				'weight'          => $item->weight,
+				'price'           => $item_price,
+				'tax'             => $item->tax,
+				'size_definition' => $item->size_definition,
+				'image'           => $thumbnail_url,
+				'count'           => $cart[$uid]['variations'][$variation_id]['count'],
+				'uid'             => $item->uid,
+				'variation_id'    => $variation_id,
+				'properties'      => unfix_chars($properties)
 			);
 
 			// update shopping cart

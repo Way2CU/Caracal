@@ -93,15 +93,20 @@ Caracal.Shop.Cart = function() {
 	/**
 	 * Add new item with specified CID to the shopping cart.
 	 *
-	 * @param string cid
+	 * @param string cid            - Combined item id in form of `uid/variation_id`
+	 * @param string price_property - Optional property text_id to be used as price
 	 */
-	self.add_item_by_cid = function(cid) {
+	self.add_item_by_cid = function(cid, price_property) {
 		// prepare server data
 		var cid_data = cid.split('/', 2);
 		var data = {
 			uid: cid_data[0],
 			variation_id: cid_data[1]
 		};
+
+		// assign price property if specified
+		if (price_property != null)
+			data.price_property = price_property;
 
 		// check if item is reserved
 		if (self.reservations.indexOf(data.uid) > -1)
@@ -130,10 +135,11 @@ Caracal.Shop.Cart = function() {
 	 * Add new item with specified unique id and a set of properties. Properties will
 	 * be used to generate variation id.
 	 *
-	 * @param string uid
-	 * @param object properties
+	 * @param string uid            - Unique item id
+	 * @param object properties     - Optional properties to store with item
+	 * @param string price_property - Optional property text_id to be used as price
 	 */
-	self.add_item_by_uid = function(uid, properties) {
+	self.add_item_by_uid = function(uid, properties, price_property) {
 		// check if item is reserved
 		if (self.reservations.indexOf(uid) > -1)
 			return;
@@ -147,10 +153,15 @@ Caracal.Shop.Cart = function() {
 
 		// add item through server
 		var data = {
-				'uid': uid,
-				'properties': properties
+				uid: uid,
+				properties: properties
 			};
 
+		// assign price property if specified
+		if (price_property != null)
+			data.price_property = price_property;
+
+		// send data to server
 		new Communicator('shop')
 			.on_success(self.handlers.item_add_success)
 			.on_error(self.handlers.item_add_error)
@@ -161,7 +172,7 @@ Caracal.Shop.Cart = function() {
 	/**
 	 * Add all items to cart from previous transaction.
 	 *
-	 * @param string transaction_uid
+	 * @param string transaction_uid - Previous transaction unique id
 	 */
 	self.add_items_from_transaction = function(transaction_uid) {
 		var data = {'uid': transaction_uid};
