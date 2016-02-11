@@ -89,7 +89,7 @@ class country_list extends Module {
 				`name` varchar(35) NOT NULL,
 				`short` char(2) NOT NULL,
 				PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
 		$db->query($sql);
 
 		$sql = "CREATE TABLE IF NOT EXISTS `country_states` (
@@ -99,7 +99,7 @@ class country_list extends Module {
 				`short` char(5) NOT NULL,
 				PRIMARY KEY (`id`),
 				KEY `country` (`country`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;";
 		$db->query($sql);
 
 		// populate table with data
