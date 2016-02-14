@@ -2198,15 +2198,12 @@ class shop extends Module {
 		$uid = fix_chars($_REQUEST['uid']);
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$price_property = isset($_REQUEST['price_property']) ? fix_chars($_REQUEST['price_property']) : null;
+		$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
 
 		// get variation id
-		if (isset($_REQUEST['properties'])) {
-			$properties = isset($_REQUEST['properties']) ? fix_chars($_REQUEST['properties']) : array();
+		if (isset($_REQUEST['variation_id']))
+			$variation_id = fix_chars($_REQUEST['variation_id']); else
 			$variation_id = $this->generateVariationId($uid, $properties);
-
-		} else if ($_REQUEST['variation_id']) {
-			$variation_id = fix_chars($_REQUEST['variation_id']);
-		}
 
 		// get thumbnail options
 		$thumbnail_size = isset($_REQUEST['thumbnail_size']) ? fix_id($_REQUEST['thumbnail_size']) : 100;
