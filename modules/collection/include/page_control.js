@@ -230,7 +230,7 @@ function PageControl(selector, page_selector) {
 				return;
 
 			// emit submit signal
-			if (!self._emitSignal('submit', current_page))
+			if (!self._emitSignal('submit', self.current_page))
 				return;
 
 			// submit form
