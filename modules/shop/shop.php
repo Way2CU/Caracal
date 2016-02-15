@@ -628,7 +628,7 @@ class shop extends Module {
 				break;
 
 			case 'set_item_as_cart':
-				$this->setItemAsCart($params, $children);
+				$this->setItemAsCartFromParams($params, $children);
 				break;
 
 			case 'set_cart_from_template':
@@ -706,6 +706,10 @@ class shop extends Module {
 
 			case 'json_get_shopping_cart':
 				$this->json_ShowCart();
+				break;
+
+			case 'json_set_item_as_cart':
+				$this->json_SetItemAsCart();
 				break;
 
 			case 'json_get_shopping_cart_summary':
@@ -1288,37 +1292,58 @@ class shop extends Module {
 	}
 
 	/**
-	 * Set shopping cart to contain only one item.
+	 * Set item as cart content from provided template params.
 	 *
 	 * @param array $params
 	 * @param array $children
 	 */
-	private function setItemAsCart($params, $children) {
+	private function setItemAsCartFromParams($params, $children) {
 		$uid = isset($params['uid']) ? fix_chars($params['uid']) : null;
 		$count = isset($params['count']) ? fix_id($params['count']) : 1;
+		$variation_id = isset($params['variation_id']) ? fix_chars($params['variation_id']) : null;
 
-		// make sure we have UID specified
-		if (!is_null($uid)) {
-			$cart = array();
-			$manager = ShopItemManager::getInstance();
-			$properties = isset($params['properties']) ? fix_chars($params['properties']) : array();
-			$variation_id = $this->generateVariationId($uid, $properties);
+		// set cart content
+		$this->setItemAsCart($uid, $count, $variation_id);
+	}
 
-			// check if item exists in database to avoid poluting shopping cart
-			$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+	/**
+	 * Set shopping cart to contain only one item.
+	 *
+	 * @param string $uid
+	 * @param integer $count
+	 * @param string $variation_id
+	 * @return boolean
+	 */
+	private function setItemAsCart($uid, $count, $variation_id=null) {
+		$cart = array();
+		$result = false;
+		$manager = ShopItemManager::getInstance();
 
-			if (is_object($item) && $count > 0) {
-				$cart[$uid] = array(
-					'uid'			=> $uid,
-					'quantity'		=> $count,
-					'variations'	=> array()
-				);
-				$cart[$uid]['variations'][$variation_id] = array('count' => $count);
-			}
+		// make sure we have variation id
+		if (is_null($variation_id))
+			$variation_id = $this->generateVariationId($uid, array());
 
-			$_SESSION['shopping_cart'] = $cart;
-			Events::trigger('shop', 'shopping-cart-changed');
+		// check if item exists in database to avoid poluting shopping cart
+		$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+
+		// make new content of shopping cart
+		if (is_object($item) && $count > 0) {
+			$cart[$uid] = array(
+				'uid'			=> $uid,
+				'quantity'		=> $count,
+				'variations'	=> array()
+			);
+			$cart[$uid]['variations'][$variation_id] = array('count' => $count);
+			$result = true;
 		}
+
+		// assign new cart
+		$_SESSION['shopping_cart'] = $cart;
+
+		// notify all the listeners about change
+		Events::trigger('shop', 'shopping-cart-changed');
+
+		return $result;
 	}
 
 	/**
@@ -2081,6 +2106,20 @@ class shop extends Module {
 					'value'			=> $value->value
 				);
 			}
+
+		print json_encode($result);
+	}
+
+	/**
+	 * Set single item as shopping cart content.
+	 */
+	private function json_SetItemAsCart() {
+		$uid = fix_chars($_REQUEST['uid']);
+		$count = isset($_REQUEST['count']) ? fix_id($_REQUEST['count']) : 1;
+		$variation_id = isset($_REQUEST['variation_id']) ? fix_chars($_REQUEST['variation_id']) : null;
+
+		// set cart content
+		$result = $this->setItemAsCart($uid, $count, $variation_id);
 
 		print json_encode($result);
 	}
