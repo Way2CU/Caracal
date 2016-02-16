@@ -183,7 +183,8 @@ class Handler {
 					'text_id'   => $item->text_id,
 					'name'      => $item->name,
 					'type'      => $item->type,
-					'value' => $item->value,
+					'value'     => unserialize($item->value),
+					'raw_value' => $item->value,
 					'data'      => json_encode($data)
 				);
 			$index++;
