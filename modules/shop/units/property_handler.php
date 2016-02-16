@@ -153,7 +153,7 @@ class Handler {
 		if (isset($tag_params['starts_with']))
 			$conditions['text_id'] = array(
 					'operator' => 'LIKE',
-					'value'    => fix_chars($tag_params['starts_with']).'%'
+					'value'    => escape_chars($tag_params['starts_with']).'%'
 				);
 
 		// get item properties from database
