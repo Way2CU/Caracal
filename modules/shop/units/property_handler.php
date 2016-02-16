@@ -145,6 +145,8 @@ class Handler {
 	public function tag_PropertyList($tag_params, $children) {
 		$manager = Manager::getInstance();
 		$conditions = array();
+		$sort_by = array('id');
+		$sort_asc = true;
 
 		// prepare conditions
 		if (isset($tag_params['item']))
@@ -156,8 +158,14 @@ class Handler {
 					'value'    => escape_chars($tag_params['starts_with']).'%'
 				);
 
+		if (isset($tag_params['sort_by']))
+			$sort_by = fix_chars(explode(',', $tag_params['sort_by']));
+
+		if (isset($tag_params['sort_asc']))
+			$sort_asc = $tag_params['sort_asc'] == '1';
+
 		// get item properties from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $sort_by, $sort_asc);
 
 		// we need items to display
 		if (count($items) == 0)

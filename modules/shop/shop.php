@@ -866,7 +866,7 @@ class shop extends Module {
 		// create shop item properties table
 		$sql = "
 			CREATE TABLE `shop_item_properties` (
-				`id` int NOT NULL AUTO_INCREMENT,
+				`id` INT NOT NULL AUTO_INCREMENT,
 				`item` INT NOT NULL,
 				`text_id` VARCHAR(32) NOT NULL,
 				`type` VARCHAR(32) NOT NULL";
