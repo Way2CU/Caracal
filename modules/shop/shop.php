@@ -3717,7 +3717,6 @@ class shop extends Module {
 				$params['plan_description'] = $this->formatRecurring(array(
 					'price'			=> $plan['price'],
 					'period'		=> $plan['interval_count'],
-					'period'		=> $plan['interval_count'],
 					'unit'			=> $plan['interval'],
 					'setup'			=> $plan['setup_price'],
 					'trial_period'	=> $plan['trial_count'],
