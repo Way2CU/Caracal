@@ -8,26 +8,28 @@
 		method="POST"
 		enctype="multipart/form-data"
 		>
-		<label class="horizontal">
-			<span><cms:text constant="label_text" module="links"/></span>
-			<input
-				type="text"
-				name="text"
-				class="multi-language"
-				style="width: 270px;"
-				maxlength="50"
-				/>
-		</label>
-		<label class="horizontal">
-			<span><cms:text constant="label_text" module="links"/></span>
-			<input
-				type="text"
-				name="text_id"
-				class="code ltr"
-				style="width: 200px;"
-				maxlength="32"
-				/>
-		</label>
+		<div>
+			<label class="horizontal">
+				<span><cms:text constant="label_text" module="links"/></span>
+				<input
+					type="text"
+					name="text"
+					class="multi-language"
+					style="width: 270px;"
+					maxlength="50"
+					/>
+			</label>
+			<label class="horizontal">
+				<span><cms:text constant="label_text_id" module="links"/></span>
+				<input
+					type="text"
+					name="text_id"
+					class="code ltr"
+					style="width: 200px;"
+					maxlength="32"
+					/>
+			</label>
+		</div>
 		<label>
 			<span><cms:text constant="label_description" module="links"/></span>
 			<textarea
@@ -93,9 +95,9 @@
 
 		// create toolbar
 		toolbar_api
-				.createToolbar('link_add_form', '[name=description]:input')
-				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image')
-				.addControl('downloads', 'link');
+		.createToolbar('link_add_form', '[name=description]:input')
+		.addControl('common', 'markdown')
+		.addControl('gallery', 'article_image')
+		.addControl('downloads', 'link');
 	</script>
 </document>
