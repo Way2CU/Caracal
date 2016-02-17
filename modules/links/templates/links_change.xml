@@ -14,12 +14,11 @@
 				<input
 					type="text"
 					name="text"
-					value="$params['text']"
 					class="multi-language"
 					style="width: 270px;"
 					maxlength="50"
-					cms:eval="value"
 					/>
+				<cms:language_data param="text"/>
 			</label>
 			<label class="horizontal">
 				<span><cms:text constant="label_text_id" module="links"/></span>
@@ -40,9 +39,8 @@
 				name="description"
 				class="multi-language"
 				style="width: 575px; height: 200px;"
-				>
-				<cms:var param="description" multilanguage="yes"/>
-			</textarea>
+				/>
+			<cms:language_data param="description"/>
 		</label>
 		<label>
 			<span><cms:text constant="label_url" module="links"/></span>
