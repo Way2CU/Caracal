@@ -9,7 +9,7 @@
  */
 namespace Modules\Links;
 
-use \ItemManager as ItemManager
+use \ItemManager as ItemManager;
 
 
 class Manager extends ItemManager {
