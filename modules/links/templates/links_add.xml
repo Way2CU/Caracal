@@ -8,7 +8,7 @@
 		method="POST"
 		enctype="multipart/form-data"
 		>
-		<label>
+		<label class="horizontal">
 			<span><cms:text constant="label_text" module="links"/></span>
 			<input
 				type="text"
@@ -16,6 +16,16 @@
 				class="multi-language"
 				style="width: 270px;"
 				maxlength="50"
+				/>
+		</label>
+		<label class="horizontal">
+			<span><cms:text constant="label_text" module="links"/></span>
+			<input
+				type="text"
+				name="text_id"
+				class="code ltr"
+				style="width: 200px;"
+				maxlength="32"
 				/>
 		</label>
 		<label>

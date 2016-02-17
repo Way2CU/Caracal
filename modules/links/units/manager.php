@@ -24,6 +24,7 @@ class Manager extends ItemManager {
 		$this->addProperty('id', 'int');
 		$this->addProperty('text', 'ml_varchar');
 		$this->addProperty('description', 'ml_text');
+		$this->addProperty('text_id', 'varchar');
 		$this->addProperty('url', 'varchar');
 		$this->addProperty('external', 'boolean');
 		$this->addProperty('sponsored', 'boolean');

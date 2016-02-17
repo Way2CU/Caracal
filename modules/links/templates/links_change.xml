@@ -8,7 +8,7 @@
 		id="link_change_form"
 		>
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-		<label>
+		<label class="horizontal">
 			<span><cms:text constant="label_text" module="links"/></span>
 			<input
 				type="text"
@@ -17,6 +17,18 @@
 				class="multi-language"
 				style="width: 270px;"
 				maxlength="50"
+				cms:eval="value"
+				/>
+		</label>
+		<label class="horizontal">
+			<span><cms:text constant="label_text" module="links"/></span>
+			<input
+				type="text"
+				name="text_id"
+				value="$params['text_id']"
+				class="code ltr"
+				style="width: 200px;"
+				maxlength="32"
 				cms:eval="value"
 				/>
 		</label>

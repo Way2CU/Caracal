@@ -216,7 +216,8 @@ class links extends Module {
 		// create main table for links
 		$sql = "
 			CREATE TABLE IF NOT EXISTS `links` (
-				`id` INT NOT NULL AUTO_INCREMENT,";
+				`id` INT NOT NULL AUTO_INCREMENT,
+				`text_id` VARCHAR(32) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`text_{$language}` VARCHAR(50) NOT NULL DEFAULT '',";
@@ -233,7 +234,8 @@ class links extends Module {
 				`total_clicks` INT NOT NULL DEFAULT '0',
 				`image` INT,
 				PRIMARY KEY (`id`),
-				KEY `sponsored` (`sponsored`)
+				KEY `index_by_sponsored` (`sponsored`),
+				KEY `index_by_text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -352,6 +354,7 @@ class links extends Module {
 					'id'               => $item->id,
 					'text'             => $item->text,
 					'description'      => $item->description,
+					'text_id'          => $item->text_id,
 					'url'              => $item->url,
 					'external'         => $item->external,
 					'sponsored'        => $item->sponsored,
@@ -376,6 +379,7 @@ class links extends Module {
 		$data = array(
 				'text' 			=> $this->getMultilanguageField('text'),
 				'description' 	=> $this->getMultilanguageField('description'),
+				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'url' 			=> escape_chars($_REQUEST['url']),
 				'external' 		=> isset($_REQUEST['external']) && ($_REQUEST['external'] == 'on' || $_REQUEST['external'] == '1') ? 1 : 0,
 				'sponsored' 	=> isset($_REQUEST['sponsored']) && ($_REQUEST['sponsored'] == 'on' || $_REQUEST['sponsored'] == '1') ? 1 : 0,
@@ -881,6 +885,7 @@ class links extends Module {
 					'id'                  => $item->id,
 					'text'                => $item->text,
 					'description'         => $item->description,
+					'text_id'             => $item->text_id,
 					'url'                 => $item->url,
 					'redirect_url'        => url_Make('redirect', $this->name, array('id', $item->id)),
 					'external'            => $item->external,
@@ -997,6 +1002,7 @@ class links extends Module {
 						'id'                  => $item->id,
 						'text'                => $item->text,
 						'description'         => $item->description,
+						'text_id'             => $item->text_id,
 						'url'                 => $item->url,
 						'redirect_url'        => url_Make('redirect', $this->name, array('id', $item->id)),
 						'external'            => $item->external,
