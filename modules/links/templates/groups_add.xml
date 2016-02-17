@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="links_group_add_form">
 		<label>
 			<span><cms:text constant="label_name" module="links"/></span>
-			<input type="text" name="name" style="width: 360px;" maxlength="50"/>
+			<input
+				type="text"
+				name="name"
+				class="multi-language"
+				style="width: 360px;"
+				maxlength="50"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_text_id" module="links"/></span>
@@ -24,4 +30,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript" charset="utf-8">
+		new LanguageSelector('links_group_add_form');
+	</script>
 </document>

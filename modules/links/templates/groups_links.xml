@@ -13,7 +13,7 @@
 				</span>
 			</div>
 			<div class="list_content" style="height: 300px">
-				<_group_links group="$params['group']" cms:eval="group"/>
+				<cms:group_links group="$params['group']" cms:eval="group"/>
 			</div>
 		</div>
 		<div class="button_bar">

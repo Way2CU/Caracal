@@ -2,17 +2,17 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div style="margin-bottom: 10px;">
-		<cms:var name="$params['message']"/>
+		<cms:var param="message"/>
 		<div style="padding: 10px; font-weight: bold;">
-			<cms:var name="$params['name']"/>
+			<cms:var param="name"/>
 		</div>
 	</div>
 	<div class="button_bar">
 		<button type="button" onclick="$params['yes_action']" cms:eval="onclick">
-			<cms:var name="$params['yes_text']"/>
+			<cms:var param="yes_text"/>
 		</button>
 		<button type="button" onclick="$params['no_action']" cms:eval="onclick">
-			<cms:var name="$params['no_text']"/>
+			<cms:var param="no_text"/>
 		</button>
 	</div>
 </document>

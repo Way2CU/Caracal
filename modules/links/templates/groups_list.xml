@@ -3,7 +3,7 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<cms:var name="$params['link_new']"/>
+		<cms:var param="link_new"/>
 	</div>
 
 	<!-- Header -->
@@ -17,7 +17,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 300px">
-			<_group_list/>
+			<cms:group_list/>
 		</div>
 	</div>
 </document>

@@ -3,20 +3,24 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 300px;">
-			<cms:var name="$params['text']"/>
+			<cms:var param="text" multilanguage="yes"/>
 		</span>
 		<span class="column" style="width: 100px;">
 			<div class="progress_bar" style="width: 90px;">
-				<div class="gauge" style="'width: '.$params['display_percent'].'%'" cms:eval="style"/>
+				<div
+					class="gauge"
+					style="'width: '.$params['display_percent'].'%'"
+					cms:eval="style"
+					/>
 			</div>
 		</span>
 		<span class="column" style="width: 70px;">
-			<cms:var name="$params['sponsored_clicks']"/>
+			<cms:var param="sponsored_clicks"/>
 			<cms:raw text="/"/>
-			<cms:var name="$params['display_limit']"/>
+			<cms:var param="display_limit"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<cms:var name="$params['item_change']"/>
+			<cms:var param="item_change"/>
 		</span>
 	</div>
 </document>

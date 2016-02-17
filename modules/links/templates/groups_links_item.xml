@@ -12,12 +12,12 @@
 					cms:eval="name"
 					cms:optional="checked"
 					/>
-				<cms:var name="$params['text']"/>
+				<cms:var param="text" multilanguage="yes"/>
 			</label>
 		</span>
 
 		<span class="column" style="width: 70px; text-align: center;">
-			<cms:var name="$params['sponsored_character']"/>
+			<cms:var param="sponsored_character"/>
 		</span>
 	</div>
 </document>

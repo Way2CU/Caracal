@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST">
+	<form
+		action="$params['form_action']"
+		cms:eval="action"
+		method="POST"
+		id="link_change_form"
+		>
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
 			<span><cms:text constant="label_text" module="links"/></span>
@@ -9,27 +14,33 @@
 				type="text"
 				name="text"
 				value="$params['text']"
+				class="multi-language"
 				style="width: 270px;"
 				maxlength="50"
 				cms:eval="value"
 				/>
 		</label>
-
 		<label>
 			<span><cms:text constant="label_description" module="links"/></span>
 			<textarea
 				name="description"
+				class="multi-language"
 				style="width: 575px; height: 200px;"
 				>
-				<cms:var name="$params['description']"/>
+				<cms:var param="description" multilanguage="yes"/>
 			</textarea>
 		</label>
-
 		<label>
 			<span><cms:text constant="label_url" module="links"/></span>
-			<input type="text" name="url" value="$params['url']" style="width: 360px;" maxlength="255" cms:eval="value"/>
+			<input
+				type="text"
+				name="url"
+				value="$params['url']"
+				style="width: 360px;"
+				maxlength="255"
+				cms:eval="value"
+				/>
 		</label>
-
 		<label class="checkbox">
 			<span><cms:text constant="label_external" module="links"/></span>
 			<input
@@ -39,7 +50,6 @@
 				cms:optional="checked"
 				/>
 		</label>
-
 		<label class="checkbox">
 			<span><cms:text constant="label_sponsored" module="links"/></span>
 			<input
@@ -49,10 +59,16 @@
 				cms:optional="checked"
 				/>
 		</label>
-
 		<label>
 			<span><cms:text constant="label_display_limit" module="links"/></span>
-			<input type="text" name="display_limit" value="$params['display_limit']" style="width: 50px;" maxlength="30" cms:eval="value"/>
+			<input
+				type="text"
+				name="display_limit"
+				value="$params['display_limit']"
+				style="width: 50px;"
+				maxlength="30"
+				cms:eval="value"
+				/>
 		</label>
 
 		<div class="button_bar">
@@ -63,4 +79,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript" charset="utf-8">
+		new LanguageSelector('link_change_form');
+	</script>
 </document>

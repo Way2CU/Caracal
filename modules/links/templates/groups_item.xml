@@ -3,12 +3,12 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 250px;">
-			<cms:var name="$params['name']"/>
+			<cms:var param="name" multilanguage="yes"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_delete']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_links']"/>
+			<cms:var param="item_change"/><cms:raw text=" "/>
+			<cms:var param="item_delete"/><cms:raw text=" "/>
+			<cms:var param="item_links"/>
 		</span>
 	</div>
 </document>

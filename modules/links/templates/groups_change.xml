@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="links_group_change_form">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
 			<span><cms:text constant="label_name" module="links"/></span>
-			<input type="text" name="name" value="$params['name']" style="width: 360px;" maxlength="50" cms:eval="value"/>
+			<input
+				type="text"
+				name="name"
+				value="$params['name']"
+				class="multi-language"
+				style="width: 360px;"
+				maxlength="50"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_text_id" module="links"/></span>
@@ -27,4 +35,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript" charset="utf-8">
+		new LanguageSelector('links_group_change_form');
+	</script>
 </document>

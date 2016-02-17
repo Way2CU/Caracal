@@ -19,7 +19,11 @@
 		</div>
 
 		<div class="list_content" style="height: 300px">
-			<_link_list sponsored="1" template="overview_list_item.xml" local="1"/>
+			<cms:link_list
+				sponsored="1"
+				template="overview_list_item.xml"
+				local="1"
+				/>
 		</div>
 	</div>
 </document>

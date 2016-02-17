@@ -3,9 +3,9 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<cms:var name="$params['link_new']"/>
-		<cms:var name="$params['link_groups']"/>
-		<cms:var name="$params['link_overview']"/>
+		<cms:var param="link_new"/>
+		<cms:var param="link_groups"/>
+		<cms:var param="link_overview"/>
 	</div>
 
 	<!-- Header -->
@@ -28,7 +28,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 400px">
-			<_link_list/>
+			<cms:link_list/>
 		</div>
 	</div>
 </document>

@@ -1,35 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form id="link_add_form" action="$params['form_action']" cms:eval="action" method="POST" enctype="multipart/form-data" onsubmit="">
+	<form
+		id="link_add_form"
+		action="$params['form_action']"
+		cms:eval="action"
+		method="POST"
+		enctype="multipart/form-data"
+		>
 		<label>
 			<span><cms:text constant="label_text" module="links"/></span>
-			<input type="text" name="text" style="width: 270px;" maxlength="50"/>
+			<input
+				type="text"
+				name="text"
+				class="multi-language"
+				style="width: 270px;"
+				maxlength="50"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_description" module="links"/></span>
-			<textarea name="description" style="width: 575px; height: 200px;"><cms:raw/></textarea>
+			<textarea
+				name="description"
+				class="multi-language"
+				style="width: 575px; height: 200px;"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_url" module="links"/></span>
-			<input type="text" name="url" style="width: 360px;" maxlength="255"/>
+			<input
+				type="text"
+				name="url"
+				style="width: 360px;"
+				maxlength="255"
+				/>
 		</label>
 		<label class="checkbox">
 			<span><cms:text constant="label_external" module="links"/></span>
-			<input type="checkbox" name="external" checked="checked"/>
+			<input
+				type="checkbox"
+				name="external"
+				checked="checked"
+				/>
 		</label>
 		<label class="checkbox">
 			<span><cms:text constant="label_sponsored" module="links"/></span>
-			<input type="checkbox" name="sponsored"/>
+			<input
+				type="checkbox"
+				name="sponsored"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_display_limit" module="links"/></span>
-			<input type="text" name="display_limit" value="0" style="width: 50px;" maxlength="30"/>
+			<input
+				type="text"
+				name="display_limit"
+				value="0"
+				style="width: 50px;"
+				maxlength="30"
+				/>
 		</label>
 		<cms:if condition="$params['with_images'] == true">
 			<label>
 				<span><cms:text constant="label_image" module="links"/></span>
-				<input type="file" name="image"/>
+				<input
+					type="file"
+					name="image"
+					/>
 			</label>
 		</cms:if>
 
@@ -41,4 +78,7 @@
 			</button>
 		</div>
 	</form>
+	<script type="text/javascript" charset="utf-8">
+		new LanguageSelector('link_add_form');
+	</script>
 </document>
