@@ -81,5 +81,12 @@
 	</form>
 	<script type="text/javascript" charset="utf-8">
 		new LanguageSelector('link_change_form');
+
+		// create toolbar
+		toolbar_api
+				.createToolbar('link_change_form', '[name=description]:input')
+				.addControl('common', 'markdown')
+				.addControl('gallery', 'article_image')
+				.addControl('downloads', 'link');
 	</script>
 </document>
