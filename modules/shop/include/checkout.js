@@ -511,7 +511,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 	// finalize object
 	self._init();
-}
+};
 
 
 /**
@@ -733,7 +733,7 @@ Caracal.Shop.CheckoutForm = function() {
 
 	// complete object initialization
 	self._init();
-}
+};
 
 
 $(function() {

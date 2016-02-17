@@ -47,7 +47,7 @@ function DynamicPageContent(container_id, link_selector, switch_delay, change_ur
 		// connect popstate event
 		if (self._change_url && window.history.pushState != undefined)
 			$(window).bind('popstate', self._handle_pop_state);
-	}
+	};
 
 	/**
 	 * Load content from specified URL.

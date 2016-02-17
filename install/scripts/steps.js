@@ -31,7 +31,7 @@ function Steps() {
 		// connect footer buttons
 		self._buttons.filter('.next').click(self._handle_next_click);
 		self._buttons.filter('.previous').click(self._handle_previous_click);
-	}
+	};
 
 	/**
 	 * Handle clicking on step in steps navigation.

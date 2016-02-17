@@ -326,7 +326,7 @@ function Dialog() {
 		self._content_loaded = true;
 
 		// set dialog content
-		self._inner_content.html(data)
+		self._inner_content.html(data);
 
 		// show dialog if needed
 		if (self._show_on_load)

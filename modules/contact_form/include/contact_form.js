@@ -29,7 +29,7 @@ function ContactForm(form_object) {
 
 		self._communicator
 				.on_success(self._handle_success)
-				.on_error(self._handle_error)
+				.on_error(self._handle_error);
 
 		// find form and fields
 		self._form = $(form_object);
@@ -59,7 +59,7 @@ function ContactForm(form_object) {
 		// create message container
 		self._message = $('<div>');
 		self._message.css('padding', '20px');
-	}
+	};
 
 	/**
 	 * Get data from fields.

@@ -175,7 +175,7 @@ Caracal.WindowSystem.Dialog = function() {
 
 	// finish object initialization
 	self.init();
-}
+};
 
 /**
  * Window Constructor
@@ -222,7 +222,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 					.bind('mousedown', self._handleClick);
 
 			// create window title bar
-			self.title_bar = $('<div>')
+			self.title_bar = $('<div>');
 			self.title_bar
 					.addClass('title')
 					.bind('dragstart', self._handleDragStart)
@@ -249,7 +249,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 					.addClass('container')
 					.appendTo(self.container);
 
-			self.content = $('<div>')
+			self.content = $('<div>');
 			self.content
 					.addClass('content')
 					.appendTo(window_container);
@@ -697,7 +697,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 
 	// finish object initialization
 	self.init();
-}
+};
 
 /**
  * Window System
@@ -772,7 +772,7 @@ Caracal.WindowSystem.System = function(container, list_container) {
 
 			// preconfigure window
 			self.list[id] = window;
-			window.attach(self)
+			window.attach(self);
 
 			// set window icon
 			if (window_icon != null)
@@ -920,7 +920,7 @@ Caracal.WindowSystem.System = function(container, list_container) {
 
 	// finish object initialization
 	self.init();
-}
+};
 
 $(function() {
 	Caracal.window_system = new Caracal.WindowSystem.System('div#container', 'footer');
