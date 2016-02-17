@@ -2298,7 +2298,7 @@ class shop extends Module {
 						));
 
 				if (is_object($property))
-					$item_price = floatval($property->value); else
+					$item_price = floatval(unserialize($property->value)); else
 					$item_price = $item->price;  // fallback, better charge regular than nothing
 
 			} else {
