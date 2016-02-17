@@ -53,7 +53,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_groups'),
-								url_getFromFilePath($this->path.'images/groups.svg'),
+								url_GetFromFilePath($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'groups_list',
 											500,
