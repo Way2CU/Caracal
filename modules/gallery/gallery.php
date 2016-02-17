@@ -2592,7 +2592,7 @@ class gallery extends Module {
 	 * @param string $filename
 	 * @param integer $thumb_size
 	 * @param integer $constraint
-	 * @param ingeger $crop_size
+	 * @param integer $crop_size
 	 * @return string
 	 */
 	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
