@@ -235,7 +235,7 @@ Caracal.Gallery.Loader = function() {
 
 	// finalize object
 	self._init();
-}
+};
 
 
 /**
@@ -851,7 +851,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 	// finalize object
 	self._init();
-}
+};
 
 
 /**
@@ -942,7 +942,7 @@ Caracal.Gallery.Container = function() {
 
 	// finalize object
 	self._init();
-}
+};
 
 
 /**
@@ -965,7 +965,7 @@ Caracal.Gallery.create_image = function(data) {
 		.attr('alt', data.title);
 
 	return link;
-}
+};
 
 
 /**

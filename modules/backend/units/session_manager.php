@@ -134,9 +134,8 @@ class SessionManager {
 			$manager->login_user($username);
 
 			// check if we need to make redirect URL
-			if (isset($_SESSION['redirect_url']))
-				$url = url_SetRefresh($_SESSION['redirect_url'], 2); else
-				$url = url_SetRefresh(url_Make('', $this->parent->name), 2);
+			$url = (isset($_SESSION['redirect_url'])) ?  $_SESSION['redirect_url'] : url_Make('', $this->parent->name);
+			url_SetRefresh($_SESSION['redirect_url'], 2);
 
 			// get message
 			$message = $this->parent->getLanguageConstant('message_login_ok');
@@ -201,7 +200,8 @@ class SessionManager {
 		$message = $this->parent->getLanguageConstant('message_logout_ok');
 
 		// get url
-		$url = url_SetRefresh(url_Make('', $this->parent->name), 2);
+		$url = url_Make('', $this->parent->name);
+		url_SetRefresh($url, 2);
 
 		// load template and show the message
 		$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');

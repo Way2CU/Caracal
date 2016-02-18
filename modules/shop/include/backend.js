@@ -30,7 +30,7 @@ Caracal.Shop.open_item_search = function() {
 					language_handler.getText('shop', 'title_search_results'),
 					true, url
 				);
-}
+};
 
 /**
  * Remove related item from the list.
@@ -39,7 +39,7 @@ Caracal.Shop.open_item_search = function() {
  */
 Caracal.Shop.remove_related_item = function(caller) {
 	$(caller).closest('div.list_item').remove();
-}
+};
 
 /**
  * Add color list item.
@@ -92,7 +92,7 @@ Caracal.Shop.add_color_item = function(color_name, color_value) {
 		.data('name', color_name)
 		.data('value', color_value)
 		.appendTo(container);
-}
+};
 
 /**
  * Handle adding item color.
@@ -108,12 +108,12 @@ Caracal.Shop.add_color = function() {
 		colors.val(color_name.val() + ':' + color_value.val());
 
 	// add new item to the list
-	Caracal.Shop.add_color_item(color_name.val(), color_value.val())
+	Caracal.Shop.add_color_item(color_name.val(), color_value.val());
 
 	// reset color input fields
 	color_name.val('');
 	color_value.val('#FFFFFF');
-}
+};
 
 /**
  * Handle clicking on remove button for color.
@@ -141,7 +141,7 @@ Caracal.Shop.delete_color = function(event) {
 	parent.remove();
 
 	event.preventDefault();
-}
+};
 
 /**
  * Parse colors string and populate list.
@@ -157,7 +157,7 @@ Caracal.Shop.parse_colors = function() {
 		var data = colors[i].split(':');
 		Caracal.Shop.add_color_item(data[0], data[1]);
 	}
-}
+};
 
 /**
  * Update transaction status.
@@ -199,7 +199,7 @@ Caracal.Shop.update_transaction_status = function(button) {
 			select.removeAttr('disabled');
 		}
 	});
-}
+};
 
 /**
  * Update handling and total transaction amount.
@@ -500,7 +500,7 @@ Caracal.Shop.edit_property = function(event) {
 
 		case 'ml_text':
 			var input_value = current_window.find('input[name=property_ml_text]');
-			var language_data = input_value.data('language')
+			var language_data = input_value.data('language');
 
 			// set current value
 			input_value.val(data.value[selector.current_language]);

@@ -45,7 +45,7 @@ Caracal.MobileMenu = function() {
 				top: self._top_bar.height(),
 				height: $(window).height() - self._top_bar.height(),
 				zIndex: 10000
-			})
+			});
 
 		// connect events in main menu
 		self._menu.find('a').click(self._handle_menu_item_click);
@@ -198,6 +198,6 @@ Caracal.MobileMenu = function() {
 
 	// complete initialization
 	self._init();
-}
+};
 
 window['MobileMenu'] = Caracal.MobileMenu;

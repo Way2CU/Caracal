@@ -240,4 +240,4 @@ Caracal.PropertyEditor = function(selector) {
 
 	// finalize object
 	self._init();
-}
+};

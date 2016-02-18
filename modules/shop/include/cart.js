@@ -753,7 +753,7 @@ Caracal.Shop.Cart = function() {
 
 	// finalize object
 	self._init();
-}
+};
 
 
 /**
@@ -1037,7 +1037,7 @@ Caracal.Shop.Item = function(cart) {
 
 	// finalize object
 	self._init();
-}
+};
 
 
 /**
@@ -1138,4 +1138,4 @@ Caracal.Shop.ItemView = function(item) {
 
 	// finalize object
 	self._init();
-}
+};
