@@ -245,7 +245,7 @@ class links extends Module {
 				`id` INT NOT NULL AUTO_INCREMENT,";
 
 		foreach($list as $language)
-			$sql .= "`text_{$language}` VARCHAR(50) NOT NULL DEFAULT '',";
+			$sql .= "`name_{$language}` VARCHAR(50) NOT NULL DEFAULT '',";
 
 		$sql .= "
 				`text_id` VARCHAR(32) NOT NULL,
@@ -1091,6 +1091,7 @@ class links extends Module {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
 				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
 				$template = new TemplateHandler($tag_params['template']);
+
 		} else {
 			$template = new TemplateHandler('group.xml', $this->path.'templates/');
 		}
