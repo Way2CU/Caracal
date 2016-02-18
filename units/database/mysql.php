@@ -106,7 +106,7 @@ class Database_MySQL extends Database {
 	 * @return boolean
 	 */
 	public function multi_query($sql) {
-		$this->handle->multi_query($sql) === true;
+		$this->handle->multi_query($sql);
 		while ($this->handle->more_results() && $this->handle->next_result());
 
 		return $this->handle->errno == 0;
