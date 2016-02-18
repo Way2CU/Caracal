@@ -239,7 +239,7 @@ function Dialog() {
 	 * @return object
 	 */
 	self.clearCloseCallback = function() {
-		self._close_callback == null;
+		self._close_callback = null;
 		return self;
 	};
 
