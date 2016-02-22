@@ -350,17 +350,19 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		var backend_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 		var selector = new LanguageSelector('shop_item_change_form');
 		var notebook = new Notebook('shop_change_item_notebook');
 
+		// get language constants
+		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_delivery'];
+		var data = language_handler.getTextArray('shop', titles);
 		notebook
-			.setPageTitle(0, language_handler.getText('shop', 'tab_item'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_properties'))
-			.setPageTitle(2, language_handler.getText('shop', 'tab_colors'))
-			.setPageTitle(3, language_handler.getText('shop', 'tab_category'))
-			.setPageTitle(4, language_handler.getText('shop', 'tab_related'))
-			.setPageTitle(5, language_handler.getText('shop', 'tab_delivery'));
+			.setPageTitle(0, data['tab_item'])
+			.setPageTitle(1, data['tab_properties'])
+			.setPageTitle(2, data['tab_colors'])
+			.setPageTitle(3, data['tab_category'])
+			.setPageTitle(4, data['tab_related'])
+			.setPageTitle(5, data['tab_delivery']);
 
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_array]');
