@@ -9,7 +9,13 @@
 					<label>
 						<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 						<span><cms:text constant="label_name" module="shop"/></span>
-						<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+						<input
+							type="text"
+							class="multi-language"
+							name="name"
+							style="width: 270px;"
+							maxlength="255"
+							/>
 						<cms:language_data param="name"/>
 					</label>
 				</div>

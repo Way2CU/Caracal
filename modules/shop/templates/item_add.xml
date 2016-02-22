@@ -8,7 +8,13 @@
 				<div class="box left" style="width: 290px;">
 					<label>
 						<span><cms:text constant="label_name" module="shop"/></span>
-						<input type="text" class="multi-language" name="name" style="width: 270px;" maxlength="30"/>
+						<input
+							type="text"
+							class="multi-language"
+							name="name"
+							style="width: 270px;"
+							maxlength="255"
+							/>
 					</label>
 				</div>
 				<div class="box left" style="width: 160px;">
