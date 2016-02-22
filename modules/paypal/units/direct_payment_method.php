@@ -282,7 +282,7 @@ class PayPal_Direct extends PaymentMethod {
 
 			// set currency
 			$recurring_fields['AMT'] = $plan->price;
-			$recurring_fields['CURRENCYCODE'] = $shop->getDefaultCurrency();
+			$recurring_fields['CURRENCYCODE'] = shop::getDefaultCurrency();
 
 			// billing period
 			$recurring_fields['BILLINGPERIOD'] = $this->units[$plan->interval];

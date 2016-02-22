@@ -294,7 +294,7 @@ class PayPal_Express extends PaymentMethod {
 			if (is_object($plan)) {
 				// prepare fields for initial negotiation
 				$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->price;
-				$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+				$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
 				$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $plan->name[$language];
 				$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 				$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Authorization';
@@ -305,7 +305,7 @@ class PayPal_Express extends PaymentMethod {
 				// add one time payment
 				if ($plan->setup_price > 0) {
 					$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
-					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
 					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
 					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 					$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
@@ -319,7 +319,7 @@ class PayPal_Express extends PaymentMethod {
 			$transaction = $_SESSION['transaction'];
 
 			$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
-			$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+			$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
 			$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction['uid'];
 			$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 			$fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];
@@ -445,7 +445,7 @@ class PayPal_Express extends PaymentMethod {
 			if (is_object($plan) && $plan->setup_price > 0) {
 				$setup_fields = $fields;
 				$setup_fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
-				$setup_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+				$setup_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
 				$setup_fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
 				$setup_fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 				$setup_fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
@@ -468,7 +468,7 @@ class PayPal_Express extends PaymentMethod {
 
 			// set currency
 			$recurring_fields['AMT'] = $plan->price;
-			$recurring_fields['CURRENCYCODE'] = $shop->getDefaultCurrency();
+			$recurring_fields['CURRENCYCODE'] = shop::getDefaultCurrency();
 
 			// billing period
 			$recurring_fields['BILLINGPERIOD'] = $this->units[$plan->interval];
@@ -512,7 +512,7 @@ class PayPal_Express extends PaymentMethod {
 			$transaction = $_SESSION['transaction'];
 
 			$payment_fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
-			$payment_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = $shop->getDefaultCurrency();
+			$payment_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
 			$payment_fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction['uid'];
 			$payment_fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 			$payment_fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];

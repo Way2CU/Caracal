@@ -309,7 +309,7 @@ class ShopCurrenciesHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'default'		=> $this->_parent->getDefaultCurrency(),
+					'default'		=> shop::getDefaultCurrency(),
 					'form_action'	=> backend_UrlMake($this->name, 'currencies', 'save_default'),
 					'cancel_action'	=> window_Close('shop_currencies_set_default')
 				);

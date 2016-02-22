@@ -164,8 +164,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$description .= ', ...';
 
 		// get proper currency code
-		$shop_module = shop::getInstance();
-		$currency = $shop_module->getDefaultCurrency();
+		$currency = shop::getDefaultCurrency();
 
 		if (array_key_exists($currency, $this->currency_aliases))
 			$currency = $this->currency_aliases[$currency];
@@ -223,8 +222,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$description .= ', ...';
 
 		// get proper currency code
-		$shop_module = shop::getInstance();
-		$currency = $shop_module->getDefaultCurrency();
+		$currency = shop::getDefaultCurrency();
 
 		if (array_key_exists($currency, $this->currency_aliases))
 			$currency = $this->currency_aliases[$currency];

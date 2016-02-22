@@ -174,8 +174,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_payment($transaction_data, $billing_information, $items, $return_url, $cancel_url) {
-		$shop = shop::getInstance();
-		$currency = $shop->getDefaultCurrency();
+		$currency = shop::getDefaultCurrency();
 
 		// charge url
 		$this->url = url_Make('charge', $this->parent->name);
@@ -225,8 +224,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function new_recurring_payment($transaction_data, $billing_information, $plan_name, $return_url, $cancel_url) {
-		$shop = shop::getInstance();
-		$currency = $shop->getDefaultCurrency();
+		$currency = shop::getDefaultCurrency();
 
 		// charge url
 		$this->url = url_Make('subscribe', $this->parent->name);

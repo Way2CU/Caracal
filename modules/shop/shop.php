@@ -1797,7 +1797,7 @@ class shop extends Module {
 	 * Return default currency using JSON object
 	 */
 	private function json_GetCurrency() {
-		print json_encode($this->getDefaultCurrency());
+		print json_encode(self::getDefaultCurrency());
 	}
 
 	/**
@@ -2054,7 +2054,7 @@ class shop extends Module {
 		$result['cart'] = array();
 		$result['size_values'] = array();
 		$result['count'] = count($result['cart']);
-		$result['currency'] = $this->getDefaultCurrency();
+		$result['currency'] = self::getDefaultCurrency();
 
 		if (isset($_SESSION['transaction'])) {
 			$result['shipping'] = $_SESSION['transaction']['shipping'];
@@ -2453,8 +2453,9 @@ class shop extends Module {
 	 * Return default currency
 	 * @return string
 	 */
-	public function getDefaultCurrency() {
-		return $this->settings['default_currency'];
+	public static function getDefaultCurrency() {
+		$shop = self::getInstance();
+		return $shop->settings['default_currency'];
 	}
 
 	/**
@@ -3700,7 +3701,7 @@ class shop extends Module {
 				'checkout_url'		=> $payment_method->get_url(),
 				'checkout_fields'	=> $checkout_fields,
 				'checkout_name'		=> $payment_method->get_title(),
-				'currency'			=> $this->getDefaultCurrency(),
+				'currency'			=> self::getDefaultCurrency(),
 				'recurring'			=> $recurring,
 				'include_shipping'	=> $include_shipping,
 				'type'				=> $transaction_type
@@ -4079,7 +4080,7 @@ class shop extends Module {
 
 		$template = $this->getLanguageConstant('recurring_description');
 		$zero_word = $this->getLanguageConstant('recurring_period_zero');
-		$currency = $this->getDefaultCurrency();
+		$currency = self::getDefaultCurrency();
 
 		$price = $params['price'].' '.$currency;
 		$period = $params['period'].' '.$units[$params['unit']];
