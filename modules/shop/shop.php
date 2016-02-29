@@ -876,7 +876,7 @@ class shop extends Module {
 				`id` INT NOT NULL AUTO_INCREMENT,
 				`item` INT NOT NULL,
 				`text_id` VARCHAR(32) NOT NULL,
-				`type` VARCHAR(32) NOT NULL";
+				`type` VARCHAR(32) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
@@ -891,7 +891,7 @@ class shop extends Module {
 
 		// create table for related shop items
 		$sql = "
-			CREATE TABLE IF NOT EXISTS `shop_related_items` (
+			CREATE TABLE `shop_related_items` (
 				`item` INT NOT NULL,
 				`related` INT NOT NULL,
 				KEY `item` (`item`,`related`)
@@ -952,7 +952,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop buyers table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_buyers` (
+		$sql = "CREATE TABLE `shop_buyers` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`first_name` varchar(64) NOT NULL,
 			`last_name` varchar(64) NOT NULL,
@@ -967,7 +967,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop buyer addresses table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_delivery_address` (
+		$sql = "CREATE TABLE `shop_delivery_address` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`buyer` INT NOT NULL,
 			`name` varchar(128) NOT NULL,
@@ -985,7 +985,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop transactions table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_transactions` (
+		$sql = "CREATE TABLE `shop_transactions` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`buyer` INT NOT NULL,
 			`address` INT NOT NULL,
@@ -1011,7 +1011,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop transaction items table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_items` (
+		$sql = "CREATE TABLE `shop_transaction_items` (
 			`id` int NOT NULL AUTO_INCREMENT,
 			`transaction` int NOT NULL,
 			`item` int NOT NULL,
@@ -1026,7 +1026,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop payment tokens table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_payment_tokens` (
+		$sql = "CREATE TABLE `shop_payment_tokens` (
 			`id` int NOT NULL AUTO_INCREMENT,
 			`payment_method` varchar(64) NOT NULL,
 			`buyer` int NOT NULL,
@@ -1042,7 +1042,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop transaction plans table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_transaction_plans` (
+		$sql = "CREATE TABLE `shop_transaction_plans` (
 			`id` int NOT NULL AUTO_INCREMENT,
 			`transaction` int NOT NULL,
 			`plan_name` varchar(64) NOT NULL,
@@ -1059,7 +1059,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create show recurring payments table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_recurring_payments` (
+		$sql = "CREATE TABLE `shop_recurring_payments` (
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`plan` INT NOT NULL,
 			`amount` DECIMAL(8,2) NOT NULL,
@@ -1071,7 +1071,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop stock table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_warehouse` (
+		$sql = "CREATE TABLE `shop_warehouse` (
 			`id` int NOT NULL AUTO_INCREMENT,
 			`name` varchar(60) NOT NULL,
 			`street` varchar(200) NOT NULL,
@@ -1085,7 +1085,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop stock table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_stock` (
+		$sql = "CREATE TABLE `shop_stock` (
 			`id` int NOT NULL AUTO_INCREMENT,
 			`item` int NOT NULL,
 			`size` int DEFAULT NULL,
@@ -1096,7 +1096,7 @@ class shop extends Module {
 		$db->query($sql);
 
 		// create shop manufacturers table
-		$sql = "CREATE TABLE IF NOT EXISTS `shop_manufacturers` (
+		$sql = "CREATE TABLE `shop_manufacturers` (
 			`id` int NOT NULL AUTO_INCREMENT,";
 
 		foreach($list as $language)
