@@ -148,6 +148,7 @@
 	"menu_stocks": "Stocks",
 	"menu_transactions": "Transactions",
 	"menu_warehouses": "Warehouses",
+	"menu_import": "Import data",
 	"message_bad_fields": "The following fields are invalid:",
 	"message_category_delete": "You are about to delete the following category. Items contained in specified category will not be removed! Are you sure?",
 	"message_category_deleted": "Category was deleted!",
