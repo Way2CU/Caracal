@@ -262,6 +262,13 @@ class shop extends Module {
 			);
 			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
 
+			$import_menu = new backend_MenuItem(
+				$this->getLanguageConstant('menu_import'),
+				url_GetFromFilePath($this->path.'images/import.svg'),
+				'javascript: void(0);', 5
+			);
+			$shop_menu->addChild('shop_import', $import_menu);
+
 			$shop_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
