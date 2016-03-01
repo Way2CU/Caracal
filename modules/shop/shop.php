@@ -2673,7 +2673,10 @@ class shop extends Module {
 	 */
 	private function getShippingInformation() {
 		$result = array();
-		$fields = array('name', 'email', 'phone', 'street', 'street2', 'city', 'zip', 'country', 'state');
+		$fields = array(
+				'name', 'email', 'phone', 'street', 'street2',
+				'city', 'zip', 'country', 'state', 'access_code'
+			);
 
 		// get delivery information
 		foreach($fields as $field)
@@ -2899,14 +2902,14 @@ class shop extends Module {
 		$address = $address_manager->getSingleItem(
 			$address_manager->getFieldNames(),
 			array(
-				'buyer'		=> $buyer->id,
-				'name'		=> $shipping_information['name'],
-				'street'	=> $shipping_information['street'],
-				'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
-				'city'		=> $shipping_information['city'],
-				'zip'		=> $shipping_information['zip'],
-				'state'		=> $shipping_information['state'],
-				'country'	=> $shipping_information['country'],
+				'buyer'   => $buyer->id,
+				'name'    => $shipping_information['name'],
+				'street'  => $shipping_information['street'],
+				'street2' => isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+				'city'    => $shipping_information['city'],
+				'zip'     => $shipping_information['zip'],
+				'state'   => $shipping_information['state'],
+				'country' => $shipping_information['country'],
 			));
 
 		if (is_object($address)) {
@@ -2916,16 +2919,16 @@ class shop extends Module {
 		} else {
 			// create new address
 			$address_manager->insertData(array(
-				'buyer'		=> $buyer->id,
-				'name'		=> $shipping_information['name'],
-				'street'	=> $shipping_information['street'],
-				'street2'	=> isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
-				'phone'		=> $shipping_information['phone'],
-				'city'		=> $shipping_information['city'],
-				'zip'		=> $shipping_information['zip'],
-				'state'		=> $shipping_information['state'],
-				'country'	=> $shipping_information['country'],
-				'access_code'	=> $shipping_information['access_code']
+				'buyer'       => $buyer->id,
+				'name'        => $shipping_information['name'],
+				'street'      => $shipping_information['street'],
+				'street2'     => isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+				'phone'       => $shipping_information['phone'],
+				'city'        => $shipping_information['city'],
+				'zip'         => $shipping_information['zip'],
+				'state'       => $shipping_information['state'],
+				'country'     => $shipping_information['country'],
+				'access_code' => $shipping_information['access_code']
 			));
 
 			$id = $address_manager->getInsertedID();
