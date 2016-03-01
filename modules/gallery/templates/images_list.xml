@@ -9,7 +9,11 @@
 
 		<div class="floated">
 			<cms:text constant="group" module="gallery"/>
-			<select onchange="javascript: gallery_update_image_list();" id="gallery_images_group">
+			<select
+				onchange="javascript: gallery_update_image_list();"
+				id="gallery_images_group"
+				style="width: 150px;"
+				>
 				<option value="0"><cms:text constant="all_images" module="gallery"/></option>
 				<cms:group_list
 					selected="isset($_REQUEST['group']) ? fix_chars($_REQUEST['group']) : 0"
