@@ -19,12 +19,11 @@
 						src="_BASEURL.'/modules/backend/images/logo_text.svg'"
 						alt="Caracal"
 						eval="src"
-					/>
+						/>
 					<cms:text constant="slogan" module="backend"/>
 				</div>
 
-				<div id="user_widget">
-				</div>
+				<div id="user_widget"/>
 
 				<nav id="language">
 					<cms:module

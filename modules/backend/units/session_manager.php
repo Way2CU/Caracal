@@ -134,7 +134,7 @@ class SessionManager {
 			$manager->login_user($username);
 
 			// check if we need to make redirect URL
-			$url = (isset($_SESSION['redirect_url'])) ?  $_SESSION['redirect_url'] : url_Make('', $this->parent->name);
+			$url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : url_Make('', $this->parent->name);
 			url_SetRefresh($_SESSION['redirect_url'], 2);
 
 			// get message
@@ -145,8 +145,7 @@ class SessionManager {
 			$template->setMappedModule($this->parent->name);
 
 			$params = array(
-						'message'		=> $message,
-						'redirect_url'	=> $url
+						'message'		=> $message
 					);
 
 			$template->restoreXML();
