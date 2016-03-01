@@ -17,7 +17,7 @@
     "label_sponsored": "קישור ממומן",
     "label_sponsored_clicks": "קליקים ממומנים:",
     "label_text": "טקסט:",
-    "label_text_id": "מזהה טקסט המאמר&nbsp;<small>(אופציונאלי)</small>:",
+    "label_text_id": "Unique text ID&nbsp;<small>(optional)</small>:",
     "label_total_clicks": "סך קליקים:",
     "label_url": "URL:",
     "links": "קישורים",
