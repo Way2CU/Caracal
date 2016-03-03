@@ -134,7 +134,7 @@ class SessionManager {
 			$manager->login_user($username);
 
 			// check if we need to make redirect URL
-			if isset($_SESSION['redirect_url'])
+			if (isset($_SESSION['redirect_url']))
 				$url = $_SESSION['redirect_url']; else
 				$url = url_Make('', $this->parent->name);
 			url_SetRefresh($url, 2);
