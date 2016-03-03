@@ -828,7 +828,7 @@ class shop extends Module {
 		$sql = "
 			CREATE TABLE `shop_items` (
 				`id` int NOT NULL AUTO_INCREMENT,
-				`uid` VARCHAR(13) NOT NULL,";
+				`uid` VARCHAR(64) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
