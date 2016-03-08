@@ -2113,7 +2113,7 @@ class gallery extends Module {
 	 * @param $filename
 	 */
 	private function getFileName($filename) {
-		return md5($filename.strval(time())).'.'.pathinfo(strtolower($filename), PATHINFO_EXTENSION);
+		return hash('md5', $filename.strval(time())).'.'.pathinfo(strtolower($filename), PATHINFO_EXTENSION);
 	}
 
 	/**
@@ -2511,6 +2511,8 @@ class gallery extends Module {
 		}
 
 		// process uploaded images
+		$manager = GalleryManager::getInstance();
+
 		for ($i = 0; $i < count($file_names); $i++) {
 			// get unique file name for this image to be stored
 			$filename = $this->getFileName($file_names[$i]);
@@ -2518,7 +2520,6 @@ class gallery extends Module {
 			// try moving file to new destination
 			if (move_uploaded_file($file_temp_names[$i], $this->image_path.$filename)) {
 				// store empty data in database
-				$manager = GalleryManager::getInstance();
 				$data = array(
 							'size'			=> $file_sizes[$i],
 							'filename'		=> $filename,
