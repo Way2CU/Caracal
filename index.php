@@ -74,6 +74,13 @@ define('_AJAX_REQUEST',
 		);
 define('_BROWSER_OK', is_browser_ok());
 
+// force secure connection if requested
+if (!_SECURE && $force_https) {
+	$url = url_GetBaseURL(true);
+	header('Location: '.$url, true, 301);
+	exit();
+}
+
 // start measuring time
 $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];

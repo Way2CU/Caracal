@@ -49,6 +49,9 @@ $memcached_config = array(
 		'port'	=> 11211
 	);
 
+// security
+$force_https = false;
+
 // head tag
 $include_scripts = false;
 $optimize_code = false;

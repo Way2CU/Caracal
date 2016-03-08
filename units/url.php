@@ -307,8 +307,8 @@ function path_GetFromURL($url, $base=_BASEURL) {
  *
  * @return string
  */
-function url_GetBaseURL() {
-	$base = (_SECURE ? 'https://' : 'http://')._DOMAIN;
+function url_GetBaseURL($secure=false) {
+	$base = (_SECURE || $secure ? 'https://' : 'http://')._DOMAIN;
 
 	$port = $_SERVER['SERVER_PORT'];
 	if ($port != 80 && $port != 443)
