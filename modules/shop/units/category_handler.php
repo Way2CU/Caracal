@@ -393,7 +393,7 @@ class ShopCategoryHandler {
 
 		// get order list
 		if (isset($tag_params['order_by']))
-			$order_by = fix_chars(split(',', $tag_params['order_by'])); else
+			$order_by = fix_chars(explode(',', $tag_params['order_by'])); else
 			$order_by = array('title_'.$language);
 
 		if (isset($tag_params['order_ascending']))
