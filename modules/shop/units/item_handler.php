@@ -715,7 +715,10 @@ class Handler {
 		}
 
 		if (isset($tag_params['order_by']))
-			$order_by = array(fix_chars($tag_params['order_by']));
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
 
 		// get items
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
