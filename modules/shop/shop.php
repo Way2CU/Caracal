@@ -2481,7 +2481,7 @@ class shop extends Module {
 	 * @param object $payment_method
 	 * @return array
 	 */
-	private function getCartSummary($transaction_id, $type, $payment_method=null) {
+	public function getCartSummary($transaction_id, $type, $payment_method=null) {
 		global $default_language;
 
 		// prepare params
