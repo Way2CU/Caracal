@@ -269,6 +269,7 @@ class PayPal_Express extends PaymentMethod {
 		global $language, $section, $action;
 
 		$shop = shop::getInstance();
+		$item_manager = ShopItemManager::getInstance();
 		$result = false;
 		$fields = array();
 		$request_id = 0;
@@ -317,13 +318,31 @@ class PayPal_Express extends PaymentMethod {
 		// add regular items
 		if (isset($_SESSION['transaction'])) {
 			$transaction = $_SESSION['transaction'];
+			$summary = $shop->getCartSummary(
+					$transaction['uid'],
+					$shop->getTransactionType(),
+					$self
+				);
 
+			// configure transaction
 			$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
+			$fields["PAYMENTREQUEST_{$request_id}_ITEMAMT"] = $transaction['total'];
 			$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
 			$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction['uid'];
 			$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 			$fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];
 			$fields["PAYMENTREQUEST_{$request_id}_SHIPPINGAMT"] = $transaction['shipping'];
+
+			// configure items
+			$item_id = 0;
+			foreach ($summary['items_for_checkout'] as $data) {
+				$fields["L_PAYMENTREQUEST_{$request_id}_QTY{$item_id}"] = $data['count'];
+				$fields["L_PAYMENTREQUEST_{$request_id}_AMT{$item_id}"] = $data['price'];
+				$fields["L_PAYMENTREQUEST_{$request_id}_NAME{$item_id}"] = $data['name'][$language];
+				$fields["L_PAYMENTREQUEST_{$request_id}_NUMBER{$item_id}"] = $item_id;
+				$item_id++;
+			}
+
 			$request_id++;
 		}
 
