@@ -419,7 +419,6 @@
 						<div class="page" id="payment_method">
 							<h1><cms:text constant="title_payment_method" module="shop"/></h1>
 							<input type="hidden" name="payment_method" value=""/>
-							<input type="hidden" name="stage" value="set_info"/>
 							<div class="payment_methods">
 								<cms:payment_method_list/>
 							</div>
@@ -536,7 +535,7 @@
 							local="1"
 							cms:eval="name"
 							/>
-						<input type="hidden" name="stage" value="set_info"/>
+						<input type="hidden" name="stage" value="set-info"/>
 					</cms:if>
 				</div>
 			</form>

@@ -129,6 +129,14 @@ final class User {
 }
 
 
+final class Stage {
+	const INPUT = 'input';
+	const SET_INFO = 'set-info';  // used to collect information, not handled
+	const RESUME = 'resume';
+	const CHECKOUT = 'checkout';
+}
+
+
 final class RecurringPayment {
 	// interval units
 	const DAY = 0;
@@ -3566,216 +3574,264 @@ class shop extends Module {
 	}
 
 	/**
-	 * Handle drawing checkout form
+	 * Handle drawing checkout form.
+	 *
+	 * Checkout form is organized in following stages:
+	 * Input -> Set info -> [Resume] -> Checkout
+	 *
+	 * Set info and Resume stages are not being handled by any template. They are considered
+	 * inbetween stages where system prepares all the data required for Checkout stage. Internally
+	 * stage will change from any of the two to Checkout.
+	 *
+	 * Resume stage is optional and is used for payment methods that require redirecting
+	 * to external resource before showing checkout page. To achieve this, Shop module emits
+	 * `before-checkout` event signal which allows payment method to redirect to desired
+	 * resource. That resource then has to redirect back to checkout URL with stage set to `resume`.
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
 	public function tag_CheckoutForm($tag_params, $children) {
-		$account_information = array();
-		$shipping_information = array();
 		$billing_information = array();
+		$buyer = null;
+		$address = null;
 		$payment_method = null;
 		$stage = isset($_REQUEST['stage']) ? fix_chars($_REQUEST['stage']) : null;
 		$transaction_type = $this->getTransactionType();
-		$recurring = $transaction_type == TransactionType::SUBSCRIPTION;
 
 		// decide whether to include shipping and account information
+		$include_shipping = true;
 		if (isset($tag_params['include_shipping']))
-			$include_shipping = fix_id($tag_params['include_shipping']) == 1; else
-			$include_shipping = true;
+			$include_shipping = fix_id($tag_params['include_shipping']) == 1;
 
-		$bad_fields = array();
-		$info_available = false;
+		// handle data preparation of checkout process
+		switch ($stage) {
+			case Stage::RESUME:
+				// collect billing information
+				$payment_method = $this->getPaymentMethod($tag_params);
+				$billing_information = $this->getBillingInformation($payment_method);
 
-		// grab user information
-		if (!is_null($stage)) {
-			// get payment method
-			$payment_method = $this->getPaymentMethod($tag_params);
+				// get buyer and address associated with transaction
+				$uid = '';
+				if (isset($_SESSION['transaction']['uid']))
+					$uid = $_SESSION['transaction']['uid'];
 
-			if (is_null($payment_method))
-				throw new PaymentMethodError('No payment method selected!');
+				$transactions_manager = ShopTransactionsManager::getInstance();
+				$buyer_manager = ShopBuyersManager::getInstance();
+				$address_manager = ShopDeliveryAddressManager::getInstance();
 
-			// get billing information
-			$billing_information = $this->getBillingInformation($payment_method);
-			$billing_required = array(
-				'billing_full_name', 'billing_card_type', 'billing_credit_card', 'billing_expire_month',
-				'billing_expire_year', 'billing_cvv'
-			);
-			$bad_fields = $this->checkFields($billing_information, $billing_required, $bad_fields);
+				// get transaction with specified unique id
+				$transaction = $transactions_manager->getSingleItem(
+						array('buyer', 'address'),
+						array('uid' => $uid)
+					);
 
-			// get shipping information
-			if ($include_shipping && $stage == 'set_info') {
-				$shipping_information = $this->getShippingInformation();
-				$shipping_required = array('name', 'email', 'street', 'city', 'zip', 'country');
+				if (is_object($transaction)) {
+					$buyer = $buyer_manager->getSingleItem(
+							$buyer_manager->getFieldNames(),
+							array('buyer' => $transaction->buyer)
+						);
+					$address = $address_manager->getSingleItem(
+							$address_manager->getFieldNames(),
+							array('address' => $transaction->address)
+						);
+				}
+				break;
+
+			case Stage::SET_INFO:
+			default:
+				// get buyer
+				$buyer = $this->getUserAccount();
+
+				// collect shipping information
+				if ($include_shipping) {
+					$shipping_required = array('name', 'email', 'street', 'city', 'zip', 'country');
+					$shipping_information = $this->getShippingInformation();
+					$address = $this->getAddress($buyer, $shipping_information);
+				} else {
+					$shipping_required = array();
+				}
+
+				// collect billing information
+				$payment_method = $this->getPaymentMethod($tag_params);
+				$billing_information = $this->getBillingInformation($payment_method);
+
+				// check required fields
+				if (!$payment_method->provides_information()) {
+					$billing_required = array(
+							'billing_full_name', 'billing_card_type',
+							'billing_credit_card', 'billing_expire_month',
+							'billing_expire_year', 'billing_cvv'
+						);
+				} else {
+					$billing_required = array();
+				}
+
+				$bad_fields = array();
+				$bad_fields = $this->checkFields($billing_information, $billing_required, $bad_fields);
 				$bad_fields = $this->checkFields($shipping_information, $shipping_required, $bad_fields);
-			}
+				$required_count = count($billing_required) + count($shipping_required);
+				$fields_are_invalid = count($bad_fields) > 0 && $required_count > 0;
+
+				// log bad fields if debugging is enabled
+				if ($fields_are_invalid && defined('DEBUG'))
+					trigger_error('Checkout bad fields: '.implode(', ', $bad_fields), E_USER_NOTICE);
+
+				// reset stage back to data entry
+				if ($fields_are_invalid || is_null($payment_method) || is_null($buyer))
+					$stage = Stage::INPUT; else
+					$stage = Stage::CHECKOUT;
+
+				break;
 		}
 
-		$info_available = count($bad_fields) == 0 && !is_null($payment_method);
+		// handle final stage of checkout process
+		switch ($stage) {
+			case Stage::CHECKOUT:
+				// get fields for payment method
+				$return_url = url_Make('checkout_completed', 'shop', array('payment_method', $payment_method->get_name()));
+				$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
 
-		// log bad fields if debugging is enabled
-		if (count($bad_fields) > 0 && defined('DEBUG'))
-			trigger_error('Checkout bad fields: '.implode(', ', $bad_fields), E_USER_NOTICE);
-
-		if ($info_available) {
-			$address_manager = ShopDeliveryAddressManager::getInstance();
-			$currency_manager = ShopCurrenciesManager::getInstance();
-
-			// get fields for payment method
-			$return_url = url_Make('checkout_completed', 'shop', array('payment_method', $payment_method->get_name()));
-			$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
-
-			// get currency info
-			$currency = $this->settings['default_currency'];
-			$currency_item = $currency_manager->getSingleItem(array('id'), array('currency' => $currency));
-
-			if (is_object($currency_item))
-				$transaction_data['currency'] = $currency_item->id;
-
-			// get buyer
-			$buyer = $this->getUserAccount();
-
-			if (is_null($buyer))
-				trigger_error('Unknown buyer, unable to proceed with checkout.', E_USER_ERROR);
-
-			if ($include_shipping)
-				$address = $this->getAddress($buyer, $shipping_information); else
-				$address = null;
-
-			// update transaction
-			$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
-
-			// emit signal and return if handled
-			if ($stage == 'set_info') {
+				// emit signal and give payment methods a chance to redirect
+				// payment process to external location
 				$result_list = Events::trigger(
-					'shop',
-					'before-checkout',
-					$payment_method->get_name(),
-					$return_url,
-					$cancel_url
-				);
+						'shop', 'before-checkout',
+						$payment_method->get_name(),
+						$return_url,
+						$cancel_url
+					);
 
 				foreach ($result_list as $result)
 					if ($result) {
 						$this->showCheckoutRedirect();
 						return;
 					}
-			}
 
-			// create new payment
-			switch ($transaction_type) {
-				case TransactionType::SUBSCRIPTION:
-					// recurring payment
-					$checkout_fields = $payment_method->new_recurring_payment(
-						$summary,
-						$billing_information,
-						$_SESSION['recurring_plan'],
-						$return_url,
-						$cancel_url
-					);
-					break;
+				// update transaction
+				$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
-				case TransactionType::DELAYED:
-					// regular payment
-					$checkout_fields = $payment_method->new_delayed_payment(
-						$summary,
-						$billing_information,
-						$summary['items_for_checkout'],
-						$return_url,
-						$cancel_url
-					);
-					break;
+				// create new payment
+				switch ($transaction_type) {
+					case TransactionType::SUBSCRIPTION:
+						// recurring payment
+						$checkout_fields = $payment_method->new_recurring_payment(
+							$summary,
+							$billing_information,
+							$_SESSION['recurring_plan'],
+							$return_url,
+							$cancel_url
+						);
+						break;
 
-				case TransactionType::REGULAR:
-				default:
-					// regular payment
-					$checkout_fields = $payment_method->new_payment(
-						$summary,
-						$billing_information,
-						$summary['items_for_checkout'],
-						$return_url,
-						$cancel_url
-					);
-					break;
-			}
+					case TransactionType::DELAYED:
+						// regular payment
+						$checkout_fields = $payment_method->new_delayed_payment(
+							$summary,
+							$billing_information,
+							$summary['items_for_checkout'],
+							$return_url,
+							$cancel_url
+						);
+						break;
 
-			// load template
-			$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
-			$template->setTemplateParamsFromArray($children);
-			$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
-			$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+					case TransactionType::REGULAR:
+					default:
+						// regular payment
+						$checkout_fields = $payment_method->new_payment(
+							$summary,
+							$billing_information,
+							$summary['items_for_checkout'],
+							$return_url,
+							$cancel_url
+						);
+						break;
+				}
 
-			// parse template
-			$params = array(
-				'checkout_url'		=> $payment_method->get_url(),
-				'checkout_fields'	=> $checkout_fields,
-				'checkout_name'		=> $payment_method->get_title(),
-				'currency'			=> self::getDefaultCurrency(),
-				'recurring'			=> $recurring,
-				'include_shipping'	=> $include_shipping,
-				'type'				=> $transaction_type
-			);
+				// load template
+				$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
+				$template->setTemplateParamsFromArray($children);
+				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
+				$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 
-			// for recurring plans add additional params
-			if ($recurring) {
-				$plans = $payment_method->get_recurring_plans();
-				$plan_name = $_SESSION['recurring_plan'];
+				// parse template
+				$params = array(
+					'checkout_url'		=> $payment_method->get_url(),
+					'checkout_fields'	=> $checkout_fields,
+					'checkout_name'		=> $payment_method->get_title(),
+					'currency'			=> self::getDefaultCurrency(),
+					'recurring'			=> $transaction_type == TransactionType::SUBSCRIPTION,
+					'include_shipping'	=> $include_shipping,
+					'type'				=> $transaction_type
+				);
 
-				$plan = $plans[$plan_name];
+				// for recurring plans add additional params
+				if ($transaction_type == TransactionType::SUBSCRIPTION) {
+					$plans = $payment_method->get_recurring_plans();
+					$plan_name = $_SESSION['recurring_plan'];
 
-				$params['plan_name'] = $plan['name'];
-				$params['plan_description'] = $this->formatRecurring(array(
-					'price'			=> $plan['price'],
-					'period'		=> $plan['interval_count'],
-					'unit'			=> $plan['interval'],
-					'setup'			=> $plan['setup_price'],
-					'trial_period'	=> $plan['trial_count'],
-					'trial_unit'	=> $plan['trial']
-				));
+					$plan = $plans[$plan_name];
 
-			} else {
-				$params['sub-total'] = number_format($summary['total'], 2);
-				$params['shipping'] = number_format($summary['shipping'], 2);
-				$params['handling'] = number_format($summary['handling'], 2);
-				$params['total_weight'] = number_format($summary['weight'], 2);
-				$params['total'] = number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2);
-			}
+					$params['plan_name'] = $plan['name'];
+					$params['plan_description'] = $this->formatRecurring(array(
+						'price'			=> $plan['price'],
+						'period'		=> $plan['interval_count'],
+						'unit'			=> $plan['interval'],
+						'setup'			=> $plan['setup_price'],
+						'trial_period'	=> $plan['trial_count'],
+						'trial_unit'	=> $plan['trial']
+					));
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
+				} else {
+					$params['sub-total'] = number_format($summary['total'], 2);
+					$params['shipping'] = number_format($summary['shipping'], 2);
+					$params['handling'] = number_format($summary['handling'], 2);
+					$params['total_weight'] = number_format($summary['weight'], 2);
+					$params['total'] = number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2);
+				}
 
-		} else {
-			// no information available, show form
-			$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
-			$template->setTemplateParamsFromArray($children);
-			$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
-			$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
-			$template->registerTagHandler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+				break;
 
-			// get fixed country if set
-			$fixed_country = '';
-			if (isset($this->settings['fixed_country']))
-				$fixed_country = $this->settings['fixed_country'];
+			// initial stage of checkout process
+			case Stage::INPUT:
+			default:
+				// no information available, show form
+				$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
+				$template->setTemplateParamsFromArray($children);
+				$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
+				$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
+				$template->registerTagHandler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
 
-			// get login retry count
-			$retry_manager = LoginRetryManager::getInstance();
-			$count = $retry_manager->getRetryCount();
+				// get fixed country if set
+				$fixed_country = '';
+				if (isset($this->settings['fixed_country']))
+					$fixed_country = $this->settings['fixed_country'];
 
-			$params = array(
-				'include_shipping'	=> $include_shipping,
-				'fixed_country'		=> $fixed_country,
-				'bad_fields'		=> $bad_fields,
-				'recurring'			=> $recurring,
-				'show_captcha'		=> $count > 3,
-				'terms_link'		=> isset($_SESSION['buyer_terms_link']) ? $_SESSION['buyer_terms_link'] : null,
-				'payment_method'	=> isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null
-			);
+				// get login retry count
+				$retry_manager = LoginRetryManager::getInstance();
+				$count = $retry_manager->getRetryCount();
+				$buyer_terms_link = null;
+				$payment_method = null;
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
+				if (isset($_SESSION['buyer_terms_link']))
+					$buyer_terms_link = $_SESSION['buyer_terms_link'];
+
+				$params = array(
+					'include_shipping'	=> $include_shipping,
+					'fixed_country'		=> $fixed_country,
+					'bad_fields'		=> $bad_fields,
+					'recurring'			=> $recurring,
+					'show_captcha'		=> $count > 3,
+					'terms_link'		=> $buyer_terms_link,
+					'payment_method'	=> isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null
+				);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+				break;
 		}
 	}
 

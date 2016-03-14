@@ -330,7 +330,7 @@ class PayPal_Express extends PaymentMethod {
 		$return_url = url_Make(
 							$action,
 							$section,
-							array('stage', 'return'),
+							array('stage', 'resume'),
 							array('payment_method', $this->name)
 						);
 
@@ -382,9 +382,9 @@ class PayPal_Express extends PaymentMethod {
 
 		// get buyer information
 		$fields = array(
-			'TOKEN'		=> $token,
-			'PAYERID'	=> $payer_id
-		);
+				'TOKEN'		=> $token,
+				'PAYERID'	=> $payer_id
+			);
 		$response = PayPal_Helper::callAPI(PayPal_Helper::METHOD_GetExpressCheckoutDetails, $fields);
 
 		// update transaction status and buyer
