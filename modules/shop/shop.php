@@ -3692,6 +3692,9 @@ class shop extends Module {
 				$return_url = url_Make('checkout_completed', 'shop', array('payment_method', $payment_method->get_name()));
 				$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
 
+				// update transaction
+				$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
+
 				// emit signal and give payment methods a chance to redirect
 				// payment process to external location
 				$result_list = Events::trigger(
@@ -3706,9 +3709,6 @@ class shop extends Module {
 						$this->showCheckoutRedirect();
 						return;
 					}
-
-				// update transaction
-				$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 				// create new payment
 				switch ($transaction_type) {
