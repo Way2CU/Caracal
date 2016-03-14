@@ -3880,8 +3880,8 @@ class shop extends Module {
 					$new_item['count'] = $data['count'];
 					$new_item['description'] = implode(', ', array_values($properties));
 					$new_item['total'] = number_format(($new_item['price'] * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
-					$new_item['tax'] = number_format($new_item['price'], 2);
-					$new_item['price'] = number_format($new_item['tax'], 2);
+					$new_item['tax'] = number_format($new_item['tax'], 2);
+					$new_item['price'] = number_format($new_item['price'], 2);
 					$new_item['weight'] = number_format($new_item['weight'], 2);
 					$new_item['transaction_type'] = $transaction_type;
 
