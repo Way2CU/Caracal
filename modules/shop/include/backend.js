@@ -22,7 +22,7 @@ Caracal.Shop.open_item_search = function() {
 			sub_action: 'search_results',
 			query: value
 		};
-	var url = backend_url + '?' + $.param(data);
+	var url = $('base').attr('href') + '?' + $.param(data);
 
 	Caracal.window_system.openWindow(
 					'shop_search_results',
