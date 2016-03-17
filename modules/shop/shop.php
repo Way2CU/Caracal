@@ -3597,6 +3597,7 @@ class shop extends Module {
 		$address = null;
 		$payment_method = null;
 		$stage = isset($_REQUEST['stage']) ? fix_chars($_REQUEST['stage']) : null;
+		$original_stage = $stage;
 		$transaction_type = $this->getTransactionType();
 		$bad_fields = array();
 
@@ -3698,19 +3699,22 @@ class shop extends Module {
 				$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
 
 				// emit signal and give payment methods a chance to redirect
-				// payment process to external location
-				$result_list = Events::trigger(
-						'shop', 'before-checkout',
-						$payment_method->get_name(),
-						$return_url,
-						$cancel_url
-					);
+				// payment process to external location only on initial redirect
+				// to checkout page to prevent dead loop
+				if ($original_stage == Stage::SET_INFO) {
+					$result_list = Events::trigger(
+							'shop', 'before-checkout',
+							$payment_method->get_name(),
+							$return_url,
+							$cancel_url
+						);
 
-				foreach ($result_list as $result)
-					if ($result) {
-						$this->showCheckoutRedirect();
-						return;
-					}
+					foreach ($result_list as $result)
+						if ($result) {
+							$this->showCheckoutRedirect();
+							return;
+						}
+				}
 
 				// create new payment
 				switch ($transaction_type) {
