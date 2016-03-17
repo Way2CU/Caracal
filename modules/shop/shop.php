@@ -3598,6 +3598,7 @@ class shop extends Module {
 		$payment_method = null;
 		$stage = isset($_REQUEST['stage']) ? fix_chars($_REQUEST['stage']) : null;
 		$transaction_type = $this->getTransactionType();
+		$bad_fields = array();
 
 		// decide whether to include shipping and account information
 		$include_shipping = true;
