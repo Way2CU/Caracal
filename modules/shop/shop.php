@@ -3630,12 +3630,13 @@ class shop extends Module {
 				if (is_object($transaction)) {
 					$buyer = $buyer_manager->getSingleItem(
 							$buyer_manager->getFieldNames(),
-							array('buyer' => $transaction->buyer)
+							array('id' => $transaction->buyer)
 						);
 					$address = $address_manager->getSingleItem(
 							$address_manager->getFieldNames(),
-							array('address' => $transaction->address)
+							array('id' => $transaction->address)
 						);
+					$stage = Stage::CHECKOUT;
 				}
 				break;
 
