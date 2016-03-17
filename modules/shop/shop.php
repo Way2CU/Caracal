@@ -3642,7 +3642,6 @@ class shop extends Module {
 				break;
 
 			case Stage::SET_INFO:
-			default:
 				// get buyer
 				$buyer = $this->getUserAccount();
 
