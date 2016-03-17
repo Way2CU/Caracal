@@ -321,7 +321,7 @@ class PayPal_Express extends PaymentMethod {
 			$summary = $shop->getCartSummary(
 					$transaction['uid'],
 					$shop->getTransactionType(),
-					$self
+					$this
 				);
 
 			// configure transaction
