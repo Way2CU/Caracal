@@ -3822,7 +3822,7 @@ class shop extends Module {
 					'include_shipping'	=> $include_shipping,
 					'fixed_country'		=> $fixed_country,
 					'bad_fields'		=> $bad_fields,
-					'recurring'			=> $recurring,
+					'recurring'			=> $transaction_type == TransactionType::SUBSCRIPTION,
 					'show_captcha'		=> $count > 3,
 					'terms_link'		=> $buyer_terms_link,
 					'payment_method'	=> isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null
