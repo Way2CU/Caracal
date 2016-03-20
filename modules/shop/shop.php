@@ -3614,19 +3614,11 @@ class shop extends Module {
 				$billing_information = $this->getBillingInformation($payment_method);
 
 				// get buyer and address associated with transaction
-				$uid = '';
-				if (isset($_SESSION['transaction']['uid']))
-					$uid = $_SESSION['transaction']['uid'];
-
-				$transactions_manager = ShopTransactionsManager::getInstance();
 				$buyer_manager = ShopBuyersManager::getInstance();
 				$address_manager = ShopDeliveryAddressManager::getInstance();
 
 				// get transaction with specified unique id
-				$transaction = $transactions_manager->getSingleItem(
-						array('buyer', 'address'),
-						array('uid' => $uid)
-					);
+				$transaction = Transaction::get_current();
 
 				if (is_object($transaction)) {
 					$buyer = $buyer_manager->getSingleItem(
