@@ -375,28 +375,16 @@ Caracal.Shop.BuyerInformationForm = function() {
 				var email_field = self.sign_in_form.find('input[name=new_email]');
 
 				if (email_field.val() != '') {
-					var data = {
-							section: 'shop',
-							action: 'json_get_account_exists',
-							email: email_field.val()
-						};
-
-					$.ajax({
-						url: self.backend_url,
-						type: 'GET',
-						async: false,
-						data: data,
-						dataType: 'json',
-						context: this,
-						success: function(data) {
+					new Communicator('shop')
+						.on_success(function(data) {
 							if (data.account_exists) {
 								email_field.addClass('bad');
 								alert(data.message);
 							} else {
 								email_field.removeClass('bad');
 							}
-						}
-					});
+						})
+						.get('json_get_account_exists', {email: email_field.val()});
 				}
 
 				// alter field visibility
@@ -669,12 +657,6 @@ Caracal.Shop.CheckoutForm = function() {
 	self.handler.delivery_provider_change = function(event) {
 		var selected = self.delivery_provider_list.find('input[name=delivery_provider]:checked').val();
 
-		var data = {
-				section: 'shop',
-				action: 'json_set_delivery_method',
-				method: selected
-			};
-
 		// show loading overlay
 		self.overlay
 			.css({
@@ -684,16 +666,10 @@ Caracal.Shop.CheckoutForm = function() {
 			.animate({opacity: 1}, 500);
 		self.delivery_method_list.removeClass('visible');
 
-		$.ajax({
-			url: self.backend_url,
-			type: 'GET',
-			async: true,
-			data: data,
-			dataType: 'json',
-			context: this,
-			success: self.handler.delivery_providers_load,
-			error: self.handler.delivery_providers_error
-		});
+		new Communicator('shop')
+			.on_success(self.handler.delivery_providers_load)
+			.on_error(self.handler.delivery_providers_error)
+			.get('json_set_delivery_method', {method: selected});
 	};
 
 	/**
@@ -715,20 +691,13 @@ Caracal.Shop.CheckoutForm = function() {
 
 		// send selection to server
 		var data = {
-				section: 'shop',
-				action: 'json_set_delivery_method',
 				method: method[7],
 				type: item.attr('value')
 			};
 
 		// send data to server
-		$.ajax({
-			url: self.backend_url,
-			type: 'GET',
-			async: true,
-			data: data,
-			dataType: 'json'
-		});
+		new Communicator('shop')
+			.get('json_set_delivery_method', data);
 	};
 
 	// complete object initialization
