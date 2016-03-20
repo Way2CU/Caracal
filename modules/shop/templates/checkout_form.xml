@@ -108,7 +108,8 @@
 					<cms:if condition="$params['include_shipping']">
 						<div class="delivery_provider">
 							<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
-							<cms:delivery_methods shopping_cart="1"
+							<cms:delivery_methods
+								shopping_cart="1"
 								template="delivery_checkout.xml"
 								local="1"
 								/>
@@ -119,9 +120,7 @@
 
 				<cms:if condition="$params['include_shipping']">
 					<div class="delivery_method">
-						<div class="services">
-						</div>
-
+						<div class="services"/>
 						<div class="clear_float"/>
 					</div>
 				</cms:if>
