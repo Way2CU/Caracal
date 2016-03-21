@@ -1362,14 +1362,6 @@ class links extends Module {
 		}
 
 		// save some CPU time by getting this early
-		if (class_exists('gallery')) {
-			$use_images = true;
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
-		} else {
-			$use_images = false;
-		}
-
 		$items = $manager->getItems(
 							$manager->getFieldNames(),
 							$conditions,
@@ -1384,8 +1376,14 @@ class links extends Module {
 					'items'			=> array()
 				);
 
+		$gallery_present = class_exists('gallery');
+
 		if (count($items) > 0) {
-			foreach ($items as $item)
+			foreach ($items as $item) {
+				$image_url = null;
+				if ($gallery_present && !is_null($item->image))
+					$image_url = gallery::getImageById($item->image);
+
 				$result['items'][] = array(
 									'id'               => $item->id,
 									'text'             => $item->text,
@@ -1396,9 +1394,9 @@ class links extends Module {
 									'display_limit'    => $item->display_limit,
 									'sponsored_clicks' => $item->sponsored_clicks,
 									'total_clicks'     => $item->total_clicks,
-									'image'            => null
+									'image'            => $image_url
 								);
-		} else {
+			}
 		}
 
 		print json_encode($result);
