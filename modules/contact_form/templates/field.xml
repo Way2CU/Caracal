@@ -55,11 +55,12 @@
 					<input
 						name="$params['name']"
 						type="checkbox"
+						value="$params['value']"
 						checked="$params['checked'] ? 'checked' : false"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						cms:optional="checked,required,disabled"
-						cms:eval="name"
+						cms:eval="name,value"
 						/>
 				</option>
 

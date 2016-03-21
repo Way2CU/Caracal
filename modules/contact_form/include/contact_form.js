@@ -76,7 +76,25 @@ function ContactForm(form_object) {
 
 			switch (type) {
 				case 'checkbox':
-					result[name] = this.checked ? 1 : 0;
+					if (field.hasAttr('value') && field.attr('value') != '') {
+						// ensure we have storage array
+						if (result[name] == undefined) {
+							result[name] = new Array();
+
+						} else if (!(result[name] instanceof Array)) {
+							var temp = result[name];
+							result[name] = new Array();
+							result[name].push(temp);
+						}
+
+						// add current value to the list
+						if (this.checked)
+							result[name].push(field.val());
+
+					} else {
+						// checkboxes without value are treated as on/off switches
+						result[name] = this.checked ? 1 : 0;
+					}
 					break;
 
 				case 'radio':
@@ -91,8 +109,12 @@ function ContactForm(form_object) {
 					result[name] = field.val();
 					break;
 			}
-
 		});
+
+		// convert array values to string
+		for (var index in result)
+			if (result[index] instanceof Array)
+				result[index] = result[index].join();
 
 		return result;
 	};
