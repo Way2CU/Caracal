@@ -76,7 +76,7 @@ function ContactForm(form_object) {
 
 			switch (type) {
 				case 'checkbox':
-					if (field.hasAttr('value') && field.attr('value') != '') {
+					if (field.attr('value')) {
 						// ensure we have storage array
 						if (result[name] == undefined) {
 							result[name] = new Array();
