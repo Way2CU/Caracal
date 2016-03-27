@@ -2440,17 +2440,19 @@ class shop extends Module {
 	 */
 	private function json_SaveRemark() {
 		$result = false;
+		$transaction = Transaction::get_current();
+		$manager = ShopTransactionsManager::getInstance();
 
-		if (isset($_SESSION['transaction'])) {
-			$manager = ShopTransactionsManager::getInstance();
-
-			// get data
-			$uid = $_SESSION['transaction']['uid'];
+		if (!is_null($transaction)) {
 			$remark = escape_chars($_REQUEST['remark']);
-
-			// store remark
-			$manager->updateData(array('remark' => $remark), array('uid' => $uid));
+			$manager->updateData(
+					array('remark' => $remark),
+					array('id' => $transaction->id)
+				);
 			$result = true;
+
+		} else {
+			trigger_error('Shop: Trying to set transaction remark before transaction is created!', E_USER_NOTICE);
 		}
 
 		print json_encode($result);
