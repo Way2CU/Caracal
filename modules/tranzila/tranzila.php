@@ -122,10 +122,6 @@ class tranzila extends Module {
 	 * Event triggered upon module deinitialization
 	 */
 	public function onDisable() {
-		global $db;
-
-		/* $sql = ""; */
-		/* $db->query($sql); */
 	}
 
 	private function showSettings() {
