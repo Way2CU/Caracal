@@ -327,7 +327,7 @@ class Backend_UserManager {
 		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
 		$duplicate_emails = $manager->getItems(array('id'), array('email' => $data['email']));
 
-		if (class_exists('captcha') && isset($source['captcha'])) {
+		if (ModuleHandler::is_loaded('captcha') && isset($source['captcha'])) {
 			// validate submission through captcha
 			$captcha = captcha::getInstance();
 			if (!$captcha->isCaptchaValid($source['captcha'])) {
@@ -412,7 +412,7 @@ class Backend_UserManager {
 		$result = false;
 
 		// make sure contact form is available
-		if (!class_exists('contact_form'))
+		if (!ModuleHandler::is_loaded('contact_form'))
 			return $result;
 
 		// get managers
@@ -566,7 +566,7 @@ class Backend_UserManager {
 				);
 
 		// make sure contact form module is enabled
-		if (!class_exists('contact_form'))
+		if (!ModuleHandler::is_loaded('contact_form'))
 			if (_AJAX_REQUEST) {
 				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
 				print json_encode($result);
@@ -583,7 +583,7 @@ class Backend_UserManager {
 				return;
 			}
 
-		if (!class_exists('captcha'))
+		if (!ModuleHandler::is_loaded('captcha'))
 			if (_AJAX_REQUEST) {
 				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
 				print json_encode($result);
@@ -952,7 +952,7 @@ class Backend_UserManager {
 	 * Show form for selecting email templates for notifying users.
 	 */
 	private function showTemplateSelection() {
-		if (class_exists('contact_form')) {
+		if (ModuleHandler::is_loaded('contact_form')) {
 			// get contact form and show settings
 			$contact_form = contact_form::getInstance();
 			$template = new TemplateHandler('email_templates.xml', $this->parent->path.'templates/');

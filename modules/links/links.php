@@ -28,7 +28,7 @@ class links extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$links_menu = new backend_MenuItem(
@@ -328,7 +328,7 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'with_images'	=> class_exists('gallery'),
+					'with_images'	=> ModuleHandler::is_loaded('gallery'),
 					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
 					'cancel_action'	=> window_Close('links_add')
 				);
@@ -389,7 +389,7 @@ class links extends Module {
 		$gallery_addon = '';
 
 		// if images are in use and specified
-		if (class_exists('gallery') && isset($_FILES['image'])) {
+		if (ModuleHandler::is_loaded('gallery') && isset($_FILES['image'])) {
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
 
@@ -487,7 +487,7 @@ class links extends Module {
 		$gallery_addon = '';
 
 		// if we used image with this, we need to remove that too
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 			if (is_object($item) && !empty($item->image)) {
@@ -864,7 +864,7 @@ class links extends Module {
 		$image = null;
 		$thumbnail = null;
 
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
 
@@ -918,10 +918,11 @@ class links extends Module {
 		$conditions = array();
 
 		// save some CPU time by getting this early
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
+
 		} else {
 			$use_images = false;
 		}
@@ -1073,7 +1074,7 @@ class links extends Module {
 		$id = $tag_params['id'];
 
 		// save some CPU time by getting this early
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
@@ -1142,10 +1143,11 @@ class links extends Module {
 		$membership_manager = \Modules\Links\MembershipManager::getInstance();
 
 		// save some CPU time by getting this early
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
+
 		} else {
 			$use_images = false;
 		}
@@ -1288,7 +1290,7 @@ class links extends Module {
 		// prepare response
 		if (is_object($item)) {
 			$image_url = null;
-			if (class_exists('gallery'))
+			if (ModuleHandler::is_loaded('gallery'))
 				$image_url = gallery::getImageById($item->image);
 
 			$result['error'] = false;
@@ -1376,7 +1378,7 @@ class links extends Module {
 					'items'			=> array()
 				);
 
-		$gallery_present = class_exists('gallery');
+		$gallery_present = ModuleHandler::is_loaded('gallery');
 
 		if (count($items) > 0) {
 			foreach ($items as $item) {

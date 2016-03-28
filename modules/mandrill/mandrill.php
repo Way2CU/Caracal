@@ -27,7 +27,7 @@ class mandrill extends Module {
 		parent::__construct(__FILE__);
 
 		// register mailer
-		if (class_exists('contact_form')) {
+		if (ModuleHandler::is_loaded('contact_form')) {
 			$mailer = new Mandrill_Mailer($this->language, $this->settings['api_key']);
 
 			$contact_form = contact_form::getInstance();
@@ -35,7 +35,7 @@ class mandrill extends Module {
 		}
 
 		// register backend
-		if (class_exists('backend') && $section == 'backend') {
+		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
 			$backend = backend::getInstance();
 
 			$mandrill_menu = new backend_MenuItem(

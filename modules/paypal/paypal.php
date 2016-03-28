@@ -27,7 +27,7 @@ class paypal extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend') && class_exists('shop')) {
+		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 			$recurring_menu = $backend->getMenu('shop_recurring_plans');
@@ -63,7 +63,7 @@ class paypal extends Module {
 		}
 
 		// register payment method
-		if (class_exists('shop')) {
+		if (ModuleHandler::is_loaded('shop')) {
 			require_once('units/express_payment_method.php');
 			require_once('units/direct_payment_method.php');
 

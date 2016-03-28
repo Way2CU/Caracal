@@ -25,7 +25,7 @@ class feedback extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend')) {
+		if (ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$feedback_menu = new backend_MenuItem(

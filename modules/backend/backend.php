@@ -61,7 +61,7 @@ class backend extends Module {
 		Events::register('backend', 'user-password-change', 1);
 
 		// load CSS and JScript
-		if (class_exists('head_tag') && $section == 'backend') {
+		if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
 			$head_tag = head_tag::getInstance();
 			$collection = collection::getInstance();
 
@@ -261,7 +261,7 @@ class backend extends Module {
 					if (isset($_REQUEST['sub_action']))
 						$params['sub_action'] = escape_chars($_REQUEST['sub_action']);
 
-					if (class_exists($module_name)) {
+					if (ModuleHandler::is_loaded($module_name)) {
 						$module = call_user_func(array($module_name, 'getInstance'));
 						$module->transferControl($params, $children);
 					}
@@ -615,11 +615,12 @@ class backend extends Module {
 
 			$manager->deleteData(array('name' => $module_name));
 
-			if (class_exists($module_name)) {
+			if (ModuleHandler::is_loaded($module_name)) {
 				$module = call_user_func(array($module_name, 'getInstance'));
 				$module->onDisable();
 
 				$message = $this->getLanguageConstant('message_module_disabled');
+
 			} else {
 				$message = $this->getLanguageConstant('message_module_not_active');
 			}

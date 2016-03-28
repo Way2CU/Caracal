@@ -97,7 +97,7 @@ class collection extends Module {
 		parent::__construct(__FILE__, false);
 
 		// get instance of head tag early on
-		if (class_exists('head_tag'))
+		if (ModuleHandler::is_loaded('head_tag'))
 			$this->head_tag = head_tag::getInstance();
 
 		// include scripts by default

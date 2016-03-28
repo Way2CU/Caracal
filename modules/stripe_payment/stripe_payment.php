@@ -31,7 +31,7 @@ class stripe_payment extends Module {
 		Stripe::setApiKey($this->getPrivateKey());
 
 		// register backend
-		if (class_exists('backend') && class_exists('shop')) {
+		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 			$plans_menu = $backend->getMenu('shop_recurring_plans');
@@ -68,7 +68,7 @@ class stripe_payment extends Module {
 		}
 
 		// register payment method
-		if (class_exists('shop')) {
+		if (ModuleHandler::is_loaded('shop')) {
 			require_once("units/stripe_payment_method.php");
 			Stripe_PaymentMethod::getInstance($this);
 		}

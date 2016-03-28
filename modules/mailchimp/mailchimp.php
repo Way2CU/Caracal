@@ -26,7 +26,7 @@ class mailchimp extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$mailchimp_menu = new backend_MenuItem(

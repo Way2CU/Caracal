@@ -20,15 +20,8 @@ class tips extends Module {
 	protected function __construct() {
 		parent::__construct(__FILE__);
 
-		// load module style and scripts
-		if (class_exists('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
-		}
-
 		// register backend
-		if (class_exists('backend')) {
+		if (ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$tips_menu = new backend_MenuItem(

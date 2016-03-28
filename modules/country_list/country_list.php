@@ -27,7 +27,7 @@ class country_list extends Module {
 
 		parent::__construct(__FILE__);
 
-		if (class_exists('contact_form')) {
+		if (ModuleHandler::is_loaded('contact_form')) {
 			$contact_form = contact_form::getInstance();
 			$contact_form->registerField(
 				'country_list',

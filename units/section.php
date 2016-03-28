@@ -98,14 +98,14 @@ class SectionHandler {
 
 		if (_AJAX_REQUEST || empty($file)) {
 			// request came from script, transfer control to modules
-			if (class_exists($section)) {
+			if (ModuleHandler::is_loaded($section)) {
 				$module = call_user_func(array(escape_chars($section), 'getInstance'));
 				$params = array('action' => $action);
 
 				// transfer control to module
 				$module->transferControl($params, array());
 
-			} else if ($section == 'backend_module' && class_exists('backend')) {
+			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {
 				// transfer control to backend modules
 				$module = backend::getInstance();
 				$params = array('action' => 'transfer_control');

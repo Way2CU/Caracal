@@ -24,7 +24,7 @@ class youtube extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$youtube_menu = new backend_MenuItem(
@@ -260,7 +260,7 @@ class youtube extends Module {
 	 * Include YouTube IFrame API script.
 	 */
 	private function includeApiScript() {
-		if (!class_exists('head_tag'))
+		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
 		head_tag::getInstance()->addTag(

@@ -130,7 +130,7 @@ class ShopManufacturerHandler {
 		$template = new TemplateHandler('manufacturer_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$gallery = gallery::getInstance();
 			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 		}
@@ -169,7 +169,7 @@ class ShopManufacturerHandler {
 		// store or update data in database
 		if (is_null($id)) {
 			// get new image inserted
-			if (class_exists('gallery') && isset($_FILES['logo'])) {
+			if (ModuleHandler::is_loaded('gallery') && isset($_FILES['logo'])) {
 				$gallery = gallery::getInstance();
 				$gallery_manager = GalleryManager::getInstance();
 
@@ -328,10 +328,11 @@ class ShopManufacturerHandler {
 		$conditions = array();
 		$selected = -1;
 
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
 			$gallery = gallery::getInstance();
 			$gallery_manager = GalleryManager::getInstance();
+
 		} else {
 			$use_images = false;
 		}

@@ -33,9 +33,9 @@ class downloads extends Module {
 			}
 
 		// register backend
-		if (class_exists('backend')) {
+		if (ModuleHandler::is_loaded('backend')) {
 			// add backend specific script
-			if (class_exists('head_tag')) {
+			if (ModuleHandler::is_loaded('head_tag')) {
 				$head_tag = head_tag::getInstance();
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/downloads_toolbar.js'), 'type'=>'text/javascript'));
 			}

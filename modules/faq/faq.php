@@ -21,7 +21,7 @@ class faq extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend')) {
+		if (ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$faq_menu = new backend_MenuItem(

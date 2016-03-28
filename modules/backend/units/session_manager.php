@@ -111,7 +111,7 @@ class SessionManager {
 		if ($retry_count > 3) {
 			// on purpose we make a separate condition, if captcha
 			// module is not loaded, block IP address for one day
-			if (class_exists('captcha')) {
+			if (ModuleHandler::is_loaded('captcha')) {
 				$captcha_module = captcha::getInstance();
 
 				$captcha_ok = $captcha_module->isCaptchaValid($captcha);
@@ -253,7 +253,7 @@ class SessionManager {
 		if ($retry_count > 3) {
 			// on purpose we make a separate condition, if captcha
 			// module is not loaded, block IP address for one day
-			if (class_exists('captcha')) {
+			if (ModuleHandler::is_loaded('captcha')) {
 				$captcha_module = captcha::getInstance();
 
 				$captcha_ok = $captcha_module->isCaptchaValid($captcha);

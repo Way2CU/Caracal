@@ -226,18 +226,18 @@ class shop extends Module {
 		Events::connect('backend', 'user-create', 'handleUserCreate', $this);
 
 		// register backend
-		if (class_exists('backend') && $section == 'backend') {
+		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
 			$head_tag = head_tag::getInstance();
 			$backend = backend::getInstance();
 
 			// include collection scripts
-			if (class_exists('collection')) {
+			if (ModuleHandler::is_loaded('collection')) {
 				$collection = collection::getInstance();
 				$collection->includeScript(collection::PROPERTY_EDITOR);
 			}
 
 			// include local scripts
-			if (class_exists('head_tag')) {
+			if (ModuleHandler::is_loaded('head_tag')) {
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
@@ -1183,7 +1183,7 @@ class shop extends Module {
 	 * Include buyer information and checkout form scripts.
 	 */
 	public function includeScripts() {
-		if (!class_exists('head_tag') || !class_exists('collection'))
+		if (!ModuleHandler::is_loaded('head_tag') || !ModuleHandler::is_loaded('collection'))
 			return;
 
 		$head_tag = head_tag::getInstance();
@@ -1211,7 +1211,7 @@ class shop extends Module {
 	 * Include shopping cart scripts.
 	 */
 	public function includeCartScripts() {
-		if (!class_exists('head_tag') || !class_exists('collection'))
+		if (!ModuleHandler::is_loaded('head_tag') || !ModuleHandler::is_loaded('collection'))
 			return;
 
 		$head_tag = head_tag::getInstance();
@@ -1225,7 +1225,7 @@ class shop extends Module {
  	 * Include script that makes sure page is not running in iframe.
 	 */
 	public function includeRedirectScript() {
-		if (!class_exists('head_tag'))
+		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
 		$head_tag = head_tag::getInstance();
@@ -1244,7 +1244,7 @@ class shop extends Module {
 			'cancel_action'	=> window_Close('shop_settings')
 		);
 
-		if (class_exists('contact_form')) {
+		if (ModuleHandler::is_loaded('contact_form')) {
 			$contact_form = contact_form::getInstance();
 			$template->registerTagHandler('cms:template_list', $contact_form, 'tag_TemplateList');
 		}
@@ -2060,7 +2060,7 @@ class shop extends Module {
 	private function json_ShowCart() {
 		$manager = ShopItemManager::getInstance();
 		$values_manager = ShopItemSizeValuesManager::getInstance();
-		$gallery = class_exists('gallery') ? gallery::getInstance() : null;
+		$gallery = ModuleHandler::is_loaded('gallery') ? gallery::getInstance() : null;
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 
 		$result = array();
@@ -2090,7 +2090,7 @@ class shop extends Module {
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				// get item image url
-				$thumbnail_url = class_exists('gallery') ? gallery::getGroupThumbnailById($item->gallery) : '';
+				$thumbnail_url = ModuleHandler::is_loaded('gallery') ? gallery::getGroupThumbnailById($item->gallery) : '';
 
 				$uid = $item->uid;
 
@@ -2294,7 +2294,7 @@ class shop extends Module {
 
 			// get item image url
 			$thumbnail_url = null;
-			if (class_exists('gallery'))
+			if (ModuleHandler::is_loaded('gallery'))
 				$thumbnail_url = gallery::getGroupThumbnailById(
 										$item->gallery,
 										null,
@@ -3088,7 +3088,7 @@ class shop extends Module {
 		}
 
 		// if affiliate system is active, update referral
-		if (isset($_SESSION['referral_id']) && class_exists('affiliates')) {
+		if (isset($_SESSION['referral_id']) && ModuleHandler::is_loaded('affiliates')) {
 			$referral_id = $_SESSION['referral_id'];
 			$referrals_manager = AffiliateReferralsManager::getInstance();
 
@@ -3195,7 +3195,7 @@ class shop extends Module {
 		$result = false;
 
 		// require contact form
-		if (!class_exists('contact_form'))
+		if (!ModuleHandler::is_loaded('contact_form'))
 			return $result;
 
 		$email_address = null;

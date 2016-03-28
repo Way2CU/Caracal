@@ -38,7 +38,7 @@ class page_info extends Module {
 		header('Content-Type: text/html; charset=UTF-8');
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$menu = $backend->getMenu($backend->name);
@@ -231,7 +231,7 @@ class page_info extends Module {
 						));
 
 		// add other languages if required
-		if (count($language_list) > 1 && $url_rewrite && class_exists('language_menu'))
+		if (count($language_list) > 1 && $url_rewrite && ModuleHandler::is_loaded('language_menu'))
 			language_menu::getInstance()->addMeta();
 
 		// robot tags
@@ -410,7 +410,7 @@ class page_info extends Module {
 			$this->page_description = Language::getText($constant);
 
 		// set from article
-		} else if (isset($tag_params['article']) && class_exists('articles')) {
+		} else if (isset($tag_params['article']) && ModuleHandler::is_loaded('articles')) {
 			$manager = ArticleManager::getInstance();
 			$text_id = fix_chars($tag_params['article']);
 

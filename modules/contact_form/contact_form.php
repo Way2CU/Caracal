@@ -93,7 +93,7 @@ class contact_form extends Module {
 				);
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			// create menu
@@ -183,13 +183,13 @@ class contact_form extends Module {
 		}
 
 		// include required scripts
-		if (class_exists('collection') && $section != 'backend') {
+		if (ModuleHandler::is_loaded('collection') && $section != 'backend') {
 			$collection = collection::getInstance();
 			$collection->includeScript(collection::DIALOG);
 			$collection->includeScript(collection::COMMUNICATOR);
 		}
 
-		if (class_exists('head_tag') && $section != 'backend') {
+		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend') {
 			$head_tag = head_tag::getInstance();
 
 			$head_tag->addTag('script',

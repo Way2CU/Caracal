@@ -24,7 +24,7 @@ class activity_tracker extends Module {
 
 		parent::__construct(__FILE__);
 
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$activities_menu = new backend_MenuItem(
@@ -483,7 +483,7 @@ class activity_tracker extends Module {
 	 * Include beacon JavaScript.
 	 */
 	private function includeScripts() {
-		if (!class_exists('head_tag'))
+		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
 		$head_tag = head_tag::getInstance();

@@ -21,7 +21,7 @@ class fedex extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend') && class_exists('shop')) {
+		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_delivery_methods');
 
@@ -42,7 +42,7 @@ class fedex extends Module {
 		}
 
 		// register delivery method
-		if (class_exists('shop')) {
+		if (ModuleHandler::is_loaded('shop')) {
 			require_once('units/fedex_delivery_method.php');
 			FedEx_DeliveryMethod::getInstance($this);
 		}

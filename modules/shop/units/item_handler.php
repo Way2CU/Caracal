@@ -247,7 +247,7 @@ class Handler {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
 
-			if (class_exists('gallery')) {
+			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::getInstance();
 				$gallery_id = $gallery->createGallery($data['name']);
 				$data['gallery'] = $gallery_id;
@@ -542,7 +542,7 @@ class Handler {
 		// parse template
 		if (is_object($item)) {
 			// get gallery module
-			if (class_exists('gallery'))
+			if (ModuleHandler::is_loaded('gallery'))
 				$gallery = gallery::getInstance();
 
 			if (!is_null($gallery)) {
@@ -732,7 +732,7 @@ class Handler {
 
 		if (count($items) > 0) {
 			$gallery = null;
-			if (class_exists('gallery'))
+			if (ModuleHandler::is_loaded('gallery'))
 				$gallery = gallery::getInstance();
 
 			$manufacturer_manager = \ShopManufacturerManager::getInstance();
@@ -952,7 +952,7 @@ class Handler {
 			if (is_object($item)) {
 				// get item image url
 				$thumbnail_url = null;
-				if (class_exists('gallery'))
+				if (ModuleHandler::is_loaded('gallery'))
 					$thumbnail_url = gallery::getGroupThumbnailById(
 											$item->gallery,
 											null,

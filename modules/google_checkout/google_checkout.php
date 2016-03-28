@@ -21,7 +21,7 @@ class google_checkout extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend') && class_exists('shop')) {
+		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
@@ -42,7 +42,7 @@ class google_checkout extends Module {
 		}
 
 		// register payment method
-		if (class_exists('shop')) {
+		if (ModuleHandler::is_loaded('shop')) {
 			require_once("units/google_checkout_payment_method.php");
 			GoogleCheckout_PaymentMethod::getInstance($this);
 		}

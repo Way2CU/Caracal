@@ -112,7 +112,7 @@ class ShopCategoryHandler {
 		$template->registerTagHandler('cms:category', $this, 'tag_Category');
 		$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
 
-		if (class_exists('gallery')) {
+		if (ModuleHandler::is_loaded('gallery')) {
 			$gallery = gallery::getInstance();
 			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 		}
@@ -139,7 +139,7 @@ class ShopCategoryHandler {
 			// register tag handlers
 			$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
 
-			if (class_exists('gallery')) {
+			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::getInstance();
 				$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
 			}
@@ -178,7 +178,7 @@ class ShopCategoryHandler {
 			);
 
 		// get image if set and gallery is activated
-		if (isset($_REQUEST['image']) & class_exists('gallery'))
+		if (isset($_REQUEST['image']) && ModuleHandler::is_loaded('gallery'))
 			$data['image'] = fix_id($_REQUEST['image']);
 
 		if (is_null($id)) {
@@ -303,7 +303,7 @@ class ShopCategoryHandler {
 			$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
 
 			// get image urls
-			if (class_exists('gallery')) {
+			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::getInstance();
 				$gallery_manager = GalleryManager::getInstance();
 				$image = $gallery_manager->getSingleItem(
@@ -420,7 +420,7 @@ class ShopCategoryHandler {
 				$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
 
 				// get image urls
-				if (class_exists('gallery')) {
+				if (ModuleHandler::is_loaded('gallery')) {
 					$gallery = gallery::getInstance();
 					$gallery_manager = GalleryManager::getInstance();
 					$image = $gallery_manager->getSingleItem(

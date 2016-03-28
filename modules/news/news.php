@@ -21,14 +21,14 @@ class news extends Module {
 
 		parent::__construct(__FILE__);
 
-		if (class_exists('head_tag')) {
+		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$news_menu = new backend_MenuItem(
@@ -922,7 +922,8 @@ class news extends Module {
 	private function createFeedLinks() {
 		global $language;
 
-		if (!class_exists('head_tag')) return;
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
 
 		$head = head_tag::getInstance();
 		$manager = NewsFeedManager::getInstance();

@@ -22,7 +22,7 @@ class tranzila extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend') && class_exists('shop')) {
+		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
 			$backend = backend::getInstance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
@@ -43,7 +43,7 @@ class tranzila extends Module {
 		}
 
 		// integrate tranzila in to shop
-		if (class_exists('shop')) {
+		if (ModuleHandler::is_loaded('shop')) {
 			// register payment method
 			require_once('units/tranzila_payment_method.php');
 			$this->method = Tranzila_PaymentMethod::getInstance($this);

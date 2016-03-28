@@ -8,6 +8,7 @@
 
 class ModuleHandler {
 	private static $_instance;
+	private static $loaded_modules = array();
 
 	/**
 	 * Get single instance of ModuleHandler
@@ -118,6 +119,10 @@ class ModuleHandler {
 			$result = call_user_func(array($class, 'getInstance'));
 		}
 
+		// add module to the list of loaded ones
+		if (!is_null($result))
+			self::$loaded_modules[] = $name;
+
 		return $result;
 	}
 
@@ -129,15 +134,22 @@ class ModuleHandler {
 	public function includeModule($name) {
 		global $module_path, $system_module_path;
 
+		$result = false;
 		$filename = $module_path.$name.'/'.$name.'.php';
 		$system_filename = $system_module_path.$name.'/'.$name.'.php';
 
 		if (file_exists($filename) && $this->_checkDependencies($name)) {
 			include_once($filename);
+			$result = true;
 
 		} else if (file_exists($system_filename) && $this->_checkDependencies($name)) {
 			include_once($system_filename);
+			$result = true;
 		}
+
+		// add module to the list of loaded ones
+		if ($result)
+			self::$loaded_modules[] = $name;
 	}
 
 	/**
@@ -185,7 +197,7 @@ class ModuleHandler {
 			}
 
 			foreach ($required as $required_module)
-				if (!class_exists($required_module)) {
+				if (!ModuleHandler::is_loaded($required_module)) {
 					$result = false;
 					trigger_error("Module '{$name}' requires '{$required_module}' but it's not available!");
 					break;
@@ -194,6 +206,16 @@ class ModuleHandler {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Check if specified module is loaded.
+	 *
+	 * @param string name
+	 * @return boolean
+	 */
+	public static function is_loaded($name) {
+		return in_array($name, self::$loaded_modules);
 	}
 }
 

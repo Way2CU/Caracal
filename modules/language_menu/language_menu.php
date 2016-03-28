@@ -24,7 +24,7 @@ class language_menu extends Module {
 		parent::__construct(__FILE__);
 
 		// load CSS and JScript
-		if (class_exists('head_tag')) {
+		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
@@ -123,7 +123,7 @@ class language_menu extends Module {
 		global $action, $section;
 
 		// check if we were asked to get languages from specific module
-		if (isset($tag_params['from_module']) && class_exists($tag_params['from_module'])) {
+		if (isset($tag_params['from_module']) && ModuleHandler::is_loaded($tag_params['from_module'])) {
 			$module = call_user_func(array($tag_params['from_module'], 'getInstance'));
 			$list = $module->language->getLanguages(true);
 
@@ -175,7 +175,7 @@ class language_menu extends Module {
 		global $action, $section, $language, $default_language;
 
 		// check if we were asked to get languages from specific module
-		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
+		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 			$list = $module->language->getLanguages(true);
 
@@ -207,7 +207,7 @@ class language_menu extends Module {
 	 */
 	private function json_GetText() {
 		// check if we were asked to get languages from specific module
-		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
+		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
 
@@ -228,7 +228,7 @@ class language_menu extends Module {
 	private function json_GetTextArray() {
 		// check if we were asked to get languages from specific module
 		$language_handler = null;
-		if (isset($_REQUEST['from_module']) && class_exists($_REQUEST['from_module'])) {
+		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
 			$language_handler = $module->language;
 		}

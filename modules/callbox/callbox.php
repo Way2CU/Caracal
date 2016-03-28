@@ -25,7 +25,7 @@ class callbox extends Module {
 		parent::__construct(__FILE__);
 
 		// register backend
-		if (class_exists('backend')) {
+		if (ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$callbox_menu = new backend_MenuItem(
@@ -52,7 +52,7 @@ class callbox extends Module {
 			$backend->addMenu($this->name, $callbox_menu);
 		}
 
-		if (class_exists('head_tag') && $section != 'backend' && $this->settings['include_code']) {
+		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend' && $this->settings['include_code']) {
 			$head_tag = head_tag::getInstance();
 
 			$url = str_replace('{id}', $this->settings['account_id'], '//{id}.tctm.co/t.js');

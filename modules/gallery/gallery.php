@@ -58,7 +58,7 @@ class gallery extends Module {
 			}
 
 		// load module style and scripts
-		if (class_exists('head_tag')) {
+		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
 			// load backend files if needed
@@ -110,7 +110,7 @@ class gallery extends Module {
 		}
 
 		// register backend
-		if ($section == 'backend' && class_exists('backend')) {
+		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
 			$gallery_menu = new backend_MenuItem(

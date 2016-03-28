@@ -37,7 +37,7 @@
 			<span><cms:text constant="label_description" module="shop"/></span>
 			<textarea name="description" class="multi-language" style="width: 375px; height: 170px;"/>
 		</label>
-		<cms:if condition="class_exists('gallery')">
+		<cms:if condition="ModuleHandler::is_loaded('gallery')">
 			<label>
 				<span><cms:text constant="label_category_image" module="shop"/></span>
 				<select name="image" style="width: 300px;">

@@ -193,8 +193,9 @@ class TemplateHandler {
 	 */
 	public function setMappedModule($module) {
 		if (is_string($module)) {
-			if (class_exists($module))
+			if (ModuleHandler::is_loaded($module))
 				$this->module = call_user_func(array($module, 'getInstance'));
+
 		} else {
 			$this->module = $module;
 		}
@@ -348,7 +349,7 @@ class TemplateHandler {
 
 				// transfer control to module
 				case 'cms:module':
-					if (class_exists($tag->tagAttrs['name'])) {
+					if (ModuleHandler::is_loaded($tag->tagAttrs['name'])) {
 						$module = call_user_func(array($tag->tagAttrs['name'], 'getInstance'));
 						$module->transferControl($tag->tagAttrs, $tag->tagChildren);
 					}
@@ -407,10 +408,11 @@ class TemplateHandler {
 
 					// check if constant is module based
 					if (key_exists('module', $tag->tagAttrs)) {
-						if (class_exists($tag->tagAttrs['module'])) {
+						if (ModuleHandler::is_loaded($tag->tagAttrs['module'])) {
 							$module = call_user_func(array($tag->tagAttrs['module'], 'getInstance'));
 							$text = $module->getLanguageConstant($constant, $language);
 						}
+
 					} else {
 						// use default language handler
 						$text = Language::getText($constant, $language);
@@ -592,7 +594,7 @@ class TemplateHandler {
 
 				// support for script tag
 				case 'cms:script':
-					if (class_exists('head_tag')) {
+					if (ModuleHandler::is_loaded('head_tag')) {
 						$head_tag = head_tag::getInstance();
 						$head_tag->addTag('script', $tag->tagAttrs);
 					}
@@ -600,7 +602,7 @@ class TemplateHandler {
 
 				// support for collection module
 				case 'cms:collection':
-					if (array_key_exists('include', $tag->tagAttrs) && class_exists('collection')) {
+					if (array_key_exists('include', $tag->tagAttrs) && ModuleHandler::is_loaded('collection')) {
 						$scripts = fix_chars(explode(',', $tag->tagAttrs['include']));
 
 						$collection = collection::getInstance();
@@ -610,7 +612,7 @@ class TemplateHandler {
 
 				// support for link tag
 				case 'cms:link':
-					if (class_exists('head_tag')) {
+					if (ModuleHandler::is_loaded('head_tag')) {
 						$head_tag = head_tag::getInstance();
 						$head_tag->addTag('link', $tag->tagAttrs);
 					}

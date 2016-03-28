@@ -174,7 +174,7 @@ class head_tag extends Module {
 		global $include_scripts, $optimize_code, $section;
 
 		// if page_info module is loaded, ask it to add its own tags
-		if (class_exists('page_info'))
+		if (ModuleHandler::is_loaded('page_info'))
 			page_info::getInstance()->addElements();
 
 		// merge tag lists
