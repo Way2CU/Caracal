@@ -6,6 +6,7 @@
 use Core\Events;
 use Core\Markdown;
 
+
 class Backend_UserManager {
 	private static $_instance;
 

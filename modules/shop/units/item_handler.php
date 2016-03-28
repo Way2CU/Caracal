@@ -16,6 +16,7 @@ require_once('property_handler.php');
 
 use \gallery as gallery;
 use \TemplateHandler as TemplateHandler;
+use \ModuleHandler as ModuleHandler;
 
 
 class Handler {
