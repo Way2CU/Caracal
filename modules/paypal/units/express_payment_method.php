@@ -316,7 +316,7 @@ class PayPal_Express extends PaymentMethod {
 		}
 
 		// add regular items
-		$transaction = Transaction::getCurrent();
+		$transaction = Transaction::get_current();
 		if (!is_null($transaction)) {
 			$summary = $shop->getCartSummary(
 					$transaction->uid,
