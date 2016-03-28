@@ -271,6 +271,8 @@ class ShopTransactionsHandler {
 		$buyers_manager = ShopBuyersManager::getInstance();
 		$user_manager = UserManager::getInstance();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 
 		// get conditionals
 		if (isset($tag_params['buyer']))
@@ -278,6 +280,12 @@ class ShopTransactionsHandler {
 
 		if (isset($_REQUEST['status']) && $_REQUEST['status'] != '')
 			$conditions['status'] = fix_id($_REQUEST['status']);
+
+		if (isset($tag_params['order_by']))
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
 
 		if (isset($tag_params['system_user']) && $_SESSION['logged']) {
 			$user_id = fix_id($tag_params['system_user']);
@@ -305,7 +313,7 @@ class ShopTransactionsHandler {
 				$buyer_names[$buyer->id] = $buyer->first_name.' '.$buyer->last_name;
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
 
 		if (count($items) > 0)
 			foreach($items as $item) {

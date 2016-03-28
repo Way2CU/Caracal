@@ -39,7 +39,10 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<cms:transaction_list/>
+			<cms:transaction_list
+				order_by="timestamp"
+				order_asc="0"
+				/>
 		</div>
 	</div>
 </document>
