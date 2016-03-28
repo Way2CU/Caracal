@@ -316,22 +316,23 @@ class PayPal_Express extends PaymentMethod {
 		}
 
 		// add regular items
-		if (isset($_SESSION['transaction'])) {
-			$transaction = $_SESSION['transaction'];
+		$transaction = Transaction::getCurrent();
+		if (!is_null($transaction)) {
 			$summary = $shop->getCartSummary(
-					$transaction['uid'],
+					$transaction->uid,
 					$shop->getTransactionType(),
 					$this
 				);
 
 			// configure transaction
-			$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction['total'];
-			$fields["PAYMENTREQUEST_{$request_id}_ITEMAMT"] = $transaction['total'];
+			$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $transaction->total;
+			$fields["PAYMENTREQUEST_{$request_id}_ITEMAMT"] = $transaction->total;
 			$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
-			$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction['uid'];
+			$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $transaction->uid;
 			$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
-			$fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction['handling'];
-			$fields["PAYMENTREQUEST_{$request_id}_SHIPPINGAMT"] = $transaction['shipping'];
+			$fields["PAYMENTREQUEST_{$request_id}_HANDLINGAMT"] = $transaction->handling;
+			$fields["PAYMENTREQUEST_{$request_id}_SHIPPINGAMT"] = $transaction->shipping;
+			$fields["PAYMENTREQUEST_{$request_id}_NOTETEXT"] = $transaction->remark;
 
 			// configure items
 			$item_id = 0;
