@@ -86,7 +86,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		$url = defined('_DESKTOP_VERSION') ? $this->url : $this->mobile_url;
+		$url = _DESKTOP_VERSION ? $this->url : $this->mobile_url;
 		$terminal = $this->parent->settings['terminal'];
 
 		$url = str_replace('%terminal%', $terminal, $url);
