@@ -31,7 +31,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	);
 
 	private $language_aliases = array(
-		'he'	=> 'il'
+		'he'	=> 'il',
+		'en'	=> 'us'
 	);
 
 	/**
