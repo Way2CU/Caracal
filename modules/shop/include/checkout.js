@@ -518,6 +518,7 @@ Caracal.Shop.CheckoutForm = function() {
 	self.checkout_details = self.checkout.find('table.checkout_details');
 	self.delivery_provider_list = self.checkout.find('div.delivery_provider');
 	self.delivery_method_list = self.checkout.find('div.delivery_method');
+	self.delivery_interface= self.checkout.find('div.delivery_interface');
 	self.overlay = self.delivery_provider_list.find('div.overlay');
 
 	// handler functions namespace
@@ -558,6 +559,8 @@ Caracal.Shop.CheckoutForm = function() {
 	 * @param object data
 	 */
 	self.handler.custom_interface_load = function(data) {
+		self.delivery_interface.html(data);
+		self.overlay.removeClass('visible');
 	};
 
 	/**
