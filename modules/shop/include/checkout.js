@@ -672,7 +672,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 * @param object event
 	 */
 	self.handler.delivery_provider_change = function(event) {
-		var selected = self.delivery_provider_list.find('input[name=delivery_provider]:checked').val();
+		var method = self.delivery_provider_list.find('input[name=delivery_provider]:checked');
 
 		// show loading overlay
 		self.overlay
@@ -685,19 +685,19 @@ Caracal.Shop.CheckoutForm = function() {
 
 		var communicator = new Communicator('shop');
 
-		if (selected.data('custom-interface')) {
+		if (method.data('custom-interface')) {
 			// get delivery method custom interface
 			communicator
 				.on_success(self.handler.custom_interface_load)
 				.on_error(self.handler.custom_interface_error)
-				.get('json_get_delivery_method_interface', {method: selected}, 'html');
+				.get('json_get_delivery_method_interface', {method: method.val()}, 'html');
 
 		} else {
 			// get delivery types for selected method
 			communicator
 				.on_success(self.handler.delivery_providers_load)
 				.on_error(self.handler.delivery_providers_error)
-				.get('json_set_delivery_method', {method: selected});
+				.get('json_set_delivery_method', {method: method.val()});
 		}
 
 	};
