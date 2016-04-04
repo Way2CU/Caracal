@@ -352,7 +352,7 @@ div#checkout.recurring div.transaction_details {
 
 div.transaction_details textarea {
 	width: 356px;
-	height: 60px;
+	height: calc(3em + 25px);
 	resize: none;
 
 	margin: 0px;
