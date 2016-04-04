@@ -115,8 +115,6 @@ div#checkout div.delivery_provider label input[type=radio] + span:before {
 	bottom: 0px;
 
 	margin-left: -8px;
-	margin-bottom: -3px;
-	margin-right: 4px;
 
 	border: 1px solid #b0b0b0;
 	border-radius: 9px;
@@ -349,7 +347,7 @@ body.rtl div.transaction_details {
 
 div#checkout.recurring div.transaction_details {
 	width: 550px;
-	margin-bottom: 20px;
+	margin-bottom: calc(3em + 25px);
 }
 
 div.transaction_details textarea {
