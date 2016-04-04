@@ -6,7 +6,8 @@
 			type="radio"
 			name="delivery_provider"
 			value="$params['name']"
-			cms:eval="value"
+			data-custom-interface="$params['custom_interface']"
+			cms:eval="value,data-custom-interface"
 		/>
 		<span>
 			<img

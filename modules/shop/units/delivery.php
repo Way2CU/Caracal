@@ -105,12 +105,13 @@ final class Delivery {
 			foreach (self::$methods as $name => $method) {
 				$international = $method->isInternational();
 				$data = array(
-					'name'			=> $name,
-					'title'			=> $method->getTitle(),
-					'icon'			=> $method->getIcon(),
-					'image'			=> $method->getImage(),
-					'small_image'	=> $method->getSmallImage(),
-					'international'	=> $international
+					'name'             => $name,
+					'title'            => $method->getTitle(),
+					'icon'             => $method->getIcon(),
+					'image'            => $method->getImage(),
+					'small_image'      => $method->getSmallImage(),
+					'custom_interface' => $method->hasCustomInterface(),
+					'international'    => $international
 				);
 
 				// add method data to result

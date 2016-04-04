@@ -553,6 +553,23 @@ Caracal.Shop.CheckoutForm = function() {
 	};
 
 	/**
+	 * Handle loading custom delivery provider interface from the server.
+	 *
+	 * @param object data
+	 */
+	self.handler.custom_interface_load = function(data) {
+	};
+
+	/**
+	 * Handle communication error when loading custom delivery provider interface
+	 * from the server.
+	 *
+	 * @param object error
+	 */
+	self.handler.custom_interface_error = function(object) {
+	};
+
+	/**
 	 * Handle successful data load from server.
 	 *
 	 * @param object data
@@ -666,10 +683,23 @@ Caracal.Shop.CheckoutForm = function() {
 			.animate({opacity: 1}, 500);
 		self.delivery_method_list.removeClass('visible');
 
-		new Communicator('shop')
-			.on_success(self.handler.delivery_providers_load)
-			.on_error(self.handler.delivery_providers_error)
-			.get('json_set_delivery_method', {method: selected});
+		var communicator = new Communicator('shop');
+
+		if (selected.data('custom-interface')) {
+			// get delivery method custom interface
+			communicator
+				.on_success(self.handler.custom_interface_load)
+				.on_error(self.handler.custom_interface_error)
+				.get('json_get_delivery_method_interface', {method: selected}, 'html');
+
+		} else {
+			// get delivery types for selected method
+			communicator
+				.on_success(self.handler.delivery_providers_load)
+				.on_error(self.handler.delivery_providers_error)
+				.get('json_set_delivery_method', {method: selected});
+		}
+
 	};
 
 	/**

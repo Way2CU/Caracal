@@ -747,6 +747,10 @@ class shop extends Module {
 				$this->json_SetCartFromTransaction();
 				break;
 
+			case 'json_get_delivery_method_interface':
+				$this->json_GetDeliveryMethodInterface();
+				break;
+
 			case 'json_get_property':
 				$handler = \Modules\Shop\Property\Handler::getInstance($this);
 				$handler->json_GetProperty();
@@ -1836,6 +1840,21 @@ class shop extends Module {
 	public function json_SetRecurringPlan() {
 		$recurring_plan = fix_chars($_REQUEST['plan']);
 		$_SESSION['recurring_plan'] = $recurring_plan;
+	}
+
+	/**
+	 * Returns custom delivery method interface.
+	 */
+	private function json_GetDeliveryMethodInterface() {
+		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
+
+		// make sure method is specified
+		if (is_null($method))
+			return;
+
+		$delivery_method = Delivery::get_method($method);
+		if ($delivery_method->hasCustomInterface())
+			print $delivery_method->getInterface();
 	}
 
 	/**

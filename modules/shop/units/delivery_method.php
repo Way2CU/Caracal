@@ -180,9 +180,24 @@ abstract class DeliveryMethod {
 	abstract public function getAvailableParams();
 
 	/**
+	 * Get custom delivery method interface.
+	 *
+	 * @return string
+	 */
+	abstract public function getInterface();
+
+	/**
 	 * Whether delivery method can be used for international deliveries.
 	 *
 	 * @return boolean
 	 */
 	abstract public function isInternational();
+
+	/**
+	 * Whether delivery method provides custom interface. If custom interface is
+	 * present instead of `getDeliveryTypes` function `getInterface` will be called.
+	 *
+	 * @return boolean
+	 */
+	abstract public function hasCustomInterface();
 }
