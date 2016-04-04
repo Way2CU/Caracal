@@ -559,7 +559,9 @@ Caracal.Shop.CheckoutForm = function() {
 	 * @param object data
 	 */
 	self.handler.custom_interface_load = function(data) {
-		self.delivery_interface.html(data);
+		self.delivery_interface
+				.html(data)
+				.addClass('visible');
 		self.overlay.removeClass('visible');
 	};
 
@@ -575,6 +577,8 @@ Caracal.Shop.CheckoutForm = function() {
 
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
+		self.delivery_method_list.removeClass('visible');
+		self.delivery_interface.removeClass('visible');
 
 		// hide overlay
 		self.overlay.removeClass('visible');
@@ -664,6 +668,7 @@ Caracal.Shop.CheckoutForm = function() {
 
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
+		self.delivery_interface.removeClass('visible');
 
 		// hide overlay
 		self.overlay.removeClass('visible');
@@ -680,6 +685,7 @@ Caracal.Shop.CheckoutForm = function() {
 		// show loading overlay
 		self.overlay.addClass('visible');
 		self.delivery_method_list.removeClass('visible');
+		self.delivery_interface.removeClass('visible');
 
 		var communicator = new Communicator('shop');
 
