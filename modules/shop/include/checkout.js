@@ -520,6 +520,7 @@ Caracal.Shop.CheckoutForm = function() {
 	self.delivery_method_list = self.checkout.find('div.delivery_method');
 	self.delivery_interface= self.checkout.find('div.delivery_interface');
 	self.overlay = self.delivery_provider_list.find('div.overlay');
+	self.checkout_button = self.checkout.find('div.checkout_controls button[type=submit]');
 
 	// handler functions namespace
 	self.handler = {};
@@ -534,7 +535,7 @@ Caracal.Shop.CheckoutForm = function() {
 
 		// disable checkout button
 		if (self.delivery_provider_list.length > 0)
-			self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
+			self.disable_checkout_button();
 
 		// connect events
 		self.checkout.find('textarea[name=remarks]').on('blur', self.handler.remarks_focus_lost);
@@ -573,7 +574,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 */
 	self.handler.custom_interface_error = function(object) {
 		// disable checkout button
-		self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
+		self.disable_checkout_button();
 
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
@@ -650,7 +651,7 @@ Caracal.Shop.CheckoutForm = function() {
 
 		} else {
 			// no prices specified, enable checkout button
-			self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
+			self.enable_checkout_button();
 		}
 
 		// hide overlay
@@ -664,7 +665,7 @@ Caracal.Shop.CheckoutForm = function() {
 	 */
 	self.handler.delivery_providers_error = function(error) {
 		// disable checkout button
-		self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
+		self.disable_checkout_button();
 
 		// add every delivery method to the container
 		self.delivery_method_list.html('');
@@ -721,7 +722,7 @@ Caracal.Shop.CheckoutForm = function() {
 		self.checkout_details.find('.total-value').html(parseFloat(total).toFixed(2) + ' ' + self.cached_data.currency);
 
 		// enable checkout button
-		self.checkout.find('div.checkout_controls button[type=submit]').removeAttr('disabled', 'disabled');
+		self.enable_checkout_button();
 
 		// send selection to server
 		var data = {
@@ -732,6 +733,20 @@ Caracal.Shop.CheckoutForm = function() {
 		// send data to server
 		new Communicator('shop')
 			.get('json_set_delivery_method', data);
+	};
+
+	/**
+	 * Enable checkout button.
+	 */
+	self.enable_checkout_button = function() {
+		self.checkout_button.removeAttr('disabled', 'disabled');
+	};
+
+	/**
+	 * Disable checkout button.
+	 */
+	self.disable_checkout_button = function() {
+		self.checkout_button.attr('disabled', 'disabled');
 	};
 
 	// complete object initialization
