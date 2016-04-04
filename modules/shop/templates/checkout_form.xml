@@ -121,6 +121,7 @@
 				<cms:if condition="$params['include_shipping']">
 					<div class="delivery_method">
 						<div class="services"/>
+						<div class="interface"/>
 						<div class="clear_float"/>
 					</div>
 				</cms:if>

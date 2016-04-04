@@ -567,6 +567,14 @@ Caracal.Shop.CheckoutForm = function() {
 	 * @param object error
 	 */
 	self.handler.custom_interface_error = function(object) {
+		// disable checkout button
+		self.checkout.find('div.checkout_controls button[type=submit]').attr('disabled', 'disabled');
+
+		// add every delivery method to the container
+		self.delivery_method_list.html('');
+
+		// hide overlay
+		self.overlay.removeClass('visible');
 	};
 
 	/**
@@ -639,11 +647,7 @@ Caracal.Shop.CheckoutForm = function() {
 		}
 
 		// hide overlay
-		self.overlay
-			.stop(true, true)
-			.animate({opacity: 0}, 500, function() {
-				$(this).css('display', 'none');
-			});
+		self.overlay.removeClass('visible');
 	};
 
 	/**
@@ -659,11 +663,7 @@ Caracal.Shop.CheckoutForm = function() {
 		self.delivery_method_list.html('');
 
 		// hide overlay
-		self.overlay
-			.stop(true, true)
-			.animate({opacity: 0}, 500, function() {
-				$(this).css('display', 'none');
-			});
+		self.overlay.removeClass('visible');
 	};
 
 	/**
@@ -675,12 +675,7 @@ Caracal.Shop.CheckoutForm = function() {
 		var method = self.delivery_provider_list.find('input[name=delivery_provider]:checked');
 
 		// show loading overlay
-		self.overlay
-			.css({
-				display: 'block',
-				opacity: 0
-			})
-			.animate({opacity: 1}, 500);
+		self.overlay.addClass('visible');
 		self.delivery_method_list.removeClass('visible');
 
 		var communicator = new Communicator('shop');
