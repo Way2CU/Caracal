@@ -173,14 +173,14 @@ div#checkout div.overlay {
 	background-position: center center, center center;
 	background-repeat: no-repeat, no-repeat;
 
-	transition: 0.5s opacity, 0 visibility;
-	transition-delay: 0, 0.5s;
+	transition: 0.3s opacity, 0s visibility;
+	transition-delay: 0s, 0s;
 }
 
 div#checkout div.overlay.visible {
 	visibility: visible;
 	opacity: 1;
-	transition-delay: 0, 0;
+	transition-delay: 0s, 0.3s;
 }
 
 div#checkout div.delivery_method,
