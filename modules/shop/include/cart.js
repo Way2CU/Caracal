@@ -16,6 +16,7 @@ Caracal.Shop = Caracal.Shop || {};
  * and variation id combined.
  *
  * Signals fired by this object:
+ * 	item-add (cart, uid, variation id, properties)
  * 	item-added (cart, uid, variation id, properties)
  * 	item-removed (cart, item)
  * 	item-amount-change (cart, item, new amount)
@@ -53,6 +54,7 @@ Caracal.Shop.Cart = function() {
 		self.ui.checkout_button = $();
 
 		// create event containers
+		self.events.on_item_add = new Array();
 		self.events.on_item_added = new Array();
 		self.events.on_item_removed = new Array();
 		self.events.on_item_amount_change = new Array();
@@ -81,10 +83,13 @@ Caracal.Shop.Cart = function() {
 			return result;
 
 		// add item if all signal handlers permit it
-		if (self.events.emit_signal('item-added', self, item.uid, item.variation_id, item.properties)) {
+		if (self.events.emit_signal('item-add', self, item.uid, item.variation_id, item.properties)) {
 			var cid = item.get_cid();
 			self.items[cid] = item;
 			result = true;
+
+			// emit signal after item has been added
+			self.events.emit_signal('item-added', self, item.uid, item.variation_id, item.properties)
 		}
 
 		return result;
@@ -118,7 +123,7 @@ Caracal.Shop.Cart = function() {
 			if (item != null)
 				item.alter_count(1);
 
-		} else if (self.events.emit_signal('item-added', self, data.uid, data.variation_id, null)) {
+		} else if (self.events.emit_signal('item-add', self, data.uid, data.variation_id, null)) {
 			// temporarily prevent modifications of this item
 			self.reservations.push(data.uid);
 
@@ -145,7 +150,7 @@ Caracal.Shop.Cart = function() {
 			return;
 
 		// check if signal handlers allow adding this item
-		if (!self.events.emit_signal('item-added', self, uid, null, properties))
+		if (!self.events.emit_signal('item-add', self, uid, null, properties))
 			return;
 
 		// temporarily prevent modifications of this item
@@ -566,6 +571,9 @@ Caracal.Shop.Cart = function() {
 		var index = self.reservations.indexOf(data.uid);
 		if (index > -1)
 			self.reservations.splice(index, 1);
+
+		// emit signal after item has been added
+		self.events.emit_signal('item-added', self, item.uid, item.variation_id, item.properties)
 
 		// update totals
 		self.ui.update_totals();
