@@ -721,9 +721,6 @@ Caracal.Shop.CheckoutForm = function() {
 		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(method[1]).toFixed(2));
 		self.checkout_details.find('.total-value').html(parseFloat(total).toFixed(2) + ' ' + self.cached_data.currency);
 
-		// enable checkout button
-		self.enable_checkout_button();
-
 		// send selection to server
 		var data = {
 				method: method[7],
@@ -732,6 +729,7 @@ Caracal.Shop.CheckoutForm = function() {
 
 		// send data to server
 		new Communicator('shop')
+			.on_success(self.enable_checkout_button)
 			.get('json_set_delivery_method', data);
 	};
 
