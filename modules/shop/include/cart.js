@@ -1,7 +1,7 @@
 /**
  * Shopping Cart JavaScript
  *
- * Copyright (c) 2015. by Way2CU, http://way2cu.com
+ * Copyright (c) 2016. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
  */
 
