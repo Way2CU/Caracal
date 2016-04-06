@@ -92,11 +92,11 @@
 							<thead>
 								<tr>
 									<th><cms:text constant="column_discounted_item_name" module="shop"/></th>
-									<th><cms:text constant="column_quantity" module="shop"/></th>
-									<th><cms:text constant="column_regular_price" module="shop"/></th>
-									<th><cms:text constant="column_discount" module="shop"/></th>
-									<th><cms:text constant="column_discount_amount" module="shop"/></th>
-									<th><cms:text constant="column_final_price" module="shop"/></th>
+									<th style="width: 70px"><cms:text constant="column_quantity" module="shop"/></th>
+									<th style="width: 120px"><cms:text constant="column_regular_price" module="shop"/></th>
+									<th style="width: 70px"><cms:text constant="column_discount" module="shop"/></th>
+									<th style="width: 70px"><cms:text constant="column_discount_amount" module="shop"/></th>
+									<th style="width: 120px"><cms:text constant="column_final_price" module="shop"/></th>
 								</tr>
 							</thead>
 							<tbody>

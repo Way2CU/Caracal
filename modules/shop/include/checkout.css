@@ -465,8 +465,13 @@ table.discounted_items thead th {
 	border-right: 1px solid white;
 	background-color: #F0F0F0;
 
+	text-align: left;
 	font-size: 1em;
 	font-weight: bold;
+}
+
+body.rtl table.discounted_items thead th {
+	text-align: right;
 }
 
 /**
