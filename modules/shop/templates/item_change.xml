@@ -64,6 +64,19 @@
 							/>
 					</label>
 				</div>
+				<div class="box left" style="width: 100px">
+					<label>
+						<span><cms:text constant="label_discount" module="shop"/></span>
+						<input
+							type="text"
+							name="discount"
+							style="width: 80px;"
+							maxlength="6"
+							value="$params['discount']"
+							cms:eval="value"
+							/>
+					</label>
+				</div>
 				<div class="box left" style="width: 120px;">
 					<label>
 						<span><cms:text constant="label_size_definition" module="shop"/></span>

@@ -187,27 +187,28 @@ class Handler {
 
 			// prepare parameters
 			$params = array(
-						'id'			=> $item->id,
-						'uid'			=> $item->uid,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
-						'gallery'		=> $item->gallery,
-						'manufacturer'	=> $item->manufacturer,
-						'size_definition'=> $item->size_definition,
-						'author'		=> $item->author,
-						'views'			=> $item->views,
-						'price'			=> $item->price,
-						'colors'		=> $item->colors,
-						'tax'			=> $item->tax,
-						'weight'		=> $item->weight,
-						'votes_up'		=> $item->votes_up,
-						'votes_down'	=> $item->votes_down,
-						'priority'		=> $item->priority,
-						'timestamp'		=> $item->timestamp,
-						'visible'		=> $item->visible,
-						'deleted'		=> $item->deleted,
-						'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-						'cancel_action'	=> window_Close('shop_item_change')
+						'id'              => $item->id,
+						'uid'             => $item->uid,
+						'name'            => $item->name,
+						'description'     => $item->description,
+						'gallery'         => $item->gallery,
+						'manufacturer'    => $item->manufacturer,
+						'size_definition' => $item->size_definition,
+						'author'          => $item->author,
+						'views'           => $item->views,
+						'price'           => $item->price,
+						'discount'        => $item->discount,
+						'colors'          => $item->colors,
+						'tax'             => $item->tax,
+						'weight'          => $item->weight,
+						'votes_up'        => $item->votes_up,
+						'votes_down'      => $item->votes_down,
+						'priority'        => $item->priority,
+						'timestamp'       => $item->timestamp,
+						'visible'         => $item->visible,
+						'deleted'         => $item->deleted,
+						'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
+						'cancel_action'   => window_Close('shop_item_change')
 					);
 
 			// parse template
@@ -231,17 +232,18 @@ class Handler {
 		$new_item = is_null($id);
 
 		$data = array(
-				'name'				=> $this->parent->getMultilanguageField('name'),
-				'description'		=> $this->parent->getMultilanguageField('description'),
-				'price'				=> isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
-				'colors'			=> fix_chars($_REQUEST['colors']),
-				'tax'				=> isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
-				'weight'			=> isset($_REQUEST['weight']) && !empty($_REQUEST['weight']) ? fix_chars($_REQUEST['weight']) : 0,
-				'size_definition'	=> isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
-				'priority'			=> isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
-				'manufacturer'		=> isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
-				'visible'			=> $_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1' ? 1 : 0,
-				'uid'				=> isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
+				'name'            => $this->parent->getMultilanguageField('name'),
+				'description'     => $this->parent->getMultilanguageField('description'),
+				'price'           => isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
+				'discount'        => isset($_REQUEST['discount']) && !empty($_REQUEST['discount']) ? fix_chars($_REQUEST['discount']) : 0,
+				'colors'          => fix_chars($_REQUEST['colors']),
+				'tax'             => isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
+				'weight'          => isset($_REQUEST['weight']) && !empty($_REQUEST['weight']) ? fix_chars($_REQUEST['weight']) : 0,
+				'size_definition' => isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
+				'priority'        => isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
+				'manufacturer'    => isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
+				'visible'         => $_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1' ? 1 : 0,
+				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
 			);
 
 		if ($new_item) {
