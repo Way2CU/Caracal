@@ -2121,7 +2121,7 @@ class shop extends Module {
 						$result['cart'][] = array(
 							'name'			=> $item->name,
 							'weight'		=> $item->weight,
-							'price'			=> $item->price,
+							'price'			=> $properties['price'],
 							'tax'			=> $item->tax,
 							'image'			=> $thumbnail_url,
 							'uid'			=> $item->uid,
@@ -2597,6 +2597,7 @@ class shop extends Module {
 							// add items to checkout list
 							$new_item = $items_by_uid[$uid];
 							$new_item['count'] = $data['count'];
+							$new_item['price'] = $data['price'];
 							$new_item['description'] = serialize($data);
 
 							// add item to list for delivery estimation
