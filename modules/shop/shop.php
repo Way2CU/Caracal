@@ -4105,22 +4105,51 @@ class shop extends Module {
 	 * @param array children
 	 */
 	public function tag_DiscountedItemList($tag_params, $children) {
+		$manager = ShopItemManager::getInstance();
+
 		// get items which have discounted price
-		$items = array();
+		$item_to_display = array();
+		$uid_list = array_keys($cart);
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
 
 		// prepare template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');
 
-
-		// show items with discounts
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				$params = array(
-					);
+				// make sure item has discount
+				if (!$item->discount)
+					continue;
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
-				$template->parse();
+				if (!array_key_exists($uid, $cart) || count($cart[$uid]['variations']) == 0)
+					continue;
+
+				// prepare item data to display
+				$uid = $item->uid;
+
+				// show items
+				foreach ($cart[$uid]['variations'] as $variation_id => $properties) {
+					if ($item->discount)
+						$price = $properties['price'] * ((100 - $item->discount) / 100); else
+						$price = $data['price'];
+
+					$count = $properties['count'];
+					$discount_amount = $properties['price'] - $price;
+					$total_discount = $discount_amount * $count;
+
+					$item_data = array(
+							'name'            => $item->name,
+							'count'           => $count,
+							'price'           => $price,
+							'discount'        => $item->discount,
+							'discount_amount' => $discount_amount,
+							'total_discount'  => $total_discount
+						);
+
+					$template->restoreXML();
+					$template->setLocalParams($params);
+					$template->parse();
+				}
 			}
 	}
 
