@@ -30,22 +30,7 @@
 							<!-- Regular transactions -->
 							<cms:if condition="$params['type'] != TransactionType::DELAYED">
 								<tr class="first">
-									<td colspan="3" rowspan="5" style="padding: 20px;">
-										<!-- Discounts table -->
-										<cms:if condition="$params['type'] != TransactionType::DELAYED and $params['discounts'] != 0">
-											<table>
-												<tr>
-													<th><cms:text constant="column_discounted_item_name" module="shop"/></th>
-													<th><cms:text constant="column_quantity" module="shop"/></th>
-													<th><cms:text constant="column_regular_price" module="shop"/></th>
-													<th><cms:text constant="column_discount" module="shop"/></th>
-													<th><cms:text constant="column_discount_amount" module="shop"/></th>
-													<th><cms:text constant="column_final_price" module="shop"/></th>
-												</tr>
-												<cms:discounted_items/>
-											</table>
-										</cms:if>
-									</td>
+									<td colspan="3" rowspan="5" style="padding: 20px;"/>
 									<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
 									<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
 								</tr>
@@ -100,6 +85,25 @@
 							<cms:checkout_items/>
 						</tbody>
 					</table>
+
+					<!-- Discounts table -->
+					<cms:if condition="$params['type'] != TransactionType::DELAYED and $params['discounts'] != 0">
+						<table border="0" cellspacing="0" cellpadding="0" class="discounted_items">
+							<thead>
+								<tr>
+									<th><cms:text constant="column_discounted_item_name" module="shop"/></th>
+									<th><cms:text constant="column_quantity" module="shop"/></th>
+									<th><cms:text constant="column_regular_price" module="shop"/></th>
+									<th><cms:text constant="column_discount" module="shop"/></th>
+									<th><cms:text constant="column_discount_amount" module="shop"/></th>
+									<th><cms:text constant="column_final_price" module="shop"/></th>
+								</tr>
+							</thead>
+							<tbody>
+								<cms:discounted_items/>
+							</tbody>
+						</table>
+					</cms:if>
 				</cms:if>
 
 				<cms:if condition="$params['recurring']">
