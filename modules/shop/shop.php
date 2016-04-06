@@ -4106,7 +4106,7 @@ class shop extends Module {
 		$item_to_display = array();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$uid_list = array_keys($cart);
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
 
 		// prepare template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');
