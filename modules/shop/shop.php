@@ -4104,6 +4104,7 @@ class shop extends Module {
 
 		// get items which have discounted price
 		$item_to_display = array();
+		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$uid_list = array_keys($cart);
 		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
 
