@@ -2620,15 +2620,14 @@ class shop extends Module {
 							$tax = $new_item['tax'];
 							$weight = $new_item['weight'];
 
-							if ($data['discount']) {
+							if ($new_item['discount']) {
 								// calculate discounted prices
-								$price = $data['price'] * ((100 - $data['discount']) / 100);
+								$price = $data['price'] * ((100 - $new_item['discount']) / 100);
 								$total_discount += $data['price'] - $price;
 							} else {
 								$price = $data['price'];
 							}
 
-							$new_item['price'] = $price;
 							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 							$total_weight += $weight * $data['count'];
 
