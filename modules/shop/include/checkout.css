@@ -459,22 +459,23 @@ table.discounted_items thead th {
 	padding-right: 7px;
 
 	border-right: 1px solid white;
-	background-color: #333333;
+	background-color: #F0F0F0;
 
-	color: white;
-	font-size: 1.1em;
+	font-size: 1em;
 	font-weight: bold;
 }
 
 /**
  * Body
  */
+table.discounted_items tbody td,
 table.checkout_details tbody td {
 	padding: 5px;
 	padding-left: 7px;
 	padding-right: 7px;
 }
 
+table.discounted_items tbody td small,
 table.checkout_details tbody td small {
 	display: block;
 
