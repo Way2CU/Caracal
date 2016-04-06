@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<tr>
+		<td><cms:var param="name"/></td>
+		<td><cms:var param="quantity"/></td>
+		<td><cms:var param="price"/></td>
+		<td><cms:var param="discount"/></td>
+		<td><cms:var param="discount_amount"/></td>
+		<td><cms:var param="total_discount"/></td>
+	</tr>
+</document>

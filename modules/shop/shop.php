@@ -856,6 +856,7 @@ class shop extends Module {
 				`author` INT NOT NULL,
 				`views` INT NOT NULL,
 				`price` DECIMAL(10,2) NOT NULL,
+				`discount` DECIMAL(5,2) NOT NULL,
 				`tax` DECIMAL(5,2) NOT NULL,
 				`weight` DECIMAL(10,4) NOT NULL,
 				`votes_up` INT NOT NULL,
@@ -2515,6 +2516,7 @@ class shop extends Module {
 		$shipping = 0;
 		$handling = 0;
 		$total_money = 0;
+		$total_discount = 0;
 		$total_weight = 0;
 		$items_by_uid = array();
 		$items_for_checkout = array();
@@ -2582,6 +2584,7 @@ class shop extends Module {
 						'id'		=> $item->id,
 						'name'		=> $item->name,
 						'price'		=> $item->price,
+						'discount'	=> $item->discount,
 						'tax'		=> $item->tax,
 						'weight'	=> $item->weight
 					);
@@ -2618,9 +2621,17 @@ class shop extends Module {
 
 							// include item data in summary
 							$tax = $new_item['tax'];
-							$price = $data['price'];
 							$weight = $new_item['weight'];
 
+							if ($data['discount']) {
+								// calculate discounted prices
+								$price = $data['price'] * ((100 - $data['discount']) / 100);
+								$total_discount += $data['price'] - $price;
+							} else {
+								$price = $data['price'];
+							}
+
+							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 							$total_weight += $weight * $data['count'];
 						}
@@ -2629,12 +2640,13 @@ class shop extends Module {
 		}
 
 		$result = array(
-			'items_for_checkout'	=> $items_for_checkout,
-			'shipping'				=> $shipping,
-			'handling'				=> $handling,
-			'weight'				=> $total_weight,
-			'total'					=> $total_money,
-			'currency'				=> $preferred_currency
+			'items_for_checkout' => $items_for_checkout,
+			'shipping'           => $shipping,
+			'handling'           => $handling,
+			'weight'             => $total_weight,
+			'total'              => $total_money,
+			'discounts'          => $total_discount,
+			'currency'           => $preferred_currency
 		);
 
 		return $result;
@@ -3770,6 +3782,7 @@ class shop extends Module {
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
 				$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+				$template->registerTagHandler('cms:discounted_items', $this, 'tag_DiscountedItemList');
 
 				// parse template
 				$params = array(
@@ -3805,6 +3818,7 @@ class shop extends Module {
 					$params['handling'] = number_format($summary['handling'], 2);
 					$params['total_weight'] = number_format($summary['weight'], 2);
 					$params['total'] = number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2);
+					$params['discounts'] = number_format($summary['discounts'], 2);
 				}
 
 				$template->restoreXML();
@@ -4064,6 +4078,31 @@ class shop extends Module {
 			foreach(Delivery::get_printable_list() as $name => $data) {
 				$params = $data;
 				$params['selected'] = ($selected == $name);
+
+				$template->restoreXML();
+				$template->setLocalParams($params);
+				$template->parse();
+			}
+	}
+
+	/**
+	 * Show list of discounts for current transaction.
+	 *
+	 * @param array $tag_params
+	 * @param array children
+	 */
+	public function tag_DiscountedItemList($tag_params, $children) {
+		// get items which have discounted price
+		$items = array();
+
+		// prepare template
+		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');
+
+		// show items with discounts
+		if (count($items) > 0)
+			foreach ($items as $item) {
+				$params = array(
+					);
 
 				$template->restoreXML();
 				$template->setLocalParams($params);

@@ -83,6 +83,16 @@
 						<!-- Shooping cart contents -->
 						<tbody>
 							<cms:checkout_items/>
+							<cms:if condition="$params['type'] != TransactionType::DELAYED">
+								<tr>
+									<th><cms:text constant="column_name" module="shop"/></th>
+									<th><cms:text constant="column_quantity" module="shop"/></th>
+									<th><cms:text constant="column_price" module="shop"/></th>
+									<th><cms:text constant="column_discount" module="shop"/></th>
+									<th><cms:text constant="column_discount_amount" module="shop"/></th>
+									<th><cms:text constant="column_total_discount" module="shop"/></th>
+								</tr>
+							</cms:if>
 						</tbody>
 					</table>
 				</cms:if>
