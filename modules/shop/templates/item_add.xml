@@ -328,12 +328,12 @@
 		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_delivery'];
 		var data = language_handler.getTextArray('shop', titles);
 		notebook
-			.setPageTitle(0, data['tab_item'])
-			.setPageTitle(1, data['tab_properties'])
-			.setPageTitle(2, data['tab_colors'])
-			.setPageTitle(3, data['tab_category'])
-			.setPageTitle(4, data['tab_related'])
-			.setPageTitle(5, data['tab_delivery']);
+		.setPageTitle(0, data['tab_item'])
+		.setPageTitle(1, data['tab_properties'])
+		.setPageTitle(2, data['tab_colors'])
+		.setPageTitle(3, data['tab_category'])
+		.setPageTitle(4, data['tab_related'])
+		.setPageTitle(5, data['tab_delivery']);
 
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
@@ -341,9 +341,9 @@
 
 		// create toolbar
 		toolbar_api
-			.createToolbar('shop_item_add_form', '[name=description]:input')
-			.addControl('common', 'markdown')
-			.addControl('gallery', 'article_image')
-			.addControl('downloads', 'link');
+		.createToolbar('shop_item_add_form', '[name=description]:input')
+		.addControl('common', 'markdown')
+		.addControl('gallery', 'article_image')
+		.addControl('downloads', 'link');
 	</script>
 </document>

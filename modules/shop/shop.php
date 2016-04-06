@@ -2123,6 +2123,7 @@ class shop extends Module {
 							'name'			=> $item->name,
 							'weight'		=> $item->weight,
 							'price'			=> $properties['price'],
+							'discount'		=> $item->discount,
 							'tax'			=> $item->tax,
 							'image'			=> $thumbnail_url,
 							'uid'			=> $item->uid,
@@ -2605,15 +2606,15 @@ class shop extends Module {
 
 							// add item to list for delivery estimation
 							$delivery_items []= array(
-								'properties'	=> array(),
-								'package'		=> 1,
-								'weight'		=> 0.5,
-								'package_type'	=> 0,
-								'width'			=> 2,
-								'height'		=> 5,
-								'length'		=> 15,
-								'units'			=> 1,
-								'count'			=> $data['count']
+								'properties'   => array(),
+								'package'      => 1,
+								'weight'       => 0.5,
+								'package_type' => 0,
+								'width'        => 2,
+								'height'       => 5,
+								'length'       => 15,
+								'units'        => 1,
+								'count'        => $data['count']
 							);
 
 							// include item data in summary
@@ -2624,6 +2625,7 @@ class shop extends Module {
 								// calculate discounted prices
 								$price = $data['price'] * ((100 - $new_item['discount']) / 100);
 								$total_discount += $data['price'] - $price;
+
 							} else {
 								$price = $data['price'];
 							}
@@ -3890,6 +3892,7 @@ class shop extends Module {
 			$db_item = array(
 				'name'		=> $item->name,
 				'price'		=> $item->price,
+				'discount'	=> $item->discount,
 				'tax'		=> $item->tax,
 				'weight'	=> $item->weight
 			);
@@ -3907,11 +3910,20 @@ class shop extends Module {
 							unset($properties[$key]);
 
 					$new_item = $items_by_uid[$uid];
+					if ($new_item['discount']) {
+						// calculate discounted prices
+						$price = $data['price'] * ((100 - $new_item['discount']) / 100);
+						$total_discount += $data['price'] - $price;
+
+					} else {
+						$price = $data['price'];
+					}
+
 					$new_item['count'] = $data['count'];
 					$new_item['description'] = implode(', ', array_values($properties));
-					$new_item['total'] = number_format(($data['price'] * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
+					$new_item['total'] = number_format(($price * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
 					$new_item['tax'] = number_format($new_item['tax'], 2);
-					$new_item['price'] = number_format($data['price'], 2);
+					$new_item['price'] = number_format($price, 2);
 					$new_item['weight'] = number_format($new_item['weight'], 2);
 					$new_item['transaction_type'] = $transaction_type;
 
