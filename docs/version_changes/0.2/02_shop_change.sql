@@ -1,3 +1,4 @@
+ALTER TABLE `shop_items` ADD COLUMN `price_discount` decimal(10,2) AFTER `price`;
 ALTER TABLE `shop_buyers` ADD COLUMN `system_user` int AFTER `guest`;
 ALTER TABLE `shop_buyers` ADD COLUMN `agreed` boolean DEFAULT '0' AFTER `system_user`;
 ALTER TABLE `shop_buyers` ADD COLUMN `promotions` boolean DEFAULT '0' AFTER `agreed`;
