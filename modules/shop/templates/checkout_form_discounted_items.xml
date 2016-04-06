@@ -3,7 +3,7 @@
 <document>
 	<tr>
 		<td><cms:var param="name"/></td>
-		<td><cms:var param="quantity"/></td>
+		<td><cms:var param="count"/></td>
 		<td><cms:var param="price"/></td>
 		<td><cms:var param="discount"/><cms:raw text="&amp;nbsp;%"/></td>
 		<td><cms:var param="discount_amount"/></td>
