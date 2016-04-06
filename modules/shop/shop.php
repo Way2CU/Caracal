@@ -3033,6 +3033,7 @@ class shop extends Module {
 			$result['delivery_method'] = $delivery_method;
 			$result['remark'] = '';
 			$result['total'] = $summary['total'];
+			$result['discounts'] = $summary['discounts'];
 
 			// get default currency
 			$currency_manager = ShopCurrenciesManager::getInstance();
@@ -3062,6 +3063,7 @@ class shop extends Module {
 			$result['handling'] = $summary['handling'];
 			$result['shipping'] = $summary['shipping'];
 			$result['total'] = $summary['total'];
+			$result['discounts'] = $summary['discounts'];
 
 			$data = array(
 				'handling'	=> $summary['handling'],
