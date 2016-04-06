@@ -83,7 +83,7 @@
 						<!-- Shooping cart contents -->
 						<tbody>
 							<cms:checkout_items/>
-							<cms:if condition="$params['type'] != TransactionType::DELAYED">
+							<cms:if condition="$params['type'] != TransactionType::DELAYED and $params['discounts'] != 0">
 								<tr>
 									<th><cms:text constant="column_name" module="shop"/></th>
 									<th><cms:text constant="column_quantity" module="shop"/></th>
@@ -92,6 +92,7 @@
 									<th><cms:text constant="column_discount_amount" module="shop"/></th>
 									<th><cms:text constant="column_total_discount" module="shop"/></th>
 								</tr>
+								<cms:discounted_items/>
 							</cms:if>
 						</tbody>
 					</table>
