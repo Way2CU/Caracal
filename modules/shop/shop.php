@@ -2616,9 +2616,6 @@ class shop extends Module {
 								'count'			=> $data['count']
 							);
 
-							// add item to the list
-							$items_for_checkout[] = $new_item;
-
 							// include item data in summary
 							$tax = $new_item['tax'];
 							$weight = $new_item['weight'];
@@ -2631,8 +2628,12 @@ class shop extends Module {
 								$price = $data['price'];
 							}
 
+							$new_item['price'] = $price;
 							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 							$total_weight += $weight * $data['count'];
+
+							// add item to the list
+							$items_for_checkout[] = $new_item;
 						}
 				}
 				break;
