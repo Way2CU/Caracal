@@ -441,14 +441,14 @@ body.rtl table.checkout_details thead td {
 	border-left: 1px solid white;
 }
 
-table.checkout_details tfoot th {
+table.checkout_details tbody th {
 	border: 0px solid #b0b0b0;
 	border-bottom-width: 1px;
 	background-color: #F0F0F0;
 	text-align: left;
 }
 
-body.rtl table.checkout_details tfoot th {
+body.rtl table.checkout_details tbody th {
 	text-align: right;
 }
 
