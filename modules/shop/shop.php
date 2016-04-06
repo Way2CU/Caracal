@@ -4131,7 +4131,7 @@ class shop extends Module {
 					$discount_amount = $properties['price'] - $price;
 					$total_discount = $discount_amount * $count;
 
-					$item_data = array(
+					$params = array(
 							'name'            => $item->name,
 							'count'           => $count,
 							'price'           => $price,
