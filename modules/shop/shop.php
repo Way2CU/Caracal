@@ -2632,7 +2632,6 @@ class shop extends Module {
 							}
 
 							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
-							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
 							$total_weight += $weight * $data['count'];
 						}
 				}
@@ -4097,6 +4096,7 @@ class shop extends Module {
 
 		// prepare template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');
+
 
 		// show items with discounts
 		if (count($items) > 0)
