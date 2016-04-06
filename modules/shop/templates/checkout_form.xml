@@ -120,7 +120,7 @@
 					<div class="transaction_details">
 						<label>
 							<span><cms:text constant="label_remarks" module="shop"/></span>
-							<textarea name="remarks" rows="4" cols="25"/>
+							<textarea name="remarks" rows="4" cols="25"><cms:var param="remarks"/></textarea>
 						</label>
 					</div>
 

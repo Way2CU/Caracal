@@ -3824,6 +3824,12 @@ class shop extends Module {
 					$params['discounts'] = number_format($summary['discounts'], 2);
 				}
 
+				// add transaction specific data
+				$transaction = Transaction::get_current();
+				if (!is_null($transaction)) {
+					$params['remarks'] = $transaction->remark;
+				}
+
 				$template->restoreXML();
 				$template->setLocalParams($params);
 				$template->parse();
