@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<tr>
-		<td><cms:var param="name"/></td>
+		<td><cms:var param="name" multilanguage="yes"/></td>
 		<td><cms:var param="count"/></td>
 		<td><cms:var param="price"/></td>
 		<td><cms:var param="discount"/><cms:raw text="&amp;nbsp;%"/></td>
