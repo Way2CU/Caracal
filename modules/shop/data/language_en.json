@@ -13,6 +13,7 @@
 	"checkout": "Checkout",
 	"clear": "Clear",
 	"column_discount": "Discount",
+	"column_discounted_item_name": "Discounted item",
 	"column_discount_amount": "Amount",
 	"column_total_discount": "Total amount",
 	"column_categories": "Categories item belongs to",

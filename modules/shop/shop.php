@@ -4129,15 +4129,14 @@ class shop extends Module {
 
 					$count = $properties['count'];
 					$discount_amount = $properties['price'] - $price;
-					$total_discount = $discount_amount * $count;
 
 					$params = array(
 							'name'            => $item->name,
 							'count'           => $count,
-							'price'           => $price,
+							'price'           => $properties['price'],
 							'discount'        => $item->discount,
 							'discount_amount' => $discount_amount,
-							'total_discount'  => $total_discount
+							'final_price'     => $price
 						);
 
 					$template->restoreXML();

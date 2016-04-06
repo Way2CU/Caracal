@@ -85,7 +85,7 @@
 							<cms:checkout_items/>
 							<cms:if condition="$params['type'] != TransactionType::DELAYED and $params['discounts'] != 0">
 								<tr>
-									<th><cms:text constant="column_name" module="shop"/></th>
+									<th><cms:text constant="column_discounted_item_name" module="shop"/></th>
 									<th><cms:text constant="column_quantity" module="shop"/></th>
 									<th><cms:text constant="column_price" module="shop"/></th>
 									<th><cms:text constant="column_discount" module="shop"/></th>
