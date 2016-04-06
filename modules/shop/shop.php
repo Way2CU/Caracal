@@ -3888,12 +3888,17 @@ class shop extends Module {
 			if (count($item['variations']) > 0)
 				foreach($item['variations'] as $variation_id => $data) {
 					// add items to checkout list
+					$properties = $data;
+					foreach ($this->excluded_properties as $key)
+						if (isset($properties[$key]))
+							unset($properties[$key]);
+
 					$new_item = $items_by_uid[$uid];
 					$new_item['count'] = $data['count'];
-					$new_item['description'] = implode(', ', array_values($data));
-					$new_item['total'] = number_format(($new_item['price'] * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
+					$new_item['description'] = implode(', ', array_values($properties));
+					$new_item['total'] = number_format(($data['price'] * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
 					$new_item['tax'] = number_format($new_item['tax'], 2);
-					$new_item['price'] = number_format($new_item['price'], 2);
+					$new_item['price'] = number_format($data['price'], 2);
 					$new_item['weight'] = number_format($new_item['weight'], 2);
 					$new_item['transaction_type'] = $transaction_type;
 
