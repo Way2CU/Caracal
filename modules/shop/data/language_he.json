@@ -15,6 +15,8 @@
     "column_discount": "Discount",
     "column_discounted_item_name": "Discounted item",
     "column_discount_amount": "Amount",
+    "column_regular_price": "Regular price",
+    "column_discount_price": "Discounted price",
     "column_total_discount": "Total amount",
     "column_categories": "קטגוריות אליהן שייך המוצר",
     "column_color_name": "שם",

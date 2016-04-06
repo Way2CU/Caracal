@@ -5,8 +5,8 @@
 		<td><cms:var param="name" multilanguage="yes"/></td>
 		<td><cms:var param="count"/></td>
 		<td><cms:var param="price"/></td>
-		<td><cms:var param="discount"/><cms:raw text="&amp;nbsp;%"/></td>
+		<td><cms:var param="discount"/><cms:raw text="%"/></td>
 		<td><cms:var param="discount_amount"/></td>
-		<td><cms:var param="total_discount"/></td>
+		<td><cms:var param="final_price"/></td>
 	</tr>
 </document>

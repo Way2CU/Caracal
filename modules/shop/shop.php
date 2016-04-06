@@ -4135,7 +4135,7 @@ class shop extends Module {
 							'count'           => $count,
 							'price'           => $properties['price'],
 							'discount'        => $item->discount,
-							'discount_amount' => $discount_amount,
+							'discount_amount' => number_format($discount_amount, 2),
 							'final_price'     => $price
 						);
 

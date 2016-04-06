@@ -87,10 +87,10 @@
 								<tr>
 									<th><cms:text constant="column_discounted_item_name" module="shop"/></th>
 									<th><cms:text constant="column_quantity" module="shop"/></th>
-									<th><cms:text constant="column_price" module="shop"/></th>
+									<th><cms:text constant="column_regular_price" module="shop"/></th>
 									<th><cms:text constant="column_discount" module="shop"/></th>
 									<th><cms:text constant="column_discount_amount" module="shop"/></th>
-									<th><cms:text constant="column_total_discount" module="shop"/></th>
+									<th><cms:text constant="column_final_price" module="shop"/></th>
 								</tr>
 								<cms:discounted_items/>
 							</cms:if>
