@@ -193,7 +193,7 @@ class shop extends Module {
 	private $checkout_styles = array();
 
 	private $excluded_properties = array(
-		'size_value', 'color_value', 'count'
+		'size_value', 'color_value', 'count', 'price'
 	);
 
 	private $search_params = array();
@@ -1862,9 +1862,9 @@ class shop extends Module {
 	 */
 	private function json_SetDeliveryMethod() {
 		$result = array(
-				'error'		=> false,
-				'message'	=> '',
-				'delivery_prices'	=> array()
+				'error'           => false,
+				'message'         => '',
+				'delivery_prices' => array()
 			);
 		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
@@ -2303,14 +2303,6 @@ class shop extends Module {
 				);
 			}
 
-			if (!array_key_exists($variation_id, $cart[$uid]['variations'])) {
-				$cart[$uid]['variations'][$variation_id] = $properties;
-				$cart[$uid]['variations'][$variation_id]['count'] = 0;
-			}
-
-			// increase count in case it already exists
-			$cart[$uid]['variations'][$variation_id]['count'] += 1;
-
 			// get item image url
 			$thumbnail_url = null;
 			if (ModuleHandler::is_loaded('gallery'))
@@ -2338,6 +2330,19 @@ class shop extends Module {
 			} else {
 				$item_price = $item->price;
 			}
+
+			// create variation and configure its values
+			foreach ($this->excluded_properties as $key)
+				if (isset($properties[$key]))
+					unset($properties[$key]);
+
+			if (!array_key_exists($variation_id, $cart[$uid]['variations'])) {
+				$cart[$uid]['variations'][$variation_id] = $properties;
+				$cart[$uid]['variations'][$variation_id]['count'] = 0;
+			}
+
+			$cart[$uid]['variations'][$variation_id]['count'] += 1;
+			$cart[$uid]['variations'][$variation_id]['price'] = $item_price;
 
 			// prepare result
 			$result = array(
@@ -2590,15 +2595,9 @@ class shop extends Module {
 					if (count($item['variations']) > 0)
 						foreach($item['variations'] as $variation_id => $data) {
 							// add items to checkout list
-							$properties = $data;
-
-							foreach ($this->excluded_properties as $key)
-								if (isset($properties[$key]))
-									unset($properties[$key]);
-
 							$new_item = $items_by_uid[$uid];
 							$new_item['count'] = $data['count'];
-							$new_item['description'] = serialize($properties);
+							$new_item['description'] = serialize($data);
 
 							// add item to list for delivery estimation
 							$delivery_items []= array(
@@ -2618,7 +2617,7 @@ class shop extends Module {
 
 							// include item data in summary
 							$tax = $new_item['tax'];
-							$price = $new_item['price'];
+							$price = $data['price'];
 							$weight = $new_item['weight'];
 
 							$total_money += ($price * (1 + ($tax / 100))) * $data['count'];
@@ -3888,15 +3887,9 @@ class shop extends Module {
 			if (count($item['variations']) > 0)
 				foreach($item['variations'] as $variation_id => $data) {
 					// add items to checkout list
-					$properties = $data;
-
-					foreach ($this->excluded_properties as $key)
-						if (isset($properties[$key]))
-							unset($properties[$key]);
-
 					$new_item = $items_by_uid[$uid];
 					$new_item['count'] = $data['count'];
-					$new_item['description'] = implode(', ', array_values($properties));
+					$new_item['description'] = implode(', ', array_values($data));
 					$new_item['total'] = number_format(($new_item['price'] * (1 + ($new_item['tax'] / 100))) * $new_item['count'], 2);
 					$new_item['tax'] = number_format($new_item['tax'], 2);
 					$new_item['price'] = number_format($new_item['price'], 2);
