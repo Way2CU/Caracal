@@ -64,6 +64,10 @@ table.checkout_details {
 	color: #333333;
 }
 
+table.discounted_items {
+	border-radius: 0;
+}
+
 /**
  * Delivery method selection
  */
