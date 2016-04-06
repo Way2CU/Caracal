@@ -4117,11 +4117,9 @@ class shop extends Module {
 				if (!$item->discount)
 					continue;
 
+				$uid = $item->uid;
 				if (!array_key_exists($uid, $cart) || count($cart[$uid]['variations']) == 0)
 					continue;
-
-				// prepare item data to display
-				$uid = $item->uid;
 
 				// show items
 				foreach ($cart[$uid]['variations'] as $variation_id => $properties) {
