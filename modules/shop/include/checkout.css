@@ -445,6 +445,7 @@ table.checkout_details tbody th {
 	padding: 5px 7px;
 	border: 0px solid #b0b0b0;
 	border-top-width: 1px;
+	border-bottom-width: 1px;
 	background-color: #F0F0F0;
 	text-align: left;
 }
