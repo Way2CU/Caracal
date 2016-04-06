@@ -3912,14 +3912,9 @@ class shop extends Module {
 							unset($properties[$key]);
 
 					$new_item = $items_by_uid[$uid];
-					if ($new_item['discount']) {
-						// calculate discounted prices
-						$price = $data['price'] * ((100 - $new_item['discount']) / 100);
-						$total_discount += $data['price'] - $price;
-
-					} else {
+					if ($new_item['discount'])
+						$price = $data['price'] * ((100 - $new_item['discount']) / 100); else
 						$price = $data['price'];
-					}
 
 					$new_item['count'] = $data['count'];
 					$new_item['description'] = implode(', ', array_values($properties));
