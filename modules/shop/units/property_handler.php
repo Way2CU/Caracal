@@ -202,6 +202,10 @@ class Handler {
 				);
 			$index++;
 
+			// add price property if discount is specified
+			if ($discount > 0 && $item->type == 'decimal')
+				$params['discount_price'] = number_format($params['value'] * ((100 - $discount) / 100), 2);
+
 			// parse template
 			$template->restoreXML();
 			$template->setLocalParams($params);
