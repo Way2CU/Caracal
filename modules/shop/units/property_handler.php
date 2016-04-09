@@ -166,7 +166,7 @@ class Handler {
 			$sort_asc = $tag_params['sort_asc'] == '1';
 
 		if (isset($tag_params['discount']))
-			$discount = fix_id($tag_params['discount']);
+			$discount = floatval($tag_params['discount']);
 
 		// get item properties from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $sort_by, $sort_asc);
