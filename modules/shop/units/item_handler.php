@@ -591,7 +591,7 @@ class Handler {
 						'views'                 => $item->views,
 						'price'                 => $item->price,
 						'discount'              => $item->discount,
-						'discount_price'        => $item->discount ? $item->price * ((100 - $item->discount) / 100) : $item->price,
+						'discount_price'        => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
 						'tax'                   => $item->tax,
 						'currency'              => $this->parent->settings['default_currency'],
 						'weight'                => $item->weight,
