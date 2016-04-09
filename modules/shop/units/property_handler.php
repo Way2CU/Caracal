@@ -147,6 +147,7 @@ class Handler {
 		$conditions = array();
 		$sort_by = array('id');
 		$sort_asc = true;
+		$discount = 0;
 
 		// prepare conditions
 		if (isset($tag_params['item']))
@@ -163,6 +164,9 @@ class Handler {
 
 		if (isset($tag_params['sort_asc']))
 			$sort_asc = $tag_params['sort_asc'] == '1';
+
+		if (isset($tag_params['discount']))
+			$discount = fix_id($tag_params['discount']);
 
 		// get item properties from database
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $sort_by, $sort_asc);
@@ -193,7 +197,8 @@ class Handler {
 					'type'      => $item->type,
 					'value'     => unserialize($item->value),
 					'raw_value' => $item->value,
-					'data'      => json_encode($data)
+					'data'      => json_encode($data),
+					'discount'  => $discount
 				);
 			$index++;
 
