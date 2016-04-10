@@ -960,7 +960,7 @@ Caracal.Shop.Item = function(cart) {
 		if (self.discount > 0)
 			price = self.discount_price;
 
-		return self.count * self.price * self.exchange_rate;
+		return self.count * price * self.exchange_rate;
 	};
 
 	/**
