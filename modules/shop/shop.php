@@ -2471,9 +2471,12 @@ class shop extends Module {
 		$result = false;
 		$transaction = Transaction::get_current();
 		$manager = ShopTransactionsManager::getInstance();
+		$append = isset($_REQUEST['append']) && $_REQUEST['append'] == 1 ? true : false;
 
 		if (!is_null($transaction)) {
-			$remark = escape_chars($_REQUEST['remark']);
+			$remark = $append ? $transaction->remark."\n" : '';
+			$remark .= escape_chars($_REQUEST['remark']);
+
 			$manager->updateData(
 					array('remark' => $remark),
 					array('id' => $transaction->id)
