@@ -373,7 +373,7 @@ class ItemManager {
 		$tmp = array();
 
 		foreach($data as $field_name => $field_value) {
-			if (!in_array($field_name, $this->field_types)) {
+			if (!in_array($field_name, $this->fields)) {
 				trigger_error("Item manager: Unknown field `{$field_name}` in `{$this->table_name}`.", E_USER_NOTICE);
 				continue;
 			}
