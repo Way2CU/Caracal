@@ -2124,7 +2124,7 @@ class shop extends Module {
 							'weight'          => $item->weight,
 							'price'           => $properties['price'],
 							'discount'        => $item->discount,
-							'discount_price'  => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
+							'discount_price'  => $item->discount ? number_format($properties['price'] * ((100 - $item->discount) / 100), 2) : $properties['price'],
 							'tax'             => $item->tax,
 							'image'           => $thumbnail_url,
 							'uid'             => $item->uid,
