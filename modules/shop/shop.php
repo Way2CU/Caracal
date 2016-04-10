@@ -2120,17 +2120,18 @@ class shop extends Module {
 						unset($new_properties['count']);
 
 						$result['cart'][] = array(
-							'name'			=> $item->name,
-							'weight'		=> $item->weight,
-							'price'			=> $properties['price'],
-							'discount'		=> $item->discount,
-							'tax'			=> $item->tax,
-							'image'			=> $thumbnail_url,
-							'uid'			=> $item->uid,
-							'variation_id'	=> $variation_id,
-							'count'			=> $properties['count'],
-							'properties'	=> unfix_chars($new_properties),
-							'size_definition'	=> $item->size_definition
+							'name'            => $item->name,
+							'weight'          => $item->weight,
+							'price'           => $properties['price'],
+							'discount'        => $item->discount,
+							'discount_price'  => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
+							'tax'             => $item->tax,
+							'image'           => $thumbnail_url,
+							'uid'             => $item->uid,
+							'variation_id'    => $variation_id,
+							'count'           => $properties['count'],
+							'properties'      => unfix_chars($new_properties),
+							'size_definition' => $item->size_definition
 						);
 					}
 			}
@@ -2351,6 +2352,8 @@ class shop extends Module {
 				'name'            => $item->name,
 				'weight'          => $item->weight,
 				'price'           => $item_price,
+				'discount'        => $item->discount,
+				'discount_price'  => $item->discount ? number_format($item_price * ((100 - $item->discount) / 100), 2) : $item_price,
 				'tax'             => $item->tax,
 				'size_definition' => $item->size_definition,
 				'image'           => $thumbnail_url,
