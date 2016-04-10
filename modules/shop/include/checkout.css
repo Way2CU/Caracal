@@ -968,6 +968,7 @@ div#input_details label.captcha {
 
 div#input_details label.captcha.hidden {
 	max-height: 0px;
+	padding: 0;
 }
 
 div#input_details label.captcha img {
