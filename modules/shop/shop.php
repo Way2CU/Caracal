@@ -3039,7 +3039,6 @@ class shop extends Module {
 			$result['delivery_method'] = $delivery_method;
 			$result['remark'] = '';
 			$result['total'] = $summary['total'];
-			$result['discounts'] = $summary['discounts'];
 
 			// get default currency
 			$currency_manager = ShopCurrenciesManager::getInstance();
@@ -3057,6 +3056,9 @@ class shop extends Module {
 			$transactions_manager->insertData($result);
 			$result['id'] = $transactions_manager->getInsertedID();
 
+			// add discounts to result
+			$result['discounts'] = $summary['discounts'];
+
 			// store transaction data to session
 			$_SESSION['transaction'] = $result;
 
@@ -3069,7 +3071,6 @@ class shop extends Module {
 			$result['handling'] = $summary['handling'];
 			$result['shipping'] = $summary['shipping'];
 			$result['total'] = $summary['total'];
-			$result['discounts'] = $summary['discounts'];
 
 			$data = array(
 				'handling'	=> $summary['handling'],
@@ -3082,6 +3083,9 @@ class shop extends Module {
 
 			// update existing transaction
 			$transactions_manager->updateData($data, array('uid' => $uid));
+
+			// add discounts to result
+			$result['discounts'] = $summary['discounts'];
 
 			// update session storage with newest data
 			$_SESSION['transaction'] = $result;
