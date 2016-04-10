@@ -204,6 +204,7 @@ div#checkout div.delivery_interface {
 	transition-duration: 0.5s;
 
 	opacity: 0;
+	overflow: hidden;
 }
 
 div#checkout div.delivery_method.visible,
