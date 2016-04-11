@@ -11,8 +11,9 @@ use Core\Module;
 class language_menu extends Module {
 	private static $_instance;
 	private $invalid_params = array(
-						'PHPSESSID', '__utmz', '__utma', 'language',
-						'__utmc', '__utmb', '_', 'subject', 'MAX_FILE_SIZE', '_rewrite'
+						'__utmz', '__utma', 'language', '__utmc', '__utmb',
+						'_', 'subject', 'MAX_FILE_SIZE', '_rewrite',
+						Session::COOKIE_ID, Session::COOKIE_TYPE
 					);
 
 	/**
