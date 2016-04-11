@@ -56,7 +56,11 @@ class language_menu extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print':
-					$this->printMenus($params, $children);
+					$this->tag_LanguageList($params, $children);
+					break;
+
+				case 'print_current':
+					$this->tag_CurrentLanguage($params, $children);
 					break;
 
 				case 'json':
@@ -115,12 +119,39 @@ class language_menu extends Module {
 	}
 
 	/**
+	 * Return parameters forming language URLs.
+	 *
+	 * @return array
+	 */
+	private function get_params() {
+		$result = array();
+
+		// prepare params
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'POST':
+				$params = $_POST;
+				break;
+
+			case 'GET':
+			default:
+				$params = $_GET;
+		}
+
+		// filter out invalid parameters
+		foreach($params as $key => $value)
+			if (!in_array($key, $this->invalid_params))
+				$result[$key] = escape_chars($value);
+
+		return $result;
+	}
+
+	/**
 	 * Prints language menu using OL
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function printMenus($tag_params, $children) {
+	private function tag_LanguageList($tag_params, $children) {
 		global $action, $section;
 
 		// check if we were asked to get languages from specific module
@@ -135,38 +166,49 @@ class language_menu extends Module {
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
-		// prepare params
-		switch ($_SERVER['REQUEST_METHOD']) {
-			case 'POST':
-				$params = $_POST;
-				break;
-
-			case 'GET':
-			default:
-				$params = $_GET;
-		}
-		$link_params = array();
-
-		foreach($params as $key => $value)
-			if (!in_array($key, $this->invalid_params))
-				$link_params[$key] = escape_chars($value);
+		// get parameters for URL
+		$link_params = $this->get_params();
 
 		// print language list
 		if (count($list) > 0)
-			foreach ($list as $short=>$long) {
+			foreach ($list as $short => $long) {
 				$link_params['language'] = $short;
 				$link = url_MakeFromArray($link_params);
 
 				$params = array(
-					'short_name'	=> $short,
-					'long_name'		=> $long,
-					'url' 			=> $link
+					'short_name' => $short,
+					'long_name'  => $long,
+					'url'        => $link
 				);
 
 				$template->restoreXML();
 				$template->setLocalParams($params);
 				$template->parse( );
 			}
+	}
+
+	/**
+	 * Show currently selected language item.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CurrentLanguage($tag_params, $children) {
+		global $language;
+
+		$list = Language::getLanguages(true);
+		$link_params = $this->get_params();
+		$template = $this->loadTemplate($tag_params, 'current_language.xml');
+
+		$params = array(
+				'short_name' => $language,
+				'long_name'  => $list[$language],
+				'url'        => url_MakeFromArray($link_params)
+			);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
