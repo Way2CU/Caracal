@@ -184,7 +184,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 * @param object $transaction
 	 * @return array
 	 */
-	public function getDeliveryTypes($items, $shipper, $recipient, $transaction, $preferred_currency) {
+	public function getDeliveryTypes($items, $shipper, $recipient, $transaction) {
 		$shop = shop::getInstance();
 		$debug = $shop->isDebug();
 		$result = array();
@@ -209,7 +209,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 		$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP';
 		$request['RequestedShipment']['ShipTimestamp'] = date('c');
 		$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING';
-		$request['RequestedShipment']['PreferredCurrency'] = $preferred_currency;
+		$request['RequestedShipment']['PreferredCurrency'] = $transaction->currency;
 		$request['RequestedShipment']['Shipper'] = array(
 											'Contact'	=> array(
 											),
