@@ -1955,7 +1955,7 @@ class shop extends Module {
 						$shipper,
 						$recipient,
 						$transaction,
-						$result['delivery_type']
+						$type
 					);
 
 			} else {

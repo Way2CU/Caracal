@@ -192,12 +192,12 @@ abstract class DeliveryMethod {
 	 * @param array $items
 	 * @param array $shipper
 	 * @param array $recipient
-	 * @param string $transaction_id
+	 * @param object $transaction
 	 * @param string $preferred_currency
 	 * @param string $selection
 	 * @return float
 	 */
-	abstract public function getCustomEstimate($items, $shipper, $recipient, $transaction_id, $preferred_currency, $selection);
+	abstract public function getCustomEstimate($items, $shipper, $recipient, $transaction, $preferred_currency, $selection);
 
 	/**
 	 * Whether delivery method can be used for international deliveries.
