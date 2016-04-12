@@ -184,6 +184,22 @@ final class Transaction {
 		// update data
 		$manager->updateData($data, array('id' => $transaction->id));
 	}
+
+	/**
+	 * Set shipping cost for specified transactions.
+	 *
+	 * @param object $transaction
+	 * @param float $value
+	 */
+	public static function set_shipping($transaction, $value) {
+		$manager = self::get_manager();
+
+		// update data
+		$manager->updateData(
+				array('shipping' => $value),
+				array('id' => $transaction->id)
+			);
+	}
 }
 
 ?>
