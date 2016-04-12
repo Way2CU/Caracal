@@ -181,10 +181,10 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 * @param array $items
 	 * @param array $shipper
 	 * @param array $recipient
-	 * @param string $transaction_id
+	 * @param object $transaction
 	 * @return array
 	 */
-	public function getDeliveryTypes($items, $shipper, $recipient, $transaction_id, $preferred_currency) {
+	public function getDeliveryTypes($items, $shipper, $recipient, $transaction, $preferred_currency) {
 		$shop = shop::getInstance();
 		$debug = $shop->isDebug();
 		$result = array();
@@ -200,7 +200,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 		// populate request header
 		$this->_populateCredentials($request);
 		$this->_populateClientDetails($request);
-		$this->_populateTransactionDetails($request, $transaction_id);
+		$this->_populateTransactionDetails($request, $transaction->id);
 		$this->_populateVersionInformation($request, FedEx_DeliveryMethod::RATE_SERVICE);
 
 		// add remaining request information

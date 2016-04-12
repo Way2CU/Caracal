@@ -1864,13 +1864,29 @@ class shop extends Module {
 	}
 
 	/**
-	 * Set delivery method and return updated information about cart totals.
+	 * Set delivery method and return updated information about cart totals. If delivery type
+	 * was omitted list of delivery types will be returned. The process of getting delivery estimate
+	 * is as follows:
+	 *
+	 * Delivery method with custom interface:
+	 * 		<- get_delivery_method_interface
+	 * 		-> set_delivery_method(method, type)
+	 * 		<- returns price
+	 *
+	 * Delivery method with regular list of delivery types:
+	 * 		-> set_delivery_method(method)
+	 * 		<- returns list of types
+	 * 		-> set_delivery_method(method, type)
+	 * 		<- returns price
 	 */
 	private function json_SetDeliveryMethod() {
 		$result = array(
 				'error'           => false,
 				'message'         => '',
-				'delivery_prices' => array()
+				'delivery_prices' => array(),
+				'shipping'        => 0,
+				'handling'        => 0,
+				'total'           => 0
 			);
 		$method = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
@@ -1898,22 +1914,7 @@ class shop extends Module {
 			return;
 		}
 
-		// get cart summary
-		$result = $this->getCartSummary(
-						$transaction->uid,
-						$transaction->type,
-						$this->payment_methods[$transaction->payment_method]
-					);
-		unset($result['items_for_checkout']);
-
-		// add language constants
-		$result['label_no_estimate'] = $this->getLanguageConstant('label_no_estimate');
-		$result['label_estimated_time'] = $this->getLanguageConstant('label_estimated_time');
-
-		// add delivery method related values
-		$result['delivery_method'] = Delivery::get_current_name();
-		$result['delivery_type'] = Delivery::get_current_type();
-
+		// get information about sender and recipient
 		// TODO: Instead of picking up the first warehouse we need to choose proper one based on item property.
 		$warehouse_manager = ShopWarehouseManager::getInstance();
 		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
@@ -1936,14 +1937,55 @@ class shop extends Module {
 				'country'	=> $address->country
 			);
 
-			// get types and prices from delivery method provider
+		} else {
+			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
+			$result['error'] = true;
+			$result['message'] = $this->getLanguageConstant('message_error_no_warehouse');
+			print json_encode($result);
+			return;
+		}
+
+		// decide what to do with data
+		if (!is_null($method) && !is_null($type)) {
+			// both method and type were specified, get estimate
+			if ($delivery_method->hasCustomInterface()) {
+				// get custom estimate from the delivery method
+				$result['shipping'] = $delivery_method->getCustomEstimate(
+						Delivery::get_items_for_estimate(),
+						$shipper,
+						$recipient,
+						$transaction,
+						$result['delivery_type']
+					);
+
+			} else {
+				// get estimate from the list of delivery types
+				$delivery_prices = $delivery_method->getDeliveryTypes(
+						Delivery::get_items_for_estimate(),
+						$shipper,
+						$recipient,
+						$transaction
+					);
+
+				// find matching type from the list of provided types
+				$shipping = 0;
+				foreach ($delivery_prices as $data)
+					if ($data[0] == $type) {
+						$shipping = $data[1];
+						break;
+					}
+
+				$result['shipping'] = $shipping;
+			}
+
+		} else if (is_null($type) && !$delivery_method->hasCustomInterface()) {
+			// only method was specified, get either interface of delivery types
 			$delivery_prices = $delivery_method->getDeliveryTypes(
-				Delivery::get_items_for_estimate(),
-				$shipper,
-				$recipient,
-				$transaction->uid,
-				$transaction->currency
-			);
+					Delivery::get_items_for_estimate(),
+					$shipper,
+					$recipient,
+					$transaction
+				);
 
 			// add formated dates to result
 			$date_format = $this->getLanguageConstant('format_date_short');
@@ -1979,9 +2021,24 @@ class shop extends Module {
 					if (!is_null($delivery[4]))
 						$delivery[4] = date($date_format, $delivery[4]);
 				}
-		} else {
-			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
 		}
+
+		// add language constants
+		$result['label_no_estimate'] = $this->getLanguageConstant('label_no_estimate');
+		$result['label_estimated_time'] = $this->getLanguageConstant('label_estimated_time');
+
+		// add delivery method related values
+		$result['delivery_method'] = Delivery::get_current_name();
+		$result['delivery_type'] = Delivery::get_current_type();
+
+		// get cart summary and update result
+		$summary = $this->getCartSummary(
+						$transaction->uid,
+						$transaction->type,
+						$this->payment_methods[$transaction->payment_method]
+					);
+		$result['handling'] = $summary['handling'];
+		$result['total'] = $summary['total'];
 
 		print json_encode($result);
 	}
