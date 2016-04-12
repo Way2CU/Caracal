@@ -2042,6 +2042,7 @@ class shop extends Module {
 					);
 		$result['handling'] = $summary['handling'];
 		$result['total'] = $summary['total'];
+		$result['currency'] = $summary['currency'];
 
 		print json_encode($result);
 	}
