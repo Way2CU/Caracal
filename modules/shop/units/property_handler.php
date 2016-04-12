@@ -137,6 +137,58 @@ class Handler {
 	}
 
 	/**
+	 * Render single property for specified shop item.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Property($tag_params, $children) {
+		$manager = Manager::getInstance();
+		$conditions = array();
+
+		// prepare conditions
+		if (isset($tag_params['item']))
+			$conditions['item'] = fix_id($tag_params['item']); else
+			$conditions['item'] = -1;
+
+		// get item properties from database
+		$item = $manager->getSingleItems($manager->getFieldNames(), $conditions);
+
+		// we need items to display
+		if (!is_object($item))
+			return;
+
+		// create template
+		$template = $this->parent->loadTemplate($tag_params, 'item_property.xml');
+
+		// prepare data
+		$data = array(
+				'text_id' => $item->text_id,
+				'name'    => $item->name,
+				'type'    => $item->type,
+				'value'   => unserialize($item->value)
+			);
+
+		// prepare parameters
+		$params = array(
+				'id'        => $item->id,
+				'index'     => $index,
+				'text_id'   => $item->text_id,
+				'name'      => $item->name,
+				'type'      => $item->type,
+				'value'     => unserialize($item->value),
+				'raw_value' => $item->value,
+				'data'      => json_encode($data),
+				'discount'  => $discount
+			);
+
+		// parse template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Tag handler for list of item properties.
 	 *
 	 * @param array $tag_params

@@ -582,6 +582,11 @@ class shop extends Module {
 				$handler->tag_CategoryList($params, $children);
 				break;
 
+			case 'show_property':
+				$handler = \Modules\Shop\Property\Handler::getInstance($this);
+				$handler->tag_Property($params, $children);
+				break;
+
 			case 'show_property_list':
 				$handler = \Modules\Shop\Property\Handler::getInstance($this);
 				$handler->tag_PropertyList($params, $children);

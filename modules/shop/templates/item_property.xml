@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../../units/schema/language.dtd">
+<document>
+	<div class="property">
+		<span><cms:var param="name" multilanguage="yes"/></span>
+		<cms:choice param="type">
+			<option value="number"><cms:var param="value"/></option>
+			<option value="decimal"><cms:var param="value"/></option>
+			<option value="text"><cms:var param="value"/></option>
+			<option value="ml_text"><cms:var param="value" multilanguage="yes"/></option>
+			<option value="array"><cms:var name="$params['value'][0]"/></option>
+			<option value="ml_array"><cms:var name="$params['value'][0][$language]"/></option>
+		</cms:choice>
+	</div>
+</document>
