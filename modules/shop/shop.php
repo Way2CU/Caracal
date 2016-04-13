@@ -2603,7 +2603,7 @@ class shop extends Module {
 		$currency_manager = ShopCurrenciesManager::getInstance();
 
 		$transaction = $transaction_manager->getSingleItem(
-							array('currency'),
+							array('currency', 'shipping', 'handling'),
 							array('uid' => $transaction_id)
 						);
 
@@ -2710,6 +2710,10 @@ class shop extends Module {
 							$items_for_checkout[] = $new_item;
 						}
 				}
+
+				// get shipping and handling from database
+				$shipping = $transaction->shipping;
+				$handling = $transaction->handling;
 				break;
 		}
 
