@@ -169,7 +169,7 @@ final class Transaction {
 	 * @param float $total
 	 * @param float $handling
 	 */
-	public static function set_totals($transaction, $total=null, $handling=null) {
+	public static function set_totals($transaction, $total=null, $shipping=null, $handling=null) {
 		$manager = self::get_manager();
 
 		// prepare data
@@ -177,6 +177,9 @@ final class Transaction {
 
 		if (!is_null($total))
 			$data['total'] = $total;
+
+		if (!is_null($shipping))
+			$data['shipping'] = $shipping;
 
 		if (!is_null($handling))
 			$data['handling'] = $handling;

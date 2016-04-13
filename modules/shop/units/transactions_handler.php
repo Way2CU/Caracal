@@ -559,7 +559,7 @@ class ShopTransactionsHandler {
 			return;
 		}
 
-		Transaction::set_totals($transaction, $total, $handling);
+		Transaction::set_totals($transaction, $total, null, $handling);
 		print json_encode($result);
 	}
 }

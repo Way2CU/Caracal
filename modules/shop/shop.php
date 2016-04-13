@@ -1978,9 +1978,6 @@ class shop extends Module {
 				$result['shipping'] = $shipping;
 			}
 
-			// update transaction value
-			Transaction::set_shipping($transaction, $result['shipping']);
-
 		} else if (is_null($type) && !$delivery_method->hasCustomInterface()) {
 			// only method was specified, get either interface of delivery types
 			$delivery_prices = $delivery_method->getDeliveryTypes(
@@ -2043,6 +2040,14 @@ class shop extends Module {
 		$result['handling'] = $summary['handling'];
 		$result['total'] = $summary['total'];
 		$result['currency'] = $summary['currency'];
+
+		// update transaction values
+		Transaction::set_totals(
+				$transaction,
+				$result['total'],
+				$result['shipping'],
+				$result['handling']
+			);
 
 		print json_encode($result);
 	}
