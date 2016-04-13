@@ -176,8 +176,7 @@ class Handler {
 				'name'      => $item->name,
 				'type'      => $item->type,
 				'value'     => unserialize($item->value),
-				'raw_value' => $item->value,
-				'data'      => json_encode($data)
+				'raw_value' => $item->value
 			);
 
 		// parse template
