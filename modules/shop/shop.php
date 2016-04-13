@@ -1976,6 +1976,7 @@ class shop extends Module {
 					}
 
 				$result['shipping'] = $shipping;
+				Transactio::set_shipping($transaction, $shipping);
 			}
 
 		} else if (is_null($type) && !$delivery_method->hasCustomInterface()) {
@@ -2041,13 +2042,8 @@ class shop extends Module {
 		$result['total'] = $summary['total'];
 		$result['currency'] = $summary['currency'];
 
-		// update transaction values
-		Transaction::set_totals(
-				$transaction,
-				$result['total'],
-				$result['shipping'],
-				$result['handling']
-			);
+		// update transaction total
+		Transaction::set_totals($transaction, $result['total']);
 
 		print json_encode($result);
 	}
