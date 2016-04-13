@@ -1979,7 +1979,7 @@ class shop extends Module {
 			}
 
 			// set transaction shipping value
-			Transaction::set_shipping($transaction, $shipping);
+			Transaction::set_shipping($transaction, $result['shipping']);
 
 		} else if (is_null($type) && !$delivery_method->hasCustomInterface()) {
 			// only method was specified, get either interface of delivery types
