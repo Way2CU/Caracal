@@ -152,7 +152,7 @@ class Handler {
 			$conditions['item'] = -1;
 
 		// get item properties from database
-		$item = $manager->getSingleItems($manager->getFieldNames(), $conditions);
+		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
 		// we need items to display
 		if (!is_object($item))
