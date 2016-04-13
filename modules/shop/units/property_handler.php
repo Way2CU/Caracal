@@ -172,14 +172,12 @@ class Handler {
 		// prepare parameters
 		$params = array(
 				'id'        => $item->id,
-				'index'     => $index,
 				'text_id'   => $item->text_id,
 				'name'      => $item->name,
 				'type'      => $item->type,
 				'value'     => unserialize($item->value),
 				'raw_value' => $item->value,
-				'data'      => json_encode($data),
-				'discount'  => $discount
+				'data'      => json_encode($data)
 			);
 
 		// parse template
