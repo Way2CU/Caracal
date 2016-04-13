@@ -151,6 +151,9 @@ class Handler {
 			$conditions['item'] = fix_id($tag_params['item']); else
 			$conditions['item'] = -1;
 
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = escape_chars($tag_params['text_id']);
+
 		// get item properties from database
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
 
