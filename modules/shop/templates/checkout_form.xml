@@ -3,7 +3,12 @@
 <document>
 	<div id="checkout_container">
 		<div id="checkout" cms:skip_cache="1" class="$params['recurring'] ? 'recurring' : 'sale'" cms:eval="class">
-			<form action="$params['checkout_url']" method="POST" cms:eval="action">
+			<form
+				action="$params['checkout_url']"
+				method="POST"
+				data-method="$params['method']"
+				cms:eval="action,data-method"
+				>
 				<cms:if condition="!$params['recurring']">
 					<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
 						<!-- Header -->

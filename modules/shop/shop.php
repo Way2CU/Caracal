@@ -3874,13 +3874,14 @@ class shop extends Module {
 
 				// parse template
 				$params = array(
-					'checkout_url'		=> $payment_method->get_url(),
-					'checkout_fields'	=> $checkout_fields,
-					'checkout_name'		=> $payment_method->get_title(),
-					'currency'			=> self::getDefaultCurrency(),
-					'recurring'			=> $transaction_type == TransactionType::SUBSCRIPTION,
-					'include_shipping'	=> $include_shipping,
-					'type'				=> $transaction_type
+					'checkout_url'     => $payment_method->get_url(),
+					'checkout_fields'  => $checkout_fields,
+					'checkout_name'    => $payment_method->get_title(),
+					'method'           => $payment_method->get_name(),
+					'currency'         => self::getDefaultCurrency(),
+					'recurring'        => $transaction_type == TransactionType::SUBSCRIPTION,
+					'include_shipping' => $include_shipping,
+					'type'             => $transaction_type
 				);
 
 				// for recurring plans add additional params
