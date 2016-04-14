@@ -2609,11 +2609,16 @@ class shop extends Module {
 							array('uid' => $transaction_id)
 						);
 
-		if (is_object($transaction))
+		if (is_object($transaction)) {
 			$currency = $currency_manager->getSingleItem(
 				$currency_manager->getFieldNames(),
 				array('id' => $transaction->currency)
 			);
+
+			// get shipping and handling from database
+			$shipping = $transaction->shipping;
+			$handling = $transaction->handling;
+		}
 
 		if (is_object($currency))
 			$preferred_currency = $currency->currency; else
@@ -2713,9 +2718,6 @@ class shop extends Module {
 						}
 				}
 
-				// get shipping and handling from database
-				$shipping = $transaction->shipping;
-				$handling = $transaction->handling;
 				break;
 		}
 
