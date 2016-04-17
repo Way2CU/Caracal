@@ -136,7 +136,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			new Communicator('shop')
 				.on_success(self.handler.custom_interface_load)
 				.on_error(self.handler.custom_interface_error)
-				.get('json_get_delivery_method_interface', {method: method.val()}, 'html');
+				.get('json_get_delivery_method_interface', {method: provider.data('value')}, 'html');
 		}
 
 		// update button status
