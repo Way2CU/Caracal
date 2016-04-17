@@ -168,7 +168,8 @@ div#shipping_information div.container.provider div.details a.selected {
 }
 
 div#shipping_information div.container.provider div.details a.bad {
-	box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.7);
+	border-color: red;
+	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
 }
 
 div#shipping_information div.container.provider div.details a img {
