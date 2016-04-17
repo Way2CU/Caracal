@@ -73,9 +73,9 @@ table.discounted_items {
  */
 div#shipping_information div.container {
 	position: relative;
+	padding: 0;
 	padding-left: 10px;
 	padding-right: 10px;
-	padding-bottom: 15px;
 
 	text-align: left;
 	max-height: 0px;
@@ -90,6 +90,7 @@ body.rtl div#shipping_information div.container {
 
 div#shipping_information div.container.visible {
 	max-height: 500px;
+	padding-bottom: 15px;
 }
 
 div#shipping_information div.container.provider div.summary {
