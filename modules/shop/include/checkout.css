@@ -118,6 +118,25 @@ div#shipping_information div.container h4 {
 	font-weight: normal;
 }
 
+div#shipping_information div.container.provider div.details a {
+	display: inline-block;
+	padding: 10px;
+}
+
+div#shipping_information div.container.provider div.details a img {
+	vertical-align: middle;
+	margin-right: 5px;
+	border: 0;
+}
+
+body.rtl div#shipping_information div.container.provider div.details a img {
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+div#shipping_information div.container.provider div.details a:hover {
+}
+
 div#shipping_information div.overlay {
 	visibility: hidden;
 	opacity: 0;
