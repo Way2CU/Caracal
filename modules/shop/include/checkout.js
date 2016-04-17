@@ -458,7 +458,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self.validator.shipping_information_page = function() {
 
 		// make sure delivery provider is selected
-		if (self.shipping.providers.filter('.select').length == 0)
+		if (self.shipping.providers.filter('.selected').length == 0)
 			self.shipping.providers.addClass('bad');
 
 		// make sure required address fields are filled in
@@ -488,7 +488,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		}
 
 		// make sure delivery type is selected if needed
-		if (self.shipping.types_container.hasClass('visible') && self.shipping.types_container.find('.selected').length == 0)
+		if (self.shipping.types_container.hasClass('visible') && self.shipping.types_container.filter('.selected').length == 0)
 			self.shipping.types_container.find('a').addClass('bad');
 
 		return self.shipping.page.find('.bad').length == 0;
