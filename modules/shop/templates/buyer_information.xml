@@ -113,17 +113,17 @@
 										autocomplete="on"
 										/>
 								</label>
-								<label class="separator">
-									<span><cms:text constant="label_last_name" module="shop"/></span>
+								<label>
+									<span><cms:text constant="label_phone_number" module="shop"/></span>
 									<input
 										type="text"
 										name="new_phone_number"
-										maxlength="64"
+										maxlength="200"
 										data-required="1"
 										autocomplete="on"
 										/>
 								</label>
-								<label>
+								<label class="separator">
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
 										type="email"
