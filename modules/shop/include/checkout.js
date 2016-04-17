@@ -29,6 +29,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	// local namespaces
 	self.handler = {};
 	self.validator = {};
+	self.shipping = {};
 
 	/**
 	 * Complete object initialization.
@@ -80,6 +81,15 @@ Caracal.Shop.BuyerInformationForm = function() {
 				self.page_control.enablePage(billing_page_index);
 		}
 
+		// shipping information pages
+		var container = $('div#shipping_information');
+		self.shipping.overlay = container.find('div.container.provider div.overlay');
+		self.shipping.provider_container = container.find('div.container.provider');
+		self.shipping.address_container = container.find('div.container.address');
+		self.shipping.contact_container = container.find('div.container.contact');
+		self.shipping.types_container = container.find('div.container.types');
+		self.shipping.interface_container = container.find('div.container.interface');
+
 		// check if user is already logged
 		if (self.shipping_information_form.find('select[name=presets]').data('autoload') == 1)
 			self._load_account_information();
@@ -128,6 +138,60 @@ Caracal.Shop.BuyerInformationForm = function() {
 			.on_success(self.handler.account_load_success)
 			.on_error(self.handler.account_load_error)
 			.get('json_get_account_info', null);
+	};
+
+	/**
+	 * Handle clicking on delivery provider.
+	 *
+	 * @param object event
+	 */
+	self.handler.delivery_provider_click = function(event) {
+		var provider = $(this);
+		var user_information = provider.data('user-information');
+
+		// prevent default behavior
+		event.preventDefault();
+
+		if (user_information == 1) {
+			// show fields for user information entry
+			self.shipping.address_container.addClass('visible');
+
+		} else if (provider.data('custom-interface')) {
+			// show busy indicator
+			self.shipping.overlay.addClass('visible');
+
+			// load delivery provider custom interface
+			new Communicator('shop')
+				.on_success(self.handler.custom_interface_load)
+				.on_error(self.handler.custom_interface_error)
+				.get('json_get_delivery_method_interface', {method: method.val()}, 'html');
+		}
+	};
+
+	/**
+	 * Handle loading custom delivery provider interface from the server.
+	 *
+	 * @param object data
+	 */
+	self.handler.custom_interface_load = function(data) {
+		self.shipping.interface_container
+				.html(data)
+				.addClass('visible');
+		self.shipping.overlay.removeClass('visible');
+	};
+
+	/**
+	 * Handle communication error when loading custom delivery provider interface
+	 * from the server.
+	 *
+	 * @param object error
+	 */
+	self.handler.custom_interface_error = function(object) {
+		// add every delivery method to the container
+		self.shipping.interface_container.removeClass('visible');
+
+		// hide overlay
+		self.shipping.overlay.removeClass('visible');
 	};
 
 	/**
@@ -558,37 +622,6 @@ Caracal.Shop.CheckoutForm = function() {
 	};
 
 	/**
-	 * Handle loading custom delivery provider interface from the server.
-	 *
-	 * @param object data
-	 */
-	self.handler.custom_interface_load = function(data) {
-		self.delivery_interface
-				.html(data)
-				.addClass('visible');
-		self.overlay.removeClass('visible');
-	};
-
-	/**
-	 * Handle communication error when loading custom delivery provider interface
-	 * from the server.
-	 *
-	 * @param object error
-	 */
-	self.handler.custom_interface_error = function(object) {
-		// disable checkout button
-		self.disable_checkout_button();
-
-		// add every delivery method to the container
-		self.delivery_method_list.html('');
-		self.delivery_method_list.removeClass('visible');
-		self.delivery_interface.removeClass('visible');
-
-		// hide overlay
-		self.overlay.removeClass('visible');
-	};
-
-	/**
 	 * Handle successful data load from server.
 	 *
 	 * @param object data
@@ -707,7 +740,6 @@ Caracal.Shop.CheckoutForm = function() {
 				.on_error(self.handler.delivery_providers_error)
 				.get('json_set_delivery_method', {method: method.val()});
 		}
-
 	};
 
 	/**
