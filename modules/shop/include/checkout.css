@@ -71,7 +71,7 @@ table.discounted_items {
 /**
  * Delivery method selection
  */
-div#shopping_information div.container {
+div#shipping_information div.container {
 	position: relative;
 	padding-left: 10px;
 	padding-right: 10px;
