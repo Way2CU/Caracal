@@ -83,7 +83,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * Function called once async load of text variables is completed.
 	 */
 	self._configure_dialogs = function(data) {
-		self.password_dialog.setTitle(data['title_password_dialog']);
+		self.account.password_dialog.setTitle(data['title_password_dialog']);
 	};
 
 	/**
@@ -93,7 +93,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._show_password_dialog = function(event) {
 		event.preventDefault();
-		self.password_dialog.show();
+		self.account.password_dialog.show();
 	};
 
 	/**
@@ -113,12 +113,11 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self.handler.delivery_provider_click = function(event) {
 		var provider = $(this);
-		var user_information = provider.data('user-information');
 
 		// prevent default behavior
 		event.preventDefault();
 
-		if (user_information == 1) {
+		if (provider.data('user-information') == 1) {
 			// show fields for user information entry
 			self.shipping.address_container.addClass('visible');
 
@@ -171,24 +170,24 @@ Caracal.Shop.BuyerInformationForm = function() {
 		switch (selection) {
 			// existing account
 			case 'log_in':
-				self.sign_in_form.find('div.new_account').removeClass('visible');
-				self.sign_in_form.find('div.existing_account').addClass('visible');
-				self.sign_in_form.find('div.guest_checkout').removeClass('visible');
+				self.account.page.find('div.new_account').removeClass('visible');
+				self.account.page.find('div.existing_account').addClass('visible');
+				self.account.page.find('div.guest_checkout').removeClass('visible');
 				break;
 
 			// new account
 			case 'sign_up':
-				self.sign_in_form.find('div.new_account').addClass('visible');
-				self.sign_in_form.find('div.existing_account').removeClass('visible');
-				self.sign_in_form.find('div.guest_checkout').removeClass('visible');
+				self.account.page.find('div.new_account').addClass('visible');
+				self.account.page.find('div.existing_account').removeClass('visible');
+				self.account.page.find('div.guest_checkout').removeClass('visible');
 				break;
 
 			// checkout as guest
 			case 'guest':
 			default:
-				self.sign_in_form.find('div.new_account').removeClass('visible');
-				self.sign_in_form.find('div.existing_account').removeClass('visible');
-				self.sign_in_form.find('div.guest_checkout').addClass('visible');
+				self.account.page.find('div.new_account').removeClass('visible');
+				self.account.page.find('div.existing_account').removeClass('visible');
+				self.account.page.find('div.guest_checkout').addClass('visible');
 				break;
 		}
 	};
@@ -202,15 +201,15 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var control = $(this);
 		var option = control.find('option[value='+control.val()+']');
 
-		self.shipping_information_form.find('input[name=name]').val(option.data('name'));
-		self.shipping_information_form.find('input[name=phone]').val(option.data('phone'));
-		self.shipping_information_form.find('input[name=street]').val(option.data('street'));
-		self.shipping_information_form.find('input[name=street2]').val(option.data('street2'));
-		self.shipping_information_form.find('input[name=city]').val(option.data('city'));
-		self.shipping_information_form.find('input[name=zip]').val(option.data('zip'));
-		self.shipping_information_form.find('select[name=country]').val(option.data('country'));
-		self.shipping_information_form.find('input[name=state]').val(option.data('state'));
-		self.shipping_information_form.find('input[name=access_code]').val(option.data('access_code'));
+		self.shipping.page.find('input[name=name]').val(option.data('name'));
+		self.shipping.page.find('input[name=phone]').val(option.data('phone'));
+		self.shipping.page.find('input[name=street]').val(option.data('street'));
+		self.shipping.page.find('input[name=street2]').val(option.data('street2'));
+		self.shipping.page.find('input[name=city]').val(option.data('city'));
+		self.shipping.page.find('input[name=zip]').val(option.data('zip'));
+		self.shipping.page.find('select[name=country]').val(option.data('country'));
+		self.shipping.page.find('input[name=state]').val(option.data('state'));
+		self.shipping.page.find('input[name=access_code]').val(option.data('access_code'));
 	};
 
 	/**
@@ -222,14 +221,14 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var method = $(this);
 
 		// set payment method before processing
-		self.method_field.val(method.data('name'));
+		self.payment.method_field.val(method.data('name'));
 
 		// add selection class to
-		self.methods.not(method).removeClass('active');
+		self.payment.methods.not(method).removeClass('active');
 		method.addClass('active');
 
 		// remove bad class
-		self.methods.removeClass('bad');
+		self.payment.methods.removeClass('bad');
 	};
 
 	/**
@@ -238,9 +237,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * @param object data
 	 */
 	self.handler.account_load_success = function(data) {
-		var presets = self.shipping_information_form.find('select[name=presets]');
-		var email_field = self.sign_in_form.find('input[name=sign_in_email]');
-		var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+		var presets = self.shipping.page.find('select[name=presets]');
+		var email_field = self.account.page.find('input[name=sign_in_email]');
+		var password_field = self.account.page.find('input[name=sign_in_password]');
 
 		// reset presets
 		presets.html('');
@@ -250,9 +249,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 		password_field.removeClass('bad');
 
 		// populate shipping information with data received from the server
-		self.shipping_information_form.find('input[name=first_name]').val(data.information.first_name);
-		self.shipping_information_form.find('input[name=last_name]').val(data.information.last_name);
-		self.shipping_information_form.find('input[name=email]').val(data.information.email);
+		self.shipping.page.find('input[name=first_name]').val(data.information.first_name);
+		self.shipping.page.find('input[name=last_name]').val(data.information.last_name);
+		self.shipping.page.find('input[name=email]').val(data.information.email);
 
 		// empty preset
 		var empty_option = $('<option>');
@@ -282,10 +281,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 		}
 
 		// alter field visibility
-		self.shipping_information_form.find('select[name=presets]').parent().show();
-		self.shipping_information_form.find('input[name=name]').parent().show();
-		self.shipping_information_form.find('input[name=email]').parent().hide();
-		self.shipping_information_form.find('hr').eq(0).show();
+		self.shipping.page.find('select[name=presets]').parent().show();
+		self.shipping.page.find('input[name=name]').parent().show();
+		self.shipping.page.find('input[name=email]').parent().hide();
+		self.shipping.page.find('hr').eq(0).show();
 	};
 
 	/**
@@ -296,8 +295,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * @param string description
 	 */
 	self.handler.account_load_error = function(xhr, transfer_status, description) {
-		var email_field = self.sign_in_form.find('input[name=sign_in_email]');
-		var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+		var email_field = self.account.page.find('input[name=sign_in_email]');
+		var password_field = self.account.page.find('input[name=sign_in_password]');
 
 		// add "bad" class to input fields
 		email_field.addClass('bad');
@@ -314,16 +313,16 @@ Caracal.Shop.BuyerInformationForm = function() {
 	*/
 	self.validator.sign_in_page = function() {
 		var result = false;
-		var next_button = self.sign_in_form.find('button.next');
+		var next_button = self.account.page.find('button.next');
 
 		// check which option is selected
-		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
+		var selection = self.account.page.find('input[name=existing_user]:checked').val();
 
 		switch (selection) {
 			case 'log_in':
-				var email_field = self.sign_in_form.find('input[name=sign_in_email]');
-				var password_field = self.sign_in_form.find('input[name=sign_in_password]');
-				var captcha_field = self.sign_in_form.find('label.captcha');
+				var email_field = self.account.page.find('input[name=sign_in_email]');
+				var password_field = self.account.page.find('input[name=sign_in_password]');
+				var captcha_field = self.account.page.find('label.captcha');
 
 				// prepare data
 				var data = {
@@ -368,7 +367,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 			case 'sign_up':
 				// get new account section
-				var container = self.sign_in_form.find('div.new_account');
+				var container = self.account.page.find('div.new_account');
 				var fields = container.find('input');
 				var first_name = container.find('input[name=first_name]');
 				var last_name = container.find('input[name=last_name]');
@@ -396,7 +395,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				}
 
 				// check if account with specified email already exists
-				var email_field = self.sign_in_form.find('input[name=new_email]');
+				var email_field = self.account.page.find('input[name=new_email]');
 
 				if (email_field.val() != '') {
 					new Communicator('shop')
@@ -412,10 +411,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 				}
 
 				// alter field visibility
-				self.shipping_information_form.find('select[name=presets]').parent().hide();
-				self.shipping_information_form.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().show();
-				self.shipping_information_form.find('input[name=email]').val(email_field.val()).parent().hide();
-				self.shipping_information_form.find('hr').eq(0).hide();
+				self.shipping.page.find('select[name=presets]').parent().hide();
+				self.shipping.page.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().show();
+				self.shipping.page.find('input[name=email]').val(email_field.val()).parent().hide();
+				self.shipping.page.find('hr').eq(0).hide();
 
 				result = !(password.hasClass('bad') || password_confirm.hasClass('bad') || email_field.hasClass('bad'));
 				break;
@@ -435,10 +434,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 					agree_to_terms.addClass('bad');
 
 				// hide unneeded fields
-				self.shipping_information_form.find('select[name=presets]').parent().hide();
-				self.shipping_information_form.find('input[name=name]').parent().show();
-				self.shipping_information_form.find('input[name=email]').parent().show();
-				self.shipping_information_form.find('hr').eq(0).show();
+				self.shipping.page.find('select[name=presets]').parent().hide();
+				self.shipping.page.find('input[name=name]').parent().show();
+				self.shipping.page.find('input[name=email]').parent().show();
+				self.shipping.page.find('hr').eq(0).show();
 		}
 
 		return result;
@@ -450,7 +449,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	* @return boolean
 	*/
 	self.validator.shipping_information_page = function() {
-		var fields = self.shipping_information_form.find('input,select');
+		var fields = self.shipping.page.find('input,select');
 
 		// add "bad" class to every required field which is empty
 		fields.each(function(index) {
@@ -461,7 +460,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				field.removeClass('bad');
 		});
 
-		return self.shipping_information_form.find('.bad').length == 0;
+		return self.shipping.page.find('.bad').length == 0;
 	};
 
 	/**
@@ -470,10 +469,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 	* @return boolean
 	*/
 	self.validator.payment_method_page = function() {
-		var result = self.methods.filter('.active').length > 0;
+		var result = self.payment.methods.filter('.active').length > 0;
 
 		if (!result)
-			self.methods.addClass('bad');
+			self.payment.methods.addClass('bad');
 
 		return result;
 	};
