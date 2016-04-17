@@ -313,7 +313,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 	*/
 	self.validator.sign_in_page = function() {
 		var result = false;
-		var next_button = self.account.page.find('button.next');
 
 		// check which option is selected
 		var selection = self.account.page.find('input[name=existing_user]:checked').val();
@@ -422,7 +421,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			case 'guest':
 			default:
 				// get agree checkbox
-				var agree_to_terms = self.sign_in_form.find('input[name=agree_to_terms]');
+				var agree_to_terms = self.account.page.find('input[name=agree_to_terms]');
 
 				result = true;
 				if (agree_to_terms.length > 0)
