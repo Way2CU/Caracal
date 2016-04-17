@@ -510,6 +510,9 @@ Caracal.Shop.CheckoutForm = function() {
 
 	// cached response from server
 	self.cached_data = null;
+	self.shipping = 0;
+	self.handling = 0;
+	self.value = 0;
 
 	// backend URL used to get JSON data
 	self.backend_url = $('base').attr('href') + '/index.php';
@@ -745,6 +748,14 @@ Caracal.Shop.CheckoutForm = function() {
 	 */
 	self.disable_checkout_button = function() {
 		self.checkout_button.attr('disabled', 'disabled');
+	};
+
+	/**
+	 * Get total price for charging.
+	 * @return float
+	 */
+	self.get_total = function() {
+		return self.value + self.shipping + self.handling;
 	};
 
 	// complete object initialization

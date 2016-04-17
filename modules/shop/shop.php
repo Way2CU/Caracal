@@ -2858,13 +2858,14 @@ class shop extends Module {
 
 					// get user data
 					$data = array(
-						'first_name'	=> escape_chars($_REQUEST['first_name']),
-						'last_name'		=> escape_chars($_REQUEST['last_name']),
-						'email'			=> escape_chars($_REQUEST['new_email']),
-						'uid'			=> isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
-						'guest'			=> 0,
-						'agreed'		=> $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
-						'promotions'	=> $want_promotions ? 1 : 0
+						'first_name' => escape_chars($_REQUEST['first_name']),
+						'last_name'  => escape_chars($_REQUEST['last_name']),
+						'email'      => escape_chars($_REQUEST['new_email']),
+						'phone'      => escape_chars($_REQUEST['new_phone']),
+						'uid'        => isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
+						'guest'      => 0,
+						'agreed'     => $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
+						'promotions' => $want_promotions ? 1 : 0
 					);
 
 					$password = $_REQUEST['new_password'];
@@ -2904,14 +2905,15 @@ class shop extends Module {
 
 					} else if ($password == $password_confirm) {
 						$user_data = array(
-								'username'		=> $data['email'],
-								'email'			=> $data['email'],
-								'fullname'		=> $data['first_name'].' '.$data['last_name'],
-								'first_name'	=> $data['first_name'],
-								'last_name'		=> $data['last_name'],
-								'level'			=> 0,
-								'verified'		=> 0,
-								'agreed'		=> 0
+								'username'   => $data['email'],
+								'email'      => $data['email'],
+								'phone'      => $data['phone'],
+								'fullname'   => $data['first_name'].' '.$data['last_name'],
+								'first_name' => $data['first_name'],
+								'last_name'  => $data['last_name'],
+								'level'      => 0,
+								'verified'   => 0,
+								'agreed'     => 0
 							);
 						$user_manager->insertData($user_data);
 						$data['system_user'] = $user_manager->getInsertedID();
@@ -2925,12 +2927,11 @@ class shop extends Module {
 						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
 						// send notification email
-						if (class_exists('Backend_UserManager')) {
+						if (ModuleHandler::is_loaded('backend')) {
 							$backed_user_manager = Backend_UserManager::getInstance();
 							$backed_user_manager->sendNotificationEmail($result->system_user);
 						}
 					}
-
 					break;
 
 				case User::GUEST:
@@ -2946,27 +2947,17 @@ class shop extends Module {
 						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
 
 					// collect data
-					if (isset($_REQUEST['name'])) {
-						$name = explode(' ', escape_chars($_REQUEST['name']), 2);
-						$first_name = $name[0];
-						$last_name = count($name) > 1 ? $name[1] : '';
 
-					} else {
-						$first_name = escape_chars($_REQUEST['first_name']);
-						$last_name = escape_chars($_REQUEST['last_name']);
-					}
-
-					$uid = isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : null;
-					$email = isset($_REQUEST['email']) ? escape_chars($_REQUEST['email']) : null;
 
 					$conditions = array();
 					$data = array(
-						'first_name'	=> $first_name,
-						'last_name'		=> $last_name,
-						'guest'			=> 1,
-						'system_user'	=> 0,
-						'agreed'		=> $agree_to_terms,
-						'promotions'	=> $want_promotions ? 1 : 0
+						'first_name'   => escape_chars($_REQUEST['guest_first_name']),
+						'last_name'    => escape_chars($_REQUEST['guest_last_name']),
+						'guest'        => 1,
+						'system_user'  => 0,
+						'agreed'       => $agree_to_terms,
+						'promotions'   => $want_promotions ? 1 : 0,
+						'send_invoice' => $send_invoice ? 1 : 0
 					);
 
 					// include uid if specified

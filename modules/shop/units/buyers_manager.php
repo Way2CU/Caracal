@@ -20,6 +20,7 @@ class ShopBuyersManager extends ItemManager {
 		$this->addProperty('first_name', 'varchar');
 		$this->addProperty('last_name', 'varchar');
 		$this->addProperty('email', 'varchar');
+		$this->addProperty('phone', 'varchar');
 		$this->addProperty('guest', 'boolean');
 		$this->addProperty('system_user', 'int');
 		$this->addProperty('agreed', 'boolean');
