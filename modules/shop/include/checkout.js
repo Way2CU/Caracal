@@ -165,7 +165,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * @param object event
 	 */
 	self.handler.account_type_change = function(event) {
-		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
+		var selection = self.account.page.find('input[name=existing_user]:checked').val();
 
 		switch (selection) {
 			// existing account
