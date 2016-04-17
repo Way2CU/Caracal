@@ -71,16 +71,23 @@ table.discounted_items {
 /**
  * Delivery method selection
  */
-div#input_details div.delivery_provider {
+div#shipping_information h4 {
+	margin: 0;
+	padding: 0;
+
+	font-weight: normal;
+}
+
+div#shipping_information div.delivery_provider {
 	position: relative;
 	text-align: left;
 }
 
-body.rtl div#input_details div.delivery_provider {
+body.rtl div#shipping_information div.delivery_provider {
 	text-align: right;
 }
 
-div#input_details div.delivery_provider label {
+div#shipping_information div.delivery_provider label {
 	display: inline-block;
 	width: 100px;
 
@@ -89,11 +96,11 @@ div#input_details div.delivery_provider label {
 	margin-top: 10px;
 }
 
-div#input_details div.delivery_provider label input[type=radio] {
+div#shipping_information div.delivery_provider label input[type=radio] {
 	display: none;
 }
 
-div#input_details div.delivery_provider label input[type=radio] + span {
+div#shipping_information div.delivery_provider label input[type=radio] + span {
 	display: inline-block;
 	position: relative;
 
@@ -101,7 +108,7 @@ div#input_details div.delivery_provider label input[type=radio] + span {
 	text-align: center;
 }
 
-div#input_details div.delivery_provider label input[type=radio] + span:before {
+div#shipping_information div.delivery_provider label input[type=radio] + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -125,12 +132,12 @@ div#input_details div.delivery_provider label input[type=radio] + span:before {
 	transition-duration: 0.3s;
 }
 
-div#input_details div.delivery_provider label input[type=radio]:checked + span:before {
+div#shipping_information div.delivery_provider label input[type=radio]:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
 
-div#input_details div.checkout_message.redirect p {
+div#shipping_information div.checkout_message.redirect p {
 	padding: 20px;
 	padding-left: 70px;
 	background-image: url(../images/checkout_loading.gif);
@@ -138,7 +145,7 @@ div#input_details div.checkout_message.redirect p {
 	background-repeat: no-repeat;
 }
 
-div#input_details div.overlay {
+div#shipping_information div.overlay {
 	visibility: hidden;
 	opacity: 0;
 	width: 100%;
@@ -171,14 +178,14 @@ div#input_details div.overlay {
 	transition-delay: 0s, 0s;
 }
 
-div#input_details div.overlay.visible {
+div#shipping_information div.overlay.visible {
 	visibility: visible;
 	opacity: 1;
 	transition-delay: 0s, 0.3s;
 }
 
-div#input_details div.delivery_method,
-div#input_details div.delivery_interface {
+div#shipping_information div.delivery_method,
+div#shipping_information div.delivery_interface {
 	display: block;
 	height: 0px;
 	position: relative;
@@ -199,15 +206,15 @@ div#input_details div.delivery_interface {
 	overflow: hidden;
 }
 
-div#input_details div.delivery_method.visible,
-div#input_details div.delivery_interface.visible {
+div#shipping_information div.delivery_method.visible,
+div#shipping_information div.delivery_interface.visible {
 	height: auto;
 	margin-top: 20px;
 	padding: 7px;
 	opacity: 1;
 }
 
-div#input_details div.delivery_method label {
+div#shipping_information div.delivery_method label {
 	display: inline-block;
 	width: calc(((100% - 10px) / 3) - 22px);
 
@@ -223,33 +230,33 @@ div#input_details div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#input_details div.delivery_method label {
+body.rtl div#shipping_information div.delivery_method label {
 	margin-left: 5px;
 	margin-right: 0px;
 }
 
-div#input_details div.delivery_method label:nth-child(3n + 0),
-body.rtl div#input_details div.delivery_method label:nth-child(3n + 0) {
+div#shipping_information div.delivery_method label:nth-child(3n + 0),
+body.rtl div#shipping_information div.delivery_method label:nth-child(3n + 0) {
 	margin-left: 0px;
 }
 
-div#input_details div.delivery_method label:nth-child(-n + 3) {
+div#shipping_information div.delivery_method label:nth-child(-n + 3) {
 	margin-top: 0px;
 }
 
-div#input_details div.delivery_method label:hover {
+div#shipping_information div.delivery_method label:hover {
 	background-color: #e0e0e0;
 }
 
-div#input_details div.delivery_method label input {
+div#shipping_information div.delivery_method label input {
 	position: absolute;
 }
 
-div#input_details div.delivery_method label input[type=radio] {
+div#shipping_information div.delivery_method label input[type=radio] {
 	display: none;
 }
 
-div#input_details div.delivery_method label input + div:before {
+div#shipping_information div.delivery_method label input + div:before {
 	display: inline-block;
 	vertical-align: middle;
 	width: 16px;
@@ -271,30 +278,30 @@ div#input_details div.delivery_method label input + div:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#input_details div.delivery_method label input + div:before {
+body.rtl div#shipping_information div.delivery_method label input + div:before {
 	margin-left: 6px;
 	margin-right: 0px;
 }
 
-div#input_details div.delivery_method label input:checked + div:before {
+div#shipping_information div.delivery_method label input:checked + div:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
 
-div#input_details div.delivery_method label > div span {
+div#shipping_information div.delivery_method label > div span {
 	float: right;
 }
 
-div#input_details div.delivery_method label > div span:after {
+div#shipping_information div.delivery_method label > div span:after {
 	content: ' ' attr(data-currency);
 	font-size: 0.9em;
 }
 
-body.rtl div#input_details div.delivery_method label > div span {
+body.rtl div#shipping_information div.delivery_method label > div span {
 	float: left;
 }
 
-div#input_details div.delivery_method label > span {
+div#shipping_information div.delivery_method label > span {
 	display: block;
 	padding-left: 24px;
 
@@ -302,12 +309,12 @@ div#input_details div.delivery_method label > span {
 	font-size: 0.8em;
 }
 
-body.rtl div#input_details div.delivery_method label > span {
+body.rtl div#shipping_information div.delivery_method label > span {
 	padding-left: 0px;
 	padding-right: 24px;
 }
 
-div#input_details div.delivery_method div.delivery_methods {
+div#shipping_information div.delivery_method div.delivery_methods {
 	display: block;
 	width: 460px;
 
@@ -315,7 +322,7 @@ div#input_details div.delivery_method div.delivery_methods {
 	float: left;
 }
 
-div#input_details div.delivery_method div.services {
+div#shipping_information div.delivery_method div.services {
 	display: block;
 	float: left;
 	width: 460px;
