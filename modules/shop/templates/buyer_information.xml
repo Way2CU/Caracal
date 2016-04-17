@@ -297,7 +297,7 @@
 
 							<!-- Person and address receiving the shippment -->
 							<div class="container address">
-								<h4><cms:text constant="label_address" module="shop"/></h4>
+								<h4><cms:text constant="label_shipping_address" module="shop"/></h4>
 
 								<div class="summary">
 								</div>
@@ -433,7 +433,7 @@
 
 							<!-- Contact information in case of a need -->
 							<div class="container contact">
-								<h4><cms:text constant="label_addition_information" module="shop"/></h4>
+								<h4><cms:text constant="label_additional_information" module="shop"/></h4>
 
 								<div class="summary">
 								</div>
