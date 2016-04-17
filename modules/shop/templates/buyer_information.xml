@@ -291,11 +291,11 @@
 								</div>
 
 								<div class="overlay"/>
-								<hr/>
 							</div>
 
 							<!-- Person and address receiving the shippment -->
 							<div class="container address">
+								<hr/>
 								<h4><cms:text constant="label_shipping_address" module="shop"/></h4>
 
 								<div class="summary">
@@ -426,11 +426,11 @@
 											/>
 									</label>
 								</div>
-								<hr/>
 							</div>
 
 							<!-- Contact information in case of a need -->
 							<div class="container contact">
+								<hr/>
 								<h4><cms:text constant="label_additional_information" module="shop"/></h4>
 
 								<div class="summary">
@@ -475,10 +475,10 @@
 										<small><cms:text constant="tooltip_access_code" module="shop"/></small>
 									</label>
 								</div>
-								<hr/>
 							</div>
 
 							<div class="container types">
+								<hr/>
 								<h4><cms:text constant="label_delivery_types" module="shop"/></h4>
 
 								<div class="summary">
