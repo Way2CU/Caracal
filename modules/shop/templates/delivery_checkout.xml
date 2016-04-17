@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<label>
-		<input
-			type="radio"
-			name="delivery_provider"
-			value="$params['name']"
-			data-custom-interface="$params['custom_interface']"
-			cms:eval="value,data-custom-interface"
-		/>
-		<span>
-			<img
-				src="$params['small_image']"
-				alt="$params['title']"
-				cms:eval="src,alt"
-				width="100"
-				height="28"
+	<a
+		href="javascript: void(0);"
+		data-value="$params['name']"
+		data-custom-interface="$params['custom_interface']"
+		cms:eval="data-value,data-custom-interface"
+		>
+		<img
+			src="$params['small_image']"
+			alt="$params['title']"
+			cms:eval="src,alt"
+			width="100"
+			height="28"
 			/>
-			<cms:var param="title"/>
-		</span>
-	</label>
+		<cms:var param="title"/>
+	</a>
 </document>
