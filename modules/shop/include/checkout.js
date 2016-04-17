@@ -118,23 +118,19 @@ Caracal.Shop.BuyerInformationForm = function() {
 		// prevent default behavior
 		event.preventDefault();
 
+		// hide all containers
+		self.shipping.interface_container.removeClass('visible');
+		self.shipping.contact_container.removeClass('visible');
+		self.shipping.types_container.removeClass('visible');
+		self.shipping.interface_container.removeClass('visible');
+
 		if (provider.data('user-information') == 1) {
 			// show fields for user information entry
 			self.shipping.address_container.addClass('visible');
 
-			// hide other containers
-			self.shipping.interface_container.removeClass('visible');
-			self.shipping.contact_container.removeClass('visible');
-			self.shipping.types_container.removeClass('visible');
-
-		} else if (provider.data('custom-interface')) {
+		} else if (provider.data('custom-interface') == 1) {
 			// show busy indicator
 			self.shipping.overlay.addClass('visible');
-
-			// hide other containers
-			self.shipping.address_container.removeClass('visible');
-			self.shipping.contact_container.removeClass('visible');
-			self.shipping.types_container.removeClass('visible');
 
 			// load delivery provider custom interface
 			new Communicator('shop')
