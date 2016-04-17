@@ -93,6 +93,28 @@ div#shipping_information div.container.visible {
 	padding-bottom: 15px;
 }
 
+div#shipping_information div.container div.summary {
+	max-height: 0;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container.completed div.summary {
+	max-height: 500px;
+}
+
+div#shipping_information div.container div.details {
+	max-height: 500px;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container.completed div.details {
+	max-height: 0;
+}
+
 div#shipping_information div.container hr {
 	margin-top: 0;
 }
