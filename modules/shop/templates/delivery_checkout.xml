@@ -5,6 +5,7 @@
 		href="javascript: void(0);"
 		data-value="$params['name']"
 		data-custom-interface="$params['custom_interface']"
+		data-user-information="1"
 		cms:eval="data-value,data-custom-interface"
 		>
 		<img
