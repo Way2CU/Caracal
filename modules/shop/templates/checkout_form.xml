@@ -128,18 +128,6 @@
 							<textarea name="remarks" rows="4" cols="25"><cms:var param="remarks"/></textarea>
 						</label>
 					</div>
-
-					<cms:if condition="$params['include_shipping']">
-						<div class="delivery_provider">
-							<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
-							<cms:delivery_methods
-								shopping_cart="1"
-								template="delivery_checkout.xml"
-								local="1"
-								/>
-							<div class="overlay"/>
-						</div>
-					</cms:if>
 				</div>
 
 				<cms:if condition="$params['include_shipping']">

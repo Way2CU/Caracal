@@ -3861,7 +3861,6 @@ class shop extends Module {
 				$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
-				$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 				$template->registerTagHandler('cms:discounted_items', $this, 'tag_DiscountedItemList');
 
 				// parse template
@@ -3922,6 +3921,7 @@ class shop extends Module {
 				$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
 				$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
 				$template->registerTagHandler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
+				$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 
 				// get fixed country if set
 				$fixed_country = '';

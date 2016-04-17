@@ -71,7 +71,7 @@ table.discounted_items {
 /**
  * Delivery method selection
  */
-div#checkout div.delivery_provider {
+div#input_details div.delivery_provider {
 	display: inline-block;
 	position: relative;
 	vertical-align: top;
@@ -83,12 +83,12 @@ div#checkout div.delivery_provider {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 }
 
-div#checkout div.delivery_provider span.title {
+div#input_details div.delivery_provider span.title {
 	display: block;
 	padding-bottom: 5px;
 }
 
-div#checkout div.delivery_provider label {
+div#input_details div.delivery_provider label {
 	display: inline-block;
 	width: 100px;
 
@@ -97,11 +97,11 @@ div#checkout div.delivery_provider label {
 	margin-top: 10px;
 }
 
-div#checkout div.delivery_provider label input[type=radio] {
+div#input_details div.delivery_provider label input[type=radio] {
 	display: none;
 }
 
-div#checkout div.delivery_provider label input[type=radio] + span {
+div#input_details div.delivery_provider label input[type=radio] + span {
 	display: inline-block;
 	position: relative;
 
@@ -109,7 +109,7 @@ div#checkout div.delivery_provider label input[type=radio] + span {
 	text-align: center;
 }
 
-div#checkout div.delivery_provider label input[type=radio] + span:before {
+div#input_details div.delivery_provider label input[type=radio] + span:before {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -133,12 +133,12 @@ div#checkout div.delivery_provider label input[type=radio] + span:before {
 	transition-duration: 0.3s;
 }
 
-div#checkout div.delivery_provider label input[type=radio]:checked + span:before {
+div#input_details div.delivery_provider label input[type=radio]:checked + span:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
 
-div#checkout div.checkout_message.redirect p {
+div#input_details div.checkout_message.redirect p {
 	padding: 20px;
 	padding-left: 70px;
 	background-image: url(../images/checkout_loading.gif);
@@ -146,7 +146,7 @@ div#checkout div.checkout_message.redirect p {
 	background-repeat: no-repeat;
 }
 
-div#checkout div.overlay {
+div#input_details div.overlay {
 	visibility: hidden;
 	opacity: 0;
 	width: 100%;
@@ -179,14 +179,14 @@ div#checkout div.overlay {
 	transition-delay: 0s, 0s;
 }
 
-div#checkout div.overlay.visible {
+div#input_details div.overlay.visible {
 	visibility: visible;
 	opacity: 1;
 	transition-delay: 0s, 0.3s;
 }
 
-div#checkout div.delivery_method,
-div#checkout div.delivery_interface {
+div#input_details div.delivery_method,
+div#input_details div.delivery_interface {
 	display: block;
 	height: 0px;
 	position: relative;
@@ -207,15 +207,15 @@ div#checkout div.delivery_interface {
 	overflow: hidden;
 }
 
-div#checkout div.delivery_method.visible,
-div#checkout div.delivery_interface.visible {
+div#input_details div.delivery_method.visible,
+div#input_details div.delivery_interface.visible {
 	height: auto;
 	margin-top: 20px;
 	padding: 7px;
 	opacity: 1;
 }
 
-div#checkout div.delivery_method label {
+div#input_details div.delivery_method label {
 	display: inline-block;
 	width: calc(((100% - 10px) / 3) - 22px);
 
@@ -231,33 +231,33 @@ div#checkout div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#checkout div.delivery_method label {
+body.rtl div#input_details div.delivery_method label {
 	margin-left: 5px;
 	margin-right: 0px;
 }
 
-div#checkout div.delivery_method label:nth-child(3n + 0),
-body.rtl div#checkout div.delivery_method label:nth-child(3n + 0) {
+div#input_details div.delivery_method label:nth-child(3n + 0),
+body.rtl div#input_details div.delivery_method label:nth-child(3n + 0) {
 	margin-left: 0px;
 }
 
-div#checkout div.delivery_method label:nth-child(-n + 3) {
+div#input_details div.delivery_method label:nth-child(-n + 3) {
 	margin-top: 0px;
 }
 
-div#checkout div.delivery_method label:hover {
+div#input_details div.delivery_method label:hover {
 	background-color: #e0e0e0;
 }
 
-div#checkout div.delivery_method label input {
+div#input_details div.delivery_method label input {
 	position: absolute;
 }
 
-div#checkout div.delivery_method label input[type=radio] {
+div#input_details div.delivery_method label input[type=radio] {
 	display: none;
 }
 
-div#checkout div.delivery_method label input + div:before {
+div#input_details div.delivery_method label input + div:before {
 	display: inline-block;
 	vertical-align: middle;
 	width: 16px;
@@ -279,30 +279,30 @@ div#checkout div.delivery_method label input + div:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#checkout div.delivery_method label input + div:before {
+body.rtl div#input_details div.delivery_method label input + div:before {
 	margin-left: 6px;
 	margin-right: 0px;
 }
 
-div#checkout div.delivery_method label input:checked + div:before {
+div#input_details div.delivery_method label input:checked + div:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
 
-div#checkout div.delivery_method label > div span {
+div#input_details div.delivery_method label > div span {
 	float: right;
 }
 
-div#checkout div.delivery_method label > div span:after {
+div#input_details div.delivery_method label > div span:after {
 	content: ' ' attr(data-currency);
 	font-size: 0.9em;
 }
 
-body.rtl div#checkout div.delivery_method label > div span {
+body.rtl div#input_details div.delivery_method label > div span {
 	float: left;
 }
 
-div#checkout div.delivery_method label > span {
+div#input_details div.delivery_method label > span {
 	display: block;
 	padding-left: 24px;
 
@@ -310,12 +310,12 @@ div#checkout div.delivery_method label > span {
 	font-size: 0.8em;
 }
 
-body.rtl div#checkout div.delivery_method label > span {
+body.rtl div#input_details div.delivery_method label > span {
 	padding-left: 0px;
 	padding-right: 24px;
 }
 
-div#checkout div.delivery_method div.delivery_methods {
+div#input_details div.delivery_method div.delivery_methods {
 	display: block;
 	width: 460px;
 
@@ -323,7 +323,7 @@ div#checkout div.delivery_method div.delivery_methods {
 	float: left;
 }
 
-div#checkout div.delivery_method div.services {
+div#input_details div.delivery_method div.services {
 	display: block;
 	float: left;
 	width: 460px;
@@ -350,7 +350,7 @@ body.rtl div.transaction_details {
 	margin-left: 20px;
 }
 
-div#checkout.recurring div.transaction_details {
+div#input_details.recurring div.transaction_details {
 	width: 550px;
 	margin-bottom: calc(3em + 25px);
 }
@@ -380,7 +380,7 @@ div.transaction_details textarea:focus {
 	outline: none;
 }
 
-div#checkout.recurring div.transaction_details textarea {
+div#input_details.recurring div.transaction_details textarea {
 	width: 538px;
 }
 
