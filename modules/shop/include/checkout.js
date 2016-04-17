@@ -118,11 +118,11 @@ Caracal.Shop.BuyerInformationForm = function() {
 		// prevent default behavior
 		event.preventDefault();
 
-		// hide all containers
-		self.shipping.address_container.removeClass('visible');
-		self.shipping.contact_container.removeClass('visible');
-		self.shipping.types_container.removeClass('visible');
-		self.shipping.interface_container.removeClass('visible');
+		// reset all containers
+		self.shipping.address_container.removeClass('visible completed');
+		self.shipping.contact_container.removeClass('visible completed');
+		self.shipping.types_container.removeClass('visible completed');
+		self.shipping.interface_container.removeClass('visible completed');
 
 		if (provider.data('user-information') == 1) {
 			// show fields for user information entry
@@ -462,7 +462,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 	* @return boolean
 	*/
 	self.validator.shipping_information_page = function() {
-
 		// make sure delivery provider is selected
 		if (self.shipping.providers.filter('.selected').length == 0)
 			self.shipping.providers.addClass('bad');

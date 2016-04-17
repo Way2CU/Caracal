@@ -93,34 +93,6 @@ div#shipping_information div.container.visible {
 	padding-bottom: 15px;
 }
 
-div#shipping_information div.container.provider div.summary {
-	position: absolute;
-	top: 0;
-	right: 0;
-	opacity: 0;
-	visibility: hidden;
-}
-
-body.rtl div#shipping_information div.container.provider div.summary {
-	right: auto;
-	left: 0;
-}
-
-div#shipping_information div.container.provider div.details {
-	overflow: hidden;
-	transition: max-height 0.5s;
-}
-
-div#shipping_information div.container.provider.completed div.summary {
-	opacity: 1;
-	visibility: visible;
-	transform: translate(0, 0);
-}
-
-div#shipping_information div.container.provider.completed div.details {
-	max-height: 0;
-}
-
 div#shipping_information div.container hr {
 	margin-top: 0;
 }
