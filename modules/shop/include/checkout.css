@@ -816,7 +816,7 @@ div#input_details div.guest_checkout {
 div#input_details div.existing_account.visible,
 div#input_details div.new_account.visible,
 div#input_details div.guest_checkout.visible {
-	max-height: 300px;
+	max-height: 500px;
 }
 
 div#input_details div.existing_account label:first-of-type,
