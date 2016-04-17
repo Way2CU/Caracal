@@ -76,7 +76,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.account.page.find('input[name=existing_user]').change(self.handler.account_type_change);
 		self.shipping.page.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
 		self.shipping.provider_container.find('div.details a').on('click', self.handler.delivery_provider_click);
-		self.methods.click(self.handler.payment_method_click);
+		self.payment.methods.click(self.handler.payment_method_click);
 	};
 
 	/**
