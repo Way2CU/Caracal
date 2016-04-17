@@ -66,6 +66,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.shipping.contact_container = self.shipping.page.find('div.container.contact');
 		self.shipping.types_container = self.shipping.page.find('div.container.types');
 		self.shipping.interface_container = self.shipping.page.find('div.container.interface');
+		self.shipping.providers = self.shipping.provider_container.find('div.details a');
 
 		// check if user is already logged
 		if (self.shipping.page.find('select[name=presets]').data('autoload') == 1)
@@ -75,7 +76,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.account.page.find('a.password_recovery').click(self._show_password_dialog);
 		self.account.page.find('input[name=existing_user]').change(self.handler.account_type_change);
 		self.shipping.page.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
-		self.shipping.provider_container.find('div.details a').on('click', self.handler.delivery_provider_click);
+		self.shipping.providers.on('click', self.handler.delivery_provider_click);
 		self.payment.methods.click(self.handler.payment_method_click);
 	};
 
@@ -131,6 +132,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 				.on_error(self.handler.custom_interface_error)
 				.get('json_get_delivery_method_interface', {method: method.val()}, 'html');
 		}
+
+		// update button status
+		self.shipping.providers.not(provider).removeClass('selected');
+		provider.addClass('selected');
 	};
 
 	/**
