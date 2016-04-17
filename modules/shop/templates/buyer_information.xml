@@ -274,150 +274,178 @@
 					<cms:if condition="$params['include_shipping']">
 						<div class="page" id="shipping_information">
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
-							<label>
-								<span><cms:text constant="label_presets" module="shop"/></span>
-								<select
-									name="presets"
-									data-autoload="$_SESSION['logged'] ? 1 : 0"
-									cms:eval="data-autoload"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_full_name" module="shop"/></span>
-								<input
-									class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="name"
-									value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-									maxlength="64"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
+							<div class="delivery_method">
+							</div>
+
 							<hr/>
-							<label>
-								<span><cms:text constant="label_email" module="shop"/></span>
-								<input
-									class="in_array('email', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="email"
-									name="email"
-									value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-									maxlength="127"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_phone_number" module="shop"/></span>
-								<input
-									class="in_array('phone', $params['bad_fields']) ? 'ltr bad' : 'ltr'"
-									cms:eval="class,value"
-									type="text"
-									name="phone"
-									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
-									maxlength="127"
-									autocomplete="on"
-									/>
-							</label>
-							<hr/>
-							<label>
-								<span><cms:text constant="label_street" module="shop"/></span>
-								<input
-									class="in_array('street', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="street"
-									value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-									maxlength="200"
-									data-required="1"
-									autocomplete="on"
-									/>
-								<small><cms:text constant="tooltip_street" module="shop"/></small>
-							</label>
-							<label class="separator">
-								<span></span>
-								<input
-									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="street2"
-									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
-									maxlength="200"
-									autocomplete="on"
-									/>
-								<small><cms:text constant="tooltip_street2" module="shop"/></small>
-							</label>
-							<label>
-								<span><cms:text constant="label_city" module="shop"/></span>
-								<input
-									class="in_array('city', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="city"
-									value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
-									maxlength="40"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_zip" module="shop"/></span>
-								<input
-									class="in_array('zip', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="zip"
-									value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-									maxlength="20"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_country" module="shop"/></span>
-								<cms:if condition="empty($params['fixed_country'])">
+
+							<!-- Person and address receiving the shippment -->
+							<div class="address">
+								<label>
+									<span><cms:text constant="label_presets" module="shop"/></span>
 									<select
-										name="country"
-										class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
-										cms:eval="class"
+										name="presets"
+										data-autoload="$_SESSION['logged'] ? 1 : 0"
+										cms:eval="data-autoload"
+										/>
+								</label>
+
+								<label>
+									<span><cms:text constant="label_full_name" module="shop"/></span>
+									<input
+										class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class,value"
+										type="text"
+										name="name"
+										value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
+										maxlength="64"
 										data-required="1"
 										autocomplete="on"
-										>
-										<option/>
-										<cms:module
-											name="country_list"
-											action="show"
-											selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-											cms:eval="selected"
-											/>
-									</select>
-								</cms:if>
-								<cms:if condition="!empty($params['fixed_country'])">
-									<select
-										name="country"
+										/>
+								</label>
+
+								<label>
+									<span><cms:text constant="label_street" module="shop"/></span>
+									<input
+										class="in_array('street', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class,value"
+										type="text"
+										name="street"
+										value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
+										maxlength="200"
 										data-required="1"
 										autocomplete="on"
-										>
-										<cms:module
-											name="country_list"
-											action="show"
-											filter="$params['fixed_country']"
-											cms:eval="filter"
-											/>
-									</select>
-								</cms:if>
-							</label>
-							<label>
-								<span><cms:text constant="label_state" module="shop"/></span>
-								<input
-									type="text"
-									name="state"
-									maxlength="40"
-									autocomplete="on"
-									/>
-							</label>
+										/>
+									<small><cms:text constant="tooltip_street" module="shop"/></small>
+								</label>
+
+								<label class="separator">
+									<span></span>
+									<input
+										class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class,value"
+										type="text"
+										name="street2"
+										value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
+										maxlength="200"
+										autocomplete="on"
+										/>
+									<small><cms:text constant="tooltip_street2" module="shop"/></small>
+								</label>
+
+								<label>
+									<span><cms:text constant="label_city" module="shop"/></span>
+									<input
+										class="in_array('city', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class,value"
+										type="text"
+										name="city"
+										value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
+										maxlength="40"
+										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+
+								<label>
+									<span><cms:text constant="label_zip" module="shop"/></span>
+									<input
+										class="in_array('zip', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class,value"
+										type="text"
+										name="zip"
+										value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
+										maxlength="20"
+										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+
+								<label>
+									<span><cms:text constant="label_country" module="shop"/></span>
+									<cms:if condition="empty($params['fixed_country'])">
+										<select
+											name="country"
+											class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
+											cms:eval="class"
+											data-required="1"
+											autocomplete="on"
+											>
+											<option/>
+											<cms:module
+												name="country_list"
+												action="show"
+												selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
+												cms:eval="selected"
+												/>
+										</select>
+									</cms:if>
+									<cms:if condition="!empty($params['fixed_country'])">
+										<select
+											name="country"
+											data-required="1"
+											autocomplete="on"
+											>
+											<cms:module
+												name="country_list"
+												action="show"
+												filter="$params['fixed_country']"
+												cms:eval="filter"
+												/>
+										</select>
+									</cms:if>
+								</label>
+								<label>
+									<span><cms:text constant="label_state" module="shop"/></span>
+									<input
+										type="text"
+										name="state"
+										maxlength="40"
+										autocomplete="on"
+										/>
+								</label>
+							</div>
+
+							<hr/>
+
+							<!-- Contact information in case of a need -->
+							<div class="contact">
+								<label>
+									<span><cms:text constant="label_email" module="shop"/></span>
+									<input
+										class="in_array('email', $params['bad_fields']) ? 'bad' : ''"
+										cms:eval="class,value"
+										type="email"
+										name="email"
+										value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
+										maxlength="127"
+										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+								<label>
+									<span><cms:text constant="label_phone_number" module="shop"/></span>
+									<input
+										class="in_array('phone', $params['bad_fields']) ? 'ltr bad' : 'ltr'"
+										cms:eval="class,value"
+										type="text"
+										name="phone"
+										value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
+										maxlength="127"
+										autocomplete="on"
+										/>
+								</label>
+							</div>
+
+							<hr/>
+
+							<div class="types">
+							</div>
+
+							<div class="interface">
+							</div>
+
+							<hr/>
 							<hr/>
 							<label>
 								<span><cms:text constant="label_access_code" module="shop"/></span>
