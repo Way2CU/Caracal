@@ -77,10 +77,17 @@ div#shipping_information div.container {
 	padding-right: 10px;
 
 	text-align: left;
+	transform: scaleY(0);
+	visibility: hidden;
 }
 
 body.rtl div#shipping_information div.container {
 	text-align: right;
+}
+
+div#shipping_information div.container.visible {
+	visibility: visible;
+	transform: scaleY(1);
 }
 
 div#shipping_information div.container.provider div.summary {
@@ -150,7 +157,7 @@ div#shipping_information div.container.provider div.details a:hover {
 
 div#shipping_information div.container.provider div.details a.selected {
 	background-color: #F0F0F0;
-	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
 }
 
 div#shipping_information div.container.provider div.details a img {
