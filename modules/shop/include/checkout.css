@@ -90,64 +90,6 @@ div#shipping_information div.container h4 {
 	font-weight: normal;
 }
 
-div#shipping_information div.delivery_provider label {
-	display: inline-block;
-	width: 100px;
-
-	margin-left: 5px;
-	margin-right: 5px;
-	margin-top: 10px;
-}
-
-div#shipping_information div.delivery_provider label input[type=radio] {
-	display: none;
-}
-
-div#shipping_information div.delivery_provider label input[type=radio] + span {
-	display: inline-block;
-	position: relative;
-
-	padding-bottom: 20px;
-	text-align: center;
-}
-
-div#shipping_information div.delivery_provider label input[type=radio] + span:before {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-
-	position: absolute;
-	left: 50%;
-	bottom: 0px;
-
-	margin-left: -8px;
-
-	border: 1px solid #b0b0b0;
-	border-radius: 9px;
-	background-image: url(../images/radio.png);
-	background-position: 0px 0px;
-	background-repeat: no-repeat;
-	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
-
-	content: '';
-
-	transition-property: all;
-	transition-duration: 0.3s;
-}
-
-div#shipping_information div.delivery_provider label input[type=radio]:checked + span:before {
-	background-position: -16px 0px;
-	box-shadow: none;
-}
-
-div#shipping_information div.checkout_message.redirect p {
-	padding: 20px;
-	padding-left: 70px;
-	background-image: url(../images/checkout_loading.gif);
-	background-position: 20px center;
-	background-repeat: no-repeat;
-}
-
 div#shipping_information div.overlay {
 	visibility: hidden;
 	opacity: 0;
@@ -193,15 +135,6 @@ div#shipping_information div.delivery_interface {
 	height: 0px;
 	position: relative;
 
-	padding: 7px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin-top: 0px;
-
-	background-color: white;
-	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-
-	color: #333333;
 	transition-property: all;
 	transition-duration: 0.5s;
 
