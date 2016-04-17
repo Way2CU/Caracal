@@ -276,7 +276,7 @@
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
 
 							<!-- Delivery provider selection -->
-							<div class="delivery_provider">
+							<div class="container delivery_provider">
 								<h4><cms:text constant="label_delivery_method" module="shop"/></h4>
 								<cms:delivery_methods
 									shopping_cart="1"
@@ -290,7 +290,7 @@
 							<hr/>
 
 							<!-- Person and address receiving the shippment -->
-							<div class="address">
+							<div class="container address">
 								<h4><cms:text constant="label_address" module="shop"/></h4>
 								<label>
 									<span><cms:text constant="label_presets" module="shop"/></span>
@@ -420,7 +420,7 @@
 							<hr/>
 
 							<!-- Contact information in case of a need -->
-							<div class="contact">
+							<div class="container contact">
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
@@ -462,10 +462,10 @@
 
 							<hr/>
 
-							<div class="types">
+							<div class="container types">
 							</div>
 
-							<div class="interface">
+							<div class="container interface">
 							</div>
 
 							<div class="checkout_controls">

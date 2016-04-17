@@ -71,20 +71,23 @@ table.discounted_items {
 /**
  * Delivery method selection
  */
-div#shipping_information h4 {
+div#shopping_information div.container {
+	position: relative;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	text-align: left;
+}
+
+body.rtl div#shipping_information div.container {
+	text-align: right;
+}
+
+div#shipping_information div.container h4 {
 	margin: 0;
 	padding: 0;
 
 	font-weight: normal;
-}
-
-div#shipping_information div.delivery_provider {
-	position: relative;
-	text-align: left;
-}
-
-body.rtl div#shipping_information div.delivery_provider {
-	text-align: right;
 }
 
 div#shipping_information div.delivery_provider label {
