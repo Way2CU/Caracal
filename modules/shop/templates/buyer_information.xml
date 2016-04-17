@@ -274,7 +274,17 @@
 					<cms:if condition="$params['include_shipping']">
 						<div class="page" id="shipping_information">
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
-							<div class="delivery_method">
+
+							<!-- Delivery provider selection -->
+							<div class="delivery_provider">
+								<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
+								<cms:delivery_methods
+									shopping_cart="1"
+									template="delivery_checkout.xml"
+									local="1"
+									/>
+
+								<div class="overlay"/>
 							</div>
 
 							<hr/>
@@ -423,6 +433,7 @@
 										autocomplete="on"
 										/>
 								</label>
+
 								<label>
 									<span><cms:text constant="label_phone_number" module="shop"/></span>
 									<input
@@ -435,6 +446,17 @@
 										autocomplete="on"
 										/>
 								</label>
+
+								<label>
+									<span><cms:text constant="label_access_code" module="shop"/></span>
+									<input
+										type="text"
+										name="access_code"
+										maxlength="40"
+										autocomplete="on"
+										/>
+									<small><cms:text constant="tooltip_access_code" module="shop"/></small>
+								</label>
 							</div>
 
 							<hr/>
@@ -445,29 +467,12 @@
 							<div class="interface">
 							</div>
 
-							<hr/>
-							<hr/>
-							<label>
-								<span><cms:text constant="label_access_code" module="shop"/></span>
-								<input
-									type="text"
-									name="access_code"
-									maxlength="40"
-									autocomplete="on"
-									/>
-								<small><cms:text constant="tooltip_access_code" module="shop"/></small>
-							</label>
-
 							<div class="checkout_controls">
 								<cms:guest>
 									<button class="previous"><cms:text constant="back"/></button>
 								</cms:guest>
 								<button class="next"><cms:text constant="next"/></button>
 							</div>
-
-							<cms:if condition="!empty($params['message'])">
-								<div class="message"><cms:var name="$params['message']"/></div>
-							</cms:if>
 						</div>
 					</cms:if>
 
