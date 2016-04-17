@@ -75,10 +75,13 @@ div#shipping_information div.container {
 	position: relative;
 	padding-left: 10px;
 	padding-right: 10px;
+	padding-bottom: 15px;
 
 	text-align: left;
 	max-height: 0px;
 	overflow: hidden;
+
+	transition: max-height 0.5s;
 }
 
 body.rtl div#shipping_information div.container {
@@ -115,6 +118,10 @@ div#shipping_information div.container.provider.completed div.summary {
 
 div#shipping_information div.container.provider.completed div.details {
 	max-height: 0;
+}
+
+div#shipping_information div.container hr {
+	margin-top: 0;
 }
 
 div#shipping_information div.container h4 {
