@@ -14,27 +14,24 @@ Caracal.Shop = Caracal.Shop || {};
 Caracal.Shop.BuyerInformationForm = function() {
 	var self = this;
 
-	self.backend_url = $('base').attr('href') + '/index.php';
-
-	self.sign_in_form = $('div#sign_in.page');
-	self.shipping_information_form = $('div#shipping_information.page');
-	self.billing_information_form = $('div#billing_information.page');
-	self.payment_method_form = $('div#payment_method.page');
-	self.methods = $('div.payment_methods span');
-	self.method_field = $('input[name=payment_method]');
 	self.page_control = new PageControl('div#input_details div.pages');
-	self.password_dialog = new Dialog();
-	self.cvv_dialog = new Dialog();
 
 	// local namespaces
 	self.handler = {};
 	self.validator = {};
+	self.account = {};
 	self.shipping = {};
+	self.payment = {};
 
 	/**
 	 * Complete object initialization.
 	 */
 	self._init = function() {
+		// find DOM elements
+		self.account.page = $('div#sign_in.page');
+		self.shipping.page = $('div#shipping_information.page');
+		self.payment.page = $('div#payment_method.page');
+
 		// implement page control
 		self.page_control
 			.setAllowForward(false)
@@ -42,63 +39,43 @@ Caracal.Shop.BuyerInformationForm = function() {
 			.attachControls('div#checkout_steps a')
 			.attachForm('div#input_details form');
 
-		// load dialog titles from server
-		language_handler.getTextArrayAsync(
-					'shop',
-					['title_password_dialog', 'title_cvv_dialog'],
-					self._configure_dialogs
-				);
+		// create password recovery dialog
+		self.account.password_dialog = new Dialog();
 
-		// configure dialogs
-		self.password_dialog
+		self.account.password_dialog
 				.setSize(400, 300)
 				.setScroll(false)
 				.setClearOnClose(false);
-
-		self.cvv_dialog
-				.setSize(642, 265)
-				.setScroll(false)
-				.setClearOnClose(false)
-				.setContentFromDOM('img#what_is_cvv');
+		language_handler.getTextArrayAsync('shop', ['title_password_dialog'], self._configure_dialogs);
 
 		// set validators used by page control
-		self.sign_in_form.data('validator', self.validator.sign_in_page);
-		self.shipping_information_form.data('validator', self.validator.shipping_information_page);
-		self.billing_information_form.data('validator', self.validator.billing_information_page);
+		self.account.page.data('validator', self.validator.sign_in_page);
+		self.shipping.page.data('validator', self.validator.shipping_information_page);
 
-		if (self.payment_method_form.length > 0) {
-			// no payment method was preselected, we need validator
-			self.payment_method_form.data('validator', self.validator.payment_method_page);
+		// no payment method was preselected, we need validator
+		if (self.payment.page.length > 0)
+			self.payment.page.data('validator', self.validator.payment_method_page);
 
-		} else {
-			// payment method was preselected, prepare billing page
-			var method = $('div#input_details input[name=payment_method]');
-			var billing_page_index = self.billing_information_form.index();
-
-			// set billing page state
-			if (method.data('provides-information') == 1)
-				self.page_control.disablePage(billing_page_index); else
-				self.page_control.enablePage(billing_page_index);
-		}
+		self.payment.methods = $('div.payment_methods span');
+		self.payment.method_field = $('input[name=payment_method]');
 
 		// shipping information pages
-		var container = $('div#shipping_information');
-		self.shipping.overlay = container.find('div.container.provider div.overlay');
-		self.shipping.provider_container = container.find('div.container.provider');
-		self.shipping.address_container = container.find('div.container.address');
-		self.shipping.contact_container = container.find('div.container.contact');
-		self.shipping.types_container = container.find('div.container.types');
-		self.shipping.interface_container = container.find('div.container.interface');
+		self.shipping.overlay = self.shipping.page.find('div.container.provider div.overlay');
+		self.shipping.provider_container = self.shipping.page.find('div.container.provider');
+		self.shipping.address_container = self.shipping.page.find('div.container.address');
+		self.shipping.contact_container = self.shipping.page.find('div.container.contact');
+		self.shipping.types_container = self.shipping.page.find('div.container.types');
+		self.shipping.interface_container = self.shipping.page.find('div.container.interface');
 
 		// check if user is already logged
-		if (self.shipping_information_form.find('select[name=presets]').data('autoload') == 1)
+		if (self.shipping.page.find('select[name=presets]').data('autoload') == 1)
 			self._load_account_information();
 
 		// connect events
-		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);
-		self.shipping_information_form.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
-		self.sign_in_form.find('a.password_recovery').click(self._show_password_dialog);
-		self.billing_information_form.find('a.what_is_cvv').click(self._show_cvv_dialog);
+		self.account.page.find('a.password_recovery').click(self._show_password_dialog);
+		self.account.page.find('input[name=existing_user]').change(self.handler.account_type_change);
+		self.shipping.page.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
+		self.shipping.provider_container.find('div.details a').on('click', self.handler.delivery_provider_click);
 		self.methods.click(self.handler.payment_method_click);
 	};
 
@@ -107,7 +84,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._configure_dialogs = function(data) {
 		self.password_dialog.setTitle(data['title_password_dialog']);
-		self.cvv_dialog.setTitle(data['title_cvv_dialog']);
 	};
 
 	/**
@@ -118,16 +94,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self._show_password_dialog = function(event) {
 		event.preventDefault();
 		self.password_dialog.show();
-	};
-
-	/**
-	 * Show CVV explanation dialog.
-	 *
-	 * @param object event
-	 */
-	self._show_cvv_dialog = function(event) {
-		event.preventDefault();
-		self.cvv_dialog.show();
 	};
 
 	/**
@@ -264,12 +230,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		// remove bad class
 		self.methods.removeClass('bad');
-
-		// disable billing information page if payment method provides info about buyer
-		var billing_page_index = self.billing_information_form.index();
-		if (method.data('provides-information') == 1)
-			self.page_control.disablePage(billing_page_index); else
-			self.page_control.enablePage(billing_page_index);
 	};
 
 	/**
@@ -518,49 +478,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 		return result;
 	};
 
-	/**
-	* Validate billing information page.
-	*
-	* @return boolean
-	*/
-	self.validator.billing_information_page = function() {
-		var fields = self.billing_information_form.find('input,select');
-		var method = self.methods.filter('.active');
-
-		fields.each(function(index) {
-			var field = $(this);
-
-			if (field.data('required') == 1 && field.val() == '')
-				field.addClass('bad'); else
-				field.removeClass('bad');
-		});
-
-		// if supported check data validity with method provided functions
-		if (self.billing_information_form.find('.bad').length == 0)
-			switch (self.method_field.val()) {
-				case 'stripe':
-					var card_number = fields.filter('input[name=billing_credit_card]');
-					var card_expire_month = fields.filter('input[name=billing_expire_month]');
-					var card_expire_year = fields.filter('input[name=billing_expire_year]');
-					var card_cvv = fields.filter('input[name=billing_cvv]');
-
-					if (!Stripe.card.validateCardNumber(card_number.val()))
-						card_number.addClass('bad');
-
-					if (!Stripe.card.validateExpiry(card_expire_month.val(), card_expire_year.val())) {
-						card_expire_month.addClass('bad');
-						card_expire_year.addClass('bad');
-					}
-
-					if (!Stripe.card.validateCVC(card_cvv.val()))
-						card_cvv.addClass('bad');
-
-					break;
-			}
-
-		return self.billing_information_form.find('.bad').length == 0;
-	};
-
 	// finalize object
 	self._init();
 };
@@ -577,9 +494,6 @@ Caracal.Shop.CheckoutForm = function() {
 	self.shipping = 0;
 	self.handling = 0;
 	self.value = 0;
-
-	// backend URL used to get JSON data
-	self.backend_url = $('base').attr('href') + '/index.php';
 
 	self.checkout = $('div#checkout');
 	self.checkout_details = self.checkout.find('table.checkout_details');
