@@ -78,6 +78,7 @@ div#shipping_information div.container {
 
 	text-align: left;
 	max-height: 0px;
+	overflow: hidden;
 }
 
 body.rtl div#shipping_information div.container {
