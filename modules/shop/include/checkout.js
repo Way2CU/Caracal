@@ -321,10 +321,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
-	* Validate sign in page.
-	*
-	* @return boolean
-	*/
+	 * Validate sign in page.
+	 *
+	 * @return boolean
+	 */
 	self.validator.sign_in_page = function() {
 		var result = false;
 
@@ -457,26 +457,41 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
-	* Validate shipping information page.
-	*
-	* @return boolean
-	*/
+	 * Validate shipping information page. System expects the following process:
+	 * Delivery provider -> [User information -> Additional information] -> [Custom interface]
+	 *
+	 * User information and custom interface are completely optional. However if delivery provider
+	 * requires showing this interface interface will be shown one step at a time.
+	 *
+	 * @return boolean
+	 */
 	self.validator.shipping_information_page = function() {
+		var provider = self.shipping.providers.filter('.selected');
+		var needs_user_info = provider.data('user-information');
+
 		// make sure delivery provider is selected
 		if (self.shipping.providers.filter('.selected').length == 0)
-			self.shipping.providers.addClass('bad');
+			self.shipping.providers.addClass('bad'); else
+			return false;  // prevent page from switching
 
-		// make sure required address fields are filled in
+		// make sure required address fields are entered
 		if (self.shipping.address_container.hasClass('visible')) {
 			var fields = self.shipping.address_container.find('input,select');
 
-			fields.each(function(index) {
+			fields.each(function() {
 				var field = $(this);
 
 				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
 					field.addClass('bad'); else
 					field.removeClass('bad');
 			});
+
+			// complete current interface
+			if (fields.filter('.bad').length == 0) {
+				self.shipping.address_container.addClass('completed');
+				self.shipping.contact_container.addClass('visible');
+				return false;  // prevent page from switching
+			}
 		}
 
 		// make sure required contact fields are filled in
