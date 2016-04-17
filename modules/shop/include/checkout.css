@@ -127,9 +127,14 @@ div#shipping_information div.container h4 {
 	font-weight: normal;
 }
 
+div#shipping_information div.container div.summary span {
+	display: block;
+	margin-bottom: 5px;
+}
+
 div#shipping_information div.container div.summary span:before {
 	display: inline-block;
-	min-width: 100px;
+	min-width: 200px;
 	content: '';
 }
 
