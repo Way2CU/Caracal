@@ -136,6 +136,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 		// update button status
 		self.shipping.providers.not(provider).removeClass('selected');
 		provider.addClass('selected');
+
+		// remove bad class
+		self.shipping.providers.removeClass('bad');
 	};
 
 	/**
@@ -453,16 +456,40 @@ Caracal.Shop.BuyerInformationForm = function() {
 	* @return boolean
 	*/
 	self.validator.shipping_information_page = function() {
-		var fields = self.shipping.page.find('input,select');
 
-		// add "bad" class to every required field which is empty
-		fields.each(function(index) {
-			var field = $(this);
+		// make sure delivery provider is selected
+		if (self.shipping.providers.filter('.select').length == 0)
+			self.shipping.providers.addClass('bad');
 
-			if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
-				field.addClass('bad'); else
-				field.removeClass('bad');
-		});
+		// make sure required address fields are filled in
+		if (self.shipping.address_container.hasClass('visible')) {
+			var fields = self.shipping.address_container.find('input,select');
+
+			fields.each(function(index) {
+				var field = $(this);
+
+				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
+					field.addClass('bad'); else
+					field.removeClass('bad');
+			});
+		}
+
+		// make sure required contact fields are filled in
+		if (self.shipping.contact_container.hasClass('visible')) {
+			var fields = self.shipping.contact_container.find('input,select');
+
+			fields.each(function(index) {
+				var field = $(this);
+
+				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
+					field.addClass('bad'); else
+					field.removeClass('bad');
+			});
+		}
+
+		// make sure delivery type is selected if needed
+		if (self.shipping.types_container.hasClass('visible') && self.shipping.types_container.find('.selected').length == 0)
+			self.shipping.types_container.find('a').addClass('bad');
 
 		return self.shipping.page.find('.bad').length == 0;
 	};
