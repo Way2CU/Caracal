@@ -103,7 +103,7 @@
 										autocomplete="on"
 										/>
 								</label>
-								<label>
+								<label class="separator">
 									<span><cms:text constant="label_last_name" module="shop"/></span>
 									<input
 										type="text"
@@ -119,7 +119,6 @@
 										type="text"
 										name="new_phone_number"
 										maxlength="200"
-										data-required="1"
 										autocomplete="on"
 										/>
 								</label>
@@ -205,13 +204,22 @@
 										autocomplete="on"
 										/>
 								</label>
-								<label>
+								<label class="separator">
 									<span><cms:text constant="label_last_name" module="shop"/></span>
 									<input
 										type="text"
 										name="guest_last_name"
 										maxlength="64"
 										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+								<label>
+									<span><cms:text constant="label_phone_number" module="shop"/></span>
+									<input
+										type="email"
+										name="guest_phone"
+										maxlength="200"
 										autocomplete="on"
 										/>
 								</label>
