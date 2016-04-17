@@ -126,10 +126,11 @@ div#shipping_information div.container.provider div.details a {
 
 	text-align: center;
 
-	border: 1px solid #0b63ce;
-	border-radius: 5px;
-
-	vertical-align: top;
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
+	background-color: white;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
 
 	transition-property: all;
 	transition-duration: 0.3s;
