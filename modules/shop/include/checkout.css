@@ -73,6 +73,11 @@ table.discounted_items {
  */
 div#input_details div.delivery_provider {
 	position: relative;
+	text-align: left;
+}
+
+body.rtl div#input_details div.delivery_provider {
+	text-align: right;
 }
 
 div#input_details div.delivery_provider label {
