@@ -296,6 +296,37 @@
 								<h4><cms:text constant="label_shipping_address" module="shop"/></h4>
 
 								<div class="summary">
+									<span
+										class="full_name"
+										data-label="label_full_name"
+										cms:constant="data-label"
+										/>
+									<span
+										class="street"
+										data-label="label_street"
+										cms:constant="data-label"
+										/>
+									<span class="street2"/>
+									<span
+										class="city"
+										data-label="label_city"
+										cms:constant="data-label"
+										/>
+									<span
+										class="zip"
+										data-label="label_zip"
+										cms:constant="data-label"
+										/>
+									<span
+										class="country"
+										data-label="label_country"
+										cms:constant="data-label"
+										/>
+									<span
+										class="state"
+										data-label="label_state"
+										cms:constant="data-label"
+										/>
 								</div>
 
 								<div class="details">

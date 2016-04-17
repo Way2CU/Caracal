@@ -108,6 +108,13 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
+	 * Update summary for address container.
+	 */
+	self._update_shipping_address_summary = function() {
+		
+	};
+
+	/**
 	 * Handle clicking on delivery provider.
 	 *
 	 * @param object event
@@ -490,6 +497,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			if (fields.filter('.bad').length == 0) {
 				self.shipping.address_container.addClass('completed');
 				self.shipping.contact_container.addClass('visible');
+				self._update_shipping_address_summary();
 				return false;  // prevent page from switching
 			}
 		}
