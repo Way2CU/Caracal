@@ -119,7 +119,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		event.preventDefault();
 
 		// hide all containers
-		self.shipping.interface_container.removeClass('visible');
+		self.shipping.address_container.removeClass('visible');
 		self.shipping.contact_container.removeClass('visible');
 		self.shipping.types_container.removeClass('visible');
 		self.shipping.interface_container.removeClass('visible');
