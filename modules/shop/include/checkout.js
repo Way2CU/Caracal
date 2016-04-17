@@ -467,12 +467,12 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self.validator.shipping_information_page = function() {
 		var provider = self.shipping.providers.filter('.selected');
-		var needs_user_info = provider.data('user-information');
 
 		// make sure delivery provider is selected
-		if (self.shipping.providers.filter('.selected').length == 0)
-			self.shipping.providers.addClass('bad'); else
+		if (provider.length == 0) {
+			self.shipping.providers.addClass('bad');
 			return false;  // prevent page from switching
+		}
 
 		// make sure required address fields are entered
 		if (self.shipping.address_container.hasClass('visible')) {
