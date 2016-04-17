@@ -113,6 +113,7 @@ div#shipping_information div.container.provider.completed div.details {
 
 div#shipping_information div.container h4 {
 	margin: 0;
+	margin-bottom: 10px;
 	padding: 0;
 
 	font-weight: normal;
@@ -120,7 +121,15 @@ div#shipping_information div.container h4 {
 
 div#shipping_information div.container.provider div.details a {
 	display: inline-block;
+	margin-right: 10px;
 	padding: 10px;
+
+	text-align: left;
+}
+
+body.rtl div#shipping_information div.container.provider div.details a {
+	margin-right: 0;
+	margin-left: 10px;
 }
 
 div#shipping_information div.container.provider div.details a img {
