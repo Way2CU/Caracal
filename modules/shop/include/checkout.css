@@ -130,7 +130,6 @@ div#shipping_information div.container.provider div.details a {
 	border-radius: 4px;
 	outline: none;
 	background-color: white;
-	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
 
 	transition-property: all;
 	transition-duration: 0.3s;
@@ -139,6 +138,11 @@ div#shipping_information div.container.provider div.details a {
 body.rtl div#shipping_information div.container.provider div.details a {
 	margin-right: 0;
 	margin-left: 10px;
+}
+
+div#shipping_information div.container.provider div.details a.selected {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.4);
 }
 
 div#shipping_information div.container.provider div.details a img {
