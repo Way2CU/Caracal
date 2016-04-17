@@ -291,9 +291,8 @@
 								</div>
 
 								<div class="overlay"/>
+								<hr/>
 							</div>
-
-							<hr/>
 
 							<!-- Person and address receiving the shippment -->
 							<div class="container address">
@@ -427,9 +426,8 @@
 											/>
 									</label>
 								</div>
+								<hr/>
 							</div>
-
-							<hr/>
 
 							<!-- Contact information in case of a need -->
 							<div class="container contact">
@@ -477,9 +475,8 @@
 										<small><cms:text constant="tooltip_access_code" module="shop"/></small>
 									</label>
 								</div>
+								<hr/>
 							</div>
-
-							<hr/>
 
 							<div class="container types">
 								<h4><cms:text constant="label_delivery_types" module="shop"/></h4>
