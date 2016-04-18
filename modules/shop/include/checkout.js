@@ -76,6 +76,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.account.page.find('a.password_recovery').click(self._show_password_dialog);
 		self.account.page.find('input[name=existing_user]').change(self.handler.account_type_change);
 		self.shipping.page.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
+		self.shipping.page.find('div.container div.summary').on('click', self.handler.summary);
 		self.shipping.providers.on('click', self.handler.delivery_provider_click);
 		self.payment.methods.click(self.handler.payment_method_click);
 	};
@@ -117,7 +118,17 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * Update summary for contact information container.
 	 */
 	self._update_shipping_contact_summary = function() {
-		
+	};
+
+	/**
+	 * Handle clicking on summary.
+	 */
+	self.handler.summary_click = function(event) {
+		// prevent default behavior
+		event.preventDefault();
+
+		// switch container to edit mode
+		$(this).closest('div.container').removeClass('completed');
 	};
 
 	/**
