@@ -89,7 +89,7 @@ body.rtl div#shipping_information div.container {
 }
 
 div#shipping_information div.container.visible {
-	max-height: 500px;
+	max-height: 550px;
 	padding-bottom: 15px;
 }
 
