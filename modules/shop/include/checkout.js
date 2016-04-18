@@ -119,7 +119,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			var field = fields.eq(i);
 			var label = summary.find('span.' + field.attr('name'));
 
-			label.html(field.value();
+			label.html(field.value());
 		}
 	};
 
@@ -134,7 +134,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			var field = fields.eq(i);
 			var label = summary.find('span.' + field.attr('name'));
 
-			label.html(field.value();
+			label.html(field.value());
 		}
 	};
 
