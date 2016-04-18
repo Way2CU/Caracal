@@ -114,7 +114,9 @@ div#shipping_information div.container div.summary:after {
 	width: 3em;
 	height: 3em;
 
-	border-radius: 50%;
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	background-color: white;
 	background-image: url(../images/edit.svg);
 	background-size: 2em 2em;
 	background-position: center;
