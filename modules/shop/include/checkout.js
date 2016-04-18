@@ -498,13 +498,14 @@ Caracal.Shop.BuyerInformationForm = function() {
 		if (address_visible) {
 			var fields = self.shipping.address_container.find('input,select');
 
-			fields.each(function() {
-				var field = $(this);
+			// iterate over fields
+			for (var i = 0, count = fields.length; i < count; i++) {
+				var field = fields.eq(i);
 
 				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
 					field.addClass('bad'); else
 					field.removeClass('bad');
-			});
+			}
 
 			// complete current interface
 			if (fields.filter('.bad').length == 0) {
