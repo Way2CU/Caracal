@@ -485,8 +485,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 		}
 
 		// prepare for checking what should be shown next
-		var show_address = provider.data('user-information');
-		var show_interface = provider.data('custom-interface');
+		var show_address = provider.data('user-information') == 1;
+		var show_interface = provider.data('custom-interface') == 1;
 		var address_visible = self.shipping.address_container.hasClass('visible');
 		var address_completed = self.shipping.address_container.hasClass('completed');
 		var contact_visible = self.shipping.contact_container.hasClass('visible');
