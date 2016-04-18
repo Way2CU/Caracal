@@ -461,6 +461,21 @@
 								<h4><cms:text constant="label_additional_information" module="shop"/></h4>
 
 								<div class="summary">
+									<span
+										class="email"
+										data-label="label_email"
+										cms:constant="data-label"
+										/>
+									<span
+										class="phone_number"
+										data-label="label_phone_number"
+										cms:constant="data-label"
+										/>
+									<span
+										class="access_code"
+										data-label="label_access_code"
+										cms:constant="data-label"
+										/>
 								</div>
 
 								<div class="details">
