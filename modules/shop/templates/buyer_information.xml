@@ -297,11 +297,6 @@
 
 								<div class="summary">
 									<span
-										class="full_name"
-										data-label="label_full_name"
-										cms:constant="data-label"
-										/>
-									<span
 										class="street"
 										data-label="label_street"
 										cms:constant="data-label"
@@ -326,32 +321,14 @@
 										data-label="label_state"
 										cms:constant="data-label"
 										/>
+									<span
+										class="access_code"
+										data-label="label_access_code"
+										cms:constant="data-label"
+										/>
 								</div>
 
 								<div class="details">
-									<label>
-										<span><cms:text constant="label_presets" module="shop"/></span>
-										<select
-											name="presets"
-											data-autoload="$_SESSION['logged'] ? 1 : 0"
-											cms:eval="data-autoload"
-											/>
-									</label>
-
-									<label>
-										<span><cms:text constant="label_full_name" module="shop"/></span>
-										<input
-											class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
-											type="text"
-											name="name"
-											value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-											maxlength="64"
-											data-required="1"
-											autocomplete="on"
-											/>
-									</label>
-
 									<label>
 										<span><cms:text constant="label_street" module="shop"/></span>
 										<input
@@ -443,6 +420,7 @@
 											</select>
 										</cms:if>
 									</label>
+
 									<label>
 										<span><cms:text constant="label_state" module="shop"/></span>
 										<input
@@ -451,6 +429,17 @@
 											maxlength="40"
 											autocomplete="on"
 											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_access_code" module="shop"/></span>
+										<input
+											type="text"
+											name="access_code"
+											maxlength="40"
+											autocomplete="on"
+											/>
+										<small><cms:text constant="tooltip_access_code" module="shop"/></small>
 									</label>
 								</div>
 							</div>
@@ -462,6 +451,11 @@
 
 								<div class="summary">
 									<span
+										class="full_name"
+										data-label="label_full_name"
+										cms:constant="data-label"
+										/>
+									<span
 										class="email"
 										data-label="label_email"
 										cms:constant="data-label"
@@ -471,14 +465,32 @@
 										data-label="label_phone_number"
 										cms:constant="data-label"
 										/>
-									<span
-										class="access_code"
-										data-label="label_access_code"
-										cms:constant="data-label"
-										/>
 								</div>
 
 								<div class="details">
+									<label>
+										<span><cms:text constant="label_presets" module="shop"/></span>
+										<select
+											name="presets"
+											data-autoload="$_SESSION['logged'] ? 1 : 0"
+											cms:eval="data-autoload"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_full_name" module="shop"/></span>
+										<input
+											class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
+											cms:eval="class,value"
+											type="text"
+											name="name"
+											value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
+											maxlength="64"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+
 									<label>
 										<span><cms:text constant="label_email" module="shop"/></span>
 										<input
@@ -504,17 +516,6 @@
 											maxlength="127"
 											autocomplete="on"
 											/>
-									</label>
-
-									<label>
-										<span><cms:text constant="label_access_code" module="shop"/></span>
-										<input
-											type="text"
-											name="access_code"
-											maxlength="40"
-											autocomplete="on"
-											/>
-										<small><cms:text constant="tooltip_access_code" module="shop"/></small>
 									</label>
 								</div>
 							</div>
