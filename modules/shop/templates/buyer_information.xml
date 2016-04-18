@@ -306,7 +306,6 @@
 										data-label="label_street"
 										cms:constant="data-label"
 										/>
-									<span class="street2"/>
 									<span
 										class="city"
 										data-label="label_city"

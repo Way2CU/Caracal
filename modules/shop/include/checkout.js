@@ -111,7 +111,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * Update summary for address container.
 	 */
 	self._update_shipping_address_summary = function() {
-		
+		self.shipping.address_container.find('div.details input,select').each(function() {
+			var field = $(this);
+			self.shipping.address_container.find('div.summary span.' + field.attr('class')).html(field.val());
+		});
 	};
 
 	/**
