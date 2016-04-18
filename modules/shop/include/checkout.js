@@ -592,12 +592,14 @@ Caracal.Shop.BuyerInformationForm = function() {
 			return false;  // prevent page from switching
 
 		} else if (!show_interface && user_information_complete && !types_visible) {
+			// get delivery types for selected method
+			new Communicator('shop')
+				.on_success(self.handler.delivery_providers_load)
+				.on_error(self.handler.delivery_providers_error)
+				.get('json_set_delivery_method', {method: provider.data('value')});
+
 			return false;  // prevent page from switching
 		}
-
-		// make sure delivery type is selected if needed
-		if (self.shipping.types_container.hasClass('visible') && self.shipping.types_container.filter('.selected').length == 0)
-			self.shipping.types_container.find('a').addClass('bad');
 
 		// prepare conditions
 		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
