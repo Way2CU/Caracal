@@ -94,10 +94,34 @@ div#shipping_information div.container.visible {
 }
 
 div#shipping_information div.container div.summary {
+	position: relative;,
 	max-height: 0;
 	overflow: hidden;
 
 	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container div.summary:after {
+	display: block;
+	content: '';
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 3em;
+	height: 3em;
+
+	border-radius: 50%;
+	background-image: url(../images/edit.svg);
+	background-size: 2em 2em;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	line-height: 0;
+}
+
+body.rtl div#shipping_information div.container div.summary:after {
+	left: 20px;
+	right: auto;
 }
 
 div#shipping_information div.container.completed div.summary {
