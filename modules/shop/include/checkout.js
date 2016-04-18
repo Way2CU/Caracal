@@ -491,6 +491,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var address_completed = self.shipping.address_container.hasClass('completed');
 		var contact_visible = self.shipping.contact_container.hasClass('visible');
 		var contact_completed = self.shipping.contact_container.hasClass('completed');
+		var interface_completed = true;
+		var types_completed = true;
 
 		// make sure required address fields are entered
 		if (address_visible) {
@@ -534,7 +536,11 @@ Caracal.Shop.BuyerInformationForm = function() {
 		if (self.shipping.types_container.hasClass('visible') && self.shipping.types_container.filter('.selected').length == 0)
 			self.shipping.types_container.find('a').addClass('bad');
 
-		return self.shipping.page.find('.bad').length == 0;
+		// prepare conditions
+		var user_information_complete = (show_address && (address_completed && contact_completed)) || !show_address;
+		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
+
+		return user_information_complete && delivery_type_completed;
 	};
 
 	/**
