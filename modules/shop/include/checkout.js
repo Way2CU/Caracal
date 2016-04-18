@@ -111,11 +111,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * Update summary for address container.
 	 */
 	self._update_shipping_address_summary = function() {
-		return;
-		self.shipping.address_container.find('div.details input,select').each(function() {
-			var field = $(this);
-			self.shipping.address_container.find('div.summary span.' + field.attr('class')).html(field.val());
-		});
 	};
 
 	/**
@@ -509,7 +504,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 			}
 
 			// complete current interface
-			if (fields.filter('.bad').length == 0) {
+			if (fields.filter('.bad').length == 0 && !address_completed) {
+				address_completed = true;
 				self.shipping.address_container.addClass('completed');
 				self._update_shipping_address_summary();
 			}
