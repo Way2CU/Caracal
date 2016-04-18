@@ -101,6 +101,10 @@ div#shipping_information div.container div.summary {
 	transition: max-height 0.5s;
 }
 
+div#shipping_information div.container.completed div.summary {
+	max-height: 500px;
+}
+
 div#shipping_information div.container div.summary:after {
 	display: block;
 	content: '';
@@ -122,10 +126,6 @@ div#shipping_information div.container div.summary:after {
 body.rtl div#shipping_information div.container div.summary:after {
 	left: 20px;
 	right: auto;
-}
-
-div#shipping_information div.container.completed div.summary {
-	max-height: 500px;
 }
 
 div#shipping_information div.container div.details {
