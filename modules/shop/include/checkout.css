@@ -94,7 +94,7 @@ div#shipping_information div.container.visible {
 }
 
 div#shipping_information div.container div.summary {
-	position: relative;,
+	position: relative;
 	max-height: 0;
 	overflow: hidden;
 
