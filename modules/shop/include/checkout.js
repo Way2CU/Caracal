@@ -112,12 +112,30 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * Update summary for address container.
 	 */
 	self._update_shipping_address_summary = function() {
+		var fields = self.shipping.address_container.find('input,select');
+		var summary = self.shipping.address_container.find('div.summary');
+
+		for (var i = 0, count = fields.length; i < count; i++) {
+			var field = fields.eq(i);
+			var label = summary.find('span.' + field.attr('name'));
+
+			label.html(field.value();
+		}
 	};
 
 	/**
 	 * Update summary for contact information container.
 	 */
 	self._update_shipping_contact_summary = function() {
+		var fields = self.shipping.contact_container.find('input,select');
+		var summary = self.shipping.contact_container.find('div.summary');
+
+		for (var i = 0, count = fields.length; i < count; i++) {
+			var field = fields.eq(i);
+			var label = summary.find('span.' + field.attr('name'));
+
+			label.html(field.value();
+		}
 	};
 
 	/**
