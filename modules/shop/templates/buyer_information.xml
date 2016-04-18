@@ -447,7 +447,7 @@
 							<!-- Contact information in case of a need -->
 							<div class="container contact">
 								<hr/>
-								<h4><cms:text constant="label_additional_information" module="shop"/></h4>
+								<h4><cms:text constant="label_contact_information" module="shop"/></h4>
 
 								<div class="summary">
 									<span
@@ -523,9 +523,6 @@
 							<div class="container types">
 								<hr/>
 								<h4><cms:text constant="label_delivery_types" module="shop"/></h4>
-
-								<div class="summary">
-								</div>
 
 								<div class="details">
 								</div>
