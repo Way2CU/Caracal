@@ -111,6 +111,7 @@ final class Delivery {
 					'image'            => $method->getImage(),
 					'small_image'      => $method->getSmallImage(),
 					'custom_interface' => $method->hasCustomInterface(),
+					'user_information' => $method->requiresUserInformation(),
 					'international'    => $international
 				);
 
