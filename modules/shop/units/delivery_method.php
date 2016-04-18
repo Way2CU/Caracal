@@ -211,4 +211,13 @@ abstract class DeliveryMethod {
 	 * @return boolean
 	 */
 	abstract public function hasCustomInterface();
+
+	/**
+	 * Return boolean value denoting if system should ask user for delivery address.
+	 *
+	 * @return boolean
+	 */
+	public function requiresUserInformation() {
+		return true;
+	}
 }
