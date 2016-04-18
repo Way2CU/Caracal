@@ -536,7 +536,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
 					field.addClass('bad'); else
 					field.removeClass('bad');
-			});
+			}
 
 			// complete current interface
 			if (fields.filter('.bad').length == 0 && !contact_completed) {
