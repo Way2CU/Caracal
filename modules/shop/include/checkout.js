@@ -114,6 +114,13 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
+	 * Update summary for contact information container.
+	 */
+	self._update_shipping_contact_summary = function() {
+		
+	};
+
+	/**
 	 * Handle clicking on delivery provider.
 	 *
 	 * @param object event
@@ -487,7 +494,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var address_completed = self.shipping.address_container.hasClass('completed');
 		var contact_visible = self.shipping.contact_container.hasClass('visible');
 		var contact_completed = self.shipping.contact_container.hasClass('completed');
+		var interface_visible = false;
 		var interface_completed = true;
+		var types_visible = false;
 		var types_completed = true;
 
 		// make sure required address fields are entered
@@ -521,13 +530,40 @@ Caracal.Shop.BuyerInformationForm = function() {
 		if (contact_visible) {
 			var fields = self.shipping.contact_container.find('input,select');
 
-			fields.each(function(index) {
-				var field = $(this);
+			for (var i = 0, count = fields.length; i < count; i++) {
+				var field = fields.eq(i);
 
 				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
 					field.addClass('bad'); else
 					field.removeClass('bad');
 			});
+
+			// complete current interface
+			if (fields.filter('.bad').length == 0 && !contact_completed) {
+				contact_completed = true;
+				self.shipping.contact_container.addClass('completed');
+				self._update_shipping_contact_summary();
+			}
+		}
+
+		// flag denoting status of user information
+		var user_information_complete = (show_address && (address_completed && contact_completed)) || !show_address;
+
+		// show custom interface
+		if (show_interface && user_information_complete && !interface_visible) {
+			// show busy indicator
+			self.shipping.overlay.addClass('visible');
+
+			// load delivery provider custom interface
+			new Communicator('shop')
+				.on_success(self.handler.custom_interface_load)
+				.on_error(self.handler.custom_interface_error)
+				.get('json_get_delivery_method_interface', {method: provider.data('value')}, 'html');
+
+			return false;  // prevent page from switching
+
+		} else if (!show_interface && user_information_complete && !types_visible) {
+			return false;  // prevent page from switching
 		}
 
 		// make sure delivery type is selected if needed
@@ -535,7 +571,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 			self.shipping.types_container.find('a').addClass('bad');
 
 		// prepare conditions
-		var user_information_complete = (show_address && (address_completed && contact_completed)) || !show_address;
 		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
 
 		return user_information_complete && delivery_type_completed;
