@@ -109,8 +109,8 @@ div#shipping_information div.container div.summary:after {
 	display: block;
 	content: '';
 	position: absolute;
-	top: 20px;
-	right: 20px;
+	top: 0;
+	right: 0;
 	width: 3em;
 	height: 3em;
 
@@ -126,8 +126,17 @@ div#shipping_information div.container div.summary:after {
 }
 
 body.rtl div#shipping_information div.container div.summary:after {
-	left: 20px;
+	left: 0;
 	right: auto;
+}
+
+div#shipping_information div.container div.summary:hover:after {
+	background-color: #F0F0F0;
+}
+
+div#shipping_information div.container div.summary:active:after {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
 }
 
 div#shipping_information div.container div.details {
