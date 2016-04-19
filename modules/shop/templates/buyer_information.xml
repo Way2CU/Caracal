@@ -19,6 +19,9 @@
 				</a>
 			</cms:if>
 			<a href="javascript:void(0);">
+				<cms:text constant="title_billing_information" module="shop"/>
+			</a>
+			<a href="javascript:void(0);">
 				<cms:text constant="title_checkout" module="shop"/>
 			</a>
 		</div>
@@ -534,6 +537,87 @@
 							</div>
 						</div>
 					</cms:if>
+
+					<!-- Billing Information -->
+					<div class="page" id="billing_information">
+						<h1><cms:text constant="title_billing_information" module="shop"/></h1>
+
+						<label>
+							<span><cms:text constant="label_full_name" module="shop"/></span>
+							<input
+								type="text"
+								name="billing_full_name"
+								maxlength="64"
+								autocomplete="on"
+								data-required="1"
+								/>
+						</label>
+						<hr/>
+						<label>
+							<span><cms:text constant="label_credit_card_type" module="shop"/></span>
+							<select name="billing_card_type" data-required="1">
+								<option/>
+								<cms:card_type/>
+							</select>
+						</label>
+						<label>
+							<span><cms:text constant="label_credit_card" module="shop"/></span>
+							<input
+								type="text"
+								name="billing_credit_card"
+								maxlength="127"
+								autocomplete="on"
+								data-required="1"
+								/>
+						</label>
+						<div class="horizontal">
+							<label>
+								<span><cms:text constant="label_expiration_date" module="shop"/></span>
+								<input
+									type="text"
+									name="billing_expire_month"
+									maxlength="2"
+									autocomplete="on"
+									placeholder="mm"
+									data-required="1"
+									/>
+							</label>
+							<label>
+								<input
+									type="text"
+									name="billing_expire_year"
+									maxlength="4"
+									autocomplete="on"
+									placeholder="yyyy"
+									data-required="1"
+									/>
+							</label>
+						</div>
+						<label>
+							<span><cms:text constant="label_cvv" module="shop"/></span>
+							<input
+								type="text"
+								name="billing_cvv"
+								maxlength="4"
+								autocomplete="on"
+								data-required="1"
+								/>
+							<cms:raw><![CDATA[&nbsp;]]></cms:raw>
+							<a href="javascript: void();" class="what_is_cvv">
+								<cms:text constant="label_cvv_question" module="shop"/>
+							</a>
+							<img
+								id="what_is_cvv"
+								src="_BASEURL.'/modules/shop/images/security_code.png'"
+								alt="CVV2"
+								cms:eval="src"
+								/>
+						</label>
+						<div class="checkout_controls">
+							<button class="previous"><cms:text constant="back"/></button>
+							<button class="next"><cms:text constant="next"/></button>
+						</div>
+					</div>
 
 					<!-- Dummy checkout page -->
 					<div class="page" id="checkout"/>
