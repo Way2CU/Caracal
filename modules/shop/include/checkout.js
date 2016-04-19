@@ -681,6 +681,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 			return false;  // prevent page from switching
 		}
 
+		// validate custom interface
+		if (show_interface && !interface_completed && self.interface_save_function != null)
+			self.interface_save_function();
+
 		// prepare conditions
 		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
 
