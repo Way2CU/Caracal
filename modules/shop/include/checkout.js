@@ -1,7 +1,7 @@
 /**
  * Checkout Form Implemenentation
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2015. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -23,6 +23,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self.account = {};
 	self.shipping = {};
 	self.payment = {};
+	self.billing = {};
 
 	/**
 	 * Complete object initialization.
@@ -32,6 +33,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.account.page = $('div#sign_in.page');
 		self.shipping.page = $('div#shipping_information.page');
 		self.payment.page = $('div#payment_method.page');
+		self.billing.page = $('div#billing_information.page');
 
 		// implement page control
 		self.page_control
@@ -40,6 +42,11 @@ Caracal.Shop.BuyerInformationForm = function() {
 			.attachControls('div#checkout_steps a')
 			.attachForm('div#input_details form');
 
+		// disable billing information if payment method doesn't require credit card
+		var payment_method = $('div#input_details input[name=payment_method][type=hidden]');
+		if (payment_method.length > 0 && payment_method.data('needs-credit-card') != '1')
+			self.page_control.disablePage(2);
+
 		// create password recovery dialog
 		self.account.password_dialog = new Dialog();
 
@@ -47,11 +54,25 @@ Caracal.Shop.BuyerInformationForm = function() {
 				.setSize(400, 300)
 				.setScroll(false)
 				.setClearOnClose(false);
-		language_handler.getTextArrayAsync('shop', ['title_password_dialog'], self._configure_dialogs);
+
+		// create cvv information dialog
+		self.billing.cvv_dialog = new Dialog();
+		self.billing.cvv_dialog
+				.setSize(642, 265)
+				.setScroll(false)
+				.setClearOnClose(false)
+				.setContentFromDOM('img#what_is_cvv');
+
+		language_handler.getTextArrayAsync(
+			'shop', 
+			['title_password_dialog', 'title_cvv_dialog'],
+			self._configure_dialogs
+			);
 
 		// set validators used by page control
 		self.account.page.data('validator', self.validator.sign_in_page);
 		self.shipping.page.data('validator', self.validator.shipping_information_page);
+		self.billing.page.data('validator', self.validator.billing_information_page);
 
 		// no payment method was preselected, we need validator
 		if (self.payment.page.length > 0)
@@ -88,6 +109,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._configure_dialogs = function(data) {
 		self.account.password_dialog.setTitle(data['title_password_dialog']);
+		self.billing.cvv_dialog.setTitle(data['title_cvv_dialog']);
 	};
 
 	/**
@@ -98,6 +120,15 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self._show_password_dialog = function(event) {
 		event.preventDefault();
 		self.account.password_dialog.show();
+	};
+	/**
+	 * Show CVV explanation dialog.
+	 *
+	 * @param object event
+	 */
+	self._show_cvv_dialog = function(event) {
+		event.preventDefault();
+		self.billing.cvv_dialog.show();
 	};
 
 	/**
@@ -693,6 +724,49 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
 
 		return user_information_complete && delivery_type_completed;
+	};
+
+	/**
+	 * Validate billing information page.
+	 *
+	 * @return boolean
+	 */
+	self.validator.billing_information_page = function() {
+		var fields = self.billing_information_form.find('input,select');
+		var method = self.methods.filter('.active');
+
+		fields.each(function(index) {
+			var field = $(this);
+
+			if (field.data('required') == 1 && field.val() == '')
+				field.addClass('bad'); else
+				field.removeClass('bad');
+		});
+
+		// if supported check data validity with method provided functions
+		if (self.billing_information_form.find('.bad').length == 0)
+			switch (self.method_field.val()) {
+				case 'stripe':
+					var card_number = fields.filter('input[name=billing_credit_card]');
+					var card_expire_month = fields.filter('input[name=billing_expire_month]');
+					var card_expire_year = fields.filter('input[name=billing_expire_year]');
+					var card_cvv = fields.filter('input[name=billing_cvv]');
+
+					if (!Stripe.card.validateCardNumber(card_number.val()))
+						card_number.addClass('bad');
+
+					if (!Stripe.card.validateExpiry(card_expire_month.val(), card_expire_year.val())) {
+						card_expire_month.addClass('bad');
+						card_expire_year.addClass('bad');
+					}
+
+					if (!Stripe.card.validateCVC(card_cvv.val()))
+						card_cvv.addClass('bad');
+
+					break;
+			}
+
+		return self.billing_information_form.find('.bad').length == 0;
 	};
 
 	/**

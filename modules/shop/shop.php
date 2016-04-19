@@ -3844,7 +3844,6 @@ class shop extends Module {
 				$retry_manager = LoginRetryManager::getInstance();
 				$count = $retry_manager->getRetryCount();
 				$buyer_terms_link = null;
-				$payment_method = null;
 
 				if (isset($_SESSION['buyer_terms_link']))
 					$buyer_terms_link = $_SESSION['buyer_terms_link'];
