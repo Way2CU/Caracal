@@ -184,7 +184,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 * @param object $transaction
 	 * @return array
 	 */
-	public function getDeliveryTypes($items, $shipper, $recipient, $transaction) {
+	public function getDeliveryTypes($items, $shipper, $recipient, $transaction=null) {
 		$shop = shop::getInstance();
 		$debug = $shop->isDebug();
 		$result = array();
@@ -200,7 +200,8 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 		// populate request header
 		$this->_populateCredentials($request);
 		$this->_populateClientDetails($request);
-		$this->_populateTransactionDetails($request, $transaction->id);
+		if (!is_null($transaction))
+			$this->_populateTransactionDetails($request, $transaction->id);
 		$this->_populateVersionInformation($request, FedEx_DeliveryMethod::RATE_SERVICE);
 
 		// add remaining request information
@@ -209,7 +210,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 		$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP';
 		$request['RequestedShipment']['ShipTimestamp'] = date('c');
 		$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING';
-		$request['RequestedShipment']['PreferredCurrency'] = $transaction->currency;
+		$request['RequestedShipment']['PreferredCurrency'] = Shop::getDefaultCurrency();
 		$request['RequestedShipment']['Shipper'] = array(
 											'Contact'	=> array(
 											),

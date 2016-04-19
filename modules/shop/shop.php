@@ -1898,13 +1898,6 @@ class shop extends Module {
 		// get current transaction
 		$transaction = Transaction::get_current();
 
-		if (is_null($transaction)) {
-			$result['error'] = true;
-			$result['message'] = $this->getLanguageConstant('message_error_transaction');
-			print json_encode($result);
-			return;
-		}
-
 		// get prefered method
 		$delivery_method = Delivery::get_current();
 
@@ -1955,8 +1948,8 @@ class shop extends Module {
 						Delivery::get_items_for_estimate(),
 						$shipper,
 						$recipient,
-						$transaction,
-						$type
+						$type,
+						$transaction
 					);
 
 			} else {

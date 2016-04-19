@@ -131,7 +131,7 @@ abstract class DeliveryMethod {
 	 * @param object $transaction
 	 * @return array
 	 */
-	abstract public function getDeliveryTypes($items, $shipper, $recipient, $transaction);
+	abstract public function getDeliveryTypes($items, $shipper, $recipient, $transaction=null);
 
 	/**
 	 * Get list of supported package types. Items in resulting array must
@@ -191,11 +191,11 @@ abstract class DeliveryMethod {
 	 * @param array $items
 	 * @param array $shipper
 	 * @param array $recipient
-	 * @param object $transaction
 	 * @param string $selection
+	 * @param object $transaction
 	 * @return float
 	 */
-	abstract public function getCustomEstimate($items, $shipper, $recipient, $transaction, $selection);
+	abstract public function getCustomEstimate($items, $shipper, $recipient, $selection, $transaction=null);
 
 	/**
 	 * Whether delivery method can be used for international deliveries.
