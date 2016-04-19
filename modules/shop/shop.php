@@ -3005,6 +3005,16 @@ class shop extends Module {
 			$new_transaction = !(is_object($transaction) && $transaction->status == TransactionStatus::PENDING);
 		}
 
+		// get delivery estimate
+		$recipient = array(
+				'street'   => array($address->street, $address->street2),
+				'city'     => $address->city,
+				'zip_code' => $address->zip,
+				'state'    => $address->state,
+				'country'  => $address->country,
+			);
+		$delivery_estimate = $this->getDeliveryEstimate($recipient, $delivery_method, $delivery_type);
+
 		// check if we have existing transaction in our database
 		if ($new_transaction) {
 			// get shopping cart summary
@@ -3021,7 +3031,7 @@ class shop extends Module {
 			$result['type'] = $type;
 			$result['status'] = $new_status;
 			$result['handling'] = $summary['handling'];
-			$result['shipping'] = $summary['shipping'];
+			$result['shipping'] = $delivery_estimate;
 			$result['weight'] = $summary['weight'];
 			$result['payment_method'] = $payment_method->get_name();
 			$result['delivery_method'] = $delivery_method;
@@ -3058,7 +3068,7 @@ class shop extends Module {
 			// there's already an existing transaction
 			$result = $_SESSION['transaction'];
 			$result['handling'] = $summary['handling'];
-			$result['shipping'] = $summary['shipping'];
+			$result['shipping'] = $delivery_estimate;
 			$result['total'] = $summary['total'];
 
 			$data = array(
