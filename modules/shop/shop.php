@@ -2583,7 +2583,7 @@ class shop extends Module {
 			'shipping'           => $shipping,
 			'handling'           => $handling,
 			'weight'             => $total_weight,
-			'total'              => $total_money + $shipping + $handling,
+			'total'              => $total_money,
 			'discounts'          => $total_discount,
 			'currency'           => $preferred_currency
 		);
