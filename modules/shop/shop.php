@@ -3753,21 +3753,9 @@ class shop extends Module {
 				$payment_method = $this->getPaymentMethod($tag_params);
 				$billing_information = $this->getBillingInformation($payment_method);
 
-				// check required fields
-				if (!$payment_method->provides_information()) {
-					$billing_required = array(
-							'billing_full_name', 'billing_card_type',
-							'billing_credit_card', 'billing_expire_month',
-							'billing_expire_year', 'billing_cvv'
-						);
-				} else {
-					$billing_required = array();
-				}
-
 				$bad_fields = array();
-				$bad_fields = $this->checkFields($billing_information, $billing_required, $bad_fields);
 				$bad_fields = $this->checkFields($shipping_information, $shipping_required, $bad_fields);
-				$required_count = count($billing_required) + count($shipping_required);
+				$required_count = count($shipping_required);
 				$fields_are_invalid = count($bad_fields) > 0 && $required_count > 0;
 
 				// log bad fields if debugging is enabled
