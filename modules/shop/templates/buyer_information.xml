@@ -18,9 +18,11 @@
 					<cms:text constant="title_payment_method" module="shop"/>
 				</a>
 			</cms:if>
+			<!--
 			<a href="javascript:void(0);">
 				<cms:text constant="title_billing_information" module="shop"/>
 			</a>
+			-->
 			<a href="javascript:void(0);">
 				<cms:text constant="title_checkout" module="shop"/>
 			</a>
@@ -539,6 +541,7 @@
 					</cms:if>
 
 					<!-- Billing Information -->
+					<!--
 					<div class="page" id="billing_information">
 						<h1><cms:text constant="title_billing_information" module="shop"/></h1>
 
@@ -618,6 +621,13 @@
 							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</div>
+					-->
+					<!-- Legacy fields, kept for reverse compatibility -->
+					<input type="hidden" name="billing_full_name" />
+					<input type="hidden" name="billing_credit_card" />
+					<input type="hidden" name="billing_expire_month" />
+					<input type="hidden" name="billing_expire_year" />
+					<input type="hidden" name="billing_cvv" />
 
 					<!-- Dummy checkout page -->
 					<div class="page" id="checkout"/>
