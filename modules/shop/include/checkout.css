@@ -102,6 +102,7 @@ div#shipping_information div.container div.summary {
 }
 
 div#shipping_information div.container.completed div.summary {
+	min-height: 3em;
 	max-height: 500px;
 }
 
