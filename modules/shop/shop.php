@@ -2941,8 +2941,6 @@ class shop extends Module {
 						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
 
 					// collect data
-
-
 					$conditions = array();
 					$data = array(
 						'first_name'   => escape_chars($_REQUEST['guest_first_name']),
@@ -2950,20 +2948,19 @@ class shop extends Module {
 						'guest'        => 1,
 						'system_user'  => 0,
 						'agreed'       => $agree_to_terms,
-						'promotions'   => $want_promotions ? 1 : 0,
-						'send_invoice' => $send_invoice ? 1 : 0
+						'promotions'   => $want_promotions ? 1 : 0
 					);
 
 					// include uid if specified
-					if (!is_null($uid)) {
-						$conditions['uid'] = $uid;
-						$data['uid'] = $uid;
+					if (isset($_REQUEST['uid'])) {
+						$conditions['uid'] = escape_chars($_REQUEST['uid']);
+						$data['uid'] = $conditions['uid'];
 					}
 
 					// include email if specified
-					if (!is_null($email)) {
-						$conditions['email'] = $email;
-						$data['email'] = $email;
+					if (isset($_REQUEST['guest_email'])) {
+						$conditions['email'] = escape_chars($_REQUEST['guest_email']);
+						$data['email'] = $conditions['email'];
 					}
 
 					// try finding existing account
