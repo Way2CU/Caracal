@@ -42,11 +42,6 @@ Caracal.Shop.BuyerInformationForm = function() {
 			.attachControls('div#checkout_steps a')
 			.attachForm('div#input_details form');
 
-		// disable billing information if payment method doesn't require credit card
-		var payment_method = $('div#input_details input[name=payment_method][type=hidden]');
-		if (payment_method.length > 0 && payment_method.data('needs-credit-card') != '1')
-			self.page_control.disablePage(2);
-
 		// create password recovery dialog
 		self.account.password_dialog = new Dialog();
 
@@ -64,9 +59,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 				.setContentFromDOM('img#what_is_cvv');
 
 		language_handler.getTextArrayAsync(
-			'shop', 
-			['title_password_dialog', 'title_cvv_dialog'],
-			self._configure_dialogs
+				'shop',
+				['title_password_dialog', 'title_cvv_dialog'],
+				self._configure_dialogs
 			);
 
 		// set validators used by page control

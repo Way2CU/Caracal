@@ -2,6 +2,7 @@ ALTER TABLE `shop_items` ADD COLUMN `discount` decimal(5,2) AFTER `price`;
 ALTER TABLE `shop_buyers` ADD COLUMN `system_user` int AFTER `guest`;
 ALTER TABLE `shop_buyers` ADD COLUMN `agreed` boolean DEFAULT '0' AFTER `system_user`;
 ALTER TABLE `shop_buyers` ADD COLUMN `promotions` boolean DEFAULT '0' AFTER `agreed`;
+ALTER TABLE `shop_buyers` ADD COLUMN `phone` varchar(200) DEFAULT '' AFTER `email`;
 ALTER TABLE `shop_buyers` DROP COLUMN `validated`;
 ALTER TABLE `shop_buyers` DROP COLUMN `password`;
 ALTER TABLE `shop_transactions` DROP COLUMN `system_user`;
