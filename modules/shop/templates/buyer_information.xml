@@ -335,11 +335,8 @@
 									<label>
 										<span><cms:text constant="label_street" module="shop"/></span>
 										<input
-											class="in_array('street', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
 											type="text"
 											name="street"
-											value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
 											maxlength="200"
 											data-required="1"
 											autocomplete="on"
@@ -350,11 +347,8 @@
 									<label class="separator">
 										<span></span>
 										<input
-											class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
 											type="text"
 											name="street2"
-											value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
 											maxlength="200"
 											autocomplete="on"
 											/>
@@ -364,11 +358,8 @@
 									<label>
 										<span><cms:text constant="label_city" module="shop"/></span>
 										<input
-											class="in_array('city', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
 											type="text"
 											name="city"
-											value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
 											maxlength="40"
 											data-required="1"
 											autocomplete="on"
@@ -378,11 +369,8 @@
 									<label>
 										<span><cms:text constant="label_zip" module="shop"/></span>
 										<input
-											class="in_array('zip', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
 											type="text"
 											name="zip"
-											value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
 											maxlength="20"
 											data-required="1"
 											autocomplete="on"
@@ -394,8 +382,6 @@
 										<cms:if condition="empty($params['fixed_country'])">
 											<select
 												name="country"
-												class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
-												cms:eval="class"
 												data-required="1"
 												autocomplete="on"
 												>
@@ -403,8 +389,6 @@
 												<cms:module
 													name="country_list"
 													action="show"
-													selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-													cms:eval="selected"
 													/>
 											</select>
 										</cms:if>
