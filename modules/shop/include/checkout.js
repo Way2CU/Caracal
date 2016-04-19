@@ -277,7 +277,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self.handler.custom_interface_load = function(data) {
 		self.shipping.interface_container
 				.html(data)
-				.addClass('visible');
+				.addClass('visible')
+				.find('div.summary').on('click', self.handler.summary_click);
 		self.shipping.overlay.removeClass('visible');
 	};
 
