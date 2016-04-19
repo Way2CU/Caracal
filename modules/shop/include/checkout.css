@@ -177,7 +177,7 @@ div#shipping_information div.container div.summary span[data-label]:before {
 	content: attr(data-label);
 }
 
-div#shipping_information div.container.provider div.details a {
+div#shipping_information div.container.method div.details a {
 	display: inline-block;
 	margin-right: 10px;
 	padding: 10px;
@@ -195,27 +195,27 @@ div#shipping_information div.container.provider div.details a {
 	transition: all 0.3s;
 }
 
-body.rtl div#shipping_information div.container.provider div.details a {
+body.rtl div#shipping_information div.container.method div.details a {
 	margin-right: 0;
 	margin-left: 10px;
 }
 
-div#shipping_information div.container.provider div.details a:hover {
+div#shipping_information div.container.method div.details a:hover {
 	background-color: #F0F0F0;
 	text-decoration: none;
 }
 
-div#shipping_information div.container.provider div.details a.selected {
+div#shipping_information div.container.method div.details a.selected {
 	background-color: #F0F0F0;
 	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
 }
 
-div#shipping_information div.container.provider div.details a.bad {
+div#shipping_information div.container.method div.details a.bad {
 	border-color: red;
 	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
 }
 
-div#shipping_information div.container.provider div.details a img {
+div#shipping_information div.container.method div.details a img {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
