@@ -1885,35 +1885,6 @@ class shop extends Module {
 		// get delivery method
 		$method_name = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
 		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
-		$method = Delivery::get_method($method_name);
-
-		if (is_null($method)) {
-			trigger_error('Shop: No delivery method specified!', E_USER_NOTICE);
-			$result['error'] = true;
-			print json_encode($result);
-			return;
-		}
-
-		// get warehouse address
-		// TODO: Instead of picking up the first warehouse we need to
-		// choose proper one based on location of items
-		$warehouse_manager = ShopWarehouseManager::getInstance();
-		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
-
-		if (!is_object($warehouse)) {
-			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
-			$result['error'] = true;
-			print json_encode($result);
-			return;
-		}
-
-		$shipper = array(
-			'street'	=> array($warehouse->street, $warehouse->street2),
-			'city'		=> $warehouse->city,
-			'zip_code'	=> $warehouse->zip,
-			'state'		=> $warehouse->state,
-			'country'	=> $warehouse->country
-		);
 
 		// get recipient from user specified information
 		$recipient = array(
@@ -1927,34 +1898,11 @@ class shop extends Module {
 			'country'  => isset($_REQUEST['country']) ? escape_chars($_REQUEST['country']) : ''
 		);
 
-		// get estimate
-		if ($method->hasCustomInterface()) {
-			// get custom estimate from the delivery method
-			$result['shipping'] = $method->getCustomEstimate(
-					Delivery::get_items_for_estimate(),
-					$shipper,
-					$recipient,
-					$type
-				);
+		$shipping = $this->getDeliveryEstimate($recipient, $method_name, $type);
 
-		} else {
-			// get estimate from the list of delivery types
-			$delivery_prices = $method->getDeliveryTypes(
-					Delivery::get_items_for_estimate(),
-					$shipper,
-					$recipient
-				);
-
-			// find matching type from the list of provided types
-			$shipping = 0;
-			foreach ($delivery_prices as $data)
-				if ($data[0] == $type) {
-					$shipping = $data[1];
-					break;
-				}
-
-			$result['shipping'] = $shipping;
-		}
+		if (!is_null($shipping))
+			$result['shipping'] = $shipping; else
+			$result['error'] = true;
 
 		print json_encode($result);
 	}
@@ -2716,6 +2664,71 @@ class shop extends Module {
 				$result[$field] = fix_chars($_REQUEST[$field]);
 
 		return $result;
+	}
+
+	/**
+	 * Get delivery cost for specified information.
+	 *
+	 * @param array $recipient
+	 * @param string $method_name
+	 * @param string $type
+	 * @return float
+	 */
+	public function getDeliveryEstimate($recipient, $method_name, $type) {
+		$result = null;
+
+		// get delivery method
+		$method = Delivery::get_method($method_name);
+
+		if (is_null($method)) {
+			trigger_error('Shop: No delivery method specified!', E_USER_NOTICE);
+			return $result;
+		}
+
+		// get warehouse address
+		// TODO: Instead of picking up the first warehouse we need to
+		// choose proper one based on location of items
+		$warehouse_manager = ShopWarehouseManager::getInstance();
+		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
+
+		if (!is_object($warehouse)) {
+			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
+			return $result;
+		}
+
+		$shipper = array(
+			'street'	=> array($warehouse->street, $warehouse->street2),
+			'city'		=> $warehouse->city,
+			'zip_code'	=> $warehouse->zip,
+			'state'		=> $warehouse->state,
+			'country'	=> $warehouse->country
+		);
+
+		// get estimate
+		if ($method->hasCustomInterface()) {
+			// get custom estimate from the delivery method
+			$result = $method->getCustomEstimate(
+					Delivery::get_items_for_estimate(),
+					$shipper,
+					$recipient,
+					$type
+				);
+
+		} else {
+			// get estimate from the list of delivery types
+			$delivery_prices = $method->getDeliveryTypes(
+					Delivery::get_items_for_estimate(),
+					$shipper,
+					$recipient
+				);
+
+			// find matching type from the list of provided types
+			foreach ($delivery_prices as $data)
+				if ($data[0] == $type) {
+					$result = $data[1];
+					break;
+				}
+		}
 	}
 
 	/**
