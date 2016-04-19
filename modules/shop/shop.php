@@ -2729,6 +2729,8 @@ class shop extends Module {
 					break;
 				}
 		}
+
+		return $result;
 	}
 
 	/**
