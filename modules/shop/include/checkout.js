@@ -717,7 +717,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * @return boolean
 	 */
 	self.set_interface_save_function = function(callback) {
-		if (!typeof callback == 'function'))
+		if (!typeof callback == 'function')
 			return false;
 
 		self.interface_save_function = callback;
