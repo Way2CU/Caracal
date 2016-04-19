@@ -742,6 +742,21 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.shipping.page.find('input[name=delivery_type]').val(type);
 	};
 
+	/**
+	 * Return name of selected delivery method.
+	 *
+	 * @return string
+	 */
+	self.get_selected_delivery_method = function() {
+		var result = null;
+		var selected = self.shipping.method_container.find('div.details a.selected');
+
+		if (selected.length > 0)
+			result = selected.data('value');
+
+		return result;
+	};
+
 	// finalize object
 	self._init();
 };
