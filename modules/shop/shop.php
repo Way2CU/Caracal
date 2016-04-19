@@ -1928,9 +1928,9 @@ class shop extends Module {
 		);
 
 		// get estimate
-		if ($delivery_method->hasCustomInterface()) {
+		if ($method->hasCustomInterface()) {
 			// get custom estimate from the delivery method
-			$result['shipping'] = $delivery_method->getCustomEstimate(
+			$result['shipping'] = $method->getCustomEstimate(
 					Delivery::get_items_for_estimate(),
 					$shipper,
 					$recipient,
@@ -1939,7 +1939,7 @@ class shop extends Module {
 
 		} else {
 			// get estimate from the list of delivery types
-			$delivery_prices = $delivery_method->getDeliveryTypes(
+			$delivery_prices = $method->getDeliveryTypes(
 					Delivery::get_items_for_estimate(),
 					$shipper,
 					$recipient
