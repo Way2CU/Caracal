@@ -275,6 +275,9 @@
 						<div class="page" id="shipping_information">
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
 
+							<input type="hidden" name="delivery_provider"/>
+							<input type="hidden" name="delivery_type"/>
+
 							<!-- Delivery provider selection -->
 							<div class="container provider visible">
 								<h4><cms:text constant="label_delivery_method" module="shop"/></h4>

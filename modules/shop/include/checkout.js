@@ -724,6 +724,20 @@ Caracal.Shop.BuyerInformationForm = function() {
 		return true;
 	};
 
+	/**
+	 * Set delivery provider and type to be sent to server.
+	 *
+	 * @param string provider
+	 * @param string type
+	 */
+	self.set_delivery_method = function(provider, type) {
+		if (!provider)
+			var provider = self.shipping.provider_container.find('div.details a.selected').data('value');
+
+		self.shipping.page.find('input[name=delivery_provider]').val(provider);
+		self.shipping.page.find('input[name=delivery_type]').val(type);
+	};
+
 	// finalize object
 	self._init();
 };
