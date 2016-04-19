@@ -48,15 +48,19 @@ class PayPal_Express extends PaymentMethod {
 	}
 
 	/**
-	 * Whether this payment method is able to provide user information
+	 * Whether this payment method requires system to ask user for credit
+	 * card information.
+	 *
 	 * @return boolean
 	 */
-	public function provides_information() {
-		return true;
+	public function needs_credit_card_information() {
+		return false;
 	}
 
 	/**
-	 * If recurring payments are supported by this payment method.
+	 * Whether this payment method requires system to ask user for credit
+	 * card information.
+	 *
 	 * @return boolean
 	 */
 	public function supports_recurring() {

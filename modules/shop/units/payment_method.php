@@ -23,10 +23,12 @@ abstract class PaymentMethod {
 	}
 
 	/**
-	 * Whether this payment method is able to provide user information.
+	 * Whether this payment method requires system to ask user for credit
+	 * card information.
+	 *
 	 * @return boolean
 	 */
-	abstract public function provides_information();
+	abstract public function needs_credit_card_information();
 
 	/**
 	 * If recurring payments are supported by this payment method.

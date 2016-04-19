@@ -30,10 +30,12 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
-	 * Whether this payment method is able to provide user information
+	 * Whether this payment method requires system to ask user for credit
+	 * card information.
+	 *
 	 * @return boolean
 	 */
-	public function provides_information() {
+	public function needs_credit_card_information() {
 		return false;
 	}
 

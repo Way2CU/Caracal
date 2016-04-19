@@ -454,7 +454,7 @@
 
 								<div class="summary">
 									<span
-										class="full_name"
+										class="name"
 										data-label="label_full_name"
 										cms:constant="data-label"
 										/>
@@ -483,11 +483,8 @@
 									<label>
 										<span><cms:text constant="label_full_name" module="shop"/></span>
 										<input
-											class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
 											type="text"
 											name="name"
-											value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
 											maxlength="64"
 											data-required="1"
 											autocomplete="on"
@@ -497,11 +494,8 @@
 									<label>
 										<span><cms:text constant="label_email" module="shop"/></span>
 										<input
-											class="in_array('email', $params['bad_fields']) ? 'bad' : ''"
-											cms:eval="class,value"
 											type="email"
 											name="email"
-											value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
 											maxlength="127"
 											data-required="1"
 											autocomplete="on"
@@ -511,11 +505,8 @@
 									<label>
 										<span><cms:text constant="label_phone_number" module="shop"/></span>
 										<input
-											class="in_array('phone', $params['bad_fields']) ? 'ltr bad' : 'ltr'"
-											cms:eval="class,value"
 											type="text"
 											name="phone"
-											value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
 											maxlength="127"
 											autocomplete="on"
 											/>

@@ -744,6 +744,10 @@ class shop extends Module {
 				$this->json_SetRecurringPlan();
 				break;
 
+			case 'json_get_delivery_estimate':
+				$this->json_GetDeliveryEstimate();
+				break;
+
 			case 'json_set_delivery_method':
 				$this->json_SetDeliveryMethod();
 				break;
@@ -1865,6 +1869,101 @@ class shop extends Module {
 	}
 
 	/**
+	 * Get estimated price of delivery and delivery types if method provides
+	 * them for specified parameters. Scripts calling this method need to provide
+	 * the following fields:
+	 *
+	 *	 street, street2, city, zip_code, state, country
+	 *
+	 * System will try to select the closest warehouse and give estimates
+	 * based on that address.
+	 */
+	private function json_GetDeliveryEstimate() {
+		$result = array(
+				'error'           => false,
+				'delivery_prices' => array(),
+				'shipping'        => 0,
+				'handling'        => 0
+			);
+
+		// get delivery method
+		$method_name = isset($_REQUEST['method']) ? escape_chars($_REQUEST['method']) : null;
+		$type = isset($_REQUEST['type']) ? escape_chars($_REQUEST['type']) : null;
+		$method = Delivery::get_method($method_name);
+
+		if (is_null($method)) {
+			trigger_error('Shop: No delivery method specified!', E_USER_NOTICE);
+			$result['error'] = true;
+			print json_encode($result);
+			return;
+		}
+
+		// get warehouse address
+		// TODO: Instead of picking up the first warehouse we need to
+		// choose proper one based on location of items
+		$warehouse_manager = ShopWarehouseManager::getInstance();
+		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
+
+		if (!is_object($warehouse)) {
+			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
+			$result['error'] = true;
+			print json_encode($result);
+			return;
+		}
+
+		$shipper = array(
+			'street'	=> array($warehouse->street, $warehouse->street2),
+			'city'		=> $warehouse->city,
+			'zip_code'	=> $warehouse->zip,
+			'state'		=> $warehouse->state,
+			'country'	=> $warehouse->country
+		);
+
+		// get recipient from user specified information
+		$recipient = array(
+			'street'   => array(
+					isset($_REQUEST['street']) ? escape_chars($_REQUEST['street']) : '',
+					isset($_REQUEST['street2']) ? escape_chars($_REQUEST['street2']) : '',
+				),
+			'city'     => isset($_REQUEST['city']) ? escape_chars($_REQUEST['city']) : '',
+			'zip_code' => isset($_REQUEST['zip']) ? escape_chars($_REQUEST['zip']) : '',
+			'state'    => isset($_REQUEST['state']) ? escape_chars($_REQUEST['state']) : '',
+			'country'  => isset($_REQUEST['country']) ? escape_chars($_REQUEST['country']) : ''
+		);
+
+		// get estimate
+		if ($delivery_method->hasCustomInterface()) {
+			// get custom estimate from the delivery method
+			$result['shipping'] = $delivery_method->getCustomEstimate(
+					Delivery::get_items_for_estimate(),
+					$shipper,
+					$recipient,
+					$type
+				);
+
+		} else {
+			// get estimate from the list of delivery types
+			$delivery_prices = $delivery_method->getDeliveryTypes(
+					Delivery::get_items_for_estimate(),
+					$shipper,
+					$recipient
+				);
+
+			// find matching type from the list of provided types
+			$shipping = 0;
+			foreach ($delivery_prices as $data)
+				if ($data[0] == $type) {
+					$shipping = $data[1];
+					break;
+				}
+
+			$result['shipping'] = $shipping;
+		}
+
+		print json_encode($result);
+	}
+
+	/**
 	 * Set delivery method and return updated information about cart totals. If delivery type
 	 * was omitted list of delivery types will be returned. The process of getting delivery estimate
 	 * is as follows:
@@ -2763,7 +2862,7 @@ class shop extends Module {
 		$result = array();
 
 		// get billing information
-		if (!$payment_method->provides_information()) {
+		if ($payment_method->needs_credit_card_information()) {
 			$fields = array(
 				'billing_full_name', 'billing_card_type', 'billing_credit_card', 'billing_expire_month',
 				'billing_expire_year', 'billing_cvv'
@@ -3049,11 +3148,12 @@ class shop extends Module {
 	 * @param integer $type
 	 * @param object $payment_method
 	 * @param string $delivery_method
+	 * @param string $delivery_type
 	 * @param object $buyer
 	 * @param object $address
 	 * @return array
 	 */
-	private function updateTransaction($type, $payment_method, $delivery_method, $buyer, $address) {
+	private function updateTransaction($type, $payment_method, $delivery_method, $delivery_type, $buyer, $address) {
 		global $db;
 
 		$result = array();
@@ -3094,6 +3194,7 @@ class shop extends Module {
 			$result['weight'] = $summary['weight'];
 			$result['payment_method'] = $payment_method->get_name();
 			$result['delivery_method'] = $delivery_method;
+			$result['delivery_type'] = $delivery_type;
 			$result['remark'] = '';
 			$result['total'] = $summary['total'];
 
@@ -3130,9 +3231,11 @@ class shop extends Module {
 			$result['total'] = $summary['total'];
 
 			$data = array(
-				'handling'	=> $summary['handling'],
-				'shipping'	=> $summary['shipping'],
-				'total'		=> $summary['total']
+				'handling'        => $summary['handling'],
+				'shipping'        => $summary['shipping'],
+				'total'           => $summary['total'],
+				'delivery_method' => $delivery_method,
+				'delivery_type'   => $delivery_type
 			);
 
 			if (!is_null($address))
@@ -3703,6 +3806,8 @@ class shop extends Module {
 		$original_stage = $stage;
 		$transaction_type = $this->getTransactionType();
 		$bad_fields = array();
+		$delivery_method = '';
+		$delivery_type = '';
 
 		// decide whether to include shipping and account information
 		$include_shipping = true;
@@ -3745,6 +3850,7 @@ class shop extends Module {
 					$shipping_required = array('name', 'email', 'street', 'city', 'zip', 'country');
 					$shipping_information = $this->getShippingInformation();
 					$address = $this->getAddress($buyer, $shipping_information);
+
 				} else {
 					$shipping_required = array();
 				}
@@ -3767,6 +3873,11 @@ class shop extends Module {
 					$stage = Stage::INPUT; else
 					$stage = Stage::CHECKOUT;
 
+				// get delivery method values
+				if ($include_shipping) {
+					$delivery_method = escape_chars($_REQUEST['delivery_method']);
+					$delivery_type = escape_chars($_REQUEST['delivery_type']);
+				}
 				break;
 		}
 
@@ -3778,7 +3889,14 @@ class shop extends Module {
 				$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
 
 				// update transaction
-				$summary = $this->updateTransaction($transaction_type, $payment_method, '', $buyer, $address);
+				$summary = $this->updateTransaction(
+						$transaction_type,
+						$payment_method,
+						$delivery_method,
+						$delivery_type,
+						$buyer,
+						$address
+					);
 
 				// emit signal and give payment methods a chance to redirect
 				// payment process to external location only on initial redirect
@@ -4090,11 +4208,11 @@ class shop extends Module {
 
 		// prepare parameters
 		$params = array(
-			'name'					=> $method->get_name(),
-			'title'					=> $method->get_title(),
-			'icon'					=> $method->get_icon_url(),
-			'image'					=> $method->get_image_url(),
-			'provides_information'	=> $method->provides_information()
+			'name'              => $method->get_name(),
+			'title'             => $method->get_title(),
+			'icon'              => $method->get_icon_url(),
+			'image'             => $method->get_image_url(),
+			'needs_credit_card' => $method->needs_credit_card_information()
 		);
 
 		// load and parse template
@@ -4120,11 +4238,11 @@ class shop extends Module {
 			foreach ($this->payment_methods as $name => $module)
 				if (($only_recurring && $module->supports_recurring()) || !$only_recurring) {
 					$params = array(
-						'name'					=> $name,
-						'title'					=> $module->get_title(),
-						'icon'					=> $module->get_icon_url(),
-						'image'					=> $module->get_image_url(),
-						'provides_information'	=> $module->provides_information()
+						'name'              => $name,
+						'title'             => $module->get_title(),
+						'icon'              => $module->get_icon_url(),
+						'image'             => $module->get_image_url(),
+						'needs_credit_card' => $module->needs_credit_card_information()
 					);
 
 					$template->restoreXML();

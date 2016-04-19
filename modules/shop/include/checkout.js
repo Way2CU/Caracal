@@ -261,6 +261,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 				.get('json_get_delivery_method_interface', {method: provider.data('value')}, 'html');
 		}
 
+		// set value for hidden fields
+		self.set_delivery_method(provider.data('value'), '');
+
 		// update button status
 		self.shipping.providers.not(provider).removeClass('selected');
 		provider.addClass('selected');
@@ -677,7 +680,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			new Communicator('shop')
 				.on_success(self.handler.delivery_providers_load)
 				.on_error(self.handler.delivery_providers_error)
-				.get('json_set_delivery_method', {method: provider.data('value')});
+				.get('json_get_delivery_estimate', {method: provider.data('value')});
 
 			return false;  // prevent page from switching
 		}
@@ -750,18 +753,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 Caracal.Shop.CheckoutForm = function() {
 	var self = this;
 
-	// cached response from server
-	self.cached_data = null;
-	self.shipping = 0;
-	self.handling = 0;
-	self.value = 0;
-
 	self.checkout = $('div#checkout');
-	self.checkout_details = self.checkout.find('table.checkout_details');
-	self.delivery_provider_list = self.checkout.find('div.delivery_provider');
-	self.delivery_method_list = self.checkout.find('div.delivery_method');
-	self.delivery_interface= self.checkout.find('div.delivery_interface');
-	self.overlay = self.delivery_provider_list.find('div.overlay');
 	self.checkout_button = self.checkout.find('div.checkout_controls button[type=submit]');
 
 	// handler functions namespace
@@ -794,63 +786,6 @@ Caracal.Shop.CheckoutForm = function() {
 		// send data to server
 		new Communicator('shop')
 			.send('json_save_remark', {remark: textarea.val()});
-	};
-
-	/**
-	 * Handle changing delivery provider.
-	 *
-	 * @param object event
-	 */
-	self.handler.delivery_provider_change = function(event) {
-		var method = self.delivery_provider_list.find('input[name=delivery_provider]:checked');
-
-		// show loading overlay
-		self.overlay.addClass('visible');
-		self.delivery_method_list.removeClass('visible');
-		self.delivery_interface.removeClass('visible');
-
-		var communicator = new Communicator('shop');
-
-		if (method.data('custom-interface')) {
-			// get delivery method custom interface
-			communicator
-				.on_success(self.handler.custom_interface_load)
-				.on_error(self.handler.custom_interface_error)
-				.get('json_get_delivery_method_interface', {method: method.val()}, 'html');
-
-		} else {
-			// get delivery types for selected method
-			communicator
-				.on_success(self.handler.delivery_providers_load)
-				.on_error(self.handler.delivery_providers_error)
-				.get('json_set_delivery_method', {method: method.val()});
-		}
-	};
-
-	/**
-	 * Handle clicking on delivery method.
-	 *
-	 * @param object event
-	 */
-	self.handler.delivery_method_click = function(event) {
-		var item = $(this);
-		var method = item.data('method');
-		var total = self.cached_data.total + self.cached_data.handling + parseFloat(method[1]);
-
-		// update checkout table
-		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(method[1]).toFixed(2));
-		self.checkout_details.find('.total-value').html(parseFloat(total).toFixed(2) + ' ' + self.cached_data.currency);
-
-		// send selection to server
-		var data = {
-				method: method[7],
-				type: item.attr('value')
-			};
-
-		// send data to server
-		new Communicator('shop')
-			.on_success(self.enable_checkout_button)
-			.get('json_set_delivery_method', data);
 	};
 
 	/**
