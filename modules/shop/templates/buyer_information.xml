@@ -464,7 +464,7 @@
 										cms:constant="data-label"
 										/>
 									<span
-										class="phone_number"
+										class="phone"
 										data-label="label_phone_number"
 										cms:constant="data-label"
 										/>
