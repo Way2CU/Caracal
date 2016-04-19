@@ -3691,7 +3691,7 @@ class shop extends Module {
 
 				// get delivery method values
 				if ($include_shipping) {
-					$delivery_method = escape_chars($_REQUEST['delivery_method']);
+					$delivery_method = escape_chars($_REQUEST['delivery_provider']);
 					$delivery_type = escape_chars($_REQUEST['delivery_type']);
 				}
 				break;

@@ -117,9 +117,9 @@ final class Delivery {
 
 				// add method data to result
 				if (
+					$type == self::ALL ||
 					($international && $type == self::INTERNATIONAL) ||
-					(!$international && $type == self::DOMESTIC) ||
-					$type == self::ALL
+					(!$international && $type == self::DOMESTIC)
 				)
 					$result[] = $data;
 			}
