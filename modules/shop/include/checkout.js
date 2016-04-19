@@ -15,6 +15,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	var self = this;
 
 	self.page_control = new PageControl('div#input_details div.pages');
+	self.interface_save_function = null;
 
 	// local namespaces
 	self.handler = {};
@@ -61,6 +62,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		// shipping information pages
 		self.shipping.overlay = self.shipping.page.find('div.container.provider div.overlay');
+		self.shipping.types_overlay = self.shipping.page.find('div.container.types div.overlay');
 		self.shipping.provider_container = self.shipping.page.find('div.container.provider');
 		self.shipping.address_container = self.shipping.page.find('div.container.address');
 		self.shipping.contact_container = self.shipping.page.find('div.container.contact');
@@ -147,6 +149,84 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		// switch container to edit mode
 		$(this).closest('div.container').removeClass('completed');
+	};
+
+	/**
+	 * Handle successful data load from server.
+	 *
+	 * @param object data
+	 */
+	self.handler.delivery_providers_load = function(data) {
+		// add every delivery method to the container
+		var container = self.shipping.types_container.find('div.details');
+		container.html('');
+
+		if (data.delivery_prices && data.delivery_prices.length > 0) {
+			for (var id in data.delivery_prices) {
+				var method = data.delivery_prices[id];
+				var entry = $('<label>');
+				var name = $('<div>');
+				var price = $('<span>');
+				var time = $('<span>');
+				var checkbox = $('<input>');
+
+				// add method name to object
+				method.push(data.delivery_method);
+
+				// create interface
+				checkbox
+					.attr('type', 'radio')
+					.attr('name', 'delivery_method')
+					.attr('value', id)
+					.data('method', method)
+					.change(self.handler.delivery_method_click)
+					.appendTo(entry);
+
+				price
+					.html(method[1])
+					.attr('data-currency', method[2]);
+
+				name
+					.html(method[0])
+					.append(price)
+					.appendTo(entry);
+
+				if (method[4] === null) {
+					// no estimate available
+					time.html(self.cached_data.label_no_estimate);
+
+				} else {
+					var start = method[3] != null ? method[5] + ' - ' : '';
+					var end = method[6];
+					time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
+				}
+
+				time.appendTo(entry);
+
+				entry
+					.addClass('method')
+					.appendTo(container);
+			}
+
+			// show list of delivery methods
+			self.shipping.types_container.addClass('visible');
+		}
+
+		// hide overlay
+		self.shipping.types_overlay.removeClass('visible');
+	};
+
+	/**
+	 * Handle error on server side while loading delivery methods.
+	 *
+	 * @param object error
+	 */
+	self.handler.delivery_providers_error = function(error) {
+		// add every delivery method to the container
+		self.shipping.types_interface.removeClass('visible');
+
+		// hide overlay
+		self.shipping.types_overlay.removeClass('visible');
 	};
 
 	/**
@@ -523,10 +603,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var address_completed = self.shipping.address_container.hasClass('completed');
 		var contact_visible = self.shipping.contact_container.hasClass('visible');
 		var contact_completed = self.shipping.contact_container.hasClass('completed');
-		var interface_visible = false;
-		var interface_completed = true;
-		var types_visible = false;
-		var types_completed = true;
+		var interface_visible = self.shipping.interface_container.hasClass('visible');
+		var interface_completed = self.shipping.interface_container.hasClass('completed');
+		var types_visible = self.shipping.types_container.hasClass('visible');
+		var types_completed = self.shipping.types_container.hasClass('completed');
 
 		// make sure required address fields are entered
 		if (address_visible) {
@@ -621,6 +701,25 @@ Caracal.Shop.BuyerInformationForm = function() {
 		return result;
 	};
 
+	/**
+	 * Set interface save function which will be called before switching to a new page. Return
+	 * value of specified function does not play a role in validating shipping information page.
+	 * If class `completed` is present on custom interface container then upon completion of
+	 * other containers on the page user will be allowed to proceed.
+	 *
+	 * Return value denotes if function was set.
+	 *
+	 * @param function callback
+	 * @return boolean
+	 */
+	self.set_interface_save_function = function(callback) {
+		if (!typeof callback == 'function'))
+			return false;
+
+		self.interface_save_function = callback;
+		return true;
+	};
+
 	// finalize object
 	self._init();
 };
@@ -676,96 +775,6 @@ Caracal.Shop.CheckoutForm = function() {
 		// send data to server
 		new Communicator('shop')
 			.send('json_save_remark', {remark: textarea.val()});
-	};
-
-	/**
-	 * Handle successful data load from server.
-	 *
-	 * @param object data
-	 */
-	self.handler.delivery_providers_load = function(data) {
-		self.cached_data = data;
-		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(data.shipping).toFixed(2));
-		self.checkout_details.find('.subtotal-value.handling').html(parseFloat(data.handling).toFixed(2));
-		self.checkout_details.find('.total-value').html(parseFloat(data.total).toFixed(2) + ' ' + data.currency);
-
-		// add every delivery method to the container
-		self.delivery_method_list.html('');
-
-		if (data.delivery_prices && data.delivery_prices.length > 0) {
-			for (var id in data.delivery_prices) {
-				var method = data.delivery_prices[id];
-				var entry = $('<label>');
-				var name = $('<div>');
-				var price = $('<span>');
-				var time = $('<span>');
-				var checkbox = $('<input>');
-
-				// add method name to object
-				method.push(data.delivery_method);
-
-				// create interface
-				checkbox
-					.attr('type', 'radio')
-					.attr('name', 'delivery_method')
-					.attr('value', id)
-					.data('method', method)
-					.change(self.handler.delivery_method_click)
-					.appendTo(entry);
-
-				price
-					.html(method[1])
-					.attr('data-currency', method[2]);
-
-				name
-					.html(method[0])
-					.append(price)
-					.appendTo(entry);
-
-				if (method[4] === null) {
-					// no estimate available
-					time.html(self.cached_data.label_no_estimate);
-
-				} else {
-					var start = method[3] != null ? method[5] + ' - ' : '';
-					var end = method[6];
-					time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
-				}
-
-				time.appendTo(entry);
-
-				entry
-					.addClass('method')
-					.appendTo(self.delivery_method_list);
-
-				// show list of delivery methods
-				self.delivery_method_list.addClass('visible');
-			}
-
-		} else {
-			// no prices specified, enable checkout button
-			self.enable_checkout_button();
-		}
-
-		// hide overlay
-		self.overlay.removeClass('visible');
-	};
-
-	/**
-	 * Handle error on server side while loading delivery methods.
-	 *
-	 * @param object error
-	 */
-	self.handler.delivery_providers_error = function(error) {
-		// disable checkout button
-		self.disable_checkout_button();
-
-		// add every delivery method to the container
-		self.delivery_method_list.html('');
-		self.delivery_interface.removeClass('visible');
-
-		// hide overlay
-		self.overlay.removeClass('visible');
 	};
 
 	/**
