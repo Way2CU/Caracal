@@ -235,14 +235,6 @@ div#shipping_information div.overlay {
 
 	background-image:
 				url(../images/checkout_loading.gif),
-				-webkit-radial-gradient(
-					center center,
-					circle cover,
-					rgba(255, 255, 255, 1) 30%,
-					rgba(255, 255, 255, 0) 100%
-				);
-	background-image:
-				url(../images/checkout_loading.gif),
 				radial-gradient(
 					center center,
 					circle cover,
