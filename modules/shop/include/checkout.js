@@ -143,12 +143,12 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var fields = self.shipping.address_container.find('input,select');
 		var summary = self.shipping.address_container.find('div.summary');
 
-		for (var i = 0, count = fields.length; i < count; i++) {
-			var field = fields.eq(i);
+		fields.each(function() {
+			var field = $(this);
 			var label = summary.find('span.' + field.attr('name'));
 
 			label.html(field.val());
-		}
+		});
 	};
 
 	/**
@@ -158,12 +158,12 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var fields = self.shipping.contact_container.find('input,select');
 		var summary = self.shipping.contact_container.find('div.summary');
 
-		for (var i = 0, count = fields.length; i < count; i++) {
-			var field = fields.eq(i);
+		fields.each(function() {
+			var field = $(this);
 			var label = summary.find('span.' + field.attr('name'));
 
 			label.html(field.val());
-		}
+		});
 	};
 
 	/**
@@ -588,15 +588,22 @@ Caracal.Shop.BuyerInformationForm = function() {
 			default:
 				// get agree checkbox
 				var agree_to_terms = self.account.page.find('input[name=agree_to_terms]');
+				var fields = self.account.page.find('div.guest_checkout input');
 
-				result = true;
-				if (agree_to_terms.length > 0)
-					result = agree_to_terms.is(':checked');
+				// ensure required fields are filled in
+				fields.each(function(index) {
+					var field = $(this);
 
-				// set class
-				if (result)
-					agree_to_terms.removeClass('bad'); else
-					agree_to_terms.addClass('bad');
+					if (field.attr('type') != 'checkbox')
+						value_is_good = field.val() != ''; else
+						value_is_good = field.is(':checked');
+
+					if (field.data('required') == 1 && !value_is_good)
+						field.addClass('bad'); else
+						field.removeClass('bad');
+				});
+
+				result = fields.filter('.bad').length == 0;
 
 				// hide unneeded fields
 				self.shipping.page.find('select[name=presets]').parent().hide();
@@ -643,13 +650,13 @@ Caracal.Shop.BuyerInformationForm = function() {
 			var fields = self.shipping.address_container.find('input,select');
 
 			// iterate over fields
-			for (var i = 0, count = fields.length; i < count; i++) {
-				var field = fields.eq(i);
+			fields.each(function() {
+				var field = $(this);
 
 				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
 					field.addClass('bad'); else
 					field.removeClass('bad');
-			}
+			});
 
 			// complete current interface
 			if (fields.filter('.bad').length == 0 && !address_completed) {
