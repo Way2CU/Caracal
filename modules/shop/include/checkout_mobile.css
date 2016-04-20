@@ -1,7 +1,7 @@
 /**
  * Checkout Style Sheet
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2015. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -46,9 +46,9 @@ div#checkout div.clear_float {
 	clear: both;
 }
 
+table.discounted_items,
 table.checkout_details {
 	width: 100%;
-
 	margin-bottom: 20px;
 
 	border: 1px solid white;
@@ -59,86 +59,168 @@ table.checkout_details {
 	color: #333333;
 }
 
+table.discounted_items {
+	border-radius: 0;
+}
+
 /**
  * Delivery method selection
  */
-div#checkout div.delivery_provider {
-	display: block;
-	height: 90px;
+div#shipping_information div.container {
+	position: relative;
+	padding: 0;
+	padding-left: 10px;
+	padding-right: 10px;
 
-	margin-bottom: 20px;
+	text-align: left;
+	max-height: 0px;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+body.rtl div#shipping_information div.container {
+	text-align: right;
+}
+
+div#shipping_information div.container.visible {
+	max-height: 550px;
+	padding-bottom: 15px;
+}
+
+div#shipping_information div.container div.summary {
+	position: relative;
+	max-height: 0;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container.completed div.summary {
+	max-height: 500px;
+}
+
+div#shipping_information div.container div.summary:after {
+	display: block;
+	content: '';
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 3em;
+	height: 3em;
+
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	background-color: white;
+	background-image: url(../images/edit.svg);
+	background-size: 2em 2em;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	line-height: 0;
+	transition: all 0.3s;
+}
+
+body.rtl div#shipping_information div.container div.summary:after {
+	left: 0;
+	right: auto;
+}
+
+div#shipping_information div.container div.summary:hover:after {
+	background-color: #F0F0F0;
+}
+
+div#shipping_information div.container div.summary:active:after {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
+}
+
+div#shipping_information div.container div.details {
+	max-height: 500px;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container.completed div.details {
+	max-height: 0;
+}
+
+div#shipping_information div.container hr {
+	margin-top: 0;
+}
+
+div#shipping_information div.container h4 {
+	margin: 0;
+	margin-bottom: 10px;
+	padding: 0;
+
+	font-weight: normal;
+}
+
+div#shipping_information div.container div.summary span {
+	display: block;
+}
+
+div#shipping_information div.container div.summary span:before {
+	display: inline-block;
+	min-width: 200px;
+	content: '';
+}
+
+div#shipping_information div.container div.summary span[data-label]:before {
+	content: attr(data-label);
+}
+
+div#shipping_information div.container.method div.details a {
+	display: inline-block;
+	margin-right: 10px;
 	padding: 10px;
 
-	position: relative;
+	text-align: center;
 
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
 	background-color: white;
-	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+
+	color: #333333;
+	line-height: 100%;
+
+	transition: all 0.3s;
 }
 
-div#checkout div.delivery_provider span.title {
+body.rtl div#shipping_information div.container.method div.details a {
+	margin-right: 0;
+	margin-left: 10px;
+}
+
+div#shipping_information div.container.method div.details a:hover {
+	background-color: #F0F0F0;
+	text-decoration: none;
+}
+
+div#shipping_information div.container.method div.details a.selected {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
+}
+
+div#shipping_information div.container.method div.details a.bad {
+	border-color: red;
+	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+div#shipping_information div.container.method div.details a img {
 	display: block;
-	padding-bottom: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+	border: 0;
 }
 
-div#checkout div.delivery_provider label {
-	display: inline-block;
-	width: 100px;
-	height: 55px;
-
-	margin-left: 5px;
-	margin-right: 5px;
-	margin-top: 10px;
-}
-
-div#checkout div.delivery_provider label input[type=radio] {
-	display: none;
-}
-
-div#checkout div.delivery_provider label input[type=radio] + span {
-	position: relative;
-}
-
-div#checkout div.delivery_provider label input[type=radio] + span:before {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-
-	position: absolute;
-	left: 50%;
-	bottom: -20px;
-
-	margin-left: -8px;
-	margin-bottom: -3px;
-	margin-right: 4px;
-
-	border: 1px solid #b0b0b0;
-	border-radius: 9px;
-	background-image: url(../images/radio.png);
-	background-position: 0px 0px;
-	background-repeat: no-repeat;
-	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
-
-	content: '';
-
-	transition-property: all;
-	transition-duration: 0.3s;
-}
-
-div#checkout div.delivery_provider label input[type=radio]:checked + span:before {
-	background-position: -16px 0px;
-	box-shadow: none;
-}
-
-div#checkout div.checkout_message.redirect p {
-	padding: 20px;
-	padding-left: 70px;
-	background-image: url(../images/checkout_loading.gif);
-	background-position: 20px center;
-	background-repeat: no-repeat;
-}
-
-div#checkout div.overlay {
-	display: none;
+div#shipping_information div.overlay {
+	visibility: hidden;
+	opacity: 0;
 	width: 100%;
 	height: 100%;
 
@@ -147,51 +229,61 @@ div#checkout div.overlay {
 	left: 0px;
 
 	background-image:
-		url(../images/checkout_loading.gif),
-		radial-gradient(
-			center center,
-			circle cover,
-			rgba(255, 255, 255, 0.9) 30%,
-			rgba(255, 255, 255, 0) 100%
-		);
+				url(../images/checkout_loading.gif),
+				-webkit-radial-gradient(
+					center center,
+					circle cover,
+					rgba(255, 255, 255, 1) 30%,
+					rgba(255, 255, 255, 0) 100%
+				);
+	background-image:
+				url(../images/checkout_loading.gif),
+				radial-gradient(
+					center center,
+					circle cover,
+					rgba(255, 255, 255, 1) 30%,
+					rgba(255, 255, 255, 0) 100%
+				);
 	background-position: center center, center center;
 	background-repeat: no-repeat, no-repeat;
+
+	transition: 0.3s opacity, 0s visibility;
+	transition-delay: 0s, 0s;
 }
 
-div#checkout div.delivery_method {
+div#shipping_information div.overlay.visible {
+	visibility: visible;
+	opacity: 1;
+	transition-delay: 0s, 0.3s;
+}
+
+div#shipping_information div.delivery_method,
+div#shipping_information div.delivery_interface {
 	display: block;
 	height: 0px;
 	position: relative;
 
-	padding: 7px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-
-	background-color: white;
-	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-
-	color: #333333;
 	transition-property: all;
 	transition-duration: 0.5s;
 
 	opacity: 0;
+	overflow: hidden;
 }
 
-div#checkout div.delivery_method.visible {
+div#shipping_information div.delivery_method.visible,
+div#shipping_information div.delivery_interface.visible {
 	height: auto;
+	margin-top: 20px;
 	padding: 7px;
 	opacity: 1;
 }
 
-div#checkout.recurring div.delivery_method.visible {
-	margin-top: 20px;
-}
-
-div#checkout div.delivery_method label {
+div#shipping_information div.delivery_method label {
 	display: inline-block;
-	width: calc(100% - 20px);
+	width: calc(((100% - 10px) / 3) - 22px);
 
 	margin-top: 5px;
+	margin-right: 5px;
 	padding: 10px;
 
 	border: 1px solid #CFCFCF;
@@ -202,19 +294,33 @@ div#checkout div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
-div#checkout div.delivery_method label:hover {
+body.rtl div#shipping_information div.delivery_method label {
+	margin-left: 5px;
+	margin-right: 0px;
+}
+
+div#shipping_information div.delivery_method label:nth-child(3n + 0),
+body.rtl div#shipping_information div.delivery_method label:nth-child(3n + 0) {
+	margin-left: 0px;
+}
+
+div#shipping_information div.delivery_method label:nth-child(-n + 3) {
+	margin-top: 0px;
+}
+
+div#shipping_information div.delivery_method label:hover {
 	background-color: #e0e0e0;
 }
 
-div#checkout div.delivery_method label input {
-    position: absolute;
+div#shipping_information div.delivery_method label input {
+	position: absolute;
 }
 
-div#checkout div.delivery_method label input[type=radio] {
+div#shipping_information div.delivery_method label input[type=radio] {
 	display: none;
 }
 
-div#checkout div.delivery_method label input + div:before {
+div#shipping_information div.delivery_method label input + div:before {
 	display: inline-block;
 	vertical-align: middle;
 	width: 16px;
@@ -236,43 +342,43 @@ div#checkout div.delivery_method label input + div:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#checkout div.delivery_method label input + div:before {
+body.rtl div#shipping_information div.delivery_method label input + div:before {
 	margin-left: 6px;
 	margin-right: 0px;
 }
 
-div#checkout div.delivery_method label input:checked + div:before {
+div#shipping_information div.delivery_method label input:checked + div:before {
 	background-position: -16px 0px;
 	box-shadow: none;
 }
 
-div#checkout div.delivery_method label > div span {
-    float: right;
+div#shipping_information div.delivery_method label > div span {
+	float: right;
 }
 
-div#checkout div.delivery_method label > div span:after {
+div#shipping_information div.delivery_method label > div span:after {
 	content: ' ' attr(data-currency);
 	font-size: 0.9em;
 }
 
-body.rtl div#checkout div.delivery_method label > div span {
+body.rtl div#shipping_information div.delivery_method label > div span {
 	float: left;
 }
 
-div#checkout div.delivery_method label > span {
-    display: block;
-    padding-left: 24px;
+div#shipping_information div.delivery_method label > span {
+	display: block;
+	padding-left: 24px;
 
-    color: #909090;
-    font-size: 0.8em;
+	color: #909090;
+	font-size: 0.8em;
 }
 
-body.rtl div#checkout div.delivery_method label > span {
+body.rtl div#shipping_information div.delivery_method label > span {
 	padding-left: 0px;
 	padding-right: 24px;
 }
 
-div#checkout div.delivery_method div.delivery_methods {
+div#shipping_information div.delivery_method div.delivery_methods {
 	display: block;
 	width: 460px;
 
@@ -280,7 +386,7 @@ div#checkout div.delivery_method div.delivery_methods {
 	float: left;
 }
 
-div#checkout div.delivery_method div.services {
+div#shipping_information div.delivery_method div.services {
 	display: block;
 	float: left;
 	width: 460px;
@@ -329,6 +435,10 @@ div.transaction_details textarea {
 div.transaction_details textarea:focus {
 	border: 1px solid #0B63C8;
 	outline: none;
+}
+
+div#input_details.recurring div.transaction_details textarea {
+	width: 538px;
 }
 
 /**
@@ -405,15 +515,34 @@ body.rtl table.checkout_details thead td:first-child {
 	border-radius: 0px 7px 0px 0px;
 }
 
+table.discounted_items thead th {
+	padding: 5px;
+	padding-left: 7px;
+	padding-right: 7px;
+
+	border-right: 1px solid white;
+	background-color: #F0F0F0;
+
+	text-align: left;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+body.rtl table.discounted_items thead th {
+	text-align: right;
+}
+
 /**
  * Body
  */
+table.discounted_items tbody td,
 table.checkout_details tbody td {
 	padding: 5px;
 	padding-left: 7px;
 	padding-right: 7px;
 }
 
+table.discounted_items tbody td small,
 table.checkout_details tbody td small {
 	display: block;
 
@@ -455,14 +584,20 @@ table.checkout_details tfoot td.subtotal-value {
 table.checkout_details tfoot td.total-value,
 table.checkout_details tfoot td.total-label {
 	padding-top: 6px;
-	border-top: 1px solid #b0b0b0;
+	border: 0px solid #b0b0b0;
+	border-top-width: 1px;
 	background-color: #F0F0F0;
 
 	font-size: 1.2em;
 }
 
 table.checkout_details tfoot td.total-label {
-	border-left: 1px solid #b0b0b0;
+	border-left-width: 1px;
+}
+
+body.rtl table.checkout_details tfoot td.total-label {
+	border-left-width: 0px;
+	border-right-width: 1px;
 }
 
 table.checkout_details tfoot td.total-label {
@@ -486,7 +621,11 @@ div.checkout_controls {
 	display: block;
 	margin-top: 20px;
 
-	text-align: center;
+	text-align: right;
+}
+
+body.rtl div.checkout_controls {
+	text-align: left;
 }
 
 div.checkout_controls button {
@@ -503,11 +642,12 @@ div.checkout_controls button {
 	background-image: linear-gradient(0deg, #47a0f3 0%, #0c70d5 75%, #0b6fd4 100%);
 	background-repeat: repeat-x;
 	background-positiont: left top;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-				inset 0 1px rgba(255, 255, 255, 0.3),
-				inset 0 10px rgba(255, 255, 255, 0.2),
-    			inset 0 10px 20px rgba(255, 255, 255, 0.25),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 1px rgba(255, 255, 255, 0.3),
+		inset 0 10px rgba(255, 255, 255, 0.2),
+		inset 0 10px 20px rgba(255, 255, 255, 0.25),
+		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	color: white;
 	font-size: 1.1em;
@@ -520,6 +660,11 @@ div.checkout_controls button {
 	transition-duration: 0.3s;
 }
 
+body.rtl div.checkout_controls button {
+	margin-left: 0px;
+	margin-right: 10px;
+}
+
 div.checkout_controls button:focus {
 	outline: none;
 }
@@ -527,27 +672,27 @@ div.checkout_controls button:focus {
 div.checkout_controls button:hover {
 	background-color: #0d9ed5;
 	background-image: linear-gradient(top, #47c8f3 0%, #0d9ed4 75%, #0d9ed5 100%);
-	background-image: -webkit-linear-gradient(top, #47c8f3 0%, #0d9ed4 75%, #0d9ed5 100%);
 }
 
 div.checkout_controls button:active {
 	background-color: #47a0f3;
 	background-image: linear-gradient(top, #0c70d5 0%, #47a0f3 75%, #0d9ed5 100%);
-	background-image: -webkit-linear-gradient(top, #0c70d5 0%, #47a0f3 75%, #0d9ed5 100%);
 
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 }
 
 div.checkout_controls button:disabled {
 	border-color: #707070;
 	background-image: none;
 	background-color: #909090;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-				inset 0 1px rgba(255, 255, 255, 0.3),
-				inset 0 10px rgba(255, 255, 255, 0.2),
-    			inset 0 10px 20px rgba(255, 255, 255, 0.25),
-    			inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 1px rgba(255, 255, 255, 0.3),
+		inset 0 10px rgba(255, 255, 255, 0.2),
+    		inset 0 10px 20px rgba(255, 255, 255, 0.25),
+    		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	text-shadow: -1px -1px 0px #606060;
 }
@@ -699,7 +844,7 @@ div#input_details div.guest_checkout {
 div#input_details div.existing_account.visible,
 div#input_details div.new_account.visible,
 div#input_details div.guest_checkout.visible {
-	max-height: 350px;
+	max-height: 500px;
 }
 
 div#input_details div.existing_account label:first-of-type,
@@ -708,13 +853,18 @@ div#input_details div.guest_checkout label:first-of-type {
 	margin-top: 3px;
 }
 
-body.rtl div#input_details label {
+div#input_details label span {
+	display: inline-block;
+	width: 150px;
+
+	padding-left: 10px;
+	padding-right: 10px;
+
 	text-align: right;
 }
 
-div#input_details label span {
-	display: block;
-	padding-bottom: 2px;
+body.rtl div#input_details label span {
+	text-align: left;
 }
 
 div#input_details label select,
@@ -733,6 +883,11 @@ div#input_details label input {
 
 	transition-property: all;
 	transition-duration: 0.3s;
+}
+
+div#input_details label select.ltr,
+div#input_details label input.ltr {
+	direction: ltr;
 }
 
 div#input_details label input[type=email],
@@ -762,6 +917,7 @@ div#input_details label input[name=billing_expire_month] {
 }
 
 div#input_details label input[name=billing_expire_year],
+div#input_details label input[name=captcha],
 div#input_details label input[name=billing_cvv] {
 	width: 50px;
 }
@@ -840,6 +996,7 @@ div#input_details label.captcha {
 
 div#input_details label.captcha.hidden {
 	max-height: 0px;
+	padding: 0;
 }
 
 div#input_details label.captcha img {
@@ -910,7 +1067,7 @@ div#checkout_steps {
 	margin-bottom: 20px;
 
 	color: #505050;
-	font-size: 0.7em;
+	font-size: 0.8em;
 	text-align: left;
 
 	counter-reset: checkout-steps;
@@ -932,8 +1089,6 @@ div#checkout_steps a {
 
 	transition-property: all;
 	transition-duration: 0.3s;
-
-	white-space: nowrap;
 	counter-increment: checkout-steps;
 }
 
@@ -1028,7 +1183,6 @@ div#checkout_steps a.disabled:hover span {
 div.payment_methods {
 	display: block;
 	padding: 10px;
-	text-align: center;
 }
 
 div.payment_methods span {

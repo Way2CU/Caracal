@@ -688,23 +688,24 @@ div.checkout_controls button:active {
 	background-color: #47a0f3;
 	background-image: linear-gradient(top, #0c70d5 0%, #47a0f3 75%, #0d9ed5 100%);
 
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 }
 
 div.checkout_controls button:disabled {
 	border-color: #707070;
 	background-image: none;
 	background-color: #909090;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-	inset 0 1px rgba(255, 255, 255, 0.3),
-	inset 0 10px rgba(255, 255, 255, 0.2),
-	inset 0 10px 20px rgba(255, 255, 255, 0.25),
-	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 1px rgba(255, 255, 255, 0.3),
+		inset 0 10px rgba(255, 255, 255, 0.2),
+    		inset 0 10px 20px rgba(255, 255, 255, 0.25),
+    		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	text-shadow: -1px -1px 0px #606060;
 }
-
 
 div.checkout_controls small {
 	display: block;
@@ -967,8 +968,8 @@ div#input_details label input.bad,
 div#input_details label input.bad[type=checkbox] + span:before {
 	border-color: red;
 	box-shadow:
-	inset 3px 3px 5px rgba(200, 200, 200, 0.4),
-	0px 0px 5px rgba(255, 0, 0, 0.6);
+			inset 3px 3px 5px rgba(200, 200, 200, 0.4),
+			0px 0px 5px rgba(255, 0, 0, 0.6);
 }
 
 div#input_details label select:focus,
