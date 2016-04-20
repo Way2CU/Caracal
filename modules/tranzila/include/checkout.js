@@ -37,10 +37,6 @@ Site.configure_tranzila_checkout = function() {
 
 	// show dialog when form is submitted
 	form.on('submit', function(event) {
-		// update sum before showing page
-		var sum = form.find('input[name=sum]');
-		sum.val(Site.checkout_form.get_total());
-
 		// show tranzila page
 		dialog.show();
 	});
