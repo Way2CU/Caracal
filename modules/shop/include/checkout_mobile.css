@@ -613,11 +613,7 @@ div.checkout_controls {
 	display: block;
 	margin-top: 20px;
 
-	text-align: right;
-}
-
-body.rtl div.checkout_controls {
-	text-align: left;
+	text-align: center;
 }
 
 div.checkout_controls button {
@@ -852,11 +848,11 @@ div#input_details label span {
 	padding-left: 10px;
 	padding-right: 10px;
 
-	text-align: right;
+	text-align: left;
 }
 
 body.rtl div#input_details label span {
-	text-align: left;
+	text-align: right;
 }
 
 div#input_details label select,
