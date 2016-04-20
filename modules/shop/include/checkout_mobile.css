@@ -797,6 +797,10 @@ div#input_details label {
 	text-align: left;
 }
 
+body.rtl div#input_details label {
+	text-align: right;
+}
+
 div#input_details label.separator {
 	margin-bottom: 25px;
 }
