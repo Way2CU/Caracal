@@ -209,7 +209,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 				name
 					.html(method[0])
-					.addClass('name');
+					.addClass('name')
 					.append(price)
 					.appendTo(entry);
 
