@@ -60,7 +60,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		language_handler.getTextArrayAsync(
 				'shop',
-				['title_password_dialog', 'title_cvv_dialog'],
+				['title_password_dialog', 'title_cvv_dialog', 'label_no_estimate', 'label_estimated_time'],
 				self._configure_dialogs
 			);
 
@@ -187,6 +187,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var container = self.shipping.types_container.find('div.details');
 		container.html('');
 
+		// pre-cache language constants
+		var no_estimate = language_handler.getText('shop', 'label_no_estimate');
+		var estimated_time = language_handler.getText('shop', 'label_estimated_time');
+
 		if (data.delivery_prices) {
 			for (var id in data.delivery_prices) {
 				var method = data.delivery_prices[id];
@@ -202,10 +206,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 				// create interface
 				checkbox
 					.attr('type', 'radio')
-					.attr('name', 'delivery_method')
 					.attr('value', id)
-					.data('method', method)
-					.change(self.handler.delivery_method_click)
+					.change(self.handler.delivery_type_change)
 					.appendTo(entry);
 
 				price
@@ -219,12 +221,12 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 				if (method[4] === null) {
 					// no estimate available
-					time.html(self.cached_data.label_no_estimate);
+					time.html(no_estimate);
 
 				} else {
-					var start = method[3] != null ? method[5] + ' - ' : '';
-					var end = method[6];
-					time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
+					var start = method[3] != null ? method[3] + ' - ' : '';
+					var end = method[4];
+					time.html(estimated_time + '<br>' + start + end);
 				}
 
 				time.appendTo(entry);
