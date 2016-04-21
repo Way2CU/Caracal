@@ -1324,9 +1324,9 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	private function setItemAsCartFromParams($params, $children) {
-		$uid = isset($params['uid']) ? fix_chars($params['uid']) : null;
-		$count = isset($params['count']) ? fix_id($params['count']) : 1;
-		$variation_id = isset($params['variation_id']) ? fix_chars($params['variation_id']) : null;
+		$uid = isset($params['uid']) ? escape_chars($params['uid']) : null;
+		$count = isset($params['count']) ? escape_chars($params['count']) : 1;
+		$variation_id = isset($params['variation_id']) ? escape_chars($params['variation_id']) : null;
 
 		// set cart content
 		$this->setItemAsCart($uid, $count, $variation_id);
@@ -1359,8 +1359,10 @@ class shop extends Module {
 				'quantity'		=> $count,
 				'variations'	=> array()
 			);
-			$cart[$uid]['variations'][$variation_id] = array('count' => $count);
-			$cart[$uid]['variations'][$variation_id] = array('price' => $item->price);
+			$cart[$uid]['variations'][$variation_id] = array(
+					'count' => $count,
+					'price' => $item->price
+				);
 			$result = true;
 		}
 
