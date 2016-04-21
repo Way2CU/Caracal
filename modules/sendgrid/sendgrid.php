@@ -13,7 +13,7 @@ use Core\Module;
 /* require_once('units/mailer.php'); */
 
 
-class sendgrid_mailer extends Module {
+class sendgrid extends Module {
 	private static $_instance;
 
 	/**
