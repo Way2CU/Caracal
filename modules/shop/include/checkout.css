@@ -284,6 +284,10 @@ div#shipping_information div.container.types div.details a.bad {
 	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
 }
 
+div#shipping_information div.container.types div.summary span {
+	min-height: calc(3em + 2px);
+}
+
 div#shipping_information div.overlay {
 	visibility: hidden;
 	opacity: 0;
