@@ -20,6 +20,8 @@ class sendgrid extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $section;
+
 		parent::__construct(__FILE__);
 
 		// register mailer
