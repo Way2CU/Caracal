@@ -7,3 +7,6 @@
 [submodule "libraries/less"]
 	path = libraries/less
 	url = https://github.com/oyejorge/less.php.git
+[submodule "libraries/sendgrid"]
+	path = libraries/sendgrid
+	url = https://github.com/sendgrid/sendgrid-php.git

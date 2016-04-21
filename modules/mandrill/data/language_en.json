@@ -1,7 +1,7 @@
 {
-    "label_api_key": "API key:", 
-    "mailer_title": "Mandrill", 
-    "menu_mandrill": "Mandrill", 
-    "message_saved": "Settings were saved.", 
+    "label_api_key": "API key:",
+    "mailer_title": "Mandrill",
+    "menu_mandrill": "Mandrill",
+    "message_saved": "Settings were saved.",
     "title_settings": "Mandrill Settings"
 }
