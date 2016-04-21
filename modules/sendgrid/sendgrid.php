@@ -23,7 +23,7 @@ class sendgrid extends Module {
 		parent::__construct(__FILE__);
 
 		// register mailer
-		if (ModuleHandler::is_loaded('contact_form') {
+		if (ModuleHandler::is_loaded('contact_form')) {
 			$mailer = new \Modules\SendGrid\Mailer(
 					$this->language,
 					$this->settings['api_key']
