@@ -111,7 +111,7 @@ class sendgrid extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('mandrill_settings')
+						'cancel_action'	=> window_Close('sendgrid_settings')
 					);
 
 		$template->restoreXML();
@@ -133,7 +133,7 @@ class sendgrid extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_saved'),
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close('mandrill_settings')
+					'action'	=> window_Close('sendgrid_settings')
 				);
 
 		$template->restoreXML();
