@@ -261,7 +261,7 @@ body.rtl div#shipping_information div.container.types div.details a span.name sp
 }
 
 div#shipping_information div.container.types div.details a span.name span:after {
-	content: attr(data-currency);
+	content: ' ' attr(data-currency);
 	display: inline-block;
 }
 

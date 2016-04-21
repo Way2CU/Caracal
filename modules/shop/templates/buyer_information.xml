@@ -505,12 +505,12 @@
 
 							<div class="container types">
 								<hr/>
-								<h4><cms:text constant="label_delivery_types" module="shop"/></h4>
+								<h4><cms:text constant="label_delivery_type" module="shop"/></h4>
 
 								<div class="summary">
 									<span
 										class="price"
-										data-label="label_estimated_delivery"
+										data-label="label_estimated_cost"
 										cms:constant="data-label"
 										/>
 								</div>

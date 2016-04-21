@@ -87,6 +87,7 @@
     "label_domestic": "Available for domestic shipping",
     "label_email": "E-Mail:",
     "label_estimated_time": "Estimated delivery:",
+    "label_estimated_cost": "Estimated cost:",
     "label_existing_user": "Yes, I already have an account.",
     "label_expiration_date": "Expiration date:",
     "label_first_name": "First name:",

@@ -216,6 +216,67 @@ div#shipping_information div.container.method div.details a img {
 	border: 0;
 }
 
+div#shipping_information div.container.types div.details a {
+	display: inline-block;
+	margin-right: 10px;
+	padding: 10px;
+
+	text-align: center;
+
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
+	background-color: white;
+
+	color: #333333;
+	text-align: left;
+	line-height: 100%;
+
+	transition: all 0.3s;
+}
+
+body.rtl div#shipping_information div.container.types div.details a {
+	margin-right: 0;
+	margin-left: 10px;
+	text-align: right;
+}
+
+div#shipping_information div.container.types div.details a span.name {
+	display: block;
+}
+
+div#shipping_information div.container.types div.details a span.name span {
+	float: right;
+}
+
+body.rtl div#shipping_information div.container.types div.details a span.name span {
+	float: left;
+}
+
+div#shipping_information div.container.types div.details a span.name span:after {
+	content: ' ' attr(data-currency);
+	display: inline-block;
+}
+
+div#shipping_information div.container.types div.details a span.estimate {
+	font-size: 0.8em;
+}
+
+div#shipping_information div.container.types div.details a:hover {
+	background-color: #F0F0F0;
+	text-decoration: none;
+}
+
+div#shipping_information div.container.types div.details a.selected {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
+}
+
+div#shipping_information div.container.types div.details a.bad {
+	border-color: red;
+	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
 div#shipping_information div.overlay {
 	visibility: hidden;
 	opacity: 0;
