@@ -182,7 +182,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 *
 	 * @param object data
 	 */
-	self.handler.delivery_methods_load = function(data) {
+	self.handler.delivery_types_load = function(data) {
 		// add every delivery method to the container
 		var container = self.shipping.types_container.find('div.details');
 		container.html('');
@@ -194,21 +194,14 @@ Caracal.Shop.BuyerInformationForm = function() {
 		if (data.delivery_prices) {
 			for (var id in data.delivery_prices) {
 				var method = data.delivery_prices[id];
-				var entry = $('<label>');
+				var entry = $('<a>');
 				var name = $('<div>');
 				var price = $('<span>');
 				var time = $('<span>');
 				var checkbox = $('<input>');
 
-				// add method name to object
-				method.push(data.delivery_method);
-
 				// create interface
-				checkbox
-					.attr('type', 'radio')
-					.attr('value', id)
-					.change(self.handler.delivery_type_change)
-					.appendTo(entry);
+				entry.on('click', self.handler.delivery_type_click);
 
 				price
 					.html(method[1])
@@ -216,6 +209,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 				name
 					.html(method[0])
+					.addClass('name');
 					.append(price)
 					.appendTo(entry);
 
@@ -229,7 +223,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 					time.html(estimated_time + '<br>' + start + end);
 				}
 
-				time.appendTo(entry);
+				time
+					.addClass('estimate')
+					.appendTo(entry);
 
 				entry
 					.addClass('method')
@@ -249,7 +245,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 *
 	 * @param object error
 	 */
-	self.handler.delivery_methods_error = function(error) {
+	self.handler.delivery_types_error = function(error) {
 		// add every delivery method to the container
 		self.shipping.types_interface.removeClass('visible');
 
@@ -724,8 +720,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 			// get delivery types for selected method
 			new Communicator('shop')
-				.on_success(self.handler.delivery_methods_load)
-				.on_error(self.handler.delivery_methods_error)
+				.on_success(self.handler.delivery_types_load)
+				.on_error(self.handler.delivery_types_error)
 				.get('json_get_delivery_estimate', data);
 
 			return false;  // prevent page from switching
