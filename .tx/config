@@ -36,6 +36,11 @@ file_filter = modules/mandrill/data/language_<lang>.json
 source_lang = en
 type = KEYVALUEJSON
 
+[caracal.sendgrid]
+file_filter = modules/sendgrid/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
 [caracal.faq]
 file_filter = modules/faq/data/language_<lang>.json
 source_lang = en
