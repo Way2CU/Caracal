@@ -252,11 +252,11 @@ div#shipping_information div.container.types div.details a span.name {
 	display: block;
 }
 
-div#shipping_information div.container.types div.details a span.price {
+div#shipping_information div.container.types div.details a span.name span {
 	float: right;
 }
 
-body.rtl div#shipping_information div.container.types div.details a span.price {
+body.rtl div#shipping_information div.container.types div.details a span.name span {
 	float: left;
 }
 
