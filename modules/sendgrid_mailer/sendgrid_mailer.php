@@ -37,7 +37,7 @@ class sendgrid_mailer extends Module {
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
 			$backend = backend::getInstance();
 
-			$mandrill_menu = new backend_MenuItem(
+			$sendgrid_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_sendgrid'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					window_Open( // on click open window
@@ -50,7 +50,7 @@ class sendgrid_mailer extends Module {
 					$level=6
 				);
 
-			$backend->addMenu($this->name, $mandrill_menu);
+			$backend->addMenu($this->name, $sendgrid_menu);
 		}
 	}
 
