@@ -709,11 +709,22 @@ Caracal.Shop.BuyerInformationForm = function() {
 			return false;  // prevent page from switching
 
 		} else if (!show_interface && user_information_complete && !types_visible) {
+			// prepare data
+			var data = {
+					method: method.data('value'),
+					street: self.shipping.address_container.find('input[name=street]').val(),
+					street2: self.shipping.address_container.find('input[name=street2]').val(),
+					city: self.shipping.address_container.find('input[name=city]').val(),
+					zip_code: self.shipping.address_container.find('input[name=zip]').val(),
+					state: self.shipping.address_container.find('input[name=state]').val(),
+					country: self.shipping.address_container.find('input[name=country]').val()
+				};
+
 			// get delivery types for selected method
 			new Communicator('shop')
 				.on_success(self.handler.delivery_methods_load)
 				.on_error(self.handler.delivery_methods_error)
-				.get('json_get_delivery_estimate', {method: method.data('value')});
+				.get('json_get_delivery_estimate', data);
 
 			return false;  // prevent page from switching
 		}

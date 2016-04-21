@@ -1900,9 +1900,13 @@ class shop extends Module {
 
 		$shipping = $this->getDeliveryEstimate($recipient, $method_name, $type);
 
-		if (!is_null($shipping))
-			$result['shipping'] = $shipping; else
-			$result['error'] = true;
+		if (!is_null($shipping['price']))
+			$result['shipping'] = $shipping['price'];
+
+		if (!is_null($shipping['list']))
+			$result['delivery_prices'] = $shipping['list'];
+
+		$result['error'] = is_null($shipping['list']) && is_null($shipping['price']);
 
 		print json_encode($result);
 	}
@@ -2672,10 +2676,13 @@ class shop extends Module {
 	 * @param array $recipient
 	 * @param string $method_name
 	 * @param string $type
-	 * @return float
+	 * @return array
 	 */
 	public function getDeliveryEstimate($recipient, $method_name, $type) {
-		$result = null;
+		$result = array(
+				'list'  => null,
+				'price' => null
+			);
 
 		// get delivery method
 		$method = Delivery::get_method($method_name);
@@ -2707,7 +2714,7 @@ class shop extends Module {
 		// get estimate
 		if ($method->hasCustomInterface()) {
 			// get custom estimate from the delivery method
-			$result = $method->getCustomEstimate(
+			$result['price'] = $method->getCustomEstimate(
 					Delivery::get_items_for_estimate(),
 					$shipper,
 					$recipient,
@@ -2725,9 +2732,11 @@ class shop extends Module {
 			// find matching type from the list of provided types
 			foreach ($delivery_prices as $data)
 				if ($data[0] == $type) {
-					$result = $data[1];
+					$result['price'] = $data[1];
 					break;
 				}
+
+			$result['list'] = $delivery_prices;
 		}
 
 		return $result;
@@ -3020,7 +3029,7 @@ class shop extends Module {
 			// get shopping cart summary
 			$uid = uniqid('', true);
 			$summary = $this->getCartSummary($uid, $type, $payment_method);
-			$summary['shipping'] = $delivery_estimate;
+			$summary['shipping'] = $delivery_estimate['price'];
 
 			// decide on new transaction status
 			$new_status = TransactionStatus::PENDING;
@@ -3065,7 +3074,7 @@ class shop extends Module {
 		} else {
 			$uid = $_SESSION['transaction']['uid'];
 			$summary = $this->getCartSummary($uid, $type, $payment_method);
-			$summary['shipping'] = $delivery_estimate;
+			$summary['shipping'] = $delivery_estimate['price'];
 
 			// there's already an existing transaction
 			$result = $_SESSION['transaction'];
