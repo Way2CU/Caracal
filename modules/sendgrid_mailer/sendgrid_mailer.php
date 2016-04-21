@@ -15,7 +15,7 @@ require_once(_LIBPATH.'sendgrid/lib/Client.php');
 require_once('units/mailer.php');
 
 
-class sendgrid extends Module {
+class sendgrid_mailer extends Module {
 	private static $_instance;
 
 	/**
