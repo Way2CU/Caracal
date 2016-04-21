@@ -1350,7 +1350,7 @@ class shop extends Module {
 			$variation_id = $this->generateVariationId($uid, array());
 
 		// check if item exists in database to avoid poluting shopping cart
-		$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+		$item = $manager->getSingleItem(array('id', 'price'), array('uid' => $uid));
 
 		// make new content of shopping cart
 		if (is_object($item) && $count > 0) {
@@ -1360,6 +1360,7 @@ class shop extends Module {
 				'variations'	=> array()
 			);
 			$cart[$uid]['variations'][$variation_id] = array('count' => $count);
+			$cart[$uid]['variations'][$variation_id] = array('price' => $item->price);
 			$result = true;
 		}
 
