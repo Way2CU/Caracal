@@ -236,6 +236,7 @@ div#shipping_information div.container.types div.details a {
 	background-color: white;
 
 	color: #333333;
+	text-align: left;
 	line-height: 100%;
 
 	transition: all 0.3s;
@@ -244,6 +245,28 @@ div#shipping_information div.container.types div.details a {
 body.rtl div#shipping_information div.container.types div.details a {
 	margin-right: 0;
 	margin-left: 10px;
+	text-align: right;
+}
+
+div#shipping_information div.container.types div.details a span.name {
+	display: block;
+}
+
+div#shipping_information div.container.types div.details a span.price {
+	float: right;
+}
+
+body.rtl div#shipping_information div.container.types div.details a span.price {
+	float: left;
+}
+
+div#shipping_information div.container.types div.details a span.price:after {
+	content: attr(data-currency);
+	display: inline-block;
+}
+
+div#shipping_information div.container.types div.details a span.estimate {
+	font-size: 0.8em;
 }
 
 div#shipping_information div.container.types div.details a:hover {

@@ -167,6 +167,34 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
+	 * Update summary for delivery type container.
+	 */
+	self._update_shipping_types_summary = function() {
+		var summary = self.shipping.types_container.find('div.summary span.price');
+		var type = self.shipping.types_container.find('div.details a.selected');
+
+		summary.html(type.data('price') + ' ' + type.data('currency'));
+	};
+
+	/**
+	 * Handle clicking on delivery type.
+	 *
+	 * @param object event
+	 */
+	self.handler.delivery_type_click = function(event) {
+		// prevent default link behavior
+		event.preventDefault();
+
+		// hightlight selected type
+		var type = $(this);
+		self.shipping.types_container.find('div.summary a').not(type).removeClass('selected');
+		type.addClass('selected');
+
+		// set delivery type values
+		self.set_delivery_method(null, type.data('type'));
+	};
+
+	/**
 	 * Handle clicking on summary.
 	 */
 	self.handler.summary_click = function(event) {
@@ -195,10 +223,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 			for (var id in data.delivery_prices) {
 				var method = data.delivery_prices[id];
 				var entry = $('<a>');
-				var name = $('<div>');
+				var name = $('<span>');
 				var price = $('<span>');
 				var time = $('<span>');
-				var checkbox = $('<input>');
 
 				// create interface
 				entry.on('click', self.handler.delivery_type_click);
@@ -228,6 +255,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 					.appendTo(entry);
 
 				entry
+					.data('type', id)
+					.data('price', method[1])
+					.data('currency', method[2])
+					.attr('href', 'javascript: void(0)')
 					.addClass('method')
 					.appendTo(container);
 			}
@@ -742,6 +773,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 			} else {
 				// complete delivery type selection process
 				types.removeClass('bad');
+				self._update_shipping_types_summary();
 				self.shipping.types_container.addClass('completed');
 			}
 		}
