@@ -1877,7 +1877,7 @@ class shop extends Module {
 	private function json_GetDeliveryEstimate() {
 		$result = array(
 				'error'           => false,
-				'delivery_prices' => array(),
+				'delivery_prices' => null,
 				'shipping'        => 0,
 				'handling'        => 0
 			);

@@ -187,7 +187,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var container = self.shipping.types_container.find('div.details');
 		container.html('');
 
-		if (data.delivery_prices && data.delivery_prices.length > 0) {
+		if (data.delivery_prices) {
 			for (var id in data.delivery_prices) {
 				var method = data.delivery_prices[id];
 				var entry = $('<label>');
