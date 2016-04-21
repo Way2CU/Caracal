@@ -20,7 +20,7 @@ class Mailer extends ContactForm_Mailer {
 
 	public function __construct($language, $api_key) {
 		$this->language = $language;
-		$this->mailer = new SendGrid($api_key);
+		$this->mailer = new \SendGrid($api_key);
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Mailer extends ContactForm_Mailer {
 	 * point to avoid potential timeouts.
 	 */
 	public function start_message() {
-		$this->message = new SendGrid\Email();
+		$this->message = new \SendGrid\Email();
 	}
 
 	/**

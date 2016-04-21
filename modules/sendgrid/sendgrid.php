@@ -10,6 +10,8 @@
  */
 use Core\Module;
 
+require_once(_LIBPATH.'sendgrid/lib/SendGrid.php');
+require_once(_LIBPATH.'sendgrid/lib/Client.php');
 require_once('units/mailer.php');
 
 
