@@ -507,6 +507,14 @@
 								<hr/>
 								<h4><cms:text constant="label_delivery_types" module="shop"/></h4>
 
+								<div class="summary">
+									<span
+										class="price"
+										data-label="label_estimated_delivery"
+										cms:constant="data-label"
+										/>
+								</div>
+
 								<div class="details">
 								</div>
 

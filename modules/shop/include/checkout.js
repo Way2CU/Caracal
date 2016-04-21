@@ -735,6 +735,21 @@ Caracal.Shop.BuyerInformationForm = function() {
 		if (show_interface && !interface_completed && self.interface_save_function != null)
 			self.interface_save_function();
 
+		// validate delivery type
+		if (!show_interface && !types_completed) {
+			var types = self.shipping.types_container.find('div.details a');
+
+			if (types.filter('.selected').length == 0) {
+				// mark delivery types as bad
+				types.addClass('bad');
+
+			} else {
+				// complete delivery type selection process
+				types.removeClass('bad');
+				self.shipping.types_container.addClass('completed');
+			}
+		}
+
 		// prepare conditions
 		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
 
