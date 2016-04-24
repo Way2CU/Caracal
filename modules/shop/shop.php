@@ -3035,8 +3035,8 @@ class shop extends Module {
 
 			} else if (count($delivery_data['list']) > 0) {
 				// no estimate available, check list
-				foreach ($delivery_data['list'] as $type => $data)
-					if ($type == $delivery_type) {
+				foreach ($delivery_data['list'] as $estimate_delivery_type => $data)
+					if ($estimate_delivery_type == $delivery_type) {
 						$delivery_estimate = $data[1];
 						break;
 					}
