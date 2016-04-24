@@ -3031,7 +3031,7 @@ class shop extends Module {
 
 			if (!is_null($delivery_data['price'])) {
 				// use original estimate
-				$delivery_estimate = $delivery_data['price']);
+				$delivery_estimate = $delivery_data['price'];
 
 			} else if (count($delivery_data['list']) > 0) {
 				// no estimate available, check list
