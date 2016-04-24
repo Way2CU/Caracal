@@ -2515,7 +2515,7 @@ class shop extends Module {
 				$ids = array_keys($cart);
 
 				if (count($cart) == 0)
-					return $result;
+					break;
 
 				// get managers
 				$manager = ShopItemManager::getInstance();
