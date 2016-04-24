@@ -2,6 +2,6 @@
     "label_api_key": "מפתח API:",
     "mailer_title": "SendGrid",
     "menu_sendgrid": "SendGrid",
-    "message_saved": "Settings were saved.",
-    "title_settings": "SendGrid Settings"
+    "message_saved": "ההגדרות נשמרו",
+    "title_settings": "הגדרות SendGrid"
 }
