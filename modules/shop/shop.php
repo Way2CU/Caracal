@@ -3018,14 +3018,38 @@ class shop extends Module {
 		}
 
 		// get delivery estimate
-		$recipient = array(
-				'street'   => array($address->street, $address->street2),
-				'city'     => $address->city,
-				'zip_code' => $address->zip,
-				'state'    => $address->state,
-				'country'  => $address->country,
-			);
-		$delivery_estimate = $this->getDeliveryEstimate($recipient, $delivery_method, $delivery_type);
+		if ($delivery_method) {
+			$recipient = array(
+					'street'   => array($address->street, $address->street2),
+					'city'     => $address->city,
+					'zip_code' => $address->zip,
+					'state'    => $address->state,
+					'country'  => $address->country,
+				);
+			$delivery_estimate = null;
+			$delivery_data = $this->getDeliveryEstimate($recipient, $delivery_method, $delivery_type);
+
+			if (!is_null($delivery_data['price'])) {
+				// use original estimate
+				$delivery_estimate = $delivery_data['price']);
+
+			} else if (count($delivery_data['list']) > 0) {
+				// no estimate available, check list
+				foreach ($delivery_data['list'] as $type => $data)
+					if ($type == $delivery_type) {
+						$delivery_estimate = $data[1];
+						break;
+					}
+
+			} else if {
+				// we didn't have any estimate report error
+				trigger_error('No valid delivery estimate was found.', E_USER_WARNING);
+			}
+
+		} else {
+			// this transaction doesn't require delivery estimate
+			$delivery_estimate = 0;
+		}
 
 		// check if we have existing transaction in our database
 		if ($new_transaction) {
