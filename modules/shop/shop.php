@@ -3056,7 +3056,7 @@ class shop extends Module {
 			// get shopping cart summary
 			$uid = uniqid('', true);
 			$summary = $this->getCartSummary($uid, $type, $payment_method);
-			$summary['shipping'] = $delivery_estimate['price'];
+			$summary['shipping'] = $delivery_estimate;
 
 			// decide on new transaction status
 			$new_status = TransactionStatus::PENDING;
@@ -3101,7 +3101,7 @@ class shop extends Module {
 		} else {
 			$uid = $_SESSION['transaction']['uid'];
 			$summary = $this->getCartSummary($uid, $type, $payment_method);
-			$summary['shipping'] = $delivery_estimate['price'];
+			$summary['shipping'] = $delivery_estimate;
 
 			// there's already an existing transaction
 			$result = $_SESSION['transaction'];
