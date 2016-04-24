@@ -10,7 +10,7 @@
  */
 use Core\Module;
 
-/* require_once('units/mailer.php'); */
+require_once('units/mailer.php');
 
 
 class sendgrid extends Module {

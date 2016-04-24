@@ -14,13 +14,25 @@ use \ContactForm_Mailer as ContactForm_Mailer;
 
 class Mailer extends ContactForm_Mailer {
 	private $language;
-	private $mailer = null;
-	private $message = null;
 	private $variables = array();
+
+	protected $subject;
+	protected $variables;
+	protected $plain_body;
+	protected $html_body;
+	protected $sender;
+	protected $sender_address;
+	protected $recipients;
+	protected $recipient_addresses;
+	protected $recipients_cc;
+	protected $recipients_bcc;
+	protected $attachments;
+	protected $attachment_names;
+	protected $inline_attachments;
+	protected $headers;
 
 	public function __construct($language, $api_key) {
 		$this->language = $language;
-		$this->mailer = new \SendGrid($api_key);
 	}
 
 	/**
@@ -39,7 +51,18 @@ class Mailer extends ContactForm_Mailer {
 	 * point to avoid potential timeouts.
 	 */
 	public function start_message() {
-		$this->message = new \SendGrid\Email();
+		$this->subject = null;
+		$this->variables = array();
+		$this->plain_body = null;
+		$this->html_body = null;
+		$this->sender = null;
+		$this->recipients = array();
+		$this->recipients_cc = array();
+		$this->recipients_bcc = array();
+		$this->attachments = array();
+		$this->attachment_names = array();
+		$this->inline_attachments = array();
+		$this->headers = array();
 	}
 
 	/**
@@ -51,29 +74,6 @@ class Mailer extends ContactForm_Mailer {
 	 * @return boolean
 	 */
 	public function send() {
-		// add variables
-		foreach ($this->variables as $key => $value)
-			$this->message->addSubstitution("%{$key}%", array($value));
-
-		// send message
-		$raw_response = $this->mailer->send($this->message);
-		$response = json_decode($raw_response);
-
-		// prepare result
-		$result = $response->message == 'success';
-
-		// trigger event
-		if ($result)
-			Events::trigger(
-				'contact_form',
-				'email-sent',
-				'sendgrid',
-				$this->message->to,
-				$this->message->subject,
-				$this->variables
-			);
-
-		return $result;
 	}
 
 	/**
@@ -83,9 +83,12 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $name
 	 */
 	public function set_sender($address, $name=null) {
-		$this->message->setFrom($address);
-		if (!is_null($name))
-			$this->message->setFromName($name);
+		if (is_null($name))
+			$recipient = $address; else
+			$recipient = $this->encode_string($name).' <'.$address.'>';
+
+		$this->recipient_addresses[] = $address;
+		$this->recipients[] = $recipient;
 	}
 
 	/**
@@ -95,7 +98,11 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $name
 	 */
 	public function add_recipient($address, $name=null) {
-		$this->message->addTo($address, $name);
+		if (is_null($name))
+			$recipient = $address; else
+			$recipient = $this->encode_string($name).' <'.$address.'>';
+
+		$this->recipients_cc[] = $recipient;
 	}
 
 	/**
@@ -105,7 +112,11 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $name
 	 */
 	public function add_cc_recipient($address, $name=null) {
-		$this->message->addCc($address, $name);
+		if (is_null($name))
+			$recipient = $address; else
+			$recipient = $this->encode_string($name).' <'.$address.'>';
+
+		$this->recipients_cc[] = $recipient;
 	}
 
 	/**
@@ -115,7 +126,11 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $name
 	 */
 	public function add_bcc_recipient($address, $name=null) {
-		$this->message->addBcc($email, $name);
+		if (is_null($name))
+			$recipient = $address; else
+			$recipient = $this->encode_string($name).' <'.$address.'>';
+
+		$this->recipients_bcc[] = $recipient;
 	}
 
 	/**
@@ -125,7 +140,7 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $value
 	 */
 	public function add_header_string($key, $value) {
-		$this->message->addHeader($key, $value);
+		$this->headers[$key] = $value;
 	}
 
 	/**
@@ -134,7 +149,7 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $subject
 	 */
 	public function set_subject($subject) {
-		$this->message->setSubject($subject);
+		$this->subject = $subject;
 	}
 
 	/**
@@ -153,9 +168,9 @@ class Mailer extends ContactForm_Mailer {
 	 * @param string $html_body
 	 */
 	public function set_body($plain_body, $html_body=null) {
-		$this->message->setText($plain_body);
+		$this->plain_body = $plain_body;
 		if (!is_null($html_body) && !empty($html_body))
-			$this->message->setHtml($html_body);
+			$this->html_body = $html_body;
 	}
 
 	/**
@@ -170,7 +185,12 @@ class Mailer extends ContactForm_Mailer {
 	 * @param boolean $inline
 	 */
 	public function attach_file($file_name, $attached_name=null, $inline=false) {
-		$this->message->addAttachment($file, $attachend_name, $inline ? $attached_name : null);
+		if (!$inline)
+			$this->attachments[] = $file_name; else
+			$this->inline_attachments[] = $file_name;
+
+		if (!is_null($attached_name))
+			$this->attachment_names[$file_name] = $attached_name;
 	}
 }
 
