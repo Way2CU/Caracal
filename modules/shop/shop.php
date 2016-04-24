@@ -3041,7 +3041,7 @@ class shop extends Module {
 						break;
 					}
 
-			} else if {
+			} else {
 				// we didn't have any estimate report error
 				trigger_error('No valid delivery estimate was found.', E_USER_WARNING);
 			}
