@@ -17,6 +17,15 @@
  *  window-focus-lost
  *  window-content-load
  *  window-before-submit
+ *
+ * All callbacks will receive only window affected as parameter. An example
+ * callback function would look like:
+ *
+ * 	function Callback(affected_window) {
+ * 		if (affected_window.id == 'login')
+ * 			console.log('test');
+ * 	}
+ *
  */
 
 var Caracal = Caracal || {};
