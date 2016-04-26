@@ -26,6 +26,7 @@ class collection extends Module {
 	const COMMUNICATOR = 8;
 	const DYNAMIC_PAGE_CONTENT = 9;
 	const PROPERTY_EDITOR = 10;
+	const EVENT_SYSTEM = 11;
 
 	// jQuery and its extensions
 	const JQUERY = 50;
@@ -52,6 +53,7 @@ class collection extends Module {
 				collection::COMMUNICATOR         => 'communicator.js',
 				collection::DYNAMIC_PAGE_CONTENT => 'dynamic_page_content.js',
 				collection::PROPERTY_EDITOR      => 'property_editor.js',
+				collection::EVENT_SYSTEM         => 'event_system.js',
 				collection::JQUERY               => 'jquery.js',
 				collection::JQUERY_EVENT_DRAG    => 'jquery.event.drag.js',
 				collection::JQUERY_EVENT_SCROLL  => 'jquery.mousewheel.js',
@@ -74,6 +76,7 @@ class collection extends Module {
 				'communicator'         => collection::COMMUNICATOR,
 				'dynamic_page_content' => collection::DYNAMIC_PAGE_CONTENT,
 				'property_editor'      => collection::PROPERTY_EDITOR,
+				'event_system'         => collection::EVENT_SYSTEM,
 				'jquery'               => collection::JQUERY,
 				'jquery_event_drag'    => collection::JQUERY_EVENT_DRAG,
 				'jquery_event_scroll'  => collection::JQUERY_EVENT_SCROLL,
@@ -102,6 +105,7 @@ class collection extends Module {
 
 		// include scripts by default
 		$this->includeScriptById(collection::JQUERY);
+		$this->includeScriptById(collection::EVENT_SYSTEM);
 	}
 
 	/**
