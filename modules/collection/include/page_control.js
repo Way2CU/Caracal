@@ -557,7 +557,7 @@ function PageControl(selector, page_selector) {
 	 * 		Returning false will prevent page from switching. This should
 	 * 		not be used to validate content of certain page as order might
 	 * 		change. Instead validator property should be used.
-
+	 *
 	 *
 	 * Callback for submit:
 	 * 		function (current_page), returns boolean

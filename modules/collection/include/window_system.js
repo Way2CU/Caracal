@@ -9,6 +9,14 @@
  * to take parts from this file leave credits intact.
  *
  * Requires jQuery 1.4.2+
+ *
+ * Events available from WindowSystem:
+ *  window-open
+ *  window-close
+ *  window-focus-gain
+ *  window-focus-lost
+ *  window-content-load
+ *  window-before-submit
  */
 
 var Caracal = Caracal || {};
@@ -269,7 +277,6 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 					.click(self.close)
 					.appendTo(self.title_bar);
 		}
-
 	};
 
 	/**
@@ -281,7 +288,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 		if (self.window_system.getTopWindowId != self.id)
 			self.window_system.focusWindow(self.id);
 	};
-	
+
 	/**
 	 * Handle clicking on window list.
 	 *
@@ -361,6 +368,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 		self.visible = true;
 		self.focus();
 
+		// emit event
+		self.window_system.events.trigger('window-open', self);
+
 		return self;
 	};
 
@@ -372,6 +382,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 		self.window_system.removeWindow(self);
 		self.window_system.focusTopWindow();
 		self.window_list_item.remove();
+
+		// emit event
+		self.window_system.events.trigger('window-close', self);
 	};
 
 	/**
@@ -417,6 +430,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 
 		// change window list item
 		self.window_list_item.addClass('active');
+
+		// emit event
+		self.window_system.events.trigger('window-focus-gain', self);
 	};
 
 	/**
@@ -430,6 +446,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 
 		// change window list item
 		self.window_list_item.removeClass('active');
+
+		// emit event
+		self.window_system.events.trigger('window-focus-lost', self);
 	};
 
 	/**
@@ -468,6 +487,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 
 		var data = {};
 		var field_types = ['input', 'select', 'textarea'];
+
+		// emit event
+		self.window_system.events.trigger('window-before-submit', self);
 
 		// collect data from from
 		for (var index in field_types) {
@@ -562,6 +584,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 
 		// remove loading indicator
 		self.container.removeClass('loading');
+
+		// emit event
+		self.window_system.events.trigger('window-content-load', self);
 
 		// if display level is right, focus first element
 		if (self.zIndex == 1000)
@@ -713,6 +738,8 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	self.window_list = $('<ul>');
 	self.container_offset = self.container.offset();
 
+	self.events = null;
+
 	/**
 	 * Finish object initialization.
 	 */
@@ -720,6 +747,16 @@ Caracal.WindowSystem.System = function(container, list_container) {
 		self.window_list
 				.attr('id', 'window_list')
 				.appendTo(self.list_container);
+
+		// create event storage arrays
+		self.events = new Caracal.EventSystem();
+		self.events
+ 				.register('window-open')
+ 				.register('window-close')
+ 				.register('window-focus-gain')
+ 				.register('window-focus-lost')
+ 				.register('window-content-load')
+ 				.register('window-before-submit');
 	};
 
 	/**
@@ -825,7 +862,7 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	 * @param string id
 	 */
 	self.focusWindow = function(id) {
-		if (self.windowExists(id)) 
+		if (self.windowExists(id))
 			for (var window_id in self.list)
 				if (window_id != id)
 					self.list[window_id].loseFocus(); else
@@ -851,19 +888,19 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	self.getWindow = function(id) {
 		return self.list[id];
 	};
-	
+
 	/**
 	 * Get top window object.
-	 * 
+	 *
 	 * @return object
 	 */
 	self.getTopWindow = function() {
 		return self.getWindow(self.getTopWindowId());
 	};
-	
+
 	/**
 	 * Get top window id.
-	 * 
+	 *
 	 * @return string
 	 */
 	self.getTopWindowId = function() {
