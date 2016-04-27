@@ -14,22 +14,20 @@ use \ContactForm_Mailer as ContactForm_Mailer;
 
 class Mailer extends ContactForm_Mailer {
 	private $language;
-	private $variables = array();
-
-	protected $subject;
-	protected $variables;
-	protected $plain_body;
-	protected $html_body;
-	protected $sender;
-	protected $sender_address;
-	protected $recipients;
-	protected $recipient_addresses;
-	protected $recipients_cc;
-	protected $recipients_bcc;
-	protected $attachments;
-	protected $attachment_names;
-	protected $inline_attachments;
-	protected $headers;
+	private $subject;
+	private $variables;
+	private $plain_body;
+	private $html_body;
+	private $sender;
+	private $sender_address;
+	private $recipients;
+	private $recipient_addresses;
+	private $recipients_cc;
+	private $recipients_bcc;
+	private $attachments;
+	private $attachment_names;
+	private $inline_attachments;
+	private $headers;
 
 	public function __construct($language, $api_key) {
 		$this->language = $language;
