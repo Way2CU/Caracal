@@ -8,13 +8,14 @@
  * based communication between objects.
  */
 
-var Caracal = Caracal || {};
+var Caracal = Caracal || new Object();
 
 
 Caracal.EventSystem = function() {
 	var self = this;
 
 	self.events = null;
+	self.response_types = new Object();
 
 	/**
 	 * Object initialization.
@@ -27,13 +28,18 @@ Caracal.EventSystem = function() {
 	 * Register new event in the system.
 	 *
 	 * @param string event_name
+	 * @param string response_type
 	 * @return self
 	 */
-	self.register = function(event_name) {
+	self.register = function(event_name, response_type) {
 		var real_name = event_name.replace(/-/g, '_');
 
+		// register new event
 		if (!(real_name in self.events))
 			self.events[real_name] = new Array();
+
+		// store response type
+		self.response_types[real_name] = response_type;
 
 		return self;
 	};
@@ -72,30 +78,58 @@ Caracal.EventSystem = function() {
 	 *
 	 * @param string event_name
 	 * @param ...
+	 * @return mixed
 	 */
 	self.trigger = function(event_name) {
+		var result = null;
 		var real_name = event_name.replace(/-/g, '_');
+
+		// make sure event exists
+		if (!(real_name in self.events))
+			return result;
+
+		// prepare for execution
 		var params = new Array();
-		var list = null;
+		var response_type = self.response_types[real_name];
+		var list = self.events[real_name];
 
 		// prepare arguments
 		for (var index in arguments)
 			params.push(arguments[index]);
 		params = params.slice(1);
 
-		// get list of functions to be called
-		if (real_name in self.events)
-			list = self.events[real_name];
+		// prepare result
+		switch (response_type) {
+			case 'array':
+				result = new Array();
+				break;
 
-		// make sure we have list
-		if (!list)
-			return;
+			case 'boolean':
+			default:
+				result = true;
+				break;
+		}
 
-		// call function
+		// call functions
 		for (var index in list) {
 			callback = list[index];
-			callback.apply(null, params);
+			response = callback.apply(null, params);
+
+			if (response_type)
+				switch (response_type) {
+					case 'array':
+						result.push(response);
+						break;
+
+					case 'boolean':
+					default:
+						result &= response;
+						if (!result) break;
+						break;
+				}
 		}
+
+		return result;
 	};
 
 	// finalize object
