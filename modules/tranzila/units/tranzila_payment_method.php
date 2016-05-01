@@ -10,7 +10,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	private static $_instance;
 
 	private $url = 'https://direct.tranzila.com/%terminal%/iframe.php';
-	private $mobile_url = 'https://direct.tranzila.com/%terminal%/mobile.php';
+	private $mobile_url = 'https://direct.tranzila.com/%terminal%/iframe.php';
 	private $token_url = 'https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi';
 
 	private $currency = array(
