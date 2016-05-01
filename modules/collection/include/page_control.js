@@ -3,6 +3,29 @@
  *
  * Copyright (c) 2013. by Way2CU
  * Author: Mladen Mijatov
+ *
+ * Supported events:
+ *
+ * - Callback for `page-flip`:
+ * 		function (current_page, new_page), returns boolean
+ *
+ * 		Returning false will prevent page from switching. This should
+ * 		not be used to validate content of certain page as order might
+ * 		change. Instead validator property should be used.
+ *
+ *
+ * - Callback for `submit`:
+ * 		function (current_page), returns boolean
+ *
+ * 		Returning false will prevent form submission.
+ *
+ *
+ * Callback for `update-size`:
+ * 		function (new_size), returns integer
+ *
+ * 		Returning value is the size to be applied. If there's
+ * 		more than one handler for this signal, largest value
+ * 		will be used.
  */
 
 /**
@@ -31,6 +54,7 @@ function PageControl(selector, page_selector) {
 	self.interval_time = 0;
 
 	// signal handlers
+	self.events = new Caracal.EventSystem();
 	self.on_page_flip = new Array();
 	self.on_submit = new Array();
 	self.on_container_resize = new Array();
@@ -48,6 +72,12 @@ function PageControl(selector, page_selector) {
 		// get all pages
 		self.pages = self.container.find(page_selector || 'div.page');
 		self.pages.each(self._connectButtonEvents);
+
+		// register events
+		self.events
+				.register('page-flip', 'boolean')
+				.register('submit', 'boolean')
+				.register('container-resize', 'array');
 
 		self.showPage(0);
 	};
@@ -123,67 +153,9 @@ function PageControl(selector, page_selector) {
 	};
 
 	/**
-	 * Emit signal with specified parameters. This function accepts more than one
-	 * parameter. All except first parameter will be passed to callback function.
-	 *
-	 * @param string signal_name
-	 * @param ...
-	 * @return mixed
-	 */
-	self._emitSignal = function(signal_name) {
-		var list = null;
-		var result = null;
-		var result_is_object = false;
-		var params = new Array();
+	 * Manually invoke container size update.
 
-		// prepare arguments
-		for (var index in arguments)
-			params.push(arguments[index]);
-		params = params.slice(1);
-
-		// get list of functions to call
-		switch (signal_name) {
-			case 'page-flip':
-				list = self.on_page_flip;
-				result = true;
-				break;
-
-			case 'submit':
-				list = self.on_submit;
-				result = true;
-				break;
-
-			case 'update-size':
-				list = self.on_container_resize;
-				result = [];
-				result_is_object = true;
-				break;
-		}
-
-		// emit signal
-		if (list != null && list.length > 0)
-			for (var i=0, length=list.length; i < length; i++) {
-				var callback = list[i];
-
-				// get response from callback
-				response = callback.apply(this, params);
-
-				// response is boolean
-				if (!result_is_object && !response) {
-					result = false;
-					break;
-
-				// response is an array
-				} else if (result_is_object) {
-					result.push(response);
-				}
-			}
-
-		return result;
-	};
-
-	/**
-	 * Manually invoke container size update. This will emit `update-size` signal.
+	 * @fires update-size
 	 */
 	self.updateSize = function() {
 		var size = 0;
@@ -196,7 +168,7 @@ function PageControl(selector, page_selector) {
 			});
 
 		// get size from event handlers
-		var response = self._emitSignal('update-size', size);
+		var response = self.events.trigger('update-size', size);
 		max_size = Math.max.apply(null, response);
 
 		if (max_size > size)
@@ -226,11 +198,11 @@ function PageControl(selector, page_selector) {
 		// submit on last page
 		if (new_page >= self.pages.length - 1 && self.submit_on_end) {
 			// page-flip signal should be emitted before submit
-			if (!self._emitSignal('page-flip', self.current_page, new_page))
+			if (!self.events.trigger('page-flip', self.current_page, new_page))
 				return;
 
 			// emit submit signal
-			if (!self._emitSignal('submit', self.current_page))
+			if (!self.events.trigger('submit', self.current_page))
 				return;
 
 			// submit form
@@ -257,7 +229,7 @@ function PageControl(selector, page_selector) {
 			return;
 
 		// emit signal and exit unless all of the handlers approve
-		if (!self._emitSignal('page-flip', self.current_page, new_page))
+		if (!self.events.trigger('page-flip', self.current_page, new_page))
 			return;
 
 		// switch page
@@ -544,63 +516,6 @@ function PageControl(selector, page_selector) {
 
 		if (self.auto_resize)
 			self.updateSize();
-
-		return self;
-	};
-
-	/**
-	 * Connect function to be called when specified signal is emitted.
-	 *
-	 * Callback for page-flip:
-	 * 		function (current_page, new_page), returns boolean
-	 *
-	 * 		Returning false will prevent page from switching. This should
-	 * 		not be used to validate content of certain page as order might
-	 * 		change. Instead validator property should be used.
-	 *
-	 *
-	 * Callback for submit:
-	 * 		function (current_page), returns boolean
-	 *
-	 * 		Returning false will prevent form submission.
-	 *
-	 *
-	 * Callback for update-size:
-	 * 		function (new_size), returns integer
-	 *
-	 * 		Returning value is the size to be applied. If there's
-	 * 		more than one handler for this signal, largest value
-	 * 		will be used.
-	 *
-	 * @param string signal_name
-	 * @param function callback
-	 * @param boolean top
-	 */
-	self.connect = function(signal_name, callback, top) {
-		switch (signal_name) {
-			case 'page-flip':
-				if (!top)
-					self.on_page_flip.push(callback); else
-					self.on_page_flip.splice(0, 0, callback);
-
-				break;
-
-			case 'submit':
-				if (!top)
-					self.on_submit.push(callback); else
-					self.on_submit.splice(0, 0, callback);
-
-				break;
-
-			case 'update-size':
-				if (!top)
-					self.on_container_resize.push(callback); else
-					self.on_container_resize.splice(0, 0, callback);
-				break;
-
-			default:
-				break;
-		}
 
 		return self;
 	};
