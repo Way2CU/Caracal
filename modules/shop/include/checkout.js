@@ -28,7 +28,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	/**
 	 * Complete object initialization.
 	 */
-	self._init = function() {.
+	self._init = function() {
 		// find DOM elements
 		self.account.page = $('div#sign_in.page');
 		self.shipping.page = $('div#shipping_information.page');
