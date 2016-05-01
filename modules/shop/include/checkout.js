@@ -18,17 +18,17 @@ Caracal.Shop.BuyerInformationForm = function() {
 	self.interface_save_function = null;
 
 	// local namespaces
-	self.handler = {};
-	self.validator = {};
-	self.account = {};
-	self.shipping = {};
-	self.payment = {};
-	self.billing = {};
+	self.handler = new Object();
+	self.validator = new Object();
+	self.account = new Object();
+	self.shipping = new Object();
+	self.payment = new Object();
+	self.billing = new Object();
 
 	/**
 	 * Complete object initialization.
 	 */
-	self._init = function() {
+	self._init = function() {.
 		// find DOM elements
 		self.account.page = $('div#sign_in.page');
 		self.shipping.page = $('div#shipping_information.page');
@@ -60,7 +60,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		language_handler.getTextArrayAsync(
 				'shop',
-				['title_password_dialog', 'title_cvv_dialog', 'label_no_estimate', 'label_estimated_time'],
+				[
+					'title_password_dialog', 'title_cvv_dialog',
+					'label_no_estimate', 'label_estimated_time'
+				],
 				self._configure_dialogs
 			);
 
@@ -97,6 +100,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.shipping.page.find('div.container div.summary').on('click', self.handler.summary_click);
 		self.shipping.methods.on('click', self.handler.delivery_method_click);
 		self.payment.methods.click(self.handler.payment_method_click);
+		self.page_control.events.connect('page-flip', self.handler.page_flip);
 	};
 
 	/**
@@ -174,6 +178,20 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var type = self.shipping.types_container.find('div.details a.selected');
 
 		summary.html(type.data('price') + ' ' + type.data('currency'));
+	};
+
+	/**
+	 * Handle page flip and scroll window to the top if checkout process
+	 * is not entirely visible.
+	 *
+	 * @param integer current_page
+	 * @param integer new_page
+	 * @return boolean
+	 */
+	self.handler.page_flip = function(current_page, new_page) {
+		var container = document.getElementById('checkout_container');
+		container.scrollIntoView();
+		return true;  // we don't want to prevent page flip
 	};
 
 	/**
@@ -904,7 +922,7 @@ Caracal.Shop.CheckoutForm = function() {
 	self.checkout_button = self.checkout.find('div.checkout_controls button[type=submit]');
 
 	// handler functions namespace
-	self.handler = {};
+	self.handler = new Object();
 
 	/**
 	 * Complete object initialization.
