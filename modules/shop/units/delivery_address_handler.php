@@ -68,17 +68,18 @@ class DeliveryAddressHandler {
 		// parse template
 		if (is_object($address)) {
 			$params = array(
-					'id'		=> $address->id,
-					'buyer'		=> $address->buyer,
-					'name'		=> $address->name,
-					'street'	=> $address->street,
-					'street2'	=> $address->street2,
-					'phone'		=> $address->phone,
-					'city'		=> $address->city,
-					'zip'		=> $address->zip,
-					'state'		=> $address->state,
-					'country'	=> $address->country,
-					'access_code'	=> $address->access_code
+					'id'          => $address->id,
+					'buyer'       => $address->buyer,
+					'name'        => $address->name,
+					'street'      => $address->street,
+					'street2'     => $address->street2,
+					'email'       => $address->email,
+					'phone'       => $address->phone,
+					'city'        => $address->city,
+					'zip'         => $address->zip,
+					'state'       => $address->state,
+					'country'     => $address->country,
+					'access_code' => $address->access_code
 				);
 
 			$template->restoreXML();

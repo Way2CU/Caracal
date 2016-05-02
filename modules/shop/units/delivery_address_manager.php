@@ -20,6 +20,7 @@ class ShopDeliveryAddressManager extends ItemManager {
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('street', 'varchar');
 		$this->addProperty('street2', 'varchar');
+		$this->addProperty('email', 'varchar');
 		$this->addProperty('phone', 'varchar');
 		$this->addProperty('city', 'varchar');
 		$this->addProperty('zip', 'varchar');

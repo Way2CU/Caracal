@@ -1938,18 +1938,19 @@ class shop extends Module {
 
 		if (is_object($buyer)) {
 			$result = array(
-				'information'			=> array(),
-				'delivery_addresses'	=> array(),
-				'last_payment_method'	=> '',
-				'last_delivery_method'	=> ''
+				'information'          => array(),
+				'delivery_addresses'   => array(),
+				'last_payment_method'  => '',
+				'last_delivery_method' => ''
 			);
 
 			// populate user information
 			$result['information'] = array(
-				'first_name'	=> $buyer->first_name,
-				'last_name'		=> $buyer->last_name,
-				'email'			=> $buyer->email,
-				'uid'			=> $buyer->uid
+				'first_name' => $buyer->first_name,
+				'last_name'  => $buyer->last_name,
+				'email'      => $buyer->email,
+				'phone'      => $buyer->phone,
+				'uid'        => $buyer->uid
 			);
 
 			// populate delivery addresses
@@ -1961,16 +1962,17 @@ class shop extends Module {
 			if (count($address_list) > 0)
 				foreach ($address_list as $address) {
 					$result['delivery_addresses'][] = array(
-						'id'		=> $address->id,
-						'name'		=> $address->name,
-						'street'	=> $address->street,
-						'street2'	=> $address->street2,
-						'phone'		=> $address->phone,
-						'city'		=> $address->city,
-						'zip'		=> $address->zip,
-						'state'		=> $address->state,
-						'country'	=> $address->country,
-						'access_code'	=> $address->access_code
+						'id'          => $address->id,
+						'name'        => $address->name,
+						'street'      => $address->street,
+						'street2'     => $address->street2,
+						'email'       => $address->email,
+						'phone'       => $address->phone,
+						'city'        => $address->city,
+						'zip'         => $address->zip,
+						'state'       => $address->state,
+						'country'     => $address->country,
+						'access_code' => $address->access_code
 					);
 				}
 
@@ -2888,12 +2890,13 @@ class shop extends Module {
 					// collect data
 					$conditions = array();
 					$data = array(
-						'first_name'   => escape_chars($_REQUEST['guest_first_name']),
-						'last_name'    => escape_chars($_REQUEST['guest_last_name']),
-						'guest'        => 1,
-						'system_user'  => 0,
-						'agreed'       => $agree_to_terms,
-						'promotions'   => $want_promotions ? 1 : 0
+						'first_name'  => escape_chars($_REQUEST['guest_first_name']),
+						'last_name'   => escape_chars($_REQUEST['guest_last_name']),
+						'phone'       => escape_chars($_REQUEST['guest_phone']),
+						'guest'       => 1,
+						'system_user' => 0,
+						'agreed'      => $agree_to_terms,
+						'promotions'  => $want_promotions ? 1 : 0
 					);
 
 					// include uid if specified
@@ -2973,6 +2976,7 @@ class shop extends Module {
 				'name'        => $shipping_information['name'],
 				'street'      => $shipping_information['street'],
 				'street2'     => isset($shipping_information['street2']) ? $shipping_information['street2'] : '',
+				'email'       => $shipping_information['email'],
 				'phone'       => $shipping_information['phone'],
 				'city'        => $shipping_information['city'],
 				'zip'         => $shipping_information['zip'],
@@ -3331,6 +3335,7 @@ class shop extends Module {
 			$fields['buyer_first_name'] = $buyer->first_name;
 			$fields['buyer_last_name'] = $buyer->last_name;
 			$fields['buyer_email'] = $buyer->email;
+			$fields['buyer_phone'] = $buyer->phone;
 			$fields['buyer_uid'] = $buyer->uid;
 
 			$email_address = $buyer->email;
@@ -3347,6 +3352,7 @@ class shop extends Module {
 			$fields['address_name'] = $address->name;
 			$fields['address_street'] = $address->street;
 			$fields['address_street2'] = $address->street2;
+			$fields['address_email'] = $address->email;
 			$fields['address_phone'] = $address->phone;
 			$fields['address_city'] = $address->city;
 			$fields['address_zip'] = $address->zip;
