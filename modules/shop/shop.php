@@ -635,11 +635,11 @@ class shop extends Module {
 				$this->showCheckout();
 				break;
 
-			case 'checkout_completed':
+			case 'checkout-completed':
 				$this->showCheckoutCompleted();
 				break;
 
-			case 'checkout_canceled':
+			case 'checkout-canceled':
 				$this->showCheckoutCanceled();
 				break;
 
@@ -3783,8 +3783,8 @@ class shop extends Module {
 		switch ($stage) {
 			case Stage::CHECKOUT:
 				// get fields for payment method
-				$return_url = url_Make('checkout_completed', 'shop', array('payment_method', $payment_method->get_name()));
-				$cancel_url = url_Make('checkout_canceled', 'shop', array('payment_method', $payment_method->get_name()));
+				$return_url = url_Make('checkout-completed', 'shop', array('payment_method', $payment_method->get_name()));
+				$cancel_url = url_Make('checkout-canceled', 'shop', array('payment_method', $payment_method->get_name()));
 
 				// update transaction
 				$summary = $this->updateTransaction(
