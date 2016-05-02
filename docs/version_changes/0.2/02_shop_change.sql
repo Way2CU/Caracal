@@ -9,4 +9,5 @@ ALTER TABLE `shop_transactions` DROP COLUMN `system_user`;
 ALTER TABLE `shop_transactions` ADD COLUMN `payment_token` int NOT NULL DEFAULT '0' AFTER `payment_method`;
 ALTER TABLE `shop_transactions` CHANGE `token` `remote_id` varchar(255);
 ALTER TABLE `shop_delivery_address` ADD COLUMN `access_code` varchar(100) AFTER `country`;
+ALTER TABLE `shop_delivery_address` ADD COLUMN `email` varchar(127) DEFAULT '' AFTER `street2`;
 ALTER TABLE `shop_items` MODIFY `uid` varchar(64);
