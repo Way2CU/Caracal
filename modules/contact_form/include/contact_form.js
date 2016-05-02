@@ -81,7 +81,7 @@ ContactForm.Form = function(form_object) {
 		self.events = new Caracal.EventSystem();
 		self.events
 			.register('submit-error', 'boolean')
-			.register('submit-success');
+			.register('submit-success', 'boolean');
 	};
 
 	/**
