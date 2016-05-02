@@ -22,10 +22,10 @@
  */
 
 var Caracal = Caracal || new Object();
-Caracal.contact_form = Caracal.contact_form || new Object();
+Caracal.ContactForm = Caracal.ContactForm || new Object();
 
 
-function ContactForm(form_object) {
+ContactForm.Form = function(form_object) {
 	var self = this;
 
 	self._form = null;
@@ -65,12 +65,12 @@ function ContactForm(form_object) {
 		}
 
 		// create dialog
-		if (Caracal.contact_form.dialog == null) {
-			Caracal.contact_form.dialog = new Dialog();
-			Caracal.contact_form.dialog.setTitle(language_handler.getText('contact_form', 'dialog_title'));
-			Caracal.contact_form.dialog.setSize(400, 100);
-			Caracal.contact_form.dialog.setScroll(false);
-			Caracal.contact_form.dialog.setClearOnClose(true);
+		if (Caracal.ContactForm.dialog == null) {
+			Caracal.ContactForm.dialog = new Dialog();
+			Caracal.ContactForm.dialog.setTitle(language_handler.getText('contact_form', 'dialog_title'));
+			Caracal.ContactForm.dialog.setSize(400, 100);
+			Caracal.ContactForm.dialog.setScroll(false);
+			Caracal.ContactForm.dialog.setClearOnClose(true);
 		}
 
 		// create message container
@@ -176,9 +176,9 @@ function ContactForm(form_object) {
 		var response = self.events.trigger('submit-success', data);
 		if (response) {
 			self._message.html(data.message);
-			Caracal.contact_form.dialog.setError(data.error);
-			Caracal.contact_form.dialog.setContent(self._message);
-			Caracal.contact_form.dialog.show();
+			Caracal.ContactForm.dialog.setError(data.error);
+			Caracal.ContactForm.dialog.setContent(self._message);
+			Caracal.ContactForm.dialog.show();
 		}
 
 		// clear form on success
@@ -201,9 +201,9 @@ function ContactForm(form_object) {
 		var response = self.events.trigger('submit-error', request_status, description);
 		if (response) {
 			self._message.html(data.message);
-			Caracal.contact_form.dialog.setError(true);
-			Caracal.contact_form.dialog.setContent(self._message);
-			Caracal.contact_form.dialog.show();
+			Caracal.ContactForm.dialog.setError(true);
+			Caracal.ContactForm.dialog.setContent(self._message);
+			Caracal.ContactForm.dialog.show();
 		}
 	};
 
@@ -212,11 +212,11 @@ function ContactForm(form_object) {
 }
 
 $(function() {
-	Caracal.contact_form.forms = [];
-	Caracal.contact_form.dialog = null;
+	Caracal.ContactForm.list = [];
+	Caracal.ContactForm.dialog = null;
 
 	$('form[data-dynamic]').each(function() {
 		var form = new ContactForm(this);
-		Caracal.contact_form.forms.push(form);
+		Caracal.ContactForm.list.push(form);
 	});
 });
