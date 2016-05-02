@@ -993,6 +993,7 @@ class shop extends Module {
 			`name` varchar(128) NOT NULL,
 			`street` varchar(200) NOT NULL,
 			`street2` varchar(200) NOT NULL,
+			`email` varchar(127) NOT NULL,
 			`phone` varchar(200) NOT NULL,
 			`city` varchar(40) NOT NULL,
 			`zip` varchar(20) NOT NULL,
