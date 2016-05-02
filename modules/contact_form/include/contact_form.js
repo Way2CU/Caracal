@@ -2,12 +2,27 @@
  * Dynamic Contact Form Support JavaScript
  * Caracal Development Framework
  *
- * Copyright (c) 2014. by Way2CU, http://way2cu.com
+ * Copyright (c) 2016. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
+ *
+ * Supported events:
+ * - Callback for `submit-success`:
+ * 		funcion (response_data), returns boolean
+ *
+ * 		If result is `false` it will prevent default dialog from
+ * 		showing, giving custom scripts opportunity to present success
+ * 		message in a different way.
+ *
+ * - Callback for `submit-error`:
+ *   	function (status, description), returns boolean
+ *
+ *   	If result is `false` it will prevent default dialog from
+ *   	showing giving custom scripts opportunity to present error
+ *   	message in a different way.
  */
 
-var Caracal = Caracal || {};
-Caracal.contact_form = Caracal.contact_form || {};
+var Caracal = Caracal || new Object();
+Caracal.contact_form = Caracal.contact_form || new Object();
 
 
 function ContactForm(form_object) {
@@ -19,6 +34,8 @@ function ContactForm(form_object) {
 	self._overlay = null;
 	self._message = null;
 	self._silent = false;
+
+	self.events = null;
 
 	/**
 	 * Complete object initialization.
@@ -59,6 +76,12 @@ function ContactForm(form_object) {
 		// create message container
 		self._message = $('<div>');
 		self._message.css('padding', '20px');
+
+		// create events handling system
+		self.events = new Caracal.EventSystem();
+		self.events
+			.register('submit-error', 'boolean')
+			.register('submit-success');
 	};
 
 	/**
@@ -67,8 +90,9 @@ function ContactForm(form_object) {
 	 * @return object
 	 */
 	self._get_data = function() {
-		var result = {};
+		var result = new Object();
 
+		// collect data
 		self._fields.each(function() {
 			var field = $(this);
 			var name = field.attr('name');
@@ -149,8 +173,8 @@ function ContactForm(form_object) {
 		self._overlay.removeClass('visible');
 
 		// configure and show dialog
-		var response = self._form.triggerHandler('dialog-show', [data.error]);
-		if (response == undefined || (response != undefined && response == true)) {
+		var response = self.events.trigger('submit-success', data);
+		if (response) {
 			self._message.html(data.message);
 			Caracal.contact_form.dialog.setError(data.error);
 			Caracal.contact_form.dialog.setContent(self._message);
@@ -160,9 +184,6 @@ function ContactForm(form_object) {
 		// clear form on success
 		if (!data.error)
 			self._form[0].reset();
-
-		// trigger other form events
-		self._form.trigger('analytics-event', data);
 	};
 
 	/**
@@ -177,8 +198,8 @@ function ContactForm(form_object) {
 		self._overlay.removeClass('visible');
 
 		// configure and show dialog
-		var response = self._form.triggerHandler('dialog-show', [true]);
-		if (response == undefined || (response != undefined && response == true)) {
+		var response = self.events.trigger('submit-error', request_status, description);
+		if (response) {
 			self._message.html(data.message);
 			Caracal.contact_form.dialog.setError(true);
 			Caracal.contact_form.dialog.setContent(self._message);
