@@ -840,6 +840,7 @@ class shop extends Module {
 
 		// set shop in testing mode by default
 		$this->saveSetting('testing_mode', 1);
+		$this->saveSetting('send_copy', 0);
 
 		// create shop items table
 		$sql = "
@@ -1276,6 +1277,7 @@ class shop extends Module {
 		$shop_location = fix_chars($_REQUEST['shop_location']);
 		$fixed_country = fix_chars($_REQUEST['fixed_country']);
 		$testing_mode = fix_id($_REQUEST['testing_mode']);
+		$send_copy = fix_id($_REQUEST['send_copy']);
 
 		$this->saveSetting('regular_template', $regular_template);
 		$this->saveSetting('recurring_template', $recurring_template);
@@ -1283,6 +1285,7 @@ class shop extends Module {
 		$this->saveSetting('shop_location', $shop_location);
 		$this->saveSetting('fixed_country', $fixed_country);
 		$this->saveSetting('testing_mode', $testing_mode);
+		$this->saveSetting('send_copy', $send_copy);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -3604,12 +3607,21 @@ class shop extends Module {
 		$sender = $contact_form->getSender();
 		$template = $contact_form->getTemplate($template);
 
+		// get default recipient
+		$recipients = array();
+		if ($this->settings['send_copy'])
+			$recipients = $contact_form->getRecipients();
+
 		// start creating message
 		foreach ($mailers as $mailer_name => $mailer) {
 			$mailer->start_message();
 			$mailer->set_subject($template['subject']);
 			$mailer->set_sender($sender['address'], $sender['name']);
 			$mailer->add_recipient($email_address);
+
+			if (count($recipients) > 0)
+				foreach ($recipients as $recipient)
+					$mailer->add_recipient($recipient['address']);
 
 			$mailer->set_body($template['plain_body'], $template['html_body']);
 			$mailer->set_variables($fields);

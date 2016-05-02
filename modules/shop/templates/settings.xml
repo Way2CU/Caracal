@@ -3,6 +3,7 @@
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div id="shop_settings_notebook">
+			<!-- General settings -->
 			<div>
 				<label>
 					<span><cms:text constant="label_fixed_country" module="shop"/></span>
@@ -44,6 +45,7 @@
 				</label>
 			</div>
 
+			<!-- Email templates -->
 			<div>
 				<label>
 					<span><cms:text constant="label_regular_template" module="shop"/></span>
@@ -80,6 +82,15 @@
 							cms:eval="selected"
 						/>
 					</select>
+				</label>
+				<label type="checkbox">
+					<span><cms:text constant="label_send_copy" module="shop"/></span>
+					<input
+						type="checkbox"
+						name="send_copy"
+						checked="$settings['send_copy'] ? 'checked' : false"
+						cms:optional="checked"
+						/>
 				</label>
 			</div>
 		</div>

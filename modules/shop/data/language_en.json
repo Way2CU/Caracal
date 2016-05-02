@@ -57,6 +57,7 @@
 	"empty_shopping_cart": "There are no items in shopping cart.",
 	"handling": "Handling:",
 	"hide_shopping_cart": "Hide shopping cart",
+	"label_send_copy": "Send copy to default recipient?",
 	"label_contact_information": "Contact information:",
 	"label_discount": "Discount (%):",
 	"label_packaged_by": "Packaged by:",
