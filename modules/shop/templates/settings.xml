@@ -83,7 +83,7 @@
 						/>
 					</select>
 				</label>
-				<label type="checkbox">
+				<label class="checkbox">
 					<span><cms:text constant="label_send_copy" module="shop"/></span>
 					<input
 						type="checkbox"
