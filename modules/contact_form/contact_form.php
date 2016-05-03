@@ -421,6 +421,7 @@ class contact_form extends Module {
 		$this->saveSetting('smtp_server', 'smtp.gmail.com');
 		$this->saveSetting('smtp_port', '465');
 		$this->saveSetting('use_ssl', 1);
+		$this->saveSetting('mailer', '');
 
 		// templates table
 		$sql = "

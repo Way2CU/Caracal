@@ -263,7 +263,7 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 		// attach file
 		if ($inline)
 			$this->message['images'][] = $structure; else
-				$this->message['attachments'][] = $structure;
+			$this->message['attachments'][] = $structure;
 	}
 }
 
