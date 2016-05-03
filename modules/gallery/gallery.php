@@ -2625,7 +2625,7 @@ class gallery extends Module {
 		}
 
 		// we failed to load image, exit
-		if (is_null($img_source))
+		if ($img_source === FALSE)
 			return null;
 
 		// calculate width to height ratio
