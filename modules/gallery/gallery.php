@@ -2602,8 +2602,13 @@ class gallery extends Module {
 		$target_file = $this->thumbnail_path.$thumb_size.$addon.'_'.$constraint;
 		$target_file .= '_'.pathinfo($filename, PATHINFO_BASENAME);
 
+		// if target file exists, don't create it
 		if (file_exists($target_file))
 			return $target_file;
+
+		// make sure source exists
+		if (!file_exists($filename))
+			return null;
 
 		// create image resource
 		$img_source = null;
