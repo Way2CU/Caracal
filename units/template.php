@@ -220,9 +220,8 @@ class TemplateHandler {
 		if (!empty($tags))
 			$tag_array = $tags;
 
-		if (empty($tag_array) && $this->active && property_exists($this->engine->document, 'tagChildren'))
-			$tag_array = $this->engine->document->tagChildren; else
-			error_log('Missing "document" tag or empty template is not loaded in '.$this->file.'.', E_USER_NOTICE);
+		if (empty($tag_array) && $this->active)
+			$tag_array = $this->engine->document->tagChildren;
 
 		// start parsing tags
 		$count = count($tag_array);
