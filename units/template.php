@@ -798,12 +798,25 @@ class TemplateHandler {
 	private function handleError($number, $message, $file=null, $line=null, $context=null) {
 		$data = array();
 
-		$data[] = $type.':';
+		switch ($number) {
+			case E_USER_ERROR:
+				$data[] = 'Error: ';
+				break;
+
+			case E_USER_WARNING:
+				$data[] = 'Warning: ';
+				break;
+
+			case E_USER_NOTICE:
+				$data[] = 'Notice: ';
+				break;
+		}
+
 		$data[] = $message.' in template "';
 		$data[] = $this->file.'"';
 
 		if (!is_null($file))
-			$data[] = '('.$file.' on line '.$line.')';
+			$data[] = ' ('.$file.' on line '.$line.')';
 
 		$text = implode('', $data);
 		error_log($text);
