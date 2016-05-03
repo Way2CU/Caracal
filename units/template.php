@@ -215,7 +215,12 @@ class TemplateHandler {
 			return;
 
 		// take the tag list for parsing
-		$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
+		try {
+			$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
+
+		} catch (Exception $error) {
+			error_log($error->getMessage().' ('.$this->file.')', E_USER_NOTICE);
+		}
 
 		// start parsing tags
 		$count = count($tag_array);
