@@ -542,7 +542,7 @@ Caracal.Shop.Cart = function() {
 		}
 
 		// trigger an event
-		self.events.trigger('cart-cleared', cart);
+		self.events.trigger('cart-cleared', self);
 	};
 
 	/**
@@ -577,7 +577,7 @@ Caracal.Shop.Cart = function() {
 		self.ui.update_totals();
 
 		// trigger event
-		self.events.trigger('card-loaded', self, data);
+		self.events.trigger('cart-loaded', self, data);
 	};
 
 	/**
