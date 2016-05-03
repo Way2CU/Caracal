@@ -12,7 +12,7 @@
 	RewriteRule ^(.*)$ %{ENV:protocol}://%1/$1 [R=301,L]
 
 	# don't rewrite site content
-	RewriteCond ^/site/ - [NC,L]
+	RewriteRule ^/site/ - [NC,L]
 
 	# make sure requested file name is not directory or file name
 	RewriteCond %{REQUEST_FILENAME} !-f
