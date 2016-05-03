@@ -14,6 +14,7 @@
 	# make sure requested file name is not directory or file name
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} !^/site/
 
 	# take whole URI and give it to main index file
 	RewriteRule (.*) index.php?_rewrite=$1 [QSA,L]
