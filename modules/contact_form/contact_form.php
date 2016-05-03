@@ -846,7 +846,7 @@ class contact_form extends Module {
 					$mailer->add_recipient($recipient['address'], $recipient['name']);
 
 				foreach ($attachments as $attachment)
-					$mailer->add_attachment($attachment);
+					$mailer->attach_file($attachment);
 
 				$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
 				$mailer->set_variables($replacement_fields);
