@@ -200,7 +200,7 @@ ContactForm.Form = function(form_object) {
 		// configure and show dialog
 		var response = self.events.trigger('submit-error', request_status, description);
 		if (response) {
-			self._message.html(data.message);
+			self._message.html(description);
 			Caracal.ContactForm.dialog.setError(true);
 			Caracal.ContactForm.dialog.setContent(self._message);
 			Caracal.ContactForm.dialog.show();
