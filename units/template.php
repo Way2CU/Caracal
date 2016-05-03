@@ -203,9 +203,7 @@ class TemplateHandler {
 	/**
 	 * Parse loaded template
 	 *
-	 * @param integer $level Current level of parsing
 	 * @param array $tags Leave blank, used for recursion
-	 * @param boolean $parent_block If parent tag is block element
 	 */
 	public function parse($tags=array()) {
 		global $section, $action, $language, $template_path, $system_template_path, $images_path;
@@ -803,10 +801,12 @@ class TemplateHandler {
 				$data[] = 'Error: ';
 				break;
 
+			case E_WARNING:
 			case E_USER_WARNING:
 				$data[] = 'Warning: ';
 				break;
 
+			case E_NOTICE:
 			case E_USER_NOTICE:
 				$data[] = 'Notice: ';
 				break;
