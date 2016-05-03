@@ -126,7 +126,6 @@ class TemplateHandler {
 		}
 	}
 
-
 	/**
 	 * Restores XML to original state
 	 */
@@ -210,6 +209,9 @@ class TemplateHandler {
 	 */
 	public function parse($tags=array()) {
 		global $section, $action, $language, $template_path, $system_template_path, $images_path;
+
+		// turn on custom error hanlder
+		set_error_handler(array($this, 'handleError'));
 
 		if ((!$this->active) && empty($tags))
 			return;
@@ -703,6 +705,9 @@ class TemplateHandler {
 			if ($skip_cache)
 				$this->cache->endDirtyArea();
 		}
+
+		// restore previous error handler
+		restore_error_handler();
 	}
 
 	/**
@@ -778,6 +783,31 @@ class TemplateHandler {
 			return;
 
 		$this->tag_children[$tag_name] = $children;
+	}
+
+	/**
+	 * Handle errors inside of template parser.
+	 *
+	 * @param integer $number - level of error raised
+	 * @param string $message - error message
+	 * @param string $file - file in which error has occurred
+	 * @param integer $line - line where error has occurred
+	 * @param array $context - variable map in the time of raising an error
+	 * @return boolean
+	 */
+	private function handleError($number, $message, $file=null, $line=null, $context=null) {
+		$data = new Array();
+
+		$data[] = $type.':';
+		$data[] = $message.' in template "';
+		$data[] = $this->file.'"';
+
+		if (!is_null($file))
+			$data[] = '('.$file.' on line '.$line.')';
+
+		$text = implode('', $data);
+		error_log($text);
+		return true;
 	}
 }
 
