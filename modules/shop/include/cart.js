@@ -17,7 +17,7 @@
  *  	Called after item has been added to the cart. At the time
  *  	of event calling all the item data is known and available.
  *
- * - Callback for `item-removed`:
+ * - Callback for `item-remove`:
  *  	function (cart, item), returns boolean
  *
  *  	If return value is `false` item will not be removed.
@@ -36,6 +36,18 @@
  *
  * - Callback for `totals-updated`:
  *  	function (cart, count, cost, weight)
+ *
+ * - Callback for `cart-loaded`:
+ *   	function (cart, data)
+ *
+ *   	Called after card is loaded and all the items added. Item
+ *   	data at this point is available for use.
+ *
+ * - Callback for `cart-cleared`:
+ *   	function (cart)
+ *
+ *   	Called after cart has been successfully cleared on server
+ *   	side.
  */
 
 var Caracal = Caracal || new Object();
@@ -92,11 +104,12 @@ Caracal.Shop.Cart = function() {
 		self.events
 			.register('item-add', 'boolean')
 			.register('item-added')
-			.register('item-removed')
-			.register('item-amount-change')
-			.register('before-checkout')
-			.register('checkout')
-			.register('totals-updated');
+			.register('item-remove', 'boolean')
+			.register('item-amount-change', 'boolean')
+			.register('checkout', 'boolean')
+			.register('totals-updated')
+			.register('cart-loaded')
+			.register('card-cleared');
 
 		// load shopping cart from server
 		new Communicator('shop')
@@ -527,6 +540,9 @@ Caracal.Shop.Cart = function() {
 			var item = self.items[cid];
 			item.handlers.remove_success(true);
 		}
+
+		// trigger an event
+		self.events.trigger('cart-cleared', cart);
 	};
 
 	/**
@@ -559,6 +575,9 @@ Caracal.Shop.Cart = function() {
 
 		// update totals
 		self.ui.update_totals();
+
+		// trigger event
+		self.events.trigger('card-loaded', self, data);
 	};
 
 	/**
@@ -829,7 +848,7 @@ Caracal.Shop.Item = function(cart) {
 	self.remove = function() {
 		var result = false;
 
-		if (self.cart.events.trigger('item-removed', self.cart, self)) {
+		if (self.cart.events.trigger('item-remove', self.cart, self)) {
 			var data = {
 				uid: self.uid,
 				variation_id: self.variation_id
