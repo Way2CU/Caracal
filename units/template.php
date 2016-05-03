@@ -795,7 +795,7 @@ class TemplateHandler {
 	 * @param array $context - variable map in the time of raising an error
 	 * @return boolean
 	 */
-	private function handleError($number, $message, $file=null, $line=null, $context=null) {
+	public function handleError($number, $message, $file=null, $line=null, $context=null) {
 		$data = array();
 
 		switch ($number) {
