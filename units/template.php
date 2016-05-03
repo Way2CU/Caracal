@@ -796,7 +796,7 @@ class TemplateHandler {
 	 * @return boolean
 	 */
 	private function handleError($number, $message, $file=null, $line=null, $context=null) {
-		$data = new Array();
+		$data = array();
 
 		$data[] = $type.':';
 		$data[] = $message.' in template "';
