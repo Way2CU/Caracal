@@ -216,7 +216,7 @@ $(function() {
 	Caracal.ContactForm.dialog = null;
 
 	$('form[data-dynamic]').each(function() {
-		var form = new Caracal.ContactForm(this);
+		var form = new Caracal.ContactForm.Form(this);
 		Caracal.ContactForm.list.push(form);
 	});
 });
