@@ -25,7 +25,7 @@ var Caracal = Caracal || new Object();
 Caracal.ContactForm = Caracal.ContactForm || new Object();
 
 
-ContactForm.Form = function(form_object) {
+Caracal.ContactForm.Form = function(form_object) {
 	var self = this;
 
 	self._form = null;
@@ -216,7 +216,7 @@ $(function() {
 	Caracal.ContactForm.dialog = null;
 
 	$('form[data-dynamic]').each(function() {
-		var form = new ContactForm(this);
+		var form = new Caracal.ContactForm(this);
 		Caracal.ContactForm.list.push(form);
 	});
 });
