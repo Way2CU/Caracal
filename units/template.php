@@ -215,11 +215,11 @@ class TemplateHandler {
 			return;
 
 		// take the tag list for parsing
-		try {
+		if (property_exists($this, 'engine') && property_exists($this->engine, 'document')) {
 			$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
 
-		} catch (Exception $error) {
-			error_log($error->getMessage().' ('.$this->file.')', E_USER_NOTICE);
+		} else {
+			error_log('Missing "document" tag or template is not loaded in '.$this->file.'.', E_USER_NOTICE);
 		}
 
 		// start parsing tags
