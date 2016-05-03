@@ -726,7 +726,7 @@ class contact_form extends Module {
 			// add field to missing fields list
 			switch ($field->type) {
 				case 'file':
-					if ($_FILES[$name]['error'] == UPLOAD_ERR_OK) {
+					if (isset($_FILES[$name]) && $_FILES[$name]['error'] == UPLOAD_ERR_OK) {
 						$attachments[] = $_FILES[$name]['name'];
 
 					} else if ($field->required) {
