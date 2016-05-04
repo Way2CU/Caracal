@@ -3,15 +3,14 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 220px;">
-			<cms:if condition="!empty($params['description'])">
-				<input type="checkbox"/>
-			</cms:if>
 			<cms:var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
 
 			<cms:if condition="!empty($params['description'])">
-				<small>
-					<cms:var name="$params['description']"/>
-				</small>
+				<input type="checkbox" id="'properties_'.$params['id']" cms:eval="id"/>
+				<label for="'properties_'.$params['id']" cms:eval="id">
+					<cms:text constant="tab_properties" module="shop"/>
+				</label>
+				<small><cms:var name="$params['description']"/></small>
 			</cms:if>
 		</span>
 		<span class="column" style="width: 70px;">

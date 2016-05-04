@@ -26,10 +26,6 @@ div.window div.scrollable_list div.list_item small {
 	transition: max-height 0.3s;
 }
 
-div.window div.scrollable_list div.list_item input[type=checkbox]:checked + small {
-	max-height: 100px;
-}
-
 div.window div.scrollable_list div.list_item small span.property {
 	display: block;
 }
@@ -42,4 +38,33 @@ div.window div.scrollable_list div.list_item small span.value {
 body.rtl div.window div.scrollable_list div.list_item small span.value {
 	padding-left: 0;
 	padding-right: 10px;
+}
+
+div.window div.scrollable_list div.list_item input ~ label:before {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	line-height: 0;
+	border: 5px solid transparent;
+	border-left-color: #333333;
+
+	margin-right: 5px;
+	transition: transform 0.3s;
+}
+
+body.rtl div.window div.scrollable_list div.list_item input ~ label:before {
+	border-color: transparent;
+	border-right-color: #333333;
+}
+
+div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+	transform: rotate(90deg);
+}
+
+body.rtl div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+	transform: rotate(-90deg);
+}
+
+div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ small {
+	max-height: 100px;
 }
