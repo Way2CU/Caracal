@@ -62,12 +62,13 @@ div.window div.scrollable_list div.list_item input + label:before {
 	border-left-color: #333333;
 
 	transition: transform 0.3s;
-	transform-origin: 2px 50%;
+	transform-origin: 20% 50%;
 }
 
 body.rtl div.window div.scrollable_list div.list_item input + label:before {
 	border-color: transparent;
 	border-right-color: #333333;
+	transform-origin: 80% 50%;
 }
 
 div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
