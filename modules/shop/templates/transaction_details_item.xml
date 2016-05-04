@@ -7,7 +7,7 @@
 
 			<cms:if condition="!empty($params['description'])">
 				<input type="checkbox" id="'properties_'.$params['id']" cms:eval="id"/>
-				<label for="'properties_'.$params['id']" cms:eval="id">
+				<label for="'properties_'.$params['id']" cms:eval="for">
 					<cms:text constant="tab_properties" module="shop"/>
 				</label>
 				<small><cms:var name="$params['description']"/></small>

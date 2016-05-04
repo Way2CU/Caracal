@@ -44,7 +44,7 @@ div.window div.scrollable_list div.list_item input {
 	display: none;
 }
 
-div.window div.scrollable_list div.list_item input ~ label:before {
+div.window div.scrollable_list div.list_item input + label:before {
 	display: inline-block;
 	content: '';
 	width: 0;
@@ -57,7 +57,7 @@ div.window div.scrollable_list div.list_item input ~ label:before {
 	transition: transform 0.3s;
 }
 
-body.rtl div.window div.scrollable_list div.list_item input ~ label:before {
+body.rtl div.window div.scrollable_list div.list_item input + label:before {
 	border-color: transparent;
 	border-right-color: #333333;
 }
