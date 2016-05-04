@@ -61,7 +61,6 @@ div.window div.scrollable_list div.list_item input + label:before {
 	border: 5px solid transparent;
 	border-left-color: #333333;
 
-	margin-right: 5px;
 	transition: transform 0.3s;
 	transform-origin: 2px 50%;
 }
