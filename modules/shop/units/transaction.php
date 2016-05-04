@@ -11,6 +11,7 @@ namespace Modules\Shop;
 
 use \ShopTransactionsManager as TransactionsManager;
 use \ShopDeliveryAddressManager as DeliveryAddressManager;
+use \ShopBuyersManager as BuyersManager;
 
 
 class UnknownTransactionError extends \Exception {}
@@ -30,18 +31,6 @@ final class Transaction {
 			self::$manager = TransactionsManager::getInstance();
 
 		return self::$manager;
-	}
-
-	/**
-	 * Get delivery address manager.
-	 *
-	 * @return object
-	 */
-	public static function get_address_manager() {
-		if (is_null(self::$address_manager))
-			self::$address_manager = DeliveryAddressManager::getInstance();
-
-		return self::$address_manager;
 	}
 
 	/**
@@ -91,12 +80,12 @@ final class Transaction {
 	}
 
 	/**
-	 * Get address associated with currently active transaction.
+	 * Get buyer associated with currently active transaction.
 	 *
 	 * @return object
 	 */
-	public static function get_address() {
-		$result = array();
+	public static function get_current_buyer() {
+		$result = null;
 		$transaction = self::get_current();
 
 		// make sure transaction is set
@@ -104,8 +93,37 @@ final class Transaction {
 			return $result;
 
 		// get address
-		$manager = self::get_address_manager();
-		$address = $manager->getSingleItem($manager->getFieldNames(), array('id' => $transaction->address));
+		$manager = BuyersManager::getInstance();
+		$buyer = $manager->getSingleItem(
+				$manager->getFieldNames(),
+				array('id' => $transaction->buyer)
+			);
+
+		if (is_object($buyer))
+			$result = $buyer;
+
+		return $result;
+	}
+
+	/**
+	 * Get address associated with currently active transaction.
+	 *
+	 * @return object
+	 */
+	public static function get_current_address() {
+		$result = null;
+		$transaction = self::get_current();
+
+		// make sure transaction is set
+		if (is_null($transaction))
+			return $result;
+
+		// get address
+		$manager = DeliveryAddressManager::getInstance();
+		$address = $manager->getSingleItem(
+				$manager->getFieldNames(),
+				array('id' => $transaction->address)
+			);
 
 		if (is_object($address))
 			$result = $address;
