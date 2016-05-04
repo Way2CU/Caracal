@@ -21,6 +21,12 @@ div.window label.property-selector.ml_array ~ div.property-container label.prope
 
 div.window div.scrollable_list div.list_item small {
 	display: block;
+	max-height: 0;
+	transition: max-height 0.3s;
+}
+
+div.window div.scrollable_list div.list_item input[type=checkbox]:checked small {
+	max-height: 100px;
 }
 
 div.window div.scrollable_list div.list_item small span.property {

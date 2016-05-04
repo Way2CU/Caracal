@@ -3,6 +3,9 @@
 <document>
 	<div class="list_item">
 		<span class="column" style="width: 220px;">
+			<cms:if condition="!empty($params['description'])">
+				<input type="checkbox"/>
+			</cms:if>
 			<cms:var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
 
 			<cms:if condition="!empty($params['description'])">
