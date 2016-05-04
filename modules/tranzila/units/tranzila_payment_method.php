@@ -191,9 +191,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		// add buyer information
 		$buyer = Transaction::get_current_buyer();
 		if (is_object($buyer)) {
-			$params['buyer_name'] = $buyer->name;
-			$params['buyer_email'] = $buyer->email;
-			$params['buyer_phone'] = $buyer->phone;
+			$params['contact'] = $buyer->name;
+			$params['email'] = $buyer->email;
+			$params['phone'] = $buyer->phone;
 		}
 
 		// create HTML form
