@@ -40,8 +40,13 @@ body.rtl div.window div.scrollable_list div.list_item small span.value {
 	padding-right: 10px;
 }
 
+div.window div.scrollable_list div.list_item input {
+	display: none;
+}
+
 div.window div.scrollable_list div.list_item input ~ label:before {
 	display: inline-block;
+	content: '';
 	width: 0;
 	height: 0;
 	line-height: 0;
