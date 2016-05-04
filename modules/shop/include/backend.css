@@ -30,6 +30,10 @@ div.window div.scrollable_list div.list_item small span.property {
 	display: block;
 }
 
+div.window div.scrollable_list div.list_item small span.property:first-of-type {
+	padding-top: 5px;
+}
+
 div.window div.scrollable_list div.list_item small span.value {
 	display: inline-block;
 	padding-left: 10px;
