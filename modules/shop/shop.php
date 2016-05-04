@@ -90,6 +90,8 @@ final class TransactionStatus {
 	// list of statuses available for manual setting based on current transaction status
 	public static $flow = array(
 		TransactionType::REGULAR => array(
+			self::PENDING	=> array(self::PENDING),
+			self::CANCELED  => array(self::CANCELED),
 			self::COMPLETED	=> array(self::COMPLETED, self::SHIPPING),
 			self::SHIPPING	=> array(self::SHIPPING, self::SHIPPED),
 			self::SHIPPED	=> array(self::LOST, self::DELIVERED)
