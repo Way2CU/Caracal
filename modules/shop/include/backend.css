@@ -44,6 +44,10 @@ div.window div.scrollable_list div.list_item input {
 	display: none;
 }
 
+div.window div.scrollable_list div.list_item input + label {
+	margin-bottom: 0;
+}
+
 div.window div.scrollable_list div.list_item input + label:before {
 	display: inline-block;
 	content: '';
@@ -55,6 +59,7 @@ div.window div.scrollable_list div.list_item input + label:before {
 
 	margin-right: 5px;
 	transition: transform 0.3s;
+	transform-origin: 2px 50%;
 }
 
 body.rtl div.window div.scrollable_list div.list_item input + label:before {
