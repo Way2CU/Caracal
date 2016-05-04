@@ -178,15 +178,23 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// prepare basic parameters
 		$params = array(
-			'currency'		=> $currency_code,
-			'sum'			=> $data['total'] + $data['shipping'] + $data['handling'],
-			'cred_type'		=> 1,
-			'pdesc'			=> $description,
-			'tranmode'		=> 'AK',
+			'currency'       => $currency_code,
+			'sum'            => $data['total'] + $data['shipping'] + $data['handling'],
+			'cred_type'      => 1,
+			'pdesc'          => $description,
+			'tranmode'       => 'AK',
 			'transaction_id' => $data['uid'],
-			'nologo'		=> 1,
-			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
+			'nologo'         => 1,
+			'lang'           => isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language,
 		);
+
+		// add buyer information
+		$buyer = Transaction::get_current_buyer();
+		if (is_object($buyer)) {
+			$params['buyer_name'] = $buyer->name;
+			$params['buyer_email'] = $buyer->email;
+			$params['buyer_phone'] = $buyer->phone;
+		}
 
 		// create HTML form
 		$result = '';
