@@ -149,7 +149,7 @@
 						type="text"
 						value="$params['address_phone']"
 						readonly="readonly"
-						style="width: 120px;"
+						style="width: 200px;"
 						class="code ltr"
 						cms:eval="value"
 						/>
@@ -213,7 +213,7 @@
 	</div>
 	<div class="scrollable_list box right" style="width: 475px;">
 		<div class="list_header">
-			<span class="column" style="width: 190px;">
+			<span class="column" style="width: 220px;">
 				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column" style="width: 70px;">

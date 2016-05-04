@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 190px;">
+		<span class="column" style="width: 220px;">
 			<cms:var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
 
 			<cms:if condition="!empty($params['description'])">
@@ -12,13 +12,13 @@
 			</cms:if>
 		</span>
 		<span class="column" style="width: 70px;">
-			<cms:var name="$params['amount']"/>
+			<cms:var param="amount"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<cms:var name="$params['price'].' '.$params['currency']"/>
+			<cms:var param="price"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<cms:var name="$params['total'].' '.$params['currency']"/>
+			<cms:var param="total"/>
 		</span>
 	</div>
 </document>
