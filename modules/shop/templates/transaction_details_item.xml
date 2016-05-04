@@ -6,7 +6,7 @@
 			<cms:var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
 
 			<cms:if condition="!empty($params['description'])">
-				<small style="display: block;">
+				<small>
 					<cms:var name="$params['description']"/>
 				</small>
 			</cms:if>

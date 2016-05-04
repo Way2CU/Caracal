@@ -18,3 +18,21 @@ div.window label.property-selector.array ~ div.property-container label.property
 div.window label.property-selector.ml_array ~ div.property-container label.property.ml_array {
 	display: block;
 }
+
+div.window div.scrollable_list div.list_item small {
+	display: block;
+}
+
+div.window div.scrollable_list div.list_item small span.property {
+	display: block;
+}
+
+div.window div.scrollable_list div.list_item small span.value {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+body.rtl div.window div.scrollable_list div.list_item small span.value {
+	padding-left: 0;
+	padding-right: 10px;
+}
