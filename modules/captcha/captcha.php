@@ -170,7 +170,7 @@ class captcha extends Module {
 
 		// print out the image
 		header('Content-type: image/png');
-		imagepng($image);
+		imagepng($image, null, 9, PNG_ALL_FILTERS);
 		imagedestroy($image);
 	}
 
