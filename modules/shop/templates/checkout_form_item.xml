@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<tr>
-		<td>
-			<cms:var name="$params['name'][$language]"/>
-			<cms:if condition="!empty($params['description'])">
-				<small><cms:var name="$params['description']"/></small>
-			</cms:if>
-		</td>
-		<td><cms:var name="$params['count']"/></td>
-		<cms:if condition="$params['transaction_type'] != TransactionType::DELAYED">
+	<cms:if condition="$params['transaction_type'] != TransactionType::DELAYED">
+		<tr>
+			<td>
+				<cms:var name="$params['name'][$language]"/>
+				<cms:if condition="!empty($params['description'])">
+					<small><cms:var name="$params['description']"/></small>
+				</cms:if>
+			</td>
+			<td><cms:var name="$params['count']"/></td>
 			<td><cms:var name="$params['price']"/></td>
-			<td><cms:var name="$params['tax']"/></td>
-		</cms:if>
-		<td><cms:var name="$params['weight']"/></td>
-		<cms:if condition="$params['transaction_type'] != TransactionType::DELAYED">
+			<td class="optional"><cms:var name="$params['tax']"/></td>
+			<td class="optional"><cms:var name="$params['weight']"/></td>
 			<td><cms:var name="$params['total']"/></td>
-		</cms:if>
-	</tr>
+		</tr>
+	</cms:if>
+
+	<cms:if condition="$params['transaction_type'] == TransactionType::DELAYED">
+		<tr>
+			<td>
+				<cms:var name="$params['name'][$language]"/>
+				<cms:if condition="!empty($params['description'])">
+					<small><cms:var name="$params['description']"/></small>
+				</cms:if>
+			</td>
+			<td><cms:var name="$params['count']"/></td>
+			<td class="optional"><cms:var name="$params['weight']"/></td>
+		</tr>
+	</cms:if>
 </document>

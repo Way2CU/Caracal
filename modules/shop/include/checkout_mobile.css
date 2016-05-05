@@ -57,6 +57,7 @@ table.checkout_details {
 	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
 
 	color: #333333;
+	font-size: 0.6rem;
 }
 
 table.discounted_items {
@@ -536,6 +537,10 @@ div#recurring_summary h2 {
 /**
  * Header
  */
+table.checkout_details td.optional {
+	display: none;
+}
+
 table.checkout_details thead td {
 	padding: 5px;
 	padding-left: 7px;
