@@ -538,7 +538,7 @@ div#recurring_summary h2 {
  * Header
  */
 table.checkout_details td.optional,
-table.checkout_details th.optional {
+table.discounted_items th.optional {
 	display: none;
 }
 
