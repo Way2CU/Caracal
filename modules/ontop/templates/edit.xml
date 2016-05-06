@@ -36,6 +36,7 @@
 				name="key"
 				style="width: 300px;"
 				rows="3"
+				autocomplete="off"
 				>
 				<cms:var param="key"/>
 			</textarea>
