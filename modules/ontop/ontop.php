@@ -179,7 +179,7 @@ class ontop extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'form_action'	=> backend_UrlMake($this->name, 'save_application'),
+					'form_action'	=> backend_UrlMake($this->name, 'save'),
 					'cancel_action'	=> window_Close('ontop_new_application')
 				);
 
