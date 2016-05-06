@@ -51,6 +51,7 @@ final class Handler {
 				$result[] = array(
 					$application->uid,
 					$application->key
+				);
 
 		return $result;
 	}
