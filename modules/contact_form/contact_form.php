@@ -860,7 +860,7 @@ class contact_form extends Module {
 				// report error with mailer in case it failed
 				if (!$send_result)
 					trigger_error('Form submission failed with "'.$mailer_name.'".', E_USER_WARNING); else
-					Events::trigger($this->name, 'submitted', $sender, $recipients, $template, $data);
+					Events::trigger($this->name, 'submitted', $sender, $recipients, $template, $replacement_fields);
 			}
 		}
 

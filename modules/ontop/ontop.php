@@ -383,10 +383,10 @@ class ontop extends Module {
 	 * @param array $template
 	 * @param array $data
 	 */
-	public function handle_contact_form_submit($sender, $recipients, $template, $data) {
+	public function handle_contact_form_submit($sender, $recipients, $template, $fields) {
 		// prepare data
 		$message = $this->getLanguageConstant('message_contact_form_submit')."\n";
-		foreach ($data as $key => $value)
+		foreach ($fields as $key => $value)
 			$message .= $key.': '.$value."\n";
 
 		// get push targets
