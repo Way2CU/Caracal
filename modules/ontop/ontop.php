@@ -26,6 +26,8 @@ class ontop extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
+		global $section;
+
 		parent::__construct(__FILE__);
 
 		// connect events
