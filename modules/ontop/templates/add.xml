@@ -22,11 +22,10 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_key" module="ontop"/></span>
-			<input
-				type="text"
+			<textarea
 				name="key"
-				style="width: 150px;"
-				maxlength="128"
+				style="width: 300px;"
+				rows="3"
 				/>
 		</label>
 		<fieldset>
