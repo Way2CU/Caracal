@@ -337,10 +337,9 @@ class ontop extends Module {
 		Handler::push($numbers, 'Test', 'Numbers');
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($numbers);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_test'),
+					'message'	=> $this->getLanguageConstant('message_test')."<br><b>{$numbers}</b>",
 					'button'	=> $this->getLanguageConstant('close'),
 					'action'	=> window_Close('ontop_test_application').';'.window_ReloadContent('ontop_applications')
 				);
