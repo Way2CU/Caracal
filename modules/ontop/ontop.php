@@ -43,7 +43,7 @@ class ontop extends Module {
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					window_Open(
 						'ontop_applications',
-						300,
+						450,
 						$this->getLanguageConstant('title_ontop'),
 						true, true,
 						backend_UrlMake($this->name, 'applications')
@@ -157,7 +157,7 @@ class ontop extends Module {
 										$this->getLanguageConstant('title_add_application'),
 										true, false,
 										$this->name,
-										'add_application'
+										'add'
 									),
 					);
 
@@ -285,7 +285,7 @@ class ontop extends Module {
 												'transfer_control',
 												'backend_module',
 												array('module', $this->name),
-												array('backend_action', 'delete_application_commit'),
+												array('backend_action', 'delete_commit'),
 												array('id', $id)
 											)
 										),
@@ -406,7 +406,7 @@ class ontop extends Module {
 							'transfer_control',
 							'backend_module',
 							array('module', $this->name),
-							array('backend_action', 'edit_application'),
+							array('backend_action', 'edit'),
 							array('id', $item->id)
 						)
 					)),
@@ -421,7 +421,7 @@ class ontop extends Module {
 							'transfer_control',
 							'backend_module',
 							array('module', $this->name),
-							array('backend_action', 'delete_application'),
+							array('backend_action', 'delete'),
 							array('id', $item->id)
 						)
 					))

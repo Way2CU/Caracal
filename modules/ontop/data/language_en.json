@@ -15,5 +15,6 @@
 	"label_contact_form_submit": "Contact form submitted",
 	"legend_system_events": "Push on system events:",
 	"tooltip_name": "Internally used name to make management easier.",
-	"menu_ontop": "OnTop"
+	"menu_ontop": "OnTop",
+	"column_name": "Name"
 }
