@@ -341,7 +341,7 @@ class ontop extends Module {
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_test')."<br><b>{$numbers}</b>",
 					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close('ontop_test_application').';'.window_ReloadContent('ontop_applications')
+					'action'	=> window_Close('ontop_test_application')
 				);
 
 		$template->restoreXML();
