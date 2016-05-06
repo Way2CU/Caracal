@@ -470,7 +470,7 @@ class ontop extends Module {
 							array('id', $item->id)
 						)
 					))
-			);
+				);
 
 			$template->restoreXML();
 			$template->setLocalParams($params);

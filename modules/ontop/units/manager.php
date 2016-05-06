@@ -25,7 +25,6 @@ class Manager extends ItemManager {
 		$this->addProperty('uid', 'varchar');
 		$this->addProperty('key', 'varchar');
 		$this->addProperty('shop_transaction_complete', 'boolean');
-		$this->addProperty('shop_transaction_pending', 'boolean');
 		$this->addProperty('contact_form_submit', 'boolean');
 	}
 
