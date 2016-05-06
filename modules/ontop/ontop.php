@@ -36,7 +36,7 @@ class ontop extends Module {
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();
 
-			$articles_menu = new backend_MenuItem(
+			$ontop_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_ontop'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					window_Open(
@@ -48,6 +48,8 @@ class ontop extends Module {
 					),
 					$level=5
 				);
+
+			$backend->addMenu($this->name, $ontop_menu);
 		}
 	}
 
