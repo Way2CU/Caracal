@@ -455,7 +455,7 @@ class ontop extends Module {
 							array('backend_action', 'delete'),
 							array('id', $item->id)
 						)
-					))
+					)),
 				'item_test' => url_MakeHyperlink(
 					$this->getLanguageConstant('test'),
 					window_Open(
