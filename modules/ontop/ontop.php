@@ -130,7 +130,7 @@ class ontop extends Module {
 				`key` VARCHAR(128) NOT NULL,
 				`shop_transaction_complete` BOOLEAN NOT NULL DEFAULT '0',
 				`contact_form_submit` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
+				PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 
 		$db->query($sql);
