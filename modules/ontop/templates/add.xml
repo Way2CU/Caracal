@@ -30,15 +30,15 @@
 				/>
 		</label>
 		<fieldset>
-			<legend><cms:text constant="legend_system_events" module="shop"/></legend>
-			<label type="checkbox">
+			<legend><cms:text constant="legend_system_events" module="ontop"/></legend>
+			<label class="checkbox">
 				<span><cms:text constant="label_shop_transaction_complete" module="ontop"/></span>
 				<input
 					type="checkbox"
 					name="shop_transaction_complete"
 					/>
 			</label>
-			<label type="checkbox">
+			<label class="checkbox">
 				<span><cms:text constant="label_contact_form_submit" module="ontop"/></span>
 				<input
 					type="checkbox"
