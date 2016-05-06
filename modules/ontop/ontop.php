@@ -385,16 +385,14 @@ class ontop extends Module {
 	 */
 	public function handle_contact_form_submit($sender, $recipients, $template, $fields) {
 		// prepare data
-		$message = $template['name']."\n";
-		foreach ($fields as $key => $value)
-			$message .= $key.': '.$value."\n";
+		$message = $template['name'];
 
 		// get push targets
 		$targets = Handler::get_targets(array('contact_form_submit'));
 		Handler::set_targets($targets);
 
 		// push notifications
-		Handler::push($message, 'Contact form', 'Submit');
+		Handler::push($message, 'Contact form', 'Submit', null, $fields);
 	}
 
 	/**
