@@ -208,7 +208,7 @@ class ontop extends Module {
 						'key'                       => $item->title,
 						'shop_transaction_complete' => $item->shop_transaction_complete,
 						'contact_form_submit'       => $item->contact_form_submit,
-						'form_action'               => backend_UrlMake($this->name, 'save_application'),
+						'form_action'               => backend_UrlMake($this->name, 'save'),
 						'cancel_action'             => window_Close('ontop_edit_application')
 					);
 
