@@ -27,7 +27,7 @@ final class Handler {
 	 * @param array $params
 	 * @return array
 	 */
-	private static function get_targets($params=array()) {
+	public static function get_targets($params=array()) {
 		$result = array();
 		$manager = Manager::getInstance();
 		$conditions = array();
