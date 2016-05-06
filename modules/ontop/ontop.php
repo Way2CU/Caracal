@@ -106,6 +106,10 @@ class ontop extends Module {
 					$this->delete_application_commit();
 					break;
 
+				case 'test':
+					$this->test_application();
+					break;
+
 				default:
 					$this->show_applications();
 					break;
@@ -321,6 +325,33 @@ class ontop extends Module {
 	}
 
 	/**
+	 * Send test message to selected application.
+	 */
+	private function test_application() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = Manager::getInstance();
+
+		$target = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		Handler::set_targets(array($target->uid, $target->key));
+
+		$numbers = sprintf('%03d-%03d', rand(0, 999), rand(0, 999));
+		Handler::push($numbers, 'Test', 'Numbers');
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($numbers);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_test'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close('ontop_test_application').';'.window_ReloadContent('ontop_applications')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
 	 * Handle new completed transaction event.
 	 *
 	 * @param object $transaction
@@ -395,7 +426,7 @@ class ontop extends Module {
 				'key'                       => $item->key,
 				'shop_transaction_complete' => $item->shop_transaction_complete,
 				'contact_form_submit'       => $item->contact_form_submit,
-				'item_change'               => url_MakeHyperlink(
+				'item_change' => url_MakeHyperlink(
 					$this->getLanguageConstant('change'),
 					window_Open(
 						'ontop_edit_application', 	// window id
@@ -410,7 +441,7 @@ class ontop extends Module {
 							array('id', $item->id)
 						)
 					)),
-				'item_delete'               => url_MakeHyperlink(
+				'item_delete' => url_MakeHyperlink(
 					$this->getLanguageConstant('delete'),
 					window_Open(
 						'ontop_delete_application', 	// window id
@@ -422,6 +453,21 @@ class ontop extends Module {
 							'backend_module',
 							array('module', $this->name),
 							array('backend_action', 'delete'),
+							array('id', $item->id)
+						)
+					))
+				'item_test' => url_MakeHyperlink(
+					$this->getLanguageConstant('test'),
+					window_Open(
+						'ontop_test_application', 	// window id
+						400,				// width
+						$this->getLanguageConstant('title_test_application'), // title
+						false, false,
+						url_Make(
+							'transfer_control',
+							'backend_module',
+							array('module', $this->name),
+							array('backend_action', 'test'),
 							array('id', $item->id)
 						)
 					))

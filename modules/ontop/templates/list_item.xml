@@ -2,12 +2,13 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 150px;">
+		<span class="column" style="width: 250px;">
 			<cms:var param="name"/>
 		</span>
 		<span class="column">
-			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
-			<cms:var name="$params['item_delete']"/>
+			<cms:var param="item_change"/><cms:raw text=" "/>
+			<cms:var param="item_delete"/><cms:raw text=" "/>
+			<cms:var param="item_test"/>
 		</span>
 	</div>
 </document>
