@@ -205,7 +205,7 @@ class ontop extends Module {
 						'id'                        => $item->id,
 						'name'                      => $item->name,
 						'uid'                       => $item->uid,
-						'key'                       => $item->title,
+						'key'                       => $item->key,
 						'shop_transaction_complete' => $item->shop_transaction_complete,
 						'contact_form_submit'       => $item->contact_form_submit,
 						'form_action'               => backend_UrlMake($this->name, 'save'),
