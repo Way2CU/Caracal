@@ -471,6 +471,10 @@ class ontop extends Module {
 						)
 					))
 			);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
 		}
 	}
 }
