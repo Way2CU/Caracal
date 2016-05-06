@@ -80,17 +80,13 @@ final class Transaction {
 	}
 
 	/**
-	 * Get buyer associated with currently active transaction.
+	 * Get buyer for specified transaction.
 	 *
+	 * @param object $transaction
 	 * @return object
 	 */
-	public static function get_current_buyer() {
+	public static function get_buyer($transaction) {
 		$result = null;
-		$transaction = self::get_current();
-
-		// make sure transaction is set
-		if (is_null($transaction))
-			return $result;
 
 		// get address
 		$manager = BuyersManager::getInstance();
@@ -106,17 +102,29 @@ final class Transaction {
 	}
 
 	/**
-	 * Get address associated with currently active transaction.
+	 * Get buyer associated with currently active transaction.
 	 *
 	 * @return object
 	 */
-	public static function get_current_address() {
-		$result = null;
+	public static function get_current_buyer() {
 		$transaction = self::get_current();
 
 		// make sure transaction is set
 		if (is_null($transaction))
 			return $result;
+
+		// get buyer
+		return self::get_buyer($transaction);
+	}
+
+	/**
+	 * Get address for specified transaction.
+	 *
+	 * @param object $transaction
+	 * @return object
+	 */
+	public static function get_address($transaction) {
+		$result = null;
 
 		// get address
 		$manager = DeliveryAddressManager::getInstance();
@@ -129,6 +137,21 @@ final class Transaction {
 			$result = $address;
 
 		return $result;
+	}
+
+	/**
+	 * Get address associated with currently active transaction.
+	 *
+	 * @return object
+	 */
+	public static function get_current_address() {
+		$transaction = self::get_current();
+
+		// make sure transaction is set
+		if (is_null($transaction))
+			return $result;
+
+		return self::get_address($transaction);
 	}
 
 	/**
