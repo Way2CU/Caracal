@@ -330,7 +330,7 @@ class ontop extends Module {
 		$message = $this->getLanguageConstant('message_shop_transaction_complete');
 		$message = str_replace(
 				array('%from%', '%total%'),
-				array($buyer->first_name.' '.$buyer->last_name, $transaction->total)
+				array($buyer->first_name.' '.$buyer->last_name, $transaction->total),
 				$message
 			);
 
