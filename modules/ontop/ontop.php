@@ -230,7 +230,6 @@ class ontop extends Module {
 				'name' => escape_chars($_REQUEST['name']),
 				'uid' => escape_chars($_REQUEST['uid']),
 				'key' => escape_chars($_REQUEST['key']),
-				'shop_transaction_complete' => $shop_
 			);
 
 		// collect boolean parameters
