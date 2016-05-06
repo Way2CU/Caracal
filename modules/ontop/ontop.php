@@ -385,7 +385,7 @@ class ontop extends Module {
 	 */
 	public function handle_contact_form_submit($sender, $recipients, $template, $fields) {
 		// prepare data
-		$message = $this->getLanguageConstant('message_contact_form_submit')."\n";
+		$message = $template['name']."\n";
 		foreach ($fields as $key => $value)
 			$message .= $key.': '.$value."\n";
 

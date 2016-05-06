@@ -3863,9 +3863,10 @@ class contact_form extends Module {
 
 		if (is_object($template))
 			$result = array(
-					'plain_body'	=> $template->plain[$language],
-					'html_body'		=> $template->html[$language],
-					'subject'		=> $template->subject[$language]
+					'name'       => $template->name[$language],
+					'plain_body' => $template->plain[$language],
+					'html_body'  => $template->html[$language],
+					'subject'    => $template->subject[$language]
 				);
 
 		return $result;
