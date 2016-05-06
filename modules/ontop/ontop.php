@@ -360,11 +360,11 @@ class ontop extends Module {
 
 		// prepare data
 		$buyer = Transaction::get_buyer($transaction);
-		$message = $this->getLanguageConstant('message_shop_transaction_complete');
-		$message = str_replace(
-				array('%from%', '%total%'),
-				array($buyer->first_name.' '.$buyer->last_name, $transaction->total),
-				$message
+		$fields = array(
+				'Buyer'    => $buyer->first_name.' '.$buyer->last_name,
+				'Total'    => $transaction->total,
+				'Delivery' => $transaction->delivery_method,
+				'Type'     => $transaction->delivery_type
 			);
 
 		// get push targets
@@ -372,7 +372,7 @@ class ontop extends Module {
 		Handler::set_targets($targets);
 
 		// push notifications
-		Handler::push($message, 'Shop', 'Transaction complete');
+		Handler::push(null, 'Shop', 'Transaction complete', null, $fields);
 	}
 
 	/**

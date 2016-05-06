@@ -8,7 +8,6 @@
 	"message_application_delete": "You are about to remove the following application from the system. Are you sure?",
 	"message_application_deleted": "Application data was removed.",
 	"message_contact_form_submit": "New submission:",
-	"message_shop_transaction_complete": "New purchase from %from%, for total of %total%.",
 	"message_test": "Test notification sent with following numbers:",
 	"label_name": "Name:",
 	"label_uid": "Application id:",
