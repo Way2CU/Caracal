@@ -48,7 +48,10 @@ final class Handler {
 		// prepare result
 		if (count($applications) > 0)
 			foreach ($applications as $application)
-				$result[$application->uid] = $application->key;
+				$result[] = array(
+					'id'  => $application->uid,
+					'key' => $application->key;
+				);
 
 		return $result;
 	}
