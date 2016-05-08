@@ -22,7 +22,7 @@ Caracal.Shop.open_item_search = function() {
 			sub_action: 'search_results',
 			query: value
 		};
-	var url = $('base').attr('href') + '?' + $.param(data);
+	var url = $('meta[property=base-url]').attr('content') + '?' + $.param(data);
 
 	Caracal.window_system.openWindow(
 					'shop_search_results',
@@ -187,7 +187,7 @@ Caracal.Shop.update_transaction_status = function(button) {
 
 	// send data to server
 	$.ajax({
-		url: $('base').attr('href') + '/index.php',
+		url: $('meta[property=base-url]').attr('content') + '/index.php',
 		cache: false,
 		dataType: 'json',
 		type: 'POST',
@@ -232,7 +232,7 @@ Caracal.Shop.update_total_amount = function(button) {
 
 	// send data to server
 	$.ajax({
-		url: $('base').attr('href') + '/index.php',
+		url: $('meta[property=base-url]').attr('content') + '/index.php',
 		cache: false,
 		dataType: 'json',
 		type: 'POST',

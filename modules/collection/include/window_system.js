@@ -772,7 +772,7 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	 * Show login window.
 	 */
 	self.showLoginWindow = function() {
-		var base = $('base').attr('href');
+		var base = $('meta[property=base-url]').attr('content');
 
 		self.openWindow(
 			'login_window',

@@ -464,7 +464,7 @@ Caracal.Shop.Cart = function() {
 			if (url[0] != '/')
 				url = '/' + url;
 
-			url = $('base').attr('href') + url;
+			url = $('meta[property=base-url]').attr('content') + url;
 		}
 
 		// add payment method if specified
