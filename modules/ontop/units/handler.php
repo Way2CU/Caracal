@@ -139,7 +139,7 @@ final class Handler {
 			return;
 
 		// add credentials
-		$data['apps'] = json_encode($targets),
+		$data['apps'] = json_encode($targets);
 
 		// prepare for sending
 		$options = array(
