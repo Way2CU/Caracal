@@ -50,7 +50,7 @@ final class Handler {
 			foreach ($applications as $application)
 				$result[] = array(
 					'id'  => $application->uid,
-					'key' => $application->key;
+					'key' => $application->key
 				);
 
 		return $result;
