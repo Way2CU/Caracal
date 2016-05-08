@@ -138,10 +138,12 @@ final class Handler {
 		if (empty($data))
 			return;
 
+		// add credentials
+		$data['apps'] = json_encode($targets),
+
 		// prepare for sending
 		$options = array(
 				'http' => array(
-					'apps'    => json_encode($targets),
 					'header'  => "Content-type: application/x-www-form-urlencoded",
 					'method'  => 'POST',
 					'content' => http_build_query($data)
