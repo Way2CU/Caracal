@@ -96,8 +96,7 @@ final class Handler {
 		// prepare parameters
 		$params = array(
 				'api_ver' => self::API_VERSION,
-				'is_post' => 1,
-				'apps'    => json_encode($targets)
+				'is_post' => 1
 			);
 		$url = self::API_ENDPOINT.'?'.http_build_query($params);
 
@@ -139,6 +138,7 @@ final class Handler {
 		// prepare for sending
 		$options = array(
 				'http' => array(
+					'apps'    => json_encode($targets),
 					'header'  => "Content-type: application/x-www-form-urlencoded",
 					'method'  => 'POST',
 					'content' => http_build_query($data)
