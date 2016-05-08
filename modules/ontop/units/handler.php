@@ -97,7 +97,9 @@ final class Handler {
 		$params = array(
 				'api_ver' => self::API_VERSION,
 				'is_post' => 1,
+				'apps'    => json_encode($targets)
 			);
+		$url = self::API_ENDPOINT.'?'.http_build_query($params);
 
 		$data = array();
 		if (!is_null($message))
@@ -143,16 +145,8 @@ final class Handler {
 				));
         $context  = stream_context_create($options);
 
-		// send notifications
-		foreach ($targets as $target) {
-			// prepare url
-			$params['id'] = $target[0];
-			$params['key'] = $target[1];
-			$url = self::API_ENDPOINT.'?'.http_build_query($params);
-
-			// send data
-			$result = file_get_contents($url, false, $context);
-		}
+		// send data
+		$result = file_get_contents($url, false, $context);
 	}
 }
 
