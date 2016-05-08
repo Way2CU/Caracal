@@ -13,7 +13,7 @@ final class Handler {
 	private static $targets = array();
 
 	const API_VERSION = 1;
-	const API_ENDPOINT = 'https://ontop.tech/api/push';
+	const API_ENDPOINT = 'https://ontop.tech/api/batchPush';
 
 	/**
 	 * Get targets to send data to. If optional params are specified
@@ -48,10 +48,7 @@ final class Handler {
 		// prepare result
 		if (count($applications) > 0)
 			foreach ($applications as $application)
-				$result[] = array(
-					$application->uid,
-					$application->key
-				);
+				$result[$application->uid] = $application->key;
 
 		return $result;
 	}
@@ -59,6 +56,11 @@ final class Handler {
 	/**
 	 * Set target applications to receive notifications. Each
 	 * target is an array with application uid and key.
+	 *
+	 * Example targets:
+	 * $targets = array(
+	 * 		'uid' => 'key'
+	 * 	);
 	 *
 	 * @param array $targets
 	 */
