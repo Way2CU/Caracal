@@ -237,7 +237,6 @@ class page_info extends Module {
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
-		$head_tag->addTag('meta', array('name' => 'rating', 'content' => 'general'));
 
 		if ($section != 'backend' && $section != 'backend_module' && $db_use) {
 			// google analytics
