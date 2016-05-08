@@ -331,10 +331,10 @@ class ontop extends Module {
 		$manager = Manager::getInstance();
 
 		$target = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
-		Handler::set_targets(array(
+		Handler::set_targets(array(array(
 				'id'  => $target->uid,
 				'key' => $target->key
-			));
+			)));
 
 		$numbers = sprintf('%03d-%03d', rand(0, 999), rand(0, 999));
 		Handler::push($numbers, 'Test', 'Numbers');
