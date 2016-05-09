@@ -44,15 +44,15 @@ body.rtl div.window div.scrollable_list div.list_item small span.value {
 	padding-right: 10px;
 }
 
-div.window div.scrollable_list div.list_item input {
+div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input {
 	display: none;
 }
 
-div.window div.scrollable_list div.list_item input + label {
+div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label {
 	margin-bottom: 0;
 }
 
-div.window div.scrollable_list div.list_item input + label:before {
+div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label:before {
 	display: inline-block;
 	content: '';
 	width: 0;
@@ -65,20 +65,20 @@ div.window div.scrollable_list div.list_item input + label:before {
 	transform-origin: 20% 50%;
 }
 
-body.rtl div.window div.scrollable_list div.list_item input + label:before {
+body.rtl div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label:before {
 	border-color: transparent;
 	border-right-color: #333333;
 	transform-origin: 80% 50%;
 }
 
-div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
 	transform: rotate(90deg);
 }
 
-body.rtl div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+body.rtl div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
 	transform: rotate(-90deg);
 }
 
-div.window div.scrollable_list div.list_item input[type=checkbox]:checked ~ small {
+div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ small {
 	max-height: 100px;
 }
