@@ -80,12 +80,12 @@ class tranzila extends Module {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
-				case 'payment_confirm':
+				case 'payment-confirm':
 					if (!is_null($this->method))
 						$this->method->handle_confirm_payment();
 					break;
 
-				case 'payment_cancel':
+				case 'payment-cancel':
 					if (!is_null($this->method))
 						$this->method->handle_cancel_payment();
 					break;
@@ -131,8 +131,8 @@ class tranzila extends Module {
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 				'cancel_action'	=> window_Close('tranzila'),
-				'confirm_url'	=> url_Make('payment_confirm', $this->name),
-				'cancel_url'	=> url_Make('payment_cancel', $this->name),
+				'confirm_url'	=> url_Make('payment-confirm', $this->name),
+				'cancel_url'	=> url_Make('payment-cancel', $this->name),
 			);
 
 		$template->restoreXML();

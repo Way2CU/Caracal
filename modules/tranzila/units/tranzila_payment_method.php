@@ -385,7 +385,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		} catch (UnknownTransactionError $error) {
 			// redirect user to error page
-			$return_url = url_Make('checkout_error', 'shop');
+			$return_url = url_Make('checkout-error', 'shop');
 			header('Location: '.$return_url, true, 302);
 			return;
 		}
@@ -396,7 +396,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
 
 			// redirect buyer
-			$return_url = url_Make('checkout_error', 'shop');
+			$return_url = url_Make('checkout-error', 'shop');
 			header('Location: '.$return_url, true, 302);
 			return;
 		}
@@ -447,7 +447,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		}
 
 		// redirect browser
-		$return_url = url_Make('checkout_completed', 'shop');
+		$return_url = url_Make('checkout-completed', 'shop');
 		header('Location: '.$return_url, true, 302);
 	}
 
@@ -462,7 +462,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
 
 		// redirect browser
-		$return_url = url_Make('checkout_canceled', 'shop');
+		$return_url = url_Make('checkout-canceled', 'shop');
 		header('Location: '.$return_url, true, 302);
 	}
 }
