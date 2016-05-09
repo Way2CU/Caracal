@@ -160,6 +160,7 @@ class ShopTransactionsHandler {
 		$params['first_name'] = $buyer->first_name;
 		$params['last_name'] = $buyer->last_name;
 		$params['email'] = $buyer->email;
+		$params['phone'] = $buyer->phone;
 
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
 
