@@ -1319,13 +1319,16 @@ class links extends Module {
 		$groups = array();
 		$conditions = array();
 
+		$manager = \Modules\Links\Manager::getInstance();
+		$group_manager = \Modules\Links\GroupManager::getInstance();
+		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
 		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
 
-		$manager = \Modules\Links\Manager::getInstance();
-		$group_manager = \Modules\Links\GroupManager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		if (isset($_REQUEST['random']) && $_REQUEST['random'] == 1)
+			$order_by = array('RAND()');
 
 		if (isset($_REQUEST['group'])) {
 			$group_list = explode(',', fix_chars($_REQUEST['group']));
