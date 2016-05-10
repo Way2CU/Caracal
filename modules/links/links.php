@@ -1322,7 +1322,6 @@ class links extends Module {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
 		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
-		$grouped = isset($_REQUEST['grouped']) && $_REQUEST['grouped'] == 'yes' ? true : false;
 
 		$manager = \Modules\Links\Manager::getInstance();
 		$group_manager = \Modules\Links\GroupManager::getInstance();
@@ -1331,7 +1330,7 @@ class links extends Module {
 		if (isset($_REQUEST['group'])) {
 			$group_list = explode(',', fix_chars($_REQUEST['group']));
 
-			$list = $group_manager->getItems(array('id'), array('name' => $group_list));
+			$list = $group_manager->getItems(array('id'), array('text_id' => $group_list));
 
 			if (count($list) > 0)
 				foreach ($list as $list_item)
