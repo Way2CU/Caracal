@@ -47,7 +47,7 @@ Header unset Pragma
 	SetOutputFilter DEFLATE
 </FilesMatch>
 
-<FilesMatch "\.(js|css|less|ttf|otf)$">
+<FilesMatch "\.(js|css|less|ttf|otf|woff)$">
 	Header set Cache-Control "max-age=864000, must-revalidate"
 	SetOutputFilter DEFLATE
 </FilesMatch>
