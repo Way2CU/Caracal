@@ -170,6 +170,7 @@ class Mailer extends ContactForm_Mailer {
 		if ($socket && $error_number == 0) {
 			// send and receive data
 			fwrite($socket, $header_string."\r\n");
+			fflush($socket);
 			$raw_data = fgets($socket);
 
 			// make sure server gave us green light
@@ -180,6 +181,7 @@ class Mailer extends ContactForm_Mailer {
 
 			// send email content
 			fwrite($socket, $content);
+			fflush($socket);
 
 			// receive response
 			$response_header = '';
