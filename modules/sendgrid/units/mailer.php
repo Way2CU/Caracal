@@ -169,8 +169,11 @@ class Mailer extends ContactForm_Mailer {
 
 		if ($socket && $error_number == 0) {
 			// send and receive data
-			fwrite($socket, $header_string."\r\n\r\n".$content);
+			fwrite($socket, $header_string."\r\n\r\n");
 			$raw_data = stream_get_contents($socket, 4096);
+			fwrite($socket, $content);
+			$raw_data = stream_get_contents($socket, 4096);
+
 			$raw_response = explode("\r\n\r\n", $raw_data);
 
 			// parse response
