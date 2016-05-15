@@ -99,6 +99,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$attachment_name = $this->encode_string($attachment_name);
 
 		if (file_exists($file_name)) {
+			// get file content
 			$data = file_get_contents($file_name);
 			$data = base64_encode($data);
 

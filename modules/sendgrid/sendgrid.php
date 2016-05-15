@@ -26,13 +26,13 @@ class sendgrid extends Module {
 
 		// register mailer
 		if (ModuleHandler::is_loaded('contact_form')) {
-			/* $mailer = new \Modules\SendGrid\Mailer( */
-			/* 		$this->language, */
-			/* 		$this->settings['api_key'] */
-			/* 	); */
+			$mailer = new \Modules\SendGrid\Mailer(
+					$this->language,
+					$this->settings['api_key']
+				);
 
-			/* $contact_form = contact_form::getInstance(); */
-			/* $contact_form->registerMailer('sendgrid', $mailer); */
+			$contact_form = contact_form::getInstance();
+			$contact_form->registerMailer('sendgrid', $mailer);
 		}
 
 		// register backend
