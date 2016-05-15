@@ -98,19 +98,19 @@ class Mailer extends ContactForm_Mailer {
 		$chunks = array_merge($chunks, $this->build_array_chunks('bcc[]', $this->recipients_bcc));
 		$chunks = array_merge($chunks, $this->build_array_chunks('bccname[]', $this->recipients_bcc_name));
 
-		$chunks[] = $this->build_chunk('from', $this->sender));
-		$chunks[] = $this->build_chunk('fromname', $this->sender_name));
+		$chunks[] = $this->build_chunk('from', $this->sender);
+		$chunks[] = $this->build_chunk('fromname', $this->sender_name);
 
 		if (!is_null($this->reply_to))
-			$chunks[] = $this->build_chunk('replyto', $this->reply_to));
+			$chunks[] = $this->build_chunk('replyto', $this->reply_to);
 
-		$chunks[] = $this->build_chunk('subject', $this->subject));
-		$chunks[] = $this->build_chunk('text', $this->plain_body));
+		$chunks[] = $this->build_chunk('subject', $this->subject);
+		$chunks[] = $this->build_chunk('text', $this->plain_body);
 
 		if (!is_null($this->html_body))
-			$chunks[] = $this->build_chunk('html', $this->html_body));
+			$chunks[] = $this->build_chunk('html', $this->html_body);
 
-		$chunks[] = $this->build_chunk('headers', json_encode($this->headers)));
+		$chunks[] = $this->build_chunk('headers', json_encode($this->headers));
 
 		// add attachments
 		if (count($this->attachments) > 0)
