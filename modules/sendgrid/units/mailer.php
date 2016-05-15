@@ -171,18 +171,18 @@ class Mailer extends ContactForm_Mailer {
 			// send and receive data
 			fwrite($socket, $header_string."\r\n\r\n");
 			fflush($socket);
-			$raw_data = stream_get_contents($socket, 4096);
+			$raw_data = stream_get_contents($socket);
 
 			// make sure server gave us green light
 			if (!trim($raw_data) == 'HTTP/1.1 100 Continue') {
-				error_log('SendGrid: Aborting send! Server responded '.$raw_data, E_USER_WARNING);
+				error_log('SendGrid: Aborting send! Server responded '.$raw_data, E_USER_NOTICE);
 				return false;
 			}
 
 			// send email content
-			fwrite($socket, "\r\n".$content);
+			fwrite($socket, $content);
 			fflush($socket);
-			$raw_data = stream_get_contents($socket, 4096);
+			$raw_data = stream_get_contents($socket);
 
 			$raw_response = explode("\r\n", $raw_data);
 
