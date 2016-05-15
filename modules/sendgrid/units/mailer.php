@@ -311,7 +311,7 @@ class Mailer extends ContactForm_Mailer {
 		$result = array();
 
 		foreach ($list as $value) {
-			$result[] = $this->build_array_chunks($field_name, $value, $encode);
+			$result[] = $this->build_chunk($field_name, $value, $encode);
 		}
 
 		return $result;
