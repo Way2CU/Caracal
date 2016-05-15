@@ -13,7 +13,8 @@ use \ContactForm_Mailer as ContactForm_Mailer;
 
 
 class Mailer extends ContactForm_Mailer {
-	const API_HOST = 'https://api.sendgrid.com';
+	const API_PROTOCOL = 'ssl://';
+	const API_HOST = 'api.sendgrid.com';
 	const API_ENDPOINT = '/api/mail.send.json';
 
 	private $language;
@@ -164,7 +165,7 @@ class Mailer extends ContactForm_Mailer {
 		foreach ($headers as $key => $value)
 			$header_string .= "{$key}: {$value}\r\n";
 
-		$socket = fsockopen(self::API_HOST, 443, $error_number, $error_string, 5);
+		$socket = fsockopen(self::API_PROTOCOL.self::API_HOST, 443, $error_number, $error_string, 5);
 
 		if ($socket && $error_number == 0) {
 			// send and receive data
