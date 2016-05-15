@@ -88,7 +88,7 @@ class Mailer extends ContactForm_Mailer {
 	 */
 	public function send() {
 		$result = false;
-		$boundary = '~~~~~~~~\o/~~~~~/\~~~~~~~(shaark!!!)~~'.uniqid();
+		$boundary = '--------------------------'.uniqid();
 		$chunks = array();
 
 		// create chunks
@@ -133,7 +133,7 @@ class Mailer extends ContactForm_Mailer {
 			}
 
 		// prepare content
-		$content = "HTTP/1.1 100 Continue\r\n";
+		$content = '';
 
 		foreach ($chunks as $chunk) {
 			$metadata = $chunk['metadata'];
@@ -149,16 +149,16 @@ class Mailer extends ContactForm_Mailer {
 		}
 
 		// closing boundary
-		$content .= $boundary."--\r\n\r\n";
+		$content .= $boundary."--\r\n";
 
 		// prepare connection headers
 		$headers = array(
 				'Host'           => self::API_HOST,
 				'Accept'         => '*/*',
+				'Authorization'  => 'bearer '.$this->api_key,
+				'Content-Length' => strlen($content),
 				'Expect'         => '100-continue',
 				'Content-Type'   => 'multipart/form-data; boundary='.$boundary,
-				'Content-Length' => strlen($content),
-				'Authorization'  => 'Bearer '.$this->api_key
 			);
 
 		$header_string = "POST ".self::API_ENDPOINT." HTTP/1.1\r\n";
@@ -169,9 +169,8 @@ class Mailer extends ContactForm_Mailer {
 
 		if ($socket && $error_number == 0) {
 			// send and receive data
-			fwrite($socket, $header_string."\r\n\r\n");
-			fflush($socket);
-			$raw_data = stream_get_contents($socket);
+			fwrite($socket, $header_string."\r\n");
+			$raw_data = fgets($socket);
 
 			// make sure server gave us green light
 			if (!trim($raw_data) == 'HTTP/1.1 100 Continue') {
@@ -181,7 +180,6 @@ class Mailer extends ContactForm_Mailer {
 
 			// send email content
 			fwrite($socket, $content);
-			fflush($socket);
 			$raw_data = stream_get_contents($socket);
 
 			$raw_response = explode("\r\n", $raw_data);
@@ -344,7 +342,6 @@ class Mailer extends ContactForm_Mailer {
 
 		// get file content
 		$data = file_get_contents($file_name);
-		$content = base64_encode($data);
 
 		// get file mime type
 		$handle = finfo_open(FILEINFO_MIME_TYPE);
@@ -352,13 +349,11 @@ class Mailer extends ContactForm_Mailer {
 		finfo_close($handle);
 
 		// prepare result
-		$metadata['Content-Type'] = "{$mime_type}; charset=US-ASCII; name=\"{$attached_name}\"";
 		$metadata['Content-Disposition'] = "form-data; name=\"{$field_name}[{$attached_name}]\"; filename=\"{$attached_name}\"";
-		$metadata['Content-Transfer-Encoding'] = 'base64';
 
 		return array(
 				'metadata' => $metadata,
-				'content'  => $content
+				'content'  => $data
 			);
 	}
 
@@ -367,27 +362,17 @@ class Mailer extends ContactForm_Mailer {
 	 *
 	 * @param string $field_name
 	 * @param string $value
-	 * @param booleran $encode
 	 * @return array
 	 */
-	private function build_chunk($field_name, $value, $encode=true) {
+	private function build_chunk($field_name, $value) {
 		// prepare metadata
 		$metadata = array();
 		$metadata['Content-Disposition'] = "form-data; name=\"{$field_name}\"";
 
-		// prepare content
-		if ($encode) {
-			$metadata['Content-Transfer-Encoding'] = 'base64';
-			$content = base64_encode($value);
-
-		} else {
-			$content = $value;
-		}
-
 		// create chunk
 		return array(
 				'metadata' => $metadata,
-				'content'  => $content
+				'content'  => $value
 			);
 	}
 }
