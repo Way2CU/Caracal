@@ -94,16 +94,16 @@ class Mailer extends ContactForm_Mailer {
 
 		// prepare content
 		$content = array(
-				'to[]'      => $this->recipients,
-				'toname[]'  => $this->recipients_name,
-				'cc[]'      => $this->recipients_cc,
-				'ccname[]'  => $this->recipients_cc_name,
-				'bcc[]'     => $this->recipients_bcc,
-				'bccname[]' => $this->recipients_bcc_name,
-				'from'      => $this->sender,
-				'fromname'  => $this->sender_name,
-				'subject'   => $this->subject,
-				'text'      => $this->plain_body,
+				'to'       => $this->recipients,
+				'toname'   => $this->recipients_name,
+				'cc'       => $this->recipients_cc,
+				'ccname'   => $this->recipients_cc_name,
+				'bcc'      => $this->recipients_bcc,
+				'bccname'  => $this->recipients_bcc_name,
+				'from'     => $this->sender,
+				'fromname' => $this->sender_name,
+				'subject'  => $this->subject,
+				'text'     => $this->plain_body,
 			);
 
 		if (!is_null($this->reply_to))
@@ -112,16 +112,16 @@ class Mailer extends ContactForm_Mailer {
 		if (!is_null($this->html_body))
 			$content['html'] = $this->html_body;
 
-		$handle = curl_init();
-		curl_setopt($handle, CURLOPT_URL, self::API_URL);
-		curl_setopt($handle, CURLOPT_POST, 1);
-		curl_setopt($handle, CURLOPT_HTTPGET, true);
+		$handle = curl_init(self::API_URL);
+		curl_setopt($handle, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+		curl_setopt($handle, CURLOPT_POST, true);
+		curl_setopt($handle, CURLOPT_HEADER, false);
 		curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($handle, CURLOPT_TIMEOUT, 10);
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($handle, CURLOPT_POSTFIELDS, $content);
 		curl_setopt($handle, CURLOPT_USERAGENT, 'Caracal '._VERSION);
 		$response = curl_exec($handle);
+		curl_close($handle);
 
 		// parse response
 		$response = json_decode($response);
