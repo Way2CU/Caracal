@@ -13,9 +13,7 @@ use \ContactForm_Mailer as ContactForm_Mailer;
 
 
 class Mailer extends ContactForm_Mailer {
-	const API_PROTOCOL = 'ssl://';
-	const API_HOST = 'api.sendgrid.com';
-	const API_ENDPOINT = '/api/mail.send.json';
+	const API_URL = 'https://api.sendgrid.com/api/mail.send.json';
 
 	private $language;
 	private $subject;
@@ -88,138 +86,47 @@ class Mailer extends ContactForm_Mailer {
 	 */
 	public function send() {
 		$result = false;
-		$boundary = '--------------------------'.uniqid();
-		$chunks = array();
 
-		// create chunks
-		$chunks = array_merge($chunks, $this->build_array_chunks('to[]', $this->recipients));
-		$chunks = array_merge($chunks, $this->build_array_chunks('toname[]', $this->recipients_name));
-		$chunks = array_merge($chunks, $this->build_array_chunks('cc[]', $this->recipients_cc));
-		$chunks = array_merge($chunks, $this->build_array_chunks('ccname[]', $this->recipients_cc_name));
-		$chunks = array_merge($chunks, $this->build_array_chunks('bcc[]', $this->recipients_bcc));
-		$chunks = array_merge($chunks, $this->build_array_chunks('bccname[]', $this->recipients_bcc_name));
-
-		$chunks[] = $this->build_chunk('from', $this->sender);
-		$chunks[] = $this->build_chunk('fromname', $this->sender_name);
-
-		if (!is_null($this->reply_to))
-			$chunks[] = $this->build_chunk('replyto', $this->reply_to);
-
-		$chunks[] = $this->build_chunk('subject', $this->subject);
-		$chunks[] = $this->build_chunk('text', $this->plain_body);
-
-		if (!is_null($this->html_body))
-			$chunks[] = $this->build_chunk('html', $this->html_body);
-
-		$chunks[] = $this->build_chunk('headers', json_encode($this->headers));
-
-		// add attachments
-		if (count($this->attachments) > 0)
-			foreach ($this->attachments as $file) {
-				if (in_array($file, $this->attachment_names))
-					$name = $this->attachment_names[$file]; else
-					$name = basename($file);
-
-				$chunks[] = $this->build_file_chunk('files', $file, $name);
-			}
-
-		if (count($this->inline_attachments) > 0)
-			foreach ($this->inline_attachments as $file) {
-				if (in_array($file, $this->attachment_names))
-					$name = $this->attachment_names[$file]; else
-					$name = basename($file);
-
-				$chunks[] = $this->build_file_chunk('content', $file, $name);
-			}
-
-		// prepare content
-		$content = '';
-
-		foreach ($chunks as $chunk) {
-			$metadata = $chunk['metadata'];
-			$chunk_content = $chunk['content'];
-
-			// add boundary
-			$content .= $boundary."\r\n";
-
-			foreach ($metadata as $key => $value)
-				$content .= "{$key}: {$value}\r\n";
-
-			$content .= "\r\n".$chunk_content."\r\n";
-		}
-
-		// closing boundary
-		$content .= $boundary."--\r\n";
-
-		// prepare connection headers
+		// prepare headers
 		$headers = array(
-				'Host'           => self::API_HOST,
-				'Accept'         => '*/*',
-				'Authorization'  => 'bearer '.$this->api_key,
-				'Content-Length' => strlen($content),
-				'Expect'         => '100-continue',
-				'Content-Type'   => 'multipart/form-data; boundary='.$boundary,
+				'Authorization: bearer '.$this->api_key
 			);
 
-		$header_string = "POST ".self::API_ENDPOINT." HTTP/1.1\r\n";
-		foreach ($headers as $key => $value)
-			$header_string .= "{$key}: {$value}\r\n";
+		// prepare content
+		$content = array(
+				'to[]'      => $this->recipients,
+				'toname[]'  => $this->recipients_name,
+				'cc[]'      => $this->recipients_cc,
+				'ccname[]'  => $this->recipients_cc_name,
+				'bcc[]'     => $this->recipients_bcc,
+				'bccname[]' => $this->recipients_bcc_name,
+				'from'      => $this->sender,
+				'fromname'  => $this->sender_name,
+				'subject'   => $this->subject,
+				'text'      => $this->plain_body,
+			);
 
-		$socket = fsockopen(self::API_PROTOCOL.self::API_HOST, 443, $error_number, $error_string, 5);
+		if (!is_null($this->reply_to))
+			$content['replyto'] = $this->reply_to;
 
-		// make sure we have a connection
-		if (!$socket || $error_number != 0) {
-			trigger_error("SendGrid: {$error_number} - {$error_string}", E_USER_WARNING);
-			return false;
-		}
+		if (!is_null($this->html_body))
+			$content['html'] = $this->html_body;
 
-		// send and receive data
-		fwrite($socket, $header_string."\r\n");
-		fflush($socket);
-		$raw_data = fgets($socket);
+		$handle = curl_init();
+		curl_setopt($handle, CURLOPT_URL, self::API_URL);
+		curl_setopt($handle, CURLOPT_POST, 1);
+		curl_setopt($handle, CURLOPT_HTTPGET, true);
+		curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($handle, CURLOPT_TIMEOUT, 10);
+		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($handle, CURLOPT_POSTFIELDS, $content);
+		curl_setopt($handle, CURLOPT_USERAGENT, 'Caracal '._VERSION);
+		$response = curl_exec($ch);
 
-		// make sure server gave us green light
-		if (trim($raw_data) == 'HTTP/1.1 100 Continue') {
-			// send email content
-			fwrite($socket, $content);
-			fflush($socket);
-
-			// receive response
-			$response_header = '';
-			$response_content = '';
-			$target = 0;
-			while (($buffer = fgets($socket)) !== false) {
-				if ($buffer == "\r\n")
-					$target++;
-
-				// store response
-				switch ($target) {
-					case 0:
-						$response_header .= $buffer."\n";
-						break;
-
-					case 1:
-						$response_content .= $buffer."\n";
-						break;
-				}
-
-				// break on end
-				if ($target == 2)
-					break;
-			}
-
-			// parse response
-			$response = json_decode($response_content);
-			if (is_object($response))
-				$result = $response->message == 'success';
-
-		} else {
-			error_log('SendGrid: Aborting send! Server responded '.$raw_data, E_USER_NOTICE);
-			return false;
-		}
-
-		// close socket
-		fclose($socket);
+		// parse response
+		$response = json_decode($response);
+		if (is_object($response))
+			$result = $response->message == 'success';
 
 		return $result;
 	}
