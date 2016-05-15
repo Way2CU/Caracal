@@ -121,7 +121,7 @@ class Mailer extends ContactForm_Mailer {
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($handle, CURLOPT_POSTFIELDS, $content);
 		curl_setopt($handle, CURLOPT_USERAGENT, 'Caracal '._VERSION);
-		$response = curl_exec($ch);
+		$response = curl_exec($handle);
 
 		// parse response
 		$response = json_decode($response);
