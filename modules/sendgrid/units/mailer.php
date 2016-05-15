@@ -152,7 +152,7 @@ class Mailer extends ContactForm_Mailer {
 
 		// prepare connection headers
 		$headers = array(
-				'Host'           => $this->API_HOST,
+				'Host'           => self::API_HOST,
 				'Accept'         => '*/*',
 				'Expect'         => '100-continue',
 				'Content-Type'   => 'multipart/form-data; boundary='.$boundary,
@@ -160,11 +160,11 @@ class Mailer extends ContactForm_Mailer {
 				'Authorization'  => 'Bearer '.$this->api_key
 			);
 
-		$header_string = "POST {$this->API_ENDPOINT} HTTP/1.1\r\n";
+		$header_string = "POST ".self::API_ENDPOINT." HTTP/1.1\r\n";
 		foreach ($headers as $key => $value)
 			$header_string .= "{$key}: {$value}\r\n";
 
-		$socket = fsockopen($this->API_HOST, 443, $error_number, $error_string, 5);
+		$socket = fsockopen(self::API_HOST, 443, $error_number, $error_string, 5);
 
 		if ($socket && $error_number == 0) {
 			// send and receive data
@@ -181,7 +181,7 @@ class Mailer extends ContactForm_Mailer {
 			// close socket
 			fclose($socket);
 		} else {
-			trigger_error("SendGrid: There was a problem opening {$this->API_HOST}.", E_USER_WARNING);
+			trigger_error('SendGrid: There was a problem opening '.self::API_HOST.'.', E_USER_WARNING);
 		}
 
 		return $result;
