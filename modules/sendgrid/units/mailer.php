@@ -167,18 +167,19 @@ class Mailer extends ContactForm_Mailer {
 
 		$socket = fsockopen(self::API_PROTOCOL.self::API_HOST, 443, $error_number, $error_string, 5);
 
-		if ($socket && $error_number == 0) {
-			// send and receive data
-			fwrite($socket, $header_string."\r\n");
-			fflush($socket);
-			$raw_data = fgets($socket);
+		// make sure we have a connection
+		if (!$socket || $error_number != 0) {
+			trigger_error("SendGrid: {$error_number} - {$error_string}", E_USER_WARNING);
+			return false;
+		}
 
-			// make sure server gave us green light
-			if (!trim($raw_data) == 'HTTP/1.1 100 Continue') {
-				error_log('SendGrid: Aborting send! Server responded '.$raw_data, E_USER_NOTICE);
-				return false;
-			}
+		// send and receive data
+		fwrite($socket, $header_string."\r\n");
+		fflush($socket);
+		$raw_data = fgets($socket);
 
+		// make sure server gave us green light
+		if (trim($raw_data) == 'HTTP/1.1 100 Continue') {
 			// send email content
 			fwrite($socket, $content);
 			fflush($socket);
@@ -210,14 +211,15 @@ class Mailer extends ContactForm_Mailer {
 			// parse response
 			$response = json_decode($response_content);
 			if (is_object($response))
-				$result = $response->message == 'success'; else
-				trigger_error('SendGrid: Server responded with: '.$raw_data, E_USER_NOTICE);
+				$result = $response->message == 'success';
 
-			// close socket
-			fclose($socket);
 		} else {
-			trigger_error('SendGrid: There was a problem opening '.self::API_HOST.'.', E_USER_WARNING);
+			error_log('SendGrid: Aborting send! Server responded '.$raw_data, E_USER_NOTICE);
+			return false;
 		}
+
+		// close socket
+		fclose($socket);
 
 		return $result;
 	}
