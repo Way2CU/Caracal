@@ -135,6 +135,13 @@ class Mailer extends ContactForm_Mailer {
 				$final_content['content['.$name.']'] = $name;
 			}
 
+		// add variables
+		$substitutions = array();
+		foreach ($this->variables as $key => $value)
+			$substitutions['%'.$key.'%'] = array($value);
+		$final_content['x-smtpapi'] = json_encode(array('sub' => $substitutions));
+
+		// make api call
 		$handle = curl_init(self::API_URL);
 		curl_setopt($handle, CURLOPT_POST, true);
 		curl_setopt($handle, CURLOPT_HEADER, false);
