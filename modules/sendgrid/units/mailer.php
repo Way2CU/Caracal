@@ -112,13 +112,35 @@ class Mailer extends ContactForm_Mailer {
 		if (!is_null($this->html_body))
 			$content['html'] = $this->html_body;
 
+		// prepare array for sending
+		$this->build_query_for_curl($content, $final_content);
+
+		// add attachments
+		if (count($this->attachments))
+			foreach ($this->attachments as $file) {
+				if (in_array($file, $this->attachment_names))
+					$name = $this->attachment_names[$file]; else
+					$name = basename($file);
+
+				$final_content['files['.$name.']'] = '@'.$file;
+			}
+
+		if (count($this->inline_attachments))
+			foreach ($this->inline_attachments as $file) {
+				if (in_array($file, $this->attachment_names))
+					$name = $this->attachment_names[$file]; else
+					$name = basename($file);
+
+				$final_content['files['.$name.']'] = '@'.$file;
+				$final_content['content['.$name.']'] = $name;
+			}
+
 		$handle = curl_init(self::API_URL);
-		curl_setopt($handle, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
 		curl_setopt($handle, CURLOPT_POST, true);
 		curl_setopt($handle, CURLOPT_HEADER, false);
 		curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($handle, CURLOPT_POSTFIELDS, $content);
+		curl_setopt($handle, CURLOPT_POSTFIELDS, $final_content);
 		curl_setopt($handle, CURLOPT_USERAGENT, 'Caracal '._VERSION);
 		$response = curl_exec($handle);
 		curl_close($handle);
@@ -306,6 +328,25 @@ class Mailer extends ContactForm_Mailer {
 				'metadata' => $metadata,
 				'content'  => $value
 			);
+	}
+
+	/**
+	 * Build query parameters for cURL to keep arrays.
+	 *
+	 * @param array $array
+	 * @param pointer $result,
+	 * @param string $prefix
+	 */
+	private function build_query_for_curl($array, &$result=array(), $prefix=null) {
+		if (is_object($array))
+			$array = get_object_vars($array);
+
+		foreach ($array as $key => $value) {
+			$index = isset($prefix) ? $prefix.'['.$key.']' : $key;
+			if (is_array($value) || is_object($value))
+				$this->build_query_for_curl($value, $result, $index); else
+				$result[$index] = $value;
+		}
 	}
 }
 
