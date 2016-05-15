@@ -161,7 +161,7 @@ class Mailer extends ContactForm_Mailer {
 			);
 
 		$header_string = "POST {$this->API_ENDPOINT} HTTP/1.1\r\n";
-		foreach ($headers as $key = $value)
+		foreach ($headers as $key => $value)
 			$header_string .= "{$key}: {$value}\r\n";
 
 		$socket = fsockopen($this->API_HOST, 443, $error_number, $error_string, 5);
