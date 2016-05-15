@@ -149,7 +149,7 @@ class Mailer extends ContactForm_Mailer {
 		}
 
 		// closing boundary
-		$content .= $boundary."--\r\n";
+		$content .= $boundary."--\r\n\r\n";
 
 		// prepare connection headers
 		$headers = array(
@@ -174,7 +174,7 @@ class Mailer extends ContactForm_Mailer {
 			fwrite($socket, $content);
 			$raw_data = stream_get_contents($socket, 4096);
 
-			$raw_response = explode("\r\n\r\n", $raw_data);
+			$raw_response = explode("\r\n", $raw_data);
 
 			// parse response
 			$response = json_decode($raw_response[1]);
