@@ -180,12 +180,33 @@ class Mailer extends ContactForm_Mailer {
 
 			// send email content
 			fwrite($socket, $content);
-			$raw_data = stream_get_contents($socket);
 
-			$raw_response = explode("\r\n", $raw_data);
+			// receive response
+			$response_header = '';
+			$response_content = '';
+			$target = 0;
+			while (($buffer = fgets($socket)) !== false) {
+				if ($buffer == "\r\n")
+					$target++;
+
+				// store response
+				switch ($target) {
+					case 0:
+						$response_header .= $buffer."\n";
+						break;
+
+					case 1:
+						$response_content .= $buffer."\n";
+						break;
+				}
+
+				// break on end
+				if ($target == 2)
+					break;
+			}
 
 			// parse response
-			$response = json_decode($raw_response[1]);
+			$response = json_decode($response_content);
 			if (is_object($response))
 				$result = $response->message == 'success'; else
 				trigger_error('SendGrid: Server responded with: '.$raw_data, E_USER_NOTICE);
