@@ -357,7 +357,7 @@ class Mailer extends ContactForm_Mailer {
 	 * @param booleran $encode
 	 * @return array
 	 */
-	private function build_chunk($field_name, $list, $encode=true) {
+	private function build_chunk($field_name, $value, $encode=true) {
 		// prepare metadata
 		$metadata = array();
 		$metadata['Content-Disposition'] = "form-data; name=\"{$field_name}\"";
