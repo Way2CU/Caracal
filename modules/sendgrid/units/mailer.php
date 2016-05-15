@@ -35,7 +35,7 @@ class Mailer extends ContactForm_Mailer {
 	private $inline_attachments;
 	private $headers;
 
-	private protected $api_key;
+	protected $api_key;
 
 	public function __construct($language, $api_key) {
 		$this->language = $language;
