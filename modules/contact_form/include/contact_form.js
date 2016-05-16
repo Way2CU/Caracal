@@ -110,8 +110,10 @@ Caracal.ContactForm.Form = function(form_object) {
 				.attr('name', 'contact-form-target')
 				.attr('id', 'contact-form-target')
 				.css('display', 'none')
-				.one('load', self.handler.target_load)
 				.appendTo($('body'));
+
+			// connect event separately to avoid initial triggering
+			self._target.one('load', self.handler.target_load);
 		}
 
 		return self._target.attr('id');
