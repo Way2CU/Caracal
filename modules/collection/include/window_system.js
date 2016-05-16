@@ -649,16 +649,19 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 				var iframe = self.getUploaderFrame();
 				$(this).attr('target', iframe.attr('id'));
 
-				// handle frame load event
-				iframe.one('load', function() {
-					var content = iframe.contents().find('body');
+				// handle frame load event through event set in
+				// timeout to avoid initial triggering in some browsers
+				setTimeout(function() {
+					iframe.on('load', function() {
+						var content = iframe.contents().find('body');
 
-					// trigger original form event
-					self.contentLoaded(content.html());
+						// trigger original form event
+						self.contentLoaded(content.html());
 
-					// reset frame content in order to prevent errors with other events
-					content.html('');
-				});
+						// reset frame content in order to prevent errors with other events
+						content.html('');
+					});
+				}, 100);
 			}
 		});
 
