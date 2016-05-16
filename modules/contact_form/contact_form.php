@@ -729,7 +729,9 @@ class contact_form extends Module {
 			switch ($field->type) {
 				case 'file':
 					if (isset($_FILES[$name]) && $_FILES[$name]['error'] == UPLOAD_ERR_OK) {
-						$attachments[] = $_FILES[$name]['name'];
+						$file_name = $_FILES[$name]['name'];
+						$tmp_name = $_FILES[$name]['tmp_name'];
+						$attachments[$file_name] = $tmp_name;
 
 					} else if ($field->required) {
 						$missing_fields[$name] = array(
@@ -847,8 +849,8 @@ class contact_form extends Module {
 				foreach ($recipients as $recipient)
 					$mailer->add_recipient($recipient['address'], $recipient['name']);
 
-				foreach ($attachments as $attachment)
-					$mailer->attach_file($attachment);
+				foreach ($attachments as $file_name => $tmp_name)
+					$mailer->attach_file($tmp_name, $file_name);
 
 				$mailer->set_body($template['plain_body'], Markdown::parse($template['html_body']));
 				$mailer->set_variables($replacement_fields);
