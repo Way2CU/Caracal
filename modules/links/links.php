@@ -965,7 +965,7 @@ class links extends Module {
 		}
 
 		if (isset($tag_params['order_by']))
-			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
+			$order_by = explode(',', fix_chars($tag_params['order_by']));
 
 		if (isset($tag_params['order_asc']))
 			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
