@@ -260,7 +260,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 			// add attachments if needed
 			if (count($this->attachments) > 0)
 				foreach ($this->attachments as $file) {
-					if (in_array($file, $this->attachment_names))
+					if (array_key_exists($file, $this->attachment_names))
 						$name = $this->attachment_names[$file]; else
 						$name = basename($file);
 
