@@ -20,7 +20,6 @@
  *   	showing giving custom scripts opportunity to present error
  *   	message in a different way.
  */
-
 var Caracal = Caracal || new Object();
 Caracal.ContactForm = Caracal.ContactForm || new Object();
 
@@ -34,8 +33,10 @@ Caracal.ContactForm.Form = function(form_object) {
 	self._overlay = null;
 	self._message = null;
 	self._silent = false;
+	self._target = null;
 
 	self.events = null;
+	self.handler = new Object();
 
 	/**
 	 * Complete object initialization.
@@ -43,17 +44,26 @@ Caracal.ContactForm.Form = function(form_object) {
 	self._init = function() {
 		// create object for communicating with backend
 		self._communicator = new Communicator('contact_form');
-
 		self._communicator
-				.on_success(self._handle_success)
-				.on_error(self._handle_error);
+				.on_success(self.handler.submit_success)
+				.on_error(self.handler.submit_error);
 
 		// find form and fields
 		self._form = $(form_object);
 		self._fields = self._form.find('input,textarea,select');
 
 		// connect form events
-		self._form.submit(self._handle_submit);
+		if (self._fields.filter('input:file').length == 0) {
+			// handle regular submission
+			self._form.on('submit', self.handler.form_submit);
+
+		} else {
+			// handle submission with file uploads
+			var target_id = self._configure_target();
+			self._form
+				.on('submit', self.handler.target_submit)
+				.attr('target', target_id);
+		}
 
 		// get overlay
 		self._overlay = self._form.find('div.overlay');
@@ -82,6 +92,29 @@ Caracal.ContactForm.Form = function(form_object) {
 		self.events
 			.register('submit-error', 'boolean')
 			.register('submit-success', 'boolean');
+	};
+
+	/**
+	 * Create target IFrame for AJAX form submissions with files.
+	 *
+	 * @return string
+	 */
+	self._configure_target = function() {
+		var result = null;
+		self._target = $('iframe#contact-form-target');
+
+		// element doesn't exist, create it
+		if (self._target.length == 0) {
+			self._target = $('<iframe>');
+			self._target
+				.attr('name', 'contact-form-target')
+				.attr('id', 'contact-form-target')
+				.css('display', 'none')
+				.one('load', self.handler.target_load)
+				.appendTo($('body'));
+		}
+
+		return self._target.attr('id');
 	};
 
 	/**
@@ -149,7 +182,7 @@ Caracal.ContactForm.Form = function(form_object) {
 	 * @param object event
 	 * @return boolean
 	 */
-	self._handle_submit = function(event) {
+	self.handler.form_submit = function(event) {
 		// prevent original form from submitting
 		event.preventDefault();
 
@@ -168,7 +201,7 @@ Caracal.ContactForm.Form = function(form_object) {
 	 *
 	 * @param object data
 	 */
-	self._handle_success = function(data) {
+	self.handler.submit_success = function(data) {
 		// hide overlay
 		self._overlay.removeClass('visible');
 
@@ -193,7 +226,7 @@ Caracal.ContactForm.Form = function(form_object) {
 	 * @param string request_status
 	 * @param string description
 	 */
-	self._handle_error = function(xhr, request_status, description) {
+	self.handler.submit_error = function(xhr, request_status, description) {
 		// hide overlay
 		self._overlay.removeClass('visible');
 
@@ -205,6 +238,42 @@ Caracal.ContactForm.Form = function(form_object) {
 			Caracal.ContactForm.dialog.setContent(self._message);
 			Caracal.ContactForm.dialog.show();
 		}
+	};
+
+	/**
+	 * Handle successfull submission on target IFrame.
+	 *
+	 * @param object event
+	 */
+	self.handler.target_load = function(event) {
+		// hide overlay
+		self._overlay.removeClass('visible');
+
+		// get content from response page
+		var data = self._get_data();
+		var content = self._target.contents().find('body');
+
+		// configure and show dialog
+		var response = self.events.trigger('submit-success', data);
+		if (response) {
+			self._message.html(content.html());
+			Caracal.ContactForm.dialog.setError(false);
+			Caracal.ContactForm.dialog.setContent(self._message);
+			Caracal.ContactForm.dialog.show();
+		}
+
+		// clear form on success
+		self._form[0].reset();
+	};
+
+	/**
+	 * Handle submission to target IFrame.
+	 *
+	 * @param object event
+	 */
+	self.handler.target_submit = function(event) {
+		// show overlay
+		self._overlay.addClass('visible');
 	};
 
 	// finalize object
