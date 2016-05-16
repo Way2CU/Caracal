@@ -916,6 +916,8 @@ class links extends Module {
 		$group_manager = \Modules\Links\GroupManager::getInstance();
 		$membership_manager = \Modules\Links\MembershipManager::getInstance();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 
 		// save some CPU time by getting this early
 		if (ModuleHandler::is_loaded('gallery')) {
@@ -962,10 +964,17 @@ class links extends Module {
 			$conditions['id'] = $item_list;
 		}
 
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
+
 		$items = $manager->getItems(
 								$manager->getFieldNames(),
 								$conditions,
-								array('id')
+								$order_by,
+								$order_asc
 							);
 
 		$template = $this->loadTemplate($tag_params, 'links_item.xml');
@@ -977,7 +986,11 @@ class links extends Module {
 		if (isset($tag_params['limit']) && !is_null($items))
 			$items = array_slice($items, 0, $tag_params['limit'], true);
 
-		if (count($items) > 0)
+		// make sure list contains items
+		if (count($items) == 0)
+			return;
+
+		// generate output
 		foreach ($items as $item) {
 			// calculate display progress
 			if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
