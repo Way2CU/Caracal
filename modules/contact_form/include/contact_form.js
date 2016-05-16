@@ -112,8 +112,11 @@ Caracal.ContactForm.Form = function(form_object) {
 				.css('display', 'none')
 				.appendTo($('body'));
 
-			// connect event separately to avoid initial triggering
-			self._target.one('load', self.handler.target_load);
+			// connect event separately through timeout to avoid
+			// initial triggering in some browsers
+			setTimeout(function() {
+				self._target.on('load', self.handler.target_load);
+			}, 100);
 		}
 
 		return self._target.attr('id');
