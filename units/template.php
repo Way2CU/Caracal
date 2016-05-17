@@ -402,8 +402,24 @@ class TemplateHandler {
 				case 'cms:svg':
 					$path = _BASEPATH.'/'.$images_path;
 					$file = $tag->tagAttrs['file'];
+					$symbol = isset($tag->tagAttrs['symbol']) ? $tag->tagAttrs['symbol'] : null;
 
-					echo file_get_contents($path.$file);
+					if (is_null($symbol)) {
+						echo file_get_contents($path.$file);
+
+					} else {
+						$params = array(
+								'url'    => _BASEURL.'/'.$images_path.$file,
+								'symbol' => $symbol
+							);
+
+						if (isset($tag->tagAttrs['class']))
+							$params['class'] = $tag->tagAttrs['class'];
+
+						$template = new TemplateHandler('svg_symbol.xml', $system_template_path);
+						$template->setMappedModule($this->module);
+					}
+
 					break;
 
 				// multi language constants

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../schema/template.dtd">
+<document>
+	<svg
+		class="isset($params['class']) ? $params['class'] : null"
+		cms:optional="class"
+		>
+		<use
+			href="'#'.$params['symbol']"
+			xlink:href="$params['url'].'#'.$params['symbol']"
+			cms:eval="href,xlink:href"
+			/>
+	</svg>
+</document>
