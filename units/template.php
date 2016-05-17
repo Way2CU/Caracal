@@ -418,6 +418,10 @@ class TemplateHandler {
 
 						$template = new TemplateHandler('svg_symbol.xml', $system_template_path);
 						$template->setMappedModule($this->module);
+
+						$template->restoreXML();
+						$template->setLocalParams($params);
+						$template->parse();
 					}
 
 					break;
