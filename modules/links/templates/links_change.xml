@@ -50,6 +50,7 @@
 				value="$params['url']"
 				style="width: 360px;"
 				maxlength="255"
+				class="ltr code"
 				cms:eval="value"
 				/>
 		</label>
