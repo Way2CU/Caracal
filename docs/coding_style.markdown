@@ -25,44 +25,53 @@ line with one less indent level.
 
 Good:
 
-	$something = long_function_name(
-						$param_first,
-						call_to_another_function(),
-						$next_param
-					);
+```php
+$something = long_function_name(
+					$param_first,
+					call_to_another_function(),
+					$next_param
+				);
+```
 
 Bad:
 
-	$something = long_function_name($param_first,
-	call_to_another_function(), $next_param);
+```php
+$something = long_function_name($param_first,
+call_to_another_function(), $next_param);
+```
 
 Also bad:
 
-	$something = long_function_name($param_first,
-			call_to_another_function(), $next_param);
-
+```php
+$something = long_function_name($param_first,
+		call_to_another_function(), $next_param);
+```
 
 If a function definition is too long, break extra parameters vertically and approximately align to the first parameter
 of the definition. However whenever possible, avoid breaking function definitions.
 
 Good:
 
-	function long_funciton_name($parameter_with_long_name, $another_parameter, $short_one,
-								$something_even_longer, $additional_parameter) {
-		// function code...
-	}
+```php
+function long_funciton_name($parameter_with_long_name, $another_parameter, $short_one,
+							$something_even_longer, $additional_parameter) {
+	// function code...
+}
+```
 
 Bad:
 
-	function long_function_name(
-		$parameter_with_long_name,
-		$another_parameter,
-		$short_one,
-		$something_even_longer,
-		$additional_parameter
-	) {
-		// function code...
-	}
+```php
+function long_function_name(
+	$parameter_with_long_name,
+	$another_parameter,
+	$short_one,
+	$something_even_longer,
+	$additional_parameter
+) {
+	// function code...
+}
+```
 
 
 Blank Lines
@@ -74,59 +83,67 @@ lines can be used sparingly to group code inside of functions or to group import
 
 Good:
 
-	namespace Test;
+```php
+namespace Test;
 
 
-	abstract class NewClass {
-		abstract public function test();
+abstract class NewClass {
+	abstract public function test();
+}
+
+
+class AnotherClass(NewClass) {
+	public function test() {
 	}
-
-
-	class AnotherClass(NewClass) {
-		public function test() {
-		}
-	}
+}
+```
 
 Bad:
 
-	namespace Text;
+```php
+namespace Text;
 
-	abstract class NewClass
-	{
-		abstract public function test();
+abstract class NewClass
+{
+	abstract public function test();
+}
+class AnotherClass(NewClass)
+{
+	public function test() {
 	}
-	class AnotherClass(NewClass)
-	{
-		public function test() {
-		}
-	}
+}
+```
 
 
 Add a single blank line before else statements if they are wrapped in curly braces.
 
 Good:
 
-	if ($variable == 1) {
-		call_function($variable);
+```php
+if ($variable == 1) {
+	call_function($variable);
 
-	} else if ($variable == 2 && $new_var == 1) [
-		$something = 3;
-		call_function($something);
+} else if ($variable == 2 && $new_var == 1) [
+	$something = 3;
+	call_function($something);
 
-	} else {
-		$something = 1;
-	}
+} else {
+	$something = 1;
+}
+```
 
 Bad:
 
-	if ($variable == 1) {
-		call_function($variable);
-	} else if ($variable == 2 && $new_var == 1) [
-		$something = 3;
-		call_function($something);
-	} else {
-		$something = 1;
-	}
+```php
+if ($variable == 1) {
+	call_function($variable);
+} else if ($variable == 2 && $new_var == 1) [
+	$something = 3;
+	call_function($something);
+} else {
+	$something = 1;
+}
+```
 
 
 Whitespace in Expressions and Statements
@@ -136,51 +153,60 @@ Avoid extraneous whitespace in following situations:
 
 - Immediately inside parentheses, brackets or braces:
 
-	Good: function_call($param[0], array(1, 2));
-	Bad:  function_call( $param[ 0 ], array( 1 , 2 ) );
+Good: `function_call($param[0], array(1, 2));`
+
+Bad:  `function_call( $param[ 0 ], array( 1 , 2 ) );`
 
 - Immediately before comma:
 
-	Good: $something = array(1, 2, 3, 4);
-	Bad:  $something = array(1 , 2 , 3 , 4);
+Good: `$something = array(1, 2, 3, 4);`
+
+Bad:  `$something = array(1 , 2 , 3 , 4);`
 
 - Immediately before open parenthesis for indexes or argument list of a function call:
 
-	Good:
+Good:
 
-		$something = $array[1];
-		$new_var = function_call($something);
+```php
+$something = $array[1];
+$new_var = function_call($something);
+```
 
-	Bad:
+Bad:
 
-		$something = $array [1];
-		$new_var = function_call ($something);
+```php
+$something = $array [1];
+$new_var = function_call ($something);
+```
 
 - More than one space around variable assignment:
 
-	Good:
+Good:
 
-- Immediately inside parentheses, brackets or braces:
+```php
+$var1 = 1;
+$var2 = 2;
+$long_variable = 3;
+```
 
-		$var1 = 1;
-		$var2 = 2;
-		$long_variable = 3;
+Bad:
 
-	Bad:
-
-		$var1 =          1;
-		$var2 =          2;
-		$long_variable = 3;
-
+```php
+$var1 =          1;
+$var2 =          2;
+$long_variable = 3;
+```
 
 However, additional tab characters should be used to align key, value pairs when defining an array.
 
 Good:
 
-	$new_array = array(
-			'0'		=> 'value',
-			'new'	=> 'another_value'
-		);
+```php
+$new_array = array(
+		'0'		=> 'value',
+		'new'	=> 'another_value'
+	);
+```
 
 
 Other Recommendations
@@ -194,13 +220,17 @@ Multiple statements on a single line are _strongly_ discouraged.
 
 Good:
 
-	if ($something)
-		do_call_function(); else
-		another_function();
+```php
+if ($something)
+	do_call_function(); else
+	another_function();
+```
 
 Bad:
 
-	if ($something) do_call_function(); else another_function();
+```php
+if ($something) do_call_function(); else another_function();
+```
 
 
 Do not wrap single line statements in curly braces in flow control commands. However if any of the sides has more than
@@ -208,32 +238,40 @@ one line of code it's okay to wrap single lines as well.
 
 Good:
 
-	if ($something)
-		another_function();
+```php
+if ($something)
+	another_function();
+```
 
 Also good:
 
-	if ($something) {
-		another_function();
+```php
+if ($something) {
+	another_function();
 
-	} else {
-		$new_var = 3.14;
-		call_function($new_var);
-	}
+} else {
+	$new_var = 3.14;
+	call_function($new_var);
+}
+```
 
 Bad:
 
-	if ($something) {
-		another_function();
-	}
+```php
+if ($something) {
+	another_function();
+}
+```
 
 Also bad:
 
-	if ($something) {
-		another_function();
-	} else {
-		call_function($something);
-	}
+```php
+if ($something) {
+	another_function();
+} else {
+	call_function($something);
+}
+```
 
 
 C style of function declaration is not allowed! As this project is not written in C functions can be nested within
@@ -242,19 +280,23 @@ line as the declaration itself.
 
 Good:
 
-	class NewClass {
-		function Something($param) {
-		}
+```php
+class NewClass {
+	function Something($param) {
 	}
+}
+```
 
 Bad:
 
-	class NewClass
+```php
+class NewClass
+{
+	function Something ($param)
 	{
-		function Something ($param)
-		{
-		}
 	}
+}
+```
 
 
 Comments
@@ -279,20 +321,26 @@ commends start with slash followed by two asterisks on first line. Each line is 
 
 Good:
 
-	/**
-	 * Block comment example.
-	 */
+```php
+/**
+ * Block comment example.
+ */
+```
 
 Bad:
 
-	/*
-	 * Block comment example.
-	 */
+```php
+/*
+ * Block comment example.
+ */
+```
 
 Really bad:
 
-	//////////////////
-	// Block comment example
+```php
+//////////////////
+// Block comment example
+```
 
 
 Block comments that describe classes or are located at the beginning of the file need to have title and short
@@ -301,14 +349,16 @@ or class in question. Each word in title of the comment is capitalized.
 
 Example:
 
-	/**
-	 * Database Connection Handler
-	 *
-	 * Object this class produces are used for generating and maintaining
-	 * connection pool for database backend. In normal use you will never have
-	 * to manually create these objects as they are automatically created
-	 * by the database itself.
-	 */
+```php
+/**
+ * Database Connection Handler
+ *
+ * Object this class produces are used for generating and maintaining
+ * connection pool for database backend. In normal use you will never have
+ * to manually create these objects as they are automatically created
+ * by the database itself.
+ */
+```
 
 
 Inline Comments
@@ -325,11 +375,15 @@ the code is not immediately obvious. Avoid writing obvious inline comments.
 
 Good:
 
-	x = x + 1;  // compensate for border
+```php
+x = x + 1;  // compensate for border
+```
 
 Bad:
 
-	x = x + 1; // increment x
+```php
+x = x + 1; // increment x
+```
 
 
 Naming Styles
@@ -337,8 +391,8 @@ Naming Styles
 
 - Class names: Always use CapWords convention when naming classes. Treat acronyms as words (ex. Sql instead of SQL);
 - Namespaces: Same as class names;
-- Variable names: Lowercase words separated by underscore (ex. $example_variable_name);
-- Constant names: Uppercase words separated by underscore (ex. SOME_CONSTANT_NAME);
+- Variable names: Lowercase words separated by underscore (ex. `$example_variable_name`);
+- Constant names: Uppercase words separated by underscore (ex. `SOME_CONSTANT_NAME`);
 - Function names: Same as variable names;
 
 
@@ -350,34 +404,38 @@ forces programmer to keep the code simple and more readable.
 
 Good:
 
-	switch ($variable) {
-		case 1:
-			$result = 'a';
-			break;
+```php
+switch ($variable) {
+	case 1:
+		$result = 'a';
+		break;
 
-		case 2:
-			$result = 'b';
-			break;
+	case 2:
+		$result = 'b';
+		break;
 
-		default:
-			$result = null;
-			break;
-	}
+	default:
+		$result = null;
+		break;
+}
 
-	return $result
+return $result
+```
 
 Bad:
 
-	switch ($variable) {
-		case 1:
-			return 'a';
+```php
+switch ($variable) {
+	case 1:
+		return 'a';
 
-		case 2:
-			return 'b';
+	case 2:
+		return 'b';
 
-		default:
-			return null;
-	}
+	default:
+		return null;
+}
+```
 
 
 Proper use of exceptions. Throwing custom exceptions allows developers to properly handle errors in their own code
@@ -385,13 +443,15 @@ without having to resort to alternative methods of debugging.
 
 Good:
 
-	class CustomException extends Exception {
-	}
+```php
+class CustomException extends Exception {}
 
 
-	throw new CustomException('Could not connect!');
+throw new CustomException('Could not connect!');
+```
 
 Extremely bad:
 
-	print "Error: Could not connect!";
-
+```php
+print "Error: Could not connect!";
+```
