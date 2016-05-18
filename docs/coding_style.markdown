@@ -123,7 +123,7 @@ Good:
 if ($variable == 1) {
 	call_function($variable);
 
-} else if ($variable == 2 && $new_var == 1) [
+} else if ($variable == 2 && $new_var == 1) {
 	$something = 3;
 	call_function($something);
 
@@ -137,7 +137,7 @@ Bad:
 ```php
 if ($variable == 1) {
 	call_function($variable);
-} else if ($variable == 2 && $new_var == 1) [
+} else if ($variable == 2 && $new_var == 1) {
 	$something = 3;
 	call_function($something);
 } else {
