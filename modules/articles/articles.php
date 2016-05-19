@@ -694,6 +694,7 @@ class articles extends Module {
 			$params = array(
 						'id'			=> $item->id,
 						'text_id'		=> $item->text_id,
+						'group'			=> $item->group,
 						'timestamp'		=> $item->timestamp,
 						'date'			=> $date,
 						'time'			=> $time,
@@ -800,6 +801,7 @@ class articles extends Module {
 				$params = array(
 							'id'			=> $item->id,
 							'text_id'		=> $item->text_id,
+							'group'			=> $item->group,
 							'timestamp'		=> $item->timestamp,
 							'date'			=> $date,
 							'time'			=> $time,
