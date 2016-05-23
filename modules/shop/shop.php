@@ -797,6 +797,11 @@ class shop extends Module {
 				$handler->transferControl($params, $children);
 				break;
 
+			case 'coupons':
+				$handler = \Modules\Shop\Promotion\CouponHandler::getInstance($this);
+				$handler->transferControl($params, $children);
+				break;
+
 			case 'sizes':
 				$handler = ShopItemSizesHandler::getInstance($this);
 				$handler->transferControl($params, $children);
