@@ -460,19 +460,19 @@ class TemplateHandler {
 						$content = $tag->tagData;
 					$content = $multilanguage ? $this->params[$name][$language] : $this->params[$name];
 
-					// convert to HTML
-					$content = Markdown::parse($content);
-
-					// strip tags if needed
-					if ($clear_text)
-						$content = strip_tags($content);
-
 					// limit words if specified
 					if (!is_null($char_count)) {
 						if (is_null($end_with))
 							$content = limit_words($content, $char_count); else
 							$content = limit_words($content, $char_count, $end_with);
 					}
+
+					// convert to HTML
+					$content = Markdown::parse($content);
+
+					// strip tags if needed
+					if ($clear_text)
+						$content = strip_tags($content);
 
 					echo $content;
 					break;
