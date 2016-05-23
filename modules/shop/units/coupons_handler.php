@@ -33,13 +33,13 @@ class CouponHandler {
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new \backend_MenuItem(
-									$this->getLanguageConstant('menu_coupons'),
+									$this->parent->getLanguageConstant('menu_coupons'),
 									url_GetFromFilePath($this->path.'images/coupons.svg'),
 
 									window_Open( // on click open window
 												'shop_coupons',
 												400,
-												$this->getLanguageConstant('title_coupons'),
+												$this->parent->getLanguageConstant('title_coupons'),
 												true, true,
 												backend_UrlMake($this->name, self::SUB_ACTION, 'show')
 											),
