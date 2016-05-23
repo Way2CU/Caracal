@@ -68,7 +68,10 @@ class CouponHandler {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
-
+			case 'show':
+			default:
+				$this->show_coupons();
+				break;
 		}
 	}
 
@@ -76,6 +79,36 @@ class CouponHandler {
 	 * Show coupons management form.
 	 */
 	private function show_coupons() {
+		$template = new TemplateHandler('coupon_list.xml', $this->path.'templates/');
+
+		$params = array(
+					'link_new' => url_MakeHyperlink(
+										$this->parent->getLanguageConstant('add_coupon'),
+										window_Open( // on click open window
+											'shop_coupon_add',
+											350,
+											$this->parent->getLanguageConstant('title_coupon_add'),
+											true, true,
+											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
+										)
+									)
+					);
+
+		// register tag handler
+		$template->registerTagHandler('cms:coupon_list', $this, 'tag_CouponList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Render coupon list tag.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CouponList($tag_params, $children) {
 	}
 }
 
