@@ -70,6 +70,26 @@ class CouponHandler {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
+			case 'add':
+				$this->add_coupon();
+				break;
+
+			case 'change':
+				$this->change_coupon();
+				break;
+
+			case 'save':
+				$this->save_coupon();
+				break;
+
+			case 'delete':
+				$this->delete_coupon();
+				break;
+
+			case 'delete_commit':
+				$this->delete_coupon_commit();
+				break;
+
 			case 'show':
 			default:
 				$this->show_coupons();
@@ -102,6 +122,36 @@ class CouponHandler {
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
+	}
+
+	/**
+ 	 * Show form for adding coupons.
+	 */
+	private function add_coupon() {
+	}
+
+	/**
+	 * Show form for changing coupons.
+	 */
+	private function change_coupon() {
+	}
+
+	/**
+	 * Save new or changed coupon data.
+	 */
+	private function save_coupon() {
+	}
+
+	/**
+	 * Show confirmation form before removing coupon.
+	 */
+	private function delete_coupon() {
+	}
+
+	/**
+ 	 * Perform coupon data removal.
+	 */
+	private function delete_coupon_commit() {
 	}
 
 	/**
