@@ -198,16 +198,14 @@ class PaymentMethodError extends Exception {};
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
+	private $promotions;
 	private $checkout_scripts = array();
 	private $checkout_styles = array();
+	private $search_params = array();
 
 	private $excluded_properties = array(
 		'size_value', 'color_value', 'count', 'price'
 	);
-
-	private $search_params = array();
-
-	const BUYER_SECRET = 'oz$9=7if~db/MP|BBN>)63T}6w{D6no[^79L]9>8(8wrv6:$/n63YsvCa<BR4379De1d035wvi]]iqA<P=3gHNv1H';
 
 	/**
 	 * Constructor
@@ -217,8 +215,9 @@ class shop extends Module {
 
 		parent::__construct(__FILE__);
 
-		// create methods storage
+		// create extension storage
 		$this->payment_methods = array();
+		$this->promotions = array();
 
 		// create events
 		Events::register('shop', 'shopping-cart-changed');
