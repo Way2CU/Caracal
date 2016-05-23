@@ -9,7 +9,7 @@
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 350px;">
+			<span class="column" style="width: 250px;">
 				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column">
