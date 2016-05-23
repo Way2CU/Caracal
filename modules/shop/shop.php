@@ -427,7 +427,7 @@ class shop extends Module {
 			$backend->addMenu($this->name, $shop_menu);
 
 			// create custom handlers
-			$coupons_handler = new \Modules\Shop\Promotion\CouponHandler::getInstance($this);
+			$coupons_handler = \Modules\Shop\Promotion\CouponHandler::getInstance($this);
 		}
 	}
 
