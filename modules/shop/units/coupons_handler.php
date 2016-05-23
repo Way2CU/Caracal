@@ -155,6 +155,15 @@ class CouponHandler {
 	}
 
 	/**
+	 * Render single coupon tag.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Coupon($tag_params, $children) {
+	}
+
+	/**
 	 * Render coupon list tag.
 	 *
 	 * @param array $tag_params

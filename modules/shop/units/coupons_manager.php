@@ -18,6 +18,12 @@ class CouponsManager extends ItemManager {
 		parent::__construct('shop_coupons');
 
 		$this->addProperty('id', 'int');
+		$this->addProperty('text_id', 'varchar');
+		$this->addProperty('name', 'ml_varchar');
+		$this->addProperty('has_limit', 'boolean');
+		$this->addProperty('has_timeout', 'boolean');
+		$this->addProperty('limit', 'int');
+		$this->addProperty('timeout', 'timestamp');
 	}
 
 	/**

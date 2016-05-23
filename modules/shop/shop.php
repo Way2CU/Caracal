@@ -1140,6 +1140,23 @@ class shop extends Module {
 			PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
+
+		// create coupons storage
+		$sql = "CREATE TABLE `shop_coupons` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`text_id` varchar(64) NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
+
+		$sql .= "`has_limit` boolean NOT NULL DEFAULT '0',
+			`has_timeout` boolean NOT NULL DEFAULT '0',
+			`limit` int NOT NULL DEFAULT '0',
+			`timeout` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (`id`),
+			KEY `index_by_text_id` (`text_id`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
 	}
 
 	/**
@@ -1166,7 +1183,8 @@ class shop extends Module {
 			'shop_related_items',
 			'shop_manufacturers',
 			'shop_payment_tokens',
-			'shop_item_properties'
+			'shop_item_properties',
+			'shop_coupons'
 		);
 
 		$db->drop_tables($tables);
