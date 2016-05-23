@@ -1168,12 +1168,24 @@ class shop extends Module {
 	 * Method used by payment providers to register with main module.
 	 *
 	 * @param string $name
-	 * @param object $module
+	 * @param object $method
 	 */
-	public function registerPaymentMethod($name, &$module) {
+	public function registerPaymentMethod($name, &$method) {
 		if (!array_key_exists($name, $this->payment_methods))
-			$this->payment_methods[$name] = $module; else
+			$this->payment_methods[$name] = $method; else
 			throw new Exception("Payment method '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Method used with promotions to register with main module.
+	 *
+	 * @param string $name
+	 * @param object $promotion
+	 */
+	public function registerPromotion($name, &$promotion) {
+		if (!array_key_exists($name, $this->promotions))
+			$this->promotions[$name] = $promotion; else
+			throw new Exception("Promotion '{$name}' is already registered with the system.");
 	}
 
 	/**
