@@ -1589,6 +1589,7 @@ class shop extends Module {
 				array('status' => $status),
 				array('id' => $transaction->id)
 			);
+			$transaction->status = $status;
 			$result = true;
 
 			// get template based on transaction type
