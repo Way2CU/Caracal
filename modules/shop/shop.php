@@ -342,7 +342,7 @@ class shop extends Module {
 				$this->getLanguageConstant('menu_special_offers'),
 				url_GetFromFilePath($this->path.'images/special_offers.svg'),
 				'javascript: void(0);', 5
-			));
+			);
 
 			$shop_menu->addChild('shop_special_offers', $special_offers);
 
