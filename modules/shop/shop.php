@@ -13,8 +13,12 @@
 use Core\Events;
 use Core\Module;
 
+// base classes
 require_once('units/payment_method.php');
 require_once('units/delivery_method.php');
+require_once('units/promotion.php');
+
+// data managers and handlers
 require_once('units/item_handler.php');
 require_once('units/category_handler.php');
 require_once('units/currencies_handler.php');
@@ -32,6 +36,9 @@ require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
 require_once('units/delivery_methods_handler.php');
+require_once('units/coupons_handler.php');
+
+// helper classes
 require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
@@ -331,18 +338,14 @@ class shop extends Module {
 
 			$shop_menu->addSeparator(5);
 
-			$shop_menu->addChild(null, new backend_MenuItem(
+			// special offers menu
+			$special_offers = new backend_MenuItem(
 				$this->getLanguageConstant('menu_special_offers'),
 				url_GetFromFilePath($this->path.'images/special_offers.svg'),
-				window_Open( // on click open window
-					'shop_special_offers',
-					490,
-					$this->getLanguageConstant('title_special_offers'),
-					true, true,
-					backend_UrlMake($this->name, 'special_offers')
-				),
-				5  // level
+				'javascript: void(0);', 5
 			));
+
+			$shop_menu->addChild('shop_special_offers', $special_offers);
 
 			$shop_menu->addSeparator(5);
 
