@@ -7,6 +7,8 @@ namespace Modules\Shop\Promotion;
 
 require_once('coupons_manager.php');
 
+use \TemplateHandler as TemplateHandler;
+
 
 class CouponHandler {
 	private static $_instance;
