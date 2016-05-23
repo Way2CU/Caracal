@@ -20,9 +20,31 @@ class CouponHandler {
 	 * Constructor
 	 */
 	protected function __construct($parent) {
+		global $section;
+
 		$this->parent = $parent;
 		$this->name = $this->parent->name;
 		$this->path = $this->parent->path;
+
+		// create main menu
+		if ($section == 'backend') {
+			$method_menu = $backend->getMenu('shop_special_offers');
+
+			if (!is_null($method_menu))
+				$method_menu->addChild('', new backend_MenuItem(
+									$this->getLanguageConstant('menu_coupons'),
+									url_GetFromFilePath($this->path.'images/coupons.svg'),
+
+									window_Open( // on click open window
+												'shop_coupons',
+												400,
+												$this->getLanguageConstant('title_coupons'),
+												true, true,
+												backend_UrlMake($this->name, self::SUB_ACTION, 'show')
+											),
+									$level=5
+								));
+		}
 	}
 
 	/**
