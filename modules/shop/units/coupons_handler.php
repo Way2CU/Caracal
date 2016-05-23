@@ -28,7 +28,7 @@ class CouponHandler {
 
 		// create main menu
 		if ($section == 'backend') {
-			$backend = backend::getInstance();
+			$backend = \backend::getInstance();
 			$method_menu = $backend->getMenu('shop_special_offers');
 
 			if (!is_null($method_menu))
