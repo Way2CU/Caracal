@@ -32,7 +32,7 @@ class CouponHandler {
 			$method_menu = $backend->getMenu('shop_special_offers');
 
 			if (!is_null($method_menu))
-				$method_menu->addChild('', new backend_MenuItem(
+				$method_menu->addChild('', new \backend_MenuItem(
 									$this->getLanguageConstant('menu_coupons'),
 									url_GetFromFilePath($this->path.'images/coupons.svg'),
 
