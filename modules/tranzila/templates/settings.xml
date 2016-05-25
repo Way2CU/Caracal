@@ -59,7 +59,7 @@
 						name="confirm_url"
 						value="$params['confirm_url']"
 						cms:eval="value"
-						style="width: 360px;"
+						style="width: 350px;"
 						readonly="readonly"
 						/>
 				</label>
@@ -71,7 +71,7 @@
 						name="confirm_url"
 						value="$params['cancel_url']"
 						cms:eval="value"
-						style="width: 360px;"
+						style="width: 350px;"
 						readonly="readonly"
 						/>
 				</label>
