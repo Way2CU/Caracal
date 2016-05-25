@@ -684,7 +684,7 @@ class articles extends Module {
 		$template = $this->loadTemplate($tag_params, 'article.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
+		$template->registerTagHandler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
 
 		// parse article
 		if (is_object($item)) {
@@ -783,6 +783,9 @@ class articles extends Module {
 				$conditions['group'] = -1;
 		}
 
+		if (isset($tag_params['without_group']) && $tag_params['without_group'] == 1)
+			$conditions['group'] = 'NULL';
+
 		// get items from manager
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
 
@@ -790,8 +793,8 @@ class articles extends Module {
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article', $this, 'tag_Article');
-		$template->registerTagHandler('_article_rating_image', $this, 'tag_ArticleRatingImage');
+		$template->registerTagHandler('cms:article', $this, 'tag_Article');
+		$template->registerTagHandler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
 
 		if (count($items) > 0)
 			foreach($items as $item) {
