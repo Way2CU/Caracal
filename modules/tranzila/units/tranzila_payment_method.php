@@ -188,6 +188,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'lang'           => isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language,
 		);
 
+		if ($this->parent->settings['custom_template'])
+			$params['template'] = 'custom';
+
 		// add buyer information
 		$buyer = Transaction::get_current_buyer();
 		if (is_object($buyer)) {
@@ -253,6 +256,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'nologo'		=> 1,
 			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
 		);
+
+		if ($this->parent->settings['custom_template'])
+			$params['template'] = 'custom';
 
 		// create HTML form
 		$result = '';
