@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<cms:var param="title" multilanguage="yes"/>
+	</div>
+	<div class="list_group">
+		<cms:article_list
+			template="list_item.xml"
+			only_visible="$template['only_visible']"
+			cms:eval="only_visible"
+			/>
+	</div>
+</document>

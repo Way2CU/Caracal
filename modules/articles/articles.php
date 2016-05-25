@@ -295,7 +295,8 @@ class articles extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
+		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -964,7 +965,7 @@ class articles extends Module {
 		$template = $this->loadTemplate($tag_params, 'group.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
+		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
 
 		if (!is_null($id))
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
@@ -1003,7 +1004,7 @@ class articles extends Module {
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_article_list', $this, 'tag_ArticleList');
+		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']))
