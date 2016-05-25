@@ -308,7 +308,7 @@ class articles extends Module {
 	private function addArticle() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
@@ -332,7 +332,7 @@ class articles extends Module {
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
-			$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+			$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
 			$params = array(
 						'id'			=> $item->id,
@@ -473,7 +473,7 @@ class articles extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
