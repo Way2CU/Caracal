@@ -784,7 +784,10 @@ class articles extends Module {
 		}
 
 		if (isset($tag_params['without_group']) && $tag_params['without_group'] == 1)
-			$conditions['group'] = 'NULL';
+			$conditions['group'] = array(
+					'operator' => 'is',
+					'value'    => 'NULL'
+				);
 
 		// get items from manager
 		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
