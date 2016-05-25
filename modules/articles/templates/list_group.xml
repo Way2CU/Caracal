@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<cms:var param="title" multilanguage="yes"/>
-	</div>
+	<h4><cms:var param="title" multilanguage="yes"/></h4>
 	<div class="list_group">
 		<cms:article_list
 			group="$params['id']"

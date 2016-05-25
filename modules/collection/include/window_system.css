@@ -466,6 +466,21 @@ div.window div.scrollable_list .list_content {
 	background-color: #FFFFFF;
 }
 
+div.dialog div.scrollable_list .list_content h4,
+div.window div.scrollable_list .list_content h4 {
+}
+
+div.dialog div.scrollable_list .list_content .list_group,
+div.window div.scrollable_list .list_content .list_group {
+	padding-left: 2em;
+}
+
+body.rtl div.dialog div.scrollable_list .list_content .list_group,
+body.rtl div.window div.scrollable_list .list_content .list_group {
+	padding-left: 0px;
+	padding-right: 2em;
+}
+
 div.dialog div.scrollable_list .list_content .list_item,
 div.window div.scrollable_list .list_content .list_item {
 	display: block;
