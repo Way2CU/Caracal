@@ -286,7 +286,7 @@ class shop extends Module {
 				url_GetFromFilePath($this->path.'images/categories.svg'),
 				window_Open( // on click open window
 					'shop_categories',
-					490,
+					550,
 					$this->getLanguageConstant('title_manage_categories'),
 					true, true,
 					backend_UrlMake($this->name, 'categories')

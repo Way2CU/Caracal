@@ -11,7 +11,7 @@
 			<cms:var name="$params['item_add']"/>
 		</span>
 	</div>
-	<div style="($language_rtl ? 'padding-right' : 'padding-left').': 15px;'" cms:eval="style">
+	<div class="list_group">
 		<cms:children
 			parent_id="$params['id']"
 			level="$params['level'] + 1"
