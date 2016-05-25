@@ -6,9 +6,11 @@
 	</div>
 	<div class="list_group">
 		<cms:article_list
-			template="list_item.xml"
+			group="$params['id']"
 			only_visible="$template['only_visible']"
-			cms:eval="only_visible"
+			template="list_item.xml"
+			local="1"
+			cms:eval="only_visible,group"
 			/>
 	</div>
 </document>
