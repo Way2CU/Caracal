@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="'width: '.(300-($params['level'] * 15)).'px;'" cms:eval="style">
+		<span class="column" style="width: 300px">
 			<cms:var name="$params['title'][$language]"/>
 		</span>
 		<span class="column">
