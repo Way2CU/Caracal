@@ -468,6 +468,8 @@ div.window div.scrollable_list .list_content {
 
 div.dialog div.scrollable_list .list_content h4,
 div.window div.scrollable_list .list_content h4 {
+	margin: 0px;
+	padding: 5px;
 }
 
 div.dialog div.scrollable_list .list_content .list_group,
