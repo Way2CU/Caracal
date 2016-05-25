@@ -75,13 +75,13 @@
 						readonly="readonly"
 						/>
 				</label>
-				<div class="button_bar">
-					<button type="submit"><cms:text constant="save"/></button>
-					<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-						<cms:text constant="cancel"/>
-					</button>
-				</div>
 			</div>
+		</div>
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
 		</div>
 	</form>
 
