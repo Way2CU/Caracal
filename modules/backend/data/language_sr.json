@@ -21,6 +21,7 @@
     "group_root": "Unlimited",
     "group_users": "Korisnici",
     "initialise": "Inicijalizuj",
+    "label_lasting_session": "Keep me logged in.",
     "label_email": "Email:",
     "label_fullname": "Ime i prezime:",
     "label_level": "Nivo:",

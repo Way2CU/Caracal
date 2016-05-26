@@ -16,11 +16,23 @@
 				<div class="input_controls">
 					<label style="clear: both;">
 						<span><cms:text constant="username" module="backend"/></span>
-						<input type="text" name="username" value="$params['username']" cms:eval="value" style="width: 160px;"/>
+						<input
+							type="text"
+							name="username"
+							value="$params['username']"
+							autofocus="autofocus"
+							cms:eval="value"
+							style="width: 160px;"
+							/>
 					</label>
 					<label>
 						<span><cms:text constant="password" module="backend"/></span>
-						<input type="password" name="password" value="" style="width: 160px;"/>
+						<input
+							type="password"
+							name="password"
+							value=""
+							style="width: 160px;"
+							/>
 					</label>
 					<cms:if condition="$params['show_captcha']">
 						<label class="captcha">
@@ -29,6 +41,13 @@
 							<input type="text" name="captcha" value=""/>
 						</label>
 					</cms:if>
+					<label class="checkbox">
+						<span><cms:text constant="label_lasting_session" module="backend"/></span>
+						<input
+							type="checkbox"
+							name="lasting"
+							/>
+					</label>
 				</div>
 			</div>
 			<div style="clear: both;"/>

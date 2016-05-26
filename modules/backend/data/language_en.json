@@ -21,6 +21,7 @@
     "group_root": "Unlimited",
     "group_users": "Users",
     "initialise": "Initialise",
+    "label_lasting_session": "Keep me logged in.",
     "label_email": "Email:",
     "label_fullname": "Full name:",
     "label_level": "Level:",
