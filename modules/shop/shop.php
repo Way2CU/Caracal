@@ -4290,7 +4290,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_AccountOptions($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'account_type.xml');
+		$template = $this->loadTemplate($tag_params, 'account_type_option.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (isset($tag_params['selected']))
@@ -4303,11 +4303,11 @@ class shop extends Module {
 			User::GUEST => $this->getLanguageConstant('label_guest')
 		);
 
-		foreach ($options as $option) {
+		foreach ($options as $value => $text) {
 			$params = array(
-				'value'    => $option,
-				'name'     => $this->getLanguageConstant('account_'.$option),
-				'selected' => $selected == $option
+				'value'    => $value,
+				'name'     => $text,
+				'selected' => $selected == $value
 			);
 
 			$template->restoreXML();
