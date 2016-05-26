@@ -104,6 +104,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		// apply account option
 		self.handler.account_type_change(null);
+
+		// select delivery method if only one is available
+		if (self.shipping.methods.length == 1)
+			self.shipping.methods.eq(1).trigger('click');
 	};
 
 	/**
