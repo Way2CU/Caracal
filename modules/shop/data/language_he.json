@@ -143,6 +143,7 @@
     "label_property_name": "שם:",
     "label_property_type": "סוג:",
     "label_property_value": "ערך:",
+    "label_default_account_option": "Default account option selected on checkout:",
     "manage_categories": "נהל קטגוריות",
     "menu_categories": "נהל קטגוריות",
     "menu_currencies": "מטבעות",
@@ -304,5 +305,6 @@
     "tooltip_street2": "דירה, יחידה, בניין, קומה וכו'.",
     "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח.",
     "tooltip_access_code": "לבניינים ושערי כניסה.",
-    "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results."
+    "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results.",
+    "legend_location": "Location"
 }

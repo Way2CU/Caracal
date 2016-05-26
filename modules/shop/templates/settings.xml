@@ -5,35 +5,6 @@
 		<div id="shop_settings_notebook">
 			<!-- General settings -->
 			<div>
-				<label>
-					<span><cms:text constant="label_fixed_country" module="shop"/></span>
-					<select name="fixed_country" style="width: 300px">
-						<option/>
-						<cms:module
-							name="country_list"
-							action="show"
-							template="country_option.xml"
-							local="1"
-							selected="$settings['fixed_country']"
-							cms:eval="selected"
-						/>
-					</select>
-				</label>
-				<label>
-					<span><cms:text constant="label_shop_location" module="shop"/></span>
-					<select name="shop_location" style="width: 300px">
-						<option/>
-						<cms:module
-							name="country_list"
-							action="show"
-							template="country_option.xml"
-							local="1"
-							selected="$settings['shop_location']"
-							cms:eval="selected"
-						/>
-					</select>
-				</label>
-
 				<label class="checkbox">
 					<span><cms:text constant="label_testing_mode" module="shop"/></span>
 					<input
@@ -41,8 +12,50 @@
 						name="testing_mode"
 						checked="$settings['testing_mode'] ? 'checked' : false"
 						cms:optional="checked"
-					/>
+						/>
 				</label>
+
+				<label>
+					<span><cms:text constant="label_default_account_option" module="shop"/></span>
+					<select name="default_account_option">
+						<cms:account_options
+							selected="$settings['default_account_option']"
+							cms:eval="selected"
+							/>
+					</select>
+				</label>
+
+				<fieldset>
+					<legend><cms:text constant="legend_location" module="shop"/></legend>
+					<label>
+						<span><cms:text constant="label_fixed_country" module="shop"/></span>
+						<select name="fixed_country" style="width: 300px">
+							<option/>
+							<cms:module
+								name="country_list"
+								action="show"
+								template="country_option.xml"
+								local="1"
+								selected="$settings['fixed_country']"
+								cms:eval="selected"
+								/>
+						</select>
+					</label>
+					<label>
+						<span><cms:text constant="label_shop_location" module="shop"/></span>
+						<select name="shop_location" style="width: 300px">
+							<option/>
+							<cms:module
+								name="country_list"
+								action="show"
+								template="country_option.xml"
+								local="1"
+								selected="$settings['shop_location']"
+								cms:eval="selected"
+								/>
+						</select>
+					</label>
+				</fieldset>
 			</div>
 
 			<!-- Email templates -->
@@ -56,7 +69,7 @@
 							template="templates_option.xml"
 							local="1"
 							cms:eval="selected"
-						/>
+							/>
 					</select>
 				</label>
 				<label>
@@ -68,7 +81,7 @@
 							template="templates_option.xml"
 							local="1"
 							cms:eval="selected"
-						/>
+							/>
 					</select>
 				</label>
 				<label>
@@ -80,7 +93,7 @@
 							template="templates_option.xml"
 							local="1"
 							cms:eval="selected"
-						/>
+							/>
 					</select>
 				</label>
 				<label class="checkbox">

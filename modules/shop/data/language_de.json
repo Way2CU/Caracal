@@ -143,8 +143,8 @@
     "label_property_name": "Name:",
     "label_property_type": "Type:",
     "label_property_value": "Value:",
+    "label_default_account_option": "Default account option selected on checkout:",
     "manage_categories": "Manage categories",
-    "menu_coupons": "Coupons",
     "menu_categories": "Manage categories",
     "menu_currencies": "Currencies",
     "menu_delivery_methods": "Delivery methods",
@@ -237,7 +237,6 @@
     "tab_related": "Related items",
     "tab_shipping": "Shipping",
     "tax": "Tax:",
-    "title_coupons": "Shop: Coupons",
     "title_billing_information": "Billing information",
     "title_category_add": "Shop: Add category",
     "title_category_change": "Shop: Edit category",
@@ -306,5 +305,6 @@
     "tooltip_street2": "Apartment, suite, unit, building, floor, etc.",
     "tooltip_total_money": "Total price without handling and shipping.",
     "tooltip_access_code": "For buildings and gated communities.",
-    "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results."
+    "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results.",
+    "legend_location": "Location"
 }
