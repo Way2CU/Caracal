@@ -1283,7 +1283,7 @@ class shop extends Module {
 		$fixed_country = fix_chars($_REQUEST['fixed_country']);
 		$testing_mode = fix_id($_REQUEST['testing_mode']);
 		$send_copy = fix_id($_REQUEST['send_copy']);
-		$default_account_option = fix_id($_REQUEST['default_account_option']);
+		$default_account_option = escape_chars($_REQUEST['default_account_option']);
 
 		$this->saveSetting('regular_template', $regular_template);
 		$this->saveSetting('recurring_template', $recurring_template);
