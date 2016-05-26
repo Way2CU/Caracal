@@ -30,6 +30,10 @@
 	Deny from all
 </FilesMatch>
 
+<FilesMatch "^(install|docs|libraries|.git|.tx)/">
+	Deny from all
+</FilesMatch>
+
 <FilesMatch "favicon.ico">
 	Deny from all
 </FilesMatch>
