@@ -1,0 +1,14 @@
+{
+    "label_terminal": "Terminal name:",
+    "label_terminal2": "Terminal for charging tokens:",
+    "label_terminal_password": "Terminal password:",
+    "label_url_cancel": "Cancel URL:",
+    "label_url_confirm": "Confirmation URL:",
+    "label_custom_template": "Show custom template?",
+    "menu_tranzila": "Tranzila",
+    "message_settings_saved": "New settings were saved.",
+    "payment_method_title": "Tranzila",
+    "title_settings": "Tranzila Settings",
+    "tab_terminal": "Terminal",
+    "tab_urls": "URLs"
+}
