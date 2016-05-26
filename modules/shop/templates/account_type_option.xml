@@ -3,7 +3,7 @@
 <document>
 	<option
 		value="$params['value']"
-		selected="$params['selected'] ? 'selected' : false'"
+		selected="$params['selected'] ? 'selected' : false"
 		cms:eval="value"
 		cms:optional="selected"
 		>
