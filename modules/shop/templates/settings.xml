@@ -17,7 +17,7 @@
 
 				<label>
 					<span><cms:text constant="label_default_account_option" module="shop"/></span>
-					<select name="default_account_option">
+					<select name="default_account_option" style="width: 250px;">
 						<cms:account_options
 							selected="$settings['default_account_option']"
 							cms:eval="selected"
