@@ -107,7 +107,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 		// select delivery method if only one is available
 		if (self.shipping.methods.length == 1)
-			self.shipping.methods.eq(1).trigger('click');
+			self.shipping.methods.eq(0).trigger('click');
 	};
 
 	/**
