@@ -128,6 +128,17 @@ class CouponHandler {
  	 * Show form for adding coupons.
 	 */
 	private function add_coupon() {
+		$template = new TemplateHandler('coupon_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
+					'cancel_action'	=> window_Close('shop_coupon_add')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**

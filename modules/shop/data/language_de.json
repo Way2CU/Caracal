@@ -1,4 +1,5 @@
 {
+    "add_coupon": "Add coupon",
     "add_another": "Add another",
     "add_category": "Add category",
     "add_currency": "Add currency",
@@ -57,6 +58,10 @@
     "empty_shopping_cart": "There are no items in shopping cart.",
     "handling": "Handling:",
     "hide_shopping_cart": "Hide shopping cart",
+    "label_coupon_has_limit": "Coupon has use limit?",
+    "label_coupon_limit": "Limit:",
+    "label_coupon_has_timeout": "Coupon has expiration date?",
+    "label_coupon_timeout": "Expiration date:",
     "label_send_copy": "Send copy to default recipient?",
     "label_contact_information": "Contact information:",
     "label_discount": "Discount (%):",
@@ -129,7 +134,7 @@
     "label_access_code": "Security access code:",
     "label_tax": "Tax (%):",
     "label_testing_mode": "Enable testing mode?",
-    "label_text_id": "Text ID:",
+    "label_text_id": "Text id:",
     "label_timestamp": "Timestamp:",
     "label_title": "Title:",
     "label_total": "Total amount:",
@@ -145,6 +150,7 @@
     "label_property_value": "Value:",
     "label_default_account_option": "Default account option selected on checkout:",
     "manage_categories": "Manage categories",
+    "menu_coupons": "Coupons",
     "menu_categories": "Manage categories",
     "menu_currencies": "Currencies",
     "menu_delivery_methods": "Delivery methods",
@@ -237,6 +243,10 @@
     "tab_related": "Related items",
     "tab_shipping": "Shipping",
     "tax": "Tax:",
+    "title_coupons": "Shop: Coupons",
+    "title_coupon_add": "Shop: Add coupon",
+    "title_coupon_change": "Shop: Change coupon",
+    "title_coupon_delete": "Shop: Delete coupon",
     "title_billing_information": "Billing information",
     "title_category_add": "Shop: Add category",
     "title_category_change": "Shop: Edit category",
@@ -306,5 +316,7 @@
     "tooltip_total_money": "Total price without handling and shipping.",
     "tooltip_access_code": "For buildings and gated communities.",
     "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results.",
-    "legend_location": "Location"
+    "legend_location": "Location",
+    "legend_coupon_limit": "Limit",
+    "legend_coupon_timeout": "Timeout"
 }
