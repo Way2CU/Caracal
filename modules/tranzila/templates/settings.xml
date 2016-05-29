@@ -2,63 +2,81 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<label>
-			<span><cms:text constant="label_terminal" module="tranzila"/></span>
-			<input
-				type="text"
-				class="code"
-				name="terminal"
-				value="$settings['terminal']"
-				cms:eval="value"
-				style="width: 260px;"
-			/>
-		</label>
-		<label>
-			<span><cms:text constant="label_terminal2" module="tranzila"/></span>
-			<input
-				type="text"
-				class="code"
-				name="terminal2"
-				value="$settings['terminal2']"
-				cms:eval="value"
-				style="width: 260px;"
-			/>
-		</label>
-		<label>
-			<span><cms:text constant="label_terminal_password" module="tranzila"/></span>
-			<input
-				type="text"
-				class="code"
-				name="terminal_password"
-				value="$settings['terminal_password']"
-				cms:eval="value"
-				style="width: 260px;"
-			/>
-		</label>
-		<label>
-			<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
-			<input
-				type="text"
-				class="code"
-				name="confirm_url"
-				value="$params['confirm_url']"
-				cms:eval="value"
-				style="width: 360px;"
-				readonly="readonly"
-			/>
-		</label>
-		<label>
-			<span><cms:text constant="label_url_cancel" module="tranzila"/></span>
-			<input
-				type="text"
-				class="code"
-				name="confirm_url"
-				value="$params['cancel_url']"
-				cms:eval="value"
-				style="width: 360px;"
-				readonly="readonly"
-			/>
-		</label>
+		<div id="tranzila_settings_notebook">
+			<!-- Terminal page -->
+			<div>
+				<label>
+					<span><cms:text constant="label_terminal" module="tranzila"/></span>
+					<input
+						type="text"
+						class="code"
+						name="terminal"
+						value="$settings['terminal']"
+						cms:eval="value"
+						style="width: 260px;"
+						/>
+				</label>
+				<label>
+					<span><cms:text constant="label_terminal2" module="tranzila"/></span>
+					<input
+						type="text"
+						class="code"
+						name="terminal2"
+						value="$settings['terminal2']"
+						cms:eval="value"
+						style="width: 260px;"
+						/>
+				</label>
+				<label>
+					<span><cms:text constant="label_terminal_password" module="tranzila"/></span>
+					<input
+						type="text"
+						class="code"
+						name="terminal_password"
+						value="$settings['terminal_password']"
+						cms:eval="value"
+						style="width: 260px;"
+						/>
+				</label>
+				<label class="checkbox">
+					<span><cms:text constant="label_custom_template" module="tranzila"/></span>
+					<input
+						type="checkbox"
+						name="custom_template"
+						checked="$settings['custom_template'] ? 'checked' : false"
+						cms:optional="checked"
+						/>
+				</label>
+			</div>
+
+			<!-- URLs page -->
+			<div>
+				<label>
+					<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
+					<input
+						type="text"
+						class="code"
+						name="confirm_url"
+						value="$params['confirm_url']"
+						cms:eval="value"
+						style="width: 350px;"
+						readonly="readonly"
+						/>
+				</label>
+				<label>
+					<span><cms:text constant="label_url_cancel" module="tranzila"/></span>
+					<input
+						type="text"
+						class="code"
+						name="confirm_url"
+						value="$params['cancel_url']"
+						cms:eval="value"
+						style="width: 350px;"
+						readonly="readonly"
+						/>
+				</label>
+			</div>
+		</div>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
@@ -66,4 +84,12 @@
 			</button>
 		</div>
 	</form>
+
+	<script type="text/javascript" charset="utf-8">
+		// create notebook
+		var notebook = new Notebook('tranzila_settings_notebook');
+		notebook
+			.setPageTitle(0, language_handler.getText('tranzila', 'tab_terminal'))
+			.setPageTitle(1, language_handler.getText('tranzila', 'tab_urls'));
+	</script>
 </document>

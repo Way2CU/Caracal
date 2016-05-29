@@ -292,7 +292,7 @@ class shop extends Module {
 				url_GetFromFilePath($this->path.'images/categories.svg'),
 				window_Open( // on click open window
 					'shop_categories',
-					490,
+					550,
 					$this->getLanguageConstant('title_manage_categories'),
 					true, true,
 					backend_UrlMake($this->name, 'categories')
@@ -853,6 +853,7 @@ class shop extends Module {
 		// set shop in testing mode by default
 		$this->saveSetting('testing_mode', 1);
 		$this->saveSetting('send_copy', 0);
+		$this->saveSetting('default_account_option', User::GUEST);
 
 		// create shop items table
 		$sql = "
@@ -1293,6 +1294,7 @@ class shop extends Module {
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('cms:account_options', $this, 'tag_AccountOptions');
 
 		$params = array(
 			'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
@@ -1321,6 +1323,7 @@ class shop extends Module {
 		$fixed_country = fix_chars($_REQUEST['fixed_country']);
 		$testing_mode = fix_id($_REQUEST['testing_mode']);
 		$send_copy = fix_id($_REQUEST['send_copy']);
+		$default_account_option = escape_chars($_REQUEST['default_account_option']);
 
 		$this->saveSetting('regular_template', $regular_template);
 		$this->saveSetting('recurring_template', $recurring_template);
@@ -1329,6 +1332,7 @@ class shop extends Module {
 		$this->saveSetting('fixed_country', $fixed_country);
 		$this->saveSetting('testing_mode', $testing_mode);
 		$this->saveSetting('send_copy', $send_copy);
+		$this->saveSetting('default_account_option', $default_account_option);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -1629,6 +1633,7 @@ class shop extends Module {
 				array('status' => $status),
 				array('id' => $transaction->id)
 			);
+			$transaction->status = $status;
 			$result = true;
 
 			// get template based on transaction type
@@ -4310,6 +4315,39 @@ class shop extends Module {
 			$params = array(
 				'id'	=> $id,
 				'name'	=> $name
+			);
+
+			$template->restoreXML();
+			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Render account options tag.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_AccountOptions($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'account_type_option.xml');
+		$template->setTemplateParamsFromArray($children);
+
+		if (isset($tag_params['selected']))
+			$selected = escape_chars($tag_params['selected']); else
+			$selected = User::GUEST;
+
+		$options = array(
+			User::EXISTING => $this->getLanguageConstant('label_existing_user'),
+			User::CREATE => $this->getLanguageConstant('label_new_user'),
+			User::GUEST => $this->getLanguageConstant('label_guest')
+		);
+
+		foreach ($options as $value => $text) {
+			$params = array(
+				'value'    => $value,
+				'name'     => $text,
+				'selected' => $selected == $value
 			);
 
 			$template->restoreXML();

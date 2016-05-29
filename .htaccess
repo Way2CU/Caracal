@@ -26,7 +26,11 @@
 	Deny from all
 </FilesMatch>
 
-<FilesMatch "site/\.(php|php3|asp|sh|py)$">
+<FilesMatch "^site/.*\.(php|php3|asp|sh|py)$">
+	Deny from all
+</FilesMatch>
+
+<FilesMatch "^(install|docs|libraries|.git|.tx)/">
 	Deny from all
 </FilesMatch>
 

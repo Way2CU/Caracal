@@ -41,12 +41,13 @@
 									type="radio"
 									name="existing_user"
 									value="log_in"
-									checked="checked"
+									checked="$settings['default_account_option'] == 'log_in' ? 'checked' : false"
+									cms:optional="checked"
 									/>
 								<span><cms:text constant="label_existing_user" module="shop"/></span>
 							</label>
 
-							<div class="existing_account visible">
+							<div class="existing_account">
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
@@ -93,6 +94,8 @@
 									type="radio"
 									name="existing_user"
 									value="sign_up"
+									checked="$settings['default_account_option'] == 'sign_up' ? 'checked' : false"
+									cms:optional="checked"
 									/>
 								<span><cms:text constant="label_new_user" module="shop"/></span>
 							</label>
@@ -194,6 +197,8 @@
 									type="radio"
 									name="existing_user"
 									value="guest"
+									checked="$settings['default_account_option'] == 'guest' ? 'checked' : false"
+									cms:optional="checked"
 									/>
 								<span><cms:text constant="label_guest" module="shop"/></span>
 							</label>

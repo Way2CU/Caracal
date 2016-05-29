@@ -4,8 +4,11 @@
     "label_terminal_password": "ססמת מסוף:",
     "label_url_cancel": "כתובת ביטול:",
     "label_url_confirm": "כתובת אישור:",
+    "label_custom_template": "להציג תבנית מותאמת אישית?",
     "menu_tranzila": "טרנזילה",
     "message_settings_saved": "ההגדרות החדשות נשמרו",
     "payment_method_title": "תשלום",
-    "title_settings": "הגדרות טרנזילה"
+    "title_settings": "הגדרות טרנזילה",
+    "tab_terminal": "טרמינל",
+    "tab_urls": "URLs"
 }

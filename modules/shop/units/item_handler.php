@@ -107,7 +107,7 @@ class Handler {
 										$this->parent->getLanguageConstant('manage_categories'),
 										window_Open( // on click open window
 											'shop_categories',
-											580,
+											550,
 											$this->parent->getLanguageConstant('title_manage_categories'),
 											true, true,
 											backend_UrlMake($this->name, 'categories')

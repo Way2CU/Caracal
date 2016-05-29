@@ -12,7 +12,7 @@
 					<span><cms:text constant="label_group" module="articles"/></span>
 					<select name="group" style="width: 270px;">
 						<option></option>
-						<_group_list template="group_option.xml" local="1"/>
+						<cms:group_list template="group_option.xml" local="1"/>
 					</select>
 				</label>
 				<label>

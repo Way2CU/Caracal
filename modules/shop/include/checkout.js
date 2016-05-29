@@ -101,6 +101,13 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.shipping.methods.on('click', self.handler.delivery_method_click);
 		self.payment.methods.click(self.handler.payment_method_click);
 		self.page_control.events.connect('page-flip', self.handler.page_flip);
+
+		// apply account option
+		self.handler.account_type_change(null);
+
+		// select delivery method if only one is available
+		if (self.shipping.methods.length == 1)
+			self.shipping.methods.eq(0).trigger('click');
 	};
 
 	/**

@@ -364,7 +364,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_add')
 				);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -530,7 +530,7 @@ class news extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -781,7 +781,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_feeds_add')
 				);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
@@ -812,7 +812,7 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_feeds_change')
 				);
 
-		$template->registerTagHandler('_group_list', $this, 'tag_GroupList');
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 		$template->restoreXML();
 		$template->setLocalParams($params);
 		$template->parse();
