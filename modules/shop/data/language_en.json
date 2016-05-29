@@ -317,7 +317,7 @@
 	"tooltip_access_code": "For buildings and gated communities.",
 	"tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results.",
 	"legend_location": "Location",
-	"legend_coupon_limit": "Limit",
-	"legend_coupon_timeout": "Timeout",
+	"legend_coupon_limit": "Use limit",
+	"legend_coupon_timeout": "Expiration date",
 	"format_coupon_timeout": "yyyy-mm-dd hh:mm:ss"
 }
