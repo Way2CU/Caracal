@@ -21,6 +21,7 @@
 				type="text"
 				name="name"
 				class="multi-language"
+				maxlength="255"
 				/>
 		</label>
 
