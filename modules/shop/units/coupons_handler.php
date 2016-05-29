@@ -40,7 +40,7 @@ class CouponHandler {
 
 									window_Open( // on click open window
 												'shop_coupons',
-												400,
+												450,
 												$this->parent->getLanguageConstant('title_coupons'),
 												true, true,
 												backend_UrlMake($this->name, self::SUB_ACTION, 'show')
