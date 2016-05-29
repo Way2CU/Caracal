@@ -26,14 +26,13 @@
 		</label>
 
 		<fieldset>
-			<legend><cms:text constant="legend_coupon_limit" module="shop"/></legend>
-			<label class="checkbox">
-				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
+			<legend>
 				<input
 					type="checkbox"
 					name="has_limit"
 					/>
-			</label>
+				<cms:text constant="legend_coupon_limit" module="shop"/>
+			</legend>
 
 			<label>
 				<span><cms:text constant="label_coupon_limit" module="shop"/></span>
@@ -47,14 +46,13 @@
 		</fieldset>
 
 		<fieldset>
-			<legend><cms:text constant="legend_coupon_timeout" module="shop"/></legend>
-			<label class="checkbox">
-				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
+			<legend>
 				<input
 					type="checkbox"
 					name="has_timeout"
 					/>
-			</label>
+				<cms:text constant="legend_coupon_timeout" module="shop"/>
+			</legend>
 
 			<label>
 				<span><cms:text constant="label_coupon_timeout" module="shop"/></span>
