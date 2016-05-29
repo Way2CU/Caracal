@@ -59,7 +59,7 @@
     "handling": "טיפול:",
     "hide_shopping_cart": "הסתר עגלת קניות",
     "label_coupon_has_limit": "Coupon has use limit.",
-    "label_coupon_limit": "Limit:",
+    "label_coupon_limit": "Number of uses:",
     "label_coupon_has_timeout": "Coupon has expiration date.",
     "label_coupon_timeout": "Expiration date:",
     "label_send_copy": "לשלוח העתק למען ברירת מחדל?",
@@ -317,7 +317,5 @@
     "tooltip_access_code": "לבניינים ושערי כניסה.",
     "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results.",
     "legend_location": "Location",
-    "legend_coupon_limit": "Limit",
-    "legend_coupon_timeout": "Timeout",
     "format_coupon_timeout": "yyyy-mm-dd hh:mm:ss"
 }
