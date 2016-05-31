@@ -199,6 +199,7 @@ class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
 	private $promotions;
+	private $discounts;
 	private $checkout_scripts = array();
 	private $checkout_styles = array();
 	private $search_params = array();
@@ -218,6 +219,7 @@ class shop extends Module {
 		// create extension storage
 		$this->payment_methods = array();
 		$this->promotions = array();
+		$this->discounts = array();
 
 		// create events
 		Events::register('shop', 'shopping-cart-changed');
@@ -1153,9 +1155,23 @@ class shop extends Module {
 		$sql .= "`has_limit` boolean NOT NULL DEFAULT '0',
 			`has_timeout` boolean NOT NULL DEFAULT '0',
 			`limit` int NOT NULL DEFAULT '0',
-			`timeout` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`timeout` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
 			KEY `index_by_text_id` (`text_id`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		$sql = "CREATE TABLE `shop_coupon_codes` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`coupon` int NOT NULL,
+			`code` varchar(64) NOT NULL,
+			`timest_used` int NOT NULL DEFAULT '0',
+			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`promotion` varchar(64) NOT NULL,
+			PRIMARY KEY (`id`),
+			KEY `index_by_text_id` (`text_id`)
+			KEY `index_by_timestamp` (`timestamp`)
+			KEY `index_by_coupon` (`coupon`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 	}
@@ -1213,6 +1229,18 @@ class shop extends Module {
 		if (!array_key_exists($name, $this->promotions))
 			$this->promotions[$name] = $promotion; else
 			throw new Exception("Promotion '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Register discount to be used with promotions.
+	 *
+	 * @param string $name
+	 * @param object $discount
+	 */
+	public function registerDiscount($name, &$discount) {
+		if (!array_key_exists($name, $this->discounts))
+			$this->discounts[$name] = $discount; else
+			throw new Exception("Discount '{$name}' is already registered with the system.");
 	}
 
 	/**
