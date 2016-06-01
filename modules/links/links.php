@@ -381,8 +381,8 @@ class links extends Module {
 				'description' 	=> $this->getMultilanguageField('description'),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'url' 			=> escape_chars($_REQUEST['url']),
-				'external' 		=> isset($_REQUEST['external']) && ($_REQUEST['external'] == 'on' || $_REQUEST['external'] == '1') ? 1 : 0,
-				'sponsored' 	=> isset($_REQUEST['sponsored']) && ($_REQUEST['sponsored'] == 'on' || $_REQUEST['sponsored'] == '1') ? 1 : 0,
+				'external' 		=> $this->getBooleanField('external') ? 1 : 0,
+				'sponsored' 	=> $this->getBooleanField('sponsored') ? 1 : 0,
 				'display_limit'	=> fix_id($_REQUEST['display_limit']),
 			);
 

@@ -242,7 +242,7 @@ class Handler {
 				'size_definition' => isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
 				'priority'        => isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'    => isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
-				'visible'         => $_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1' ? 1 : 0,
+				'visible'         => $this->parent->getBooleanField('visible') ? 1 : 0,
 				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
 			);
 

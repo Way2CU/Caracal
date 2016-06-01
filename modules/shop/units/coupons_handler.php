@@ -151,6 +151,37 @@ class CouponHandler {
 	 * Save new or changed coupon data.
 	 */
 	private function save_coupon() {
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+		$data = array(
+				'text_id'     => escape_chars($_REQUEST['text_id']),
+				'name'        => $this->parent->getMultilanguageField('name'),
+				'has_limit'   => $this->parent->getBooleanField('has_limit') ? 1 : 0,
+				'has_timeout' => $this->parent->getBooleanField('has_timeout') ? 1 : 0,
+				'limit'       => fix_id($_REQUEST['limit']),
+				'timeout'     => escape_chars($_REQUEST['timeout']),
+				'discount'    => fix_id($_REQUEST['discount'])
+			);
+
+		if (is_null($id)) {
+			$window = 'shop_coupon_add';
+			$manager->insertData($data);
+		} else {
+			$window = 'shop_coupon_change';
+			$manager->updateData($data,	array('id' => $id));
+		}
+
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->getLanguageConstant('message_coupon_saved'),
+					'button'	=> $this->getLanguageConstant('close'),
+					'action'	=> window_Close($window).';'.window_ReloadContent('shop_coupons'),
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**

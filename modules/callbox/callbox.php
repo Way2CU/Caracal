@@ -152,7 +152,7 @@ class callbox extends Module {
 		$account_id = fix_chars($_REQUEST['account_id']);
 		$account_key = fix_chars($_REQUEST['account_key']);
 		$account_secret = fix_chars($_REQUEST['account_secret']);
-		$include_code = isset($_REQUEST['include_code']) && ($_REQUEST['include_code'] == 'on' || $_REQUEST['include_code'] == '1') ? 1 : 0;
+		$include_code = $this->getBooleanField('include_code') ? 1 : 0;
 
 		$this->saveSetting('account_id', $account_id);
 		$this->saveSetting('account_key', $account_key);

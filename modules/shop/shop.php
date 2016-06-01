@@ -2867,11 +2867,8 @@ class shop extends Module {
 					$retry_manager = LoginRetryManager::getInstance();
 
 					// check if user agrees
-					$agree_to_terms = false;
-					if (isset($_REQUEST['agree_to_terms']))
-					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
-
-					$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+					$agree_to_terms = $this->getBooleanField('agree_to_terms');
+					$want_promotions = $this->getBooleanField('want_promotions');
 
 					// get user data
 					$data = array(
@@ -2881,7 +2878,7 @@ class shop extends Module {
 						'phone'      => escape_chars($_REQUEST['new_phone']),
 						'uid'        => isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
 						'guest'      => 0,
-						'agreed'     => $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
+						'agreed'     => $agree_to_terms ? 1 : 0,
 						'promotions' => $want_promotions ? 1 : 0
 					);
 
@@ -2954,14 +2951,10 @@ class shop extends Module {
 				case User::GUEST:
 				default:
 					// check if user agrees
-					$agree_to_terms = false;
-					if (isset($_REQUEST['agree_to_terms']))
-					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
+					$agree_to_terms = $this->getBooleanField('agree_to_terms');
 
 					// check if user wants to receive promotional emails
-					$want_promotions = false;
-					if (isset($_REQUEST['want_promotions']))
-						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+					$want_promotions = $this->getBooleanField('want_promotions');
 
 					// collect data
 					$conditions = array();
@@ -2971,7 +2964,7 @@ class shop extends Module {
 						'phone'       => escape_chars($_REQUEST['guest_phone']),
 						'guest'       => 1,
 						'system_user' => 0,
-						'agreed'      => $agree_to_terms,
+						'agreed'      => $agree_to_terms ? 1 : 0,
 						'promotions'  => $want_promotions ? 1 : 0
 					);
 

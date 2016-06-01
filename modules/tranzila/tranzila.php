@@ -146,7 +146,7 @@ class tranzila extends Module {
 		$terminal_name = fix_chars($_REQUEST['terminal']);
 		$terminal2_name = fix_chars($_REQUEST['terminal2']);
 		$terminal_password = fix_chars($_REQUEST['terminal_password']);
-		$custom_template = isset($_REQUEST['custom_template']) && ($_REQUEST['custom_template'] == 1 || $_REQUEST['custom_template'] == 'on') ? 1 : 0;
+		$custom_template = $this->getBooleanField('custom_template') ? 1 : 0;
 		$this->saveSetting('terminal', $terminal_name);
 		$this->saveSetting('terminal2', $terminal2_name);
 		$this->saveSetting('terminal_password', $terminal_password);
