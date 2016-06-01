@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form
@@ -10,15 +9,21 @@
 		<div id="shop_coupon_add_notebook">
 			<!-- General page -->
 			<div>
-				<label>
+				<label class="box left">
 					<span><cms:text constant="label_text_id" module="shop"/></span>
 					<input
 						type="text"
 						name="text_id"
 						class="code ltr"
 						maxlength="64"
-						style="width: 200px"
+						style="width: 150px;"
 						/>
+				</label>
+				<label class="box">
+					<span><cms:text constant="label_promotion_discount" module="shop"/></span>
+					<select name="discount" style="width: 200px;">
+						<cms:discount_list/>
+					</select>
 				</label>
 				<label>
 					<span><cms:text constant="label_name" module="shop"/></span>
@@ -34,44 +39,48 @@
 				<!-- Use limit -->
 				<hr/>
 
-				<label class="checkbox">
-					<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
-					<input
-						type="checkbox"
-						name="has_limit"
-						/>
-				</label>
+				<div class="box left" style="min-width: 170px;">
+					<label class="checkbox">
+						<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
+						<input
+							type="checkbox"
+							name="has_limit"
+							/>
+					</label>
 
-				<label>
-					<span><cms:text constant="label_coupon_limit" module="shop"/></span>
-					<input
-						type="number"
-						name="limit"
-						value="0"
-						min="0"
-						/>
-				</label>
+					<label>
+						<span><cms:text constant="label_coupon_limit" module="shop"/></span>
+						<input
+							type="number"
+							name="limit"
+							value="0"
+							min="0"
+							style="width: 120px;"
+							/>
+					</label>
+				</div>
 
 				<!-- Time limit -->
-				<hr/>
+				<div class="box">
+					<label class="checkbox">
+						<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
+						<input
+							type="checkbox"
+							name="has_timeout"
+							/>
+					</label>
 
-				<label class="checkbox">
-					<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
-					<input
-						type="checkbox"
-						name="has_timeout"
-						/>
-				</label>
-
-				<label>
-					<span><cms:text constant="label_coupon_timeout" module="shop"/></span>
-					<input
-						type="datetime"
-						name="timeout"
-						placeholder="format_coupon_timeout"
-						cms:constant="placeholder"
-						/>
-				</label>
+					<label>
+						<span><cms:text constant="label_coupon_timeout" module="shop"/></span>
+						<input
+							type="datetime"
+							name="timeout"
+							placeholder="format_coupon_timeout"
+							style="width: 150px;"
+							cms:constant="placeholder"
+							/>
+					</label>
+				</div>
 			</div>
 
 			<!-- Codes page -->
