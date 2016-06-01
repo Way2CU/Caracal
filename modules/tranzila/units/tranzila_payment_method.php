@@ -267,6 +267,11 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		if (array_key_exists($currency, $this->currency))
 			$currency_code = $this->currency[$currency];
 
+		// check which language needs to be set
+		$interface_language = $language;
+		if (isset($this->language_aliases[$language]))
+			$interface_language = $this->language_aliases[$language];
+
 		// prepare basic parameters
 		$params = array(
 			'currency'		=> $currency_code,
@@ -276,7 +281,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'transaction_id' => $data['uid'],
 			'hidesum'		=> 1,
 			'nologo'		=> 1,
-			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
+			'lang'			=> $interface_language
 		);
 
 		if ($this->parent->settings['custom_template'])
