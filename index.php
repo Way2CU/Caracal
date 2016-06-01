@@ -76,7 +76,7 @@ define('_BROWSER_OK', is_browser_ok());
 
 // force secure connection if requested
 if (!_SECURE && $force_https) {
-	$url = url_GetBaseURL(true);
+	$url = url_GetBaseURL(true).$_SERVER['REQUEST_URI'];
 	header('Location: '.$url, true, 301);
 	exit();
 }

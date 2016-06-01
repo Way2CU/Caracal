@@ -89,10 +89,21 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
+		global $language;
+
 		$url = _DESKTOP_VERSION ? $this->url : $this->mobile_url;
 		$terminal = $this->parent->settings['terminal'];
 
 		$url = str_replace('%terminal%', $terminal, $url);
+
+		// Apply nasty custom template hacks in order to make
+		// Tranzila support RTL properly. Sadly there's no other
+		// way around this.
+		if ($this->parent->settings['custom_template']) {
+			if ($language == 'he')
+				$url .= '?template=custom_he&lang=heb'; else
+				$url .= '?template=custom';
+		}
 
 		return $url;
 	}
@@ -176,6 +187,17 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		if (array_key_exists($currency, $this->currency))
 			$currency_code = $this->currency[$currency];
 
+		// Since concept of naming conventions doesn't ring a bell in
+		// Tranzila "development" team's heads we have to resort to complex
+		// sussage-like conditions which determine how language code can
+		// be abused next. It's important to note, language parameter sent
+		// through POST only works when template is *NOT* set to `custom`.
+		// If template is set to `custom` language is set through `get_url`
+		// function and this parameter is ignored.
+		$interface_language = $language;
+		if (isset($this->language_aliases[$language]))
+			$interface_language = $this->language_aliases[$language];
+
 		// prepare basic parameters
 		$params = array(
 			'currency'       => $currency_code,
@@ -185,7 +207,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'tranmode'       => 'AK',
 			'transaction_id' => $data['uid'],
 			'nologo'         => 1,
-			'lang'           => isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language,
+			'lang'           => $interface_language
 		);
 
 		if ($this->parent->settings['custom_template'])
@@ -245,6 +267,11 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		if (array_key_exists($currency, $this->currency))
 			$currency_code = $this->currency[$currency];
 
+		// check which language needs to be set
+		$interface_language = $language;
+		if (isset($this->language_aliases[$language]))
+			$interface_language = $this->language_aliases[$language];
+
 		// prepare basic parameters
 		$params = array(
 			'currency'		=> $currency_code,
@@ -254,7 +281,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'transaction_id' => $data['uid'],
 			'hidesum'		=> 1,
 			'nologo'		=> 1,
-			'lang'			=> isset($this->language_aliases[$language]) ? $this->language_aliases[$language] : $language
+			'lang'			=> $interface_language
 		);
 
 		if ($this->parent->settings['custom_template'])
