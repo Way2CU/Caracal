@@ -6,86 +6,86 @@
 		method="POST"
 		id="shop_coupon_add_form"
 		>
-		<div id="shop_coupon_add_notebook">
-			<!-- General page -->
-			<div>
-				<label class="box left">
-					<span><cms:text constant="label_text_id" module="shop"/></span>
-					<input
-						type="text"
-						name="text_id"
-						class="code ltr"
-						maxlength="64"
-						style="width: 150px;"
-						/>
-				</label>
-				<label class="box">
-					<span><cms:text constant="label_promotion_discount" module="shop"/></span>
-					<select name="discount" style="width: 200px;">
-						<cms:discount_list/>
-					</select>
-				</label>
-				<label>
-					<span><cms:text constant="label_name" module="shop"/></span>
-					<input
-						type="text"
-						name="name"
-						class="multi-language"
-						maxlength="255"
-						style="width: 320px"
-						/>
-				</label>
+		<!-- General page -->
+		<div>
+			<label class="box left">
+				<span><cms:text constant="label_text_id" module="shop"/></span>
+				<input
+					type="text"
+					name="text_id"
+					class="code ltr"
+					maxlength="64"
+					style="width: 150px;"
+					/>
+			</label>
+			<label class="box">
+				<span><cms:text constant="label_promotion_discount" module="shop"/></span>
+				<select name="discount" style="width: 200px;">
+					<cms:discount_list/>
+				</select>
+			</label>
+		</div>
+		<label>
+			<span><cms:text constant="label_name" module="shop"/></span>
+			<input
+				type="text"
+				name="name"
+				class="multi-language"
+				maxlength="255"
+				style="width: 370px"
+				/>
+		</label>
 
-				<!-- Use limit -->
-				<hr/>
+		<!-- Use limit -->
+		<hr/>
 
-				<div class="box left" style="min-width: 170px;">
-					<label class="checkbox">
-						<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
-						<input
-							type="checkbox"
-							name="has_limit"
-							/>
-					</label>
+		<div class="box left" style="min-width: 170px;">
+			<label class="checkbox">
+				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
+				<input
+					type="checkbox"
+					name="has_limit"
+					/>
+			</label>
 
-					<label>
-						<span><cms:text constant="label_coupon_limit" module="shop"/></span>
-						<input
-							type="number"
-							name="limit"
-							value="0"
-							min="0"
-							style="width: 120px;"
-							/>
-					</label>
-				</div>
+			<label>
+				<span><cms:text constant="label_coupon_limit" module="shop"/></span>
+				<input
+					type="text"
+					name="limit"
+					value="0"
+					min="0"
+					style="width: 120px;"
+					/>
+			</label>
+		</div>
 
-				<!-- Time limit -->
-				<div class="box">
-					<label class="checkbox">
-						<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
-						<input
-							type="checkbox"
-							name="has_timeout"
-							/>
-					</label>
+		<!-- Time limit -->
+		<div class="box">
+			<label class="checkbox">
+				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
+				<input
+					type="checkbox"
+					name="has_timeout"
+					/>
+			</label>
 
-					<label>
-						<span><cms:text constant="label_coupon_timeout" module="shop"/></span>
-						<input
-							type="datetime"
-							name="timeout"
-							placeholder="format_coupon_timeout"
-							style="width: 150px;"
-							cms:constant="placeholder"
-							/>
-					</label>
-				</div>
-			</div>
+			<label>
+				<span><cms:text constant="label_coupon_timeout" module="shop"/></span>
+				<input
+					type="datetime"
+					name="timeout"
+					placeholder="format_coupon_timeout"
+					style="width: 150px;"
+					cms:constant="placeholder"
+					/>
+			</label>
+		</div>
 
-			<!-- Codes page -->
-			<div>
-			</div>
+		<hr/>
+
+		<div>
+			<cms:text constant="message_add_coupon" module="shop"/>
 		</div>
 
 		<div class="button_bar">
@@ -99,12 +99,5 @@
 
 	<script type="text/javascript" charset="utf-8">
 		var selector = new LanguageSelector('shop_coupon_add_form');
-		var notebook = new Notebook('shop_coupon_add_notebook');
-
-		var titles = ['tab_general', 'tab_codes'];
-		var data = language_handler.getTextArray('shop', titles);
-		notebook
-			.setPageTitle(0, data['tab_general'])
-			.setPageTitle(1, data['tab_codes']);
 	</script>
 </document>
