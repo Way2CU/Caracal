@@ -26,22 +26,10 @@ Site.configure_tranzila_checkout = function() {
 	// make form submit to iframe
 	form.attr('target', 'tranzila_checkout');
 
-	// create submit button
-	button = $('<button>');
-	button
-		.attr('type', 'button')
-		.html(language_handler.getText(null, 'submit'))
-		.on('click', function() {
-			var iframe_doc = (iframe[0].contentWindow || iframe[0].contentDocument);
-			if (iframe_doc.document) iframe_doc = iframe_doc.document;
-			iframe_doc.getElementById('itranpayform').submit();
-		});
-
 	// configure dialog
 	dialog
 		.setTitle(language_handler.getText('tranzila', 'payment_method_title'))
-		.setContent(iframe)
-		.addControl(button);
+		.setContent(iframe);
 
 	if (!Site.is_mobile())
 		dialog.setSize(400, 250); else
