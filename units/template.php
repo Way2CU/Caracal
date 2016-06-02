@@ -677,6 +677,7 @@ class TemplateHandler {
 
 				// force flush on common elements
 				case 'head':
+				case 'body':
 				case 'header':
 				case 'footer':
 					$flush_data = true;
