@@ -206,6 +206,11 @@ class page_info extends Module {
 				'property' => 'base-url',
 				'content'  => _BASEURL
 			));
+		$head_tag->addTag('meta',
+			array(
+				'http-equiv' => 'X-UA-Compatible'
+				'content'    => 'IE=edge'
+			));
 
 		// add mobile menu script
 		if (_MOBILE_VERSION && !in_array('mobile_menu', $this->omit_elements))
