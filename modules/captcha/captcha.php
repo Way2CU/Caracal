@@ -122,15 +122,9 @@ class captcha extends Module {
 		$font_size_px = $this->settings['font_size'];
 		$width = (10 + $this->settings['char_count'] * $this->settings['font_size']);
 		$height = $font_size_px + 10;
+		$image = imagecreate($width, $height);
 
-		if (!in_array(parse_url($referer, PHP_URL_HOST), $accepted_hosts)) {
-			// load error image
-			$image = imagecreatefrompng($this->path.'images/error_image.png');
-
-		} else {
-			// create image
-			$image = imagecreate($width, $height);
-
+		if (in_array(parse_url($referer, PHP_URL_HOST), $accepted_hosts)) {
 			// allocate colors and fonts
 			$colors = $this->getColors($image);
 			$fonts = $this->getFonts();
@@ -165,7 +159,6 @@ class captcha extends Module {
 
 				imagettftext($image, $font_size, $font_angle, $font_x, $font_y, $font_color, $font_file, $value[$i]);
 			}
-
 		}
 
 		// print out the image
