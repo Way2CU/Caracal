@@ -30,7 +30,7 @@ Site.configure_tranzila_checkout = function() {
 	button = $('<button>');
 	button
 		.attr('type', 'button')
-		.html(language_handler.getText(null, 'submit')
+		.html(language_handler.getText(null, 'submit'))
 		.on('click', function() {
 			var iframe_doc = (iframe[0].contentWindow || iframe[0].contentDocument);
 			if (iframe_doc.document) iframe_doc = iframe_doc.document;
