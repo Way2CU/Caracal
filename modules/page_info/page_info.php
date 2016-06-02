@@ -208,7 +208,7 @@ class page_info extends Module {
 			));
 		$head_tag->addTag('meta',
 			array(
-				'http-equiv' => 'X-UA-Compatible'
+				'http-equiv' => 'X-UA-Compatible',
 				'content'    => 'IE=edge'
 			));
 
