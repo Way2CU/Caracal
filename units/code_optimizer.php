@@ -96,7 +96,7 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	private function includeStyle($file_name, &$priority_commands) {
-		global $system_module_path, $styles_path;
+		global $system_module_path, $styles_path, $site_path;
 
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
@@ -125,7 +125,7 @@ class CodeOptimizer {
 
 				// change path for module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('/url\(.*\.\.\/(.*)\)([;,])/ium', 'url('.$directory_url.'$1)$2', $data);
+					$data = preg_replace('/url\(.*\.\.\/(.*)\)([;,])/ium', 'url('.$directory_url.'\1)\2', $data);
 
 				break;
 		}
@@ -134,17 +134,18 @@ class CodeOptimizer {
 		$data = preg_replace('/\/\*.*?(?=\*\/)\*\//imus', '', $data);
 
 		// fix relative paths
-		$data = preg_replace('/url\s*\(\s*(..\/){2,}/imus', 'url(../', $data);
+		$data = preg_replace('/url\s*\(\s*(\.\.\/){2,}/imus', 'url(../', $data);
+		$data = preg_replace('/url\(..\/([^\)]+)\)/imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
 
 		// parse most important
-		$data = str_replace("\r", "", $data);
+		$data = str_replace("\r", '', $data);
 		$data = explode("\n", $data);
 
 		$in_comment = false;
 
 		foreach($data as $line) {
 			$line_data = trim($line);
-			$command = explode(" ", $line_data);
+			$command = explode(' ', $line_data);
 
 			// skip empty lines
 			if (empty($line_data))
@@ -198,8 +199,24 @@ class CodeOptimizer {
 		// insert priority commands at the top of the file
 		$result = array_merge($priority_commands, $result);
 
+		// prepare data for last optimization
+		$data = implode('', $result);
+
+		// remove units from zero values and remove - if present as there's no such thing as -0
+		$data = preg_replace('/([^\d])-?(0+)(px|pt|rem|em|vw|vh|vmax|vmin|cm|mm|m\%)/imus', '\1\2', $data);
+
+		// remove excess spaces around symbols
+		// skipping + on purpose to keep calc working
+		$data = preg_replace('/\s*([>~:;,\(\)\[\]\{\}])\s*/imus', '\1', $data);
+
+		// shorten color codes when possible
+		$data = preg_replace('/#([\dabcdef])\1([\dabcdef])\2([\dabcdef])\3/imus', '#\1\2\3', $data);
+
+		// remove semicolor before curly brace
+		$data = preg_replace('/;\}/imus', '}', $data);
+
 		// save compiled file
-		file_put_contents($file_name, implode(" ", $result));
+		file_put_contents($file_name, $data);
 	}
 
 	/**
@@ -262,7 +279,7 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	public function printData() {
-		global $cache_path;
+		global $cache_path, $include_styles;
 
 		// compile styles if needed
 		$style_cache = $cache_path.$this->getCachedName($this->style_list).'.css';
@@ -287,7 +304,12 @@ class CodeOptimizer {
 			}
 		}
 
-		print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'">';
+		// include styles in page or as outside resource
+		if (!$include_styles)
+			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'">'; else
+			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+
+		// show javascript tags
 		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"></script>';
 	}
 }

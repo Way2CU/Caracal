@@ -138,40 +138,10 @@ class head_tag extends Module {
 	}
 
 	/**
-	 * Show file associated with specified tag.
-	 *
-	 * @param object $tag
-	 */
-	private function printFile($tag) {
-		switch ($tag[0]) {
-			case 'link':
-				$body = null;
-				if (array_key_exists('rel', $tag[1]) && $tag[1]['rel'] == 'stylesheet') {
-					$body = file_get_contents($tag[1]['href']);
-					$tag = array('style', array('type' => 'text/css'));
-					unset($tag[1]['href']);
-				}
-
-				$this->printTag($tag, $body);
-				break;
-
-			case 'script':
-				$body = file_get_contents($tag[1]['src']);
-				unset($tag[1]['src']);
-				$this->printTag($tag, $body);
-				break;
-
-			default:
-				$this->printTag($tag);
-				break;
-		}
-	}
-
-	/**
 	 * Print previously added tags
 	 */
 	private function printTags() {
-		global $include_scripts, $optimize_code, $section;
+		global $optimize_code, $section;
 
 		// if page_info module is loaded, ask it to add its own tags
 		if (ModuleHandler::is_loaded('page_info'))
@@ -204,11 +174,6 @@ class head_tag extends Module {
 
 			// print optimized code
 			$optimizer->printData();
-
-		} else if ($include_scripts) {
-			// just include javascript in body
-			foreach ($tags as $tag)
-				$this->printFile($tag);
 
 		} else {
 			// no optimization

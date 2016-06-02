@@ -53,7 +53,7 @@ $memcached_config = array(
 $force_https = false;
 
 // head tag
-$include_scripts = false;
+$include_styles = false;
 $optimize_code = false;
 
 // various
