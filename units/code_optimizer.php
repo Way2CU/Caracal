@@ -207,7 +207,9 @@ class CodeOptimizer {
 
 		// remove excess spaces around symbols
 		// skipping + on purpose to keep calc working
-		$data = preg_replace('/\s*([>~:;,\(\)\[\]\{\}])\s*/imus', '\1', $data);
+		$data = preg_replace('/\s*([>~:;,\[\]\{\}])\s*/imus', '\1', $data);
+		$data = preg_replace('/\s*([\(\)])\s*([^+-\/\*\^])/imus', '\1\2', $data);
+		$data = preg_replace('/([\+])\s*([^\d])/imus', '\1\2', $data);
 
 		// shorten color codes when possible
 		$data = preg_replace('/#([\dabcdef])\1([\dabcdef])\2([\dabcdef])\3/imus', '#\1\2\3', $data);
