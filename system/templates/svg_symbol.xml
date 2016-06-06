@@ -6,7 +6,7 @@
 		cms:optional="class"
 		>
 		<use
-			href="$params['fallback'] ? false : '#'.$params['symbol']"
+			href="$params['fallback'] ? '#'.$params['symbol'] : false"
 			xlink:href="$params['url'].'#'.$params['symbol']"
 			cms:eval="xlink:href"
 			cms:optional="href"
