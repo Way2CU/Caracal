@@ -10,6 +10,7 @@
  */
 
 use Core\Markdown;
+use Core\Cache\Type as CacheType;
 use Core\Cache\Manager as Cache;
 
 
