@@ -2618,7 +2618,7 @@ class gallery extends Module {
 			case 'jpeg':
 				$img_source = imagecreatefromjpeg($filename);
 				$save_function = @imagejpeg;
-				$save_quality = 95;
+				$save_quality = 85;
 				break;
 
 			case 'png':
