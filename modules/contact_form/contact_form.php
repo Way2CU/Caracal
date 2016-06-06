@@ -3771,9 +3771,13 @@ class contact_form extends Module {
 		// make sure result is not empty
 		if (empty($applicable)) {
 			$name = isset($this->settings['mailer']) ? $this->settings['mailer'] : null;
-			if (isset($this->mailers[$name]))
-				$applicable[] = $name; else
-				$applicable[] = array_shift(array_keys($this->mailers));
+			if (isset($this->mailers[$name])) {
+				$applicable[] = $name;
+
+			} else {
+				$names = array_keys($this->mailers);
+				$applicable[] = $names[0];
+			}
 		}
 
 		// prepare results array
