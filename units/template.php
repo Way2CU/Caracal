@@ -206,7 +206,7 @@ class TemplateHandler {
 	 * @param array $tags Leave blank, used for recursion
 	 */
 	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path, $images_path;
+		global $section, $action, $language, $template_path, $system_template_path, $images_path, $cache_method;
 
 		// turn on custom error hanlder
 		set_error_handler(array($this, 'handleError'));
@@ -409,8 +409,9 @@ class TemplateHandler {
 
 					} else {
 						$params = array(
-								'url'    => _BASEURL.'/'.$images_path.$file,
-								'symbol' => $symbol
+								'url'      => _BASEURL.'/'.$images_path.$file,
+								'symbol'   => $symbol,
+								'fallback' => $cache_method != CacheType::NONE || !_BROWSER_OK
 							);
 
 						if (isset($tag->tagAttrs['class']))
