@@ -136,9 +136,12 @@ class Mailer extends ContactForm_Mailer {
 			}
 
 		// add variables
+		$count = count($this->recipients);
 		$substitutions = array();
-		foreach ($this->variables as $key => $value)
-			$substitutions['%'.$key.'%'] = array($value);
+		foreach ($this->variables as $key => $value) {
+			$list = array_fill(0, $count, $value);
+			$substitutions['%'.$key.'%'] = $list;
+		}
 		$final_content['x-smtpapi'] = json_encode(array('sub' => $substitutions));
 
 		// make api call
