@@ -58,7 +58,7 @@ class contact_form extends Module {
 							'type'			=> 'text',
 							'required'		=> true,
 							'autocomplete'	=> true,
-							'pattern'		=> '\d+'
+							'pattern'		=> '\+?[\d\s]+'
 						),
 						'verify_email' => array(
 							'type'			=> 'honey-pot'
