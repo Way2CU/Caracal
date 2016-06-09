@@ -1,23 +1,19 @@
 <?php
 
 /**
- * Handle shop discounts
+ * Handle shop discounts.
+ *
+ * Author: Mladen Mijatov
  */
 
-require_once('shop_discount_manager.php');
+namespace Modules\Shop\Promotion;
+
+require_once('discount_manager.php');
 
 
-class DiscountType {
-	const ITEM = 0;
-	const ALL_ITEMS = 1;
-	const GROUP = 2;
-	const TOTAL_SUM = 3;
-}
-
-
-class ShopDiscountHandler {
+class DiscountHandler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
@@ -25,9 +21,9 @@ class ShopDiscountHandler {
 	 * Constructor
 	 */
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -84,11 +80,11 @@ class ShopDiscountHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_discount'),
+										$this->parent->getLanguageConstant('add_discount'),
 										window_Open( // on click open window
 											'shop_discounts_add',
 											505,
-											$this->_parent->getLanguageConstant('title_discounts_add'),
+											$this->parent->getLanguageConstant('title_discounts_add'),
 											true, true,
 											backend_UrlMake($this->name, 'discounts', 'add')
 										)
@@ -138,8 +134,8 @@ class ShopDiscountHandler {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
-				'name'			=> $this->_parent->getMultilanguageField('name'),
-				'description'	=> $this->_parent->getMultilanguageField('description'),
+				'name'			=> $this->parent->getMultilanguageField('name'),
+				'description'	=> $this->parent->getMultilanguageField('description'),
 				'type'			=> fix_id($_REQUEST['type']),
 				'percent'		=> fix_chars($_REQUEST['percent']))
 			);
@@ -157,8 +153,8 @@ class ShopDiscountHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_discount_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->getLanguageConstant('message_discount_saved'),
+					'button'	=> $this->parent->getLanguageConstant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_discounts')
 				);
 
@@ -179,13 +175,13 @@ class ShopDiscountHandler {
 		$item = $manager->getSingleItem(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->setMappedModule($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_item_delete"),
+					'message'		=> $this->parent->getLanguageConstant("message_item_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->parent->getLanguageConstant("delete"),
+					'no_text'		=> $this->parent->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_delete',
 											url_Make(
