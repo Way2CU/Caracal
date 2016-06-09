@@ -199,6 +199,7 @@ class page_info extends Module {
 		$head_tag = head_tag::getInstance();
 		$collection = collection::getInstance();
 		$language_list = Language::getLanguages(false);
+		$ignored_section = in_array($section, array('backend', 'backend_module'));
 
 		// add base url tag
 		$head_tag->addTag('meta',
@@ -243,7 +244,7 @@ class page_info extends Module {
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
 
-		if ($section != 'backend' && $section != 'backend_module' && $db_use) {
+		if (!$ignored_section && $db_use) {
 			// google analytics
 			if (!empty($this->settings['analytics']))
 				$head_tag->addGoogleAnalytics(
@@ -337,7 +338,7 @@ class page_info extends Module {
 		// add default styles and script if they exists
 		$collection->includeScript(collection::JQUERY);
 
-		if ($section != 'backend') {
+		if (!$ignored_section) {
 			$styles = array();
 			$less_style = null;
 
