@@ -348,6 +348,19 @@ class shop extends Module {
 
 			$shop_menu->addChild('shop_special_offers', $special_offers);
 
+			$special_offers->addChild(null, new backend_MenuItem(
+				$this->getLanguageConstant('menu_discounts'),
+				url_GetFromFilePath($this->path.'images/discounts.svg'),
+				window_Open( // on click open window
+					'shop_discounts',
+					500,
+					$this->getLanguageConstant('title_discounts'),
+					true, true,
+					backend_UrlMake($this->name, 'discounts')
+				),
+				5  // level
+			));
+
 			$shop_menu->addSeparator(5);
 
 			// payment methods menu
@@ -801,6 +814,11 @@ class shop extends Module {
 
 			case 'coupons':
 				$handler = \Modules\Shop\Promotion\CouponHandler::getInstance($this);
+				$handler->transferControl($params, $children);
+				break;
+
+			case 'discounts':
+				$handler = \Modules\Shop\Promotion\DiscountHandler::getInstance($this);
 				$handler->transferControl($params, $children);
 				break;
 
