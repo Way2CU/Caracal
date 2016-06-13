@@ -24,7 +24,6 @@ class CouponsManager extends ItemManager {
 		$this->addProperty('has_timeout', 'boolean');
 		$this->addProperty('limit', 'int');
 		$this->addProperty('timeout', 'timestamp');
-		$this->addProperty('discount', 'varchar');
 	}
 
 	/**
