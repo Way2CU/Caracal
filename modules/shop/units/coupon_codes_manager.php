@@ -21,6 +21,7 @@ class CouponCodesManager extends ItemManager {
 		$this->addProperty('code', 'varchar');
 		$this->addProperty('times_used', 'int');
 		$this->addProperty('timestamp', 'timestamp');
+		$this->addProperty('discount', 'varchar');
 	}
 
 	/**
