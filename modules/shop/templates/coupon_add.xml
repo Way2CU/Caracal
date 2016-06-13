@@ -7,24 +7,16 @@
 		id="shop_coupon_add_form"
 		>
 		<!-- General page -->
-		<div>
-			<label class="box left">
-				<span><cms:text constant="label_text_id" module="shop"/></span>
-				<input
-					type="text"
-					name="text_id"
-					class="code ltr"
-					maxlength="64"
-					style="width: 150px;"
-					/>
-			</label>
-			<label class="box">
-				<span><cms:text constant="label_promotion_discount" module="shop"/></span>
-				<select name="discount" style="width: 200px;">
-					<cms:discount_list/>
-				</select>
-			</label>
-		</div>
+		<label>
+			<span><cms:text constant="label_text_id" module="shop"/></span>
+			<input
+				type="text"
+				name="text_id"
+				class="code ltr"
+				maxlength="64"
+				style="width: 150px;"
+				/>
+		</label>
 		<label>
 			<span><cms:text constant="label_name" module="shop"/></span>
 			<input
