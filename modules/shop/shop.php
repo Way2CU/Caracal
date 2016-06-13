@@ -1168,7 +1168,7 @@ class shop extends Module {
 			`code` varchar(64) NOT NULL,
 			`timest_used` int NOT NULL DEFAULT '0',
 			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			`promotion` varchar(64) NOT NULL,
+			`discount` varchar(64) NOT NULL,
 			PRIMARY KEY (`id`),
 			KEY `index_by_timestamp` (`timestamp`),
 			KEY `index_by_coupon` (`coupon`)
