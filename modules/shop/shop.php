@@ -17,6 +17,7 @@ use Core\Module;
 require_once('units/payment_method.php');
 require_once('units/delivery_method.php');
 require_once('units/promotion.php');
+require_once('units/discount.php');
 
 // data managers and handlers
 require_once('units/item_handler.php');
@@ -347,19 +348,6 @@ class shop extends Module {
 			);
 
 			$shop_menu->addChild('shop_special_offers', $special_offers);
-
-			$special_offers->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_discounts'),
-				url_GetFromFilePath($this->path.'images/discounts.svg'),
-				window_Open( // on click open window
-					'shop_discounts',
-					500,
-					$this->getLanguageConstant('title_discounts'),
-					true, true,
-					backend_UrlMake($this->name, 'discounts')
-				),
-				5  // level
-			));
 
 			$shop_menu->addSeparator(5);
 

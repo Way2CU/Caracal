@@ -6,7 +6,7 @@ namespace Modules\Shop\Promotion;
 /**
  * Promotion base class.
  */
-abstract class Promotion {
+abstract class Discount {
 	protected $name;
 
 	/**
@@ -28,12 +28,19 @@ abstract class Promotion {
 	abstract public function get_title();
 
 	/**
- 	 * Check if specified transaction qualified for this promotion.
+	 * Apply discount on specified trancation.
+	 *
+	 * @param object $transaction
+	 */
+	abstract public function apply($transaction);
+
+	/**
+	 * Check if discount is applied on specified transaction
 	 *
 	 * @param object $transaction
 	 * @return boolean
 	 */
-	abstract public function qualifies($transaction);
+	abstract public function is_applied($transaction);
 }
 
 ?>
