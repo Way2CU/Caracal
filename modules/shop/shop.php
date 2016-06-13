@@ -1170,8 +1170,7 @@ class shop extends Module {
 			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			`promotion` varchar(64) NOT NULL,
 			PRIMARY KEY (`id`),
-			KEY `index_by_text_id` (`text_id`)
-			KEY `index_by_timestamp` (`timestamp`)
+			KEY `index_by_timestamp` (`timestamp`),
 			KEY `index_by_coupon` (`coupon`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
@@ -2676,6 +2675,21 @@ class shop extends Module {
 			'discounts'          => $total_discount,
 			'currency'           => $preferred_currency
 		);
+
+		return $result;
+	}
+
+	/**
+	 * Get discount for specified name.
+	 *
+	 * @param string $name
+	 * @return object
+	 */
+	private function getDiscount($name) {
+		$result = null;
+
+		if (array_key_exists($name, $this->discounts))
+			$result = $this->discounts[$name];
 
 		return $result;
 	}
