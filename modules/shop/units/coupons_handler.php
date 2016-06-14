@@ -6,6 +6,7 @@
 namespace Modules\Shop\Promotion;
 
 require_once('coupons_manager.php');
+require_once('coupon_codes_manager.php');
 
 use \TemplateHandler as TemplateHandler;
 
@@ -315,7 +316,7 @@ class CouponHandler {
 							$this->parent->getLanguageConstant('add_code'),
 							window_Open( // on click open window
 								'shop_coupon_codes_add',
-								430,
+								300,
 								$this->parent->getLanguageConstant('title_coupon_code_add'),
 								true, true,
 								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_add')
@@ -345,6 +346,7 @@ class CouponHandler {
 	private function add_code() {
 		$template = new TemplateHandler('coupon_code_add.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
+		$template->registerTagHandler('cms:list', $this->parent, 'tag_DiscountList');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
@@ -372,6 +374,80 @@ class CouponHandler {
 	 * Save new or changed coupon codes.
 	 */
 	private function save_code() {
+		$coupon_id = fix_id($_REQUEST['coupon']);
+		$manager = CouponCodesManager::getInstance();
+
+		// collect all data for comparison
+		$data = array();
+		$codes = array();
+
+		foreach ($_REQUEST as $key => $value)
+			if (substr($key, 0, 5) == 'code_') {
+				$index = substr($key, 5);
+
+				// get discount value
+				$discount = null;
+				if (isset($_REQUEST['discount_'.$index]))
+					$discount = fix_id($_REQUEST['discount_'.$index]);
+
+				// store data for later use
+				$data[] = array(
+						'code'     => $value,
+						'discount' => $discount
+					);
+				$codes[] = $value;
+			}
+
+		// remove all associated coupon codes which are not in final list
+		$manager->deleteData(array(
+					'coupon'       => $coupon_id,
+					'code'         => array(
+						'operator' => 'NOT IN',
+						'value'    => $codes
+					)));
+
+		// get remaining codes
+		$remaining = $manager->getItems(
+				$manager->getFieldNames(),
+				array('coupon' => $coupon_id)
+			);
+		$remaining_id_list = array();
+
+		if (count($remaining) > 0)
+			foreach ($remaining as $code)
+				$remaining_id_list[$code->code] = $code->id;
+
+		// update or insert data
+		foreach ($data as $code_data) {
+			if (array_key_exists($code_data['code'], $remaining_id_list)) {
+				// update existing data
+				$id = $remaining_id_list[$code_data['code']];
+				$manager->updateData(
+						array('discount' => $code_data['discount']),
+						array('id' => $id)
+					);
+
+			} else {
+				// insert new data
+				$new_data = $code_data;
+				$new_data['coupon'] = $coupon_id;
+				$manager->insertData($new_data);
+			}
+		}
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'message'	=> $this->parent->getLanguageConstant('message_coupon_code_saved'),
+					'button'	=> $this->parent->getLanguageConstant('close'),
+					'action'	=> window_Close('shop_coupon_codes')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**

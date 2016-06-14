@@ -1,5 +1,25 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
+	<label>
+		<span><cms:text constant="label_coupon_code" module="shop"/></span>
+		<input
+			type="text"
+			name="code"
+			class="ltr code"
+			style="width: 270px;"
+			/>
+	</label>
+
+	<label>
+		<span><cms:text constant="label_coupon_code_discount" module="shop"/></span>
+		<select
+			name="discount"
+			style="width: 270px;"
+			>
+			<cms:discount_list/>
+		</select>
+	</label>
+
 	<div class="button_bar">
 		<button type="button"><cms:text constant="add"/></button>
 		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
