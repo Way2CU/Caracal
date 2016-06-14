@@ -1,0 +1,9 @@
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="button_bar">
+		<button type="button"><cms:text constant="add"/></button>
+		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+			<cms:text constant="cancel"/>
+		</button>
+	</div>
+</document>

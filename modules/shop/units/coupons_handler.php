@@ -91,8 +91,27 @@ class CouponHandler {
 				break;
 
 			case 'show':
-			default:
 				$this->show_coupons();
+				break;
+
+			case 'codes':
+				$this->show_codes();
+				break;
+
+			case 'codes_generate':
+				$this->generate_codes();
+				break;
+
+			case 'codes_add':
+				$this->add_code();
+				break;
+
+			case 'codes_change':
+				$this->change_code();
+				break;
+
+			case 'codes_save':
+				$this->save_code();
 				break;
 		}
 	}
@@ -105,19 +124,18 @@ class CouponHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->parent->getLanguageConstant('add_coupon'),
-										window_Open( // on click open window
-											'shop_coupon_add',
-											430,
-											$this->parent->getLanguageConstant('title_coupon_add'),
-											true, true,
-											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
-										)
-									)
+							$this->parent->getLanguageConstant('add_coupon'),
+							window_Open( // on click open window
+								'shop_coupon_add',
+								430,
+								$this->parent->getLanguageConstant('title_coupon_add'),
+								true, true,
+								backend_UrlMake($this->name, self::SUB_ACTION, 'add')
+							))
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:coupon_list', $this, 'tag_CouponList');
+		$template->registerTagHandler('cms:list', $this, 'tag_CouponList');
 
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -145,6 +163,36 @@ class CouponHandler {
 	 * Show form for changing coupons.
 	 */
 	private function change_coupon() {
+		$id = fix_id($_REQUEST['id']);
+		$manager = CouponsManager::getInstance();
+
+		// get item from the database
+		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+
+		// make sure item is valid
+		if (!is_object($item))
+			return;
+
+		// load template
+		$template = new TemplateHandler('coupon_change.xml', $this->path.'templates/');
+
+		// prepare parameters
+		$params = array(
+			'id'            => $item->id,
+			'text_id'       => $item->text_id,
+			'name'          => $item->name,
+			'has_limit'     => $item->has_limit,
+			'has_timeout'   => $item->has_timeout,
+			'limit'         => $item->limit,
+			'timeout'       => $item->timeout,
+			'form_action'   => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
+			'cancel_action' => window_Close('shop_coupon_change')
+			);
+
+		// parse template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -191,12 +239,139 @@ class CouponHandler {
 	 * Show confirmation form before removing coupon.
 	 */
 	private function delete_coupon() {
+		global $language;
+
+		// get coupon from the database
+		$id = fix_id($_REQUEST['id']);
+		$manager = CouponsManager::getInstance();
+
+		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+
+		// load template
+		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
+
+		// prepare parameters
+		$params = array(
+					'message'		=> $this->parent->getLanguageConstant('message_coupon_delete'),
+					'name'			=> $item->name[$language],
+					'yes_text'		=> $this->parent->getLanguageConstant('delete'),
+					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
+					'yes_action'	=> window_LoadContent(
+											'shop_coupon_delete',
+											url_Make(
+												'transfer_control',
+												'backend_module',
+												array('module', $this->name),
+												array('backend_action', self::SUB_ACTION),
+												array('sub_action', 'delete_commit'),
+												array('id', $id)
+											)
+										),
+					'no_action'		=> window_Close('shop_coupon_delete')
+				);
+
+		// parse template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
  	 * Perform coupon data removal.
 	 */
 	private function delete_coupon_commit() {
+		// remove data
+		$id = fix_id($_REQUEST['id']);
+		$manager = CouponsManager::getInstance();
+
+		$manager->deleteData(array('id' => $id));
+
+		// show confirmation message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$params = array(
+					'message'	=> $this->parent->getLanguageConstant('message_coupon_deleted'),
+					'button'	=> $this->parent->getLanguageConstant('close'),
+					'action'	=> window_Close('shop_coupon_delete').';'.window_ReloadContent('shop_coupons')
+				);
+
+		// parse message template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show codes management window.
+	 */
+	private function show_codes() {
+		$coupon_id = fix_id($_REQUEST['id']);
+		$template = new TemplateHandler('coupon_code_list.xml', $this->path.'templates/');
+
+		$params = array(
+					'coupon'        => $coupon_id,
+					'form_action'   => backend_UrlMake($this->name, self::SUB_ACTION, 'codes_save'),
+					'cancel_action' => window_Close('shop_coupon_codes'),
+					'link_new'      => url_MakeHyperlink(
+							$this->parent->getLanguageConstant('add_code'),
+							window_Open( // on click open window
+								'shop_coupon_codes_add',
+								430,
+								$this->parent->getLanguageConstant('title_coupon_code_add'),
+								true, true,
+								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_add')
+							)),
+					'link_generate' => url_MakeHyperlink(
+							$this->parent->getLanguageConstant('generate_codes'),
+							window_Open( // on click open window
+								'shop_coupon_codes_add',
+								430,
+								$this->parent->getLanguageConstant('title_coupon_code_generate'),
+								true, true,
+								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_generate')
+							))
+					);
+
+		// register tag handler
+		$template->registerTagHandler('cms:list', $this, 'tag_CodeList');
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for adding new code to the coupon.
+	 */
+	private function add_code() {
+		$template = new TemplateHandler('coupon_code_add.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
+					'cancel_action'	=> window_Close('shop_coupon_codes_add')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show form for changing existing code in coupon.
+	 */
+	private function change_code() {
+	}
+
+	/**
+	 * Show for for generating coupon codes.
+	 */
+	private function generate_codes() {
+	}
+
+	/**
+	 * Save new or changed coupon codes.
+	 */
+	private function save_code() {
 	}
 
 	/**
@@ -215,6 +390,100 @@ class CouponHandler {
 	 * @param array $children
 	 */
 	public function tag_CouponList($tag_params, $children) {
+		$manager = CouponsManager::getInstance();
+		$conditions = array();
+
+		// get items from the database
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// load template
+		$template = $this->parent->loadTemplate($tag_params, 'coupon_list_item.xml');
+
+		// parse template
+		if (count($items) == 0)
+			return;
+
+		foreach ($items as $item) {
+			$params = array(
+				'id'          => $item->id,
+				'text_id'     => $item->text_id,
+				'name'        => $item->name,
+				'has_limit'   => $item->has_limit,
+				'has_timeout' => $item->has_timeout,
+				'limit'       => $item->limit,
+				'timeout'     => $item->timeout,
+				'item_change' => url_MakeHyperlink(
+						$this->parent->getLanguageConstant('change'),
+						window_Open(
+							'shop_coupon_change', 	// window id
+							430,				// width
+							$this->parent->getLanguageConstant('title_coupon_change'), // title
+							true, true,
+							url_Make(
+								'transfer_control',
+								'backend_module',
+								array('module', $this->name),
+								array('backend_action', self::SUB_ACTION),
+								array('sub_action', 'change'),
+								array('id', $item->id)
+							)
+						)),
+				'item_delete' => url_MakeHyperlink(
+						$this->parent->getLanguageConstant('delete'),
+						window_Open(
+							'shop_coupon_delete', 	// window id
+							400,				// width
+							$this->parent->getLanguageConstant('title_coupon_delete'), // title
+							false, false,
+							url_Make(
+								'transfer_control',
+								'backend_module',
+								array('module', $this->name),
+								array('backend_action', self::SUB_ACTION),
+								array('sub_action', 'delete'),
+								array('id', $item->id)
+							)
+						)),
+				'item_codes' => url_MakeHyperlink(
+						$this->parent->getLanguageConstant('codes'),
+						window_Open(
+							'shop_coupon_codes', 	// window id
+							400,				// width
+							$this->parent->getLanguageConstant('title_coupon_codes'), // title
+							true, true,
+							url_Make(
+								'transfer_control',
+								'backend_module',
+								array('module', $this->name),
+								array('backend_action', self::SUB_ACTION),
+								array('sub_action', 'codes'),
+								array('id', $item->id)
+							)
+						))
+				);
+
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
+	}
+
+	/**
+ 	 * Generator for single coupon code tag.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Code($tag_params, $children) {
+	}
+
+	/**
+	 * Generator for list of codes.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_CodeList($tag_params, $children) {
 	}
 }
 

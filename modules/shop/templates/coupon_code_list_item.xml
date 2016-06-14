@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column" style="width: 250px;">
+			<cms:var param="code"/>
+		</span>
+		<span class="column" style="width: 100px;">
+			<cms:var param="times_used"/>
+		</span>
+
+		<span class="column">
+			<cms:var param="item_change"/><cms:raw text=" "/>
+			<cms:var param="item_delete"/>
+		</span>
+	</div>
+</document>

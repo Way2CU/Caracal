@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window Menu -->
+	<div class="main_menu">
+		<cms:var param="link_new"/><cms:raw text=" "/>
+		<cms:var param="link_generate"/>
+	</div>
+
+	<form
+		action="$params['form_action']"
+		method="POST"
+		cms:eval="action"
+		>
+		<input type="hidden" name="coupon" value="$params['coupon']"/>
+		<!-- Header -->
+		<div class="scrollable_list">
+			<div class="list_header">
+				<span class="column" style="width: 180px;">
+					<cms:text constant="column_code" module="shop"/>
+				</span>
+				<span class="column" style="width: 80px;">
+					<cms:text constant="column_times_used" module="shop"/>
+				</span>
+				<span class="column">
+					<cms:text constant="column_options" module="shop"/>
+				</span>
+			</div>
+			<div class="list_content" style="height: 250px">
+				<!-- List Content -->
+				<cms:list/>
+			</div>
+		</div>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
