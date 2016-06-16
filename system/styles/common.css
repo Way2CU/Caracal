@@ -17,6 +17,10 @@ body {
 	z-index: 0;
 }
 
+html[dir=rtl] body {
+	direction: rtl;
+}
+
 input,
 select,
 textarea,
@@ -33,10 +37,6 @@ select:focus,
 textarea:focus,
 button:focus {
 	outline: none;
-}
-
-html[dir=rtl] {
-	direction: rtl;
 }
 
 /**
