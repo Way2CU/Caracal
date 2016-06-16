@@ -156,7 +156,7 @@ class language_menu extends Module {
 
 		// check if we were asked to get languages from specific module
 		if (isset($tag_params['from_module']) && ModuleHandler::is_loaded($tag_params['from_module'])) {
-			$module = call_user_func(array($tag_params['from_module'], 'getInstance'));
+			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'getInstance'));
 			$list = $module->language->getLanguages(true);
 
 		} else {

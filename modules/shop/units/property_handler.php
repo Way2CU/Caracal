@@ -152,7 +152,7 @@ class Handler {
 			$conditions['item'] = -1;
 
 		if (isset($tag_params['text_id']))
-			$conditions['text_id'] = escape_chars($tag_params['text_id']);
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item properties from database
 		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);

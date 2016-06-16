@@ -984,7 +984,7 @@ class links extends Module {
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']) && !is_null($items))
-			$items = array_slice($items, 0, $tag_params['limit'], true);
+			$items = array_slice($items, 0, fix_id($tag_params['limit']), true);
 
 		// make sure list contains items
 		if (count($items) == 0)
@@ -1084,7 +1084,7 @@ class links extends Module {
 	public function tag_Group($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
-		$id = $tag_params['id'];
+		$id = fix_id($tag_params['id']);
 
 		// save some CPU time by getting this early
 		if (ModuleHandler::is_loaded('gallery')) {

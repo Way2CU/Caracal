@@ -1004,7 +1004,7 @@ class news extends Module {
 	 */
 	public function tag_NewsList($tag_params, $children) {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
-		$group = isset($tag_params['group']) ? escape_chars($tag_params['group']) : null;
+		$group = isset($tag_params['group']) ? fix_chars($tag_params['group']) : null;
 		$conditions = array();
 
 		if (!isset($tag_params['show_invisible']))
@@ -1168,6 +1168,8 @@ class news extends Module {
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
+		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null
+
 		// parse items
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -1175,7 +1177,7 @@ class news extends Module {
 							'id'			=> $item->id,
 							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
-							'selected'		=> isset($tag_params['selected']) ? $tag_params['selected'] : null,
+							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -1281,9 +1283,13 @@ class news extends Module {
 	 * @param array $children
 	 */
 	public function tag_Feed($tag_params, $children) {
-		$id = isset($tag_params['id']) ? $tag_params['id'] : null;
-		if (is_null($id)) $id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		if (is_null($id)) return;
+		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
+
+		if (is_null($id))
+			$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+
+		if (is_null($id))
+			return;
 
 		$manager = NewsFeedManager::getInstance();
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));

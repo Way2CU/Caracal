@@ -468,7 +468,7 @@ class shop extends Module {
 		// include pre-configured options
 		if (isset($this->search_params['category'])) {
 			$membership_manager = ShopItemMembershipManager::getInstance();
-			$category = $this->search_params['category'];
+			$category = fix_chars($this->search_params['category']);
 			$item_ids = array();
 
 			if (!is_numeric($category)) {
@@ -481,6 +481,9 @@ class shop extends Module {
 				if (is_object($raw_category))
 					$category = $raw_category->id; else
 						$category = -1;
+
+			} else {
+				$category = fix_id($category);
 			}
 
 			// get list of item ids
@@ -1499,7 +1502,7 @@ class shop extends Module {
 	 */
 	private function setTermsLink($tag_params, $children) {
 		if (isset($tag_params['link']))
-			$_SESSION['buyer_terms_link'] = $tag_params['link'];
+			$_SESSION['buyer_terms_link'] = fix_chars($tag_params['link']);
 	}
 
 	/**

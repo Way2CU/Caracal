@@ -2841,9 +2841,7 @@ class contact_form extends Module {
 			$skip_foreign = $tag_params['skip_foreign'] == 1;
 
 		if (isset($tag_params['types'])) {
-			$types = explode(',', $tag_params['types']);
-			$types = fix_chars($types);
-
+			$types = fix_chars(explode(',', $tag_params['types']));
 			$conditions['type'] = $types;
 		}
 
@@ -2895,7 +2893,7 @@ class contact_form extends Module {
 
 		$order_by = array('id');
 		if (isset($tag_params['order_by']))
-			$order_by = explode(',', $tag_params['order_by']);
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
 
 		$order_asc = true;
 		if (isset($tag_params['order_asc']))

@@ -298,15 +298,15 @@ class Backend_UserManager {
 			$source = $tag_params;
 
 		$data = array(
-				'username'	=> escape_chars($source['username']),
-				'email'		=> escape_chars($source['email']),
+				'username'	=> fix_chars($source['username']),
+				'email'		=> fix_chars($source['email']),
 				'level'		=> 0,
 				'agreed'	=> $agreed
 			);
 
 		// prepare user's name
 		if (isset($source['fullname'])) {
-			$data['fullname'] = escape_chars($source['fullname']);
+			$data['fullname'] = fix_chars($source['fullname']);
 			$raw_data = explode(' ', $data['fullname'], 1);
 
 			if (count($raw_data) == 2) {
@@ -319,8 +319,8 @@ class Backend_UserManager {
 			}
 
 		} else if (isset($source['first_name'])) {
-			$data['first_name'] = escape_chars($source['first_name']);
-			$data['last_name'] = escape_chars($source['last_name']);
+			$data['first_name'] = fix_chars($source['first_name']);
+			$data['last_name'] = fix_chars($source['last_name']);
 			$data['fullname'] = $data['first_name'].' '.$data['last_name'];
 		}
 
@@ -613,24 +613,24 @@ class Backend_UserManager {
 
 		// get username
 		if (array_key_exists('username', $tag_params))
-			$username = escape_chars($tag_params['username']);
+			$username = fix_chars($tag_params['username']);
 
 		if (is_null($username) && array_key_exists('username', $_REQUEST))
-			$username = escape_chars($_REQUEST['username']);
+			$username = fix_chars($_REQUEST['username']);
 
 		// get email
 		if (array_key_exists('email', $tag_params))
-			$email = escape_chars($tag_params['email']);
+			$email = fix_chars($tag_params['email']);
 
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
-			$email = escape_chars($_REQUEST['email']);
+			$email = fix_chars($_REQUEST['email']);
 
 		// get captcha value
 		if (array_key_exists('captcha', $tag_params))
-			$captcha = escape_chars($tag_params['captcha']);
+			$captcha = fix_chars($tag_params['captcha']);
 
 		if (is_null($captcha) && array_key_exists('captcha', $_REQUEST))
-			$captcha = escape_chars($_REQUEST['captcha']);
+			$captcha = fix_chars($_REQUEST['captcha']);
 
 		// get user from the database
 		if (!is_null($username))
@@ -749,10 +749,10 @@ class Backend_UserManager {
 
 		// get password
 		if (array_key_exists('password', $tag_params))
-			$password = $tag_params['password'];
+			$password = escape_chars($tag_params['password']);
 
 		if (is_null($password) && array_key_exists('password', $_REQUEST))
-			$password = $_REQUEST['password'];
+			$password = escape_chars($_REQUEST['password']);
 
 		// get code
 		if (array_key_exists('code', $tag_params))
@@ -1108,7 +1108,7 @@ class Backend_UserManager {
 
 		$selected = -1;
 		if (isset($tag_params['selected']))
-			$selected = $tag_params['selected'];
+			$selected = fix_id($tag_params['selected']);
 
 		// create template
 		if (isset($tag_params['template'])) {
@@ -1150,17 +1150,17 @@ class Backend_UserManager {
 
 		// get username
 		if (isset($tag_params['username']))
-			$username = escape_chars($tag_params['username']);
+			$username = fix_chars($tag_params['username']);
 
 		if (isset($_REQUEST['username']) && is_null($username))
-			$username = escape_chars($_REQUEST['username']);
+			$username = fix_chars($_REQUEST['username']);
 
 		// get verification code
 		if (isset($tag_params['code']))
-			$code = escape_chars($tag_params['code']);
+			$code = fix_chars($tag_params['code']);
 
 		if (isset($_REQUEST['code']) && is_null($code))
-			$code = escape_chars($_REQUEST['code']);
+			$code = fix_chars($_REQUEST['code']);
 
 		if (is_null($username) || is_null($code))
 			return;

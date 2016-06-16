@@ -644,7 +644,7 @@ class articles extends Module {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		if (isset($tag_params['text_id']))
-			$conditions['text_id'] = explode(',', $tag_params['text_id']);
+			$conditions['text_id'] = fix_chars(explode(',', $tag_params['text_id']));
 
 		if (isset($tag_params['order_by']))
 			$order_by = explode(',', fix_chars($tag_params['order_by']));
@@ -657,7 +657,7 @@ class articles extends Module {
 
 		if (isset($tag_params['group'])) {
 			$group_id_list = array();
-			$group_names = explode(',', $tag_params['group']);
+			$group_names = fix_chars(explode(',', $tag_params['group']));
 
 			if (count($group_names) > 0 && is_numeric($group_names[0])) {
 				// specified group is a number, treat it as group id
@@ -744,7 +744,7 @@ class articles extends Module {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		if (isset($tag_params['text_id']))
-			$conditions['text_id'] = explode(',', $tag_params['text_id']);
+			$conditions['text_id'] = fix_chars(explode(',', $tag_params['text_id']));
 
 		if (isset($tag_params['order_by']))
 			$order_by = explode(',', fix_chars($tag_params['order_by']));
@@ -763,7 +763,7 @@ class articles extends Module {
 
 		if (isset($tag_params['group'])) {
 			$group_id_list = array();
-			$group_names = explode(',', $tag_params['group']);
+			$group_names = fix_chars(explode(',', $tag_params['group']));
 
 			if (count($group_names) > 0 && is_numeric($group_names[0])) {
 				// specified group is a number, treat it as group id
@@ -874,7 +874,7 @@ class articles extends Module {
 		if (isset($tag_params['id'])) {
 			// print image tag with specified URL
 			$id = fix_id($tag_params['id']);
-			$type = isset($tag_params['type']) ? $tag_params['type'] : ImageType::Stars;
+			$type = isset($tag_params['type']) ? fix_id($tag_params['type']) : ImageType::Stars;
 			$manager = ArticleManager::getInstance();
 
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -960,7 +960,7 @@ class articles extends Module {
 	 */
 	public function tag_Group($tag_params, $children) {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
-		$text_id = isset($tag_params['text_id']) ? escape_chars($tag_params['text_id']) : null;
+		$text_id = isset($tag_params['text_id']) ? fix_chars($tag_params['text_id']) : null;
 
 		// we need at least one of IDs in order to display article
 		if (is_null($id) && is_null($text_id)) return;
@@ -1014,7 +1014,7 @@ class articles extends Module {
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']))
-			$items = array_slice($items, 0, $tag_params['limit'], true);
+			$items = array_slice($items, 0, fix_id($tag_params['limit']), true);
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
