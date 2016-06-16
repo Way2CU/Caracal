@@ -284,8 +284,10 @@ class CouponHandler {
 		// remove data
 		$id = fix_id($_REQUEST['id']);
 		$manager = CouponsManager::getInstance();
+		$code_manager = CouponCodesManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
+		$code_manager->deleteData(array('coupon' => $id));
 
 		// show confirmation message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -524,7 +526,7 @@ class CouponHandler {
 						$this->parent->getLanguageConstant('codes'),
 						window_Open(
 							'shop_coupon_codes', 	// window id
-							400,				// width
+							430,				// width
 							$this->parent->getLanguageConstant('title_coupon_codes'), // title
 							true, true,
 							url_Make(
@@ -560,6 +562,48 @@ class CouponHandler {
 	 * @param array $children
 	 */
 	public function tag_CodeList($tag_params, $children) {
+		$manager = CouponCodesManager::getInstance();
+		$conditions = array();
+
+		// get parameters
+		if (isset($tag_params['coupon']))
+			$conditions['coupon'] = fix_id($tag_params['coupon']); else
+			$conditions['coupon'] = -1;
+
+		// get items from the database
+		define('SQL_DEBUG', 1);
+		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+
+		// make sure we have items
+		if (count($items) == 0)
+			return;
+
+		// load template
+		$template = $this->parent->loadTemplate($tag_params, 'coupon_code_list_item.xml');
+
+		// parse template
+		foreach ($items as $item) {
+			$params = array(
+				'id'          => $item->id,
+				'coupon'      => $item->coupon,
+				'code'        => $item->code,
+				'times_used'  => $item->times_used,
+				'timestamp'   => $item->timestamp,
+				'discount'    => $item->discount,
+				'item_change' => url_MakeHyperlink(
+							$this->parent->getLanguageConstant('change'),
+							'javascript: Caracal.Shop.change_coupon_code(this);'
+						),
+				'item_delete' => url_MakeHyperlink(
+							$this->parent->getLanguageConstant('delete'),
+							'javascript: Caracal.Shop.delete_coupon_code(this);'
+						)
+			);
+
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
 	}
 }
 

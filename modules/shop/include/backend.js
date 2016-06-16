@@ -619,3 +619,108 @@ Caracal.Shop.cancel_property_edit = function(button) {
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
 };
+
+/**
+ * Add coupon code data to the parent list.
+ *
+ * @param object button
+ */
+Caracal.Shop.add_coupon_code = function(button) {
+	// create new nodes
+	var list_item = document.createElement('div');
+	var column_code = document.createElement('span');
+	var column_times = document.createElement('span');
+	var column_options = document.createElement('span');
+	var option_change = document.createElement('a');
+	var option_delete = document.createElement('a');
+
+	// configure and pack user interface
+	column_code.classList.add('column');
+	column_code.style.width = '180px';
+	column_times.classList.add('column');
+	column_times.style.width = '80px';
+
+	language_handler.getTextArrayAsync(null, ['delete', 'change'], function(data) {
+		option_change.appendChild(document.createTextNode(data['change']));
+		option_delete.appendChild(document.createTextNode(data['delete']));
+	});
+
+	option_change.addEventListener('click', Caracal.Shop.change_coupon_code);
+	option_delete.addEventListener('click', Caracal.Shop.delete_coupon_code);
+
+	with (column_options) {
+		classList.add('column');
+		appendChild(option_change);
+		appendChild(document.createTextNode(' '));
+		appendChild(option_delete);
+	}
+
+	with (list_item) {
+		appendChild(column_code);
+		appendChild(column_times);
+		appendChild(column_options);
+		classList.add('list_item');
+	}
+
+	// store data in the list
+	var content = button.parentNode.parentNode;
+	var code = content.querySelector('input[name=code]').value;
+	var discount = content.querySelector('select[name=discount]').value;
+	var index = Date.now();
+
+	column_code.appendChild(document.createTextNode(code));
+	column_times.appendChild(document.createTextNode(0));
+
+	var data_code = document.createElement('input');
+	with (data_code) {
+		setAttribute('type', 'hidden');
+		setAttribute('name', 'code_' + index.toString());
+		setAttribute('value', code);
+	}
+
+	var data_discount = document.createElement('input');
+	with (data_discount) {
+		setAttribute('type', 'hidden');
+		setAttribute('name', 'discount_' + index.toString());
+		setAttribute('value', discount);
+	}
+
+	column_code.appendChild(data_code);
+	column_code.appendChild(data_discount);
+
+	// find parent window and add new option to it
+	var codes_window = document.getElementById('shop_coupon_codes');
+	var list = codes_window.querySelector('div.list_content');
+	list.appendChild(list_item);
+
+	// close window
+	Caracal.window_system.closeWindow('shop_coupon_codes_add');
+};
+
+/**
+ * Generate coupon codes and add them to the parent list.
+ *
+ * @param object button
+ */
+Caracal.Shop.generate_coupon_codes = function(button) {
+};
+
+/**
+ * Handle clicking on change button.
+ *
+ * @param object sender
+ */
+Caracal.Shop.change_coupon_code = function(sender) {
+	var button = sender.target || sender;
+};
+
+/**
+ * Handle coupon code removal.
+ *
+ * @param object sender
+ */
+Caracal.Shop.delete_coupon_code = function(sender) {
+	var button = sender.target || sender;
+	var list_item = button.parentNode.parentNode;
+	list_item.parentNode.removeChild(list_item);
+};

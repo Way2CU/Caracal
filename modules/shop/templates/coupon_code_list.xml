@@ -12,7 +12,7 @@
 		method="POST"
 		cms:eval="action"
 		>
-		<input type="hidden" name="coupon" value="$params['coupon']"/>
+		<input type="hidden" name="coupon" value="$params['coupon']" cms:eval="value"/>
 		<!-- Header -->
 		<div class="scrollable_list">
 			<div class="list_header">
@@ -28,7 +28,10 @@
 			</div>
 			<div class="list_content" style="height: 250px">
 				<!-- List Content -->
-				<cms:list/>
+				<cms:list
+					coupon="$params['coupon']"
+					cms:eval="coupon"
+					/>
 			</div>
 		</div>
 

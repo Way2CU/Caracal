@@ -2,10 +2,10 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 250px;">
+		<span class="column" style="width: 180px;">
 			<cms:var param="code"/>
 		</span>
-		<span class="column" style="width: 100px;">
+		<span class="column" style="width: 80px;">
 			<cms:var param="times_used"/>
 		</span>
 
