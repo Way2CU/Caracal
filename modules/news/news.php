@@ -453,7 +453,7 @@ class news extends Module {
 	private function deleteNews() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -488,7 +488,7 @@ class news extends Module {
 	 * Delete news from database
 	 */
 	private function deleteNews_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsManager::getInstance();
 		$membership_manager = NewsMembershipManager::getInstance();
 
@@ -622,7 +622,7 @@ class news extends Module {
 	private function deleteGroup() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsGroupManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -687,7 +687,7 @@ class news extends Module {
 	 * Show group items edit form
 	 */
 	private function groupItems() {
-		$group_id = fix_id(fix_chars($_REQUEST['id']));
+		$group_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('group_news.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -708,7 +708,7 @@ class news extends Module {
 	 * Save group items
 	 */
 	private function groupItems_Save() {
-		$group = fix_id(fix_chars($_REQUEST['group']));
+		$group = fix_id($_REQUEST['group']);
 		$membership_manager = NewsMembershipManager::getInstance();
 
 		// fetch all ids being set to specific group
@@ -861,7 +861,7 @@ class news extends Module {
 	private function deleteFeed() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsFeedManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -896,7 +896,7 @@ class news extends Module {
 	 * Perform feed removal
 	 */
 	private function deleteFeed_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsFeedManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));

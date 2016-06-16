@@ -500,7 +500,7 @@ class articles extends Module {
 	 * Print form for changing article group data
 	 */
 	private function changeGroup() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleGroupManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -528,7 +528,7 @@ class articles extends Module {
 	private function deleteGroup() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleGroupManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -563,7 +563,7 @@ class articles extends Module {
 	 * Perform removal of certain group
 	 */
 	private function deleteGroup_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = ArticleGroupManager::getInstance();
 		$article_manager = ArticleManager::getInstance();
 

@@ -459,7 +459,7 @@ class gallery extends Module {
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
-		
+
 		$link_new_bulk = url_MakeHyperlink(
 					$this->getLanguageConstant('upload_images_bulk'),
 					window_Open(
@@ -470,7 +470,7 @@ class gallery extends Module {
 						$url_new_bulk
 					)
 				);
-		
+
 		// prepare parameters
 		$params = array(
 					'link_new'		=> $link_new,
@@ -591,7 +591,7 @@ class gallery extends Module {
 	 * Pring image data editing form
 	 */
 	private function changeImage() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -665,7 +665,7 @@ class gallery extends Module {
 	private function deleteImage() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -700,7 +700,7 @@ class gallery extends Module {
 	 * Complete removal of specified image
 	 */
 	private function deleteImage_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 
 		$manager = GalleryManager::getInstance();
 
@@ -765,7 +765,7 @@ class gallery extends Module {
 	 * Group change form
 	 */
 	private function changeGroup() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryGroupManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -793,7 +793,7 @@ class gallery extends Module {
 	 * Save new or changed group data
 	 */
 	private function saveGroup() {
-		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
@@ -836,7 +836,7 @@ class gallery extends Module {
 	private function deleteGroup() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryGroupManager::getInstance();
 
 		$item = $manager->getSingleItem(array('name'), array('id' => $id));
@@ -871,7 +871,7 @@ class gallery extends Module {
 	 * Delete group from the system
 	 */
 	private function deleteGroup_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::getInstance();
 		$group_manager = GalleryGroupManager::getInstance();
 
@@ -937,7 +937,7 @@ class gallery extends Module {
 	 * Container change form
 	 */
 	private function changeContainer() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -963,7 +963,7 @@ class gallery extends Module {
 	 * Save new or changed group container data
 	 */
 	private function saveContainer() {
-		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
@@ -1003,7 +1003,7 @@ class gallery extends Module {
 	private function deleteContainer() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::getInstance();
 
 		$item = $manager->getSingleItem(array('name'), array('id' => $id));
@@ -1038,7 +1038,7 @@ class gallery extends Module {
 	 * Delete container from the system
 	 */
 	private function deleteContainer_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 

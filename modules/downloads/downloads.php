@@ -274,7 +274,7 @@ class downloads extends Module {
 	 * Print form for changing data
 	 */
 	private function changeData() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = DownloadsManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -367,7 +367,7 @@ class downloads extends Module {
 	 * Complete removal of specified image
 	 */
 	private function deleteDownload_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 
 		$manager = DownloadsManager::getInstance();
 

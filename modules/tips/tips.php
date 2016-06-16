@@ -260,7 +260,7 @@ class tips extends Module {
 	private function deleteTip() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = TipManager::getInstance();
 
 		$item = $manager->getSingleItem(array('content'), array('id' => $id));
@@ -295,7 +295,7 @@ class tips extends Module {
 	 * Perform tip removal
 	 */
 	private function deleteTip_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = TipManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));

@@ -316,7 +316,7 @@ class youtube extends Module {
 	 * Change video data form
 	 */
 	private function changeVideo() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
 		$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -342,7 +342,7 @@ class youtube extends Module {
 	 * Save modified or new video data
 	 */
 	private function saveVideo() {
-		$id = isset($_REQUEST['id']) ? fix_id(fix_chars($_REQUEST['id'])) : null;
+		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
 		$title = $this->getMultilanguageField('title');
@@ -381,7 +381,7 @@ class youtube extends Module {
 	private function deleteVideo() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
 		$video = $manager->getSingleItem(array('title'), array('id' => $id));
@@ -416,7 +416,7 @@ class youtube extends Module {
 	 * Actually delete specified video from database
 	 */
 	private function deleteVideo_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
@@ -440,7 +440,7 @@ class youtube extends Module {
 	 * Play video in backend window
 	 */
 	private function previewVideo() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
 		$video_id = $manager->getItemValue('id', array('id' => $id));
@@ -522,7 +522,7 @@ class youtube extends Module {
 	 * Show group changing form
 	 */
 	private function changeGroup() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_GroupManager::getInstance();
 
 		$group = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -607,7 +607,7 @@ class youtube extends Module {
 	private function deleteGroup() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_GroupManager::getInstance();
 
 		$group = $manager->getSingleItem(array('name'), array('id' => $id));
@@ -642,7 +642,7 @@ class youtube extends Module {
 	 * Actually remove group and tell user about the result
 	 */
 	private function deleteGroup_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_GroupManager::getInstance();
 		$membership_manager = YouTube_MembershipManager::getInstance();
 
