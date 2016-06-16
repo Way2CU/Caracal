@@ -102,7 +102,7 @@ class language_menu extends Module {
 
 		foreach($params as $key => $value)
 			if (!in_array($key, $this->invalid_params))
-				$link_params[$key] = escape_chars($value);
+				$link_params[$key] = fix_chars($value);
 
 		// add link to each language
 		foreach ($language_list as $language_code) {
