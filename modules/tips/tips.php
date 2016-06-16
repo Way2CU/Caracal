@@ -326,9 +326,11 @@ class tips extends Module {
 		$conditions = array();
 
 		if (isset($tag_params['id'])) {
-			$conditions['id'] = $tag_params['id'];
+			$conditions['id'] = fix_id($tag_params['id']);
+
 		} else if (isset($tag_params['random']) && $tag_params['random']) {
 			$order_by[] = 'RAND()';
+
 		} else {
 			$order_by[] = 'id';
 		}
