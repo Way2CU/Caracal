@@ -1168,7 +1168,7 @@ class news extends Module {
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
-		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null
+		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
 		// parse items
 		if (count($items) > 0)
