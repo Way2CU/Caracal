@@ -35,7 +35,7 @@ button:focus {
 	outline: none;
 }
 
-body.rtl {
+html[dir=rtl] {
 	direction: rtl;
 }
 
@@ -158,7 +158,7 @@ div.scrollbar_thumb.active {
 	transition-property: all;
 }
 
-body.rtl [data-tooltip]:after {
+html[dir=rtl] [data-tooltip]:after {
 	left: auto;
 	right: 15px;
 }
@@ -188,7 +188,7 @@ body.rtl [data-tooltip]:after {
 	transition-property: all;
 }
 
-body.rtl [data-tooltip]:before {
+html[dir=rtl] [data-tooltip]:before {
 	left: auto;
 	right: 30px;
 }

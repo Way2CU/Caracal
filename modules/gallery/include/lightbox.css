@@ -33,7 +33,7 @@ div#lightbox div.title_bar {
 	text-align: left;
 }
 
-body.rtl div#lightbox div.title_bar {
+html[dir=rtl] div#lightbox div.title_bar {
 	text-align: right;
 }
 
@@ -58,7 +58,7 @@ div#lightbox a.close_button {
 	transition: all 0.3s;
 }
 
-body.rtl div#lightbox a.close_button {
+html[dir=rtl] div#lightbox a.close_button {
 	float: left;
 }
 

@@ -39,7 +39,7 @@ div.window div.scrollable_list div.list_item small span.value {
 	padding-left: 10px;
 }
 
-body.rtl div.window div.scrollable_list div.list_item small span.value {
+html[dir=rtl] div.window div.scrollable_list div.list_item small span.value {
 	padding-left: 0;
 	padding-right: 10px;
 }
@@ -65,7 +65,7 @@ div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input
 	transform-origin: 20% 50%;
 }
 
-body.rtl div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label:before {
+html[dir=rtl] div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label:before {
 	border-color: transparent;
 	border-right-color: #333333;
 	transform-origin: 80% 50%;
@@ -75,7 +75,7 @@ div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input
 	transform: rotate(90deg);
 }
 
-body.rtl div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+html[dir=rtl] div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
 	transform: rotate(-90deg);
 }
 

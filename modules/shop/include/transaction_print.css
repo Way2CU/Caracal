@@ -20,7 +20,7 @@ body {
 	direction: ltr;
 }
 
-body.rtl {
+html[dir=rtl] {
 	direction: rtl;
 }
 
@@ -33,7 +33,7 @@ div#buyer {
 	left: 0cm;
 }
 
-body.rtl div#buyer {
+html[dir=rtl] div#buyer {
 	left: auto;
 	right: 0cm;
 }
@@ -57,7 +57,7 @@ div#delivery {
 	right: 0cm;
 }
 
-body.rtl div#delivery {
+html[dir=rtl] div#delivery {
 	right: auto;
 	left: 0cm;
 }
