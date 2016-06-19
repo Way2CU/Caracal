@@ -3,6 +3,7 @@
     "column_rating": "Rating",
     "column_text_id": "Text ID",
     "column_title": "Title",
+    "label_gallery": "Gallery:",
     "label_content": "Article text:",
     "label_group": "Group:",
     "label_group_description": "Description:",
