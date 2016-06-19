@@ -416,7 +416,7 @@ class page_info extends Module {
 
 		// set from article
 		} else if (isset($tag_params['article']) && ModuleHandler::is_loaded('articles')) {
-			$manager = ArticleManager::getInstance();
+			$manager = Modules\Articles\Manager::getInstance();
 			$text_id = fix_chars($tag_params['article']);
 
 			// get article from database

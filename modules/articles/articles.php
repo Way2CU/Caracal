@@ -8,8 +8,19 @@
  *
  * Author: Mladen Mijatov
  */
+require_once('units/manager.php');
+require_once('units/vote_manager.php');
+require_once('units/group_manager.php');
+
 use Core\Module;
 use Core\Markdown;
+
+
+
+final class ImageType {
+	const Stars = 1;
+	const Circles = 2;
+}
 
 
 class articles extends Module {
@@ -227,6 +238,7 @@ class articles extends Module {
 
 		$sql .= "
 				`author` INT NOT NULL ,
+				`gallery` INT NOT NULL ,
 				`visible` BOOLEAN NOT NULL DEFAULT '0',
 				`views` INT NOT NULL DEFAULT '0',
 				`votes_up` INT NOT NULL DEFAULT '0',
@@ -310,6 +322,11 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
+		if (ModuleHandler::is_loaded('gallery')) {
+			$gallery = gallery::getInstance();
+			$template->registerTagHandler('cms:gallery_list', $gallery, 'tag_GroupList');
+		}
+
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
 					'cancel_action'	=> window_Close('articles_new')
@@ -325,37 +342,44 @@ class articles extends Module {
 	 */
 	private function changeArticle() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ArticleManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
-		if (is_object($item)) {
-			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
-			$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		if (!is_object($item))
+			return;
 
-			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> unfix_chars($item->text_id),
-						'group'			=> $item->group,
-						'title'			=> unfix_chars($item->title),
-						'content'		=> $item->content,
-						'visible' 		=> $item->visible,
-						'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
-						'cancel_action'	=> window_Close('articles_change')
-					);
+		$template = new TemplateHandler('change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
+		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
+		if (ModuleHandler::is_loaded('gallery')) {
+			$gallery = gallery::getInstance();
+			$template->registerTagHandler('cms:gallery_list', $gallery, 'tag_GroupList');
 		}
+
+		$params = array(
+					'id'			=> $item->id,
+					'text_id'		=> unfix_chars($item->text_id),
+					'group'			=> $item->group,
+					'title'			=> unfix_chars($item->title),
+					'content'		=> $item->content,
+					'visible' 		=> $item->visible,
+					'gallery'		=> $item->gallery,
+					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
+					'cancel_action'	=> window_Close('articles_change')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
 	 * Save article data
 	 */
 	private function saveArticle() {
-		$manager = ArticleManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
@@ -370,7 +394,8 @@ class articles extends Module {
 					'title'		=> $title,
 					'content'	=> $content,
 					'visible'	=> $visible,
-					'author'	=> $_SESSION['uid']
+					'author'	=> $_SESSION['uid'],
+					'gallery'	=> fix_id($_REQUEST['gallery'])
 				);
 
 		if (is_null($id)) {
@@ -402,7 +427,7 @@ class articles extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ArticleManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
 
@@ -437,7 +462,7 @@ class articles extends Module {
 	 */
 	private function deleteArticle_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ArticleManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 
@@ -501,7 +526,7 @@ class articles extends Module {
 	 */
 	private function changeGroup() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::getInstance();
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -529,7 +554,7 @@ class articles extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::getInstance();
 
 		$item = $manager->getSingleItem(array('title'), array('id' => $id));
 
@@ -564,8 +589,8 @@ class articles extends Module {
 	 */
 	private function deleteGroup_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ArticleGroupManager::getInstance();
-		$article_manager = ArticleManager::getInstance();
+		$manager = Modules\Articles\GroupManager::getInstance();
+		$article_manager = Modules\Articles\Manager::getInstance();
 
 		$manager->deleteData(array('id' => $id));
 		$article_manager->updateData(array('group' => null), array('group' => $id));
@@ -590,7 +615,7 @@ class articles extends Module {
 	 * Save changed group data
 	 */
 	private function saveGroup() {
-		$manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::getInstance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
@@ -632,8 +657,8 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_Article($tag_params, $children) {
-		$manager = ArticleManager::getInstance();
-		$group_manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
+		$group_manager = Modules\Articles\GroupManager::getInstance();
 		$admin_manager = UserManager::getInstance();
 		$conditions = array();
 		$order_by = array('id');
@@ -705,6 +730,7 @@ class articles extends Module {
 																'fullname',
 																array('id' => $item->author)
 															),
+						'gallery'		=> $item->gallery,
 						'visible'		=> $item->visible,
 						'views'			=> $item->views,
 						'votes_up'		=> $item->votes_up,
@@ -725,8 +751,8 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_ArticleList($tag_params, $children) {
-		$manager = ArticleManager::getInstance();
-		$group_manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
+		$group_manager = Modules\Articles\GroupManager::getInstance();
 		$admin_manager = UserManager::getInstance();
 
 		$conditions = array();
@@ -818,6 +844,7 @@ class articles extends Module {
 																'fullname',
 																array('id' => $item->author)
 															),
+							'gallery'		=> $item->gallery,
 							'visible'		=> $item->visible,
 							'views'			=> $item->views,
 							'votes_up'		=> $item->votes_up,
@@ -875,7 +902,7 @@ class articles extends Module {
 			// print image tag with specified URL
 			$id = fix_id($tag_params['id']);
 			$type = isset($tag_params['type']) ? fix_id($tag_params['type']) : ImageType::Stars;
-			$manager = ArticleManager::getInstance();
+			$manager = Modules\Articles\Manager::getInstance();
 
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -904,7 +931,7 @@ class articles extends Module {
 			// print image itself
 			$id = fix_id($_REQUEST['id']);
 			$type = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : ImageType::Stars;
-			$manager = ArticleManager::getInstance();
+			$manager = Modules\Articles\Manager::getInstance();
 
 			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
@@ -965,7 +992,7 @@ class articles extends Module {
 		// we need at least one of IDs in order to display article
 		if (is_null($id) && is_null($text_id)) return;
 
-		$manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::getInstance();
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
@@ -998,7 +1025,7 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_GroupList($tag_params, $children) {
-		$manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::getInstance();
 		$conditions = array();
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 'yes')
@@ -1076,7 +1103,7 @@ class articles extends Module {
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ImageType::Stars;
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
 
-		$manager = ArticleManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
 		$admin_manager = UserManager::getInstance();
 
 		$result = array(
@@ -1133,8 +1160,8 @@ class articles extends Module {
 	private function json_ArticleList() {
 		global $language;
 
-		$manager = ArticleManager::getInstance();
-		$group_manager = ArticleGroupManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
+		$group_manager = Modules\Articles\GroupManager::getInstance();
 		$admin_manager = UserManager::getInstance();
 
 		$conditions = array();
@@ -1246,8 +1273,8 @@ class articles extends Module {
 	private function json_Vote() {
 		$id = fix_id($_REQUEST['id']);
 		$value = $_REQUEST['value'];
-		$manager = ArticleManager::getInstance();
-		$vote_manager = ArticleVoteManager::getInstance();
+		$manager = Modules\Articles\Manager::getInstance();
+		$vote_manager = Modules\Articles\VoteManager::getInstance();
 
 		$vote = $vote_manager->getSingleItem(
 									array('id'),
@@ -1321,98 +1348,4 @@ class articles extends Module {
 	}
 }
 
-
-class ArticleManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('articles');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('content', 'ml_text');
-		$this->addProperty('author', 'int');
-		$this->addProperty('visible', 'boolean');
-		$this->addProperty('views', 'int');
-		$this->addProperty('votes_up', 'int');
-		$this->addProperty('votes_down', 'int');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-
-class ArticleGroupManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('article_groups');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('visible', 'boolean');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-class ArticleVoteManager extends ItemManager {
-	private static $_instance;
-
-	/**
-	 * Constructor
-	 */
-	protected function __construct() {
-		parent::__construct('article_votes');
-
-		$this->addProperty('id', 'int');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('article', 'int');
-	}
-
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
-
-		return self::$_instance;
-	}
-}
-
-
-class ImageType {
-	const Stars = 1;
-	const Circles = 2;
-
-	private function __construct() {
-	}
-}
+?>
