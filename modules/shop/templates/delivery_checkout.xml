@@ -4,8 +4,8 @@
 	<a
 		href="javascript: void(0);"
 		data-value="$params['name']"
-		data-custom-interface="$params['custom_interface']"
-		data-user-information="$params['user_information']"
+		data-custom-interface="$params['custom_interface'] ? 1 : 0"
+		data-user-information="$params['user_information'] ? 1 : 0"
 		cms:eval="data-value,data-custom-interface,data-user-information"
 		>
 		<img
