@@ -835,11 +835,16 @@ class TemplateHandler {
 				break;
 		}
 
+		// include template name
 		$data[] = $message.' in template "';
 		$data[] = $this->file.'"';
 
+		// if errors is in file include it
 		if (!is_null($file))
 			$data[] = ' ('.$file.' on line '.$line.')';
+
+		// log query string as it might help
+		$data[] = ' with query string "'.$_REQUEST['QUERY_STRING'].'"';
 
 		$text = implode('', $data);
 		error_log($text);
