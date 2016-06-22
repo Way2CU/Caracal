@@ -3772,9 +3772,12 @@ class shop extends Module {
 				$required_count = count($shipping_required);
 				$fields_are_invalid = count($bad_fields) > 0 && $required_count > 0;
 
-				// log bad fields if debugging is enabled
+				// log bad behavior if debugging is enabled
 				if ($fields_are_invalid && defined('DEBUG'))
 					trigger_error('Checkout bad fields: '.implode(', ', $bad_fields), E_USER_NOTICE);
+
+				if (is_null($buyer) && defined('DEBUG'))
+					trigger_error('Unable to get buyer. Check database compatibility!', E_USER_NOTICE);
 
 				// reset stage back to data entry
 				if ($fields_are_invalid || is_null($payment_method) || is_null($buyer))
