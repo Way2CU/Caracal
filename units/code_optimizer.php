@@ -219,6 +219,9 @@ class CodeOptimizer {
 
 		// save compiled file
 		file_put_contents($file_name, $data);
+
+		// generate integrity hash and store it to file
+		file_put_contents($file_name.'.sha384', hash_file('sha384', $file_name, true));
 	}
 
 	/**
@@ -293,6 +296,9 @@ class CodeOptimizer {
 		if ($this->needsRecompile($script_cache, $this->script_list)) {
 			$this->closure_compiler->compile_and_save($script_cache);
 
+			// store integrity hash
+			file_put_contents($script_cache.'.sha384', hash_file('sha384', $script_cache, true));
+
 			// report script errors
 			$error_list = $this->closure_compiler->get_errors();
 			if (count($error_list) > 0) {
@@ -307,12 +313,20 @@ class CodeOptimizer {
 		}
 
 		// include styles in page or as outside resource
+		$integrity = '';
+		if (file_exists($style_cache.'.sha384'))
+			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
+
 		if (!$include_styles)
-			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'">'; else
+			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
 			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
 
 		// show javascript tags
-		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"></script>';
+		$integrity = '';
+		if (file_exists($script_cache.'.sha384'))
+			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
+
+		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
 	}
 }
 
