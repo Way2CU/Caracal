@@ -30,7 +30,7 @@ Caracal.MobileMenu = function() {
 	 */
 	self._init = function() {
 		// detect if page is in RTL
-		self._page_rtl = $('body').hasClass('rtl');
+		self._page_rtl = $('html').attr('dir') == 'rtl';
 
 		// assign site components
 		self._top_bar = $('.mobile_title').eq(0);
