@@ -326,8 +326,8 @@ class CouponHandler {
 					'link_generate' => url_MakeHyperlink(
 							$this->parent->getLanguageConstant('generate_codes'),
 							window_Open( // on click open window
-								'shop_coupon_codes_add',
-								430,
+								'shop_coupon_codes_generate',
+								300,
 								$this->parent->getLanguageConstant('title_coupon_code_generate'),
 								true, true,
 								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_generate')
@@ -370,6 +370,17 @@ class CouponHandler {
 	 * Show for for generating coupon codes.
 	 */
 	private function generate_codes() {
+		$template = new TemplateHandler('coupon_code_generate.xml', $this->path.'templates/');
+		$template->registerTagHandler('cms:list', $this->parent, 'tag_DiscountList');
+		$template->setMappedModule($this->name);
+
+		$params = array(
+					'cancel_action'	=> window_Close('shop_coupon_codes_generate')
+				);
+
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**

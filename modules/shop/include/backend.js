@@ -625,7 +625,7 @@ Caracal.Shop.cancel_property_edit = function(button) {
  *
  * @param object button
  */
-Caracal.Shop.add_coupon_code = function(button) {
+Caracal.Shop.add_coupon_code = function(button, code, discount) {
 	// create new nodes
 	var list_item = document.createElement('div');
 	var column_code = document.createElement('span');
@@ -640,10 +640,9 @@ Caracal.Shop.add_coupon_code = function(button) {
 	column_times.classList.add('column');
 	column_times.style.width = '80px';
 
-	language_handler.getTextArrayAsync(null, ['delete', 'change'], function(data) {
-		option_change.appendChild(document.createTextNode(data['change']));
-		option_delete.appendChild(document.createTextNode(data['delete']));
-	});
+	var data = language_handler.getTextArray(null, ['delete', 'change']);
+	option_change.appendChild(document.createTextNode(data['change']));
+	option_delete.appendChild(document.createTextNode(data['delete']));
 
 	option_change.addEventListener('click', Caracal.Shop.change_coupon_code);
 	option_delete.addEventListener('click', Caracal.Shop.delete_coupon_code);
@@ -663,10 +662,24 @@ Caracal.Shop.add_coupon_code = function(button) {
 	}
 
 	// store data in the list
-	var content = button.parentNode.parentNode;
-	var code = content.querySelector('input[name=code]').value;
-	var discount = content.querySelector('select[name=discount]').value;
-	var index = Date.now();
+	var get_data = !code && !discount;
+	if (get_data) {
+		var content = button.parentNode.parentNode;
+		var code = content.querySelector('input[name=code]').value;
+		var discount = content.querySelector('select[name=discount]').value;
+	}
+
+	var hash_code = function(string){
+		var hash = 0;
+		if (string.length == 0) return hash;
+		for (i = 0; i < string.length; i++) {
+			char = string.charCodeAt(i);
+			hash = ((hash<<5)-hash)+char;
+			hash = hash & hash; // Convert to 32bit integer
+		}
+		return hash;
+	};
+	var index = hash_code(code);
 
 	column_code.appendChild(document.createTextNode(code));
 	column_times.appendChild(document.createTextNode(0));
@@ -694,7 +707,8 @@ Caracal.Shop.add_coupon_code = function(button) {
 	list.appendChild(list_item);
 
 	// close window
-	Caracal.window_system.closeWindow('shop_coupon_codes_add');
+	if (get_data)
+		Caracal.window_system.closeWindow('shop_coupon_codes_add');
 };
 
 /**
@@ -702,7 +716,33 @@ Caracal.Shop.add_coupon_code = function(button) {
  *
  * @param object button
  */
-Caracal.Shop.generate_coupon_codes = function(button) {
+Caracal.Shop.generate_coupon_codes = function(sender) {
+	var button = sender.target || sender;
+	var content = button.parentNode.parentNode;
+	var count = content.querySelector('input[name=count]').value;
+	var length = content.querySelector('input[name=length]').value;
+	var charset = content.querySelector('select[name=charset]').value;
+	var prefix = content.querySelector('input[name=prefix]').value;
+	var suffix = content.querySelector('input[name=suffix]').value;
+	var discount = content.querySelector('select[name=discount]').value;
+
+	generate_code = function() {
+		var result = '';
+		var charset_size = charset.length;
+
+		for (var i=0; i<length; i++)
+			result += charset[Math.floor(Math.random() * charset_size)];
+
+		return prefix + result + suffix;
+	};
+
+	for (var i=0; i<count; i++) {
+		var code = generate_code().toUpperCase();
+		Caracal.Shop.add_coupon_code(sender, code, discount);
+	}
+
+	// close window
+	Caracal.window_system.closeWindow('shop_coupon_codes_generate');
 };
 
 /**
