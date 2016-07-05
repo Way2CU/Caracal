@@ -4,6 +4,18 @@
 	<div class="list_item">
 		<span class="column" style="width: 180px;">
 			<cms:var param="code"/>
+			<input
+				type="hidden"
+				name="'code_'.$params['id']"
+				value="$params['code']"
+				cms:eval="name,value"
+				/>
+			<input
+				type="hidden"
+				name="'discount_'.$params['id']"
+				value="$params['discount']"
+				cms:eval="name,value"
+				/>
 		</span>
 		<span class="column" style="width: 80px;">
 			<cms:var param="times_used"/>
