@@ -1,54 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Template File Specification
-	Copyright (c) 2013. by Way2CU
-	
+	Copyright (c) 2016. by Way2CU
+
 	Author: Mladen Mijatov
 -->
 <!ELEMENT document ANY>
-<!ATTLIST document 
+<!ATTLIST document
 	minimum_level CDATA #IMPLIED
 >
 
-<!ELEMENT _template EMPTY>
-<!ATTLIST _template 
+<!ELEMENT cms:template EMPTY>
+<!ATTLIST cms:template
 	file CDATA #REQUIRED
 	path CDATA #IMPLIED
 >
 
-<!ELEMENT _text ANY>
-<!ATTLIST _text
+<!ELEMENT cms:text EMPTY>
+<!ATTLIST cms:text
 	constant CDATA #REQUIRED
 	module CDATA #IMPLIED
-	eval CDATA #IMPLIED
 >
 
-<!ELEMENT _section_data EMPTY>
+<!ELEMENT cms:markdown EMPTY>
+<!ATTLIST cms:markdown
+	param CDATA #REQUIRED
+	multilanguage CDATA #IMPLIED
+	chars CDATA #IMPLIED
+	end_with CDATA #IMPLIED
+	clear_text CDATA #IMPLIED
+>
 
-<!ELEMENT _language_data EMPTY>
-<!ATTLIST _language_data
+<!ELEMENT cms:section_data EMPTY>
+
+<!ELEMENT cms:language_data EMPTY>
+<!ATTLIST cms:language_data
 	param CDATA #REQUIRED
 >
 
-<!ELEMENT _if ANY>
-<!ATTLIST _if 
-	condition CDATA #REQUIRED
+<!ELEMENT cms:if ANY>
+<!ATTLIST cms:if
+	condition CDATA #IMPLIED
+	action CDATA #IMPLIED
+	section CDATA #IMPLIED
 >
 
-<!ELEMENT _var EMPTY>
-<!ATTLIST _var 
-	name CDATA #REQUIRED
+<!ELEMENT cms:var EMPTY>
+<!ATTLIST cms:var
+	name CDATA #IMPLIED
+	param CDATA #IMPLIED
 >
 
-<!ELEMENT _raw ANY>
-<!ATTLIST _raw 
+<!ELEMENT cms:raw ANY>
+<!ATTLIST cms:raw
 	text CDATA #IMPLIED
 	file CDATA #IMPLIED
 >
 
-<!ELEMENT _session EMPTY>
-<!ATTLIST _session
+<!ELEMENT cms:session EMPTY>
+<!ATTLIST cms:session
 	name CDATA #REQUIRED
 	value CDATA #REQUIRED
-	eval CDATA #IMPLIED
+	once CDATA #IMPLIED
+>
+
+<!ELEMENT cms:svg EMPTY>
+<!ATTLIST cms:svg
+	file CDATA #REQUIRED
+	symbol CDATA #IMPLIED
+>
+
+<!ELEMENT cms:module ANY>
+<!ATTLIST cms:module
+	name CDATA #REQUIRED
+	action CDATA #REQUIRED
+>
+
+<!ELEMENT cms:replace ANY>
+<!ATTLIST cms:replace
+	param CDATA #IMPLIED
+>
+
+<!ELEMENT cms:user ANY>
+<!ELEMENT cms:guest ANY>
+<!ELEMENT cms:desktop ANY>
+<!ELEMENT cms:mobile ANY>
+
+<!ELEMENT cms:script EMPTY>
+<!ELEMENT cms:collection EMPTY>
+<!ELEMENT cms:link EMPTY>
+
+<!ELEMENT cms:choice option>
+<!ATTLIST cms:choice
+	param CDATA #IMPLIED
+	value CDATA #IMPLIED
 >
