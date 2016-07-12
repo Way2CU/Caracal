@@ -1,12 +1,19 @@
 <?php
 
 /**
- * Database Item Base Class
+ * Item manager base class.
+ *
+ * This class is used to make working with database easier. It is not meant to be
+ * ORM or in place solution. Custom SQL queries are still possible and encouraged.
  *
  * Author: Mladen Mijatov
  */
 
-class Query {
+
+class LoadQueryError extends Exception {};
+
+
+final class Query {
 	const INSERT = 0;
 	const UPDATE = 1;
 	const DELETE = 2;
@@ -14,7 +21,7 @@ class Query {
 }
 
 
-class ItemManager {
+abstract class ItemManager {
 	/**
 	 * List of string based field types
 	 * @var array
@@ -55,9 +62,8 @@ class ItemManager {
 	protected $languages = array();
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
-	 * @global resource $db
 	 * @param string $table_name
 	 * @return db_item
 	 */
@@ -69,7 +75,7 @@ class ItemManager {
 	}
 
 	/**
-	 * Adds new field definition to the object
+	 * Adds new field definition to the object.
 	 *
 	 * @param string $field_name
 	 * @param string $field_type
@@ -452,8 +458,23 @@ class ItemManager {
 	 *
 	 * @param string $file_name
 	 * @param object $module
+	 * @return string
 	 */
 	public static function load_query_file($file_name, $module=null) {
+		global $system_queries_path;
+
+		// get path to look for query
+		if (!is_null($module))
+			$path = $module->path; else
+			$path = $system_queries_path;
+
+		// throw error
+		if (!file_exists($path.$file_name))
+			throw new LoadQueryError("Unable to find specified query file '{$file_name}' in '{$path}'.");
+
+		// load file
+		$raw_file = file_get_contents($path.$file_name);
 	}
 }
+
 ?>
