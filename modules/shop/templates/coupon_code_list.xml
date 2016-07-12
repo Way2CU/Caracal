@@ -19,6 +19,9 @@
 				<span class="column" style="width: 180px;">
 					<cms:text constant="column_code" module="shop"/>
 				</span>
+				<span class="column" style="width: 180px;">
+					<cms:text constant="column_discount" module="shop"/>
+				</span>
 				<span class="column" style="width: 80px;">
 					<cms:text constant="column_times_used" module="shop"/>
 				</span>

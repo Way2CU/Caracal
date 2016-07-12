@@ -4394,6 +4394,39 @@ class shop extends Module {
 	}
 
 	/**
+ 	 * Render list of discounts.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_DiscountList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'discount_list_item.xml');
+		$selected = null;
+
+		// make sure we have registered discounts
+		if (count($this->discounts) == 0)
+			return;
+
+		// collect extra parameters
+		if (isset($tag_params['selected']))
+			$selected = fix_chars($tag_params['selected']);
+
+		foreach ($this->discounts as $text_id => $discount) {
+			// prepare parameters
+			$params = array(
+				'text_id'  => $text_id,
+				'selected' => $selected == $text_id,
+				'title'    => $discount->get_title()
+			);
+
+			// parse template
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
+	}
+
+	/**
 	 * Function that returns boolean denoting if shop is in testing phase.
 	 *
 	 * @return boolean

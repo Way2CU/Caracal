@@ -17,12 +17,14 @@
 				cms:eval="name,value"
 				/>
 		</span>
+		<span class="column" style="width: 180px;">
+			<cms:discount id="$params['discount']" cms:eval="id"/>
+		</span>
 		<span class="column" style="width: 80px;">
 			<cms:var param="times_used"/>
 		</span>
 
 		<span class="column">
-			<cms:var param="item_change"/><cms:raw text=" "/>
 			<cms:var param="item_delete"/>
 		</span>
 	</div>

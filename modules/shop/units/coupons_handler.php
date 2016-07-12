@@ -537,7 +537,7 @@ class CouponHandler {
 						$this->parent->getLanguageConstant('codes'),
 						window_Open(
 							'shop_coupon_codes', 	// window id
-							430,				// width
+							550,				// width
 							$this->parent->getLanguageConstant('title_coupon_codes'), // title
 							true, true,
 							url_Make(
@@ -591,6 +591,7 @@ class CouponHandler {
 
 		// load template
 		$template = $this->parent->loadTemplate($tag_params, 'coupon_code_list_item.xml');
+		$template->registerTagHandler('cms:discount', $this->parent, 'tag_DiscountList');
 
 		// parse template
 		foreach ($items as $item) {
@@ -601,10 +602,6 @@ class CouponHandler {
 				'times_used'  => $item->times_used,
 				'timestamp'   => $item->timestamp,
 				'discount'    => $item->discount,
-				'item_change' => url_MakeHyperlink(
-							$this->parent->getLanguageConstant('change'),
-							'javascript: Caracal.Shop.change_coupon_code(this);'
-						),
 				'item_delete' => url_MakeHyperlink(
 							$this->parent->getLanguageConstant('delete'),
 							'javascript: Caracal.Shop.delete_coupon_code(this);'

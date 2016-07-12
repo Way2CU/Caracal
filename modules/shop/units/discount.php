@@ -4,13 +4,13 @@ namespace Modules\Shop\Promotion;
 
 
 /**
- * Promotion base class.
+ * Discount base class.
  */
 abstract class Discount {
 	protected $name;
 
 	/**
-	 * Get promotion unique name.
+	 * Get discount unique name.
 	 *
 	 * @return string
 	 */
@@ -19,8 +19,8 @@ abstract class Discount {
 	}
 
 	/**
-	 * Get multi-language name for the promotion. This name
-	 * is used for showing user applied promotion instead of using
+	 * Get multi-language name for the discount. This name
+	 * is used for showing user applied discount instead of using
 	 * unique strings.
 	 *
 	 * @return string
