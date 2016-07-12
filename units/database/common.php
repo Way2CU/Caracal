@@ -58,11 +58,11 @@ function database_connect() {
  * @return boolean
  */
 function database_initialize($create_database) {
-	global $db, $db_config, $data_path;
+	global $db, $db_config, $data_path, $system_queries_path;
 
 	$result = false;
 	$database_exists = false;
-	$sql_file = 'units/database/init.sql';
+	$sql_file = $system_queries_path.'initialize.sql';
 	$xml_file = $data_path.'system_init.xml';
 
 	if (!file_exists($sql_file) || !file_exists($xml_file)) {

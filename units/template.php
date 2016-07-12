@@ -537,7 +537,6 @@ class TemplateHandler {
 					break;
 
 				// conditional tag
-				case '_if':
 				case 'cms:if':
 					$settings = !is_null($this->module) ? $this->module->settings : array();
 					$params = $this->params;
