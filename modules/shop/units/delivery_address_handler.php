@@ -59,7 +59,7 @@ class DeliveryAddressHandler {
 			$conditions['buyer'] = fix_id($tag_params['buyer']);
 
 		// get address
-		$address = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$address = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'address.xml');

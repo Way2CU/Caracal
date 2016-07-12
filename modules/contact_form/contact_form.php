@@ -628,8 +628,8 @@ class contact_form extends Module {
 		$field_manager = ContactForm_FormFieldManager::getInstance();
 
 		// get all transfer fields
-		$fields = $field_manager->getItems(
-				$field_manager->getFieldNames(),
+		$fields = $field_manager->get_items(
+				$field_manager->get_field_names(),
 				array('type' => 'transfer-param')
 			);
 
@@ -693,12 +693,12 @@ class contact_form extends Module {
 		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
 
 		// load form and fields
-		$form = $manager->getSingleItem(
-						$manager->getFieldNames(),
+		$form = $manager->get_single_item(
+						$manager->get_field_names(),
 						array('id' => $id)
 					);
-		$fields = $field_manager->getItems(
-						$field_manager->getFieldNames(),
+		$fields = $field_manager->get_items(
+						$field_manager->get_field_names(),
 						array('form' => $id)
 					);
 
@@ -810,11 +810,11 @@ class contact_form extends Module {
 		// store and email
 		if (count($missing_fields) == 0) {
 			// store form submission
-			$submission_manager->insertData(array(
+			$submission_manager->insert_item(array(
 					'form'		=> $form->id,
 					'address'	=> $_SERVER['REMOTE_ADDR'],
 				));
-			$submission_id = $submission_manager->getInsertedID();
+			$submission_id = $submission_manager->get_inserted_id();
 
 			// store data to database
 			foreach($data as $field_data) {
@@ -824,7 +824,7 @@ class contact_form extends Module {
 						'value'			=> $field_data['value']
 					);
 
-				$submission_field_manager->insertData($new_data);
+				$submission_field_manager->insert_item($new_data);
 			}
 
 			// TODO: Store files somewhere after submission, if needed.
@@ -962,7 +962,7 @@ class contact_form extends Module {
 		}
 
 		// get field ids
-		$raw_fields = $field_manager->getItems(
+		$raw_fields = $field_manager->get_items(
 				array('id', 'name'),
 				array('name' => array_keys($fields))
 			);
@@ -980,7 +980,7 @@ class contact_form extends Module {
 			$conditions['form'] = $form_id;
 
 		$score = array();
-		$submissions = $submission_manager->getItems(array('id'), $conditions);
+		$submissions = $submission_manager->get_items(array('id'), $conditions);
 
 		if (count($submissions) > 0)
 			foreach ($submissions as $submission) {
@@ -996,7 +996,7 @@ class contact_form extends Module {
 				'value'			=> $value
 			);
 
-			$data_list = $submission_field_manager->getItems(array('id', 'submission'), $conditions);
+			$data_list = $submission_field_manager->get_items(array('id', 'submission'), $conditions);
 
 			if (count($data_list) > 0)
 				$score[$data_list->submission]++;
@@ -1008,7 +1008,7 @@ class contact_form extends Module {
 
 		// update submission
 		foreach ($data as $name => $value) {
-			$submission_field_manager->updateData(
+			$submission_field_manager->update_items(
 					array(
 						'submission'	=> $submission_id,
 						'field'			=> $field_ids[$name]
@@ -1226,8 +1226,8 @@ class contact_form extends Module {
 		$manager = ContactForm_SubmissionManager::getInstance();
 
 		// load submission details
-		$item = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+				$manager->get_field_names(),
 				array('id' => $id)
 			);
 
@@ -1339,8 +1339,8 @@ class contact_form extends Module {
 		}
 
 		// populate missing header values
-		$form_fields = $form_field_manager->getItems(
-			$form_field_manager->getFieldNames(),
+		$form_fields = $form_field_manager->get_items(
+			$form_field_manager->get_field_names(),
 			array('form' => $form_id)
 		);
 
@@ -1383,15 +1383,15 @@ class contact_form extends Module {
 		}
 
 		// get related submissions
-		$submissions = $submission_manager->getItems(
-			$submission_manager->getFieldNames(),
+		$submissions = $submission_manager->get_items(
+			$submission_manager->get_field_names(),
 			array('form' => $form_id)
 		);
 
 		if (count($submissions) > 0) {
 			// get ids for all fields
 			$field_ids = array();
-			$form_fields = $form_field_manager->getItems(array('id'), array('name' => $fields));
+			$form_fields = $form_field_manager->get_items(array('id'), array('name' => $fields));
 
 			if (count($form_fields) > 0)
 				foreach ($form_fields as $field)
@@ -1400,8 +1400,8 @@ class contact_form extends Module {
 			// append submission fields to data array
 			foreach ($submissions as $submission) {
 				$record = array();
-				$field_data = $submission_field_manager->getItems(
-					$submission_field_manager->getFieldNames(),
+				$field_data = $submission_field_manager->get_items(
+					$submission_field_manager->get_field_names(),
 					array(
 						'submission'	=> $submission->id,
 						'field'			=> $field_ids
@@ -1498,7 +1498,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_TemplateManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('templates_change.xml', $this->path.'templates/');
@@ -1543,10 +1543,10 @@ class contact_form extends Module {
 
 		if (is_null($id)) {
 			$window = 'contact_form_templates_add';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'contact_form_templates_edit';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -1572,7 +1572,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_TemplateManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1607,7 +1607,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_TemplateManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1676,7 +1676,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('forms_change.xml', $this->path.'templates/');
@@ -1736,12 +1736,12 @@ class contact_form extends Module {
 		// insert or update data in database
 		if (is_null($id)) {
 			$window = 'contact_forms_add';
-			$manager->insertData($data);
-			$id = $manager->getInsertedID();
+			$manager->insert_item($data);
+			$id = $manager->get_inserted_id();
 
 		} else {
 			$window = 'contact_forms_edit';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		// create fields if needed
@@ -1751,7 +1751,7 @@ class contact_form extends Module {
 
 			if (count($field_list) > 0)
 				foreach ($field_list as $name => $field_data) {
-					$field_manager->insertData(array(
+					$field_manager->insert_item(array(
 						'form'		=> $id,
 						'name'		=> $name,
 						'type'		=> isset($field_data['type']) ? $field_data['type'] : 'text',
@@ -1772,12 +1772,12 @@ class contact_form extends Module {
 		}
 
 		// remove existing domains from database
-		$domain_manager->deleteData(array('form' => $id));
+		$domain_manager->delete_items(array('form' => $id));
 
 		// insert all domains from list
 		if (count($domain_list) > 0)
 			foreach ($domain_list as $domain)
-				$domain_manager->insertData(array(
+				$domain_manager->insert_item(array(
 					'form'		=> $id,
 					'domain'	=> $domain
 				));
@@ -1797,12 +1797,12 @@ class contact_form extends Module {
 		}
 
 		// remove existing mailer associations
-		$mailer_manager->deleteData(array('form' => $id));
+		$mailer_manager->delete_items(array('form' => $id));
 
 		// record mailer associations
 		if (count($mailer_list) > 0)
 			foreach ($mailer_list as $mailer)
-				$mailer_manager->insertData(array(
+				$mailer_manager->insert_item(array(
 						'form'		=> $id,
 						'mailer'	=> $mailer
 					));
@@ -1832,7 +1832,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1873,17 +1873,17 @@ class contact_form extends Module {
 		$fieldset_membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
 		// remove all fieldsets
-		$fieldsets = $fieldset_manager->getItems(array('id'), array('form' => $id));
+		$fieldsets = $fieldset_manager->get_items(array('id'), array('form' => $id));
 		if (count($fieldsets) > 0)
 			foreach ($fieldsets as $fieldset) {
-				$fieldset_membership_manager->deleteData(array('fieldset' => $fieldset->id));
-				$fieldset_manager->deleteData(array('id' => $fieldset->id));
+				$fieldset_membership_manager->delete_items(array('fieldset' => $fieldset->id));
+				$fieldset_manager->delete_items(array('id' => $fieldset->id));
 			}
 
 		// remove rest of the data
-		$manager->deleteData(array('id' => $id));
-		$field_manager->deleteData(array('form' => $id));
-		$domain_manager->deleteData(array('form' => $id));
+		$manager->delete_items(array('id' => $id));
+		$field_manager->delete_items(array('form' => $id));
+		$domain_manager->delete_items(array('form' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1964,7 +1964,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FieldsetManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('fieldsets_change.xml', $this->path.'templates/');
@@ -2012,19 +2012,19 @@ class contact_form extends Module {
 		// insert or update data in database
 		if (is_null($id)) {
 			$window = 'contact_form_fieldset_add';
-			$manager->insertData($data);
-			$id = $manager->getInsertedID();
+			$manager->insert_item($data);
+			$id = $manager->get_inserted_id();
 
 		} else {
 			$window = 'contact_form_fieldset_edit';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		// update list assigned fields
-		$membership_manager->deleteData(array('fieldset' => $id));
+		$membership_manager->delete_items(array('fieldset' => $id));
 		if (count($field_list) > 0)
 			foreach ($field_list as $field_id) {
-				$membership_manager->insertData(array(
+				$membership_manager->insert_item(array(
 									'fieldset'	=> $id,
 									'field'		=> $field_id
 								));
@@ -2053,7 +2053,7 @@ class contact_form extends Module {
 		$manager = ContactForm_FieldsetManager::getInstance();
 		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2089,9 +2089,9 @@ class contact_form extends Module {
 		$manager = ContactForm_FieldsetManager::getInstance();
 		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
-		$form = $manager->getItemValue('form', array('id' => $id));
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('fieldset' => $id));
+		$form = $manager->get_item_value('form', array('id' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('fieldset' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2187,7 +2187,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormFieldManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('fields_change.xml', $this->path.'templates/');
@@ -2249,10 +2249,10 @@ class contact_form extends Module {
 		// insert or update data in database
 		if (is_null($id)) {
 			$window = 'contact_form_fields_add';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'contact_form_fields_edit';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		// show message
@@ -2277,7 +2277,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FormFieldManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2314,10 +2314,10 @@ class contact_form extends Module {
 		$value_manager = ContactForm_FieldValueManager::getInstance();
 		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
-		$form = $manager->getItemValue('form', array('id' => $id));
-		$manager->deleteData(array('id' => $id));
-		$value_manager->deleteData(array('field' => $id));
-		$membership_manager->deleteData(array('field' => $id));
+		$form = $manager->get_item_value('form', array('id' => $id));
+		$manager->delete_items(array('id' => $id));
+		$value_manager->delete_items(array('field' => $id));
+		$membership_manager->delete_items(array('field' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2411,7 +2411,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FieldValueManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('values_change.xml', $this->path.'templates/');
@@ -2449,10 +2449,10 @@ class contact_form extends Module {
 		// insert or update data in database
 		if (is_null($id)) {
 			$window = 'contact_form_field_value_add';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'contact_form_field_value_edit';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		// show message
@@ -2545,11 +2545,11 @@ class contact_form extends Module {
 
 		// remove existing if needed
 		if ($remove_existing)
-			$manager->deleteData(array('field' => $field_id));
+			$manager->delete_items(array('field' => $field_id));
 
 		// insert data to database
 		foreach ($values as $data)
-			$manager->insertData($data);
+			$manager->insert_item($data);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -2580,7 +2580,7 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FieldValueManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2615,8 +2615,8 @@ class contact_form extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ContactForm_FieldValueManager::getInstance();
 
-		$field = $manager->getItemValue('field', array('id' => $id));
-		$manager->deleteData(array('id' => $id));
+		$field = $manager->get_item_value('field', array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -2758,7 +2758,7 @@ class contact_form extends Module {
 		$template->setTemplateParamsFromArray($children);
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// parse template
 		if (count($items) > 0)
@@ -2852,7 +2852,7 @@ class contact_form extends Module {
 		if (isset($tag_params['fieldset'])) {
 			$fieldset = fix_id($tag_params['fieldset']);
 			$fieldset_manager = ContactForm_FieldsetFieldsManager::getInstance();
-			$raw_data = $fieldset_manager->getItems(array('field'), array('fieldset' => $fieldset));
+			$raw_data = $fieldset_manager->get_items(array('field'), array('fieldset' => $fieldset));
 
 			if (count($raw_data) > 0)
 				foreach ($raw_data as $data)
@@ -2871,7 +2871,7 @@ class contact_form extends Module {
 			$fieldset_memebership_manager = ContactForm_FieldsetFieldsManager::getInstance();
 
 			// get all fieldsets
-			$fieldsets = $fieldset_manager->getItems(array('id'), array('form' => $conditions['form']));
+			$fieldsets = $fieldset_manager->get_items(array('id'), array('form' => $conditions['form']));
 			$fieldset_ids = array();
 
 			if (count($fieldsets) > 0)
@@ -2879,7 +2879,7 @@ class contact_form extends Module {
 					$fieldset_ids[] = $fieldset->id;
 
 			// get all fields belonging to fieldset
-			$raw_data = $fieldset_memebership_manager->getItems(array('field'), array('fieldset' => $fieldset_ids));
+			$raw_data = $fieldset_memebership_manager->get_items(array('field'), array('fieldset' => $fieldset_ids));
 
 			if (count($raw_data) > 0)
 				foreach ($raw_data as $membership)
@@ -2905,7 +2905,7 @@ class contact_form extends Module {
 		$template->registerTagHandler('cms:values', $this, 'tag_FieldValueList');
 
 		// get fields
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// parse template
 		if (count($items) > 0)
@@ -3042,7 +3042,7 @@ class contact_form extends Module {
 			$selected = fix_chars($tag_params['selected']);
 
 		// get items from the database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'values_list_item.xml');
@@ -3128,10 +3128,10 @@ class contact_form extends Module {
 		$template->setTagChildren('cms:fieldsets', $children);
 
 		// get form from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		if (is_object($item)) {
-			$fields = $field_manager->getItems(
+			$fields = $field_manager->get_items(
 				array('id'),
 				array(
 					'form'	=> $item->id,
@@ -3179,7 +3179,7 @@ class contact_form extends Module {
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -3274,15 +3274,15 @@ class contact_form extends Module {
 		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submission
-		$item = $submission_manager->getSingleItem(
-				$submission_manager->getFieldNames(),
+		$item = $submission_manager->get_single_item(
+				$submission_manager->get_field_names(),
 				$conditions
 			);
 
 		// load field definitions
 		if ($conditions['form'] != -1) {
-			$field_definitions = $field_manager->getItems(
-				$field_manager->getFieldNames(),
+			$field_definitions = $field_manager->get_items(
+				$field_manager->get_field_names(),
 				array('form' => $conditions['form'])
 			);
 
@@ -3294,8 +3294,8 @@ class contact_form extends Module {
 		// parse template
 		if (is_object($item)) {
 			// get submitted fields
-			$submitted_data = $submission_field_manager->getItems(
-					$submission_field_manager->getFieldNames(),
+			$submitted_data = $submission_field_manager->get_items(
+					$submission_field_manager->get_field_names(),
 					array('submission' => $item->id)
 				);
 
@@ -3356,15 +3356,15 @@ class contact_form extends Module {
 		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submissions
-		$items = $submission_manager->getItems(
-				$submission_manager->getFieldNames(),
+		$items = $submission_manager->get_items(
+				$submission_manager->get_field_names(),
 				$conditions
 			);
 
 		// load field definitions
 		if ($conditions['form'] != -1) {
-			$field_definitions = $field_manager->getItems(
-				$field_manager->getFieldNames(),
+			$field_definitions = $field_manager->get_items(
+				$field_manager->get_field_names(),
 				array('form' => $conditions['form'])
 			);
 
@@ -3377,8 +3377,8 @@ class contact_form extends Module {
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				// get submitted fields
-				$submitted_data = $submission_field_manager->getItems(
-						$submission_field_manager->getFieldNames(),
+				$submitted_data = $submission_field_manager->get_items(
+						$submission_field_manager->get_field_names(),
 						array('submission' => $item->id)
 					);
 
@@ -3458,8 +3458,8 @@ class contact_form extends Module {
 		}
 
 		// get submission for specified id
-		$submission = $submission_manager->getSingleItem(
-				$submission_manager->getFieldNames(),
+		$submission = $submission_manager->get_single_item(
+				$submission_manager->get_field_names(),
 				array('id' => $submission_id)
 			);
 
@@ -3469,8 +3469,8 @@ class contact_form extends Module {
 		}
 
 		// get form fields
-		$raw_fields = $form_field_manager->getItems(
-				$form_field_manager->getFieldNames(),
+		$raw_fields = $form_field_manager->get_items(
+				$form_field_manager->get_field_names(),
 				array('form' => $submission->form)
 			);
 
@@ -3479,8 +3479,8 @@ class contact_form extends Module {
 			$fields[$field->id] = $field;
 
 		// load submission data
-		$items = $submission_field_manager->getItems(
-				$submission_field_manager->getFieldNames(),
+		$items = $submission_field_manager->get_items(
+				$submission_field_manager->get_field_names(),
 				array('submission' => $submission->id)
 			);
 
@@ -3531,7 +3531,7 @@ class contact_form extends Module {
 		if (isset($tag_params['form'])) {
 			$form = fix_id($tag_params['form']);
 			$manager = ContactForm_MailerManager::getInstance();
-			$associations = $manager->getItems(array('mailer'), array('form' => $form));
+			$associations = $manager->get_items(array('mailer'), array('form' => $form));
 
 			if (count($associations) > 0)
 				foreach ($associations as $association)
@@ -3573,7 +3573,7 @@ class contact_form extends Module {
 			return;
 
 		// get list of domains
-		$domain_list = $manager->getItems($manager->getFieldNames(), array('form' => $form_id));
+		$domain_list = $manager->get_items($manager->get_field_names(), array('form' => $form_id));
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'domain_list_item.xml');
@@ -3617,7 +3617,7 @@ class contact_form extends Module {
 			$conditions['form'] = fix_id($tag_params['form']);
 
 		// get fieldset from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
@@ -3672,7 +3672,7 @@ class contact_form extends Module {
 			}
 
 		// get fieldset from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
@@ -3759,7 +3759,7 @@ class contact_form extends Module {
 		// add default mailer if no others were provided
 		if (!is_null($form)) {
 			$manager = ContactForm_MailerManager::getInstance();
-			$association_list = $manager->getItems(array('mailer'), array('form' => $form));
+			$association_list = $manager->get_items(array('mailer'), array('form' => $form));
 
 			if (count($association_list) > 0)
 				foreach ($association_list as $association)
@@ -3863,7 +3863,7 @@ class contact_form extends Module {
 		$manager = ContactForm_TemplateManager::getInstance();
 
 		// get template
-		$template = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $name));
+		$template = $manager->get_single_item($manager->get_field_names(), array('text_id' => $name));
 
 		if (is_object($template))
 			$result = array(

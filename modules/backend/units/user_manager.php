@@ -135,7 +135,7 @@ class Backend_UserManager {
 		$id = fix_id($_REQUEST['id']);
 		$manager = UserManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('users_change.xml', $this->parent->path.'templates/');
@@ -222,12 +222,12 @@ class Backend_UserManager {
 			$window = 'system_users_change';
 
 			// get existing user
-			$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$user = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			if (($_SESSION['level'] == 10) || (is_object($user) && $user->level < $_SESSION['level'])) {
 				// save changed user data
 				$message = $this->parent->getLanguageConstant('message_users_data_saved');
-				$manager->updateData($data, array('id' => $id));
+				$manager->update_items($data, array('id' => $id));
 
 				if ($update_password)
 					$manager->change_password($data['username'], $password);
@@ -246,10 +246,10 @@ class Backend_UserManager {
 			if ($level_is_ok) {
 				// save new user data
 				$message = $this->parent->getLanguageConstant('message_users_data_saved');
-				$manager->insertData($data);
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array('id' => $manager->getInsertedID())
+				$manager->insert_item($data);
+				$user = $manager->get_single_item(
+										$manager->get_field_names(),
+										array('id' => $manager->get_inserted_id())
 									);
 
 				if ($update_password)
@@ -325,8 +325,8 @@ class Backend_UserManager {
 		}
 
 		// check for duplicates
-		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
-		$duplicate_emails = $manager->getItems(array('id'), array('email' => $data['email']));
+		$duplicate_users = $manager->get_items(array('id'), array('username' => $data['username']));
+		$duplicate_emails = $manager->get_items(array('id'), array('email' => $data['email']));
 
 		if (ModuleHandler::is_loaded('captcha') && isset($source['captcha'])) {
 			// validate submission through captcha
@@ -356,8 +356,8 @@ class Backend_UserManager {
 
 			} else {
 				// insert data
-				$manager->insertData($data);
-				$user_id = $manager->getInsertedID();
+				$manager->insert_item($data);
+				$user_id = $manager->get_inserted_id();
 				$manager->change_password($data['username'], $source['password']);
 
 				// log user in
@@ -370,8 +370,8 @@ class Backend_UserManager {
 				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
 
 				// trigger event
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
+				$user = $manager->get_single_item(
+										$manager->get_field_names(),
 										array('id' => $user_id)
 									);
 				Events::trigger('backend', 'user-create', $user);
@@ -422,8 +422,8 @@ class Backend_UserManager {
 		$contact_form = contact_form::getInstance();
 
 		// get user for specified id
-		$user = $user_manager->getSingleItem(
-					$user_manager->getFieldNames(),
+		$user = $user_manager->get_single_item(
+					$user_manager->get_field_names(),
 					array('id' => $user_id)
 				);
 
@@ -441,7 +441,7 @@ class Backend_UserManager {
 					'user'	=> $user_id,
 					'code'	=> $verification_code
 				);
-		$verification_manager->insertData($verification_data);
+		$verification_manager->insert_item($verification_data);
 
 		// prepare email
 		$fields = array(
@@ -514,8 +514,8 @@ class Backend_UserManager {
 		}
 
 		// get user from the database
-		$user = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$user = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => $user_id)
 							);
 
@@ -532,8 +532,8 @@ class Backend_UserManager {
 				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
 
 				// trigger error
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
+				$user = $manager->get_single_item(
+										$manager->get_field_names(),
 										array('id' => $user->id)
 									);
 				Events::trigger('backend', 'user-password-change', $user);
@@ -639,7 +639,7 @@ class Backend_UserManager {
 		if (!is_null($email))
 			$conditions['email'] = $email;
 
-		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$user = $manager->get_single_item($manager->get_field_names(), $conditions);
 		$captcha_valid = $captcha_module->isCaptchaValid($captcha);
 
 		// send email
@@ -651,7 +651,7 @@ class Backend_UserManager {
 						'user'	=> $user->id,
 						'code'	=> $code
 					);
-			$verification_manager->insertData($verification_data);
+			$verification_manager->insert_item($verification_data);
 
 			// prepare email
 			$fields = array(
@@ -768,12 +768,12 @@ class Backend_UserManager {
 		if (!is_null($email))
 			$conditions['email'] = $email;
 
-		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$user = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// store new password
 		if (is_object($user)) {
-			$verification = $verification_manager->getSingleItem(
-													$verification_manager->getFieldNames(),
+			$verification = $verification_manager->get_single_item(
+													$verification_manager->get_field_names(),
 													array(
 														'user'	=> $user->id,
 														'code'	=> $code
@@ -781,7 +781,7 @@ class Backend_UserManager {
 
 			if (is_object($verification)) {
 				// remove verification code from the database
-				$verification_manager->deleteData(array('user' => $verification->user));
+				$verification_manager->delete_items(array('user' => $verification->user));
 
 				// store new password and mark account as verified
 				$manager->verify_user($user->username);
@@ -827,7 +827,7 @@ class Backend_UserManager {
 		$id = fix_id($_REQUEST['id']);
 		$manager = UserManager::getInstance();
 
-		$item = $manager->getSingleItem(array('fullname'), array('id' => $id));
+		$item = $manager->get_single_item(array('fullname'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->parent->path.'templates/');
 		$template->setMappedModule($this->parent->name);
@@ -863,11 +863,11 @@ class Backend_UserManager {
 		$manager = UserManager::getInstance();
 
 		// trigger event
-		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$user = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		Events::trigger('backend', 'user-delete', $user);
 
 		// remove user from database
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
 		$template->setMappedModule($this->parent->name);
@@ -912,7 +912,7 @@ class Backend_UserManager {
 		$user_id = fix_id($_SESSION['uid']);
 
 		// get existing user entry
-		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user_id));
+		$user = $manager->get_single_item($manager->get_field_names(), array('id' => $user_id));
 
 		if (is_object($user)) {
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
@@ -926,7 +926,7 @@ class Backend_UserManager {
 				$message = $this->parent->getLanguageConstant('message_password_changed');
 
 				// trigger event
-				$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user->id));
+				$user = $manager->get_single_item($manager->get_field_names(), array('id' => $user->id));
 				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
@@ -1042,7 +1042,7 @@ class Backend_UserManager {
 		$template->setMappedModule($this->parent->name);
 
 		// get users from database
-		$users = $admin_manager->getItems($admin_manager->getFieldNames(), $conditions);
+		$users = $admin_manager->get_items($admin_manager->get_field_names(), $conditions);
 
 		// draw users
 		if (count($users) > 0)
@@ -1166,11 +1166,11 @@ class Backend_UserManager {
 			return;
 
 		// get user from database
-		$user = $manager->getSingleItem($manager->getFieldNames(), array('username' => $username));
+		$user = $manager->get_single_item($manager->get_field_names(), array('username' => $username));
 
 		if (is_object($user))
-			$verification = $verification_manager->getSingleItem(
-									$verification_manager->getFieldNames(),
+			$verification = $verification_manager->get_single_item(
+									$verification_manager->get_field_names(),
 									array(
 										'user'	=> $user->id,
 										'code'	=> $code
@@ -1179,7 +1179,7 @@ class Backend_UserManager {
 		// data matches, mark account as verified
 		if (is_object($verification)) {
 			$manager->verify_user($user->username);
-			$verification_manager->deleteData(array('user' => $user->id));
+			$verification_manager->delete_items(array('user' => $user->id));
 
 			// automatically log user in
 			$manager->login_user($user->username);

@@ -18,9 +18,9 @@ class VoteManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('article_votes');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('article', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('address', 'varchar');
+		$this->add_property('article', 'int');
 	}
 
 	/**

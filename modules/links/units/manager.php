@@ -21,17 +21,17 @@ class Manager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('links');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('url', 'varchar');
-		$this->addProperty('external', 'boolean');
-		$this->addProperty('sponsored', 'boolean');
-		$this->addProperty('display_limit', 'integer');
-		$this->addProperty('sponsored_clicks', 'integer');
-		$this->addProperty('total_clicks', 'integer');
-		$this->addProperty('image', 'integer');
+		$this->add_property('id', 'int');
+		$this->add_property('text', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('url', 'varchar');
+		$this->add_property('external', 'boolean');
+		$this->add_property('sponsored', 'boolean');
+		$this->add_property('display_limit', 'integer');
+		$this->add_property('sponsored_clicks', 'integer');
+		$this->add_property('total_clicks', 'integer');
+		$this->add_property('image', 'integer');
 	}
 
 	/**

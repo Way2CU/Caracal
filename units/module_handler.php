@@ -36,8 +36,8 @@ class ModuleHandler {
 			$manager = ModuleManager::getInstance();
 
 			// get priority module list
-			$preload_raw = $manager->getItems(
-									$manager->getFieldNames(),
+			$preload_raw = $manager->get_items(
+									$manager->get_field_names(),
 									array(
 										'active' 	=> 1,
 										'preload'	=> 1
@@ -46,8 +46,8 @@ class ModuleHandler {
 								);
 
 			// get normal module list
-			$normal_raw = $manager->getItems(
-									$manager->getFieldNames(),
+			$normal_raw = $manager->get_items(
+									$manager->get_field_names(),
 									array(
 										'active' 	=> 1,
 										'preload'	=> 0

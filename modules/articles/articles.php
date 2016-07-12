@@ -344,7 +344,7 @@ class articles extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Modules\Articles\Manager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (!is_object($item))
 			return;
@@ -400,10 +400,10 @@ class articles extends Module {
 
 		if (is_null($id)) {
 			$window = 'articles_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'articles_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -429,7 +429,7 @@ class articles extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Modules\Articles\Manager::getInstance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -464,7 +464,7 @@ class articles extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Modules\Articles\Manager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -528,7 +528,7 @@ class articles extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Modules\Articles\GroupManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('group_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -556,7 +556,7 @@ class articles extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Modules\Articles\GroupManager::getInstance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -592,8 +592,8 @@ class articles extends Module {
 		$manager = Modules\Articles\GroupManager::getInstance();
 		$article_manager = Modules\Articles\Manager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$article_manager->updateData(array('group' => null), array('group' => $id));
+		$manager->delete_items(array('id' => $id));
+		$article_manager->update_items(array('group' => null), array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -630,10 +630,10 @@ class articles extends Module {
 
 		if (is_null($id)) {
 			$window = 'article_groups_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'article_groups_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -690,7 +690,7 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items($group_manager->get_field_names(), array('text_id' => $group_names));
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -703,7 +703,7 @@ class articles extends Module {
 		}
 
 		// get single item from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'article.xml');
@@ -726,7 +726,7 @@ class articles extends Module {
 						'time'			=> $time,
 						'title'			=> $item->title,
 						'content'		=> $item->content,
-						'author'		=> $admin_manager->getItemValue(
+						'author'		=> $admin_manager->get_item_value(
 																'fullname',
 																array('id' => $item->author)
 															),
@@ -797,7 +797,7 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items($group_manager->get_field_names(), array('text_id' => $group_names));
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -816,7 +816,7 @@ class articles extends Module {
 				);
 
 		// get items from manager
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
@@ -840,7 +840,7 @@ class articles extends Module {
 							'time'			=> $time,
 							'title'			=> $item->title,
 							'content'		=> $item->content,
-							'author'		=> $admin_manager->getItemValue(
+							'author'		=> $admin_manager->get_item_value(
 																'fullname',
 																array('id' => $item->author)
 															),
@@ -904,7 +904,7 @@ class articles extends Module {
 			$type = isset($tag_params['type']) ? fix_id($tag_params['type']) : ImageType::Stars;
 			$manager = Modules\Articles\Manager::getInstance();
 
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			$template = new TemplateHandler('rating_image.xml', $this->path.'templates/');
 			$template->setMappedModule($this->name);
@@ -933,7 +933,7 @@ class articles extends Module {
 			$type = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : ImageType::Stars;
 			$manager = Modules\Articles\Manager::getInstance();
 
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			switch ($type) {
 				case ImageType::Stars:
@@ -1001,8 +1001,8 @@ class articles extends Module {
 		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
 
 		if (!is_null($id))
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id)); else
+			$item = $manager->get_single_item($manager->get_field_names(), array('text_id' => $text_id));
 
 		if (is_object($item)) {
 			$params = array(
@@ -1031,7 +1031,7 @@ class articles extends Module {
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
@@ -1112,7 +1112,7 @@ class articles extends Module {
 				);
 
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$rating_image_url = url_Make(
 					'get_rating_image',
@@ -1134,7 +1134,7 @@ class articles extends Module {
 								'time'			=> $time,
 								'title'			=> $all_languages ? $item->title : $item->title[$language],
 								'content'		=> $all_languages ? $item->content : Markdown::parse($item->content[$language]),
-								'author'		=> $admin_manager->getItemValue(
+								'author'		=> $admin_manager->get_item_value(
 																	'fullname',
 																	array('id' => $item->author)
 																),
@@ -1202,7 +1202,7 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items($group_manager->get_field_names(), array('text_id' => $group_names));
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -1218,7 +1218,7 @@ class articles extends Module {
 		$rating_image_type = isset($_REQUEST['rating_image_type']) ? $_REQUEST['rating_image_type'] : ImageType::Stars;
 
 		// get items from manager
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,
@@ -1245,7 +1245,7 @@ class articles extends Module {
 									'date'			=> $date,
 									'time'			=> $time,
 									'title'			=> $all_languages ? $item->title : $item->title[$language],
-									'author'		=> $admin_manager->getItemValue(
+									'author'		=> $admin_manager->get_item_value(
 																		'fullname',
 																		array('id' => $item->author)
 																	),
@@ -1276,7 +1276,7 @@ class articles extends Module {
 		$manager = Modules\Articles\Manager::getInstance();
 		$vote_manager = Modules\Articles\VoteManager::getInstance();
 
-		$vote = $vote_manager->getSingleItem(
+		$vote = $vote_manager->get_single_item(
 									array('id'),
 									array(
 										'article'	=> $id,
@@ -1296,10 +1296,10 @@ class articles extends Module {
 
 		} else {
 			// stupid but we need to make sure article exists
-			$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
+			$article = $manager->get_single_item(array('id', 'votes_up', 'votes_down'), array('id' => $id));
 
 			if (is_object($article)) {
-				$vote_manager->insertData(array(
+				$vote_manager->insert_item(array(
 										'article'	=> $article->id,
 										'address'	=> $_SERVER['REMOTE_ADDR']
 									));
@@ -1316,10 +1316,10 @@ class articles extends Module {
 					if ($value == 1)
 						$data['votes_up']++;
 
-					$manager->updateData($data, array('id' => $article->id));
+					$manager->update_items($data, array('id' => $article->id));
 				}
 
-				$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
+				$article = $manager->get_single_item(array('id', 'votes_up', 'votes_down'), array('id' => $id));
 				$result['rating'] = $this->getArticleRating($article, 10);
 			} else {
 				$result['error'] = true;

@@ -96,12 +96,12 @@ class ShopTransactionsHandler {
 		$user_manager = UserManager::getInstance();
 
 		$id = fix_id($_REQUEST['id']);
-		$transaction = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => $id)
 							);
-		$address = $address_manager->getSingleItem(
-								$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+								$address_manager->get_field_names(),
 								array('id' => $transaction->address)
 							);
 
@@ -152,8 +152,8 @@ class ShopTransactionsHandler {
 			);
 
 		// regular or guest buyer
-		$buyer = $buyer_manager->getSingleItem(
-								$buyer_manager->getFieldNames(),
+		$buyer = $buyer_manager->get_single_item(
+								$buyer_manager->get_field_names(),
 								array('id' => $transaction->buyer)
 							);
 
@@ -184,12 +184,12 @@ class ShopTransactionsHandler {
 		$item_manager = ShopTransactionItemsManager::getInstance();
 
 		$id = fix_id($_REQUEST['id']);
-		$transaction = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => $id)
 							);
-		$address = $address_manager->getSingleItem(
-								$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+								$address_manager->get_field_names(),
 								array('id' => $transaction->address)
 							);
 
@@ -232,8 +232,8 @@ class ShopTransactionsHandler {
 			);
 
 		// regular or guest buyer
-		$buyer = $buyer_manager->getSingleItem(
-								$buyer_manager->getFieldNames(),
+		$buyer = $buyer_manager->get_single_item(
+								$buyer_manager->get_field_names(),
 								array('id' => $transaction->buyer)
 							);
 
@@ -243,7 +243,7 @@ class ShopTransactionsHandler {
 
 		// calculate total count
 		$total_count = 0;
-		$item_list = $item_manager->getItems(array('amount'), array('transaction' => $transaction->id));
+		$item_list = $item_manager->get_items(array('amount'), array('transaction' => $transaction->id));
 
 		if (count($item_list) > 0)
 			foreach ($item_list as $item)
@@ -292,7 +292,7 @@ class ShopTransactionsHandler {
 
 		if (isset($tag_params['system_user']) && $_SESSION['logged']) {
 			$user_id = fix_id($tag_params['system_user']);
-			$buyer = $buyers_manager->getSingleItem(array('id'), array('system_user' => $user_id));
+			$buyer = $buyers_manager->get_single_item(array('id'), array('system_user' => $user_id));
 
 			if (is_object($buyer))
 				$conditions['buyer'] = $buyer->id; else
@@ -309,14 +309,14 @@ class ShopTransactionsHandler {
 
 		// get all buyers
 		$buyer_names = array();
-		$buyers = $buyers_manager->getItems(array('id', 'first_name', 'last_name'), array());
+		$buyers = $buyers_manager->get_items(array('id', 'first_name', 'last_name'), array());
 
 		if (count($buyers) > 0)
 			foreach ($buyers as $buyer)
 				$buyer_names[$buyer->id] = $buyer->first_name.' '.$buyer->last_name;
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -395,12 +395,12 @@ class ShopTransactionsHandler {
 		if (!isset($conditions['transaction']))
 			return;
 
-		$currency_id = $transaction_manager->getItemValue('currency', array('id' => $conditions['transaction']));
-		$currency = $currency_manager->getItemValue('currency', array('id' => $currency_id));
+		$currency_id = $transaction_manager->get_item_value('currency', array('id' => $conditions['transaction']));
+		$currency = $currency_manager->get_item_value('currency', array('id' => $currency_id));
 
 		// get items from database
 		$items = array();
-		$raw_items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$raw_items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
@@ -437,7 +437,7 @@ class ShopTransactionsHandler {
 
 		// get the rest of item details from database
 		$id_list = array_keys($items);
-		$raw_items = $item_manager->getItems($item_manager->getFieldNames(), array('id' => $id_list));
+		$raw_items = $item_manager->get_items($item_manager->get_field_names(), array('id' => $id_list));
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
@@ -497,7 +497,7 @@ class ShopTransactionsHandler {
 				$conditions['id'] = fix_id($tag_params['transaction']); else
 				$conditions['uid'] = escape_chars($tag_params['transaction']);
 
-			$transaction = $manager->getSingleItem(array('type', 'status'), $conditions);
+			$transaction = $manager->get_single_item(array('type', 'status'), $conditions);
 		}
 
 		// prepare available statuses

@@ -9,12 +9,12 @@ class ContactForm_TemplateManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_templates');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('subject', 'ml_varchar');
-		$this->addProperty('plain', 'ml_text');
-		$this->addProperty('html', 'ml_text');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('subject', 'ml_varchar');
+		$this->add_property('plain', 'ml_text');
+		$this->add_property('html', 'ml_text');
 	}
 
 	/**

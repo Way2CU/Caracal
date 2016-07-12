@@ -253,7 +253,7 @@ class downloads extends Module {
 					'visible'		=> isset($_REQUEST['visible']) ? 1 : 0
 				);
 
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -277,7 +277,7 @@ class downloads extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = DownloadsManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -310,7 +310,7 @@ class downloads extends Module {
 				'visible'		=> fix_id($_REQUEST['visible'])
 			);
 
-		$manager->updateData($data, array('id' => $id));
+		$manager->update_items($data, array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -335,7 +335,7 @@ class downloads extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = DownloadsManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -371,7 +371,7 @@ class downloads extends Module {
 
 		$manager = DownloadsManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -395,10 +395,10 @@ class downloads extends Module {
 		$manager = DownloadsManager::getInstance();
 
 		if (!is_null($id)) {
-			$item = $manager->getSingleItem(array('count', 'filename'), array('id' => $id));
+			$item = $manager->get_single_item(array('count', 'filename'), array('id' => $id));
 
 			// update count
-			$manager->updateData(array('count' => $item->count + 1), array('id' => $id));
+			$manager->update_items(array('count' => $item->count + 1), array('id' => $id));
 
 			// redirect
 			$url = $this->_getDownloadURL($item);
@@ -429,7 +429,7 @@ class downloads extends Module {
 			$order_asc = false;
 		}
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		if (is_object($item)) {
 			$params = array(
@@ -464,7 +464,7 @@ class downloads extends Module {
 			$conditions['visible'] = 1;
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
@@ -538,7 +538,7 @@ class downloads extends Module {
 			$manager = DownloadsManager::getInstance();
 			$conditions = array();
 
-			$items = $manager->getItems($manager->getFieldNames(), $conditions);
+			$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 			if (count($items) > 0)
 				foreach($items as $item) {
@@ -632,14 +632,14 @@ class DownloadsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('downloads');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('count', 'int');
-		$this->addProperty('filename', 'varchar');
-		$this->addProperty('size', 'int');
-		$this->addProperty('visible', 'boolean');
-		$this->addProperty('timestamp', 'timestamp');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('count', 'int');
+		$this->add_property('filename', 'varchar');
+		$this->add_property('size', 'int');
+		$this->add_property('visible', 'boolean');
+		$this->add_property('timestamp', 'timestamp');
 	}
 
 	/**
@@ -648,8 +648,8 @@ class DownloadsManager extends ItemManager {
 	 * @param array $conditionals
 	 * @param integer $limit
 	 */
-	function deleteData($conditionals, $limit=null) {
-		$items = $this->getItems(array('filename'), $conditionals);
+	function delete_items($conditionals, $limit=null) {
+		$items = $this->get_items(array('filename'), $conditionals);
 
 		$path = downloads::getInstance()->file_path;
 
@@ -657,7 +657,7 @@ class DownloadsManager extends ItemManager {
 			foreach ($items as $item)
 				unlink($path.$item->filename);
 
-		parent::deleteData($conditionals, $limit);
+		parent::delete_items($conditionals, $limit);
 	}
 
 	/**

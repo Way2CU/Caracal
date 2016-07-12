@@ -15,11 +15,11 @@ class ShopDiscountManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_discounts');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('type', 'int');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('percent', 'decimal');
+		$this->add_property('id', 'int');
+		$this->add_property('type', 'int');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('percent', 'decimal');
 	}
 
 	/**
@@ -42,9 +42,9 @@ class ShopDiscountItemsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_discounts');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('discount', 'int');
-		$this->addProperty('item', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('discount', 'int');
+		$this->add_property('item', 'int');
 	}
 
 	/**

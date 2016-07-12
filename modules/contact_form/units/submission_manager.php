@@ -9,10 +9,10 @@ class ContactForm_SubmissionManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_submissions');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('form', 'int');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('address', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('form', 'int');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('address', 'varchar');
 	}
 
 	/**

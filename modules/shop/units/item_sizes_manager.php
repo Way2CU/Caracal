@@ -9,8 +9,8 @@ class ShopItemSizesManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_item_sizes');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'varchar');
 	}
 
 	/**

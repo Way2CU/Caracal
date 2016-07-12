@@ -122,7 +122,7 @@ class ShopManufacturerHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopManufacturerManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (!is_object($item))
 			return;
@@ -182,7 +182,7 @@ class ShopManufacturerHandler {
 								'protected'		=> 1
 							);
 
-					$gallery_manager->updateData($image_data, array('id' => $result['id']));
+					$gallery_manager->update_items($image_data, array('id' => $result['id']));
 
 					$data['logo'] = $result['id'];
 					$gallery_addon = ';'.window_ReloadContent('gallery_images');
@@ -190,7 +190,7 @@ class ShopManufacturerHandler {
 			}
 
 			// insert new manufacturer data
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_manufacturer_add';
 
 		} else {
@@ -198,7 +198,7 @@ class ShopManufacturerHandler {
 			$data['logo'] = isset($_REQUEST['logo']) && !empty($_REQUEST['logo']) ? fix_id($_REQUEST['logo']) : 0;
 
 			// update existing data
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_manufacturer_change';
 		}
 
@@ -226,7 +226,7 @@ class ShopManufacturerHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopManufacturerManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -263,8 +263,8 @@ class ShopManufacturerHandler {
 		$manager = ShopManufacturerManager::getInstance();
 		$item_manager = ShopItemManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$item_manager->updateData(array('manufacturer' => 0), array('manufacturer' => $id));
+		$manager->delete_items(array('id' => $id));
+		$item_manager->update_items(array('manufacturer' => 0), array('manufacturer' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -295,7 +295,7 @@ class ShopManufacturerHandler {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		// get single item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
@@ -340,7 +340,7 @@ class ShopManufacturerHandler {
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
@@ -350,8 +350,8 @@ class ShopManufacturerHandler {
 				$image = '';
 
 				if ($use_images && !empty($item->logo)) {
-					$image_item = $gallery_manager->getSingleItem(
-											$gallery_manager->getFieldNames(),
+					$image_item = $gallery_manager->get_single_item(
+											$gallery_manager->get_field_names(),
 											array('id' => $item->logo)
 										);
 

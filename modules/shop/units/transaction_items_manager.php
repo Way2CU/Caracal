@@ -15,13 +15,13 @@ class ShopTransactionItemsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_transaction_items');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('transaction', 'int');
-		$this->addProperty('item', 'int');
-		$this->addProperty('price', 'decimal');
-		$this->addProperty('tax', 'decimal');
-		$this->addProperty('amount', 'int');
-		$this->addProperty('description', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('transaction', 'int');
+		$this->add_property('item', 'int');
+		$this->add_property('price', 'decimal');
+		$this->add_property('tax', 'decimal');
+		$this->add_property('amount', 'int');
+		$this->add_property('description', 'varchar');
 	}
 
 	/**

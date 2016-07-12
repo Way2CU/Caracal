@@ -340,8 +340,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// get token
 		$token_manager = Modules\Shop\TokenManager::getInstance();
-		$token = $token_manager->getSingleItem(
-			$token_manager->getFieldNames(),
+		$token = $token_manager->get_single_item(
+			$token_manager->get_field_names(),
 			array('id' => $transaction->payment_token)
 		);
 
@@ -356,8 +356,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// prepare currency
 		$currency_manager = ShopCurrenciesManager::getInstance();
-		$currency = $currency_manager->getSingleItem(
-			$currency_manager->getFieldNames(),
+		$currency = $currency_manager->get_single_item(
+			$currency_manager->get_field_names(),
 			array('id' => $transaction->currency)
 		);
 

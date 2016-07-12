@@ -101,7 +101,7 @@ class SomeManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('table_name');
 
-		$this->addProperty('id', 'int');
+		$this->add_property('id', 'int');
 	}
 
 	/**

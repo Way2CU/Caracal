@@ -319,7 +319,7 @@ class youtube extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
-		$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$video = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('video_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -356,8 +356,8 @@ class youtube extends Module {
 				);
 
 		if (is_null($id))
-			$manager->insertData($data); else
-			$manager->updateData($data, array('id' => $id));
+			$manager->insert_item($data); else
+			$manager->update_items($data, array('id' => $id));
 
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -384,7 +384,7 @@ class youtube extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
-		$video = $manager->getSingleItem(array('title'), array('id' => $id));
+		$video = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -419,7 +419,7 @@ class youtube extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -443,7 +443,7 @@ class youtube extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_VideoManager::getInstance();
 
-		$video_id = $manager->getItemValue('id', array('id' => $id));
+		$video_id = $manager->get_item_value('id', array('id' => $id));
 
 		if ($video_id) {
 			$template = new TemplateHandler('video_preview.xml', $this->path.'templates/');
@@ -525,7 +525,7 @@ class youtube extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_GroupManager::getInstance();
 
-		$group = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$group = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('group_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -560,7 +560,7 @@ class youtube extends Module {
 
 		if (is_null($id)) {
 			// store new record
-			$manager->insertData(array(
+			$manager->insert_item(array(
 							'text_id'		=> $text_id,
 							'name'			=> $name,
 							'description'	=> $description,
@@ -571,7 +571,7 @@ class youtube extends Module {
 
 		} else {
 			// change existing record
-			$manager->updateData(
+			$manager->update_items(
 							array(
 								'text_id'		=> $text_id,
 								'name'			=> $name,
@@ -610,7 +610,7 @@ class youtube extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = YouTube_GroupManager::getInstance();
 
-		$group = $manager->getSingleItem(array('name'), array('id' => $id));
+		$group = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -646,8 +646,8 @@ class youtube extends Module {
 		$manager = YouTube_GroupManager::getInstance();
 		$membership_manager = YouTube_MembershipManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('group' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -700,11 +700,11 @@ class youtube extends Module {
 		}
 
 		// remove old memberships
-		$membership_manager->deleteData(array('group' => $group));
+		$membership_manager->delete_items(array('group' => $group));
 
 		// save new memberships
 		foreach ($video_ids as $id)
-			$membership_manager->insertData(array(
+			$membership_manager->insert_item(array(
 											'group'	=> $group,
 											'video'	=> $id
 										));
@@ -738,24 +738,24 @@ class youtube extends Module {
 
 		if (isset($tag_params['id'])) {
 			// video is was specified
-			$video = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$video = $manager->get_single_item(
+									$manager->get_field_names(),
 									array(
 										'id' => fix_id($tag_params['id'])
 									));
 
 		} else if (isset($tag_params['text_id'])) {
 			// text id was specified
-			$video = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$video = $manager->get_single_item(
+									$manager->get_field_names(),
 									array(
 										'text_id' => fix_chars($tag_params['text_id'])
 									));
 
 		} else if (isset($tag_params['random'])) {
 			// get random video
-			$video = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$video = $manager->get_single_item(
+									$manager->get_field_names(),
 									array(),
 									array('RAND()')
 								);
@@ -853,7 +853,7 @@ class youtube extends Module {
 				// group text id was specified
 				$group_manager = YouTube_GroupManager::getInstance();
 
-				$group_item = $group_manager->getSingleItem(
+				$group_item = $group_manager->get_single_item(
 												array('id'),
 												array(
 													'text_id' => fix_chars($tag_params['group_text_id'])
@@ -869,7 +869,7 @@ class youtube extends Module {
 			}
 
 
-			$membership_items = $membership_manager->getItems(
+			$membership_items = $membership_manager->get_items(
 											array('video'),
 											array('group' => $group_id)
 										);
@@ -894,8 +894,8 @@ class youtube extends Module {
 		}
 
 		// get items from database
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc,
@@ -989,12 +989,12 @@ class youtube extends Module {
 		if (isset($tag_params['id'])) {
 			// get video based on id
 			$video_id = fix_id($tag_params['id']);
-			$video = $manager->getSingleItem($manager->getFieldNames(), array('id' => $video_id));
+			$video = $manager->get_single_item($manager->get_field_names(), array('id' => $video_id));
 
 		} else if (isset($tag_params['text_id'])) {
 			// get video based on textual id
 			$video_id = fix_chars($tag_params['text_id']);
-			$video = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $video_id));
+			$video = $manager->get_single_item($manager->get_field_names(), array('text_id' => $video_id));
 		}
 
 		if (isset($tag_params['image_number']))
@@ -1062,7 +1062,7 @@ class youtube extends Module {
 			$order_asc = $tag_params['order_asc'] == 'yes';
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template handler
 		if (isset($tag_params['template'])) {
@@ -1153,7 +1153,7 @@ class youtube extends Module {
 		$manager = YouTube_VideoManager::getInstance();
 		$membership_manager = YouTube_MembershipManager::getInstance();
 
-		$memberships = $membership_manager->getItems(
+		$memberships = $membership_manager->get_items(
 												array('video'),
 												array('group' => $group)
 											);
@@ -1163,7 +1163,7 @@ class youtube extends Module {
 			foreach($memberships as $membership)
 				$video_ids[] = $membership->video;
 
-		$items = $manager->getItems($manager->getFieldNames(), array(), array('title_'.$language));
+		$items = $manager->get_items($manager->get_field_names(), array(), array('title_'.$language));
 
 		$template = new TemplateHandler('group_videos_item.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1195,7 +1195,7 @@ class youtube extends Module {
 
 		$manager = YouTube_VideoManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$result = array(
 					'error'			=> false,
@@ -1227,8 +1227,8 @@ class youtube extends Module {
 
 		$manager = YouTube_VideoManager::getInstance();
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								array(),
 								$order_by,
 								$order_asc,

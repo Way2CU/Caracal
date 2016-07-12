@@ -121,7 +121,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 		$manager = Stripe_PlansManager::getInstance();
 
 		// get recurring payment plans from database
-		$items = $manager->getItems($manager->getFieldNames(), array());
+		$items = $manager->get_items($manager->get_field_names(), array());
 
 		// prepare result
 		if (count($items) > 0)

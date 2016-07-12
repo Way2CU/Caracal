@@ -545,7 +545,7 @@ class gallery extends Module {
 			$result = $this->createImage('image');
 
 			if (!$result['error'])
-				$manager->updateData(
+				$manager->update_items(
 						array('group'	=> $group),
 						array('id'		=> $result['id'])
 					);
@@ -569,7 +569,7 @@ class gallery extends Module {
 							'slideshow'		=> $slideshow,
 						);
 
-				$manager->updateData($data, array('id' => $result['id']));
+				$manager->update_items($data, array('id' => $result['id']));
 			}
 		}
 
@@ -594,7 +594,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('images_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -643,7 +643,7 @@ class gallery extends Module {
 					'slideshow'		=> $slideshow
 				);
 
-		$manager->updateData($data, array('id' => $id));
+		$manager->update_items($data, array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -668,7 +668,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::getInstance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -704,7 +704,7 @@ class gallery extends Module {
 
 		$manager = GalleryManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -768,7 +768,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryGroupManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('groups_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -807,11 +807,11 @@ class gallery extends Module {
 		$manager = GalleryGroupManager::getInstance();
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_groups_change';
 			$message = $this->getLanguageConstant('message_group_changed');
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'gallery_groups_create';
 			$message = $this->getLanguageConstant('message_group_created');
 		}
@@ -839,7 +839,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryGroupManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -875,8 +875,8 @@ class gallery extends Module {
 		$manager = GalleryManager::getInstance();
 		$group_manager = GalleryGroupManager::getInstance();
 
-		$manager->deleteData(array('group' => $id));
-		$group_manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('group' => $id));
+		$group_manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -940,7 +940,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('containers_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -974,11 +974,11 @@ class gallery extends Module {
 		$manager = GalleryContainerManager::getInstance();
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_containers_change';
 			$message = $this->getLanguageConstant('message_container_changed');
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'gallery_containers_create';
 			$message = $this->getLanguageConstant('message_container_created');
 		}
@@ -1006,7 +1006,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1042,8 +1042,8 @@ class gallery extends Module {
 		$manager = GalleryContainerManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('container' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('container' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1095,11 +1095,11 @@ class gallery extends Module {
 		}
 
 		// remove old memberships
-		$membership_manager->deleteData(array('container' => $container));
+		$membership_manager->delete_items(array('container' => $container));
 
 		// save new memberships
 		foreach ($gallery_ids as $id)
-			$membership_manager->insertData(array(
+			$membership_manager->insert_item(array(
 											'group'		=> $id,
 											'container'	=> $container
 										));
@@ -1152,7 +1152,7 @@ class gallery extends Module {
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
 
-			$group_id = $group_manager->getItemValue(
+			$group_id = $group_manager->get_item_value(
 												'id',
 												array('text_id' => fix_chars($tag_params['group']))
 											);
@@ -1180,8 +1180,8 @@ class gallery extends Module {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 		}
 
-		$item = $manager->getSingleItem(
-							$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+							$manager->get_field_names(),
 							$conditions,
 							$order_by,
 							$order_asc
@@ -1246,7 +1246,7 @@ class gallery extends Module {
 		if (isset($tag_params['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
 
-			$group_id = $group_manager->getItemValue(
+			$group_id = $group_manager->get_item_value(
 												'id',
 												array('text_id' => fix_chars($tag_params['group']))
 											);
@@ -1265,8 +1265,8 @@ class gallery extends Module {
 		if (isset($tag_params['order_asc']))
 			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
 
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							$conditions,
 							$order_by,
 							$order_asc,
@@ -1354,7 +1354,7 @@ class gallery extends Module {
 		if (isset($tag_params['text_id']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
-		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
+		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->get_field_names()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
 
@@ -1372,7 +1372,7 @@ class gallery extends Module {
 
 			} else {
 				// container text_id was specified, get ID
-				$container = $container_manager->getSingleItem(
+				$container = $container_manager->get_single_item(
 													array('id'),
 													array('text_id' => fix_chars($tag_params['container']))
 												);
@@ -1384,7 +1384,7 @@ class gallery extends Module {
 
 			// grab all groups for specified container
 			if (!is_null($container_id)) {
-				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+				$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
 
 				// extract object values
 				$list = array();
@@ -1400,7 +1400,7 @@ class gallery extends Module {
 		}
 
 		// get group from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template
 		$template = $this->loadTemplate($tag_params, 'group.xml');
@@ -1441,7 +1441,7 @@ class gallery extends Module {
 		$order_by = array();
 		$order_asc = true;
 
-		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
+		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->get_field_names()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
 
@@ -1459,7 +1459,7 @@ class gallery extends Module {
 
 			} else {
 				// container text_id was specified, get ID
-				$container = $container_manager->getSingleItem(
+				$container = $container_manager->get_single_item(
 													array('id'),
 													array('text_id' => fix_chars($tag_params['container']))
 												);
@@ -1471,7 +1471,7 @@ class gallery extends Module {
 
 			// grab all groups for specified container
 			if (!is_null($container_id)) {
-				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+				$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
 
 				// extract object values
 				$list = array();
@@ -1487,8 +1487,8 @@ class gallery extends Module {
 		}
 
 		// get groups
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
@@ -1573,7 +1573,7 @@ class gallery extends Module {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get container
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'container.xml');
@@ -1621,8 +1621,8 @@ class gallery extends Module {
 								);
 		}
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
@@ -1719,7 +1719,7 @@ class gallery extends Module {
 		$manager = GalleryGroupManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 
-		$memberships = $membership_manager->getItems(
+		$memberships = $membership_manager->get_items(
 												array('group'),
 												array('container' => $container)
 											);
@@ -1729,7 +1729,7 @@ class gallery extends Module {
 			foreach($memberships as $membership)
 				$gallery_ids[] = $membership->group;
 
-		$items = $manager->getItems($manager->getFieldNames(), array(), array('name_'.$language));
+		$items = $manager->get_items($manager->get_field_names(), array(), array('name_'.$language));
 
 		$template = new TemplateHandler('containers_groups_item.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -1774,11 +1774,11 @@ class gallery extends Module {
 		if (isset($_REQUEST['id'])) {
 			// get specific image
 			$id = fix_id($_REQUEST['id']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		} else {
 			// get first image from group (useful for group thumbnails)
 			$id = fix_id($_REQUEST['group']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('group' => $id));
 		}
 
 		if (is_object($item)) {
@@ -1851,7 +1851,7 @@ class gallery extends Module {
 		if (isset($_REQUEST['group'])) {
 			$group_manager = GalleryGroupManager::getInstance();
 
-			$group_id = $group_manager->getItemValue(
+			$group_id = $group_manager->get_item_value(
 												'id',
 												array('text_id' => $_REQUEST['group'])
 											);
@@ -1873,7 +1873,7 @@ class gallery extends Module {
 			$limit = fix_id($_REQUEST['limit']);
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,
@@ -1925,7 +1925,7 @@ class gallery extends Module {
 			$manager = GalleryGroupManager::getInstance();
 			$membership_manager = GalleryGroupMembershipManager::getInstance();
 
-			$id = $membership_manager->getSingleItem('group', array('container' => $container));
+			$id = $membership_manager->get_single_item('group', array('container' => $container));
 		} else {
 			// no container nor group id was specified
 			// invalid params, print blank JSON object with message
@@ -1939,7 +1939,7 @@ class gallery extends Module {
 		}
 
 		$manager = GalleryGroupManager::getInstance();
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$result = array(
@@ -1979,7 +1979,7 @@ class gallery extends Module {
 			if (is_null($container_id)) {
 				$container_text_id = fix_chars($_REQUEST['container']);
 				$container_manager = GalleryContainerManager::getInstance();
-				$container = $container_manager->getSingleItem(
+				$container = $container_manager->get_single_item(
 														array('id'),
 														array('text_id' => $container_text_id)
 													);
@@ -1991,7 +1991,7 @@ class gallery extends Module {
 			// grab all groups for specified container
 			$memberships = array();
 			if (!is_null($container_id))
-				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+				$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
 
 			// extract object values
 			$list = array();
@@ -2014,8 +2014,8 @@ class gallery extends Module {
 		if (isset($_REQUEST['order_asc']))
 			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes';
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
@@ -2053,7 +2053,7 @@ class gallery extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$result = array(
@@ -2080,8 +2080,8 @@ class gallery extends Module {
 	private function json_ContainerList() {
 		$manager = GalleryContainerManager::getInstance();
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								array(),
 								array('name')
 							);
@@ -2125,7 +2125,7 @@ class gallery extends Module {
 	public function getImageURL($item) {
 		if (!is_object($item) && is_numeric($item)) {
 			$manager = GalleryManager::getInstance();
-			$item = $manager->getSingleItem(array('filename'), array('id' => $item));
+			$item = $manager->get_single_item(array('filename'), array('id' => $item));
 		}
 
 		return url_GetFromFilePath($this->image_path.$item->filename);
@@ -2151,8 +2151,8 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get image from the database
-		$item = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+				$manager->get_field_names(),
 				$conditions
 			);
 
@@ -2207,8 +2207,8 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get image from the database
-		$item = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+				$manager->get_field_names(),
 				$conditions
 			);
 
@@ -2249,7 +2249,7 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get group from database
-		$group = $manager->getSingleItem(array('id', 'thumbnail'), $conditions);
+		$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
 
 		// specified group doesn't exist
 		if (!is_object($group))
@@ -2257,7 +2257,7 @@ class gallery extends Module {
 
 		if (empty($group->thumbnail)) {
 			// no image was set as thumbnail, get one at random
-			$image = $image_manager->getSingleItem(
+			$image = $image_manager->get_single_item(
 										array('id'),
 										array(
 											'group' 	=> $group->id,
@@ -2302,13 +2302,13 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get container
-		$container = $manager->getSingleItem(array('id'), $conditions);
+		$container = $manager->get_single_item(array('id'), $conditions);
 
 		if (!is_object($container))
 			return $result;
 
 		// get random group for container
-		$membership = $membership_manager->getSingleItem(
+		$membership = $membership_manager->get_single_item(
 				array('group'),
 				array('container' => $container->id),
 				array('RAND()')  // order by
@@ -2344,7 +2344,7 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get group from database
-		$group = $manager->getSingleItem(array('id', 'thumbnail'), $conditions);
+		$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
 
 		// specified group doesn't exist
 		if (!is_object($group))
@@ -2352,7 +2352,7 @@ class gallery extends Module {
 
 		if (empty($group->thumbnail)) {
 			// no image was set as thumbnail, get one at random
-			$image = $image_manager->getSingleItem(
+			$image = $image_manager->get_single_item(
 										array('id'),
 										array(
 											'group' 	=> $group->id,
@@ -2385,7 +2385,7 @@ class gallery extends Module {
 
 		if (empty($group->thumbnail)) {
 			// group doesn't have specified thumbnail, get random
-			$image = $manager->getSingleItem(
+			$image = $manager->get_single_item(
 										array('filename'),
 										array(
 											'group' 	=> $group->id,
@@ -2400,9 +2400,9 @@ class gallery extends Module {
 				$group_id = array_rand($group);
 				$group_manager = GalleryGroupManager::getInstance();
 
-				$group = $group_manager->getSingleItem(array('thumbnail'), array('id' => $group_id));
+				$group = $group_manager->get_single_item(array('thumbnail'), array('id' => $group_id));
 			}
-			$image = $manager->getSingleItem(array('filename'), array('id' => $group->thumbnail));
+			$image = $manager->get_single_item(array('filename'), array('id' => $group->thumbnail));
 		}
 
 		if (is_object($image))
@@ -2424,7 +2424,7 @@ class gallery extends Module {
 		$group_manager = GalleryGroupManager::getInstance();
 		$membership_manager = GalleryGroupMembershipManager::getInstance();
 
-		$items = $membership_manager->getItems(
+		$items = $membership_manager->get_items(
 											array('group'),
 											array('container' => $container->id),
 											array('RAND()')
@@ -2434,7 +2434,7 @@ class gallery extends Module {
 			$membership = $items[array_rand($items)];
 			$id = $membership->group;
 
-			$group = $group_manager->getSingleItem(array('id', 'thumbnail'), array('id' => $id));
+			$group = $group_manager->get_single_item(array('id', 'thumbnail'), array('id' => $id));
 
 			if (is_object($group))
 				$result = $this->getGroupImage($group);
@@ -2528,8 +2528,8 @@ class gallery extends Module {
 							'protected'		=> $protected
 						);
 
-				$manager->insertData($data);
-				$id = $manager->getInsertedID();
+				$manager->insert_item($data);
+				$id = $manager->get_inserted_id();
 
 				$result['filename'] = $filename;
 				$result['message'] = $this->getLanguageConstant('message_image_uploaded');
@@ -2565,8 +2565,8 @@ class gallery extends Module {
 		$gallery_manager = GalleryGroupManager::getInstance();
 
 		// create gallery
-		$gallery_manager->insertData(array('name' => $name));
-		$result = $gallery_manager->getInsertedID();
+		$gallery_manager->insert_item(array('name' => $name));
+		$result = $gallery_manager->get_inserted_id();
 
 		return $result;
 	}
@@ -2581,8 +2581,8 @@ class gallery extends Module {
 		$gallery_manager = GalleryGroupManager::getInstance();
 
 		// create gallery
-		$gallery_manager->insertData(array('name' => $name));
-		$result = $gallery_manager->getInsertedID();
+		$gallery_manager->insert_item(array('name' => $name));
+		$result = $gallery_manager->get_inserted_id();
 
 		return $result;
 	}

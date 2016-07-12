@@ -163,7 +163,7 @@ class Handler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = \ShopItemManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			// create template
@@ -273,22 +273,22 @@ class Handler {
 
 		} else {
 			// remove membership data, we'll update those in a moment
-			$membership_manager->deleteData(array('item' => $id));
+			$membership_manager->delete_items(array('item' => $id));
 
 			// remove delivery methods
-			$delivery_item_relation_manager->deleteData(array('item' => $id));
+			$delivery_item_relation_manager->delete_items(array('item' => $id));
 		}
 
 		// store item data
 		if ($new_item) {
 			// store new data
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_item_add';
-			$id = $manager->getInsertedID();
+			$id = $manager->get_inserted_id();
 
 		} else {
 			// update existing data
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_item_change';
 		}
 
@@ -309,7 +309,7 @@ class Handler {
 		// update membership
 		if (count($category_ids) > 0)
 			foreach ($category_ids as $category_id) {
-				$membership_manager->insertData(array(
+				$membership_manager->insert_item(array(
 										'category'	=> $category_id,
 										'item'		=> $id
 									));
@@ -319,7 +319,7 @@ class Handler {
 		if (count($delivery_ids) > 0)
 			foreach ($delivery_ids as $delivery_id)
 				if (!empty($delivery_id)) {
-					$delivery_item_relation_manager->insertData(array(
+					$delivery_item_relation_manager->insert_item(array(
 											'item'		=> $id,
 											'price'		=> $delivery_id
 										));
@@ -327,7 +327,7 @@ class Handler {
 
 		// store related items
 		if (!$new_item)
-			$related_items_manager->deleteData(array('item' => $id));
+			$related_items_manager->delete_items(array('item' => $id));
 
 		$related = array();
 		$keys = array_keys($_REQUEST);
@@ -338,7 +338,7 @@ class Handler {
 
 		if (count($related) > 0) {
 			foreach($related as $related_id)
-				$related_items_manager->insertData(array(
+				$related_items_manager->insert_item(array(
 										'item'		=> $id,
 										'related'	=> $related_id
 									));
@@ -372,7 +372,7 @@ class Handler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = \ShopItemManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->parent->name);
@@ -410,8 +410,8 @@ class Handler {
 		$manager = \ShopItemManager::getInstance();
 		$membership_manager = \ShopItemMembershipManager::getInstance();
 
-		$manager->updateData(array('deleted' => 1), array('id' => $id));
-		$membership_manager->deleteData(array('item' => $id));
+		$manager->update_items(array('deleted' => 1), array('id' => $id));
+		$membership_manager->delete_items(array('item' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->parent->name);
@@ -459,7 +459,7 @@ class Handler {
 		$uid = uniqid();
 
 		// check if it already exists in database
-		$count = $manager->sqlResult("SELECT count(*) FROM `shop_items` WHERE `uid`='{$uid}'");
+		$count = $manager->get_result("SELECT count(*) FROM `shop_items` WHERE `uid`='{$uid}'");
 
 		if ($count > 0)
 			// given how high entropy is we will probably
@@ -497,7 +497,7 @@ class Handler {
 			} else {
 				// specified id is actually text_id, get real one
 				$category_manager = \ShopCategoryManager::getInstance();
-				$category = $category_manager->getSingleItem(
+				$category = $category_manager->get_single_item(
 												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
 											);
@@ -512,7 +512,7 @@ class Handler {
 
 			// get all associated items
 			$id_list = array();
-			$membership_list = $membership_manager->getItems(array('item'), array('category' => $category_id));
+			$membership_list = $membership_manager->get_items(array('item'), array('category' => $category_id));
 
 			if (count($membership_list) > 0)
 				foreach($membership_list as $membership)
@@ -527,7 +527,7 @@ class Handler {
 			return;
 
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// create template handler
 		$template = $this->parent->loadTemplate($tag_params, 'item.xml');
@@ -553,8 +553,8 @@ class Handler {
 				$manufacturer_logo_url = '';
 
 				if ($item->manufacturer != 0) {
-					$manufacturer = $manufacturer_manager->getSingleItem(
-													$manufacturer_manager->getFieldNames(),
+					$manufacturer = $manufacturer_manager->get_single_item(
+													$manufacturer_manager->get_field_names(),
 													array('id' => $item->manufacturer)
 												);
 
@@ -636,7 +636,7 @@ class Handler {
 			} else {
 				// specified id is actually text_id, get real one
 				$category_manager = \ShopCategoryManager::getInstance();
-				$category = $category_manager->getSingleItem(
+				$category = $category_manager->get_single_item(
 												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
 											);
@@ -648,7 +648,7 @@ class Handler {
 			}
 
 			$membership_manager = \ShopItemMembershipManager::getInstance();
-			$membership_items = $membership_manager->getItems(
+			$membership_items = $membership_manager->get_items(
 												array('item'),
 												array('category' => $category_id)
 											);
@@ -673,13 +673,13 @@ class Handler {
 
 			} else {
 				// find item id based on specified text id
-				$item = $manager->getSingleItem(array('id'), array('uid' => fix_chars($tag_params['related'])));
+				$item = $manager->get_single_item(array('id'), array('uid' => fix_chars($tag_params['related'])));
 
 				if (is_object($item))
 					$item_id = $item->id;
 			}
 
-			$related_items = $relation_manager->getItems(array('related'), array('item' => $item_id));
+			$related_items = $relation_manager->get_items(array('related'), array('item' => $item_id));
 			$related_item_ids = array();
 
 			if (count($related_items) > 0)
@@ -708,7 +708,7 @@ class Handler {
 			$per_page = is_numeric($tag_params['paginate']) ? $tag_params['paginate'] : 10;
 			$param = isset($tag_params['page_param']) ? fix_chars($tag_params['page_param']) : null;
 
-			$item_count = $manager->getItemValue('COUNT(id)', $conditions);
+			$item_count = $manager->get_item_value('COUNT(id)', $conditions);
 
 			$page_switch = new PageSwitch($param);
 			$page_switch->setCurrentAsBaseURL();
@@ -726,7 +726,7 @@ class Handler {
 			$order_asc = $tag_params['order_asc'] == 1;
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		// create template
 		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
@@ -754,8 +754,8 @@ class Handler {
 					$manufacturer_logo_url = '';
 
 					if ($item->manufacturer != 0) {
-						$manufacturer = $manufacturer_manager->getSingleItem(
-														$manufacturer_manager->getFieldNames(),
+						$manufacturer = $manufacturer_manager->get_single_item(
+														$manufacturer_manager->get_field_names(),
 														array('id' => $item->manufacturer)
 													);
 
@@ -900,7 +900,7 @@ class Handler {
 			return;
 
 		// get specified item
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (!is_object($item))
 			return;
@@ -954,7 +954,7 @@ class Handler {
 							'visible'	=> 1
 						);
 
-			$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+			$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 			if (is_object($item)) {
 				// get item image url

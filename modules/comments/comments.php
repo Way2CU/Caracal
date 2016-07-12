@@ -278,7 +278,7 @@ class comments extends Module {
 						);
 
 				$manager = CommentManager::getInstance();
-				$manager->insertData($data);
+				$manager->insert_item($data);
 
 				$response_message = $this->getLanguageConstant('message_saved');
 			} else {
@@ -341,7 +341,7 @@ class comments extends Module {
 			if ($only_visible)
 				$conditions['visible'] = 1;
 
-			$items = $manager->getItems(array('id', 'user', 'message', 'timestamp'), $conditions);
+			$items = $manager->get_items(array('id', 'user', 'message', 'timestamp'), $conditions);
 
 			$result['last_id'] = 0;
 			$result['comments'] = array();
@@ -384,7 +384,7 @@ class comments extends Module {
 			$manager = CommentManager::getInstance();
 			$time = date('Y-m-d H:i:s', time() - (intval($this->settings['repost_time']) * 60));
 
-			$count = $manager->sqlResult("
+			$count = $manager->get_result("
 									SELECT count(id)
 									FROM `comments`
 									WHERE
@@ -409,15 +409,15 @@ class CommentManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('comments');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('module', 'varchar');
-		$this->addProperty('section', 'varchar');
-		$this->addProperty('user', 'varchar');
-		$this->addProperty('email', 'varchar');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('message', 'text');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('visible', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('module', 'varchar');
+		$this->add_property('section', 'varchar');
+		$this->add_property('user', 'varchar');
+		$this->add_property('email', 'varchar');
+		$this->add_property('address', 'varchar');
+		$this->add_property('message', 'text');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('visible', 'boolean');
 	}
 
 	/**

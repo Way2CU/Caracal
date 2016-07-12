@@ -10,8 +10,8 @@ class ContactForm_DomainManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_domains');
 
-		$this->addProperty('form', 'int');
-		$this->addProperty('domain', 'varchar');
+		$this->add_property('form', 'int');
+		$this->add_property('domain', 'varchar');
 	}
 
 	/**

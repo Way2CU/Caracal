@@ -17,12 +17,12 @@ class AffiliateReferralsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('affiliate_referrals');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('affiliate', 'int');
-		$this->addProperty('url', 'varchar');
-		$this->addProperty('landing', 'varchar');
-		$this->addProperty('transaction', 'int');
-		$this->addProperty('conversion', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('affiliate', 'int');
+		$this->add_property('url', 'varchar');
+		$this->add_property('landing', 'varchar');
+		$this->add_property('transaction', 'int');
+		$this->add_property('conversion', 'boolean');
 	}
 
 	/**

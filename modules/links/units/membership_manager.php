@@ -22,9 +22,9 @@ class MembershipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('link_membership');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('link', 'int');
-		$this->addProperty('group', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('link', 'int');
+		$this->add_property('group', 'int');
 	}
 
 	/**

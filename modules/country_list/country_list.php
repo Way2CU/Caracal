@@ -117,7 +117,7 @@ class country_list extends Module {
 		$state_list = $this->state_list->document->tagChildren;
 
 		foreach ($country_list as $country)
-			$country_manager->insertData(array(
+			$country_manager->insert_item(array(
 								'name'	=> escape_chars($country->tagData),
 								'short'	=> $country->tagAttrs['short']
 							));
@@ -126,7 +126,7 @@ class country_list extends Module {
 			$country_code = $country->tagAttrs['short'];
 
 			foreach ($country->tagChildren as $state)
-				$state_manager->insertData(array(
+				$state_manager->insert_item(array(
 									'country'	=> $country_code,
 									'name'		=> $state->tagData,
 									'short'		=> $state->tagAttrs['short']
@@ -164,7 +164,7 @@ class country_list extends Module {
 		// create template
 		$template = $this->loadTemplate($tag_params, 'country_option.xml');
 		$template->setTemplateParamsFromArray($children);
-		$country_list = $manager->getItems($manager->getFieldNames(), $conditions);
+		$country_list = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// parse template
 		if (count($country_list) > 0)
@@ -205,7 +205,7 @@ class country_list extends Module {
 
 		$template = $this->loadTemplate($tag_params, 'state_option.xml');
 		$template->setTemplateParamsFromArray($children);
-		$state_list = $manager->getItems($manager->getFieldNames(), $conditions);
+		$state_list = $manager->get_items($manager->get_field_names(), $conditions);
 
 		foreach ($state_list as $state) {
 			$params = array(
@@ -281,9 +281,9 @@ class CountryManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('countries');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('short', 'char');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'varchar');
+		$this->add_property('short', 'char');
 	}
 
 	/**
@@ -307,10 +307,10 @@ class CountryStateManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('country_states');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('country', 'char');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('short', 'char');
+		$this->add_property('id', 'int');
+		$this->add_property('country', 'char');
+		$this->add_property('name', 'varchar');
+		$this->add_property('short', 'char');
 	}
 
 	/**

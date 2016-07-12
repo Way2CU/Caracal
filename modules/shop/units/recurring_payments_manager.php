@@ -9,11 +9,11 @@ class ShopRecurringPaymentsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_recurring_payments');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('plan', 'int');
-		$this->addProperty('amount', 'decimal');
-		$this->addProperty('status', 'int');
-		$this->addProperty('timestamp', 'timestamp');
+		$this->add_property('id', 'int');
+		$this->add_property('plan', 'int');
+		$this->add_property('amount', 'decimal');
+		$this->add_property('status', 'int');
+		$this->add_property('timestamp', 'timestamp');
 	}
 
 	/**

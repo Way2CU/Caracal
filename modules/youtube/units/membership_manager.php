@@ -17,9 +17,9 @@ class YouTube_MembershipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('youtube_group_membership');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('video', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('group', 'int');
+		$this->add_property('video', 'int');
 	}
 
 	/**

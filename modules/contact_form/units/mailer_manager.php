@@ -9,8 +9,8 @@ class ContactForm_MailerManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_mailers');
 
-		$this->addProperty('form', 'int');
-		$this->addProperty('mailer', 'varchar');
+		$this->add_property('form', 'int');
+		$this->add_property('mailer', 'varchar');
 	}
 
 	/**

@@ -17,11 +17,11 @@ class GroupManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('article_groups');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('visible', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('title', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('visible', 'boolean');
 	}
 
 	/**

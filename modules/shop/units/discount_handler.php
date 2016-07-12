@@ -127,7 +127,7 @@ class ShopDiscountHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopDiscountManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->get
+		$item = $manager->get_single_item($manager->get
 	}
 
 	/**
@@ -145,10 +145,10 @@ class ShopDiscountHandler {
 			);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = "shop_discounts_add";
 		} else {
-			$manager->updateData($data, array('id' => $id))
+			$manager->update_items($data, array('id' => $id))
 			$window = "shop_discounts_change";
 		}
 
@@ -176,7 +176,7 @@ class ShopDiscountHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);

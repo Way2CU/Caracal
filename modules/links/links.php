@@ -345,7 +345,7 @@ class links extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = \Modules\Links\Manager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('links_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -402,7 +402,7 @@ class links extends Module {
 							'protected'		=> 1
 						);
 
-				$gallery_manager->updateData($image_data, array('id' => $result['id']));
+				$gallery_manager->update_items($image_data, array('id' => $result['id']));
 
 				$data['image'] = $result['id'];
 				$gallery_addon = ';'.window_ReloadContent('gallery_images');
@@ -410,10 +410,10 @@ class links extends Module {
 		}
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'links_change';
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'links_add';
 		}
 
@@ -446,7 +446,7 @@ class links extends Module {
 		$manager = \Modules\Links\Manager::getInstance();
 
 		// get item from the database
-		$item = $manager->getSingleItem(array('text'), array('id' => $id));
+		$item = $manager->get_single_item(array('text'), array('id' => $id));
 
 		// load template
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
@@ -488,19 +488,19 @@ class links extends Module {
 
 		// if we used image with this, we need to remove that too
 		if (ModuleHandler::is_loaded('gallery')) {
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			if (is_object($item) && !empty($item->image)) {
 				$gallery_manager = GalleryManager::getInstance();
-				$gallery_manager->deleteData(array('id' => $item->image));
+				$gallery_manager->delete_items(array('id' => $item->image));
 			}
 
 			$gallery_addon = ';'.window_ReloadContent('gallery_images');
 		}
 
 		// remove data from the database
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('link' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('link' => $id));
 
 		// load message template
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -568,7 +568,7 @@ class links extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = \Modules\Links\GroupManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('groups_change.xml', $this->path.'templates/');
@@ -600,12 +600,12 @@ class links extends Module {
 			);
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'groups_change';
 			$message = $this->getLanguageConstant('message_group_renamed');
 
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'groups_add';
 			$message = $this->getLanguageConstant('message_group_created');
 		}
@@ -634,7 +634,7 @@ class links extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = \Modules\Links\GroupManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -670,8 +670,8 @@ class links extends Module {
 		$manager = \Modules\Links\GroupManager::getInstance();
 		$membership_manager = \Modules\Links\MembershipManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('group' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -723,11 +723,11 @@ class links extends Module {
 		}
 
 		// remove old memberships
-		$membership_manager->deleteData(array('group' => $group));
+		$membership_manager->delete_items(array('group' => $group));
 
 		// save new memberships
 		foreach ($link_ids as $id)
-			$membership_manager->insertData(array(
+			$membership_manager->insert_item(array(
 											'link'	=> $id,
 											'group'	=> $group
 										));
@@ -771,7 +771,7 @@ class links extends Module {
 		$link_id = fix_id($_REQUEST['id']);
 		$manager = \Modules\Links\Manager::getInstance();
 
-		$link = $manager->getSingleItem($manager->getFieldNames(), array('id' => $link_id));
+		$link = $manager->get_single_item($manager->get_field_names(), array('id' => $link_id));
 
 		if (is_object($link)) {
 			$url = $link->url;
@@ -781,7 +781,7 @@ class links extends Module {
 			if ($link->sponsored == 1)
 				$data['sponsored_clicks'] = $link->sponsored_clicks + 1;
 
-			$manager->updateData($data, array('id' => $link_id));
+			$manager->update_items($data, array('id' => $link_id));
 
 			url_SetRefresh($url, 0);
 		}
@@ -800,7 +800,7 @@ class links extends Module {
 		$link_manager = \Modules\Links\Manager::getInstance();
 		$membership_manager = \Modules\Links\MembershipManager::getInstance();
 
-		$memberships = $membership_manager->getItems(
+		$memberships = $membership_manager->get_items(
 												array('link'),
 												array('group' => $group)
 											);
@@ -810,7 +810,7 @@ class links extends Module {
 			foreach($memberships as $membership)
 				$link_ids[] = $membership->link;
 
-		$links = $link_manager->getItems(array('id', 'text', 'sponsored'), array());
+		$links = $link_manager->get_items(array('id', 'text', 'sponsored'), array());
 
 		$template = new TemplateHandler('groups_links_item.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -840,7 +840,7 @@ class links extends Module {
 		$id = isset($params['id']) ? $params['id'] : fix_id($_REQUEST['id']);
 		$manager = \Modules\Links\Manager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (isset($params['template'])) {
 			if (isset($params['local']) && $params['local'] == 1)
@@ -869,8 +869,8 @@ class links extends Module {
 			$gallery_manager = GalleryManager::getInstance();
 
 			if (is_numeric($item->image)) {
-				$image_item = $gallery_manager->getSingleItem(
-													$gallery_manager->getFieldNames(),
+				$image_item = $gallery_manager->get_single_item(
+													$gallery_manager->get_field_names(),
 													array('id' => $item->image)
 												);
 
@@ -940,14 +940,14 @@ class links extends Module {
 			} else {
 				// specified group is text id
 				$text_id = fix_chars($tag_params['group']);
-				$raw_group = $group_manager->getSingleItem(array('id'), array('text_id' => $text_id));
+				$raw_group = $group_manager->get_single_item(array('id'), array('text_id' => $text_id));
 
 				if (is_object($raw_group))
 					$group = $raw_group->id; else
 					return;
 			}
 
-			$items = $membership_manager->getItems(
+			$items = $membership_manager->get_items(
 												array('link'),
 												array('group' => $group)
 											);
@@ -970,8 +970,8 @@ class links extends Module {
 		if (isset($tag_params['order_asc']))
 			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
@@ -1004,7 +1004,7 @@ class links extends Module {
 			$image = '';
 			$thumbnail = '';
 			if ($use_images && !empty($item->image)) {
-				$image_item = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $item->image));
+				$image_item = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $item->image));
 
 				if (is_object($image_item)) {
 					$image = $gallery->getImageURL($image_item);
@@ -1099,7 +1099,7 @@ class links extends Module {
 		$link_manager = \Modules\Links\Manager::getInstance();
 		$membership_manager = \Modules\Links\MembershipManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -1118,14 +1118,14 @@ class links extends Module {
 			$thumbnail = '';
 
 			if ($use_images) {
-				$first_link_id = $membership_manager->getItemValue('link', array('group' => $item->id));
+				$first_link_id = $membership_manager->get_item_value('link', array('group' => $item->id));
 
 				// we have some links assigned to the group, get thumbnail
 				if (!empty($first_link_id)) {
-					$image_id = $link_manager->getItemValue('image', array('id' => $first_link_id));
+					$image_id = $link_manager->get_item_value('image', array('id' => $first_link_id));
 
 					if (!empty($image_id)) {
-						$image = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $image_id));
+						$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
 						$thumbnail = $gallery->getThumbnailURL($image);
 					}
 				}
@@ -1170,8 +1170,8 @@ class links extends Module {
 		if (isset($tag_params['sponsored']) && $tag_params['sponsored'] == '1')
 			$conditions['sponsored'] = 1;
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								array('id')
 							);
@@ -1194,14 +1194,14 @@ class links extends Module {
 				$thumbnail = '';
 
 				if ($use_images) {
-					$first_link_id = $membership_manager->getItemValue('link', array('group' => $item->id));
+					$first_link_id = $membership_manager->get_item_value('link', array('group' => $item->id));
 
 					// we have some links assigned to the group, get thumbnail
 					if (!empty($first_link_id)) {
-						$image_id = $link_manager->getItemValue('image', array('id' => $first_link_id));
+						$image_id = $link_manager->get_item_value('image', array('id' => $first_link_id));
 
 						if (!empty($image_id)) {
-							$image = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $image_id));
+							$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
 							$thumbnail = $gallery->getThumbnailURL($image);
 						}
 					}
@@ -1292,7 +1292,7 @@ class links extends Module {
 			$order_asc = $_REQUEST['order_asc'] == 1;
 
 		// get link from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// make sure link exists
 		if (is_null($item)) {
@@ -1346,7 +1346,7 @@ class links extends Module {
 		if (isset($_REQUEST['group'])) {
 			$group_list = explode(',', fix_chars($_REQUEST['group']));
 
-			$list = $group_manager->getItems(array('id'), array('text_id' => $group_list));
+			$list = $group_manager->get_items(array('id'), array('text_id' => $group_list));
 
 			if (count($list) > 0)
 				foreach ($list as $list_item)
@@ -1363,7 +1363,7 @@ class links extends Module {
 
 		// fetch ids for specified groups
 		if (!empty($groups)) {
-			$list = $membership_manager->getItems(array('link'), array('group' => $groups));
+			$list = $membership_manager->get_items(array('link'), array('group' => $groups));
 
 			$id_list = array();
 			if (count($list) > 0) {
@@ -1379,8 +1379,8 @@ class links extends Module {
 		}
 
 		// save some CPU time by getting this early
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							$conditions,
 							$order_by,
 							$order_asc,
@@ -1432,7 +1432,7 @@ class links extends Module {
 
 		$manager = \Modules\Links\GroupManager::getInstance();
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,

@@ -429,7 +429,7 @@ class backend extends Module {
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = ModuleManager::getInstance();
-			$manager->updateData(
+			$manager->update_items(
 							array('active' => 1),
 							array('name' => $module_name)
 						);
@@ -461,7 +461,7 @@ class backend extends Module {
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = ModuleManager::getInstance();
-			$manager->updateData(
+			$manager->update_items(
 							array('active' => 0),
 							array('name' => $module_name)
 						);
@@ -525,14 +525,14 @@ class backend extends Module {
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = ModuleManager::getInstance();
-			$max_order = $manager->getItemValue(
+			$max_order = $manager->get_item_value(
 										'MAX(`order`)',
 										array('preload' => 0)
 									);
 
 			if (is_null($max_order)) $max_order = -1;
 
-			$manager->insertData(
+			$manager->insert_item(
 							array(
 								'order'		=> $max_order + 1,
 								'name'		=> $module_name,
@@ -606,14 +606,14 @@ class backend extends Module {
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
 			$manager = ModuleManager::getInstance();
-			$max_order = $manager->getItemValue(
+			$max_order = $manager->get_item_value(
 										'MAX(`order`)',
 										array('preload' => 0)
 									);
 
 			if (is_null($max_order)) $max_order = -1;
 
-			$manager->deleteData(array('name' => $module_name));
+			$manager->delete_items(array('name' => $module_name));
 
 			if (ModuleHandler::is_loaded($module_name)) {
 				$module = call_user_func(array($module_name, 'getInstance'));
@@ -677,7 +677,7 @@ class backend extends Module {
 		$raw_list = $this->getModuleList();
 		$manager = ModuleManager::getInstance();
 
-		$modules_in_use = $manager->getItems(
+		$modules_in_use = $manager->get_items(
 											array('id', 'order', 'name', 'preload', 'active'),
 											array(),
 											array('preload', 'order')

@@ -9,12 +9,12 @@ class FeedbackManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('feedback');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('user', 'int');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('message', 'text');
-		$this->addProperty('url', 'varchar');
-		$this->addProperty('status', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('user', 'int');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('message', 'text');
+		$this->add_property('url', 'varchar');
+		$this->add_property('status', 'int');
 	}
 
 	/**

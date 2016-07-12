@@ -420,7 +420,7 @@ class page_info extends Module {
 			$text_id = fix_chars($tag_params['article']);
 
 			// get article from database
-			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
+			$item = $manager->get_single_item(array('content'), array('text_id' => $text_id));
 
 			if (is_object($item)) {
 				$content = strip_tags(Markdown::parse($item->content[$language]));

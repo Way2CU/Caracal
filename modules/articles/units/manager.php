@@ -18,18 +18,18 @@ class Manager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('articles');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('content', 'ml_text');
-		$this->addProperty('author', 'int');
-		$this->addProperty('gallery', 'int');
-		$this->addProperty('visible', 'boolean');
-		$this->addProperty('views', 'int');
-		$this->addProperty('votes_up', 'int');
-		$this->addProperty('votes_down', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('group', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('title', 'ml_varchar');
+		$this->add_property('content', 'ml_text');
+		$this->add_property('author', 'int');
+		$this->add_property('gallery', 'int');
+		$this->add_property('visible', 'boolean');
+		$this->add_property('views', 'int');
+		$this->add_property('votes_up', 'int');
+		$this->add_property('votes_down', 'int');
 	}
 
 	/**
