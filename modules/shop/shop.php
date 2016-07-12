@@ -861,8 +861,8 @@ class shop extends Module {
 		// create shop items table
 		$sql = "
 			CREATE TABLE `shop_items` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`uid` VARCHAR(64) NOT NULL,";
+			`id` int NOT NULL AUTO_INCREMENT,
+			`uid` VARCHAR(64) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
@@ -871,107 +871,107 @@ class shop extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .= "
-				`gallery` INT NOT NULL,
-				`manufacturer` INT NOT NULL,
-				`size_definition` INT NULL,
-				`colors` VARCHAR(255) NOT NULL DEFAULT '',
-				`author` INT NOT NULL,
-				`views` INT NOT NULL,
-				`price` DECIMAL(10,2) NOT NULL,
-				`discount` DECIMAL(5,2) NOT NULL,
-				`tax` DECIMAL(5,2) NOT NULL,
-				`weight` DECIMAL(10,4) NOT NULL,
-				`votes_up` INT NOT NULL,
-				`votes_down` INT NOT NULL,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`priority` INT(4) NOT NULL DEFAULT '5',
-				`visible` BOOLEAN NOT NULL DEFAULT '1',
-				`deleted` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
-				KEY `visible` (`visible`),
-				KEY `deleted` (`deleted`),
-				KEY `uid` (`uid`),
-				KEY `author` (`author`)
+			`gallery` INT NOT NULL,
+			`manufacturer` INT NOT NULL,
+			`size_definition` INT NULL,
+			`colors` VARCHAR(255) NOT NULL DEFAULT '',
+			`author` INT NOT NULL,
+			`views` INT NOT NULL,
+			`price` DECIMAL(10,2) NOT NULL,
+			`discount` DECIMAL(5,2) NOT NULL,
+			`tax` DECIMAL(5,2) NOT NULL,
+			`weight` DECIMAL(10,4) NOT NULL,
+			`votes_up` INT NOT NULL,
+			`votes_down` INT NOT NULL,
+			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`priority` INT(4) NOT NULL DEFAULT '5',
+			`visible` BOOLEAN NOT NULL DEFAULT '1',
+			`deleted` BOOLEAN NOT NULL DEFAULT '0',
+			PRIMARY KEY ( `id` ),
+			KEY `visible` (`visible`),
+			KEY `deleted` (`deleted`),
+			KEY `uid` (`uid`),
+			KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item membership table
 		$sql = "
 			CREATE TABLE `shop_item_membership` (
-				`category` INT NOT NULL,
-				`item` INT NOT NULL,
-				KEY `category` (`category`),
-				KEY `item` (`item`)
+			`category` INT NOT NULL,
+			`item` INT NOT NULL,
+			KEY `category` (`category`),
+			KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item properties table
 		$sql = "
 			CREATE TABLE `shop_item_properties` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`item` INT NOT NULL,
-				`text_id` VARCHAR(32) NOT NULL,
-				`type` VARCHAR(32) NOT NULL,";
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`item` INT NOT NULL,
+			`text_id` VARCHAR(32) NOT NULL,
+			`type` VARCHAR(32) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
 
 		$sql .= "
-				`value` TEXT NOT NULL,
-				PRIMARY KEY ( `id` ),
-				KEY `item` (`item`),
-				KEY `text_id` (`text_id`)
+			`value` TEXT NOT NULL,
+			PRIMARY KEY ( `id` ),
+			KEY `item` (`item`),
+			KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create table for related shop items
 		$sql = "
 			CREATE TABLE `shop_related_items` (
-				`item` INT NOT NULL,
-				`related` INT NOT NULL,
-				KEY `item` (`item`,`related`)
+			`item` INT NOT NULL,
+			`related` INT NOT NULL,
+			KEY `item` (`item`,`related`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 		$db->query($sql);
 
 		// create shop currencies tableshop_related_items
 		$sql = "
 			CREATE TABLE `shop_currencies` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`currency` VARCHAR(5) NOT NULL,
-				PRIMARY KEY ( `id` )
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`currency` VARCHAR(5) NOT NULL,
+			PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item sizes table
 		$sql = "
 			CREATE TABLE `shop_item_sizes` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`name` VARCHAR(25) NOT NULL,
-				PRIMARY KEY ( `id` )
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`name` VARCHAR(25) NOT NULL,
+			PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item size values table
 		$sql = "
 			CREATE TABLE `shop_item_size_values` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`definition` INT NOT NULL,";
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`definition` INT NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
 
 		$sql .= "PRIMARY KEY ( `id` ),
 			KEY `definition` (`definition`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop categories table
 		$sql = "
 			CREATE TABLE `shop_categories` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`text_id` VARCHAR(32) NOT NULL,
-				`parent` INT NOT NULL DEFAULT '0',
-				`image` INT NULL,";
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`text_id` VARCHAR(32) NOT NULL,
+			`parent` INT NOT NULL DEFAULT '0',
+			`image` INT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
@@ -980,9 +980,9 @@ class shop extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .="
-				PRIMARY KEY ( `id` ),
-				KEY `parent` (`parent`),
-				KEY `text_id` (`text_id`)
+			PRIMARY KEY ( `id` ),
+			KEY `parent` (`parent`),
+			KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1017,8 +1017,8 @@ class shop extends Module {
 			`country` varchar(64) NOT NULL,
 			`access_code` varchar(100) NOT NULL,
 			PRIMARY KEY (`id`),
-				  KEY `buyer` (`buyer`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			KEY `buyer` (`buyer`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop transactions table
@@ -1044,7 +1044,7 @@ class shop extends Module {
 			PRIMARY KEY (`id`),
 			KEY `buyer` (`buyer`),
 			KEY `address` (`address`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop transaction items table
@@ -1059,7 +1059,7 @@ class shop extends Module {
 			PRIMARY KEY (`id`),
 			KEY `transaction` (`transaction`),
 			KEY `item` (`item`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop payment tokens table
@@ -1075,7 +1075,7 @@ class shop extends Module {
 			PRIMARY KEY (`id`),
 			KEY `index_by_name` (`payment_method`, `buyer`, `name`),
 			KEY `index_by_buyer` (`payment_method`, `buyer`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop transaction plans table
@@ -1090,8 +1090,19 @@ class shop extends Module {
 			`start_time` timestamp NULL,
 			`end_time` timestamp NULL,
 			PRIMARY KEY (`id`),
-				  KEY `transaction` (`transaction`),
-				  KEY `plan_name` (`plan_name`)
+			KEY `transaction` (`transaction`),
+			KEY `plan_name` (`plan_name`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop transaction promotions table
+		$sql = "CREATE TABLE `shop_transaction_promotions` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`transaction` int NOT NULL,
+			`promotion` varchar(64) NOT NULL,
+			`discount` varchar(64) NOT NULL,
+			PRIMARY KEY (`id`),
+			KEY `transaction` (`transaction`)
 			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1103,7 +1114,7 @@ class shop extends Module {
 			`status` INT NOT NULL,
 			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
-				  KEY `index_by_plan` (`plan`)
+			KEY `index_by_plan` (`plan`)
 			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
