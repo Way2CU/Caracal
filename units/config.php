@@ -14,6 +14,7 @@ $system_path = 'system/';
 $system_images_path = $system_path.'images/';
 $system_styles_path = $system_path.'styles/';
 $system_template_path = $system_path.'templates/';
+$system_queries_path = $system_path.'queries/';
 $system_module_path = 'modules/';
 
 $data_path = $site_path.'data/';
