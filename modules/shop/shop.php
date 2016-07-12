@@ -476,12 +476,12 @@ class shop extends Module {
 		// include pre-configured options
 		if (isset($this->search_params['category'])) {
 			$membership_manager = ShopItemMembershipManager::getInstance();
-			$category = $this->search_params['category'];
+			$category = fix_chars($this->search_params['category']);
 			$item_ids = array();
 
 			if (!is_numeric($category)) {
 				$category_manager = ShopCategoryManager::getInstance();
-				$raw_category = $category_manager->getSingleItem(
+				$raw_category = $category_manager->get_single_item(
 					array('id'),
 					array('text_id' => $category)
 				);
@@ -489,10 +489,13 @@ class shop extends Module {
 				if (is_object($raw_category))
 					$category = $raw_category->id; else
 						$category = -1;
+
+			} else {
+				$category = fix_id($category);
 			}
 
 			// get list of item ids
-			$membership_list = $membership_manager->getItems(
+			$membership_list = $membership_manager->get_items(
 				array('item'),
 				array('category' => $category)
 			);
@@ -506,7 +509,7 @@ class shop extends Module {
 		}
 
 		// get all items and process them
-		$items = $manager->getItems(
+		$items = $manager->get_items(
 			array(
 				'id',
 				'name',
@@ -559,7 +562,7 @@ class shop extends Module {
 		);
 
 		// create new buyer
-		$manager->insertData($data);
+		$manager->insert_item($data);
 	}
 
 	/**
@@ -1440,7 +1443,7 @@ class shop extends Module {
 			$variation_id = $this->generateVariationId($uid, array());
 
 		// check if item exists in database to avoid poluting shopping cart
-		$item = $manager->getSingleItem(array('id', 'price'), array('uid' => $uid));
+		$item = $manager->get_single_item(array('id', 'price'), array('uid' => $uid));
 
 		// make new content of shopping cart
 		if (is_object($item) && $count > 0) {
@@ -1483,7 +1486,7 @@ class shop extends Module {
 				$item = null;
 
 				if (!is_null($uid))
-					$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+					$item = $manager->get_single_item(array('id'), array('uid' => $uid));
 
 				// make sure item actually exists in database to avoid poluting
 				if (is_object($item) && $amount > 0) {
@@ -1540,7 +1543,7 @@ class shop extends Module {
 			$transaction_id = fix_chars($tag_params['transaction']);
 
 		if (is_null($transaction_id) && !is_null($user_id)) {
-			$transaction = $transaction_manager->getSingleItem(
+			$transaction = $transaction_manager->get_single_item(
 				array('id'),
 				array('system_user' => $user_id)
 			);
@@ -1579,7 +1582,7 @@ class shop extends Module {
 	 */
 	private function setTermsLink($tag_params, $children) {
 		if (isset($tag_params['link']))
-			$_SESSION['buyer_terms_link'] = $tag_params['link'];
+			$_SESSION['buyer_terms_link'] = fix_chars($tag_params['link']);
 	}
 
 	/**
@@ -1616,7 +1619,7 @@ class shop extends Module {
 			return $result;
 
 		// get all recurring payment transactions for current buyer
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 			array('id'),
 			array(
 				'type'			=> TransactionType::SUBSCRIPTION,
@@ -1631,14 +1634,14 @@ class shop extends Module {
 		if (!is_object($transaction))
 			return $result;
 
-		$plan = $plan_manager->getSingleItem(
-			$plan_manager->getFieldNames(),
+		$plan = $plan_manager->get_single_item(
+			$plan_manager->get_field_names(),
 			array('transaction' => $transaction->id)
 		);
 
 		// get last payment
-		$last_payment = $recurring_manager->getSingleItem(
-			$recurring_manager->getFieldNames(),
+		$last_payment = $recurring_manager->get_single_item(
+			$recurring_manager->get_field_names(),
 			array('plan' => $plan->id),
 			array('timestamp'),
 			false  // ascending
@@ -1662,14 +1665,14 @@ class shop extends Module {
 		$manager = ShopTransactionsManager::getInstance();
 
 		// try to get transaction with specified id
-		$transaction = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+			$manager->get_field_names(),
 			array('uid' => $transaction_id)
 		);
 
 		// set status of transaction
 		if (is_object($transaction)) {
-			$manager->updateData(
+			$manager->update_items(
 				array('status' => $status),
 				array('id' => $transaction->id)
 			);
@@ -1766,7 +1769,7 @@ class shop extends Module {
 
 		// get transaction
 		$manager = ShopTransactionsManager::getInstance();
-		$transaction = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$transaction = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// cancel transaction
 		if (is_object($transaction) && array_key_exists($transaction->payment_method, $this->payment_methods)) {
@@ -1802,8 +1805,8 @@ class shop extends Module {
 		$transaction_manager = ShopTransactionsManager::getInstance();
 
 		// get transaction and associated plan
-		$plan = $plan_manager->getSingleItem(
-			$plan_manager->getFieldNames(),
+		$plan = $plan_manager->get_single_item(
+			$plan_manager->get_field_names(),
 			array('id' => $plan_id)
 		);
 
@@ -1818,19 +1821,19 @@ class shop extends Module {
 			'status'	=> $status
 		);
 
-		$manager->insertData($data);
-		$payment_id = $manager->getInsertedID();
+		$manager->insert_item($data);
+		$payment_id = $manager->get_inserted_id();
 		$result = true;
 
 		// get newly inserted data
-		$payment = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$payment = $manager->get_single_item(
+			$manager->get_field_names(),
 			array('id' => $payment_id)
 		);
 
 		// get transaction and buyer
-		$transaction = $transaction_manager->getSingleItem(
-			$transaction_manager->getFieldNames(),
+		$transaction = $transaction_manager->get_single_item(
+			$transaction_manager->get_field_names(),
 			array('id' => $plan->transaction)
 		);
 
@@ -2016,8 +2019,8 @@ class shop extends Module {
 
 		// get buyer from specified email
 		if ($_SESSION['logged'])
-			$buyer = $buyer_manager->getSingleItem(
-				$buyer_manager->getFieldNames(),
+			$buyer = $buyer_manager->get_single_item(
+				$buyer_manager->get_field_names(),
 				array(
 					'guest'			=> 0,
 					'system_user'	=> $_SESSION['uid']
@@ -2042,8 +2045,8 @@ class shop extends Module {
 			);
 
 			// populate delivery addresses
-			$address_list = $delivery_address_manager->getItems(
-				$delivery_address_manager->getFieldNames(),
+			$address_list = $delivery_address_manager->get_items(
+				$delivery_address_manager->get_field_names(),
 				array('buyer' => $buyer->id)
 			);
 
@@ -2065,8 +2068,8 @@ class shop extends Module {
 				}
 
 			// get last used payment and delivery method
-			$transaction = $transaction_manager->getSingleItem(
-				$transaction_manager->getFieldNames(),
+			$transaction = $transaction_manager->get_single_item(
+				$transaction_manager->get_field_names(),
 				array('buyer' => $buyer->id),
 				array('timestamp'), false
 			);
@@ -2092,7 +2095,7 @@ class shop extends Module {
 		);
 
 		if (!is_null($email)) {
-			$account = $manager->getSingleItem(array('id'), array('email' => $email));
+			$account = $manager->get_single_item(array('id'), array('email' => $email));
 			$result['account_exists'] = is_object($account);
 			$result['message'] = $this->getLanguageConstant('message_error_account_exists');
 		}
@@ -2130,8 +2133,8 @@ class shop extends Module {
 		$ids = array_keys($cart);
 
 		// get items from database and prepare result
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
-		$values = $values_manager->getItems($values_manager->getFieldNames(), array());
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
+		$values = $values_manager->get_items($values_manager->get_field_names(), array());
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -2207,7 +2210,7 @@ class shop extends Module {
 		$transaction_item_manager = ShopTransactionItemsManager::getInstance();
 
 		// find specified transaction
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 				array('id'),
 				array(
 					'uid'	=> $uid,
@@ -2225,8 +2228,8 @@ class shop extends Module {
 		}
 
 		// get transaction items
-		$items = $transaction_item_manager->getItems(
-			$transaction_item_manager->getFieldNames(),
+		$items = $transaction_item_manager->get_items(
+			$transaction_item_manager->get_field_names(),
 			array('transaction' => $transaction->id)
 		);
 
@@ -2247,8 +2250,8 @@ class shop extends Module {
 		}
 
 		// get active shop items
-		$items = $item_manager->getItems(
-			$item_manager->getFieldNames(),
+		$items = $item_manager->get_items(
+			$item_manager->get_field_names(),
 			array(
 				'deleted'	=> 0,
 				'visible'	=> 1,
@@ -2313,7 +2316,7 @@ class shop extends Module {
 
 		// try to get item from database
 		$manager = ShopItemManager::getInstance();
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $uid));
+		$item = $manager->get_single_item($manager->get_field_names(), array('uid' => $uid));
 
 		// default result is false
 		$result = null;
@@ -2345,7 +2348,7 @@ class shop extends Module {
 			// get item price
 			if (!is_null($price_property)) {
 				$properties_manager = \Modules\Shop\Property\Manager::getInstance();
-				$property = $properties_manager->getSingleItem(
+				$property = $properties_manager->get_single_item(
 						array('value'),
 						array(
 							'item'    => $item->id,
@@ -2475,8 +2478,8 @@ class shop extends Module {
 		$payment_method = $this->getPaymentMethod(null);
 
 		// get specified transaction
-		$transaction = $transaction_manager->getSingleItem(
-			$transaction_manager->getFieldNames(),
+		$transaction = $transaction_manager->get_single_item(
+			$transaction_manager->get_field_names(),
 			array('uid' => $uid)
 		);
 
@@ -2503,7 +2506,7 @@ class shop extends Module {
 			$remark = $append ? $transaction->remark."\n" : '';
 			$remark .= escape_chars($_REQUEST['remark']);
 
-			$manager->updateData(
+			$manager->update_items(
 					array('remark' => $remark),
 					array('id' => $transaction->id)
 				);
@@ -2561,14 +2564,14 @@ class shop extends Module {
 		$transaction_manager = ShopTransactionsManager::getInstance();
 		$currency_manager = ShopCurrenciesManager::getInstance();
 
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 							array('currency', 'shipping', 'handling'),
 							array('uid' => $transaction_id)
 						);
 
 		if (is_object($transaction)) {
-			$currency = $currency_manager->getSingleItem(
-				$currency_manager->getFieldNames(),
+			$currency = $currency_manager->get_single_item(
+				$currency_manager->get_field_names(),
 				array('id' => $transaction->currency)
 			);
 
@@ -2614,7 +2617,7 @@ class shop extends Module {
 				$manager = ShopItemManager::getInstance();
 
 				// get items from database and prepare result
-				$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+				$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
 
 				// parse items from database
 				foreach ($items as $item) {
@@ -2807,7 +2810,7 @@ class shop extends Module {
 		// TODO: Instead of picking up the first warehouse we need to
 		// choose proper one based on location of items
 		$warehouse_manager = ShopWarehouseManager::getInstance();
-		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
+		$warehouse = $warehouse_manager->get_single_item($warehouse_manager->get_field_names(), array());
 
 		if (!is_object($warehouse)) {
 			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
@@ -2881,8 +2884,8 @@ class shop extends Module {
 
 					// get user account if sign in is valid
 					if ($credentials_ok && $retry_count <= 3)
-						$result = $manager->getSingleItem(
-								$manager->getFieldNames(),
+						$result = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('email' => $email)
 							);
 
@@ -2913,12 +2916,12 @@ class shop extends Module {
 					$password_confirm = $_REQUEST['new_password_confirm'];
 
 					// check if system user already exists
-					$user = $user_manager->getSingleItem(array('id'), array('email' => $data['email']));
+					$user = $user_manager->get_single_item(array('id'), array('email' => $data['email']));
 
 					if (is_object($user)) {
 						// check if buyer exists
-						$buyer = $manager->getSingleItem(
-									$manager->getFieldNames(),
+						$buyer = $manager->get_single_item(
+									$manager->get_field_names(),
 									array('system_user' => $user->id)
 								);
 
@@ -2931,11 +2934,11 @@ class shop extends Module {
 							$data['system_user'] = $user->id;
 
 							// create new account
-							$manager->insertData($data);
+							$manager->insert_item($data);
 
 							// get account object
-							$id = $manager->getInsertedID();
-							$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+							$id = $manager->get_inserted_id();
+							$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 							// send notification email
 							if (class_exists('Backend_UserManager')) {
@@ -2956,16 +2959,16 @@ class shop extends Module {
 								'verified'   => 0,
 								'agreed'     => 0
 							);
-						$user_manager->insertData($user_data);
-						$data['system_user'] = $user_manager->getInsertedID();
+						$user_manager->insert_item($user_data);
+						$data['system_user'] = $user_manager->get_inserted_id();
 						$user_manager->change_password($user_data['username'], $password);
 
 						// create new account
-						$manager->insertData($data);
+						$manager->insert_item($data);
 
 						// get account object
-						$id = $manager->getInsertedID();
-						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+						$id = $manager->get_inserted_id();
+						$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 						// send notification email
 						if (ModuleHandler::is_loaded('backend')) {
@@ -3009,7 +3012,7 @@ class shop extends Module {
 
 					// try finding existing account
 					if (count($conditions) > 0) {
-						$account = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+						$account = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 						if (is_object($account))
 							$result = $account;
@@ -3017,11 +3020,11 @@ class shop extends Module {
 
 					// create new account
 					if (!is_object($result)) {
-						$manager->insertData($data);
+						$manager->insert_item($data);
 
 						// get account object
-						$id = $manager->getInsertedID();
-						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+						$id = $manager->get_inserted_id();
+						$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 					}
 
 					break;
@@ -3029,8 +3032,8 @@ class shop extends Module {
 
 		} else if ($_SESSION['logged']) {
 			// user is already logged in, get associated buyer
-			$buyer = $manager->getSingleItem(
-				$manager->getFieldNames(),
+			$buyer = $manager->get_single_item(
+				$manager->get_field_names(),
 				array('system_user' => $_SESSION['uid'])
 			);
 
@@ -3048,8 +3051,8 @@ class shop extends Module {
 		$address_manager = ShopDeliveryAddressManager::getInstance();
 
 		// try to associate address with transaction
-		$address = $address_manager->getSingleItem(
-			$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+			$address_manager->get_field_names(),
 			array(
 				'buyer'   => $buyer->id,
 				'name'    => $shipping_information['name'],
@@ -3067,7 +3070,7 @@ class shop extends Module {
 
 		} else {
 			// create new address
-			$address_manager->insertData(array(
+			$address_manager->insert_item(array(
 				'buyer'       => $buyer->id,
 				'name'        => $shipping_information['name'],
 				'street'      => $shipping_information['street'],
@@ -3081,8 +3084,8 @@ class shop extends Module {
 				'access_code' => $shipping_information['access_code']
 			));
 
-			$id = $address_manager->getInsertedID();
-			$result = $address_manager->getSingleItem($address_manager->getFieldNames(), array('id' => $id));
+			$id = $address_manager->get_inserted_id();
+			$result = $address_manager->get_single_item($address_manager->get_field_names(), array('id' => $id));
 		}
 
 		return $result;
@@ -3116,7 +3119,7 @@ class shop extends Module {
 
 		if (isset($_SESSION['transaction']) && isset($_SESSION['transaction']['uid'])) {
 			$uid = $_SESSION['transaction']['uid'];
-			$transaction = $transactions_manager->getSingleItem(array('status'), array('uid' => $uid));
+			$transaction = $transactions_manager->get_single_item(array('status'), array('uid' => $uid));
 			$new_transaction = !(is_object($transaction) && $transaction->status == TransactionStatus::PENDING);
 		}
 
@@ -3182,7 +3185,7 @@ class shop extends Module {
 			// get default currency
 			$currency_manager = ShopCurrenciesManager::getInstance();
 			$default_currency = $this->settings['default_currency'];
-			$currency = $currency_manager->getSingleItem(array('id'), array('currency' => $default_currency));
+			$currency = $currency_manager->get_single_item(array('id'), array('currency' => $default_currency));
 
 			if (is_object($currency))
 				$result['currency'] = $currency->id;
@@ -3192,8 +3195,8 @@ class shop extends Module {
 				$result['address'] = $address->id;
 
 			// create new transaction
-			$transactions_manager->insertData($result);
-			$result['id'] = $transactions_manager->getInsertedID();
+			$transactions_manager->insert_item($result);
+			$result['id'] = $transactions_manager->get_inserted_id();
 
 			// add discounts to result
 			$result['discounts'] = $summary['discounts'];
@@ -3224,7 +3227,7 @@ class shop extends Module {
 				$data['address'] = $address->id;
 
 			// update existing transaction
-			$transactions_manager->updateData($data, array('uid' => $uid));
+			$transactions_manager->update_items($data, array('uid' => $uid));
 
 			// add discounts to result
 			$result['discounts'] = $summary['discounts'];
@@ -3234,15 +3237,15 @@ class shop extends Module {
 		}
 
 		// remove items associated with transaction
-		$transaction_items_manager->deleteData(array('transaction' => $result['id']));
+		$transaction_items_manager->delete_items(array('transaction' => $result['id']));
 
 		// remove plans associated with transaction
-		$transaction_plans_manager->deleteData(array('transaction' => $result['id']));
+		$transaction_plans_manager->delete_items(array('transaction' => $result['id']));
 
 		// store items
 		if (count($summary['items_for_checkout']) > 0)
 			foreach($summary['items_for_checkout'] as $uid => $item) {
-				$transaction_items_manager->insertData(array(
+				$transaction_items_manager->insert_item(array(
 					'transaction'	=> $result['id'],
 					'item'			=> $item['id'],
 					'price'			=> $item['price'],
@@ -3261,7 +3264,7 @@ class shop extends Module {
 			$plan = isset($plan_list[$plan_name]) ? $plan_list[$plan_name] : null;
 
 			if (!is_null($plan))
-				$transaction_plans_manager->insertData(array(
+				$transaction_plans_manager->insert_item(array(
 					'transaction'		=> $result['id'],
 					'plan_name'			=> $plan_name,
 					'trial'				=> $plan['trial'],
@@ -3278,7 +3281,7 @@ class shop extends Module {
 			$referral_id = $_SESSION['referral_id'];
 			$referrals_manager = AffiliateReferralsManager::getInstance();
 
-			$referrals_manager->updateData(
+			$referrals_manager->update_items(
 				array('transaction' => $result['id']),
 				array('id' => $referral_id)
 			);
@@ -3307,15 +3310,15 @@ class shop extends Module {
 			$buyer_data['guest'] = 1;
 
 		// get transaction from database
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 			array('id', 'buyer'),
 			array('uid' => $transaction_uid)
 		);
 
 		// try to get buyer from the system based on uid
 		if (isset($buyer_data['uid']))
-			$buyer = $buyer_manager->getSingleItem(
-				$buyer_manager->getFieldNames(),
+			$buyer = $buyer_manager->get_single_item(
+				$buyer_manager->get_field_names(),
 				array('uid' => $buyer_data['uid'])
 			);
 
@@ -3326,16 +3329,16 @@ class shop extends Module {
 				$buyer_id = $buyer->id;
 
 				// update buyer information
-				$buyer_manager->updateData($buyer_data, array('id' => $buyer->id));
+				$buyer_manager->update_items($buyer_data, array('id' => $buyer->id));
 
 			} else {
 				// create new buyer
-				$buyer_manager->insertData($buyer_data);
-				$buyer_id = $buyer_manager->getInsertedID();
+				$buyer_manager->insert_item($buyer_data);
+				$buyer_id = $buyer_manager->get_inserted_id();
 			}
 
 			// update transaction buyer
-			$transaction_manager->updateData(
+			$transaction_manager->update_items(
 				array('buyer'	=> $buyer_id),
 				array('id'		=> $transaction->id)
 			);
@@ -3412,8 +3415,8 @@ class shop extends Module {
 
 		// get currency
 		$currency_manager = ShopCurrenciesManager::getInstance();
-		$currency = $currency_manager->getSingleItem(
-				$currency_manager->getFieldNames(),
+		$currency = $currency_manager->get_single_item(
+				$currency_manager->get_field_names(),
 				array('id' => $transaction->currency)
 			);
 
@@ -3422,8 +3425,8 @@ class shop extends Module {
 
 		// add buyer information
 		$buyer_manager = ShopBuyersManager::getInstance();
-		$buyer = $buyer_manager->getSingleItem(
-				$buyer_manager->getFieldNames(),
+		$buyer = $buyer_manager->get_single_item(
+				$buyer_manager->get_field_names(),
 				array('id' => $transaction->buyer)
 			);
 
@@ -3439,8 +3442,8 @@ class shop extends Module {
 
 		// add buyer address
 		$address_manager = ShopDeliveryAddressManager::getInstance();
-		$address = $address_manager->getSingleItem(
-			$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+			$address_manager->get_field_names(),
 			array('id' => $transaction->address)
 		);
 
@@ -3462,8 +3465,8 @@ class shop extends Module {
 				$subtotal = 0;
 				$item_manager = ShopItemManager::getInstance();
 				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
-				$items = $transaction_item_manager->getItems(
-					$transaction_item_manager->getFieldNames(),
+				$items = $transaction_item_manager->get_items(
+					$transaction_item_manager->get_field_names(),
 					array('transaction' => $transaction->id)
 				);
 
@@ -3474,7 +3477,7 @@ class shop extends Module {
 						$id_list[] = $item->item;
 
 					$item_names = array();
-					$item_list = $item_manager->getItems(array('id', 'name'), array('id' => $id_list));
+					$item_list = $item_manager->get_items(array('id', 'name'), array('id' => $id_list));
 					foreach ($item_list as $item)
 						$item_names[$item->id] = $item->name[$language];
 
@@ -3579,8 +3582,8 @@ class shop extends Module {
 				$subtotal = 0;
 				$item_manager = ShopItemManager::getInstance();
 				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
-				$items = $transaction_item_manager->getItems(
-					$transaction_item_manager->getFieldNames(),
+				$items = $transaction_item_manager->get_items(
+					$transaction_item_manager->get_field_names(),
 					array('transaction' => $transaction->id)
 				);
 
@@ -3591,7 +3594,7 @@ class shop extends Module {
 						$id_list[] = $item->item;
 
 					$item_names = array();
-					$item_list = $item_manager->getItems(array('id', 'name'), array('id' => $id_list));
+					$item_list = $item_manager->get_items(array('id', 'name'), array('id' => $id_list));
 					foreach ($item_list as $item)
 						$item_names[$item->id] = $item->name[$language];
 
@@ -3677,8 +3680,8 @@ class shop extends Module {
 
 			case TransactionType::SUBSCRIPTION:
 				$plan_manager = ShopTransactionPlansManager::getInstance();
-				$plan = $plan_manager->getSingleItem(
-					$plan_manager->getFieldNames(),
+				$plan = $plan_manager->get_single_item(
+					$plan_manager->get_field_names(),
 					array('transaction' => $transaction->id)
 				);
 
@@ -3822,12 +3825,12 @@ class shop extends Module {
 				$transaction = Transaction::get_current();
 
 				if (is_object($transaction)) {
-					$buyer = $buyer_manager->getSingleItem(
-							$buyer_manager->getFieldNames(),
+					$buyer = $buyer_manager->get_single_item(
+							$buyer_manager->get_field_names(),
 							array('id' => $transaction->buyer)
 						);
-					$address = $address_manager->getSingleItem(
-							$address_manager->getFieldNames(),
+					$address = $address_manager->get_single_item(
+							$address_manager->get_field_names(),
 							array('id' => $transaction->address)
 						);
 					$stage = Stage::CHECKOUT;
@@ -3857,9 +3860,12 @@ class shop extends Module {
 				$required_count = count($shipping_required);
 				$fields_are_invalid = count($bad_fields) > 0 && $required_count > 0;
 
-				// log bad fields if debugging is enabled
+				// log bad behavior if debugging is enabled
 				if ($fields_are_invalid && defined('DEBUG'))
 					trigger_error('Checkout bad fields: '.implode(', ', $bad_fields), E_USER_NOTICE);
+
+				if (is_null($buyer) && defined('DEBUG'))
+					trigger_error('Unable to get buyer. Check database compatibility!', E_USER_NOTICE);
 
 				// reset stage back to data entry
 				if ($fields_are_invalid || is_null($payment_method) || is_null($buyer))
@@ -4057,7 +4063,7 @@ class shop extends Module {
 		$transaction_type = $this->getTransactionType();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
 		$items_by_uid = array();
 		$items_for_checkout = array();
 
@@ -4278,7 +4284,7 @@ class shop extends Module {
 		$item_to_display = array();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$uid_list = array_keys($cart);
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 
 		// prepare template
 		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');

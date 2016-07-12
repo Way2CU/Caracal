@@ -15,24 +15,24 @@ class ShopTransactionsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_transactions');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('buyer', 'int');
-		$this->addProperty('address', 'int');
-		$this->addProperty('uid', 'varchar');
-		$this->addProperty('type', 'smallint');
-		$this->addProperty('status', 'smallint');
-		$this->addProperty('currency', 'int');
-		$this->addProperty('handling', 'decimal');
-		$this->addProperty('shipping', 'decimal');
-		$this->addProperty('weight', 'decimal');
-		$this->addProperty('payment_method', 'varchar');
-		$this->addProperty('payment_token', 'int');
-		$this->addProperty('delivery_method', 'varchar');
-		$this->addProperty('delivery_type', 'varchar');
-		$this->addProperty('remark', 'text');
-		$this->addProperty('remote_id', 'varchar');
-		$this->addProperty('total', 'decimal');
-		$this->addProperty('timestamp', 'timestamp');
+		$this->add_property('id', 'int');
+		$this->add_property('buyer', 'int');
+		$this->add_property('address', 'int');
+		$this->add_property('uid', 'varchar');
+		$this->add_property('type', 'smallint');
+		$this->add_property('status', 'smallint');
+		$this->add_property('currency', 'int');
+		$this->add_property('handling', 'decimal');
+		$this->add_property('shipping', 'decimal');
+		$this->add_property('weight', 'decimal');
+		$this->add_property('payment_method', 'varchar');
+		$this->add_property('payment_token', 'int');
+		$this->add_property('delivery_method', 'varchar');
+		$this->add_property('delivery_type', 'varchar');
+		$this->add_property('remark', 'text');
+		$this->add_property('remote_id', 'varchar');
+		$this->add_property('total', 'decimal');
+		$this->add_property('timestamp', 'timestamp');
 	}
 
 	/**

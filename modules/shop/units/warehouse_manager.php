@@ -13,14 +13,14 @@ class ShopWarehouseManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_warehouse');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('street', 'varchar');
-		$this->addProperty('street2', 'varchar');
-		$this->addProperty('city', 'varchar');
-		$this->addProperty('zip', 'varchar');
-		$this->addProperty('country', 'varchar');
-		$this->addProperty('state', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'varchar');
+		$this->add_property('street', 'varchar');
+		$this->add_property('street2', 'varchar');
+		$this->add_property('city', 'varchar');
+		$this->add_property('zip', 'varchar');
+		$this->add_property('country', 'varchar');
+		$this->add_property('state', 'varchar');
 	}
 
 	/**

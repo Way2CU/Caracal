@@ -194,7 +194,7 @@ class ShopItemSizesHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemSizeValuesManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			// create template
@@ -228,10 +228,10 @@ class ShopItemSizesHandler {
 
 		if (is_null($id)) {
 			$window = 'shop_item_size_add';
-			$manager->insertData(array('name' => $name));
+			$manager->insert_item(array('name' => $name));
 		} else {
 			$window = 'shop_item_size_change';
-			$manager->updateData(array('name' => $name), array('id' => $id));
+			$manager->update_items(array('name' => $name), array('id' => $id));
 		}
 
 		// show message
@@ -265,11 +265,11 @@ class ShopItemSizesHandler {
 				);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_item_size_values_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_item_size_values_change';
 		}
 
@@ -296,7 +296,7 @@ class ShopItemSizesHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemSizesManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -333,8 +333,8 @@ class ShopItemSizesHandler {
 		$manager = ShopItemSizesManager::getInstance();
 		$values_manager = ShopItemSizeValuesManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$values_manager->deleteData(array('definition' => $id));
+		$manager->delete_items(array('id' => $id));
+		$values_manager->delete_items(array('definition' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -359,7 +359,7 @@ class ShopItemSizesHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemSizeValuesManager::getInstance();
 
-		$item = $manager->getSingleItem(array('value'), array('id' => $id));
+		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -395,7 +395,7 @@ class ShopItemSizesHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopItemSizeValuesManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -423,7 +423,7 @@ class ShopItemSizesHandler {
 		$uid = uniqid();
 
 		// check if it already exists in database
-		$count = $manager->sqlResult("SELECT count(*) FROM `shop_items` WHERE `uid`='{$uid}'");
+		$count = $manager->get_result("SELECT count(*) FROM `shop_items` WHERE `uid`='{$uid}'");
 
 		if ($count > 0)
 			// given how high entropy is we will probably
@@ -446,7 +446,7 @@ class ShopItemSizesHandler {
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'size_list_item.xml');
@@ -525,7 +525,7 @@ class ShopItemSizesHandler {
 			$selected = 0;
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'values_list_item.xml');

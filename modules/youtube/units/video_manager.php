@@ -17,10 +17,10 @@ class YouTube_VideoManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('youtube_video');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('video_id', 'varchar');
-		$this->addProperty('title', 'ml_varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('video_id', 'varchar');
+		$this->add_property('title', 'ml_varchar');
 	}
 
 	/**

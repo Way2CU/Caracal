@@ -191,7 +191,7 @@ class faq extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = QuestionManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
@@ -231,10 +231,10 @@ class faq extends Module {
 
 		if (is_null($id)) {
 			$window = 'faq_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'faq_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -260,7 +260,7 @@ class faq extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = QuestionManager::getInstance();
 
-		$item = $manager->getSingleItem(array('question'), array('id' => $id));
+		$item = $manager->get_single_item(array('question'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -295,7 +295,7 @@ class faq extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = QuestionManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -325,7 +325,7 @@ class faq extends Module {
 			return;
 
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($id)) {
 			$template = $this->loadTemplate($tag_params, 'list_item.xml');
@@ -354,7 +354,7 @@ class faq extends Module {
 		$conditions = array();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');

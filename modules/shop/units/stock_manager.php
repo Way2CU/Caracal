@@ -15,10 +15,10 @@ class ShopStockManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_stock');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('item', 'int');
-		$this->addProperty('size', 'int');
-		$this->addProperty('amount', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('item', 'int');
+		$this->add_property('size', 'int');
+		$this->add_property('amount', 'int');
 	}
 
 	/**

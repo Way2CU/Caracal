@@ -2,13 +2,14 @@
 <!DOCTYPE document SYSTEM "../schema/template.dtd">
 <document>
 	<svg
-		class="isset($params['class']) ? $params['class'] : null"
+		class="isset($params['class']) ? $params['class'] : false"
 		cms:optional="class"
 		>
 		<use
-			href="'#'.$params['symbol']"
+			href="$params['fallback'] ? '#'.$params['symbol'] : false"
 			xlink:href="$params['url'].'#'.$params['symbol']"
-			cms:eval="href,xlink:href"
+			cms:eval="xlink:href"
+			cms:optional="href"
 			/>
 	</svg>
 </document>

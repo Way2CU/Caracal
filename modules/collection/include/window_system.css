@@ -32,7 +32,7 @@ div.window {
 	-webkit-transform: translateZ(0);
 }
 
-body.rtl div.window {
+html[dir=rtl] div.window {
 	box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
@@ -115,7 +115,7 @@ div.window div.title div.wrap {
 	background-repeat: no-repeat;
 }
 
-body.rtl div.window div.title div.wrap {
+html[dir=rtl] div.window div.title div.wrap {
 	padding-left: 30px;
 	padding-right: 32px;
 	background-image: linear-gradient(-45deg, white, white calc(100% - 1.5em), transparent calc(100% - 1.5em), transparent);
@@ -140,7 +140,7 @@ div.window div.title span.icon {
 	transition: all 0.3s;
 }
 
-body.rtl div.window div.title span.icon {
+html[dir=rtl] div.window div.title span.icon {
 	left: auto;
 	right: 3px;
 }
@@ -169,7 +169,7 @@ div.window div.title a.close_button {
 	transition: all 0.3s;
 }
 
-body.rtl div.window div.title a.close_button {
+html[dir=rtl] div.window div.title a.close_button {
 	right: auto;
 	left: 0px;
 }
@@ -218,13 +218,13 @@ div.window div.content label.horizontal {
 	margin-right: 20px;
 }
 
-body.rtl div.window div.content label.horizontal {
+html[dir=rtl] div.window div.content label.horizontal {
 	margin-left: 20px;
 	margin-right: 0px;
 }
 
 div.window div.content label.horizontal:last-of-type,
-body.rtl div.window div.content label.horizontal:last-of-type {
+html[dir=rtl] div.window div.content label.horizontal:last-of-type {
 	margin-left: 0px;
 	margin-right: 0px;
 }
@@ -298,8 +298,8 @@ div.window div.content input[type=checkbox] {
 	clear: both;
 }
 
-body.rtl div.window div.content input[type=radio],
-body.rtl div.window div.content input[type=checkbox] {
+html[dir=rtl] div.window div.content input[type=radio],
+html[dir=rtl] div.window div.content input[type=checkbox] {
 	margin-left: 3px;
 	margin-right: 0px;
 	float: right;
@@ -325,7 +325,7 @@ div.window div.content label.inline span {
 	margin-right: 5px;
 }
 
-body.rtl div.window div.content label.inline span {
+html[dir=rtl] div.window div.content label.inline span {
 	margin-left: 5px;
 	margin-right: 0px;
 }
@@ -374,12 +374,12 @@ div.window button {
 }
 
 div.window button:first-child,
-body.rtl div.window button:last-child {
+html[dir=rtl] div.window button:last-child {
 	margin-left: 0;
 }
 
 div.window button:last-child,
-body.rtl div.window button:first-child {
+html[dir=rtl] div.window button:first-child {
 	margin-right: 0;
 }
 
@@ -424,7 +424,7 @@ div.window div.button_bar {
 	text-align: center;
 }
 
-body.rtl div.window div.button_bar {
+html[dir=rtl] div.window div.button_bar {
 	left: auto;
 	right: -7px;
 }
@@ -477,8 +477,8 @@ div.window div.scrollable_list .list_content .list_group .list_item {
 	padding-left: 15px;
 }
 
-body.rtl div.dialog div.scrollable_list .list_content .list_group .list_item,
-body.rtl div.window div.scrollable_list .list_content .list_group .list_item {
+html[dir=rtl] div.dialog div.scrollable_list .list_content .list_group .list_item,
+html[dir=rtl] div.window div.scrollable_list .list_content .list_group .list_item {
 	padding-left: 5px;
 	padding-right: 15px;
 }
@@ -620,7 +620,7 @@ div.window div.toolbar a.button {
 	transition: all 0.3s;
 }
 
-body.rtl div.window div.toolbar a.button {
+html[dir=rtl] div.window div.toolbar a.button {
 	float: right;
 }
 
@@ -636,7 +636,7 @@ div.window div.toolbar span.separator {
 	background-repeat: no-repeat;
 }
 
-body.rtl div.window div.toolbar span.separator {
+html[dir=rtl] div.window div.toolbar span.separator {
 	float: right;
 }
 
@@ -725,7 +725,7 @@ div.dialog div.container div.title_bar a.close_button {
 	transition: all 0.3s;
 }
 
-body.rtl div.dialog div.container div.title_bar a.close_button {
+html[dir=rtl] div.dialog div.container div.title_bar a.close_button {
 	right: auto;
 	left: 0px;
 }
@@ -755,9 +755,8 @@ div.window div.content label.box {
 	margin-right: 10px;
 }
 
-body.rtl div.window div.box.left,
-body.rtl div.window div.content label.box.left {
-	margin-left: 10px;
+html[dir=rtl] div.window div.box.left {
+	margin-left: 7px;
 	margin-right: 0px;
 }
 
@@ -794,7 +793,7 @@ div#login_window div.icon {
 	text-align: center;
 }
 
-body.rtl div#login_window div.icon {
+html[dir=rtl] div#login_window div.icon {
 	padding-right: 0px;
 	padding-left: 5px;
 	float: right;
@@ -807,7 +806,7 @@ div#login_window div.controls {
 	float: left;
 }
 
-body.rtl div#login_window div.controls {
+html[dir=rtl] div#login_window div.controls {
 	float: right;
 }
 
@@ -817,7 +816,7 @@ div#login_window div.input_controls {
 	padding-left: 25px;
 }
 
-body.rtl div#login_window div.input_controls {
+html[dir=rtl] div#login_window div.input_controls {
 	padding-left: 0px;
 	padding-right: 25px;
 }
@@ -873,7 +872,7 @@ div.window div.main_menu {
 	font-weight: normal;
 }
 
-body.rtl div.window div.main_menu {
+html[dir=rtl] div.window div.main_menu {
 	left: auto;
 	right: -7px;
 }
@@ -899,7 +898,7 @@ div.window div.main_menu div.floated {
 	float: right;
 }
 
-body.rtl div.window div.main_menu div.floated {
+html[dir=rtl] div.window div.main_menu div.floated {
 	float: left;
 }
 
@@ -981,7 +980,7 @@ div.window div.content iframe.target {
 	transition-property: all;
 }
 
-body.rtl [data-tooltip]:after {
+html[dir=rtl] [data-tooltip]:after {
 	left: auto;
 	right: 15px;
 }
@@ -1011,7 +1010,7 @@ body.rtl [data-tooltip]:after {
 	transition-property: all;
 }
 
-body.rtl [data-tooltip]:before {
+html[dir=rtl] [data-tooltip]:before {
 	left: auto;
 	right: 30px;
 }

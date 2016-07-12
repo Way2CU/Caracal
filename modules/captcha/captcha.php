@@ -123,24 +123,20 @@ class captcha extends Module {
 		$width = (10 + $this->settings['char_count'] * $this->settings['font_size']);
 		$height = $font_size_px + 10;
 
-		if (!in_array(parse_url($referer, PHP_URL_HOST), $accepted_hosts)) {
-			// load error image
-			$image = imagecreatefrompng($this->path.'images/error_image.png');
+		// create image
+		$image = imagecreate($width, $height);
+		// allocate colors and fonts
+		$colors = $this->getColors($image);
+		$fonts = $this->getFonts();
 
-		} else {
-			// create image
-			$image = imagecreate($width, $height);
+		// set random seed
+		srand ((float) microtime() * 10000000);
 
-			// allocate colors and fonts
-			$colors = $this->getColors($image);
-			$fonts = $this->getFonts();
+		// background fill
+		imagefill($image, 0, 0, $colors[0]);
 
-			// set random seed
-			srand ((float) microtime() * 10000000);
 
-			// background fill
-			imagefill($image, 0, 0, $colors[0]);
-
+		if (in_array(parse_url($referer, PHP_URL_HOST), $accepted_hosts)) {
 			// draw specified number of circles
 			for ($i=0; $i < $arc_count; $i++) {
 				$arc_center_x = -15 + $i * 30 + rand(-20,20);
@@ -165,7 +161,6 @@ class captcha extends Module {
 
 				imagettftext($image, $font_size, $font_angle, $font_x, $font_y, $font_color, $font_file, $value[$i]);
 			}
-
 		}
 
 		// print out the image

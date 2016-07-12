@@ -154,7 +154,7 @@ final class Delivery {
 			);
 
 			// update data
-			$manager->updateData($data, array('id' => $transaction->id));
+			$manager->update_items($data, array('id' => $transaction->id));
 			$result = true;
 		}
 
@@ -246,7 +246,7 @@ final class Delivery {
 
 		// populate missing fields
 		$manager = ItemManager::getInstance();
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 		$item_map = array();
 
 		// cache item data

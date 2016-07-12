@@ -260,7 +260,7 @@ class stripe_payment extends Module {
 			);
 
 		// load all plan unique ids
-		$plans = $manager->getItems(array('text_id'), array());
+		$plans = $manager->get_items(array('text_id'), array());
 
 		if (count($plans) > 0)
 			foreach ($plans as $plan)
@@ -274,7 +274,7 @@ class stripe_payment extends Module {
 			if (in_array($plan['id'], $uids)) {
 				// plan exists, update data
 				$data = array('name' => $plan['name']);
-				$manager->updateData($data, array('text_id' => $plan['id']));
+				$manager->update_items($data, array('text_id' => $plan['id']));
 
 			} else {
 				// this plan is not present in database, add it
@@ -287,7 +287,7 @@ class stripe_payment extends Module {
 						'price'				=> $plan['amount'] / 100,
 						'currency'			=> $plan['currency']
 					);
-				$manager->insertData($data);
+				$manager->insert_item($data);
 			}
 		}
 
@@ -299,7 +299,7 @@ class stripe_payment extends Module {
 		}
 
 		// remove plans
-		$manager->deleteData(array('text_id' => $remove_plans));
+		$manager->delete_items(array('text_id' => $remove_plans));
 	}
 
 	/**
@@ -353,7 +353,7 @@ class stripe_payment extends Module {
 		$conditions = array();
 
 		// get transaction first
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 								array('buyer', 'system_user'),
 								array('uid' => $transaction_uid)
 							);
@@ -374,8 +374,8 @@ class stripe_payment extends Module {
 			return null;
 
 		// try to get customer from database
-		$customer = $customer_manager->getSingleItem(
-							$customer_manager->getFieldNames(),
+		$customer = $customer_manager->get_single_item(
+							$customer_manager->get_field_names(),
 							$conditions
 						);
 
@@ -402,8 +402,8 @@ class stripe_payment extends Module {
 			);
 
 		// get transaction
-		$transaction = $transaction_manager->getSingleItem(
-								$transaction_manager->getFieldNames(),
+		$transaction = $transaction_manager->get_single_item(
+								$transaction_manager->get_field_names(),
 								array('uid' => $transaction_uid)
 							);
 
@@ -413,8 +413,8 @@ class stripe_payment extends Module {
 		}
 
 		// get currency
-		$currency = $currency_manager->getSingleItem(
-								$currency_manager->getFieldNames(),
+		$currency = $currency_manager->get_single_item(
+								$currency_manager->get_field_names(),
 								array('id' => $transaction->currency)
 							);
 
@@ -456,8 +456,8 @@ class stripe_payment extends Module {
 		$plan_name = fix_chars($_REQUEST['plan_name']);
 
 		// get transaction
-		$transaction = $transaction_manager->getSingleItem(
-								$transaction_manager->getFieldNames(),
+		$transaction = $transaction_manager->get_single_item(
+								$transaction_manager->get_field_names(),
 								array('uid' => $transaction_uid)
 							);
 
@@ -488,7 +488,7 @@ class stripe_payment extends Module {
 			// get email from system user
 			if ($transaction->system_user != 0) {
 				$user_manager = UserManager::getInstance();
-				$system_user = $user_manager->getSingleItem(
+				$system_user = $user_manager->get_single_item(
 										array('email'),
 										array('id' => $transaction->system_user)
 									);
@@ -502,7 +502,7 @@ class stripe_payment extends Module {
 			// get email from buyer
 			if ($transaction->buyer != 0 && !isset($customer_data['email'])) {
 				$buyer_manager = ShopBuyersManager::getInstance();
-				$buyer = $buyer_manager->getSingleItem(
+				$buyer = $buyer_manager->get_single_item(
 										array('email'),
 										array('id' => $transaction->buyer)
 									);
@@ -523,7 +523,7 @@ class stripe_payment extends Module {
 			}
 
 			// store customer to local database
-			$customer_manager->insertData($stripe_data);
+			$customer_manager->insert_item($stripe_data);
 
 			// make subscription
 			try {
@@ -563,7 +563,7 @@ class stripe_payment extends Module {
 		$selected = isset($_SESSION['recurring_plan']) ? $_SESSION['recurring_plan'] : null;
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'plans_list_item.xml');

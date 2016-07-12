@@ -257,7 +257,7 @@ class affiliates extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = AffiliatesManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
@@ -307,7 +307,7 @@ class affiliates extends Module {
 				'default'	=> $default
 			);
 
-		$existing_items = $manager->getItems(array('id'), array('uid' => $uid));
+		$existing_items = $manager->get_items(array('id'), array('uid' => $uid));
 
 		if (is_null($id)) {
 			if (count($existing_items) > 0 || empty($uid)) {
@@ -319,7 +319,7 @@ class affiliates extends Module {
 				$message = 'message_affiliate_saved';
 
 				$data['uid'] = $uid;
-				$manager->insertData($data);
+				$manager->insert_item($data);
 			}
 
 			$window = 'affiliates_new';
@@ -328,7 +328,7 @@ class affiliates extends Module {
 			// update existing record
 			$window = 'affiliates_change';
 			$message = 'message_affiliate_saved';
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 		}
 
 		// show message
@@ -356,7 +356,7 @@ class affiliates extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = AffiliatesManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -395,8 +395,8 @@ class affiliates extends Module {
 		$manager = AffiliatesManager::getInstance();
 		$referrals_manager = AffiliateReferralsManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$referrals_manager->deleteData(array('affiliate' => $id));
+		$manager->delete_items(array('id' => $id));
+		$referrals_manager->delete_items(array('affiliate' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -442,7 +442,7 @@ class affiliates extends Module {
 
 		$manager = AffiliatesManager::getInstance();
 		$user_id = $_SESSION['uid'];
-		$affiliate = $manager->getSingleItem($manager->getFieldNames(), array('user' => $user_id));
+		$affiliate = $manager->get_single_item($manager->get_field_names(), array('user' => $user_id));
 
 		if (is_object($affiliate)) {
 			$template = new TemplateHandler('information.xml', $this->path.'templates/');
@@ -487,11 +487,11 @@ class affiliates extends Module {
 		$landing = mb_substr($landing, 0, mb_strlen($base_url));
 
 		// get affiliate
-		$affiliate = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $uid));
+		$affiliate = $manager->get_single_item($manager->get_field_names(), array('uid' => $uid));
 
 		// if affiliate code is not valid, assign to default affiliate
 		if (!is_object($affiliate))
-			$affiliate = $manager->getSingleItem($manager->getFieldNames(), array('default' => 1));
+			$affiliate = $manager->get_single_item($manager->get_field_names(), array('default' => 1));
 
 		// if affiliate exists, update
 		if (is_object($affiliate) && !is_null($referer)) {
@@ -502,12 +502,12 @@ class affiliates extends Module {
 						'conversion'	=> 0
 					);
 
-			$referrals_manager->insertData($data);
-			$id = $referrals_manager->getInsertedID();
+			$referrals_manager->insert_item($data);
+			$id = $referrals_manager->get_inserted_id();
 			$_SESSION['referral_id'] = $id;
 
 			// increase referrals counter
-			$manager->updateData(
+			$manager->update_items(
 						array('clicks' => '`clicks` + 1'),
 						array('id' => $affiliate->id)
 					);
@@ -526,18 +526,18 @@ class affiliates extends Module {
 		$referrals_manager = AffiliateReferralsManager::getInstance();
 
 		// get referral entry by specified id
-		$referral = $referrals_manager->getSingleItem(
-								$referrals_manager->getFieldNames(),
+		$referral = $referrals_manager->get_single_item(
+								$referrals_manager->get_field_names(),
 								array('id' => $id)
 							);
 
 		// referral entry is valid, update affiliate and referral record
 		if (is_object($referral)) {
-			$manager->updateData(
+			$manager->update_items(
 						array('conversions' => '`conversions` + 1'),
 						array('id' => $referral->affiliate)
 					);
-			$referrals_manager->updateData(
+			$referrals_manager->update_items(
 						array('conversion' => 1),
 						array('id' => $referral->id)
 					);
@@ -555,7 +555,7 @@ class affiliates extends Module {
 		$conditions = array();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');

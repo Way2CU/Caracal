@@ -118,7 +118,7 @@ class ShopWarehouseHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopWarehouseManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('warehouse_change.xml', $this->path.'templates/');
@@ -171,11 +171,11 @@ class ShopWarehouseHandler {
 		$manager = ShopWarehouseManager::getInstance();
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_warehouse_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_warehouse_change';
 		}
 
@@ -201,7 +201,7 @@ class ShopWarehouseHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopWarehouseManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -237,7 +237,7 @@ class ShopWarehouseHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopWarehouseManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -276,7 +276,7 @@ class ShopWarehouseHandler {
 		$template = $this->_parent->loadTemplate($tag_params, 'warehouse_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {

@@ -13,8 +13,8 @@ class ContactForm_FieldsetFieldsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_fieldset_fields');
 
-		$this->addProperty('fieldset', 'int');
-		$this->addProperty('field', 'int');
+		$this->add_property('fieldset', 'int');
+		$this->add_property('field', 'int');
 	}
 
 	/**

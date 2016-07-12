@@ -96,15 +96,6 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		$url = str_replace('%terminal%', $terminal, $url);
 
-		// Apply nasty custom template hacks in order to make
-		// Tranzila support RTL properly. Sadly there's no other
-		// way around this.
-		if ($this->parent->settings['custom_template']) {
-			if ($language == 'he')
-				$url .= '?template=custom_he&lang=heb'; else
-				$url .= '?template=custom';
-		}
-
 		return $url;
 	}
 
@@ -187,13 +178,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		if (array_key_exists($currency, $this->currency))
 			$currency_code = $this->currency[$currency];
 
-		// Since concept of naming conventions doesn't ring a bell in
-		// Tranzila "development" team's heads we have to resort to complex
-		// sussage-like conditions which determine how language code can
-		// be abused next. It's important to note, language parameter sent
-		// through POST only works when template is *NOT* set to `custom`.
-		// If template is set to `custom` language is set through `get_url`
-		// function and this parameter is ignored.
+		// detect language to be used for stock templates
 		$interface_language = $language;
 		if (isset($this->language_aliases[$language]))
 			$interface_language = $this->language_aliases[$language];
@@ -210,8 +195,16 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'lang'           => $interface_language
 		);
 
-		if ($this->parent->settings['custom_template'])
-			$params['template'] = 'custom';
+		// apply different behavior for custom templates
+		if ($this->parent->settings['custom_template']) {
+			if ($language == 'he') {
+				$params['template'] = 'custom_he';
+				$params['lang'] = 'heb';
+
+			} else {
+				$params['template'] = 'custom';
+			}
+		}
 
 		// add buyer information
 		$buyer = Transaction::get_current_buyer();
@@ -284,8 +277,16 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'lang'			=> $interface_language
 		);
 
-		if ($this->parent->settings['custom_template'])
-			$params['template'] = 'custom';
+		// apply different behavior for custom templates
+		if ($this->parent->settings['custom_template']) {
+			if ($language == 'he') {
+				$params['template'] = 'custom_he';
+				$params['lang'] = 'heb';
+
+			} else {
+				$params['template'] = 'custom';
+			}
+		}
 
 		// create HTML form
 		$result = '';
@@ -339,8 +340,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// get token
 		$token_manager = Modules\Shop\TokenManager::getInstance();
-		$token = $token_manager->getSingleItem(
-			$token_manager->getFieldNames(),
+		$token = $token_manager->get_single_item(
+			$token_manager->get_field_names(),
 			array('id' => $transaction->payment_token)
 		);
 
@@ -355,8 +356,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		// prepare currency
 		$currency_manager = ShopCurrenciesManager::getInstance();
-		$currency = $currency_manager->getSingleItem(
-			$currency_manager->getFieldNames(),
+		$currency = $currency_manager->get_single_item(
+			$currency_manager->get_field_names(),
 			array('id' => $transaction->currency)
 		);
 

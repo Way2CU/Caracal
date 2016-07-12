@@ -305,7 +305,7 @@ class paypal extends Module {
 		$shop = shop::getInstance();
 		$manager = PayPal_PlansManager::getInstance();
 
-		$plan = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$plan = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($plan)) {
 			$template = new TemplateHandler('plans_change.xml', $this->path.'templates/');
@@ -357,11 +357,11 @@ class paypal extends Module {
 
 		if (is_null($id)) {
 			$window = 'paypal_recurring_plans_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 
 		} else {
 			$window = 'paypal_recurring_plans_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -387,7 +387,7 @@ class paypal extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = PayPal_PlansManager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -422,7 +422,7 @@ class paypal extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = PayPal_PlansManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -453,8 +453,8 @@ class paypal extends Module {
 		$plan_manager = ShopTransactionPlansManager::getInstance();
 
 		// get plan associated with this transaction
-		$plan = $plan_manager->getSingleItem(
-									$plan_manager->getFieldNames(),
+		$plan = $plan_manager->get_single_item(
+									$plan_manager->get_field_names(),
 									array('transaction' => $transaction->id)
 								);
 
@@ -515,8 +515,8 @@ class paypal extends Module {
 			case 'recurring_payment_suspended':
 			case 'recurring_payment_suspended_due_to_max_failed_payment':
 				$profile_id = escape_chars($_REQUEST['recurring_payment_id']);
-				$transaction = $transaction_manager->getSingleItem(
-												$transaction_manager->getFieldNames(),
+				$transaction = $transaction_manager->get_single_item(
+												$transaction_manager->get_field_names(),
 												array('token' => $profile_id)
 											);
 
@@ -559,7 +559,7 @@ class paypal extends Module {
 		$template = $this->loadTemplate($tag_params, 'plans_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach($items as $item) {

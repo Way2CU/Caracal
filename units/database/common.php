@@ -26,7 +26,7 @@ function database_connect() {
 			$result = $connected && $selected;
 
 			// connection was successful but database doesn't exist
-			if ($connected && (!$selected || ($selected && !ModuleManager::getInstance()->tableExists())))
+			if ($connected && (!$selected || ($selected && !ModuleManager::getInstance()->table_exists())))
 				$result = database_initialize(!$selected);
 
 			break;
@@ -58,11 +58,11 @@ function database_connect() {
  * @return boolean
  */
 function database_initialize($create_database) {
-	global $db, $db_config, $data_path;
+	global $db, $db_config, $data_path, $system_queries_path;
 
 	$result = false;
 	$database_exists = false;
-	$sql_file = 'units/database/init.sql';
+	$sql_file = $system_queries_path.'initialize.sql';
 	$xml_file = $data_path.'system_init.xml';
 
 	if (!file_exists($sql_file) || !file_exists($xml_file)) {
@@ -106,7 +106,7 @@ function database_initialize($create_database) {
 			switch ($item->tagName) {
 				case 'module':
 					// insert data
-					$module_manager->insertData(array(
+					$module_manager->insert_item(array(
 									'name'		=> $item->tagAttrs['name'],
 									'order'		=> $item->tagAttrs['order'],
 									'preload'	=> $item->tagAttrs['preload'] == 'yes' ? 1 : 0,
@@ -152,7 +152,7 @@ function database_initialize($create_database) {
 						$data['fullname'] = $data['first_name'].' '.$data['last_name'];
 					}
 
-					$admin_manager->insertData($data);
+					$admin_manager->insert_item($data);
 					break;
 			}
 

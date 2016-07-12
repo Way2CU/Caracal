@@ -47,7 +47,7 @@ class Handler {
 		$manager = Manager::getInstance();
 
 		// remove existing properties
-		$manager->deleteData(array('item' => $item_id));
+		$manager->delete_items(array('item' => $item_id));
 
 		// insert new data
 		$count = 0;
@@ -66,7 +66,7 @@ class Handler {
 					'value'   => serialize($decoded['value'])
 				);
 
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$count++;
 		}
 
@@ -87,7 +87,7 @@ class Handler {
 			$conditions['item'] = fix_id($_REQUEST['item']);
 
 		if (isset($_REQUEST['item_uid'])) {
-			$item = $item_manager->getSingleItem(
+			$item = $item_manager->get_single_item(
 					array('id'),
 					array('uid' => fix_chars($_REQUEST['item_uid']))
 				);
@@ -104,7 +104,7 @@ class Handler {
 			$conditions['text_id'] = fix_chars($_REQUEST['text_id']);
 
 		// get property from the database
-		$property = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$property = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// bail if no property was found
 		if (!is_object($property)) {
@@ -152,10 +152,10 @@ class Handler {
 			$conditions['item'] = -1;
 
 		if (isset($tag_params['text_id']))
-			$conditions['text_id'] = escape_chars($tag_params['text_id']);
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item properties from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// we need items to display
 		if (!is_object($item))
@@ -221,7 +221,7 @@ class Handler {
 			$discount = floatval($tag_params['discount']);
 
 		// get item properties from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $sort_by, $sort_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $sort_by, $sort_asc);
 
 		// we need items to display
 		if (count($items) == 0)

@@ -15,8 +15,8 @@ class ShopRelatedItemsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_related_items');
 
-		$this->addProperty('item', 'int');
-		$this->addProperty('related', 'int');
+		$this->add_property('item', 'int');
+		$this->add_property('related', 'int');
 	}
 
 	/**

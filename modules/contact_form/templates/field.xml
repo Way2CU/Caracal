@@ -276,7 +276,7 @@
 						cms:optional="required,disabled"
 						cms:eval="name"
 						>
-						<cms:if condition="!empty($params['placeholder'][$language]) or $params['required']">
+						<cms:if condition="(!empty($params['placeholder'][$language]) or $params['required']) and empty($params['value'])">
 							<option
 								value=""
 								disabled="disabled"

@@ -195,7 +195,7 @@ class ontop extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Manager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
@@ -244,11 +244,11 @@ class ontop extends Module {
 
 		if (is_null($id)) {
 			$window = 'ontop_new_application';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 
 		} else {
 			$window = 'ontop_edit_application';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -272,7 +272,7 @@ class ontop extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Manager::getInstance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -307,7 +307,7 @@ class ontop extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Manager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -330,7 +330,7 @@ class ontop extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Manager::getInstance();
 
-		$target = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$target = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		Handler::set_targets(array(array(
 				'id'  => $target->uid,
 				'key' => $target->key
@@ -409,7 +409,7 @@ class ontop extends Module {
 		$conditions = array();
 
 		// get application from the database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) == 0)
 			return;

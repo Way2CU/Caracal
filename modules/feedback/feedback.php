@@ -147,7 +147,7 @@ class feedback extends Module {
 		$message = fix_chars($_REQUEST['message']);
 		$url = $_SERVER['QUERY_STRING'];
 
-		$manager->insertData(array(
+		$manager->insert_item(array(
 						'user'		=> $user,
 						'message'	=> $message,
 						'url'		=> $url
@@ -172,7 +172,7 @@ class feedback extends Module {
 		$template->setTemplateParamsFromArray($children);
 
 		// get items from the database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// parse template
 		if (count($items) > 0)
@@ -180,7 +180,7 @@ class feedback extends Module {
 				$timestamp = strtotime($item->timestamp);
 				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
 				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
-				$user = $user_manager->getSingleItem(array('fullname'), array('id' => $item->user));
+				$user = $user_manager->get_single_item(array('fullname'), array('id' => $item->user));
 				$user_name = $item->user;
 
 				if (is_object($user))

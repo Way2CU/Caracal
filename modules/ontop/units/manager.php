@@ -20,12 +20,12 @@ class Manager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('ontop_applications');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('uid', 'varchar');
-		$this->addProperty('key', 'varchar');
-		$this->addProperty('shop_transaction_complete', 'boolean');
-		$this->addProperty('contact_form_submit', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'varchar');
+		$this->add_property('uid', 'varchar');
+		$this->add_property('key', 'varchar');
+		$this->add_property('shop_transaction_complete', 'boolean');
+		$this->add_property('contact_form_submit', 'boolean');
 	}
 
 	/**

@@ -237,7 +237,7 @@ abstract class Module {
 		$manager = SettingsManager::getInstance();
 
 		// get values from the database
-		$settings = $manager->getItems($manager->getFieldNames(), array('module' => $this->name));
+		$settings = $manager->get_items($manager->get_field_names(), array('module' => $this->name));
 
 		if (count($settings) > 0)
 			foreach ($settings as $setting)
@@ -263,7 +263,7 @@ abstract class Module {
 		$manager = SettingsManager::getInstance();
 
 		// check if specified setting already exists
-		$setting = $manager->getSingleItem(
+		$setting = $manager->get_single_item(
 								array('id'),
 								array(
 									'module'	=> $this->name,
@@ -272,13 +272,13 @@ abstract class Module {
 
 		// update or insert data
 		if (is_object($setting)) {
-			$manager->updateData(
+			$manager->update_items(
 						array('value' => $value),
 						array('id' => $setting->id)
 					);
 
 		} else {
-			$manager->insertData(array(
+			$manager->insert_item(array(
 						'module'	=> $this->name,
 						'variable'	=> $var,
 						'value'		=> $value

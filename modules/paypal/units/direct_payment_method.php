@@ -169,7 +169,7 @@ class PayPal_Direct extends PaymentMethod {
 	public function new_recurring_payment($data, $billing_information, $plan_name, $return_url, $cancel_url) {
 		$result = '';
 		$manager = PayPal_PlansManager::getInstance();
-		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+		$plan = $manager->get_single_item($manager->get_field_names(), array('text_id' => $plan_name));
 
 		if (is_object($plan)) {
 			$params = array(
@@ -228,8 +228,8 @@ class PayPal_Direct extends PaymentMethod {
 			$plan_name = $_SESSION['recurring_plan'];
 
 			$manager = PayPal_PlansManager::getInstance();
-			$plan = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$plan = $manager->get_single_item(
+									$manager->get_field_names(),
 									array('text_id' => $plan_name)
 								);
 			$current_plan = $shop->getRecurringPlan();

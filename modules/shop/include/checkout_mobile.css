@@ -80,7 +80,7 @@ div#shipping_information div.container {
 	transition: max-height 0.5s;
 }
 
-body.rtl div#shipping_information div.container {
+html[dir=rtl] div#shipping_information div.container {
 	text-align: right;
 }
 
@@ -120,7 +120,7 @@ div#shipping_information div.container div.summary:after {
 	transition: all 0.3s;
 }
 
-body.rtl div#shipping_information div.container div.summary:after {
+html[dir=rtl] div#shipping_information div.container div.summary:after {
 	left: 0;
 	right: auto;
 }
@@ -189,7 +189,7 @@ div#shipping_information div.container.method div.details a {
 	transition: all 0.3s;
 }
 
-body.rtl div#shipping_information div.container.method div.details a {
+html[dir=rtl] div#shipping_information div.container.method div.details a {
 	margin-right: 0;
 	margin-left: 10px;
 }
@@ -236,7 +236,7 @@ div#shipping_information div.container.types div.details a {
 	transition: all 0.3s;
 }
 
-body.rtl div#shipping_information div.container.types div.details a {
+html[dir=rtl] div#shipping_information div.container.types div.details a {
 	margin-right: 0;
 	margin-left: 10px;
 	text-align: right;
@@ -250,7 +250,7 @@ div#shipping_information div.container.types div.details a span.name span {
 	float: right;
 }
 
-body.rtl div#shipping_information div.container.types div.details a span.name span {
+html[dir=rtl] div#shipping_information div.container.types div.details a span.name span {
 	float: left;
 }
 
@@ -346,13 +346,13 @@ div#shipping_information div.delivery_method label {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#shipping_information div.delivery_method label {
+html[dir=rtl] div#shipping_information div.delivery_method label {
 	margin-left: 5px;
 	margin-right: 0px;
 }
 
 div#shipping_information div.delivery_method label:nth-child(3n + 0),
-body.rtl div#shipping_information div.delivery_method label:nth-child(3n + 0) {
+html[dir=rtl] div#shipping_information div.delivery_method label:nth-child(3n + 0) {
 	margin-left: 0px;
 }
 
@@ -394,7 +394,7 @@ div#shipping_information div.delivery_method label input + div:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#shipping_information div.delivery_method label input + div:before {
+html[dir=rtl] div#shipping_information div.delivery_method label input + div:before {
 	margin-left: 6px;
 	margin-right: 0px;
 }
@@ -413,7 +413,7 @@ div#shipping_information div.delivery_method label > div span:after {
 	font-size: 0.9em;
 }
 
-body.rtl div#shipping_information div.delivery_method label > div span {
+html[dir=rtl] div#shipping_information div.delivery_method label > div span {
 	float: left;
 }
 
@@ -425,7 +425,7 @@ div#shipping_information div.delivery_method label > span {
 	font-size: 0.8em;
 }
 
-body.rtl div#shipping_information div.delivery_method label > span {
+html[dir=rtl] div#shipping_information div.delivery_method label > span {
 	padding-left: 0px;
 	padding-right: 24px;
 }
@@ -556,19 +556,19 @@ table.checkout_details thead td {
 	font-weight: bold;
 }
 
-body.rtl table.checkout_details thead td {
+html[dir=rtl] table.checkout_details thead td {
 	border: 0px;
 	border-left: 1px solid white;
 }
 
 table.checkout_details thead td:first-child,
-body.rtl table.checkout_details thead td:last-child {
+html[dir=rtl] table.checkout_details thead td:last-child {
 	border-left: 0px;
 	border-radius: 7px 0px 0px 0px;
 }
 
 table.checkout_details thead td:last-child,
-body.rtl table.checkout_details thead td:first-child {
+html[dir=rtl] table.checkout_details thead td:first-child {
 	border-right: 0px;
 	border-radius: 0px 7px 0px 0px;
 }
@@ -586,7 +586,7 @@ table.discounted_items thead th {
 	font-weight: bold;
 }
 
-body.rtl table.discounted_items thead th {
+html[dir=rtl] table.discounted_items thead th {
 	text-align: right;
 }
 
@@ -653,7 +653,7 @@ table.checkout_details tfoot td.total-label {
 	border-left-width: 1px;
 }
 
-body.rtl table.checkout_details tfoot td.total-label {
+html[dir=rtl] table.checkout_details tfoot td.total-label {
 	border-left-width: 0px;
 	border-right-width: 1px;
 }
@@ -714,7 +714,7 @@ div.checkout_controls button {
 	transition-duration: 0.3s;
 }
 
-body.rtl div.checkout_controls button {
+html[dir=rtl] div.checkout_controls button {
 	margin-left: 0px;
 	margin-right: 10px;
 }
@@ -863,7 +863,7 @@ div#input_details label {
 	text-align: left;
 }
 
-body.rtl div#input_details label {
+html[dir=rtl] div#input_details label {
 	text-align: right;
 }
 
@@ -921,7 +921,7 @@ div#input_details label span {
 	text-align: left;
 }
 
-body.rtl div#input_details label span {
+html[dir=rtl] div#input_details label span {
 	text-align: right;
 }
 
@@ -1034,8 +1034,8 @@ div#input_details label.checkbox input + span:before {
 	background-image: url(../images/checkbox.png);
 }
 
-body.rtl div#input_details label.radio input + span:before,
-body.rtl div#input_details label.checkbox input + span:before {
+html[dir=rtl] div#input_details label.radio input + span:before,
+html[dir=rtl] div#input_details label.checkbox input + span:before {
 	margin-right: auto;
 	margin-left: 4px;
 }
@@ -1064,7 +1064,7 @@ div#input_details label.captcha img {
 	border-radius: 3px;
 }
 
-body.rtl div#input_details label.captcha img {
+html[dir=rtl] div#input_details label.captcha img {
 	margin-right: 10px;
 	margin-left: 0px;
 }
@@ -1083,11 +1083,11 @@ div#input_details div.horizontal label:nth-child(2) {
 	padding: 0px;
 }
 
-body.rtl div#input_details div.horizontal {
+html[dir=rtl] div#input_details div.horizontal {
 	text-align: right;
 }
 
-body.rtl div#input_details div.horizontal label {
+html[dir=rtl] div#input_details div.horizontal label {
 	display: inline-block;
 	padding-right: auto;
 	padding-left: 7px;
@@ -1150,7 +1150,7 @@ div#checkout_steps a {
 	counter-increment: checkout-steps;
 }
 
-body.rtl div#checkout_steps a {
+html[dir=rtl] div#checkout_steps a {
 	margin-right: auto;
 	margin-left: 5px;
 }
@@ -1174,7 +1174,7 @@ div#checkout_steps a:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#checkout_steps a:before {
+html[dir=rtl] div#checkout_steps a:before {
 	margin-right: auto;
 	margin-left: 3px;
 }
@@ -1197,7 +1197,7 @@ div#checkout_steps a:not(:last-of-type):after {
 	border-left: 5px solid #606060;
 }
 
-body.rtl div#checkout_steps a:not(:last-of-type):after {
+html[dir=rtl] div#checkout_steps a:not(:last-of-type):after {
 	left: auto;
 	right: 3px;
 	border-left-width: 0px;

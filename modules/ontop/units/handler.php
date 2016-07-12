@@ -43,7 +43,7 @@ final class Handler {
 				$conditions[$param] = 1;
 
 		// get applications for specified conditions
-		$applications = $manager->getItems(array('uid', 'key'), $conditions);
+		$applications = $manager->get_items(array('uid', 'key'), $conditions);
 
 		// prepare result
 		if (count($applications) > 0)

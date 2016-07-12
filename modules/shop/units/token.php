@@ -42,8 +42,8 @@ final class Token {
 		$manager = self::get_manager();
 
 		// try to get item
-		$result = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$result = $manager->get_single_item(
+			$manager->get_field_names(),
 			array(
 				'payment_method'	=> $payment_method,
 				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer,
@@ -99,9 +99,9 @@ final class Token {
 		}
 
 		// insert new data
-		$manager->insertData($data);
-		$id = $manager->getInsertedID();
-		$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$manager->insert_item($data);
+		$id = $manager->get_inserted_id();
+		$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		// set as default
 		if ($default)
@@ -122,8 +122,8 @@ final class Token {
 		$manager = self::get_manager();
 
 		// get specified item
-		$item = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+			$manager->get_field_names(),
 			array(
 				'payment_method'	=> $payment_method,
 				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer,
@@ -148,8 +148,8 @@ final class Token {
 		$manager = self::get_manager();
 
 		// get items
-		$items = $manager->getItems(
-			$manager->getFieldNames(),
+		$items = $manager->get_items(
+			$manager->get_field_names(),
 			array(
 				'payment_method'	=> $payment_method,
 				'buyer'				=> is_object($buyer) ? $buyer->id : $buyer
@@ -181,7 +181,7 @@ final class Token {
 		}
 
 		// clear all tokens for specifed method and buyer
-		$manager->updateData(
+		$manager->update_items(
 			array(
 				'default' => 0
 			),
@@ -191,7 +191,7 @@ final class Token {
 			));
 
 		// set specified token as default
-		$manager->updateData(array('default' => 1), array('id' => $new_default->id));
+		$manager->update_items(array('default' => 1), array('id' => $new_default->id));
 	}
 
 	/**
@@ -223,7 +223,7 @@ final class Token {
 	 */
 	public static function delete_by_id($id) {
 		$manager = self::get_manager();
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 	}
 
 	/**

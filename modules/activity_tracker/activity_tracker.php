@@ -229,7 +229,7 @@ class activity_tracker extends Module {
 		$manager = ActivityManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 
-		$activity = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$activity = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($activity)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
@@ -270,10 +270,10 @@ class activity_tracker extends Module {
 		// update or insert new data
 		if (is_null($id)) {
 			$window = 'activities_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'activities_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		// show message
@@ -300,7 +300,7 @@ class activity_tracker extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ActivityManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -336,8 +336,8 @@ class activity_tracker extends Module {
 		$manager = ActivityManager::getInstance();
 		$log_manager = ActivityLogManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$log_manager->deleteData(array('activity' => $id));
+		$manager->delete_items(array('id' => $id));
+		$log_manager->delete_items(array('activity' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -370,8 +370,8 @@ class activity_tracker extends Module {
 		$function_name = isset($_REQUEST['function']) ? fix_chars($_REQUEST['function']) : null;
 
 		// get activity
-		$activity = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$activity = $manager->get_single_item(
+								$manager->get_field_names(),
 								array(
 									'activity'	=> $activity_name,
 									'function'	=> $function_name,
@@ -395,11 +395,11 @@ class activity_tracker extends Module {
 			return $result;
 
 		// try to get log record
-		$log = $log_manager->getSingleItem($log_manager->getFieldNames(), $conditions);
+		$log = $log_manager->get_single_item($log_manager->get_field_names(), $conditions);
 
 		if (is_object($log)) {
 			// update existing log
-			$log_manager->updateData(
+			$log_manager->update_items(
 						array('timestamp' => $db->format_timestamp(time())),
 						array('id' => $log->id)
 					);
@@ -417,7 +417,7 @@ class activity_tracker extends Module {
 			if ($_SESSION['logged'])
 				$data['user'] = $_SESSION['uid'];
 
-			$log_manager->insertData($data);
+			$log_manager->insert_item($data);
 			$result = true;
 		}
 
@@ -444,8 +444,8 @@ class activity_tracker extends Module {
 		$function_name = isset($_REQUEST['function']) ? fix_chars($_REQUEST['function']) : null;
 
 		// get activity
-		$activity = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$activity = $manager->get_single_item(
+								$manager->get_field_names(),
 								array(
 									'activity'	=> $activity_name,
 									'function'	=> $function_name,
@@ -469,7 +469,7 @@ class activity_tracker extends Module {
 			$conditions['user'] = $_SESSION['uid'];
 
 		// get logs from database
-		$logs = $log_manager->getItems(array('id'), $conditions);
+		$logs = $log_manager->get_items(array('id'), $conditions);
 		$result = count($logs) > 0;
 
 		// show result
@@ -506,7 +506,7 @@ class activity_tracker extends Module {
 		$conditions = array();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'list_item.xml');

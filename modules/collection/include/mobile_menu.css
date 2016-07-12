@@ -63,19 +63,19 @@
 	transform: translateZ(0);
 }
 
-body.rtl .mobile_menu {
+html[dir=rtl] .mobile_menu {
 	left: auto;
 	right: -200px;
 }
 
-body.rtl .mobile_menu.visible {
+html[dir=rtl] .mobile_menu.visible {
 	right: 0px;
 }
 
-body.rtl .mobile_title {
+html[dir=rtl] .mobile_title {
 	background-position: right center;
 }
 
-body.rtl .mobile_title.visible {
+html[dir=rtl] .mobile_title.visible {
 	background-position: 105% center;
 }

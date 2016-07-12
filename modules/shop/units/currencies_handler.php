@@ -198,7 +198,7 @@ class ShopCurrenciesHandler {
 					'currency' => fix_chars($_REQUEST['currency'])
 				);
 
-		$manager->insertData($data);
+		$manager->insert_item($data);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -221,7 +221,7 @@ class ShopCurrenciesHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCurrenciesManager::getInstance();
 
-		$currency = $manager->getItemValue('currency', array('id' => $id));
+		$currency = $manager->get_item_value('currency', array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -257,7 +257,7 @@ class ShopCurrenciesHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCurrenciesManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -351,7 +351,7 @@ class ShopCurrenciesHandler {
 		$manager = ShopCurrenciesManager::getInstance();
 		$conditions = array();
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
 		$template = $this->_parent->loadTemplate($tag_params, 'currency_list_item.xml');

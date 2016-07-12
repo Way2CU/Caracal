@@ -68,7 +68,7 @@ final class ExtendedParsedown extends \Parsedown {
 				// shorthand gallery image
 				$gallery = \gallery::getInstance();
 				$manager = \GalleryManager::getInstance();
-				$gallery_image = $manager->getSingleItem(
+				$gallery_image = $manager->get_single_item(
 					array('title', 'filename', 'visible'),
 					array('id' => fix_id($original_source))
 				);

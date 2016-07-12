@@ -201,7 +201,7 @@ class tips extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = TipManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
@@ -234,10 +234,10 @@ class tips extends Module {
 
 		if (is_null($id)) {
 			$window = 'tips_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'tips_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -260,10 +260,10 @@ class tips extends Module {
 	private function deleteTip() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = TipManager::getInstance();
 
-		$item = $manager->getSingleItem(array('content'), array('id' => $id));
+		$item = $manager->get_single_item(array('content'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -295,10 +295,10 @@ class tips extends Module {
 	 * Perform tip removal
 	 */
 	private function deleteTip_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = TipManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -326,14 +326,16 @@ class tips extends Module {
 		$conditions = array();
 
 		if (isset($tag_params['id'])) {
-			$conditions['id'] = $tag_params['id'];
+			$conditions['id'] = fix_id($tag_params['id']);
+
 		} else if (isset($tag_params['random']) && $tag_params['random']) {
 			$order_by[] = 'RAND()';
+
 		} else {
 			$order_by[] = 'id';
 		}
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, false);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, false);
 
 		$template = $this->loadTemplate($tag_params, 'tip.xml');
 		$template->setTemplateParamsFromArray($children);
@@ -381,7 +383,7 @@ class tips extends Module {
 		$template->setMappedModule($this->name);
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -448,8 +450,8 @@ class tips extends Module {
 
 		$manager = TipManager::getInstance();
 
-		$item = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+								$manager->get_field_names(),
 								$conditions,
 								array($order_by),
 								$order_asc
@@ -495,8 +497,8 @@ class tips extends Module {
 
 		$manager = TipManager::getInstance();
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								array($order_by),
 								$order_asc,
@@ -531,9 +533,9 @@ class TipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('tips');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('content', 'ml_text');
-		$this->addProperty('visible', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('content', 'ml_text');
+		$this->add_property('visible', 'boolean');
 	}
 
 	/**

@@ -10,6 +10,7 @@
  */
 
 use Core\Markdown;
+use Core\Cache\Type as CacheType;
 use Core\Cache\Manager as Cache;
 
 
@@ -206,7 +207,7 @@ class TemplateHandler {
 	 * @param array $tags Leave blank, used for recursion
 	 */
 	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path, $images_path;
+		global $section, $action, $language, $template_path, $system_template_path, $images_path, $cache_method;
 
 		// turn on custom error hanlder
 		set_error_handler(array($this, 'handleError'));
@@ -409,8 +410,9 @@ class TemplateHandler {
 
 					} else {
 						$params = array(
-								'url'    => _BASEURL.'/'.$images_path.$file,
-								'symbol' => $symbol
+								'url'      => _BASEURL.'/'.$images_path.$file,
+								'symbol'   => $symbol,
+								'fallback' => $cache_method != CacheType::NONE || !_BROWSER_OK
 							);
 
 						if (isset($tag->tagAttrs['class']))
@@ -535,7 +537,6 @@ class TemplateHandler {
 					break;
 
 				// conditional tag
-				case '_if':
 				case 'cms:if':
 					$settings = !is_null($this->module) ? $this->module->settings : array();
 					$params = $this->params;
@@ -677,6 +678,7 @@ class TemplateHandler {
 
 				// force flush on common elements
 				case 'head':
+				case 'body':
 				case 'header':
 				case 'footer':
 					$flush_data = true;
@@ -832,9 +834,14 @@ class TemplateHandler {
 				break;
 		}
 
+		// include template name
 		$data[] = $message.' in template "';
 		$data[] = $this->file.'"';
 
+		// log query string as it might help
+		$data[] = ' with query string "'.$_SERVER['QUERY_STRING'].'"';
+
+		// if errors is in file include it
 		if (!is_null($file))
 			$data[] = ' ('.$file.' on line '.$line.')';
 

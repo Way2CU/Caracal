@@ -137,7 +137,7 @@ class ShopDeliveryMethodsHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopDeliveryMethodsManager::getInstance();
 
-		$method = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$method = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($method)) {
 			$template = new TemplateHandler('delivery_method_change.xml', $this->path.'templates/');
@@ -171,11 +171,11 @@ class ShopDeliveryMethodsHandler {
 			);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_delivery_method_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_delivery_method_change';
 		}
 
@@ -203,7 +203,7 @@ class ShopDeliveryMethodsHandler {
 		$manager = ShopDeliveryMethodsManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 
-		$method = $manager->getSingleItem(array('name'), array('id' => $id));
+		$method = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -241,16 +241,16 @@ class ShopDeliveryMethodsHandler {
 		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 
-		$prices = $prices_manager->getItems(array('id'), array('method' => $id));
+		$prices = $prices_manager->get_items(array('id'), array('method' => $id));
 		$id_list = array();
 
 		if (count($prices) > 0)
 			foreach ($prices as $price)
 				$id_list[] = $price->id;
 
-		$manager->deleteData(array('id' => $id));
-		$prices_manager->deleteData(array('method' => $id));
-		$relations_manager->deleteData(array('price' => $id_list));
+		$manager->delete_items(array('id' => $id));
+		$prices_manager->delete_items(array('method' => $id));
+		$relations_manager->delete_items(array('price' => $id_list));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -327,7 +327,7 @@ class ShopDeliveryMethodsHandler {
 	private function changePrice() {
 		$manager = ShopDeliveryMethodPricesManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('delivery_method_price_change.xml', $this->path.'templates/');
 
@@ -360,11 +360,11 @@ class ShopDeliveryMethodsHandler {
 			$data['method'] = fix_id($_REQUEST['method']);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_delivery_price_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_delivery_price_change';
 		}
 
@@ -392,7 +392,7 @@ class ShopDeliveryMethodsHandler {
 		$manager = ShopDeliveryMethodPricesManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 
-		$item = $manager->getSingleItem(array('value'), array('id' => $id));
+		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -429,8 +429,8 @@ class ShopDeliveryMethodsHandler {
 		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
 		$id = fix_id($_REQUEST['id']);
 
-		$manager->deleteData(array('id' => $id));
-		$relations_manager->deleteData(array('price' => $id));
+		$manager->delete_items(array('id' => $id));
+		$relations_manager->delete_items(array('price' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->_parent->name);
@@ -477,15 +477,15 @@ class ShopDeliveryMethodsHandler {
 
 			// shopping cart contains only UIDs, we need IDs
 			$id_list = array();
-			$items = $items_manager->getItems(array('id'), array('uid' => $uid_list));
+			$items = $items_manager->get_items(array('id'), array('uid' => $uid_list));
 
 			if (count($items) > 0)
 				foreach ($items as $item)
 					$id_list[] = $item->id;
 
 			// get item relations to delivery methods
-			$relations = $relations_manager->getItems(
-								$relations_manager->getFieldNames(),
+			$relations = $relations_manager->get_items(
+								$relations_manager->get_field_names(),
 								array('item' => $id_list)
 							);
 
@@ -503,7 +503,7 @@ class ShopDeliveryMethodsHandler {
 					$price_count[$relation->price]++;
 				}
 
-			$relations = $prices_manager->getItems(array('id', 'method'), array('id' => $price_list));
+			$relations = $prices_manager->get_items(array('id', 'method'), array('id' => $price_list));
 			$method_count = array();
 
 			if (count($relations) > 0)
@@ -550,7 +550,7 @@ class ShopDeliveryMethodsHandler {
 		$template->registerTagHandler('cms:price_list', $this, 'tag_DeliveryPricesList');
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -645,7 +645,7 @@ class ShopDeliveryMethodsHandler {
 			$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
 			$item_id = fix_id($tag_params['item']);
 
-			$raw_relations = $relations_manager->getItems(array('price'), array('item' => $item_id));
+			$raw_relations = $relations_manager->get_items(array('price'), array('item' => $item_id));
 
 			if (count($raw_relations) > 0)
 				foreach ($raw_relations as $relation)
@@ -657,7 +657,7 @@ class ShopDeliveryMethodsHandler {
 		$template->setTemplateParamsFromArray($children);
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {

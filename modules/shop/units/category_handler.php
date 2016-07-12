@@ -129,7 +129,7 @@ class ShopCategoryHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCategoryManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			// create template
@@ -183,13 +183,13 @@ class ShopCategoryHandler {
 
 		if (is_null($id)) {
 			// write new data
-			$manager->insertData($data);
+			$manager->insert_item($data);
 
 			$window = 'shop_category_add';
 
 		} else {
 			// update existing data
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 
 			$window = 'shop_category_change';
 		}
@@ -216,7 +216,7 @@ class ShopCategoryHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCategoryManager::getInstance();
 
-		$title = $manager->getItemValue('title', array('id' => $id));
+		$title = $manager->get_item_value('title', array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -252,7 +252,7 @@ class ShopCategoryHandler {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopCategoryManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -287,7 +287,7 @@ class ShopCategoryHandler {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
@@ -300,13 +300,13 @@ class ShopCategoryHandler {
 			$thumbnail_url = '';
 
 			// get number of children for this category
-			$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
+			$child_count = $manager->get_item_value('count(*)', array('parent' => $item->id));
 
 			// get image urls
 			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::getInstance();
 				$gallery_manager = GalleryManager::getInstance();
-				$image = $gallery_manager->getSingleItem(
+				$image = $gallery_manager->get_single_item(
 												array('filename'),
 												array('id' => $item->image)
 											);
@@ -359,7 +359,7 @@ class ShopCategoryHandler {
 		} else if (isset($tag_params['parent'])) {
 			// get parent id from specified text id
 			$text_id = fix_chars($tag_params['parent']);
-			$parent = $manager->getSingleItem(array('id'), array('text_id' => $text_id));
+			$parent = $manager->get_single_item(array('id'), array('text_id' => $text_id));
 
 			if (is_object($parent))
 				$conditions['parent'] = $parent->id; else
@@ -381,7 +381,7 @@ class ShopCategoryHandler {
 
 		if (!is_null($item_id)) {
 			$membership_manager = ShopItemMembershipManager::getInstance();
-			$membership_items = $membership_manager->getItems(
+			$membership_items = $membership_manager->get_items(
 												array('category'),
 												array('item' => $item_id)
 											);
@@ -400,7 +400,7 @@ class ShopCategoryHandler {
 			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes'; else
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template handler
 		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
@@ -417,13 +417,13 @@ class ShopCategoryHandler {
 				$thumbnail_url = '';
 
 				// get number of children for this category
-				$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
+				$child_count = $manager->get_item_value('count(*)', array('parent' => $item->id));
 
 				// get image urls
 				if (ModuleHandler::is_loaded('gallery')) {
 					$gallery = gallery::getInstance();
 					$gallery_manager = GalleryManager::getInstance();
-					$image = $gallery_manager->getSingleItem(
+					$image = $gallery_manager->get_single_item(
 													array('filename'),
 													array('id' => $item->image)
 												);

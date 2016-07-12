@@ -17,14 +17,14 @@ class AffiliatesManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('affiliates');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('uid', 'varchar');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('user', 'int');
-		$this->addProperty('clicks', 'integer');
-		$this->addProperty('conversions', 'integer');
-		$this->addProperty('active', 'boolean');
-		$this->addProperty('default', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('uid', 'varchar');
+		$this->add_property('name', 'varchar');
+		$this->add_property('user', 'int');
+		$this->add_property('clicks', 'integer');
+		$this->add_property('conversions', 'integer');
+		$this->add_property('active', 'boolean');
+		$this->add_property('default', 'boolean');
 	}
 
 	/**

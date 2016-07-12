@@ -379,7 +379,7 @@ class news extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = NewsManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -413,10 +413,10 @@ class news extends Module {
 				);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'news_add';
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'news_change';
 		}
 
@@ -424,10 +424,10 @@ class news extends Module {
 		if (isset($_REQUEST['group']) && !empty($_REQUEST['group'])) {
 			$membership_manager = NewsMembershipManager::getInstance();
 			$group = fix_id($_REQUEST['group']);
-			$news_id = $manager->getInsertedID();
+			$news_id = $manager->get_inserted_id();
 
 			if (!empty($news_id))
-				$membership_manager->insertData(array(
+				$membership_manager->insert_item(array(
 											'news'	=> $news_id,
 											'group'	=> $group
 										));
@@ -453,10 +453,10 @@ class news extends Module {
 	private function deleteNews() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsManager::getInstance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -488,12 +488,12 @@ class news extends Module {
 	 * Delete news from database
 	 */
 	private function deleteNews_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsManager::getInstance();
 		$membership_manager = NewsMembershipManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('news' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('news' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -562,7 +562,7 @@ class news extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = NewsGroupManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('group_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -595,10 +595,10 @@ class news extends Module {
 				);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'news_group_add';
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'news_group_change';
 		}
 
@@ -622,10 +622,10 @@ class news extends Module {
 	private function deleteGroup() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsGroupManager::getInstance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -664,9 +664,9 @@ class news extends Module {
 		$membership_manager = NewsMembershipManager::getInstance();
 		$feed_manager = NewsFeedManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('group' => $id));
-		$feed_manager->deleteData(array('group' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('group' => $id));
+		$feed_manager->delete_items(array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -687,7 +687,7 @@ class news extends Module {
 	 * Show group items edit form
 	 */
 	private function groupItems() {
-		$group_id = fix_id(fix_chars($_REQUEST['id']));
+		$group_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('group_news.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -708,7 +708,7 @@ class news extends Module {
 	 * Save group items
 	 */
 	private function groupItems_Save() {
-		$group = fix_id(fix_chars($_REQUEST['group']));
+		$group = fix_id($_REQUEST['group']);
 		$membership_manager = NewsMembershipManager::getInstance();
 
 		// fetch all ids being set to specific group
@@ -719,11 +719,11 @@ class news extends Module {
 		}
 
 		// remove old memberships
-		$membership_manager->deleteData(array('group' => $group));
+		$membership_manager->delete_items(array('group' => $group));
 
 		// save new memberships
 		foreach ($news_ids as $id)
-			$membership_manager->insertData(array(
+			$membership_manager->insert_item(array(
 											'news'	=> $id,
 											'group'	=> $group
 										));
@@ -796,7 +796,7 @@ class news extends Module {
 		$id = fix_id($_REQUEST['id']);
 		$manager = NewsFeedManager::getInstance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('feed_change.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -834,10 +834,10 @@ class news extends Module {
 				);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'news_feeds_add';
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'news_feeds_change';
 		}
 
@@ -861,10 +861,10 @@ class news extends Module {
 	private function deleteFeed() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsFeedManager::getInstance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -896,10 +896,10 @@ class news extends Module {
 	 * Perform feed removal
 	 */
 	private function deleteFeed_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
+		$id = fix_id($_REQUEST['id']);
 		$manager = NewsFeedManager::getInstance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -928,8 +928,8 @@ class news extends Module {
 		$head = head_tag::getInstance();
 		$manager = NewsFeedManager::getInstance();
 
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							array('active' => 1)
 						);
 
@@ -966,8 +966,8 @@ class news extends Module {
 		$admin_manager = UserManager::getInstance();
 
 		if (!is_null($id))
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
-			$item = $manager->getSingleItem($manager->getFieldNames(), array(), array('timestamp'), False);
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id)); else
+			$item = $manager->get_single_item($manager->get_field_names(), array(), array('timestamp'), False);
 
 		$template = $this->loadTemplate($tag_params, 'news.xml');
 		$template->setTemplateParamsFromArray($children);
@@ -981,7 +981,7 @@ class news extends Module {
 						'id'		=> $item->id,
 						'time'		=> $time,
 						'date'		=> $date,
-						'author'	=> $admin_manager->getItemValue(
+						'author'	=> $admin_manager->get_item_value(
 															'fullname',
 															array('id' => $item->author)
 														),
@@ -1004,7 +1004,7 @@ class news extends Module {
 	 */
 	public function tag_NewsList($tag_params, $children) {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
-		$group = isset($tag_params['group']) ? escape_chars($tag_params['group']) : null;
+		$group = isset($tag_params['group']) ? fix_chars($tag_params['group']) : null;
 		$conditions = array();
 
 		if (!isset($tag_params['show_invisible']))
@@ -1018,10 +1018,10 @@ class news extends Module {
 		if (!is_null($group)) {
 			// group is set, get item ids and feed them to conditions list
 			if (!is_numeric($group))
-				$group_id = $group_manager->getItemValue('id', array('text_id' => $group)); else
+				$group_id = $group_manager->get_item_value('id', array('text_id' => $group)); else
 				$group_id = $group;
 
-			$item_list = $membership_manager->getItems(
+			$item_list = $membership_manager->get_items(
 												array('news'),
 												array('group' => $group_id)
 											);
@@ -1037,8 +1037,8 @@ class news extends Module {
 		}
 
 		// get items from database
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							$conditions,
 							array('timestamp'),
 							false,
@@ -1061,7 +1061,7 @@ class news extends Module {
 							'time'			=> $time,
 							'date'			=> $date,
 							'timestamp'		=> $timestamp,
-							'author'		=> $admin_manager->getItemValue(
+							'author'		=> $admin_manager->get_item_value(
 																'fullname',
 																array('id' => $item->author)
 															),
@@ -1119,13 +1119,13 @@ class news extends Module {
 
 		if (isset($_REQUEST['id'])) {
 			// Id is specified
-			$item = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$item = $manager->get_single_item(
+									$manager->get_field_names(),
 									array('id' => fix_id($_REQUEST['id']))
 								);
 		} else {
 			// no Id was specified, select first group
-			$item = $manager->getSingleItem($manager->getFieldNames(), array());
+			$item = $manager->get_single_item($manager->get_field_names(), array());
 		}
 
 		// create template
@@ -1156,8 +1156,8 @@ class news extends Module {
 		$manager = NewsGroupManager::getInstance();
 
 		// get items from database
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							array(),
 							array(),
 							true,
@@ -1168,6 +1168,8 @@ class news extends Module {
 		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
+		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
+
 		// parse items
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -1175,7 +1177,7 @@ class news extends Module {
 							'id'			=> $item->id,
 							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
-							'selected'		=> isset($tag_params['selected']) ? $tag_params['selected'] : null,
+							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
@@ -1245,7 +1247,7 @@ class news extends Module {
 		$news_manager = NewsManager::getInstance();
 		$membership_manager = NewsMembershipManager::getInstance();
 
-		$memberships = $membership_manager->getItems(
+		$memberships = $membership_manager->get_items(
 												array('news'),
 												array('group' => $group)
 											);
@@ -1255,7 +1257,7 @@ class news extends Module {
 			foreach($memberships as $membership)
 				$news_ids[] = $membership->news;
 
-		$items = $news_manager->getItems(array('id', 'title'), array());
+		$items = $news_manager->get_items(array('id', 'title'), array());
 
 		// create template
 		$template = new TemplateHandler('group_news_item.xml', $this->path.'templates/');
@@ -1281,12 +1283,16 @@ class news extends Module {
 	 * @param array $children
 	 */
 	public function tag_Feed($tag_params, $children) {
-		$id = isset($tag_params['id']) ? $tag_params['id'] : null;
-		if (is_null($id)) $id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		if (is_null($id)) return;
+		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
+
+		if (is_null($id))
+			$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
+
+		if (is_null($id))
+			return;
 
 		$manager = NewsFeedManager::getInstance();
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			if (!$item->active) return;  // if item is not active, just exit
@@ -1296,7 +1302,7 @@ class news extends Module {
 
 			// get build date
 			$membership_manager = NewsMembershipManager::getInstance();
-			$membership_list = $membership_manager->getItems(array('news'), array('group' => $item->group));
+			$membership_list = $membership_manager->get_items(array('news'), array('group' => $item->group));
 
 			// get guild date only if there are news items in group
 			if (count($membership_list) > 0) {
@@ -1306,7 +1312,7 @@ class news extends Module {
 					$id_list[] = $membership->news;
 
 				$news_manager = NewsManager::getInstance();
-				$news = $news_manager->getSingleItem(
+				$news = $news_manager->get_single_item(
 													array('timestamp'),
 													array('id' => $id_list),
 													array('timestamp'),
@@ -1346,14 +1352,14 @@ class news extends Module {
 		$manager = NewsFeedManager::getInstance();
 		$group_manager = NewsGroupManager::getInstance();
 
-		$items = $manager->getItems($manager->getFieldNames(), array());
+		$items = $manager->get_items($manager->get_field_names(), array());
 
 		// create template parser
 		$template = new TemplateHandler('feed_list_item.xml', $this->path.'templates/');
 
 		if (count($items) > 0)
 			foreach($items as $item) {
-				$group = $group_manager->getSingleItem(array('title'), array('id' => $item->group));
+				$group = $group_manager->get_single_item(array('title'), array('id' => $item->group));
 
 				$params = array(
 							'id'			=> $item->id,
@@ -1415,15 +1421,15 @@ class news extends Module {
 
 		if (isset($_REQUEST['id'])) {
 			// id was specified, fetch the news
-			$item = $manager->getSingleItem(
-								$manager->getFieldNames(),
+			$item = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => fix_id($_REQUEST['id']))
 							);
 
 		} else {
 			// no news id has been specified, grab the latest
-			$item = $manager->getSingleItem(
-								$manager->getFieldNames(),
+			$item = $manager->get_single_item(
+								$manager->get_field_names(),
 								array(),
 								array('id'),
 								False
@@ -1439,7 +1445,7 @@ class news extends Module {
 						'id'			=> $item->id,
 						'time'			=> $time,
 						'date'			=> $date,
-						'author'		=> $admin_manager->getItemValue(
+						'author'		=> $admin_manager->get_item_value(
 															'fullname',
 															array('id' => $item->author)
 														),
@@ -1494,12 +1500,12 @@ class NewsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('news');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('author', 'int');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('content', 'ml_text');
-		$this->addProperty('visible', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('author', 'int');
+		$this->add_property('title', 'ml_varchar');
+		$this->add_property('content', 'ml_text');
+		$this->add_property('visible', 'boolean');
 	}
 
 	/**
@@ -1523,9 +1529,9 @@ class NewsMembershipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('news_membership');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('news', 'int');
-		$this->addProperty('group', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('news', 'int');
+		$this->add_property('group', 'int');
 	}
 
 	/**
@@ -1549,9 +1555,9 @@ class NewsGroupManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('news_groups');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('title', 'ml_varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('title', 'ml_varchar');
 	}
 
 	/**
@@ -1575,12 +1581,12 @@ class NewsFeedManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('news_feeds');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('news_count', 'int');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('active', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('group', 'int');
+		$this->add_property('news_count', 'int');
+		$this->add_property('title', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('active', 'boolean');
 	}
 
 	/**
