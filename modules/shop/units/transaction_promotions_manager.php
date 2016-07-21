@@ -5,24 +5,24 @@
  * Author: Mladen Mijatov
  */
 
-namespace Modules\Shop\Promotions;
+namespace Modules\Shop\Transaction;
 
 use \ItemManager as ItemManager;
 
 
-class Manager extends ItemManager {
+class PromotionManager extends ItemManager {
 	private static $_instance;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		parent::__construct('shop_promotions');
+		parent::__construct('shop_transaction_promotions');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('text_id', 'varchar');
+		$this->addProperty('transaction', 'int');
+		$this->addProperty('promotion', 'varchar');
+		$this->addProperty('discount', 'varchar');
 	}
 
 	/**

@@ -30,6 +30,7 @@ require_once('units/transactions_handler.php');
 require_once('units/warehouse_handler.php');
 require_once('units/transaction_items_manager.php');
 require_once('units/transaction_plans_manager.php');
+require_once('units/transaction_promotions_manager.php');
 require_once('units/recurring_payments_manager.php');
 require_once('units/buyers_manager.php');
 require_once('units/delivery_address_manager.php');
@@ -1106,7 +1107,7 @@ class shop extends Module {
 			`discount` varchar(64) NOT NULL,
 			PRIMARY KEY (`id`),
 			KEY `transaction` (`transaction`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create show recurring payments table
@@ -1118,7 +1119,7 @@ class shop extends Module {
 			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
 			KEY `index_by_plan` (`plan`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop stock table
@@ -1132,7 +1133,7 @@ class shop extends Module {
 			`country` varchar(64) NOT NULL,
 			`state` varchar(40) NOT NULL,
 			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop stock table
@@ -1142,8 +1143,8 @@ class shop extends Module {
 			`size` int DEFAULT NULL,
 			`amount` int NOT NULL,
 			PRIMARY KEY (`id`),
-				  KEY `item` (`item`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop manufacturers table
@@ -1156,7 +1157,7 @@ class shop extends Module {
 		$sql .= " `web_site` varchar(255) NOT NULL,
 			`logo` int NOT NULL,
 			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create coupons storage
@@ -1173,7 +1174,7 @@ class shop extends Module {
 			`timeout` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
 			KEY `index_by_text_id` (`text_id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		$sql = "CREATE TABLE `shop_coupon_codes` (
@@ -1187,7 +1188,7 @@ class shop extends Module {
 			KEY `index_by_timestamp` (`timestamp`),
 			KEY `index_by_code` (`code`),
 			KEY `index_by_coupon` (`coupon`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 	}
 
@@ -1209,6 +1210,7 @@ class shop extends Module {
 			'shop_transactions',
 			'shop_transaction_items',
 			'shop_transaction_plans',
+			'shop_transaction_promotions',
 			'shop_recurring_payments',
 			'shop_warehouse',
 			'shop_stock',
@@ -3109,6 +3111,7 @@ class shop extends Module {
 		$transactions_manager = ShopTransactionsManager::getInstance();
 		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
 		$transaction_plans_manager = ShopTransactionPlansManager::getInstance();
+		$promotion_manager = \Modules\Shop\Transaction\PromotionManager::getInstance();
 
 		// update buyer
 		if (!is_null($buyer))
@@ -3275,6 +3278,33 @@ class shop extends Module {
 					'end_time'			=> $db->format_timestamp($plan['end_time'])
 				));
 		}
+
+		// remove associated promotions from the table
+		$discount_items = array();
+		$promotion_manager->delete_items(array('transaction' => $result['id']));
+
+		foreach ($this->promotions as $promotion)
+			if ($promotion->qualifies($transaction)) {
+				// store discount for application later
+				$discount = $promotion->get_discount();
+
+				// insert data to database
+				$data = array(
+						'transaction' => $result['id'],
+						'promotion'   => $promotion->get_name(),
+						'discount'    => $discount->get_name()
+					);
+
+				$promotion_manager->insert_item($data);
+
+				// apply discount
+				$discount_items = array_merge($discount_items, $discount->apply($transaction));
+			}
+
+		// deduce discounts from total amount
+		$discount_total = 0;
+		foreach ($discounted_items as $discount)
+			$discount_total += $discount[2];
 
 		// if affiliate system is active, update referral
 		if (isset($_SESSION['referral_id']) && ModuleHandler::is_loaded('affiliates')) {

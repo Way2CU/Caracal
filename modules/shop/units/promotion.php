@@ -34,6 +34,14 @@ abstract class Promotion {
 	 * @return boolean
 	 */
 	abstract public function qualifies($transaction);
+
+	/**
+	 * Return discount associated with this promotion. This object
+	 * will specify the amount being deduced from final.
+	 *
+	 * @return object
+	 */
+	abstract public function get_discount();
 }
 
 ?>

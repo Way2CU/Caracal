@@ -28,19 +28,20 @@ abstract class Discount {
 	abstract public function get_title();
 
 	/**
-	 * Apply discount on specified trancation.
+	 * Apply discount on specified trancation. Result is a list
+	 * of discount items. These items do not reflect shop items in the
+	 * cart. Instead they represent different deduction from the final
+	 * price.
+	 *
+	 *	$result = array(
+	 *		// item name, count, total amount discounted
+	 *		array('Item name', 1, 15),
+	 *	);
 	 *
 	 * @param object $transaction
+	 * @return array
 	 */
 	abstract public function apply($transaction);
-
-	/**
-	 * Check if discount is applied on specified transaction
-	 *
-	 * @param object $transaction
-	 * @return boolean
-	 */
-	abstract public function is_applied($transaction);
 }
 
 ?>
