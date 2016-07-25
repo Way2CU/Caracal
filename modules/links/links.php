@@ -848,7 +848,7 @@ class links extends Module {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get items from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
 		$template = $this->loadTemplate($tag_params, 'links_item.xml');
