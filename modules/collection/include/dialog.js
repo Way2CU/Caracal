@@ -178,9 +178,6 @@ function Dialog() {
 					height: height,
 				});
 
-		if (typeof width == 'number')
-			self._container.css('margin-left', -Math.round(width / 2));
-
 		return self;
 	};
 
