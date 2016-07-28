@@ -449,7 +449,6 @@ div#shipping_information div.delivery_method div.services {
  */
 div.transaction_details {
 	display: block;
-	height: 90px;
 
 	margin-bottom: 20px;
 	padding: 10px;
