@@ -40,6 +40,7 @@ div.dialog {
 	color: #333333;
 
 	transition: top 0.6s;
+	transform: translateX(-50%);
 }
 
 div.dialog.visible {
