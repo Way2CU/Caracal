@@ -833,31 +833,34 @@ class links extends Module {
 	/**
 	 * Tag handler for `link` object
 	 *
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Link($params, $children) {
-		$id = isset($params['id']) ? $params['id'] : fix_id($_REQUEST['id']);
+	public function tag_Link($tag_params, $children) {
 		$manager = \Modules\Links\Manager::getInstance();
 
-		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
+		// get parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
 
-		if (isset($params['template'])) {
-			if (isset($params['local']) && $params['local'] == 1)
-				$template = new TemplateHandler($params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($params['template']);
-		} else {
-			$template = new TemplateHandler('links_item.xml', $this->path.'templates/');
-		}
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
+		// get items from the database
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
+
+		// load template
+		$template = $this->loadTemplate($tag_params, 'links_item.xml');
 		$template->setMappedModule($this->name);
 
 		// calculate display progress
 		if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
 			$percent = 100;
+
 		} else {
 			$percent = round(($item->sponsored_clicks / $item->display_limit) * 100, 0);
-			if ($percent > 100) $percent = 100;
+			if ($percent > 100)
+				$percent = 100;
 		}
 
 		// get thumbnail image if exists

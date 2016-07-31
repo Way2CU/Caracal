@@ -85,7 +85,7 @@ html[dir=rtl] div#shipping_information div.container {
 }
 
 div#shipping_information div.container.visible {
-	max-height: 550px;
+	max-height: 800px;
 	padding-bottom: 15px;
 }
 
@@ -135,7 +135,7 @@ div#shipping_information div.container div.summary:active:after {
 }
 
 div#shipping_information div.container div.details {
-	max-height: 500px;
+	max-height: 750px;
 	overflow: hidden;
 
 	transition: max-height 0.5s;
@@ -449,7 +449,6 @@ div#shipping_information div.delivery_method div.services {
  */
 div.transaction_details {
 	display: block;
-	height: 90px;
 
 	margin-bottom: 20px;
 	padding: 10px;
