@@ -3301,10 +3301,15 @@ class shop extends Module {
 				$discount_items = array_merge($discount_items, $discount->apply($transaction));
 			}
 
+		// store discounts to transaction
+		$_SESSION['transaction']['discounts'] = $discount_items;
+
 		// deduce discounts from total amount
 		$discount_total = 0;
 		foreach ($discounted_items as $discount)
 			$discount_total += $discount[2];
+
+		$_SESSION['transaction']['total'] -= $discount_total;
 
 		// if affiliate system is active, update referral
 		if (isset($_SESSION['referral_id']) && ModuleHandler::is_loaded('affiliates')) {
@@ -3987,6 +3992,7 @@ class shop extends Module {
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
 				$template->registerTagHandler('cms:discounted_items', $this, 'tag_DiscountedItemList');
+				$template->registerTagHandler('cms:discounts', $this, 'tag_DiscountList');
 
 				// parse template
 				$params = array(
@@ -4352,6 +4358,28 @@ class shop extends Module {
 					$template->parse();
 				}
 			}
+	}
+
+	/**
+	 * Render tag for list of applied discounts.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_DiscountList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'discount_item.xml');
+
+		foreach ($discount_items as $item) {
+			$params = array(
+				'text'   => $item[0],
+				'count'  => $item[1],
+				'amount' => $item[2]
+			);
+
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
 	}
 
 	/**
