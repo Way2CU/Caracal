@@ -1,15 +1,15 @@
 {
-    "label_terminal": "Terminal name:",
-    "label_terminal2": "Terminal for charging tokens:",
-    "label_terminal_password": "Terminal password:",
-    "label_url_cancel": "Cancel URL:",
-    "label_url_confirm": "Confirmation URL:",
-    "label_custom_template": "Show custom template?",
+    "label_terminal": "Име терминала:",
+    "label_terminal2": "Терминал за наплату токена:",
+    "label_terminal_password": "Лозинка терминала:",
+    "label_url_cancel": "Отказни URL:",
+    "label_url_confirm": "Потврдни URL:",
+    "label_custom_template": "Приказ засебног шаблона?",
     "menu_tranzila": "Tranzila",
-    "message_settings_saved": "New settings were saved.",
+    "message_settings_saved": "Нова подешавања су снимљена.",
     "payment_method_title": "Tranzila",
-    "title_settings": "Tranzila Settings",
-    "tab_terminal": "Terminal",
-    "tab_urls": "URLs",
-    "purchase": "Purchase"
+    "title_settings": "Tranzila Подешавања",
+    "tab_terminal": "Терминал",
+    "tab_urls": "URL-ови",
+    "purchase": "Купи"
 }

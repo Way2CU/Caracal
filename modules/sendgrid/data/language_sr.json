@@ -1,7 +1,7 @@
 {
-    "label_api_key": "API key:",
+    "label_api_key": "API кључ:",
     "mailer_title": "SendGrid",
     "menu_sendgrid": "SendGrid",
-    "message_saved": "Settings were saved.",
-    "title_settings": "SendGrid Settings"
+    "message_saved": "Подешавања су снимљена.",
+    "title_settings": "SendGrid Подешавања"
 }
