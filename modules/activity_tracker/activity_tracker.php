@@ -28,33 +28,33 @@ class activity_tracker extends Module {
 			$backend = backend::getInstance();
 
 			$activities_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_activities'),
+					$this->get_language_constant('menu_activities'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$activities_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage'),
+								$this->get_language_constant('menu_manage'),
 								url_GetFromFilePath($this->path.'images/activities.svg'),
 
 								window_Open( // on click open window
 											'activities',
 											730,
-											$this->getLanguageConstant('title_manage'),
+											$this->get_language_constant('title_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'show')
 										),
 								$level=5
 							));
 			$activities_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_log'),
+								$this->get_language_constant('menu_log'),
 								url_GetFromFilePath($this->path.'images/log.svg'),
 
 								window_Open( // on click open window
 											'activities_log',
 											730,
-											$this->getLanguageConstant('title_log'),
+											$this->get_language_constant('title_log'),
 											true, true,
 											backend_UrlMake($this->name, 'show_log')
 										),
@@ -80,7 +80,7 @@ class activity_tracker extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -184,9 +184,9 @@ class activity_tracker extends Module {
 
 		$params = array(
 						'link_new' => window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'activities_new', 370,
-										$this->getLanguageConstant('title_activity_new'),
+										$this->get_language_constant('title_activity_new'),
 										true, false,
 										$this->name,
 										'new'
@@ -281,8 +281,8 @@ class activity_tracker extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_activity_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_activity_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('activities'),
 				);
 
@@ -306,10 +306,10 @@ class activity_tracker extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_activity_delete'),
+					'message'		=> $this->get_language_constant('message_activity_delete'),
 					'name'			=> $item->activity.' - '.$item->function,
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'activities_delete',
 											url_Make(
@@ -343,8 +343,8 @@ class activity_tracker extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_activity_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_activity_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('activities_delete').';'.window_ReloadContent('activities')
 				);
 
@@ -523,11 +523,11 @@ class activity_tracker extends Module {
 						'ignore_address'		=> $item->ignore_address,
 						'ignore_address_char'	=> $item->ignore_address ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'item_change'			=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'activities_change', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_activity_change'), // title
+													$this->get_language_constant('title_activity_change'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -539,11 +539,11 @@ class activity_tracker extends Module {
 												)
 											),
 						'item_delete'			=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'activities_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_activity_delete'), // title
+													$this->get_language_constant('title_activity_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',

@@ -39,20 +39,20 @@ class articles extends Module {
 			$backend = backend::getInstance();
 
 			$articles_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_articles'),
+					$this->get_language_constant('menu_articles'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_articles_new'),
+								$this->get_language_constant('menu_articles_new'),
 								url_GetFromFilePath($this->path.'images/new_article.svg'),
 
 								window_Open( // on click open window
 											'articles_new',
 											730,
-											$this->getLanguageConstant('title_articles_new'),
+											$this->get_language_constant('title_articles_new'),
 											true, true,
 											backend_UrlMake($this->name, 'articles_new')
 										),
@@ -61,26 +61,26 @@ class articles extends Module {
 			$articles_menu->addSeparator(5);
 
 			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_articles_manage'),
+								$this->get_language_constant('menu_articles_manage'),
 								url_GetFromFilePath($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'articles',
 											720,
-											$this->getLanguageConstant('title_articles_manage'),
+											$this->get_language_constant('title_articles_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'articles')
 										),
 								$level=5
 							));
 			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_article_groups'),
+								$this->get_language_constant('menu_article_groups'),
 								url_GetFromFilePath($this->path.'images/groups.svg'),
 
 								window_Open( // on click open window
 											'article_groups',
 											650,
-											$this->getLanguageConstant('title_article_groups'),
+											$this->get_language_constant('title_article_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										),
@@ -107,7 +107,7 @@ class articles extends Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -298,9 +298,9 @@ class articles extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'articles_new', 730,
-										$this->getLanguageConstant('title_articles_new'),
+										$this->get_language_constant('title_articles_new'),
 										true, false,
 										$this->name,
 										'articles_new'
@@ -383,8 +383,8 @@ class articles extends Module {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
-		$content = $this->getMultilanguageField('content');
+		$title = $this->get_multilanguage_field('title');
+		$content = $this->get_multilanguage_field('content');
 		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 
@@ -410,8 +410,8 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_article_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_article_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('articles'),
 				);
 
@@ -435,10 +435,10 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_article_delete'),
+					'message'		=> $this->get_language_constant('message_article_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'articles_delete',
 											url_Make(
@@ -470,8 +470,8 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_article_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_article_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('articles_delete').';'.window_ReloadContent('articles')
 				);
 
@@ -489,9 +489,9 @@ class articles extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'article_groups_new', 400,
-										$this->getLanguageConstant('title_article_groups_new'),
+										$this->get_language_constant('title_article_groups_new'),
 										true, false,
 										$this->name,
 										'groups_new'
@@ -562,10 +562,10 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_group_delete'),
+					'message'		=> $this->get_language_constant('message_group_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'article_groups_delete',
 											url_Make(
@@ -599,8 +599,8 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('article_groups_delete').';'
 									.window_ReloadContent('articles').';'
 									.window_ReloadContent('article_groups')
@@ -619,8 +619,8 @@ class articles extends Module {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
-		$description = $this->getMultilanguageField('description');
+		$title = $this->get_multilanguage_field('title');
+		$description = $this->get_multilanguage_field('description');
 
 		$data = array(
 					'text_id'		=> $text_id,
@@ -640,8 +640,8 @@ class articles extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('article_groups'),
 				);
 
@@ -714,8 +714,8 @@ class articles extends Module {
 		// parse article
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$params = array(
 						'id'			=> $item->id,
@@ -828,8 +828,8 @@ class articles extends Module {
 		if (count($items) > 0)
 			foreach($items as $item) {
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 				$params = array(
 							'id'			=> $item->id,
@@ -852,11 +852,11 @@ class articles extends Module {
 							'rating'		=> $this->getArticleRating($item, 10),
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'articles_change', 	// window id
 														730,				// width
-														$this->getLanguageConstant('title_articles_change'), // title
+														$this->get_language_constant('title_articles_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -868,11 +868,11 @@ class articles extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'articles_delete', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_articles_delete'), // title
+														$this->get_language_constant('title_articles_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1054,11 +1054,11 @@ class articles extends Module {
 							'description'	=> $item->description,
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'article_groups_change', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_article_groups_change'), // title
+														$this->get_language_constant('title_article_groups_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1070,11 +1070,11 @@ class articles extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'article_groups_delete', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_article_groups_delete'), // title
+														$this->get_language_constant('title_article_groups_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1123,8 +1123,8 @@ class articles extends Module {
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$result['item'] = array(
 								'id'			=> $item->id,
@@ -1148,7 +1148,7 @@ class articles extends Module {
 		} else {
 			// no item was found
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_article_not_found');
+			$result['error_message'] = $this->get_language_constant('message_json_article_not_found');
 		}
 
 		print json_encode($result);
@@ -1229,8 +1229,8 @@ class articles extends Module {
 		if (count($items) > 0) {
 			foreach($items as $item) {
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
 				$rating_image_url = url_Make(
 							'get_rating_image',
 							$this->name,
@@ -1261,7 +1261,7 @@ class articles extends Module {
 		} else {
 			// no articles were found for specified cirteria
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_articles_not_found');
+			$result['error_message'] = $this->get_language_constant('message_json_articles_not_found');
 		}
 
 		print json_encode($result);
@@ -1292,7 +1292,7 @@ class articles extends Module {
 		if (is_object($vote)) {
 			// that address already voted
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_vote_already');
+			$result['error_message'] = $this->get_language_constant('message_vote_already');
 
 		} else {
 			// stupid but we need to make sure article exists
@@ -1323,7 +1323,7 @@ class articles extends Module {
 				$result['rating'] = $this->getArticleRating($article, 10);
 			} else {
 				$result['error'] = true;
-				$result['error_message'] = $this->getLanguageConstant('message_vote_error');
+				$result['error_message'] = $this->get_language_constant('message_vote_error');
 			}
 		}
 

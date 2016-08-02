@@ -44,19 +44,19 @@ class downloads extends Module {
 			$backend = backend::getInstance();
 
 			$downloads_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_downloads'),
+					$this->get_language_constant('menu_downloads'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_upload_file'),
+								$this->get_language_constant('menu_upload_file'),
 								url_GetFromFilePath($this->path.'images/upload.svg'),
 								window_Open( // on click open window
 											'upload_file',
 											400,
-											$this->getLanguageConstant('title_upload_file'),
+											$this->get_language_constant('title_upload_file'),
 											true, true,
 											backend_UrlMake($this->name, 'upload')
 										),
@@ -64,12 +64,12 @@ class downloads extends Module {
 							));
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage'),
+								$this->get_language_constant('menu_manage'),
 								url_GetFromFilePath($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'downloads',
 											520,
-											$this->getLanguageConstant('title_manage'),
+											$this->get_language_constant('title_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'list')
 										),
@@ -96,7 +96,7 @@ class downloads extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -204,9 +204,9 @@ class downloads extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('menu_upload_file'),
+										$this->get_language_constant('menu_upload_file'),
 										'upload_file', 400,
-										$this->getLanguageConstant('title_upload_file'),
+										$this->get_language_constant('title_upload_file'),
 										true, false,
 										$this->name,
 										'upload'
@@ -246,8 +246,8 @@ class downloads extends Module {
 			$manager =  DownloadsManager::getInstance();
 
 			$data = array(
-					'name'			=> $this->getMultilanguageField('name'),
-					'description' 	=> $this->getMultilanguageField('description'),
+					'name'			=> $this->get_multilanguage_field('name'),
+					'description' 	=> $this->get_multilanguage_field('description'),
 					'filename'		=> $result['filename'],
 					'size'			=> $_FILES['file']['size'],
 					'visible'		=> isset($_REQUEST['visible']) ? 1 : 0
@@ -261,7 +261,7 @@ class downloads extends Module {
 
 		$params = array(
 					'message'	=> $result['message'],
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('upload_file').";".window_ReloadContent('downloads')
 				);
 
@@ -305,8 +305,8 @@ class downloads extends Module {
 
 		$id = fix_id($_REQUEST['id']);
 		$data = array(
-				'name'			=> $this->getMultilanguageField('name'),
-				'description' 	=> $this->getMultilanguageField('description'),
+				'name'			=> $this->get_multilanguage_field('name'),
+				'description' 	=> $this->get_multilanguage_field('description'),
 				'visible'		=> fix_id($_REQUEST['visible'])
 			);
 
@@ -316,8 +316,8 @@ class downloads extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_file_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_file_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('downloads_change').";".window_ReloadContent('downloads')
 				);
 
@@ -341,10 +341,10 @@ class downloads extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_file_delete'),
+					'message'		=> $this->get_language_constant('message_file_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'downloads_delete',
 											url_Make(
@@ -377,8 +377,8 @@ class downloads extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_file_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_file_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('downloads_delete').";".window_ReloadContent('downloads')
 				);
 
@@ -484,11 +484,11 @@ class downloads extends Module {
 							'timestamp'		=> $item->timestamp,
 							'url'			=> url_Make('get', $this->name, array('id', $item->id)),
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'downloads_change', 		// window id
 														400,						// width
-														$this->getLanguageConstant('title_change'), // title
+														$this->get_language_constant('title_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -500,11 +500,11 @@ class downloads extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'downloads_delete', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_delete'), // title
+														$this->get_language_constant('title_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -557,7 +557,7 @@ class downloads extends Module {
 		} else {
 			// invalid license
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_license_error');
+			$result['error_message'] = $this->get_language_constant('message_license_error');
 		}
 
 		print json_encode($result);
@@ -604,18 +604,18 @@ class downloads extends Module {
 			if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $this->file_path.$file_name)) {
 				// file was moved properly, record new data
 				$result['filename'] = $file_name;
-				$result['message'] = $this->getLanguageConstant('message_file_uploaded');
+				$result['message'] = $this->get_language_constant('message_file_uploaded');
 
 			} else {
 				// error moving file to new location. folder permissions?
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_file_save_error');
+				$result['message'] = $this->get_language_constant('message_file_save_error');
 			}
 
 		} else {
 			// there was an error during upload, notify user
 			$result['error'] = true;
-			$result['message'] = $this->getLanguageConstant('message_file_upload_error');
+			$result['message'] = $this->get_language_constant('message_file_upload_error');
 		}
 
 		return $result;

@@ -36,13 +36,13 @@ class CouponHandler {
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new \backend_MenuItem(
-									$this->parent->getLanguageConstant('menu_coupons'),
+									$this->parent->get_language_constant('menu_coupons'),
 									url_GetFromFilePath($this->path.'images/coupons.svg'),
 
 									window_Open( // on click open window
 												'shop_coupons',
 												450,
-												$this->parent->getLanguageConstant('title_coupons'),
+												$this->parent->get_language_constant('title_coupons'),
 												true, true,
 												backend_UrlMake($this->name, self::SUB_ACTION, 'show')
 											),
@@ -67,7 +67,7 @@ class CouponHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -125,11 +125,11 @@ class CouponHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-							$this->parent->getLanguageConstant('add_coupon'),
+							$this->parent->get_language_constant('add_coupon'),
 							window_Open( // on click open window
 								'shop_coupon_add',
 								430,
-								$this->parent->getLanguageConstant('title_coupon_add'),
+								$this->parent->get_language_constant('title_coupon_add'),
 								true, true,
 								backend_UrlMake($this->name, self::SUB_ACTION, 'add')
 							))
@@ -204,7 +204,7 @@ class CouponHandler {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
 				'text_id'     => escape_chars($_REQUEST['text_id']),
-				'name'        => $this->parent->getMultilanguageField('name'),
+				'name'        => $this->parent->get_multilanguage_field('name'),
 				'has_limit'   => $this->parent->get_boolean_field('has_limit') ? 1 : 0,
 				'has_timeout' => $this->parent->get_boolean_field('has_timeout') ? 1 : 0,
 				'limit'       => fix_id($_REQUEST['limit']),
@@ -226,8 +226,8 @@ class CouponHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_coupon_saved'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_coupon_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('shop_coupons'),
 				);
 
@@ -253,10 +253,10 @@ class CouponHandler {
 
 		// prepare parameters
 		$params = array(
-					'message'		=> $this->parent->getLanguageConstant('message_coupon_delete'),
+					'message'		=> $this->parent->get_language_constant('message_coupon_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->parent->getLanguageConstant('delete'),
-					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->parent->get_language_constant('delete'),
+					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_coupon_delete',
 											url_Make(
@@ -292,8 +292,8 @@ class CouponHandler {
 		// show confirmation message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_coupon_deleted'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_coupon_deleted'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('shop_coupon_delete').';'.window_ReloadContent('shop_coupons')
 				);
 
@@ -315,20 +315,20 @@ class CouponHandler {
 					'form_action'   => backend_UrlMake($this->name, self::SUB_ACTION, 'codes_save'),
 					'cancel_action' => window_Close('shop_coupon_codes'),
 					'link_new'      => url_MakeHyperlink(
-							$this->parent->getLanguageConstant('add_code'),
+							$this->parent->get_language_constant('add_code'),
 							window_Open( // on click open window
 								'shop_coupon_codes_add',
 								300,
-								$this->parent->getLanguageConstant('title_coupon_code_add'),
+								$this->parent->get_language_constant('title_coupon_code_add'),
 								true, true,
 								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_add')
 							)),
 					'link_generate' => url_MakeHyperlink(
-							$this->parent->getLanguageConstant('generate_codes'),
+							$this->parent->get_language_constant('generate_codes'),
 							window_Open( // on click open window
 								'shop_coupon_codes_generate',
 								300,
-								$this->parent->getLanguageConstant('title_coupon_code_generate'),
+								$this->parent->get_language_constant('title_coupon_code_generate'),
 								true, true,
 								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_generate')
 							))
@@ -453,8 +453,8 @@ class CouponHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_coupon_code_saved'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_coupon_code_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('shop_coupon_codes')
 				);
 
@@ -502,11 +502,11 @@ class CouponHandler {
 				'limit'       => $item->limit,
 				'timeout'     => $item->timeout,
 				'item_change' => url_MakeHyperlink(
-						$this->parent->getLanguageConstant('change'),
+						$this->parent->get_language_constant('change'),
 						window_Open(
 							'shop_coupon_change', 	// window id
 							430,				// width
-							$this->parent->getLanguageConstant('title_coupon_change'), // title
+							$this->parent->get_language_constant('title_coupon_change'), // title
 							true, true,
 							url_Make(
 								'transfer_control',
@@ -518,11 +518,11 @@ class CouponHandler {
 							)
 						)),
 				'item_delete' => url_MakeHyperlink(
-						$this->parent->getLanguageConstant('delete'),
+						$this->parent->get_language_constant('delete'),
 						window_Open(
 							'shop_coupon_delete', 	// window id
 							400,				// width
-							$this->parent->getLanguageConstant('title_coupon_delete'), // title
+							$this->parent->get_language_constant('title_coupon_delete'), // title
 							false, false,
 							url_Make(
 								'transfer_control',
@@ -534,11 +534,11 @@ class CouponHandler {
 							)
 						)),
 				'item_codes' => url_MakeHyperlink(
-						$this->parent->getLanguageConstant('codes'),
+						$this->parent->get_language_constant('codes'),
 						window_Open(
 							'shop_coupon_codes', 	// window id
 							550,				// width
-							$this->parent->getLanguageConstant('title_coupon_codes'), // title
+							$this->parent->get_language_constant('title_coupon_codes'), // title
 							true, true,
 							url_Make(
 								'transfer_control',
@@ -603,7 +603,7 @@ class CouponHandler {
 				'timestamp'   => $item->timestamp,
 				'discount'    => $item->discount,
 				'item_delete' => url_MakeHyperlink(
-							$this->parent->getLanguageConstant('delete'),
+							$this->parent->get_language_constant('delete'),
 							'javascript: Caracal.Shop.delete_coupon_code(this);'
 						)
 			);

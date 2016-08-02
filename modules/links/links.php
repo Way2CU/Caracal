@@ -32,19 +32,19 @@ class links extends Module {
 			$backend = backend::getInstance();
 
 			$links_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_links'),
+					$this->get_language_constant('menu_links'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_manage'),
+								$this->get_language_constant('menu_links_manage'),
 								url_GetFromFilePath($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'links_list',
 											720,
-											$this->getLanguageConstant('title_links_manage'),
+											$this->get_language_constant('title_links_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'links_list')
 										),
@@ -52,12 +52,12 @@ class links extends Module {
 							));
 
 			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_groups'),
+								$this->get_language_constant('menu_links_groups'),
 								url_GetFromFilePath($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'groups_list',
 											500,
-											$this->getLanguageConstant('title_groups_manage'),
+											$this->get_language_constant('title_groups_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'groups_list')
 										),
@@ -65,12 +65,12 @@ class links extends Module {
 							));
 
 			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_overview'),
+								$this->get_language_constant('menu_links_overview'),
 								url_GetFromFilePath($this->path.'images/overview.svg'),
 								window_Open( // on click open window
 											'links_overview',
 											650,
-											$this->getLanguageConstant('title_links_overview'),
+											$this->get_language_constant('title_links_overview'),
 											true, true,
 											backend_UrlMake($this->name, 'overview')
 										),
@@ -97,7 +97,7 @@ class links extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		switch ($params['action']) {
 			case 'show':
@@ -285,29 +285,29 @@ class links extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('add'),
+										$this->get_language_constant('add'),
 										'links_add', 600,
-										$this->getLanguageConstant('title_links_add'),
+										$this->get_language_constant('title_links_add'),
 										true, false,
 										$this->name,
 										'links_add'
 									),
 					'link_groups'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('groups'),
+										$this->get_language_constant('groups'),
 										window_Open( // on click open window
 											'groups_list',
 											500,
-											$this->getLanguageConstant('title_groups_manage'),
+											$this->get_language_constant('title_groups_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'groups_list')
 										)
 									),
 					'link_overview'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('overview'),
+										$this->get_language_constant('overview'),
 										window_Open( // on click open window
 											'links_overview',
 											650,
-											$this->getLanguageConstant('title_links_overview'),
+											$this->get_language_constant('title_links_overview'),
 											true, true,
 											backend_UrlMake($this->name, 'links_overview')
 										)
@@ -377,8 +377,8 @@ class links extends Module {
 		$manager = \Modules\Links\Manager::getInstance();
 
 		$data = array(
-				'text' 			=> $this->getMultilanguageField('text'),
-				'description' 	=> $this->getMultilanguageField('description'),
+				'text' 			=> $this->get_multilanguage_field('text'),
+				'description' 	=> $this->get_multilanguage_field('description'),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'url' 			=> escape_chars($_REQUEST['url']),
 				'external' 		=> $this->get_boolean_field('external') ? 1 : 0,
@@ -423,8 +423,8 @@ class links extends Module {
 
 		// prepare parameters for template
 		$params = array(
-					'message' => $this->getLanguageConstant('message_link_saved'),
-					'button'  => $this->getLanguageConstant('close'),
+					'message' => $this->get_language_constant('message_link_saved'),
+					'button'  => $this->get_language_constant('close'),
 					'action'  => window_Close($window_name).';'.
 						window_ReloadContent('links_list').';'.
 						window_ReloadContent('links_overview').$gallery_addon
@@ -454,10 +454,10 @@ class links extends Module {
 
 		// prepare parameters for template
 		$params = array(
-					'message'    => $this->getLanguageConstant('message_link_delete'),
+					'message'    => $this->get_language_constant('message_link_delete'),
 					'name'       => $item->text[$language],
-					'yes_text'   => $this->getLanguageConstant('delete'),
-					'no_text'    => $this->getLanguageConstant('cancel'),
+					'yes_text'   => $this->get_language_constant('delete'),
+					'no_text'    => $this->get_language_constant('cancel'),
 					'yes_action' => window_LoadContent(
 											'links_delete',
 											url_Make(
@@ -508,8 +508,8 @@ class links extends Module {
 
 		// prepare parameters for template
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_link_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_link_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('links_delete').';'.window_ReloadContent('links_list').$gallery_addon
 				);
 
@@ -528,9 +528,9 @@ class links extends Module {
 
 		$params = array(
 					'link_new' => window_OpenHyperlink(
-										$this->getLanguageConstant('create_group'),
+										$this->get_language_constant('create_group'),
 										'groups_add', 400,
-										$this->getLanguageConstant('title_groups_create'),
+										$this->get_language_constant('title_groups_create'),
 										true, false,
 										$this->name,
 										'groups_add'
@@ -595,19 +595,19 @@ class links extends Module {
 		$manager = \Modules\Links\GroupManager::getInstance();
 
 		$data = array(
-				'name'    => $this->getMultilanguageField('name'),
+				'name'    => $this->get_multilanguage_field('name'),
 				'text_id' => escape_chars($_REQUEST['text_id'])
 			);
 
 		if (!is_null($id)) {
 			$manager->update_items($data, array('id' => $id));
 			$window_name = 'groups_change';
-			$message = $this->getLanguageConstant('message_group_renamed');
+			$message = $this->get_language_constant('message_group_renamed');
 
 		} else {
 			$manager->insert_item($data);
 			$window_name = 'groups_add';
-			$message = $this->getLanguageConstant('message_group_created');
+			$message = $this->get_language_constant('message_group_created');
 		}
 
 		// show message
@@ -616,7 +616,7 @@ class links extends Module {
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).';'.window_ReloadContent('groups_list')
 				);
 
@@ -640,10 +640,10 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_group_delete'),
+					'message'		=> $this->get_language_constant('message_group_delete'),
 					'name'			=> $item->name[$Language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'groups_delete',
 											url_Make(
@@ -677,8 +677,8 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('groups_delete').';'.window_ReloadContent('groups_list')
 				);
 
@@ -737,8 +737,8 @@ class links extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_links_updated'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_links_updated'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('groups_links')
 				);
 
@@ -1034,11 +1034,11 @@ class links extends Module {
 						'image'               => $image,
 						'thumbnail'           => $thumbnail,
 						'item_change'         => url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'links_change', 	// window id
 													600,				// width
-													$this->getLanguageConstant('title_links_change'), // title
+													$this->get_language_constant('title_links_change'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1050,11 +1050,11 @@ class links extends Module {
 												)
 											),
 						'item_delete'         => url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'links_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_links_delete'), // title
+													$this->get_language_constant('title_links_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1066,7 +1066,7 @@ class links extends Module {
 												)
 											),
 						'item_open'           => url_MakeHyperlink(
-												$this->getLanguageConstant('open'),
+												$this->get_language_constant('open'),
 												$item->url,
 												'', '',
 												'_blank'
@@ -1217,11 +1217,11 @@ class links extends Module {
 							'text_id'     => $item->text_id,
 							'thumbnail'   => $thumbnail,
 							'item_change' => url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'groups_change', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_groups_change'), // title
+														$this->get_language_constant('title_groups_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1233,11 +1233,11 @@ class links extends Module {
 													)
 												),
 							'item_delete' => url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'groups_delete', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_groups_delete'), // title
+														$this->get_language_constant('title_groups_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1249,11 +1249,11 @@ class links extends Module {
 													)
 												),
 							'item_links'  => url_MakeHyperlink(
-													$this->getLanguageConstant('links'),
+													$this->get_language_constant('links'),
 													window_Open(
 														'groups_links', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_groups_links'), // title
+														$this->get_language_constant('title_groups_links'), // title
 														false, false,
 														url_Make(
 															'transfer_control',

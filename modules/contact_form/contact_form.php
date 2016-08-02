@@ -99,33 +99,33 @@ class contact_form extends Module {
 
 			// create menu
 			$contact_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_contact'),
+					$this->get_language_constant('menu_contact'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$contact_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage_forms'),
+								$this->get_language_constant('menu_manage_forms'),
 								url_GetFromFilePath($this->path.'images/forms.svg'),
 
 								window_Open( // on click open window
 											'contact_forms',
 											600,
-											$this->getLanguageConstant('title_forms_manage'),
+											$this->get_language_constant('title_forms_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'forms_manage')
 										),
 								$level=5
 							));
 			$contact_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage_templates'),
+								$this->get_language_constant('menu_manage_templates'),
 								url_GetFromFilePath($this->path.'images/templates.svg'),
 
 								window_Open( // on click open window
 											'contact_form_templates',
 											550,
-											$this->getLanguageConstant('title_templates_manage'),
+											$this->get_language_constant('title_templates_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'templates_manage')
 										),
@@ -133,13 +133,13 @@ class contact_form extends Module {
 							));
 			$contact_menu->addSeparator(6);
 			$contact_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
+								$this->get_language_constant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'contact_form_settings',
 											400,
-											$this->getLanguageConstant('title_settings'),
+											$this->get_language_constant('title_settings'),
 											true, true,
 											backend_UrlMake($this->name, 'settings_show')
 										),
@@ -147,13 +147,13 @@ class contact_form extends Module {
 							));
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_submissions'),
+								$this->get_language_constant('menu_submissions'),
 								url_GetFromFilePath($this->path.'images/submissions.svg'),
 
 								window_Open( // on click open window
 											'contact_form_submissions',
 											650,
-											$this->getLanguageConstant('title_submissions'),
+											$this->get_language_constant('title_submissions'),
 											true, true,
 											backend_UrlMake($this->name, 'submissions')
 										),
@@ -180,7 +180,7 @@ class contact_form extends Module {
 		// get localized template names
 		if ($section == 'backend_module') {
 			foreach ($this->form_templates as $name => $fields)
-				$this->form_template_names[$name] = $this->getLanguageConstant('form_'.$name);
+				$this->form_template_names[$name] = $this->get_language_constant('form_'.$name);
 		}
 
 		// include required scripts
@@ -226,7 +226,7 @@ class contact_form extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -738,7 +738,7 @@ class contact_form extends Module {
 												$field->label,
 												$field->placeholder
 											);
-						$messages[] = $this->getLanguageConstant('message_upload_error');
+						$messages[] = $this->get_language_constant('message_upload_error');
 					}
 					break;
 
@@ -768,7 +768,7 @@ class contact_form extends Module {
 
 					// replace values with language specific
 					if (empty($field->value) || $field->value == 0)
-						$value = $this->getLanguageConstant('field_value_'.$value);
+						$value = $this->get_language_constant('field_value_'.$value);
 
 					// prepare data for insertion
 					$data[] = array(
@@ -785,7 +785,7 @@ class contact_form extends Module {
 												$field->placeholder
 											);
 
-						$message = $this->getLanguageConstant('message_missing_field');
+						$message = $this->get_language_constant('message_missing_field');
 						if (!in_array($message, $messages))
 							$messages[] = $message;
 					}
@@ -869,11 +869,11 @@ class contact_form extends Module {
 		// get messages
 		$message_sent = Language::getText('message_sent');
 		if (empty($message_sent))
-			$message_sent = $this->getLanguageConstant('message_sent');
+			$message_sent = $this->get_language_constant('message_sent');
 
 		$message_form_error = Language::getText('message_form_error');
 		if (empty($message_form_error))
-			$message_form_error = $this->getLanguageConstant('message_form_error');
+			$message_form_error = $this->get_language_constant('message_form_error');
 
 		// show result
 		if (_AJAX_REQUEST) {
@@ -1162,8 +1162,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('contact_form_settings')
 				);
 
@@ -1199,11 +1199,11 @@ class contact_form extends Module {
 			);
 
 			$export_link = url_MakeHyperlink(
-				$this->getLanguageConstant('menu_export'),
+				$this->get_language_constant('menu_export'),
 				window_Open(
 					'contact_form_export',
 					400,
-					$this->getLanguageConstant('title_export'),
+					$this->get_language_constant('title_export'),
 					true, false,
 					$export_url
 				)
@@ -1372,10 +1372,10 @@ class contact_form extends Module {
 			$data[] = array();
 
 			if ($export_ip)
-				$data[0][] = $this->getLanguageConstant('header_ip_address');
+				$data[0][] = $this->get_language_constant('header_ip_address');
 
 			if ($export_timestamp)
-				$data[0][] = $this->getLanguageConstant('header_timestamp');
+				$data[0][] = $this->get_language_constant('header_timestamp');
 
 			foreach ($headers as $field_name => $header)
 				if (in_array($field_name, $fields))
@@ -1416,8 +1416,8 @@ class contact_form extends Module {
 				// add timestamp
 				if ($export_timestamp) {
 					$timestamp = strtotime($submission->timestamp);
-					$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-					$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+					$date = date($this->get_language_constant('format_date_short'), $timestamp);
+					$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 					$record[] = $date.' '.$time;
 				}
@@ -1458,9 +1458,9 @@ class contact_form extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'contact_form_templates_add', 650,
-										$this->getLanguageConstant('title_templates_add'),
+										$this->get_language_constant('title_templates_add'),
 										true, false,
 										$this->name,
 										'templates_add'
@@ -1527,10 +1527,10 @@ class contact_form extends Module {
 	private function saveTemplate() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$name = $this->getMultilanguageField('name');
-		$subject = $this->getMultilanguageField('subject');
-		$plain_text = $this->getMultilanguageField('plain_text_content');
-		$html = $this->getMultilanguageField('html_content');
+		$name = $this->get_multilanguage_field('name');
+		$subject = $this->get_multilanguage_field('subject');
+		$plain_text = $this->get_multilanguage_field('plain_text_content');
+		$html = $this->get_multilanguage_field('html_content');
 
 		$manager = ContactForm_TemplateManager::getInstance();
 		$data = array(
@@ -1553,8 +1553,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_template_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_template_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_templates'),
 				);
 
@@ -1578,10 +1578,10 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_template_delete"),
+					'message'		=> $this->get_language_constant("message_template_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_templates_delete',
 											url_Make(
@@ -1613,8 +1613,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_template_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_template_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('contact_form_templates_delete').';'.window_ReloadContent('contact_form_templates')
 				);
 
@@ -1632,9 +1632,9 @@ class contact_form extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'contact_forms_add', 430,
-										$this->getLanguageConstant('title_forms_add'),
+										$this->get_language_constant('title_forms_add'),
 										true, false,
 										$this->name,
 										'forms_add'
@@ -1719,7 +1719,7 @@ class contact_form extends Module {
 
 		$data = array(
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
-				'name'			=> $this->getMultilanguageField('name'),
+				'name'			=> $this->get_multilanguage_field('name'),
 				'action'		=> escape_chars($_REQUEST['action']),
 				'template'		=> fix_chars($_REQUEST['template']),
 				'use_ajax'		=>$this->get_boolean_field('use_ajax') ? 1 : 0,
@@ -1813,8 +1813,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_form_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_form_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_forms'),
 				);
 
@@ -1838,10 +1838,10 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_form_delete"),
+					'message'		=> $this->get_language_constant("message_form_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'contact_forms_delete',
 											url_Make(
@@ -1889,8 +1889,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_form_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_form_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('contact_forms_delete').';'.window_ReloadContent('contact_forms')
 				);
 
@@ -1911,11 +1911,11 @@ class contact_form extends Module {
 		$params = array(
 					'form'			=> $form_id,
 					'link_new'		=> url_MakeHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										window_Open(
 											'contact_form_fieldset_add', 	// window id
 											350,				// width
-											$this->getLanguageConstant('title_fieldsets_add'), // title
+											$this->get_language_constant('title_fieldsets_add'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
@@ -1999,7 +1999,7 @@ class contact_form extends Module {
 		// collect data
 		$data = array(
 			'name'		=> fix_chars($_REQUEST['name']),
-			'legend'	=> $this->getMultilanguageField('legend'),
+			'legend'	=> $this->get_multilanguage_field('legend'),
 			'form'		=> $form_id
 		);
 
@@ -2035,8 +2035,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_fieldset_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_fieldset_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('contact_form_fieldsets_'.$form_id)
 				);
 
@@ -2059,10 +2059,10 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_fieldset_delete'),
+					'message'		=> $this->get_language_constant('message_fieldset_delete'),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_fieldset_delete',
 											url_Make(
@@ -2097,8 +2097,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_fieldset_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_fieldset_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('contact_form_fieldset_delete').';'.window_ReloadContent('contact_form_fieldsets_'.$form)
 				);
 
@@ -2118,11 +2118,11 @@ class contact_form extends Module {
 		$params = array(
 					'form'		=> $form_id,
 					'link_new'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										window_Open(
 											'contact_form_fields_add', 	// window id
 											400,				// width
-											$this->getLanguageConstant('title_fields_add'), // title
+											$this->get_language_constant('title_fields_add'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
@@ -2134,11 +2134,11 @@ class contact_form extends Module {
 										)
 									),
 					'link_fieldsets' => url_MakeHyperlink(
-										$this->getLanguageConstant('fieldsets'),
+										$this->get_language_constant('fieldsets'),
 										window_Open(
 											'contact_form_fieldsets_'.$form_id, 	// window id
 											350,				// width
-											$this->getLanguageConstant('title_fieldsets_manage'), // title
+											$this->get_language_constant('title_fieldsets_manage'), // title
 											true, false,
 											url_Make(
 												'transfer_control',
@@ -2232,8 +2232,8 @@ class contact_form extends Module {
 			'form'         => $form_id,
 			'name'         => fix_chars($_REQUEST['name']),
 			'type'         => fix_chars($_REQUEST['type']),
-			'label'        => $this->getMultilanguageField('label'),
-			'placeholder'  => $this->getMultilanguageField('placeholder'),
+			'label'        => $this->get_multilanguage_field('label'),
+			'placeholder'  => $this->get_multilanguage_field('placeholder'),
 			'min'          => fix_id($_REQUEST['min']),
 			'max'          => fix_id($_REQUEST['max']),
 			'maxlength'    => fix_id($_REQUEST['maxlength']),
@@ -2260,8 +2260,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_field_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_field_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_fields_'.$form_id),
 				);
 
@@ -2283,10 +2283,10 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_field_delete"),
+					'message'		=> $this->get_language_constant("message_field_delete"),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_fields_delete',
 											url_Make(
@@ -2323,8 +2323,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_field_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_field_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('contact_form_fields_delete').';'.window_ReloadContent('contact_form_fields_'.$form)
 				);
 
@@ -2344,11 +2344,11 @@ class contact_form extends Module {
 		$params = array(
 					'field'		=> $field_id,
 					'link_new'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										window_Open(
 											'contact_form_field_value_add', 	// window id
 											400,				// width
-											$this->getLanguageConstant('title_field_value_add'), // title
+											$this->get_language_constant('title_field_value_add'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
@@ -2360,11 +2360,11 @@ class contact_form extends Module {
 										)
 									),
 					'link_import'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('import'),
+										$this->get_language_constant('import'),
 										window_Open(
 											'contact_form_field_value_import', 	// window id
 											400,				// width
-											$this->getLanguageConstant('title_field_value_import'), // title
+											$this->get_language_constant('title_field_value_import'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
@@ -2441,7 +2441,7 @@ class contact_form extends Module {
 
 		$data = array(
 			'field'	=> $field_id,
-			'name'	=> $this->getMultilanguageField('name'),
+			'name'	=> $this->get_multilanguage_field('name'),
 			'value'	=> fix_chars($_REQUEST['value'])
 		);
 		$manager = ContactForm_FieldValueManager::getInstance();
@@ -2460,8 +2460,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_field_value_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_field_value_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_field_values_'.$field_id),
 				);
 
@@ -2555,14 +2555,14 @@ class contact_form extends Module {
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
-		$message = $this->getLanguageConstant('message_import_complete');
+		$message = $this->get_language_constant('message_import_complete');
 		$message = str_replace('%s', count($values), $message);
 		$import_window = 'contact_form_field_value_import';
 		$field_window = 'contact_form_field_values_'.$field_id;
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($import_window).';'.window_ReloadContent($field_window)
 				);
 
@@ -2586,10 +2586,10 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_field_value_delete'),
+					'message'		=> $this->get_language_constant('message_field_value_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_field_value_delete',
 											url_Make(
@@ -2622,8 +2622,8 @@ class contact_form extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_field_value_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_field_value_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('contact_form_field_value_delete').';'.window_ReloadContent('contact_form_field_values_'.$field)
 				);
 
@@ -2694,7 +2694,7 @@ class contact_form extends Module {
 			$params = array(
 				'selected'	=> $field == $selected,
 				'type'		=> $field,
-				'name'		=> $this->getLanguageConstant('field_'.$field)
+				'name'		=> $this->get_language_constant('field_'.$field)
 			);
 
 			$template->restoreXML();
@@ -2772,11 +2772,11 @@ class contact_form extends Module {
 						'html'			=> $item->html,
 						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'contact_form_templates_edit', 	// window id
 													650,				// width
-													$this->getLanguageConstant('title_templates_edit'), // title
+													$this->get_language_constant('title_templates_edit'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -2788,11 +2788,11 @@ class contact_form extends Module {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'contact_form_templates_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_templates_delete'), // title
+													$this->get_language_constant('title_templates_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -2954,11 +2954,11 @@ class contact_form extends Module {
 					'in_fieldset'	=> in_array($item->id, $fieldset_fields),
 					'skip_foreign'	=> $skip_foreign,
 					'item_change'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('change'),
+											$this->get_language_constant('change'),
 											window_Open(
 												'contact_form_fields_edit', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_fields_edit'), // title
+												$this->get_language_constant('title_fields_edit'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -2970,11 +2970,11 @@ class contact_form extends Module {
 											)
 										),
 					'item_delete'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('delete'),
+											$this->get_language_constant('delete'),
 											window_Open(
 												'contact_form_fields_delete', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_fields_delete'), // title
+												$this->get_language_constant('title_fields_delete'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -2986,11 +2986,11 @@ class contact_form extends Module {
 											)
 										),
 					'item_values'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('field_values'),
+											$this->get_language_constant('field_values'),
 											window_Open(
 												'contact_form_field_values_'.$item->id, 	// window id
 												450,				// width
-												$this->getLanguageConstant('title_field_values'), // title
+												$this->get_language_constant('title_field_values'), // title
 												true, false,
 												url_Make(
 													'transfer_control',
@@ -3058,11 +3058,11 @@ class contact_form extends Module {
 						'value'			=> $item->value,
 						'selected'		=> $selected == $item->value,
 						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'contact_form_field_value_edit', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_field_value_edit'), // title
+													$this->get_language_constant('title_field_value_edit'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -3074,11 +3074,11 @@ class contact_form extends Module {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'contact_form_field_value_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_field_value_delete'), // title
+													$this->get_language_constant('title_field_value_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -3195,11 +3195,11 @@ class contact_form extends Module {
 					'show_cancel'	=> $item->show_cancel,
 					'selected'		=> $selected == $item->id,
 					'item_fields'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('fields'),
+											$this->get_language_constant('fields'),
 											window_Open(
 												'contact_form_fields_'.$item->id, 	// window id
 												500,				// width
-												$this->getLanguageConstant('title_form_fields'), // title
+												$this->get_language_constant('title_form_fields'), // title
 												true, false,
 												url_Make(
 													'transfer_control',
@@ -3211,11 +3211,11 @@ class contact_form extends Module {
 											)
 										),
 					'item_change'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('change'),
+											$this->get_language_constant('change'),
 											window_Open(
 												'contact_forms_edit', 	// window id
 												430,				// width
-												$this->getLanguageConstant('title_forms_edit'), // title
+												$this->get_language_constant('title_forms_edit'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -3227,11 +3227,11 @@ class contact_form extends Module {
 											)
 										),
 					'item_delete'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('delete'),
+											$this->get_language_constant('delete'),
 											window_Open(
 												'contact_forms_delete', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_forms_delete'), // title
+												$this->get_language_constant('title_forms_delete'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -3313,8 +3313,8 @@ class contact_form extends Module {
 
 			// prepare timestamps
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$params = array(
 					'id'			=> $item->id,
@@ -3397,8 +3397,8 @@ class contact_form extends Module {
 
 				// prepare timestamps
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 				$params = array(
 						'id'			=> $item->id,
@@ -3409,11 +3409,11 @@ class contact_form extends Module {
 						'address'		=> $item->address,
 						'fields'		=> $field_data,
 						'item_details'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('details'),
+												$this->get_language_constant('details'),
 												window_Open(
 													'contact_form_submission_details'.$item->id, 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_submission_details'), // title
+													$this->get_language_constant('title_submission_details'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -3688,11 +3688,11 @@ class contact_form extends Module {
 					'legend'		=> $item->legend,
 					'include'		=> array_key_exists($item->name, $includes) ? $includes[$item->name] : '',
 					'item_change'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('change'),
+											$this->get_language_constant('change'),
 											window_Open(
 												'contact_form_fieldset_edit', 	// window id
 												350,				// width
-												$this->getLanguageConstant('title_fieldsets_edit'), // title
+												$this->get_language_constant('title_fieldsets_edit'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -3704,11 +3704,11 @@ class contact_form extends Module {
 											)
 										),
 					'item_delete'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('delete'),
+											$this->get_language_constant('delete'),
 											window_Open(
 												'contact_form_fieldset_delete', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_fieldsets_delete'), // title
+												$this->get_language_constant('title_fieldsets_delete'), // title
 												false, false,
 												url_Make(
 													'transfer_control',

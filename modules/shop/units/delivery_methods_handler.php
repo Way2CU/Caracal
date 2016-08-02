@@ -33,7 +33,7 @@ class ShopDeliveryMethodsHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -95,11 +95,11 @@ class ShopDeliveryMethodsHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_delivery_method'),
+										$this->_parent->get_language_constant('add_delivery_method'),
 										window_Open( // on click open window
 											'shop_delivery_method_add',
 											370,
-											$this->_parent->getLanguageConstant('title_delivery_method_add'),
+											$this->_parent->get_language_constant('title_delivery_method_add'),
 											true, true,
 											backend_UrlMake($this->name, 'delivery_methods', 'add')
 										)
@@ -165,7 +165,7 @@ class ShopDeliveryMethodsHandler {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
-				'name'			=> $this->_parent->getMultilanguageField('name'),
+				'name'			=> $this->_parent->get_multilanguage_field('name'),
 				'international'	=> $this->_parent->get_boolean_field('international') ? 1 : 0,
 				'domestic'		=> $this->_parent->get_boolean_field('domestic') ? 1 : 0,
 			);
@@ -184,8 +184,8 @@ class ShopDeliveryMethodsHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_delivery_method_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_delivery_method_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_delivery_methods')
 				);
 
@@ -209,10 +209,10 @@ class ShopDeliveryMethodsHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_delivery_method_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_delivery_method_delete"),
 					'name'			=> $method->name[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_delivery_method_delete',
 											url_Make(
@@ -256,8 +256,8 @@ class ShopDeliveryMethodsHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_delivery_method_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_delivery_method_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_delivery_method_delete').";".window_ReloadContent('shop_delivery_methods')
 				);
 
@@ -276,11 +276,11 @@ class ShopDeliveryMethodsHandler {
 		$params = array(
 				'method'	=> $id,
 				'link_new' => url_MakeHyperlink(
-									$this->_parent->getLanguageConstant('add_delivery_price'),
+									$this->_parent->get_language_constant('add_delivery_price'),
 									window_Open( // on click open window
 										'shop_delivery_price_add',
 										370,
-										$this->_parent->getLanguageConstant('title_delivery_method_price_add'),
+										$this->_parent->get_language_constant('title_delivery_method_price_add'),
 										true, true,
 										url_Make(
 											'transfer_control',
@@ -373,8 +373,8 @@ class ShopDeliveryMethodsHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_delivery_price_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_delivery_price_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_delivery_method_prices')
 				);
 
@@ -398,10 +398,10 @@ class ShopDeliveryMethodsHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_delivery_price_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_delivery_price_delete"),
 					'name'			=> $item->value,
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_delivery_price_delete',
 											url_Make(
@@ -436,8 +436,8 @@ class ShopDeliveryMethodsHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_delivery_price_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_delivery_price_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_delivery_price_delete').";".window_ReloadContent('shop_delivery_method_prices')
 				);
 
@@ -564,11 +564,11 @@ class ShopDeliveryMethodsHandler {
 					'item'					=> $item_id,
 					'selected'				=> $selected == $item->id ? 1 : 0,
 					'item_change'	=> url_MakeHyperlink(
-						$this->_parent->getLanguageConstant('change'),
+						$this->_parent->get_language_constant('change'),
 						window_Open(
 							'shop_delivery_method_change', 	// window id
 							370,				// width
-							$this->_parent->getLanguageConstant('title_delivery_method_change'), // title
+							$this->_parent->get_language_constant('title_delivery_method_change'), // title
 							true, true,
 							url_Make(
 								'transfer_control',
@@ -581,11 +581,11 @@ class ShopDeliveryMethodsHandler {
 						)
 					),
 					'item_delete'	=> url_MakeHyperlink(
-						$this->_parent->getLanguageConstant('delete'),
+						$this->_parent->get_language_constant('delete'),
 						window_Open(
 							'shop_delivery_method_delete', 	// window id
 							400,				// width
-							$this->_parent->getLanguageConstant('title_delivery_method_delete'), // title
+							$this->_parent->get_language_constant('title_delivery_method_delete'), // title
 							false, false,
 							url_Make(
 								'transfer_control',
@@ -598,11 +598,11 @@ class ShopDeliveryMethodsHandler {
 						)
 					),
 					'item_prices'	=> url_MakeHyperlink(
-						$this->_parent->getLanguageConstant('prices'),
+						$this->_parent->get_language_constant('prices'),
 						window_Open(
 							'shop_delivery_method_prices', 	// window id
 							370,				// width
-							$this->_parent->getLanguageConstant('title_delivery_method_prices'), // title
+							$this->_parent->get_language_constant('title_delivery_method_prices'), // title
 							true, false,
 							url_Make(
 								'transfer_control',
@@ -667,11 +667,11 @@ class ShopDeliveryMethodsHandler {
 						'method'	=> isset($conditions['method']) ? $conditions['method'] : 0,
 						'selected'	=> in_array($item->id, $relations) ? 1 : 0,
 						'item_change'	=> url_MakeHyperlink(
-							$this->_parent->getLanguageConstant('change'),
+							$this->_parent->get_language_constant('change'),
 							window_Open(
 								'shop_delivery_price_change', 	// window id
 								370,				// width
-								$this->_parent->getLanguageConstant('title_delivery_method_price_change'), // title
+								$this->_parent->get_language_constant('title_delivery_method_price_change'), // title
 								true, true,
 								url_Make(
 									'transfer_control',
@@ -684,11 +684,11 @@ class ShopDeliveryMethodsHandler {
 							)
 						),
 						'item_delete'	=> url_MakeHyperlink(
-							$this->_parent->getLanguageConstant('delete'),
+							$this->_parent->get_language_constant('delete'),
 							window_Open(
 								'shop_delivery_price_delete', 	// window id
 								400,				// width
-								$this->_parent->getLanguageConstant('title_delivery_method_price_delete'), // title
+								$this->_parent->get_language_constant('title_delivery_method_price_delete'), // title
 								false, false,
 								url_Make(
 									'transfer_control',

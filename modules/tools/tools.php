@@ -36,7 +36,7 @@ class tools extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

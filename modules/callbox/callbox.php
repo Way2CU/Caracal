@@ -29,20 +29,20 @@ class callbox extends Module {
 			$backend = backend::getInstance();
 
 			$callbox_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_callbox'),
+					$this->get_language_constant('menu_callbox'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$callbox_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
+								$this->get_language_constant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'callbox_settings',
 											400,
-											$this->getLanguageConstant('title_settings'),
+											$this->get_language_constant('title_settings'),
 											true, true,
 											backend_UrlMake($this->name, 'settings')
 										),
@@ -83,7 +83,7 @@ class callbox extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -164,8 +164,8 @@ class callbox extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('callbox_settings')
 				);
 

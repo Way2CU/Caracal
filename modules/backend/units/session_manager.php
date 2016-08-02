@@ -29,7 +29,7 @@ class SessionManager {
 	/**
 	 * Transfer control to this object
 	 */
-	public function transferControl() {
+	public function transfer_control() {
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 
 		if (!is_null($action) && $action == 'transfer_control')
@@ -140,7 +140,7 @@ class SessionManager {
 			url_SetRefresh($url, 2);
 
 			// get message
-			$message = $this->parent->getLanguageConstant('message_login_ok');
+			$message = $this->parent->get_language_constant('message_login_ok');
 
 			// create template and show login form
 			$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');
@@ -157,7 +157,7 @@ class SessionManager {
 		} else {
 			// user is not logged in properly, increase fail
 			// counter and present login window with message
-			$message = $this->parent->getLanguageConstant('message_login_error');
+			$message = $this->parent->get_language_constant('message_login_error');
 			$this->login($message);
 			$retry_manager->increaseCount();
 		}
@@ -171,10 +171,10 @@ class SessionManager {
 		$template->setMappedModule($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->parent->getLanguageConstant('message_logout'),
+					'message'		=> $this->parent->get_language_constant('message_logout'),
 					'name'			=> '',
-					'yes_text'		=> $this->parent->getLanguageConstant('logout'),
-					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->parent->get_language_constant('logout'),
+					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'logout_window',
 											backend_UrlMake($this->parent->name, 'logout_commit')
@@ -198,7 +198,7 @@ class SessionManager {
 		UserManager::getInstance()->logout_user();
 
 		// get message
-		$message = $this->parent->getLanguageConstant('message_logout_ok');
+		$message = $this->parent->get_language_constant('message_logout_ok');
 
 		// get url
 		$url = url_Make('', $this->parent->name);
@@ -283,19 +283,19 @@ class SessionManager {
 			$manager->login_user($username);
 
 			// return message
-			$result['message'] = $this->parent->getLanguageConstant('message_login_ok');
+			$result['message'] = $this->parent->get_language_constant('message_login_ok');
 			$result['logged_in'] = true;
 
 		} elseif ($credentials_ok && $captcha_ok && !$verified) {
 			// user is logged but account is not verified
-			$result['message'] = $this->parent->getLanguageConstant('message_users_account_not_verified');
+			$result['message'] = $this->parent->get_language_constant('message_users_account_not_verified');
 
 		} else {
 			// user is not logged in properly, increase fail
 			// counter and present login window with message
 			$count = $retry_manager->increaseCount();
 
-			$result['message'] = $this->parent->getLanguageConstant('message_login_error');
+			$result['message'] = $this->parent->get_language_constant('message_login_error');
 			$result['show_captcha'] = $count > 3;
 		}
 
@@ -313,7 +313,7 @@ class SessionManager {
 		UserManager::getInstance()->logout_user();
 
 		// get message
-		$message = $this->parent->getLanguageConstant('message_logout_ok');
+		$message = $this->parent->get_language_constant('message_logout_ok');
 		$result = array(
 			'logged_in'	=> false,
 			'message'	=> $message

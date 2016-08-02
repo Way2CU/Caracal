@@ -44,7 +44,7 @@ class captcha extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -273,7 +273,7 @@ class captcha extends Module {
 
 		$params = array(
 				'url'	=> $this->getImageURL(),
-				'alt'	=> $this->getLanguageConstant('captcha_message')
+				'alt'	=> $this->get_language_constant('captcha_message')
 			);
 
 		$template->setLocalParams($params);

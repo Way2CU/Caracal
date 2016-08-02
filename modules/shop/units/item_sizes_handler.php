@@ -39,7 +39,7 @@ class ShopItemSizesHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params=array(), $children=array()) {
+	public function transfer_control($params=array(), $children=array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -98,11 +98,11 @@ class ShopItemSizesHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_size_definition'),
+										$this->_parent->get_language_constant('add_size_definition'),
 										window_Open( // on click open window
 											'shop_item_size_add',
 											370,
-											$this->_parent->getLanguageConstant('title_size_add'),
+											$this->_parent->get_language_constant('title_size_add'),
 											true, true,
 											backend_UrlMake($this->name, 'sizes', 'add')
 										)
@@ -126,11 +126,11 @@ class ShopItemSizesHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_size_value'),
+										$this->_parent->get_language_constant('add_size_value'),
 										window_Open( // on click open window
 											'shop_item_size_values_add',
 											370,
-											$this->_parent->getLanguageConstant('title_size_value_add'),
+											$this->_parent->get_language_constant('title_size_value_add'),
 											true, true,
 											url_Make(
 												'transfer_control',
@@ -239,8 +239,8 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_item_size_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_item_size_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_item_sizes').';'
 				);
 
@@ -257,7 +257,7 @@ class ShopItemSizesHandler {
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$definition = isset($_REQUEST['definition']) ? fix_id($_REQUEST['definition']) : null;
-		$value = $this->_parent->getMultilanguageField('value');
+		$value = $this->_parent->get_multilanguage_field('value');
 
 		$data = array(
 					'definition'	=> $definition,
@@ -278,8 +278,8 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_item_size_value_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_item_size_value_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_item_size_values').';'
 				);
 
@@ -302,10 +302,10 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_size_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_size_delete"),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_size_delete',
 											url_Make(
@@ -340,8 +340,8 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_size_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_size_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_item_size_delete').";".window_ReloadContent('shop_item_sizes')
 				);
 
@@ -365,10 +365,10 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_size_value_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_size_value_delete"),
 					'name'			=> $item->value[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_size_values_delete',
 											url_Make(
@@ -401,8 +401,8 @@ class ShopItemSizesHandler {
 		$template->setMappedModule($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_size_value_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_size_value_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_item_size_values_delete').";".window_ReloadContent('shop_item_size_values')
 				);
 
@@ -460,11 +460,11 @@ class ShopItemSizesHandler {
 							'name'			=> $item->name,
 							'selected'		=> $selected,
 							'item_delete'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('delete'),
+													$this->_parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_size_delete', 	// window id
 														400,				// width
-														$this->_parent->getLanguageConstant('title_size_delete'), // title
+														$this->_parent->get_language_constant('title_size_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -477,11 +477,11 @@ class ShopItemSizesHandler {
 													)
 												),
 							'item_values'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('values'),
+													$this->_parent->get_language_constant('values'),
 													window_Open(
 														'shop_item_size_values', 	// window id
 														400,				// width
-														$this->_parent->getLanguageConstant('title_size_values'), // title
+														$this->_parent->get_language_constant('title_size_values'), // title
 														true, true,
 														url_Make(
 															'transfer_control',
@@ -550,11 +550,11 @@ class ShopItemSizesHandler {
 							'value'			=> $item->value,
 							'selected'		=> $selected_value,
 							'item_change'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('change'),
+													$this->_parent->get_language_constant('change'),
 													window_Open(
 														'shop_item_size_values_change', 	// window id
 														370,				// width
-														$this->_parent->getLanguageConstant('title_size_value_change'), // title
+														$this->_parent->get_language_constant('title_size_value_change'), // title
 														true, true,
 														url_Make(
 															'transfer_control',
@@ -567,11 +567,11 @@ class ShopItemSizesHandler {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('delete'),
+													$this->_parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_size_values_delete', 	// window id
 														400,				// width
-														$this->_parent->getLanguageConstant('title_size_value_delete'), // title
+														$this->_parent->get_language_constant('title_size_value_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',

@@ -25,20 +25,20 @@ class tips extends Module {
 			$backend = backend::getInstance();
 
 			$tips_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_tips'),
+					$this->get_language_constant('menu_tips'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$tips_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_tips_manage'),
+								$this->get_language_constant('menu_tips_manage'),
 								url_GetFromFilePath($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'tips',
 											500,
-											$this->getLanguageConstant('title_tips_manage'),
+											$this->get_language_constant('title_tips_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'tips')
 										),
@@ -65,7 +65,7 @@ class tips extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -162,9 +162,9 @@ class tips extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'tips_new', 400,
-										$this->getLanguageConstant('title_tips_new'),
+										$this->get_language_constant('title_tips_new'),
 										true, false,
 										$this->name,
 										'tips_new'
@@ -228,7 +228,7 @@ class tips extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = TipManager::getInstance();
 		$data = array(
-					'content'	=> $this->getMultilanguageField('content'),
+					'content'	=> $this->get_multilanguage_field('content'),
 					'visible'	=> fix_id($_REQUEST['visible'])
 				);
 
@@ -244,8 +244,8 @@ class tips extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_tip_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_tip_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('tips'),
 				);
 
@@ -269,10 +269,10 @@ class tips extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_tip_delete"),
+					'message'		=> $this->get_language_constant("message_tip_delete"),
 					'name'			=> $item->content[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'tips_delete',
 											url_Make(
@@ -304,8 +304,8 @@ class tips extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_tip_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_tip_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('tips_delete').";".window_ReloadContent('tips')
 				);
 
@@ -392,11 +392,11 @@ class tips extends Module {
 							'content'		=> $item->content,
 							'visible'		=> $item->visible,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'tips_change', 		// window id
 														400,				// width
-														$this->getLanguageConstant('title_tips_change'), // title
+														$this->get_language_constant('title_tips_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -408,11 +408,11 @@ class tips extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'tips_delete', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_tips_delete'), // title
+														$this->get_language_constant('title_tips_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',

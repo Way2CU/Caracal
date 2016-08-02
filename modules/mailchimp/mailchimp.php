@@ -30,20 +30,20 @@ class mailchimp extends Module {
 			$backend = backend::getInstance();
 
 			$mailchimp_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_mailchimp'),
+					$this->get_language_constant('menu_mailchimp'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$mailchimp_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_lists'),
+								$this->get_language_constant('menu_lists'),
 								url_GetFromFilePath($this->path.'images/lists.svg'),
 
 								window_Open( // on click open window
 											'mailchimp_lists',
 											450,
-											$this->getLanguageConstant('title_lists'),
+											$this->get_language_constant('title_lists'),
 											true, true,
 											backend_UrlMake($this->name, 'lists')
 										),
@@ -52,13 +52,13 @@ class mailchimp extends Module {
 			$mailchimp_menu->addSeparator(5);
 
 			$mailchimp_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
+								$this->get_language_constant('menu_settings'),
 								url_GetFromFilePath($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'mailchimp_settings',
 											450,
-											$this->getLanguageConstant('title_settings'),
+											$this->get_language_constant('title_settings'),
 											true, true,
 											backend_UrlMake($this->name, 'settings')
 										),
@@ -85,7 +85,7 @@ class mailchimp extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

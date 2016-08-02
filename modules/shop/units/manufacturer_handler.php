@@ -41,7 +41,7 @@ class ShopManufacturerHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -79,11 +79,11 @@ class ShopManufacturerHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_manufacturer'),
+										$this->_parent->get_language_constant('add_manufacturer'),
 										window_Open( // on click open window
 											'shop_manufacturer_add',
 											360,
-											$this->_parent->getLanguageConstant('title_manufacturer_add'),
+											$this->_parent->get_language_constant('title_manufacturer_add'),
 											true, true,
 											backend_UrlMake($this->name, 'manufacturers', 'add')
 										)
@@ -162,7 +162,7 @@ class ShopManufacturerHandler {
 
 		// get data from request
 		$data = array(
-				'name'		=> $this->_parent->getMultilanguageField('name'),
+				'name'		=> $this->_parent->get_multilanguage_field('name'),
 				'web_site'	=> escape_chars($_REQUEST['web_site']),
 			);
 
@@ -207,8 +207,8 @@ class ShopManufacturerHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_manufacturer_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_manufacturer_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_manufacturers').$gallery_addon
 				);
 
@@ -232,10 +232,10 @@ class ShopManufacturerHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_manufacturer_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_manufacturer_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_manufacturer_delete',
 											url_Make(
@@ -270,8 +270,8 @@ class ShopManufacturerHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_manufacturer_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_manufacturer_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_manufacturer_delete').";".window_ReloadContent('shop_manufacturers')
 				);
 
@@ -367,11 +367,11 @@ class ShopManufacturerHandler {
 						'logo'		=> $image,
 						'selected'	=> $selected == $item->id ? 1 : 0,
 						'item_change'	=> url_MakeHyperlink(
-												$this->_parent->getLanguageConstant('change'),
+												$this->_parent->get_language_constant('change'),
 												window_Open(
 													'shop_manufacturer_change', 	// window id
 													360,				// width
-													$this->_parent->getLanguageConstant('title_manufacturer_change'), // title
+													$this->_parent->get_language_constant('title_manufacturer_change'), // title
 													true, true,
 													url_Make(
 														'transfer_control',
@@ -384,11 +384,11 @@ class ShopManufacturerHandler {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->_parent->getLanguageConstant('delete'),
+												$this->_parent->get_language_constant('delete'),
 												window_Open(
 													'shop_manufacturer_delete', 	// window id
 													400,				// width
-													$this->_parent->getLanguageConstant('title_manufacturer_delete'), // title
+													$this->_parent->get_language_constant('title_manufacturer_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',

@@ -28,45 +28,45 @@ class affiliates extends Module {
 			$backend = backend::getInstance();
 
 			$referrals_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_affiliates'),
+					$this->get_language_constant('menu_affiliates'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 			$referrals_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage_affiliates'),
+								$this->get_language_constant('menu_manage_affiliates'),
 								url_GetFromFilePath($this->path.'images/affiliates.svg'),
 
 								window_Open( // on click open window
 											'affiliates',
 											700,
-											$this->getLanguageConstant('title_affiliates'),
+											$this->get_language_constant('title_affiliates'),
 											true, true,
 											backend_UrlMake($this->name, 'affiliates')
 										),
 								$level=10
 							));
 			$referrals_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_referral_urls'),
+								$this->get_language_constant('menu_referral_urls'),
 								url_GetFromFilePath($this->path.'images/referrals.svg'),
 
 								window_Open( // on click open window
 											'referrals',
 											750,
-											$this->getLanguageConstant('title_referrals'),
+											$this->get_language_constant('title_referrals'),
 											true, true,
 											backend_UrlMake($this->name, 'referrals')
 										),
 								$level=4
 							));
 			$referrals_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_information'),
+								$this->get_language_constant('menu_information'),
 								url_GetFromFilePath($this->path.'images/information.svg'),
 
 								window_Open( // on click open window
 											'affiliate_information',
 											400,
-											$this->getLanguageConstant('title_affiliate_information'),
+											$this->get_language_constant('title_affiliate_information'),
 											true, true,
 											backend_UrlMake($this->name, 'information')
 										),
@@ -96,7 +96,7 @@ class affiliates extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -203,9 +203,9 @@ class affiliates extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new_affiliate'),
+										$this->get_language_constant('new_affiliate'),
 										'affiliates_new', 370,
-										$this->getLanguageConstant('title_affiliates_add'),
+										$this->get_language_constant('title_affiliates_add'),
 										true, false,
 										$this->name,
 										'affiliate_add'
@@ -336,8 +336,8 @@ class affiliates extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant($message),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant($message),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('affiliates'),
 				);
 
@@ -362,10 +362,10 @@ class affiliates extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_affiliate_delete"),
+					'message'		=> $this->get_language_constant("message_affiliate_delete"),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'affiliates_delete',
 											url_Make(
@@ -403,8 +403,8 @@ class affiliates extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_affiliate_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_affiliate_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('affiliates_delete').";".window_ReloadContent('affiliates')
 				);
 
@@ -421,8 +421,8 @@ class affiliates extends Module {
 		$template->setMappedModule($this->name);
 
 		if (isset($_REQUEST['group_by']) && $_REQUEST['group_by'] == 'landing')
-			$column = $this->getLanguageConstant('column_landing'); else
-			$column = $this->getLanguageConstant('column_url');
+			$column = $this->get_language_constant('column_landing'); else
+			$column = $this->get_language_constant('column_url');
 
 		$params = array(
 				'column_group_by'	=> $column,
@@ -576,11 +576,11 @@ class affiliates extends Module {
 						'conversions'	=> $item->conversions,
 						'rate'			=> $rate,
 						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'affiliates_change', 	// window id
 													370,				// width
-													$this->getLanguageConstant('title_affiliates_change'), // title
+													$this->get_language_constant('title_affiliates_change'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -592,11 +592,11 @@ class affiliates extends Module {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'affiliates_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_affiliates_delete'), // title
+													$this->get_language_constant('title_affiliates_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',

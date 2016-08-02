@@ -30,12 +30,12 @@ class page_speed extends Module {
 
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
-										$this->getLanguageConstant('menu_page_speed'),
+										$this->get_language_constant('menu_page_speed'),
 										url_GetFromFilePath($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_speed',
 													670,
-													$this->getLanguageConstant('title_page_speed'),
+													$this->get_language_constant('title_page_speed'),
 													true, false, // disallow minimize, safety feature
 													backend_UrlMake($this->name, 'show')
 												),
@@ -66,7 +66,7 @@ class page_speed extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
@@ -104,17 +104,17 @@ class page_speed extends Module {
 
 		$params = array(
 						'check_page_speed' => window_OpenHyperlink(
-											$this->getLanguageConstant('check_page_speed'),
+											$this->get_language_constant('check_page_speed'),
 											'page_speed_check', 260,
-											$this->getLanguageConstant('title_check_page_speed'),
+											$this->get_language_constant('title_check_page_speed'),
 											true, false,
 											$this->name,
 											'check'
 										),
 						'set_api_key' => window_OpenHyperlink(
-											$this->getLanguageConstant('set_api_key'),
+											$this->get_language_constant('set_api_key'),
 											'page_speed_set_api_key', 400,
-											$this->getLanguageConstant('title_set_api_key'),
+											$this->get_language_constant('title_set_api_key'),
 											true, false,
 											$this->name,
 											'set_api_key'
@@ -144,10 +144,10 @@ class page_speed extends Module {
 			$data = file_get_contents($request);
 			file_put_contents($this->path.'data/page_speed.json', $data);
 
-			$message = $this->getLanguageConstant('message_check_page_speed_done');
+			$message = $this->get_language_constant('message_check_page_speed_done');
 
 		} else {
-			$message = $this->getLanguageConstant('message_check_page_speed_error');
+			$message = $this->get_language_constant('message_check_page_speed_error');
 		}
 
 		// prepare and parse result message
@@ -156,7 +156,7 @@ class page_speed extends Module {
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('page_speed_check').';'.window_ReloadContent('page_speed')
 				);
 
@@ -197,8 +197,8 @@ class page_speed extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_api_key_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_api_key_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('page_speed_set_api_key')
 				);
 

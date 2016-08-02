@@ -256,19 +256,19 @@ class shop extends Module {
 			}
 
 			$shop_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_shop'),
+				$this->get_language_constant('menu_shop'),
 				url_GetFromFilePath($this->path.'images/icon.svg'),
 				'javascript:void(0);',
 				5  // level
 			);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_items'),
+				$this->get_language_constant('menu_items'),
 				url_GetFromFilePath($this->path.'images/items.svg'),
 				window_Open( // on click open window
 					'shop_items',
 					650,
-					$this->getLanguageConstant('title_manage_items'),
+					$this->get_language_constant('title_manage_items'),
 					true, true,
 					backend_UrlMake($this->name, 'items')
 				),
@@ -276,14 +276,14 @@ class shop extends Module {
 			));
 
 			$recurring_plans_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_recurring_plans'),
+				$this->get_language_constant('menu_recurring_plans'),
 				url_GetFromFilePath($this->path.'images/recurring_plans.svg'),
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
 
 			$import_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_import'),
+				$this->get_language_constant('menu_import'),
 				url_GetFromFilePath($this->path.'images/import.svg'),
 				'javascript: void(0);', 5
 			);
@@ -292,12 +292,12 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_categories'),
+				$this->get_language_constant('menu_categories'),
 				url_GetFromFilePath($this->path.'images/categories.svg'),
 				window_Open( // on click open window
 					'shop_categories',
 					550,
-					$this->getLanguageConstant('title_manage_categories'),
+					$this->get_language_constant('title_manage_categories'),
 					true, true,
 					backend_UrlMake($this->name, 'categories')
 				),
@@ -305,12 +305,12 @@ class shop extends Module {
 			));
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_item_sizes'),
+				$this->get_language_constant('menu_item_sizes'),
 				url_GetFromFilePath($this->path.'images/item_sizes.svg'),
 				window_Open( // on click open window
 					'shop_item_sizes',
 					400,
-					$this->getLanguageConstant('title_manage_item_sizes'),
+					$this->get_language_constant('title_manage_item_sizes'),
 					true, true,
 					backend_UrlMake($this->name, 'sizes')
 				),
@@ -318,12 +318,12 @@ class shop extends Module {
 			));
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_manufacturers'),
+				$this->get_language_constant('menu_manufacturers'),
 				url_GetFromFilePath($this->path.'images/manufacturers.svg'),
 				window_Open( // on click open window
 					'shop_manufacturers',
 					400,
-					$this->getLanguageConstant('title_manufacturers'),
+					$this->get_language_constant('title_manufacturers'),
 					true, true,
 					backend_UrlMake($this->name, 'manufacturers')
 				),
@@ -332,7 +332,7 @@ class shop extends Module {
 
 			// delivery methods menu
 			$delivery_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_delivery_methods'),
+				$this->get_language_constant('menu_delivery_methods'),
 				url_GetFromFilePath($this->path.'images/delivery.svg'),
 				'javascript: void(0);', 5
 			);
@@ -343,7 +343,7 @@ class shop extends Module {
 
 			// special offers menu
 			$special_offers = new backend_MenuItem(
-				$this->getLanguageConstant('menu_special_offers'),
+				$this->get_language_constant('menu_special_offers'),
 				url_GetFromFilePath($this->path.'images/special_offers.svg'),
 				'javascript: void(0);', 5
 			);
@@ -354,7 +354,7 @@ class shop extends Module {
 
 			// payment methods menu
 			$methods_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_payment_methods'),
+				$this->get_language_constant('menu_payment_methods'),
 				url_GetFromFilePath($this->path.'images/payment_methods.svg'),
 				'javascript: void(0);', 5
 			);
@@ -362,12 +362,12 @@ class shop extends Module {
 			$shop_menu->addChild('shop_payment_methods', $methods_menu);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_currencies'),
+				$this->get_language_constant('menu_currencies'),
 				url_GetFromFilePath($this->path.'images/currencies.svg'),
 				window_Open( // on click open window
 					'shop_currencies',
 					350,
-					$this->getLanguageConstant('title_currencies'),
+					$this->get_language_constant('title_currencies'),
 					true, true,
 					backend_UrlMake($this->name, 'currencies')
 				),
@@ -377,36 +377,36 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_transactions'),
+				$this->get_language_constant('menu_transactions'),
 				url_GetFromFilePath($this->path.'images/transactions.svg'),
 				window_Open( // on click open window
 					'shop_transactions',
 					800,
-					$this->getLanguageConstant('title_transactions'),
+					$this->get_language_constant('title_transactions'),
 					true, true,
 					backend_UrlMake($this->name, 'transactions')
 				),
 				5  // level
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_warehouses'),
+				$this->get_language_constant('menu_warehouses'),
 				url_GetFromFilePath($this->path.'images/warehouse.svg'),
 				window_Open( // on click open window
 					'shop_warehouses',
 					490,
-					$this->getLanguageConstant('title_warehouses'),
+					$this->get_language_constant('title_warehouses'),
 					true, true,
 					backend_UrlMake($this->name, 'warehouses')
 				),
 				5  // level
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_stocks'),
+				$this->get_language_constant('menu_stocks'),
 				url_GetFromFilePath($this->path.'images/stock.svg'),
 				window_Open( // on click open window
 					'shop_stocks',
 					490,
-					$this->getLanguageConstant('title_stocks'),
+					$this->get_language_constant('title_stocks'),
 					true, true,
 					backend_UrlMake($this->name, 'stocks')
 				),
@@ -415,13 +415,13 @@ class shop extends Module {
 
 			$shop_menu->addSeparator(5);
 			$shop_menu->addChild('', new backend_MenuItem(
-				$this->getLanguageConstant('menu_settings'),
+				$this->get_language_constant('menu_settings'),
 				url_GetFromFilePath($this->path.'images/settings.svg'),
 
 				window_Open( // on click open window
 					'shop_settings',
 					400,
-					$this->getLanguageConstant('title_settings'),
+					$this->get_language_constant('title_settings'),
 					true, true,
 					backend_UrlMake($this->name, 'settings')
 				),
@@ -572,7 +572,7 @@ class shop extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -791,37 +791,37 @@ class shop extends Module {
 			switch ($action) {
 			case 'items':
 				$handler = ShopItemHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'currencies':
 				$handler = ShopCurrenciesHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'categories':
 				$handler = ShopCategoryHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'coupons':
 				$handler = \Modules\Shop\Promotion\CouponHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'sizes':
 				$handler = ShopItemSizesHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'transactions':
 				$handler = ShopTransactionsHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'manufacturers':
 				$handler = ShopManufacturerHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'special_offers':
@@ -829,7 +829,7 @@ class shop extends Module {
 
 			case 'warehouses':
 				$handler = ShopWarehouseHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'stocks':
@@ -1384,8 +1384,8 @@ class shop extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-			'message'	=> $this->getLanguageConstant('message_settings_saved'),
-			'button'	=> $this->getLanguageConstant('close'),
+			'message'	=> $this->get_language_constant('message_settings_saved'),
+			'button'	=> $this->get_language_constant('close'),
 			'action'	=> window_Close('shop_settings')
 		);
 
@@ -1895,8 +1895,8 @@ class shop extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-			'message'		=> $this->getLanguageConstant('message_checkout_redirect'),
-			'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+			'message'		=> $this->get_language_constant('message_checkout_redirect'),
+			'button_text'	=> $this->get_language_constant('button_take_me_back'),
 			'button_action'	=> url_Make('', 'home'),
 			'redirect'		=> true
 		);
@@ -2099,7 +2099,7 @@ class shop extends Module {
 		if (!is_null($email)) {
 			$account = $manager->get_single_item(array('id'), array('email' => $email));
 			$result['account_exists'] = is_object($account);
-			$result['message'] = $this->getLanguageConstant('message_error_account_exists');
+			$result['message'] = $this->get_language_constant('message_error_account_exists');
 		}
 
 		print json_encode($result);
@@ -3426,7 +3426,7 @@ class shop extends Module {
 		$contact_form = contact_form::getInstance();
 
 		// template replacement data
-		$status_text = $this->getLanguageConstant(TransactionStatus::$reverse[$transaction->status]);
+		$status_text = $this->get_language_constant(TransactionStatus::$reverse[$transaction->status]);
 		$fields = array(
 			'transaction_id'				=> $transaction->id,
 			'transaction_uid'				=> $transaction->uid,
@@ -3445,8 +3445,8 @@ class shop extends Module {
 		);
 
 		$timestamp = strtotime($transaction->timestamp);
-		$fields['date'] = date($this->getLanguageConstant('format_date_short'), $timestamp);
-		$fields['time'] = date($this->getLanguageConstant('format_time_short'), $timestamp);
+		$fields['date'] = date($this->get_language_constant('format_date_short'), $timestamp);
+		$fields['time'] = date($this->get_language_constant('format_time_short'), $timestamp);
 
 		// get currency
 		$currency_manager = ShopCurrenciesManager::getInstance();
@@ -3517,18 +3517,18 @@ class shop extends Module {
 						$item_names[$item->id] = $item->name[$language];
 
 					// create items table
-					$text_table = str_pad($this->getLanguageConstant('column_name'), 60);
-					$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
-					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
-					$text_table .= str_pad($this->getLanguageConstant('column_item_total'), 8);
+					$text_table = str_pad($this->get_language_constant('column_name'), 60);
+					$text_table .= str_pad($this->get_language_constant('column_price'), 8);
+					$text_table .= str_pad($this->get_language_constant('column_amount'), 6);
+					$text_table .= str_pad($this->get_language_constant('column_item_total'), 8);
 					$text_table .= "\n" . str_repeat('-', 60 + 8 + 6 + 8) . "\n";
 
 					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
 					$html_table .= '<thead><tr>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_price').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_item_total').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_name').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_price').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_amount').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_item_total').'</td>';
 					$html_table .= '</td></thead><tbody>';
 
 					foreach ($items as $item) {
@@ -3576,30 +3576,30 @@ class shop extends Module {
 					$html_table .= '</tbody>';
 
 					// create totals
-					$text_table .= str_pad($this->getLanguageConstant('column_subtotal'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_subtotal'), 15);
 					$text_table .= str_pad($subtotal, 10, ' ', STR_PAD_LEFT) . "\n";
 
-					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_shipping'), 15);
 					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
 
-					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_handling'), 15);
 					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$text_table .= str_repeat('-', 25);
-					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_total'), 15);
 					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$html_table .= '<tfoot>';
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_subtotal') . '</td>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->get_language_constant('column_subtotal') . '</td>';
 					$html_table .= '<td>' . $subtotal . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->get_language_constant('column_shipping') . '</td>';
 					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->get_language_constant('column_handling') . '</td>';
 					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->get_language_constant('column_total') . '</b></td>';
 					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
 
 					$html_table .= '</tfoot>';
@@ -3634,14 +3634,14 @@ class shop extends Module {
 						$item_names[$item->id] = $item->name[$language];
 
 					// create items table
-					$text_table = str_pad($this->getLanguageConstant('column_name'), 60);
-					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
+					$text_table = str_pad($this->get_language_constant('column_name'), 60);
+					$text_table .= str_pad($this->get_language_constant('column_amount'), 6);
 					$text_table .= "\n" . str_repeat('-', 60 + 6) . "\n";
 
 					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
 					$html_table .= '<thead><tr>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_name').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_amount').'</td>';
 					$html_table .= '</td></thead><tbody>';
 
 					foreach ($items as $item) {
@@ -3682,24 +3682,24 @@ class shop extends Module {
 					$html_table .= '</tbody>';
 
 					// create totals
-					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_shipping'), 15);
 					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
 
-					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_handling'), 15);
 					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$text_table .= str_repeat('-', 25);
-					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_total'), 15);
 					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$html_table .= '<tfoot>';
-					$html_table .= '<tr><td></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<tr><td></td><td>' . $this->get_language_constant('column_shipping') . '</td>';
 					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
 
-					$html_table .= '<tr><td></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<tr><td></td><td>' . $this->get_language_constant('column_handling') . '</td>';
 					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
 
-					$html_table .= '<tr><td></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<tr><td></td><td><b>' . $this->get_language_constant('column_total') . '</b></td>';
 					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
 
 					$html_table .= '</tfoot>';
@@ -4170,12 +4170,12 @@ class shop extends Module {
 		// get message to show
 		$message = Language::getText('message_checkout_completed');
 		if (empty($message))
-			$message = $this->getLanguageConstant('message_checkout_completed');
+			$message = $this->get_language_constant('message_checkout_completed');
 
 		// prepare template parameters
 		$params = array(
 				'message'		=> $message,
-				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+				'button_text'	=> $this->get_language_constant('button_take_me_back'),
 				'button_action'	=> url_Make('', 'home'),
 				'redirect'		=> false
 			);
@@ -4199,12 +4199,12 @@ class shop extends Module {
 		// get message to show
 		$message = Language::getText('message_checkout_canceled');
 		if (empty($message))
-			$message = $this->getLanguageConstant('message_checkout_canceled');
+			$message = $this->get_language_constant('message_checkout_canceled');
 
 		// prepare template parameters
 		$params = array(
 				'message'		=> $message,
-				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
+				'button_text'	=> $this->get_language_constant('button_take_me_back'),
 				'button_action'	=> url_Make('', 'home'),
 				'redirect'		=> false
 			);
@@ -4390,10 +4390,10 @@ class shop extends Module {
 	 */
 	public function tag_CycleUnit($tag_params, $children) {
 		$units = array(
-			RecurringPayment::DAY 	=> $this->getLanguageConstant('cycle_day'),
-			RecurringPayment::WEEK	=> $this->getLanguageConstant('cycle_week'),
-			RecurringPayment::MONTH	=> $this->getLanguageConstant('cycle_month'),
-			RecurringPayment::YEAR	=> $this->getLanguageConstant('cycle_year')
+			RecurringPayment::DAY 	=> $this->get_language_constant('cycle_day'),
+			RecurringPayment::WEEK	=> $this->get_language_constant('cycle_week'),
+			RecurringPayment::MONTH	=> $this->get_language_constant('cycle_month'),
+			RecurringPayment::YEAR	=> $this->get_language_constant('cycle_year')
 		);
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : null;
@@ -4450,9 +4450,9 @@ class shop extends Module {
 			$selected = User::GUEST;
 
 		$options = array(
-			User::EXISTING => $this->getLanguageConstant('label_existing_user'),
-			User::CREATE => $this->getLanguageConstant('label_new_user'),
-			User::GUEST => $this->getLanguageConstant('label_guest')
+			User::EXISTING => $this->get_language_constant('label_existing_user'),
+			User::CREATE => $this->get_language_constant('label_new_user'),
+			User::GUEST => $this->get_language_constant('label_guest')
 		);
 
 		foreach ($options as $value => $text) {
@@ -4532,14 +4532,14 @@ class shop extends Module {
 	 */
 	public function formatRecurring($params) {
 		$units = array(
-			RecurringPayment::DAY 	=> mb_strtolower($this->getLanguageConstant('cycle_day')),
-			RecurringPayment::WEEK	=> mb_strtolower($this->getLanguageConstant('cycle_week')),
-			RecurringPayment::MONTH	=> mb_strtolower($this->getLanguageConstant('cycle_month')),
-			RecurringPayment::YEAR	=> mb_strtolower($this->getLanguageConstant('cycle_year'))
+			RecurringPayment::DAY 	=> mb_strtolower($this->get_language_constant('cycle_day')),
+			RecurringPayment::WEEK	=> mb_strtolower($this->get_language_constant('cycle_week')),
+			RecurringPayment::MONTH	=> mb_strtolower($this->get_language_constant('cycle_month')),
+			RecurringPayment::YEAR	=> mb_strtolower($this->get_language_constant('cycle_year'))
 		);
 
-		$template = $this->getLanguageConstant('recurring_description');
-		$zero_word = $this->getLanguageConstant('recurring_period_zero');
+		$template = $this->get_language_constant('recurring_description');
+		$zero_word = $this->get_language_constant('recurring_period_zero');
 		$currency = self::getDefaultCurrency();
 
 		$price = $params['price'].' '.$currency;

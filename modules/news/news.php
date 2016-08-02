@@ -32,19 +32,19 @@ class news extends Module {
 			$backend = backend::getInstance();
 
 			$news_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_news'),
+					$this->get_language_constant('menu_news'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					5  // level
 				);
 
 			$news_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_add_news'),
+								$this->get_language_constant('menu_add_news'),
 								url_GetFromFilePath($this->path.'images/add_news.svg'),
 								window_Open( // on click open window
 											'news_add',
 											490,
-											$this->getLanguageConstant('title_news_add'),
+											$this->get_language_constant('title_news_add'),
 											true, true,
 											backend_UrlMake($this->name, 'news_add')
 										),
@@ -53,12 +53,12 @@ class news extends Module {
 			$news_menu->addSeparator(5);
 
 			$news_menu->addChild(null, new backend_MenuItem(
-					$this->getLanguageConstant('menu_manage_news'),
+					$this->get_language_constant('menu_manage_news'),
 					url_GetFromFilePath($this->path.'images/manage_news.svg'),
 					window_Open( // on click open window
 								'news',
 								520,
-								$this->getLanguageConstant('title_manage_news'),
+								$this->get_language_constant('title_manage_news'),
 								true, true,
 								backend_UrlMake($this->name, 'news')
 							),
@@ -66,12 +66,12 @@ class news extends Module {
 				));
 
 			$news_menu->addChild(null, new backend_MenuItem(
-					$this->getLanguageConstant('menu_manage_groups'),
+					$this->get_language_constant('menu_manage_groups'),
 					url_GetFromFilePath($this->path.'images/manage_groups.svg'),
 					window_Open( // on click open window
 								'news_groups',
 								580,
-								$this->getLanguageConstant('title_manage_groups'),
+								$this->get_language_constant('title_manage_groups'),
 								true, true,
 								backend_UrlMake($this->name, 'groups')
 							),
@@ -81,12 +81,12 @@ class news extends Module {
 			$news_menu->addSeparator(5);
 
 			$news_menu->addChild(null, new backend_MenuItem(
-					$this->getLanguageConstant('menu_news_feeds'),
+					$this->get_language_constant('menu_news_feeds'),
 					url_GetFromFilePath($this->path.'images/rss.svg'),
 					window_Open( // on click open window
 								'news_feeds',
 								700,
-								$this->getLanguageConstant('title_manage_feeds'),
+								$this->get_language_constant('title_manage_feeds'),
 								true, true,
 								backend_UrlMake($this->name, 'feeds')
 							),
@@ -117,7 +117,7 @@ class news extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -325,21 +325,21 @@ class news extends Module {
 
 		$params = array(
 					'link_new'		=> url_MakeHyperlink(
-										$this->getLanguageConstant('add_news'),
+										$this->get_language_constant('add_news'),
 										window_Open( // on click open window
 											'news_add',
 											490,
-											$this->getLanguageConstant('title_news_add'),
+											$this->get_language_constant('title_news_add'),
 											true, true,
 											backend_UrlMake($this->name, 'news_add')
 										)
 									),
 					'link_groups'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('groups'),
+										$this->get_language_constant('groups'),
 										window_Open( // on click open window
 											'news_groups',
 											580,
-											$this->getLanguageConstant('title_manage_news'),
+											$this->get_language_constant('title_manage_news'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										)
@@ -407,8 +407,8 @@ class news extends Module {
 
 		$data = array(
 					'author'	=> $_SESSION['uid'],
-					'title'		=> $this->getMultilanguageField('title'),
-					'content'	=> $this->getMultilanguageField('content'),
+					'title'		=> $this->get_multilanguage_field('title'),
+					'content'	=> $this->get_multilanguage_field('content'),
 					'visible'	=> fix_id($_REQUEST['visible'])
 				);
 
@@ -437,8 +437,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_news_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_news_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('news'),
 				);
 
@@ -462,10 +462,10 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_news_delete"),
+					'message'		=> $this->get_language_constant("message_news_delete"),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'news_delete',
 											url_Make(
@@ -499,8 +499,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_news_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_news_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('news_delete').";"
 									.window_ReloadContent('news')
 				);
@@ -519,11 +519,11 @@ class news extends Module {
 
 		$params = array(
 					'link_new'		=> url_MakeHyperlink(
-										$this->getLanguageConstant('add_group'),
+										$this->get_language_constant('add_group'),
 										window_Open( // on click open window
 											'news_group_add',
 											390,
-											$this->getLanguageConstant('title_news_group_add'),
+											$this->get_language_constant('title_news_group_add'),
 											true, true,
 											backend_UrlMake($this->name, 'group_add')
 										)
@@ -591,7 +591,7 @@ class news extends Module {
 
 		$data = array(
 					'text_id'	=> fix_chars($_REQUEST['text_id']),
-					'title'		=> $this->getMultilanguageField('title')
+					'title'		=> $this->get_multilanguage_field('title')
 				);
 
 		if (is_null($id)) {
@@ -606,8 +606,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('news_groups'),
 				);
 
@@ -631,10 +631,10 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_news_delete"),
+					'message'		=> $this->get_language_constant("message_news_delete"),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'news_group_delete',
 											url_Make(
@@ -672,8 +672,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_group_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('news_group_delete').";"
 									.window_ReloadContent('news_groups')
 				);
@@ -733,8 +733,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_items_updated"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_group_items_updated"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('news_group_items')
 				);
 
@@ -752,11 +752,11 @@ class news extends Module {
 
 		$params = array(
 					'link_new'		=> url_MakeHyperlink(
-										$this->getLanguageConstant('add_feed'),
+										$this->get_language_constant('add_feed'),
 										window_Open( // on click open window
 											'news_feeds_add',
 											390,
-											$this->getLanguageConstant('title_news_feed_add'),
+											$this->get_language_constant('title_news_feed_add'),
 											true, true,
 											backend_UrlMake($this->name, 'feed_add')
 										)
@@ -828,8 +828,8 @@ class news extends Module {
 		$data = array(
 					'group'			=> fix_id($_REQUEST['group']),
 					'news_count'	=> empty($_REQUEST['news_count']) ? 10 : fix_id($_REQUEST['news_count']),
-					'title'			=> $this->getMultilanguageField('title'),
-					'description'	=> $this->getMultilanguageField('description'),
+					'title'			=> $this->get_multilanguage_field('title'),
+					'description'	=> $this->get_multilanguage_field('description'),
 					'active'		=> fix_id($_REQUEST['active'])
 				);
 
@@ -845,8 +845,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_feed_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_feed_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('news_feeds'),
 				);
 
@@ -870,10 +870,10 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_feed_delete"),
+					'message'		=> $this->get_language_constant("message_feed_delete"),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'news_feeds_delete',
 											url_Make(
@@ -905,8 +905,8 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_news_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_news_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('news_feeds_delete').";"
 									.window_ReloadContent('news')
 				);
@@ -974,8 +974,8 @@ class news extends Module {
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$params = array(
 						'id'		=> $item->id,
@@ -1053,8 +1053,8 @@ class news extends Module {
 		if (count($items) > 0)
 			foreach($items as $item) {
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 				$params = array(
 							'id'			=> $item->id,
@@ -1069,11 +1069,11 @@ class news extends Module {
 							'content'		=> $item->content,
 							'visible'		=> $item->visible,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'news_change', 	// window id
 														490,			// width
-														$this->getLanguageConstant('title_news_change'), // title
+														$this->get_language_constant('title_news_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1085,11 +1085,11 @@ class news extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'news_delete', 	// window id
 														390,			// width
-														$this->getLanguageConstant('title_news_delete'), // title
+														$this->get_language_constant('title_news_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1179,11 +1179,11 @@ class news extends Module {
 							'title'			=> $item->title,
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'news_group_change', 	// window id
 														390,					// width
-														$this->getLanguageConstant('title_news_group_change'), // title
+														$this->get_language_constant('title_news_group_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1195,11 +1195,11 @@ class news extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'news_group_delete', 	// window id
 														390,					// width
-														$this->getLanguageConstant('title_news_group_delete'), // title
+														$this->get_language_constant('title_news_group_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1211,11 +1211,11 @@ class news extends Module {
 													)
 												),
 							'item_members'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('items'),
+													$this->get_language_constant('items'),
 													window_Open(
 														'news_group_items', 	// window id
 														390,					// width
-														$this->getLanguageConstant('title_news_group_items'), // title
+														$this->get_language_constant('title_news_group_items'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1371,11 +1371,11 @@ class news extends Module {
 							'active'		=> $item->active,
 							'active_char'	=> $item->active ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'news_feeds_change', 	// window id
 														390,					// width
-														$this->getLanguageConstant('title_news_feed_change'), // title
+														$this->get_language_constant('title_news_feed_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1387,11 +1387,11 @@ class news extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'news_feeds_delete', 	// window id
 														390,					// width
-														$this->getLanguageConstant('title_news_feed_delete'), // title
+														$this->get_language_constant('title_news_feed_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1438,8 +1438,8 @@ class news extends Module {
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$result = array(
 						'id'			=> $item->id,
@@ -1458,7 +1458,7 @@ class news extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object')
+						'error_message'	=> $this->get_language_constant('message_json_error_object')
 					);
 		}
 

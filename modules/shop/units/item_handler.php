@@ -52,7 +52,7 @@ class Handler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -94,21 +94,21 @@ class Handler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->parent->getLanguageConstant('add_item'),
+										$this->parent->get_language_constant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
 											550,
-											$this->parent->getLanguageConstant('title_item_add'),
+											$this->parent->get_language_constant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
 										)
 									),
 					'link_categories' => url_MakeHyperlink(
-										$this->parent->getLanguageConstant('manage_categories'),
+										$this->parent->get_language_constant('manage_categories'),
 										window_Open( // on click open window
 											'shop_categories',
 											550,
-											$this->parent->getLanguageConstant('title_manage_categories'),
+											$this->parent->get_language_constant('title_manage_categories'),
 											true, true,
 											backend_UrlMake($this->name, 'categories')
 										)
@@ -233,8 +233,8 @@ class Handler {
 		$new_item = is_null($id);
 
 		$data = array(
-				'name'            => $this->parent->getMultilanguageField('name'),
-				'description'     => $this->parent->getMultilanguageField('description'),
+				'name'            => $this->parent->get_multilanguage_field('name'),
+				'description'     => $this->parent->get_multilanguage_field('description'),
 				'price'           => isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
 				'discount'        => isset($_REQUEST['discount']) && !empty($_REQUEST['discount']) ? fix_chars($_REQUEST['discount']) : 0,
 				'colors'          => fix_chars($_REQUEST['colors']),
@@ -260,7 +260,7 @@ class Handler {
 				$open_editor = window_Open(
 									'gallery_images',
 									670,
-									$gallery->getLanguageConstant('title_images'),
+									$gallery->get_language_constant('title_images'),
 									true, true,
 									url_Make(
 										'transfer_control',
@@ -354,8 +354,8 @@ class Handler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_item_saved'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_item_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('shop_items').';'.$open_editor
 				);
 
@@ -379,10 +379,10 @@ class Handler {
 		$template->setMappedModule($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->parent->getLanguageConstant('message_item_delete'),
+					'message'		=> $this->parent->get_language_constant('message_item_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->parent->getLanguageConstant('delete'),
-					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->parent->get_language_constant('delete'),
+					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_delete',
 											url_Make(
@@ -418,8 +418,8 @@ class Handler {
 		$template->setMappedModule($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_item_deleted'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_item_deleted'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('shop_item_delete').';'.window_ReloadContent('shop_items')
 				);
 
@@ -806,11 +806,11 @@ class Handler {
 							'visible'               => $item->visible,
 							'deleted'               => $item->deleted,
 							'item_change'           => url_MakeHyperlink(
-													$this->parent->getLanguageConstant('change'),
+													$this->parent->get_language_constant('change'),
 													window_Open(
 														'shop_item_change', 	// window id
 														550,				// width
-														$this->parent->getLanguageConstant('title_item_change'), // title
+														$this->parent->get_language_constant('title_item_change'), // title
 														true, true,
 														url_Make(
 															'transfer_control',
@@ -823,11 +823,11 @@ class Handler {
 													)
 												),
 							'item_delete'           => url_MakeHyperlink(
-													$this->parent->getLanguageConstant('delete'),
+													$this->parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_delete', 	// window id
 														400,				// width
-														$this->parent->getLanguageConstant('title_item_delete'), // title
+														$this->parent->get_language_constant('title_item_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -846,7 +846,7 @@ class Handler {
 					$open_gallery_window = window_Open(
 										'gallery_images',
 										670,
-										$gallery->getLanguageConstant('title_images'),
+										$gallery->get_language_constant('title_images'),
 										true, true,
 										url_Make(
 											'transfer_control',
@@ -857,7 +857,7 @@ class Handler {
 										)
 									);
 					$params['item_images'] = url_MakeHyperlink(
-														$this->parent->getLanguageConstant('images'),
+														$this->parent->get_language_constant('images'),
 														$open_gallery_window
 													);
 				} else {
@@ -992,13 +992,13 @@ class Handler {
 			} else {
 				// there was a problem with reading item from database
 				$result['error'] = true;
-				$result['error_message'] = $this->parent->getLanguageConstant('message_error_getting_item');
+				$result['error_message'] = $this->parent->get_language_constant('message_error_getting_item');
 			}
 
 		} else {
 			// invalid ID was specified
 			$result['error'] = true;
-			$result['error_message'] = $this->parent->getLanguageConstant('message_error_invalid_id');
+			$result['error_message'] = $this->parent->get_language_constant('message_error_invalid_id');
 		}
 
 		// create JSON object and print it

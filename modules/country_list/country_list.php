@@ -31,13 +31,13 @@ class country_list extends Module {
 			$contact_form = contact_form::getInstance();
 			$contact_form->registerField(
 				'country_list',
-				$this->getLanguageConstant('country_field_name'),
+				$this->get_language_constant('country_field_name'),
 				$this,
 				'field_CountryList'
 			);
 			$contact_form->registerField(
 				'state_list',
-				$this->getLanguageConstant('state_field_name'),
+				$this->get_language_constant('state_field_name'),
 				$this,
 				'field_StateList'
 			);
@@ -60,7 +60,7 @@ class country_list extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

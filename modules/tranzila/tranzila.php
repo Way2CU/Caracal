@@ -28,13 +28,13 @@ class tranzila extends Module {
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_tranzila'),
+									$this->get_language_constant('menu_tranzila'),
 									url_GetFromFilePath($this->path.'images/icon.png'),
 
 									window_Open( // on click open window
 												'tranzila',
 												400,
-												$this->getLanguageConstant('title_settings'),
+												$this->get_language_constant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
 											),
@@ -76,7 +76,7 @@ class tranzila extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -156,8 +156,8 @@ class tranzila extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_settings_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_settings_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('tranzila')
 				);
 

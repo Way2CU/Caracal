@@ -90,7 +90,7 @@ class SectionHandler {
 	 * @param string $action
 	 * @param string $language
 	 */
-	public function transferControl($section, $action, $language='') {
+	public function transfer_control($section, $action, $language='') {
 		$file = '';
 
 		if (!_AJAX_REQUEST)
@@ -103,7 +103,7 @@ class SectionHandler {
 				$params = array('action' => $action);
 
 				// transfer control to module
-				$module->transferControl($params, array());
+				$module->transfer_control($params, array());
 
 			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {
 				// transfer control to backend modules
@@ -111,7 +111,7 @@ class SectionHandler {
 				$params = array('action' => 'transfer_control');
 
 				// transfer control to module
-				$module->transferControl($params, array());
+				$module->transfer_control($params, array());
 
 			} else {
 				// no matching module exist, try loading template

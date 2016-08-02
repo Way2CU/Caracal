@@ -38,7 +38,7 @@ class ShopCategoryHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -77,11 +77,11 @@ class ShopCategoryHandler {
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_category'),
+										$this->_parent->get_language_constant('add_category'),
 										window_Open( // on click open window
 											'shop_category_add',
 											400,
-											$this->_parent->getLanguageConstant('title_category_add'),
+											$this->_parent->get_language_constant('title_category_add'),
 											true, true,
 											backend_UrlMake($this->name, 'categories', 'add')
 										)
@@ -173,8 +173,8 @@ class ShopCategoryHandler {
 		$data = array(
 				'parent'		=> fix_id($_REQUEST['parent']),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
-				'title'			=> $this->_parent->getMultilanguageField('title'),
-				'description'	=> $this->_parent->getMultilanguageField('description')
+				'title'			=> $this->_parent->get_multilanguage_field('title'),
+				'description'	=> $this->_parent->get_multilanguage_field('description')
 			);
 
 		// get image if set and gallery is activated
@@ -199,8 +199,8 @@ class ShopCategoryHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_category_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_category_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_categories'),
 				);
 
@@ -222,10 +222,10 @@ class ShopCategoryHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant('message_category_delete'),
+					'message'		=> $this->_parent->get_language_constant('message_category_delete'),
 					'name'			=> $title,
-					'yes_text'		=> $this->_parent->getLanguageConstant('delete'),
-					'no_text'		=> $this->_parent->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->_parent->get_language_constant('delete'),
+					'no_text'		=> $this->_parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_category_delete',
 											url_Make(
@@ -258,8 +258,8 @@ class ShopCategoryHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_category_deleted'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_category_deleted'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close('shop_category_delete').";"
 									.window_ReloadContent('shop_categories')
 				);
@@ -450,11 +450,11 @@ class ShopCategoryHandler {
 							'in_category'	=> in_array($item->id, $item_category_ids) ? 1 : 0,
 							'selected'		=> isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
 							'item_change'	=> url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('change'),
+										$this->_parent->get_language_constant('change'),
 										window_Open(
 											'shop_category_change', 	// window id
 											400,			// width
-											$this->_parent->getLanguageConstant('title_category_change'), // title
+											$this->_parent->get_language_constant('title_category_change'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
@@ -467,11 +467,11 @@ class ShopCategoryHandler {
 										)
 									),
 							'item_delete'	=> url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('delete'),
+										$this->_parent->get_language_constant('delete'),
 										window_Open(
 											'shop_category_delete', 	// window id
 											270,			// width
-											$this->_parent->getLanguageConstant('title_category_delete'), // title
+											$this->_parent->get_language_constant('title_category_delete'), // title
 											false, false,
 											url_Make(
 												'transfer_control',
@@ -484,11 +484,11 @@ class ShopCategoryHandler {
 										)
 									),
 							'item_add'		=> url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add'),
+										$this->_parent->get_language_constant('add'),
 										window_Open(
 											'shop_category_add', 	// window id
 											400,			// width
-											$this->_parent->getLanguageConstant('title_category_add'), // title
+											$this->_parent->get_language_constant('title_category_add'), // title
 											false, false,
 											url_Make(
 												'transfer_control',

@@ -45,12 +45,12 @@ class page_info extends Module {
 
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
-										$this->getLanguageConstant('menu_page_info'),
+										$this->get_language_constant('menu_page_info'),
 										url_GetFromFilePath($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_settings',
 													400,
-													$this->getLanguageConstant('title_page_info'),
+													$this->get_language_constant('title_page_info'),
 													true, false, // disallow minimize, safety feature
 													backend_UrlMake($this->name, 'show')
 												),
@@ -75,7 +75,7 @@ class page_info extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -178,8 +178,8 @@ class page_info extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('page_settings')
 				);
 

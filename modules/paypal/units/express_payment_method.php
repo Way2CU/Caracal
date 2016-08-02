@@ -88,7 +88,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->parent->getLanguageConstant('express_method_title');
+		return $this->parent->get_language_constant('express_method_title');
 	}
 
 	/**
@@ -311,7 +311,7 @@ class PayPal_Express extends PaymentMethod {
 				if ($plan->setup_price > 0) {
 					$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
 					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
-					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
+					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->get_language_constant('api_setup_fee');
 					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 					$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 					$request_id++;
@@ -470,7 +470,7 @@ class PayPal_Express extends PaymentMethod {
 				$setup_fields = $fields;
 				$setup_fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
 				$setup_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
-				$setup_fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
+				$setup_fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->get_language_constant('api_setup_fee');
 				$setup_fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 				$setup_fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 

@@ -129,7 +129,7 @@ if ($cache->isCached()) {
 
 	// show page and cache it along the way
 	$cache->startCapture();
-	$section_handler->transferControl($section, $action, $language);
+	$section_handler->transfer_control($section, $action, $language);
 	$cache->endCapture();
 }
 

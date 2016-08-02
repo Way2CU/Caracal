@@ -30,7 +30,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getTitle() {
-		return $this->parent->getLanguageConstant('delivery_method_title');
+		return $this->parent->get_language_constant('delivery_method_title');
 	}
 
 	/**

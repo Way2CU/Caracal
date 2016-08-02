@@ -39,12 +39,12 @@ class mandrill extends Module {
 			$backend = backend::getInstance();
 
 			$mandrill_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_mandrill'),
+					$this->get_language_constant('menu_mandrill'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					window_Open( // on click open window
 								'mandrill_settings',
 								370,
-								$this->getLanguageConstant('title_settings'),
+								$this->get_language_constant('title_settings'),
 								true, true,
 								backend_UrlMake($this->name, 'settings')
 							),
@@ -71,7 +71,7 @@ class mandrill extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
@@ -130,8 +130,8 @@ class mandrill extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('mandrill_settings')
 				);
 

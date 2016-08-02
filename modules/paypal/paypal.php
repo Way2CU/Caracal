@@ -35,12 +35,12 @@ class paypal extends Module {
 			// add menu entry for payment methods
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_paypal'),
+									$this->get_language_constant('menu_paypal'),
 									url_GetFromFilePath($this->path.'images/icon.svg'),
 									window_Open( // on click open window
 												'paypal',
 												400,
-												$this->getLanguageConstant('title_settings'),
+												$this->get_language_constant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
 											),
@@ -49,12 +49,12 @@ class paypal extends Module {
 
 			if (!is_null($recurring_menu))
 				$recurring_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_paypal'),
+									$this->get_language_constant('menu_paypal'),
 									url_GetFromFilePath($this->path.'images/icon.svg'),
 									window_Open( // on click open window
 												'paypal_recurring_plans',
 												400,
-												$this->getLanguageConstant('title_recurring_plans'),
+												$this->get_language_constant('title_recurring_plans'),
 												true, true,
 												backend_UrlMake($this->name, 'recurring_plans')
 											),
@@ -100,7 +100,7 @@ class paypal extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control action
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -243,8 +243,8 @@ class paypal extends Module {
 		$this->save_setting('direct_enabled', $this->get_boolean_field('direct_enabled') ? 1 : 0);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_settings_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_settings_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('paypal')
 				);
 
@@ -264,9 +264,9 @@ class paypal extends Module {
 
 		$params = array(
 					'link_new' => window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'paypal_recurring_plans_new', 405,
-										$this->getLanguageConstant('title_recurring_plans_new'),
+										$this->get_language_constant('title_recurring_plans_new'),
 										true, false,
 										$this->name,
 										'recurring_plans_new'
@@ -343,7 +343,7 @@ class paypal extends Module {
 
 		$data = array(
 				'text_id'			=> escape_chars($_REQUEST['text_id']),
-				'name'				=> $this->getMultilanguageField('name'),
+				'name'				=> $this->get_multilanguage_field('name'),
 				'trial'				=> fix_id($_REQUEST['trial_unit']),
 				'trial_count'		=> fix_id($_REQUEST['trial_count']),
 				'interval'			=> fix_id($_REQUEST['interval_unit']),
@@ -368,8 +368,8 @@ class paypal extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_plan_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_plan_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('paypal_recurring_plans'),
 				);
 
@@ -393,10 +393,10 @@ class paypal extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_plan_delete'),
+					'message'		=> $this->get_language_constant('message_plan_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'paypal_recurring_plans_delete',
 											url_Make(
@@ -428,8 +428,8 @@ class paypal extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_plan_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_plan_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('paypal_recurring_plans_delete').';'.
 								window_ReloadContent('paypal_recurring_plans')
 				);
@@ -576,11 +576,11 @@ class paypal extends Module {
 					'start_time'		=> $item->start_time,
 					'group_name'		=> $item->group_name,
 					'item_change'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('change'),
+											$this->get_language_constant('change'),
 											window_Open(
 												'paypal_recurring_plans_change', 	// window id
 												405,				// width
-												$this->getLanguageConstant('title_recurring_plans_change'), // title
+												$this->get_language_constant('title_recurring_plans_change'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -592,11 +592,11 @@ class paypal extends Module {
 											)
 										),
 					'item_delete'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('delete'),
+											$this->get_language_constant('delete'),
 											window_Open(
 												'paypal_recurring_plans_delete', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_recurring_plans_delete'), // title
+												$this->get_language_constant('title_recurring_plans_delete'), // title
 												false, false,
 												url_Make(
 													'transfer_control',

@@ -25,20 +25,20 @@ class faq extends Module {
 			$backend = backend::getInstance();
 
 			$faq_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_faq'),
+					$this->get_language_constant('menu_faq'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=4
 				);
 
 			$faq_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage_questions'),
+								$this->get_language_constant('menu_manage_questions'),
 								url_GetFromFilePath($this->path.'images/questions.svg'),
 
 								window_Open( // on click open window
 											'faq',
 											700,
-											$this->getLanguageConstant('title_questions'),
+											$this->get_language_constant('title_questions'),
 											true, true,
 											backend_UrlMake($this->name, 'manage')
 										),
@@ -65,7 +65,7 @@ class faq extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -152,9 +152,9 @@ class faq extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new_question'),
+										$this->get_language_constant('new_question'),
 										'faq_new', 500,
-										$this->getLanguageConstant('title_question_new'),
+										$this->get_language_constant('title_question_new'),
 										true, false,
 										$this->name,
 										'add'
@@ -217,8 +217,8 @@ class faq extends Module {
 	 */
 	private function saveQuestion() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$question = $this->getMultilanguageField('question');
-		$answer = $this->getMultilanguageField('answer');
+		$question = $this->get_multilanguage_field('question');
+		$answer = $this->get_multilanguage_field('answer');
 		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 
 		$manager = QuestionManager::getInstance();
@@ -241,8 +241,8 @@ class faq extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_question_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_question_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('faq'),
 				);
 
@@ -266,10 +266,10 @@ class faq extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_question_delete"),
+					'message'		=> $this->get_language_constant("message_question_delete"),
 					'name'			=> $item->question[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'faq_delete',
 											url_Make(
@@ -301,8 +301,8 @@ class faq extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_question_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_question_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('faq_delete').";".window_ReloadContent('faq')
 				);
 
@@ -367,11 +367,11 @@ class faq extends Module {
 						'question'	=> $item->question,
 						'answer'	=> $item->answer,
 						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'faq_change', 	// window id
 													730,				// width
-													$this->getLanguageConstant('title_question_change'), // title
+													$this->get_language_constant('title_question_change'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -383,11 +383,11 @@ class faq extends Module {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'faq_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_question_delete'), // title
+													$this->get_language_constant('title_question_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',

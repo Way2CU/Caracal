@@ -29,20 +29,20 @@ class feedback extends Module {
 			$backend = backend::getInstance();
 
 			$feedback_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_feedback'),
+					$this->get_language_constant('menu_feedback'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$feedback_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_feedback_show'),
+								$this->get_language_constant('menu_feedback_show'),
 								url_GetFromFilePath($this->path.'images/feedback_list.svg'),
 
 								window_Open( // on click open window
 											'feedback_manage',
 											730,
-											$this->getLanguageConstant('title_feedback_show'),
+											$this->get_language_constant('title_feedback_show'),
 											true, true,
 											backend_UrlMake($this->name, 'show_feedback')
 										),
@@ -69,7 +69,7 @@ class feedback extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -178,8 +178,8 @@ class feedback extends Module {
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
 				$user = $user_manager->get_single_item(array('fullname'), array('id' => $item->user));
 				$user_name = $item->user;
 
@@ -197,11 +197,11 @@ class feedback extends Module {
 						'url'		=> $item->url,
 						'status'	=> $item->status,
 						'item_change'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('change'),
+											$this->get_language_constant('change'),
 											window_Open(
 												'feedback_change', 	// window id
 												430,				// width
-												$this->getLanguageConstant('title_feedback_change'), // title
+												$this->get_language_constant('title_feedback_change'), // title
 												false, false,
 												url_Make(
 													'transfer_control',
@@ -213,11 +213,11 @@ class feedback extends Module {
 											)
 										),
 						'item_delete'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('delete'),
+											$this->get_language_constant('delete'),
 											window_Open(
 												'feedback_delete', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_feedback_delete'), // title
+												$this->get_language_constant('title_feedback_delete'), // title
 												false, false,
 												url_Make(
 													'transfer_control',

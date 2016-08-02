@@ -124,7 +124,7 @@ class collection extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 	}
 
 	/**

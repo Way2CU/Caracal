@@ -28,19 +28,19 @@ class youtube extends Module {
 			$backend = backend::getInstance();
 
 			$youtube_menu = new backend_MenuItem(
-								$this->getLanguageConstant('menu_youtube'),
+								$this->get_language_constant('menu_youtube'),
 								url_GetFromFilePath($this->path.'images/icon.svg'),
 								'javascript:void(0);',
 								$level=5
 							);
 
 			$youtube_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_video_list'),
+								$this->get_language_constant('menu_video_list'),
 								url_GetFromFilePath($this->path.'images/list.svg'),
 								window_Open( // on click open window
 											$this->name.'_video_list',
 											650,
-											$this->getLanguageConstant('title_video_list'),
+											$this->get_language_constant('title_video_list'),
 											true, true,
 											backend_UrlMake($this->name, 'video_list')
 										),
@@ -48,12 +48,12 @@ class youtube extends Module {
 							));
 
 			$youtube_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_video_groups'),
+								$this->get_language_constant('menu_video_groups'),
 								url_GetFromFilePath($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											$this->name.'_group_list',
 											570,
-											$this->getLanguageConstant('title_video_groups'),
+											$this->get_language_constant('title_video_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'group_list')
 										),
@@ -80,7 +80,7 @@ class youtube extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -280,9 +280,9 @@ class youtube extends Module {
 
 		$params = array(
 					'link_new'	=> window_OpenHyperlink(
-										$this->getLanguageConstant('add'),
+										$this->get_language_constant('add'),
 										$this->name.'_video_add', 400,
-										$this->getLanguageConstant('title_video_add'),
+										$this->get_language_constant('title_video_add'),
 										true, false,
 										$this->name,
 										'video_add'
@@ -345,7 +345,7 @@ class youtube extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$video_id = fix_chars($_REQUEST['video_id']);
-		$title = $this->getMultilanguageField('title');
+		$title = $this->get_multilanguage_field('title');
 
 		$manager = YouTube_VideoManager::getInstance();
 
@@ -365,8 +365,8 @@ class youtube extends Module {
 
 		$window_name = $this->name.(is_null($id) ? '_video_add' : '_video_change');
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_video_saved"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_video_saved"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_video_list')
 				);
 
@@ -390,10 +390,10 @@ class youtube extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_video_delete"),
+					'message'		=> $this->get_language_constant("message_video_delete"),
 					'name'			=> $video->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_video_delete',
 											url_Make(
@@ -426,8 +426,8 @@ class youtube extends Module {
 
 		$window_name = $this->name.'_video_delete';
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_video_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_video_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_video_list')
 				);
 
@@ -451,7 +451,7 @@ class youtube extends Module {
 
 			$params = array(
 						'video_id'	=> $video_id,
-						'button'	=> $this->getLanguageConstant("close"),
+						'button'	=> $this->get_language_constant("close"),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
 
@@ -466,8 +466,8 @@ class youtube extends Module {
 			$template->setMappedModule($this->name);
 
 			$params = array(
-						'message'	=> $this->getLanguageConstant("message_video_error"),
-						'button'	=> $this->getLanguageConstant("close"),
+						'message'	=> $this->get_language_constant("message_video_error"),
+						'button'	=> $this->get_language_constant("close"),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
 
@@ -486,9 +486,9 @@ class youtube extends Module {
 
 		$params = array(
 					'link_new'	=> window_OpenHyperlink(
-										$this->getLanguageConstant('create_group'),
+										$this->get_language_constant('create_group'),
 										$this->name.'_group_create', 400,
-										$this->getLanguageConstant('title_group_create'),
+										$this->get_language_constant('title_group_create'),
 										true, false,
 										$this->name,
 										'group_create'
@@ -554,8 +554,8 @@ class youtube extends Module {
 		// get parameters and secure them
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$name = $this->getMultilanguageField('name');
-		$description = $this->getMultilanguageField('description');
+		$name = $this->get_multilanguage_field('name');
+		$description = $this->get_multilanguage_field('description');
 		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 
 		if (is_null($id)) {
@@ -591,8 +591,8 @@ class youtube extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent($this->name.'_group_list'),
 				);
 
@@ -616,10 +616,10 @@ class youtube extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_group_delete"),
+					'message'		=> $this->get_language_constant("message_group_delete"),
 					'name'			=> $group->name[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_group_delete',
 											url_Make(
@@ -654,8 +654,8 @@ class youtube extends Module {
 
 		$window_name = $this->name.'_group_delete';
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_group_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close($window_name).";".window_ReloadContent($this->name.'_group_list')
 				);
 
@@ -714,8 +714,8 @@ class youtube extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_videos_updated"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_group_videos_updated"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close($this->name.'_group_videos')
 				);
 
@@ -919,11 +919,11 @@ class youtube extends Module {
 							'thumbnail'		=> $this->getThumbnailURL($item->video_id),
 							'image'			=> $this->getThumbnailURL($item->video_id, 0),
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														$this->name.'_video_change', 	// window id
 														400,							// width
-														$this->getLanguageConstant('title_video_change'), // title
+														$this->get_language_constant('title_video_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -935,11 +935,11 @@ class youtube extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														$this->name.'_video_delete', 	// window id
 														300,							// width
-														$this->getLanguageConstant('title_video_delete'), // title
+														$this->get_language_constant('title_video_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -951,7 +951,7 @@ class youtube extends Module {
 													)
 												),
 							'item_preview'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('preview'),
+													$this->get_language_constant('preview'),
 													window_Open(
 														$this->name.'_video_preview', 	// window id
 														400,							// width
@@ -1083,11 +1083,11 @@ class youtube extends Module {
 								'visible'		=> $item->visible,
 								'visible_char'	=> $item->visible == 1 ? CHAR_CHECKED : CHAR_UNCHECKED,
 								'item_change'	=> url_MakeHyperlink(
-														$this->getLanguageConstant('change'),
+														$this->get_language_constant('change'),
 														window_Open(
 															$this->name.'_group_change', 	// window id
 															400,							// width
-															$this->getLanguageConstant('title_group_change'), // title
+															$this->get_language_constant('title_group_change'), // title
 															false, false,
 															url_Make(
 																'transfer_control',
@@ -1099,11 +1099,11 @@ class youtube extends Module {
 														)
 													),
 								'item_delete'	=> url_MakeHyperlink(
-														$this->getLanguageConstant('delete'),
+														$this->get_language_constant('delete'),
 														window_Open(
 															$this->name.'_group_delete', 	// window id
 															300,							// width
-															$this->getLanguageConstant('title_group_delete'), // title
+															$this->get_language_constant('title_group_delete'), // title
 															false, false,
 															url_Make(
 																'transfer_control',
@@ -1115,11 +1115,11 @@ class youtube extends Module {
 														)
 													),
 								'item_videos'	=> url_MakeHyperlink(
-														$this->getLanguageConstant('videos'),
+														$this->get_language_constant('videos'),
 														window_Open(
 															$this->name.'_group_videos', 	// window id
 															400,							// width
-															$this->getLanguageConstant('title_group_videos'), // title
+															$this->get_language_constant('title_group_videos'), // title
 															false, false,
 															url_Make(
 																'transfer_control',

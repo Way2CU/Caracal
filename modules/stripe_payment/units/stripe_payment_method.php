@@ -73,7 +73,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_title() {
-		$this->parent->getLanguageConstant('payment_method_title');
+		$this->parent->get_language_constant('payment_method_title');
 	}
 
 	/**

@@ -38,13 +38,13 @@ class stripe_payment extends Module {
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_stripe'),
+									$this->get_language_constant('menu_stripe'),
 									url_GetFromFilePath($this->path.'images/icon.svg'),
 
 									window_Open( // on click open window
 												'stripe',
 												350,
-												$this->getLanguageConstant('title_settings'),
+												$this->get_language_constant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'show_settings')
 											),
@@ -53,13 +53,13 @@ class stripe_payment extends Module {
 
 			if (!is_null($plans_menu))
 				$plans_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_stripe'),
+									$this->get_language_constant('menu_stripe'),
 									url_GetFromFilePath($this->path.'images/icon.svg'),
 
 									window_Open( // on click open window
 												'stripe_recurring_plans',
 												460,
-												$this->getLanguageConstant('title_recurring_plans'),
+												$this->get_language_constant('title_recurring_plans'),
 												true, true,
 												backend_UrlMake($this->name, 'recurring_plans')
 											),
@@ -90,7 +90,7 @@ class stripe_payment extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -208,8 +208,8 @@ class stripe_payment extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_settings_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_settings_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('stripe')
 				);
 
@@ -232,7 +232,7 @@ class stripe_payment extends Module {
 			$template->setMappedModule($this->name);
 
 			$params = array(
-						'message'	=> $this->getLanguageConstant('message_missing_api_keys'),
+						'message'	=> $this->get_language_constant('message_missing_api_keys'),
 					);
 
 			$template->restoreXML();

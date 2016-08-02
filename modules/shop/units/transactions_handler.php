@@ -38,7 +38,7 @@ class ShopTransactionsHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -72,7 +72,7 @@ class ShopTransactionsHandler {
 
 		$params = array(
 			'link_reload'	=> url_MakeHyperlink(
-							$this->_parent->getLanguageConstant('reload'),
+							$this->_parent->get_language_constant('reload'),
 							window_ReloadContent('shop_transactions')
 						)
 			);
@@ -321,7 +321,7 @@ class ShopTransactionsHandler {
 		if (count($items) > 0)
 			foreach($items as $item) {
 				// prepare window parameters
-				$title = $this->_parent->getLanguageConstant('title_transaction_details');
+				$title = $this->_parent->get_language_constant('title_transaction_details');
 				$title .= ' '.$item->uid;
 				$window = 'shop_transaction_details_'.$item->id;
 
@@ -331,8 +331,8 @@ class ShopTransactionsHandler {
 					$name = $buyer_names[$item->buyer];
 
 				// prepare language constants
-				$transaction_status = $this->_parent->getLanguageConstant(TransactionStatus::$reverse[$item->status]);
-				$transaction_type = $this->_parent->getLanguageConstant(TransactionType::$reverse[$item->type]);
+				$transaction_status = $this->_parent->get_language_constant(TransactionStatus::$reverse[$item->status]);
+				$transaction_type = $this->_parent->get_language_constant(TransactionType::$reverse[$item->type]);
 
 				// prepare template parameters
 				$params = array(
@@ -356,7 +356,7 @@ class ShopTransactionsHandler {
 							'remark'			=> $item->remark,
 							'timestamp'			=> $item->timestamp,
 							'item_details'		=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('details'),
+													$this->_parent->get_language_constant('details'),
 													window_Open(
 														$window, 800, $title, true, false,
 														url_Make(
@@ -524,7 +524,7 @@ class ShopTransactionsHandler {
 		foreach ($status_list as $id => $constant) {
 			$params = array(
 					'id'		=> $id,
-					'text'		=> $this->_parent->getLanguageConstant($constant),
+					'text'		=> $this->_parent->get_language_constant($constant),
 					'selected'	=> $active
 				);
 

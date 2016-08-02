@@ -287,7 +287,7 @@ class TemplateHandler {
 			// implement tooltip
 			if (isset($tag->tagAttrs['cms:tooltip'])) {
 				if (!is_null($this->module))
-					$value = $this->module->getLanguageConstant($tag->tagAttrs['cms:tooltip']); else
+					$value = $this->module->get_language_constant($tag->tagAttrs['cms:tooltip']); else
 					$value = Language::getText($tag->tagAttrs['cms:tooltip']);
 
 				if (!empty($value))
@@ -302,7 +302,7 @@ class TemplateHandler {
 				if (count($params) > 0)
 					foreach ($params as $param)
 						if (!is_null($this->module))
-							$tag->tagAttrs[$param] = $this->module->getLanguageConstant($tag->tagAttrs[$param]); else
+							$tag->tagAttrs[$param] = $this->module->get_language_constant($tag->tagAttrs[$param]); else
 							$tag->tagAttrs[$param] = Language::getText($tag->tagAttrs[$param]);
 
 				unset($tag->tagAttrs['cms:constant']);
@@ -358,7 +358,7 @@ class TemplateHandler {
 				case 'cms:module':
 					if (ModuleHandler::is_loaded($tag->tagAttrs['name'])) {
 						$module = call_user_func(array($tag->tagAttrs['name'], 'getInstance'));
-						$module->transferControl($tag->tagAttrs, $tag->tagChildren);
+						$module->transfer_control($tag->tagAttrs, $tag->tagChildren);
 					}
 					break;
 
@@ -438,7 +438,7 @@ class TemplateHandler {
 					if (key_exists('module', $tag->tagAttrs)) {
 						if (ModuleHandler::is_loaded($tag->tagAttrs['module'])) {
 							$module = call_user_func(array($tag->tagAttrs['module'], 'getInstance'));
-							$text = $module->getLanguageConstant($constant, $language);
+							$text = $module->get_language_constant($constant, $language);
 						}
 
 					} else {

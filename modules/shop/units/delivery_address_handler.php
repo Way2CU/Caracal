@@ -38,7 +38,7 @@ class DeliveryAddressHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 	}
 
 	/**

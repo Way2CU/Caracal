@@ -84,43 +84,43 @@ class backend extends Module {
 		// add admin level menus
 		if ($section == 'backend') {
 			$system_menu = new backend_MenuItem(
-									$this->getLanguageConstant('menu_system'),
+									$this->get_language_constant('menu_system'),
 									url_GetFromFilePath($this->path.'images/system.svg'),
 									'javascript:void(0);',
 									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
-									$this->getLanguageConstant('menu_modules'),
+									$this->get_language_constant('menu_modules'),
 									url_GetFromFilePath($this->path.'images/modules.svg'),
 									window_Open( // on click open window
 												'system_modules',
 												610,
-												$this->getLanguageConstant('title_modules'),
+												$this->get_language_constant('title_modules'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'modules')
 											),
 									$level=10
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
-									$this->getLanguageConstant('menu_users'),
+									$this->get_language_constant('menu_users'),
 									url_GetFromFilePath($this->path.'images/users.svg'),
 									window_Open( // on click open window
 												'system_users',
 												690,
-												$this->getLanguageConstant('title_users_manager'),
+												$this->get_language_constant('title_users_manager'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'users')
 											),
 									$level=10
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
-									$this->getLanguageConstant('menu_clear_cache'),
+									$this->get_language_constant('menu_clear_cache'),
 									url_GetFromFilePath($this->path.'images/clear_cache.svg'),
 									window_Open( // on click open window
 												'system_clear_cache',
 												350,
-												$this->getLanguageConstant('title_clear_cache'),
+												$this->get_language_constant('title_clear_cache'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'clear_cache')
 											),
@@ -128,24 +128,24 @@ class backend extends Module {
 								));
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
-									$this->getLanguageConstant('menu_change_password'),
+									$this->get_language_constant('menu_change_password'),
 									url_GetFromFilePath($this->path.'images/change_password.svg'),
 									window_Open( // on click open window
 												'change_password_window',
 												350,
-												$this->getLanguageConstant('title_change_password'),
+												$this->get_language_constant('title_change_password'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'change_password')
 											),
 									$level=1
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
-									$this->getLanguageConstant('menu_logout'),
+									$this->get_language_constant('menu_logout'),
 									url_GetFromFilePath($this->path.'images/logout.svg'),
 									window_Open( // on click open window
 												'logout_window',
 												350,
-												$this->getLanguageConstant('title_logout'),
+												$this->get_language_constant('title_logout'),
 												true, false, // disallow minimize, safety feature
 												backend_UrlMake($this->name, 'logout')
 											),
@@ -172,7 +172,7 @@ class backend extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// dead lock protection for backend module
 		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
 		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
@@ -185,7 +185,7 @@ class backend extends Module {
 			// if user is not logged, redirect him to a proper place
 			if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
 				$session_manager = SessionManager::getInstance($this);
-				$session_manager->transferControl();
+				$session_manager->transfer_control();
 				return;
 			}
 
@@ -203,7 +203,7 @@ class backend extends Module {
 				case 'json_login':
 				case 'json_logout':
 					$session_manager = SessionManager::getInstance();
-					$session_manager->transferControl();
+					$session_manager->transfer_control();
 					break;
 
 				case 'verify_account':
@@ -244,7 +244,7 @@ class backend extends Module {
 					// if user is not logged, redirect him to a proper place
 					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
 						$session_manager = SessionManager::getInstance($this);
-						$session_manager->transferControl();
+						$session_manager->transfer_control();
 						return;
 					}
 
@@ -263,7 +263,7 @@ class backend extends Module {
 
 					if (ModuleHandler::is_loaded($module_name)) {
 						$module = call_user_func(array($module_name, 'getInstance'));
-						$module->transferControl($params, $children);
+						$module->transfer_control($params, $children);
 					}
 					break;
 
@@ -319,14 +319,14 @@ class backend extends Module {
 				case 'email_templates':
 				case 'email_templates_save':
 					$user_manager = Backend_UserManager::getInstance();
-					$user_manager->transferControl();
+					$user_manager->transfer_control();
 					break;
 
 				// ---
 				case 'logout':
 				case 'logout_commit':
 					$session_manager = SessionManager::getInstance($this);
-					$session_manager->transferControl();
+					$session_manager->transfer_control();
 					break;
 			}
 	}
@@ -433,10 +433,10 @@ class backend extends Module {
 							array('active' => 1),
 							array('name' => $module_name)
 						);
-			$message = $this->getLanguageConstant('message_module_activated');
+			$message = $this->get_language_constant('message_module_activated');
 
 		} else {
-			$message = $this->getLanguageConstant('message_module_protected');
+			$message = $this->get_language_constant('message_module_protected');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -465,10 +465,10 @@ class backend extends Module {
 							array('active' => 0),
 							array('name' => $module_name)
 						);
-			$message = $this->getLanguageConstant('message_module_deactivated');
+			$message = $this->get_language_constant('message_module_deactivated');
 		} else {
 			// protected module
-			$message = $this->getLanguageConstant('message_module_protected');
+			$message = $this->get_language_constant('message_module_protected');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -494,7 +494,7 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_module_initialise'),
+					'message'		=> $this->get_language_constant('message_module_initialise'),
 					'name'			=> $module_name,
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_module_dialog',
@@ -506,9 +506,9 @@ class backend extends Module {
 												array('module_name', $module_name)
 											)
 										),
-					'yes_text'		=> $this->getLanguageConstant("initialise"),
+					'yes_text'		=> $this->get_language_constant("initialise"),
 					'no_action'		=> window_Close($this->name.'_module_dialog'),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 				);
 
 		$template->restoreXML();
@@ -545,11 +545,11 @@ class backend extends Module {
 
 			if (!is_null($module)) {
 				$module->on_init();
-				$message = $this->getLanguageConstant('message_module_initialised');
+				$message = $this->get_language_constant('message_module_initialised');
 			}
 
 		} else {
-			$message = $this->getLanguageConstant('message_module_protected');
+			$message = $this->get_language_constant('message_module_protected');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -575,7 +575,7 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_module_disable'),
+					'message'		=> $this->get_language_constant('message_module_disable'),
 					'name'			=> $module_name,
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_module_dialog',
@@ -587,9 +587,9 @@ class backend extends Module {
 												array('module_name', $module_name)
 											)
 										),
-					'yes_text'		=> $this->getLanguageConstant("disable"),
+					'yes_text'		=> $this->get_language_constant("disable"),
 					'no_action'		=> window_Close($this->name.'_module_dialog'),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 				);
 
 		$template->restoreXML();
@@ -619,14 +619,14 @@ class backend extends Module {
 				$module = call_user_func(array($module_name, 'getInstance'));
 				$module->on_disable();
 
-				$message = $this->getLanguageConstant('message_module_disabled');
+				$message = $this->get_language_constant('message_module_disabled');
 
 			} else {
-				$message = $this->getLanguageConstant('message_module_not_active');
+				$message = $this->get_language_constant('message_module_not_active');
 			}
 
 		} else {
-			$message = $this->getLanguageConstant('message_module_protected');
+			$message = $this->get_language_constant('message_module_protected');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -655,7 +655,7 @@ class backend extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_cleared_cache'),
+					'message'		=> $this->get_language_constant('message_cleared_cache'),
 					'action'		=> window_Close('system_clear_cache')
 				);
 
@@ -740,11 +740,11 @@ class backend extends Module {
 							'preload_symbol'	=> $definition['preload'] ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'order'				=> $definition['order'],
 							'item_activate'		=> url_MakeHyperlink(
-													$this->getLanguageConstant('activate'),
+													$this->get_language_constant('activate'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
-														$this->getLanguageConstant('title_module_activate'), // title
+														$this->get_language_constant('title_module_activate'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -756,11 +756,11 @@ class backend extends Module {
 													)
 												),
 							'item_deactivate'		=> url_MakeHyperlink(
-													$this->getLanguageConstant('deactivate'),
+													$this->get_language_constant('deactivate'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
-														$this->getLanguageConstant('title_module_deactivate'), // title
+														$this->get_language_constant('title_module_deactivate'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -772,11 +772,11 @@ class backend extends Module {
 													)
 												),
 							'item_initialise'		=> url_MakeHyperlink(
-													$this->getLanguageConstant('initialise'),
+													$this->get_language_constant('initialise'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
-														$this->getLanguageConstant('title_module_initialise'), // title
+														$this->get_language_constant('title_module_initialise'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -788,11 +788,11 @@ class backend extends Module {
 													)
 												),
 							'item_disable'		=> url_MakeHyperlink(
-													$this->getLanguageConstant('disable'),
+													$this->get_language_constant('disable'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
-														$this->getLanguageConstant('title_module_disable'), // title
+														$this->get_language_constant('title_module_disable'), // title
 														false, false,
 														url_Make(
 															'transfer_control',

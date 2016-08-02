@@ -90,7 +90,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->parent->getLanguageConstant('direct_method_title');
+		return $this->parent->get_language_constant('direct_method_title');
 	}
 
 	/**

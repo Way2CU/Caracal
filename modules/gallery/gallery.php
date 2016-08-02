@@ -114,19 +114,19 @@ class gallery extends Module {
 			$backend = backend::getInstance();
 
 			$gallery_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_gallery'),
+					$this->get_language_constant('menu_gallery'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_images'),
+								$this->get_language_constant('menu_images'),
 								url_GetFromFilePath($this->path.'images/images.svg'),
 								window_Open( // on click open window
 											'gallery_images',
 											670,
-											$this->getLanguageConstant('title_images'),
+											$this->get_language_constant('title_images'),
 											true, true,
 											backend_UrlMake($this->name, 'images')
 										),
@@ -134,12 +134,12 @@ class gallery extends Module {
 							));
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_groups'),
+								$this->get_language_constant('menu_groups'),
 								url_GetFromFilePath($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'gallery_groups',
 											450,
-											$this->getLanguageConstant('title_groups'),
+											$this->get_language_constant('title_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										),
@@ -147,12 +147,12 @@ class gallery extends Module {
 							));
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_containers'),
+								$this->get_language_constant('menu_containers'),
 								url_GetFromFilePath($this->path.'images/containers.svg'),
 								window_Open( // on click open window
 											'gallery_containers',
 											490,
-											$this->getLanguageConstant('title_containers'),
+											$this->get_language_constant('title_containers'),
 											true, true,
 											backend_UrlMake($this->name, 'containers')
 										),
@@ -179,7 +179,7 @@ class gallery extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -441,11 +441,11 @@ class gallery extends Module {
 					);
 
 		$link_new = url_MakeHyperlink(
-					$this->getLanguageConstant('upload_images'),
+					$this->get_language_constant('upload_images'),
 					window_Open(
 						'gallery_images_upload',
 						400,
-						$this->getLanguageConstant('title_images_upload'),
+						$this->get_language_constant('title_images_upload'),
 						true, false,
 						$url_new
 					)
@@ -461,11 +461,11 @@ class gallery extends Module {
 					);
 
 		$link_new_bulk = url_MakeHyperlink(
-					$this->getLanguageConstant('upload_images_bulk'),
+					$this->get_language_constant('upload_images_bulk'),
 					window_Open(
 						'gallery_images_upload_bulk',
 						400,
-						$this->getLanguageConstant('title_images_upload_bulk'),
+						$this->get_language_constant('title_images_upload_bulk'),
 						true, false,
 						$url_new_bulk
 					)
@@ -476,11 +476,11 @@ class gallery extends Module {
 					'link_new'		=> $link_new,
 					'link_new_bulk'	=> $link_new_bulk,
 					'link_groups'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('groups'),
+										$this->get_language_constant('groups'),
 										window_Open( // on click open window
 											'gallery_groups',
 											500,
-											$this->getLanguageConstant('title_groups'),
+											$this->get_language_constant('title_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										)
@@ -553,8 +553,8 @@ class gallery extends Module {
 		} else {
 			// store single uploaded image
 			$text_id = fix_chars($_REQUEST['text_id']);
-			$title = $this->getMultilanguageField('title');
-			$description = $this->getMultilanguageField('description');
+			$title = $this->get_multilanguage_field('title');
+			$description = $this->get_multilanguage_field('description');
 			$window_name = 'gallery_images_upload';
 
 			$result = $this->createImage('image');
@@ -578,7 +578,7 @@ class gallery extends Module {
 
 		$params = array(
 					'message'	=> $result['message'],
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_images')
 				);
 
@@ -628,9 +628,9 @@ class gallery extends Module {
 
 		$id = fix_id($_REQUEST['id']);
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
+		$title = $this->get_multilanguage_field('title');
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
-		$description = $this->getMultilanguageField('description');
+		$description = $this->get_multilanguage_field('description');
 		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 		$slideshow = $this->get_boolean_field('slideshow') ? 1 : 0;
 
@@ -649,8 +649,8 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_image_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_image_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('gallery_images_change').";".window_ReloadContent('gallery_images')
 				);
 
@@ -674,10 +674,10 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_image_delete"),
+					'message'		=> $this->get_language_constant("message_image_delete"),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'gallery_images_delete',
 											url_Make(
@@ -710,8 +710,8 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_image_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_image_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_images_delete').";".window_ReloadContent('gallery_images')
 				);
 
@@ -729,9 +729,9 @@ class gallery extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('create_group'),
+										$this->get_language_constant('create_group'),
 										'gallery_groups_create', 400,
-										$this->getLanguageConstant('title_groups_create'),
+										$this->get_language_constant('title_groups_create'),
 										true, false,
 										$this->name,
 										'groups_create'
@@ -797,8 +797,8 @@ class gallery extends Module {
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> $this->getMultilanguageField('name'),
-			'description' 	=> $this->getMultilanguageField('description'),
+			'name' 			=> $this->get_multilanguage_field('name'),
+			'description' 	=> $this->get_multilanguage_field('description'),
 		);
 
 		if (isset($_REQUEST['thumbnail']))
@@ -809,11 +809,11 @@ class gallery extends Module {
 		if (!is_null($id)) {
 			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_groups_change';
-			$message = $this->getLanguageConstant('message_group_changed');
+			$message = $this->get_language_constant('message_group_changed');
 		} else {
 			$manager->insert_item($data);
 			$window_name = 'gallery_groups_create';
-			$message = $this->getLanguageConstant('message_group_created');
+			$message = $this->get_language_constant('message_group_created');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -821,7 +821,7 @@ class gallery extends Module {
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_groups')
 				);
 
@@ -845,10 +845,10 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_group_delete"),
+					'message'		=> $this->get_language_constant("message_group_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'gallery_groups_delete',
 											url_Make(
@@ -882,8 +882,8 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_group_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_groups_delete').";".window_ReloadContent('gallery_groups').";".window_ReloadContent('gallery_images')
 				);
 
@@ -901,9 +901,9 @@ class gallery extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('create_container'),
+										$this->get_language_constant('create_container'),
 										'gallery_containers_create', 400,
-										$this->getLanguageConstant('title_containers_create'),
+										$this->get_language_constant('title_containers_create'),
 										true, false,
 										$this->name,
 										'containers_create'
@@ -967,8 +967,8 @@ class gallery extends Module {
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> $this->getMultilanguageField('name'),
-			'description' 	=> $this->getMultilanguageField('description'),
+			'name' 			=> $this->get_multilanguage_field('name'),
+			'description' 	=> $this->get_multilanguage_field('description'),
 		);
 
 		$manager = GalleryContainerManager::getInstance();
@@ -976,11 +976,11 @@ class gallery extends Module {
 		if (!is_null($id)) {
 			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_containers_change';
-			$message = $this->getLanguageConstant('message_container_changed');
+			$message = $this->get_language_constant('message_container_changed');
 		} else {
 			$manager->insert_item($data);
 			$window_name = 'gallery_containers_create';
-			$message = $this->getLanguageConstant('message_container_created');
+			$message = $this->get_language_constant('message_container_created');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -988,7 +988,7 @@ class gallery extends Module {
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_containers')
 				);
 
@@ -1012,10 +1012,10 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_container_delete'),
+					'message'		=> $this->get_language_constant('message_container_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'gallery_containers_delete',
 											url_Make(
@@ -1049,8 +1049,8 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_container_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_container_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_containers_delete').";".window_ReloadContent('gallery_containers')
 				);
 
@@ -1109,8 +1109,8 @@ class gallery extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_container_groups_updated"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_container_groups_updated"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_containers_groups')
 				);
 
@@ -1294,11 +1294,11 @@ class gallery extends Module {
 						'image'			=> $this->getImageURL($item),
 						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'gallery_images_change', 	// window id
 													400,						// width
-													$this->getLanguageConstant('title_images_change'), // title
+													$this->get_language_constant('title_images_change'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1310,11 +1310,11 @@ class gallery extends Module {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'gallery_images_delete', 	// window id
 													400,						// width
-													$this->getLanguageConstant('title_images_delete'), // title
+													$this->get_language_constant('title_images_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1515,11 +1515,11 @@ class gallery extends Module {
 							'image'			=> $this->getGroupImage($item, true),
 							'selected'		=> $selected,
 							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+													$this->get_language_constant('change'),
 													window_Open(
 														'gallery_groups_change', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_groups_change'), // title
+														$this->get_language_constant('title_groups_change'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1531,11 +1531,11 @@ class gallery extends Module {
 													)
 												),
 							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+													$this->get_language_constant('delete'),
 													window_Open(
 														'gallery_groups_delete', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_groups_delete'), // title
+														$this->get_language_constant('title_groups_delete'), // title
 														false, false,
 														url_Make(
 															'transfer_control',
@@ -1648,11 +1648,11 @@ class gallery extends Module {
 						'image'			=> $this->getContainerImage($item),
 						'selected'		=> $selected,
 						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+												$this->get_language_constant('change'),
 												window_Open(
 													'gallery_containers_change', 	// window id
 													400,							// width
-													$this->getLanguageConstant('title_containers_change'), // title
+													$this->get_language_constant('title_containers_change'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1664,11 +1664,11 @@ class gallery extends Module {
 												)
 											),
 						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+												$this->get_language_constant('delete'),
 												window_Open(
 													'gallery_containers_delete', 	// window id
 													400,							// width
-													$this->getLanguageConstant('title_containers_delete'), // title
+													$this->get_language_constant('title_containers_delete'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1680,11 +1680,11 @@ class gallery extends Module {
 												)
 											),
 						'item_groups'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('container_groups'),
+												$this->get_language_constant('container_groups'),
 												window_Open(
 													'gallery_containers_groups', 	// window id
 													400,							// width
-													$this->getLanguageConstant('title_containers_groups'), // title
+													$this->get_language_constant('title_containers_groups'), // title
 													false, false,
 													url_Make(
 														'transfer_control',
@@ -1762,7 +1762,7 @@ class gallery extends Module {
 			// invalid params, print blank JSON object with message
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_params'),
+						'error_message'	=> $this->get_language_constant('message_json_error_params'),
 					);
 
 			print json_encode($result);
@@ -1798,7 +1798,7 @@ class gallery extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+						'error_message'	=> $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -1904,7 +1904,7 @@ class gallery extends Module {
 			}
 		} else {
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+			$result['error_message'] = $this->get_language_constant('message_json_error_object');
 		}
 
 		print json_encode($result);
@@ -1931,7 +1931,7 @@ class gallery extends Module {
 			// invalid params, print blank JSON object with message
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_params'),
+						'error_message'	=> $this->get_language_constant('message_json_error_params'),
 					);
 
 			print json_encode($result);
@@ -1952,7 +1952,7 @@ class gallery extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+						'error_message'	=> $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -2037,7 +2037,7 @@ class gallery extends Module {
 						);
 		} else {
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+			$result['error_message'] = $this->get_language_constant('message_json_error_object');
 		}
 
 		print json_encode($result);
@@ -2066,7 +2066,7 @@ class gallery extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+						'error_message'	=> $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -2101,7 +2101,7 @@ class gallery extends Module {
 						);
 		} else {
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+			$result['error_message'] = $this->get_language_constant('message_json_error_object');
 		}
 
 		print json_encode($result);
@@ -2487,7 +2487,7 @@ class gallery extends Module {
 				unset($file_sizes[$i]);
 
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_invalid_type');
+				$result['message'] = $this->get_language_constant('message_image_invalid_type');
 
 				trigger_error('Gallery: Invalid file type uploaded.', E_USER_NOTICE);
 
@@ -2501,7 +2501,7 @@ class gallery extends Module {
 				unset($file_sizes[$i]);
 
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_upload_error');
+				$result['message'] = $this->get_language_constant('message_image_upload_error');
 
 				trigger_error('Gallery: Not an uploaded file. This should not happen!', E_USER_ERROR);
 
@@ -2532,7 +2532,7 @@ class gallery extends Module {
 				$id = $manager->get_inserted_id();
 
 				$result['filename'] = $filename;
-				$result['message'] = $this->getLanguageConstant('message_image_uploaded');
+				$result['message'] = $this->get_language_constant('message_image_uploaded');
 
 				// append result
 				if ($multiple_upload) {
@@ -2547,7 +2547,7 @@ class gallery extends Module {
 
 			} else {
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_save_error');
+				$result['message'] = $this->get_language_constant('message_image_save_error');
 			}
 		}
 

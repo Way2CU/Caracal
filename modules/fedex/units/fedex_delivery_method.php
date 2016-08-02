@@ -282,7 +282,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 			foreach ($response->RateReplyDetails as $type) {
 				// extract data from response
 				$id = $type->ServiceType;
-				$name = $this->parent->getLanguageConstant($id);
+				$name = $this->parent->get_language_constant($id);
 				$timestamp = strtotime($type->DeliveryTimestamp);
 				$amount = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
 				$currency = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Currency;

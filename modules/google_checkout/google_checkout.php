@@ -27,13 +27,13 @@ class google_checkout extends Module {
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_google_checkout'),
+									$this->get_language_constant('menu_google_checkout'),
 									url_GetFromFilePath($this->path.'images/icon.png'),
 
 									window_Open( // on click open window
 												'paypal',
 												650,
-												$this->getLanguageConstant('title_settings'),
+												$this->get_language_constant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
 											),
@@ -64,7 +64,7 @@ class google_checkout extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {

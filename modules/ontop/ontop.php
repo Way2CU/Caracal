@@ -39,12 +39,12 @@ class ontop extends Module {
 			$backend = backend::getInstance();
 
 			$ontop_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_ontop'),
+					$this->get_language_constant('menu_ontop'),
 					url_GetFromFilePath($this->path.'images/icon.svg'),
 					window_Open(
 						'ontop_applications',
 						450,
-						$this->getLanguageConstant('title_ontop'),
+						$this->get_language_constant('title_ontop'),
 						true, true,
 						backend_UrlMake($this->name, 'applications')
 					),
@@ -71,7 +71,7 @@ class ontop extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -156,9 +156,9 @@ class ontop extends Module {
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'ontop_new_application', 350,
-										$this->getLanguageConstant('title_add_application'),
+										$this->get_language_constant('title_add_application'),
 										true, false,
 										$this->name,
 										'add'
@@ -255,8 +255,8 @@ class ontop extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_application_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_application_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('ontop_applications'),
 				);
 
@@ -278,10 +278,10 @@ class ontop extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_application_delete'),
+					'message'		=> $this->get_language_constant('message_application_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'ontop_delete_application',
 											url_Make(
@@ -313,8 +313,8 @@ class ontop extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_application_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_application_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('ontop_delete_application').';'.window_ReloadContent('ontop_applications')
 				);
 
@@ -342,8 +342,8 @@ class ontop extends Module {
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_test')."<br><b>{$numbers}</b>",
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_test')."<br><b>{$numbers}</b>",
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('ontop_test_application')
 				);
 
@@ -426,11 +426,11 @@ class ontop extends Module {
 				'shop_transaction_complete' => $item->shop_transaction_complete,
 				'contact_form_submit'       => $item->contact_form_submit,
 				'item_change' => url_MakeHyperlink(
-					$this->getLanguageConstant('change'),
+					$this->get_language_constant('change'),
 					window_Open(
 						'ontop_edit_application', 	// window id
 						350,				// width
-						$this->getLanguageConstant('title_edit_application'), // title
+						$this->get_language_constant('title_edit_application'), // title
 						false, false,
 						url_Make(
 							'transfer_control',
@@ -441,11 +441,11 @@ class ontop extends Module {
 						)
 					)),
 				'item_delete' => url_MakeHyperlink(
-					$this->getLanguageConstant('delete'),
+					$this->get_language_constant('delete'),
 					window_Open(
 						'ontop_delete_application', 	// window id
 						400,				// width
-						$this->getLanguageConstant('title_delete_application'), // title
+						$this->get_language_constant('title_delete_application'), // title
 						false, false,
 						url_Make(
 							'transfer_control',
@@ -456,11 +456,11 @@ class ontop extends Module {
 						)
 					)),
 				'item_test' => url_MakeHyperlink(
-					$this->getLanguageConstant('test'),
+					$this->get_language_constant('test'),
 					window_Open(
 						'ontop_test_application', 	// window id
 						400,				// width
-						$this->getLanguageConstant('title_test_application'), // title
+						$this->get_language_constant('title_test_application'), // title
 						false, false,
 						url_Make(
 							'transfer_control',

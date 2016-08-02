@@ -65,7 +65,7 @@ abstract class Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		$result = false;
 		$action_name = isset($params['action']) ? $params['action'] : null;
 		$backend_action = isset($params['backend_action']) ? $params['backend_action'] : null;
@@ -123,7 +123,7 @@ abstract class Module {
 	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function createAction($name, $callable, $params) {
+	protected function create_action($name, $callable, $params) {
 		if (array_key_exists($name, $this->actions))
 			throw new AddActionError("Action '{$name}' is already defined!");
 
@@ -138,7 +138,7 @@ abstract class Module {
 	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function createBackendAction($name, $callable, $params) {
+	protected function create_backend_action($name, $callable, $params) {
 		if (array_key_exists($name, $this->backend_actions))
 			throw new AddActionError("Backend action '{$name}' is already defined!");
 
@@ -152,7 +152,7 @@ abstract class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	public function getLanguageConstant($constant, $language=null) {
+	public function get_language_constant($constant, $language=null) {
 		// make sure language is loaded
 		if (is_null($this->language)) {
 			trigger_error("Requested '{$constant}' but language file was not loaded for module '{$this->name}'.", E_USER_WARNING);
@@ -174,7 +174,7 @@ abstract class Module {
 	 * @param string $name
 	 * @return array
 	 */
-	public function getMultilanguageField($name) {
+	public function get_multilanguage_field($name) {
 		$result = array();
 		$list = Language::getLanguages(false);
 
