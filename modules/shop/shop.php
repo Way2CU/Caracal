@@ -855,7 +855,7 @@ class shop extends Module {
 	public function on_init() {
 		global $db;
 
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// set shop in testing mode by default
 		$this->save_setting('testing_mode', 1);
@@ -4168,7 +4168,7 @@ class shop extends Module {
 		$template->set_template_params_from_array($children);
 
 		// get message to show
-		$message = Language::getText('message_checkout_completed');
+		$message = Language::get_text('message_checkout_completed');
 		if (empty($message))
 			$message = $this->get_language_constant('message_checkout_completed');
 
@@ -4197,7 +4197,7 @@ class shop extends Module {
 		$template->set_template_params_from_array($children);
 
 		// get message to show
-		$message = Language::getText('message_checkout_canceled');
+		$message = Language::get_text('message_checkout_canceled');
 		if (empty($message))
 			$message = $this->get_language_constant('message_checkout_canceled');
 

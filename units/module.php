@@ -160,10 +160,10 @@ abstract class Module {
 		}
 
 		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
-		$result = $this->language->getText($constant, $language_in_use);
+		$result = $this->language->get_text($constant, $language_in_use);
 
 		if (empty($result))
-			$result = Language::getText($constant, $language_in_use);
+			$result = Language::get_text($constant, $language_in_use);
 
 		return $result;
 	}
@@ -176,7 +176,7 @@ abstract class Module {
 	 */
 	public function get_multilanguage_field($name) {
 		$result = array();
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		foreach($list as $lang) {
 			$param_name = "{$name}_{$lang}";

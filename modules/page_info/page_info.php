@@ -198,7 +198,7 @@ class page_info extends Module {
 
 		$head_tag = head_tag::get_instance();
 		$collection = collection::get_instance();
-		$language_list = Language::getLanguages(false);
+		$language_list = Language::get_languages(false);
 		$ignored_section = in_array($section, array('backend', 'backend_module'));
 
 		// add base url tag
@@ -292,7 +292,7 @@ class page_info extends Module {
 
   		// copyright
 		if (!in_array('copyright', $this->omit_elements) && _STANDARD == 'html401') {
-			$copyright = Language::getText('copyright');
+			$copyright = Language::get_text('copyright');
 			$copyright = strip_tags($copyright);
 			$head_tag->addTag('meta',
 						array(
@@ -412,7 +412,7 @@ class page_info extends Module {
 		// set from language constant
 		if (isset($tag_params['constant'])) {
 			$constant = fix_chars($tag_params['constant']);
-			$this->page_description = Language::getText($constant);
+			$this->page_description = Language::get_text($constant);
 
 		// set from article
 		} else if (isset($tag_params['article']) && ModuleHandler::is_loaded('articles')) {

@@ -47,7 +47,7 @@ class Mandrill_Mailer extends ContactForm_Mailer {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->language->getText('mailer_title');
+		return $this->language->get_text('mailer_title');
 	}
 
 	/**

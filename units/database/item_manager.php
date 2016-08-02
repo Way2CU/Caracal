@@ -69,7 +69,7 @@ abstract class ItemManager {
 	 */
 	protected function __construct($table_name) {
 		$this->table_name = $table_name;
-		$this->languages = Language::getLanguages(false);
+		$this->languages = Language::get_languages(false);
 
 		sort($this->languages, SORT_STRING);
 	}

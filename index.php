@@ -99,7 +99,7 @@ $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home
 $action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
 // initialize language system and apply language
-Language::applyForSession();
+Language::apply_for_session();
 
 // turn off URL rewrite for backend
 if ($section == 'backend' || $section == 'backend_module')

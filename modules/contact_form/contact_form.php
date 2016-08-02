@@ -412,7 +412,7 @@ class contact_form extends Module {
 	public function on_init() {
 		global $db;
 
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// predefined settings stored in system wide tables
 		$this->save_setting('sender_name', '');
@@ -867,11 +867,11 @@ class contact_form extends Module {
 		}
 
 		// get messages
-		$message_sent = Language::getText('message_sent');
+		$message_sent = Language::get_text('message_sent');
 		if (empty($message_sent))
 			$message_sent = $this->get_language_constant('message_sent');
 
-		$message_form_error = Language::getText('message_form_error');
+		$message_form_error = Language::get_text('message_form_error');
 		if (empty($message_form_error))
 			$message_form_error = $this->get_language_constant('message_form_error');
 
@@ -2497,7 +2497,7 @@ class contact_form extends Module {
 		$field_id = fix_id($_REQUEST['field']);
 		$manager = ContactForm_FieldValueManager::get_instance();
 		$remove_existing = $this->get_boolean_field('remove_existing');
-		$languages = Language::getLanguages(false);
+		$languages = Language::get_languages(false);
 
 		// make sure uploaded file is good
 		if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
@@ -2509,7 +2509,7 @@ class contact_form extends Module {
 		$values = array();
 		$columns = array();
 		$headers = array('value');
-		$headers = array_merge($headers, Language::getLanguages(false));
+		$headers = array_merge($headers, Language::get_languages(false));
 
 		if (($handle = fopen($_FILES['file']['tmp_name'], 'r')) !== false) {
 			// get headers

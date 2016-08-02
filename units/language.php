@@ -65,7 +65,7 @@ class LanguageHandler {
 	 * @param string $specified_language
 	 * @return string
 	 */
-	public function getText($constant, $specified_language=null) {
+	public function get_text($constant, $specified_language=null) {
 		global $language;
 
 		// prepare default result
@@ -84,7 +84,7 @@ class LanguageHandler {
 	 * @param boolean $printable What list should contain, printable text or language code
 	 * @return array
 	 */
-	public function getLanguages($printable=true) {
+	public function get_languages($printable=true) {
 		global $available_languages;
 		$result = array();
 
@@ -94,7 +94,7 @@ class LanguageHandler {
 				$this->list = array();
 
 				foreach ($available_languages as $code)
-					$this->list[$code] = Language::getPrintable($code);
+					$this->list[$code] = Language::get_printable($code);
 			}
 			$result = $this->list;
 
@@ -103,16 +103,6 @@ class LanguageHandler {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Check if current language is RTL (right-to-left)
-	 *
-	 * @param string $specified_language
-	 * @return boolean
-	 */
-	public function isRTL($specified_language=null) {
-		return Language::isRTL($specified_language);
 	}
 }
 
@@ -131,16 +121,16 @@ final class Language {
 	 * @param string $language
 	 * @return string
 	 */
-	public static function getText($constant, $language=null) {
+	public static function get_text($constant, $language=null) {
 		$result = '';
 
 		// get site specific constant
 		if (!is_null(self::$site_handler))
-			$result = self::$site_handler->getText($constant, $language);
+			$result = self::$site_handler->get_text($constant, $language);
 
 		// get system constant
 		if (empty($result))
-			$result = self::$system_handler->getText($constant, $language);
+			$result = self::$system_handler->get_text($constant, $language);
 
 		return $result;
 	}
@@ -152,16 +142,16 @@ final class Language {
 	 * @param boolean $printable
 	 * @return array
 	 */
-	public static function getLanguages($printable=true) {
+	public static function get_languages($printable=true) {
 		$result = array();
 
 		// get site specific constant
 		if (!is_null(self::$site_handler))
-			$result = self::$site_handler->getLanguages($printable);
+			$result = self::$site_handler->get_languages($printable);
 
 		// get system constant
 		if (empty($result))
-			$result = self::$system_handler->getLanguages($printable);
+			$result = self::$system_handler->get_languages($printable);
 
 		return $result;
 	}
@@ -172,7 +162,7 @@ final class Language {
 	 * @param string $code
 	 * @return string
 	 */
-	public static function getPrintable($code) {
+	public static function get_printable($code) {
 		$result = '';
 
 		if (property_exists(self::$list->list, $code))
@@ -188,7 +178,7 @@ final class Language {
 	 * @param string $specified_language
 	 * @return boolean
 	 */
-	public static function isRTL($specified_language=null) {
+	public static function is_rtl($specified_language=null) {
 		global $language;
 		$language_to_check = is_null($specified_language) ? $language : $specified_language;
 
@@ -200,7 +190,7 @@ final class Language {
 	 *
 	 * @return array
 	 */
-	public static function getRTL() {
+	public static function get_rtl() {
 		return self::$list->rtl;
 	}
 
@@ -213,7 +203,7 @@ final class Language {
 	 * @param string $default
 	 * @return string
 	 */
-	public static function matchBrowserLanguage($supported_languages, $default) {
+	public static function match_browser_language($supported_languages, $default) {
 		$result = $default;
 		$languages = array();
 
@@ -261,14 +251,14 @@ final class Language {
 	 * function will try to match the language with browser's desired
 	 * language or use site's default.
 	 */
-	public static function applyForSession() {
+	public static function apply_for_session() {
 		global $section, $language, $default_language, $available_languages, $language_rtl,
 	 		$data_path, $system_path;
 
 		if (!isset($_REQUEST['language'])) {
 			// no language change was specified, check session
 			if (!isset($_SESSION['language']) || empty($_SESSION['language']))
-				$_SESSION['language'] = self::matchBrowserLanguage($available_languages, $default_language);
+				$_SESSION['language'] = self::match_browser_language($available_languages, $default_language);
 
 		} else {
 			// language change was specified, make sure it's valid
@@ -279,7 +269,7 @@ final class Language {
 				// set language without asking if module is backend
 				if (in_array($section, array('backend', 'backend_module')))
 					$_SESSION['language'] = fix_chars($_REQUEST['language']); else
-					$_SESSION['language'] = self::matchBrowserLanguage($available_languages, $default_language);
+					$_SESSION['language'] = self::match_browser_language($available_languages, $default_language);
 			}
 		}
 
@@ -288,7 +278,7 @@ final class Language {
 
 		// store language to global variable
 		$language = $_SESSION['language'];
-		$language_rtl = self::isRTL($language);
+		$language_rtl = self::is_rtl($language);
 
 		// create language handlers
 		self::$system_handler = new LanguageHandler($system_path);

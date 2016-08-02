@@ -288,7 +288,7 @@ class TemplateHandler {
 			if (isset($tag->tagAttrs['cms:tooltip'])) {
 				if (!is_null($this->module))
 					$value = $this->module->get_language_constant($tag->tagAttrs['cms:tooltip']); else
-					$value = Language::getText($tag->tagAttrs['cms:tooltip']);
+					$value = Language::get_text($tag->tagAttrs['cms:tooltip']);
 
 				if (!empty($value))
 					$tag->tagAttrs['data-tooltip'] = $value;
@@ -303,7 +303,7 @@ class TemplateHandler {
 					foreach ($params as $param)
 						if (!is_null($this->module))
 							$tag->tagAttrs[$param] = $this->module->get_language_constant($tag->tagAttrs[$param]); else
-							$tag->tagAttrs[$param] = Language::getText($tag->tagAttrs[$param]);
+							$tag->tagAttrs[$param] = Language::get_text($tag->tagAttrs[$param]);
 
 				unset($tag->tagAttrs['cms:constant']);
 			}
@@ -443,7 +443,7 @@ class TemplateHandler {
 
 					} else {
 						// use default language handler
-						$text = Language::getText($constant, $language);
+						$text = Language::get_text($constant, $language);
 					}
 
 					echo $text;

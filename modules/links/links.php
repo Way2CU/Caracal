@@ -211,7 +211,7 @@ class links extends Module {
 		global $db;
 
 		// get list of languages
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// create main table for links
 		$sql = "

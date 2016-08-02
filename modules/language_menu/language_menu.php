@@ -94,7 +94,7 @@ class language_menu extends Module {
 		global $default_language;
 
 		$head_tag = head_tag::get_instance();
-		$language_list = Language::getLanguages(false);
+		$language_list = Language::get_languages(false);
 
 		// prepare params
 		$params = $_REQUEST;
@@ -157,10 +157,10 @@ class language_menu extends Module {
 		// check if we were asked to get languages from specific module
 		if (isset($tag_params['from_module']) && ModuleHandler::is_loaded($tag_params['from_module'])) {
 			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'get_instance'));
-			$list = $module->language->getLanguages(true);
+			$list = $module->language->get_languages(true);
 
 		} else {
-			$list = Language::getLanguages(true);
+			$list = Language::get_languages(true);
 		}
 
 		$template = $this->load_template($tag_params, 'list_item.xml');
@@ -196,7 +196,7 @@ class language_menu extends Module {
 	public function tag_CurrentLanguage($tag_params, $children) {
 		global $language;
 
-		$list = Language::getLanguages(true);
+		$list = Language::get_languages(true);
 		$link_params = $this->get_params();
 		$template = $this->load_template($tag_params, 'current_language.xml');
 
@@ -220,13 +220,13 @@ class language_menu extends Module {
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
-			$list = $module->language->getLanguages(true);
+			$list = $module->language->get_languages(true);
 
 		} else {
-			$list = Language::getLanguages(true);
+			$list = Language::get_languages(true);
 		}
 
-		$rtl = Language::getRTL();
+		$rtl = Language::get_rtl();
 		$result = array(
 					'error'				=> false,
 					'error_message'		=> '',
@@ -252,10 +252,10 @@ class language_menu extends Module {
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
 			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
-			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
+			$text = $module->language->get_text(escape_chars($_REQUEST['constant']));
 
 		} else {
-			$text = Language::getText(escape_chars($_REQUEST['constant']));
+			$text = Language::get_text(escape_chars($_REQUEST['constant']));
 		}
 
 		$result = array(
@@ -286,8 +286,8 @@ class language_menu extends Module {
 		if (count($constants) > 0)
 			foreach ($constants as $constant)
 				if (!is_null($language_handler))
-					$result['text'][$constant] = $language_handler->getText($constant); else
-					$result['text'][$constant] = Language::getText($constant);
+					$result['text'][$constant] = $language_handler->get_text($constant); else
+					$result['text'][$constant] = Language::get_text($constant);
 
 		print json_encode($result);
 	}

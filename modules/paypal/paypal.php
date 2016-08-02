@@ -167,7 +167,7 @@ class paypal extends Module {
 		global $db;
 
 		// get list of languages
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// store global settings
 		$this->save_setting('api_username', '');

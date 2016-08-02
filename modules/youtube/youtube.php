@@ -196,7 +196,7 @@ class youtube extends Module {
 	public function on_init() {
 		global $db;
 
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// create videos table
 		$sql = "
