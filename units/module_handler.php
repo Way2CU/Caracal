@@ -25,7 +25,7 @@ class ModuleHandler {
 	 *
 	 * @param boolean $include_only
 	 */
-	function loadModules($include_only=false) {
+	public function load_modules($include_only=false) {
 		global $db_use, $data_path;
 
 		$preload_list = array();
@@ -78,16 +78,16 @@ class ModuleHandler {
 		// load modules
 		if (count($preload_list) > 0)
 			foreach ($preload_list as $module_name)
-				$this->loadModule($module_name);
+				$this->load_module($module_name);
 
 		if (count($normal_list) > 0)
 			if ($include_only) {
 				foreach($normal_list as $module_name)
-					$this->includeModule($module_name);
+					$this->include_module($module_name);
 
 			} else {
 				foreach($normal_list as $module_name)
-					$this->loadModule($module_name);
+					$this->load_module($module_name);
 			}
 	}
 
@@ -97,7 +97,7 @@ class ModuleHandler {
 	 * @param string $filename
 	 * @return resource
 	 */
-	public function loadModule($name) {
+	public function load_module($name) {
 		global $module_path, $system_module_path;
 
 		$result = null;
@@ -131,18 +131,18 @@ class ModuleHandler {
 	 *
 	 * @param string $filename
 	 */
-	public function includeModule($name) {
+	public function include_module($name) {
 		global $module_path, $system_module_path;
 
 		$result = false;
 		$filename = $module_path.$name.'/'.$name.'.php';
 		$system_filename = $system_module_path.$name.'/'.$name.'.php';
 
-		if (file_exists($filename) && $this->_checkDependencies($name)) {
+		if (file_exists($filename) && $this->check_dependencies($name)) {
 			include_once($filename);
 			$result = true;
 
-		} else if (file_exists($system_filename) && $this->_checkDependencies($name)) {
+		} else if (file_exists($system_filename) && $this->check_dependencies($name)) {
 			include_once($system_filename);
 			$result = true;
 		}
@@ -156,7 +156,7 @@ class ModuleHandler {
 	 * Check for module dependancies
 	 * @param string $name
 	 */
-	private function _checkDependencies($name) {
+	private function check_dependencies($name) {
 		global $module_path, $system_module_path;
 
 		$result = true;

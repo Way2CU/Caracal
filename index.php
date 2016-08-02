@@ -115,7 +115,7 @@ $module_handler = ModuleHandler::get_instance();
 
 if ($cache->isCached()) {
 	// only include specified modules
-	$module_handler->loadModules(true);
+	$module_handler->load_modules(true);
 
 	// show cached page
 	$cache->printCache();
@@ -125,7 +125,7 @@ if ($cache->isCached()) {
 	$section_handler = SectionHandler::get_instance();
 
 	// load all the modules
-	$module_handler->loadModules();
+	$module_handler->load_modules();
 
 	// show page and cache it along the way
 	$cache->startCapture();
