@@ -449,7 +449,7 @@ class ShopItemSizesHandler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
-		$template = $this->_parent->loadTemplate($tag_params, 'size_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'size_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template
@@ -528,7 +528,7 @@ class ShopItemSizesHandler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
-		$template = $this->_parent->loadTemplate($tag_params, 'values_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'values_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template

@@ -96,7 +96,7 @@ class feedback extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "
@@ -116,7 +116,7 @@ class feedback extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('feedback');
@@ -168,7 +168,7 @@ class feedback extends Module {
 		$conditions = array();
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// get items from the database

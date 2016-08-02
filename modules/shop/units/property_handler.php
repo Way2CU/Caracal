@@ -162,7 +162,7 @@ class Handler {
 			return;
 
 		// create template
-		$template = $this->parent->loadTemplate($tag_params, 'item_property.xml');
+		$template = $this->parent->load_template($tag_params, 'item_property.xml');
 
 		// prepare data
 		$data = array(
@@ -228,7 +228,7 @@ class Handler {
 			return;
 
 		// create template
-		$template = $this->parent->loadTemplate($tag_params, 'item_property_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'item_property_list_item.xml');
 
 		$index = 0;
 		foreach ($items as $item) {

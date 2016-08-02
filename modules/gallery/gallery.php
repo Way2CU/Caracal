@@ -336,7 +336,7 @@ class gallery extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -407,13 +407,13 @@ class gallery extends Module {
 		$db->query($sql);
 
 		if (!array_key_exists('image_extensions', $this->settings))
-			$this->saveSetting('image_extensions', 'jpg,jpeg,png');
+			$this->save_setting('image_extensions', 'jpg,jpeg,png');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('gallery', 'gallery_groups', 'gallery_containers', 'gallery_group_membership');
@@ -631,8 +631,8 @@ class gallery extends Module {
 		$title = $this->getMultilanguageField('title');
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 		$description = $this->getMultilanguageField('description');
-		$visible = $this->getBooleanField('visible') ? 1 : 0;
-		$slideshow = $this->getBooleanField('slideshow') ? 1 : 0;
+		$visible = $this->get_boolean_field('visible') ? 1 : 0;
+		$slideshow = $this->get_boolean_field('slideshow') ? 1 : 0;
 
 		$data = array(
 					'text_id'		=> $text_id,
@@ -1188,7 +1188,7 @@ class gallery extends Module {
 						);
 
 		// create template parser
-		$template = $this->loadTemplate($tag_params, 'image.xml');
+		$template = $this->load_template($tag_params, 'image.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
@@ -1273,7 +1273,7 @@ class gallery extends Module {
 							$limit
 						);
 
-		$template = $this->loadTemplate($tag_params, 'images_list_item.xml');
+		$template = $this->load_template($tag_params, 'images_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
@@ -1403,7 +1403,7 @@ class gallery extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template = $this->load_template($tag_params, 'group.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
@@ -1495,7 +1495,7 @@ class gallery extends Module {
 							);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'groups_list_item.xml');
+		$template = $this->load_template($tag_params, 'groups_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
@@ -1576,7 +1576,7 @@ class gallery extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'container.xml');
+		$template = $this->load_template($tag_params, 'container.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');
@@ -1628,7 +1628,7 @@ class gallery extends Module {
 								$order_asc
 							);
 
-		$template = $this->loadTemplate($tag_params, 'containers_list_item.xml');
+		$template = $this->load_template($tag_params, 'containers_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$template->registerTagHandler('cms:image', $this, 'tag_Image');

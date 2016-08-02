@@ -159,7 +159,7 @@ class downloads extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -187,7 +187,7 @@ class downloads extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('downloads');
@@ -421,7 +421,7 @@ class downloads extends Module {
 		$order_by = array();
 		$order_asc = true;
 
-		$template = $this->loadTemplate($tag_params, 'download.xml');
+		$template = $this->load_template($tag_params, 'download.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (isset($tag_params['latest']) && $tag_params['latest'] == 1) {
@@ -466,7 +466,7 @@ class downloads extends Module {
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('_download', $this, 'tag_Download');
 		$template->registerTagHandler('cms:download', $this, 'tag_Download');

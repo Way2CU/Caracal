@@ -207,7 +207,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		// get list of languages
@@ -269,7 +269,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('links', 'link_groups', 'link_membership');
@@ -381,8 +381,8 @@ class links extends Module {
 				'description' 	=> $this->getMultilanguageField('description'),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'url' 			=> escape_chars($_REQUEST['url']),
-				'external' 		=> $this->getBooleanField('external') ? 1 : 0,
-				'sponsored' 	=> $this->getBooleanField('sponsored') ? 1 : 0,
+				'external' 		=> $this->get_boolean_field('external') ? 1 : 0,
+				'sponsored' 	=> $this->get_boolean_field('sponsored') ? 1 : 0,
 				'display_limit'	=> fix_id($_REQUEST['display_limit']),
 			);
 
@@ -851,7 +851,7 @@ class links extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'links_item.xml');
+		$template = $this->load_template($tag_params, 'links_item.xml');
 		$template->setMappedModule($this->name);
 
 		// calculate display progress
@@ -981,7 +981,7 @@ class links extends Module {
 								$order_asc
 							);
 
-		$template = $this->loadTemplate($tag_params, 'links_item.xml');
+		$template = $this->load_template($tag_params, 'links_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:link', $this, 'tag_Link');
 		$template->registerTagHandler('cms:link_group', $this, 'tag_LinkGroupList');

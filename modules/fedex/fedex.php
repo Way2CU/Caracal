@@ -73,7 +73,7 @@ class fedex extends Module {
 					break;
 
 				case 'save_settings':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -84,7 +84,7 @@ class fedex extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "";
@@ -95,7 +95,7 @@ class fedex extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$sql = "";
@@ -123,16 +123,16 @@ class fedex extends Module {
 	/**
 	 * Save settings.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		$key = fix_chars($_REQUEST['key']);
 		$password = fix_chars($_REQUEST['password']);
 		$account = fix_chars($_REQUEST['account']);
 		$meter = fix_chars($_REQUEST['meter']);
 
-		$this->saveSetting('fedex_key', $key);
-		$this->saveSetting('fedex_password', $password);
-		$this->saveSetting('fedex_account', $account);
-		$this->saveSetting('fedex_meter', $meter);
+		$this->save_setting('fedex_key', $key);
+		$this->save_setting('fedex_password', $password);
+		$this->save_setting('fedex_account', $account);
+		$this->save_setting('fedex_meter', $meter);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);

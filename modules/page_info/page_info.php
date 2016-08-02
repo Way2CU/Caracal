@@ -105,7 +105,7 @@ class page_info extends Module {
 					break;
 
 				case 'save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -116,21 +116,21 @@ class page_info extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		if (!isset($this->settings['description']))
-			$this->saveSetting('description', '');
+			$this->save_setting('description', '');
 
 		if (!isset($this->settings['analytics']))
-			$this->saveSetting('analytics', '');
+			$this->save_setting('analytics', '');
 
 		if (!isset($this->settings['wm_tools']))
-			$this->saveSetting('wm_tools', '');
+			$this->save_setting('wm_tools', '');
 
 		if (!isset($this->settings['bing_wm_tools']))
-			$this->saveSetting('bing_wm_tools', '');
+			$this->save_setting('bing_wm_tools', '');
 	}
 
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -155,7 +155,7 @@ class page_info extends Module {
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		$description = fix_chars($_REQUEST['description']);
 		$analytics = fix_chars($_REQUEST['analytics']);
 		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
@@ -165,14 +165,14 @@ class page_info extends Module {
 		$optimizer = fix_chars($_REQUEST['optimizer']);
 		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
 
-		$this->saveSetting('description', $description);
-		$this->saveSetting('analytics', $analytics);
-		$this->saveSetting('analytics_domain', $analytics_domain);
-		$this->saveSetting('analytics_version', $analytics_version);
-		$this->saveSetting('wm_tools', $wm_tools);
-		$this->saveSetting('bing_wm_tools', $bing_wm_tools);
-		$this->saveSetting('optimizer', $optimizer);
-		$this->saveSetting('optimizer_key', $optimizer_key);
+		$this->save_setting('description', $description);
+		$this->save_setting('analytics', $analytics);
+		$this->save_setting('analytics_domain', $analytics_domain);
+		$this->save_setting('analytics_version', $analytics_version);
+		$this->save_setting('wm_tools', $wm_tools);
+		$this->save_setting('bing_wm_tools', $bing_wm_tools);
+		$this->save_setting('optimizer', $optimizer);
+		$this->save_setting('optimizer_key', $optimizer_key);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -442,7 +442,7 @@ class page_info extends Module {
 		global $system_module_path;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'analytics_version.xml');
+		$template = $this->load_template($tag_params, 'analytics_version.xml');
 		$template->setTemplateParamsFromArray($children);
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : '0';
 

@@ -290,7 +290,7 @@ class ShopCategoryHandler {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// create template handler
-		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
+		$template = $this->_parent->load_template($tag_params, 'category.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 
@@ -403,7 +403,7 @@ class ShopCategoryHandler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template handler
-		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'category_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
 

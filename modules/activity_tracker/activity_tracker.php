@@ -135,7 +135,7 @@ class activity_tracker extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "
@@ -168,7 +168,7 @@ class activity_tracker extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('activities', 'activity_log');
@@ -257,7 +257,7 @@ class activity_tracker extends Module {
 	private function saveActivity() {
 		$manager = ActivityManager::getInstance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$ignore_address = $this->getBooleanField('ignore_address') ? 1 : 0;
+		$ignore_address = $this->get_boolean_field('ignore_address') ? 1 : 0;
 
 		// collect data
 		$data = array(
@@ -509,7 +509,7 @@ class activity_tracker extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template

@@ -84,10 +84,10 @@ class language_menu extends Module {
 			}
 	}
 
-	public function onInit() {
+	public function on_init() {
 	}
 
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	public function addMeta() {
@@ -163,7 +163,7 @@ class language_menu extends Module {
 			$list = Language::getLanguages(true);
 		}
 
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// get parameters for URL
@@ -198,7 +198,7 @@ class language_menu extends Module {
 
 		$list = Language::getLanguages(true);
 		$link_params = $this->get_params();
-		$template = $this->loadTemplate($tag_params, 'current_language.xml');
+		$template = $this->load_template($tag_params, 'current_language.xml');
 
 		$params = array(
 				'short_name' => $language,

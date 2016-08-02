@@ -193,7 +193,7 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -249,7 +249,7 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('youtube_video', 'youtube_groups', 'youtube_group_membership');
@@ -556,7 +556,7 @@ class youtube extends Module {
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$name = $this->getMultilanguageField('name');
 		$description = $this->getMultilanguageField('description');
-		$visible = $this->getBooleanField('visible') ? 1 : 0;
+		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 
 		if (is_null($id)) {
 			// store new record
@@ -800,7 +800,7 @@ class youtube extends Module {
 				$params['url'] = $url;
 
 				// embed video player
-				$template = $this->loadTemplate($tag_params, 'embed.xml');
+				$template = $this->load_template($tag_params, 'embed.xml');
 				$template->setTemplateParamsFromArray($children);
 
 				$template->restoreXML();
@@ -809,7 +809,7 @@ class youtube extends Module {
 
 			} else {
 				// parse specified template
-				$template = $this->loadTemplate($tag_params, 'video.xml');
+				$template = $this->load_template($tag_params, 'video.xml');
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:thumbnail', $this, 'tag_Thumbnail');
 
@@ -903,7 +903,7 @@ class youtube extends Module {
 							);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'video_item.xml');
+		$template = $this->load_template($tag_params, 'video_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:video', $this, 'tag_Video');
 		$template->registerTagHandler('cms:thumbnail', $this, 'tag_Thumbnail');
@@ -1005,7 +1005,7 @@ class youtube extends Module {
 			$image_number = array(2);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'video_thumbnail.xml');
+		$template = $this->load_template($tag_params, 'video_thumbnail.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template

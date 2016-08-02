@@ -128,7 +128,7 @@ class paypal extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				case 'recurring_plans':
@@ -163,18 +163,18 @@ class paypal extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		// get list of languages
 		$list = Language::getLanguages(false);
 
 		// store global settings
-		$this->saveSetting('api_username', '');
-		$this->saveSetting('api_password', '');
-		$this->saveSetting('api_signature', '');
-		$this->saveSetting('express_enabled', 1);
-		$this->saveSetting('direct_enabled', 1);
+		$this->save_setting('api_username', '');
+		$this->save_setting('api_password', '');
+		$this->save_setting('api_signature', '');
+		$this->save_setting('express_enabled', 1);
+		$this->save_setting('direct_enabled', 1);
 
 		// create tables
 		$sql = "
@@ -204,7 +204,7 @@ class paypal extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('paypal_recurring_plans');
@@ -232,15 +232,15 @@ class paypal extends Module {
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
 
-		$this->saveSetting('api_username', escape_chars($_REQUEST['api_username']));
-		$this->saveSetting('api_password', escape_chars($_REQUEST['api_password']));
-		$this->saveSetting('api_signature', escape_chars($_REQUEST['api_signature']));
-		$this->saveSetting('express_enabled', $this->getBooleanField('express_enabled') ? 1 : 0);
-		$this->saveSetting('direct_enabled', $this->getBooleanField('direct_enabled') ? 1 : 0);
+		$this->save_setting('api_username', escape_chars($_REQUEST['api_username']));
+		$this->save_setting('api_password', escape_chars($_REQUEST['api_password']));
+		$this->save_setting('api_signature', escape_chars($_REQUEST['api_signature']));
+		$this->save_setting('express_enabled', $this->get_boolean_field('express_enabled') ? 1 : 0);
+		$this->save_setting('direct_enabled', $this->get_boolean_field('direct_enabled') ? 1 : 0);
 
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_settings_saved'),
@@ -556,7 +556,7 @@ class paypal extends Module {
 		$manager = PayPal_PlansManager::getInstance();
 		$conditions = array();
 
-		$template = $this->loadTemplate($tag_params, 'plans_list_item.xml');
+		$template = $this->load_template($tag_params, 'plans_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);

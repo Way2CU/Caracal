@@ -102,7 +102,7 @@ class tranzila extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -113,17 +113,17 @@ class tranzila extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		$this->saveSetting('terminal', '');
-		$this->saveSetting('terminal2', '');
-		$this->saveSetting('terminal_password', '');
-		$this->saveSetting('custom_template', '0');
+	public function on_init() {
+		$this->save_setting('terminal', '');
+		$this->save_setting('terminal2', '');
+		$this->save_setting('terminal_password', '');
+		$this->save_setting('custom_template', '0');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	private function showSettings() {
@@ -142,15 +142,15 @@ class tranzila extends Module {
 		$template->parse();
 	}
 
-	private function saveSettings() {
+	private function save_settings() {
 		$terminal_name = fix_chars($_REQUEST['terminal']);
 		$terminal2_name = fix_chars($_REQUEST['terminal2']);
 		$terminal_password = fix_chars($_REQUEST['terminal_password']);
-		$custom_template = $this->getBooleanField('custom_template') ? 1 : 0;
-		$this->saveSetting('terminal', $terminal_name);
-		$this->saveSetting('terminal2', $terminal2_name);
-		$this->saveSetting('terminal_password', $terminal_password);
-		$this->saveSetting('custom_template', $custom_template);
+		$custom_template = $this->get_boolean_field('custom_template') ? 1 : 0;
+		$this->save_setting('terminal', $terminal_name);
+		$this->save_setting('terminal2', $terminal2_name);
+		$this->save_setting('terminal_password', $terminal_password);
+		$this->save_setting('custom_template', $custom_template);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);

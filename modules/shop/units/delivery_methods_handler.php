@@ -166,8 +166,8 @@ class ShopDeliveryMethodsHandler {
 
 		$data = array(
 				'name'			=> $this->_parent->getMultilanguageField('name'),
-				'international'	=> $this->_parent->getBooleanField('international') ? 1 : 0,
-				'domestic'		=> $this->_parent->getBooleanField('domestic') ? 1 : 0,
+				'international'	=> $this->_parent->get_boolean_field('international') ? 1 : 0,
+				'domestic'		=> $this->_parent->get_boolean_field('domestic') ? 1 : 0,
 			);
 
 		if (is_null($id)) {
@@ -545,7 +545,7 @@ class ShopDeliveryMethodsHandler {
 		}
 
 		// get template
-		$template = $this->_parent->loadTemplate($tag_params, 'delivery_methods_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'delivery_methods_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:price_list', $this, 'tag_DeliveryPricesList');
 
@@ -653,7 +653,7 @@ class ShopDeliveryMethodsHandler {
 		}
 
 		// get template
-		$template = $this->_parent->loadTemplate($tag_params, 'delivery_method_prices_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'delivery_method_prices_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// get items from database

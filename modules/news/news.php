@@ -236,7 +236,7 @@ class news extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -309,7 +309,7 @@ class news extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('news', 'news_membership', 'news_groups', 'news_feeds');
@@ -969,7 +969,7 @@ class news extends Module {
 			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id)); else
 			$item = $manager->get_single_item($manager->get_field_names(), array(), array('timestamp'), False);
 
-		$template = $this->loadTemplate($tag_params, 'news.xml');
+		$template = $this->load_template($tag_params, 'news.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
@@ -1046,7 +1046,7 @@ class news extends Module {
 						);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'news_list_item.xml');
+		$template = $this->load_template($tag_params, 'news_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse items
@@ -1129,7 +1129,7 @@ class news extends Module {
 		}
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template = $this->load_template($tag_params, 'group.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
@@ -1165,7 +1165,7 @@ class news extends Module {
 						);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
+		$template = $this->load_template($tag_params, 'group_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;

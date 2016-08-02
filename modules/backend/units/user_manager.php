@@ -290,7 +290,7 @@ class Backend_UserManager {
 			);
 		$manager = UserManager::getInstance();
 		$user_id = null;
-		$agreed = $this->parent->getBooleanField('agreed') ? 1 : 0;
+		$agreed = $this->parent->get_boolean_field('agreed') ? 1 : 0;
 
 		// grab new user data
 		if (_AJAX_REQUEST)
@@ -574,7 +574,7 @@ class Backend_UserManager {
 				return;
 
 			} else {
-				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+				$template = $this->parent->load_template($tag_params, 'message.xml');
 				$template->setTemplateParamsFromArray($children);
 				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
 
@@ -591,7 +591,7 @@ class Backend_UserManager {
 				return;
 
 			} else {
-				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+				$template = $this->parent->load_template($tag_params, 'message.xml');
 				$template->setTemplateParamsFromArray($children);
 				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
 
@@ -703,7 +703,7 @@ class Backend_UserManager {
 			print json_encode($result);
 
 		} else {
-			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+			$template = $this->parent->load_template($tag_params, 'message.xml');
 			$template->setTemplateParamsFromArray($children);
 
 			$template->restoreXML();
@@ -809,7 +809,7 @@ class Backend_UserManager {
 			print json_encode($result);
 
 		} else {
-			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
+			$template = $this->parent->load_template($tag_params, 'message.xml');
 			$template->setTemplateParamsFromArray($children);
 
 			$template->restoreXML();

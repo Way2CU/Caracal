@@ -94,7 +94,7 @@ class PageSwitch {
 	 * @param array $children
 	 */
 	public function tag_Pages($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'page_switch_page.xml');
+		$template = $this->load_template($tag_params, 'page_switch_page.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// calculate number of total pages
@@ -154,7 +154,7 @@ class PageSwitch {
 	 */
 	public function tag_PageSwitch($tag_params, $children) {
 		// create template handler
-		$template = $this->loadTemplate($tag_params, 'page_switch.xml');
+		$template = $this->load_template($tag_params, 'page_switch.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('_pages', $this, 'tag_Pages');
 

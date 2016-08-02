@@ -96,16 +96,16 @@ class captcha extends Module {
 	/**
 	 * Event called upon module initialisation
 	 */
-	public function onInit() {
-		$this->saveSetting('char_count', 4);
-		$this->saveSetting('char_type', 'numbers');
-		$this->saveSetting('arc_count', 15);
-		$this->saveSetting('font_size', 28);
-		$this->saveSetting('accepted_hosts', $_SERVER['SERVER_NAME']);
-		$this->saveSetting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
+	public function on_init() {
+		$this->save_setting('char_count', 4);
+		$this->save_setting('char_type', 'numbers');
+		$this->save_setting('arc_count', 15);
+		$this->save_setting('font_size', 28);
+		$this->save_setting('accepted_hosts', $_SERVER['SERVER_NAME']);
+		$this->save_setting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
 	}
 
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -268,7 +268,7 @@ class captcha extends Module {
 	 * @param array $children
 	 */
 	private function printImageTag($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'image.xml');
+		$template = $this->load_template($tag_params, 'image.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$params = array(

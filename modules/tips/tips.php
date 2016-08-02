@@ -124,7 +124,7 @@ class tips extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -146,7 +146,7 @@ class tips extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('tips');
@@ -337,7 +337,7 @@ class tips extends Module {
 
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, false);
 
-		$template = $this->loadTemplate($tag_params, 'tip.xml');
+		$template = $this->load_template($tag_params, 'tip.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
@@ -378,7 +378,7 @@ class tips extends Module {
 		if (isset($tag_params['limit']))
 			$limit = fix_id($tag_params['limit']);
 
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 

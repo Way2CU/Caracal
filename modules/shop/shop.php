@@ -840,7 +840,7 @@ class shop extends Module {
 				break;
 
 			case 'settings_save':
-				$this->saveSettings();
+				$this->save_settings();
 				break;
 
 			default:
@@ -852,15 +852,15 @@ class shop extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
 
 		// set shop in testing mode by default
-		$this->saveSetting('testing_mode', 1);
-		$this->saveSetting('send_copy', 0);
-		$this->saveSetting('default_account_option', User::GUEST);
+		$this->save_setting('testing_mode', 1);
+		$this->save_setting('send_copy', 0);
+		$this->save_setting('default_account_option', User::GUEST);
 
 		// create shop items table
 		$sql = "
@@ -1195,7 +1195,7 @@ class shop extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array(
@@ -1359,7 +1359,7 @@ class shop extends Module {
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// save new settings
 		$regular_template = fix_chars($_REQUEST['regular_template']);
 		$recurring_template = fix_chars($_REQUEST['recurring_template']);
@@ -1370,14 +1370,14 @@ class shop extends Module {
 		$send_copy = fix_id($_REQUEST['send_copy']);
 		$default_account_option = escape_chars($_REQUEST['default_account_option']);
 
-		$this->saveSetting('regular_template', $regular_template);
-		$this->saveSetting('recurring_template', $recurring_template);
-		$this->saveSetting('delayed_template', $delayed_template);
-		$this->saveSetting('shop_location', $shop_location);
-		$this->saveSetting('fixed_country', $fixed_country);
-		$this->saveSetting('testing_mode', $testing_mode);
-		$this->saveSetting('send_copy', $send_copy);
-		$this->saveSetting('default_account_option', $default_account_option);
+		$this->save_setting('regular_template', $regular_template);
+		$this->save_setting('recurring_template', $recurring_template);
+		$this->save_setting('delayed_template', $delayed_template);
+		$this->save_setting('shop_location', $shop_location);
+		$this->save_setting('fixed_country', $fixed_country);
+		$this->save_setting('testing_mode', $testing_mode);
+		$this->save_setting('send_copy', $send_copy);
+		$this->save_setting('default_account_option', $default_account_option);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -2526,7 +2526,7 @@ class shop extends Module {
 	 * @param string $currency
 	 */
 	public function saveDefaultCurrency($currency) {
-		$this->saveSetting('default_currency', $currency);
+		$this->save_setting('default_currency', $currency);
 	}
 
 	/**
@@ -2899,8 +2899,8 @@ class shop extends Module {
 					$retry_manager = LoginRetryManager::getInstance();
 
 					// check if user agrees
-					$agree_to_terms = $this->getBooleanField('agree_to_terms');
-					$want_promotions = $this->getBooleanField('want_promotions');
+					$agree_to_terms = $this->get_boolean_field('agree_to_terms');
+					$want_promotions = $this->get_boolean_field('want_promotions');
 
 					// get user data
 					$data = array(
@@ -2983,10 +2983,10 @@ class shop extends Module {
 				case User::GUEST:
 				default:
 					// check if user agrees
-					$agree_to_terms = $this->getBooleanField('agree_to_terms');
+					$agree_to_terms = $this->get_boolean_field('agree_to_terms');
 
 					// check if user wants to receive promotional emails
-					$want_promotions = $this->getBooleanField('want_promotions');
+					$want_promotions = $this->get_boolean_field('want_promotions');
 
 					// collect data
 					$conditions = array();
@@ -3796,7 +3796,7 @@ class shop extends Module {
 
 		// show plan
 		if (count($plans) > 0 && !is_null($plan_name) && isset($plans[$plan_name])) {
-			$template = $this->loadTemplate($tag_params, 'plan.xml');
+			$template = $this->load_template($tag_params, 'plan.xml');
 			$template->setTemplateParamsFromArray($children);
 			$current_plan = $this->getRecurringPlan();
 
@@ -3988,7 +3988,7 @@ class shop extends Module {
 				}
 
 				// load template
-				$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
+				$template = $this->load_template($tag_params, 'checkout_form.xml', 'checkout_template');
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
 				$template->registerTagHandler('cms:discounted_items', $this, 'tag_DiscountedItemList');
@@ -4047,7 +4047,7 @@ class shop extends Module {
 			case Stage::INPUT:
 			default:
 				// no information available, show form
-				$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
+				$template = $this->load_template($tag_params, 'buyer_information.xml');
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
 				$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
@@ -4144,7 +4144,7 @@ class shop extends Module {
 		}
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
+		$template = $this->load_template($tag_params, 'checkout_form_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template
@@ -4164,7 +4164,7 @@ class shop extends Module {
 	 */
 	public function tag_CompletedMessage($tag_params, $children) {
 		// show message
-		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
+		$template = $this->load_template($tag_params, 'checkout_message.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// get message to show
@@ -4193,7 +4193,7 @@ class shop extends Module {
 	 */
 	public function tag_CanceledMessage($tag_params, $children) {
 		// show message
-		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
+		$template = $this->load_template($tag_params, 'checkout_message.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// get message to show
@@ -4250,7 +4250,7 @@ class shop extends Module {
 		);
 
 		// load and parse template
-		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
+		$template = $this->load_template($tag_params, 'payment_method.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->restoreXML();
 		$template->setLocalParams($params);
@@ -4264,7 +4264,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_PaymentMethodsList($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
+		$template = $this->load_template($tag_params, 'payment_method.xml');
 		$template->setTemplateParamsFromArray($children);
 		$only_recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
@@ -4292,7 +4292,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_DeliveryMethodsList($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'delivery_method.xml');
+		$template = $this->load_template($tag_params, 'delivery_method.xml');
 		$template->setTemplateParamsFromArray($children);
 		$selected = Delivery::get_current_name();
 
@@ -4323,7 +4323,7 @@ class shop extends Module {
 		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 
 		// prepare template
-		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');
+		$template = $this->load_template($tag_params, 'checkout_form_discounted_items.xml');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -4367,7 +4367,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_DiscountList($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'discount_item.xml');
+		$template = $this->load_template($tag_params, 'discount_item.xml');
 
 		foreach ($discount_items as $item) {
 			$params = array(
@@ -4397,7 +4397,7 @@ class shop extends Module {
 		);
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : null;
-		$template = $this->loadTemplate($tag_params, 'cycle_unit_option.xml');
+		$template = $this->load_template($tag_params, 'cycle_unit_option.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		foreach($units as $id => $text) {
@@ -4420,7 +4420,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_CardType($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'card_type.xml');
+		$template = $this->load_template($tag_params, 'card_type.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		foreach (CardType::$names as $id => $name) {
@@ -4442,7 +4442,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_AccountOptions($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'account_type_option.xml');
+		$template = $this->load_template($tag_params, 'account_type_option.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (isset($tag_params['selected']))
@@ -4475,7 +4475,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_DiscountList($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'discount_list_item.xml');
+		$template = $this->load_template($tag_params, 'discount_list_item.xml');
 		$selected = null;
 
 		// make sure we have registered discounts

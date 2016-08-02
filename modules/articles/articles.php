@@ -218,7 +218,7 @@ class articles extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -282,7 +282,7 @@ class articles extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('articles', 'article_group', 'article_votes');
@@ -385,7 +385,7 @@ class articles extends Module {
 		$text_id = escape_chars($_REQUEST['text_id']);
 		$title = $this->getMultilanguageField('title');
 		$content = $this->getMultilanguageField('content');
-		$visible = $this->getBooleanField('visible') ? 1 : 0;
+		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 
 		$data = array(
@@ -706,7 +706,7 @@ class articles extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'article.xml');
+		$template = $this->load_template($tag_params, 'article.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
@@ -819,7 +819,7 @@ class articles extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:article', $this, 'tag_Article');
@@ -995,7 +995,7 @@ class articles extends Module {
 		$manager = Modules\Articles\GroupManager::getInstance();
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'group.xml');
+		$template = $this->load_template($tag_params, 'group.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
@@ -1034,7 +1034,7 @@ class articles extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
+		$template = $this->load_template($tag_params, 'group_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');

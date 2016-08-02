@@ -298,7 +298,7 @@ class ShopManufacturerHandler {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (is_object($item)) {
@@ -341,7 +341,7 @@ class ShopManufacturerHandler {
 			$selected = fix_id($tag_params['selected']);
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
-		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)

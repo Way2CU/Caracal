@@ -119,7 +119,7 @@ class ontop extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "
@@ -139,7 +139,7 @@ class ontop extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('ontop_applications');
@@ -415,7 +415,7 @@ class ontop extends Module {
 			return;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 
 		// parse template
 		foreach ($items as $item) {

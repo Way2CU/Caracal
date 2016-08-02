@@ -302,7 +302,7 @@ class ShopTransactionsHandler {
 		// load template
 		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::getInstance($this->_parent);
 
-		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'transaction_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
 		$template->registerTagHandler('cms:address', $delivery_address_handler, 'tag_DeliveryAddress');
@@ -461,7 +461,7 @@ class ShopTransactionsHandler {
 
 		if (count($items) > 0) {
 			$sizes_handler = ShopItemSizesHandler::getInstance($this->_parent);
-			$template = $this->_parent->loadTemplate($tag_params, 'transaction_details_item.xml');
+			$template = $this->_parent->load_template($tag_params, 'transaction_details_item.xml');
 			$template->setTemplateParamsFromArray($children);
 			$template->registerTagHandler('cms:value_list', $sizes_handler, 'tag_ValueList');
 
@@ -477,7 +477,7 @@ class ShopTransactionsHandler {
 	 * Print transaction status
 	 */
 	public function tag_TransactionStatus($tag_params, $children) {
-		$template = $this->_parent->loadTemplate($tag_params, 'transaction_status_option.xml');
+		$template = $this->_parent->load_template($tag_params, 'transaction_status_option.xml');
 		$template->setTemplateParamsFromArray($children);
 		$transaction = null;
 

@@ -80,7 +80,7 @@ class country_list extends Module {
 	/**
 	 * Create table and populate with data on module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		// create tables
@@ -137,7 +137,7 @@ class country_list extends Module {
 	/**
 	 * Clean up database on module disable
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('countries', 'country_states');
@@ -162,7 +162,7 @@ class country_list extends Module {
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'country_option.xml');
+		$template = $this->load_template($tag_params, 'country_option.xml');
 		$template->setTemplateParamsFromArray($children);
 		$country_list = $manager->get_items($manager->get_field_names(), $conditions);
 
@@ -203,7 +203,7 @@ class country_list extends Module {
 			$conditions['country'] = fix_chars($_REQUEST['country']);
 		}
 
-		$template = $this->loadTemplate($tag_params, 'state_option.xml');
+		$template = $this->load_template($tag_params, 'state_option.xml');
 		$template->setTemplateParamsFromArray($children);
 		$state_list = $manager->get_items($manager->get_field_names(), $conditions);
 
@@ -226,7 +226,7 @@ class country_list extends Module {
 	 * @param array $params
 	 */
 	public function field_CountryList($params) {
-		$template = $this->loadTemplate($params, 'country_list_field.xml');
+		$template = $this->load_template($params, 'country_list_field.xml');
 		$template->registerTagHandler('cms:country_list', $this, 'tag_CountryList');
 
 		$template->restoreXML();
@@ -240,7 +240,7 @@ class country_list extends Module {
 	 * @param array $params
 	 */
 	public function field_StateList($params) {
-		$template = $this->loadTemplate($params, 'state_list_field.xml');
+		$template = $this->load_template($params, 'state_list_field.xml');
 		$template->registerTagHandler('cms:state_list', $this, 'tag_StateList');
 
 		$template->restoreXML();

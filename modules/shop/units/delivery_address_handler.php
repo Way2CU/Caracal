@@ -62,7 +62,7 @@ class DeliveryAddressHandler {
 		$address = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->_parent->loadTemplate($tag_params, 'address.xml');
+		$template = $this->_parent->load_template($tag_params, 'address.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template

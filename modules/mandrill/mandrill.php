@@ -80,7 +80,7 @@ class mandrill extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -91,14 +91,14 @@ class mandrill extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		$this->saveSetting('api_key', '');
+	public function on_init() {
+		$this->save_setting('api_key', '');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -121,9 +121,9 @@ class mandrill extends Module {
 	/**
 	 * Save new settings.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// save setting
-		$this->saveSetting('api_key', fix_chars($_REQUEST['api_key']));
+		$this->save_setting('api_key', fix_chars($_REQUEST['api_key']));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');

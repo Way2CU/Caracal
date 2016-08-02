@@ -270,7 +270,7 @@ class contact_form extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				case 'templates_manage':
@@ -409,20 +409,20 @@ class contact_form extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
 
 		// predefined settings stored in system wide tables
-		$this->saveSetting('sender_name', '');
-		$this->saveSetting('sender_address', 'sample@email.com');
-		$this->saveSetting('recipient_name', '');
-		$this->saveSetting('recipient_address', 'sample@email.com');
-		$this->saveSetting('smtp_server', 'smtp.gmail.com');
-		$this->saveSetting('smtp_port', '465');
-		$this->saveSetting('use_ssl', 1);
-		$this->saveSetting('mailer', '');
+		$this->save_setting('sender_name', '');
+		$this->save_setting('sender_address', 'sample@email.com');
+		$this->save_setting('recipient_name', '');
+		$this->save_setting('recipient_address', 'sample@email.com');
+		$this->save_setting('smtp_server', 'smtp.gmail.com');
+		$this->save_setting('smtp_port', '465');
+		$this->save_setting('use_ssl', 1);
+		$this->save_setting('mailer', '');
 
 		// templates table
 		$sql = "
@@ -586,7 +586,7 @@ class contact_form extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array(
@@ -892,7 +892,7 @@ class contact_form extends Module {
 
 		} else {
 			// show response from template
-			$template = $this->loadTemplate($tag_params, 'reponse.xml');
+			$template = $this->load_template($tag_params, 'reponse.xml');
 			$template->setTemplateParamsFromArray($children);
 
 			$params = array(
@@ -1141,9 +1141,9 @@ class contact_form extends Module {
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// grab parameters
-		$use_ssl = $this->getBooleanField('use_ssl') ? 1 : 0;
+		$use_ssl = $this->get_boolean_field('use_ssl') ? 1 : 0;
 		$params = array(
 			'mailer', 'sender_name', 'sender_address', 'recipient_name', 'recipient_address',
 			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password'
@@ -1152,10 +1152,10 @@ class contact_form extends Module {
 		// save settings
 		foreach($params as $param) {
 			$value = fix_chars($_REQUEST[$param]);
-			$this->saveSetting($param, $value);
+			$this->save_setting($param, $value);
 		}
 
-		$this->saveSetting('use_ssl', $use_ssl);
+		$this->save_setting('use_ssl', $use_ssl);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -1296,9 +1296,9 @@ class contact_form extends Module {
 		// get options
 		$form_id = fix_id($_REQUEST['form']);
 		$filename = empty($_REQUEST['filename']) ? 'export.csv' : fix_chars($_REQUEST['filename']);
-		$include_headers = $this->getBooleanField('headers_included') ? 1 : 0;
-		$export_ip = $this->getBooleanField('export_ip') ? 1 : 0;
-		$export_timestamp = $this->getBooleanField('export_timestamp') ? 1 : 0;
+		$include_headers = $this->get_boolean_field('headers_included') ? 1 : 0;
+		$export_ip = $this->get_boolean_field('export_ip') ? 1 : 0;
+		$export_timestamp = $this->get_boolean_field('export_timestamp') ? 1 : 0;
 
 		switch (fix_id($_REQUEST['separator_type'])) {
 			case 0:
@@ -1722,15 +1722,15 @@ class contact_form extends Module {
 				'name'			=> $this->getMultilanguageField('name'),
 				'action'		=> escape_chars($_REQUEST['action']),
 				'template'		=> fix_chars($_REQUEST['template']),
-				'use_ajax'		=>$this->getBooleanField('use_ajax') ? 1 : 0,
-				'show_submit'	=>$this->getBooleanField('show_submit') ? 1 : 0,
-				'show_reset'	=>$this->getBooleanField('show_reset') ? 1 : 0,
-				'show_cancel'	=>$this->getBooleanField('show_cancel') ? 1 : 0
+				'use_ajax'		=>$this->get_boolean_field('use_ajax') ? 1 : 0,
+				'show_submit'	=>$this->get_boolean_field('show_submit') ? 1 : 0,
+				'show_reset'	=>$this->get_boolean_field('show_reset') ? 1 : 0,
+				'show_cancel'	=>$this->get_boolean_field('show_cancel') ? 1 : 0
 			);
 
 		if (isset($_REQUEST['reply_to_field'])) {
 			$data['reply_to_field'] = fix_id($_REQUEST['reply_to_field']);
-			$data['include_reply_to'] = $this->getBooleanField('include_reply_to') ? 1 : 0;
+			$data['include_reply_to'] = $this->get_boolean_field('include_reply_to') ? 1 : 0;
 		}
 
 		// insert or update data in database
@@ -2239,10 +2239,10 @@ class contact_form extends Module {
 			'maxlength'    => fix_id($_REQUEST['maxlength']),
 			'value'        => escape_chars($_REQUEST['value']),
 			'pattern'      => escape_chars($_REQUEST['pattern']),
-			'disabled'     => $this->getBooleanField('disabled') ? 1 : 0,
-			'required'     => $this->getBooleanField('required') ? 1 : 0,
-			'checked'      => $this->getBooleanField('checked') ? 1 : 0,
-			'autocomplete' => $this->getBooleanField('autocomplete') ? 1 : 0
+			'disabled'     => $this->get_boolean_field('disabled') ? 1 : 0,
+			'required'     => $this->get_boolean_field('required') ? 1 : 0,
+			'checked'      => $this->get_boolean_field('checked') ? 1 : 0,
+			'autocomplete' => $this->get_boolean_field('autocomplete') ? 1 : 0
 		);
 		$manager = ContactForm_FormFieldManager::getInstance();
 
@@ -2496,7 +2496,7 @@ class contact_form extends Module {
 	private function importValues_Commit() {
 		$field_id = fix_id($_REQUEST['field']);
 		$manager = ContactForm_FieldValueManager::getInstance();
-		$remove_existing = $this->getBooleanField('remove_existing');
+		$remove_existing = $this->get_boolean_field('remove_existing');
 		$languages = Language::getLanguages(false);
 
 		// make sure uploaded file is good
@@ -2687,7 +2687,7 @@ class contact_form extends Module {
 			$selected = fix_chars($tag_params['selected']);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'field_type_option.xml');
+		$template = $this->load_template($tag_params, 'field_type_option.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		foreach ($this->field_types as $field) {
@@ -2724,7 +2724,7 @@ class contact_form extends Module {
 	 */
 	public function tag_FormTemplateList($tag_params, $children) {
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : null;
-		$template = $this->loadTemplate($tag_params, 'form_template_option.xml');
+		$template = $this->load_template($tag_params, 'form_template_option.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		foreach ($this->form_templates as $name => $fields) {
@@ -2754,7 +2754,7 @@ class contact_form extends Module {
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'templates_list_item.xml');
+		$template = $this->load_template($tag_params, 'templates_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// get items from database
@@ -2900,7 +2900,7 @@ class contact_form extends Module {
 			$order_asc = $tag_params['order_asc'] == 1;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'field.xml');
+		$template = $this->load_template($tag_params, 'field.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:values', $this, 'tag_FieldValueList');
 
@@ -3045,7 +3045,7 @@ class contact_form extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'values_list_item.xml');
+		$template = $this->load_template($tag_params, 'values_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)
@@ -3121,7 +3121,7 @@ class contact_form extends Module {
 			$show_fieldsets = $tag_params['show_fieldsets'] == 1;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'form.xml');
+		$template = $this->load_template($tag_params, 'form.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
 		$template->registerTagHandler('cms:fieldsets', $this, 'tag_FieldsetList');
@@ -3174,7 +3174,7 @@ class contact_form extends Module {
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'forms_list_item.xml');
+		$template = $this->load_template($tag_params, 'forms_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
 
@@ -3269,7 +3269,7 @@ class contact_form extends Module {
 			$conditions['form'] = fix_id($tag_params['form']);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'submission.xml');
+		$template = $this->load_template($tag_params, 'submission.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
@@ -3351,7 +3351,7 @@ class contact_form extends Module {
 			$conditions['form'] = fix_id($tag_params['form']);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'submissions_list_item.xml');
+		$template = $this->load_template($tag_params, 'submissions_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
 
@@ -3485,7 +3485,7 @@ class contact_form extends Module {
 			);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'submission_field.xml');
+		$template = $this->load_template($tag_params, 'submission_field.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)
@@ -3525,7 +3525,7 @@ class contact_form extends Module {
 	 */
 	public function tag_MailerList($tag_params, $children) {
 		$selected = array();
-		$template = $this->loadTemplate($tag_params, 'mailer_option.xml');
+		$template = $this->load_template($tag_params, 'mailer_option.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (isset($tag_params['form'])) {
@@ -3576,7 +3576,7 @@ class contact_form extends Module {
 		$domain_list = $manager->get_items($manager->get_field_names(), array('form' => $form_id));
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'domain_list_item.xml');
+		$template = $this->load_template($tag_params, 'domain_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// draw domains
@@ -3620,7 +3620,7 @@ class contact_form extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
+		$template = $this->load_template($tag_params, 'fieldset.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 
@@ -3675,7 +3675,7 @@ class contact_form extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'fieldset.xml');
+		$template = $this->load_template($tag_params, 'fieldset.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
 

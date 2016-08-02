@@ -112,16 +112,16 @@ class mailchimp extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
-		$this->saveSetting('api_key', '');
+		$this->save_setting('api_key', '');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 	}
 
@@ -134,7 +134,7 @@ class mailchimp extends Module {
 	/**
 	 * Save new configuration.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 	}
 
 	/**

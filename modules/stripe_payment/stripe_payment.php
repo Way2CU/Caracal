@@ -118,7 +118,7 @@ class stripe_payment extends Module {
 					break;
 
 				case 'save_settings':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				case 'recurring_plans':
@@ -133,11 +133,11 @@ class stripe_payment extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
-		$this->saveSetting('secret_key', '');
-		$this->saveSetting('public_key', '');
+		$this->save_setting('secret_key', '');
+		$this->save_setting('public_key', '');
 
 		// create tables
 		$sql = "
@@ -169,7 +169,7 @@ class stripe_payment extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('stripe_recurring_plans', 'stripe_customers');
@@ -197,12 +197,12 @@ class stripe_payment extends Module {
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		$secret_key = fix_chars($_REQUEST['secret_key']);
 		$public_key = fix_chars($_REQUEST['public_key']);
 
-		$this->saveSetting('secret_key', $secret_key);
-		$this->saveSetting('public_key', $public_key);
+		$this->save_setting('secret_key', $secret_key);
+		$this->save_setting('public_key', $public_key);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);
@@ -566,7 +566,7 @@ class stripe_payment extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'plans_list_item.xml');
+		$template = $this->load_template($tag_params, 'plans_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template

@@ -190,7 +190,7 @@ class page_speed extends Module {
 	 */
 	private function saveApiKey() {
 		$api_key = fix_chars($_REQUEST['api_key']);
-		$this->saveSetting('api_key', $api_key);
+		$this->save_setting('api_key', $api_key);
 
 		// prepare and parse result message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -210,13 +210,13 @@ class page_speed extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -226,7 +226,7 @@ class page_speed extends Module {
 	 * @param array $children
 	 */
 	public function tag_GeneralInformation($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'general_information.xml');
+		$template = $this->load_template($tag_params, 'general_information.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		$page_stats = $this->data_cache->pageStats;

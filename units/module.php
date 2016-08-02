@@ -56,7 +56,7 @@ abstract class Module {
 
 		// load settings from database
 		if ($load_settings)
-			$this->settings = $this->loadSettings();
+			$this->settings = $this->load_settings();
 	}
 
 	/**
@@ -192,7 +192,7 @@ abstract class Module {
 	 * @param string $name
 	 * @return boolean
 	 */
-	public function getBooleanField($name) {
+	public function get_boolean_field($name) {
 		$result = false;
 
 		if (isset($_REQUEST[$name]))
@@ -209,14 +209,14 @@ abstract class Module {
 	 * Function should be use to create tables and files specific to module
 	 * in question.
 	 */
-	public function onInit() {
+	public function on_init() {
 	}
 
 	/**
 	 * Function called when module is disabled. This function should be used to
 	 * clean up database and other module specific parts of the system.
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -224,7 +224,7 @@ abstract class Module {
 	 *
 	 * @return array
 	 */
-	protected function loadSettings() {
+	protected function load_settings() {
 		global $db, $db_use;
 
 		$result = array();
@@ -252,7 +252,7 @@ abstract class Module {
 	 * @param string $var
 	 * @param string $value
 	 */
-	protected function saveSetting($var, $value) {
+	protected function save_setting($var, $value) {
 		global $db, $db_use;
 
 		// this method is only meant for used with database
@@ -287,13 +287,13 @@ abstract class Module {
 	}
 
 	/**
-	 * Create TemplateHandler object from specified tag params
+	 * Create TemplateHandler object from specified tag parameters.
 	 *
 	 * @param array $params
 	 * @param string $default_file
 	 * @return TemplateHandler
 	 */
-	public function loadTemplate($params, $default_file, $param_name='template') {
+	public function load_template($params, $default_file, $param_name='template') {
 		if (isset($params[$param_name])) {
 			$path = '';
 			$file_name = $params[$param_name];

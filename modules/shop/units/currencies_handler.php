@@ -354,7 +354,7 @@ class ShopCurrenciesHandler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
-		$template = $this->_parent->loadTemplate($tag_params, 'currency_list_item.xml');
+		$template = $this->_parent->load_template($tag_params, 'currency_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 

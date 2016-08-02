@@ -243,7 +243,7 @@ class Handler {
 				'size_definition' => isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
 				'priority'        => isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'    => isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
-				'visible'         => $this->parent->getBooleanField('visible') ? 1 : 0,
+				'visible'         => $this->parent->get_boolean_field('visible') ? 1 : 0,
 				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
 			);
 
@@ -531,7 +531,7 @@ class Handler {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// create template handler
-		$template = $this->parent->loadTemplate($tag_params, 'item.xml');
+		$template = $this->parent->load_template($tag_params, 'item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->setMappedModule($this->name);
 
@@ -731,7 +731,7 @@ class Handler {
 
 		// create template
 		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
-		$template = $this->parent->loadTemplate($tag_params, 'item_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'item_list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
 		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
@@ -907,7 +907,7 @@ class Handler {
 			return;
 
 		// load template
-		$template = $this->parent->loadTemplate($tag_params, 'color_preview.xml');
+		$template = $this->parent->load_template($tag_params, 'color_preview.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (empty($item->colors))

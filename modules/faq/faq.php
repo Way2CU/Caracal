@@ -113,7 +113,7 @@ class faq extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$list = Language::getLanguages(false);
@@ -137,7 +137,7 @@ class faq extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$db->drop_tables(array('faq'));
@@ -219,7 +219,7 @@ class faq extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$question = $this->getMultilanguageField('question');
 		$answer = $this->getMultilanguageField('answer');
-		$visible = $this->getBooleanField('visible') ? 1 : 0;
+		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 
 		$manager = QuestionManager::getInstance();
 
@@ -328,7 +328,7 @@ class faq extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($id)) {
-			$template = $this->loadTemplate($tag_params, 'list_item.xml');
+			$template = $this->load_template($tag_params, 'list_item.xml');
 			$template->setTemplateParamsFromArray($children);
 
 			$params = array(
@@ -357,7 +357,7 @@ class faq extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		if (count($items) > 0)

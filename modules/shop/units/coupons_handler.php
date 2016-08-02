@@ -205,8 +205,8 @@ class CouponHandler {
 		$data = array(
 				'text_id'     => escape_chars($_REQUEST['text_id']),
 				'name'        => $this->parent->getMultilanguageField('name'),
-				'has_limit'   => $this->parent->getBooleanField('has_limit') ? 1 : 0,
-				'has_timeout' => $this->parent->getBooleanField('has_timeout') ? 1 : 0,
+				'has_limit'   => $this->parent->get_boolean_field('has_limit') ? 1 : 0,
+				'has_timeout' => $this->parent->get_boolean_field('has_timeout') ? 1 : 0,
 				'limit'       => fix_id($_REQUEST['limit']),
 				'timeout'     => escape_chars($_REQUEST['timeout'])
 			);
@@ -486,7 +486,7 @@ class CouponHandler {
 		$items = $manager->getItems($manager->getFieldNames(), $conditions);
 
 		// load template
-		$template = $this->parent->loadTemplate($tag_params, 'coupon_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'coupon_list_item.xml');
 
 		// parse template
 		if (count($items) == 0)
@@ -590,7 +590,7 @@ class CouponHandler {
 			return;
 
 		// load template
-		$template = $this->parent->loadTemplate($tag_params, 'coupon_code_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'coupon_code_list_item.xml');
 		$template->registerTagHandler('cms:discount', $this->parent, 'tag_DiscountList');
 
 		// parse template

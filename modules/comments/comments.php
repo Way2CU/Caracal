@@ -124,7 +124,7 @@ class comments extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "
@@ -144,19 +144,19 @@ class comments extends Module {
 		$db->query($sql);
 
 		if (!array_key_exists('repost_time', $this->settings))
-			$this->saveSetting('repost_time', 15);
+			$this->save_setting('repost_time', 15);
 
 		if (!array_key_exists('default_visibility', $this->settings))
-			$this->saveSetting('default_visibility', 1);
+			$this->save_setting('default_visibility', 1);
 
 		if (!array_key_exists('size_limit', $this->settings))
-			$this->saveSetting('size_limit', 200);
+			$this->save_setting('size_limit', 200);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('comments');
@@ -199,9 +199,9 @@ class comments extends Module {
 		$default_visibility = isset($_REQUEST['default_visibility']) ? fix_id($_REQUEST['default_visibility']) : 1;
 		$size_limit = isset($_REQUEST['size_limit']) ? fix_id($_REQUEST['size_limit']) : 200;
 
-		$this->saveSetting('default_visibility', $default_visibility);
-		$this->saveSetting('repost_time', $repost_time);
-		$this->saveSetting('size_limit', $size_limit);
+		$this->save_setting('default_visibility', $default_visibility);
+		$this->save_setting('repost_time', $repost_time);
+		$this->save_setting('size_limit', $size_limit);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->setMappedModule($this->name);

@@ -147,7 +147,7 @@ class affiliates extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "CREATE TABLE IF NOT EXISTS `affiliates` (
@@ -184,7 +184,7 @@ class affiliates extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('affiliates', 'affiliate_referrals');
@@ -297,8 +297,8 @@ class affiliates extends Module {
 		$uid = escape_chars($_REQUEST['uid']);
 		$user = fix_id($_REQUEST['user']);
 		$name = fix_chars($_REQUEST['name']);
-		$active = $this->getBooleanField('active') ? 1 : 0;
-		$default = $this->getBooleanField('default') ? 1 : 0;
+		$active = $this->get_boolean_field('active') ? 1 : 0;
+		$default = $this->get_boolean_field('default') ? 1 : 0;
 
 		$data = array(
 				'name'		=> $name,
@@ -558,7 +558,7 @@ class affiliates extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->setTemplateParamsFromArray($children);
 
 		// parse template

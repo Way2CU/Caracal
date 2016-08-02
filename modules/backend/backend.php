@@ -334,13 +334,13 @@ class backend extends Module {
 	/**
 	 * Redefine abstract methods
 	 */
-	public function onInit() {
-		$this->saveSetting('template_verify', '');
-		$this->saveSetting('template_recovery', '');
-		$this->saveSetting('require_verified', 1);
+	public function on_init() {
+		$this->save_setting('template_verify', '');
+		$this->save_setting('template_recovery', '');
+		$this->save_setting('require_verified', 1);
 	}
 
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -350,8 +350,8 @@ class backend extends Module {
 	 * @param string $recovery
 	 */
 	public function saveTemplateSelection($verify, $recovery) {
-		$this->saveSetting('template_verify', $verify);
-		$this->saveSetting('template_recovery', $recovery);
+		$this->save_setting('template_verify', $verify);
+		$this->save_setting('template_recovery', $recovery);
 	}
 
 	/**
@@ -544,7 +544,7 @@ class backend extends Module {
 			$module = $handler->loadModule($module_name);
 
 			if (!is_null($module)) {
-				$module->onInit();
+				$module->on_init();
 				$message = $this->getLanguageConstant('message_module_initialised');
 			}
 
@@ -617,7 +617,7 @@ class backend extends Module {
 
 			if (ModuleHandler::is_loaded($module_name)) {
 				$module = call_user_func(array($module_name, 'getInstance'));
-				$module->onDisable();
+				$module->on_disable();
 
 				$message = $this->getLanguageConstant('message_module_disabled');
 

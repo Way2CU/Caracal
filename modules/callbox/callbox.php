@@ -103,7 +103,7 @@ class callbox extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -114,17 +114,17 @@ class callbox extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		$this->saveSetting('account_id', '');
-		$this->saveSetting('account_key', '');
-		$this->saveSetting('account_secret', '');
-		$this->saveSetting('include_code', 0);
+	public function on_init() {
+		$this->save_setting('account_id', '');
+		$this->save_setting('account_key', '');
+		$this->save_setting('account_secret', '');
+		$this->save_setting('include_code', 0);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -147,17 +147,17 @@ class callbox extends Module {
 	/**
 	 * Save settings.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// grab parameters
 		$account_id = fix_chars($_REQUEST['account_id']);
 		$account_key = fix_chars($_REQUEST['account_key']);
 		$account_secret = fix_chars($_REQUEST['account_secret']);
-		$include_code = $this->getBooleanField('include_code') ? 1 : 0;
+		$include_code = $this->get_boolean_field('include_code') ? 1 : 0;
 
-		$this->saveSetting('account_id', $account_id);
-		$this->saveSetting('account_key', $account_key);
-		$this->saveSetting('account_secret', $account_secret);
-		$this->saveSetting('include_code', $include_code);
+		$this->save_setting('account_id', $account_id);
+		$this->save_setting('account_key', $account_key);
+		$this->save_setting('account_secret', $account_secret);
+		$this->save_setting('include_code', $include_code);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
