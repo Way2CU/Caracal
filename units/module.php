@@ -187,6 +187,21 @@ abstract class Module {
 	}
 
 	/**
+	 * Get boolean field value.
+	 *
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function getBooleanField($name) {
+		$result = false;
+
+		if (isset($_REQUEST[$name]))
+			$result = $_REQUEST[$name] == 'on' || $_REQUEST[$name] == 1;
+
+		return $result;
+	}
+
+	/**
 	 * This function is called every time module is initialized. Function
 	 * is not called when module is temporarily turned off and then turned back
 	 * on.

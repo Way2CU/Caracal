@@ -1,4 +1,5 @@
 {
+    "add_coupon": "Add coupon",
     "add_another": "הוסף נוסף",
     "add_category": "הוסף קטגוריה",
     "add_currency": "הוסף מטבע",
@@ -57,6 +58,10 @@
     "empty_shopping_cart": "אין מוצרים בעגלת הקניות.",
     "handling": "טיפול:",
     "hide_shopping_cart": "הסתר עגלת קניות",
+    "label_coupon_has_limit": "Coupon has use limit.",
+    "label_coupon_limit": "Number of uses:",
+    "label_coupon_has_timeout": "Coupon has expiration date.",
+    "label_coupon_timeout": "Expiration date:",
     "label_send_copy": "לשלוח העתק למען ברירת מחדל?",
     "label_contact_information": "פרטי מקבל ההזמנה:",
     "label_discount": "(%) הנחה:",
@@ -129,7 +134,7 @@
     "label_access_code": "קוד כניסה\\אינטרקום:",
     "label_tax": "מעמ (%):",
     "label_testing_mode": "לאתחל מצב בדיקה?",
-    "label_text_id": "מזהה טקסט:",
+    "label_text_id": "Text id:",
     "label_timestamp": "תאריך ושעה:",
     "label_title": "כותרת:",
     "label_total": "סך הכל:",
@@ -145,6 +150,7 @@
     "label_property_value": "ערך:",
     "label_default_account_option": "Default account option selected on checkout:",
     "manage_categories": "נהל קטגוריות",
+    "menu_coupons": "Coupons",
     "menu_categories": "נהל קטגוריות",
     "menu_currencies": "מטבעות",
     "menu_delivery_methods": "שיטות משלוח",
@@ -237,6 +243,10 @@
     "tab_related": "אביזרים נלווים",
     "tab_shipping": "משלוח",
     "tax": "מס:",
+    "title_coupons": "Shop: Coupons",
+    "title_coupon_add": "Shop: Add coupon",
+    "title_coupon_change": "Shop: Change coupon",
+    "title_coupon_delete": "Shop: Delete coupon",
     "title_billing_information": "פרטים לחיוב",
     "title_category_add": "חנות: הוסף קטגוריה",
     "title_category_change": "חנות: ערוך קטגוריה",
@@ -306,5 +316,6 @@
     "tooltip_total_money": "סה\"כ ללא דמי טיפול ומשלוח.",
     "tooltip_access_code": "לבניינים ושערי כניסה.",
     "tooltip_item_visible": "Hidden items apart from not being shown on site are also excluded from search results.",
-    "legend_location": "Location"
+    "legend_location": "Location",
+    "format_coupon_timeout": "yyyy-mm-dd hh:mm:ss"
 }

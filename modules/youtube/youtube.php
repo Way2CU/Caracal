@@ -556,7 +556,7 @@ class youtube extends Module {
 		$text_id = fix_chars($_REQUEST['text_id']);
 		$name = $this->getMultilanguageField('name');
 		$description = $this->getMultilanguageField('description');
-		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
+		$visible = $this->getBooleanField('visible') ? 1 : 0;
 
 		if (is_null($id)) {
 			// store new record

@@ -13,8 +13,13 @@
 use Core\Events;
 use Core\Module;
 
+// base classes
 require_once('units/payment_method.php');
 require_once('units/delivery_method.php');
+require_once('units/promotion.php');
+require_once('units/discount.php');
+
+// data managers and handlers
 require_once('units/item_handler.php');
 require_once('units/category_handler.php');
 require_once('units/currencies_handler.php');
@@ -25,6 +30,7 @@ require_once('units/transactions_handler.php');
 require_once('units/warehouse_handler.php');
 require_once('units/transaction_items_manager.php');
 require_once('units/transaction_plans_manager.php');
+require_once('units/transaction_promotions_manager.php');
 require_once('units/recurring_payments_manager.php');
 require_once('units/buyers_manager.php');
 require_once('units/delivery_address_manager.php');
@@ -32,6 +38,9 @@ require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
 require_once('units/delivery_methods_handler.php');
+require_once('units/coupons_handler.php');
+
+// helper classes
 require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
@@ -191,16 +200,15 @@ class PaymentMethodError extends Exception {};
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
+	private $promotions;
+	private $discounts;
 	private $checkout_scripts = array();
 	private $checkout_styles = array();
+	private $search_params = array();
 
 	private $excluded_properties = array(
 		'size_value', 'color_value', 'count', 'price'
 	);
-
-	private $search_params = array();
-
-	const BUYER_SECRET = 'oz$9=7if~db/MP|BBN>)63T}6w{D6no[^79L]9>8(8wrv6:$/n63YsvCa<BR4379De1d035wvi]]iqA<P=3gHNv1H';
 
 	/**
 	 * Constructor
@@ -210,8 +218,10 @@ class shop extends Module {
 
 		parent::__construct(__FILE__);
 
-		// create methods storage
+		// create extension storage
 		$this->payment_methods = array();
+		$this->promotions = array();
+		$this->discounts = array();
 
 		// create events
 		Events::register('shop', 'shopping-cart-changed');
@@ -331,18 +341,14 @@ class shop extends Module {
 
 			$shop_menu->addSeparator(5);
 
-			$shop_menu->addChild(null, new backend_MenuItem(
+			// special offers menu
+			$special_offers = new backend_MenuItem(
 				$this->getLanguageConstant('menu_special_offers'),
 				url_GetFromFilePath($this->path.'images/special_offers.svg'),
-				window_Open( // on click open window
-					'shop_special_offers',
-					490,
-					$this->getLanguageConstant('title_special_offers'),
-					true, true,
-					backend_UrlMake($this->name, 'special_offers')
-				),
-				5  // level
-			));
+				'javascript: void(0);', 5
+			);
+
+			$shop_menu->addChild('shop_special_offers', $special_offers);
 
 			$shop_menu->addSeparator(5);
 
@@ -423,6 +429,9 @@ class shop extends Module {
 			));
 
 			$backend->addMenu($this->name, $shop_menu);
+
+			// create custom handlers
+			$coupons_handler = \Modules\Shop\Promotion\CouponHandler::getInstance($this);
 		}
 	}
 
@@ -795,6 +804,11 @@ class shop extends Module {
 				$handler->transferControl($params, $children);
 				break;
 
+			case 'coupons':
+				$handler = \Modules\Shop\Promotion\CouponHandler::getInstance($this);
+				$handler->transferControl($params, $children);
+				break;
+
 			case 'sizes':
 				$handler = ShopItemSizesHandler::getInstance($this);
 				$handler->transferControl($params, $children);
@@ -851,8 +865,8 @@ class shop extends Module {
 		// create shop items table
 		$sql = "
 			CREATE TABLE `shop_items` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`uid` VARCHAR(64) NOT NULL,";
+			`id` int NOT NULL AUTO_INCREMENT,
+			`uid` VARCHAR(64) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
@@ -861,107 +875,107 @@ class shop extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .= "
-				`gallery` INT NOT NULL,
-				`manufacturer` INT NOT NULL,
-				`size_definition` INT NULL,
-				`colors` VARCHAR(255) NOT NULL DEFAULT '',
-				`author` INT NOT NULL,
-				`views` INT NOT NULL,
-				`price` DECIMAL(10,2) NOT NULL,
-				`discount` DECIMAL(5,2) NOT NULL,
-				`tax` DECIMAL(5,2) NOT NULL,
-				`weight` DECIMAL(10,4) NOT NULL,
-				`votes_up` INT NOT NULL,
-				`votes_down` INT NOT NULL,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`priority` INT(4) NOT NULL DEFAULT '5',
-				`visible` BOOLEAN NOT NULL DEFAULT '1',
-				`deleted` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
-				KEY `visible` (`visible`),
-				KEY `deleted` (`deleted`),
-				KEY `uid` (`uid`),
-				KEY `author` (`author`)
+			`gallery` INT NOT NULL,
+			`manufacturer` INT NOT NULL,
+			`size_definition` INT NULL,
+			`colors` VARCHAR(255) NOT NULL DEFAULT '',
+			`author` INT NOT NULL,
+			`views` INT NOT NULL,
+			`price` DECIMAL(10,2) NOT NULL,
+			`discount` DECIMAL(5,2) NOT NULL,
+			`tax` DECIMAL(5,2) NOT NULL,
+			`weight` DECIMAL(10,4) NOT NULL,
+			`votes_up` INT NOT NULL,
+			`votes_down` INT NOT NULL,
+			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`priority` INT(4) NOT NULL DEFAULT '5',
+			`visible` BOOLEAN NOT NULL DEFAULT '1',
+			`deleted` BOOLEAN NOT NULL DEFAULT '0',
+			PRIMARY KEY ( `id` ),
+			KEY `visible` (`visible`),
+			KEY `deleted` (`deleted`),
+			KEY `uid` (`uid`),
+			KEY `author` (`author`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item membership table
 		$sql = "
 			CREATE TABLE `shop_item_membership` (
-				`category` INT NOT NULL,
-				`item` INT NOT NULL,
-				KEY `category` (`category`),
-				KEY `item` (`item`)
+			`category` INT NOT NULL,
+			`item` INT NOT NULL,
+			KEY `category` (`category`),
+			KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item properties table
 		$sql = "
 			CREATE TABLE `shop_item_properties` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`item` INT NOT NULL,
-				`text_id` VARCHAR(32) NOT NULL,
-				`type` VARCHAR(32) NOT NULL,";
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`item` INT NOT NULL,
+			`text_id` VARCHAR(32) NOT NULL,
+			`type` VARCHAR(32) NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
 
 		$sql .= "
-				`value` TEXT NOT NULL,
-				PRIMARY KEY ( `id` ),
-				KEY `item` (`item`),
-				KEY `text_id` (`text_id`)
+			`value` TEXT NOT NULL,
+			PRIMARY KEY ( `id` ),
+			KEY `item` (`item`),
+			KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create table for related shop items
 		$sql = "
 			CREATE TABLE `shop_related_items` (
-				`item` INT NOT NULL,
-				`related` INT NOT NULL,
-				KEY `item` (`item`,`related`)
+			`item` INT NOT NULL,
+			`related` INT NOT NULL,
+			KEY `item` (`item`,`related`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 		$db->query($sql);
 
 		// create shop currencies tableshop_related_items
 		$sql = "
 			CREATE TABLE `shop_currencies` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`currency` VARCHAR(5) NOT NULL,
-				PRIMARY KEY ( `id` )
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`currency` VARCHAR(5) NOT NULL,
+			PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item sizes table
 		$sql = "
 			CREATE TABLE `shop_item_sizes` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`name` VARCHAR(25) NOT NULL,
-				PRIMARY KEY ( `id` )
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`name` VARCHAR(25) NOT NULL,
+			PRIMARY KEY ( `id` )
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop item size values table
 		$sql = "
 			CREATE TABLE `shop_item_size_values` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`definition` INT NOT NULL,";
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`definition` INT NOT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
 
 		$sql .= "PRIMARY KEY ( `id` ),
 			KEY `definition` (`definition`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop categories table
 		$sql = "
 			CREATE TABLE `shop_categories` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`text_id` VARCHAR(32) NOT NULL,
-				`parent` INT NOT NULL DEFAULT '0',
-				`image` INT NULL,";
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`text_id` VARCHAR(32) NOT NULL,
+			`parent` INT NOT NULL DEFAULT '0',
+			`image` INT NULL,";
 
 		foreach($list as $language)
 			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
@@ -970,9 +984,9 @@ class shop extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .="
-				PRIMARY KEY ( `id` ),
-				KEY `parent` (`parent`),
-				KEY `text_id` (`text_id`)
+			PRIMARY KEY ( `id` ),
+			KEY `parent` (`parent`),
+			KEY `text_id` (`text_id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1007,8 +1021,8 @@ class shop extends Module {
 			`country` varchar(64) NOT NULL,
 			`access_code` varchar(100) NOT NULL,
 			PRIMARY KEY (`id`),
-				  KEY `buyer` (`buyer`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			KEY `buyer` (`buyer`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop transactions table
@@ -1034,7 +1048,7 @@ class shop extends Module {
 			PRIMARY KEY (`id`),
 			KEY `buyer` (`buyer`),
 			KEY `address` (`address`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop transaction items table
@@ -1049,7 +1063,7 @@ class shop extends Module {
 			PRIMARY KEY (`id`),
 			KEY `transaction` (`transaction`),
 			KEY `item` (`item`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop payment tokens table
@@ -1065,7 +1079,7 @@ class shop extends Module {
 			PRIMARY KEY (`id`),
 			KEY `index_by_name` (`payment_method`, `buyer`, `name`),
 			KEY `index_by_buyer` (`payment_method`, `buyer`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop transaction plans table
@@ -1080,9 +1094,20 @@ class shop extends Module {
 			`start_time` timestamp NULL,
 			`end_time` timestamp NULL,
 			PRIMARY KEY (`id`),
-				  KEY `transaction` (`transaction`),
-				  KEY `plan_name` (`plan_name`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			KEY `transaction` (`transaction`),
+			KEY `plan_name` (`plan_name`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop transaction promotions table
+		$sql = "CREATE TABLE `shop_transaction_promotions` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`transaction` int NOT NULL,
+			`promotion` varchar(64) NOT NULL,
+			`discount` varchar(64) NOT NULL,
+			PRIMARY KEY (`id`),
+			KEY `transaction` (`transaction`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create show recurring payments table
@@ -1093,8 +1118,8 @@ class shop extends Module {
 			`status` INT NOT NULL,
 			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`),
-				  KEY `index_by_plan` (`plan`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			KEY `index_by_plan` (`plan`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop stock table
@@ -1108,7 +1133,7 @@ class shop extends Module {
 			`country` varchar(64) NOT NULL,
 			`state` varchar(40) NOT NULL,
 			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop stock table
@@ -1118,8 +1143,8 @@ class shop extends Module {
 			`size` int DEFAULT NULL,
 			`amount` int NOT NULL,
 			PRIMARY KEY (`id`),
-				  KEY `item` (`item`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			KEY `item` (`item`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
 		// create shop manufacturers table
@@ -1132,7 +1157,38 @@ class shop extends Module {
 		$sql .= " `web_site` varchar(255) NOT NULL,
 			`logo` int NOT NULL,
 			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create coupons storage
+		$sql = "CREATE TABLE `shop_coupons` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`text_id` varchar(64) NOT NULL,";
+
+		foreach($list as $language)
+			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
+
+		$sql .= "`has_limit` boolean NOT NULL DEFAULT '0',
+			`has_timeout` boolean NOT NULL DEFAULT '0',
+			`limit` int NOT NULL DEFAULT '0',
+			`timeout` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (`id`),
+			KEY `index_by_text_id` (`text_id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		$sql = "CREATE TABLE `shop_coupon_codes` (
+			`id` int NOT NULL AUTO_INCREMENT,
+			`coupon` int NOT NULL,
+			`code` varchar(64) NOT NULL,
+			`times_used` int NOT NULL DEFAULT '0',
+			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`discount` varchar(64) NOT NULL,
+			PRIMARY KEY (`id`),
+			KEY `index_by_timestamp` (`timestamp`),
+			KEY `index_by_code` (`code`),
+			KEY `index_by_coupon` (`coupon`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 	}
 
@@ -1154,13 +1210,15 @@ class shop extends Module {
 			'shop_transactions',
 			'shop_transaction_items',
 			'shop_transaction_plans',
+			'shop_transaction_promotions',
 			'shop_recurring_payments',
 			'shop_warehouse',
 			'shop_stock',
 			'shop_related_items',
 			'shop_manufacturers',
 			'shop_payment_tokens',
-			'shop_item_properties'
+			'shop_item_properties',
+			'shop_coupons'
 		);
 
 		$db->drop_tables($tables);
@@ -1170,12 +1228,36 @@ class shop extends Module {
 	 * Method used by payment providers to register with main module.
 	 *
 	 * @param string $name
-	 * @param object $module
+	 * @param object $method
 	 */
-	public function registerPaymentMethod($name, &$module) {
+	public function registerPaymentMethod($name, &$method) {
 		if (!array_key_exists($name, $this->payment_methods))
-			$this->payment_methods[$name] = $module; else
+			$this->payment_methods[$name] = $method; else
 			throw new Exception("Payment method '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Method used with promotions to register with main module.
+	 *
+	 * @param string $name
+	 * @param object $promotion
+	 */
+	public function registerPromotion($name, &$promotion) {
+		if (!array_key_exists($name, $this->promotions))
+			$this->promotions[$name] = $promotion; else
+			throw new Exception("Promotion '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Register discount to be used with promotions.
+	 *
+	 * @param string $name
+	 * @param object $discount
+	 */
+	public function registerDiscount($name, &$discount) {
+		if (!array_key_exists($name, $this->discounts))
+			$this->discounts[$name] = $discount; else
+			throw new Exception("Discount '{$name}' is already registered with the system.");
 	}
 
 	/**
@@ -2615,6 +2697,21 @@ class shop extends Module {
 	}
 
 	/**
+	 * Get discount for specified name.
+	 *
+	 * @param string $name
+	 * @return object
+	 */
+	private function getDiscount($name) {
+		$result = null;
+
+		if (array_key_exists($name, $this->discounts))
+			$result = $this->discounts[$name];
+
+		return $result;
+	}
+
+	/**
 	 * Get payment method for checkout form.
 	 *
 	 * @param array $tag_params
@@ -2802,11 +2899,8 @@ class shop extends Module {
 					$retry_manager = LoginRetryManager::getInstance();
 
 					// check if user agrees
-					$agree_to_terms = false;
-					if (isset($_REQUEST['agree_to_terms']))
-					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
-
-					$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+					$agree_to_terms = $this->getBooleanField('agree_to_terms');
+					$want_promotions = $this->getBooleanField('want_promotions');
 
 					// get user data
 					$data = array(
@@ -2816,7 +2910,7 @@ class shop extends Module {
 						'phone'      => escape_chars($_REQUEST['new_phone']),
 						'uid'        => isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
 						'guest'      => 0,
-						'agreed'     => $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
+						'agreed'     => $agree_to_terms ? 1 : 0,
 						'promotions' => $want_promotions ? 1 : 0
 					);
 
@@ -2889,14 +2983,10 @@ class shop extends Module {
 				case User::GUEST:
 				default:
 					// check if user agrees
-					$agree_to_terms = false;
-					if (isset($_REQUEST['agree_to_terms']))
-					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
+					$agree_to_terms = $this->getBooleanField('agree_to_terms');
 
 					// check if user wants to receive promotional emails
-					$want_promotions = false;
-					if (isset($_REQUEST['want_promotions']))
-						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+					$want_promotions = $this->getBooleanField('want_promotions');
 
 					// collect data
 					$conditions = array();
@@ -2906,7 +2996,7 @@ class shop extends Module {
 						'phone'       => escape_chars($_REQUEST['guest_phone']),
 						'guest'       => 1,
 						'system_user' => 0,
-						'agreed'      => $agree_to_terms,
+						'agreed'      => $agree_to_terms ? 1 : 0,
 						'promotions'  => $want_promotions ? 1 : 0
 					);
 
@@ -3021,6 +3111,7 @@ class shop extends Module {
 		$transactions_manager = ShopTransactionsManager::getInstance();
 		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
 		$transaction_plans_manager = ShopTransactionPlansManager::getInstance();
+		$promotion_manager = \Modules\Shop\Transaction\PromotionManager::getInstance();
 
 		// update buyer
 		if (!is_null($buyer))
@@ -3187,6 +3278,38 @@ class shop extends Module {
 					'end_time'			=> $db->format_timestamp($plan['end_time'])
 				));
 		}
+
+		// remove associated promotions from the table
+		$discount_items = array();
+		$promotion_manager->delete_items(array('transaction' => $result['id']));
+
+		foreach ($this->promotions as $promotion)
+			if ($promotion->qualifies($transaction)) {
+				// store discount for application later
+				$discount = $promotion->get_discount();
+
+				// insert data to database
+				$data = array(
+						'transaction' => $result['id'],
+						'promotion'   => $promotion->get_name(),
+						'discount'    => $discount->get_name()
+					);
+
+				$promotion_manager->insert_item($data);
+
+				// apply discount
+				$discount_items = array_merge($discount_items, $discount->apply($transaction));
+			}
+
+		// store discounts to transaction
+		$_SESSION['transaction']['discounts'] = $discount_items;
+
+		// deduce discounts from total amount
+		$discount_total = 0;
+		foreach ($discounted_items as $discount)
+			$discount_total += $discount[2];
+
+		$_SESSION['transaction']['total'] -= $discount_total;
 
 		// if affiliate system is active, update referral
 		if (isset($_SESSION['referral_id']) && ModuleHandler::is_loaded('affiliates')) {
@@ -3869,6 +3992,7 @@ class shop extends Module {
 				$template->setTemplateParamsFromArray($children);
 				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
 				$template->registerTagHandler('cms:discounted_items', $this, 'tag_DiscountedItemList');
+				$template->registerTagHandler('cms:discounts', $this, 'tag_DiscountList');
 
 				// parse template
 				$params = array(
@@ -4237,6 +4361,28 @@ class shop extends Module {
 	}
 
 	/**
+	 * Render tag for list of applied discounts.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_DiscountList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'discount_item.xml');
+
+		foreach ($discount_items as $item) {
+			$params = array(
+				'text'   => $item[0],
+				'count'  => $item[1],
+				'amount' => $item[2]
+			);
+
+			$template->setLocalParams($params);
+			$template->restoreXML();
+			$template->parse();
+		}
+	}
+
+	/**
 	 * Handle drawing recurring payment cycle units.
 	 *
 	 * @param array $tag_params
@@ -4318,6 +4464,39 @@ class shop extends Module {
 
 			$template->restoreXML();
 			$template->setLocalParams($params);
+			$template->parse();
+		}
+	}
+
+	/**
+ 	 * Render list of discounts.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_DiscountList($tag_params, $children) {
+		$template = $this->loadTemplate($tag_params, 'discount_list_item.xml');
+		$selected = null;
+
+		// make sure we have registered discounts
+		if (count($this->discounts) == 0)
+			return;
+
+		// collect extra parameters
+		if (isset($tag_params['selected']))
+			$selected = fix_chars($tag_params['selected']);
+
+		foreach ($this->discounts as $text_id => $discount) {
+			// prepare parameters
+			$params = array(
+				'text_id'  => $text_id,
+				'selected' => $selected == $text_id,
+				'title'    => $discount->get_title()
+			);
+
+			// parse template
+			$template->setLocalParams($params);
+			$template->restoreXML();
 			$template->parse();
 		}
 	}

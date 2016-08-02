@@ -166,8 +166,8 @@ class ShopDeliveryMethodsHandler {
 
 		$data = array(
 				'name'			=> $this->_parent->getMultilanguageField('name'),
-				'international'	=> isset($_REQUEST['international']) && ($_REQUEST['international'] == 'on' || $_REQUEST['international'] == '1') ? 1 : 0,
-				'domestic'		=> isset($_REQUEST['domestic']) && ($_REQUEST['domestic'] == 'on' || $_REQUEST['domestic'] == '1') ? 1 : 0,
+				'international'	=> $this->_parent->getBooleanField('international') ? 1 : 0,
+				'domestic'		=> $this->_parent->getBooleanField('domestic') ? 1 : 0,
 			);
 
 		if (is_null($id)) {

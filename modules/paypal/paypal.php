@@ -239,8 +239,8 @@ class paypal extends Module {
 		$this->saveSetting('api_username', escape_chars($_REQUEST['api_username']));
 		$this->saveSetting('api_password', escape_chars($_REQUEST['api_password']));
 		$this->saveSetting('api_signature', escape_chars($_REQUEST['api_signature']));
-		$this->saveSetting('express_enabled', isset($_REQUEST['express_enabled']) && ($_REQUEST['express_enabled'] == 'on' || $_REQUEST['express_enabled'] == '1') ? 1 : 0);
-		$this->saveSetting('direct_enabled', isset($_REQUEST['direct_enabled']) && ($_REQUEST['direct_enabled'] == 'on' || $_REQUEST['direct_enabled'] == '1') ? 1 : 0);
+		$this->saveSetting('express_enabled', $this->getBooleanField('express_enabled') ? 1 : 0);
+		$this->saveSetting('direct_enabled', $this->getBooleanField('direct_enabled') ? 1 : 0);
 
 		$params = array(
 					'message'	=> $this->getLanguageConstant('message_settings_saved'),

@@ -98,7 +98,7 @@ class SessionManager {
 		$username = escape_chars($_REQUEST['username']);
 		$password = escape_chars($_REQUEST['password']);
 		$captcha = isset($_REQUEST['captcha']) ? escape_chars($_REQUEST['captcha']) : '';
-		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
+		$lasting_session = $this->parent->getBooleanField('lasting');
 
 		// get managers
 		$manager = UserManager::getInstance();
@@ -235,7 +235,7 @@ class SessionManager {
 		$username = escape_chars($_REQUEST['username']);
 		$password = escape_chars($_REQUEST['password']);
 		$captcha = isset($_REQUEST['captcha']) ? escape_chars($_REQUEST['captcha']) : '';
-		$lasting_session = isset($_REQUEST['lasting']) && ($_REQUEST['lasting'] == 'on' || $_REQUEST['lasting'] == '1') ? true : false;
+		$lasting_session = $this->parent->getBooleanField('lasting');
 
 		$result = array(
 				'logged_in'		=> false,

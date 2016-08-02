@@ -257,7 +257,7 @@ class activity_tracker extends Module {
 	private function saveActivity() {
 		$manager = ActivityManager::getInstance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$ignore_address = isset($_REQUEST['ignore_address']) && ($_REQUEST['ignore_address'] == 'on' || $_REQUEST['ignore_address'] == '1') ? 1 : 0;
+		$ignore_address = $this->getBooleanField('ignore_address') ? 1 : 0;
 
 		// collect data
 		$data = array(

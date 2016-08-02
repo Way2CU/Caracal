@@ -290,7 +290,7 @@ class Backend_UserManager {
 			);
 		$manager = UserManager::getInstance();
 		$user_id = null;
-		$agreed = isset($_REQUEST['agreed']) && ($_REQUEST['agreed'] == 'on' || $_REQUEST['agreed'] == '1') ? 1 : 0;
+		$agreed = $this->parent->getBooleanField('agreed') ? 1 : 0;
 
 		// grab new user data
 		if (_AJAX_REQUEST)

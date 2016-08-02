@@ -165,57 +165,58 @@ class Handler {
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
-		if (is_object($item)) {
-			// create template
-			$template = new TemplateHandler('item_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+		if (!is_object($item))
+			return;
 
-			// register tag handlers
-			$category_handler = \ShopCategoryHandler::getInstance($this->parent);
-			$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
+		// create template
+		$template = new TemplateHandler('item_change.xml', $this->path.'templates/');
+		$template->setMappedModule($this->name);
 
-			$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
-			$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
+		// register tag handlers
+		$category_handler = \ShopCategoryHandler::getInstance($this->parent);
+		$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
 
-			$manufacturer_handler = \ShopManufacturerHandler::getInstance($this->parent);
-			$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
+		$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
 
-			$delivery_handler = \ShopDeliveryMethodsHandler::getInstance($this->parent);
-			$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
+		$manufacturer_handler = \ShopManufacturerHandler::getInstance($this->parent);
+		$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
-			$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
+		$delivery_handler = \ShopDeliveryMethodsHandler::getInstance($this->parent);
+		$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
-			// prepare parameters
-			$params = array(
-						'id'              => $item->id,
-						'uid'             => $item->uid,
-						'name'            => $item->name,
-						'description'     => $item->description,
-						'gallery'         => $item->gallery,
-						'manufacturer'    => $item->manufacturer,
-						'size_definition' => $item->size_definition,
-						'author'          => $item->author,
-						'views'           => $item->views,
-						'price'           => $item->price,
-						'discount'        => $item->discount,
-						'colors'          => $item->colors,
-						'tax'             => $item->tax,
-						'weight'          => $item->weight,
-						'votes_up'        => $item->votes_up,
-						'votes_down'      => $item->votes_down,
-						'priority'        => $item->priority,
-						'timestamp'       => $item->timestamp,
-						'visible'         => $item->visible,
-						'deleted'         => $item->deleted,
-						'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-						'cancel_action'   => window_Close('shop_item_change')
-					);
+		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
 
-			// parse template
-			$template->restoreXML();
-			$template->setLocalParams($params);
-			$template->parse();
-		}
+		// prepare parameters
+		$params = array(
+					'id'              => $item->id,
+					'uid'             => $item->uid,
+					'name'            => $item->name,
+					'description'     => $item->description,
+					'gallery'         => $item->gallery,
+					'manufacturer'    => $item->manufacturer,
+					'size_definition' => $item->size_definition,
+					'author'          => $item->author,
+					'views'           => $item->views,
+					'price'           => $item->price,
+					'discount'        => $item->discount,
+					'colors'          => $item->colors,
+					'tax'             => $item->tax,
+					'weight'          => $item->weight,
+					'votes_up'        => $item->votes_up,
+					'votes_down'      => $item->votes_down,
+					'priority'        => $item->priority,
+					'timestamp'       => $item->timestamp,
+					'visible'         => $item->visible,
+					'deleted'         => $item->deleted,
+					'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
+					'cancel_action'   => window_Close('shop_item_change')
+				);
+
+		// parse template
+		$template->restoreXML();
+		$template->setLocalParams($params);
+		$template->parse();
 	}
 
 	/**
@@ -242,7 +243,7 @@ class Handler {
 				'size_definition' => isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
 				'priority'        => isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'    => isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
-				'visible'         => $_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1' ? 1 : 0,
+				'visible'         => $this->parent->getBooleanField('visible') ? 1 : 0,
 				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
 			);
 

@@ -631,8 +631,8 @@ class gallery extends Module {
 		$title = $this->getMultilanguageField('title');
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 		$description = $this->getMultilanguageField('description');
-		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
-		$slideshow = isset($_REQUEST['slideshow']) && ($_REQUEST['slideshow'] == 'on' || $_REQUEST['slideshow'] == '1') ? 1 : 0;
+		$visible = $this->getBooleanField('visible') ? 1 : 0;
+		$slideshow = $this->getBooleanField('slideshow') ? 1 : 0;
 
 		$data = array(
 					'text_id'		=> $text_id,

@@ -297,8 +297,8 @@ class affiliates extends Module {
 		$uid = escape_chars($_REQUEST['uid']);
 		$user = fix_id($_REQUEST['user']);
 		$name = fix_chars($_REQUEST['name']);
-		$active = isset($_REQUEST['active']) && ($_REQUEST['active'] == 'on' || $_REQUEST['active'] == '1') ? 1 : 0;
-		$default = isset($_REQUEST['default']) && ($_REQUEST['default'] == 'on' || $_REQUEST['default'] == '1') ? 1 : 0;
+		$active = $this->getBooleanField('active') ? 1 : 0;
+		$default = $this->getBooleanField('default') ? 1 : 0;
 
 		$data = array(
 				'name'		=> $name,

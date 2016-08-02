@@ -219,7 +219,7 @@ class faq extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$question = $this->getMultilanguageField('question');
 		$answer = $this->getMultilanguageField('answer');
-		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
+		$visible = $this->getBooleanField('visible') ? 1 : 0;
 
 		$manager = QuestionManager::getInstance();
 

@@ -1143,7 +1143,7 @@ class contact_form extends Module {
 	 */
 	private function saveSettings() {
 		// grab parameters
-		$use_ssl = isset($_REQUEST['use_ssl']) && ($_REQUEST['use_ssl'] == 'on' || $_REQUEST['use_ssl'] == '1') ? 1 : 0;
+		$use_ssl = $this->getBooleanField('use_ssl') ? 1 : 0;
 		$params = array(
 			'mailer', 'sender_name', 'sender_address', 'recipient_name', 'recipient_address',
 			'smtp_server', 'smtp_port', 'smtp_authenticate', 'smtp_username', 'smtp_password'
@@ -1296,9 +1296,9 @@ class contact_form extends Module {
 		// get options
 		$form_id = fix_id($_REQUEST['form']);
 		$filename = empty($_REQUEST['filename']) ? 'export.csv' : fix_chars($_REQUEST['filename']);
-		$include_headers = isset($_REQUEST['headers_included']) && ($_REQUEST['headers_included'] == 'on' || $_REQUEST['headers_included'] == '1') ? 1 : 0;
-		$export_ip = isset($_REQUEST['export_ip']) && ($_REQUEST['export_ip'] == 'on' || $_REQUEST['export_ip'] == '1') ? 1 : 0;
-		$export_timestamp = isset($_REQUEST['export_timestamp']) && ($_REQUEST['export_timestamp'] == 'on' || $_REQUEST['export_timestamp'] == '1') ? 1 : 0;
+		$include_headers = $this->getBooleanField('headers_included') ? 1 : 0;
+		$export_ip = $this->getBooleanField('export_ip') ? 1 : 0;
+		$export_timestamp = $this->getBooleanField('export_timestamp') ? 1 : 0;
 
 		switch (fix_id($_REQUEST['separator_type'])) {
 			case 0:
@@ -1722,15 +1722,15 @@ class contact_form extends Module {
 				'name'			=> $this->getMultilanguageField('name'),
 				'action'		=> escape_chars($_REQUEST['action']),
 				'template'		=> fix_chars($_REQUEST['template']),
-				'use_ajax'		=> isset($_REQUEST['use_ajax']) && ($_REQUEST['use_ajax'] == 'on' || $_REQUEST['use_ajax'] == '1') ? 1 : 0,
-				'show_submit'	=> isset($_REQUEST['show_submit']) && ($_REQUEST['show_submit'] == 'on' || $_REQUEST['show_submit'] == '1') ? 1 : 0,
-				'show_reset'	=> isset($_REQUEST['show_reset']) && ($_REQUEST['show_reset'] == 'on' || $_REQUEST['show_reset'] == '1') ? 1 : 0,
-				'show_cancel'	=> isset($_REQUEST['show_cancel']) && ($_REQUEST['show_cancel'] == 'on' || $_REQUEST['show_cancel'] == '1') ? 1 : 0
+				'use_ajax'		=>$this->getBooleanField('use_ajax') ? 1 : 0,
+				'show_submit'	=>$this->getBooleanField('show_submit') ? 1 : 0,
+				'show_reset'	=>$this->getBooleanField('show_reset') ? 1 : 0,
+				'show_cancel'	=>$this->getBooleanField('show_cancel') ? 1 : 0
 			);
 
 		if (isset($_REQUEST['reply_to_field'])) {
 			$data['reply_to_field'] = fix_id($_REQUEST['reply_to_field']);
-			$data['include_reply_to'] = isset($_REQUEST['include_reply_to']) && ($_REQUEST['include_reply_to'] == 'on' || $_REQUEST['include_reply_to'] == '1') ? 1 : 0;
+			$data['include_reply_to'] = $this->getBooleanField('include_reply_to') ? 1 : 0;
 		}
 
 		// insert or update data in database
@@ -2229,20 +2229,20 @@ class contact_form extends Module {
 		$form_id = fix_id($_REQUEST['form']);
 
 		$data = array(
-			'form'			=> $form_id,
-			'name'			=> fix_chars($_REQUEST['name']),
-			'type'			=> fix_chars($_REQUEST['type']),
-			'label'			=> $this->getMultilanguageField('label'),
-			'placeholder'	=> $this->getMultilanguageField('placeholder'),
-			'min'			=> fix_id($_REQUEST['min']),
-			'max'			=> fix_id($_REQUEST['max']),
-			'maxlength'		=> fix_id($_REQUEST['maxlength']),
-			'value'			=> escape_chars($_REQUEST['value']),
-			'pattern'		=> escape_chars($_REQUEST['pattern']),
-			'disabled'		=> isset($_REQUEST['disabled']) && ($_REQUEST['disabled'] == 'on' || $_REQUEST['disabled'] == '1') ? 1 : 0,
-			'required'		=> isset($_REQUEST['required']) && ($_REQUEST['required'] == 'on' || $_REQUEST['required'] == '1') ? 1 : 0,
-			'checked'		=> isset($_REQUEST['checked']) && ($_REQUEST['checked'] == 'on' || $_REQUEST['checked'] == '1') ? 1 : 0,
-			'autocomplete'	=> isset($_REQUEST['autocomplete']) && ($_REQUEST['autocomplete'] == 'on' || $_REQUEST['autocomplete'] == '1') ? 1 : 0
+			'form'         => $form_id,
+			'name'         => fix_chars($_REQUEST['name']),
+			'type'         => fix_chars($_REQUEST['type']),
+			'label'        => $this->getMultilanguageField('label'),
+			'placeholder'  => $this->getMultilanguageField('placeholder'),
+			'min'          => fix_id($_REQUEST['min']),
+			'max'          => fix_id($_REQUEST['max']),
+			'maxlength'    => fix_id($_REQUEST['maxlength']),
+			'value'        => escape_chars($_REQUEST['value']),
+			'pattern'      => escape_chars($_REQUEST['pattern']),
+			'disabled'     => $this->getBooleanField('disabled') ? 1 : 0,
+			'required'     => $this->getBooleanField('required') ? 1 : 0,
+			'checked'      => $this->getBooleanField('checked') ? 1 : 0,
+			'autocomplete' => $this->getBooleanField('autocomplete') ? 1 : 0
 		);
 		$manager = ContactForm_FormFieldManager::getInstance();
 
@@ -2496,7 +2496,7 @@ class contact_form extends Module {
 	private function importValues_Commit() {
 		$field_id = fix_id($_REQUEST['field']);
 		$manager = ContactForm_FieldValueManager::getInstance();
-		$remove_existing = isset($_REQUEST['remove_existing']) && ($_REQUEST['remove_existing'] == 'on' || $_REQUEST['remove_existing'] == '1') ? true : false;
+		$remove_existing = $this->getBooleanField('remove_existing');
 		$languages = Language::getLanguages(false);
 
 		// make sure uploaded file is good
