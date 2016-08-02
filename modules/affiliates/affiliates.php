@@ -25,7 +25,7 @@ class affiliates extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$referrals_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_affiliates'),
@@ -83,7 +83,7 @@ class affiliates extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -199,7 +199,7 @@ class affiliates extends Module {
 			die('Access denied!');
 
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -212,9 +212,9 @@ class affiliates extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_affiliate_list', $this, 'tag_AffiliateList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_affiliate_list', $this, 'tag_AffiliateList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -226,11 +226,11 @@ class affiliates extends Module {
 			die('Access denied!');
 
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// connect tag handlers
-		$user_manager = UserManager::getInstance();
-		$template->registerTagHandler('_user_list', $user_manager, 'tag_UserList');
+		$user_manager = UserManager::get_instance();
+		$template->register_tag_handler('_user_list', $user_manager, 'tag_UserList');
 
 		// generate UID
 		$uid = uniqid();
@@ -241,8 +241,8 @@ class affiliates extends Module {
 					'cancel_action'	=> window_Close('affiliates_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 
 	}
@@ -255,17 +255,17 @@ class affiliates extends Module {
 			die('Access denied!');
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = AffiliatesManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			// connect tag handlers
-			$user_manager = UserManager::getInstance();
-			$template->registerTagHandler('_user_list', $user_manager, 'tag_UserList');
+			$user_manager = UserManager::get_instance();
+			$template->register_tag_handler('_user_list', $user_manager, 'tag_UserList');
 
 			$params = array(
 						'id'			=> $item->id,
@@ -278,8 +278,8 @@ class affiliates extends Module {
 						'cancel_action'	=> window_Close('affiliates_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -291,7 +291,7 @@ class affiliates extends Module {
 		if ($_SESSION['level'] < 10)
 			die('Access denied!');
 
-		$manager = AffiliatesManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$uid = escape_chars($_REQUEST['uid']);
@@ -333,7 +333,7 @@ class affiliates extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant($message),
@@ -341,8 +341,8 @@ class affiliates extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('affiliates'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -354,12 +354,12 @@ class affiliates extends Module {
 			die('Access denied!');
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = AffiliatesManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_affiliate_delete"),
@@ -379,8 +379,8 @@ class affiliates extends Module {
 					'no_action'		=> window_Close('affiliates_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -392,15 +392,15 @@ class affiliates extends Module {
 			die('Access denied!');
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = AffiliatesManager::getInstance();
-		$referrals_manager = AffiliateReferralsManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
+		$referrals_manager = AffiliateReferralsManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$referrals_manager->delete_items(array('affiliate' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_affiliate_deleted"),
@@ -408,8 +408,8 @@ class affiliates extends Module {
 					'action'	=> window_Close('affiliates_delete').";".window_ReloadContent('affiliates')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -418,7 +418,7 @@ class affiliates extends Module {
 	 */
 	private function showReferrals() {
 		$template = new TemplateHandler('referral_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		if (isset($_REQUEST['group_by']) && $_REQUEST['group_by'] == 'landing')
 			$column = $this->get_language_constant('column_landing'); else
@@ -428,9 +428,9 @@ class affiliates extends Module {
 				'column_group_by'	=> $column,
 			);
 
-		$template->registerTagHandler('_referral_list', $this, 'tag_ReferralList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_referral_list', $this, 'tag_ReferralList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -440,13 +440,13 @@ class affiliates extends Module {
 	private function showAffiliateInformation() {
 		global $url_rewrite;
 
-		$manager = AffiliatesManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
 		$user_id = $_SESSION['uid'];
 		$affiliate = $manager->get_single_item($manager->get_field_names(), array('user' => $user_id));
 
 		if (is_object($affiliate)) {
 			$template = new TemplateHandler('information.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			if ($affiliate->clicks > 0)
 				$rate = round((100 * $affiliate->conversions) / $affiliate->clicks, 2); else
@@ -462,8 +462,8 @@ class affiliates extends Module {
 					'cancel_action'	=> window_Close('affiliate_information')
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -476,8 +476,8 @@ class affiliates extends Module {
 	private function createReferral() {
 		$result = false;
 
-		$manager = AffiliatesManager::getInstance();
-		$referrals_manager = AffiliateReferralsManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
+		$referrals_manager = AffiliateReferralsManager::get_instance();
 
 		// prepare data
 		$uid = fix_chars($_REQUEST['affiliate']);
@@ -522,8 +522,8 @@ class affiliates extends Module {
 	 * Mark a referral as conversion.
 	 */
 	public function convertReferral($id) {
-		$manager = AffiliatesManager::getInstance();
-		$referrals_manager = AffiliateReferralsManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
+		$referrals_manager = AffiliateReferralsManager::get_instance();
 
 		// get referral entry by specified id
 		$referral = $referrals_manager->get_single_item(
@@ -551,7 +551,7 @@ class affiliates extends Module {
 	 * @param array $children
 	 */
 	public function tag_AffiliateList($tag_params, $children) {
-		$manager = AffiliatesManager::getInstance();
+		$manager = AffiliatesManager::get_instance();
 		$conditions = array();
 
 		// get items from database
@@ -559,7 +559,7 @@ class affiliates extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (count($items) > 0)
@@ -609,8 +609,8 @@ class affiliates extends Module {
 											),
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -622,7 +622,7 @@ class affiliates extends Module {
 	 * @param array $children
 	 */
 	public function tag_ReferralList($tag_params, $children) {
-		$manager = AffiliateReferralsManager::getInstance();
+		$manager = AffiliateReferralsManager::get_instance();
 		$conditions = array();
 	}
 }

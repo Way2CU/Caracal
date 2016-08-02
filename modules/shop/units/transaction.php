@@ -28,7 +28,7 @@ final class Transaction {
 	 */
 	public static function get_manager() {
 		if (is_null(self::$manager))
-			self::$manager = TransactionsManager::getInstance();
+			self::$manager = TransactionsManager::get_instance();
 
 		return self::$manager;
 	}
@@ -89,7 +89,7 @@ final class Transaction {
 		$result = null;
 
 		// get address
-		$manager = BuyersManager::getInstance();
+		$manager = BuyersManager::get_instance();
 		$buyer = $manager->get_single_item(
 				$manager->get_field_names(),
 				array('id' => $transaction->buyer)
@@ -127,7 +127,7 @@ final class Transaction {
 		$result = null;
 
 		// get address
-		$manager = DeliveryAddressManager::getInstance();
+		$manager = DeliveryAddressManager::get_instance();
 		$address = $manager->get_single_item(
 				$manager->get_field_names(),
 				array('id' => $transaction->address)

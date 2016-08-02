@@ -26,7 +26,7 @@ class callbox extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$callbox_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_callbox'),
@@ -53,7 +53,7 @@ class callbox extends Module {
 		}
 
 		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend' && $this->settings['include_code']) {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
 			$url = str_replace('{id}', $this->settings['account_id'], '//{id}.tctm.co/t.js');
 			$head_tag->addTag(
@@ -70,7 +70,7 @@ class callbox extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -132,15 +132,15 @@ class callbox extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 						'cancel_action'	=> window_Close('callbox_settings')
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -161,7 +161,7 @@ class callbox extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_saved'),
@@ -169,8 +169,8 @@ class callbox extends Module {
 					'action'	=> window_Close('callbox_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 

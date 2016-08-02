@@ -23,7 +23,7 @@ class tranzila extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
 			if (!is_null($method_menu))
@@ -46,12 +46,12 @@ class tranzila extends Module {
 		if (ModuleHandler::is_loaded('shop')) {
 			// register payment method
 			require_once('units/tranzila_payment_method.php');
-			$this->method = Tranzila_PaymentMethod::getInstance($this);
+			$this->method = Tranzila_PaymentMethod::get_instance($this);
 
 			// add tranzila scripts to checkout page
 			if ($section != 'backend') {
-				$shop = shop::getInstance();
-				$collection = collection::getInstance();
+				$shop = shop::get_instance();
+				$collection = collection::get_instance();
 
 				$collection->includeScript(collection::DIALOG);
 				$shop->addCheckoutScript(url_GetFromFilePath($this->path.'include/checkout.js'));
@@ -63,7 +63,7 @@ class tranzila extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -128,7 +128,7 @@ class tranzila extends Module {
 
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
@@ -137,8 +137,8 @@ class tranzila extends Module {
 				'cancel_url'	=> url_Make('payment-cancel', $this->name),
 			);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -153,7 +153,7 @@ class tranzila extends Module {
 		$this->save_setting('custom_template', $custom_template);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_settings_saved'),
@@ -161,8 +161,8 @@ class tranzila extends Module {
 					'action'	=> window_Close('tranzila')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

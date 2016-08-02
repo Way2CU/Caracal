@@ -62,7 +62,7 @@ class backend_MenuItem {
 
 		// register named item in backend
 		if (!is_null($name)) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$backend->registerNamedItem($name, $item);
 		}
 	}

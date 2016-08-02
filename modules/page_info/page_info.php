@@ -39,7 +39,7 @@ class page_info extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$menu = $backend->getMenu($backend->name);
 
@@ -62,7 +62,7 @@ class page_info extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -138,17 +138,17 @@ class page_info extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
 						'cancel_action'	=> window_Close('page_settings')
 					);
 
-		$template->registerTagHandler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
+		$template->register_tag_handler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -175,7 +175,7 @@ class page_info extends Module {
 		$this->save_setting('optimizer_key', $optimizer_key);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_saved'),
@@ -183,8 +183,8 @@ class page_info extends Module {
 					'action'	=> window_Close('page_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -196,8 +196,8 @@ class page_info extends Module {
 			$images_path, $scripts_path, $system_styles_path, $system_images_path,
 			$default_language;
 
-		$head_tag = head_tag::getInstance();
-		$collection = collection::getInstance();
+		$head_tag = head_tag::get_instance();
+		$collection = collection::get_instance();
 		$language_list = Language::getLanguages(false);
 		$ignored_section = in_array($section, array('backend', 'backend_module'));
 
@@ -238,7 +238,7 @@ class page_info extends Module {
 
 		// add other languages if required
 		if (count($language_list) > 1 && $url_rewrite && ModuleHandler::is_loaded('language_menu'))
-			language_menu::getInstance()->addMeta();
+			language_menu::get_instance()->addMeta();
 
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
@@ -416,7 +416,7 @@ class page_info extends Module {
 
 		// set from article
 		} else if (isset($tag_params['article']) && ModuleHandler::is_loaded('articles')) {
-			$manager = Modules\Articles\Manager::getInstance();
+			$manager = Modules\Articles\Manager::get_instance();
 			$text_id = fix_chars($tag_params['article']);
 
 			// get article from database
@@ -443,7 +443,7 @@ class page_info extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'analytics_version.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : '0';
 
 		// get available versions
@@ -461,8 +461,8 @@ class page_info extends Module {
 						'version'	=> $version,
 						'selected'	=> $selected
 					);
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

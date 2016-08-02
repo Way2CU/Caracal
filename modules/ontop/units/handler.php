@@ -29,7 +29,7 @@ final class Handler {
 	 */
 	public static function get_targets($params=array()) {
 		$result = array();
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// prepare conditions for query

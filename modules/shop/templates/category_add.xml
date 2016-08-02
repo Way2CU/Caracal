@@ -18,7 +18,7 @@
 				<input
 					type="text"
 					name="parent_display"
-					value="shop::getInstance()->get_language_constant('no_parent_category')"
+					value="shop::get_instance()->get_language_constant('no_parent_category')"
 					cms:eval="value"
 					readonly="readonly"
 					style="width: 375px;"

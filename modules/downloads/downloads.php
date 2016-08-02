@@ -36,12 +36,12 @@ class downloads extends Module {
 		if (ModuleHandler::is_loaded('backend')) {
 			// add backend specific script
 			if (ModuleHandler::is_loaded('head_tag')) {
-				$head_tag = head_tag::getInstance();
+				$head_tag = head_tag::get_instance();
 				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/downloads_toolbar.js'), 'type'=>'text/javascript'));
 			}
 
 			// create main menu entries
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$downloads_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_downloads'),
@@ -83,7 +83,7 @@ class downloads extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -200,7 +200,7 @@ class downloads extends Module {
 	 */
 	private function showDownloads() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -213,9 +213,9 @@ class downloads extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_downloads_list', $this, 'tag_DownloadsList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_downloads_list', $this, 'tag_DownloadsList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -224,15 +224,15 @@ class downloads extends Module {
 	 */
 	private function uploadFile() {
 		$template = new TemplateHandler('upload.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'upload_save'),
 					'cancel_action'	=> window_Close('upload_file')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -243,7 +243,7 @@ class downloads extends Module {
 		$result = $this->saveUpload('file');
 
 		if (!$result['error']) {
-			$manager =  DownloadsManager::getInstance();
+			$manager =  DownloadsManager::get_instance();
 
 			$data = array(
 					'name'			=> $this->get_multilanguage_field('name'),
@@ -257,7 +257,7 @@ class downloads extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $result['message'],
@@ -265,8 +265,8 @@ class downloads extends Module {
 					'action'	=> window_Close('upload_file').";".window_ReloadContent('downloads')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -275,12 +275,12 @@ class downloads extends Module {
 	 */
 	private function changeData() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'			=> $item->id,
@@ -292,8 +292,8 @@ class downloads extends Module {
 					'cancel_action'	=> window_Close('downloads_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -301,7 +301,7 @@ class downloads extends Module {
 	 * Save changes of download file
 	 */
 	private function saveData() {
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
 		$data = array(
@@ -313,7 +313,7 @@ class downloads extends Module {
 		$manager->update_items($data, array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_file_saved'),
@@ -321,8 +321,8 @@ class downloads extends Module {
 					'action'	=> window_Close('downloads_change').";".window_ReloadContent('downloads')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -333,12 +333,12 @@ class downloads extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_file_delete'),
@@ -358,8 +358,8 @@ class downloads extends Module {
 					'no_action'		=> window_Close('downloads_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -369,12 +369,12 @@ class downloads extends Module {
 	private function deleteDownload_Commit() {
 		$id = fix_id($_REQUEST['id']);
 
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_file_deleted'),
@@ -382,8 +382,8 @@ class downloads extends Module {
 					'action'	=> window_Close('downloads_delete').";".window_ReloadContent('downloads')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -392,7 +392,7 @@ class downloads extends Module {
 	 */
 	private function redirectDownload() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 
 		if (!is_null($id)) {
 			$item = $manager->get_single_item(array('count', 'filename'), array('id' => $id));
@@ -416,13 +416,13 @@ class downloads extends Module {
 	 * @param array $children
 	 */
 	public function tag_Download($tag_params, $children) {
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
 
 		$template = $this->load_template($tag_params, 'download.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (isset($tag_params['latest']) && $tag_params['latest'] == 1) {
 			$order_by = array('id');
@@ -444,8 +444,8 @@ class downloads extends Module {
 						'url'			=> url_Make('get', $this->name, array('id', $item->id))
 					);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -457,7 +457,7 @@ class downloads extends Module {
 	 * @param array $children
 	 */
 	public function tag_DownloadsList($tag_params, $children) {
-		$manager = DownloadsManager::getInstance();
+		$manager = DownloadsManager::get_instance();
 		$conditions = array();
 
 		if (!isset($tag_params['show_invisible']))
@@ -467,9 +467,9 @@ class downloads extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('_download', $this, 'tag_Download');
-		$template->registerTagHandler('cms:download', $this, 'tag_Download');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('_download', $this, 'tag_Download');
+		$template->register_tag_handler('cms:download', $this, 'tag_Download');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -517,8 +517,8 @@ class downloads extends Module {
 												),
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -535,7 +535,7 @@ class downloads extends Module {
 
 		if ($this->checkLicense()) {
 			// valid license or local API requested data
-			$manager = DownloadsManager::getInstance();
+			$manager = DownloadsManager::get_instance();
 			$conditions = array();
 
 			$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -651,7 +651,7 @@ class DownloadsManager extends ItemManager {
 	function delete_items($conditionals, $limit=null) {
 		$items = $this->get_items(array('filename'), $conditionals);
 
-		$path = downloads::getInstance()->file_path;
+		$path = downloads::get_instance()->file_path;
 
 		if (count($items) > 0)
 			foreach ($items as $item)
@@ -663,7 +663,7 @@ class DownloadsManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

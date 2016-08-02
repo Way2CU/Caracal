@@ -26,7 +26,7 @@ class feedback extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$feedback_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_feedback'),
@@ -56,7 +56,7 @@ class feedback extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -128,13 +128,13 @@ class feedback extends Module {
 	 */
 	private function showFeedback() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:list', $this, 'tag_FeedbackList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:list', $this, 'tag_FeedbackList');
 
 		$params = array();
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -142,7 +142,7 @@ class feedback extends Module {
 	 * Save feedback from AJAX request.
 	 */
 	private function json_SaveFeedback() {
-		$manager = FeedbackManager::getInstance();
+		$manager = FeedbackManager::get_instance();
 		$user = $_SESSION['logged'] ? $user = $_SESSION['uid'] : null;
 		$message = fix_chars($_REQUEST['message']);
 		$url = $_SERVER['QUERY_STRING'];
@@ -163,13 +163,13 @@ class feedback extends Module {
 	 * @param array $children
 	 */
 	public function tag_FeedbackList($tag_params, $children) {
-		$manager = FeedbackManager::getInstance();
-		$user_manager = UserManager::getInstance();
+		$manager = FeedbackManager::get_instance();
+		$user_manager = UserManager::get_instance();
 		$conditions = array();
 
 		// load template
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// get items from the database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -230,8 +230,8 @@ class feedback extends Module {
 										)
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

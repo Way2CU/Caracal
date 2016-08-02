@@ -72,7 +72,7 @@ class ShopCurrenciesHandler {
 	/**
 	* Public function that creates a single instance
 	*/
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -128,7 +128,7 @@ class ShopCurrenciesHandler {
 	 */
 	private function showCurrencies() {
 		$template = new TemplateHandler('currency_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
@@ -163,9 +163,9 @@ class ShopCurrenciesHandler {
 									)
 				);
 
- 		$template->registerTagHandler('cms:currency_list', $this, 'tag_CurrencyList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+ 		$template->register_tag_handler('cms:currency_list', $this, 'tag_CurrencyList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -174,16 +174,16 @@ class ShopCurrenciesHandler {
 	 */
 	private function addCurrency() {
 		$template = new TemplateHandler('currency_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'currencies', 'save'),
 					'cancel_action'	=> window_Close('shop_currencies_add')
 				);
 
-		$template->registerTagHandler('cms:currency_list', $this, 'tag_IsoCurrencyList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:currency_list', $this, 'tag_IsoCurrencyList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -192,7 +192,7 @@ class ShopCurrenciesHandler {
 	 */
 	private function saveCurrency() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = ShopCurrenciesManager::getInstance();
+		$manager = ShopCurrenciesManager::get_instance();
 
 		$data = array(
 					'currency' => fix_chars($_REQUEST['currency'])
@@ -201,7 +201,7 @@ class ShopCurrenciesHandler {
 		$manager->insert_item($data);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_currency_saved'),
@@ -209,8 +209,8 @@ class ShopCurrenciesHandler {
 					'action'	=> window_Close('shop_currencies_add').";".window_ReloadContent('shop_currencies'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -219,12 +219,12 @@ class ShopCurrenciesHandler {
 	 */
 	private function deleteCurrency() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCurrenciesManager::getInstance();
+		$manager = ShopCurrenciesManager::get_instance();
 
 		$currency = $manager->get_item_value('currency', array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->_parent->get_language_constant('message_currency_delete'),
@@ -245,8 +245,8 @@ class ShopCurrenciesHandler {
 					'no_action'		=> window_Close('shop_currencies_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -255,12 +255,12 @@ class ShopCurrenciesHandler {
 	 */
 	private function deleteCurrency_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCurrenciesManager::getInstance();
+		$manager = ShopCurrenciesManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_currency_deleted'),
@@ -269,8 +269,8 @@ class ShopCurrenciesHandler {
 									.window_ReloadContent('shop_currencies')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -288,7 +288,7 @@ class ShopCurrenciesHandler {
 		$this->__update_cache(True);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant("message_currency_list_updated"),
@@ -296,8 +296,8 @@ class ShopCurrenciesHandler {
 					'action'	=> window_Close('shop_currencies_update')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -306,7 +306,7 @@ class ShopCurrenciesHandler {
 	 */
 	private function setDefault() {
 		$template = new TemplateHandler('currency_set_default.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'default'		=> shop::getDefaultCurrency(),
@@ -314,9 +314,9 @@ class ShopCurrenciesHandler {
 					'cancel_action'	=> window_Close('shop_currencies_set_default')
 				);
 
-		$template->registerTagHandler('cms:currency_list', $this, 'tag_CurrencyList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:currency_list', $this, 'tag_CurrencyList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -328,7 +328,7 @@ class ShopCurrenciesHandler {
 		$this->_parent->saveDefaultCurrency($currency);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_default_currency_saved'),
@@ -336,8 +336,8 @@ class ShopCurrenciesHandler {
 					'action'	=> window_Close('shop_currencies_set_default')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -348,15 +348,15 @@ class ShopCurrenciesHandler {
 	 * @param array $children
 	 */
 	public function tag_CurrencyList($tag_params, $children) {
-		$manager = ShopCurrenciesManager::getInstance();
+		$manager = ShopCurrenciesManager::get_instance();
 		$conditions = array();
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// create template
 		$template = $this->_parent->load_template($tag_params, 'currency_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
@@ -385,8 +385,8 @@ class ShopCurrenciesHandler {
 										)
 									);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -421,8 +421,8 @@ class ShopCurrenciesHandler {
 			$displayed[] = $currency_data['numeric_code'];
 
 			// parse template
-			$template->restoreXML();
-			$template->setLocalParams($currency_data);
+			$template->restore_xml();
+			$template->set_local_params($currency_data);
 			$template->parse();
 		}
 	}

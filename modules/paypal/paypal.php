@@ -28,7 +28,7 @@ class paypal extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 			$recurring_menu = $backend->getMenu('shop_recurring_plans');
 
@@ -68,7 +68,7 @@ class paypal extends Module {
 			require_once('units/direct_payment_method.php');
 
 			// set helped in debug mode if specified
-			PayPal_Helper::setSandbox(shop::getInstance()->isDebug());
+			PayPal_Helper::setSandbox(shop::get_instance()->isDebug());
 			PayPal_Helper::setCredentials(
 								$this->settings['api_username'],
 								$this->settings['api_password'],
@@ -77,17 +77,17 @@ class paypal extends Module {
 
 			// create payment methods
 			if ($this->settings['express_enabled'] == 1)
-				$this->express_method = PayPal_Express::getInstance($this);
+				$this->express_method = PayPal_Express::get_instance($this);
 
 			if ($this->settings['direct_enabled'] == 1)
-				$this->direct_method = PayPal_Direct::getInstance($this);
+				$this->direct_method = PayPal_Direct::get_instance($this);
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -217,15 +217,15 @@ class paypal extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 						'cancel_action'	=> window_Close('paypal')
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -234,7 +234,7 @@ class paypal extends Module {
 	 */
 	private function save_settings() {
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$this->save_setting('api_username', escape_chars($_REQUEST['api_username']));
 		$this->save_setting('api_password', escape_chars($_REQUEST['api_password']));
@@ -248,8 +248,8 @@ class paypal extends Module {
 					'action'	=> window_Close('paypal')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -258,9 +258,9 @@ class paypal extends Module {
 	 */
 	private function recurringPaymentPlans() {
 		$template = new TemplateHandler('plans_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_PlanList');
+		$template->register_tag_handler('cms:list', $this, 'tag_PlanList');
 
 		$params = array(
 					'link_new' => window_OpenHyperlink(
@@ -273,8 +273,8 @@ class paypal extends Module {
 									)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -282,18 +282,18 @@ class paypal extends Module {
 	 * Show form for adding a new plan.
 	 */
 	private function addPlan() {
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 		$template = new TemplateHandler('plans_add.xml', $this->path.'templates/');
-		$template->registerTagHandler('cms:cycle_unit', $shop, 'tag_CycleUnit');
-		$template->setMappedModule($this->name);
+		$template->register_tag_handler('cms:cycle_unit', $shop, 'tag_CycleUnit');
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'recurring_plans_save'),
 					'cancel_action'	=> window_Close('paypal_recurring_plans_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -302,15 +302,15 @@ class paypal extends Module {
 	 */
 	private function changePlan() {
 		$id = fix_id($_REQUEST['id']);
-		$shop = shop::getInstance();
-		$manager = PayPal_PlansManager::getInstance();
+		$shop = shop::get_instance();
+		$manager = PayPal_PlansManager::get_instance();
 
 		$plan = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($plan)) {
 			$template = new TemplateHandler('plans_change.xml', $this->path.'templates/');
-			$template->registerTagHandler('cms:cycle_unit', $shop, 'tag_CycleUnit');
-			$template->setMappedModule($this->name);
+			$template->register_tag_handler('cms:cycle_unit', $shop, 'tag_CycleUnit');
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'				=> $plan->id,
@@ -328,8 +328,8 @@ class paypal extends Module {
 						'cancel_action'	=> window_Close('paypal_recurring_plans_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -339,7 +339,7 @@ class paypal extends Module {
 	 */
 	private function savePlan() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 
 		$data = array(
 				'text_id'			=> escape_chars($_REQUEST['text_id']),
@@ -365,7 +365,7 @@ class paypal extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_plan_saved'),
@@ -373,8 +373,8 @@ class paypal extends Module {
 					'action'	=> window_Close($window).';'.window_ReloadContent('paypal_recurring_plans'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -385,12 +385,12 @@ class paypal extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_plan_delete'),
@@ -410,8 +410,8 @@ class paypal extends Module {
 					'no_action'		=> window_Close('paypal_recurring_plans_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -420,12 +420,12 @@ class paypal extends Module {
 	 */
 	private function deletePlan_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_plan_deleted'),
@@ -434,8 +434,8 @@ class paypal extends Module {
 								window_ReloadContent('paypal_recurring_plans')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -449,8 +449,8 @@ class paypal extends Module {
 	 */
 	private function handleRecurringIPN($transaction, $type, $amount) {
 		$result = false;
-		$shop = shop::getInstance();
-		$plan_manager = ShopTransactionPlansManager::getInstance();
+		$shop = shop::get_instance();
+		$plan_manager = ShopTransactionPlansManager::get_instance();
 
 		// get plan associated with this transaction
 		$plan = $plan_manager->get_single_item(
@@ -497,7 +497,7 @@ class paypal extends Module {
 		}
 
 		// get objects
-		$transaction_manager = ShopTransactionsManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
 
 		// get data
 		$handled = false;
@@ -553,11 +553,11 @@ class paypal extends Module {
 	 * @param array $children
 	 */
 	public function tag_PlanList($tag_params, $children) {
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 		$conditions = array();
 
 		$template = $this->load_template($tag_params, 'plans_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
@@ -609,8 +609,8 @@ class paypal extends Module {
 										),
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

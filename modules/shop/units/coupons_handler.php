@@ -31,7 +31,7 @@ class CouponHandler {
 
 		// create main menu
 		if ($section == 'backend') {
-			$backend = \backend::getInstance();
+			$backend = \backend::get_instance();
 			$method_menu = $backend->getMenu('shop_special_offers');
 
 			if (!is_null($method_menu))
@@ -54,7 +54,7 @@ class CouponHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -136,10 +136,10 @@ class CouponHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:list', $this, 'tag_CouponList');
+		$template->register_tag_handler('cms:list', $this, 'tag_CouponList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -148,15 +148,15 @@ class CouponHandler {
 	 */
 	private function add_coupon() {
 		$template = new TemplateHandler('coupon_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
 					'cancel_action'	=> window_Close('shop_coupon_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -165,7 +165,7 @@ class CouponHandler {
 	 */
 	private function change_coupon() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = CouponsManager::getInstance();
+		$manager = CouponsManager::get_instance();
 
 		// get item from the database
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
@@ -191,8 +191,8 @@ class CouponHandler {
 			);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -200,7 +200,7 @@ class CouponHandler {
 	 * Save new or changed coupon data.
 	 */
 	private function save_coupon() {
-		$manager = CouponsManager::getInstance();
+		$manager = CouponsManager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
 				'text_id'     => escape_chars($_REQUEST['text_id']),
@@ -223,7 +223,7 @@ class CouponHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->parent->get_language_constant('message_coupon_saved'),
@@ -231,8 +231,8 @@ class CouponHandler {
 					'action'	=> window_Close($window).';'.window_ReloadContent('shop_coupons'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -244,7 +244,7 @@ class CouponHandler {
 
 		// get coupon from the database
 		$id = fix_id($_REQUEST['id']);
-		$manager = CouponsManager::getInstance();
+		$manager = CouponsManager::get_instance();
 
 		$item = $manager->getSingleItem(array('name'), array('id' => $id));
 
@@ -272,8 +272,8 @@ class CouponHandler {
 				);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -283,8 +283,8 @@ class CouponHandler {
 	private function delete_coupon_commit() {
 		// remove data
 		$id = fix_id($_REQUEST['id']);
-		$manager = CouponsManager::getInstance();
-		$code_manager = CouponCodesManager::getInstance();
+		$manager = CouponsManager::get_instance();
+		$code_manager = CouponCodesManager::get_instance();
 
 		$manager->deleteData(array('id' => $id));
 		$code_manager->deleteData(array('coupon' => $id));
@@ -298,8 +298,8 @@ class CouponHandler {
 				);
 
 		// parse message template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -335,10 +335,10 @@ class CouponHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:list', $this, 'tag_CodeList');
+		$template->register_tag_handler('cms:list', $this, 'tag_CodeList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -347,16 +347,16 @@ class CouponHandler {
 	 */
 	private function add_code() {
 		$template = new TemplateHandler('coupon_code_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:list', $this->parent, 'tag_DiscountList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:list', $this->parent, 'tag_DiscountList');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
 					'cancel_action'	=> window_Close('shop_coupon_codes_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -371,15 +371,15 @@ class CouponHandler {
 	 */
 	private function generate_codes() {
 		$template = new TemplateHandler('coupon_code_generate.xml', $this->path.'templates/');
-		$template->registerTagHandler('cms:list', $this->parent, 'tag_DiscountList');
-		$template->setMappedModule($this->name);
+		$template->register_tag_handler('cms:list', $this->parent, 'tag_DiscountList');
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'cancel_action'	=> window_Close('shop_coupon_codes_generate')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -388,7 +388,7 @@ class CouponHandler {
 	 */
 	private function save_code() {
 		$coupon_id = fix_id($_REQUEST['coupon']);
-		$manager = CouponCodesManager::getInstance();
+		$manager = CouponCodesManager::get_instance();
 
 		// collect all data for comparison
 		$data = array();
@@ -450,7 +450,7 @@ class CouponHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->parent->get_language_constant('message_coupon_code_saved'),
@@ -458,8 +458,8 @@ class CouponHandler {
 					'action'	=> window_Close('shop_coupon_codes')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -479,7 +479,7 @@ class CouponHandler {
 	 * @param array $children
 	 */
 	public function tag_CouponList($tag_params, $children) {
-		$manager = CouponsManager::getInstance();
+		$manager = CouponsManager::get_instance();
 		$conditions = array();
 
 		// get items from the database
@@ -551,8 +551,8 @@ class CouponHandler {
 						))
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -573,7 +573,7 @@ class CouponHandler {
 	 * @param array $children
 	 */
 	public function tag_CodeList($tag_params, $children) {
-		$manager = CouponCodesManager::getInstance();
+		$manager = CouponCodesManager::get_instance();
 		$conditions = array();
 
 		// get parameters
@@ -591,7 +591,7 @@ class CouponHandler {
 
 		// load template
 		$template = $this->parent->load_template($tag_params, 'coupon_code_list_item.xml');
-		$template->registerTagHandler('cms:discount', $this->parent, 'tag_DiscountList');
+		$template->register_tag_handler('cms:discount', $this->parent, 'tag_DiscountList');
 
 		// parse template
 		foreach ($items as $item) {
@@ -608,8 +608,8 @@ class CouponHandler {
 						)
 			);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}

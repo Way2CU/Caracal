@@ -26,7 +26,7 @@ function database_connect() {
 			$result = $connected && $selected;
 
 			// connection was successful but database doesn't exist
-			if ($connected && (!$selected || ($selected && !ModuleManager::getInstance()->table_exists())))
+			if ($connected && (!$selected || ($selected && !ModuleManager::get_instance()->table_exists())))
 				$result = database_initialize(!$selected);
 
 			break;
@@ -92,9 +92,9 @@ function database_initialize($create_database) {
 
 	// create database
 	if ($database_exists && $db->multi_query($sql)) {
-		$module_manager = ModuleManager::getInstance();
-		$module_handler = ModuleHandler::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$module_manager = ModuleManager::get_instance();
+		$module_handler = ModuleHandler::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		// populate tables
 		$raw_data = file_get_contents($xml_file);

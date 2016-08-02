@@ -13,7 +13,7 @@ class ModuleHandler {
 	/**
 	 * Get single instance of ModuleHandler
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -33,7 +33,7 @@ class ModuleHandler {
 
 		if ($db_use) {
 			// database available, form module list from database entries
-			$manager = ModuleManager::getInstance();
+			$manager = ModuleManager::get_instance();
 
 			// get priority module list
 			$preload_raw = $manager->get_items(
@@ -109,14 +109,14 @@ class ModuleHandler {
 			include_once($filename);
 
 			$class = basename($filename, '.php');
-			$result = call_user_func(array($class, 'getInstance'));
+			$result = call_user_func(array($class, 'get_instance'));
 
 		} else if (file_exists($system_filename)) {
 			// no user plugin, try to load system
 			include_once($system_filename);
 
 			$class = basename($system_filename, '.php');
-			$result = call_user_func(array($class, 'getInstance'));
+			$result = call_user_func(array($class, 'get_instance'));
 		}
 
 		// add module to the list of loaded ones

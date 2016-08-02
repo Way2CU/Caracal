@@ -27,7 +27,7 @@ class mailchimp extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$mailchimp_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_mailchimp'),
@@ -72,7 +72,7 @@ class mailchimp extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -162,7 +162,7 @@ class mailchimp extends Module {
 
 		// create template
 		$template = new TemplateHandler('lists.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// create menu links
 
@@ -171,11 +171,11 @@ class mailchimp extends Module {
 		);
 
 		// register tag handlers
-		$template->registerTagHandler('cms:items', $this, 'tag_ListItems');
+		$template->register_tag_handler('cms:items', $this, 'tag_ListItems');
 
 		// show template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

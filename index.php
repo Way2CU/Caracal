@@ -110,8 +110,8 @@ if ($db_use && !database_connect())
 	die('There was an error while trying to connect database.');
 
 // transfer display control
-$cache = Cache::getInstance();
-$module_handler = ModuleHandler::getInstance();
+$cache = Cache::get_instance();
+$module_handler = ModuleHandler::get_instance();
 
 if ($cache->isCached()) {
 	// only include specified modules
@@ -122,7 +122,7 @@ if ($cache->isCached()) {
 
 } else {
 	// get main section handler so we can transfer control
-	$section_handler = SectionHandler::getInstance();
+	$section_handler = SectionHandler::get_instance();
 
 	// load all the modules
 	$module_handler->loadModules();

@@ -25,7 +25,7 @@ class ShopWarehouseHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -87,10 +87,10 @@ class ShopWarehouseHandler {
 									),
 					);
 
-		$template->registerTagHandler('cms:warehouse_list', $this, 'tag_WarehouseList');
+		$template->register_tag_handler('cms:warehouse_list', $this, 'tag_WarehouseList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -99,15 +99,15 @@ class ShopWarehouseHandler {
 	 */
 	private function addWarehouse() {
 		$template = new TemplateHandler('warehouse_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'warehouses', 'save'),
 					'cancel_action'	=> window_Close('shop_warehouse_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -116,13 +116,13 @@ class ShopWarehouseHandler {
 	 */
 	private function changeWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('warehouse_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 					'id'		=> $item->id,
@@ -137,8 +137,8 @@ class ShopWarehouseHandler {
 					'cancel_action'	=> window_Close('shop_warehouse_change')
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -168,7 +168,7 @@ class ShopWarehouseHandler {
 			);
 
 		// get instance of warehouse manager
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
 		if (is_null($id)) {
 			$manager->insert_item($data);
@@ -181,7 +181,7 @@ class ShopWarehouseHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_warehouse_saved'),
@@ -189,8 +189,8 @@ class ShopWarehouseHandler {
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_warehouses')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -199,12 +199,12 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'		=> $this->_parent->get_language_constant("message_warehouse_delete"),
@@ -225,8 +225,8 @@ class ShopWarehouseHandler {
 					'no_action'		=> window_Close('shop_warehouse_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -235,13 +235,13 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant("message_warehouse_deleted"),
@@ -249,8 +249,8 @@ class ShopWarehouseHandler {
 					'action'	=> window_Close('shop_warehouse_delete').";".window_ReloadContent('shop_warehouses')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,11 +270,11 @@ class ShopWarehouseHandler {
 	 * @param array $children
 	 */
 	public function tag_WarehouseList($tag_params, $children) {
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 		$conditions = array();
 
 		$template = $this->_parent->load_template($tag_params, 'warehouse_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
@@ -324,8 +324,8 @@ class ShopWarehouseHandler {
 											)
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

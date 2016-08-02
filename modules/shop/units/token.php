@@ -24,7 +24,7 @@ final class Token {
 	 */
 	public static function get_manager() {
 		if (is_null(self::$manager))
-			self::$manager = TokenManager::getInstance();
+			self::$manager = TokenManager::get_instance();
 
 		return self::$manager;
 	}

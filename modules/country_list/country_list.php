@@ -28,7 +28,7 @@ class country_list extends Module {
 		parent::__construct(__FILE__);
 
 		if (ModuleHandler::is_loaded('contact_form')) {
-			$contact_form = contact_form::getInstance();
+			$contact_form = contact_form::get_instance();
 			$contact_form->registerField(
 				'country_list',
 				$this->get_language_constant('country_field_name'),
@@ -47,7 +47,7 @@ class country_list extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -110,8 +110,8 @@ class country_list extends Module {
 			$this->_loadStateList();
 
 		// get managers
-		$country_manager = CountryManager::getInstance();
-		$state_manager = CountryStateManager::getInstance();
+		$country_manager = CountryManager::get_instance();
+		$state_manager = CountryStateManager::get_instance();
 
 		$country_list = $this->country_list->document->tagChildren;
 		$state_list = $this->state_list->document->tagChildren;
@@ -151,7 +151,7 @@ class country_list extends Module {
 	 * @param array $children
 	 */
 	public function tag_CountryList($tag_params, $children) {
-		$manager = CountryManager::getInstance();
+		$manager = CountryManager::get_instance();
 		$conditions = array();
 
 		// filter results if specified
@@ -163,7 +163,7 @@ class country_list extends Module {
 
 		// create template
 		$template = $this->load_template($tag_params, 'country_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 		$country_list = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// parse template
@@ -175,8 +175,8 @@ class country_list extends Module {
 							'short'		=> $country->short
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -188,7 +188,7 @@ class country_list extends Module {
 	 * @param array $children
 	 */
 	public function tag_StateList($tag_params, $children) {
-		$manager = CountryStateManager::getInstance();
+		$manager = CountryStateManager::get_instance();
 		$conditions = array();
 
 		// get tag params
@@ -204,7 +204,7 @@ class country_list extends Module {
 		}
 
 		$template = $this->load_template($tag_params, 'state_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 		$state_list = $manager->get_items($manager->get_field_names(), $conditions);
 
 		foreach ($state_list as $state) {
@@ -214,8 +214,8 @@ class country_list extends Module {
 						'short'		=> $state->short
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -227,10 +227,10 @@ class country_list extends Module {
 	 */
 	public function field_CountryList($params) {
 		$template = $this->load_template($params, 'country_list_field.xml');
-		$template->registerTagHandler('cms:country_list', $this, 'tag_CountryList');
+		$template->register_tag_handler('cms:country_list', $this, 'tag_CountryList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -241,10 +241,10 @@ class country_list extends Module {
 	 */
 	public function field_StateList($params) {
 		$template = $this->load_template($params, 'state_list_field.xml');
-		$template->registerTagHandler('cms:state_list', $this, 'tag_StateList');
+		$template->register_tag_handler('cms:state_list', $this, 'tag_StateList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -289,7 +289,7 @@ class CountryManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -316,7 +316,7 @@ class CountryStateManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

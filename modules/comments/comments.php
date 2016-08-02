@@ -23,7 +23,7 @@ class comments extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$comments_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_comments'),
@@ -65,7 +65,7 @@ class comments extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -169,7 +169,7 @@ class comments extends Module {
 	private function showComments() {
 		$comments_module = isset($_REQUEST['comments_module']) ? fix_chars($_REQUEST['comments_module']) : null;
 		$comments_section = isset($_REQUEST['comments_section']) ? fix_chars($_REQUEST['comments_section']) : null;
-		$manager = CommentManager::getInstance();
+		$manager = CommentManager::get_instance();
 	}
 
 	/**
@@ -177,7 +177,7 @@ class comments extends Module {
 	 */
 	private function moduleSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
@@ -186,8 +186,8 @@ class comments extends Module {
 
 		$params = array_merge($params, $this->settings);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -204,7 +204,7 @@ class comments extends Module {
 		$this->save_setting('size_limit', $size_limit);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_settings_saved'),
@@ -213,8 +213,8 @@ class comments extends Module {
 				);
 		$params = array_merge($params, $this->settings);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -236,7 +236,7 @@ class comments extends Module {
 		} else {
 			$template = new TemplateHandler('comment_input_form.xml', $this->path.'templates/');
 		}
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'module'		=> $module,
@@ -245,8 +245,8 @@ class comments extends Module {
 					'form_action'	=> url_Make('save_data', $this->name)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -277,7 +277,7 @@ class comments extends Module {
 							'visible'	=> $this->settings['default_visibility']
 						);
 
-				$manager = CommentManager::getInstance();
+				$manager = CommentManager::get_instance();
 				$manager->insert_item($data);
 
 				$response_message = $this->get_language_constant('message_saved');
@@ -294,7 +294,7 @@ class comments extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $reponse_message,
@@ -303,8 +303,8 @@ class comments extends Module {
 				);
 		$params = array_merge($params, $this->settings);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 
 	}
@@ -326,7 +326,7 @@ class comments extends Module {
 
 			$starting_with = isset($_REQUEST['starting_with']) ? fix_id($_REQUEST['starting_with']) : null;
 
-			$manager = CommentManager::getInstance();
+			$manager = CommentManager::get_instance();
 			$conditions = array(
 							'module'	=> $module,
 							'section'	=> $comment_section,
@@ -381,7 +381,7 @@ class comments extends Module {
 		if (isset($_SECTION['logged']) && $_SECTION['logged']) {
 			$result = true;
 		} else {
-			$manager = CommentManager::getInstance();
+			$manager = CommentManager::get_instance();
 			$time = date('Y-m-d H:i:s', time() - (intval($this->settings['repost_time']) * 60));
 
 			$count = $manager->get_result("
@@ -423,7 +423,7 @@ class CommentManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

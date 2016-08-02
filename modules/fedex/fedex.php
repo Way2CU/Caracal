@@ -22,7 +22,7 @@ class fedex extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_delivery_methods');
 
 			if (!is_null($method_menu))
@@ -44,14 +44,14 @@ class fedex extends Module {
 		// register delivery method
 		if (ModuleHandler::is_loaded('shop')) {
 			require_once('units/fedex_delivery_method.php');
-			FedEx_DeliveryMethod::getInstance($this);
+			FedEx_DeliveryMethod::get_instance($this);
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -108,15 +108,15 @@ class fedex extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
 						'cancel_action'	=> window_Close('fedex')
 					);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -135,7 +135,7 @@ class fedex extends Module {
 		$this->save_setting('fedex_meter', $meter);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_settings_saved'),
@@ -143,8 +143,8 @@ class fedex extends Module {
 					'action'	=> window_Close('fedex')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

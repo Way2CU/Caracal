@@ -101,7 +101,7 @@ class collection extends Module {
 
 		// get instance of head tag early on
 		if (ModuleHandler::is_loaded('head_tag'))
-			$this->head_tag = head_tag::getInstance();
+			$this->head_tag = head_tag::get_instance();
 
 		// include scripts by default
 		$this->includeScriptById(collection::JQUERY);
@@ -111,7 +111,7 @@ class collection extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

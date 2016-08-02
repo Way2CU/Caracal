@@ -25,7 +25,7 @@ class DeliveryAddressHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -48,7 +48,7 @@ class DeliveryAddressHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryAddress($tag_params, $children) {
-		$manager = DeliveryAddressManager::getInstance();
+		$manager = DeliveryAddressManager::get_instance();
 		$conditions = array();
 
 		// get conditions
@@ -63,7 +63,7 @@ class DeliveryAddressHandler {
 
 		// load template
 		$template = $this->_parent->load_template($tag_params, 'address.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (is_object($address)) {
@@ -82,8 +82,8 @@ class DeliveryAddressHandler {
 					'access_code' => $address->access_code
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

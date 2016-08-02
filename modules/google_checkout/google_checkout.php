@@ -22,7 +22,7 @@ class google_checkout extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
 			if (!is_null($method_menu))
@@ -44,14 +44,14 @@ class google_checkout extends Module {
 		// register payment method
 		if (ModuleHandler::is_loaded('shop')) {
 			require_once("units/google_checkout_payment_method.php");
-			GoogleCheckout_PaymentMethod::getInstance($this);
+			GoogleCheckout_PaymentMethod::get_instance($this);
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

@@ -245,7 +245,7 @@ final class Delivery {
 				}
 
 		// populate missing fields
-		$manager = ItemManager::getInstance();
+		$manager = ItemManager::get_instance();
 		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 		$item_map = array();
 

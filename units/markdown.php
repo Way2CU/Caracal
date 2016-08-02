@@ -66,8 +66,8 @@ final class ExtendedParsedown extends \Parsedown {
 		if (is_numeric($original_source)) {
 			if (class_exists('\gallery')) {
 				// shorthand gallery image
-				$gallery = \gallery::getInstance();
-				$manager = \GalleryManager::getInstance();
+				$gallery = \gallery::get_instance();
+				$manager = \GalleryManager::get_instance();
 				$gallery_image = $manager->get_single_item(
 					array('title', 'filename', 'visible'),
 					array('id' => fix_id($original_source))

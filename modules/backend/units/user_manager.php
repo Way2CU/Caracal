@@ -13,13 +13,13 @@ class Backend_UserManager {
 	private $parent;
 
 	protected function __construct() {
-		$this->parent = backend::getInstance();
+		$this->parent = backend::get_instance();
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -81,7 +81,7 @@ class Backend_UserManager {
 	 */
 	private function showUsers() {
 		$template = new TemplateHandler('users_list.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 				'link_new'	=> window_OpenHyperlink(
@@ -104,9 +104,9 @@ class Backend_UserManager {
 									)
 			);
 
- 		$template->registerTagHandler('_user_list', $this, 'tag_UserList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+ 		$template->register_tag_handler('_user_list', $this, 'tag_UserList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -115,16 +115,16 @@ class Backend_UserManager {
 	 */
 	private function createUser() {
 		$template = new TemplateHandler('users_create.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
- 		$template->registerTagHandler('cms:level', $this, 'tag_Level');
+		$template->set_mapped_module($this->parent->name);
+ 		$template->register_tag_handler('cms:level', $this, 'tag_Level');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'users_save'),
 					'cancel_action'	=> window_Close('system_users_create')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -133,13 +133,13 @@ class Backend_UserManager {
 	 */
 	private function changeUser() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('users_change.xml', $this->parent->path.'templates/');
-	 		$template->registerTagHandler('cms:level', $this, 'tag_Level');
+	 		$template->register_tag_handler('cms:level', $this, 'tag_Level');
 
 			$params = array(
 						'id'			=> $item->id,
@@ -151,8 +151,8 @@ class Backend_UserManager {
 						'cancel_action'	=> window_Close('system_users_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -171,7 +171,7 @@ class Backend_UserManager {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		// get manager instance
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		// grab new user data
 		$data = array(
@@ -267,7 +267,7 @@ class Backend_UserManager {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $message,
@@ -275,8 +275,8 @@ class Backend_UserManager {
 					'action'	=> window_Close($window).";".window_ReloadContent('system_users'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -288,7 +288,7 @@ class Backend_UserManager {
 				'error'		=> false,
 				'message'	=> ''
 			);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 		$user_id = null;
 		$agreed = $this->parent->get_boolean_field('agreed') ? 1 : 0;
 
@@ -330,7 +330,7 @@ class Backend_UserManager {
 
 		if (ModuleHandler::is_loaded('captcha') && isset($source['captcha'])) {
 			// validate submission through captcha
-			$captcha = captcha::getInstance();
+			$captcha = captcha::get_instance();
 			if (!$captcha->isCaptchaValid($source['captcha'])) {
 				$result['error'] = true;
 				$result['message'] = $this->parent->get_language_constant('message_users_error_captcha');
@@ -385,7 +385,7 @@ class Backend_UserManager {
 			} else {
 				// show message
 				$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-				$template->setMappedModule($this->parent->name);
+				$template->set_mapped_module($this->parent->name);
 
 				$params = array(
 							'message'	=> $result['message'],
@@ -393,8 +393,8 @@ class Backend_UserManager {
 							'action'	=> window_Close($window).";".window_ReloadContent('system_users'),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 
@@ -417,9 +417,9 @@ class Backend_UserManager {
 			return $result;
 
 		// get managers
-		$user_manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
-		$contact_form = contact_form::getInstance();
+		$user_manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
+		$contact_form = contact_form::get_instance();
 
 		// get user for specified id
 		$user = $user_manager->get_single_item(
@@ -494,7 +494,7 @@ class Backend_UserManager {
 				'error'		=> true,
 				'message'	=> ''
 			);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		// grab new user data
 		if (defined('_AJAX_REQUEST'))
@@ -575,11 +575,11 @@ class Backend_UserManager {
 
 			} else {
 				$template = $this->parent->load_template($tag_params, 'message.xml');
-				$template->setTemplateParamsFromArray($children);
+				$template->set_template_params_from_array($children);
 				$result['message'] = $this->parent->get_language_constant('message_no_contact_form');
 
-				$template->restoreXML();
-				$template->setLocalParams($result);
+				$template->restore_xml();
+				$template->set_local_params($result);
 				$template->parse();
 				return;
 			}
@@ -592,20 +592,20 @@ class Backend_UserManager {
 
 			} else {
 				$template = $this->parent->load_template($tag_params, 'message.xml');
-				$template->setTemplateParamsFromArray($children);
+				$template->set_template_params_from_array($children);
 				$result['message'] = $this->parent->get_language_constant('message_no_captcha');
 
-				$template->restoreXML();
-				$template->setLocalParams($result);
+				$template->restore_xml();
+				$template->set_local_params($result);
 				$template->parse();
 				return;
 			}
 
 		// get required module instances
-		$manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
-		$contact_form = contact_form::getInstance();
-		$captcha_module = captcha::getInstance();
+		$manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
+		$contact_form = contact_form::get_instance();
+		$captcha_module = captcha::get_instance();
 		$username = null;
 		$email = null;
 		$captcha = null;
@@ -704,10 +704,10 @@ class Backend_UserManager {
 
 		} else {
 			$template = $this->parent->load_template($tag_params, 'message.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template->set_template_params_from_array($children);
 
-			$template->restoreXML();
-			$template->setLocalParams($result);
+			$template->restore_xml();
+			$template->set_local_params($result);
 			$template->parse();
 		}
 
@@ -721,8 +721,8 @@ class Backend_UserManager {
 	 * @param array $children
 	 */
 	public function saveRecoveredPassword($tag_params, $children) {
-		$manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
+		$manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
 		$username = null;
 		$email = null;
 		$password = null;
@@ -810,10 +810,10 @@ class Backend_UserManager {
 
 		} else {
 			$template = $this->parent->load_template($tag_params, 'message.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template->set_template_params_from_array($children);
 
-			$template->restoreXML();
-			$template->setLocalParams($result);
+			$template->restore_xml();
+			$template->set_local_params($result);
 			$template->parse();
 		}
 
@@ -825,12 +825,12 @@ class Backend_UserManager {
 	 */
 	private function deleteUser() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		$item = $manager->get_single_item(array('fullname'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'		=> $this->parent->get_language_constant('message_users_delete'),
@@ -850,8 +850,8 @@ class Backend_UserManager {
 					'no_action'		=> window_Close('system_users_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -860,7 +860,7 @@ class Backend_UserManager {
 	 */
 	private function deleteUser_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		// trigger event
 		$user = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
@@ -870,7 +870,7 @@ class Backend_UserManager {
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $this->parent->get_language_constant('message_users_deleted'),
@@ -878,8 +878,8 @@ class Backend_UserManager {
 					'action'	=> window_Close('system_users_delete').';'.window_ReloadContent('system_users')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -888,15 +888,15 @@ class Backend_UserManager {
 	 */
 	private function changePassword() {
 		$template = new TemplateHandler('change_password.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'save_password'),
 					'cancel_action'	=> window_Close('change_password_window')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -904,7 +904,7 @@ class Backend_UserManager {
 	 * Salt and save password
 	 */
 	private function savePassword() {
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		$old_password = escape_chars($_REQUEST['old_password']);
 		$new_password = escape_chars($_REQUEST['new_password']);
@@ -936,7 +936,7 @@ class Backend_UserManager {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $message,
@@ -944,8 +944,8 @@ class Backend_UserManager {
 					'action'	=> window_Close('change_password_window')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -955,25 +955,25 @@ class Backend_UserManager {
 	private function showTemplateSelection() {
 		if (ModuleHandler::is_loaded('contact_form')) {
 			// get contact form and show settings
-			$contact_form = contact_form::getInstance();
+			$contact_form = contact_form::get_instance();
 			$template = new TemplateHandler('email_templates.xml', $this->parent->path.'templates/');
-			$template->setMappedModule($this->parent->name);
+			$template->set_mapped_module($this->parent->name);
 
-			$template->registerTagHandler('cms:templates', $contact_form, 'tag_TemplateList');
+			$template->register_tag_handler('cms:templates', $contact_form, 'tag_TemplateList');
 
 			$params = array(
 						'form_action'	=> backend_UrlMake($this->parent->name, 'email_templates_save'),
 						'cancel_action'	=> window_Close('system_users_email_templates')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 
 		} else {
 			// contact form module is not active, show message instead
 			$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-			$template->setMappedModule($this->parent->name);
+			$template->set_mapped_module($this->parent->name);
 
 			$params = array(
 						'message'	=> $this->parent->get_language_constant('message_no_contact_form'),
@@ -981,8 +981,8 @@ class Backend_UserManager {
 						'action'	=> window_Close('system_users_email_templates')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
@@ -1003,7 +1003,7 @@ class Backend_UserManager {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $this->parent->get_language_constant('message_template_selection_saved'),
@@ -1011,8 +1011,8 @@ class Backend_UserManager {
 					'action'	=> window_Close('system_users_email_templates')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1023,7 +1023,7 @@ class Backend_UserManager {
 	 * @param array $children
 	 */
 	public function tag_UserList($tag_params, $children) {
-		$admin_manager = UserManager::getInstance();
+		$admin_manager = UserManager::get_instance();
 
 		// make sure lower levels can't edit others
 		if ($_SESSION['level'] < 5)
@@ -1039,7 +1039,7 @@ class Backend_UserManager {
 			$template = new TemplateHandler('users_list_item.xml', $this->parent->path.'templates/');
 		}
 
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		// get users from database
 		$users = $admin_manager->get_items($admin_manager->get_field_names(), $conditions);
@@ -1091,8 +1091,8 @@ class Backend_UserManager {
 												),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1119,7 +1119,7 @@ class Backend_UserManager {
 			$template = new TemplateHandler('users_level.xml', $this->parent->path.'templates/');
 		}
 
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		for ($i = 0; $i <= $max_level; $i++) {
 			$params = array(
@@ -1127,8 +1127,8 @@ class Backend_UserManager {
 						'selected'	=> $selected
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1140,8 +1140,8 @@ class Backend_UserManager {
 	 * @param array $children
 	 */
 	public function verifyAccount($tag_params, $children) {
-		$manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
+		$manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
 
 		$result = false;
 		$username = null;

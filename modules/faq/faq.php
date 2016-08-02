@@ -22,7 +22,7 @@ class faq extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$faq_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_faq'),
@@ -52,7 +52,7 @@ class faq extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -148,7 +148,7 @@ class faq extends Module {
 	 */
 	private function showQuestions() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -161,9 +161,9 @@ class faq extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_questions', $this, 'tag_QuestionList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_questions', $this, 'tag_QuestionList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -172,15 +172,15 @@ class faq extends Module {
 	 */
 	private function addQuestion() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
 					'cancel_action'	=> window_Close('faq_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -189,13 +189,13 @@ class faq extends Module {
 	 */
 	private function changeQuestion() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = QuestionManager::getInstance();
+		$manager = QuestionManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'			=> $item->id,
@@ -206,8 +206,8 @@ class faq extends Module {
 						'cancel_action'	=> window_Close('faq_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -221,7 +221,7 @@ class faq extends Module {
 		$answer = $this->get_multilanguage_field('answer');
 		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 
-		$manager = QuestionManager::getInstance();
+		$manager = QuestionManager::get_instance();
 
 		$data = array(
 				'question'	=> $question,
@@ -238,7 +238,7 @@ class faq extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_question_saved'),
@@ -246,8 +246,8 @@ class faq extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('faq'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -258,12 +258,12 @@ class faq extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = QuestionManager::getInstance();
+		$manager = QuestionManager::get_instance();
 
 		$item = $manager->get_single_item(array('question'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_question_delete"),
@@ -283,8 +283,8 @@ class faq extends Module {
 					'no_action'		=> window_Close('faq_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -293,12 +293,12 @@ class faq extends Module {
 	 */
 	private function deleteQuestion_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = QuestionManager::getInstance();
+		$manager = QuestionManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_question_deleted"),
@@ -306,8 +306,8 @@ class faq extends Module {
 					'action'	=> window_Close('faq_delete').";".window_ReloadContent('faq')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -319,7 +319,7 @@ class faq extends Module {
 	 */
 	public function tag_Question($tag_params, $children) {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = QuestionManager::getInstance();
+		$manager = QuestionManager::get_instance();
 
 		if (is_null($id))
 			return;
@@ -329,7 +329,7 @@ class faq extends Module {
 
 		if (is_object($id)) {
 			$template = $this->load_template($tag_params, 'list_item.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template->set_template_params_from_array($children);
 
 			$params = array(
 					'id'		=> $item->id,
@@ -337,8 +337,8 @@ class faq extends Module {
 					'answer'	=> $item->answer,
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -350,7 +350,7 @@ class faq extends Module {
 	 * @param array $children
 	 */
 	public function tag_QuestionList($tag_params, $children) {
-		$manager = QuestionManager::getInstance();
+		$manager = QuestionManager::get_instance();
 		$conditions = array();
 
 		// get items from database
@@ -358,7 +358,7 @@ class faq extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -400,8 +400,8 @@ class faq extends Module {
 											),
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

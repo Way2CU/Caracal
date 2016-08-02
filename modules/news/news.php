@@ -22,14 +22,14 @@ class news extends Module {
 		parent::__construct(__FILE__);
 
 		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$news_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_news'),
@@ -104,7 +104,7 @@ class news extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -321,7 +321,7 @@ class news extends Module {
 	 */
 	private function showNews() {
 		$template = new TemplateHandler('news_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> url_MakeHyperlink(
@@ -346,9 +346,9 @@ class news extends Module {
 									)
 					);
 
-		$template->registerTagHandler('_news_list', $this, 'tag_NewsList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_news_list', $this, 'tag_NewsList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -357,16 +357,16 @@ class news extends Module {
 	 */
 	private function addNews() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'news_save'),
 					'cancel_action'	=> window_Close('news_add')
 				);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -377,12 +377,12 @@ class news extends Module {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsManager::getInstance();
+		$manager = NewsManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'		=> $item->id,
@@ -393,8 +393,8 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -403,7 +403,7 @@ class news extends Module {
 	 */
 	private function saveNews() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = NewsManager::getInstance();
+		$manager = NewsManager::get_instance();
 
 		$data = array(
 					'author'	=> $_SESSION['uid'],
@@ -422,7 +422,7 @@ class news extends Module {
 
 		// if group has been selected and field exists
 		if (isset($_REQUEST['group']) && !empty($_REQUEST['group'])) {
-			$membership_manager = NewsMembershipManager::getInstance();
+			$membership_manager = NewsMembershipManager::get_instance();
 			$group = fix_id($_REQUEST['group']);
 			$news_id = $manager->get_inserted_id();
 
@@ -434,7 +434,7 @@ class news extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_news_saved'),
@@ -442,8 +442,8 @@ class news extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('news'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -454,12 +454,12 @@ class news extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsManager::getInstance();
+		$manager = NewsManager::get_instance();
 
 		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_news_delete"),
@@ -479,8 +479,8 @@ class news extends Module {
 					'no_action'		=> window_Close('news_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -489,14 +489,14 @@ class news extends Module {
 	 */
 	private function deleteNews_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsManager::getInstance();
-		$membership_manager = NewsMembershipManager::getInstance();
+		$manager = NewsManager::get_instance();
+		$membership_manager = NewsMembershipManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$membership_manager->delete_items(array('news' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_news_deleted"),
@@ -505,8 +505,8 @@ class news extends Module {
 									.window_ReloadContent('news')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -515,7 +515,7 @@ class news extends Module {
 	 */
 	private function showGroups() {
 		$template = new TemplateHandler('group_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> url_MakeHyperlink(
@@ -530,9 +530,9 @@ class news extends Module {
 									),
 					);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -541,15 +541,15 @@ class news extends Module {
 	 */
 	private function addGroup() {
 		$template = new TemplateHandler('group_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'group_save'),
 					'cancel_action'	=> window_Close('news_group_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -560,12 +560,12 @@ class news extends Module {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsGroupManager::getInstance();
+		$manager = NewsGroupManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('group_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		if (is_object($item)) {
 			$params = array(
@@ -576,8 +576,8 @@ class news extends Module {
 						'cancel_action'	=> window_Close('news_group_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -587,7 +587,7 @@ class news extends Module {
 	 */
 	private function saveGroup() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = NewsGroupManager::getInstance();
+		$manager = NewsGroupManager::get_instance();
 
 		$data = array(
 					'text_id'	=> fix_chars($_REQUEST['text_id']),
@@ -603,7 +603,7 @@ class news extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_group_saved'),
@@ -611,8 +611,8 @@ class news extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('news_groups'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -623,12 +623,12 @@ class news extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsGroupManager::getInstance();
+		$manager = NewsGroupManager::get_instance();
 
 		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_news_delete"),
@@ -648,8 +648,8 @@ class news extends Module {
 					'no_action'		=> window_Close('news_group_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -660,16 +660,16 @@ class news extends Module {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_chars($_REQUEST['id']);
-		$manager = NewsGroupManager::getInstance();
-		$membership_manager = NewsMembershipManager::getInstance();
-		$feed_manager = NewsFeedManager::getInstance();
+		$manager = NewsGroupManager::get_instance();
+		$membership_manager = NewsMembershipManager::get_instance();
+		$feed_manager = NewsFeedManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$membership_manager->delete_items(array('group' => $id));
 		$feed_manager->delete_items(array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_group_deleted"),
@@ -678,8 +678,8 @@ class news extends Module {
 									.window_ReloadContent('news_groups')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -690,7 +690,7 @@ class news extends Module {
 		$group_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('group_news.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'group'			=> $group_id,
@@ -698,9 +698,9 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_group_items')
 				);
 
-		$template->registerTagHandler('_group_items', $this, 'tag_GroupItems');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_group_items', $this, 'tag_GroupItems');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -709,7 +709,7 @@ class news extends Module {
 	 */
 	private function groupItems_Save() {
 		$group = fix_id($_REQUEST['group']);
-		$membership_manager = NewsMembershipManager::getInstance();
+		$membership_manager = NewsMembershipManager::get_instance();
 
 		// fetch all ids being set to specific group
 		$news_ids = array();
@@ -730,7 +730,7 @@ class news extends Module {
 
 		// display message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_group_items_updated"),
@@ -738,8 +738,8 @@ class news extends Module {
 					'action'	=> window_Close('news_group_items')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -748,7 +748,7 @@ class news extends Module {
 	 */
 	private function showFeeds() {
 		$template = new TemplateHandler('feed_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> url_MakeHyperlink(
@@ -763,9 +763,9 @@ class news extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_feed_list', $this, 'tag_FeedList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_feed_list', $this, 'tag_FeedList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -774,16 +774,16 @@ class news extends Module {
 	 */
 	private function addFeed() {
 		$template = new TemplateHandler('feed_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'feed_save'),
 					'cancel_action'	=> window_Close('news_feeds_add')
 				);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -794,12 +794,12 @@ class news extends Module {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsFeedManager::getInstance();
+		$manager = NewsFeedManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('feed_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'			=> $item->id,
@@ -812,9 +812,9 @@ class news extends Module {
 					'cancel_action'	=> window_Close('news_feeds_change')
 				);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -823,7 +823,7 @@ class news extends Module {
 	 */
 	private function saveFeed() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = NewsFeedManager::getInstance();
+		$manager = NewsFeedManager::get_instance();
 
 		$data = array(
 					'group'			=> fix_id($_REQUEST['group']),
@@ -842,7 +842,7 @@ class news extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_feed_saved'),
@@ -850,8 +850,8 @@ class news extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('news_feeds'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -862,12 +862,12 @@ class news extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsFeedManager::getInstance();
+		$manager = NewsFeedManager::get_instance();
 
 		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_feed_delete"),
@@ -887,8 +887,8 @@ class news extends Module {
 					'no_action'		=> window_Close('news_feeds_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -897,12 +897,12 @@ class news extends Module {
 	 */
 	private function deleteFeed_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = NewsFeedManager::getInstance();
+		$manager = NewsFeedManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_news_deleted"),
@@ -911,8 +911,8 @@ class news extends Module {
 									.window_ReloadContent('news')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -925,8 +925,8 @@ class news extends Module {
 		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
-		$head = head_tag::getInstance();
-		$manager = NewsFeedManager::getInstance();
+		$head = head_tag::get_instance();
+		$manager = NewsFeedManager::get_instance();
 
 		$items = $manager->get_items(
 							$manager->get_field_names(),
@@ -962,15 +962,15 @@ class news extends Module {
 	 */
 	public function tag_News($tag_params, $children) {
 		$id = isset($tag_params['id']) ? fix_id($tag_params['id']) : null;
-		$manager = NewsManager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = NewsManager::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		if (!is_null($id))
 			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id)); else
 			$item = $manager->get_single_item($manager->get_field_names(), array(), array('timestamp'), False);
 
 		$template = $this->load_template($tag_params, 'news.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
@@ -990,8 +990,8 @@ class news extends Module {
 						'visible'	=> $item->visible
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1010,10 +1010,10 @@ class news extends Module {
 		if (!isset($tag_params['show_invisible']))
 			$conditions['visible'] = 1;
 
-		$manager = NewsManager::getInstance();
-		$membership_manager = NewsMembershipManager::getInstance();
-		$group_manager = NewsGroupManager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = NewsManager::get_instance();
+		$membership_manager = NewsMembershipManager::get_instance();
+		$group_manager = NewsGroupManager::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		if (!is_null($group)) {
 			// group is set, get item ids and feed them to conditions list
@@ -1047,7 +1047,7 @@ class news extends Module {
 
 		// create template
 		$template = $this->load_template($tag_params, 'news_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse items
 		if (count($items) > 0)
@@ -1102,8 +1102,8 @@ class news extends Module {
 												)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1115,7 +1115,7 @@ class news extends Module {
 	 * @param array $children
 	 */
 	public function tag_Group($tag_params, $children) {
-		$manager = NewsGroupManager::getInstance();
+		$manager = NewsGroupManager::get_instance();
 
 		if (isset($_REQUEST['id'])) {
 			// Id is specified
@@ -1130,7 +1130,7 @@ class news extends Module {
 
 		// create template
 		$template = $this->load_template($tag_params, 'group.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -1139,8 +1139,8 @@ class news extends Module {
 						'title'		=> $item->title,
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1153,7 +1153,7 @@ class news extends Module {
 	 */
 	public function tag_GroupList($tag_params, $children) {
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
-		$manager = NewsGroupManager::getInstance();
+		$manager = NewsGroupManager::get_instance();
 
 		// get items from database
 		$items = $manager->get_items(
@@ -1166,7 +1166,7 @@ class news extends Module {
 
 		// create template
 		$template = $this->load_template($tag_params, 'group_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
@@ -1228,8 +1228,8 @@ class news extends Module {
 												)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1244,8 +1244,8 @@ class news extends Module {
 		if (!isset($params['group'])) return;
 
 		$group = fix_id($params['group']);
-		$news_manager = NewsManager::getInstance();
-		$membership_manager = NewsMembershipManager::getInstance();
+		$news_manager = NewsManager::get_instance();
+		$membership_manager = NewsMembershipManager::get_instance();
 
 		$memberships = $membership_manager->get_items(
 												array('news'),
@@ -1270,8 +1270,8 @@ class news extends Module {
 								'title'		=> $item->title,
 							);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1291,7 +1291,7 @@ class news extends Module {
 		if (is_null($id))
 			return;
 
-		$manager = NewsFeedManager::getInstance();
+		$manager = NewsFeedManager::get_instance();
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
@@ -1301,7 +1301,7 @@ class news extends Module {
 			$template = new TemplateHandler('feed_base.xml', $this->path.'templates/');
 
 			// get build date
-			$membership_manager = NewsMembershipManager::getInstance();
+			$membership_manager = NewsMembershipManager::get_instance();
 			$membership_list = $membership_manager->get_items(array('news'), array('group' => $item->group));
 
 			// get guild date only if there are news items in group
@@ -1311,7 +1311,7 @@ class news extends Module {
 				foreach($membership_list as $membership)
 					$id_list[] = $membership->news;
 
-				$news_manager = NewsManager::getInstance();
+				$news_manager = NewsManager::get_instance();
 				$news = $news_manager->get_single_item(
 													array('timestamp'),
 													array('id' => $id_list),
@@ -1335,9 +1335,9 @@ class news extends Module {
 						'build_date'	=> $build_date
 					);
 
-			$template->registerTagHandler('_news_list', $this, 'tag_NewsList');
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->register_tag_handler('_news_list', $this, 'tag_NewsList');
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1349,8 +1349,8 @@ class news extends Module {
 	 * @param array $children
 	 */
 	public function tag_FeedList($params, $children) {
-		$manager = NewsFeedManager::getInstance();
-		$group_manager = NewsGroupManager::getInstance();
+		$manager = NewsFeedManager::get_instance();
+		$group_manager = NewsGroupManager::get_instance();
 
 		$items = $manager->get_items($manager->get_field_names(), array());
 
@@ -1404,8 +1404,8 @@ class news extends Module {
 												)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1416,8 +1416,8 @@ class news extends Module {
 	private function json_News() {
 		define('_OMIT_STATS', 1);
 
-		$manager = NewsManager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = NewsManager::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		if (isset($_REQUEST['id'])) {
 			// id was specified, fetch the news
@@ -1511,7 +1511,7 @@ class NewsManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -1537,7 +1537,7 @@ class NewsMembershipManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -1563,7 +1563,7 @@ class NewsGroupManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -1592,7 +1592,7 @@ class NewsFeedManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

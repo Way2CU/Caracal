@@ -164,7 +164,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	public function send() {
 		$result = false;
 		$content = '';
-		$contact_form = contact_form::getInstance();
+		$contact_form = contact_form::get_instance();
 
 		// make sure we are not being scammed
 		if ($contact_form->detectBots()) {

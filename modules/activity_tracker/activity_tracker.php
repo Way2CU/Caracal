@@ -25,7 +25,7 @@ class activity_tracker extends Module {
 		parent::__construct(__FILE__);
 
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$activities_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_activities'),
@@ -67,7 +67,7 @@ class activity_tracker extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -180,7 +180,7 @@ class activity_tracker extends Module {
 	 */
 	private function showActivities() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'link_new' => window_OpenHyperlink(
@@ -193,9 +193,9 @@ class activity_tracker extends Module {
 									),
 					);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_ActivityList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:list', $this, 'tag_ActivityList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -210,15 +210,15 @@ class activity_tracker extends Module {
 	 */
 	private function addActivity() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
 					'cancel_action'	=> window_Close('activities_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -226,14 +226,14 @@ class activity_tracker extends Module {
 	 * Change existing activity.
 	 */
 	private function changeActivity() {
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$activity = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($activity)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'				=> $activity->id,
@@ -245,8 +245,8 @@ class activity_tracker extends Module {
 						'cancel_action'		=> window_Close('activities_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -255,7 +255,7 @@ class activity_tracker extends Module {
 	 * Save new or changed activity.
 	 */
 	private function saveActivity() {
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$ignore_address = $this->get_boolean_field('ignore_address') ? 1 : 0;
 
@@ -278,7 +278,7 @@ class activity_tracker extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_activity_saved'),
@@ -286,8 +286,8 @@ class activity_tracker extends Module {
 					'action'	=> window_Close($window).';'.window_ReloadContent('activities'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -298,12 +298,12 @@ class activity_tracker extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_activity_delete'),
@@ -323,8 +323,8 @@ class activity_tracker extends Module {
 					'no_action'		=> window_Close('activities_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -333,14 +333,14 @@ class activity_tracker extends Module {
 	 */
 	private function deleteActivity_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ActivityManager::getInstance();
-		$log_manager = ActivityLogManager::getInstance();
+		$manager = ActivityManager::get_instance();
+		$log_manager = ActivityLogManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$log_manager->delete_items(array('activity' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_activity_deleted'),
@@ -348,8 +348,8 @@ class activity_tracker extends Module {
 					'action'	=> window_Close('activities_delete').';'.window_ReloadContent('activities')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -361,8 +361,8 @@ class activity_tracker extends Module {
 	public function keepAlive() {
 		global $db;
 
-		$manager = ActivityManager::getInstance();
-		$log_manager = ActivityLogManager::getInstance();
+		$manager = ActivityManager::get_instance();
+		$log_manager = ActivityLogManager::get_instance();
 
 		// collect data
 		$result = false;
@@ -435,8 +435,8 @@ class activity_tracker extends Module {
 	public function isAlive() {
 		global $db;
 
-		$manager = ActivityManager::getInstance();
-		$log_manager = ActivityLogManager::getInstance();
+		$manager = ActivityManager::get_instance();
+		$log_manager = ActivityLogManager::get_instance();
 
 		// collect data
 		$result = false;
@@ -486,7 +486,7 @@ class activity_tracker extends Module {
 		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
-		$head_tag = head_tag::getInstance();
+		$head_tag = head_tag::get_instance();
 		$head_tag->addTag(
 					'script',
 					array(
@@ -502,7 +502,7 @@ class activity_tracker extends Module {
 	 * @param array $children
 	 */
 	public function tag_ActivityList($tag_params, $children) {
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 		$conditions = array();
 
 		// get items from database
@@ -510,7 +510,7 @@ class activity_tracker extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (count($items) > 0)
@@ -556,8 +556,8 @@ class activity_tracker extends Module {
 											),
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

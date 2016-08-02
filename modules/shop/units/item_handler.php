@@ -39,7 +39,7 @@ class Handler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -116,10 +116,10 @@ class Handler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
+		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -128,7 +128,7 @@ class Handler {
 	 */
 	private function addItem() {
 		$template = new TemplateHandler('item_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'uid'			=> $this->generateUID(),
@@ -137,22 +137,22 @@ class Handler {
 				);
 
 		// register external tag handlers
-		$category_handler = \ShopCategoryHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
+		$category_handler = \ShopCategoryHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
 
-		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
+		$size_handler = \ShopItemSizesHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
 
-		$manufacturer_handler = \ShopManufacturerHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+		$manufacturer_handler = \ShopManufacturerHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
-		$delivery_handler = \ShopDeliveryMethodsHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
+		$delivery_handler = \ShopDeliveryMethodsHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
-		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
+		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -161,7 +161,7 @@ class Handler {
 	 */
 	private function changeItem() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = \ShopItemManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -170,22 +170,22 @@ class Handler {
 
 		// create template
 		$template = new TemplateHandler('item_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// register tag handlers
-		$category_handler = \ShopCategoryHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:category_list', $category_handler, 'tag_CategoryList');
+		$category_handler = \ShopCategoryHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
 
-		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:size_list', $size_handler, 'tag_SizeList');
+		$size_handler = \ShopItemSizesHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
 
-		$manufacturer_handler = \ShopManufacturerHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+		$manufacturer_handler = \ShopManufacturerHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
-		$delivery_handler = \ShopDeliveryMethodsHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
+		$delivery_handler = \ShopDeliveryMethodsHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
-		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
+		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
 		// prepare parameters
 		$params = array(
@@ -214,8 +214,8 @@ class Handler {
 				);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -224,10 +224,10 @@ class Handler {
 	 */
 	private function saveItem() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = \ShopItemManager::getInstance();
-		$membership_manager = \ShopItemMembershipManager::getInstance();
-		$related_items_manager = \ShopRelatedItemsManager::getInstance();
-		$delivery_item_relation_manager = \ShopDeliveryItemRelationsManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
+		$membership_manager = \ShopItemMembershipManager::get_instance();
+		$related_items_manager = \ShopRelatedItemsManager::get_instance();
+		$delivery_item_relation_manager = \ShopDeliveryItemRelationsManager::get_instance();
 		$open_editor = '';
 
 		$new_item = is_null($id);
@@ -252,7 +252,7 @@ class Handler {
 			$data['author'] = $_SESSION['uid'];
 
 			if (ModuleHandler::is_loaded('gallery')) {
-				$gallery = gallery::getInstance();
+				$gallery = gallery::get_instance();
 				$gallery_id = $gallery->createGallery($data['name']);
 				$data['gallery'] = $gallery_id;
 
@@ -346,12 +346,12 @@ class Handler {
 		}
 
 		// store properties
-		$properties_handler = \Modules\Shop\Property\Handler::getInstance($this->parent);
+		$properties_handler = \Modules\Shop\Property\Handler::get_instance($this->parent);
 		$properties_handler->save_properties($id);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->parent->get_language_constant('message_item_saved'),
@@ -359,8 +359,8 @@ class Handler {
 					'action'	=> window_Close($window).';'.window_ReloadContent('shop_items').';'.$open_editor
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -371,12 +371,12 @@ class Handler {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = \ShopItemManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'		=> $this->parent->get_language_constant('message_item_delete'),
@@ -397,8 +397,8 @@ class Handler {
 					'no_action'		=> window_Close('shop_item_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -408,14 +408,14 @@ class Handler {
 	 */
 	private function deleteItem_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = \ShopItemManager::getInstance();
-		$membership_manager = \ShopItemMembershipManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
+		$membership_manager = \ShopItemMembershipManager::get_instance();
 
 		$manager->update_items(array('deleted' => 1), array('id' => $id));
 		$membership_manager->delete_items(array('item' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $this->parent->get_language_constant('message_item_deleted'),
@@ -423,8 +423,8 @@ class Handler {
 					'action'	=> window_Close('shop_item_delete').';'.window_ReloadContent('shop_items')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -440,10 +440,10 @@ class Handler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:item_list', $this, 'tag_ItemList');
+		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 
 	}
@@ -454,7 +454,7 @@ class Handler {
 	 * @return string
 	 */
 	private function generateUID() {
-		$manager = \ShopItemManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
 
 		// generate Id
 		$uid = uniqid();
@@ -477,9 +477,9 @@ class Handler {
 	 * @param array $children
 	 */
 	public function tag_Item($tag_params, $children) {
-		$shop = \shop::getInstance();
-		$manager = \ShopItemManager::getInstance();
-		$manufacturer_manager = \ShopManufacturerManager::getInstance();
+		$shop = \shop::get_instance();
+		$manager = \ShopItemManager::get_instance();
+		$manufacturer_manager = \ShopManufacturerManager::get_instance();
 		$id = null;
 		$gallery = null;
 		$conditions = array();
@@ -497,7 +497,7 @@ class Handler {
 
 			} else {
 				// specified id is actually text_id, get real one
-				$category_manager = \ShopCategoryManager::getInstance();
+				$category_manager = \ShopCategoryManager::get_instance();
 				$category = $category_manager->get_single_item(
 												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
@@ -509,7 +509,7 @@ class Handler {
 				$category_id = $category->id;
 			}
 
-			$membership_manager = \ShopItemMembershipManager::getInstance();
+			$membership_manager = \ShopItemMembershipManager::get_instance();
 
 			// get all associated items
 			$id_list = array();
@@ -532,22 +532,22 @@ class Handler {
 
 		// create template handler
 		$template = $this->parent->load_template($tag_params, 'item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
 
 		// register tag handlers
 		if (!is_null($gallery))
-			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
+			$template->register_tag_handler('cms:image_list', $gallery, 'tag_ImageList');
 
-		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
-		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
-		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
+		$size_handler = \ShopItemSizesHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:value_list', $size_handler, 'tag_ValueList');
+		$template->register_tag_handler('cms:color_list', $this, 'tag_ColorList');
 
 		// parse template
 		if (is_object($item)) {
 			// get gallery module
 			if (ModuleHandler::is_loaded('gallery'))
-				$gallery = gallery::getInstance();
+				$gallery = gallery::get_instance();
 
 			if (!is_null($gallery)) {
 				// get manufacturer logo
@@ -605,8 +605,8 @@ class Handler {
 						'deleted'               => $item->deleted,
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -620,8 +620,8 @@ class Handler {
 	public function tag_ItemList($tag_params, $children) {
 		global $language;
 
-		$shop = \shop::getInstance();
-		$manager = \ShopItemManager::getInstance();
+		$shop = \shop::get_instance();
+		$manager = \ShopItemManager::get_instance();
 		$conditions = array();
 		$page_switch = null;
 		$order_by = array('id');
@@ -636,7 +636,7 @@ class Handler {
 
 			} else {
 				// specified id is actually text_id, get real one
-				$category_manager = \ShopCategoryManager::getInstance();
+				$category_manager = \ShopCategoryManager::get_instance();
 				$category = $category_manager->get_single_item(
 												array('id'),
 												array('text_id' => fix_chars($tag_params['category']))
@@ -648,7 +648,7 @@ class Handler {
 				$category_id = $category->id;
 			}
 
-			$membership_manager = \ShopItemMembershipManager::getInstance();
+			$membership_manager = \ShopItemMembershipManager::get_instance();
 			$membership_items = $membership_manager->get_items(
 												array('item'),
 												array('category' => $category_id)
@@ -666,7 +666,7 @@ class Handler {
 
 		if (isset($tag_params['related'])) {
 			$item_id = -1;
-			$relation_manager = \ShopRelatedItemsManager::getInstance();
+			$relation_manager = \ShopRelatedItemsManager::get_instance();
 
 			if (is_numeric($tag_params['related'])) {
 				// get item id as is
@@ -730,18 +730,18 @@ class Handler {
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		// create template
-		$size_handler = \ShopItemSizesHandler::getInstance($this->parent);
+		$size_handler = \ShopItemSizesHandler::get_instance($this->parent);
 		$template = $this->parent->load_template($tag_params, 'item_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:color_list', $this, 'tag_ColorList');
-		$template->registerTagHandler('cms:value_list', $size_handler, 'tag_ValueList');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:color_list', $this, 'tag_ColorList');
+		$template->register_tag_handler('cms:value_list', $size_handler, 'tag_ValueList');
 
 		if (count($items) > 0) {
 			$gallery = null;
 			if (ModuleHandler::is_loaded('gallery'))
-				$gallery = gallery::getInstance();
+				$gallery = gallery::get_instance();
 
-			$manufacturer_manager = \ShopManufacturerManager::getInstance();
+			$manufacturer_manager = \ShopManufacturerManager::get_instance();
 
 			// time marker after which all added items are considered new
 			$days_until_old = 7;
@@ -864,8 +864,8 @@ class Handler {
 					$params['item_images'] = '';
 				}
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 		}
@@ -892,7 +892,7 @@ class Handler {
 	 */
 	public function tag_ColorList($tag_params, $children) {
 		$id = null;
-		$manager = \ShopItemManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
 
 		if (isset($tag_params['id']))
 			$id = fix_id($tag_params['id']);
@@ -908,7 +908,7 @@ class Handler {
 
 		// load template
 		$template = $this->parent->load_template($tag_params, 'color_preview.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (empty($item->colors))
 			return;
@@ -923,8 +923,8 @@ class Handler {
 						'value'	=> $data[1]
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}
@@ -934,7 +934,7 @@ class Handler {
 	 */
 	public function json_GetItem() {
 		$uid = isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : null;
-		$manager = \ShopItemManager::getInstance();
+		$manager = \ShopItemManager::get_instance();
 
 		// get thumbnail options
 		$thumbnail_size = isset($_REQUEST['thumbnail_size']) ? fix_id($_REQUEST['thumbnail_size']) : 100;

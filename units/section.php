@@ -29,7 +29,7 @@ class SectionHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -44,7 +44,7 @@ class SectionHandler {
 	 * @param string $language
 	 * @return string
 	 */
-	public function getFile($section, $action, $language='') {
+	public function get_file($section, $action, $language='') {
 		global $default_language;
 
 		$result = '';
@@ -94,12 +94,12 @@ class SectionHandler {
 		$file = '';
 
 		if (!_AJAX_REQUEST)
-			$file = $this->getFile($section, $action, $language);
+			$file = $this->get_file($section, $action, $language);
 
 		if (_AJAX_REQUEST || empty($file)) {
 			// request came from script, transfer control to modules
 			if (ModuleHandler::is_loaded($section)) {
-				$module = call_user_func(array(escape_chars($section), 'getInstance'));
+				$module = call_user_func(array(escape_chars($section), 'get_instance'));
 				$params = array('action' => $action);
 
 				// transfer control to module
@@ -107,7 +107,7 @@ class SectionHandler {
 
 			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {
 				// transfer control to backend modules
-				$module = backend::getInstance();
+				$module = backend::get_instance();
 				$params = array('action' => 'transfer_control');
 
 				// transfer control to module

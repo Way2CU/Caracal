@@ -228,7 +228,7 @@ class CodeOptimizer {
 	 * Get a single instance of this object.
 	 * @return object
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

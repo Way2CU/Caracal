@@ -13,13 +13,13 @@ class SessionManager {
 	 * Constructor
 	 */
 	protected function __construct() {
-		$this->parent = backend::getInstance();
+		$this->parent = backend::get_instance();
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -68,7 +68,7 @@ class SessionManager {
 	 * @param string $message
 	 */
 	private function login($message='') {
-		$manager = LoginRetryManager::getInstance();
+		$manager = LoginRetryManager::get_instance();
 		$show_captcha = false;
 
 		// check if user has more than 3 failed atempts
@@ -76,7 +76,7 @@ class SessionManager {
 
 		// create template and show login form
 		$template = new TemplateHandler('session_login.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'show_captcha'	=> $show_captcha,
@@ -85,8 +85,8 @@ class SessionManager {
 					'message'		=> $message
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -101,8 +101,8 @@ class SessionManager {
 		$lasting_session = $this->parent->get_boolean_field('lasting');
 
 		// get managers
-		$manager = UserManager::getInstance();
-		$retry_manager = LoginRetryManager::getInstance();
+		$manager = UserManager::get_instance();
+		$retry_manager = LoginRetryManager::get_instance();
 
 		// get retry count for client IP address
 		$retry_count = $retry_manager->getRetryCount();
@@ -112,7 +112,7 @@ class SessionManager {
 			// on purpose we make a separate condition, if captcha
 			// module is not loaded, block IP address for one day
 			if (ModuleHandler::is_loaded('captcha')) {
-				$captcha_module = captcha::getInstance();
+				$captcha_module = captcha::get_instance();
 
 				$captcha_ok = $captcha_module->isCaptchaValid($captcha);
 				$captcha_module->resetCaptcha();
@@ -144,14 +144,14 @@ class SessionManager {
 
 			// create template and show login form
 			$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');
-			$template->setMappedModule($this->parent->name);
+			$template->set_mapped_module($this->parent->name);
 
 			$params = array(
 						'message'		=> $message
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 
 		} else {
@@ -168,7 +168,7 @@ class SessionManager {
 	 */
 	private function logout() {
 		$template = new TemplateHandler('confirmation.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'		=> $this->parent->get_language_constant('message_logout'),
@@ -182,8 +182,8 @@ class SessionManager {
 					'no_action'		=> window_Close('logout_window')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -195,7 +195,7 @@ class SessionManager {
 		Session::change_type();
 
 		// log user out
-		UserManager::getInstance()->logout_user();
+		UserManager::get_instance()->logout_user();
 
 		// get message
 		$message = $this->parent->get_language_constant('message_logout_ok');
@@ -206,15 +206,15 @@ class SessionManager {
 
 		// load template and show the message
 		$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'		=> $message,
 					'redirect_url'	=> $url
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -223,7 +223,7 @@ class SessionManager {
 	 * @return boolean
 	 */
 	public function shouldShowCaptcha() {
-		$manager = LoginRetryManager::getInstance();
+		$manager = LoginRetryManager::get_instance();
 		return $manager->getRetryCount() > 3;
 	}
 
@@ -243,8 +243,8 @@ class SessionManager {
 				'message'		=> ''
 			);
 
-		$manager = UserManager::getInstance();
-		$retry_manager = LoginRetryManager::getInstance();
+		$manager = UserManager::get_instance();
+		$retry_manager = LoginRetryManager::get_instance();
 
 		// get number of retries for client IP address
 		$retry_count = $retry_manager->getRetryCount();
@@ -254,7 +254,7 @@ class SessionManager {
 			// on purpose we make a separate condition, if captcha
 			// module is not loaded, block IP address for one day
 			if (ModuleHandler::is_loaded('captcha')) {
-				$captcha_module = captcha::getInstance();
+				$captcha_module = captcha::get_instance();
 
 				$captcha_ok = $captcha_module->isCaptchaValid($captcha);
 				$captcha_module->resetCaptcha();
@@ -310,7 +310,7 @@ class SessionManager {
 		Session::change_type();
 
 		// kill session variables
-		UserManager::getInstance()->logout_user();
+		UserManager::get_instance()->logout_user();
 
 		// get message
 		$message = $this->parent->get_language_constant('message_logout_ok');

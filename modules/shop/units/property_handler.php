@@ -30,7 +30,7 @@ class Handler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$instance))
 			self::$instance = new self($parent);
 
@@ -44,7 +44,7 @@ class Handler {
 	 * @return integer
 	 */
 	public function save_properties($item_id) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
 		// remove existing properties
 		$manager->delete_items(array('item' => $item_id));
@@ -77,8 +77,8 @@ class Handler {
 	 * Get specified item property.
 	 */
 	public function json_GetProperty() {
-		$manager = Manager::getInstance();
-		$item_manager = \ShopItemManager::getInstance();
+		$manager = Manager::get_instance();
+		$item_manager = \ShopItemManager::get_instance();
 		$conditions = array();
 		$result = false;
 
@@ -128,8 +128,8 @@ class Handler {
 	 * Get property list for specified item as JSON object.
 	 */
 	private function json_GetPropertyList() {
-		$manager = Manager::getInstance();
-		$item_manager = \ShopItemManager::getInstance();
+		$manager = Manager::get_instance();
+		$item_manager = \ShopItemManager::get_instance();
 		$conditions = array();
 		$result = false;
 
@@ -143,7 +143,7 @@ class Handler {
 	 * @param array $children
 	 */
 	public function tag_Property($tag_params, $children) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// prepare conditions
@@ -183,8 +183,8 @@ class Handler {
 			);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -195,7 +195,7 @@ class Handler {
 	 * @param array $children
 	 */
 	public function tag_PropertyList($tag_params, $children) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 		$sort_by = array('id');
 		$sort_asc = true;
@@ -259,8 +259,8 @@ class Handler {
 				$params['discount_price'] = number_format($params['value'] * ((100 - $discount) / 100), 2);
 
 			// parse template
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

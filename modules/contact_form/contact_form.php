@@ -95,7 +95,7 @@ class contact_form extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			// create menu
 			$contact_menu = new backend_MenuItem(
@@ -163,7 +163,7 @@ class contact_form extends Module {
 			$backend->addMenu($this->name, $contact_menu);
 
 			// add backend support script
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 			$head_tag->addTag('script',
 						array(
 							'src' 	=> url_GetFromFilePath($this->path.'include/backend.js'),
@@ -185,13 +185,13 @@ class contact_form extends Module {
 
 		// include required scripts
 		if (ModuleHandler::is_loaded('collection') && $section != 'backend') {
-			$collection = collection::getInstance();
+			$collection = collection::get_instance();
 			$collection->includeScript(collection::DIALOG);
 			$collection->includeScript(collection::COMMUNICATOR);
 		}
 
 		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend') {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
 			$head_tag->addTag('script',
 						array(
@@ -213,7 +213,7 @@ class contact_form extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -625,7 +625,7 @@ class contact_form extends Module {
 	 */
 	private function collectTransferParams() {
 		$params = isset($_SESSION['contact_form_transfer_params']) ? $_SESSION['contact_form_transfer_params'] : array();
-		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
 
 		// get all transfer fields
 		$fields = $field_manager->get_items(
@@ -664,8 +664,8 @@ class contact_form extends Module {
 		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS' && isset($_SERVER['HTTP_ORIGIN'])) {
 			// get list of allowed domains
 			$remote_domain = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
-			$domain_manager = ContactForm_DomainManager::getInstance();
-			$raw_list = $domain_manager->getInstance(array('domain'), array('id' => $id));
+			$domain_manager = ContactForm_DomainManager::get_instance();
+			$raw_list = $domain_manager->get_instance(array('domain'), array('id' => $id));
 			$domain_list = array();
 
 			if (count($raw_list) > 0)
@@ -687,10 +687,10 @@ class contact_form extends Module {
 			return $result;
 
 		// get managers
-		$manager = ContactForm_FormManager::getInstance();
-		$field_manager = ContactForm_FormFieldManager::getInstance();
-		$submission_manager = ContactForm_SubmissionManager::getInstance();
-		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
 
 		// load form and fields
 		$form = $manager->get_single_item(
@@ -893,7 +893,7 @@ class contact_form extends Module {
 		} else {
 			// show response from template
 			$template = $this->load_template($tag_params, 'reponse.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template->set_template_params_from_array($children);
 
 			$params = array(
 					'error'				=> !$result,
@@ -905,8 +905,8 @@ class contact_form extends Module {
 				$params['message'] = $message_sent; else
 				$params['message'] = $message_form_error;
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
@@ -918,9 +918,9 @@ class contact_form extends Module {
 	 * parameters through children tags.
 	 */
 	public function amendSubmission($tag_params, $children) {
-		$submission_manager = ContactForm_SubmissionManager::getInstance();
-		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
-		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
 
 		$data = array();
 		$fields = array();
@@ -1125,16 +1125,16 @@ class contact_form extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:mailer_list', $this, 'tag_MailerList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:mailer_list', $this, 'tag_MailerList');
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 						'cancel_action'	=> window_Close('contact_form_settings')
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1159,7 +1159,7 @@ class contact_form extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_saved'),
@@ -1167,8 +1167,8 @@ class contact_form extends Module {
 					'action'	=> window_Close('contact_form_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1178,11 +1178,11 @@ class contact_form extends Module {
 	private function showSubmissions() {
 		// load template
 		$template = new TemplateHandler('submissions_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
-		$template->registerTagHandler('cms:form_list', $this, 'tag_FormList');
-		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
-		$template->registerTagHandler('cms:list', $this, 'tag_SubmissionList');
+		$template->register_tag_handler('cms:form_list', $this, 'tag_FormList');
+		$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
+		$template->register_tag_handler('cms:list', $this, 'tag_SubmissionList');
 
 		// get variables
 		$params = array();
@@ -1213,8 +1213,8 @@ class contact_form extends Module {
 		}
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1223,7 +1223,7 @@ class contact_form extends Module {
 	 */
 	private function showSubmissionDetails() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_SubmissionManager::getInstance();
+		$manager = ContactForm_SubmissionManager::get_instance();
 
 		// load submission details
 		$item = $manager->get_single_item(
@@ -1239,8 +1239,8 @@ class contact_form extends Module {
 
 		// load template
 		$template = new TemplateHandler('submission_details.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// prepare parameters
 		$params = array(
@@ -1252,8 +1252,8 @@ class contact_form extends Module {
 			);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1263,8 +1263,8 @@ class contact_form extends Module {
 	private function showExportOptions() {
 		// load template
 		$template = new TemplateHandler('export_options.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:fields', $this, 'tag_FieldList');
 
 		// prepare options
 		$form = fix_id($_REQUEST['form']);
@@ -1276,8 +1276,8 @@ class contact_form extends Module {
 		);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1288,10 +1288,10 @@ class contact_form extends Module {
 		global $language;
 
 		// get managers
-		$form_manager = ContactForm_FormManager::getInstance();
-		$form_field_manager = ContactForm_FormFieldManager::getInstance();
-		$submission_manager = ContactForm_SubmissionManager::getInstance();
-		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$form_manager = ContactForm_FormManager::get_instance();
+		$form_field_manager = ContactForm_FormFieldManager::get_instance();
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
 
 		// get options
 		$form_id = fix_id($_REQUEST['form']);
@@ -1454,7 +1454,7 @@ class contact_form extends Module {
 	 */
 	private function manageTemplates() {
 		$template = new TemplateHandler('templates_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -1467,10 +1467,10 @@ class contact_form extends Module {
 									),
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_TemplateList');
+		$template->register_tag_handler('cms:list', $this, 'tag_TemplateList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1479,15 +1479,15 @@ class contact_form extends Module {
 	 */
 	private function addTemplate() {
 		$template = new TemplateHandler('templates_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'templates_save'),
 					'cancel_action'	=> window_Close('contact_form_templates_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1496,13 +1496,13 @@ class contact_form extends Module {
 	 */
 	private function editTemplate() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_TemplateManager::getInstance();
+		$manager = ContactForm_TemplateManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('templates_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'					=> $item->id,
@@ -1515,8 +1515,8 @@ class contact_form extends Module {
 						'cancel_action'			=> window_Close('contact_form_templates_edit')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1532,7 +1532,7 @@ class contact_form extends Module {
 		$plain_text = $this->get_multilanguage_field('plain_text_content');
 		$html = $this->get_multilanguage_field('html_content');
 
-		$manager = ContactForm_TemplateManager::getInstance();
+		$manager = ContactForm_TemplateManager::get_instance();
 		$data = array(
 				'text_id'	=> $text_id,
 				'name'		=> $name,
@@ -1550,7 +1550,7 @@ class contact_form extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_template_saved'),
@@ -1558,8 +1558,8 @@ class contact_form extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_templates'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1570,12 +1570,12 @@ class contact_form extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_TemplateManager::getInstance();
+		$manager = ContactForm_TemplateManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_template_delete"),
@@ -1595,8 +1595,8 @@ class contact_form extends Module {
 					'no_action'		=> window_Close('contact_form_templates_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1605,12 +1605,12 @@ class contact_form extends Module {
 	 */
 	private function deleteTemplate_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_TemplateManager::getInstance();
+		$manager = ContactForm_TemplateManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_template_deleted'),
@@ -1618,8 +1618,8 @@ class contact_form extends Module {
 					'action'	=> window_Close('contact_form_templates_delete').';'.window_ReloadContent('contact_form_templates')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1628,7 +1628,7 @@ class contact_form extends Module {
 	 */
 	private function manageForms() {
 		$template = new TemplateHandler('forms_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -1641,10 +1641,10 @@ class contact_form extends Module {
 									),
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_FormList');
+		$template->register_tag_handler('cms:list', $this, 'tag_FormList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1653,19 +1653,19 @@ class contact_form extends Module {
 	 */
 	private function addForm() {
 		$template = new TemplateHandler('forms_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'forms_save'),
 					'cancel_action'	=> window_Close('contact_forms_add')
 				);
 
-		$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
-		$template->registerTagHandler('cms:field_template_list', $this, 'tag_FormTemplateList');
-		$template->registerTagHandler('cms:mailer_list', $this, 'tag_MailerList');
+		$template->register_tag_handler('cms:template_list', $this, 'tag_TemplateList');
+		$template->register_tag_handler('cms:field_template_list', $this, 'tag_FormTemplateList');
+		$template->register_tag_handler('cms:mailer_list', $this, 'tag_MailerList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1674,15 +1674,15 @@ class contact_form extends Module {
 	 */
 	private function editForm() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FormManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('forms_change.xml', $this->path.'templates/');
-			$template->registerTagHandler('cms:domain_list', $this, 'tag_DomainList');
-			$template->registerTagHandler('cms:mailer_list', $this, 'tag_MailerList');
-			$template->setMappedModule($this->name);
+			$template->register_tag_handler('cms:domain_list', $this, 'tag_DomainList');
+			$template->register_tag_handler('cms:mailer_list', $this, 'tag_MailerList');
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'				=> $item->id,
@@ -1700,11 +1700,11 @@ class contact_form extends Module {
 						'cancel_action'		=> window_Close('contact_forms_edit')
 					);
 
-			$template->registerTagHandler('cms:template_list', $this, 'tag_TemplateList');
-			$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+			$template->register_tag_handler('cms:template_list', $this, 'tag_TemplateList');
+			$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1715,7 +1715,7 @@ class contact_form extends Module {
 	private function saveForm() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$fields_template = isset($_REQUEST['fields_template']) ? fix_chars($_REQUEST['fields_template']) : null;
-		$manager = ContactForm_FormManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
 
 		$data = array(
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
@@ -1746,7 +1746,7 @@ class contact_form extends Module {
 
 		// create fields if needed
 		if (!is_null($fields_template) && array_key_exists($fields_template, $this->form_templates)) {
-			$field_manager = ContactForm_FormFieldManager::getInstance();
+			$field_manager = ContactForm_FormFieldManager::get_instance();
 			$field_list = $this->form_templates[$fields_template];
 
 			if (count($field_list) > 0)
@@ -1764,7 +1764,7 @@ class contact_form extends Module {
 
 		// gather domains in to list
 		$domain_list = array();
-		$domain_manager = ContactForm_DomainManager::getInstance();
+		$domain_manager = ContactForm_DomainManager::get_instance();
 
 		foreach ($_REQUEST as $key => $value) {
 			if (strpos($key, 'domain_') === 0)
@@ -1784,7 +1784,7 @@ class contact_form extends Module {
 
 		// gather mailer list
 		$mailer_list = array();
-		$mailer_manager = ContactForm_MailerManager::getInstance();
+		$mailer_manager = ContactForm_MailerManager::get_instance();
 
 		foreach ($_REQUEST as $key => $value) {
 			if (strpos($key, 'mailer_') !== 0)
@@ -1810,7 +1810,7 @@ class contact_form extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_form_saved'),
@@ -1818,8 +1818,8 @@ class contact_form extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_forms'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1830,12 +1830,12 @@ class contact_form extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FormManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_form_delete"),
@@ -1855,8 +1855,8 @@ class contact_form extends Module {
 					'no_action'		=> window_Close('contact_forms_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1866,11 +1866,11 @@ class contact_form extends Module {
 	 */
 	private function deleteForm_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FormManager::getInstance();
-		$field_manager = ContactForm_FormFieldManager::getInstance();
-		$domain_manager = ContactForm_DomainManager::getInstance();
-		$fieldset_manager = ContactForm_FieldsetManager::getInstance();
-		$fieldset_membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
+		$domain_manager = ContactForm_DomainManager::get_instance();
+		$fieldset_manager = ContactForm_FieldsetManager::get_instance();
+		$fieldset_membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		// remove all fieldsets
 		$fieldsets = $fieldset_manager->get_items(array('id'), array('form' => $id));
@@ -1886,7 +1886,7 @@ class contact_form extends Module {
 		$domain_manager->delete_items(array('form' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_form_deleted'),
@@ -1894,8 +1894,8 @@ class contact_form extends Module {
 					'action'	=> window_Close('contact_forms_delete').';'.window_ReloadContent('contact_forms')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1906,7 +1906,7 @@ class contact_form extends Module {
 		$form_id = fix_id($_REQUEST['form']);
 
 		$template = new TemplateHandler('fieldsets_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form'			=> $form_id,
@@ -1928,10 +1928,10 @@ class contact_form extends Module {
 									)
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_FieldsetList');
+		$template->register_tag_handler('cms:list', $this, 'tag_FieldsetList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1942,7 +1942,7 @@ class contact_form extends Module {
 		$form_id = fix_id($_REQUEST['form']);
 
 		$template = new TemplateHandler('fieldsets_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form'			=> $form_id,
@@ -1950,10 +1950,10 @@ class contact_form extends Module {
 					'cancel_action'	=> window_Close('contact_form_fieldset_add')
 				);
 
-		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+		$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1962,13 +1962,13 @@ class contact_form extends Module {
 	 */
 	private function editFieldset() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FieldsetManager::getInstance();
+		$manager = ContactForm_FieldsetManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('fieldsets_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 					'id'			=> $item->id,
@@ -1979,10 +1979,10 @@ class contact_form extends Module {
 					'cancel_action'	=> window_Close('contact_form_fieldset_edit')
 				);
 
-			$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+			$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1993,8 +1993,8 @@ class contact_form extends Module {
 	private function saveFieldset() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$form_id = fix_id($_REQUEST['form']);
-		$manager = ContactForm_FieldsetManager::getInstance();
-		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FieldsetManager::get_instance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		// collect data
 		$data = array(
@@ -2032,7 +2032,7 @@ class contact_form extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_fieldset_saved'),
@@ -2040,8 +2040,8 @@ class contact_form extends Module {
 					'action'	=> window_Close($window).';'.window_ReloadContent('contact_form_fieldsets_'.$form_id)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2050,13 +2050,13 @@ class contact_form extends Module {
 	 */
 	private function deleteFieldset() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FieldsetManager::getInstance();
-		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FieldsetManager::get_instance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_fieldset_delete'),
@@ -2076,8 +2076,8 @@ class contact_form extends Module {
 					'no_action'		=> window_Close('contact_form_fieldset_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2086,15 +2086,15 @@ class contact_form extends Module {
 	 */
 	private function deleteFieldset_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FieldsetManager::getInstance();
-		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FieldsetManager::get_instance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		$form = $manager->get_item_value('form', array('id' => $id));
 		$manager->delete_items(array('id' => $id));
 		$membership_manager->delete_items(array('fieldset' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_fieldset_deleted'),
@@ -2102,8 +2102,8 @@ class contact_form extends Module {
 					'action'	=> window_Close('contact_form_fieldset_delete').';'.window_ReloadContent('contact_form_fieldsets_'.$form)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2113,7 +2113,7 @@ class contact_form extends Module {
 	private function manageFields() {
 		$form_id = fix_id($_REQUEST['form']);
 		$template = new TemplateHandler('fields_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form'		=> $form_id,
@@ -2151,10 +2151,10 @@ class contact_form extends Module {
 									),
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_FieldList');
+		$template->register_tag_handler('cms:list', $this, 'tag_FieldList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2165,7 +2165,7 @@ class contact_form extends Module {
 		$form_id = fix_id($_REQUEST['form']);
 
 		$template = new TemplateHandler('fields_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form'			=> $form_id,
@@ -2173,10 +2173,10 @@ class contact_form extends Module {
 					'cancel_action'	=> window_Close('contact_form_fields_add')
 				);
 
-		$template->registerTagHandler('cms:field_types', $this, 'tag_FieldTypes');
+		$template->register_tag_handler('cms:field_types', $this, 'tag_FieldTypes');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2185,13 +2185,13 @@ class contact_form extends Module {
 	 */
 	private function editField() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FormFieldManager::getInstance();
+		$manager = ContactForm_FormFieldManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('fields_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'				=> $item->id,
@@ -2213,10 +2213,10 @@ class contact_form extends Module {
 						'cancel_action'		=> window_Close('contact_form_fields_edit')
 					);
 
-			$template->registerTagHandler('cms:field_types', $this, 'tag_FieldTypes');
+			$template->register_tag_handler('cms:field_types', $this, 'tag_FieldTypes');
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -2244,7 +2244,7 @@ class contact_form extends Module {
 			'checked'      => $this->get_boolean_field('checked') ? 1 : 0,
 			'autocomplete' => $this->get_boolean_field('autocomplete') ? 1 : 0
 		);
-		$manager = ContactForm_FormFieldManager::getInstance();
+		$manager = ContactForm_FormFieldManager::get_instance();
 
 		// insert or update data in database
 		if (is_null($id)) {
@@ -2257,7 +2257,7 @@ class contact_form extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_field_saved'),
@@ -2265,8 +2265,8 @@ class contact_form extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_fields_'.$form_id),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2275,12 +2275,12 @@ class contact_form extends Module {
 	 */
 	private function deleteField() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FormFieldManager::getInstance();
+		$manager = ContactForm_FormFieldManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_field_delete"),
@@ -2300,8 +2300,8 @@ class contact_form extends Module {
 					'no_action'		=> window_Close('contact_form_fields_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2310,9 +2310,9 @@ class contact_form extends Module {
 	 */
 	private function deleteField_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FormFieldManager::getInstance();
-		$value_manager = ContactForm_FieldValueManager::getInstance();
-		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FormFieldManager::get_instance();
+		$value_manager = ContactForm_FieldValueManager::get_instance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		$form = $manager->get_item_value('form', array('id' => $id));
 		$manager->delete_items(array('id' => $id));
@@ -2320,7 +2320,7 @@ class contact_form extends Module {
 		$membership_manager->delete_items(array('field' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_field_deleted'),
@@ -2328,8 +2328,8 @@ class contact_form extends Module {
 					'action'	=> window_Close('contact_form_fields_delete').';'.window_ReloadContent('contact_form_fields_'.$form)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2339,7 +2339,7 @@ class contact_form extends Module {
 	private function manageValues() {
 		$field_id = fix_id($_REQUEST['field']);
 		$template = new TemplateHandler('values_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'field'		=> $field_id,
@@ -2377,10 +2377,10 @@ class contact_form extends Module {
 									),
 				);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_FieldValueList');
+		$template->register_tag_handler('cms:list', $this, 'tag_FieldValueList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2391,7 +2391,7 @@ class contact_form extends Module {
 		$field_id = fix_id($_REQUEST['field']);
 
 		$template = new TemplateHandler('values_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'field'			=> $field_id,
@@ -2399,8 +2399,8 @@ class contact_form extends Module {
 					'cancel_action'	=> window_Close('contact_form_field_value_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2409,13 +2409,13 @@ class contact_form extends Module {
 	 */
 	private function editValue() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FieldValueManager::getInstance();
+		$manager = ContactForm_FieldValueManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('values_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'				=> $item->id,
@@ -2426,8 +2426,8 @@ class contact_form extends Module {
 						'cancel_action'		=> window_Close('contact_form_field_value_edit')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -2444,7 +2444,7 @@ class contact_form extends Module {
 			'name'	=> $this->get_multilanguage_field('name'),
 			'value'	=> fix_chars($_REQUEST['value'])
 		);
-		$manager = ContactForm_FieldValueManager::getInstance();
+		$manager = ContactForm_FieldValueManager::get_instance();
 
 		// insert or update data in database
 		if (is_null($id)) {
@@ -2457,7 +2457,7 @@ class contact_form extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_field_value_saved'),
@@ -2465,8 +2465,8 @@ class contact_form extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('contact_form_field_values_'.$field_id),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2477,7 +2477,7 @@ class contact_form extends Module {
 		$field_id = fix_id($_REQUEST['field']);
 
 		$template = new TemplateHandler('values_import.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'field'			=> $field_id,
@@ -2485,8 +2485,8 @@ class contact_form extends Module {
 					'cancel_action'	=> window_Close('contact_form_field_value_import')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2495,7 +2495,7 @@ class contact_form extends Module {
 	 */
 	private function importValues_Commit() {
 		$field_id = fix_id($_REQUEST['field']);
-		$manager = ContactForm_FieldValueManager::getInstance();
+		$manager = ContactForm_FieldValueManager::get_instance();
 		$remove_existing = $this->get_boolean_field('remove_existing');
 		$languages = Language::getLanguages(false);
 
@@ -2553,7 +2553,7 @@ class contact_form extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$message = $this->get_language_constant('message_import_complete');
 		$message = str_replace('%s', count($values), $message);
@@ -2566,8 +2566,8 @@ class contact_form extends Module {
 					'action'	=> window_Close($import_window).';'.window_ReloadContent($field_window)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2578,12 +2578,12 @@ class contact_form extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FieldValueManager::getInstance();
+		$manager = ContactForm_FieldValueManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_field_value_delete'),
@@ -2603,8 +2603,8 @@ class contact_form extends Module {
 					'no_action'		=> window_Close('contact_form_field_value_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2613,13 +2613,13 @@ class contact_form extends Module {
 	 */
 	private function deleteValue_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ContactForm_FieldValueManager::getInstance();
+		$manager = ContactForm_FieldValueManager::get_instance();
 
 		$field = $manager->get_item_value('field', array('id' => $id));
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_field_value_deleted'),
@@ -2627,8 +2627,8 @@ class contact_form extends Module {
 					'action'	=> window_Close('contact_form_field_value_delete').';'.window_ReloadContent('contact_form_field_values_'.$field)
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -2688,7 +2688,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'field_type_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		foreach ($this->field_types as $field) {
 			$params = array(
@@ -2697,8 +2697,8 @@ class contact_form extends Module {
 				'name'		=> $this->get_language_constant('field_'.$field)
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
@@ -2710,8 +2710,8 @@ class contact_form extends Module {
 					'name'		=> $data['name']
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -2725,7 +2725,7 @@ class contact_form extends Module {
 	public function tag_FormTemplateList($tag_params, $children) {
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : null;
 		$template = $this->load_template($tag_params, 'form_template_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		foreach ($this->form_templates as $name => $fields) {
 			$title = isset($this->form_template_names[$name]) ? $this->form_template_names[$name] : $name;
@@ -2736,8 +2736,8 @@ class contact_form extends Module {
 					'selected'	=> $selected == $name
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -2750,12 +2750,12 @@ class contact_form extends Module {
 	 */
 	public function tag_TemplateList($tag_params, $children) {
 		$conditions = array();
-		$manager = ContactForm_TemplateManager::getInstance();
+		$manager = ContactForm_TemplateManager::get_instance();
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
 		// load template
 		$template = $this->load_template($tag_params, 'templates_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -2805,8 +2805,8 @@ class contact_form extends Module {
 											),
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}
@@ -2822,7 +2822,7 @@ class contact_form extends Module {
 		$selected = null;
 		$fieldset = null;
 		$fieldset_fields = array();
-		$manager = ContactForm_FormFieldManager::getInstance();
+		$manager = ContactForm_FormFieldManager::get_instance();
 
 		// get parameters
 		if (isset($tag_params['form']))
@@ -2851,7 +2851,7 @@ class contact_form extends Module {
 		// show fields from a fieldset or at least as members of one
 		if (isset($tag_params['fieldset'])) {
 			$fieldset = fix_id($tag_params['fieldset']);
-			$fieldset_manager = ContactForm_FieldsetFieldsManager::getInstance();
+			$fieldset_manager = ContactForm_FieldsetFieldsManager::get_instance();
 			$raw_data = $fieldset_manager->get_items(array('field'), array('fieldset' => $fieldset));
 
 			if (count($raw_data) > 0)
@@ -2867,8 +2867,8 @@ class contact_form extends Module {
 		$fieldset_orphans = false;
 		if (isset($tag_params['fieldset_orphans']) && isset($conditions['form'])) {
 			$fieldset_orphans = $tag_params['fieldset_orphans'] == 1;
-			$fieldset_manager = ContactForm_FieldsetManager::getInstance();
-			$fieldset_memebership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+			$fieldset_manager = ContactForm_FieldsetManager::get_instance();
+			$fieldset_memebership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 			// get all fieldsets
 			$fieldsets = $fieldset_manager->get_items(array('id'), array('form' => $conditions['form']));
@@ -2901,8 +2901,8 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'field.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:values', $this, 'tag_FieldValueList');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:values', $this, 'tag_FieldValueList');
 
 		// get fields
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
@@ -3006,8 +3006,8 @@ class contact_form extends Module {
 				if (in_array($item->type, $this->field_types) || $skip_foreign || $foreign_handler_missing) {
 					// handle contact form field
 					$params = array_merge($params, $backend_params);
-					$template->restoreXML();
-					$template->setLocalParams($params);
+					$template->restore_xml();
+					$template->set_local_params($params);
 					$template->parse();
 
 				} else {
@@ -3028,7 +3028,7 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_FieldValueList($tag_params, $children) {
-		$manager = ContactForm_FieldValueManager::getInstance();
+		$manager = ContactForm_FieldValueManager::get_instance();
 		$selected = null;
 		$conditions = array();
 		$order_by = array('id');
@@ -3046,7 +3046,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'values_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -3092,8 +3092,8 @@ class contact_form extends Module {
 					);
 
 				// parse template
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -3106,8 +3106,8 @@ class contact_form extends Module {
 	 */
 	public function tag_Form($tag_params, $children) {
 		$conditions = array();
-		$manager = ContactForm_FormManager::getInstance();
-		$field_manager = ContactForm_FormFieldManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
 
 		// get parameters
 		if (isset($tag_params['text_id']))
@@ -3122,10 +3122,10 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'form.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
-		$template->registerTagHandler('cms:fieldsets', $this, 'tag_FieldsetList');
-		$template->setTagChildren('cms:fieldsets', $children);
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:fields', $this, 'tag_FieldList');
+		$template->register_tag_handler('cms:fieldsets', $this, 'tag_FieldsetList');
+		$template->set_tag_children('cms:fieldsets', $children);
 
 		// get form from the database
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
@@ -3154,8 +3154,8 @@ class contact_form extends Module {
 				'has_files'		=> count($fields) > 0
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -3168,15 +3168,15 @@ class contact_form extends Module {
 	 */
 	public function tag_FormList($tag_params, $children) {
 		$conditions = array();
-		$manager = ContactForm_FormManager::getInstance();
+		$manager = ContactForm_FormManager::get_instance();
 
 		// get params
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0;
 
 		// load template
 		$template = $this->load_template($tag_params, 'forms_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:fields', $this, 'tag_FieldList');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:fields', $this, 'tag_FieldList');
 
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -3244,8 +3244,8 @@ class contact_form extends Module {
 										)
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -3257,9 +3257,9 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_Submission($tag_params, $children) {
-		$field_manager = ContactForm_FormFieldManager::getInstance();
-		$submission_manager = ContactForm_SubmissionManager::getInstance();
-		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
 		$fields = array();
 		$conditions = array();
 
@@ -3270,8 +3270,8 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'submission.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submission
 		$item = $submission_manager->get_single_item(
@@ -3326,8 +3326,8 @@ class contact_form extends Module {
 					'fields'		=> $field_data
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -3339,9 +3339,9 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_SubmissionList($tag_params, $children) {
-		$field_manager = ContactForm_FormFieldManager::getInstance();
-		$submission_manager = ContactForm_SubmissionManager::getInstance();
-		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$field_manager = ContactForm_FormFieldManager::get_instance();
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
 		$fields = array();
 		$conditions = array();
 
@@ -3352,8 +3352,8 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'submissions_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:fields', $this, 'tag_SubmissionFields');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:fields', $this, 'tag_SubmissionFields');
 
 		// get submissions
 		$items = $submission_manager->get_items(
@@ -3426,8 +3426,8 @@ class contact_form extends Module {
 											),
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -3442,9 +3442,9 @@ class contact_form extends Module {
 		global $language;
 
 		$conditions = array();
-		$form_field_manager = ContactForm_FormFieldManager::getInstance();
-		$submission_manager = ContactForm_SubmissionManager::getInstance();
-		$submission_field_manager = ContactForm_SubmissionFieldManager::getInstance();
+		$form_field_manager = ContactForm_FormFieldManager::get_instance();
+		$submission_manager = ContactForm_SubmissionManager::get_instance();
+		$submission_field_manager = ContactForm_SubmissionFieldManager::get_instance();
 
 		// get conditional parameters
 		$submission_id = null;
@@ -3486,7 +3486,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'submission_field.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -3511,8 +3511,8 @@ class contact_form extends Module {
 					'name'			=> $field->name
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -3526,11 +3526,11 @@ class contact_form extends Module {
 	public function tag_MailerList($tag_params, $children) {
 		$selected = array();
 		$template = $this->load_template($tag_params, 'mailer_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (isset($tag_params['form'])) {
 			$form = fix_id($tag_params['form']);
-			$manager = ContactForm_MailerManager::getInstance();
+			$manager = ContactForm_MailerManager::get_instance();
 			$associations = $manager->get_items(array('mailer'), array('form' => $form));
 
 			if (count($associations) > 0)
@@ -3548,8 +3548,8 @@ class contact_form extends Module {
 				'selected'	=> in_array($name, $selected)
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -3562,7 +3562,7 @@ class contact_form extends Module {
 	 */
 	public function tag_DomainList($tag_params, $children) {
 		$form_id = null;
-		$manager = ContactForm_DomainManager::getInstance();
+		$manager = ContactForm_DomainManager::get_instance();
 
 		// get form id
 		if (isset($tag_params['form']))
@@ -3577,7 +3577,7 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'domain_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// draw domains
 		if (count($domain_list) > 0)
@@ -3589,8 +3589,8 @@ class contact_form extends Module {
 						'field_name'	=> $field_name
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -3603,8 +3603,8 @@ class contact_form extends Module {
 	 */
 	public function tag_Fieldset($tag_params, $children) {
 		$conditions = array();
-		$manager = ContactForm_FieldsetManager::getInstance();
-		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FieldsetManager::get_instance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		// get conditions
 		if (isset($tag_params['id']))
@@ -3621,8 +3621,8 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'fieldset.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
 
 		// parse template
 		if (is_object($item)) {
@@ -3633,8 +3633,8 @@ class contact_form extends Module {
 				'legend'	=> $item->legend
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -3648,8 +3648,8 @@ class contact_form extends Module {
 	public function tag_FieldsetList($tag_params, $children) {
 		$includes = array();
 		$conditions = array();
-		$manager = ContactForm_FieldsetManager::getInstance();
-		$membership_manager = ContactForm_FieldsetFieldsManager::getInstance();
+		$manager = ContactForm_FieldsetManager::get_instance();
+		$membership_manager = ContactForm_FieldsetFieldsManager::get_instance();
 
 		// get conditions
 		if (isset($tag_params['form']))
@@ -3676,8 +3676,8 @@ class contact_form extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'fieldset.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:field_list', $this, 'tag_FieldList');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -3721,8 +3721,8 @@ class contact_form extends Module {
 										),
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -3758,7 +3758,7 @@ class contact_form extends Module {
 
 		// add default mailer if no others were provided
 		if (!is_null($form)) {
-			$manager = ContactForm_MailerManager::getInstance();
+			$manager = ContactForm_MailerManager::get_instance();
 			$association_list = $manager->get_items(array('mailer'), array('form' => $form));
 
 			if (count($association_list) > 0)
@@ -3860,7 +3860,7 @@ class contact_form extends Module {
 		global $language;
 
 		$result = null;
-		$manager = ContactForm_TemplateManager::getInstance();
+		$manager = ContactForm_TemplateManager::get_instance();
 
 		// get template
 		$template = $manager->get_single_item($manager->get_field_names(), array('text_id' => $name));

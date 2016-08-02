@@ -36,7 +36,7 @@ class ontop extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$ontop_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_ontop'),
@@ -58,7 +58,7 @@ class ontop extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -152,7 +152,7 @@ class ontop extends Module {
 	 */
 	private function show_applications() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -165,9 +165,9 @@ class ontop extends Module {
 									),
 					);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_ApplicationList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:list', $this, 'tag_ApplicationList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -176,15 +176,15 @@ class ontop extends Module {
 	 */
 	private function add_application() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
 					'cancel_action'	=> window_Close('ontop_new_application')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -193,13 +193,13 @@ class ontop extends Module {
 	 */
 	private function edit_application() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'                        => $item->id,
@@ -212,8 +212,8 @@ class ontop extends Module {
 						'cancel_action'             => window_Close('ontop_edit_application')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -222,7 +222,7 @@ class ontop extends Module {
 	 * Save changed or new application data.
 	 */
 	private function save_application() {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		// collect data
@@ -252,7 +252,7 @@ class ontop extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_application_saved'),
@@ -260,8 +260,8 @@ class ontop extends Module {
 					'action'	=> window_Close($window).';'.window_ReloadContent('ontop_applications'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,12 +270,12 @@ class ontop extends Module {
 	 */
 	private function delete_application() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_application_delete'),
@@ -295,8 +295,8 @@ class ontop extends Module {
 					'no_action'		=> window_Close('ontop_delete_application')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -305,12 +305,12 @@ class ontop extends Module {
 	 */
 	private function delete_application_commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_application_deleted'),
@@ -318,8 +318,8 @@ class ontop extends Module {
 					'action'	=> window_Close('ontop_delete_application').';'.window_ReloadContent('ontop_applications')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -328,7 +328,7 @@ class ontop extends Module {
 	 */
 	private function test_application() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
 		$target = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		Handler::set_targets(array(array(
@@ -347,8 +347,8 @@ class ontop extends Module {
 					'action'	=> window_Close('ontop_test_application')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -405,7 +405,7 @@ class ontop extends Module {
 	 * @param array $children
 	 */
 	public function tag_ApplicationList($tag_params, $children) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// get application from the database
@@ -472,8 +472,8 @@ class ontop extends Module {
 					))
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

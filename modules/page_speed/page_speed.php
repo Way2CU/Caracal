@@ -25,7 +25,7 @@ class page_speed extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$menu = $backend->getMenu($backend->name);
 
 			if (!is_null($menu))
@@ -44,7 +44,7 @@ class page_speed extends Module {
 
 			// add style for backend
 			if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
-				$head_tag = head_tag::getInstance();
+				$head_tag = head_tag::get_instance();
 				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/page_speed.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 		}
@@ -53,7 +53,7 @@ class page_speed extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -100,7 +100,7 @@ class page_speed extends Module {
 
 		// show page content
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'check_page_speed' => window_OpenHyperlink(
@@ -122,11 +122,11 @@ class page_speed extends Module {
 					);
 
 		// add tag handlers
-		$template->registerTagHandler('_general_information', $this, 'tag_GeneralInformation');
-		$template->registerTagHandler('_detailed_information', $this, 'tag_DetailedInformation');
+		$template->register_tag_handler('_general_information', $this, 'tag_GeneralInformation');
+		$template->register_tag_handler('_detailed_information', $this, 'tag_DetailedInformation');
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -152,7 +152,7 @@ class page_speed extends Module {
 
 		// prepare and parse result message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $message,
@@ -160,8 +160,8 @@ class page_speed extends Module {
 					'action'	=> window_Close('page_speed_check').';'.window_ReloadContent('page_speed')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -170,7 +170,7 @@ class page_speed extends Module {
 	 */
 	private function setApiKey() {
 		$template = new TemplateHandler('set_api_key.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'api_key'		=> isset($this->settings['api_key']) ? $this->settings['api_key'] : '',
@@ -178,10 +178,10 @@ class page_speed extends Module {
 					'cancel_action'	=> window_Close('page_speed_set_api_key')
 				);
 
-		$template->registerTagHandler('_module_list', $this, 'tag_ModuleList');
+		$template->register_tag_handler('_module_list', $this, 'tag_ModuleList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -194,7 +194,7 @@ class page_speed extends Module {
 
 		// prepare and parse result message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_api_key_saved'),
@@ -202,8 +202,8 @@ class page_speed extends Module {
 					'action'	=> window_Close('page_speed_set_api_key')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -227,7 +227,7 @@ class page_speed extends Module {
 	 */
 	public function tag_GeneralInformation($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'general_information.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		$page_stats = $this->data_cache->pageStats;
 
@@ -272,8 +272,8 @@ class page_speed extends Module {
 								'&chxl=0:|'.$this->data_cache->score
 			);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 

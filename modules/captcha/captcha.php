@@ -31,7 +31,7 @@ class captcha extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -269,15 +269,15 @@ class captcha extends Module {
 	 */
 	private function printImageTag($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'image.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		$params = array(
 				'url'	=> $this->getImageURL(),
 				'alt'	=> $this->get_language_constant('captcha_message')
 			);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 

@@ -31,13 +31,13 @@ class sendgrid extends Module {
 					$this->settings['api_key']
 				);
 
-			$contact_form = contact_form::getInstance();
+			$contact_form = contact_form::get_instance();
 			$contact_form->registerMailer('sendgrid', $mailer);
 		}
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$sendgrid_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_sendgrid'),
@@ -59,7 +59,7 @@ class sendgrid extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -107,15 +107,15 @@ class sendgrid extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 						'cancel_action'	=> window_Close('sendgrid_settings')
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -128,7 +128,7 @@ class sendgrid extends Module {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_saved'),
@@ -136,8 +136,8 @@ class sendgrid extends Module {
 					'action'	=> window_Close('sendgrid_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

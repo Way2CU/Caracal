@@ -26,7 +26,7 @@ class ShopItemSizesHandler {
 	* @param object $parent
 	* @return ShopItemSizesHandler
 	*/
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -94,7 +94,7 @@ class ShopItemSizesHandler {
 	 */
 	private function showItems() {
 		$template = new TemplateHandler('size_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
@@ -110,10 +110,10 @@ class ShopItemSizesHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:size_list', $this, 'tag_SizeList');
+		$template->register_tag_handler('cms:size_list', $this, 'tag_SizeList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -122,7 +122,7 @@ class ShopItemSizesHandler {
 	 */
 	private function showValues() {
 		$template = new TemplateHandler('values_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new' => url_MakeHyperlink(
@@ -145,10 +145,10 @@ class ShopItemSizesHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:value_list', $this, 'tag_ValueList');
+		$template->register_tag_handler('cms:value_list', $this, 'tag_ValueList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -157,15 +157,15 @@ class ShopItemSizesHandler {
 	 */
 	private function addItem() {
 		$template = new TemplateHandler('size_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'sizes', 'save'),
 					'cancel_action'	=> window_Close('shop_item_size_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -174,7 +174,7 @@ class ShopItemSizesHandler {
 	 */
 	private function addValue() {
 		$template = new TemplateHandler('value_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'definition'	=> fix_id($_REQUEST['definition']),
@@ -182,8 +182,8 @@ class ShopItemSizesHandler {
 					'cancel_action'	=> window_Close('shop_item_size_values_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -192,14 +192,14 @@ class ShopItemSizesHandler {
 	 */
 	private function changeValue() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizeValuesManager::getInstance();
+		$manager = ShopItemSizeValuesManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			// create template
 			$template = new TemplateHandler('value_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->_parent->name);
+			$template->set_mapped_module($this->_parent->name);
 
 			// prepare parameters
 			$params = array(
@@ -211,8 +211,8 @@ class ShopItemSizesHandler {
 					);
 
 			// parse template
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -221,7 +221,7 @@ class ShopItemSizesHandler {
 	 * Save new or changed item data
 	 */
 	private function saveItem() {
-		$manager = ShopItemSizesManager::getInstance();
+		$manager = ShopItemSizesManager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$name = fix_chars($_REQUEST['name']);
@@ -236,7 +236,7 @@ class ShopItemSizesHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_item_size_saved'),
@@ -244,8 +244,8 @@ class ShopItemSizesHandler {
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_item_sizes').';'
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -253,7 +253,7 @@ class ShopItemSizesHandler {
 	 * Save new or changed item size value
 	 */
 	private function saveValue() {
-		$manager = ShopItemSizeValuesManager::getInstance();
+		$manager = ShopItemSizeValuesManager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$definition = isset($_REQUEST['definition']) ? fix_id($_REQUEST['definition']) : null;
@@ -275,7 +275,7 @@ class ShopItemSizesHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_item_size_value_saved'),
@@ -283,8 +283,8 @@ class ShopItemSizesHandler {
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_item_size_values').';'
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 
 	}
@@ -294,12 +294,12 @@ class ShopItemSizesHandler {
 	 */
 	private function deleteItem() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizesManager::getInstance();
+		$manager = ShopItemSizesManager::get_instance();
 
 		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'		=> $this->_parent->get_language_constant("message_size_delete"),
@@ -320,8 +320,8 @@ class ShopItemSizesHandler {
 					'no_action'		=> window_Close('shop_item_size_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -330,14 +330,14 @@ class ShopItemSizesHandler {
 	 */
 	private function deleteItem_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizesManager::getInstance();
-		$values_manager = ShopItemSizeValuesManager::getInstance();
+		$manager = ShopItemSizesManager::get_instance();
+		$values_manager = ShopItemSizeValuesManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$values_manager->delete_items(array('definition' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant("message_size_deleted"),
@@ -345,8 +345,8 @@ class ShopItemSizesHandler {
 					'action'	=> window_Close('shop_item_size_delete').";".window_ReloadContent('shop_item_sizes')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -357,12 +357,12 @@ class ShopItemSizesHandler {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizeValuesManager::getInstance();
+		$manager = ShopItemSizeValuesManager::get_instance();
 
 		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'		=> $this->_parent->get_language_constant("message_size_value_delete"),
@@ -383,8 +383,8 @@ class ShopItemSizesHandler {
 					'no_action'		=> window_Close('shop_item_size_values_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -393,12 +393,12 @@ class ShopItemSizesHandler {
 	 */
 	private function deleteValue_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopItemSizeValuesManager::getInstance();
+		$manager = ShopItemSizeValuesManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant("message_size_value_deleted"),
@@ -406,8 +406,8 @@ class ShopItemSizesHandler {
 					'action'	=> window_Close('shop_item_size_values_delete').";".window_ReloadContent('shop_item_size_values')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -417,7 +417,7 @@ class ShopItemSizesHandler {
 	 * @return string
 	 */
 	private function generateUID() {
-		$manager = ShopItemManager::getInstance();
+		$manager = ShopItemManager::get_instance();
 
 		// generate Id
 		$uid = uniqid();
@@ -440,7 +440,7 @@ class ShopItemSizesHandler {
 	 * @param array $chilren
 	 */
 	public function tag_SizeList($tag_params, $children) {
-		$manager = ShopItemSizesManager::getInstance();
+		$manager = ShopItemSizesManager::get_instance();
 		$conditions = array();
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
@@ -450,7 +450,7 @@ class ShopItemSizesHandler {
 
 		// create template
 		$template = $this->_parent->load_template($tag_params, 'size_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (count($items) > 0)
@@ -495,8 +495,8 @@ class ShopItemSizesHandler {
 												)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -508,7 +508,7 @@ class ShopItemSizesHandler {
 	 * @param array $childen
 	 */
 	public function tag_ValueList($tag_params, $children) {
-		$manager = ShopItemSizeValuesManager::getInstance();
+		$manager = ShopItemSizeValuesManager::get_instance();
 		$conditions = array();
 		$selected = null;
 
@@ -529,7 +529,7 @@ class ShopItemSizesHandler {
 
 		// create template
 		$template = $this->_parent->load_template($tag_params, 'values_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		$counter = 0;
@@ -585,8 +585,8 @@ class ShopItemSizesHandler {
 												)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

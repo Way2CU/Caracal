@@ -40,7 +40,7 @@ class PayPal_Express extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -114,7 +114,7 @@ class PayPal_Express extends PaymentMethod {
 	public function get_recurring_plans() {
 		$result = array();
 		$conditions = array();
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -204,7 +204,7 @@ class PayPal_Express extends PaymentMethod {
 	 */
 	public function new_recurring_payment($data, $billing_information, $plan_name, $return_url, $cancel_url) {
 		$result = '';
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 		$plan = $manager->get_single_item($manager->get_field_names(), array('text_id' => $plan_name));
 
 		if (is_object($plan)) {
@@ -246,7 +246,7 @@ class PayPal_Express extends PaymentMethod {
 
 		// handle response
 		if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
-			$shop = shop::getInstance();
+			$shop = shop::get_instance();
 			$shop->setTransactionStatus($transaction->uid, TransactionStatus::CANCELED);
 
 			$result = true;
@@ -272,8 +272,8 @@ class PayPal_Express extends PaymentMethod {
 	public function beforeCheckout($method, $return_url, $cancel_url) {
 		global $language, $section, $action;
 
-		$shop = shop::getInstance();
-		$item_manager = ShopItemManager::getInstance();
+		$shop = shop::get_instance();
+		$item_manager = ShopItemManager::get_instance();
 		$result = false;
 		$fields = array();
 		$request_id = 0;
@@ -285,7 +285,7 @@ class PayPal_Express extends PaymentMethod {
 
 		// add recurring payment plan
 		if (!is_null($recurring_plan)) {
-			$manager = PayPal_PlansManager::getInstance();
+			$manager = PayPal_PlansManager::get_instance();
 			$plan = $manager->get_single_item($manager->get_field_names(), array('text_id' => $recurring_plan));
 			$params = array(
 				'price'			=> $plan->price,
@@ -396,7 +396,7 @@ class PayPal_Express extends PaymentMethod {
 		global $language;
 
 		// prepare data for new recurring profile
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 		$token = escape_chars($_REQUEST['token']);
 		$payer_id = escape_chars($_REQUEST['payer_id']);
 		$return_url = fix_chars($_REQUEST['return_url']);
@@ -434,7 +434,7 @@ class PayPal_Express extends PaymentMethod {
 		if ($recurring) {
 			$plan_name = $_SESSION['recurring_plan'];
 
-			$manager = PayPal_PlansManager::getInstance();
+			$manager = PayPal_PlansManager::get_instance();
 			$plan = $manager->get_single_item(
 									$manager->get_field_names(),
 									array('text_id' => $plan_name)

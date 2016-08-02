@@ -22,7 +22,7 @@ class tips extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$tips_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_tips'),
@@ -52,7 +52,7 @@ class tips extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -158,7 +158,7 @@ class tips extends Module {
 	 */
 	private function showTips() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
@@ -171,9 +171,9 @@ class tips extends Module {
 									),
 					);
 
-		$template->registerTagHandler('_tip_list', $this, 'tag_TipList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_tip_list', $this, 'tag_TipList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -182,15 +182,15 @@ class tips extends Module {
 	 */
 	private function addTip() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'tips_save'),
 					'cancel_action'	=> window_Close('tips_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -199,13 +199,13 @@ class tips extends Module {
 	 */
 	private function changeTip() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'			=> $item->id,
@@ -215,8 +215,8 @@ class tips extends Module {
 						'cancel_action'	=> window_Close('tips_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -226,7 +226,7 @@ class tips extends Module {
 	 */
 	private function saveTip() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 		$data = array(
 					'content'	=> $this->get_multilanguage_field('content'),
 					'visible'	=> fix_id($_REQUEST['visible'])
@@ -241,7 +241,7 @@ class tips extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_tip_saved'),
@@ -249,8 +249,8 @@ class tips extends Module {
 					'action'	=> window_Close($window).";".window_ReloadContent('tips'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -261,12 +261,12 @@ class tips extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
 		$item = $manager->get_single_item(array('content'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant("message_tip_delete"),
@@ -286,8 +286,8 @@ class tips extends Module {
 					'no_action'		=> window_Close('tips_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -296,12 +296,12 @@ class tips extends Module {
 	 */
 	private function deleteTip_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant("message_tip_deleted"),
@@ -309,8 +309,8 @@ class tips extends Module {
 					'action'	=> window_Close('tips_delete').";".window_ReloadContent('tips')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -321,7 +321,7 @@ class tips extends Module {
 	 * @param array $children
 	 */
 	public function tag_Tip($tag_params, $children) {
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 		$order_by = array();
 		$conditions = array();
 
@@ -338,7 +338,7 @@ class tips extends Module {
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, false);
 
 		$template = $this->load_template($tag_params, 'tip.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -347,8 +347,8 @@ class tips extends Module {
 						'visible'	=> $item->visible,
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -360,7 +360,7 @@ class tips extends Module {
 	 * @param array $children
 	 */
 	public function tag_TipList($tag_params, $children) {
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 		$conditions = array();
 		$limit = null;
 		$order_by = array('id');
@@ -379,8 +379,8 @@ class tips extends Module {
 			$limit = fix_id($tag_params['limit']);
 
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
 
 		// get items
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
@@ -425,8 +425,8 @@ class tips extends Module {
 												),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -448,7 +448,7 @@ class tips extends Module {
 		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
 
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
 		$item = $manager->get_single_item(
 								$manager->get_field_names(),
@@ -495,7 +495,7 @@ class tips extends Module {
 		if (isset($_REQUEST['limit']))
 			$limit = fix_id($_REQUEST['limit']);
 
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
 		$items = $manager->get_items(
 								$manager->get_field_names(),
@@ -541,7 +541,7 @@ class TipManager extends ItemManager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

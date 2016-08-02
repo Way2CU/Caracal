@@ -20,7 +20,7 @@ class ShopDeliveryMethodsHandler {
 	/**
 	* Public function that creates a single instance
 	*/
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -107,10 +107,10 @@ class ShopDeliveryMethodsHandler {
 				);
 
 		// register tag handler
-		$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+		$template->register_tag_handler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -125,8 +125,8 @@ class ShopDeliveryMethodsHandler {
 					'cancel_action'	=> window_Close('shop_delivery_method_add')
 				);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -135,7 +135,7 @@ class ShopDeliveryMethodsHandler {
 	 */
 	private function changeMethod() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 
 		$method = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -151,8 +151,8 @@ class ShopDeliveryMethodsHandler {
 					'cancel_action'	=> window_Close('shop_delivery_method_change')
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -161,7 +161,7 @@ class ShopDeliveryMethodsHandler {
 	 * Save new or changed method data
 	 */
 	private function saveMethod() {
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
@@ -181,7 +181,7 @@ class ShopDeliveryMethodsHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_delivery_method_saved'),
@@ -189,8 +189,8 @@ class ShopDeliveryMethodsHandler {
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_delivery_methods')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -200,13 +200,13 @@ class ShopDeliveryMethodsHandler {
 	private function deleteMethod() {
 		global $language;
 
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$method = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'		=> $this->_parent->get_language_constant("message_delivery_method_delete"),
@@ -227,8 +227,8 @@ class ShopDeliveryMethodsHandler {
 					'no_action'		=> window_Close('shop_delivery_method_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -236,9 +236,9 @@ class ShopDeliveryMethodsHandler {
 	 * Perform delivery method removal
 	 */
 	private function deleteMethod_Commit() {
-		$manager = ShopDeliveryMethodsManager::getInstance();
-		$prices_manager = ShopDeliveryMethodPricesManager::getInstance();
-		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
+		$prices_manager = ShopDeliveryMethodPricesManager::get_instance();
+		$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$prices = $prices_manager->get_items(array('id'), array('method' => $id));
@@ -253,7 +253,7 @@ class ShopDeliveryMethodsHandler {
 		$relations_manager->delete_items(array('price' => $id_list));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant("message_delivery_method_deleted"),
@@ -261,8 +261,8 @@ class ShopDeliveryMethodsHandler {
 					'action'	=> window_Close('shop_delivery_method_delete').";".window_ReloadContent('shop_delivery_methods')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,7 +270,7 @@ class ShopDeliveryMethodsHandler {
 	 * Show list of prices for specified method
 	 */
 	private function showPrices() {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$params = array(
@@ -297,10 +297,10 @@ class ShopDeliveryMethodsHandler {
 		$template = new TemplateHandler('delivery_method_prices_list.xml', $this->path.'templates/');
 
 		// register tag handler
-		$template->registerTagHandler('cms:delivery_prices', $this, 'tag_DeliveryPricesList');
+		$template->register_tag_handler('cms:delivery_prices', $this, 'tag_DeliveryPricesList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -316,8 +316,8 @@ class ShopDeliveryMethodsHandler {
 			'cancel_action'	=> window_Close('shop_delivery_price_add')
 		);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -325,7 +325,7 @@ class ShopDeliveryMethodsHandler {
 	 * Show form for changing price
 	 */
 	private function changePrice() {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
@@ -339,8 +339,8 @@ class ShopDeliveryMethodsHandler {
 			'cancel_action'	=> window_Close('shop_delivery_price_change')
 		);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -349,7 +349,7 @@ class ShopDeliveryMethodsHandler {
 	 */
 	private function savePrice() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 
 		$data = array(
 			'value'		=> fix_chars($_REQUEST['value'])
@@ -370,7 +370,7 @@ class ShopDeliveryMethodsHandler {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant('message_delivery_price_saved'),
@@ -378,8 +378,8 @@ class ShopDeliveryMethodsHandler {
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_delivery_method_prices')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -389,13 +389,13 @@ class ShopDeliveryMethodsHandler {
 	private function deletePrice() {
 		global $language;
 
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'		=> $this->_parent->get_language_constant("message_delivery_price_delete"),
@@ -416,8 +416,8 @@ class ShopDeliveryMethodsHandler {
 					'no_action'		=> window_Close('shop_delivery_price_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -425,15 +425,15 @@ class ShopDeliveryMethodsHandler {
 	 * Perform price removal
 	 */
 	private function deletePrice_Commit() {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
-		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
+		$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$manager->delete_items(array('id' => $id));
 		$relations_manager->delete_items(array('price' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
 					'message'	=> $this->_parent->get_language_constant("message_delivery_price_deleted"),
@@ -441,8 +441,8 @@ class ShopDeliveryMethodsHandler {
 					'action'	=> window_Close('shop_delivery_price_delete').";".window_ReloadContent('shop_delivery_method_prices')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -452,7 +452,7 @@ class ShopDeliveryMethodsHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryMethodsList($tag_params, $children) {
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 		$conditions = array();
 		$item_id = -1;
 		$selected = -1;
@@ -465,9 +465,9 @@ class ShopDeliveryMethodsHandler {
 
 		// delivery method list needs to be filtered by the items in shooping cart
 		if (isset($tag_params['shopping_cart']) && $tag_params['shopping_cart'] == 1) {
-			$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
-			$prices_manager = ShopDeliveryMethodPricesManager::getInstance();
-			$items_manager = ShopItemManager::getInstance();
+			$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
+			$prices_manager = ShopDeliveryMethodPricesManager::get_instance();
+			$items_manager = ShopItemManager::get_instance();
 
 			$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 			$uid_list = array_keys($cart);
@@ -546,8 +546,8 @@ class ShopDeliveryMethodsHandler {
 
 		// get template
 		$template = $this->_parent->load_template($tag_params, 'delivery_methods_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:price_list', $this, 'tag_DeliveryPricesList');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:price_list', $this, 'tag_DeliveryPricesList');
 
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -616,8 +616,8 @@ class ShopDeliveryMethodsHandler {
 					)
 				);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}
@@ -629,7 +629,7 @@ class ShopDeliveryMethodsHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryPricesList($tag_params, $children) {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$conditions = array();
 		$relations = array();
 
@@ -642,7 +642,7 @@ class ShopDeliveryMethodsHandler {
 
 		// get relations with shop item
 		if (isset($tag_params['item'])) {
-			$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+			$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
 			$item_id = fix_id($tag_params['item']);
 
 			$raw_relations = $relations_manager->get_items(array('price'), array('item' => $item_id));
@@ -654,7 +654,7 @@ class ShopDeliveryMethodsHandler {
 
 		// get template
 		$template = $this->_parent->load_template($tag_params, 'delivery_method_prices_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
@@ -702,8 +702,8 @@ class ShopDeliveryMethodsHandler {
 						),
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

@@ -69,7 +69,7 @@ class WindowItem implements Item {
 		$this->name = $name;
 
 		// register with backend
-		$backend = backend::getInstance();
+		$backend = backend::get_instance();
 		$backend->registerNamedItem($name, $this);
 	}
 
@@ -112,7 +112,7 @@ class WindowItem implements Item {
 
 		// load template
 		if (is_null(self::$template)) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			self::$template = new TemplateHandler('menu_item.xml', $backend->path);
 		}
 

@@ -234,7 +234,7 @@ abstract class Module {
 			return $result;
 
 		// get manager
-		$manager = SettingsManager::getInstance();
+		$manager = SettingsManager::get_instance();
 
 		// get values from the database
 		$settings = $manager->get_items($manager->get_field_names(), array('module' => $this->name));
@@ -260,7 +260,7 @@ abstract class Module {
 			return;
 
 		// get settings manager
-		$manager = SettingsManager::getInstance();
+		$manager = SettingsManager::get_instance();
 
 		// check if specified setting already exists
 		$setting = $manager->get_single_item(
@@ -314,7 +314,7 @@ abstract class Module {
 
 		// load template
 		$template = new TemplateHandler($file_name, $path);
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		return $template;
 	}

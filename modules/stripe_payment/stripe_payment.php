@@ -32,7 +32,7 @@ class stripe_payment extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 			$plans_menu = $backend->getMenu('shop_recurring_plans');
 
@@ -70,14 +70,14 @@ class stripe_payment extends Module {
 		// register payment method
 		if (ModuleHandler::is_loaded('shop')) {
 			require_once("units/stripe_payment_method.php");
-			Stripe_PaymentMethod::getInstance($this);
+			Stripe_PaymentMethod::get_instance($this);
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -182,15 +182,15 @@ class stripe_payment extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
 						'cancel_action'	=> window_Close('stripe')
 					);
 
-		$template->setLocalParams($params);
+		$template->set_local_params($params);
 
-		$template->restoreXML();
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -205,7 +205,7 @@ class stripe_payment extends Module {
 		$this->save_setting('public_key', $public_key);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $this->get_language_constant('message_settings_saved'),
@@ -213,8 +213,8 @@ class stripe_payment extends Module {
 					'action'	=> window_Close('stripe')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -229,14 +229,14 @@ class stripe_payment extends Module {
 		// show message if API keys are not set
 		if (!$result) {
 			$template = new TemplateHandler('window_message.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'message'	=> $this->get_language_constant('message_missing_api_keys'),
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
@@ -247,7 +247,7 @@ class stripe_payment extends Module {
 	 * Update list of recurring plans throuhg API.
 	 */
 	private function updateRecurringPlans() {
-		$manager= Stripe_PlansManager::getInstance();
+		$manager= Stripe_PlansManager::get_instance();
 		$response = Stripe_Plan::all();
 		$uids = array();
 		$processed_plans = array();
@@ -312,14 +312,14 @@ class stripe_payment extends Module {
 		$this->updateRecurringPlans();
 
 		$template = new TemplateHandler('plans_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_PlanList');
+		$template->register_tag_handler('cms:list', $this, 'tag_PlanList');
 
 		$params = array();
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -348,8 +348,8 @@ class stripe_payment extends Module {
 	 * @return object
 	 */
 	public static function getCustomer($transaction_uid) {
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$customer_manager = Stripe_CustomerManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$customer_manager = Stripe_CustomerManager::get_instance();
 		$conditions = array();
 
 		// get transaction first
@@ -388,9 +388,9 @@ class stripe_payment extends Module {
 	private function charge() {
 		$redirect_url = fix_chars($_REQUEST['redirect_url']);
 		$transaction_uid = fix_chars($_REQUEST['transaction_uid']);
-		$shop = shop::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$currency_manager = ShopCurrenciesManager::getInstance();
+		$shop = shop::get_instance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$currency_manager = ShopCurrenciesManager::get_instance();
 
 		// get card details
 		$card = array(
@@ -448,9 +448,9 @@ class stripe_payment extends Module {
 	 * Subscribe new or existing customer.
 	 */
 	private function subscribe() {
-		$shop = shop::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$customer_manager = Stripe_CustomerManager::getInstance();
+		$shop = shop::get_instance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$customer_manager = Stripe_CustomerManager::get_instance();
 		$stripe_token = isset($_REQUEST['stripe_token']) ? fix_chars($_REQUEST['stripe_token']) : null;
 		$transaction_uid = fix_chars($_REQUEST['transaction']);
 		$plan_name = fix_chars($_REQUEST['plan_name']);
@@ -487,7 +487,7 @@ class stripe_payment extends Module {
 
 			// get email from system user
 			if ($transaction->system_user != 0) {
-				$user_manager = UserManager::getInstance();
+				$user_manager = UserManager::get_instance();
 				$system_user = $user_manager->get_single_item(
 										array('email'),
 										array('id' => $transaction->system_user)
@@ -501,7 +501,7 @@ class stripe_payment extends Module {
 
 			// get email from buyer
 			if ($transaction->buyer != 0 && !isset($customer_data['email'])) {
-				$buyer_manager = ShopBuyersManager::getInstance();
+				$buyer_manager = ShopBuyersManager::get_instance();
 				$buyer = $buyer_manager->get_single_item(
 										array('email'),
 										array('id' => $transaction->buyer)
@@ -558,7 +558,7 @@ class stripe_payment extends Module {
 	 * @param array $children
 	 */
 	public function tag_PlanList($tag_params, $children) {
-		$manager = Stripe_PlansManager::getInstance();
+		$manager = Stripe_PlansManager::get_instance();
 		$conditions = array();
 		$selected = isset($_SESSION['recurring_plan']) ? $_SESSION['recurring_plan'] : null;
 
@@ -567,7 +567,7 @@ class stripe_payment extends Module {
 
 		// load template
 		$template = $this->load_template($tag_params, 'plans_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (count($items) > 0)
@@ -584,8 +584,8 @@ class stripe_payment extends Module {
 					'selected'			=> $selected == $item->name
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

@@ -26,7 +26,7 @@ class language_menu extends Module {
 
 		// load CSS and JScript
 		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
 			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
 
@@ -38,7 +38,7 @@ class language_menu extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -93,7 +93,7 @@ class language_menu extends Module {
 	public function addMeta() {
 		global $default_language;
 
-		$head_tag = head_tag::getInstance();
+		$head_tag = head_tag::get_instance();
 		$language_list = Language::getLanguages(false);
 
 		// prepare params
@@ -156,7 +156,7 @@ class language_menu extends Module {
 
 		// check if we were asked to get languages from specific module
 		if (isset($tag_params['from_module']) && ModuleHandler::is_loaded($tag_params['from_module'])) {
-			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'getInstance'));
+			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'get_instance'));
 			$list = $module->language->getLanguages(true);
 
 		} else {
@@ -164,7 +164,7 @@ class language_menu extends Module {
 		}
 
 		$template = $this->load_template($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template->set_template_params_from_array($children);
 
 		// get parameters for URL
 		$link_params = $this->get_params();
@@ -181,8 +181,8 @@ class language_menu extends Module {
 					'url'        => $link
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse( );
 			}
 	}
@@ -206,8 +206,8 @@ class language_menu extends Module {
 				'url'        => url_MakeFromArray($link_params)
 			);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -219,7 +219,7 @@ class language_menu extends Module {
 
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
-			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
 			$list = $module->language->getLanguages(true);
 
 		} else {
@@ -251,7 +251,7 @@ class language_menu extends Module {
 	private function json_GetText() {
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
-			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
 			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
 
 		} else {
@@ -272,7 +272,7 @@ class language_menu extends Module {
 		// check if we were asked to get languages from specific module
 		$language_handler = null;
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
-			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
 			$language_handler = $module->language;
 		}
 

@@ -62,8 +62,8 @@ class backend extends Module {
 
 		// load CSS and JScript
 		if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
-			$head_tag = head_tag::getInstance();
-			$collection = collection::getInstance();
+			$head_tag = head_tag::get_instance();
+			$collection = collection::get_instance();
 
 			$collection->includeScript(collection::JQUERY);
 			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
@@ -159,7 +159,7 @@ class backend extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -184,7 +184,7 @@ class backend extends Module {
 
 			// if user is not logged, redirect him to a proper place
 			if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
-				$session_manager = SessionManager::getInstance($this);
+				$session_manager = SessionManager::get_instance($this);
 				$session_manager->transfer_control();
 				return;
 			}
@@ -202,37 +202,37 @@ class backend extends Module {
 				case 'logout_commit':
 				case 'json_login':
 				case 'json_logout':
-					$session_manager = SessionManager::getInstance();
+					$session_manager = SessionManager::get_instance();
 					$session_manager->transfer_control();
 					break;
 
 				case 'verify_account':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->verifyAccount($params, $children);
 					break;
 
 				case 'save_unpriviledged_user_timer':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->saveTimer();
 					break;
 
 				case 'save_unpriviledged_user':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->saveUnpriviledgedUser($params, $children);
 					break;
 
 				case 'save_unpriviledged_password':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->saveUnpriviledgedPassword($params, $children);
 					break;
 
 				case 'password_recovery':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->recoverPasswordByEmail($params, $children);
 					break;
 
 				case 'password_recovery_save':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->saveRecoveredPassword($params, $children);
 					break;
 
@@ -243,7 +243,7 @@ class backend extends Module {
 				case 'transfer_control':
 					// if user is not logged, redirect him to a proper place
 					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
-						$session_manager = SessionManager::getInstance($this);
+						$session_manager = SessionManager::get_instance($this);
 						$session_manager->transfer_control();
 						return;
 					}
@@ -262,7 +262,7 @@ class backend extends Module {
 						$params['sub_action'] = escape_chars($_REQUEST['sub_action']);
 
 					if (ModuleHandler::is_loaded($module_name)) {
-						$module = call_user_func(array($module_name, 'getInstance'));
+						$module = call_user_func(array($module_name, 'get_instance'));
 						$module->transfer_control($params, $children);
 					}
 					break;
@@ -318,14 +318,14 @@ class backend extends Module {
 				case 'save_password':
 				case 'email_templates':
 				case 'email_templates_save':
-					$user_manager = Backend_UserManager::getInstance();
+					$user_manager = Backend_UserManager::get_instance();
 					$user_manager->transfer_control();
 					break;
 
 				// ---
 				case 'logout':
 				case 'logout_commit':
-					$session_manager = SessionManager::getInstance($this);
+					$session_manager = SessionManager::get_instance($this);
 					$session_manager->transfer_control();
 					break;
 			}
@@ -360,13 +360,13 @@ class backend extends Module {
 	private function showBackend() {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
 
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:main_menu', $this, 'tag_MainMenu');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:main_menu', $this, 'tag_MainMenu');
 
 		$params = array();
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -410,13 +410,13 @@ class backend extends Module {
 	 */
 	private function showModules() {
 		$template = new TemplateHandler('modules_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array();
 
-		$template->registerTagHandler('_module_list', $this, 'tag_ModuleList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_module_list', $this, 'tag_ModuleList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -428,7 +428,7 @@ class backend extends Module {
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = ModuleManager::getInstance();
+			$manager = ModuleManager::get_instance();
 			$manager->update_items(
 							array('active' => 1),
 							array('name' => $module_name)
@@ -440,15 +440,15 @@ class backend extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $message,
 					'action'	=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -460,7 +460,7 @@ class backend extends Module {
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = ModuleManager::getInstance();
+			$manager = ModuleManager::get_instance();
 			$manager->update_items(
 							array('active' => 0),
 							array('name' => $module_name)
@@ -472,15 +472,15 @@ class backend extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $message,
 					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -491,7 +491,7 @@ class backend extends Module {
 		$module_name = escape_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_module_initialise'),
@@ -511,8 +511,8 @@ class backend extends Module {
 					'no_text'		=> $this->get_language_constant("cancel"),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -524,7 +524,7 @@ class backend extends Module {
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = ModuleManager::getInstance();
+			$manager = ModuleManager::get_instance();
 			$max_order = $manager->get_item_value(
 										'MAX(`order`)',
 										array('preload' => 0)
@@ -540,7 +540,7 @@ class backend extends Module {
 								'active'	=> 1
 							));
 
-			$handler = ModuleHandler::getInstance();
+			$handler = ModuleHandler::get_instance();
 			$module = $handler->loadModule($module_name);
 
 			if (!is_null($module)) {
@@ -553,15 +553,15 @@ class backend extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $message,
 					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -572,7 +572,7 @@ class backend extends Module {
 		$module_name = escape_chars($_REQUEST['module_name']);
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_module_disable'),
@@ -592,8 +592,8 @@ class backend extends Module {
 					'no_text'		=> $this->get_language_constant("cancel"),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -605,7 +605,7 @@ class backend extends Module {
 
 		if (!in_array($module_name, $this->protected_modules)) {
 			// module is not protected
-			$manager = ModuleManager::getInstance();
+			$manager = ModuleManager::get_instance();
 			$max_order = $manager->get_item_value(
 										'MAX(`order`)',
 										array('preload' => 0)
@@ -616,7 +616,7 @@ class backend extends Module {
 			$manager->delete_items(array('name' => $module_name));
 
 			if (ModuleHandler::is_loaded($module_name)) {
-				$module = call_user_func(array($module_name, 'getInstance'));
+				$module = call_user_func(array($module_name, 'get_instance'));
 				$module->on_disable();
 
 				$message = $this->get_language_constant('message_module_disabled');
@@ -630,15 +630,15 @@ class backend extends Module {
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $message,
 					'action'		=> window_Close($this->name.'_module_dialog').";".window_ReloadContent('system_modules')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -647,20 +647,20 @@ class backend extends Module {
 	 */
 	private function clearCache() {
 		// clear cache
-		$cache = Cache::getInstance();
+		$cache = Cache::get_instance();
 		$cache->clearCache();
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'		=> $this->get_language_constant('message_cleared_cache'),
 					'action'		=> window_Close('system_clear_cache')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -675,7 +675,7 @@ class backend extends Module {
 
 		$list = array();
 		$raw_list = $this->getModuleList();
-		$manager = ModuleManager::getInstance();
+		$manager = ModuleManager::get_instance();
 
 		$modules_in_use = $manager->get_items(
 											array('id', 'order', 'name', 'preload', 'active'),
@@ -717,7 +717,7 @@ class backend extends Module {
 							$this->path.'templates/'
 						);
 
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		foreach($list as $name => $definition) {
 			// locate module icon
@@ -805,8 +805,8 @@ class backend extends Module {
 												),
 						);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

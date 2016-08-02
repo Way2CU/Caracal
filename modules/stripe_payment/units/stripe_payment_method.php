@@ -22,7 +22,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -118,7 +118,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	public function get_recurring_plans() {
 		$result = array();
 		$language_list = Language::getLanguages(false);
-		$manager = Stripe_PlansManager::getInstance();
+		$manager = Stripe_PlansManager::get_instance();
 
 		// get recurring payment plans from database
 		$items = $manager->get_items($manager->get_field_names(), array());
