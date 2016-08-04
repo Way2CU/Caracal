@@ -3992,7 +3992,7 @@ class shop extends Module {
 				$template->set_template_params_from_array($children);
 				$template->register_tag_handler('cms:checkout_items', $this, 'tag_CheckoutItems');
 				$template->register_tag_handler('cms:discounted_items', $this, 'tag_DiscountedItemList');
-				$template->register_tag_handler('cms:discounts', $this, 'tag_DiscountList');
+				$template->register_tag_handler('cms:discounts', $this, 'tag_DiscountsAppliedList');
 
 				// parse template
 				$params = array(
@@ -4366,7 +4366,7 @@ class shop extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_DiscountList($tag_params, $children) {
+	public function tag_DiscountAppliedList($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'discount_item.xml');
 
 		foreach ($discount_items as $item) {
