@@ -122,7 +122,7 @@ if ($cache->isCached()) {
 
 } else {
 	// get main section handler so we can transfer control
-	$section_handler = SectionHandler::getInstance();
+	$section_handler = SectionHandler::get_instance();
 
 	// load all the modules
 	$module_handler->loadModules();

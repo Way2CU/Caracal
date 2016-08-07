@@ -11,6 +11,13 @@ class SectionHandler {
 	public $engine;
 	public $active = false;
 
+	private $matched_file = null;
+	private $matched_template = null;
+
+	const PREFIX = '^(/(?<language>[a-z]{2}))?';
+	const SUFFIX = '/?';
+	const ROOT_KEY = '/';
+
 	/**
 	 * Constructor
 	 */
@@ -34,6 +41,53 @@ class SectionHandler {
 			self::$_instance = new self();
 
 		return self::$_instance;
+	}
+
+	/**
+	 * Match template based on URL and extract parameters.
+	 */
+	public function prepare() {
+		$result = false;
+
+		// try to match whole query string
+		foreach ($this->data as $pattern => $template_file) {
+			$match = preg_replace('|\{([\w\d\+-_]+)\}|iu', '(?<\1>[\w\d]+)', $pattern);
+			$match = self::PREFIX.$match.self::SUFFIX;
+
+			// successfully matched query string to template
+			if (preg_match($match, $data, $matches)) {
+				$this->matched_file = $template_file;
+				$this->matched_template = $match;
+				$result = true;
+				break;
+			}
+		}
+
+		// matching failed, try to load home template
+		if (!$result)
+			if (array_key_exists(self::ROOT_KEY, $this->data)) {
+				$this->matched_file = $this->data[self::ROOT_KEY];
+				$this->matched_template = self::ROOT_KEY;
+				$result = true;
+			}
+
+		return $result;
+	}
+
+	/**
+	 * Extract variables from URL and populate them to request array.
+	 *
+	 * @param string $pattern
+	 */
+	private function populate_variables($pattern) {
+	}
+
+	/**
+	 * Find matching template and transfer control to it.
+	 */
+	public function transfer_control() {
+		$found = false;
+
 	}
 
 	/**
