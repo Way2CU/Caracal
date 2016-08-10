@@ -89,8 +89,8 @@ $time_start = $time_start[0] + $time_start[1];
 Session::start();
 
 // unpack parameters if needed
-if ($url_rewrite)
-	url_UnpackValues();
+SectionHandler::prepare();
+URL::unpack_values();
 
 // set default values for variables
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
@@ -121,15 +121,13 @@ if ($cache->isCached()) {
 	$cache->printCache();
 
 } else {
-	// get main section handler so we can transfer control
-	$section_handler = SectionHandler::get_instance();
 
 	// load all the modules
 	$module_handler->loadModules();
 
 	// show page and cache it along the way
 	$cache->startCapture();
-	$section_handler->transferControl($section, $action, $language);
+	SectionHandler::transfer_control();
 	$cache->endCapture();
 }
 
