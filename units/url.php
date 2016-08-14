@@ -193,7 +193,7 @@ final class URL {
 		global $url_rewrite;
 
 		// get template for matching
-		$template = SectionHandler::get_matched_template();
+		$template = SectionHandler::get_matched_pattern();
 
 		// get query string
 		$query_string = $_SERVER['QUERY_STRING'];
