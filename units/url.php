@@ -190,7 +190,7 @@ final class URL {
 	 * template used to match page template file.
 	 */
 	public static function unpack_values() {
-		global $url_rewrite;
+		global $url_rewrite, $_REQUEST, $_GET, $_POST;
 
 		// get template for matching
 		$pattern = SectionHandler::get_matched_pattern();
@@ -207,6 +207,8 @@ final class URL {
 		foreach ($values as $name => $value)
 			if (!is_int($name))
 				$result[$name] = $value;
+
+		print var_export($result).PHP_EOL;
 
 		// modify global variables
 		switch ($_SERVER['REQUEST_METHOD']) {
