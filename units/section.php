@@ -79,7 +79,8 @@ final class SectionHandler {
 		if (!$result)
 			if (array_key_exists(self::ROOT_KEY, self::$data)) {
 				self::$matched_file = self::$data[self::ROOT_KEY];
-				self::$matched_pattern = self::ROOT_KEY;
+				self::$matched_pattern = self::wrap_pattern(self::ROOT_KEY);
+				self::$matched_params = array();
 				$result = true;
 			}
 
