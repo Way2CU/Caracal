@@ -197,11 +197,7 @@ final class URL {
 
 		// get query string
 		$query_string = $_SERVER['QUERY_STRING'];
-
-		if (empty($query_string))
-			return;
-
-		if ($query_string[0] != SectionHandler::ROOT_KEY)
+		if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
 			$query_string = SectionHandler::ROOT_KEY.$query_string;
 
 		// extract values

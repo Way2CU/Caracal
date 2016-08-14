@@ -50,7 +50,7 @@ final class SectionHandler {
 
 		// get query string
 		$query_string = $_SERVER['QUERY_STRING'];
-		if ($query_string[0] != self::ROOT_KEY)
+		if (substr($query_string, 0, 1) != self::ROOT_KEY)
 			$query_string = self::ROOT_KEY.$query_string;
 
 		// try to match whole query string
