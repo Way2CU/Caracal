@@ -138,7 +138,7 @@ final class SectionHandler {
 
 		// transfer call to modules
 		if (!is_null($section) && ModuleHandler::is_loaded($section)) {
-			$module = call_user_func(array(, 'get_instance'));
+			$module = call_user_func(array($section, 'get_instance'));
 			$module->transfer_control($_REQUEST, array());
 
 		// transfer call to module parser
