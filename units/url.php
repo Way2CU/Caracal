@@ -15,7 +15,7 @@ final class URL {
 	 * @param string $template_file
 	 * @return string
 	 */
-	public static function make(array $params, string $file=null) {
+	public static function make($params, $file=null) {
 		global $url_language_optional, $url_rewrite;
 
 		$result = '';
@@ -55,7 +55,7 @@ final class URL {
 	 * @param array ...
 	 * @return string
 	 */
-	public static function make_backend(string $section=null, string $action=null) {
+	public static function make_backend($section=null, $action=null) {
 		$result = self::get_base();
 		$arguments = array();
 
@@ -85,7 +85,7 @@ final class URL {
 	 * @param string $path
 	 * @return string
 	 */
-	public static function from_file_path(string $path) {
+	public static function from_file_path($path) {
 		$base_url = self::get_base();
 
 		$path = str_replace('\\', '/', $path);
@@ -101,7 +101,7 @@ final class URL {
 	 * @param string $base
 	 * @return string
 	 */
-	public static function to_file_path(string $url, string $base=null) {
+	public static function to_file_path($url, $base=null) {
 		// get base URL
 		$base = is_null($base) ? self::get_base() : $base;
 
@@ -144,8 +144,7 @@ final class URL {
 	 * @param string $target
 	 * @return string
 	 */
-	public static function make_hyperlink(string $content, string $url, string $title=null,
-										string $class=null, string $target=null) {
+	public static function make_hyperlink($content, $url, $title=null, $class=null, $target=null) {
 		$attribute_list = array();
 
 		// populate attribute list
@@ -177,7 +176,7 @@ final class URL {
 	 * @param string $url
 	 * @param integer $timeout
 	 */
-	public static function set_refresh(string $url=null, $timeout=2) {
+	public static function set_refresh($url=null, $timeout=2) {
 		$url = is_null($url) ? $_SERVER['REQUEST_URI'] : $url;
 		$output '<script type="text/javascript">';
 		$output .= 'setTimeout(function() { window.location = \''.$url.'\'; }, '.($seconds * 1000).')';
