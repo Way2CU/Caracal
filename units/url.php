@@ -178,7 +178,7 @@ final class URL {
 	 */
 	public static function set_refresh($url=null, $timeout=2) {
 		$url = is_null($url) ? $_SERVER['REQUEST_URI'] : $url;
-		$output '<script type="text/javascript">';
+		$output = '<script type="text/javascript">';
 		$output .= 'setTimeout(function() { window.location = \''.$url.'\'; }, '.($seconds * 1000).')';
 		$output .= '</script>';
 
