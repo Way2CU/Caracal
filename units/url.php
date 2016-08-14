@@ -55,7 +55,7 @@ final class URL {
 	 * @param array ...
 	 * @return string
 	 */
-	public static function make_backend($section=null, $action=null) {
+	public static function make_query($section=null, $action=null) {
 		$result = self::get_base();
 		$arguments = array();
 
