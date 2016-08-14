@@ -30,14 +30,14 @@ class callbox extends Module {
 
 			$callbox_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_callbox'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$callbox_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
+								URL::from_file_path($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'callbox_settings',

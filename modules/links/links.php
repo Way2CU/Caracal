@@ -33,14 +33,14 @@ class links extends Module {
 
 			$links_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_links'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'links_list',
 											720,
@@ -53,7 +53,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'groups_list',
 											500,
@@ -66,7 +66,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_links_overview'),
-								url_GetFromFilePath($this->path.'images/overview.svg'),
+								URL::from_file_path($this->path.'images/overview.svg'),
 								window_Open( // on click open window
 											'links_overview',
 											650,
@@ -292,7 +292,7 @@ class links extends Module {
 										$this->name,
 										'links_add'
 									),
-					'link_groups'	=> url_MakeHyperlink(
+					'link_groups'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('groups'),
 										window_Open( // on click open window
 											'groups_list',
@@ -302,7 +302,7 @@ class links extends Module {
 											backend_UrlMake($this->name, 'groups_list')
 										)
 									),
-					'link_overview'	=> url_MakeHyperlink(
+					'link_overview'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('overview'),
 										window_Open( // on click open window
 											'links_overview',
@@ -460,9 +460,9 @@ class links extends Module {
 					'no_text'    => $this->getLanguageConstant('cancel'),
 					'yes_action' => window_LoadContent(
 											'links_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'links_delete_commit'),
 												array('id', $id)
@@ -646,9 +646,9 @@ class links extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'groups_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'groups_delete_commit'),
 												array('id', $id)
@@ -783,7 +783,7 @@ class links extends Module {
 
 			$manager->updateData($data, array('id' => $link_id));
 
-			url_SetRefresh($url, 0);
+			URL::set_refresh($url, 0);
 		}
 	}
 
@@ -890,7 +890,7 @@ class links extends Module {
 					'description'         => $item->description,
 					'text_id'             => $item->text_id,
 					'url'                 => $item->url,
-					'redirect_url'        => url_Make('redirect', $this->name, array('id', $item->id)),
+					'redirect_url'        => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 					'external'            => $item->external,
 					'external_character'  => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'sponsored'           => $item->sponsored,
@@ -1021,7 +1021,7 @@ class links extends Module {
 						'description'         => $item->description,
 						'text_id'             => $item->text_id,
 						'url'                 => $item->url,
-						'redirect_url'        => url_Make('redirect', $this->name, array('id', $item->id)),
+						'redirect_url'        => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 						'external'            => $item->external,
 						'external_character'  => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'sponsored'           => $item->sponsored,
@@ -1032,39 +1032,39 @@ class links extends Module {
 						'total_clicks'        => $item->total_clicks,
 						'image'               => $image,
 						'thumbnail'           => $thumbnail,
-						'item_change'         => url_MakeHyperlink(
+						'item_change'         => URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'links_change', 	// window id
 													600,				// width
 													$this->getLanguageConstant('title_links_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'links_change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'         => url_MakeHyperlink(
+						'item_delete'         => URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'links_delete', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_links_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'links_delete'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_open'           => url_MakeHyperlink(
+						'item_open'           => URL::make_hyperlink(
 												$this->getLanguageConstant('open'),
 												$item->url,
 												'', '',
@@ -1215,48 +1215,48 @@ class links extends Module {
 							'name'        => $item->name,
 							'text_id'     => $item->text_id,
 							'thumbnail'   => $thumbnail,
-							'item_change' => url_MakeHyperlink(
+							'item_change' => URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'groups_change', 	// window id
 														400,				// width
 														$this->getLanguageConstant('title_groups_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete' => url_MakeHyperlink(
+							'item_delete' => URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'groups_delete', 	// window id
 														400,				// width
 														$this->getLanguageConstant('title_groups_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_delete'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_links'  => url_MakeHyperlink(
+							'item_links'  => URL::make_hyperlink(
 													$this->getLanguageConstant('links'),
 													window_Open(
 														'groups_links', 	// window id
 														400,				// width
 														$this->getLanguageConstant('title_groups_links'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_links'),
 															array('id', $item->id)
@@ -1315,7 +1315,7 @@ class links extends Module {
 								'text'             => $item->text,
 								'description'      => Markdown::parse($item->description),
 								'url'              => $item->url,
-								'redirect_url'     => url_Make('redirect', $this->name, array('id', $item->id)),
+								'redirect_url'     => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 								'external'         => $item->external,
 								'sponsored'        => $item->sponsored,
 								'display_limit'    => $item->display_limit,
@@ -1408,7 +1408,7 @@ class links extends Module {
 									'id'               => $item->id,
 									'text'             => $item->text,
 									'url'              => $item->url,
-									'redirect_url'     => url_Make('redirect', $this->name, array('id', $item->id)),
+									'redirect_url'     => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 									'external'         => $item->external,
 									'sponsored'        => $item->sponsored,
 									'display_limit'    => $item->display_limit,

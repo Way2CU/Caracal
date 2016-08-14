@@ -82,11 +82,11 @@
          id="tspan2987"
          x="24.243662"
          y="28.491278"
-         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'">url_Make(<tspan
-   style="font-size:14px;fill:#ff0000"
-   id="tspan4203">action</tspan>, <tspan
+         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'M+ 1mn';-inkscape-font-specification:'M+ 1mn Medium'">URL::make_query(<tspan
    style="font-size:14px;fill:#0000ff"
    id="tspan4205">section</tspan>, <tspan
+   style="font-size:14px;fill:#ff0000"
+   id="tspan4203">action</tspan>, <tspan
    style="font-size:14px;fill:#008000"
    id="tspan4207">array(param, value)</tspan>)</tspan></text>
     <text

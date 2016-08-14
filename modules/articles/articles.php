@@ -40,14 +40,14 @@ class articles extends Module {
 
 			$articles_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_articles'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_articles_new'),
-								url_GetFromFilePath($this->path.'images/new_article.svg'),
+								URL::from_file_path($this->path.'images/new_article.svg'),
 
 								window_Open( // on click open window
 											'articles_new',
@@ -62,7 +62,7 @@ class articles extends Module {
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_articles_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'articles',
@@ -75,7 +75,7 @@ class articles extends Module {
 							));
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_article_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 
 								window_Open( // on click open window
 											'article_groups',
@@ -441,9 +441,9 @@ class articles extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'articles_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'articles_delete_commit'),
 												array('id', $id)
@@ -568,9 +568,9 @@ class articles extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'article_groups_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'groups_delete_commit'),
 												array('id', $id)
@@ -851,32 +851,32 @@ class articles extends Module {
 							'votes_down' 	=> $item->votes_down,
 							'rating'		=> $this->getArticleRating($item, 10),
 							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'articles_change', 	// window id
 														730,				// width
 														$this->getLanguageConstant('title_articles_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'articles_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'articles_delete', 	// window id
 														400,				// width
 														$this->getLanguageConstant('title_articles_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'articles_delete'),
 															array('id', $item->id)
@@ -910,9 +910,9 @@ class articles extends Module {
 			$template->setMappedModule($this->name);
 
 			if (is_object($item)) {
-				$url = url_Make(
-							'get_rating_image',
+				$url = URL::make_query(
 							$this->name,
+							'get_rating_image',
 							array('type', $type),
 							array('id', $id)
 						);
@@ -1053,32 +1053,32 @@ class articles extends Module {
 							'title'			=> $item->title,
 							'description'	=> $item->description,
 							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'article_groups_change', 	// window id
 														400,						// width
 														$this->getLanguageConstant('title_article_groups_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'article_groups_delete', 	// window id
 														400,						// width
 														$this->getLanguageConstant('title_article_groups_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_delete'),
 															array('id', $item->id)
@@ -1114,9 +1114,9 @@ class articles extends Module {
 
 		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
 
-		$rating_image_url = url_Make(
-					'get_rating_image',
+		$rating_image_url = URL::make_query(
 					$this->name,
+					'get_rating_image',
 					array('type', $type),
 					array('id', $id)
 				);
@@ -1231,9 +1231,9 @@ class articles extends Module {
 				$timestamp = strtotime($item->timestamp);
 				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
 				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
-				$rating_image_url = url_Make(
-							'get_rating_image',
+				$rating_image_url = URL::make_query(
 							$this->name,
+							'get_rating_image',
 							array('type', $rating_image_type),
 							array('id', $item->id)
 						);

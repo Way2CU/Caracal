@@ -36,7 +36,7 @@ class paypal extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_paypal'),
-									url_GetFromFilePath($this->path.'images/icon.svg'),
+									URL::from_file_path($this->path.'images/icon.svg'),
 									window_Open( // on click open window
 												'paypal',
 												400,
@@ -50,7 +50,7 @@ class paypal extends Module {
 			if (!is_null($recurring_menu))
 				$recurring_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_paypal'),
-									url_GetFromFilePath($this->path.'images/icon.svg'),
+									URL::from_file_path($this->path.'images/icon.svg'),
 									window_Open( // on click open window
 												'paypal_recurring_plans',
 												400,
@@ -399,9 +399,9 @@ class paypal extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'paypal_recurring_plans_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'recurring_plans_delete_commit'),
 												array('id', $id)
@@ -575,32 +575,32 @@ class paypal extends Module {
 					'setup_price'		=> $item->setup_price,
 					'start_time'		=> $item->start_time,
 					'group_name'		=> $item->group_name,
-					'item_change'	=> url_MakeHyperlink(
+					'item_change'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
 												'paypal_recurring_plans_change', 	// window id
 												405,				// width
 												$this->getLanguageConstant('title_recurring_plans_change'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'recurring_plans_change'),
 													array('id', $item->id)
 												)
 											)
 										),
-					'item_delete'	=> url_MakeHyperlink(
+					'item_delete'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('delete'),
 											window_Open(
 												'paypal_recurring_plans_delete', 	// window id
 												400,				// width
 												$this->getLanguageConstant('title_recurring_plans_delete'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'recurring_plans_delete'),
 													array('id', $item->id)

@@ -28,7 +28,7 @@ class google_checkout extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_google_checkout'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
+									URL::from_file_path($this->path.'images/icon.png'),
 
 									window_Open( // on click open window
 												'paypal',

@@ -27,14 +27,14 @@ class comments extends Module {
 
 			$comments_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_comments'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$comments_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_administration'),
-								url_GetFromFilePath($this->path.'images/administration.svg'),
+								URL::from_file_path($this->path.'images/administration.svg'),
 								window_Open( // on click open window
 											'links_list',
 											730,
@@ -47,7 +47,7 @@ class comments extends Module {
 
 			$comments_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
+								URL::from_file_path($this->path.'images/settings.svg'),
 								window_Open( // on click open window
 											'comments_settings',
 											400,
@@ -242,7 +242,7 @@ class comments extends Module {
 					'module'		=> $module,
 					'section'		=> $section,
 					'size_limit'	=> $this->settings['size_limit'],
-					'form_action'	=> url_Make('save_data', $this->name)
+					'form_action'	=> URL::make_query($this->name, 'save_data')
 				);
 
 		$template->restoreXML();

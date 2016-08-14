@@ -80,7 +80,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		return url_Make('express-checkout', 'paypal');
+		return URL::make_query('paypal', 'express-checkout');
 	}
 
 	/**
@@ -96,7 +96,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.svg');
+		return URL::from_file_path($this->parent->path.'images/icon.svg');
 	}
 
 	/**
@@ -104,7 +104,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/express_image.png');
+		return URL::from_file_path($this->parent->path.'images/express_image.png');
 	}
 
 	/**
@@ -351,9 +351,9 @@ class PayPal_Express extends PaymentMethod {
 			$request_id++;
 		}
 
-		$return_url = url_Make(
-							$action,
+		$return_url = URL::make_query(
 							$section,
+							$action,
 							array('stage', 'resume'),
 							array('payment_method', $this->name)
 						);

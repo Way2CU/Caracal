@@ -65,25 +65,25 @@ class gallery extends Module {
 			if ($section == 'backend') {
 				$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/gallery.css'),
+							'href'	=> URL::from_file_path($this->path.'include/gallery.css'),
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
 				$head_tag->addTag('script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/gallery_toolbar.js'),
+							'src'	=> URL::from_file_path($this->path.'include/gallery_toolbar.js'),
 							'type'	=> 'text/javascript'
 						));
 				$head_tag->addTag('script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/backend.js'),
+							'src'	=> URL::from_file_path($this->path.'include/backend.js'),
 							'type'	=> 'text/javascript'
 						));
 
 				if (Language::isRTL())
 					$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/gallery_rtl.css'),
+							'href'	=> URL::from_file_path($this->path.'include/gallery_rtl.css'),
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
@@ -92,17 +92,17 @@ class gallery extends Module {
 				// load frontend scripts
 				$head_tag->addTag('script',
 							array(
-								'src'	=> url_GetFromFilePath($this->path.'include/gallery.js'),
+								'src'	=> URL::from_file_path($this->path.'include/gallery.js'),
 								'type'	=> 'text/javascript'
 							));
 				$head_tag->addTag('script',
 							array(
-								'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'),
+								'src' 	=> URL::from_file_path($this->path.'include/lightbox.js'),
 								'type'	=> 'text/javascript'
 							));
 				$head_tag->addTag('link',
 							array(
-								'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'),
+								'href'	=> URL::from_file_path($this->path.'include/lightbox.css'),
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css'
 							));
@@ -115,14 +115,14 @@ class gallery extends Module {
 
 			$gallery_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_gallery'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_images'),
-								url_GetFromFilePath($this->path.'images/images.svg'),
+								URL::from_file_path($this->path.'images/images.svg'),
 								window_Open( // on click open window
 											'gallery_images',
 											670,
@@ -135,7 +135,7 @@ class gallery extends Module {
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'gallery_groups',
 											450,
@@ -148,7 +148,7 @@ class gallery extends Module {
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_containers'),
-								url_GetFromFilePath($this->path.'images/containers.svg'),
+								URL::from_file_path($this->path.'images/containers.svg'),
 								window_Open( // on click open window
 											'gallery_containers',
 											490,
@@ -432,15 +432,15 @@ class gallery extends Module {
 		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
 
 		// upload image menu item
-		$url_new = url_Make(
-						'transfer_control',
+		$url_new = URL::make_query(
 						_BACKEND_SECTION_,
+						'transfer_control',
 						array('backend_action', 'images_upload'),
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
 
-		$link_new = url_MakeHyperlink(
+		$link_new = URL::make_hyperlink(
 					$this->getLanguageConstant('upload_images'),
 					window_Open(
 						'gallery_images_upload',
@@ -452,15 +452,15 @@ class gallery extends Module {
 				);
 
 		// bulk upload image menu item
-		$url_new_bulk = url_Make(
-						'transfer_control',
+		$url_new_bulk = URL::make_query(
 						_BACKEND_SECTION_,
+						'transfer_control',
 						array('backend_action', 'images_upload_bulk'),
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
 
-		$link_new_bulk = url_MakeHyperlink(
+		$link_new_bulk = URL::make_hyperlink(
 					$this->getLanguageConstant('upload_images_bulk'),
 					window_Open(
 						'gallery_images_upload_bulk',
@@ -475,7 +475,7 @@ class gallery extends Module {
 		$params = array(
 					'link_new'		=> $link_new,
 					'link_new_bulk'	=> $link_new_bulk,
-					'link_groups'	=> url_MakeHyperlink(
+					'link_groups'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('groups'),
 										window_Open( // on click open window
 											'gallery_groups',
@@ -680,9 +680,9 @@ class gallery extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'gallery_images_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'images_delete_commit'),
 												array('id', $id)
@@ -851,9 +851,9 @@ class gallery extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'gallery_groups_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'groups_delete_commit'),
 												array('id', $id)
@@ -1018,9 +1018,9 @@ class gallery extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'gallery_containers_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'containers_delete_commit'),
 												array('id', $id)
@@ -1293,32 +1293,32 @@ class gallery extends Module {
 						'visible'		=> $item->visible,
 						'image'			=> $this->getImageURL($item),
 						'selected'		=> $selected,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'gallery_images_change', 	// window id
 													400,						// width
 													$this->getLanguageConstant('title_images_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'images_change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'gallery_images_delete', 	// window id
 													400,						// width
 													$this->getLanguageConstant('title_images_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'images_delete'),
 														array('id', $item->id)
@@ -1514,32 +1514,32 @@ class gallery extends Module {
 							'thumbnail_url'	=> $this->getGroupImage($item),
 							'image'			=> $this->getGroupImage($item, true),
 							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'gallery_groups_change', 	// window id
 														400,						// width
 														$this->getLanguageConstant('title_groups_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'gallery_groups_delete', 	// window id
 														400,						// width
 														$this->getLanguageConstant('title_groups_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_delete'),
 															array('id', $item->id)
@@ -1647,48 +1647,48 @@ class gallery extends Module {
 						'description'	=> $item->description,
 						'image'			=> $this->getContainerImage($item),
 						'selected'		=> $selected,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'gallery_containers_change', 	// window id
 													400,							// width
 													$this->getLanguageConstant('title_containers_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'containers_change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'gallery_containers_delete', 	// window id
 													400,							// width
 													$this->getLanguageConstant('title_containers_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'containers_delete'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_groups'	=> url_MakeHyperlink(
+						'item_groups'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('container_groups'),
 												window_Open(
 													'gallery_containers_groups', 	// window id
 													400,							// width
 													$this->getLanguageConstant('title_containers_groups'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'containers_groups'),
 														array('id', $item->id)
@@ -2128,7 +2128,7 @@ class gallery extends Module {
 			$item = $manager->getSingleItem(array('filename'), array('id' => $item));
 		}
 
-		return url_GetFromFilePath($this->image_path.$item->filename);
+		return URL::from_file_path($this->image_path.$item->filename);
 	}
 
 	/**
@@ -2158,7 +2158,7 @@ class gallery extends Module {
 
 		// prepare result
 		if (is_object($item))
-			$result = url_GetFromFilePath(self::getInstance()->image_path.$item->filename);
+			$result = URL::from_file_path(self::getInstance()->image_path.$item->filename);
 
 		return $result;
 	}
@@ -2181,7 +2181,7 @@ class gallery extends Module {
 		$image_file = $this->image_path.$item->filename;
 		$thumbnail_file = self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
 
-		return url_GetFromFilePath($thumbnail_file);
+		return URL::from_file_path($thumbnail_file);
 	}
 
 	/**
@@ -2219,7 +2219,7 @@ class gallery extends Module {
 			$image_file = $gallery->image_path.$item->filename;
 
 			$thumbnail_file = self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
-			$result = url_GetFromFilePath($thumbnail_file);
+			$result = URL::from_file_path($thumbnail_file);
 		}
 
 		return $result;

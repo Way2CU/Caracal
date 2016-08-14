@@ -131,7 +131,7 @@ class ShopCurrenciesHandler {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->getLanguageConstant('add_currency'),
 										window_Open( // on click open window
 											'shop_currencies_add',
@@ -141,7 +141,7 @@ class ShopCurrenciesHandler {
 											backend_UrlMake($this->name, 'currencies', 'add')
 										)
 									),
-					'link_update' => url_MakeHyperlink(
+					'link_update' => URL::make_hyperlink(
 										$this->_parent->getLanguageConstant('update_currencies'),
 										window_Open( // on click open window
 											'shop_currencies_update',
@@ -151,7 +151,7 @@ class ShopCurrenciesHandler {
 											backend_UrlMake($this->name, 'currencies', 'update')
 										)
 									),
-					'link_default' => url_MakeHyperlink(
+					'link_default' => URL::make_hyperlink(
 										$this->_parent->getLanguageConstant('set_default_currency'),
 										window_Open( // on click open window
 											'shop_currencies_set_default',
@@ -233,9 +233,9 @@ class ShopCurrenciesHandler {
 					'no_text'		=> $this->_parent->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_currencies_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'currencies'),
 												array('sub_action', 'delete_commit'),
@@ -367,16 +367,16 @@ class ShopCurrenciesHandler {
 				$params['selected'] = $selected;
 
 				// add delete link to params
-				$params['item_delete'] = url_MakeHyperlink(
+				$params['item_delete'] = URL::make_hyperlink(
 										$this->_parent->getLanguageConstant('delete'),
 										window_Open(
 											'shop_currencies_delete', 	// window id
 											270,			// width
 											$this->_parent->getLanguageConstant('title_currencies_delete'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'currencies'),
 												array('sub_action', 'delete'),

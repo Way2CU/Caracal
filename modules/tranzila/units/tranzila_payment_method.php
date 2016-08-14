@@ -112,7 +112,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.svg');
+		return URL::from_file_path($this->parent->path.'images/icon.svg');
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
+		return URL::from_file_path($this->parent->path.'images/image.png');
 	}
 
 	/**
@@ -419,7 +419,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		} catch (UnknownTransactionError $error) {
 			// redirect user to error page
-			$return_url = url_Make('checkout-error', 'shop');
+			$return_url = URL::make_query('shop', 'checkout-error');
 			header('Location: '.$return_url, true, 302);
 			return;
 		}
@@ -430,7 +430,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
 
 			// redirect buyer
-			$return_url = url_Make('checkout-error', 'shop');
+			$return_url = URL::make_query('shop', 'checkout-error');
 			header('Location: '.$return_url, true, 302);
 			return;
 		}
@@ -481,7 +481,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		}
 
 		// redirect browser
-		$return_url = url_Make('checkout-completed', 'shop');
+		$return_url = URL::make_query('shop', 'checkout-completed');
 		header('Location: '.$return_url, true, 302);
 	}
 
@@ -496,7 +496,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
 
 		// redirect browser
-		$return_url = url_Make('checkout-canceled', 'shop');
+		$return_url = URL::make_query('shop', 'checkout-canceled');
 		header('Location: '.$return_url, true, 302);
 	}
 }

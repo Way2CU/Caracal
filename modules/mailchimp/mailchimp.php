@@ -31,14 +31,14 @@ class mailchimp extends Module {
 
 			$mailchimp_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_mailchimp'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$mailchimp_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_lists'),
-								url_GetFromFilePath($this->path.'images/lists.svg'),
+								URL::from_file_path($this->path.'images/lists.svg'),
 
 								window_Open( // on click open window
 											'mailchimp_lists',
@@ -53,7 +53,7 @@ class mailchimp extends Module {
 
 			$mailchimp_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
+								URL::from_file_path($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'mailchimp_settings',

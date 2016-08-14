@@ -6,7 +6,7 @@
 		<channel>
 			<title><cms:var name="$params['title'][$language]"/></title>
 			<description><cms:var name="$params['description'][$language]"/></description>
-			<link><cms:var name="url_Make('', 'home')"/></link>
+			<link><cms:var name="URL::make_query('', 'home')"/></link>
 			<lastBuildDate><cms:var name="date('r', $params['build_date'])"/></lastBuildDate>
 
 			<_news_list

@@ -13,6 +13,7 @@ final class SectionHandler {
 	private static $params;
 	private static $matched_file = null;
 	private static $matched_pattern = null;
+	private static $matched_params = null;
 
 	const PREFIX = '^(/(?<language>[a-z]{2}))?';
 	const SUFFIX = '/?';
@@ -65,6 +66,7 @@ final class SectionHandler {
 			if (!$result && preg_match($match, $query_string, $matches)) {
 				self::$matched_file = $template_file;
 				self::$matched_pattern = $match;
+				self::$matched_params = $params;
 				$result = true;
 			}
 		}
@@ -96,6 +98,15 @@ final class SectionHandler {
 	 */
 	public static function get_matched_pattern() {
 		return self::$matched_pattern;
+	}
+
+	/**
+	 * Get parameter names for matched pattern.
+	 *
+	 * @return string
+	 */
+	public static function get_matched_params() {
+		return self::$matched_params;
 	}
 
 	/**

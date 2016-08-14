@@ -100,14 +100,14 @@ class contact_form extends Module {
 			// create menu
 			$contact_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_contact'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_forms'),
-								url_GetFromFilePath($this->path.'images/forms.svg'),
+								URL::from_file_path($this->path.'images/forms.svg'),
 
 								window_Open( // on click open window
 											'contact_forms',
@@ -120,7 +120,7 @@ class contact_form extends Module {
 							));
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_templates'),
-								url_GetFromFilePath($this->path.'images/templates.svg'),
+								URL::from_file_path($this->path.'images/templates.svg'),
 
 								window_Open( // on click open window
 											'contact_form_templates',
@@ -134,7 +134,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(6);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
+								URL::from_file_path($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'contact_form_settings',
@@ -148,7 +148,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_submissions'),
-								url_GetFromFilePath($this->path.'images/submissions.svg'),
+								URL::from_file_path($this->path.'images/submissions.svg'),
 
 								window_Open( // on click open window
 											'contact_form_submissions',
@@ -166,12 +166,12 @@ class contact_form extends Module {
 			$head_tag = head_tag::getInstance();
 			$head_tag->addTag('script',
 						array(
-							'src' 	=> url_GetFromFilePath($this->path.'include/backend.js'),
+							'src' 	=> URL::from_file_path($this->path.'include/backend.js'),
 							'type'	=> 'text/javascript'
 						));
 			$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/backend.css'),
+							'href'	=> URL::from_file_path($this->path.'include/backend.css'),
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
@@ -195,12 +195,12 @@ class contact_form extends Module {
 
 			$head_tag->addTag('script',
 						array(
-							'src' 	=> url_GetFromFilePath($this->path.'include/contact_form.js'),
+							'src' 	=> URL::from_file_path($this->path.'include/contact_form.js'),
 							'type'	=> 'text/javascript'
 						));
 			$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/contact_form.css'),
+							'href'	=> URL::from_file_path($this->path.'include/contact_form.css'),
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
@@ -1190,15 +1190,15 @@ class contact_form extends Module {
 
 		// export menu item
 		if (!is_null($form)) {
-			$export_url = url_Make(
-				'transfer_control',
+			$export_url = URL::make_query(
 				_BACKEND_SECTION_,
+				'transfer_control',
 				array('backend_action', 'export_submissions'),
 				array('module', $this->name),
 				array('form', $form)
 			);
 
-			$export_link = url_MakeHyperlink(
+			$export_link = URL::make_hyperlink(
 				$this->getLanguageConstant('menu_export'),
 				window_Open(
 					'contact_form_export',
@@ -1584,9 +1584,9 @@ class contact_form extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_templates_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'templates_delete_commit'),
 												array('id', $id)
@@ -1844,9 +1844,9 @@ class contact_form extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'contact_forms_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'forms_delete_commit'),
 												array('id', $id)
@@ -1910,16 +1910,16 @@ class contact_form extends Module {
 
 		$params = array(
 					'form'			=> $form_id,
-					'link_new'		=> url_MakeHyperlink(
+					'link_new'		=> URL::make_hyperlink(
 										$this->getLanguageConstant('new'),
 										window_Open(
 											'contact_form_fieldset_add', 	// window id
 											350,				// width
 											$this->getLanguageConstant('title_fieldsets_add'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'fieldsets_add'),
 												array('form', $form_id)
@@ -2065,9 +2065,9 @@ class contact_form extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_fieldset_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'fieldsets_delete_commit'),
 												array('id', $id)
@@ -2117,32 +2117,32 @@ class contact_form extends Module {
 
 		$params = array(
 					'form'		=> $form_id,
-					'link_new'	=> url_MakeHyperlink(
+					'link_new'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('new'),
 										window_Open(
 											'contact_form_fields_add', 	// window id
 											400,				// width
 											$this->getLanguageConstant('title_fields_add'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'fields_add'),
 												array('form', $form_id)
 											)
 										)
 									),
-					'link_fieldsets' => url_MakeHyperlink(
+					'link_fieldsets' => URL::make_hyperlink(
 										$this->getLanguageConstant('fieldsets'),
 										window_Open(
 											'contact_form_fieldsets_'.$form_id, 	// window id
 											350,				// width
 											$this->getLanguageConstant('title_fieldsets_manage'), // title
 											true, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'fieldsets'),
 												array('form', $form_id)
@@ -2289,9 +2289,9 @@ class contact_form extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_fields_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'fields_delete_commit'),
 												array('id', $id)
@@ -2343,32 +2343,32 @@ class contact_form extends Module {
 
 		$params = array(
 					'field'		=> $field_id,
-					'link_new'	=> url_MakeHyperlink(
+					'link_new'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('new'),
 										window_Open(
 											'contact_form_field_value_add', 	// window id
 											400,				// width
 											$this->getLanguageConstant('title_field_value_add'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'values_add'),
 												array('field', $field_id)
 											)
 										)
 									),
-					'link_import'	=> url_MakeHyperlink(
+					'link_import'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('import'),
 										window_Open(
 											'contact_form_field_value_import', 	// window id
 											400,				// width
 											$this->getLanguageConstant('title_field_value_import'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'values_import'),
 												array('field', $field_id)
@@ -2592,9 +2592,9 @@ class contact_form extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'contact_form_field_value_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'values_delete_commit'),
 												array('id', $id)
@@ -2771,32 +2771,32 @@ class contact_form extends Module {
 						'plain'			=> $item->plain,
 						'html'			=> $item->html,
 						'selected'		=> $selected,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'contact_form_templates_edit', 	// window id
 													650,				// width
 													$this->getLanguageConstant('title_templates_edit'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'templates_edit'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'contact_form_templates_delete', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_templates_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'templates_delete'),
 														array('id', $item->id)
@@ -2953,48 +2953,48 @@ class contact_form extends Module {
 					'selected'		=> $selected == $item->id,
 					'in_fieldset'	=> in_array($item->id, $fieldset_fields),
 					'skip_foreign'	=> $skip_foreign,
-					'item_change'	=> url_MakeHyperlink(
+					'item_change'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
 												'contact_form_fields_edit', 	// window id
 												400,				// width
 												$this->getLanguageConstant('title_fields_edit'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'fields_edit'),
 													array('id', $item->id)
 												)
 											)
 										),
-					'item_delete'	=> url_MakeHyperlink(
+					'item_delete'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('delete'),
 											window_Open(
 												'contact_form_fields_delete', 	// window id
 												400,				// width
 												$this->getLanguageConstant('title_fields_delete'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'fields_delete'),
 													array('id', $item->id)
 												)
 											)
 										),
-					'item_values'	=> url_MakeHyperlink(
+					'item_values'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('field_values'),
 											window_Open(
 												'contact_form_field_values_'.$item->id, 	// window id
 												450,				// width
 												$this->getLanguageConstant('title_field_values'), // title
 												true, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'values_manage'),
 													array('field', $item->id)
@@ -3057,32 +3057,32 @@ class contact_form extends Module {
 						'name'			=> $item->name,
 						'value'			=> $item->value,
 						'selected'		=> $selected == $item->value,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'contact_form_field_value_edit', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_field_value_edit'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'values_edit'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'contact_form_field_value_delete', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_field_value_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'values_delete'),
 														array('id', $item->id)
@@ -3143,7 +3143,7 @@ class contact_form extends Module {
 				'id'			=> $item->id,
 				'text_id'		=> $item->text_id,
 				'name'			=> $item->name,
-				'action'		=> !empty($item->action) ? $item->action : url_Make('submit', $this->name),
+				'action'		=> !empty($item->action) ? $item->action : URL::make_query($this->name, 'submit'),
 				'template'		=> $item->template,
 				'use_ajax'		=> $item->use_ajax,
 				'show_submit'	=> $item->show_submit,
@@ -3194,48 +3194,48 @@ class contact_form extends Module {
 					'show_reset'	=> $item->show_reset,
 					'show_cancel'	=> $item->show_cancel,
 					'selected'		=> $selected == $item->id,
-					'item_fields'	=> url_MakeHyperlink(
+					'item_fields'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('fields'),
 											window_Open(
 												'contact_form_fields_'.$item->id, 	// window id
 												500,				// width
 												$this->getLanguageConstant('title_form_fields'), // title
 												true, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'fields_manage'),
 													array('form', $item->id)
 												)
 											)
 										),
-					'item_change'	=> url_MakeHyperlink(
+					'item_change'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
 												'contact_forms_edit', 	// window id
 												430,				// width
 												$this->getLanguageConstant('title_forms_edit'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'forms_edit'),
 													array('id', $item->id)
 												)
 											)
 										),
-					'item_delete'	=> url_MakeHyperlink(
+					'item_delete'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('delete'),
 											window_Open(
 												'contact_forms_delete', 	// window id
 												400,				// width
 												$this->getLanguageConstant('title_forms_delete'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'forms_delete'),
 													array('id', $item->id)
@@ -3408,16 +3408,16 @@ class contact_form extends Module {
 						'date'			=> $date,
 						'address'		=> $item->address,
 						'fields'		=> $field_data,
-						'item_details'	=> url_MakeHyperlink(
+						'item_details'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('details'),
 												window_Open(
 													'contact_form_submission_details'.$item->id, 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_submission_details'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'submission_details'),
 														array('id', $item->id)
@@ -3687,32 +3687,32 @@ class contact_form extends Module {
 					'name'			=> $item->name,
 					'legend'		=> $item->legend,
 					'include'		=> array_key_exists($item->name, $includes) ? $includes[$item->name] : '',
-					'item_change'	=> url_MakeHyperlink(
+					'item_change'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('change'),
 											window_Open(
 												'contact_form_fieldset_edit', 	// window id
 												350,				// width
 												$this->getLanguageConstant('title_fieldsets_edit'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'fieldsets_edit'),
 													array('id', $item->id)
 												)
 											)
 										),
-					'item_delete'	=> url_MakeHyperlink(
+					'item_delete'	=> URL::make_hyperlink(
 											$this->getLanguageConstant('delete'),
 											window_Open(
 												'contact_form_fieldset_delete', 	// window id
 												400,				// width
 												$this->getLanguageConstant('title_fieldsets_delete'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'fieldsets_delete'),
 													array('id', $item->id)

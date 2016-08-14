@@ -29,13 +29,13 @@ class affiliates extends Module {
 
 			$referrals_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_affiliates'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 			$referrals_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage_affiliates'),
-								url_GetFromFilePath($this->path.'images/affiliates.svg'),
+								URL::from_file_path($this->path.'images/affiliates.svg'),
 
 								window_Open( // on click open window
 											'affiliates',
@@ -48,7 +48,7 @@ class affiliates extends Module {
 							));
 			$referrals_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_referral_urls'),
-								url_GetFromFilePath($this->path.'images/referrals.svg'),
+								URL::from_file_path($this->path.'images/referrals.svg'),
 
 								window_Open( // on click open window
 											'referrals',
@@ -61,7 +61,7 @@ class affiliates extends Module {
 							));
 			$referrals_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_information'),
-								url_GetFromFilePath($this->path.'images/information.svg'),
+								URL::from_file_path($this->path.'images/information.svg'),
 
 								window_Open( // on click open window
 											'affiliate_information',
@@ -368,9 +368,9 @@ class affiliates extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'affiliates_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'affiliate_delete_commit'),
 												array('id', $id)
@@ -482,7 +482,7 @@ class affiliates extends Module {
 		// prepare data
 		$uid = fix_chars($_REQUEST['affiliate']);
 		$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
-		$base_url = url_GetBaseURL();
+		$base_url = URL::get_base();
 		$landing = url_MakeFromArray($_REQUEST);
 		$landing = mb_substr($landing, 0, mb_strlen($base_url));
 
@@ -575,32 +575,32 @@ class affiliates extends Module {
 						'clicks'		=> $item->clicks,
 						'conversions'	=> $item->conversions,
 						'rate'			=> $rate,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'affiliates_change', 	// window id
 													370,				// width
 													$this->getLanguageConstant('title_affiliates_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'affiliate_change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'affiliates_delete', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_affiliates_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'affiliate_delete'),
 														array('id', $item->id)

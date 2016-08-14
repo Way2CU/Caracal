@@ -78,7 +78,7 @@ class ShopManufacturerHandler {
 		$template = new TemplateHandler('manufacturer_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->getLanguageConstant('add_manufacturer'),
 										window_Open( // on click open window
 											'shop_manufacturer_add',
@@ -238,9 +238,9 @@ class ShopManufacturerHandler {
 					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_manufacturer_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'manufacturers'),
 												array('sub_action', 'delete_commit'),
@@ -366,16 +366,16 @@ class ShopManufacturerHandler {
 						'web_site'	=> $item->web_site,
 						'logo'		=> $image,
 						'selected'	=> $selected == $item->id ? 1 : 0,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->_parent->getLanguageConstant('change'),
 												window_Open(
 													'shop_manufacturer_change', 	// window id
 													360,				// width
 													$this->_parent->getLanguageConstant('title_manufacturer_change'), // title
 													true, true,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'manufacturers'),
 														array('sub_action', 'change'),
@@ -383,16 +383,16 @@ class ShopManufacturerHandler {
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->_parent->getLanguageConstant('delete'),
 												window_Open(
 													'shop_manufacturer_delete', 	// window id
 													400,				// width
 													$this->_parent->getLanguageConstant('title_manufacturer_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'manufacturers'),
 														array('sub_action', 'delete'),

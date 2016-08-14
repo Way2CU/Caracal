@@ -76,8 +76,8 @@ class backend extends Module {
 				$collection->includeScript(collection::TOOLBAR);
 			}
 
-			$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
 
 		}
 
@@ -85,14 +85,14 @@ class backend extends Module {
 		if ($section == 'backend') {
 			$system_menu = new backend_MenuItem(
 									$this->getLanguageConstant('menu_system'),
-									url_GetFromFilePath($this->path.'images/system.svg'),
+									URL::from_file_path($this->path.'images/system.svg'),
 									'javascript:void(0);',
 									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_modules'),
-									url_GetFromFilePath($this->path.'images/modules.svg'),
+									URL::from_file_path($this->path.'images/modules.svg'),
 									window_Open( // on click open window
 												'system_modules',
 												610,
@@ -104,7 +104,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_users'),
-									url_GetFromFilePath($this->path.'images/users.svg'),
+									URL::from_file_path($this->path.'images/users.svg'),
 									window_Open( // on click open window
 												'system_users',
 												690,
@@ -116,7 +116,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_clear_cache'),
-									url_GetFromFilePath($this->path.'images/clear_cache.svg'),
+									URL::from_file_path($this->path.'images/clear_cache.svg'),
 									window_Open( // on click open window
 												'system_clear_cache',
 												350,
@@ -129,7 +129,7 @@ class backend extends Module {
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_change_password'),
-									url_GetFromFilePath($this->path.'images/change_password.svg'),
+									URL::from_file_path($this->path.'images/change_password.svg'),
 									window_Open( // on click open window
 												'change_password_window',
 												350,
@@ -141,7 +141,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->getLanguageConstant('menu_logout'),
-									url_GetFromFilePath($this->path.'images/logout.svg'),
+									URL::from_file_path($this->path.'images/logout.svg'),
 									window_Open( // on click open window
 												'logout_window',
 												350,
@@ -498,9 +498,9 @@ class backend extends Module {
 					'name'			=> $module_name,
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_module_dialog',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'module_initialise_commit'),
 												array('module_name', $module_name)
@@ -579,9 +579,9 @@ class backend extends Module {
 					'name'			=> $module_name,
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_module_dialog',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'module_disable_commit'),
 												array('module_name', $module_name)
@@ -727,8 +727,8 @@ class backend extends Module {
 				$icon_file = _BASEPATH.'/'.$system_module_path.$name.'/images/icon.svg';
 
 			if (file_exists($icon_file))
-				$icon = url_GetFromFilePath($icon_file); else
-				$icon = url_GetFromFilePath($this->path.'images/modules.svg');
+				$icon = URL::from_file_path($icon_file); else
+				$icon = URL::from_file_path($this->path.'images/modules.svg');
 
 			$params = array(
 							'name'				=> $name,
@@ -739,64 +739,64 @@ class backend extends Module {
 							'preload'			=> $definition['preload'],
 							'preload_symbol'	=> $definition['preload'] ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'order'				=> $definition['order'],
-							'item_activate'		=> url_MakeHyperlink(
+							'item_activate'		=> URL::make_hyperlink(
 													$this->getLanguageConstant('activate'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
 														$this->getLanguageConstant('title_module_activate'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'module_activate'),
 															array('module_name', $name)
 														)
 													)
 												),
-							'item_deactivate'		=> url_MakeHyperlink(
+							'item_deactivate'		=> URL::make_hyperlink(
 													$this->getLanguageConstant('deactivate'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
 														$this->getLanguageConstant('title_module_deactivate'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'module_deactivate'),
 															array('module_name', $name)
 														)
 													)
 												),
-							'item_initialise'		=> url_MakeHyperlink(
+							'item_initialise'		=> URL::make_hyperlink(
 													$this->getLanguageConstant('initialise'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
 														$this->getLanguageConstant('title_module_initialise'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'module_initialise'),
 															array('module_name', $name)
 														)
 													)
 												),
-							'item_disable'		=> url_MakeHyperlink(
+							'item_disable'		=> URL::make_hyperlink(
 													$this->getLanguageConstant('disable'),
 													window_Open(
 														$this->name.'_module_dialog',	// window id
 														300,							// width
 														$this->getLanguageConstant('title_module_disable'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'module_disable'),
 															array('module_name', $name)

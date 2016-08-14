@@ -81,7 +81,7 @@ class SessionManager {
 		$params = array(
 					'show_captcha'	=> $show_captcha,
 					'username'		=> isset($_REQUEST['username']) ? escape_chars($_REQUEST['username']) : '',
-					'image'			=> url_GetFromFilePath($this->parent->path.'images/icons/login.png'),
+					'image'			=> URL::from_file_path($this->parent->path.'images/icons/login.png'),
 					'message'		=> $message
 				);
 
@@ -136,8 +136,8 @@ class SessionManager {
 			// check if we need to make redirect URL
 			if (isset($_SESSION['redirect_url']))
 				$url = $_SESSION['redirect_url']; else
-				$url = url_Make('', $this->parent->name);
-			url_SetRefresh($url, 2);
+				$url = URL::make_query($this->parent->name, '');
+			URL::set_refresh($url, 2);
 
 			// get message
 			$message = $this->parent->getLanguageConstant('message_login_ok');
@@ -201,8 +201,8 @@ class SessionManager {
 		$message = $this->parent->getLanguageConstant('message_logout_ok');
 
 		// get url
-		$url = url_Make('', $this->parent->name);
-		url_SetRefresh($url, 2);
+		$url = URL::make_query($this->parent->name, '');
+		URL::set_refresh($url, 2);
 
 		// load template and show the message
 		$template = new TemplateHandler('session_message.xml', $this->parent->path.'templates/');

@@ -29,7 +29,7 @@ class tranzila extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_tranzila'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
+									URL::from_file_path($this->path.'images/icon.png'),
 
 									window_Open( // on click open window
 												'tranzila',
@@ -54,8 +54,8 @@ class tranzila extends Module {
 				$collection = collection::getInstance();
 
 				$collection->includeScript(collection::DIALOG);
-				$shop->addCheckoutScript(url_GetFromFilePath($this->path.'include/checkout.js'));
-				$shop->addCheckoutStyle(url_GetFromFilePath($this->path.'include/checkout.css'));
+				$shop->addCheckoutScript(URL::from_file_path($this->path.'include/checkout.js'));
+				$shop->addCheckoutStyle(URL::from_file_path($this->path.'include/checkout.css'));
 			}
 		}
 	}
@@ -133,8 +133,8 @@ class tranzila extends Module {
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 				'cancel_action'	=> window_Close('tranzila'),
-				'confirm_url'	=> url_Make('payment-confirm', $this->name),
-				'cancel_url'	=> url_Make('payment-cancel', $this->name),
+				'confirm_url'	=> URL::make_query($this->name, 'payment-confirm'),
+				'cancel_url'	=> URL::make_query($this->name, 'payment-cancel'),
 			);
 
 		$template->restoreXML();

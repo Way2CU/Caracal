@@ -240,21 +240,21 @@ class shop extends Module {
 
 			// include local scripts
 			if (ModuleHandler::is_loaded('head_tag')) {
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 
 			$shop_menu = new backend_MenuItem(
 				$this->getLanguageConstant('menu_shop'),
-				url_GetFromFilePath($this->path.'images/icon.svg'),
+				URL::from_file_path($this->path.'images/icon.svg'),
 				'javascript:void(0);',
 				5  // level
 			);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_items'),
-				url_GetFromFilePath($this->path.'images/items.svg'),
+				URL::from_file_path($this->path.'images/items.svg'),
 				window_Open( // on click open window
 					'shop_items',
 					650,
@@ -267,14 +267,14 @@ class shop extends Module {
 
 			$recurring_plans_menu = new backend_MenuItem(
 				$this->getLanguageConstant('menu_recurring_plans'),
-				url_GetFromFilePath($this->path.'images/recurring_plans.svg'),
+				URL::from_file_path($this->path.'images/recurring_plans.svg'),
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
 
 			$import_menu = new backend_MenuItem(
 				$this->getLanguageConstant('menu_import'),
-				url_GetFromFilePath($this->path.'images/import.svg'),
+				URL::from_file_path($this->path.'images/import.svg'),
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_import', $import_menu);
@@ -283,7 +283,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_categories'),
-				url_GetFromFilePath($this->path.'images/categories.svg'),
+				URL::from_file_path($this->path.'images/categories.svg'),
 				window_Open( // on click open window
 					'shop_categories',
 					550,
@@ -296,7 +296,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_item_sizes'),
-				url_GetFromFilePath($this->path.'images/item_sizes.svg'),
+				URL::from_file_path($this->path.'images/item_sizes.svg'),
 				window_Open( // on click open window
 					'shop_item_sizes',
 					400,
@@ -309,7 +309,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_manufacturers'),
-				url_GetFromFilePath($this->path.'images/manufacturers.svg'),
+				URL::from_file_path($this->path.'images/manufacturers.svg'),
 				window_Open( // on click open window
 					'shop_manufacturers',
 					400,
@@ -323,7 +323,7 @@ class shop extends Module {
 			// delivery methods menu
 			$delivery_menu = new backend_MenuItem(
 				$this->getLanguageConstant('menu_delivery_methods'),
-				url_GetFromFilePath($this->path.'images/delivery.svg'),
+				URL::from_file_path($this->path.'images/delivery.svg'),
 				'javascript: void(0);', 5
 			);
 
@@ -333,7 +333,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_special_offers'),
-				url_GetFromFilePath($this->path.'images/special_offers.svg'),
+				URL::from_file_path($this->path.'images/special_offers.svg'),
 				window_Open( // on click open window
 					'shop_special_offers',
 					490,
@@ -349,7 +349,7 @@ class shop extends Module {
 			// payment methods menu
 			$methods_menu = new backend_MenuItem(
 				$this->getLanguageConstant('menu_payment_methods'),
-				url_GetFromFilePath($this->path.'images/payment_methods.svg'),
+				URL::from_file_path($this->path.'images/payment_methods.svg'),
 				'javascript: void(0);', 5
 			);
 
@@ -357,7 +357,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_currencies'),
-				url_GetFromFilePath($this->path.'images/currencies.svg'),
+				URL::from_file_path($this->path.'images/currencies.svg'),
 				window_Open( // on click open window
 					'shop_currencies',
 					350,
@@ -372,7 +372,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_transactions'),
-				url_GetFromFilePath($this->path.'images/transactions.svg'),
+				URL::from_file_path($this->path.'images/transactions.svg'),
 				window_Open( // on click open window
 					'shop_transactions',
 					800,
@@ -384,7 +384,7 @@ class shop extends Module {
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_warehouses'),
-				url_GetFromFilePath($this->path.'images/warehouse.svg'),
+				URL::from_file_path($this->path.'images/warehouse.svg'),
 				window_Open( // on click open window
 					'shop_warehouses',
 					490,
@@ -396,7 +396,7 @@ class shop extends Module {
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->getLanguageConstant('menu_stocks'),
-				url_GetFromFilePath($this->path.'images/stock.svg'),
+				URL::from_file_path($this->path.'images/stock.svg'),
 				window_Open( // on click open window
 					'shop_stocks',
 					490,
@@ -410,7 +410,7 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 			$shop_menu->addChild('', new backend_MenuItem(
 				$this->getLanguageConstant('menu_settings'),
-				url_GetFromFilePath($this->path.'images/settings.svg'),
+				URL::from_file_path($this->path.'images/settings.svg'),
 
 				window_Open( // on click open window
 					'shop_settings',
@@ -1212,8 +1212,8 @@ class shop extends Module {
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
-		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
+		$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 
 		// add custom scripts
 		if (count($this->checkout_scripts) > 0)
@@ -1237,7 +1237,7 @@ class shop extends Module {
 		$collection = collection::getInstance();
 
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('script', array('src' => url_GetFromFilePath($this->path.'include/cart.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/cart.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -1248,7 +1248,7 @@ class shop extends Module {
 			return;
 
 		$head_tag = head_tag::getInstance();
-		$head_tag->addTag('script', array('src' => url_GetFromFilePath($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -1815,7 +1815,7 @@ class shop extends Module {
 		$params = array(
 			'message'		=> $this->getLanguageConstant('message_checkout_redirect'),
 			'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-			'button_action'	=> url_Make('', 'home'),
+			'button_action'	=> URL::make_query('home', ''),
 			'redirect'		=> true
 		);
 
@@ -3796,8 +3796,8 @@ class shop extends Module {
 		switch ($stage) {
 			case Stage::CHECKOUT:
 				// get fields for payment method
-				$return_url = url_Make('checkout-completed', 'shop', array('payment_method', $payment_method->get_name()));
-				$cancel_url = url_Make('checkout-canceled', 'shop', array('payment_method', $payment_method->get_name()));
+				$return_url = URL::make_query('shop', 'checkout-completed', array('payment_method', $payment_method->get_name()));
+				$cancel_url = URL::make_query('shop', 'checkout-canceled', array('payment_method', $payment_method->get_name()));
 
 				// update transaction
 				$summary = $this->updateTransaction(
@@ -4052,7 +4052,7 @@ class shop extends Module {
 		$params = array(
 				'message'		=> $message,
 				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-				'button_action'	=> url_Make('', 'home'),
+				'button_action'	=> URL::make_query('home', ''),
 				'redirect'		=> false
 			);
 
@@ -4081,7 +4081,7 @@ class shop extends Module {
 		$params = array(
 				'message'		=> $message,
 				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-				'button_action'	=> url_Make('', 'home'),
+				'button_action'	=> URL::make_query('home', ''),
 				'redirect'		=> false
 			);
 

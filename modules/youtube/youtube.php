@@ -29,14 +29,14 @@ class youtube extends Module {
 
 			$youtube_menu = new backend_MenuItem(
 								$this->getLanguageConstant('menu_youtube'),
-								url_GetFromFilePath($this->path.'images/icon.svg'),
+								URL::from_file_path($this->path.'images/icon.svg'),
 								'javascript:void(0);',
 								$level=5
 							);
 
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_video_list'),
-								url_GetFromFilePath($this->path.'images/list.svg'),
+								URL::from_file_path($this->path.'images/list.svg'),
 								window_Open( // on click open window
 											$this->name.'_video_list',
 											650,
@@ -49,7 +49,7 @@ class youtube extends Module {
 
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_video_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											$this->name.'_group_list',
 											570,
@@ -396,9 +396,9 @@ class youtube extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_video_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'video_delete_commit'),
 												array('id', $id)
@@ -622,9 +622,9 @@ class youtube extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											$this->name.'_group_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'group_delete_commit'),
 												array('id', $id)
@@ -918,48 +918,48 @@ class youtube extends Module {
 							'title'			=> $item->title,
 							'thumbnail'		=> $this->getThumbnailURL($item->video_id),
 							'image'			=> $this->getThumbnailURL($item->video_id, 0),
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														$this->name.'_video_change', 	// window id
 														400,							// width
 														$this->getLanguageConstant('title_video_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'video_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														$this->name.'_video_delete', 	// window id
 														300,							// width
 														$this->getLanguageConstant('title_video_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'video_delete'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_preview'	=> url_MakeHyperlink(
+							'item_preview'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('preview'),
 													window_Open(
 														$this->name.'_video_preview', 	// window id
 														400,							// width
 														$item->title[$language], 		// title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'video_preview'),
 															array('id', $item->id)
@@ -1082,48 +1082,48 @@ class youtube extends Module {
 								'description'	=> $item->description,
 								'visible'		=> $item->visible,
 								'visible_char'	=> $item->visible == 1 ? CHAR_CHECKED : CHAR_UNCHECKED,
-								'item_change'	=> url_MakeHyperlink(
+								'item_change'	=> URL::make_hyperlink(
 														$this->getLanguageConstant('change'),
 														window_Open(
 															$this->name.'_group_change', 	// window id
 															400,							// width
 															$this->getLanguageConstant('title_group_change'), // title
 															false, false,
-															url_Make(
-																'transfer_control',
+															URL::make_query(
 																'backend_module',
+																'transfer_control',
 																array('module', $this->name),
 																array('backend_action', 'group_change'),
 																array('id', $item->id)
 															)
 														)
 													),
-								'item_delete'	=> url_MakeHyperlink(
+								'item_delete'	=> URL::make_hyperlink(
 														$this->getLanguageConstant('delete'),
 														window_Open(
 															$this->name.'_group_delete', 	// window id
 															300,							// width
 															$this->getLanguageConstant('title_group_delete'), // title
 															false, false,
-															url_Make(
-																'transfer_control',
+															URL::make_query(
 																'backend_module',
+																'transfer_control',
 																array('module', $this->name),
 																array('backend_action', 'group_delete'),
 																array('id', $item->id)
 															)
 														)
 													),
-								'item_videos'	=> url_MakeHyperlink(
+								'item_videos'	=> URL::make_hyperlink(
 														$this->getLanguageConstant('videos'),
 														window_Open(
 															$this->name.'_group_videos', 	// window id
 															400,							// width
 															$this->getLanguageConstant('title_group_videos'), // title
 															false, false,
-															url_Make(
-																'transfer_control',
+															URL::make_query(
 																'backend_module',
+																'transfer_control',
 																array('module', $this->name),
 																array('backend_action', 'group_videos'),
 																array('id', $item->id)

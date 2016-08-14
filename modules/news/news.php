@@ -24,7 +24,7 @@ class news extends Module {
 		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::getInstance();
 
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/news_system.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
@@ -33,14 +33,14 @@ class news extends Module {
 
 			$news_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_news'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					5  // level
 				);
 
 			$news_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_add_news'),
-								url_GetFromFilePath($this->path.'images/add_news.svg'),
+								URL::from_file_path($this->path.'images/add_news.svg'),
 								window_Open( // on click open window
 											'news_add',
 											490,
@@ -54,7 +54,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->getLanguageConstant('menu_manage_news'),
-					url_GetFromFilePath($this->path.'images/manage_news.svg'),
+					URL::from_file_path($this->path.'images/manage_news.svg'),
 					window_Open( // on click open window
 								'news',
 								520,
@@ -67,7 +67,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->getLanguageConstant('menu_manage_groups'),
-					url_GetFromFilePath($this->path.'images/manage_groups.svg'),
+					URL::from_file_path($this->path.'images/manage_groups.svg'),
 					window_Open( // on click open window
 								'news_groups',
 								580,
@@ -82,7 +82,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->getLanguageConstant('menu_news_feeds'),
-					url_GetFromFilePath($this->path.'images/rss.svg'),
+					URL::from_file_path($this->path.'images/rss.svg'),
 					window_Open( // on click open window
 								'news_feeds',
 								700,
@@ -324,7 +324,7 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> url_MakeHyperlink(
+					'link_new'		=> URL::make_hyperlink(
 										$this->getLanguageConstant('add_news'),
 										window_Open( // on click open window
 											'news_add',
@@ -334,7 +334,7 @@ class news extends Module {
 											backend_UrlMake($this->name, 'news_add')
 										)
 									),
-					'link_groups'	=> url_MakeHyperlink(
+					'link_groups'	=> URL::make_hyperlink(
 										$this->getLanguageConstant('groups'),
 										window_Open( // on click open window
 											'news_groups',
@@ -468,9 +468,9 @@ class news extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'news_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'news_delete_commit'),
 												array('id', $id)
@@ -518,7 +518,7 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> url_MakeHyperlink(
+					'link_new'		=> URL::make_hyperlink(
 										$this->getLanguageConstant('add_group'),
 										window_Open( // on click open window
 											'news_group_add',
@@ -637,9 +637,9 @@ class news extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'news_group_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'group_delete_commit'),
 												array('id', $id)
@@ -751,7 +751,7 @@ class news extends Module {
 		$template->setMappedModule($this->name);
 
 		$params = array(
-					'link_new'		=> url_MakeHyperlink(
+					'link_new'		=> URL::make_hyperlink(
 										$this->getLanguageConstant('add_feed'),
 										window_Open( // on click open window
 											'news_feeds_add',
@@ -876,9 +876,9 @@ class news extends Module {
 					'no_text'		=> $this->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'news_feeds_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'feed_delete_commit'),
 												array('id', $id)
@@ -935,9 +935,9 @@ class news extends Module {
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				$url = url_Make(
-							'show_feed',
+				$url = URL::make_query(
 							$this->name,
+							'show_feed',
 							array('id', $item->id),
 							array('language', $language)
 						);
@@ -1068,32 +1068,32 @@ class news extends Module {
 							'title'			=> $item->title,
 							'content'		=> $item->content,
 							'visible'		=> $item->visible,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'news_change', 	// window id
 														490,			// width
 														$this->getLanguageConstant('title_news_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'news_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'news_delete', 	// window id
 														390,			// width
 														$this->getLanguageConstant('title_news_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'news_delete'),
 															array('id', $item->id)
@@ -1178,48 +1178,48 @@ class news extends Module {
 							'text_id'		=> $item->text_id,
 							'title'			=> $item->title,
 							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'news_group_change', 	// window id
 														390,					// width
 														$this->getLanguageConstant('title_news_group_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'group_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'news_group_delete', 	// window id
 														390,					// width
 														$this->getLanguageConstant('title_news_group_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'group_delete'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_members'	=> url_MakeHyperlink(
+							'item_members'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('items'),
 													window_Open(
 														'news_group_items', 	// window id
 														390,					// width
 														$this->getLanguageConstant('title_news_group_items'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'group_items'),
 															array('id', $item->id)
@@ -1370,32 +1370,32 @@ class news extends Module {
 							'description'	=> $item->description,
 							'active'		=> $item->active,
 							'active_char'	=> $item->active ? CHAR_CHECKED : CHAR_UNCHECKED,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'news_feeds_change', 	// window id
 														390,					// width
 														$this->getLanguageConstant('title_news_feed_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'feed_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'news_feeds_delete', 	// window id
 														390,					// width
 														$this->getLanguageConstant('title_news_feed_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'feed_delete'),
 															array('id', $item->id)

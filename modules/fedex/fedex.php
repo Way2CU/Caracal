@@ -28,7 +28,7 @@ class fedex extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->getLanguageConstant('menu_fedex'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
+									URL::from_file_path($this->path.'images/icon.png'),
 
 									window_Open( // on click open window
 												'fedex',

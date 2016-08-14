@@ -29,14 +29,14 @@ class activity_tracker extends Module {
 
 			$activities_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_activities'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$activities_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage'),
-								url_GetFromFilePath($this->path.'images/activities.svg'),
+								URL::from_file_path($this->path.'images/activities.svg'),
 
 								window_Open( // on click open window
 											'activities',
@@ -49,7 +49,7 @@ class activity_tracker extends Module {
 							));
 			$activities_menu->addChild('', new backend_MenuItem(
 								$this->getLanguageConstant('menu_log'),
-								url_GetFromFilePath($this->path.'images/log.svg'),
+								URL::from_file_path($this->path.'images/log.svg'),
 
 								window_Open( // on click open window
 											'activities_log',
@@ -312,9 +312,9 @@ class activity_tracker extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'activities_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delete_commit'),
 												array('id', $id)
@@ -490,7 +490,7 @@ class activity_tracker extends Module {
 		$head_tag->addTag(
 					'script',
 					array(
-						'src'	=> url_GetFromFilePath($this->path.'include/beacon.js'),
+						'src'	=> URL::from_file_path($this->path.'include/beacon.js'),
 						'type'	=> 'text/javascript'
 					));
 	}
@@ -522,32 +522,32 @@ class activity_tracker extends Module {
 						'timeout'				=> $item->timeout,
 						'ignore_address'		=> $item->ignore_address,
 						'ignore_address_char'	=> $item->ignore_address ? CHAR_CHECKED : CHAR_UNCHECKED,
-						'item_change'			=> url_MakeHyperlink(
+						'item_change'			=> URL::make_hyperlink(
 												$this->getLanguageConstant('change'),
 												window_Open(
 													'activities_change', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_activity_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'			=> url_MakeHyperlink(
+						'item_delete'			=> URL::make_hyperlink(
 												$this->getLanguageConstant('delete'),
 												window_Open(
 													'activities_delete', 	// window id
 													400,				// width
 													$this->getLanguageConstant('title_activity_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'delete'),
 														array('id', $item->id)

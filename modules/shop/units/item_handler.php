@@ -93,7 +93,7 @@ class Handler {
 		$template = new TemplateHandler('item_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->parent->getLanguageConstant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
@@ -103,7 +103,7 @@ class Handler {
 											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
 										)
 									),
-					'link_categories' => url_MakeHyperlink(
+					'link_categories' => URL::make_hyperlink(
 										$this->parent->getLanguageConstant('manage_categories'),
 										window_Open( // on click open window
 											'shop_categories',
@@ -261,9 +261,9 @@ class Handler {
 									670,
 									$gallery->getLanguageConstant('title_images'),
 									true, true,
-									url_Make(
-										'transfer_control',
+									URL::make_query(
 										'backend_module',
+										'transfer_control',
 										array('backend_action', 'images'),
 										array('module', 'gallery'),
 										array('group', $gallery_id)
@@ -384,9 +384,9 @@ class Handler {
 					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', self::SUB_ACTION),
 												array('sub_action', 'delete_commit'),
@@ -804,16 +804,16 @@ class Handler {
 							'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
 							'visible'               => $item->visible,
 							'deleted'               => $item->deleted,
-							'item_change'           => url_MakeHyperlink(
+							'item_change'           => URL::make_hyperlink(
 													$this->parent->getLanguageConstant('change'),
 													window_Open(
 														'shop_item_change', 	// window id
 														550,				// width
 														$this->parent->getLanguageConstant('title_item_change'), // title
 														true, true,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', self::SUB_ACTION),
 															array('sub_action', 'change'),
@@ -821,16 +821,16 @@ class Handler {
 														)
 													)
 												),
-							'item_delete'           => url_MakeHyperlink(
+							'item_delete'           => URL::make_hyperlink(
 													$this->parent->getLanguageConstant('delete'),
 													window_Open(
 														'shop_item_delete', 	// window id
 														400,				// width
 														$this->parent->getLanguageConstant('title_item_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', self::SUB_ACTION),
 															array('sub_action', 'delete'),
@@ -847,15 +847,15 @@ class Handler {
 										670,
 										$gallery->getLanguageConstant('title_images'),
 										true, true,
-										url_Make(
-											'transfer_control',
+										URL::make_query(
 											'backend_module',
+											'transfer_control',
 											array('backend_action', 'images'),
 											array('module', 'gallery'),
 											array('group', $item->gallery)
 										)
 									);
-					$params['item_images'] = url_MakeHyperlink(
+					$params['item_images'] = URL::make_hyperlink(
 														$this->parent->getLanguageConstant('images'),
 														$open_gallery_window
 													);

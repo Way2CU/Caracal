@@ -83,7 +83,7 @@ class ShopDiscountHandler {
 		$template = new TemplateHandler('item_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->getLanguageConstant('add_discount'),
 										window_Open( // on click open window
 											'shop_discounts_add',
@@ -188,9 +188,9 @@ class ShopDiscountHandler {
 					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'items'),
 												array('sub_action', 'delete_commit'),

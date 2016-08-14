@@ -40,7 +40,7 @@ class mandrill extends Module {
 
 			$mandrill_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_mandrill'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					window_Open( // on click open window
 								'mandrill_settings',
 								370,

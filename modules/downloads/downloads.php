@@ -37,7 +37,7 @@ class downloads extends Module {
 			// add backend specific script
 			if (ModuleHandler::is_loaded('head_tag')) {
 				$head_tag = head_tag::getInstance();
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/downloads_toolbar.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/downloads_toolbar.js'), 'type'=>'text/javascript'));
 			}
 
 			// create main menu entries
@@ -45,14 +45,14 @@ class downloads extends Module {
 
 			$downloads_menu = new backend_MenuItem(
 					$this->getLanguageConstant('menu_downloads'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_upload_file'),
-								url_GetFromFilePath($this->path.'images/upload.svg'),
+								URL::from_file_path($this->path.'images/upload.svg'),
 								window_Open( // on click open window
 											'upload_file',
 											400,
@@ -65,7 +65,7 @@ class downloads extends Module {
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
 								$this->getLanguageConstant('menu_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'downloads',
 											520,
@@ -347,9 +347,9 @@ class downloads extends Module {
 					'no_text'		=> $this->getLanguageConstant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'downloads_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delete_commit'),
 												array('id', $id)
@@ -441,7 +441,7 @@ class downloads extends Module {
 						'count'			=> $item->count,
 						'visible'		=> $item->visible,
 						'timestamp'		=> $item->timestamp,
-						'url'			=> url_Make('get', $this->name, array('id', $item->id))
+						'url'			=> URL::make_query($this->name, 'get', array('id', $item->id))
 					);
 
 			$template->setLocalParams($params);
@@ -482,33 +482,33 @@ class downloads extends Module {
 							'count'			=> $item->count,
 							'visible'		=> $item->visible,
 							'timestamp'		=> $item->timestamp,
-							'url'			=> url_Make('get', $this->name, array('id', $item->id)),
-							'item_change'	=> url_MakeHyperlink(
+							'url'			=> URL::make_query($this->name, 'get', array('id', $item->id)),
+							'item_change'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('change'),
 													window_Open(
 														'downloads_change', 		// window id
 														400,						// width
 														$this->getLanguageConstant('title_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->getLanguageConstant('delete'),
 													window_Open(
 														'downloads_delete', 	// window id
 														400,						// width
 														$this->getLanguageConstant('title_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'delete'),
 															array('id', $item->id)
@@ -551,7 +551,7 @@ class downloads extends Module {
 								'size'			=> $item->size,
 								'visible'		=> $item->visible,
 								'timestamp'		=> $item->timestamp,
-								'download_url'	=> url_Make('get', $this->name, array('id', $item->id))
+								'download_url'	=> URL::make_query($this->name, 'get', array('id', $item->id))
 							);
 				}
 		} else {
@@ -585,7 +585,7 @@ class downloads extends Module {
 	 * @return string
 	 */
 	private function _getDownloadURL($item) {
-		return url_GetFromFilePath($this->file_path.$item->filename);
+		return URL::from_file_path($this->file_path.$item->filename);
 	}
 
 	/**

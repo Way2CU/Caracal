@@ -40,7 +40,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getIcon() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return URL::from_file_path($this->parent->path.'images/icon.png');
 	}
 
 	/**
@@ -50,7 +50,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getImage() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
+		return URL::from_file_path($this->parent->path.'images/image.png');
 	}
 
 	/**
@@ -60,7 +60,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getSmallImage() {
-		return url_GetFromFilePath($this->parent->path.'images/image_small.png');
+		return URL::from_file_path($this->parent->path.'images/image_small.png');
 	}
 
 	/**
