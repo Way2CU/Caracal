@@ -57,6 +57,7 @@ final class SectionHandler {
 		foreach (self::$data as $pattern => $template_file) {
 			$match = preg_replace('|\{([\w\d\+-_]+)\}|iu', '(?<\1>[\w\d]+)', $pattern);
 			$match = self::PREFIX.$match.self::SUFFIX;
+			$match = self::wrap_pattern($match);
 
 			// store pattern params for later use
 			preg_match_all('|\{([\w\d_-]+)\}|is', $pattern, $params);
@@ -151,6 +152,16 @@ final class SectionHandler {
 			$template = new TemplateHandler(self::$matched_file);
 			$template->parse();
 		}
+	}
+
+	/**
+	 * Wrap pattern in match safe delimiters and apply flags.
+	 *
+	 * @param string
+	 * @return string
+	 */
+	public static function wrap_pattern($pattern) {
+		return '|'.$pattern.'|is';
 	}
 }
 
