@@ -190,7 +190,7 @@ final class URL {
 	 * template used to match page template file.
 	 */
 	public static function unpack_values() {
-		global $url_rewrite, $_REQUEST, $_GET, $_POST;
+		global $url_rewrite;
 
 		// get template for matching
 		$pattern = SectionHandler::get_matched_pattern();
@@ -220,7 +220,7 @@ final class URL {
 				$_POST = array_merge($_POST, $result);
 				break;
 		}
-		$_REQUEST = array_merge($_GET, $_POST, $_COOKIE);
+		$_REQUEST = array_merge($_GET, $_POST);
 	}
 }
 
