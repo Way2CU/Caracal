@@ -55,7 +55,7 @@ final class URL {
 	 * @param array ...
 	 * @return string
 	 */
-	public static function make_backend($section=null, $action=null) {
+	public static function make_backend(string $section=null, string $action=null) {
 		$result = self::get_base();
 		$arguments = array();
 
@@ -121,7 +121,7 @@ final class URL {
 	 * @param boolean $secure
 	 * @return string
 	 */
-	public static function get_base(bool $secure=null) {
+	public static function get_base($secure=false) {
 		$base = (_SECURE || $secure ? 'https://' : 'http://')._DOMAIN;
 
 		$port = $_SERVER['SERVER_PORT'];
@@ -177,7 +177,7 @@ final class URL {
 	 * @param string $url
 	 * @param integer $timeout
 	 */
-	public static function set_refresh(string $url=null, int $timeout=2) {
+	public static function set_refresh(string $url=null, $timeout=2) {
 		$url = is_null($url) ? $_SERVER['REQUEST_URI'] : $url;
 		$output '<script type="text/javascript">';
 		$output .= 'setTimeout(function() { window.location = \''.$url.'\'; }, '.($seconds * 1000).')';
