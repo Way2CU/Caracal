@@ -193,7 +193,7 @@ final class URL {
 		global $url_rewrite;
 
 		// get template for matching
-		$template = SectionHandler::get_matched_pattern();
+		$pattern = SectionHandler::get_matched_pattern();
 
 		// get query string
 		$query_string = $_SERVER['QUERY_STRING'];
@@ -201,7 +201,7 @@ final class URL {
 			$query_string = SectionHandler::ROOT_KEY.$query_string;
 
 		// extract values
-		preg_match(self::$matched_pattern, $query_string, $values);
+		preg_match($pattern, $query_string, $values);
 		$params = SectionHandler::get_matched_params();
 		$result = array_combine($params[1], $values[0]);
 
