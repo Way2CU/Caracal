@@ -121,7 +121,7 @@ final class URL {
 	 * @param boolean $secure
 	 * @return string
 	 */
-	public static function get_base(bool $secure=false) {
+	public static function get_base(bool $secure=null) {
 		$base = (_SECURE || $secure ? 'https://' : 'http://')._DOMAIN;
 
 		$port = $_SERVER['SERVER_PORT'];
