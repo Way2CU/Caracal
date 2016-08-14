@@ -159,11 +159,7 @@ final class SectionHandler {
 			// call backend and allow it to transfer control
 			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {
 				$module = call_user_func(array('backend', 'get_instance'));
-
-				// prepare parameters
-				$params = array(
-						'action' => 'transfer_control'
-					);
+				$params = array('action' => 'transfer_control');
 
 				// transfer control to backend module
 				$module->transfer_control($params, array());
