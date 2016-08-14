@@ -202,7 +202,8 @@ final class URL {
 
 		// extract values
 		preg_match(self::$matched_pattern, $query_string, $values);
-		$result = array_combine(SectionHandler::get_matched_params()[1], $values[0]);
+		$params = SectionHandler::get_matched_params();
+		$result = array_combine($params[1], $values[0]);
 
 		// modify global variables
 		switch ($_SERVER['REQUEST_METHOD']) {
