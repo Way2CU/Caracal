@@ -16,7 +16,7 @@ final class SectionHandler {
 	private static $matched_params = null;
 
 	const PREFIX = '^(/(?<language>[a-z]{2}))?';
-	const SUFFIX = '/?';
+	const SUFFIX = '/?$';
 	const ROOT_KEY = '/';
 
 	/**
@@ -56,7 +56,10 @@ final class SectionHandler {
 		// try to match whole query string
 		foreach (self::$data as $pattern => $template_file) {
 			$match = preg_replace('|\{([\w\d\+-_]+)\}|iu', '(?<\1>[\w\d]+)', $pattern);
-			$match = self::PREFIX.$match.self::SUFFIX;
+			$match = self::PREFIX.$match;
+			if ($pattern == self::ROOT_KEY)
+				$match .= '?';  // make root slash optional as well
+			$match .= self::SUFFIX;
 			$match = self::wrap_pattern($match);
 
 			// store pattern params for later use
