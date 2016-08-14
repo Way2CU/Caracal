@@ -142,9 +142,16 @@ final class SectionHandler {
 		$section = isset($_REQUEST['section']) ? escape_chars($_REQUEST['section']) : null;
 
 		// transfer call to modules
-		if (!is_null($section) && ModuleHandler::is_loaded($section)) {
+		if (!is_null($section) && (ModuleHandler::is_loaded($section) || $section == 'backend_module')) {
 			$module = call_user_func(array($section, 'get_instance'));
-			$module->transfer_control($_REQUEST, array());
+
+			// prepare parameters
+			$params = $_REQUEST;
+			if (!isset($params['action']))
+				$params['action'] = '_default';
+
+			// transfer control to module
+			$module->transfer_control($params, array());
 
 		// transfer call to module parser
 		} else {

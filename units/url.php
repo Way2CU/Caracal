@@ -208,8 +208,6 @@ final class URL {
 			if (!is_int($name))
 				$result[$name] = $value;
 
-		print var_export($result).PHP_EOL;
-
 		// modify global variables
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
