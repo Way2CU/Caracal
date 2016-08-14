@@ -134,54 +134,21 @@ final class SectionHandler {
 	 * Find matching template and transfer control to it.
 	 */
 	public static function transfer_control() {
-		// make sure we have matched page template
-		if (is_null(self::$matched_file))
-			return;
+		$section = isset($_REQUEST['section']) ? escape_chars($_REQUEST['section']) : null;
 
-		// create template handler
-		$template = new TemplateHandler(self::$matched_file);
-		$template->parse();
-	}
+		// transfer call to modules
+		if (!is_null($section) && ModuleHandler::is_loaded($section)) {
+			$module = call_user_func(array(, 'get_instance'));
+			$module->transfer_control($_REQUEST, array());
 
-	/**
-	 * Transfers control to preconfigured template.
-	 *
-	 * @param string $section
-	 * @param string $action
-	 * @param string $language
-	 */
-	public function transfer_control($section, $action, $language='') {
-		$file = '';
-
-		if (!_AJAX_REQUEST)
-			$file = $this->get_file($section, $action, $language);
-
-		if (_AJAX_REQUEST || empty($file)) {
-			// request came from script, transfer control to modules
-			if (ModuleHandler::is_loaded($section)) {
-				$module = call_user_func(array(escape_chars($section), 'get_instance'));
-				$params = array('action' => $action);
-
-				// transfer control to module
-				$module->transfer_control($params, array());
-
-			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {
-				// transfer control to backend modules
-				$module = backend::get_instance();
-				$params = array('action' => 'transfer_control');
-
-				// transfer control to module
-				$module->transfer_control($params, array());
-
-			} else {
-				// no matching module exist, try loading template
-				$template = new TemplateHandler($file);
-				$template->parse();
-			}
-
+		// transfer call to module parser
 		} else {
-			// section file is defined, load and parse it
-			$template = new TemplateHandler($file);
+			// make sure we have matched page template
+			if (is_null(self::$matched_file))
+				return;
+
+			// create template handler
+			$template = new TemplateHandler(self::$matched_file);
 			$template->parse();
 		}
 	}
