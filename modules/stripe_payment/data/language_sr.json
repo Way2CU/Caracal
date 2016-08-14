@@ -1,13 +1,13 @@
 {
-    "column_name": "Name",
-    "column_price": "Price",
+    "column_name": "Име",
+    "column_price": "Цена",
     "column_text_id": "ID",
-    "label_public_key": "Publishable key:",
-    "label_secret_key": "Secret key:",
+    "label_public_key": "Јавни кључ:",
+    "label_secret_key": "Тајни кључ:",
     "menu_stripe": "Stripe",
-    "message_missing_api_keys": "No API keys were provided. Please configure API access first!",
-    "message_settings_saved": "Stripe keys were saved!",
+    "message_missing_api_keys": "Нисте подесили API кључеве. Молимо вас да подесите приступ прво.",
+    "message_settings_saved": "Stripe кључеви су снимљени!",
     "payment_method_title": "Stripe",
-    "title_recurring_plans": "Stripe: Recurring payment plans",
-    "title_settings": "Stripe Settings"
+    "title_recurring_plans": "Stripe: Планови циклисних плаћања",
+    "title_settings": "Stripe Подешавања"
 }

@@ -182,7 +182,7 @@ class collection extends Module {
 						$this->head_tag->addTag(
 							'link',
 							array(
-								'href'	=> url_GetFromFilePath($this->path.'include/'.$file_name),
+								'href'	=> URL::from_file_path($this->path.'include/'.$file_name),
 								'type'	=> 'text/css',
 								'rel'	=> 'stylesheet'
 							)
@@ -195,7 +195,7 @@ class collection extends Module {
 						$this->head_tag->addTag(
 							'script',
 							array(
-								'src'	=> url_GetFromFilePath($this->path.'include/'.$file_name),
+								'src'	=> URL::from_file_path($this->path.'include/'.$file_name),
 								'type'	=> 'text/javascript'
 							)
 						);
@@ -208,7 +208,7 @@ class collection extends Module {
 			$this->head_tag->addTag(
 						'script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/'.$data),
+							'src'	=> URL::from_file_path($this->path.'include/'.$data),
 							'type'	=> 'text/javascript'
 						)
 					);

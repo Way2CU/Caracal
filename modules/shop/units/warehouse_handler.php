@@ -75,7 +75,7 @@ class ShopWarehouseHandler {
 		$template = new TemplateHandler('warehouse_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'warehouse_new' => url_MakeHyperlink(
+					'warehouse_new' => URL::make_hyperlink(
 										$this->_parent->get_language_constant('add_warehouse'),
 										window_Open( // on click open window
 											'shop_warehouse_add',
@@ -213,9 +213,9 @@ class ShopWarehouseHandler {
 					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_warehouse_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'warehouses'),
 												array('sub_action', 'delete_commit'),
@@ -288,16 +288,16 @@ class ShopWarehouseHandler {
 						'zip'		=> $item->zip,
 						'country'	=> $item->country,
 						'state'		=> $item->state,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->_parent->get_language_constant('change'),
 												window_Open(
 													'shop_warehouse_change', 	// window id
 													300,				// width
 													$this->_parent->get_language_constant('title_warehouse_change'), // title
 													true, true,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'warehouses'),
 														array('sub_action', 'change'),
@@ -305,16 +305,16 @@ class ShopWarehouseHandler {
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->_parent->get_language_constant('delete'),
 												window_Open(
 													'shop_warehouse_delete', 	// window id
 													400,				// width
 													$this->_parent->get_language_constant('title_warehouse_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'warehouses'),
 														array('sub_action', 'delete'),

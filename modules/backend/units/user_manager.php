@@ -839,9 +839,9 @@ class Backend_UserManager {
 					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'system_users_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->parent->name),
 												array('backend_action', 'users_delete_commit'),
 												array('id', $id)
@@ -1057,32 +1057,32 @@ class Backend_UserManager {
 							'agreed'			=> $user->agreed,
 							'agreed_char'		=> $user->agreed ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'selected'			=> isset($tag_params['selected']) && ($tag_params['selected'] == $user->id),
-							'item_change'		=> url_MakeHyperlink(
+							'item_change'		=> URL::make_hyperlink(
 													$this->parent->get_language_constant('change'),
 													window_Open(
 														'system_users_change', 	// window id
 														370,				// width
 														$this->parent->get_language_constant('title_users_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->parent->name),
 															array('backend_action', 'users_change'),
 															array('id', $user->id)
 														)
 													)
 												),
-							'item_delete'		=> url_MakeHyperlink(
+							'item_delete'		=> URL::make_hyperlink(
 													$this->parent->get_language_constant('delete'),
 													window_Open(
 														'system_users_delete', // window id
 														400,				// width
 														$this->parent->get_language_constant('title_users_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->parent->name),
 															array('backend_action', 'users_delete'),
 															array('id', $user->id)

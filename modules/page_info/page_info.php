@@ -46,7 +46,7 @@ class page_info extends Module {
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->get_language_constant('menu_page_info'),
-										url_GetFromFilePath($this->path.'images/icon.svg'),
+										URL::from_file_path($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_settings',
 													400,
@@ -332,7 +332,7 @@ class page_info extends Module {
 							'rel'	=> 'icon',
 							'type'	=> 'image/png',
 							'sizes'	=> $sizes,
-							'href'	=> url_GetFromFilePath($icon)
+							'href'	=> URL::from_file_path($icon)
 						));
 
 		// add default styles and script if they exists
@@ -373,7 +373,7 @@ class page_info extends Module {
 							array(
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.'/'.$style)
+								'href'	=> URL::from_file_path(_BASEPATH.'/'.$style)
 							));
 			}
 
@@ -383,7 +383,7 @@ class page_info extends Module {
 						array(
 							'rel'	=> 'stylesheet/less',
 							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/'.$less_style)
+							'href'	=> URL::from_file_path(_BASEPATH.'/'.$less_style)
 						));
 
 				if (!$optimize_code)
@@ -395,7 +395,7 @@ class page_info extends Module {
 				$head_tag->addTag('script',
 						array(
 							'type'	=> 'text/javascript',
-							'src'	=> url_GetFromFilePath(_BASEPATH.'/'.$scripts_path.'main.js')
+							'src'	=> URL::from_file_path(_BASEPATH.'/'.$scripts_path.'main.js')
 						));
 		}
 	}

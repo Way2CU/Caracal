@@ -30,14 +30,14 @@ class feedback extends Module {
 
 			$feedback_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_feedback'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$feedback_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_feedback_show'),
-								url_GetFromFilePath($this->path.'images/feedback_list.svg'),
+								URL::from_file_path($this->path.'images/feedback_list.svg'),
 
 								window_Open( // on click open window
 											'feedback_manage',
@@ -196,32 +196,32 @@ class feedback extends Module {
 						'message'	=> $item->message,
 						'url'		=> $item->url,
 						'status'	=> $item->status,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 											$this->get_language_constant('change'),
 											window_Open(
 												'feedback_change', 	// window id
 												430,				// width
 												$this->get_language_constant('title_feedback_change'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'feedback_change'),
 													array('id', $item->id)
 												)
 											)
 										),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 											$this->get_language_constant('delete'),
 											window_Open(
 												'feedback_delete', 	// window id
 												400,				// width
 												$this->get_language_constant('title_feedback_delete'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'feedback_delete'),
 													array('id', $item->id)

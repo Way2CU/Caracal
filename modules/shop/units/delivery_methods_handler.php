@@ -94,7 +94,7 @@ class ShopDeliveryMethodsHandler {
 		$template = new TemplateHandler('delivery_methods_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->get_language_constant('add_delivery_method'),
 										window_Open( // on click open window
 											'shop_delivery_method_add',
@@ -215,9 +215,9 @@ class ShopDeliveryMethodsHandler {
 					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_delivery_method_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delivery_methods'),
 												array('sub_action', 'delete_commit'),
@@ -275,16 +275,16 @@ class ShopDeliveryMethodsHandler {
 
 		$params = array(
 				'method'	=> $id,
-				'link_new' => url_MakeHyperlink(
+				'link_new' => URL::make_hyperlink(
 									$this->_parent->get_language_constant('add_delivery_price'),
 									window_Open( // on click open window
 										'shop_delivery_price_add',
 										370,
 										$this->_parent->get_language_constant('title_delivery_method_price_add'),
 										true, true,
-										url_Make(
-											'transfer_control',
+										URL::make_query(
 											'backend_module',
+											'transfer_control',
 											array('module', $this->name),
 											array('backend_action', 'delivery_methods'),
 											array('sub_action', 'add_price'),
@@ -404,9 +404,9 @@ class ShopDeliveryMethodsHandler {
 					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_delivery_price_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delivery_methods'),
 												array('sub_action', 'delete_price_commit'),
@@ -563,16 +563,16 @@ class ShopDeliveryMethodsHandler {
 					'domestic_char'			=> $item->domestic ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'item'					=> $item_id,
 					'selected'				=> $selected == $item->id ? 1 : 0,
-					'item_change'	=> url_MakeHyperlink(
+					'item_change'	=> URL::make_hyperlink(
 						$this->_parent->get_language_constant('change'),
 						window_Open(
 							'shop_delivery_method_change', 	// window id
 							370,				// width
 							$this->_parent->get_language_constant('title_delivery_method_change'), // title
 							true, true,
-							url_Make(
-								'transfer_control',
+							URL::make_query(
 								'backend_module',
+								'transfer_control',
 								array('module', $this->name),
 								array('backend_action', 'delivery_methods'),
 								array('sub_action', 'change'),
@@ -580,16 +580,16 @@ class ShopDeliveryMethodsHandler {
 							)
 						)
 					),
-					'item_delete'	=> url_MakeHyperlink(
+					'item_delete'	=> URL::make_hyperlink(
 						$this->_parent->get_language_constant('delete'),
 						window_Open(
 							'shop_delivery_method_delete', 	// window id
 							400,				// width
 							$this->_parent->get_language_constant('title_delivery_method_delete'), // title
 							false, false,
-							url_Make(
-								'transfer_control',
+							URL::make_query(
 								'backend_module',
+								'transfer_control',
 								array('module', $this->name),
 								array('backend_action', 'delivery_methods'),
 								array('sub_action', 'delete'),
@@ -597,16 +597,16 @@ class ShopDeliveryMethodsHandler {
 							)
 						)
 					),
-					'item_prices'	=> url_MakeHyperlink(
+					'item_prices'	=> URL::make_hyperlink(
 						$this->_parent->get_language_constant('prices'),
 						window_Open(
 							'shop_delivery_method_prices', 	// window id
 							370,				// width
 							$this->_parent->get_language_constant('title_delivery_method_prices'), // title
 							true, false,
-							url_Make(
-								'transfer_control',
+							URL::make_query(
 								'backend_module',
+								'transfer_control',
 								array('module', $this->name),
 								array('backend_action', 'delivery_methods'),
 								array('sub_action', 'prices'),
@@ -666,16 +666,16 @@ class ShopDeliveryMethodsHandler {
 						'value'		=> $item->value,
 						'method'	=> isset($conditions['method']) ? $conditions['method'] : 0,
 						'selected'	=> in_array($item->id, $relations) ? 1 : 0,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 							$this->_parent->get_language_constant('change'),
 							window_Open(
 								'shop_delivery_price_change', 	// window id
 								370,				// width
 								$this->_parent->get_language_constant('title_delivery_method_price_change'), // title
 								true, true,
-								url_Make(
-									'transfer_control',
+								URL::make_query(
 									'backend_module',
+									'transfer_control',
 									array('module', $this->name),
 									array('backend_action', 'delivery_methods'),
 									array('sub_action', 'change_price'),
@@ -683,16 +683,16 @@ class ShopDeliveryMethodsHandler {
 								)
 							)
 						),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 							$this->_parent->get_language_constant('delete'),
 							window_Open(
 								'shop_delivery_price_delete', 	// window id
 								400,				// width
 								$this->_parent->get_language_constant('title_delivery_method_price_delete'), // title
 								false, false,
-								url_Make(
-									'transfer_control',
+								URL::make_query(
 									'backend_module',
+									'transfer_control',
 									array('module', $this->name),
 									array('backend_action', 'delivery_methods'),
 									array('sub_action', 'delete_price'),

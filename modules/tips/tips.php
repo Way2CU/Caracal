@@ -26,14 +26,14 @@ class tips extends Module {
 
 			$tips_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_tips'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$tips_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_tips_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'tips',
@@ -275,9 +275,9 @@ class tips extends Module {
 					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'tips_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'tips_delete_commit'),
 												array('id', $id)
@@ -391,32 +391,32 @@ class tips extends Module {
 							'id'			=> $item->id,
 							'content'		=> $item->content,
 							'visible'		=> $item->visible,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->get_language_constant('change'),
 													window_Open(
 														'tips_change', 		// window id
 														400,				// width
 														$this->get_language_constant('title_tips_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'tips_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->get_language_constant('delete'),
 													window_Open(
 														'tips_delete', 	// window id
 														400,				// width
 														$this->get_language_constant('title_tips_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'tips_delete'),
 															array('id', $item->id)

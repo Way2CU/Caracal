@@ -31,7 +31,7 @@ class page_speed extends Module {
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->get_language_constant('menu_page_speed'),
-										url_GetFromFilePath($this->path.'images/icon.svg'),
+										URL::from_file_path($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_speed',
 													670,
@@ -45,7 +45,7 @@ class page_speed extends Module {
 			// add style for backend
 			if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
 				$head_tag = head_tag::get_instance();
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/page_speed.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/page_speed.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 		}
 	}

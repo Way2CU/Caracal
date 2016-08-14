@@ -82,7 +82,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		return url_Make('direct-checkout', 'paypal');
+		return URL::make_query('paypal', 'direct-checkout');
 	}
 
 	/**
@@ -98,7 +98,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return URL::from_file_path($this->parent->path.'images/icon.png');
 	}
 
 	/**
@@ -106,7 +106,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/direct_image.png');
+		return URL::from_file_path($this->parent->path.'images/direct_image.png');
 	}
 
 	/**

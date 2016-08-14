@@ -26,14 +26,14 @@ class faq extends Module {
 
 			$faq_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_faq'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=4
 				);
 
 			$faq_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_questions'),
-								url_GetFromFilePath($this->path.'images/questions.svg'),
+								URL::from_file_path($this->path.'images/questions.svg'),
 
 								window_Open( // on click open window
 											'faq',
@@ -272,9 +272,9 @@ class faq extends Module {
 					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'faq_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delete_commit'),
 												array('id', $id)
@@ -366,32 +366,32 @@ class faq extends Module {
 						'id'		=> $item->id,
 						'question'	=> $item->question,
 						'answer'	=> $item->answer,
-						'item_change'	=> url_MakeHyperlink(
+						'item_change'	=> URL::make_hyperlink(
 												$this->get_language_constant('change'),
 												window_Open(
 													'faq_change', 	// window id
 													730,				// width
 													$this->get_language_constant('title_question_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
+						'item_delete'	=> URL::make_hyperlink(
 												$this->get_language_constant('delete'),
 												window_Open(
 													'faq_delete', 	// window id
 													400,				// width
 													$this->get_language_constant('title_question_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'delete'),
 														array('id', $item->id)

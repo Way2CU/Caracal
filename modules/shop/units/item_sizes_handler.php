@@ -97,7 +97,7 @@ class ShopItemSizesHandler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->get_language_constant('add_size_definition'),
 										window_Open( // on click open window
 											'shop_item_size_add',
@@ -125,16 +125,16 @@ class ShopItemSizesHandler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->get_language_constant('add_size_value'),
 										window_Open( // on click open window
 											'shop_item_size_values_add',
 											370,
 											$this->_parent->get_language_constant('title_size_value_add'),
 											true, true,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('backend_action', 'sizes'),
 												array('sub_action', 'value_add'),
 												array('module', $this->_parent->name),
@@ -308,9 +308,9 @@ class ShopItemSizesHandler {
 					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_size_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'sizes'),
 												array('sub_action', 'delete_commit'),
@@ -371,9 +371,9 @@ class ShopItemSizesHandler {
 					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_item_size_values_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'sizes'),
 												array('sub_action', 'value_delete_commit'),
@@ -459,16 +459,16 @@ class ShopItemSizesHandler {
 							'id'			=> $item->id,
 							'name'			=> $item->name,
 							'selected'		=> $selected,
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->_parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_size_delete', 	// window id
 														400,				// width
 														$this->_parent->get_language_constant('title_size_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'sizes'),
 															array('sub_action', 'delete'),
@@ -476,16 +476,16 @@ class ShopItemSizesHandler {
 														)
 													)
 												),
-							'item_values'	=> url_MakeHyperlink(
+							'item_values'	=> URL::make_hyperlink(
 													$this->_parent->get_language_constant('values'),
 													window_Open(
 														'shop_item_size_values', 	// window id
 														400,				// width
 														$this->_parent->get_language_constant('title_size_values'), // title
 														true, true,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'sizes'),
 															array('sub_action', 'values_show'),
@@ -549,16 +549,16 @@ class ShopItemSizesHandler {
 							'id'			=> $item->id,
 							'value'			=> $item->value,
 							'selected'		=> $selected_value,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 													$this->_parent->get_language_constant('change'),
 													window_Open(
 														'shop_item_size_values_change', 	// window id
 														370,				// width
 														$this->_parent->get_language_constant('title_size_value_change'), // title
 														true, true,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'sizes'),
 															array('sub_action', 'value_change'),
@@ -566,16 +566,16 @@ class ShopItemSizesHandler {
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 													$this->_parent->get_language_constant('delete'),
 													window_Open(
 														'shop_item_size_values_delete', 	// window id
 														400,				// width
 														$this->_parent->get_language_constant('title_size_value_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'sizes'),
 															array('sub_action', 'value_delete'),

@@ -28,10 +28,10 @@ class language_menu extends Module {
 		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::get_instance();
 
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/language.js'), 'type'=>'text/javascript'));
 
 			if ($section == 'backend')
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/selector.js'), 'type'=>'text/javascript'));
 		}
 	}
 

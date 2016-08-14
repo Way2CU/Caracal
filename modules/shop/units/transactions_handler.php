@@ -71,7 +71,7 @@ class ShopTransactionsHandler {
 		$template = new TemplateHandler('transaction_list.xml', $this->path.'templates/');
 
 		$params = array(
-			'link_reload'	=> url_MakeHyperlink(
+			'link_reload'	=> URL::make_hyperlink(
 							$this->_parent->get_language_constant('reload'),
 							window_ReloadContent('shop_transactions')
 						)
@@ -141,9 +141,9 @@ class ShopTransactionsHandler {
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
 				'cancel_action'		=> window_Close('shop_transaction_details_'.$transaction->id),
-				'print_url'			=> url_Make(
-											'transfer_control',
+				'print_url'			=> URL::make_query(
 											'backend_module',
+											'transfer_control',
 											array('module', $this->_parent->name),
 											array('backend_action', 'transactions'),
 											array('sub_action', 'print'),
@@ -228,7 +228,7 @@ class ShopTransactionsHandler {
 				'address_phone'		=> $address->phone,
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
-				'style_url'			=> url_GetFromFilePath($this->path.'include/transaction_print.css'),
+				'style_url'			=> URL::from_file_path($this->path.'include/transaction_print.css'),
 			);
 
 		// regular or guest buyer
@@ -355,13 +355,13 @@ class ShopTransactionsHandler {
 							'delivery_type'		=> $item->delivery_type,
 							'remark'			=> $item->remark,
 							'timestamp'			=> $item->timestamp,
-							'item_details'		=> url_MakeHyperlink(
+							'item_details'		=> URL::make_hyperlink(
 													$this->_parent->get_language_constant('details'),
 													window_Open(
 														$window, 800, $title, true, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'transactions'),
 															array('sub_action', 'details'),

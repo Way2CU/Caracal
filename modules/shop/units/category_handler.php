@@ -76,7 +76,7 @@ class ShopCategoryHandler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 										$this->_parent->get_language_constant('add_category'),
 										window_Open( // on click open window
 											'shop_category_add',
@@ -228,9 +228,9 @@ class ShopCategoryHandler {
 					'no_text'		=> $this->_parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_category_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'delete_commit'),
@@ -449,16 +449,16 @@ class ShopCategoryHandler {
 							'level'			=> $level,
 							'in_category'	=> in_array($item->id, $item_category_ids) ? 1 : 0,
 							'selected'		=> isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
-							'item_change'	=> url_MakeHyperlink(
+							'item_change'	=> URL::make_hyperlink(
 										$this->_parent->get_language_constant('change'),
 										window_Open(
 											'shop_category_change', 	// window id
 											400,			// width
 											$this->_parent->get_language_constant('title_category_change'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'change'),
@@ -466,16 +466,16 @@ class ShopCategoryHandler {
 											)
 										)
 									),
-							'item_delete'	=> url_MakeHyperlink(
+							'item_delete'	=> URL::make_hyperlink(
 										$this->_parent->get_language_constant('delete'),
 										window_Open(
 											'shop_category_delete', 	// window id
 											270,			// width
 											$this->_parent->get_language_constant('title_category_delete'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'delete'),
@@ -483,16 +483,16 @@ class ShopCategoryHandler {
 											)
 										)
 									),
-							'item_add'		=> url_MakeHyperlink(
+							'item_add'		=> URL::make_hyperlink(
 										$this->_parent->get_language_constant('add'),
 										window_Open(
 											'shop_category_add', 	// window id
 											400,			// width
 											$this->_parent->get_language_constant('title_category_add'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'add'),

@@ -40,7 +40,7 @@ class ontop extends Module {
 
 			$ontop_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_ontop'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					window_Open(
 						'ontop_applications',
 						450,
@@ -284,9 +284,9 @@ class ontop extends Module {
 					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'ontop_delete_application',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delete_commit'),
 												array('id', $id)
@@ -425,46 +425,46 @@ class ontop extends Module {
 				'key'                       => $item->key,
 				'shop_transaction_complete' => $item->shop_transaction_complete,
 				'contact_form_submit'       => $item->contact_form_submit,
-				'item_change' => url_MakeHyperlink(
+				'item_change' => URL::make_hyperlink(
 					$this->get_language_constant('change'),
 					window_Open(
 						'ontop_edit_application', 	// window id
 						350,				// width
 						$this->get_language_constant('title_edit_application'), // title
 						false, false,
-						url_Make(
-							'transfer_control',
+						URL::make_query(
 							'backend_module',
+							'transfer_control',
 							array('module', $this->name),
 							array('backend_action', 'edit'),
 							array('id', $item->id)
 						)
 					)),
-				'item_delete' => url_MakeHyperlink(
+				'item_delete' => URL::make_hyperlink(
 					$this->get_language_constant('delete'),
 					window_Open(
 						'ontop_delete_application', 	// window id
 						400,				// width
 						$this->get_language_constant('title_delete_application'), // title
 						false, false,
-						url_Make(
-							'transfer_control',
+						URL::make_query(
 							'backend_module',
+							'transfer_control',
 							array('module', $this->name),
 							array('backend_action', 'delete'),
 							array('id', $item->id)
 						)
 					)),
-				'item_test' => url_MakeHyperlink(
+				'item_test' => URL::make_hyperlink(
 					$this->get_language_constant('test'),
 					window_Open(
 						'ontop_test_application', 	// window id
 						400,				// width
 						$this->get_language_constant('title_test_application'), // title
 						false, false,
-						url_Make(
-							'transfer_control',
+						URL::make_query(
 							'backend_module',
+							'transfer_control',
 							array('module', $this->name),
 							array('backend_action', 'test'),
 							array('id', $item->id)

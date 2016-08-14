@@ -81,7 +81,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return URL::from_file_path($this->parent->path.'images/icon.png');
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
+		return URL::from_file_path($this->parent->path.'images/image.png');
 	}
 
 	/**
@@ -179,7 +179,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 		$currency = shop::getDefaultCurrency();
 
 		// charge url
-		$this->url = url_Make('charge', $this->parent->name);
+		$this->url = URL::make_query($this->parent->name, 'charge');
 
 		// prepare params
 		$params = array(
@@ -229,7 +229,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 		$currency = shop::getDefaultCurrency();
 
 		// charge url
-		$this->url = url_Make('subscribe', $this->parent->name);
+		$this->url = URL::make_query($this->parent->name, 'subscribe');
 
 		// get customer
 		$customer = stripe_payment::getCustomer($transaction_data['uid']);

@@ -257,7 +257,7 @@ class captcha extends Module {
 	 * @return string
 	 */
 	private function getImageURL() {
-		$result = url_Make('print_image', $this->name);
+		$result = URL::make_query($this->name, 'print_image');
 		return $result;
 	}
 

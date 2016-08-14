@@ -214,7 +214,7 @@ final class PayPal_Helper {
 				'token'	=> $token
 			);
 
-		url_SetRefresh('https://'.$url.'?'.http_build_query($params), 0);
+		URL::set_refresh('https://'.$url.'?'.http_build_query($params), 0);
 	}
 }
 
