@@ -70,7 +70,7 @@ final class URL {
 		if (func_num_args() > 2) {
 			$additional = array_slice(func_get_args(), 2);
 			foreach ($additional as $argument)
-				$arguments[$argument[0] = $argument[1];
+				$arguments[$argument[0]] = $argument[1];
 		}
 
 		// build query
