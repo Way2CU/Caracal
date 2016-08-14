@@ -1,7 +1,6 @@
 <?php
 
 
-
 class backend_MenuItem {
 	/**
 	 * Menu text
