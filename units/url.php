@@ -51,7 +51,7 @@ final class URL {
 			$result = '/'.$params['language'].$result;
 
 		// add URL base
-		$result = self::get_base().($url_rewrite ? '' : '?').'/'.$result;
+		$result = self::get_base().($url_rewrite ? '' : '?').$result;
 
 		return $result;
 	}
