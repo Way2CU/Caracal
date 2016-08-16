@@ -178,7 +178,7 @@ final class URL {
 		// generate attribute string
 		$attributes = '';
 		foreach ($attribute_list as $key => $value)
-			$attributes .= $key.'="'.$value.'"';
+			$attributes .= ' '.$key.'="'.$value.'"';
 
 		$result = '<a'.$attributes.'>'.$content.'</a>';
 		return $result;
