@@ -90,24 +90,41 @@ class language_menu extends Module {
 	public function on_disable() {
 	}
 
+	/**
+	 * Add meta tags to head tag.
+	 */
 	public function addMeta() {
 		global $default_language;
 
 		$head_tag = head_tag::get_instance();
 		$language_list = Language::get_languages(false);
+		$in_backend = isset($_REQUEST['section']);
 
-		// prepare params
-		$params = $_REQUEST;
-		$link_params = array();
+		// get parameters for URL
+		if ($in_backend) {
+			// get regular query parameters
+			$link_params = $this->get_params();
 
-		foreach($params as $key => $value)
-			if (!in_array($key, $this->invalid_params))
-				$link_params[$key] = fix_chars($value);
+		} else {
+			// get values matched with URL
+			$pattern = SectionHandler::get_matched_pattern();
+			$query_string = $_SERVER['QUERY_STRING'];
+			if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
+				$query_string = SectionHandler::ROOT_KEY.$query_string;
+
+			// extract values
+			preg_match($pattern, $query_string, $link_params);
+			foreach ($link_params as $key => $value)
+				if (is_int($key))
+					unset($link_params[$key]);
+		}
 
 		// add link to each language
 		foreach ($language_list as $language_code) {
 			$link_params['language'] = $language_code;
-			$url = url_MakeFromArray($link_params);
+			if ($in_backend)
+				$url = URL::get_base().'?'.http_build_query($link_params); else
+				$url = URL::make($link_params);
 
 			$head_tag->addTag('link',
 					array(
