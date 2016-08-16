@@ -154,6 +154,8 @@ class language_menu extends Module {
 	private function tag_LanguageList($tag_params, $children) {
 		global $action, $section;
 
+		$in_backend = isset($_REQUEST['section']);
+
 		// check if we were asked to get languages from specific module
 		if (isset($tag_params['from_module']) && ModuleHandler::is_loaded($tag_params['from_module'])) {
 			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'get_instance'));
@@ -167,13 +169,31 @@ class language_menu extends Module {
 		$template->set_template_params_from_array($children);
 
 		// get parameters for URL
-		$link_params = $this->get_params();
+		if ($in_backend) {
+			// get regular query parameters
+			$link_params = $this->get_params();
+
+		} else {
+			// get values matched with URL
+			$pattern = SectionHandler::get_matched_pattern();
+			$query_string = $_SERVER['QUERY_STRING'];
+			if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
+				$query_string = SectionHandler::ROOT_KEY.$query_string;
+
+			// extract values
+			preg_match($pattern, $query_string, $link_params);
+			foreach ($link_params as $key => $value)
+				if (is_int($key))
+					unset($link_params[$key]);
+		}
 
 		// print language list
 		if (count($list) > 0)
 			foreach ($list as $short => $long) {
 				$link_params['language'] = $short;
-				$link = url_MakeFromArray($link_params);
+				if ($in_backend)
+					$link = URL::get_base().'?'.http_build_query($link_params); else
+					$link = URL::make($link_params);
 
 				$params = array(
 					'short_name' => $short,
