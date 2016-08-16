@@ -46,9 +46,10 @@ final class URL {
 		// append language if specified
 		$set_language = array_key_exists('language', $params) && $params['language'] != $language;
 		$add_language = !$url_language_optional || ($url_language_optional && $set_language);
+		$language_to_add = isset($params['language']) ? $params['language'] : $language;
 
 		if ($add_language)
-			$result = '/'.$params['language'].$result;
+			$result = '/'.$language_to_add.$result;
 
 		// add URL base
 		$result = self::get_base().($url_rewrite ? '' : '?').$result;
