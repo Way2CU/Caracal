@@ -171,7 +171,7 @@ final class URL {
 			$attribute_list['target'] = $target;
 
 		// move javascript URLs to onclick handler
-		if (substr($link, 0, 11) == 'javascript:')
+		if (substr($url, 0, 11) == 'javascript:')
 			$attribute_list['onclick'] = $url; else
 			$attribute_list['href'] = $url;
 
