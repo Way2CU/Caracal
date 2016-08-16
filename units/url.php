@@ -16,7 +16,7 @@ final class URL {
 	 * @return string
 	 */
 	public static function make($params, $file=null) {
-		global $url_language_optional, $url_rewrite;
+		global $url_language_optional, $url_rewrite, $language;
 
 		$result = '';
 		$matched_pattern = null;
@@ -42,6 +42,16 @@ final class URL {
 			return $result;
 
 		$result = str_replace($matched_params, $params, $matched_pattern);
+
+		// append language if specified
+		$set_language = array_key_exists('language', $params) && $params['language'] != $language;
+		$add_language = !$url_language_optional || ($url_language_optional && $set_language);
+
+		if ($add_language)
+			$result = '/'.$params['language'].$result;
+
+		// add URL base
+		$result = self::get_base().($url_rewrite ? '' : '?').'/'.$result;
 
 		return $result;
 	}
@@ -129,7 +139,7 @@ final class URL {
 			$base .= ':'.$port;
 
 		$result = dirname($base.$_SERVER['PHP_SELF']);
-		$result = preg_replace("/\/$/i", "", $result);
+		$result = preg_replace('|/$|i', '', $result);
 
 		return $result;
 	}
