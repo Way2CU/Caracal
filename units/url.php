@@ -29,7 +29,11 @@ final class URL {
 			return $result;
 
 		// try to find matching template based on params
-		$param_names = array_keys($params);
+		$temp = $params;
+		if (isset($temp['language']))
+			unset($temp['language']);
+		$param_names = array_keys($temp);
+
 		foreach ($pattern_list as $pattern => $pattern_params)
 			if ($pattern_params[1] == $param_names) {
 				$matched_pattern = $pattern;
