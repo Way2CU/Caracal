@@ -45,7 +45,7 @@ final class URL {
 		if (is_null($matched_pattern))
 			return $result;
 
-		$result = str_replace($matched_params, $params, $matched_pattern);
+		$result = str_replace($matched_params, $temp, $matched_pattern);
 
 		// append language if specified
 		$set_language = array_key_exists('language', $params) && $params['language'] != $language;
