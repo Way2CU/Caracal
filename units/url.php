@@ -78,7 +78,7 @@ final class URL {
 		if (!is_null($section))
 			$arguments['section'] = $section;
 
-		if (!is_null($action))
+		if (!is_null($action) && !empty($action))
 			$arguments['action'] = $action;
 
 		// add remaining arguments
