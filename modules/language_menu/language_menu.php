@@ -59,10 +59,6 @@ class language_menu extends Module {
 					$this->tag_LanguageList($params, $children);
 					break;
 
-				case 'print_current':
-					$this->tag_CurrentLanguage($params, $children);
-					break;
-
 				case 'json':
 					$this->json_Menu();
 					break;
@@ -222,30 +218,6 @@ class language_menu extends Module {
 				$template->set_local_params($params);
 				$template->parse( );
 			}
-	}
-
-	/**
-	 * Show currently selected language item.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	public function tag_CurrentLanguage($tag_params, $children) {
-		global $language;
-
-		$list = Language::get_languages(true);
-		$link_params = $this->get_params();
-		$template = $this->load_template($tag_params, 'current_language.xml');
-
-		$params = array(
-				'short_name' => $language,
-				'long_name'  => $list[$language],
-				'url'        => url_MakeFromArray($link_params)
-			);
-
-		$template->restore_xml();
-		$template->set_local_params($params);
-		$template->parse();
 	}
 
 	/**
