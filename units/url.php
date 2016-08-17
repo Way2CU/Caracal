@@ -15,37 +15,43 @@ final class URL {
 	 * @param string $template_file
 	 * @return string
 	 */
-	public static function make($params, $file=null) {
+	public static function make($params=array(), $file=null) {
 		global $url_language_optional, $url_rewrite, $language;
 
 		$result = '';
 		$matched_pattern = null;
 		$matched_params = null;
 
-		// get list of URL templates matching specified file
-		$pattern_list = SectionHandler::get_templates_for_file($file);
+		if (!(empty($params) && is_null($file))) {
+			// get list of URL templates matching specified file
+			$pattern_list = SectionHandler::get_templates_for_file($file);
 
-		if (count($pattern_list) == 0)
-			return $result;
+			if (count($pattern_list) == 0)
+				return $result;
 
-		// try to find matching template based on params
-		$temp = $params;
-		if (isset($temp['language']))
-			unset($temp['language']);
-		$param_names = array_keys($temp);
+			// try to find matching template based on params
+			$temp = $params;
+			if (isset($temp['language']))
+				unset($temp['language']);
+			$param_names = array_keys($temp);
 
-		foreach ($pattern_list as $pattern => $pattern_params)
-			if ($pattern_params[1] == $param_names) {
-				$matched_pattern = $pattern;
-				$matched_params = $pattern_params[0];
-				break;
-			}
+			foreach ($pattern_list as $pattern => $pattern_params)
+				if ($pattern_params[1] == $param_names) {
+					$matched_pattern = $pattern;
+					$matched_params = $pattern_params[0];
+					break;
+				}
 
-		// build universal resource locator string
-		if (is_null($matched_pattern))
-			return $result;
+			// build universal resource locator string
+			if (is_null($matched_pattern))
+				return $result;
 
-		$result = str_replace($matched_params, $temp, $matched_pattern);
+			$result = str_replace($matched_params, $temp, $matched_pattern);
+
+		} else {
+			// special case scenario when all parameters are omitted
+			$result = SectionHandler::ROOT_KEY;
+		}
 
 		// append language if specified
 		$set_language = array_key_exists('language', $params) && $params['language'] != $language;
