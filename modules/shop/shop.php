@@ -3309,17 +3309,6 @@ class shop extends Module {
 
 		$_SESSION['transaction']['total'] -= $discount_total;
 
-		// if affiliate system is active, update referral
-		if (isset($_SESSION['referral_id']) && ModuleHandler::is_loaded('affiliates')) {
-			$referral_id = $_SESSION['referral_id'];
-			$referrals_manager = AffiliateReferralsManager::get_instance();
-
-			$referrals_manager->update_items(
-				array('transaction' => $result['id']),
-				array('id' => $referral_id)
-			);
-		}
-
 		return $result;
 	}
 
