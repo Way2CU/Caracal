@@ -670,7 +670,7 @@ class Handler {
 
 				// remove all the item ids which don't belong to all categories
 				$required_count = count($categories);
-				foreach ($item_count as $id => $count)
+				foreach ($item_counts as $id => $count)
 					if ($count == $required_count)
 						$item_ids[] = $id;
 			}
