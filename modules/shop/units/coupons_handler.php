@@ -8,6 +8,7 @@ namespace Modules\Shop\Promotion;
 require_once('coupons_manager.php');
 require_once('coupon_codes_manager.php');
 
+use \URL as URL;
 use \TemplateHandler as TemplateHandler;
 
 
@@ -37,14 +38,14 @@ class CouponHandler {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new \backend_MenuItem(
 									$this->parent->get_language_constant('menu_coupons'),
-									url_GetFromFilePath($this->path.'images/coupons.svg'),
+									URL::from_file_path($this->path.'images/coupons.svg'),
 
 									window_Open( // on click open window
 												'shop_coupons',
 												450,
 												$this->parent->get_language_constant('title_coupons'),
 												true, true,
-												backend_UrlMake($this->name, self::SUB_ACTION, 'show')
+												URL::make_query($this->name, self::SUB_ACTION, 'show')
 											),
 									$level=5
 								));
@@ -124,14 +125,14 @@ class CouponHandler {
 		$template = new TemplateHandler('coupon_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
+					'link_new' => URL::make_hyperlink(
 							$this->parent->get_language_constant('add_coupon'),
 							window_Open( // on click open window
 								'shop_coupon_add',
 								430,
 								$this->parent->get_language_constant('title_coupon_add'),
 								true, true,
-								backend_UrlMake($this->name, self::SUB_ACTION, 'add')
+								URL::make_query($this->name, self::SUB_ACTION, 'add')
 							))
 					);
 
@@ -259,7 +260,7 @@ class CouponHandler {
 					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_coupon_delete',
-											url_Make(
+											URL::make_query(
 												'transfer_control',
 												'backend_module',
 												array('module', $this->name),
@@ -314,7 +315,7 @@ class CouponHandler {
 					'coupon'        => $coupon_id,
 					'form_action'   => backend_UrlMake($this->name, self::SUB_ACTION, 'codes_save'),
 					'cancel_action' => window_Close('shop_coupon_codes'),
-					'link_new'      => url_MakeHyperlink(
+					'link_new'      => URL::make_hyperlink(
 							$this->parent->get_language_constant('add_code'),
 							window_Open( // on click open window
 								'shop_coupon_codes_add',
@@ -323,7 +324,7 @@ class CouponHandler {
 								true, true,
 								backend_UrlMake($this->name, self::SUB_ACTION, 'codes_add')
 							)),
-					'link_generate' => url_MakeHyperlink(
+					'link_generate' => URL::make_hyperlink(
 							$this->parent->get_language_constant('generate_codes'),
 							window_Open( // on click open window
 								'shop_coupon_codes_generate',
@@ -501,14 +502,14 @@ class CouponHandler {
 				'has_timeout' => $item->has_timeout,
 				'limit'       => $item->limit,
 				'timeout'     => $item->timeout,
-				'item_change' => url_MakeHyperlink(
+				'item_change' => URL::make_hyperlink(
 						$this->parent->get_language_constant('change'),
 						window_Open(
 							'shop_coupon_change', 	// window id
 							430,				// width
 							$this->parent->get_language_constant('title_coupon_change'), // title
 							true, true,
-							url_Make(
+							URL::make_query(
 								'transfer_control',
 								'backend_module',
 								array('module', $this->name),
@@ -517,14 +518,14 @@ class CouponHandler {
 								array('id', $item->id)
 							)
 						)),
-				'item_delete' => url_MakeHyperlink(
+				'item_delete' => URL::make_hyperlink(
 						$this->parent->get_language_constant('delete'),
 						window_Open(
 							'shop_coupon_delete', 	// window id
 							400,				// width
 							$this->parent->get_language_constant('title_coupon_delete'), // title
 							false, false,
-							url_Make(
+							URL::make_query(
 								'transfer_control',
 								'backend_module',
 								array('module', $this->name),
@@ -533,14 +534,14 @@ class CouponHandler {
 								array('id', $item->id)
 							)
 						)),
-				'item_codes' => url_MakeHyperlink(
+				'item_codes' => URL::make_hyperlink(
 						$this->parent->get_language_constant('codes'),
 						window_Open(
 							'shop_coupon_codes', 	// window id
 							550,				// width
 							$this->parent->get_language_constant('title_coupon_codes'), // title
 							true, true,
-							url_Make(
+							URL::make_query(
 								'transfer_control',
 								'backend_module',
 								array('module', $this->name),
@@ -602,7 +603,7 @@ class CouponHandler {
 				'times_used'  => $item->times_used,
 				'timestamp'   => $item->timestamp,
 				'discount'    => $item->discount,
-				'item_delete' => url_MakeHyperlink(
+				'item_delete' => URL::make_hyperlink(
 							$this->parent->get_language_constant('delete'),
 							'javascript: Caracal.Shop.delete_coupon_code(this);'
 						)
