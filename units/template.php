@@ -248,7 +248,7 @@ class TemplateHandler {
 					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$response = @eval('use \URL as URL; global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$response = @eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 
 					if ($response !== false)
 						$tag->tagAttrs[$param] = $response; else
