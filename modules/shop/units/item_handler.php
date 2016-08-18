@@ -672,7 +672,7 @@ class Handler {
 				$required_count = count($categories);
 				foreach ($item_count as $id => $count)
 					if ($count == $required_count)
-						$item_ids[] = $id;,
+						$item_ids[] = $id;
 			}
 
 			if (count($item_ids) > 0)
