@@ -664,7 +664,7 @@ class Handler {
 				// accumulate item membership counts
 				$item_counts = array();
 				foreach($membership_items as $membership)
-					if (isset($item_counts[$membership->item])
+					if (isset($item_counts[$membership->item]))
 						$item_counts[$membership->item]++; else
 						$item_counts[$membership->item] = 1;
 
