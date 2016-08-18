@@ -660,9 +660,20 @@ class Handler {
 											);
 
 			$item_ids = array();
-			if (count($membership_items) > 0)
+			if (count($membership_items) > 0) {
+				// accumulate item membership counts
+				$item_counts = array();
 				foreach($membership_items as $membership)
-					$item_ids[] = $membership->item;
+					if (isset($item_counts[$membership->item])
+						$item_counts[$membership->item]++; else
+						$item_counts[$membership->item] = 1;
+
+				// remove all the item ids which don't belong to all categories
+				$required_count = count($categories);
+				foreach ($item_count as $id => $count)
+					if ($count == $required_count)
+						$item_ids[] = $id;,
+			}
 
 			if (count($item_ids) > 0)
 				$conditions['id'] = $item_ids; else
