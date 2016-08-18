@@ -631,22 +631,26 @@ class Handler {
 
 		// create conditions
 		if (isset($tag_params['category'])) {
+			$categories = explode(',', $tag_params['category']);
 
-			if (is_numeric($tag_params['category'])) {
-				$category_id = fix_id($tag_params['category']);
+			if (is_numeric($categories[0])) {
+				$category_id = fix_id($categories);
 
 			} else {
 				// specified id is actually text_id, get real one
 				$category_manager = \ShopCategoryManager::get_instance();
-				$category = $category_manager->get_single_item(
+				$category_list = $category_manager->get_items(
 												array('id'),
-												array('text_id' => fix_chars($tag_params['category']))
+												array('text_id' => fix_chars($categories))
 											);
 
-				if (!is_object($category))
+				if (count($category_list) == 0)
 					return;
 
-				$category_id = $category->id;
+				// populate list of categories
+				$category_id = array();
+				foreach ($category_list as $category)
+					$category_id[] = $category->id;
 			}
 
 			$membership_manager = \ShopItemMembershipManager::get_instance();
