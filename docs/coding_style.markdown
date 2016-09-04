@@ -8,6 +8,7 @@ And don't hesitate to ask!
 _Note:_ This document was written based on great [PEP8](http://www.python.org/dev/peps/pep-0008/) proposition.
 
 Contents:
+
 1. [PHP coding style](#php)
 	- [Indentation](#php/indentation)
 	- [Blank lines](#php/blank-lings)
