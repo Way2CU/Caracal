@@ -617,6 +617,7 @@ Good:
 		name="test"
 		maxlength="10"
 		/>
+	<input type="text" name="another" maxlength="10"/>
 </div>
 <div class="container"/>
 ```
@@ -628,5 +629,11 @@ Bad:
 		name="test"
 		maxlength="10"
 		/></div>
+<div class="container"></div>
+```
+
+Also bad:
+```xml
+<div><input type="text" name="test" maxlength="10"/></div>
 <div class="container"></div>
 ```
