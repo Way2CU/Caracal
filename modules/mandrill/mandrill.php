@@ -123,7 +123,7 @@ class mandrill extends Module {
 	 */
 	private function saveSettings() {
 		// save setting
-		$this->saveSetting('api_key', fix_chars($_REQUEST['api_key']));
+		$this->saveSetting('api_key', trim(fix_chars($_REQUEST['api_key'])));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
