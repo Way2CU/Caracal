@@ -850,6 +850,9 @@ class links extends Module {
 		// get items from the database
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
+		if (!is_object($item))
+			return;
+
 		// load template
 		$template = $this->load_template($tag_params, 'links_item.xml');
 		$template->set_mapped_module($this->name);
