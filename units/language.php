@@ -255,7 +255,7 @@ final class Language {
 		global $section, $language, $default_language, $available_languages, $language_rtl,
 	 		$data_path, $system_path;
 
-		if (!isset($_REQUEST['language']) || empty($_REQUEST['language'])) {
+		if (empty($_REQUEST['language'])) {
 			// no language change was specified, check session
 			if (!isset($_SESSION['language']) || empty($_SESSION['language']))
 				$_SESSION['language'] = self::match_browser_language($available_languages, $default_language);
