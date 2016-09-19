@@ -676,6 +676,11 @@ class TemplateHandler {
 
 					break;
 
+				// support for automated testing
+				case 'cms:test':
+					// TODO: Link to autotesting class.
+					break;
+
 				// force flush on common elements
 				case 'head':
 				case 'body':
