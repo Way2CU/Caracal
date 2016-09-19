@@ -1,7 +1,7 @@
 /**
  * Checkout Form Implemenentation
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2015. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -14,26 +14,27 @@ Caracal.Shop = Caracal.Shop || {};
 Caracal.Shop.BuyerInformationForm = function() {
 	var self = this;
 
-	self.backend_url = $('base').attr('href') + '/index.php';
-
-	self.sign_in_form = $('div#sign_in.page');
-	self.shipping_information_form = $('div#shipping_information.page');
-	self.billing_information_form = $('div#billing_information.page');
-	self.payment_method_form = $('div#payment_method.page');
-	self.methods = $('div.payment_methods span');
-	self.method_field = $('input[name=payment_method]');
 	self.page_control = new PageControl('div#input_details div.pages');
-	self.password_dialog = new Dialog();
-	self.cvv_dialog = new Dialog();
+	self.interface_save_function = null;
 
 	// local namespaces
-	self.handler = {};
-	self.validator = {};
+	self.handler = new Object();
+	self.validator = new Object();
+	self.account = new Object();
+	self.shipping = new Object();
+	self.payment = new Object();
+	self.billing = new Object();
 
 	/**
 	 * Complete object initialization.
 	 */
 	self._init = function() {
+		// find DOM elements
+		self.account.page = $('div#sign_in.page');
+		self.shipping.page = $('div#shipping_information.page');
+		self.payment.page = $('div#payment_method.page');
+		self.billing.page = $('div#billing_information.page');
+
 		// implement page control
 		self.page_control
 			.setAllowForward(false)
@@ -41,63 +42,80 @@ Caracal.Shop.BuyerInformationForm = function() {
 			.attachControls('div#checkout_steps a')
 			.attachForm('div#input_details form');
 
-		// load dialog titles from server
-		language_handler.getTextArrayAsync(
-					'shop',
-					['title_password_dialog', 'title_cvv_dialog'],
-					self._configure_dialogs
-				);
+		// create password recovery dialog
+		self.account.password_dialog = new Dialog();
 
-		// configure dialogs
-		self.password_dialog
+		self.account.password_dialog
 				.setSize(400, 300)
 				.setScroll(false)
 				.setClearOnClose(false);
 
-		self.cvv_dialog
+		// create cvv information dialog
+		self.billing.cvv_dialog = new Dialog();
+		self.billing.cvv_dialog
 				.setSize(642, 265)
 				.setScroll(false)
 				.setClearOnClose(false)
 				.setContentFromDOM('img#what_is_cvv');
 
+		language_handler.getTextArrayAsync(
+				'shop',
+				[
+					'title_password_dialog', 'title_cvv_dialog',
+					'label_no_estimate', 'label_estimated_time'
+				],
+				self._configure_dialogs
+			);
+
 		// set validators used by page control
-		self.sign_in_form.data('validator', self.validator.sign_in_page);
-		self.shipping_information_form.data('validator', self.validator.shipping_information_page);
-		self.billing_information_form.data('validator', self.validator.billing_information_page);
+		self.account.page.data('validator', self.validator.sign_in_page);
+		self.shipping.page.data('validator', self.validator.shipping_information_page);
+		self.billing.page.data('validator', self.validator.billing_information_page);
 
-		if (self.payment_method_form.length > 0) {
-			// no payment method was preselected, we need validator
-			self.payment_method_form.data('validator', self.validator.payment_method_page);
+		// no payment method was preselected, we need validator
+		if (self.payment.page.length > 0)
+			self.payment.page.data('validator', self.validator.payment_method_page);
 
-		} else {
-			// payment method was preselected, prepare billing page
-			var method = $('div#input_details input[name=payment_method]');
-			var billing_page_index = self.billing_information_form.index();
+		self.payment.methods = $('div.payment_methods span');
+		self.payment.method_field = $('input[name=payment_method]');
 
-			// set billing page state
-			if (method.data('provides-information') == 1)
-				self.page_control.disablePage(billing_page_index); else
-				self.page_control.enablePage(billing_page_index);
-		}
+		// shipping information pages
+		self.shipping.overlay = self.shipping.page.find('div.container.methods div.overlay');
+		self.shipping.types_overlay = self.shipping.page.find('div.container.types div.overlay');
+		self.shipping.method_container = self.shipping.page.find('div.container.method');
+		self.shipping.address_container = self.shipping.page.find('div.container.address');
+		self.shipping.contact_container = self.shipping.page.find('div.container.contact');
+		self.shipping.types_container = self.shipping.page.find('div.container.types');
+		self.shipping.interface_container = self.shipping.page.find('div.container.interface');
+		self.shipping.methods = self.shipping.method_container.find('div.details a');
 
 		// check if user is already logged
-		if (self.shipping_information_form.find('select[name=presets]').data('autoload') == 1)
+		if (self.shipping.page.find('select[name=presets]').data('autoload') == 1)
 			self._load_account_information();
 
 		// connect events
-		self.sign_in_form.find('input[name=existing_user]').change(self.handler.account_type_change);
-		self.shipping_information_form.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
-		self.sign_in_form.find('a.password_recovery').click(self._show_password_dialog);
-		self.billing_information_form.find('a.what_is_cvv').click(self._show_cvv_dialog);
-		self.methods.click(self.handler.payment_method_click);
+		self.account.page.find('a.password_recovery').click(self._show_password_dialog);
+		self.account.page.find('input[name=existing_user]').change(self.handler.account_type_change);
+		self.shipping.page.find('select[name=presets]').change(self.handler.shipping_information_preset_change);
+		self.shipping.page.find('div.container div.summary').on('click', self.handler.summary_click);
+		self.shipping.methods.on('click', self.handler.delivery_method_click);
+		self.payment.methods.click(self.handler.payment_method_click);
+		self.page_control.events.connect('page-flip', self.handler.page_flip);
+
+		// apply account option
+		self.handler.account_type_change(null);
+
+		// select delivery method if only one is available
+		if (self.shipping.methods.length == 1)
+			self.shipping.methods.eq(0).trigger('click');
 	};
 
 	/**
 	 * Function called once async load of text variables is completed.
 	 */
 	self._configure_dialogs = function(data) {
-		self.password_dialog.setTitle(data['title_password_dialog']);
-		self.cvv_dialog.setTitle(data['title_cvv_dialog']);
+		self.account.password_dialog.setTitle(data['title_password_dialog']);
+		self.billing.cvv_dialog.setTitle(data['title_cvv_dialog']);
 	};
 
 	/**
@@ -107,9 +125,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._show_password_dialog = function(event) {
 		event.preventDefault();
-		self.password_dialog.show();
+		self.account.password_dialog.show();
 	};
-
 	/**
 	 * Show CVV explanation dialog.
 	 *
@@ -117,7 +134,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._show_cvv_dialog = function(event) {
 		event.preventDefault();
-		self.cvv_dialog.show();
+		self.billing.cvv_dialog.show();
 	};
 
 	/**
@@ -131,34 +148,266 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
+	 * Update summary for address container.
+	 */
+	self._update_shipping_address_summary = function() {
+		var fields = self.shipping.address_container.find('input,select');
+		var summary = self.shipping.address_container.find('div.summary');
+
+		fields.each(function() {
+			var field = $(this);
+			var label = summary.find('span.' + field.attr('name'));
+
+			label.html(field.val());
+		});
+	};
+
+	/**
+	 * Update summary for contact information container.
+	 */
+	self._update_shipping_contact_summary = function() {
+		var fields = self.shipping.contact_container.find('input,select');
+		var summary = self.shipping.contact_container.find('div.summary');
+
+		fields.each(function() {
+			var field = $(this);
+			var label = summary.find('span.' + field.attr('name'));
+
+			label.html(field.val());
+		});
+	};
+
+	/**
+	 * Update summary for delivery type container.
+	 */
+	self._update_shipping_types_summary = function() {
+		var summary = self.shipping.types_container.find('div.summary span.price');
+		var type = self.shipping.types_container.find('div.details a.selected');
+
+		summary.html(type.data('price') + ' ' + type.data('currency'));
+	};
+
+	/**
+	 * Handle page flip and scroll window to the top if checkout process
+	 * is not entirely visible.
+	 *
+	 * @param integer current_page
+	 * @param integer new_page
+	 * @return boolean
+	 */
+	self.handler.page_flip = function(current_page, new_page) {
+		var container = document.getElementById('checkout_container');
+		container.scrollIntoView();
+		return true;  // we don't want to prevent page flip
+	};
+
+	/**
+	 * Handle clicking on delivery type.
+	 *
+	 * @param object event
+	 */
+	self.handler.delivery_type_click = function(event) {
+		// prevent default link behavior
+		event.preventDefault();
+
+		// hightlight selected type
+		var type = $(this);
+		self.shipping.types_container.find('div.summary a').not(type).removeClass('selected');
+		type.addClass('selected');
+
+		// set delivery type values
+		self.set_delivery_method(null, type.data('type'));
+	};
+
+	/**
+	 * Handle clicking on summary.
+	 */
+	self.handler.summary_click = function(event) {
+		// prevent default behavior
+		event.preventDefault();
+
+		// switch container to edit mode
+		$(this).closest('div.container').removeClass('completed');
+	};
+
+	/**
+	 * Handle successful data load from server.
+	 *
+	 * @param object data
+	 */
+	self.handler.delivery_types_load = function(data) {
+		// add every delivery method to the container
+		var container = self.shipping.types_container.find('div.details');
+		container.html('');
+
+		// pre-cache language constants
+		var no_estimate = language_handler.getText('shop', 'label_no_estimate');
+		var estimated_time = language_handler.getText('shop', 'label_estimated_time');
+
+		if (data.delivery_prices) {
+			for (var id in data.delivery_prices) {
+				var method = data.delivery_prices[id];
+				var entry = $('<a>');
+				var name = $('<span>');
+				var price = $('<span>');
+				var time = $('<span>');
+
+				// create interface
+				entry.on('click', self.handler.delivery_type_click);
+
+				price
+					.html(method[1])
+					.attr('data-currency', method[2]);
+
+				name
+					.html(method[0])
+					.addClass('name')
+					.append(price)
+					.appendTo(entry);
+
+				if (method[4] === null) {
+					// no estimate available
+					time.html(no_estimate);
+
+				} else {
+					var start = method[3] != null ? method[3] + ' - ' : '';
+					var end = method[4];
+					time.html(estimated_time + '<br>' + start + end);
+				}
+
+				time
+					.addClass('estimate')
+					.appendTo(entry);
+
+				entry
+					.data('type', id)
+					.data('price', method[1])
+					.data('currency', method[2])
+					.attr('href', 'javascript: void(0)')
+					.addClass('method')
+					.appendTo(container);
+			}
+
+			// show list of delivery methods
+			self.shipping.types_container.addClass('visible');
+		}
+
+		// hide overlay
+		self.shipping.types_overlay.removeClass('visible');
+	};
+
+	/**
+	 * Handle error on server side while loading delivery methods.
+	 *
+	 * @param object error
+	 */
+	self.handler.delivery_types_error = function(error) {
+		// add every delivery method to the container
+		self.shipping.types_interface.removeClass('visible');
+
+		// hide overlay
+		self.shipping.types_overlay.removeClass('visible');
+	};
+
+	/**
+	 * Handle clicking on delivery method.
+	 *
+	 * @param object event
+	 */
+	self.handler.delivery_method_click = function(event) {
+		var method = $(this);
+
+		// prevent default behavior
+		event.preventDefault();
+
+		// reset all containers
+		self.shipping.address_container.removeClass('visible completed');
+		self.shipping.contact_container.removeClass('visible completed');
+		self.shipping.types_container.removeClass('visible completed');
+		self.shipping.interface_container.removeClass('visible completed');
+
+		if (method.data('user-information') == 1) {
+			// show fields for user information entry
+			self.shipping.address_container.addClass('visible');
+
+		} else if (method.data('custom-interface') == 1) {
+			// show busy indicator
+			self.shipping.overlay.addClass('visible');
+
+			// load delivery method custom interface
+			new Communicator('shop')
+				.on_success(self.handler.custom_interface_load)
+				.on_error(self.handler.custom_interface_error)
+				.get('json_get_delivery_method_interface', {method: method.data('value')}, 'html');
+		}
+
+		// set value for hidden fields
+		self.set_delivery_method(method.data('value'), '');
+
+		// update button status
+		self.shipping.methods.not(method).removeClass('selected');
+		method.addClass('selected');
+
+		// remove bad class
+		self.shipping.methods.removeClass('bad');
+	};
+
+	/**
+	 * Handle loading custom delivery method interface from the server.
+	 *
+	 * @param object data
+	 */
+	self.handler.custom_interface_load = function(data) {
+		self.shipping.interface_container
+				.html(data)
+				.addClass('visible')
+				.find('div.summary').on('click', self.handler.summary_click);
+		self.shipping.overlay.removeClass('visible');
+	};
+
+	/**
+	 * Handle communication error when loading custom delivery method interface
+	 * from the server.
+	 *
+	 * @param object error
+	 */
+	self.handler.custom_interface_error = function(object) {
+		// add every delivery method to the container
+		self.shipping.interface_container.removeClass('visible');
+
+		// hide overlay
+		self.shipping.overlay.removeClass('visible');
+	};
+
+	/**
 	 * Handle changing type of account for buyers information.
 	 *
 	 * @param object event
 	 */
 	self.handler.account_type_change = function(event) {
-		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
+		var selection = self.account.page.find('input[name=existing_user]:checked').val();
 
 		switch (selection) {
 			// existing account
 			case 'log_in':
-				self.sign_in_form.find('div.new_account').removeClass('visible');
-				self.sign_in_form.find('div.existing_account').addClass('visible');
-				self.sign_in_form.find('div.guest_checkout').removeClass('visible');
+				self.account.page.find('div.new_account').removeClass('visible');
+				self.account.page.find('div.existing_account').addClass('visible');
+				self.account.page.find('div.guest_checkout').removeClass('visible');
 				break;
 
 			// new account
 			case 'sign_up':
-				self.sign_in_form.find('div.new_account').addClass('visible');
-				self.sign_in_form.find('div.existing_account').removeClass('visible');
-				self.sign_in_form.find('div.guest_checkout').removeClass('visible');
+				self.account.page.find('div.new_account').addClass('visible');
+				self.account.page.find('div.existing_account').removeClass('visible');
+				self.account.page.find('div.guest_checkout').removeClass('visible');
 				break;
 
 			// checkout as guest
 			case 'guest':
 			default:
-				self.sign_in_form.find('div.new_account').removeClass('visible');
-				self.sign_in_form.find('div.existing_account').removeClass('visible');
-				self.sign_in_form.find('div.guest_checkout').addClass('visible');
+				self.account.page.find('div.new_account').removeClass('visible');
+				self.account.page.find('div.existing_account').removeClass('visible');
+				self.account.page.find('div.guest_checkout').addClass('visible');
 				break;
 		}
 	};
@@ -172,15 +421,15 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var control = $(this);
 		var option = control.find('option[value='+control.val()+']');
 
-		self.shipping_information_form.find('input[name=name]').val(option.data('name'));
-		self.shipping_information_form.find('input[name=phone]').val(option.data('phone'));
-		self.shipping_information_form.find('input[name=street]').val(option.data('street'));
-		self.shipping_information_form.find('input[name=street2]').val(option.data('street2'));
-		self.shipping_information_form.find('input[name=city]').val(option.data('city'));
-		self.shipping_information_form.find('input[name=zip]').val(option.data('zip'));
-		self.shipping_information_form.find('select[name=country]').val(option.data('country'));
-		self.shipping_information_form.find('input[name=state]').val(option.data('state'));
-		self.shipping_information_form.find('input[name=access_code]').val(option.data('access_code'));
+		self.shipping.page.find('input[name=name]').val(option.data('name'));
+		self.shipping.page.find('input[name=phone]').val(option.data('phone'));
+		self.shipping.page.find('input[name=street]').val(option.data('street'));
+		self.shipping.page.find('input[name=street2]').val(option.data('street2'));
+		self.shipping.page.find('input[name=city]').val(option.data('city'));
+		self.shipping.page.find('input[name=zip]').val(option.data('zip'));
+		self.shipping.page.find('select[name=country]').val(option.data('country'));
+		self.shipping.page.find('input[name=state]').val(option.data('state'));
+		self.shipping.page.find('input[name=access_code]').val(option.data('access_code'));
 	};
 
 	/**
@@ -192,20 +441,14 @@ Caracal.Shop.BuyerInformationForm = function() {
 		var method = $(this);
 
 		// set payment method before processing
-		self.method_field.val(method.data('name'));
+		self.payment.method_field.val(method.data('name'));
 
 		// add selection class to
-		self.methods.not(method).removeClass('active');
+		self.payment.methods.not(method).removeClass('active');
 		method.addClass('active');
 
 		// remove bad class
-		self.methods.removeClass('bad');
-
-		// disable billing information page if payment method provides info about buyer
-		var billing_page_index = self.billing_information_form.index();
-		if (method.data('provides-information') == 1)
-			self.page_control.disablePage(billing_page_index); else
-			self.page_control.enablePage(billing_page_index);
+		self.payment.methods.removeClass('bad');
 	};
 
 	/**
@@ -214,9 +457,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * @param object data
 	 */
 	self.handler.account_load_success = function(data) {
-		var presets = self.shipping_information_form.find('select[name=presets]');
-		var email_field = self.sign_in_form.find('input[name=sign_in_email]');
-		var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+		var presets = self.shipping.page.find('select[name=presets]');
+		var email_field = self.account.page.find('input[name=sign_in_email]');
+		var password_field = self.account.page.find('input[name=sign_in_password]');
 
 		// reset presets
 		presets.html('');
@@ -226,9 +469,9 @@ Caracal.Shop.BuyerInformationForm = function() {
 		password_field.removeClass('bad');
 
 		// populate shipping information with data received from the server
-		self.shipping_information_form.find('input[name=first_name]').val(data.information.first_name);
-		self.shipping_information_form.find('input[name=last_name]').val(data.information.last_name);
-		self.shipping_information_form.find('input[name=email]').val(data.information.email);
+		self.shipping.page.find('input[name=first_name]').val(data.information.first_name);
+		self.shipping.page.find('input[name=last_name]').val(data.information.last_name);
+		self.shipping.page.find('input[name=email]').val(data.information.email);
 
 		// empty preset
 		var empty_option = $('<option>');
@@ -258,10 +501,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 		}
 
 		// alter field visibility
-		self.shipping_information_form.find('select[name=presets]').parent().show();
-		self.shipping_information_form.find('input[name=name]').parent().show();
-		self.shipping_information_form.find('input[name=email]').parent().hide();
-		self.shipping_information_form.find('hr').eq(0).show();
+		self.shipping.page.find('select[name=presets]').parent().show();
+		self.shipping.page.find('input[name=name]').parent().show();
+		self.shipping.page.find('input[name=email]').parent().hide();
+		self.shipping.page.find('hr').eq(0).show();
 	};
 
 	/**
@@ -272,8 +515,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * @param string description
 	 */
 	self.handler.account_load_error = function(xhr, transfer_status, description) {
-		var email_field = self.sign_in_form.find('input[name=sign_in_email]');
-		var password_field = self.sign_in_form.find('input[name=sign_in_password]');
+		var email_field = self.account.page.find('input[name=sign_in_email]');
+		var password_field = self.account.page.find('input[name=sign_in_password]');
 
 		// add "bad" class to input fields
 		email_field.addClass('bad');
@@ -284,22 +527,21 @@ Caracal.Shop.BuyerInformationForm = function() {
 	};
 
 	/**
-	* Validate sign in page.
-	*
-	* @return boolean
-	*/
+	 * Validate sign in page.
+	 *
+	 * @return boolean
+	 */
 	self.validator.sign_in_page = function() {
 		var result = false;
-		var next_button = self.sign_in_form.find('button.next');
 
 		// check which option is selected
-		var selection = self.sign_in_form.find('input[name=existing_user]:checked').val();
+		var selection = self.account.page.find('input[name=existing_user]:checked').val();
 
 		switch (selection) {
 			case 'log_in':
-				var email_field = self.sign_in_form.find('input[name=sign_in_email]');
-				var password_field = self.sign_in_form.find('input[name=sign_in_password]');
-				var captcha_field = self.sign_in_form.find('label.captcha');
+				var email_field = self.account.page.find('input[name=sign_in_email]');
+				var password_field = self.account.page.find('input[name=sign_in_password]');
+				var captcha_field = self.account.page.find('label.captcha');
 
 				// prepare data
 				var data = {
@@ -344,7 +586,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 
 			case 'sign_up':
 				// get new account section
-				var container = self.sign_in_form.find('div.new_account');
+				var container = self.account.page.find('div.new_account');
 				var fields = container.find('input');
 				var first_name = container.find('input[name=first_name]');
 				var last_name = container.find('input[name=last_name]');
@@ -372,7 +614,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 				}
 
 				// check if account with specified email already exists
-				var email_field = self.sign_in_form.find('input[name=new_email]');
+				var email_field = self.account.page.find('input[name=new_email]');
 
 				if (email_field.val() != '') {
 					new Communicator('shop')
@@ -388,10 +630,10 @@ Caracal.Shop.BuyerInformationForm = function() {
 				}
 
 				// alter field visibility
-				self.shipping_information_form.find('select[name=presets]').parent().hide();
-				self.shipping_information_form.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().show();
-				self.shipping_information_form.find('input[name=email]').val(email_field.val()).parent().hide();
-				self.shipping_information_form.find('hr').eq(0).hide();
+				self.shipping.page.find('select[name=presets]').parent().hide();
+				self.shipping.page.find('input[name=name]').val(first_name.val() + ' ' + last_name.val()).parent().show();
+				self.shipping.page.find('input[name=email]').val(email_field.val()).parent().hide();
+				self.shipping.page.find('hr').eq(0).hide();
 
 				result = !(password.hasClass('bad') || password_confirm.hasClass('bad') || email_field.hasClass('bad'));
 				break;
@@ -399,66 +641,179 @@ Caracal.Shop.BuyerInformationForm = function() {
 			case 'guest':
 			default:
 				// get agree checkbox
-				var agree_to_terms = self.sign_in_form.find('input[name=agree_to_terms]');
+				var agree_to_terms = self.account.page.find('input[name=agree_to_terms]');
+				var fields = self.account.page.find('div.guest_checkout input');
 
-				result = true;
-				if (agree_to_terms.length > 0)
-					result = agree_to_terms.is(':checked');
+				// ensure required fields are filled in
+				fields.each(function(index) {
+					var field = $(this);
 
-				// set class
-				if (result)
-					agree_to_terms.removeClass('bad'); else
-					agree_to_terms.addClass('bad');
+					if (field.attr('type') != 'checkbox')
+						value_is_good = field.val() != ''; else
+						value_is_good = field.is(':checked');
+
+					if (field.data('required') == 1 && !value_is_good)
+						field.addClass('bad'); else
+						field.removeClass('bad');
+				});
+
+				result = fields.filter('.bad').length == 0;
 
 				// hide unneeded fields
-				self.shipping_information_form.find('select[name=presets]').parent().hide();
-				self.shipping_information_form.find('input[name=name]').parent().show();
-				self.shipping_information_form.find('input[name=email]').parent().show();
-				self.shipping_information_form.find('hr').eq(0).show();
+				self.shipping.page.find('select[name=presets]').parent().hide();
+				self.shipping.page.find('input[name=name]').parent().show();
+				self.shipping.page.find('input[name=email]').parent().show();
+				self.shipping.page.find('hr').eq(0).show();
 		}
 
 		return result;
 	};
 
 	/**
-	* Validate shipping information page.
-	*
-	* @return boolean
-	*/
+	 * Validate shipping information page. System expects the following process:
+	 * Delivery method -> [User information -> Additional information] -> [Custom interface | types]
+	 *
+	 * User information and custom interface are completely optional. However if delivery method
+	 * requires showing this interface interface will be shown one step at a time.
+	 *
+	 * @return boolean
+	 */
 	self.validator.shipping_information_page = function() {
-		var fields = self.shipping_information_form.find('input,select');
+		var method = self.shipping.methods.filter('.selected');
 
-		// add "bad" class to every required field which is empty
-		fields.each(function(index) {
-			var field = $(this);
+		// make sure delivery method is selected
+		if (method.length == 0) {
+			self.shipping.methods.addClass('bad');
+			return false;  // prevent page from switching
+		}
 
-			if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
-				field.addClass('bad'); else
-				field.removeClass('bad');
-		});
+		// prepare for checking what should be shown next
+		var show_address = method.data('user-information') == 1;
+		var show_interface = method.data('custom-interface') == 1;
+		var address_visible = self.shipping.address_container.hasClass('visible');
+		var address_completed = self.shipping.address_container.hasClass('completed');
+		var contact_visible = self.shipping.contact_container.hasClass('visible');
+		var contact_completed = self.shipping.contact_container.hasClass('completed');
+		var interface_visible = self.shipping.interface_container.hasClass('visible');
+		var interface_completed = self.shipping.interface_container.hasClass('completed');
+		var types_visible = self.shipping.types_container.hasClass('visible');
+		var types_completed = self.shipping.types_container.hasClass('completed');
 
-		return self.shipping_information_form.find('.bad').length == 0;
+		// make sure required address fields are entered
+		if (address_visible) {
+			var fields = self.shipping.address_container.find('input,select');
+
+			// iterate over fields
+			fields.each(function() {
+				var field = $(this);
+
+				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
+					field.addClass('bad'); else
+					field.removeClass('bad');
+			});
+
+			// complete current interface
+			if (fields.filter('.bad').length == 0 && !address_completed) {
+				address_completed = true;
+				self.shipping.address_container.addClass('completed');
+				self._update_shipping_address_summary();
+			}
+		}
+
+		// show contact information container
+		if (show_address && address_completed && !contact_visible) {
+			self.shipping.contact_container.addClass('visible');
+			return false;  // prevent page from switching
+		}
+
+		// make sure required contact fields are filled in
+		if (contact_visible) {
+			var fields = self.shipping.contact_container.find('input,select');
+
+			for (var i = 0, count = fields.length; i < count; i++) {
+				var field = fields.eq(i);
+
+				if (field.data('required') == 1 && field.is(':visible') && field.val() == '')
+					field.addClass('bad'); else
+					field.removeClass('bad');
+			}
+
+			// complete current interface
+			if (fields.filter('.bad').length == 0 && !contact_completed) {
+				contact_completed = true;
+				self.shipping.contact_container.addClass('completed');
+				self._update_shipping_contact_summary();
+			}
+		}
+
+		// flag denoting status of user information
+		var user_information_complete = (show_address && (address_completed && contact_completed)) || !show_address;
+
+		// show custom interface
+		if (show_interface && user_information_complete && !interface_visible) {
+			// show busy indicator
+			self.shipping.overlay.addClass('visible');
+
+			// load delivery method custom interface
+			new Communicator('shop')
+				.on_success(self.handler.custom_interface_load)
+				.on_error(self.handler.custom_interface_error)
+				.get('json_get_delivery_method_interface', {method: method.data('value')}, 'html');
+
+			return false;  // prevent page from switching
+
+		} else if (!show_interface && user_information_complete && !types_visible) {
+			// prepare data
+			var data = {
+					method: method.data('value'),
+					street: self.shipping.address_container.find('input[name=street]').val(),
+					street2: self.shipping.address_container.find('input[name=street2]').val(),
+					city: self.shipping.address_container.find('input[name=city]').val(),
+					zip_code: self.shipping.address_container.find('input[name=zip]').val(),
+					state: self.shipping.address_container.find('input[name=state]').val(),
+					country: self.shipping.address_container.find('input[name=country]').val()
+				};
+
+			// get delivery types for selected method
+			new Communicator('shop')
+				.on_success(self.handler.delivery_types_load)
+				.on_error(self.handler.delivery_types_error)
+				.get('json_get_delivery_estimate', data);
+
+			return false;  // prevent page from switching
+		}
+
+		// validate custom interface
+		if (show_interface && !interface_completed && self.interface_save_function != null)
+			self.interface_save_function();
+
+		// validate delivery type
+		if (!show_interface && !types_completed) {
+			var types = self.shipping.types_container.find('div.details a');
+
+			if (types.filter('.selected').length == 0) {
+				// mark delivery types as bad
+				types.addClass('bad');
+
+			} else {
+				// complete delivery type selection process
+				types.removeClass('bad');
+				self._update_shipping_types_summary();
+				self.shipping.types_container.addClass('completed');
+			}
+		}
+
+		// prepare conditions
+		var delivery_type_completed = (show_interface && interface_completed) || (!show_interface && types_completed);
+
+		return user_information_complete && delivery_type_completed;
 	};
 
 	/**
-	* Validate payment method page.
-	*
-	* @return boolean
-	*/
-	self.validator.payment_method_page = function() {
-		var result = self.methods.filter('.active').length > 0;
-
-		if (!result)
-			self.methods.addClass('bad');
-
-		return result;
-	};
-
-	/**
-	* Validate billing information page.
-	*
-	* @return boolean
-	*/
+	 * Validate billing information page.
+	 *
+	 * @return boolean
+	 */
 	self.validator.billing_information_page = function() {
 		var fields = self.billing_information_form.find('input,select');
 		var method = self.methods.filter('.active');
@@ -497,6 +852,68 @@ Caracal.Shop.BuyerInformationForm = function() {
 		return self.billing_information_form.find('.bad').length == 0;
 	};
 
+	/**
+	* Validate payment method page.
+	*
+	* @return boolean
+	*/
+	self.validator.payment_method_page = function() {
+		var result = self.payment.methods.filter('.active').length > 0;
+
+		if (!result)
+			self.payment.methods.addClass('bad');
+
+		return result;
+	};
+
+	/**
+	 * Set interface save function which will be called before switching to a new page. Return
+	 * value of specified function does not play a role in validating shipping information page.
+	 * If class `completed` is present on custom interface container then upon completion of
+	 * other containers on the page user will be allowed to proceed.
+	 *
+	 * Return value denotes if function was set.
+	 *
+	 * @param function callback
+	 * @return boolean
+	 */
+	self.set_interface_save_function = function(callback) {
+		if (!typeof callback == 'function')
+			return false;
+
+		self.interface_save_function = callback;
+		return true;
+	};
+
+	/**
+	 * Set delivery method and type to be sent to server.
+	 *
+	 * @param string method
+	 * @param string type
+	 */
+	self.set_delivery_method = function(method, type) {
+		if (!method)
+			var method = self.shipping.method_container.find('div.details a.selected').data('value');
+
+		self.shipping.page.find('input[name=delivery_method]').val(method);
+		self.shipping.page.find('input[name=delivery_type]').val(type);
+	};
+
+	/**
+	 * Return name of selected delivery method.
+	 *
+	 * @return string
+	 */
+	self.get_selected_delivery_method = function() {
+		var result = null;
+		var selected = self.shipping.method_container.find('div.details a.selected');
+
+		if (selected.length > 0)
+			result = selected.data('value');
+
+		return result;
+	};
+
 	// finalize object
 	self._init();
 };
@@ -508,35 +925,16 @@ Caracal.Shop.BuyerInformationForm = function() {
 Caracal.Shop.CheckoutForm = function() {
 	var self = this;
 
-	// cached response from server
-	self.cached_data = null;
-
-	// backend URL used to get JSON data
-	self.backend_url = $('base').attr('href') + '/index.php';
-
 	self.checkout = $('div#checkout');
-	self.checkout_details = self.checkout.find('table.checkout_details');
-	self.delivery_provider_list = self.checkout.find('div.delivery_provider');
-	self.delivery_method_list = self.checkout.find('div.delivery_method');
-	self.delivery_interface= self.checkout.find('div.delivery_interface');
-	self.overlay = self.delivery_provider_list.find('div.overlay');
 	self.checkout_button = self.checkout.find('div.checkout_controls button[type=submit]');
 
 	// handler functions namespace
-	self.handler = {};
+	self.handler = new Object();
 
 	/**
 	 * Complete object initialization.
 	 */
 	self._init = function() {
-		self.delivery_provider_list
-				.find('input[name=delivery_provider]')
-				.change(self.handler.delivery_provider_change);
-
-		// disable checkout button
-		if (self.delivery_provider_list.length > 0)
-			self.disable_checkout_button();
-
 		// connect events
 		self.checkout.find('textarea[name=remarks]').on('blur', self.handler.remarks_focus_lost);
 	};
@@ -555,185 +953,6 @@ Caracal.Shop.CheckoutForm = function() {
 	};
 
 	/**
-	 * Handle loading custom delivery provider interface from the server.
-	 *
-	 * @param object data
-	 */
-	self.handler.custom_interface_load = function(data) {
-		self.delivery_interface
-				.html(data)
-				.addClass('visible');
-		self.overlay.removeClass('visible');
-	};
-
-	/**
-	 * Handle communication error when loading custom delivery provider interface
-	 * from the server.
-	 *
-	 * @param object error
-	 */
-	self.handler.custom_interface_error = function(object) {
-		// disable checkout button
-		self.disable_checkout_button();
-
-		// add every delivery method to the container
-		self.delivery_method_list.html('');
-		self.delivery_method_list.removeClass('visible');
-		self.delivery_interface.removeClass('visible');
-
-		// hide overlay
-		self.overlay.removeClass('visible');
-	};
-
-	/**
-	 * Handle successful data load from server.
-	 *
-	 * @param object data
-	 */
-	self.handler.delivery_providers_load = function(data) {
-		self.cached_data = data;
-		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(data.shipping).toFixed(2));
-		self.checkout_details.find('.subtotal-value.handling').html(parseFloat(data.handling).toFixed(2));
-		self.checkout_details.find('.total-value').html(parseFloat(data.total).toFixed(2) + ' ' + data.currency);
-
-		// add every delivery method to the container
-		self.delivery_method_list.html('');
-
-		if (data.delivery_prices && data.delivery_prices.length > 0) {
-			for (var id in data.delivery_prices) {
-				var method = data.delivery_prices[id];
-				var entry = $('<label>');
-				var name = $('<div>');
-				var price = $('<span>');
-				var time = $('<span>');
-				var checkbox = $('<input>');
-
-				// add method name to object
-				method.push(data.delivery_method);
-
-				// create interface
-				checkbox
-					.attr('type', 'radio')
-					.attr('name', 'delivery_method')
-					.attr('value', id)
-					.data('method', method)
-					.change(self.handler.delivery_method_click)
-					.appendTo(entry);
-
-				price
-					.html(method[1])
-					.attr('data-currency', method[2]);
-
-				name
-					.html(method[0])
-					.append(price)
-					.appendTo(entry);
-
-				if (method[4] === null) {
-					// no estimate available
-					time.html(self.cached_data.label_no_estimate);
-
-				} else {
-					var start = method[3] != null ? method[5] + ' - ' : '';
-					var end = method[6];
-					time.html(self.cached_data.label_estimated_time + '<br>' + start + end);
-				}
-
-				time.appendTo(entry);
-
-				entry
-					.addClass('method')
-					.appendTo(self.delivery_method_list);
-
-				// show list of delivery methods
-				self.delivery_method_list.addClass('visible');
-			}
-
-		} else {
-			// no prices specified, enable checkout button
-			self.enable_checkout_button();
-		}
-
-		// hide overlay
-		self.overlay.removeClass('visible');
-	};
-
-	/**
-	 * Handle error on server side while loading delivery methods.
-	 *
-	 * @param object error
-	 */
-	self.handler.delivery_providers_error = function(error) {
-		// disable checkout button
-		self.disable_checkout_button();
-
-		// add every delivery method to the container
-		self.delivery_method_list.html('');
-		self.delivery_interface.removeClass('visible');
-
-		// hide overlay
-		self.overlay.removeClass('visible');
-	};
-
-	/**
-	 * Handle changing delivery provider.
-	 *
-	 * @param object event
-	 */
-	self.handler.delivery_provider_change = function(event) {
-		var method = self.delivery_provider_list.find('input[name=delivery_provider]:checked');
-
-		// show loading overlay
-		self.overlay.addClass('visible');
-		self.delivery_method_list.removeClass('visible');
-		self.delivery_interface.removeClass('visible');
-
-		var communicator = new Communicator('shop');
-
-		if (method.data('custom-interface')) {
-			// get delivery method custom interface
-			communicator
-				.on_success(self.handler.custom_interface_load)
-				.on_error(self.handler.custom_interface_error)
-				.get('json_get_delivery_method_interface', {method: method.val()}, 'html');
-
-		} else {
-			// get delivery types for selected method
-			communicator
-				.on_success(self.handler.delivery_providers_load)
-				.on_error(self.handler.delivery_providers_error)
-				.get('json_set_delivery_method', {method: method.val()});
-		}
-
-	};
-
-	/**
-	 * Handle clicking on delivery method.
-	 *
-	 * @param object event
-	 */
-	self.handler.delivery_method_click = function(event) {
-		var item = $(this);
-		var method = item.data('method');
-		var total = self.cached_data.total + self.cached_data.handling + parseFloat(method[1]);
-
-		// update checkout table
-		self.checkout_details.find('.subtotal-value.shipping').html(parseFloat(method[1]).toFixed(2));
-		self.checkout_details.find('.total-value').html(parseFloat(total).toFixed(2) + ' ' + self.cached_data.currency);
-
-		// send selection to server
-		var data = {
-				method: method[7],
-				type: item.attr('value')
-			};
-
-		// send data to server
-		new Communicator('shop')
-			.on_success(self.enable_checkout_button)
-			.get('json_set_delivery_method', data);
-	};
-
-	/**
 	 * Enable checkout button.
 	 */
 	self.enable_checkout_button = function() {
@@ -745,6 +964,14 @@ Caracal.Shop.CheckoutForm = function() {
 	 */
 	self.disable_checkout_button = function() {
 		self.checkout_button.attr('disabled', 'disabled');
+	};
+
+	/**
+	 * Get total price for charging.
+	 * @return float
+	 */
+	self.get_total = function() {
+		return self.value + self.shipping + self.handling;
 	};
 
 	// complete object initialization

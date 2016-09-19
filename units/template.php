@@ -10,6 +10,7 @@
  */
 
 use Core\Markdown;
+use Core\Cache\Type as CacheType;
 use Core\Cache\Manager as Cache;
 
 
@@ -114,7 +115,7 @@ class TemplateHandler {
 		$this->module = null;
 		$path = empty($path) ? $template_path : $path;
 		$this->file = $path.$file;
-		$this->cache = Cache::getInstance();
+		$this->cache = Cache::get_instance();
 
 		// if file exits then load
 		if (!empty($this->file) && file_exists($this->file)) {
@@ -126,11 +127,10 @@ class TemplateHandler {
 		}
 	}
 
-
 	/**
 	 * Restores XML to original state
 	 */
-	public function restoreXML() {
+	public function restore_xml() {
 		if (isset($this->engine))
 			$this->engine->Parse();
 	}
@@ -139,7 +139,7 @@ class TemplateHandler {
 	 * Manually set XML
 	 * @param string $data
 	 */
-	public function setXML($data) {
+	public function set_xml($data) {
 		if (isset($this->engine))
 			unset($this->engine);
 
@@ -153,7 +153,7 @@ class TemplateHandler {
 	 *
 	 * @param array $params
 	 */
-	public function setLocalParams($params) {
+	public function set_local_params($params) {
 		$this->params = $params;
 	}
 
@@ -162,7 +162,7 @@ class TemplateHandler {
 	 *
 	 * @param array $params;
 	 */
-	public function setTemplateParams($params) {
+	public function set_template_params($params) {
 		$this->template_params = $params;
 	}
 
@@ -171,7 +171,7 @@ class TemplateHandler {
 	 *
 	 * @param array $children
 	 */
-	public function setTemplateParamsFromArray($children) {
+	public function set_template_params_from_array($children) {
 		if (count($children) == 0)
 			return;
 
@@ -183,7 +183,7 @@ class TemplateHandler {
 				$template_params[$child->tagAttrs['name']] = $child->tagAttrs['value'];
 
 		// set params
-		$this->setTemplateParams($template_params);
+		$this->set_template_params($template_params);
 	}
 
 	/**
@@ -191,10 +191,10 @@ class TemplateHandler {
 	 *
 	 * @param string $module
 	 */
-	public function setMappedModule($module) {
+	public function set_mapped_module($module) {
 		if (is_string($module)) {
 			if (ModuleHandler::is_loaded($module))
-				$this->module = call_user_func(array($module, 'getInstance'));
+				$this->module = call_user_func(array($module, 'get_instance'));
 
 		} else {
 			$this->module = $module;
@@ -204,18 +204,25 @@ class TemplateHandler {
 	/**
 	 * Parse loaded template
 	 *
-	 * @param integer $level Current level of parsing
 	 * @param array $tags Leave blank, used for recursion
-	 * @param boolean $parent_block If parent tag is block element
 	 */
 	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path, $images_path;
+		global $section, $action, $language, $template_path, $system_template_path, $images_path, $cache_method;
+
+		// turn on custom error hanlder
+		set_error_handler(array($this, 'handle_error'));
 
 		if ((!$this->active) && empty($tags))
 			return;
 
 		// take the tag list for parsing
-		$tag_array = (empty($tags)) ? $this->engine->document->tagChildren : $tags;
+		$tag_array = array();
+
+		if (!empty($tags))
+			$tag_array = $tags;
+
+		if (empty($tag_array) && $this->active)
+			$tag_array = $this->engine->document->tagChildren;
 
 		// start parsing tags
 		$count = count($tag_array);
@@ -280,8 +287,8 @@ class TemplateHandler {
 			// implement tooltip
 			if (isset($tag->tagAttrs['cms:tooltip'])) {
 				if (!is_null($this->module))
-					$value = $this->module->getLanguageConstant($tag->tagAttrs['cms:tooltip']); else
-					$value = Language::getText($tag->tagAttrs['cms:tooltip']);
+					$value = $this->module->get_language_constant($tag->tagAttrs['cms:tooltip']); else
+					$value = Language::get_text($tag->tagAttrs['cms:tooltip']);
 
 				if (!empty($value))
 					$tag->tagAttrs['data-tooltip'] = $value;
@@ -295,8 +302,8 @@ class TemplateHandler {
 				if (count($params) > 0)
 					foreach ($params as $param)
 						if (!is_null($this->module))
-							$tag->tagAttrs[$param] = $this->module->getLanguageConstant($tag->tagAttrs[$param]); else
-							$tag->tagAttrs[$param] = Language::getText($tag->tagAttrs[$param]);
+							$tag->tagAttrs[$param] = $this->module->get_language_constant($tag->tagAttrs[$param]); else
+							$tag->tagAttrs[$param] = Language::get_text($tag->tagAttrs[$param]);
 
 				unset($tag->tagAttrs['cms:constant']);
 			}
@@ -315,7 +322,7 @@ class TemplateHandler {
 
 					// reconstruct template for cache,
 					// ugly but we are not doing it a lot
-					$data = $this->getDataForCache($tag);
+					$data = $this->get_data_for_cache($tag);
 					$this->cache->setCacheForDirtyArea($data);
 				}
 			}
@@ -350,8 +357,8 @@ class TemplateHandler {
 				// transfer control to module
 				case 'cms:module':
 					if (ModuleHandler::is_loaded($tag->tagAttrs['name'])) {
-						$module = call_user_func(array($tag->tagAttrs['name'], 'getInstance'));
-						$module->transferControl($tag->tagAttrs, $tag->tagChildren);
+						$module = call_user_func(array($tag->tagAttrs['name'], 'get_instance'));
+						$module->transfer_control($tag->tagAttrs, $tag->tagChildren);
 					}
 					break;
 
@@ -364,8 +371,8 @@ class TemplateHandler {
 					$new = new TemplateHandler($file, $path);
 
 					// transfer local params to new template handler
-					$new->setLocalParams($this->params);
-					$new->setTemplateParamsFromArray($tag->tagChildren);
+					$new->set_local_params($this->params);
+					$new->set_template_params_from_array($tag->tagChildren);
 
 					// parse new template
 					$new->parse();
@@ -396,8 +403,29 @@ class TemplateHandler {
 				case 'cms:svg':
 					$path = _BASEPATH.'/'.$images_path;
 					$file = $tag->tagAttrs['file'];
+					$symbol = isset($tag->tagAttrs['symbol']) ? $tag->tagAttrs['symbol'] : null;
 
-					echo file_get_contents($path.$file);
+					if (is_null($symbol)) {
+						echo file_get_contents($path.$file);
+
+					} else {
+						$params = array(
+								'url'      => _BASEURL.'/'.$images_path.$file,
+								'symbol'   => $symbol,
+								'fallback' => $cache_method != CacheType::NONE || !_BROWSER_OK
+							);
+
+						if (isset($tag->tagAttrs['class']))
+							$params['class'] = $tag->tagAttrs['class'];
+
+						$template = new TemplateHandler('svg_symbol.xml', $system_template_path);
+						$template->set_mapped_module($this->module);
+
+						$template->restore_xml();
+						$template->set_local_params($params);
+						$template->parse();
+					}
+
 					break;
 
 				// multi language constants
@@ -409,13 +437,13 @@ class TemplateHandler {
 					// check if constant is module based
 					if (key_exists('module', $tag->tagAttrs)) {
 						if (ModuleHandler::is_loaded($tag->tagAttrs['module'])) {
-							$module = call_user_func(array($tag->tagAttrs['module'], 'getInstance'));
-							$text = $module->getLanguageConstant($constant, $language);
+							$module = call_user_func(array($tag->tagAttrs['module'], 'get_instance'));
+							$text = $module->get_language_constant($constant, $language);
 						}
 
 					} else {
 						// use default language handler
-						$text = Language::getText($constant, $language);
+						$text = Language::get_text($constant, $language);
 					}
 
 					echo $text;
@@ -434,19 +462,19 @@ class TemplateHandler {
 						$content = $tag->tagData;
 					$content = $multilanguage ? $this->params[$name][$language] : $this->params[$name];
 
-					// convert to HTML
-					$content = Markdown::parse($content);
-
-					// strip tags if needed
-					if ($clear_text)
-						$content = strip_tags($content);
-
 					// limit words if specified
 					if (!is_null($char_count)) {
 						if (is_null($end_with))
 							$content = limit_words($content, $char_count); else
 							$content = limit_words($content, $char_count, $end_with);
 					}
+
+					// convert to HTML
+					$content = Markdown::parse($content);
+
+					// strip tags if needed
+					if ($clear_text)
+						$content = strip_tags($content);
 
 					echo $content;
 					break;
@@ -457,8 +485,8 @@ class TemplateHandler {
 						$file = $this->module->getSectionFile($section, $action, $language);
 
 						$new = new TemplateHandler(basename($file), dirname($file).'/');
-						$new->setLocalParams($this->params);
-						$new->setMappedModule($this->module);
+						$new->set_local_params($this->params);
+						$new->set_mapped_module($this->module);
 						$new->parse();
 					} else {
 						// log error
@@ -473,7 +501,7 @@ class TemplateHandler {
 					if (!isset($this->params[$name]) || !is_array($this->params[$name]) || is_null($name)) break;
 
 					$template = new TemplateHandler('language_data.xml', $system_template_path);
-					$template->setMappedModule($this->module);
+					$template->set_mapped_module($this->module);
 
 					foreach($this->params[$name] as $lang => $data) {
 						$params = array(
@@ -481,8 +509,8 @@ class TemplateHandler {
 									'language'	=> $lang,
 									'data'		=> $data,
 								);
-						$template->restoreXML();
-						$template->setLocalParams($params);
+						$template->restore_xml();
+						$template->set_local_params($params);
 						$template->parse();
 					}
 
@@ -509,7 +537,6 @@ class TemplateHandler {
 					break;
 
 				// conditional tag
-				case '_if':
 				case 'cms:if':
 					$settings = !is_null($this->module) ? $this->module->settings : array();
 					$params = $this->params;
@@ -595,7 +622,7 @@ class TemplateHandler {
 				// support for script tag
 				case 'cms:script':
 					if (ModuleHandler::is_loaded('head_tag')) {
-						$head_tag = head_tag::getInstance();
+						$head_tag = head_tag::get_instance();
 						$head_tag->addTag('script', $tag->tagAttrs);
 					}
 					break;
@@ -605,7 +632,7 @@ class TemplateHandler {
 					if (array_key_exists('include', $tag->tagAttrs) && ModuleHandler::is_loaded('collection')) {
 						$scripts = fix_chars(explode(',', $tag->tagAttrs['include']));
 
-						$collection = collection::getInstance();
+						$collection = collection::get_instance();
 						$collection->includeScript($scripts);
 					}
 					break;
@@ -613,7 +640,7 @@ class TemplateHandler {
 				// support for link tag
 				case 'cms:link':
 					if (ModuleHandler::is_loaded('head_tag')) {
-						$head_tag = head_tag::getInstance();
+						$head_tag = head_tag::get_instance();
 						$head_tag->addTag('link', $tag->tagAttrs);
 					}
 					break;
@@ -651,6 +678,7 @@ class TemplateHandler {
 
 				// force flush on common elements
 				case 'head':
+				case 'body':
 				case 'header':
 				case 'footer':
 					$flush_data = true;
@@ -669,7 +697,7 @@ class TemplateHandler {
 
 					} else {
 						// default tag handler
-						echo '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
+						echo '<'.$tag->tagName.$this->get_tag_params($tag->tagAttrs).'>';
 
 						if (count($tag->tagChildren) > 0)
 							$this->parse($tag->tagChildren);
@@ -697,6 +725,9 @@ class TemplateHandler {
 			if ($skip_cache)
 				$this->cache->endDirtyArea();
 		}
+
+		// restore previous error handler
+		restore_error_handler();
 	}
 
 	/**
@@ -704,7 +735,7 @@ class TemplateHandler {
 	 *
 	 * @param resource $params
 	 */
-	private function getTagParams($params) {
+	private function get_tag_params($params) {
 		$result = "";
 
 		if (count($params) == 0)
@@ -727,14 +758,14 @@ class TemplateHandler {
 	 * @param object $tag
 	 * @return string
 	 */
-	private function getDataForCache($tag) {
+	private function get_data_for_cache($tag) {
 		// open tag
-		$result = '<'.$tag->tagName.$this->getTagParams($tag->tagAttrs).'>';
+		$result = '<'.$tag->tagName.$this->get_tag_params($tag->tagAttrs).'>';
 
 		// get tag children
 		if (count($tag->tagChildren) > 0)
 			foreach($tag->tagChildren as $child)
-				$result .= $this->getDataForCache($child);
+				$result .= $this->get_data_for_cache($child);
 
 		// show tag data
 		if (count($tag->tagData) > 0)
@@ -754,7 +785,7 @@ class TemplateHandler {
 	 * @param string $function_name Public tag handler method
 	 * @example function tagHandler($level, $params, $children)
 	 */
-	public function registerTagHandler($tag_name, $object, $function_name) {
+	public function register_tag_handler($tag_name, $object, $function_name) {
 		$this->handlers[$tag_name] = array(
 					'object' 	=> $object,
 					'function'	=> $function_name
@@ -767,11 +798,56 @@ class TemplateHandler {
 	 * @param string $tag_name
 	 * @param array $children
 	 */
-	public function setTagChildren($tag_name, &$children) {
+	public function set_tag_children($tag_name, &$children) {
 		if (!array_key_exists($tag_name, $this->handlers))
 			return;
 
 		$this->tag_children[$tag_name] = $children;
+	}
+
+	/**
+	 * Handle errors inside of template parser.
+	 *
+	 * @param integer $number - level of error raised
+	 * @param string $message - error message
+	 * @param string $file - file in which error has occurred
+	 * @param integer $line - line where error has occurred
+	 * @param array $context - variable map in the time of raising an error
+	 * @return boolean
+	 */
+	public function handle_error($number, $message, $file=null, $line=null, $context=null) {
+		$data = array();
+
+		switch ($number) {
+			case E_USER_ERROR:
+				$data[] = 'Error: ';
+				break;
+
+			case E_WARNING:
+			case E_USER_WARNING:
+				$data[] = 'Warning: ';
+				break;
+
+			case E_NOTICE:
+			case E_USER_NOTICE:
+				$data[] = 'Notice: ';
+				break;
+		}
+
+		// include template name
+		$data[] = $message.' in template "';
+		$data[] = $this->file.'"';
+
+		// log query string as it might help
+		$data[] = ' with query string "'.$_SERVER['QUERY_STRING'].'"';
+
+		// if errors is in file include it
+		if (!is_null($file))
+			$data[] = ' ('.$file.' on line '.$line.')';
+
+		$text = implode('', $data);
+		error_log($text);
+		return true;
 	}
 }
 

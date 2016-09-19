@@ -13,13 +13,13 @@ class Backend_UserManager {
 	private $parent;
 
 	protected function __construct() {
-		$this->parent = backend::getInstance();
+		$this->parent = backend::get_instance();
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -29,7 +29,7 @@ class Backend_UserManager {
 	/**
 	 * Transfer control to this object
 	 */
-	public function transferControl() {
+	public function transfer_control() {
 		$backend_action = isset($_REQUEST['backend_action']) ? $_REQUEST['backend_action'] : null;
 
 		if (!is_null($backend_action))
@@ -81,32 +81,32 @@ class Backend_UserManager {
 	 */
 	private function showUsers() {
 		$template = new TemplateHandler('users_list.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 				'link_new'	=> window_OpenHyperlink(
-										$this->parent->getLanguageConstant('create_user'),
+										$this->parent->get_language_constant('create_user'),
 										'system_users_create',
 										370,
-										$this->parent->getLanguageConstant('title_users_create'),
+										$this->parent->get_language_constant('title_users_create'),
 										true, true,
 										$this->parent->name,
 										'users_create'
 									),
 				'link_templates'	=> window_OpenHyperlink(
-										$this->parent->getLanguageConstant('email_templates'),
+										$this->parent->get_language_constant('email_templates'),
 										'system_users_email_templates',
 										370,
-										$this->parent->getLanguageConstant('title_email_templates'),
+										$this->parent->get_language_constant('title_email_templates'),
 										true, true,
 										$this->parent->name,
 										'email_templates'
 									)
 			);
 
- 		$template->registerTagHandler('_user_list', $this, 'tag_UserList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+ 		$template->register_tag_handler('_user_list', $this, 'tag_UserList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -115,16 +115,16 @@ class Backend_UserManager {
 	 */
 	private function createUser() {
 		$template = new TemplateHandler('users_create.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
- 		$template->registerTagHandler('cms:level', $this, 'tag_Level');
+		$template->set_mapped_module($this->parent->name);
+ 		$template->register_tag_handler('cms:level', $this, 'tag_Level');
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'users_save'),
 					'cancel_action'	=> window_Close('system_users_create')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -133,13 +133,13 @@ class Backend_UserManager {
 	 */
 	private function changeUser() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('users_change.xml', $this->parent->path.'templates/');
-	 		$template->registerTagHandler('cms:level', $this, 'tag_Level');
+	 		$template->register_tag_handler('cms:level', $this, 'tag_Level');
 
 			$params = array(
 						'id'			=> $item->id,
@@ -151,8 +151,8 @@ class Backend_UserManager {
 						'cancel_action'	=> window_Close('system_users_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -171,7 +171,7 @@ class Backend_UserManager {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		// get manager instance
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		// grab new user data
 		$data = array(
@@ -222,12 +222,12 @@ class Backend_UserManager {
 			$window = 'system_users_change';
 
 			// get existing user
-			$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$user = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			if (($_SESSION['level'] == 10) || (is_object($user) && $user->level < $_SESSION['level'])) {
 				// save changed user data
-				$message = $this->parent->getLanguageConstant('message_users_data_saved');
-				$manager->updateData($data, array('id' => $id));
+				$message = $this->parent->get_language_constant('message_users_data_saved');
+				$manager->update_items($data, array('id' => $id));
 
 				if ($update_password)
 					$manager->change_password($data['username'], $password);
@@ -237,7 +237,7 @@ class Backend_UserManager {
 
 			} else {
 				// we can't edit user with higher level than our own
-				$message = $this->parent->getLanguageConstant('message_users_error_user_level_higher');
+				$message = $this->parent->get_language_constant('message_users_error_user_level_higher');
 			}
 
 		} else {
@@ -245,11 +245,11 @@ class Backend_UserManager {
 
 			if ($level_is_ok) {
 				// save new user data
-				$message = $this->parent->getLanguageConstant('message_users_data_saved');
-				$manager->insertData($data);
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
-										array('id' => $manager->getInsertedID())
+				$message = $this->parent->get_language_constant('message_users_data_saved');
+				$manager->insert_item($data);
+				$user = $manager->get_single_item(
+										$manager->get_field_names(),
+										array('id' => $manager->get_inserted_id())
 									);
 
 				if ($update_password)
@@ -260,23 +260,23 @@ class Backend_UserManager {
 
 			} else {
 				// can't assign specified level
-				$message = $this->parent->getLanguageConstant('message_users_error_level_too_high');
+				$message = $this->parent->get_language_constant('message_users_error_level_too_high');
 
 			}
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('system_users'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -288,9 +288,9 @@ class Backend_UserManager {
 				'error'		=> false,
 				'message'	=> ''
 			);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 		$user_id = null;
-		$agreed = isset($_REQUEST['agreed']) && ($_REQUEST['agreed'] == 'on' || $_REQUEST['agreed'] == '1') ? 1 : 0;
+		$agreed = $this->parent->get_boolean_field('agreed') ? 1 : 0;
 
 		// grab new user data
 		if (_AJAX_REQUEST)
@@ -298,15 +298,15 @@ class Backend_UserManager {
 			$source = $tag_params;
 
 		$data = array(
-				'username'	=> escape_chars($source['username']),
-				'email'		=> escape_chars($source['email']),
+				'username'	=> fix_chars($source['username']),
+				'email'		=> fix_chars($source['email']),
 				'level'		=> 0,
 				'agreed'	=> $agreed
 			);
 
 		// prepare user's name
 		if (isset($source['fullname'])) {
-			$data['fullname'] = escape_chars($source['fullname']);
+			$data['fullname'] = fix_chars($source['fullname']);
 			$raw_data = explode(' ', $data['fullname'], 1);
 
 			if (count($raw_data) == 2) {
@@ -319,21 +319,21 @@ class Backend_UserManager {
 			}
 
 		} else if (isset($source['first_name'])) {
-			$data['first_name'] = escape_chars($source['first_name']);
-			$data['last_name'] = escape_chars($source['last_name']);
+			$data['first_name'] = fix_chars($source['first_name']);
+			$data['last_name'] = fix_chars($source['last_name']);
 			$data['fullname'] = $data['first_name'].' '.$data['last_name'];
 		}
 
 		// check for duplicates
-		$duplicate_users = $manager->getItems(array('id'), array('username' => $data['username']));
-		$duplicate_emails = $manager->getItems(array('id'), array('email' => $data['email']));
+		$duplicate_users = $manager->get_items(array('id'), array('username' => $data['username']));
+		$duplicate_emails = $manager->get_items(array('id'), array('email' => $data['email']));
 
 		if (ModuleHandler::is_loaded('captcha') && isset($source['captcha'])) {
 			// validate submission through captcha
-			$captcha = captcha::getInstance();
+			$captcha = captcha::get_instance();
 			if (!$captcha->isCaptchaValid($source['captcha'])) {
 				$result['error'] = true;
-				$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
+				$result['message'] = $this->parent->get_language_constant('message_users_error_captcha');
 			}
 
 		} else {
@@ -342,7 +342,7 @@ class Backend_UserManager {
 
 			if (is_null($timer) || (!is_null($timer) && time() - $timer < 5)) {
 				$result['error'] = true;
-				$result['message'] = $this->parent->getLanguageConstant('message_users_error_premature_submission');
+				$result['message'] = $this->parent->get_language_constant('message_users_error_premature_submission');
 			}
 
 			unset($_SESSION['backend_user_timer']);
@@ -352,12 +352,12 @@ class Backend_UserManager {
 			if (count($duplicate_users) > 0 || count($duplicate_emails) > 0) {
 				// we found a duplicate user
 				$result['error'] = true;
-				$result['message'] = $this->parent->getLanguageConstant('message_users_error_duplicate');
+				$result['message'] = $this->parent->get_language_constant('message_users_error_duplicate');
 
 			} else {
 				// insert data
-				$manager->insertData($data);
-				$user_id = $manager->getInsertedID();
+				$manager->insert_item($data);
+				$user_id = $manager->get_inserted_id();
 				$manager->change_password($data['username'], $source['password']);
 
 				// log user in
@@ -367,11 +367,11 @@ class Backend_UserManager {
 					$manager->login_user($data['username']);
 
 				// assign message
-				$result['message'] = $this->parent->getLanguageConstant('message_users_created');
+				$result['message'] = $this->parent->get_language_constant('message_users_created');
 
 				// trigger event
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
+				$user = $manager->get_single_item(
+										$manager->get_field_names(),
 										array('id' => $user_id)
 									);
 				Events::trigger('backend', 'user-create', $user);
@@ -385,16 +385,16 @@ class Backend_UserManager {
 			} else {
 				// show message
 				$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-				$template->setMappedModule($this->parent->name);
+				$template->set_mapped_module($this->parent->name);
 
 				$params = array(
 							'message'	=> $result['message'],
-							'button'	=> $this->parent->getLanguageConstant('close'),
+							'button'	=> $this->parent->get_language_constant('close'),
 							'action'	=> window_Close($window).";".window_ReloadContent('system_users'),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 
@@ -417,13 +417,13 @@ class Backend_UserManager {
 			return $result;
 
 		// get managers
-		$user_manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
-		$contact_form = contact_form::getInstance();
+		$user_manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
+		$contact_form = contact_form::get_instance();
 
 		// get user for specified id
-		$user = $user_manager->getSingleItem(
-					$user_manager->getFieldNames(),
+		$user = $user_manager->get_single_item(
+					$user_manager->get_field_names(),
 					array('id' => $user_id)
 				);
 
@@ -441,7 +441,7 @@ class Backend_UserManager {
 					'user'	=> $user_id,
 					'code'	=> $verification_code
 				);
-		$verification_manager->insertData($verification_data);
+		$verification_manager->insert_item($verification_data);
 
 		// prepare email
 		$fields = array(
@@ -494,7 +494,7 @@ class Backend_UserManager {
 				'error'		=> true,
 				'message'	=> ''
 			);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		// grab new user data
 		if (defined('_AJAX_REQUEST'))
@@ -514,8 +514,8 @@ class Backend_UserManager {
 		}
 
 		// get user from the database
-		$user = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$user = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => $user_id)
 							);
 
@@ -529,21 +529,21 @@ class Backend_UserManager {
 
 				// prepare result
 				$result['error'] = false;
-				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
+				$result['message'] = $this->parent->get_language_constant('message_password_changed');
 
 				// trigger error
-				$user = $manager->getSingleItem(
-										$manager->getFieldNames(),
+				$user = $manager->get_single_item(
+										$manager->get_field_names(),
 										array('id' => $user->id)
 									);
 				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
-				$result['message'] = $this->parent->getLanguageConstant('message_invalid_password');
+				$result['message'] = $this->parent->get_language_constant('message_invalid_password');
 			}
 
 		} else {
-			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
+			$result['message'] = $this->parent->get_language_constant('message_no_user');
 		}
 
 		// show result
@@ -569,43 +569,43 @@ class Backend_UserManager {
 		// make sure contact form module is enabled
 		if (!ModuleHandler::is_loaded('contact_form'))
 			if (_AJAX_REQUEST) {
-				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
+				$result['message'] = $this->parent->get_language_constant('message_no_contact_form');
 				print json_encode($result);
 				return;
 
 			} else {
-				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
-				$template->setTemplateParamsFromArray($children);
-				$result['message'] = $this->parent->getLanguageConstant('message_no_contact_form');
+				$template = $this->parent->load_template($tag_params, 'message.xml');
+				$template->set_template_params_from_array($children);
+				$result['message'] = $this->parent->get_language_constant('message_no_contact_form');
 
-				$template->restoreXML();
-				$template->setLocalParams($result);
+				$template->restore_xml();
+				$template->set_local_params($result);
 				$template->parse();
 				return;
 			}
 
 		if (!ModuleHandler::is_loaded('captcha'))
 			if (_AJAX_REQUEST) {
-				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
+				$result['message'] = $this->parent->get_language_constant('message_no_captcha');
 				print json_encode($result);
 				return;
 
 			} else {
-				$template = $this->parent->loadTemplate($tag_params, 'message.xml');
-				$template->setTemplateParamsFromArray($children);
-				$result['message'] = $this->parent->getLanguageConstant('message_no_captcha');
+				$template = $this->parent->load_template($tag_params, 'message.xml');
+				$template->set_template_params_from_array($children);
+				$result['message'] = $this->parent->get_language_constant('message_no_captcha');
 
-				$template->restoreXML();
-				$template->setLocalParams($result);
+				$template->restore_xml();
+				$template->set_local_params($result);
 				$template->parse();
 				return;
 			}
 
 		// get required module instances
-		$manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
-		$contact_form = contact_form::getInstance();
-		$captcha_module = captcha::getInstance();
+		$manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
+		$contact_form = contact_form::get_instance();
+		$captcha_module = captcha::get_instance();
 		$username = null;
 		$email = null;
 		$captcha = null;
@@ -613,24 +613,24 @@ class Backend_UserManager {
 
 		// get username
 		if (array_key_exists('username', $tag_params))
-			$username = escape_chars($tag_params['username']);
+			$username = fix_chars($tag_params['username']);
 
 		if (is_null($username) && array_key_exists('username', $_REQUEST))
-			$username = escape_chars($_REQUEST['username']);
+			$username = fix_chars($_REQUEST['username']);
 
 		// get email
 		if (array_key_exists('email', $tag_params))
-			$email = escape_chars($tag_params['email']);
+			$email = fix_chars($tag_params['email']);
 
 		if (is_null($email) && array_key_exists('email', $_REQUEST))
-			$email = escape_chars($_REQUEST['email']);
+			$email = fix_chars($_REQUEST['email']);
 
 		// get captcha value
 		if (array_key_exists('captcha', $tag_params))
-			$captcha = escape_chars($tag_params['captcha']);
+			$captcha = fix_chars($tag_params['captcha']);
 
 		if (is_null($captcha) && array_key_exists('captcha', $_REQUEST))
-			$captcha = escape_chars($_REQUEST['captcha']);
+			$captcha = fix_chars($_REQUEST['captcha']);
 
 		// get user from the database
 		if (!is_null($username))
@@ -639,7 +639,7 @@ class Backend_UserManager {
 		if (!is_null($email))
 			$conditions['email'] = $email;
 
-		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$user = $manager->get_single_item($manager->get_field_names(), $conditions);
 		$captcha_valid = $captcha_module->isCaptchaValid($captcha);
 
 		// send email
@@ -651,7 +651,7 @@ class Backend_UserManager {
 						'user'	=> $user->id,
 						'code'	=> $code
 					);
-			$verification_manager->insertData($verification_data);
+			$verification_manager->insert_item($verification_data);
 
 			// prepare email
 			$fields = array(
@@ -688,14 +688,14 @@ class Backend_UserManager {
 			$result['error'] = !$result;
 
 			if (!$result['error'])
-				$result['message'] = $this->parent->getLanguageConstant('message_password_recovery_email_sent'); else
-				$result['message'] = $this->parent->getLanguageConstant('message_password_reocvery_email_error');
+				$result['message'] = $this->parent->get_language_constant('message_password_recovery_email_sent'); else
+				$result['message'] = $this->parent->get_language_constant('message_password_reocvery_email_error');
 
 		} elseif (is_object($user) && !$captcha_valid) {
-			$result['message'] = $this->parent->getLanguageConstant('message_users_error_captcha');
+			$result['message'] = $this->parent->get_language_constant('message_users_error_captcha');
 
 		} else {
-			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
+			$result['message'] = $this->parent->get_language_constant('message_no_user');
 		}
 
 		// show response
@@ -703,11 +703,11 @@ class Backend_UserManager {
 			print json_encode($result);
 
 		} else {
-			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template = $this->parent->load_template($tag_params, 'message.xml');
+			$template->set_template_params_from_array($children);
 
-			$template->restoreXML();
-			$template->setLocalParams($result);
+			$template->restore_xml();
+			$template->set_local_params($result);
 			$template->parse();
 		}
 
@@ -721,8 +721,8 @@ class Backend_UserManager {
 	 * @param array $children
 	 */
 	public function saveRecoveredPassword($tag_params, $children) {
-		$manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
+		$manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
 		$username = null;
 		$email = null;
 		$password = null;
@@ -749,10 +749,10 @@ class Backend_UserManager {
 
 		// get password
 		if (array_key_exists('password', $tag_params))
-			$password = $tag_params['password'];
+			$password = escape_chars($tag_params['password']);
 
 		if (is_null($password) && array_key_exists('password', $_REQUEST))
-			$password = $_REQUEST['password'];
+			$password = escape_chars($_REQUEST['password']);
 
 		// get code
 		if (array_key_exists('code', $tag_params))
@@ -768,12 +768,12 @@ class Backend_UserManager {
 		if (!is_null($email))
 			$conditions['email'] = $email;
 
-		$user = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$user = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// store new password
 		if (is_object($user)) {
-			$verification = $verification_manager->getSingleItem(
-													$verification_manager->getFieldNames(),
+			$verification = $verification_manager->get_single_item(
+													$verification_manager->get_field_names(),
 													array(
 														'user'	=> $user->id,
 														'code'	=> $code
@@ -781,7 +781,7 @@ class Backend_UserManager {
 
 			if (is_object($verification)) {
 				// remove verification code from the database
-				$verification_manager->deleteData(array('user' => $verification->user));
+				$verification_manager->delete_items(array('user' => $verification->user));
 
 				// store new password and mark account as verified
 				$manager->verify_user($user->username);
@@ -789,19 +789,19 @@ class Backend_UserManager {
 
 				// prepare response
 				$result['error'] = false;
-				$result['message'] = $this->parent->getLanguageConstant('message_password_changed');
+				$result['message'] = $this->parent->get_language_constant('message_password_changed');
 
 				// trigger event
 				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
 				// invalid code or user
-				$result['message'] = $this->parent->getLanguageConstant('message_invalid_code');
+				$result['message'] = $this->parent->get_language_constant('message_invalid_code');
 			}
 
 		} else {
 			// no user in the system
-			$result['message'] = $this->parent->getLanguageConstant('message_no_user');
+			$result['message'] = $this->parent->get_language_constant('message_no_user');
 		}
 
 		// show response
@@ -809,11 +809,11 @@ class Backend_UserManager {
 			print json_encode($result);
 
 		} else {
-			$template = $this->parent->loadTemplate($tag_params, 'message.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template = $this->parent->load_template($tag_params, 'message.xml');
+			$template->set_template_params_from_array($children);
 
-			$template->restoreXML();
-			$template->setLocalParams($result);
+			$template->restore_xml();
+			$template->set_local_params($result);
 			$template->parse();
 		}
 
@@ -825,23 +825,23 @@ class Backend_UserManager {
 	 */
 	private function deleteUser() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
-		$item = $manager->getSingleItem(array('fullname'), array('id' => $id));
+		$item = $manager->get_single_item(array('fullname'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'		=> $this->parent->getLanguageConstant('message_users_delete'),
+					'message'		=> $this->parent->get_language_constant('message_users_delete'),
 					'name'			=> $item->fullname,
-					'yes_text'		=> $this->parent->getLanguageConstant('delete'),
-					'no_text'		=> $this->parent->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->parent->get_language_constant('delete'),
+					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'system_users_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->parent->name),
 												array('backend_action', 'users_delete_commit'),
 												array('id', $id)
@@ -850,8 +850,8 @@ class Backend_UserManager {
 					'no_action'		=> window_Close('system_users_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -860,26 +860,26 @@ class Backend_UserManager {
 	 */
 	private function deleteUser_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		// trigger event
-		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$user = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		Events::trigger('backend', 'user-delete', $user);
 
 		// remove user from database
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_users_deleted'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_users_deleted'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('system_users_delete').';'.window_ReloadContent('system_users')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -888,15 +888,15 @@ class Backend_UserManager {
 	 */
 	private function changePassword() {
 		$template = new TemplateHandler('change_password.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'save_password'),
 					'cancel_action'	=> window_Close('change_password_window')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -904,7 +904,7 @@ class Backend_UserManager {
 	 * Salt and save password
 	 */
 	private function savePassword() {
-		$manager = UserManager::getInstance();
+		$manager = UserManager::get_instance();
 
 		$old_password = escape_chars($_REQUEST['old_password']);
 		$new_password = escape_chars($_REQUEST['new_password']);
@@ -912,7 +912,7 @@ class Backend_UserManager {
 		$user_id = fix_id($_SESSION['uid']);
 
 		// get existing user entry
-		$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user_id));
+		$user = $manager->get_single_item($manager->get_field_names(), array('id' => $user_id));
 
 		if (is_object($user)) {
 			$new_password_ok = $new_password == $repeat_password && !empty($new_password);
@@ -923,29 +923,29 @@ class Backend_UserManager {
 				$manager->change_password($user->username, $new_password);
 
 				// prepare response
-				$message = $this->parent->getLanguageConstant('message_password_changed');
+				$message = $this->parent->get_language_constant('message_password_changed');
 
 				// trigger event
-				$user = $manager->getSingleItem($manager->getFieldNames(), array('id' => $user->id));
+				$user = $manager->get_single_item($manager->get_field_names(), array('id' => $user->id));
 				Events::trigger('backend', 'user-password-change', $user);
 
 			} else {
 				// mismatching passwords
-				$message = $this->parent->getLanguageConstant('message_password_change_error');
+				$message = $this->parent->get_language_constant('message_password_change_error');
 			}
 		}
 
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('change_password_window')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -955,34 +955,34 @@ class Backend_UserManager {
 	private function showTemplateSelection() {
 		if (ModuleHandler::is_loaded('contact_form')) {
 			// get contact form and show settings
-			$contact_form = contact_form::getInstance();
+			$contact_form = contact_form::get_instance();
 			$template = new TemplateHandler('email_templates.xml', $this->parent->path.'templates/');
-			$template->setMappedModule($this->parent->name);
+			$template->set_mapped_module($this->parent->name);
 
-			$template->registerTagHandler('cms:templates', $contact_form, 'tag_TemplateList');
+			$template->register_tag_handler('cms:templates', $contact_form, 'tag_TemplateList');
 
 			$params = array(
 						'form_action'	=> backend_UrlMake($this->parent->name, 'email_templates_save'),
 						'cancel_action'	=> window_Close('system_users_email_templates')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 
 		} else {
 			// contact form module is not active, show message instead
 			$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-			$template->setMappedModule($this->parent->name);
+			$template->set_mapped_module($this->parent->name);
 
 			$params = array(
-						'message'	=> $this->parent->getLanguageConstant('message_no_contact_form'),
-						'button'	=> $this->parent->getLanguageConstant('close'),
+						'message'	=> $this->parent->get_language_constant('message_no_contact_form'),
+						'button'	=> $this->parent->get_language_constant('close'),
 						'action'	=> window_Close('system_users_email_templates')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
@@ -1003,16 +1003,16 @@ class Backend_UserManager {
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->parent->path.'templates/');
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		$params = array(
-					'message'	=> $this->parent->getLanguageConstant('message_template_selection_saved'),
-					'button'	=> $this->parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_template_selection_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('system_users_email_templates')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1023,7 +1023,7 @@ class Backend_UserManager {
 	 * @param array $children
 	 */
 	public function tag_UserList($tag_params, $children) {
-		$admin_manager = UserManager::getInstance();
+		$admin_manager = UserManager::get_instance();
 
 		// make sure lower levels can't edit others
 		if ($_SESSION['level'] < 5)
@@ -1039,10 +1039,10 @@ class Backend_UserManager {
 			$template = new TemplateHandler('users_list_item.xml', $this->parent->path.'templates/');
 		}
 
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		// get users from database
-		$users = $admin_manager->getItems($admin_manager->getFieldNames(), $conditions);
+		$users = $admin_manager->get_items($admin_manager->get_field_names(), $conditions);
 
 		// draw users
 		if (count($users) > 0)
@@ -1057,32 +1057,32 @@ class Backend_UserManager {
 							'agreed'			=> $user->agreed,
 							'agreed_char'		=> $user->agreed ? CHAR_CHECKED : CHAR_UNCHECKED,
 							'selected'			=> isset($tag_params['selected']) && ($tag_params['selected'] == $user->id),
-							'item_change'		=> url_MakeHyperlink(
-													$this->parent->getLanguageConstant('change'),
+							'item_change'		=> URL::make_hyperlink(
+													$this->parent->get_language_constant('change'),
 													window_Open(
 														'system_users_change', 	// window id
 														370,				// width
-														$this->parent->getLanguageConstant('title_users_change'), // title
+														$this->parent->get_language_constant('title_users_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->parent->name),
 															array('backend_action', 'users_change'),
 															array('id', $user->id)
 														)
 													)
 												),
-							'item_delete'		=> url_MakeHyperlink(
-													$this->parent->getLanguageConstant('delete'),
+							'item_delete'		=> URL::make_hyperlink(
+													$this->parent->get_language_constant('delete'),
 													window_Open(
 														'system_users_delete', // window id
 														400,				// width
-														$this->parent->getLanguageConstant('title_users_delete'), // title
+														$this->parent->get_language_constant('title_users_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->parent->name),
 															array('backend_action', 'users_delete'),
 															array('id', $user->id)
@@ -1091,8 +1091,8 @@ class Backend_UserManager {
 												),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1108,7 +1108,7 @@ class Backend_UserManager {
 
 		$selected = -1;
 		if (isset($tag_params['selected']))
-			$selected = $tag_params['selected'];
+			$selected = fix_id($tag_params['selected']);
 
 		// create template
 		if (isset($tag_params['template'])) {
@@ -1119,7 +1119,7 @@ class Backend_UserManager {
 			$template = new TemplateHandler('users_level.xml', $this->parent->path.'templates/');
 		}
 
-		$template->setMappedModule($this->parent->name);
+		$template->set_mapped_module($this->parent->name);
 
 		for ($i = 0; $i <= $max_level; $i++) {
 			$params = array(
@@ -1127,8 +1127,8 @@ class Backend_UserManager {
 						'selected'	=> $selected
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1140,8 +1140,8 @@ class Backend_UserManager {
 	 * @param array $children
 	 */
 	public function verifyAccount($tag_params, $children) {
-		$manager = UserManager::getInstance();
-		$verification_manager = UserVerificationManager::getInstance();
+		$manager = UserManager::get_instance();
+		$verification_manager = UserVerificationManager::get_instance();
 
 		$result = false;
 		$username = null;
@@ -1150,27 +1150,27 @@ class Backend_UserManager {
 
 		// get username
 		if (isset($tag_params['username']))
-			$username = escape_chars($tag_params['username']);
+			$username = fix_chars($tag_params['username']);
 
 		if (isset($_REQUEST['username']) && is_null($username))
-			$username = escape_chars($_REQUEST['username']);
+			$username = fix_chars($_REQUEST['username']);
 
 		// get verification code
 		if (isset($tag_params['code']))
-			$code = escape_chars($tag_params['code']);
+			$code = fix_chars($tag_params['code']);
 
 		if (isset($_REQUEST['code']) && is_null($code))
-			$code = escape_chars($_REQUEST['code']);
+			$code = fix_chars($_REQUEST['code']);
 
 		if (is_null($username) || is_null($code))
 			return;
 
 		// get user from database
-		$user = $manager->getSingleItem($manager->getFieldNames(), array('username' => $username));
+		$user = $manager->get_single_item($manager->get_field_names(), array('username' => $username));
 
 		if (is_object($user))
-			$verification = $verification_manager->getSingleItem(
-									$verification_manager->getFieldNames(),
+			$verification = $verification_manager->get_single_item(
+									$verification_manager->get_field_names(),
 									array(
 										'user'	=> $user->id,
 										'code'	=> $code
@@ -1179,7 +1179,7 @@ class Backend_UserManager {
 		// data matches, mark account as verified
 		if (is_object($verification)) {
 			$manager->verify_user($user->username);
-			$verification_manager->deleteData(array('user' => $user->id));
+			$verification_manager->delete_items(array('user' => $user->id));
 
 			// automatically log user in
 			$manager->login_user($user->username);

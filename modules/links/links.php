@@ -29,22 +29,22 @@ class links extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$links_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_links'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_links'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								$this->get_language_constant('menu_links_manage'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 								window_Open( // on click open window
 											'links_list',
 											720,
-											$this->getLanguageConstant('title_links_manage'),
+											$this->get_language_constant('title_links_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'links_list')
 										),
@@ -52,12 +52,12 @@ class links extends Module {
 							));
 
 			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								$this->get_language_constant('menu_links_groups'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'groups_list',
 											500,
-											$this->getLanguageConstant('title_groups_manage'),
+											$this->get_language_constant('title_groups_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'groups_list')
 										),
@@ -65,12 +65,12 @@ class links extends Module {
 							));
 
 			$links_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_links_overview'),
-								url_GetFromFilePath($this->path.'images/overview.svg'),
+								$this->get_language_constant('menu_links_overview'),
+								URL::from_file_path($this->path.'images/overview.svg'),
 								window_Open( // on click open window
 											'links_overview',
 											650,
-											$this->getLanguageConstant('title_links_overview'),
+											$this->get_language_constant('title_links_overview'),
 											true, true,
 											backend_UrlMake($this->name, 'overview')
 										),
@@ -84,7 +84,7 @@ class links extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -97,7 +97,7 @@ class links extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		switch ($params['action']) {
 			case 'show':
@@ -207,11 +207,11 @@ class links extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		// get list of languages
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// create main table for links
 		$sql = "
@@ -269,7 +269,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('links', 'link_groups', 'link_membership');
@@ -281,42 +281,42 @@ class links extends Module {
 	 */
 	private function showList() {
 		$template = new TemplateHandler('links_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('add'),
+										$this->get_language_constant('add'),
 										'links_add', 600,
-										$this->getLanguageConstant('title_links_add'),
+										$this->get_language_constant('title_links_add'),
 										true, false,
 										$this->name,
 										'links_add'
 									),
-					'link_groups'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('groups'),
+					'link_groups'	=> URL::make_hyperlink(
+										$this->get_language_constant('groups'),
 										window_Open( // on click open window
 											'groups_list',
 											500,
-											$this->getLanguageConstant('title_groups_manage'),
+											$this->get_language_constant('title_groups_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'groups_list')
 										)
 									),
-					'link_overview'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('overview'),
+					'link_overview'	=> URL::make_hyperlink(
+										$this->get_language_constant('overview'),
 										window_Open( // on click open window
 											'links_overview',
 											650,
-											$this->getLanguageConstant('title_links_overview'),
+											$this->get_language_constant('title_links_overview'),
 											true, true,
 											backend_UrlMake($this->name, 'links_overview')
 										)
 									)
 					);
 
-		$template->registerTagHandler('cms:link_list', $this, 'tag_LinkList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -325,7 +325,7 @@ class links extends Module {
 	 */
 	private function addLink() {
 		$template = new TemplateHandler('links_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'with_images'	=> ModuleHandler::is_loaded('gallery'),
@@ -333,8 +333,8 @@ class links extends Module {
 					'cancel_action'	=> window_Close('links_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -343,12 +343,12 @@ class links extends Module {
 	 */
 	private function changeLink() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\Manager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('links_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'               => $item->id,
@@ -364,8 +364,8 @@ class links extends Module {
 					'cancel_action'    => window_Close('links_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -374,15 +374,15 @@ class links extends Module {
 	 */
 	private function saveLink() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = \Modules\Links\Manager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
 
 		$data = array(
-				'text' 			=> $this->getMultilanguageField('text'),
-				'description' 	=> $this->getMultilanguageField('description'),
+				'text' 			=> $this->get_multilanguage_field('text'),
+				'description' 	=> $this->get_multilanguage_field('description'),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
 				'url' 			=> escape_chars($_REQUEST['url']),
-				'external' 		=> isset($_REQUEST['external']) && ($_REQUEST['external'] == 'on' || $_REQUEST['external'] == '1') ? 1 : 0,
-				'sponsored' 	=> isset($_REQUEST['sponsored']) && ($_REQUEST['sponsored'] == 'on' || $_REQUEST['sponsored'] == '1') ? 1 : 0,
+				'external' 		=> $this->get_boolean_field('external') ? 1 : 0,
+				'sponsored' 	=> $this->get_boolean_field('sponsored') ? 1 : 0,
 				'display_limit'	=> fix_id($_REQUEST['display_limit']),
 			);
 
@@ -390,8 +390,8 @@ class links extends Module {
 
 		// if images are in use and specified
 		if (ModuleHandler::is_loaded('gallery') && isset($_FILES['image'])) {
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
 
 			$result = $gallery->createImage('image');
 
@@ -402,7 +402,7 @@ class links extends Module {
 							'protected'		=> 1
 						);
 
-				$gallery_manager->updateData($image_data, array('id' => $result['id']));
+				$gallery_manager->update_items($image_data, array('id' => $result['id']));
 
 				$data['image'] = $result['id'];
 				$gallery_addon = ';'.window_ReloadContent('gallery_images');
@@ -410,29 +410,29 @@ class links extends Module {
 		}
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'links_change';
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'links_add';
 		}
 
 		// load message template
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// prepare parameters for template
 		$params = array(
-					'message' => $this->getLanguageConstant('message_link_saved'),
-					'button'  => $this->getLanguageConstant('close'),
+					'message' => $this->get_language_constant('message_link_saved'),
+					'button'  => $this->get_language_constant('close'),
 					'action'  => window_Close($window_name).';'.
 						window_ReloadContent('links_list').';'.
 						window_ReloadContent('links_overview').$gallery_addon
 				);
 
 		// show template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -443,26 +443,26 @@ class links extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\Manager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
 
 		// get item from the database
-		$item = $manager->getSingleItem(array('text'), array('id' => $id));
+		$item = $manager->get_single_item(array('text'), array('id' => $id));
 
 		// load template
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// prepare parameters for template
 		$params = array(
-					'message'    => $this->getLanguageConstant('message_link_delete'),
+					'message'    => $this->get_language_constant('message_link_delete'),
 					'name'       => $item->text[$language],
-					'yes_text'   => $this->getLanguageConstant('delete'),
-					'no_text'    => $this->getLanguageConstant('cancel'),
+					'yes_text'   => $this->get_language_constant('delete'),
+					'no_text'    => $this->get_language_constant('cancel'),
 					'yes_action' => window_LoadContent(
 											'links_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'links_delete_commit'),
 												array('id', $id)
@@ -472,8 +472,8 @@ class links extends Module {
 				);
 
 		// show template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -482,40 +482,40 @@ class links extends Module {
 	 */
 	private function deleteLink_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\Manager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 		$gallery_addon = '';
 
 		// if we used image with this, we need to remove that too
 		if (ModuleHandler::is_loaded('gallery')) {
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			if (is_object($item) && !empty($item->image)) {
-				$gallery_manager = GalleryManager::getInstance();
-				$gallery_manager->deleteData(array('id' => $item->image));
+				$gallery_manager = GalleryManager::get_instance();
+				$gallery_manager->delete_items(array('id' => $item->image));
 			}
 
 			$gallery_addon = ';'.window_ReloadContent('gallery_images');
 		}
 
 		// remove data from the database
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('link' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('link' => $id));
 
 		// load message template
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// prepare parameters for template
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_link_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_link_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('links_delete').';'.window_ReloadContent('links_list').$gallery_addon
 				);
 
 		// show template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -524,23 +524,23 @@ class links extends Module {
 	 */
 	private function showGroups() {
 		$template = new TemplateHandler('groups_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new' => window_OpenHyperlink(
-										$this->getLanguageConstant('create_group'),
+										$this->get_language_constant('create_group'),
 										'groups_add', 400,
-										$this->getLanguageConstant('title_groups_create'),
+										$this->get_language_constant('title_groups_create'),
 										true, false,
 										$this->name,
 										'groups_add'
 									),
 					);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -549,15 +549,15 @@ class links extends Module {
 	 */
 	private function addGroup() {
 		$template = new TemplateHandler('groups_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('groups_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -566,13 +566,13 @@ class links extends Module {
 	 */
 	private function changeGroup() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\GroupManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('groups_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'			=> $item->id,
@@ -582,8 +582,8 @@ class links extends Module {
 					'cancel_action'	=> window_Close('groups_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -592,36 +592,36 @@ class links extends Module {
 	 */
 	private function saveGroup() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = \Modules\Links\GroupManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
 
 		$data = array(
-				'name'    => $this->getMultilanguageField('name'),
+				'name'    => $this->get_multilanguage_field('name'),
 				'text_id' => escape_chars($_REQUEST['text_id'])
 			);
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'groups_change';
-			$message = $this->getLanguageConstant('message_group_renamed');
+			$message = $this->get_language_constant('message_group_renamed');
 
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'groups_add';
-			$message = $this->getLanguageConstant('message_group_created');
+			$message = $this->get_language_constant('message_group_created');
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).';'.window_ReloadContent('groups_list')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -632,23 +632,23 @@ class links extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\GroupManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_group_delete'),
+					'message'		=> $this->get_language_constant('message_group_delete'),
 					'name'			=> $item->name[$Language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'groups_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'groups_delete_commit'),
 												array('id', $id)
@@ -657,8 +657,8 @@ class links extends Module {
 					'no_action'		=> window_Close('groups_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -667,23 +667,23 @@ class links extends Module {
 	 */
 	private function deleteGroup_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\GroupManager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('group' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('groups_delete').';'.window_ReloadContent('groups_list')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -694,7 +694,7 @@ class links extends Module {
 		$group_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('groups_links.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'group'			=> $group_id,
@@ -702,9 +702,9 @@ class links extends Module {
 					'cancel_action'	=> window_Close('groups_links')
 				);
 
-		$template->registerTagHandler('cms:group_links', $this, 'tag_GroupLinks');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_links', $this, 'tag_GroupLinks');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -713,7 +713,7 @@ class links extends Module {
 	 */
 	private function groupLinksSave() {
 		$group = fix_id($_REQUEST['group']);
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 
 		// fetch all ids being set to specific group
 		$link_ids = array();
@@ -723,27 +723,27 @@ class links extends Module {
 		}
 
 		// remove old memberships
-		$membership_manager->deleteData(array('group' => $group));
+		$membership_manager->delete_items(array('group' => $group));
 
 		// save new memberships
 		foreach ($link_ids as $id)
-			$membership_manager->insertData(array(
+			$membership_manager->insert_item(array(
 											'link'	=> $id,
 											'group'	=> $group
 										));
 
 		// display message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_links_updated'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_links_updated'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('groups_links')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -753,14 +753,14 @@ class links extends Module {
 	private function showOverview() {
 		// display message
 		$template = new TemplateHandler('overview_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:link_list', $this, 'tag_LinkList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
 
 		$params = array(
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -769,9 +769,9 @@ class links extends Module {
 	 */
 	private function redirectLink() {
 		$link_id = fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\Manager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
 
-		$link = $manager->getSingleItem($manager->getFieldNames(), array('id' => $link_id));
+		$link = $manager->get_single_item($manager->get_field_names(), array('id' => $link_id));
 
 		if (is_object($link)) {
 			$url = $link->url;
@@ -781,9 +781,9 @@ class links extends Module {
 			if ($link->sponsored == 1)
 				$data['sponsored_clicks'] = $link->sponsored_clicks + 1;
 
-			$manager->updateData($data, array('id' => $link_id));
+			$manager->update_items($data, array('id' => $link_id));
 
-			url_SetRefresh($url, 0);
+			URL::set_refresh($url, 0);
 		}
 	}
 
@@ -797,10 +797,10 @@ class links extends Module {
 		if (!isset($params['group'])) return;
 
 		$group = fix_id($params['group']);
-		$link_manager = \Modules\Links\Manager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$link_manager = \Modules\Links\Manager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 
-		$memberships = $membership_manager->getItems(
+		$memberships = $membership_manager->get_items(
 												array('link'),
 												array('group' => $group)
 											);
@@ -810,10 +810,10 @@ class links extends Module {
 			foreach($memberships as $membership)
 				$link_ids[] = $membership->link;
 
-		$links = $link_manager->getItems(array('id', 'text', 'sponsored'), array());
+		$links = $link_manager->get_items(array('id', 'text', 'sponsored'), array());
 
 		$template = new TemplateHandler('groups_links_item.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		if (count($links) > 0)
 			foreach($links as $link) {
@@ -824,8 +824,8 @@ class links extends Module {
 								'sponsored_character' => ($link->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 							);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -833,31 +833,38 @@ class links extends Module {
 	/**
 	 * Tag handler for `link` object
 	 *
-	 * @param array $params
+	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_Link($params, $children) {
-		$id = isset($params['id']) ? $params['id'] : fix_id($_REQUEST['id']);
-		$manager = \Modules\Links\Manager::getInstance();
+	public function tag_Link($tag_params, $children) {
+		$conditions = array();
+		$manager = \Modules\Links\Manager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		// get parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
 
-		if (isset($params['template'])) {
-			if (isset($params['local']) && $params['local'] == 1)
-				$template = new TemplateHandler($params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($params['template']);
-		} else {
-			$template = new TemplateHandler('links_item.xml', $this->path.'templates/');
-		}
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
-		$template->setMappedModule($this->name);
+		// get items from the database
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
+
+		if (!is_object($item))
+			return;
+
+		// load template
+		$template = $this->load_template($tag_params, 'links_item.xml');
+		$template->set_mapped_module($this->name);
 
 		// calculate display progress
 		if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
 			$percent = 100;
+
 		} else {
 			$percent = round(($item->sponsored_clicks / $item->display_limit) * 100, 0);
-			if ($percent > 100) $percent = 100;
+			if ($percent > 100)
+				$percent = 100;
 		}
 
 		// get thumbnail image if exists
@@ -865,12 +872,12 @@ class links extends Module {
 		$thumbnail = null;
 
 		if (ModuleHandler::is_loaded('gallery')) {
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
 
 			if (is_numeric($item->image)) {
-				$image_item = $gallery_manager->getSingleItem(
-													$gallery_manager->getFieldNames(),
+				$image_item = $gallery_manager->get_single_item(
+													$gallery_manager->get_field_names(),
 													array('id' => $item->image)
 												);
 
@@ -887,7 +894,7 @@ class links extends Module {
 					'description'         => $item->description,
 					'text_id'             => $item->text_id,
 					'url'                 => $item->url,
-					'redirect_url'        => url_Make('redirect', $this->name, array('id', $item->id)),
+					'redirect_url'        => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 					'external'            => $item->external,
 					'external_character'  => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'sponsored'           => $item->sponsored,
@@ -900,8 +907,8 @@ class links extends Module {
 					'thumbnail'           => $thumbnail,
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -912,16 +919,18 @@ class links extends Module {
 	 * @param array $children
 	 */
 	public function tag_LinkList($tag_params, $children) {
-		$manager = \Modules\Links\Manager::getInstance();
-		$group_manager = \Modules\Links\GroupManager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
+		$group_manager = \Modules\Links\GroupManager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 
 		// save some CPU time by getting this early
 		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
 
 		} else {
 			$use_images = false;
@@ -938,14 +947,14 @@ class links extends Module {
 			} else {
 				// specified group is text id
 				$text_id = fix_chars($tag_params['group']);
-				$raw_group = $group_manager->getSingleItem(array('id'), array('text_id' => $text_id));
+				$raw_group = $group_manager->get_single_item(array('id'), array('text_id' => $text_id));
 
 				if (is_object($raw_group))
 					$group = $raw_group->id; else
 					return;
 			}
 
-			$items = $membership_manager->getItems(
+			$items = $membership_manager->get_items(
 												array('link'),
 												array('group' => $group)
 											);
@@ -962,22 +971,33 @@ class links extends Module {
 			$conditions['id'] = $item_list;
 		}
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		if (isset($tag_params['order_by']))
+			$order_by = explode(',', fix_chars($tag_params['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
+
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
-								array('id')
+								$order_by,
+								$order_asc
 							);
 
-		$template = $this->loadTemplate($tag_params, 'links_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:link', $this, 'tag_Link');
-		$template->registerTagHandler('cms:link_group', $this, 'tag_LinkGroupList');
+		$template = $this->load_template($tag_params, 'links_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:link', $this, 'tag_Link');
+		$template->register_tag_handler('cms:link_group', $this, 'tag_LinkGroupList');
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']) && !is_null($items))
-			$items = array_slice($items, 0, $tag_params['limit'], true);
+			$items = array_slice($items, 0, fix_id($tag_params['limit']), true);
 
-		if (count($items) > 0)
+		// make sure list contains items
+		if (count($items) == 0)
+			return;
+
+		// generate output
 		foreach ($items as $item) {
 			// calculate display progress
 			if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
@@ -991,7 +1011,7 @@ class links extends Module {
 			$image = '';
 			$thumbnail = '';
 			if ($use_images && !empty($item->image)) {
-				$image_item = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $item->image));
+				$image_item = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $item->image));
 
 				if (is_object($image_item)) {
 					$image = $gallery->getImageURL($image_item);
@@ -1005,7 +1025,7 @@ class links extends Module {
 						'description'         => $item->description,
 						'text_id'             => $item->text_id,
 						'url'                 => $item->url,
-						'redirect_url'        => url_Make('redirect', $this->name, array('id', $item->id)),
+						'redirect_url'        => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 						'external'            => $item->external,
 						'external_character'  => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'sponsored'           => $item->sponsored,
@@ -1016,48 +1036,48 @@ class links extends Module {
 						'total_clicks'        => $item->total_clicks,
 						'image'               => $image,
 						'thumbnail'           => $thumbnail,
-						'item_change'         => url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+						'item_change'         => URL::make_hyperlink(
+												$this->get_language_constant('change'),
 												window_Open(
 													'links_change', 	// window id
 													600,				// width
-													$this->getLanguageConstant('title_links_change'), // title
+													$this->get_language_constant('title_links_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'links_change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'         => url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+						'item_delete'         => URL::make_hyperlink(
+												$this->get_language_constant('delete'),
 												window_Open(
 													'links_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_links_delete'), // title
+													$this->get_language_constant('title_links_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'links_delete'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_open'           => url_MakeHyperlink(
-												$this->getLanguageConstant('open'),
+						'item_open'           => URL::make_hyperlink(
+												$this->get_language_constant('open'),
 												$item->url,
 												'', '',
 												'_blank'
 											),
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1071,22 +1091,22 @@ class links extends Module {
 	public function tag_Group($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
-		$id = $tag_params['id'];
+		$id = fix_id($tag_params['id']);
 
 		// save some CPU time by getting this early
 		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
 		} else {
 			$use_images = false;
 		}
 
-		$manager = \Modules\Links\GroupManager::getInstance();
-		$link_manager = \Modules\Links\Manager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
+		$link_manager = \Modules\Links\Manager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (isset($tag_params['template'])) {
 			if (isset($tag_params['local']) && $tag_params['local'] == 1)
@@ -1097,22 +1117,22 @@ class links extends Module {
 			$template = new TemplateHandler('group.xml', $this->path.'templates/');
 		}
 
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:link', $this, 'tag_Link');
-		$template->registerTagHandler('cms:link_list', $this, 'tag_LinkList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:link', $this, 'tag_Link');
+		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
 
 		if (is_object($item)) {
 			$thumbnail = '';
 
 			if ($use_images) {
-				$first_link_id = $membership_manager->getItemValue('link', array('group' => $item->id));
+				$first_link_id = $membership_manager->get_item_value('link', array('group' => $item->id));
 
 				// we have some links assigned to the group, get thumbnail
 				if (!empty($first_link_id)) {
-					$image_id = $link_manager->getItemValue('image', array('id' => $first_link_id));
+					$image_id = $link_manager->get_item_value('image', array('id' => $first_link_id));
 
 					if (!empty($image_id)) {
-						$image = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $image_id));
+						$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
 						$thumbnail = $gallery->getThumbnailURL($image);
 					}
 				}
@@ -1125,8 +1145,8 @@ class links extends Module {
 						'thumbnail'	=> $thumbnail,
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1138,15 +1158,15 @@ class links extends Module {
 	 * @param array $children
 	 */
 	public function tag_GroupList($tag_params, $children) {
-		$manager = \Modules\Links\GroupManager::getInstance();
-		$link_manager = \Modules\Links\Manager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
+		$link_manager = \Modules\Links\Manager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 
 		// save some CPU time by getting this early
 		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
 
 		} else {
 			$use_images = false;
@@ -1157,8 +1177,8 @@ class links extends Module {
 		if (isset($tag_params['sponsored']) && $tag_params['sponsored'] == '1')
 			$conditions['sponsored'] = 1;
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								array('id')
 							);
@@ -1171,9 +1191,9 @@ class links extends Module {
 			$template = new TemplateHandler('groups_item.xml', $this->path.'templates/');
 		}
 
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:link', $this, 'tag_Link');
-		$template->registerTagHandler('cms:link_list', $this, 'tag_LinkList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:link', $this, 'tag_Link');
+		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -1181,14 +1201,14 @@ class links extends Module {
 				$thumbnail = '';
 
 				if ($use_images) {
-					$first_link_id = $membership_manager->getItemValue('link', array('group' => $item->id));
+					$first_link_id = $membership_manager->get_item_value('link', array('group' => $item->id));
 
 					// we have some links assigned to the group, get thumbnail
 					if (!empty($first_link_id)) {
-						$image_id = $link_manager->getItemValue('image', array('id' => $first_link_id));
+						$image_id = $link_manager->get_item_value('image', array('id' => $first_link_id));
 
 						if (!empty($image_id)) {
-							$image = $gallery_manager->getSingleItem($gallery_manager->getFieldNames(), array('id' => $image_id));
+							$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
 							$thumbnail = $gallery->getThumbnailURL($image);
 						}
 					}
@@ -1199,48 +1219,48 @@ class links extends Module {
 							'name'        => $item->name,
 							'text_id'     => $item->text_id,
 							'thumbnail'   => $thumbnail,
-							'item_change' => url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+							'item_change' => URL::make_hyperlink(
+													$this->get_language_constant('change'),
 													window_Open(
 														'groups_change', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_groups_change'), // title
+														$this->get_language_constant('title_groups_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete' => url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+							'item_delete' => URL::make_hyperlink(
+													$this->get_language_constant('delete'),
 													window_Open(
 														'groups_delete', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_groups_delete'), // title
+														$this->get_language_constant('title_groups_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_delete'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_links'  => url_MakeHyperlink(
-													$this->getLanguageConstant('links'),
+							'item_links'  => URL::make_hyperlink(
+													$this->get_language_constant('links'),
 													window_Open(
 														'groups_links', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_groups_links'), // title
+														$this->get_language_constant('title_groups_links'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_links'),
 															array('id', $item->id)
@@ -1249,8 +1269,8 @@ class links extends Module {
 												),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1262,7 +1282,7 @@ class links extends Module {
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;
-		$manager = \Modules\Links\Manager::getInstance();
+		$manager = \Modules\Links\Manager::get_instance();
 		$result = array(
 					'error'			=> true,
 					'item'			=> array()
@@ -1279,7 +1299,7 @@ class links extends Module {
 			$order_asc = $_REQUEST['order_asc'] == 1;
 
 		// get link from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// make sure link exists
 		if (is_null($item)) {
@@ -1299,7 +1319,7 @@ class links extends Module {
 								'text'             => $item->text,
 								'description'      => Markdown::parse($item->description),
 								'url'              => $item->url,
-								'redirect_url'     => url_Make('redirect', $this->name, array('id', $item->id)),
+								'redirect_url'     => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 								'external'         => $item->external,
 								'sponsored'        => $item->sponsored,
 								'display_limit'    => $item->display_limit,
@@ -1319,19 +1339,21 @@ class links extends Module {
 		$groups = array();
 		$conditions = array();
 
+		$manager = \Modules\Links\Manager::get_instance();
+		$group_manager = \Modules\Links\GroupManager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
+
 		$limit = isset($tag_params['limit']) ? fix_id($tag_params['limit']) : null;
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
 		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
-		$grouped = isset($_REQUEST['grouped']) && $_REQUEST['grouped'] == 'yes' ? true : false;
 
-		$manager = \Modules\Links\Manager::getInstance();
-		$group_manager = \Modules\Links\GroupManager::getInstance();
-		$membership_manager = \Modules\Links\MembershipManager::getInstance();
+		if (isset($_REQUEST['random']) && $_REQUEST['random'] == 1)
+			$order_by = array('RAND()');
 
 		if (isset($_REQUEST['group'])) {
 			$group_list = explode(',', fix_chars($_REQUEST['group']));
 
-			$list = $group_manager->getItems(array('id'), array('name' => $group_list));
+			$list = $group_manager->get_items(array('id'), array('text_id' => $group_list));
 
 			if (count($list) > 0)
 				foreach ($list as $list_item)
@@ -1348,7 +1370,7 @@ class links extends Module {
 
 		// fetch ids for specified groups
 		if (!empty($groups)) {
-			$list = $membership_manager->getItems(array('link'), array('group' => $groups));
+			$list = $membership_manager->get_items(array('link'), array('group' => $groups));
 
 			$id_list = array();
 			if (count($list) > 0) {
@@ -1364,8 +1386,8 @@ class links extends Module {
 		}
 
 		// save some CPU time by getting this early
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							$conditions,
 							$order_by,
 							$order_asc,
@@ -1390,7 +1412,7 @@ class links extends Module {
 									'id'               => $item->id,
 									'text'             => $item->text,
 									'url'              => $item->url,
-									'redirect_url'     => url_Make('redirect', $this->name, array('id', $item->id)),
+									'redirect_url'     => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 									'external'         => $item->external,
 									'sponsored'        => $item->sponsored,
 									'display_limit'    => $item->display_limit,
@@ -1415,9 +1437,9 @@ class links extends Module {
 		$order_by = isset($tag_params['order_by']) ? explode(',', fix_chars($tag_params['order_by'])) : array('id');
 		$order_asc = isset($tag_params['order_asc']) && $tag_params['order_asc'] == 'yes' ? true : false;
 
-		$manager = \Modules\Links\GroupManager::getInstance();
+		$manager = \Modules\Links\GroupManager::get_instance();
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,

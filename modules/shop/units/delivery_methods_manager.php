@@ -15,16 +15,16 @@ class ShopDeliveryMethodsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_delivery_methods');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('international', 'boolean');
-		$this->addProperty('domestic', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('international', 'boolean');
+		$this->add_property('domestic', 'boolean');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 
@@ -41,15 +41,15 @@ class ShopDeliveryMethodPricesManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_delivery_method_prices');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('method', 'int');
-		$this->addProperty('value', 'numeric');
+		$this->add_property('id', 'int');
+		$this->add_property('method', 'int');
+		$this->add_property('value', 'numeric');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 
@@ -66,14 +66,14 @@ class ShopDeliveryItemRelationsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_delivery_item_relations');
 
-		$this->addProperty('item', 'int');
-		$this->addProperty('price', 'int');
+		$this->add_property('item', 'int');
+		$this->add_property('price', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 

@@ -267,8 +267,9 @@ Caracal.Gallery.Loader = function() {
  * 	.images.load(null, 'gallery');
  *
  * @param integer visible_items
+ * @param boolean vertical
  */
-Caracal.Gallery.Slider = function(visible_items) {
+Caracal.Gallery.Slider = function(visible_items, vertical) {
 	var self = this;
 
 	self.images = {};
@@ -283,6 +284,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.timeout = null;
 	self.pause_on_hover = true;
 	self.visible_items = null;
+	self.vertical = vertical ? true : false;
 
 	/**
 	 * Complete object initialization.
@@ -301,7 +303,7 @@ Caracal.Gallery.Slider = function(visible_items) {
 		self.controls.constructor = null;
 
 		// detect list direction automatically
-		if ($('body').hasClass('rtl'))
+		if ($('html').attr('dir') == 'rtl' && !self.vertical)
 			self.direction = -1;
 	};
 
@@ -372,11 +374,11 @@ Caracal.Gallery.Slider = function(visible_items) {
 
 		// position elements
 		if (direction == 1) {
-			incoming.css(params.property_name, params.container_width);
+			incoming.css(params.property_name, params.container_size);
 			outgoing.css(params.property_name, '-100%');
 		} else {
 			incoming.css(params.property_name, '-100%');
-			outgoing.css(params.property_name, params.container_width);
+			outgoing.css(params.property_name, params.container_size);
 		}
 
 		// trigger reflow on all incomming elements
@@ -397,36 +399,42 @@ Caracal.Gallery.Slider = function(visible_items) {
 	self.images._get_params = function(image_set) {
 		var result = {};
 
-		// get width of container
-		result.container_width = self.container.outerWidth();
+		// get size of container
+		if (self.vertical)
+			result.container_size = self.container.outerHeight(); else
+			result.container_size = self.container.outerWidth();
 
 		// get total image width
-		result.total_width = 0;
+		result.total_size = 0;
 		image_set.each(function() {
-			result.total_width += $(this).outerWidth();
+			if (self.vertical)
+				result.total_size += $(this).outerHeight(); else
+				result.total_size += $(this).outerWidth();
 		});
-		result.negative_space = result.container_width - result.total_width;
+		result.negative_space = result.container_size - result.total_size;
 
 		// calculate starting position
 		if (self.center) {
 			if (self.spacing == null) {
 				result.spacing = result.negative_space / (self.visible_items + 1);
-				result.start_x = result.spacing;
+				result.start_position = result.spacing;
 
 			} else {
 				result.spacing = self.spacing;
-				result.start_x = Math.abs((result.negative_space - (result.spacing * (self.visible_items - 1))) / 2);
+				result.start_position = Math.abs((result.negative_space - (result.spacing * (self.visible_items - 1))) / 2);
 			}
 
 		} else {
 			if (self.spacing == null)
 				result.spacing = result.negative_space / (self.visible_items - 1); else
 				result.spacing = self.spacing;
-			result.start_x = 0;
+			result.start_position = 0;
 		}
 
 		// store property name
-		result.property_name = self.direction == 1 ? 'left' : 'right';
+		if (self.vertical)
+			result.property_name = 'top'; else
+			result.property_name = self.direction == 1 ? 'left' : 'right';
 
 		return result;
 	};
@@ -437,12 +445,13 @@ Caracal.Gallery.Slider = function(visible_items) {
 	 * @param object image_set
 	 */
 	self.images._update_position = function(image_set, params) {
-		var pos_x = params.start_x;
+		var pos = params.start_position;
 
 		image_set.each(function() {
 			var item = $(this);
-			item.css(params.property_name, pos_x);
-			pos_x += item.outerWidth() + params.spacing;
+			var size = self.vertical ? item.outerHeight() : item.outerWidth();
+			item.css(params.property_name, pos);
+			pos += size + params.spacing;
 		});
 	};
 

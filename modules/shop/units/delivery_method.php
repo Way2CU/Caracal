@@ -30,7 +30,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getTitle() {
-		return $this->parent->getLanguageConstant('delivery_method_title');
+		return $this->parent->get_language_constant('delivery_method_title');
 	}
 
 	/**
@@ -40,7 +40,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getIcon() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return URL::from_file_path($this->parent->path.'images/icon.png');
 	}
 
 	/**
@@ -50,7 +50,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getImage() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
+		return URL::from_file_path($this->parent->path.'images/image.png');
 	}
 
 	/**
@@ -60,7 +60,7 @@ abstract class DeliveryMethod {
 	 * @return string
 	 */
 	public function getSmallImage() {
-		return url_GetFromFilePath($this->parent->path.'images/image_small.png');
+		return URL::from_file_path($this->parent->path.'images/image_small.png');
 	}
 
 	/**
@@ -128,11 +128,10 @@ abstract class DeliveryMethod {
 	 * @param array $items
 	 * @param array $shipper
 	 * @param array $recipient
-	 * @param string $transaction_id
-	 * @param string $preferred_currency
+	 * @param object $transaction
 	 * @return array
 	 */
-	abstract public function getDeliveryTypes($items, $shipper, $recipient, $transaction_id, $preferred_currency);
+	abstract public function getDeliveryTypes($items, $shipper, $recipient, $transaction=null);
 
 	/**
 	 * Get list of supported package types. Items in resulting array must
@@ -187,6 +186,18 @@ abstract class DeliveryMethod {
 	abstract public function getInterface();
 
 	/**
+	 * Get delivery price for selection for specified recipient.
+	 *
+	 * @param array $items
+	 * @param array $shipper
+	 * @param array $recipient
+	 * @param string $selection
+	 * @param object $transaction
+	 * @return float
+	 */
+	abstract public function getCustomEstimate($items, $shipper, $recipient, $selection, $transaction=null);
+
+	/**
 	 * Whether delivery method can be used for international deliveries.
 	 *
 	 * @return boolean
@@ -200,4 +211,13 @@ abstract class DeliveryMethod {
 	 * @return boolean
 	 */
 	abstract public function hasCustomInterface();
+
+	/**
+	 * Return boolean value denoting if system should ask user for delivery address.
+	 *
+	 * @return boolean
+	 */
+	public function requiresUserInformation() {
+		return true;
+	}
 }

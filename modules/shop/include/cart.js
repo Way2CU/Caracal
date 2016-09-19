@@ -3,10 +3,55 @@
  *
  * Copyright (c) 2016. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
+ *
+ * Supported events:
+ * - Callback for `item-add`:
+ *  	function (cart, uid, variation id, properties), returns boolean
+ *
+ *  	Called before item is added to the cart. If return value
+ *  	is `false` item will not be added.
+ *
+ * - Callback for `item-added`:
+ *  	function (cart, uid, variation id, properties)
+ *
+ *  	Called after item has been added to the cart. At the time
+ *  	of event calling all the item data is known and available.
+ *
+ * - Callback for `item-remove`:
+ *  	function (cart, item), returns boolean
+ *
+ *  	If return value is `false` item will not be removed.
+ *
+ * - Callback for `item-amount-change`:
+ *  	function (cart, item, new amount), return boolean
+ *
+ *  	Called before amount is changed for specified item. If return
+ *  	value is `false` amount will not be changed.
+ *
+ * - Callback for `checkout`:
+ *		function (cart), return boolean
+ *
+ *		Called before redirecting user to checkout. If return value
+ *		is `false` there will be no redirection.
+ *
+ * - Callback for `totals-updated`:
+ *  	function (cart, count, cost, weight)
+ *
+ * - Callback for `cart-loaded`:
+ *   	function (cart, data)
+ *
+ *   	Called after card is loaded and all the items added. Item
+ *   	data at this point is available for use.
+ *
+ * - Callback for `cart-cleared`:
+ *   	function (cart)
+ *
+ *   	Called after cart has been successfully cleared on server
+ *   	side.
  */
 
-var Caracal = Caracal || {};
-Caracal.Shop = Caracal.Shop || {};
+var Caracal = Caracal || new Object();
+Caracal.Shop = Caracal.Shop || new Object();
 
 
 /**
@@ -15,30 +60,22 @@ Caracal.Shop = Caracal.Shop || {};
  * Note: When dealing with items, CID refers to combination id which is item ID
  * and variation id combined.
  *
- * Signals fired by this object:
- * 	item-add (cart, uid, variation id, properties)
- * 	item-added (cart, uid, variation id, properties)
- * 	item-removed (cart, item)
- * 	item-amount-change (cart, item, new amount)
- * 	before-checkout
- * 	checkout
- * 	totals-updated (cart, count, cost, weight)
  *
  * @return object
  */
 Caracal.Shop.Cart = function() {
 	var self = this;
 
-	self.items = {};
+	self.items = new Object();
 	self.reservations = [];
 	self.default_currency = '';
 	self.currency = self.default_currency;
 	self.exchange_rate = 1;
 	self.handling = 0;
 	self.shipping = 0;
-	self.ui = {};
-	self.events = {};
-	self.handlers = {};
+	self.ui = new Object();
+	self.events = new Caracal.EventSystem();
+	self.handlers = new Object();
 	self.item_views = new Array();
 	self.checkout_url = '/shop/checkout';
 
@@ -63,6 +100,17 @@ Caracal.Shop.Cart = function() {
 		self.events.on_checkout = new Array();
 		self.events.on_totals_updated = new Array();
 
+		// register events
+		self.events
+			.register('item-add', 'boolean')
+			.register('item-added')
+			.register('item-remove', 'boolean')
+			.register('item-amount-change', 'boolean')
+			.register('checkout', 'boolean')
+			.register('totals-updated')
+			.register('cart-loaded')
+			.register('card-cleared');
+
 		// load shopping cart from server
 		new Communicator('shop')
 			.on_success(self.handlers.cart_load_success)
@@ -83,13 +131,13 @@ Caracal.Shop.Cart = function() {
 			return result;
 
 		// add item if all signal handlers permit it
-		if (self.events.emit_signal('item-add', self, item.uid, item.variation_id, item.properties)) {
+		if (self.events.trigger('item-add', self, item.uid, item.variation_id, item.properties)) {
 			var cid = item.get_cid();
 			self.items[cid] = item;
 			result = true;
 
 			// emit signal after item has been added
-			self.events.emit_signal('item-added', self, item.uid, item.variation_id, item.properties)
+			self.events.trigger('item-added', self, item.uid, item.variation_id, item.properties)
 		}
 
 		return result;
@@ -123,7 +171,7 @@ Caracal.Shop.Cart = function() {
 			if (item != null)
 				item.alter_count(1);
 
-		} else if (self.events.emit_signal('item-add', self, data.uid, data.variation_id, null)) {
+		} else if (self.events.trigger('item-add', self, data.uid, data.variation_id, null)) {
 			// temporarily prevent modifications of this item
 			self.reservations.push(data.uid);
 
@@ -150,7 +198,7 @@ Caracal.Shop.Cart = function() {
 			return;
 
 		// check if signal handlers allow adding this item
-		if (!self.events.emit_signal('item-add', self, uid, null, properties))
+		if (!self.events.trigger('item-add', self, uid, null, properties))
 			return;
 
 		// temporarily prevent modifications of this item
@@ -405,6 +453,10 @@ Caracal.Shop.Cart = function() {
 		if (Object.keys(self.items).length == 0)
 			return;
 
+		// trigger event
+		if (!self.events.trigger('checkout', self))
+			return;
+
 		// make sure we have absolute path to checkout
 		var url = self.checkout_url;
 
@@ -412,7 +464,7 @@ Caracal.Shop.Cart = function() {
 			if (url[0] != '/')
 				url = '/' + url;
 
-			url = $('base').attr('href') + url;
+			url = $('meta[property=base-url]').attr('content') + url;
 		}
 
 		// add payment method if specified
@@ -488,6 +540,9 @@ Caracal.Shop.Cart = function() {
 			var item = self.items[cid];
 			item.handlers.remove_success(true);
 		}
+
+		// trigger an event
+		self.events.trigger('cart-cleared', self);
 	};
 
 	/**
@@ -520,6 +575,9 @@ Caracal.Shop.Cart = function() {
 
 		// update totals
 		self.ui.update_totals();
+
+		// trigger event
+		self.events.trigger('cart-loaded', self, data);
 	};
 
 	/**
@@ -573,7 +631,7 @@ Caracal.Shop.Cart = function() {
 			self.reservations.splice(index, 1);
 
 		// emit signal after item has been added
-		self.events.emit_signal('item-added', self, item.uid, item.variation_id, item.properties)
+		self.events.trigger('item-added', self, item.uid, item.variation_id, item.properties)
 
 		// update totals
 		self.ui.update_totals();
@@ -697,66 +755,7 @@ Caracal.Shop.Cart = function() {
 		self.ui.total_weight.text(total_weight.toFixed(2));
 
 		// emit signal
-		self.events.emit_signal('totals-updated', self, total_count, total_cost, total_weight);
-	};
-
-	/**
-	 * Connect function to be called when specified signal is emitted.
-	 *
-	 * @param string signal_name
-	 * @param function callback
-	 * @param boolean top
-	 */
-	self.events.connect = function(signal_name, callback, top) {
-		var list_name = 'on_' + signal_name.replace('-', '_');
-
-		// make sure event list exists
-		if (!(list_name in self.events))
-			return self;
-
-		// add call back to the list
-		if (!top)
-			self.events[list_name].push(callback); else
-			self.events[list_name].splice(0, 0, callback);
-
-		return self;
-	};
-
-	/**
-	 * Emit signal with specified parameters. This function accepts more than one
-	 * parameter. All except first parameter will be passed to callback function.
-	 *
-	 * @param string signal_name
-	 * @param ...
-	 * @return boolean
-	 */
-	self.events.emit_signal = function(signal_name) {
-		var result = true;
-		var params = new Array();
-		var list = null;
-
-		// prepare arguments
-		for (var index in arguments)
-			params.push(arguments[index]);
-		params = params.slice(1);
-
-		// get list of functions to call
-		var list_name = 'on_' + signal_name.replace('-', '_');
-		if (list_name in self.events)
-			list = self.events[list_name];
-
-		// emit signal
-		if (list != null && list.length > 0)
-			for (var i=0, length=list.length; i < length; i++) {
-				var callback = list[i];
-
-				if (!callback.apply(this, params)) {
-					result = false;
-					break;
-				}
-			}
-
-		return result;
+		self.events.trigger('totals-updated', self, total_count, total_cost, total_weight);
 	};
 
 	// finalize object
@@ -776,6 +775,8 @@ Caracal.Shop.Item = function(cart) {
 	self.name = '';
 	self.count = 0;
 	self.price = 0;
+	self.discount = 0;
+	self.discount_price = self.price;
 	self.exchange_rate = 1;
 	self.tax = 0;
 	self.weight = 0;
@@ -783,8 +784,8 @@ Caracal.Shop.Item = function(cart) {
 	self.uid = '';
 	self.variation_id = '';
 	self.size_definition = 0;
-	self.properties = {};
-	self.handlers = {};
+	self.properties = new Object();
+	self.handlers = new Object();
 	self.views = new Array();
 
 	/**
@@ -811,7 +812,7 @@ Caracal.Shop.Item = function(cart) {
 		var old_count = self.count;
 
 		// check if signal handlers permit the change
-		if (!self.cart.events.emit_signal('item-amount-change', self.cart, self, new_count))
+		if (!self.cart.events.trigger('item-amount-change', self.cart, self, new_count))
 			return result;
 
 		// update count
@@ -847,7 +848,7 @@ Caracal.Shop.Item = function(cart) {
 	self.remove = function() {
 		var result = false;
 
-		if (self.cart.events.emit_signal('item-removed', self.cart, self)) {
+		if (self.cart.events.trigger('item-remove', self.cart, self)) {
 			var data = {
 				uid: self.uid,
 				variation_id: self.variation_id
@@ -912,6 +913,8 @@ Caracal.Shop.Item = function(cart) {
 		self.name = data.name || self.name;
 		self.count = parseFloat(data.count) || self.count;
 		self.price = parseFloat(data.price) || self.price;
+		self.discount = parseFloat(data.discount) || self.discount;
+		self.discount_price = parseFloat(data.discount_price) || self.discount_price;
 		self.tax = parseFloat(data.tax) || self.tax;
 		self.weight = parseFloat(data.weight) || self.weight;
 		self.properties = data.properties || self.properties;
@@ -952,7 +955,11 @@ Caracal.Shop.Item = function(cart) {
 	 * @return float
 	 */
 	self.get_total_cost = function() {
-		return self.count * self.price * self.exchange_rate;
+		var price = self.price;
+		if (self.discount > 0)
+			price = self.discount_price;
+
+		return self.count * price * self.exchange_rate;
 	};
 
 	/**
@@ -1118,7 +1125,7 @@ Caracal.Shop.ItemView = function(item) {
 		self.label_name.text(self.item.name[language_handler.current_language]);
 		self.label_count.text(self.item.count);
 		self.label_total
-				.text((self.item.count * self.item.price * self.exchange_rate).toFixed(2))
+				.text(self.item.get_total_cost().toFixed(2))
 				.attr('data-currency', self.currency);
 	};
 

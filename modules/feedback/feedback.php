@@ -26,23 +26,23 @@ class feedback extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$feedback_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_feedback'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_feedback'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$feedback_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_feedback_show'),
-								url_GetFromFilePath($this->path.'images/feedback_list.svg'),
+								$this->get_language_constant('menu_feedback_show'),
+								URL::from_file_path($this->path.'images/feedback_list.svg'),
 
 								window_Open( // on click open window
 											'feedback_manage',
 											730,
-											$this->getLanguageConstant('title_feedback_show'),
+											$this->get_language_constant('title_feedback_show'),
 											true, true,
 											backend_UrlMake($this->name, 'show_feedback')
 										),
@@ -56,7 +56,7 @@ class feedback extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -69,7 +69,7 @@ class feedback extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -96,7 +96,7 @@ class feedback extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "
@@ -116,7 +116,7 @@ class feedback extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('feedback');
@@ -128,13 +128,13 @@ class feedback extends Module {
 	 */
 	private function showFeedback() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:list', $this, 'tag_FeedbackList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:list', $this, 'tag_FeedbackList');
 
 		$params = array();
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -142,12 +142,12 @@ class feedback extends Module {
 	 * Save feedback from AJAX request.
 	 */
 	private function json_SaveFeedback() {
-		$manager = FeedbackManager::getInstance();
+		$manager = FeedbackManager::get_instance();
 		$user = $_SESSION['logged'] ? $user = $_SESSION['uid'] : null;
 		$message = fix_chars($_REQUEST['message']);
 		$url = $_SERVER['QUERY_STRING'];
 
-		$manager->insertData(array(
+		$manager->insert_item(array(
 						'user'		=> $user,
 						'message'	=> $message,
 						'url'		=> $url
@@ -163,24 +163,24 @@ class feedback extends Module {
 	 * @param array $children
 	 */
 	public function tag_FeedbackList($tag_params, $children) {
-		$manager = FeedbackManager::getInstance();
-		$user_manager = UserManager::getInstance();
+		$manager = FeedbackManager::get_instance();
+		$user_manager = UserManager::get_instance();
 		$conditions = array();
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'list_item.xml');
+		$template->set_template_params_from_array($children);
 
 		// get items from the database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// parse template
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
-				$user = $user_manager->getSingleItem(array('fullname'), array('id' => $item->user));
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
+				$user = $user_manager->get_single_item(array('fullname'), array('id' => $item->user));
 				$user_name = $item->user;
 
 				if (is_object($user))
@@ -196,32 +196,32 @@ class feedback extends Module {
 						'message'	=> $item->message,
 						'url'		=> $item->url,
 						'status'	=> $item->status,
-						'item_change'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('change'),
+						'item_change'	=> URL::make_hyperlink(
+											$this->get_language_constant('change'),
 											window_Open(
 												'feedback_change', 	// window id
 												430,				// width
-												$this->getLanguageConstant('title_feedback_change'), // title
+												$this->get_language_constant('title_feedback_change'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'feedback_change'),
 													array('id', $item->id)
 												)
 											)
 										),
-						'item_delete'	=> url_MakeHyperlink(
-											$this->getLanguageConstant('delete'),
+						'item_delete'	=> URL::make_hyperlink(
+											$this->get_language_constant('delete'),
 											window_Open(
 												'feedback_delete', 	// window id
 												400,				// width
-												$this->getLanguageConstant('title_feedback_delete'), // title
+												$this->get_language_constant('title_feedback_delete'), // title
 												false, false,
-												url_Make(
-													'transfer_control',
+												URL::make_query(
 													'backend_module',
+													'transfer_control',
 													array('module', $this->name),
 													array('backend_action', 'feedback_delete'),
 													array('id', $item->id)
@@ -230,8 +230,8 @@ class feedback extends Module {
 										)
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

@@ -1,0 +1,95 @@
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form
+		action="$params['form_action']"
+		cms:eval="action"
+		method="POST"
+		id="shop_coupon_add_form"
+		>
+		<!-- General page -->
+		<label>
+			<span><cms:text constant="label_text_id" module="shop"/></span>
+			<input
+				type="text"
+				name="text_id"
+				class="code ltr"
+				maxlength="64"
+				style="width: 150px;"
+				/>
+		</label>
+		<label>
+			<span><cms:text constant="label_name" module="shop"/></span>
+			<input
+				type="text"
+				name="name"
+				class="multi-language"
+				maxlength="255"
+				style="width: 370px"
+				/>
+		</label>
+
+		<!-- Use limit -->
+		<hr/>
+
+		<div class="box left" style="min-width: 170px;">
+			<label class="checkbox">
+				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
+				<input
+					type="checkbox"
+					name="has_limit"
+					/>
+			</label>
+
+			<label>
+				<span><cms:text constant="label_coupon_limit" module="shop"/></span>
+				<input
+					type="text"
+					name="limit"
+					value="0"
+					min="0"
+					style="width: 120px;"
+					/>
+			</label>
+		</div>
+
+		<!-- Time limit -->
+		<div class="box">
+			<label class="checkbox">
+				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
+				<input
+					type="checkbox"
+					name="has_timeout"
+					/>
+			</label>
+
+			<label>
+				<span><cms:text constant="label_coupon_timeout" module="shop"/></span>
+				<input
+					type="datetime"
+					name="timeout"
+					placeholder="format_coupon_timeout"
+					style="width: 150px;"
+					cms:constant="placeholder"
+					/>
+			</label>
+		</div>
+
+		<hr/>
+
+		<div>
+			<cms:text constant="message_add_coupon" module="shop"/>
+		</div>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+			<button type="reset"><cms:text constant="reset"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<script type="text/javascript" charset="utf-8">
+		var selector = new LanguageSelector('shop_coupon_add_form');
+	</script>
+</document>

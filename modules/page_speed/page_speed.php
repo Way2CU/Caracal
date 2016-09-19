@@ -25,17 +25,17 @@ class page_speed extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$menu = $backend->getMenu($backend->name);
 
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
-										$this->getLanguageConstant('menu_page_speed'),
-										url_GetFromFilePath($this->path.'images/icon.svg'),
+										$this->get_language_constant('menu_page_speed'),
+										URL::from_file_path($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_speed',
 													670,
-													$this->getLanguageConstant('title_page_speed'),
+													$this->get_language_constant('title_page_speed'),
 													true, false, // disallow minimize, safety feature
 													backend_UrlMake($this->name, 'show')
 												),
@@ -44,8 +44,8 @@ class page_speed extends Module {
 
 			// add style for backend
 			if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
-				$head_tag = head_tag::getInstance();
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/page_speed.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag = head_tag::get_instance();
+				$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/page_speed.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 		}
 	}
@@ -53,7 +53,7 @@ class page_speed extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -66,7 +66,7 @@ class page_speed extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
@@ -100,21 +100,21 @@ class page_speed extends Module {
 
 		// show page content
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'check_page_speed' => window_OpenHyperlink(
-											$this->getLanguageConstant('check_page_speed'),
+											$this->get_language_constant('check_page_speed'),
 											'page_speed_check', 260,
-											$this->getLanguageConstant('title_check_page_speed'),
+											$this->get_language_constant('title_check_page_speed'),
 											true, false,
 											$this->name,
 											'check'
 										),
 						'set_api_key' => window_OpenHyperlink(
-											$this->getLanguageConstant('set_api_key'),
+											$this->get_language_constant('set_api_key'),
 											'page_speed_set_api_key', 400,
-											$this->getLanguageConstant('title_set_api_key'),
+											$this->get_language_constant('title_set_api_key'),
 											true, false,
 											$this->name,
 											'set_api_key'
@@ -122,11 +122,11 @@ class page_speed extends Module {
 					);
 
 		// add tag handlers
-		$template->registerTagHandler('_general_information', $this, 'tag_GeneralInformation');
-		$template->registerTagHandler('_detailed_information', $this, 'tag_DetailedInformation');
+		$template->register_tag_handler('_general_information', $this, 'tag_GeneralInformation');
+		$template->register_tag_handler('_detailed_information', $this, 'tag_DetailedInformation');
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -144,24 +144,24 @@ class page_speed extends Module {
 			$data = file_get_contents($request);
 			file_put_contents($this->path.'data/page_speed.json', $data);
 
-			$message = $this->getLanguageConstant('message_check_page_speed_done');
+			$message = $this->get_language_constant('message_check_page_speed_done');
 
 		} else {
-			$message = $this->getLanguageConstant('message_check_page_speed_error');
+			$message = $this->get_language_constant('message_check_page_speed_error');
 		}
 
 		// prepare and parse result message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('page_speed_check').';'.window_ReloadContent('page_speed')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -170,7 +170,7 @@ class page_speed extends Module {
 	 */
 	private function setApiKey() {
 		$template = new TemplateHandler('set_api_key.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'api_key'		=> isset($this->settings['api_key']) ? $this->settings['api_key'] : '',
@@ -178,10 +178,10 @@ class page_speed extends Module {
 					'cancel_action'	=> window_Close('page_speed_set_api_key')
 				);
 
-		$template->registerTagHandler('_module_list', $this, 'tag_ModuleList');
+		$template->register_tag_handler('_module_list', $this, 'tag_ModuleList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -190,33 +190,33 @@ class page_speed extends Module {
 	 */
 	private function saveApiKey() {
 		$api_key = fix_chars($_REQUEST['api_key']);
-		$this->saveSetting('api_key', $api_key);
+		$this->save_setting('api_key', $api_key);
 
 		// prepare and parse result message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_api_key_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_api_key_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('page_speed_set_api_key')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -226,8 +226,8 @@ class page_speed extends Module {
 	 * @param array $children
 	 */
 	public function tag_GeneralInformation($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'general_information.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'general_information.xml');
+		$template->set_template_params_from_array($children);
 
 		$page_stats = $this->data_cache->pageStats;
 
@@ -272,8 +272,8 @@ class page_speed extends Module {
 								'&chxl=0:|'.$this->data_cache->score
 			);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 

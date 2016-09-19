@@ -157,7 +157,7 @@ class Manager {
 			if (count($matches) >= 2 && count($matches[1]) > 0)
 				foreach ($matches[1] as $match) {
 					// give template to handler
-					$template->setXML('<document>'.$match.'</document>');
+					$template->set_xml('<document>'.$match.'</document>');
 
 					// start output buffer and get data
 					ob_start();
@@ -273,7 +273,7 @@ class Manager {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

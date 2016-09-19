@@ -18,9 +18,11 @@
 					<cms:text constant="title_payment_method" module="shop"/>
 				</a>
 			</cms:if>
+			<!--
 			<a href="javascript:void(0);">
 				<cms:text constant="title_billing_information" module="shop"/>
 			</a>
+			-->
 			<a href="javascript:void(0);">
 				<cms:text constant="title_checkout" module="shop"/>
 			</a>
@@ -39,12 +41,13 @@
 									type="radio"
 									name="existing_user"
 									value="log_in"
-									checked="checked"
+									checked="$settings['default_account_option'] == 'log_in' ? 'checked' : false"
+									cms:optional="checked"
 									/>
 								<span><cms:text constant="label_existing_user" module="shop"/></span>
 							</label>
 
-							<div class="existing_account visible">
+							<div class="existing_account">
 								<label>
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
@@ -91,6 +94,8 @@
 									type="radio"
 									name="existing_user"
 									value="sign_up"
+									checked="$settings['default_account_option'] == 'sign_up' ? 'checked' : false"
+									cms:optional="checked"
 									/>
 								<span><cms:text constant="label_new_user" module="shop"/></span>
 							</label>
@@ -99,11 +104,8 @@
 								<label>
 									<span><cms:text constant="label_first_name" module="shop"/></span>
 									<input
-										class="in_array('first_name', $params['bad_fields']) ? 'bad' : ''"
-										cms:eval="class,value"
 										type="text"
 										name="first_name"
-										value="isset($_POST['first_name']) ? fix_chars($_POST['first_name']) : ''"
 										maxlength="64"
 										data-required="1"
 										autocomplete="on"
@@ -112,24 +114,27 @@
 								<label class="separator">
 									<span><cms:text constant="label_last_name" module="shop"/></span>
 									<input
-										class="in_array('last_name', $params['bad_fields']) ? 'bad' : ''"
-										cms:eval="class,value"
 										type="text"
 										name="last_name"
-										value="isset($_POST['last_name']) ? fix_chars($_POST['last_name']) : ''"
 										maxlength="64"
 										data-required="1"
 										autocomplete="on"
 										/>
 								</label>
 								<label>
+									<span><cms:text constant="label_phone_number" module="shop"/></span>
+									<input
+										type="text"
+										name="new_phone_number"
+										maxlength="200"
+										autocomplete="on"
+										/>
+								</label>
+								<label class="separator">
 									<span><cms:text constant="label_email" module="shop"/></span>
 									<input
-										class="in_array('new_email', $params['bad_fields']) ? 'bad' : ''"
-										cms:eval="class,value"
 										type="email"
 										name="new_email"
-										value="isset($_POST['new_email']) ? fix_chars($_POST['new_email']) : ''"
 										maxlength="127"
 										data-required="1"
 										autocomplete="on"
@@ -192,11 +197,53 @@
 									type="radio"
 									name="existing_user"
 									value="guest"
+									checked="$settings['default_account_option'] == 'guest' ? 'checked' : false"
+									cms:optional="checked"
 									/>
 								<span><cms:text constant="label_guest" module="shop"/></span>
 							</label>
 
 							<div class="guest_checkout">
+								<label>
+									<span><cms:text constant="label_first_name" module="shop"/></span>
+									<input
+										type="text"
+										name="guest_first_name"
+										maxlength="64"
+										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+								<label class="separator">
+									<span><cms:text constant="label_last_name" module="shop"/></span>
+									<input
+										type="text"
+										name="guest_last_name"
+										maxlength="64"
+										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+								<label>
+									<span><cms:text constant="label_phone_number" module="shop"/></span>
+									<input
+										type="email"
+										name="guest_phone"
+										maxlength="200"
+										autocomplete="on"
+										/>
+								</label>
+								<label>
+									<span><cms:text constant="label_email" module="shop"/></span>
+									<input
+										type="email"
+										name="guest_email"
+										maxlength="127"
+										data-required="1"
+										autocomplete="on"
+										/>
+								</label>
+
 								<cms:if condition="!is_null($params['terms_link'])">
 									<label class="checkbox">
 										<input
@@ -237,169 +284,249 @@
 					<cms:if condition="$params['include_shipping']">
 						<div class="page" id="shipping_information">
 							<h1><cms:text constant="title_shipping_information" module="shop"/></h1>
-							<label>
-								<span><cms:text constant="label_presets" module="shop"/></span>
-								<select
-									name="presets"
-									data-autoload="$_SESSION['logged'] ? 1 : 0"
-									cms:eval="data-autoload"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_full_name" module="shop"/></span>
-								<input
-									class="in_array('name', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="name"
-									value="isset($_POST['name']) ? fix_chars($_POST['name']) : ''"
-									maxlength="64"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<hr/>
-							<label>
-								<span><cms:text constant="label_email" module="shop"/></span>
-								<input
-									class="in_array('email', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="email"
-									name="email"
-									value="isset($_POST['email']) ? fix_chars($_POST['email']) : ''"
-									maxlength="127"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_phone_number" module="shop"/></span>
-								<input
-									class="in_array('phone', $params['bad_fields']) ? 'ltr bad' : 'ltr'"
-									cms:eval="class,value"
-									type="text"
-									name="phone"
-									value="isset($_POST['phone']) ? fix_chars($_POST['phone']) : ''"
-									maxlength="127"
-									autocomplete="on"
-									/>
-							</label>
-							<hr/>
-							<label>
-								<span><cms:text constant="label_street" module="shop"/></span>
-								<input
-									class="in_array('street', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="street"
-									value="isset($_POST['street']) ? fix_chars($_POST['street']) : ''"
-									maxlength="200"
-									data-required="1"
-									autocomplete="on"
-									/>
-								<small><cms:text constant="tooltip_street" module="shop"/></small>
-							</label>
-							<label class="separator">
-								<span></span>
-								<input
-									class="in_array('street2', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="street2"
-									value="isset($_POST['street2']) ? fix_chars($_POST['street2']) : ''"
-									maxlength="200"
-									autocomplete="on"
-									/>
-								<small><cms:text constant="tooltip_street2" module="shop"/></small>
-							</label>
-							<label>
-								<span><cms:text constant="label_city" module="shop"/></span>
-								<input
-									class="in_array('city', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="city"
-									value="isset($_POST['city']) ? fix_chars($_POST['city']) : ''"
-									maxlength="40"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_zip" module="shop"/></span>
-								<input
-									class="in_array('zip', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="zip"
-									value="isset($_POST['zip']) ? fix_chars($_POST['zip']) : ''"
-									maxlength="20"
-									data-required="1"
-									autocomplete="on"
-									/>
-							</label>
-							<label>
-								<span><cms:text constant="label_country" module="shop"/></span>
-								<cms:if condition="empty($params['fixed_country'])">
-									<select
-										name="country"
-										class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
-										cms:eval="class"
-										data-required="1"
-										autocomplete="on"
-										>
-										<option/>
-										<cms:module
-											name="country_list"
-											action="show"
-											selected="isset($_POST['country']) ? fix_chars($_POST['country']) : ''"
-											cms:eval="selected"
+
+							<input type="hidden" name="delivery_method"/>
+							<input type="hidden" name="delivery_type"/>
+
+							<!-- Delivery method selection -->
+							<div class="container method visible">
+								<h4><cms:text constant="label_delivery_method" module="shop"/></h4>
+
+								<div class="details">
+									<cms:delivery_methods
+										shopping_cart="1"
+										template="delivery_checkout.xml"
+										local="1"
+										/>
+								</div>
+
+								<div class="overlay"/>
+							</div>
+
+							<!-- Person and address receiving the shippment -->
+							<div class="container address">
+								<hr/>
+								<h4><cms:text constant="label_shipping_address" module="shop"/></h4>
+
+								<div class="summary">
+									<span
+										class="street"
+										data-label="label_street"
+										cms:constant="data-label"
+										/>
+									<span
+										class="city"
+										data-label="label_city"
+										cms:constant="data-label"
+										/>
+									<span
+										class="zip"
+										data-label="label_zip"
+										cms:constant="data-label"
+										/>
+									<span
+										class="country"
+										data-label="label_country"
+										cms:constant="data-label"
+										/>
+									<span
+										class="state"
+										data-label="label_state"
+										cms:constant="data-label"
+										/>
+									<span
+										class="access_code"
+										data-label="label_access_code"
+										cms:constant="data-label"
+										/>
+								</div>
+
+								<div class="details">
+									<label>
+										<span><cms:text constant="label_street" module="shop"/></span>
+										<input
+											type="text"
+											name="street"
+											maxlength="200"
+											data-required="1"
+											autocomplete="on"
 											/>
-									</select>
-								</cms:if>
-								<cms:if condition="!empty($params['fixed_country'])">
-									<select
-										name="country"
-										class="in_array('country', $params['bad_fields']) ? 'bad' : ''"
-										cms:eval="class"
-										data-required="1"
-										autocomplete="on"
-										>
-										<cms:module
-											name="country_list"
-											action="show"
-											filter="$params['fixed_country']"
-											cms:eval="filter"
+										<small><cms:text constant="tooltip_street" module="shop"/></small>
+									</label>
+
+									<label class="separator">
+										<span></span>
+										<input
+											type="text"
+											name="street2"
+											maxlength="200"
+											autocomplete="on"
 											/>
-									</select>
-								</cms:if>
-							</label>
-							<label>
-								<span><cms:text constant="label_state" module="shop"/></span>
-								<input
-									class="in_array('state', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="state"
-									value="isset($_POST['state']) ? fix_chars($_POST['state']) : ''"
-									maxlength="40"
-									autocomplete="on"
-									/>
-							</label>
-							<hr/>
-							<label>
-								<span><cms:text constant="label_access_code" module="shop"/></span>
-								<input
-									class="in_array('access_code', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
-									type="text"
-									name="access_code"
-									value="isset($_POST['access_code']) ? fix_chars($_POST['access_code']) : ''"
-									maxlength="40"
-									autocomplete="on"
-									/>
-								<small><cms:text constant="tooltip_access_code" module="shop"/></small>
-							</label>
+										<small><cms:text constant="tooltip_street2" module="shop"/></small>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_city" module="shop"/></span>
+										<input
+											type="text"
+											name="city"
+											maxlength="40"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_zip" module="shop"/></span>
+										<input
+											type="text"
+											name="zip"
+											maxlength="20"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_country" module="shop"/></span>
+										<cms:if condition="empty($params['fixed_country'])">
+											<select
+												name="country"
+												data-required="1"
+												autocomplete="on"
+												>
+												<option/>
+												<cms:module
+													name="country_list"
+													action="show"
+													/>
+											</select>
+										</cms:if>
+										<cms:if condition="!empty($params['fixed_country'])">
+											<select
+												name="country"
+												data-required="1"
+												autocomplete="on"
+												>
+												<cms:module
+													name="country_list"
+													action="show"
+													filter="$params['fixed_country']"
+													cms:eval="filter"
+													/>
+											</select>
+										</cms:if>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_state" module="shop"/></span>
+										<input
+											type="text"
+											name="state"
+											maxlength="40"
+											autocomplete="on"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_access_code" module="shop"/></span>
+										<input
+											type="text"
+											name="access_code"
+											maxlength="40"
+											autocomplete="on"
+											/>
+										<small><cms:text constant="tooltip_access_code" module="shop"/></small>
+									</label>
+								</div>
+							</div>
+
+							<!-- Contact information in case of a need -->
+							<div class="container contact">
+								<hr/>
+								<h4><cms:text constant="label_contact_information" module="shop"/></h4>
+
+								<div class="summary">
+									<span
+										class="name"
+										data-label="label_full_name"
+										cms:constant="data-label"
+										/>
+									<span
+										class="email"
+										data-label="label_email"
+										cms:constant="data-label"
+										/>
+									<span
+										class="phone"
+										data-label="label_phone_number"
+										cms:constant="data-label"
+										/>
+								</div>
+
+								<div class="details">
+									<label>
+										<span><cms:text constant="label_presets" module="shop"/></span>
+										<select
+											name="presets"
+											data-autoload="$_SESSION['logged'] ? 1 : 0"
+											cms:eval="data-autoload"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_full_name" module="shop"/></span>
+										<input
+											type="text"
+											name="name"
+											maxlength="64"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_email" module="shop"/></span>
+										<input
+											type="email"
+											name="email"
+											maxlength="127"
+											data-required="1"
+											autocomplete="on"
+											/>
+									</label>
+
+									<label>
+										<span><cms:text constant="label_phone_number" module="shop"/></span>
+										<input
+											type="text"
+											name="phone"
+											maxlength="127"
+											autocomplete="on"
+											/>
+									</label>
+								</div>
+							</div>
+
+							<div class="container types">
+								<hr/>
+								<h4><cms:text constant="label_delivery_type" module="shop"/></h4>
+
+								<div class="summary">
+									<span
+										class="price"
+										data-label="label_estimated_cost"
+										cms:constant="data-label"
+										/>
+								</div>
+
+								<div class="details">
+								</div>
+
+								<div class="overlay"/>
+							</div>
+
+							<div class="container interface"/>
 
 							<div class="checkout_controls">
 								<cms:guest>
@@ -407,10 +534,6 @@
 								</cms:guest>
 								<button class="next"><cms:text constant="next"/></button>
 							</div>
-
-							<cms:if condition="!empty($params['message'])">
-								<div class="message"><cms:var name="$params['message']"/></div>
-							</cms:if>
 						</div>
 					</cms:if>
 
@@ -431,17 +554,15 @@
 					</cms:if>
 
 					<!-- Billing Information -->
+					<!--
 					<div class="page" id="billing_information">
 						<h1><cms:text constant="title_billing_information" module="shop"/></h1>
 
 						<label>
 							<span><cms:text constant="label_full_name" module="shop"/></span>
 							<input
-								class="in_array('billing_full_name', $params['bad_fields']) ? 'bad' : ''"
-								cms:eval="class,value"
 								type="text"
 								name="billing_full_name"
-								value="isset($_POST['billing_full_name']) ? fix_chars($_POST['billing_first_name']) : ''"
 								maxlength="64"
 								autocomplete="on"
 								data-required="1"
@@ -458,11 +579,8 @@
 						<label>
 							<span><cms:text constant="label_credit_card" module="shop"/></span>
 							<input
-								class="in_array('billing_credit_card', $params['bad_fields']) ? 'bad' : ''"
-								cms:eval="class,value"
 								type="text"
 								name="billing_credit_card"
-								value="isset($_POST['billing_credit_card']) ? fix_chars($_POST['billing_credit_card']) : ''"
 								maxlength="127"
 								autocomplete="on"
 								data-required="1"
@@ -472,11 +590,8 @@
 							<label>
 								<span><cms:text constant="label_expiration_date" module="shop"/></span>
 								<input
-									class="in_array('billing_expire_month', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
 									type="text"
 									name="billing_expire_month"
-									value="isset($_POST['billing_expire_month']) ? fix_chars($_POST['billing_expire_month']) : ''"
 									maxlength="2"
 									autocomplete="on"
 									placeholder="mm"
@@ -485,11 +600,8 @@
 							</label>
 							<label>
 								<input
-									class="in_array('billing_expire_year', $params['bad_fields']) ? 'bad' : ''"
-									cms:eval="class,value"
 									type="text"
 									name="billing_expire_year"
-									value="isset($_POST['billing_expire_year']) ? fix_chars($_POST['billing_expire_year']) : ''"
 									maxlength="4"
 									autocomplete="on"
 									placeholder="yyyy"
@@ -500,11 +612,8 @@
 						<label>
 							<span><cms:text constant="label_cvv" module="shop"/></span>
 							<input
-								class="in_array('billing_cvv', $params['bad_fields']) ? 'bad' : ''"
-								cms:eval="class,value"
 								type="text"
 								name="billing_cvv"
-								value="isset($_POST['billing_cvv']) ? fix_chars($_POST['billing_cvv']) : ''"
 								maxlength="4"
 								autocomplete="on"
 								data-required="1"
@@ -525,6 +634,15 @@
 							<button class="next"><cms:text constant="next"/></button>
 						</div>
 					</div>
+					-->
+					<!-- Legacy fields, kept for reverse compatibility -->
+					<input type="hidden" name="billing_full_name" />
+					<input type="hidden" name="billing_credit_card" />
+					<input type="hidden" name="billing_expire_month" />
+					<input type="hidden" name="billing_expire_year" />
+					<input type="hidden" name="billing_cvv" />
+
+					<!-- Dummy checkout page -->
 					<div class="page" id="checkout"/>
 
 					<!-- Static payment method information -->

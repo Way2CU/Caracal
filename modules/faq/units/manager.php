@@ -14,16 +14,16 @@ class QuestionManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('faq');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('question', 'ml_text');
-		$this->addProperty('answer', 'ml_text');
-		$this->addProperty('visible', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('question', 'ml_text');
+		$this->add_property('answer', 'ml_text');
+		$this->add_property('visible', 'boolean');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

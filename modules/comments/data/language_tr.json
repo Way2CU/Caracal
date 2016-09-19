@@ -1,0 +1,20 @@
+{
+    "anonymous": "Anonymous",
+    "label_comment": "Comment:",
+    "label_default_visibility": "Default visibility:",
+    "label_email": "Mail:",
+    "label_repost_time": "Repost timeout (minutes):",
+    "label_size_limit": "Comment size limit (charcters):",
+    "label_user": "Name:",
+    "menu_administration": "Administration",
+    "menu_comments": "Comments",
+    "menu_settings": "Settings",
+    "message_error": "Error saving message data!",
+    "message_error_data": "Error! Wrong data specified!",
+    "message_error_repost_time": "You can post only once in %t minutes!",
+    "message_saved": "New commend was posted!",
+    "message_settings_saved": "Module settings were saved!",
+    "option_hidden": "Hidden",
+    "option_visible": "Visible",
+    "title_settings": "Comments: Module Settings"
+}

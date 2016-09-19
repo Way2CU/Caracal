@@ -22,7 +22,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -30,10 +30,12 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
-	 * Whether this payment method is able to provide user information
+	 * Whether this payment method requires system to ask user for credit
+	 * card information.
+	 *
 	 * @return boolean
 	 */
-	public function provides_information() {
+	public function needs_credit_card_information() {
 		return false;
 	}
 
@@ -71,7 +73,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_title() {
-		$this->parent->getLanguageConstant('payment_method_title');
+		$this->parent->get_language_constant('payment_method_title');
 	}
 
 	/**
@@ -79,7 +81,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return URL::from_file_path($this->parent->path.'images/icon.png');
 	}
 
 	/**
@@ -87,7 +89,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
+		return URL::from_file_path($this->parent->path.'images/image.png');
 	}
 
 	/**
@@ -115,11 +117,11 @@ class Stripe_PaymentMethod extends PaymentMethod {
 	 */
 	public function get_recurring_plans() {
 		$result = array();
-		$language_list = Language::getLanguages(false);
-		$manager = Stripe_PlansManager::getInstance();
+		$language_list = Language::get_languages(false);
+		$manager = Stripe_PlansManager::get_instance();
 
 		// get recurring payment plans from database
-		$items = $manager->getItems($manager->getFieldNames(), array());
+		$items = $manager->get_items($manager->get_field_names(), array());
 
 		// prepare result
 		if (count($items) > 0)
@@ -177,7 +179,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 		$currency = shop::getDefaultCurrency();
 
 		// charge url
-		$this->url = url_Make('charge', $this->parent->name);
+		$this->url = URL::make_query($this->parent->name, 'charge');
 
 		// prepare params
 		$params = array(
@@ -227,7 +229,7 @@ class Stripe_PaymentMethod extends PaymentMethod {
 		$currency = shop::getDefaultCurrency();
 
 		// charge url
-		$this->url = url_Make('subscribe', $this->parent->name);
+		$this->url = URL::make_query($this->parent->name, 'subscribe');
 
 		// get customer
 		$customer = stripe_payment::getCustomer($transaction_data['uid']);

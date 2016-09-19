@@ -19,8 +19,7 @@ function LanguageHandler() {
 	this.current_language = 'en';
 
 	// base url for this site
-	var base = $('base');
-	this.backend_url = base.attr('href') + '/index.php';
+	this.backend_url = $('meta[property=base-url]').attr('content') + '/index.php';
 
 	// local language constant cache
 	this.cache = {};

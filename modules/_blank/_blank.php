@@ -25,21 +25,21 @@ class _blank extends Module {
 
 		// load module style and scripts
 		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::getInstance();
-			//$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			//$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
+			$head_tag = head_tag::get_instance();
+			//$head_tag->addTag('link', array('href' => URL::from_file_path($this->path.'include/_blank.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+			//$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/_blank.js'), 'type'=>'text/javascript'));
 		}
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -52,7 +52,7 @@ class _blank extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -71,7 +71,7 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "";
@@ -82,7 +82,7 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$sql = "";
@@ -101,13 +101,13 @@ class SomeManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('table_name');
 
-		$this->addProperty('id', 'int');
+		$this->add_property('id', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

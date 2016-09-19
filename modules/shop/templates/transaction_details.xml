@@ -20,9 +20,21 @@
 				<input
 					type="text"
 					value="$params['email']"
-					cms:eval="value"
 					readonly="readonly"
 					style="width: 200px;"
+					class="code ltr"
+					cms:eval="value"
+					/>
+			</label>
+			<label>
+				<span><cms:text constant="label_phone" module="shop"/></span>
+				<input
+					type="text"
+					value="$params['phone']"
+					readonly="readonly"
+					style="width: 200px;"
+					class="code ltr"
+					cms:eval="value"
 					/>
 			</label>
 
@@ -117,6 +129,8 @@
 					/>
 			</label>
 		</div>
+
+		<!-- Shipping tab -->
 		<div>
 			<label>
 				<span><cms:text constant="label_shipping_recipient" module="shop"/></span>
@@ -134,6 +148,17 @@
 					<input
 						type="text"
 						value="$params['address_phone']"
+						readonly="readonly"
+						style="width: 200px;"
+						class="code ltr"
+						cms:eval="value"
+						/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_email" module="shop"/></span>
+					<input
+						type="text"
+						value="$params['address_email']"
 						readonly="readonly"
 						style="width: 120px;"
 						class="code ltr"
@@ -188,7 +213,7 @@
 	</div>
 	<div class="scrollable_list box right" style="width: 475px;">
 		<div class="list_header">
-			<span class="column" style="width: 190px;">
+			<span class="column" style="width: 220px;">
 				<cms:text constant="column_name" module="shop"/>
 			</span>
 			<span class="column" style="width: 70px;">

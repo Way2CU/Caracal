@@ -39,7 +39,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->language->getText('mailer_system');
+		return $this->language->get_text('mailer_system');
 	}
 
 	/**
@@ -99,6 +99,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 		$attachment_name = $this->encode_string($attachment_name);
 
 		if (file_exists($file_name)) {
+			// get file content
 			$data = file_get_contents($file_name);
 			$data = base64_encode($data);
 
@@ -163,7 +164,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 	public function send() {
 		$result = false;
 		$content = '';
-		$contact_form = contact_form::getInstance();
+		$contact_form = contact_form::get_instance();
 
 		// make sure we are not being scammed
 		if ($contact_form->detectBots()) {
@@ -259,7 +260,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 			// add attachments if needed
 			if (count($this->attachments) > 0)
 				foreach ($this->attachments as $file) {
-					if (in_array($file, $this->attachment_names))
+					if (array_key_exists($file, $this->attachment_names))
 						$name = $this->attachment_names[$file]; else
 						$name = basename($file);
 

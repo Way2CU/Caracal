@@ -25,36 +25,36 @@ class activity_tracker extends Module {
 		parent::__construct(__FILE__);
 
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$activities_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_activities'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_activities'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$activities_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_manage'),
-								url_GetFromFilePath($this->path.'images/activities.svg'),
+								$this->get_language_constant('menu_manage'),
+								URL::from_file_path($this->path.'images/activities.svg'),
 
 								window_Open( // on click open window
 											'activities',
 											730,
-											$this->getLanguageConstant('title_manage'),
+											$this->get_language_constant('title_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'show')
 										),
 								$level=5
 							));
 			$activities_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_log'),
-								url_GetFromFilePath($this->path.'images/log.svg'),
+								$this->get_language_constant('menu_log'),
+								URL::from_file_path($this->path.'images/log.svg'),
 
 								window_Open( // on click open window
 											'activities_log',
 											730,
-											$this->getLanguageConstant('title_log'),
+											$this->get_language_constant('title_log'),
 											true, true,
 											backend_UrlMake($this->name, 'show_log')
 										),
@@ -67,7 +67,7 @@ class activity_tracker extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -80,7 +80,7 @@ class activity_tracker extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -135,7 +135,7 @@ class activity_tracker extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "
@@ -168,7 +168,7 @@ class activity_tracker extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('activities', 'activity_log');
@@ -180,22 +180,22 @@ class activity_tracker extends Module {
 	 */
 	private function showActivities() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'link_new' => window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'activities_new', 370,
-										$this->getLanguageConstant('title_activity_new'),
+										$this->get_language_constant('title_activity_new'),
 										true, false,
 										$this->name,
 										'new'
 									),
 					);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_ActivityList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:list', $this, 'tag_ActivityList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -210,15 +210,15 @@ class activity_tracker extends Module {
 	 */
 	private function addActivity() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
 					'cancel_action'	=> window_Close('activities_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -226,14 +226,14 @@ class activity_tracker extends Module {
 	 * Change existing activity.
 	 */
 	private function changeActivity() {
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
-		$activity = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$activity = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($activity)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'				=> $activity->id,
@@ -245,8 +245,8 @@ class activity_tracker extends Module {
 						'cancel_action'		=> window_Close('activities_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -255,9 +255,9 @@ class activity_tracker extends Module {
 	 * Save new or changed activity.
 	 */
 	private function saveActivity() {
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$ignore_address = isset($_REQUEST['ignore_address']) && ($_REQUEST['ignore_address'] == 'on' || $_REQUEST['ignore_address'] == '1') ? 1 : 0;
+		$ignore_address = $this->get_boolean_field('ignore_address') ? 1 : 0;
 
 		// collect data
 		$data = array(
@@ -270,24 +270,24 @@ class activity_tracker extends Module {
 		// update or insert new data
 		if (is_null($id)) {
 			$window = 'activities_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'activities_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_activity_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_activity_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('activities'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -298,23 +298,23 @@ class activity_tracker extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_activity_delete'),
+					'message'		=> $this->get_language_constant('message_activity_delete'),
 					'name'			=> $item->activity.' - '.$item->function,
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'activities_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delete_commit'),
 												array('id', $id)
@@ -323,8 +323,8 @@ class activity_tracker extends Module {
 					'no_action'		=> window_Close('activities_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -333,23 +333,23 @@ class activity_tracker extends Module {
 	 */
 	private function deleteActivity_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ActivityManager::getInstance();
-		$log_manager = ActivityLogManager::getInstance();
+		$manager = ActivityManager::get_instance();
+		$log_manager = ActivityLogManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
-		$log_manager->deleteData(array('activity' => $id));
+		$manager->delete_items(array('id' => $id));
+		$log_manager->delete_items(array('activity' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_activity_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_activity_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('activities_delete').';'.window_ReloadContent('activities')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -361,8 +361,8 @@ class activity_tracker extends Module {
 	public function keepAlive() {
 		global $db;
 
-		$manager = ActivityManager::getInstance();
-		$log_manager = ActivityLogManager::getInstance();
+		$manager = ActivityManager::get_instance();
+		$log_manager = ActivityLogManager::get_instance();
 
 		// collect data
 		$result = false;
@@ -370,8 +370,8 @@ class activity_tracker extends Module {
 		$function_name = isset($_REQUEST['function']) ? fix_chars($_REQUEST['function']) : null;
 
 		// get activity
-		$activity = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$activity = $manager->get_single_item(
+								$manager->get_field_names(),
 								array(
 									'activity'	=> $activity_name,
 									'function'	=> $function_name,
@@ -395,11 +395,11 @@ class activity_tracker extends Module {
 			return $result;
 
 		// try to get log record
-		$log = $log_manager->getSingleItem($log_manager->getFieldNames(), $conditions);
+		$log = $log_manager->get_single_item($log_manager->get_field_names(), $conditions);
 
 		if (is_object($log)) {
 			// update existing log
-			$log_manager->updateData(
+			$log_manager->update_items(
 						array('timestamp' => $db->format_timestamp(time())),
 						array('id' => $log->id)
 					);
@@ -417,7 +417,7 @@ class activity_tracker extends Module {
 			if ($_SESSION['logged'])
 				$data['user'] = $_SESSION['uid'];
 
-			$log_manager->insertData($data);
+			$log_manager->insert_item($data);
 			$result = true;
 		}
 
@@ -435,8 +435,8 @@ class activity_tracker extends Module {
 	public function isAlive() {
 		global $db;
 
-		$manager = ActivityManager::getInstance();
-		$log_manager = ActivityLogManager::getInstance();
+		$manager = ActivityManager::get_instance();
+		$log_manager = ActivityLogManager::get_instance();
 
 		// collect data
 		$result = false;
@@ -444,8 +444,8 @@ class activity_tracker extends Module {
 		$function_name = isset($_REQUEST['function']) ? fix_chars($_REQUEST['function']) : null;
 
 		// get activity
-		$activity = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$activity = $manager->get_single_item(
+								$manager->get_field_names(),
 								array(
 									'activity'	=> $activity_name,
 									'function'	=> $function_name,
@@ -469,7 +469,7 @@ class activity_tracker extends Module {
 			$conditions['user'] = $_SESSION['uid'];
 
 		// get logs from database
-		$logs = $log_manager->getItems(array('id'), $conditions);
+		$logs = $log_manager->get_items(array('id'), $conditions);
 		$result = count($logs) > 0;
 
 		// show result
@@ -486,11 +486,11 @@ class activity_tracker extends Module {
 		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
-		$head_tag = head_tag::getInstance();
+		$head_tag = head_tag::get_instance();
 		$head_tag->addTag(
 					'script',
 					array(
-						'src'	=> url_GetFromFilePath($this->path.'include/beacon.js'),
+						'src'	=> URL::from_file_path($this->path.'include/beacon.js'),
 						'type'	=> 'text/javascript'
 					));
 	}
@@ -502,15 +502,15 @@ class activity_tracker extends Module {
 	 * @param array $children
 	 */
 	public function tag_ActivityList($tag_params, $children) {
-		$manager = ActivityManager::getInstance();
+		$manager = ActivityManager::get_instance();
 		$conditions = array();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'list_item.xml');
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (count($items) > 0)
@@ -522,32 +522,32 @@ class activity_tracker extends Module {
 						'timeout'				=> $item->timeout,
 						'ignore_address'		=> $item->ignore_address,
 						'ignore_address_char'	=> $item->ignore_address ? CHAR_CHECKED : CHAR_UNCHECKED,
-						'item_change'			=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+						'item_change'			=> URL::make_hyperlink(
+												$this->get_language_constant('change'),
 												window_Open(
 													'activities_change', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_activity_change'), // title
+													$this->get_language_constant('title_activity_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'			=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+						'item_delete'			=> URL::make_hyperlink(
+												$this->get_language_constant('delete'),
 												window_Open(
 													'activities_delete', 	// window id
 													400,				// width
-													$this->getLanguageConstant('title_activity_delete'), // title
+													$this->get_language_constant('title_activity_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'delete'),
 														array('id', $item->id)
@@ -556,8 +556,8 @@ class activity_tracker extends Module {
 											),
 					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

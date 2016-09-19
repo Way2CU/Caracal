@@ -21,15 +21,15 @@ class GroupManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('link_groups');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('text_id', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('text_id', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

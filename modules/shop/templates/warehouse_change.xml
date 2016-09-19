@@ -83,7 +83,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		var backend_url = $('base').attr('href') + '/index.php';
+		var backend_url = $('meta[property=base-url]').attr('content') + '/index.php';
 		$('#shop_warehouse_add_form select[name=country]').change(function() {
 			var value = $(this).val();
 			var states = $('#shop_warehouse_add_form select[name=state]');

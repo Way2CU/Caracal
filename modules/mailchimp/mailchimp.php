@@ -27,23 +27,22 @@ class mailchimp extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$mailchimp_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_mailchimp'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_mailchimp'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$mailchimp_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_lists'),
-								url_GetFromFilePath($this->path.'images/lists.svg'),
-
+								$this->get_language_constant('menu_lists'),
+								URL::from_file_path($this->path.'images/lists.svg'),
 								window_Open( // on click open window
 											'mailchimp_lists',
 											450,
-											$this->getLanguageConstant('title_lists'),
+											$this->get_language_constant('title_lists'),
 											true, true,
 											backend_UrlMake($this->name, 'lists')
 										),
@@ -52,13 +51,12 @@ class mailchimp extends Module {
 			$mailchimp_menu->addSeparator(5);
 
 			$mailchimp_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
-
+								$this->get_language_constant('menu_settings'),
+								URL::from_file_path($this->path.'images/settings.svg'),
 								window_Open( // on click open window
 											'mailchimp_settings',
 											450,
-											$this->getLanguageConstant('title_settings'),
+											$this->get_language_constant('title_settings'),
 											true, true,
 											backend_UrlMake($this->name, 'settings')
 										),
@@ -72,7 +70,7 @@ class mailchimp extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -85,7 +83,7 @@ class mailchimp extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -112,16 +110,16 @@ class mailchimp extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
-		$this->saveSetting('api_key', '');
+		$this->save_setting('api_key', '');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 	}
 
@@ -134,7 +132,7 @@ class mailchimp extends Module {
 	/**
 	 * Save new configuration.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 	}
 
 	/**
@@ -162,7 +160,7 @@ class mailchimp extends Module {
 
 		// create template
 		$template = new TemplateHandler('lists.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		// create menu links
 
@@ -171,11 +169,11 @@ class mailchimp extends Module {
 		);
 
 		// register tag handlers
-		$template->registerTagHandler('cms:items', $this, 'tag_ListItems');
+		$template->register_tag_handler('cms:items', $this, 'tag_ListItems');
 
 		// show template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

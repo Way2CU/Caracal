@@ -3,7 +3,12 @@
 <document>
 	<div id="checkout_container">
 		<div id="checkout" cms:skip_cache="1" class="$params['recurring'] ? 'recurring' : 'sale'" cms:eval="class">
-			<form action="$params['checkout_url']" method="POST" cms:eval="action">
+			<form
+				action="$params['checkout_url']"
+				method="POST"
+				data-method="$params['method']"
+				cms:eval="action,data-method"
+				>
 				<cms:if condition="!$params['recurring']">
 					<table border="0" cellspacing="0" cellpadding="0" class="checkout_details">
 						<!-- Header -->
@@ -13,8 +18,8 @@
 									<td><cms:text constant="column_name" module="shop"/></td>
 									<td style="width: 70px"><cms:text constant="column_quantity" module="shop"/></td>
 									<td style="width: 120px"><cms:text constant="column_price" module="shop"/></td>
-									<td style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
-									<td style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
+									<td class="optional" style="width: 70px"><cms:text constant="column_tax" module="shop"/></td>
+									<td class="optional" style="width: 70px"><cms:text constant="column_weight" module="shop"/></td>
 									<td style="width: 120px"><cms:text constant="column_item_total" module="shop"/></td>
 								</cms:if>
 								<cms:if condition="$params['type'] == TransactionType::DELAYED">
@@ -30,7 +35,7 @@
 							<!-- Regular transactions -->
 							<cms:if condition="$params['type'] != TransactionType::DELAYED">
 								<tr class="first">
-									<td colspan="3" rowspan="5" style="padding: 20px;"/>
+									<td colspan="_DESKTOP_VERSION ? '3' : '1'" rowspan="5" style="padding: 20px;" cms:eval="colspan"/>
 									<td colspan="2" class="subtotal-label"><cms:text constant="column_subtotal" module="shop"/></td>
 									<td class="subtotal-value subtotal"><cms:var name="$params['sub-total']"/></td>
 								</tr>
@@ -62,7 +67,7 @@
 							<!-- Delayed charge transaction -->
 							<cms:if condition="$params['type'] == TransactionType::DELAYED">
 								<tr class="first">
-									<td rowspan="3" style="padding: 20px;"/>
+									<td colspan="_DESKTOP_VERSION ? '3' : '1'" style="padding: 20px;" cms:eval="colspan"/>
 									<td class="subtotal-label"><cms:text constant="column_shipping" module="shop"/></td>
 									<td class="subtotal-value shipping"><cms:var name="$params['shipping']"/></td>
 								</tr>
@@ -92,15 +97,16 @@
 							<thead>
 								<tr>
 									<th><cms:text constant="column_discounted_item_name" module="shop"/></th>
-									<th style="width: 70px"><cms:text constant="column_quantity" module="shop"/></th>
+									<th class="optional" style="width: 70px"><cms:text constant="column_quantity" module="shop"/></th>
 									<th style="width: 120px"><cms:text constant="column_regular_price" module="shop"/></th>
-									<th style="width: 70px"><cms:text constant="column_discount" module="shop"/></th>
-									<th style="width: 70px"><cms:text constant="column_discount_amount" module="shop"/></th>
+									<th class="optional" style="width: 70px"><cms:text constant="column_discount" module="shop"/></th>
+									<th class="optional" style="width: 70px"><cms:text constant="column_discount_amount" module="shop"/></th>
 									<th style="width: 120px"><cms:text constant="column_final_price" module="shop"/></th>
 								</tr>
 							</thead>
 							<tbody>
 								<cms:discounted_items/>
+								<cms:discounts/>
 							</tbody>
 						</table>
 					</cms:if>
@@ -123,28 +129,7 @@
 							<textarea name="remarks" rows="4" cols="25"><cms:var param="remarks"/></textarea>
 						</label>
 					</div>
-
-					<cms:if condition="$params['include_shipping']">
-						<div class="delivery_provider">
-							<span class="title"><cms:text constant="label_delivery_method" module="shop"/></span>
-							<cms:delivery_methods
-								shopping_cart="1"
-								template="delivery_checkout.xml"
-								local="1"
-								/>
-							<div class="overlay"/>
-						</div>
-					</cms:if>
 				</div>
-
-				<cms:if condition="$params['include_shipping']">
-					<div class="delivery_method">
-						<div class="services"/>
-						<div class="clear_float"/>
-					</div>
-				</cms:if>
-
-				<div class="delivery_interface"/>
 
 				<cms:var name="$params['checkout_fields']"/>
 

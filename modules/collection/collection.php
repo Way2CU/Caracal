@@ -26,6 +26,7 @@ class collection extends Module {
 	const COMMUNICATOR = 8;
 	const DYNAMIC_PAGE_CONTENT = 9;
 	const PROPERTY_EDITOR = 10;
+	const EVENT_SYSTEM = 11;
 
 	// jQuery and its extensions
 	const JQUERY = 50;
@@ -52,6 +53,7 @@ class collection extends Module {
 				collection::COMMUNICATOR         => 'communicator.js',
 				collection::DYNAMIC_PAGE_CONTENT => 'dynamic_page_content.js',
 				collection::PROPERTY_EDITOR      => 'property_editor.js',
+				collection::EVENT_SYSTEM         => 'event_system.js',
 				collection::JQUERY               => 'jquery.js',
 				collection::JQUERY_EVENT_DRAG    => 'jquery.event.drag.js',
 				collection::JQUERY_EVENT_SCROLL  => 'jquery.mousewheel.js',
@@ -74,6 +76,7 @@ class collection extends Module {
 				'communicator'         => collection::COMMUNICATOR,
 				'dynamic_page_content' => collection::DYNAMIC_PAGE_CONTENT,
 				'property_editor'      => collection::PROPERTY_EDITOR,
+				'event_system'         => collection::EVENT_SYSTEM,
 				'jquery'               => collection::JQUERY,
 				'jquery_event_drag'    => collection::JQUERY_EVENT_DRAG,
 				'jquery_event_scroll'  => collection::JQUERY_EVENT_SCROLL,
@@ -98,16 +101,17 @@ class collection extends Module {
 
 		// get instance of head tag early on
 		if (ModuleHandler::is_loaded('head_tag'))
-			$this->head_tag = head_tag::getInstance();
+			$this->head_tag = head_tag::get_instance();
 
 		// include scripts by default
 		$this->includeScriptById(collection::JQUERY);
+		$this->includeScriptById(collection::EVENT_SYSTEM);
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -120,18 +124,18 @@ class collection extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 	}
 
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {}
+	public function on_init() {}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {}
+	public function on_disable() {}
 
 	/**
 	 * Get script id from its name.
@@ -178,7 +182,7 @@ class collection extends Module {
 						$this->head_tag->addTag(
 							'link',
 							array(
-								'href'	=> url_GetFromFilePath($this->path.'include/'.$file_name),
+								'href'	=> URL::from_file_path($this->path.'include/'.$file_name),
 								'type'	=> 'text/css',
 								'rel'	=> 'stylesheet'
 							)
@@ -191,7 +195,7 @@ class collection extends Module {
 						$this->head_tag->addTag(
 							'script',
 							array(
-								'src'	=> url_GetFromFilePath($this->path.'include/'.$file_name),
+								'src'	=> URL::from_file_path($this->path.'include/'.$file_name),
 								'type'	=> 'text/javascript'
 							)
 						);
@@ -204,7 +208,7 @@ class collection extends Module {
 			$this->head_tag->addTag(
 						'script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/'.$data),
+							'src'	=> URL::from_file_path($this->path.'include/'.$data),
 							'type'	=> 'text/javascript'
 						)
 					);

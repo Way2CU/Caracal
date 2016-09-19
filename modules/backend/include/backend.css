@@ -20,7 +20,7 @@ body {
 	font-size: 13px;
 }
 
-body.rtl {
+html[dir=rtl] {
 	direction: rtl;
 }
 
@@ -50,7 +50,7 @@ div#logo {
 	text-transform: uppercase;
 }
 
-body.rtl div#logo {
+html[dir=rtl] div#logo {
 	padding: 6px;
 	padding-right: 75px;
 	background-position: right center;
@@ -78,7 +78,7 @@ div#container {
 	overflow: hidden;
 }
 
-body.rtl div#container {
+html[dir=rtl] div#container {
 	background-position: calc(50% - 100px) center;
 }
 
@@ -118,7 +118,7 @@ footer:before {
 	opacity: 0.5;
 }
 
-body.rtl footer:before {
+html[dir=rtl] footer:before {
 	left: auto;
 	right: 0px;
 }
@@ -131,7 +131,7 @@ nav#common {
 	float: right;
 }
 
-body.rtl nav#common {
+html[dir=rtl] nav#common {
 	float: left;
 }
 
@@ -165,7 +165,7 @@ ul#window_list {
 	list-style-image: none;
 }
 
-body.rtl ul#window_list {
+html[dir=rtl] ul#window_list {
 	left: auto;
 	right: 201px;
 }
@@ -186,7 +186,7 @@ ul#window_list li {
 	transition: all 0.3s;
 }
 
-body.rtl ul#window_list li {
+html[dir=rtl] ul#window_list li {
 	margin: 0px;
 	margin-left: 2px;
 	padding: 10px;
@@ -217,7 +217,7 @@ ul#window_list li span {
 	transition: all 0.3s;
 }
 
-body.rtl ul#window_list li span {
+html[dir=rtl] ul#window_list li span {
 	left: auto;
 	right: 10px;
 }
@@ -251,7 +251,7 @@ ul#navigation {
 	-webkit-transform: translateZ(0);
 }
 
-body.rtl ul#navigation {
+html[dir=rtl] ul#navigation {
 	left: auto;
 	right: 0px;
 	border-right: 0px;
@@ -283,7 +283,7 @@ ul#navigation li a {
 	transition: all 0.3s;
 }
 
-body.rtl ul#navigation li a {
+html[dir=rtl] ul#navigation li a {
 	padding: 10px;
 	padding-right: 44px;
 }
@@ -307,7 +307,7 @@ ul#navigation li a span {
 	transition: all 0.3s;
 }
 
-body.rtl ul#navigation li a span {
+html[dir=rtl] ul#navigation li a span {
 	left: auto;
 	right: 10px;
 }
@@ -362,7 +362,7 @@ ul#navigation li > ul {
 	z-index: 1000;
 }
 
-body.rtl ul#navigation li > ul {
+html[dir=rtl] ul#navigation li > ul {
 	left: auto;
 	right: 95%;
 	box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.3);
@@ -394,7 +394,7 @@ ul#navigation li > ul > li.submenu > a:after {
 	font-size: 0px;
 }
 
-body.rtl ul#navigation li > ul > li.submenu > a:after {
+html[dir=rtl] ul#navigation li > ul > li.submenu > a:after {
 	right: auto;
 	left: 7px;
 
@@ -423,7 +423,7 @@ nav#language {
 	z-index: 100;
 }
 
-body.rtl nav#language {
+html[dir=rtl] nav#language {
 	right: auto;
 	left: 10px;
 }
@@ -534,7 +534,7 @@ div.window div.scrollable_list.modules div.list_item span.icon {
 	transition: 0.3s all;
 }
 
-body.rtl div.window div.scrollable_list.modules div.list_item span.icon {
+html[dir=rtl] div.window div.scrollable_list.modules div.list_item span.icon {
 	margin-right: 0px;
 	margin-left: 5px;
 }

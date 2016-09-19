@@ -30,7 +30,7 @@ class search extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -43,7 +43,7 @@ class search extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -66,13 +66,13 @@ class search extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -142,14 +142,14 @@ class search extends Module {
 			$results = array_slice($results, 0, $limit);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'result.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'result.xml');
+		$template->set_template_params_from_array($children);
 
 		// parse results
 		if (count($results) > 0)
 			foreach ($results as $params) {
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

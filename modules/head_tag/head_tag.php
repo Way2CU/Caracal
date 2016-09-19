@@ -39,7 +39,7 @@ class head_tag extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -52,7 +52,7 @@ class head_tag extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_tag':
@@ -64,10 +64,10 @@ class head_tag extends Module {
 	/**
 	 * Redefine abstract methods
 	 */
-	public function onInit() {
+	public function on_init() {
 	}
 
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -138,51 +138,21 @@ class head_tag extends Module {
 	}
 
 	/**
-	 * Show file associated with specified tag.
-	 *
-	 * @param object $tag
-	 */
-	private function printFile($tag) {
-		switch ($tag[0]) {
-			case 'link':
-				$body = null;
-				if (array_key_exists('rel', $tag[1]) && $tag[1]['rel'] == 'stylesheet') {
-					$body = file_get_contents($tag[1]['href']);
-					$tag = array('style', array('type' => 'text/css'));
-					unset($tag[1]['href']);
-				}
-
-				$this->printTag($tag, $body);
-				break;
-
-			case 'script':
-				$body = file_get_contents($tag[1]['src']);
-				unset($tag[1]['src']);
-				$this->printTag($tag, $body);
-				break;
-
-			default:
-				$this->printTag($tag);
-				break;
-		}
-	}
-
-	/**
 	 * Print previously added tags
 	 */
 	private function printTags() {
-		global $include_scripts, $optimize_code, $section;
+		global $optimize_code, $section;
 
 		// if page_info module is loaded, ask it to add its own tags
 		if (ModuleHandler::is_loaded('page_info'))
-			page_info::getInstance()->addElements();
+			page_info::get_instance()->addElements();
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 
 		if (class_exists('CodeOptimizer') && $optimize_code && !in_array($section, array('backend', 'backend_module'))) {
 			// use code optimizer if possible
-			$optimizer = CodeOptimizer::getInstance();
+			$optimizer = CodeOptimizer::get_instance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
 			foreach ($this->link_tags as $link) {
@@ -205,11 +175,6 @@ class head_tag extends Module {
 			// print optimized code
 			$optimizer->printData();
 
-		} else if ($include_scripts) {
-			// just include javascript in body
-			foreach ($tags as $tag)
-				$this->printFile($tag);
-
 		} else {
 			// no optimization
 			foreach ($tags as $tag)
@@ -219,22 +184,22 @@ class head_tag extends Module {
 		// print google analytics code if needed
 		if (!is_null($this->analytics)) {
 			$template = new TemplateHandler("google_analytics_{$this->analytics_version}.xml", $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'code'		=> $this->analytics,
 						'domain'	=> $this->analytics_domain
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
 		// print google site optimizer code if needed
 		if (!is_null($this->optimizer)) {
 			$template = new TemplateHandler('google_site_optimizer.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 							'code'	=> $this->optimizer,
@@ -243,8 +208,8 @@ class head_tag extends Module {
 							'show_control'	=> $this->optimizer_show_control
 						);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

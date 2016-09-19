@@ -190,6 +190,10 @@ class XMLParser
      */
     private function EndElement($parser, $name)
     {
+		// clean up
+        $tag = $this->GetStackLocation();
+		$tag->tagData = trim($tag->tagData);
+
         //Update stack by removing the end value from it as the parent
         array_pop($this->stack);
     }
@@ -206,7 +210,7 @@ class XMLParser
         $tag = $this->GetStackLocation();
 
         //Assign data to it
-        $tag->tagData .= trim($data);
+        $tag->tagData .= $data;
     }
 }
 

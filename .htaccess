@@ -11,19 +11,30 @@
 	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 	RewriteRule ^(.*)$ %{ENV:protocol}://%1/$1 [R=301,L]
 
+	# don't rewrite site content
+	RewriteRule ^/site/ - [NC,L]
+
 	# make sure requested file name is not directory or file name
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	# take whole URI and give it to main index file
-	RewriteRule (.*) index.php?_rewrite=$1 [QSA,L]
+	RewriteRule (.*) index.php?$1 [QSA,L]
 </IfModule>
 
 <FilesMatch "\.(xml|json)$">
 	Deny from all
 </FilesMatch>
 
-<FilesMatch "site/\.(php|php3|asp|sh|py)$">
+<FilesMatch "^site/.*\.(php|php3|asp|sh|py)$">
+	Deny from all
+</FilesMatch>
+
+<FilesMatch "^(install|docs|libraries|.git|.tx)/">
+	Deny from all
+</FilesMatch>
+
+<FilesMatch "favicon.ico">
 	Deny from all
 </FilesMatch>
 
@@ -44,7 +55,7 @@ Header unset Pragma
 	SetOutputFilter DEFLATE
 </FilesMatch>
 
-<FilesMatch "\.(js|css|less|ttf|otf)$">
+<FilesMatch "\.(js|css|less|ttf|otf|woff)$">
 	Header set Cache-Control "max-age=864000, must-revalidate"
 	SetOutputFilter DEFLATE
 </FilesMatch>

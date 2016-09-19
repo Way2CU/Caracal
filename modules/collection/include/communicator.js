@@ -24,7 +24,7 @@ function Communicator(module_name) {
 	 * Complete object initialization.
 	 */
 	self._init = function() {
-		self._url = $('base').attr('href') + self._url_path;
+		self._url = $('meta[property=base-url]').attr('content') + self._url_path;
 	};
 
 	/**

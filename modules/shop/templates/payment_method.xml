@@ -3,8 +3,8 @@
 <document>
 	<span
 		data-name="$params['name']"
-		data-provides-information="$params['provides_information'] ? 1 : 0"
+		data-needs-credit-card="$params['needs_credit_card'] ? 1 : 0"
 		style="'background-image: url(\''.$params['image'].'\');'"
-		cms:eval="data-name,data-provides-information,style"
+		cms:eval="data-name,data-needs-credit-card,style"
 	/>
 </document>

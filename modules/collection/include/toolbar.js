@@ -399,8 +399,7 @@ function ToolbarExtension_Common() {
 		path.push(icon);
 
 		// base url for this site
-		var base = $('base');
-		base_url = base.attr('href') + '/';
+		var base_url = $('meta[property=base-url]').attr('content') + '/';
 
 		return base_url + path.join('/');
 	};

@@ -26,7 +26,7 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -34,11 +34,13 @@ class GoogleCheckout_PaymentMethod extends PaymentMethod {
 	}
 
 	/**
-	 * Whether this payment method is able to provide user information
+	 * Whether this payment method requires system to ask user for credit
+	 * card information.
+	 *
 	 * @return boolean
 	 */
-	public function provides_information() {
-		return true;
+	public function needs_credit_card_information() {
+		return false;
 	}
 
 	/**

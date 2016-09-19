@@ -154,7 +154,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -181,11 +181,11 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 * @param array $items
 	 * @param array $shipper
 	 * @param array $recipient
-	 * @param string $transaction_id
+	 * @param object $transaction
 	 * @return array
 	 */
-	public function getDeliveryTypes($items, $shipper, $recipient, $transaction_id, $preferred_currency) {
-		$shop = shop::getInstance();
+	public function getDeliveryTypes($items, $shipper, $recipient, $transaction=null) {
+		$shop = shop::get_instance();
 		$debug = $shop->isDebug();
 		$result = array();
 		$request = array();
@@ -200,7 +200,8 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 		// populate request header
 		$this->_populateCredentials($request);
 		$this->_populateClientDetails($request);
-		$this->_populateTransactionDetails($request, $transaction_id);
+		if (!is_null($transaction))
+			$this->_populateTransactionDetails($request, $transaction->id);
 		$this->_populateVersionInformation($request, FedEx_DeliveryMethod::RATE_SERVICE);
 
 		// add remaining request information
@@ -209,7 +210,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 		$request['RequestedShipment']['DropoffType'] = 'REGULAR_PICKUP';
 		$request['RequestedShipment']['ShipTimestamp'] = date('c');
 		$request['RequestedShipment']['PackagingType'] = 'YOUR_PACKAGING';
-		$request['RequestedShipment']['PreferredCurrency'] = $preferred_currency;
+		$request['RequestedShipment']['PreferredCurrency'] = Shop::getDefaultCurrency();
 		$request['RequestedShipment']['Shipper'] = array(
 											'Contact'	=> array(
 											),
@@ -281,7 +282,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 			foreach ($response->RateReplyDetails as $type) {
 				// extract data from response
 				$id = $type->ServiceType;
-				$name = $this->parent->getLanguageConstant($id);
+				$name = $this->parent->get_language_constant($id);
 				$timestamp = strtotime($type->DeliveryTimestamp);
 				$amount = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
 				$currency = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Currency;

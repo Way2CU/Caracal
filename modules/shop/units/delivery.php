@@ -111,14 +111,15 @@ final class Delivery {
 					'image'            => $method->getImage(),
 					'small_image'      => $method->getSmallImage(),
 					'custom_interface' => $method->hasCustomInterface(),
+					'user_information' => $method->requiresUserInformation(),
 					'international'    => $international
 				);
 
 				// add method data to result
 				if (
+					$type == self::ALL ||
 					($international && $type == self::INTERNATIONAL) ||
-					(!$international && $type == self::DOMESTIC) ||
-					$type == self::ALL
+					(!$international && $type == self::DOMESTIC)
 				)
 					$result[] = $data;
 			}
@@ -153,7 +154,7 @@ final class Delivery {
 			);
 
 			// update data
-			$manager->updateData($data, array('id' => $transaction->id));
+			$manager->update_items($data, array('id' => $transaction->id));
 			$result = true;
 		}
 
@@ -244,8 +245,8 @@ final class Delivery {
 				}
 
 		// populate missing fields
-		$manager = ItemManager::getInstance();
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
+		$manager = ItemManager::get_instance();
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 		$item_map = array();
 
 		// cache item data

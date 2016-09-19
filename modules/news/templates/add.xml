@@ -6,7 +6,7 @@
 			<span><cms:text constant="label_group" module="news"/></span>
 			<select name="group" style="width: 250px;">
 				<option></option>
-				<_group_list template="group_select.xml" local="1"/>
+				<cms:group_list template="group_select.xml" local="1"/>
 			</select>
 		</label>
 		<label>

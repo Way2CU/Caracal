@@ -71,82 +71,224 @@ table.discounted_items {
 /**
  * Delivery method selection
  */
-div#checkout div.delivery_provider {
-	display: inline-block;
+div#shipping_information div.container {
 	position: relative;
-	vertical-align: top;
-	width: 550px;
-	min-height: 90px;
+	padding: 0;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	text-align: left;
+	max-height: 0px;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+html[dir=rtl] div#shipping_information div.container {
+	text-align: right;
+}
+
+div#shipping_information div.container.visible {
+	max-height: 550px;
+	padding-bottom: 15px;
+}
+
+div#shipping_information div.container div.summary {
+	position: relative;
+	max-height: 0;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container.completed div.summary {
+	max-height: 500px;
+}
+
+div#shipping_information div.container div.summary:after {
+	display: block;
+	content: '';
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 3em;
+	height: 3em;
+
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	background-color: white;
+	background-image: url(../images/edit.svg);
+	background-size: 2em 2em;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	line-height: 0;
+	transition: all 0.3s;
+}
+
+html[dir=rtl] div#shipping_information div.container div.summary:after {
+	left: 0;
+	right: auto;
+}
+
+div#shipping_information div.container div.summary:hover:after {
+	background-color: #F0F0F0;
+}
+
+div#shipping_information div.container div.summary:active:after {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
+}
+
+div#shipping_information div.container div.details {
+	max-height: 500px;
+	overflow: hidden;
+
+	transition: max-height 0.5s;
+}
+
+div#shipping_information div.container.completed div.details {
+	max-height: 0;
+}
+
+div#shipping_information div.container hr {
+	margin-top: 0;
+}
+
+div#shipping_information div.container h4 {
+	margin: 0;
+	margin-bottom: 10px;
+	padding: 0;
+
+	font-weight: normal;
+}
+
+div#shipping_information div.container div.summary span {
+	display: block;
+}
+
+div#shipping_information div.container div.summary span:before {
+	display: inline-block;
+	min-width: 200px;
+	content: '';
+}
+
+div#shipping_information div.container div.summary span[data-label]:before {
+	content: attr(data-label);
+}
+
+div#shipping_information div.container.method div.details a {
+	display: inline-block;
+	margin-right: 10px;
 	padding: 10px;
 
-	background-color: white;
-	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-}
-
-div#checkout div.delivery_provider span.title {
-	display: block;
-	padding-bottom: 5px;
-}
-
-div#checkout div.delivery_provider label {
-	display: inline-block;
-	width: 100px;
-
-	margin-left: 5px;
-	margin-right: 5px;
-	margin-top: 10px;
-}
-
-div#checkout div.delivery_provider label input[type=radio] {
-	display: none;
-}
-
-div#checkout div.delivery_provider label input[type=radio] + span {
-	display: inline-block;
-	position: relative;
-
-	padding-bottom: 20px;
 	text-align: center;
+
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
+	background-color: white;
+
+	color: #333333;
+	line-height: 100%;
+
+	transition: all 0.3s;
 }
 
-div#checkout div.delivery_provider label input[type=radio] + span:before {
+html[dir=rtl] div#shipping_information div.container.method div.details a {
+	margin-right: 0;
+	margin-left: 10px;
+}
+
+div#shipping_information div.container.method div.details a:hover {
+	background-color: #F0F0F0;
+	text-decoration: none;
+}
+
+div#shipping_information div.container.method div.details a.selected {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
+}
+
+div#shipping_information div.container.method div.details a.bad {
+	border-color: red;
+	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+div#shipping_information div.container.method div.details a img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+	border: 0;
+}
+
+div#shipping_information div.container.types div.details a {
 	display: inline-block;
-	width: 16px;
-	height: 16px;
+	margin-right: 10px;
+	padding: 10px;
 
-	position: absolute;
-	left: 50%;
-	bottom: 0px;
+	text-align: center;
 
-	margin-left: -8px;
+	border: 1px solid #B9B9B9;
+	border-radius: 4px;
+	outline: none;
+	background-color: white;
 
-	border: 1px solid #b0b0b0;
-	border-radius: 9px;
-	background-image: url(../images/radio.png);
-	background-position: 0px 0px;
-	background-repeat: no-repeat;
-	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
+	color: #333333;
+	text-align: left;
+	line-height: 100%;
 
-	content: '';
-
-	transition-property: all;
-	transition-duration: 0.3s;
+	transition: all 0.3s;
 }
 
-div#checkout div.delivery_provider label input[type=radio]:checked + span:before {
-	background-position: -16px 0px;
-	box-shadow: none;
+html[dir=rtl] div#shipping_information div.container.types div.details a {
+	margin-right: 0;
+	margin-left: 10px;
+	text-align: right;
 }
 
-div#checkout div.checkout_message.redirect p {
-	padding: 20px;
-	padding-left: 70px;
-	background-image: url(../images/checkout_loading.gif);
-	background-position: 20px center;
-	background-repeat: no-repeat;
+div#shipping_information div.container.types div.details a span.name {
+	display: block;
 }
 
-div#checkout div.overlay {
+div#shipping_information div.container.types div.details a span.name span {
+	float: right;
+}
+
+html[dir=rtl] div#shipping_information div.container.types div.details a span.name span {
+	float: left;
+}
+
+div#shipping_information div.container.types div.details a span.name span:after {
+	content: ' ' attr(data-currency);
+	display: inline-block;
+}
+
+div#shipping_information div.container.types div.details a span.estimate {
+	font-size: 0.8em;
+}
+
+div#shipping_information div.container.types div.details a:hover {
+	background-color: #F0F0F0;
+	text-decoration: none;
+}
+
+div#shipping_information div.container.types div.details a.selected {
+	background-color: #F0F0F0;
+	box-shadow: inset 3px 3px 5px rgba(200, 200, 200, 0.6);
+}
+
+div#shipping_information div.container.types div.details a.bad {
+	border-color: red;
+	box-shadow: inset 0px 0px 10px rgba(255, 0, 0, 0.7);
+}
+
+div#shipping_information div.container.types div.summary span {
+	min-height: calc(3em + 2px);
+}
+
+div#shipping_information div.overlay {
 	visibility: hidden;
 	opacity: 0;
 	width: 100%;
@@ -156,14 +298,6 @@ div#checkout div.overlay {
 	top: 0px;
 	left: 0px;
 
-	background-image:
-				url(../images/checkout_loading.gif),
-				-webkit-radial-gradient(
-					center center,
-					circle cover,
-					rgba(255, 255, 255, 1) 30%,
-					rgba(255, 255, 255, 0) 100%
-				);
 	background-image:
 				url(../images/checkout_loading.gif),
 				radial-gradient(
@@ -179,153 +313,10 @@ div#checkout div.overlay {
 	transition-delay: 0s, 0s;
 }
 
-div#checkout div.overlay.visible {
+div#shipping_information div.overlay.visible {
 	visibility: visible;
 	opacity: 1;
 	transition-delay: 0s, 0.3s;
-}
-
-div#checkout div.delivery_method,
-div#checkout div.delivery_interface {
-	display: block;
-	height: 0px;
-	position: relative;
-
-	padding: 7px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin-top: 0px;
-
-	background-color: white;
-	box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
-
-	color: #333333;
-	transition-property: all;
-	transition-duration: 0.5s;
-
-	opacity: 0;
-}
-
-div#checkout div.delivery_method.visible,
-div#checkout div.delivery_interface.visible {
-	height: auto;
-	margin-top: 20px;
-	padding: 7px;
-	opacity: 1;
-}
-
-div#checkout div.delivery_method label {
-	display: inline-block;
-	width: calc(((100% - 10px) / 3) - 22px);
-
-	margin-top: 5px;
-	margin-right: 5px;
-	padding: 10px;
-
-	border: 1px solid #CFCFCF;
-	border-radius: 3px;
-	vertical-align: top;
-
-	transition-property: all;
-	transition-duration: 0.3s;
-}
-
-body.rtl div#checkout div.delivery_method label {
-	margin-left: 5px;
-	margin-right: 0px;
-}
-
-div#checkout div.delivery_method label:nth-child(3n + 0),
-body.rtl div#checkout div.delivery_method label:nth-child(3n + 0) {
-	margin-left: 0px;
-}
-
-div#checkout div.delivery_method label:nth-child(-n + 3) {
-	margin-top: 0px;
-}
-
-div#checkout div.delivery_method label:hover {
-	background-color: #e0e0e0;
-}
-
-div#checkout div.delivery_method label input {
-	position: absolute;
-}
-
-div#checkout div.delivery_method label input[type=radio] {
-	display: none;
-}
-
-div#checkout div.delivery_method label input + div:before {
-	display: inline-block;
-	vertical-align: middle;
-	width: 16px;
-	height: 16px;
-
-	margin-right: 6px;
-
-	border: 1px solid #b0b0b0;
-	border-radius: 9px;
-	background-color: white;
-	background-image: url(../images/radio.png);
-	background-position: 0px 0px;
-	background-repeat: no-repeat;
-	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
-
-	content: '';
-
-	transition-property: all;
-	transition-duration: 0.3s;
-}
-
-body.rtl div#checkout div.delivery_method label input + div:before {
-	margin-left: 6px;
-	margin-right: 0px;
-}
-
-div#checkout div.delivery_method label input:checked + div:before {
-	background-position: -16px 0px;
-	box-shadow: none;
-}
-
-div#checkout div.delivery_method label > div span {
-	float: right;
-}
-
-div#checkout div.delivery_method label > div span:after {
-	content: ' ' attr(data-currency);
-	font-size: 0.9em;
-}
-
-body.rtl div#checkout div.delivery_method label > div span {
-	float: left;
-}
-
-div#checkout div.delivery_method label > span {
-	display: block;
-	padding-left: 24px;
-
-	color: #909090;
-	font-size: 0.8em;
-}
-
-body.rtl div#checkout div.delivery_method label > span {
-	padding-left: 0px;
-	padding-right: 24px;
-}
-
-div#checkout div.delivery_method div.delivery_methods {
-	display: block;
-	width: 460px;
-
-	margin-right: 10px;
-	float: left;
-}
-
-div#checkout div.delivery_method div.services {
-	display: block;
-	float: left;
-	width: 460px;
 }
 
 /**
@@ -344,12 +335,12 @@ div.transaction_details {
 	color: #333333;
 }
 
-body.rtl div.transaction_details {
+html[dir=rtl] div.transaction_details {
 	margin-right: 0px;
 	margin-left: 20px;
 }
 
-div#checkout.recurring div.transaction_details {
+div#input_details.recurring div.transaction_details {
 	width: 550px;
 	margin-bottom: calc(3em + 25px);
 }
@@ -379,7 +370,7 @@ div.transaction_details textarea:focus {
 	outline: none;
 }
 
-div#checkout.recurring div.transaction_details textarea {
+div#input_details.recurring div.transaction_details textarea {
 	width: 538px;
 }
 
@@ -440,19 +431,19 @@ table.checkout_details thead td {
 	font-weight: bold;
 }
 
-body.rtl table.checkout_details thead td {
+html[dir=rtl] table.checkout_details thead td {
 	border: 0px;
 	border-left: 1px solid white;
 }
 
 table.checkout_details thead td:first-child,
-body.rtl table.checkout_details thead td:last-child {
+html[dir=rtl] table.checkout_details thead td:last-child {
 	border-left: 0px;
 	border-radius: 7px 0px 0px 0px;
 }
 
 table.checkout_details thead td:last-child,
-body.rtl table.checkout_details thead td:first-child {
+html[dir=rtl] table.checkout_details thead td:first-child {
 	border-right: 0px;
 	border-radius: 0px 7px 0px 0px;
 }
@@ -470,7 +461,7 @@ table.discounted_items thead th {
 	font-weight: bold;
 }
 
-body.rtl table.discounted_items thead th {
+html[dir=rtl] table.discounted_items thead th {
 	text-align: right;
 }
 
@@ -537,7 +528,7 @@ table.checkout_details tfoot td.total-label {
 	border-left-width: 1px;
 }
 
-body.rtl table.checkout_details tfoot td.total-label {
+html[dir=rtl] table.checkout_details tfoot td.total-label {
 	border-left-width: 0px;
 	border-right-width: 1px;
 }
@@ -566,7 +557,7 @@ div.checkout_controls {
 	text-align: right;
 }
 
-body.rtl div.checkout_controls {
+html[dir=rtl] div.checkout_controls {
 	text-align: left;
 }
 
@@ -601,7 +592,7 @@ div.checkout_controls button {
 	transition-duration: 0.3s;
 }
 
-body.rtl div.checkout_controls button {
+html[dir=rtl] div.checkout_controls button {
 	margin-left: 0px;
 	margin-right: 10px;
 }
@@ -619,23 +610,24 @@ div.checkout_controls button:active {
 	background-color: #47a0f3;
 	background-image: linear-gradient(top, #0c70d5 0%, #47a0f3 75%, #0d9ed5 100%);
 
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 }
 
 div.checkout_controls button:disabled {
 	border-color: #707070;
 	background-image: none;
 	background-color: #909090;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2),
-	inset 0 1px rgba(255, 255, 255, 0.3),
-	inset 0 10px rgba(255, 255, 255, 0.2),
-	inset 0 10px 20px rgba(255, 255, 255, 0.25),
-	inset 0 -15px 30px rgba(0, 0, 0, 0.2);
+	box-shadow:
+		0px 0px 10px rgba(0, 0, 0, 0.2),
+		inset 0 1px rgba(255, 255, 255, 0.3),
+		inset 0 10px rgba(255, 255, 255, 0.2),
+    		inset 0 10px 20px rgba(255, 255, 255, 0.25),
+    		inset 0 -15px 30px rgba(0, 0, 0, 0.2);
 
 	text-shadow: -1px -1px 0px #606060;
 }
-
 
 div.checkout_controls small {
 	display: block;
@@ -696,7 +688,7 @@ div.checkout_message p {
  */
 div#input_details {
 	display: block;
-	width: 550px;
+	width: 650px;
 
 	margin-left: auto;
 	margin-right: auto;
@@ -778,7 +770,7 @@ div#input_details label[data-tooltip]:after {
 	width: auto;
 }
 
-body.rtl div#input_details label {
+html[dir=rtl] div#input_details label {
 	text-align: right;
 }
 
@@ -787,7 +779,7 @@ div#input_details label small {
 	padding-left: 170px;
 }
 
-body.rtl div#input_details label small {
+html[dir=rtl] div#input_details label small {
 	padding-left: 0px;
 	padding-right: 170px;
 }
@@ -815,7 +807,7 @@ div#input_details div.guest_checkout {
 div#input_details div.existing_account.visible,
 div#input_details div.new_account.visible,
 div#input_details div.guest_checkout.visible {
-	max-height: 300px;
+	max-height: 500px;
 }
 
 div#input_details div.existing_account label:first-of-type,
@@ -834,7 +826,7 @@ div#input_details label span {
 	text-align: right;
 }
 
-body.rtl div#input_details label span {
+html[dir=rtl] div#input_details label span {
 	text-align: left;
 }
 
@@ -898,8 +890,8 @@ div#input_details label input.bad,
 div#input_details label input.bad[type=checkbox] + span:before {
 	border-color: red;
 	box-shadow:
-	inset 3px 3px 5px rgba(200, 200, 200, 0.4),
-	0px 0px 5px rgba(255, 0, 0, 0.6);
+			inset 3px 3px 5px rgba(200, 200, 200, 0.4),
+			0px 0px 5px rgba(255, 0, 0, 0.6);
 }
 
 div#input_details label select:focus,
@@ -947,8 +939,8 @@ div#input_details label.checkbox input + span:before {
 	background-image: url(../images/checkbox.png);
 }
 
-body.rtl div#input_details label.radio input + span:before,
-body.rtl div#input_details label.checkbox input + span:before {
+html[dir=rtl] div#input_details label.radio input + span:before,
+html[dir=rtl] div#input_details label.checkbox input + span:before {
 	margin-right: auto;
 	margin-left: 4px;
 }
@@ -967,6 +959,7 @@ div#input_details label.captcha {
 
 div#input_details label.captcha.hidden {
 	max-height: 0px;
+	padding: 0;
 }
 
 div#input_details label.captcha img {
@@ -976,7 +969,7 @@ div#input_details label.captcha img {
 	border-radius: 3px;
 }
 
-body.rtl div#input_details label.captcha img {
+html[dir=rtl] div#input_details label.captcha img {
 	margin-right: 10px;
 	margin-left: 0px;
 }
@@ -995,11 +988,11 @@ div#input_details div.horizontal label:nth-child(2) {
 	padding: 0px;
 }
 
-body.rtl div#input_details div.horizontal {
+html[dir=rtl] div#input_details div.horizontal {
 	text-align: right;
 }
 
-body.rtl div#input_details div.horizontal label {
+html[dir=rtl] div#input_details div.horizontal label {
 	display: inline-block;
 	padding-right: auto;
 	padding-left: 7px;
@@ -1063,7 +1056,7 @@ div#checkout_steps a {
 	counter-increment: checkout-steps;
 }
 
-body.rtl div#checkout_steps a {
+html[dir=rtl] div#checkout_steps a {
 	margin-right: auto;
 	margin-left: 5px;
 }
@@ -1087,7 +1080,7 @@ div#checkout_steps a:before {
 	transition-duration: 0.3s;
 }
 
-body.rtl div#checkout_steps a:before {
+html[dir=rtl] div#checkout_steps a:before {
 	margin-right: auto;
 	margin-left: 3px;
 }
@@ -1110,7 +1103,7 @@ div#checkout_steps a:not(:last-of-type):after {
 	border-left: 5px solid #606060;
 }
 
-body.rtl div#checkout_steps a:not(:last-of-type):after {
+html[dir=rtl] div#checkout_steps a:not(:last-of-type):after {
 	left: auto;
 	right: 3px;
 	border-left-width: 0px;

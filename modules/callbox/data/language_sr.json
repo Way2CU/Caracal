@@ -1,12 +1,12 @@
 {
-    "label_account_id": "Account id:",
-    "label_account_key": "Account key:",
-    "label_account_secret": "Account secret:",
-    "label_include_code": "Include JavaScript code.",
-    "legend_account": "Account",
+    "label_account_id": "Јединствени број налога:",
+    "label_account_key": "Број налога:",
+    "label_account_secret": "Лозинка за приступ налогу:",
+    "label_include_code": "Додавање JavaScript кода.",
+    "legend_account": "Налог",
     "legend_api": "API",
     "menu_callbox": "Callbox",
-    "menu_settings": "Settings",
-    "message_saved": "Account settings were saved.",
-    "title_settings": "Callbox: Settings"
+    "menu_settings": "Подешавања",
+    "message_saved": "Подешавања налога су снимљена.",
+    "title_settings": "Callbox: Подешавања"
 }

@@ -22,18 +22,17 @@ class fedex extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_delivery_methods');
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_fedex'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
-
+									$this->get_language_constant('menu_fedex'),
+									URL::from_file_path($this->path.'images/icon.png'),
 									window_Open( // on click open window
 												'fedex',
 												350,
-												$this->getLanguageConstant('title_settings'),
+												$this->get_language_constant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
 											),
@@ -44,14 +43,14 @@ class fedex extends Module {
 		// register delivery method
 		if (ModuleHandler::is_loaded('shop')) {
 			require_once('units/fedex_delivery_method.php');
-			FedEx_DeliveryMethod::getInstance($this);
+			FedEx_DeliveryMethod::get_instance($this);
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -64,7 +63,7 @@ class fedex extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
@@ -73,7 +72,7 @@ class fedex extends Module {
 					break;
 
 				case 'save_settings':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -84,7 +83,7 @@ class fedex extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
 		$sql = "";
@@ -95,7 +94,7 @@ class fedex extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$sql = "";
@@ -108,43 +107,43 @@ class fedex extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
 						'cancel_action'	=> window_Close('fedex')
 					);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
 	/**
 	 * Save settings.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		$key = fix_chars($_REQUEST['key']);
 		$password = fix_chars($_REQUEST['password']);
 		$account = fix_chars($_REQUEST['account']);
 		$meter = fix_chars($_REQUEST['meter']);
 
-		$this->saveSetting('fedex_key', $key);
-		$this->saveSetting('fedex_password', $password);
-		$this->saveSetting('fedex_account', $account);
-		$this->saveSetting('fedex_meter', $meter);
+		$this->save_setting('fedex_key', $key);
+		$this->save_setting('fedex_password', $password);
+		$this->save_setting('fedex_account', $account);
+		$this->save_setting('fedex_meter', $meter);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_settings_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_settings_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('fedex')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

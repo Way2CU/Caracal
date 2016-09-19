@@ -18,7 +18,7 @@
 			</span>
 		</div>
 		<div class="list_content" style="height: 250px">
-			<_group_list/>
+			<cms:group_list/>
 		</div>
 	</div>
 

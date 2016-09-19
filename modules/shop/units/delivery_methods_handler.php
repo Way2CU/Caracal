@@ -20,7 +20,7 @@ class ShopDeliveryMethodsHandler {
 	/**
 	* Public function that creates a single instance
 	*/
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -33,7 +33,7 @@ class ShopDeliveryMethodsHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -94,12 +94,12 @@ class ShopDeliveryMethodsHandler {
 		$template = new TemplateHandler('delivery_methods_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_delivery_method'),
+					'link_new' => URL::make_hyperlink(
+										$this->_parent->get_language_constant('add_delivery_method'),
 										window_Open( // on click open window
 											'shop_delivery_method_add',
 											370,
-											$this->_parent->getLanguageConstant('title_delivery_method_add'),
+											$this->_parent->get_language_constant('title_delivery_method_add'),
 											true, true,
 											backend_UrlMake($this->name, 'delivery_methods', 'add')
 										)
@@ -107,10 +107,10 @@ class ShopDeliveryMethodsHandler {
 				);
 
 		// register tag handler
-		$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+		$template->register_tag_handler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -125,8 +125,8 @@ class ShopDeliveryMethodsHandler {
 					'cancel_action'	=> window_Close('shop_delivery_method_add')
 				);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -135,9 +135,9 @@ class ShopDeliveryMethodsHandler {
 	 */
 	private function changeMethod() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 
-		$method = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$method = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($method)) {
 			$template = new TemplateHandler('delivery_method_change.xml', $this->path.'templates/');
@@ -151,8 +151,8 @@ class ShopDeliveryMethodsHandler {
 					'cancel_action'	=> window_Close('shop_delivery_method_change')
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -161,36 +161,36 @@ class ShopDeliveryMethodsHandler {
 	 * Save new or changed method data
 	 */
 	private function saveMethod() {
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
-				'name'			=> $this->_parent->getMultilanguageField('name'),
-				'international'	=> isset($_REQUEST['international']) && ($_REQUEST['international'] == 'on' || $_REQUEST['international'] == '1') ? 1 : 0,
-				'domestic'		=> isset($_REQUEST['domestic']) && ($_REQUEST['domestic'] == 'on' || $_REQUEST['domestic'] == '1') ? 1 : 0,
+				'name'			=> $this->_parent->get_multilanguage_field('name'),
+				'international'	=> $this->_parent->get_boolean_field('international') ? 1 : 0,
+				'domestic'		=> $this->_parent->get_boolean_field('domestic') ? 1 : 0,
 			);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_delivery_method_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_delivery_method_change';
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_delivery_method_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_delivery_method_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_delivery_methods')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -200,24 +200,24 @@ class ShopDeliveryMethodsHandler {
 	private function deleteMethod() {
 		global $language;
 
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
-		$method = $manager->getSingleItem(array('name'), array('id' => $id));
+		$method = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_delivery_method_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_delivery_method_delete"),
 					'name'			=> $method->name[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_delivery_method_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delivery_methods'),
 												array('sub_action', 'delete_commit'),
@@ -227,8 +227,8 @@ class ShopDeliveryMethodsHandler {
 					'no_action'		=> window_Close('shop_delivery_method_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -236,33 +236,33 @@ class ShopDeliveryMethodsHandler {
 	 * Perform delivery method removal
 	 */
 	private function deleteMethod_Commit() {
-		$manager = ShopDeliveryMethodsManager::getInstance();
-		$prices_manager = ShopDeliveryMethodPricesManager::getInstance();
-		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
+		$prices_manager = ShopDeliveryMethodPricesManager::get_instance();
+		$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
-		$prices = $prices_manager->getItems(array('id'), array('method' => $id));
+		$prices = $prices_manager->get_items(array('id'), array('method' => $id));
 		$id_list = array();
 
 		if (count($prices) > 0)
 			foreach ($prices as $price)
 				$id_list[] = $price->id;
 
-		$manager->deleteData(array('id' => $id));
-		$prices_manager->deleteData(array('method' => $id));
-		$relations_manager->deleteData(array('price' => $id_list));
+		$manager->delete_items(array('id' => $id));
+		$prices_manager->delete_items(array('method' => $id));
+		$relations_manager->delete_items(array('price' => $id_list));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_delivery_method_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_delivery_method_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_delivery_method_delete').";".window_ReloadContent('shop_delivery_methods')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,21 +270,21 @@ class ShopDeliveryMethodsHandler {
 	 * Show list of prices for specified method
 	 */
 	private function showPrices() {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
 		$params = array(
 				'method'	=> $id,
-				'link_new' => url_MakeHyperlink(
-									$this->_parent->getLanguageConstant('add_delivery_price'),
+				'link_new' => URL::make_hyperlink(
+									$this->_parent->get_language_constant('add_delivery_price'),
 									window_Open( // on click open window
 										'shop_delivery_price_add',
 										370,
-										$this->_parent->getLanguageConstant('title_delivery_method_price_add'),
+										$this->_parent->get_language_constant('title_delivery_method_price_add'),
 										true, true,
-										url_Make(
-											'transfer_control',
+										URL::make_query(
 											'backend_module',
+											'transfer_control',
 											array('module', $this->name),
 											array('backend_action', 'delivery_methods'),
 											array('sub_action', 'add_price'),
@@ -297,10 +297,10 @@ class ShopDeliveryMethodsHandler {
 		$template = new TemplateHandler('delivery_method_prices_list.xml', $this->path.'templates/');
 
 		// register tag handler
-		$template->registerTagHandler('cms:delivery_prices', $this, 'tag_DeliveryPricesList');
+		$template->register_tag_handler('cms:delivery_prices', $this, 'tag_DeliveryPricesList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -316,8 +316,8 @@ class ShopDeliveryMethodsHandler {
 			'cancel_action'	=> window_Close('shop_delivery_price_add')
 		);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -325,9 +325,9 @@ class ShopDeliveryMethodsHandler {
 	 * Show form for changing price
 	 */
 	private function changePrice() {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('delivery_method_price_change.xml', $this->path.'templates/');
 
@@ -339,8 +339,8 @@ class ShopDeliveryMethodsHandler {
 			'cancel_action'	=> window_Close('shop_delivery_price_change')
 		);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -349,7 +349,7 @@ class ShopDeliveryMethodsHandler {
 	 */
 	private function savePrice() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 
 		$data = array(
 			'value'		=> fix_chars($_REQUEST['value'])
@@ -360,26 +360,26 @@ class ShopDeliveryMethodsHandler {
 			$data['method'] = fix_id($_REQUEST['method']);
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_delivery_price_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_delivery_price_change';
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_delivery_price_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_delivery_price_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_delivery_method_prices')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -389,24 +389,24 @@ class ShopDeliveryMethodsHandler {
 	private function deletePrice() {
 		global $language;
 
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
-		$item = $manager->getSingleItem(array('value'), array('id' => $id));
+		$item = $manager->get_single_item(array('value'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_delivery_price_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_delivery_price_delete"),
 					'name'			=> $item->value,
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_delivery_price_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delivery_methods'),
 												array('sub_action', 'delete_price_commit'),
@@ -416,8 +416,8 @@ class ShopDeliveryMethodsHandler {
 					'no_action'		=> window_Close('shop_delivery_price_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -425,24 +425,24 @@ class ShopDeliveryMethodsHandler {
 	 * Perform price removal
 	 */
 	private function deletePrice_Commit() {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
-		$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
+		$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
 		$id = fix_id($_REQUEST['id']);
 
-		$manager->deleteData(array('id' => $id));
-		$relations_manager->deleteData(array('price' => $id));
+		$manager->delete_items(array('id' => $id));
+		$relations_manager->delete_items(array('price' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_delivery_price_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_delivery_price_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_delivery_price_delete').";".window_ReloadContent('shop_delivery_method_prices')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -452,7 +452,7 @@ class ShopDeliveryMethodsHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryMethodsList($tag_params, $children) {
-		$manager = ShopDeliveryMethodsManager::getInstance();
+		$manager = ShopDeliveryMethodsManager::get_instance();
 		$conditions = array();
 		$item_id = -1;
 		$selected = -1;
@@ -465,9 +465,9 @@ class ShopDeliveryMethodsHandler {
 
 		// delivery method list needs to be filtered by the items in shooping cart
 		if (isset($tag_params['shopping_cart']) && $tag_params['shopping_cart'] == 1) {
-			$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
-			$prices_manager = ShopDeliveryMethodPricesManager::getInstance();
-			$items_manager = ShopItemManager::getInstance();
+			$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
+			$prices_manager = ShopDeliveryMethodPricesManager::get_instance();
+			$items_manager = ShopItemManager::get_instance();
 
 			$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 			$uid_list = array_keys($cart);
@@ -477,15 +477,15 @@ class ShopDeliveryMethodsHandler {
 
 			// shopping cart contains only UIDs, we need IDs
 			$id_list = array();
-			$items = $items_manager->getItems(array('id'), array('uid' => $uid_list));
+			$items = $items_manager->get_items(array('id'), array('uid' => $uid_list));
 
 			if (count($items) > 0)
 				foreach ($items as $item)
 					$id_list[] = $item->id;
 
 			// get item relations to delivery methods
-			$relations = $relations_manager->getItems(
-								$relations_manager->getFieldNames(),
+			$relations = $relations_manager->get_items(
+								$relations_manager->get_field_names(),
 								array('item' => $id_list)
 							);
 
@@ -503,7 +503,7 @@ class ShopDeliveryMethodsHandler {
 					$price_count[$relation->price]++;
 				}
 
-			$relations = $prices_manager->getItems(array('id', 'method'), array('id' => $price_list));
+			$relations = $prices_manager->get_items(array('id', 'method'), array('id' => $price_list));
 			$method_count = array();
 
 			if (count($relations) > 0)
@@ -545,12 +545,12 @@ class ShopDeliveryMethodsHandler {
 		}
 
 		// get template
-		$template = $this->_parent->loadTemplate($tag_params, 'delivery_methods_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:price_list', $this, 'tag_DeliveryPricesList');
+		$template = $this->_parent->load_template($tag_params, 'delivery_methods_list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:price_list', $this, 'tag_DeliveryPricesList');
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -563,16 +563,16 @@ class ShopDeliveryMethodsHandler {
 					'domestic_char'			=> $item->domestic ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'item'					=> $item_id,
 					'selected'				=> $selected == $item->id ? 1 : 0,
-					'item_change'	=> url_MakeHyperlink(
-						$this->_parent->getLanguageConstant('change'),
+					'item_change'	=> URL::make_hyperlink(
+						$this->_parent->get_language_constant('change'),
 						window_Open(
 							'shop_delivery_method_change', 	// window id
 							370,				// width
-							$this->_parent->getLanguageConstant('title_delivery_method_change'), // title
+							$this->_parent->get_language_constant('title_delivery_method_change'), // title
 							true, true,
-							url_Make(
-								'transfer_control',
+							URL::make_query(
 								'backend_module',
+								'transfer_control',
 								array('module', $this->name),
 								array('backend_action', 'delivery_methods'),
 								array('sub_action', 'change'),
@@ -580,16 +580,16 @@ class ShopDeliveryMethodsHandler {
 							)
 						)
 					),
-					'item_delete'	=> url_MakeHyperlink(
-						$this->_parent->getLanguageConstant('delete'),
+					'item_delete'	=> URL::make_hyperlink(
+						$this->_parent->get_language_constant('delete'),
 						window_Open(
 							'shop_delivery_method_delete', 	// window id
 							400,				// width
-							$this->_parent->getLanguageConstant('title_delivery_method_delete'), // title
+							$this->_parent->get_language_constant('title_delivery_method_delete'), // title
 							false, false,
-							url_Make(
-								'transfer_control',
+							URL::make_query(
 								'backend_module',
+								'transfer_control',
 								array('module', $this->name),
 								array('backend_action', 'delivery_methods'),
 								array('sub_action', 'delete'),
@@ -597,16 +597,16 @@ class ShopDeliveryMethodsHandler {
 							)
 						)
 					),
-					'item_prices'	=> url_MakeHyperlink(
-						$this->_parent->getLanguageConstant('prices'),
+					'item_prices'	=> URL::make_hyperlink(
+						$this->_parent->get_language_constant('prices'),
 						window_Open(
 							'shop_delivery_method_prices', 	// window id
 							370,				// width
-							$this->_parent->getLanguageConstant('title_delivery_method_prices'), // title
+							$this->_parent->get_language_constant('title_delivery_method_prices'), // title
 							true, false,
-							url_Make(
-								'transfer_control',
+							URL::make_query(
 								'backend_module',
+								'transfer_control',
 								array('module', $this->name),
 								array('backend_action', 'delivery_methods'),
 								array('sub_action', 'prices'),
@@ -616,8 +616,8 @@ class ShopDeliveryMethodsHandler {
 					)
 				);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}
@@ -629,7 +629,7 @@ class ShopDeliveryMethodsHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryPricesList($tag_params, $children) {
-		$manager = ShopDeliveryMethodPricesManager::getInstance();
+		$manager = ShopDeliveryMethodPricesManager::get_instance();
 		$conditions = array();
 		$relations = array();
 
@@ -642,10 +642,10 @@ class ShopDeliveryMethodsHandler {
 
 		// get relations with shop item
 		if (isset($tag_params['item'])) {
-			$relations_manager = ShopDeliveryItemRelationsManager::getInstance();
+			$relations_manager = ShopDeliveryItemRelationsManager::get_instance();
 			$item_id = fix_id($tag_params['item']);
 
-			$raw_relations = $relations_manager->getItems(array('price'), array('item' => $item_id));
+			$raw_relations = $relations_manager->get_items(array('price'), array('item' => $item_id));
 
 			if (count($raw_relations) > 0)
 				foreach ($raw_relations as $relation)
@@ -653,11 +653,11 @@ class ShopDeliveryMethodsHandler {
 		}
 
 		// get template
-		$template = $this->_parent->loadTemplate($tag_params, 'delivery_method_prices_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->_parent->load_template($tag_params, 'delivery_method_prices_list_item.xml');
+		$template->set_template_params_from_array($children);
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -666,16 +666,16 @@ class ShopDeliveryMethodsHandler {
 						'value'		=> $item->value,
 						'method'	=> isset($conditions['method']) ? $conditions['method'] : 0,
 						'selected'	=> in_array($item->id, $relations) ? 1 : 0,
-						'item_change'	=> url_MakeHyperlink(
-							$this->_parent->getLanguageConstant('change'),
+						'item_change'	=> URL::make_hyperlink(
+							$this->_parent->get_language_constant('change'),
 							window_Open(
 								'shop_delivery_price_change', 	// window id
 								370,				// width
-								$this->_parent->getLanguageConstant('title_delivery_method_price_change'), // title
+								$this->_parent->get_language_constant('title_delivery_method_price_change'), // title
 								true, true,
-								url_Make(
-									'transfer_control',
+								URL::make_query(
 									'backend_module',
+									'transfer_control',
 									array('module', $this->name),
 									array('backend_action', 'delivery_methods'),
 									array('sub_action', 'change_price'),
@@ -683,16 +683,16 @@ class ShopDeliveryMethodsHandler {
 								)
 							)
 						),
-						'item_delete'	=> url_MakeHyperlink(
-							$this->_parent->getLanguageConstant('delete'),
+						'item_delete'	=> URL::make_hyperlink(
+							$this->_parent->get_language_constant('delete'),
 							window_Open(
 								'shop_delivery_price_delete', 	// window id
 								400,				// width
-								$this->_parent->getLanguageConstant('title_delivery_method_price_delete'), // title
+								$this->_parent->get_language_constant('title_delivery_method_price_delete'), // title
 								false, false,
-								url_Make(
-									'transfer_control',
+								URL::make_query(
 									'backend_module',
+									'transfer_control',
 									array('module', $this->name),
 									array('backend_action', 'delivery_methods'),
 									array('sub_action', 'delete_price'),
@@ -702,8 +702,8 @@ class ShopDeliveryMethodsHandler {
 						),
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

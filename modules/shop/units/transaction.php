@@ -11,6 +11,7 @@ namespace Modules\Shop;
 
 use \ShopTransactionsManager as TransactionsManager;
 use \ShopDeliveryAddressManager as DeliveryAddressManager;
+use \ShopBuyersManager as BuyersManager;
 
 
 class UnknownTransactionError extends \Exception {}
@@ -27,21 +28,9 @@ final class Transaction {
 	 */
 	public static function get_manager() {
 		if (is_null(self::$manager))
-			self::$manager = TransactionsManager::getInstance();
+			self::$manager = TransactionsManager::get_instance();
 
 		return self::$manager;
-	}
-
-	/**
-	 * Get delivery address manager.
-	 *
-	 * @return object
-	 */
-	public static function get_address_manager() {
-		if (is_null(self::$address_manager))
-			self::$address_manager = DeliveryAddressManager::getInstance();
-
-		return self::$address_manager;
 	}
 
 	/**
@@ -55,8 +44,8 @@ final class Transaction {
 		$manager = self::get_manager();
 
 		// get transaction
-		$transaction = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+			$manager->get_field_names(),
 			array('uid' => $transaction_id)
 		);
 
@@ -85,7 +74,67 @@ final class Transaction {
 			return $result;
 
 		$manager = self::get_manager();
-		$result = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $id));
+		$result = $manager->get_single_item($manager->get_field_names(), array('uid' => $id));
+
+		return $result;
+	}
+
+	/**
+	 * Get buyer for specified transaction.
+	 *
+	 * @param object $transaction
+	 * @return object
+	 */
+	public static function get_buyer($transaction) {
+		$result = null;
+
+		// get address
+		$manager = BuyersManager::get_instance();
+		$buyer = $manager->get_single_item(
+				$manager->get_field_names(),
+				array('id' => $transaction->buyer)
+			);
+
+		if (is_object($buyer))
+			$result = $buyer;
+
+		return $result;
+	}
+
+	/**
+	 * Get buyer associated with currently active transaction.
+	 *
+	 * @return object
+	 */
+	public static function get_current_buyer() {
+		$transaction = self::get_current();
+
+		// make sure transaction is set
+		if (is_null($transaction))
+			return $result;
+
+		// get buyer
+		return self::get_buyer($transaction);
+	}
+
+	/**
+	 * Get address for specified transaction.
+	 *
+	 * @param object $transaction
+	 * @return object
+	 */
+	public static function get_address($transaction) {
+		$result = null;
+
+		// get address
+		$manager = DeliveryAddressManager::get_instance();
+		$address = $manager->get_single_item(
+				$manager->get_field_names(),
+				array('id' => $transaction->address)
+			);
+
+		if (is_object($address))
+			$result = $address;
 
 		return $result;
 	}
@@ -95,22 +144,14 @@ final class Transaction {
 	 *
 	 * @return object
 	 */
-	public static function get_address() {
-		$result = array();
+	public static function get_current_address() {
 		$transaction = self::get_current();
 
 		// make sure transaction is set
 		if (is_null($transaction))
 			return $result;
 
-		// get address
-		$manager = self::get_address_manager();
-		$address = $manager->getSingleItem($manager->getFieldNames(), array('id' => $transaction->address));
-
-		if (is_object($address))
-			$result = $address;
-
-		return $result;
+		return self::get_address($transaction);
 	}
 
 	/**
@@ -142,7 +183,7 @@ final class Transaction {
 	 */
 	public static function set_remote_id($transaction, $remote_id) {
 		$manager = self::get_manager();
-		$manager->updateData(
+		$manager->update_items(
 			array('remote_id' => $remote_id),
 			array('id' => $transaction->id)
 		);
@@ -156,7 +197,7 @@ final class Transaction {
 	 */
 	public static function set_token($transaction, $token) {
 		$manager = self::get_manager();
-		$manager->updateData(
+		$manager->update_items(
 			array('payment_token' => $token->id),
 			array('id' => $transaction->id)
 		);
@@ -169,7 +210,7 @@ final class Transaction {
 	 * @param float $total
 	 * @param float $handling
 	 */
-	public static function set_totals($transaction, $total=null, $handling=null) {
+	public static function set_totals($transaction, $total=null, $shipping=null, $handling=null) {
 		$manager = self::get_manager();
 
 		// prepare data
@@ -178,11 +219,30 @@ final class Transaction {
 		if (!is_null($total))
 			$data['total'] = $total;
 
+		if (!is_null($shipping))
+			$data['shipping'] = $shipping;
+
 		if (!is_null($handling))
 			$data['handling'] = $handling;
 
 		// update data
-		$manager->updateData($data, array('id' => $transaction->id));
+		$manager->update_items($data, array('id' => $transaction->id));
+	}
+
+	/**
+	 * Set shipping cost for specified transactions.
+	 *
+	 * @param object $transaction
+	 * @param float $value
+	 */
+	public static function set_shipping($transaction, $value) {
+		$manager = self::get_manager();
+
+		// update data
+		$manager->update_items(
+				array('shipping' => $value),
+				array('id' => $transaction->id)
+			);
 	}
 }
 

@@ -6,7 +6,12 @@
  * Authors: Mladen Mijatov
  */
 
-$(function() {
+var Site = Site || {};
+
+/**
+ * Create popup window and configure tranzila checkout.
+ */
+Site.configure_tranzila_checkout = function() {
 	var form = $('div#checkout form');
 	var iframe = $('<iframe>');
 	var dialog = new Dialog();
@@ -31,7 +36,13 @@ $(function() {
 		dialog.setSize('90vw', 250);
 
 	// show dialog when form is submitted
-	form.on('submit', function() {
+	form.on('submit', function(event) {
+		// show tranzila page
 		dialog.show();
 	});
+};
+
+$(function() {
+	if ($('div#checkout form').data('method') == 'tranzila')
+		Site.configure_tranzila_checkout();
 });

@@ -17,8 +17,7 @@ function ToolbarExtension_Gallery() {
 	this.dialog.setTitle(language_handler.getText('gallery', 'title_insert_image'));
 
 	// base url for this site
-	var base = $('base');
-	this.backend_url = base.attr('href') + '/index.php';
+	this.backend_url = $('meta[property=base-url]').attr('content') + '/index.php';
 
 	// register extension to mail API
 	toolbar_api.registerModule('gallery', this);
@@ -166,8 +165,7 @@ function ToolbarExtension_Gallery() {
 		path.push(icon);
 
 		// base url for this site
-		var base = $('base');
-		base_url = base.attr('href') + '/';
+		var base_url = $('meta[property=base-url]').attr('content') + '/';
 
 		return base_url + path.join('/');
 	};

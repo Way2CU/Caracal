@@ -26,23 +26,23 @@ class callbox extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$callbox_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_callbox'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_callbox'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$callbox_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_settings'),
-								url_GetFromFilePath($this->path.'images/settings.svg'),
+								$this->get_language_constant('menu_settings'),
+								URL::from_file_path($this->path.'images/settings.svg'),
 
 								window_Open( // on click open window
 											'callbox_settings',
 											400,
-											$this->getLanguageConstant('title_settings'),
+											$this->get_language_constant('title_settings'),
 											true, true,
 											backend_UrlMake($this->name, 'settings')
 										),
@@ -53,7 +53,7 @@ class callbox extends Module {
 		}
 
 		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend' && $this->settings['include_code']) {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
 			$url = str_replace('{id}', $this->settings['account_id'], '//{id}.tctm.co/t.js');
 			$head_tag->addTag(
@@ -70,7 +70,7 @@ class callbox extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -83,7 +83,7 @@ class callbox extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -103,7 +103,7 @@ class callbox extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -114,17 +114,17 @@ class callbox extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		$this->saveSetting('account_id', '');
-		$this->saveSetting('account_key', '');
-		$this->saveSetting('account_secret', '');
-		$this->saveSetting('include_code', 0);
+	public function on_init() {
+		$this->save_setting('account_id', '');
+		$this->save_setting('account_key', '');
+		$this->save_setting('account_secret', '');
+		$this->save_setting('include_code', 0);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 	}
 
 	/**
@@ -132,45 +132,45 @@ class callbox extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 						'cancel_action'	=> window_Close('callbox_settings')
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
 	/**
 	 * Save settings.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// grab parameters
 		$account_id = fix_chars($_REQUEST['account_id']);
 		$account_key = fix_chars($_REQUEST['account_key']);
 		$account_secret = fix_chars($_REQUEST['account_secret']);
-		$include_code = isset($_REQUEST['include_code']) && ($_REQUEST['include_code'] == 'on' || $_REQUEST['include_code'] == '1') ? 1 : 0;
+		$include_code = $this->get_boolean_field('include_code') ? 1 : 0;
 
-		$this->saveSetting('account_id', $account_id);
-		$this->saveSetting('account_key', $account_key);
-		$this->saveSetting('account_secret', $account_secret);
-		$this->saveSetting('include_code', $include_code);
+		$this->save_setting('account_id', $account_id);
+		$this->save_setting('account_key', $account_key);
+		$this->save_setting('account_secret', $account_secret);
+		$this->save_setting('include_code', $include_code);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('callbox_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 

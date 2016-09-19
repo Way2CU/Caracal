@@ -79,7 +79,7 @@ class CodeOptimizer {
 		} else {
 			$cache_time = filemtime($file_name);
 			foreach ($list as $file)
-				if (filemtime(path_GetFromURL($file)) > $cache_time) {
+				if (filemtime(URL::to_file_path($file)) > $cache_time) {
 					$result = true;
 					break;
 				}
@@ -96,7 +96,7 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	private function includeStyle($file_name, &$priority_commands) {
-		global $system_module_path, $styles_path;
+		global $system_module_path, $styles_path, $site_path;
 
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
@@ -104,7 +104,7 @@ class CodeOptimizer {
 
 		// get absolute local path
 		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
-			$file_name = path_GetFromURL($file_name);
+			$file_name = URL::to_file_path($file_name);
 
 		switch ($extension) {
 			case 'less':
@@ -125,7 +125,7 @@ class CodeOptimizer {
 
 				// change path for module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('/url\(.*\.\.\/(.*)\)([;,])/ium', 'url('.$directory_url.'$1)$2', $data);
+					$data = preg_replace('/url\(.*\.\.\/(.*)\)([;,])/ium', 'url('.$directory_url.'\1)\2', $data);
 
 				break;
 		}
@@ -134,17 +134,18 @@ class CodeOptimizer {
 		$data = preg_replace('/\/\*.*?(?=\*\/)\*\//imus', '', $data);
 
 		// fix relative paths
-		$data = preg_replace('/url\s*\(\s*(..\/){2,}/imus', 'url(../', $data);
+		$data = preg_replace('/url\s*\(\s*(\.\.\/){2,}/imus', 'url(../', $data);
+		$data = preg_replace('/url\(..\/([^\)]+)\)/imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
 
 		// parse most important
-		$data = str_replace("\r", "", $data);
+		$data = str_replace("\r", '', $data);
 		$data = explode("\n", $data);
 
 		$in_comment = false;
 
 		foreach($data as $line) {
 			$line_data = trim($line);
-			$command = explode(" ", $line_data);
+			$command = explode(' ', $line_data);
 
 			// skip empty lines
 			if (empty($line_data))
@@ -198,15 +199,36 @@ class CodeOptimizer {
 		// insert priority commands at the top of the file
 		$result = array_merge($priority_commands, $result);
 
+		// prepare data for last optimization
+		$data = implode('', $result);
+
+		// remove units from zero values and remove - if present as there's no such thing as -0
+		$data = preg_replace('/([^\d])-?(0+)(px|pt|rem|em|vw|vh|vmax|vmin|cm|mm|m\%)/imus', '\1\2', $data);
+
+		// remove excess spaces around symbols
+		// skipping + on purpose to keep calc working
+		$data = preg_replace('/\s*([>~:;,\{\}])\s*/imus', '\1', $data);
+		$data = preg_replace('/\s*([\(\)])\s*([^\w+-\/\*\^])/imus', '\1\2', $data);
+		$data = preg_replace('/([\+])\s*([^\d])/imus', '\1\2', $data);
+
+		// shorten color codes when possible
+		$data = preg_replace('/#([\dabcdef])\1([\dabcdef])\2([\dabcdef])\3/imus', '#\1\2\3', $data);
+
+		// remove semicolor before curly brace
+		$data = preg_replace('/;\}/imus', '}', $data);
+
 		// save compiled file
-		file_put_contents($file_name, implode(" ", $result));
+		file_put_contents($file_name, $data);
+
+		// generate integrity hash and store it to file
+		file_put_contents($file_name.'.sha384', hash_file('sha384', $file_name, true));
 	}
 
 	/**
 	 * Get a single instance of this object.
 	 * @return object
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -228,7 +250,7 @@ class CodeOptimizer {
 		// add script to be compiled
 		if ($data['host'] == _DOMAIN) {
 			$this->script_list []= $url;
-			$this->closure_compiler->add_file(path_GetFromURL($url));
+			$this->closure_compiler->add_file(URL::to_file_path($url));
 			$result = true;
 		}
 
@@ -262,7 +284,7 @@ class CodeOptimizer {
 	 * @return string
 	 */
 	public function printData() {
-		global $cache_path;
+		global $cache_path, $include_styles;
 
 		// compile styles if needed
 		$style_cache = $cache_path.$this->getCachedName($this->style_list).'.css';
@@ -273,6 +295,9 @@ class CodeOptimizer {
 		$script_cache = $cache_path.$this->getCachedName($this->script_list).'.js';
 		if ($this->needsRecompile($script_cache, $this->script_list)) {
 			$this->closure_compiler->compile_and_save($script_cache);
+
+			// store integrity hash
+			file_put_contents($script_cache.'.sha384', hash_file('sha384', $script_cache, true));
 
 			// report script errors
 			$error_list = $this->closure_compiler->get_errors();
@@ -287,8 +312,21 @@ class CodeOptimizer {
 			}
 		}
 
-		print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'">';
-		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"></script>';
+		// include styles in page or as outside resource
+		$integrity = '';
+		if (file_exists($style_cache.'.sha384'))
+			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
+
+		if (!$include_styles)
+			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
+			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+
+		// show javascript tags
+		$integrity = '';
+		if (file_exists($script_cache.'.sha384'))
+			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
+
+		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
 	}
 }
 

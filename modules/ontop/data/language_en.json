@@ -1,0 +1,22 @@
+{
+	"title_add_application": "OnTop: Add application",
+	"title_edit_application": "OnTop: Edit application",
+	"title_delete_application": "OnTop: Delete application",
+	"title_test_application": "OnTop: Test application",
+	"title_ontop": "OnTop Applications",
+	"message_application_saved": "Application data was saved.",
+	"message_application_delete": "You are about to remove the following application from the system. Are you sure?",
+	"message_application_deleted": "Application data was removed.",
+	"message_contact_form_submit": "New submission:",
+	"message_test": "Test notification sent with following numbers:",
+	"label_name": "Name:",
+	"label_uid": "Application id:",
+	"label_key": "Key:",
+	"label_shop_transaction_complete": "Shop transaction completed",
+	"label_contact_form_submit": "Contact form submitted",
+	"legend_system_events": "Push on system events:",
+	"tooltip_name": "Internally used name to make management easier.",
+	"menu_ontop": "OnTop",
+	"column_name": "Name",
+	"test": "Test"
+}

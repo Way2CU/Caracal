@@ -5,7 +5,7 @@
 		type="hidden"
 		name="payment_method"
 		value="$params['name']"
-		data-provides-information="$params['provides_information'] ? 1 : 0"
-		cms:eval="value,data-provides-information"
+		data-needs-credit-card="$params['needs_credit_card'] ? 1 : 0"
+		cms:eval="value,data-needs-credit-card"
 		/>
 </document>

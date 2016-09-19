@@ -22,23 +22,23 @@ class tips extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$tips_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_tips'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_tips'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$tips_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_tips_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								$this->get_language_constant('menu_tips_manage'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'tips',
 											500,
-											$this->getLanguageConstant('title_tips_manage'),
+											$this->get_language_constant('title_tips_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'tips')
 										),
@@ -52,7 +52,7 @@ class tips extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -65,7 +65,7 @@ class tips extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -124,10 +124,10 @@ class tips extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function on_init() {
 		global $db;
 
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		$sql = "
 			CREATE TABLE `tips` (
@@ -146,7 +146,7 @@ class tips extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function on_disable() {
 		global $db;
 
 		$tables = array('tips');
@@ -158,22 +158,22 @@ class tips extends Module {
 	 */
 	private function showTips() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'tips_new', 400,
-										$this->getLanguageConstant('title_tips_new'),
+										$this->get_language_constant('title_tips_new'),
 										true, false,
 										$this->name,
 										'tips_new'
 									),
 					);
 
-		$template->registerTagHandler('_tip_list', $this, 'tag_TipList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_tip_list', $this, 'tag_TipList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -182,15 +182,15 @@ class tips extends Module {
 	 */
 	private function addTip() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'tips_save'),
 					'cancel_action'	=> window_Close('tips_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -199,13 +199,13 @@ class tips extends Module {
 	 */
 	private function changeTip() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'			=> $item->id,
@@ -215,8 +215,8 @@ class tips extends Module {
 						'cancel_action'	=> window_Close('tips_change')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -226,31 +226,31 @@ class tips extends Module {
 	 */
 	private function saveTip() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 		$data = array(
-					'content'	=> $this->getMultilanguageField('content'),
+					'content'	=> $this->get_multilanguage_field('content'),
 					'visible'	=> fix_id($_REQUEST['visible'])
 				);
 
 		if (is_null($id)) {
 			$window = 'tips_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'tips_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_tip_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_tip_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('tips'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -260,24 +260,24 @@ class tips extends Module {
 	private function deleteTip() {
 		global $language;
 
-		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = TipManager::getInstance();
+		$id = fix_id($_REQUEST['id']);
+		$manager = TipManager::get_instance();
 
-		$item = $manager->getSingleItem(array('content'), array('id' => $id));
+		$item = $manager->get_single_item(array('content'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_tip_delete"),
+					'message'		=> $this->get_language_constant("message_tip_delete"),
 					'name'			=> $item->content[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'tips_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'tips_delete_commit'),
 												array('id', $id)
@@ -286,8 +286,8 @@ class tips extends Module {
 					'no_action'		=> window_Close('tips_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -295,22 +295,22 @@ class tips extends Module {
 	 * Perform tip removal
 	 */
 	private function deleteTip_Commit() {
-		$id = fix_id(fix_chars($_REQUEST['id']));
-		$manager = TipManager::getInstance();
+		$id = fix_id($_REQUEST['id']);
+		$manager = TipManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_tip_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_tip_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('tips_delete').";".window_ReloadContent('tips')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -321,22 +321,24 @@ class tips extends Module {
 	 * @param array $children
 	 */
 	public function tag_Tip($tag_params, $children) {
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 		$order_by = array();
 		$conditions = array();
 
 		if (isset($tag_params['id'])) {
-			$conditions['id'] = $tag_params['id'];
+			$conditions['id'] = fix_id($tag_params['id']);
+
 		} else if (isset($tag_params['random']) && $tag_params['random']) {
 			$order_by[] = 'RAND()';
+
 		} else {
 			$order_by[] = 'id';
 		}
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, false);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, false);
 
-		$template = $this->loadTemplate($tag_params, 'tip.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'tip.xml');
+		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -345,8 +347,8 @@ class tips extends Module {
 						'visible'	=> $item->visible,
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -358,7 +360,7 @@ class tips extends Module {
 	 * @param array $children
 	 */
 	public function tag_TipList($tag_params, $children) {
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 		$conditions = array();
 		$limit = null;
 		$order_by = array('id');
@@ -376,12 +378,12 @@ class tips extends Module {
 		if (isset($tag_params['limit']))
 			$limit = fix_id($tag_params['limit']);
 
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
+		$template = $this->load_template($tag_params, 'list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
@@ -389,32 +391,32 @@ class tips extends Module {
 							'id'			=> $item->id,
 							'content'		=> $item->content,
 							'visible'		=> $item->visible,
-							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+							'item_change'	=> URL::make_hyperlink(
+													$this->get_language_constant('change'),
 													window_Open(
 														'tips_change', 		// window id
 														400,				// width
-														$this->getLanguageConstant('title_tips_change'), // title
+														$this->get_language_constant('title_tips_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'tips_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+							'item_delete'	=> URL::make_hyperlink(
+													$this->get_language_constant('delete'),
 													window_Open(
 														'tips_delete', 	// window id
 														400,				// width
-														$this->getLanguageConstant('title_tips_delete'), // title
+														$this->get_language_constant('title_tips_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'tips_delete'),
 															array('id', $item->id)
@@ -423,8 +425,8 @@ class tips extends Module {
 												),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -446,10 +448,10 @@ class tips extends Module {
 		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
 
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
-		$item = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+								$manager->get_field_names(),
 								$conditions,
 								array($order_by),
 								$order_asc
@@ -493,10 +495,10 @@ class tips extends Module {
 		if (isset($_REQUEST['limit']))
 			$limit = fix_id($_REQUEST['limit']);
 
-		$manager = TipManager::getInstance();
+		$manager = TipManager::get_instance();
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								array($order_by),
 								$order_asc,
@@ -531,15 +533,15 @@ class TipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('tips');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('content', 'ml_text');
-		$this->addProperty('visible', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('content', 'ml_text');
+		$this->add_property('visible', 'boolean');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
