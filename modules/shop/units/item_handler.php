@@ -208,6 +208,7 @@ class Handler {
 					'votes_down'      => $item->votes_down,
 					'priority'        => $item->priority,
 					'timestamp'       => $item->timestamp,
+					'expires'         => $item->expires,
 					'visible'         => $item->visible,
 					'deleted'         => $item->deleted,
 					'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
@@ -245,7 +246,8 @@ class Handler {
 				'priority'        => isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'    => isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
 				'visible'         => $this->parent->get_boolean_field('visible') ? 1 : 0,
-				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
+				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID(),
+				'expires'         => strtotime(fix_chars($_REQUEST['expires']))
 			);
 
 		if ($new_item) {

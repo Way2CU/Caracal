@@ -886,6 +886,7 @@ class shop extends Module {
 			`votes_up` INT NOT NULL,
 			`votes_down` INT NOT NULL,
 			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`expires` TIMESTAMP NULL,
 			`priority` INT(4) NOT NULL DEFAULT '5',
 			`visible` BOOLEAN NOT NULL DEFAULT '1',
 			`deleted` BOOLEAN NOT NULL DEFAULT '0',

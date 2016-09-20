@@ -60,6 +60,7 @@
 	"empty_shopping_cart": "There are no items in shopping cart.",
 	"handling": "Handling:",
 	"hide_shopping_cart": "Hide shopping cart",
+	"label_item_expiration": "Expires:",
 	"label_codes_count": "Number of codes to generate:",
 	"label_prefix": "Prefix codes with:",
 	"label_suffix": "Suffix:",
