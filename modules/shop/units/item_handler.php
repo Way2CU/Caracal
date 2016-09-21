@@ -536,7 +536,7 @@ class Handler {
 					);
 			} else {
 				$conditions['expires'] = array(
-						'operator' => 'IS NOT'
+						'operator' => 'IS NOT',
 						'value'    => 'NULL'
 					);
 			}
@@ -705,7 +705,7 @@ class Handler {
 					);
 			} else {
 				$conditions['expires'] = array(
-						'operator' => 'IS NOT'
+						'operator' => 'IS NOT',
 						'value'    => 'NULL'
 					);
 			}
