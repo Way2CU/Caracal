@@ -532,7 +532,7 @@ class Handler {
 			if ($tag_params['show_expired'] == 0) {
 				$conditions['expires'] = array(
 						'operator' => '<=',
-						'value'    => date('Y-m-d')
+						'value'    => date('Y-m-d H:i:s')
 					);
 			} else {
 				$conditions['expires'] = array(
@@ -701,7 +701,7 @@ class Handler {
 			if ($tag_params['show_expired'] == 0) {
 				$conditions['expires'] = array(
 						'operator' => '<=',
-						'value'    => date('Y-m-d')
+						'value'    => date('Y-m-d H:i:s')
 					);
 			} else {
 				$conditions['expires'] = array(
