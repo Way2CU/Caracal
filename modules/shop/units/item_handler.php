@@ -527,6 +527,20 @@ class Handler {
 				$conditions['id'] = $id_list[array_rand($id_list)];
 		}
 
+		// option to show or hide expired
+		if (isset($tag_params['show_expired']))
+			if ($tag_params['show_expired'] == 0) {
+				$conditions['expires'] = array(
+						'operator' => '<=',
+						'value'    => date('Y-m-d')
+					);
+			} else {
+				$conditions['expires'] = array(
+						'operator' => 'IS NOT'
+						'value'    => 'NULL'
+					);
+			}
+
 		if (empty($conditions))
 			return;
 
@@ -681,6 +695,20 @@ class Handler {
 				$conditions['id'] = $item_ids; else
 				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
 		}
+
+		// option to show or hide expired items
+		if (isset($tag_params['show_expired']))
+			if ($tag_params['show_expired'] == 0) {
+				$conditions['expires'] = array(
+						'operator' => '<=',
+						'value'    => date('Y-m-d')
+					);
+			} else {
+				$conditions['expires'] = array(
+						'operator' => 'IS NOT'
+						'value'    => 'NULL'
+					);
+			}
 
 		if (isset($tag_params['related'])) {
 			$item_id = -1;

@@ -61,7 +61,6 @@
 					</label>
 				</div>
 
-
 				<label style="clear: both; padding-top: 10px;">
 					<span><cms:text constant="label_description" module="shop"/></span>
 					<textarea name="description" class="multi-language" style="width: 500px; height: 155px;"/>
