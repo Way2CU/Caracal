@@ -2612,6 +2612,8 @@ class gallery extends Module {
 
 		// create image resource
 		$img_source = null;
+		$save_function = null;
+		$save_quality = null;
 		$has_alpha = false;
 		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
 			case 'jpg':
@@ -2687,7 +2689,8 @@ class gallery extends Module {
 			);
 
 		// save image to file
-		$save_function($thumbnail, $target_file, $save_quality);
+		if (!is_null($save_function))
+			$save_function($thumbnail, $target_file, $save_quality);
 
 		return $target_file;
 	}
