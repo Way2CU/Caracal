@@ -45,10 +45,10 @@
 				</div>
 
 				<div class="box left">
-					<label>
+					<label style="padding-top: 10px;">
 						<span><cms:text constant="label_item_expiration" module="shop"/></span>
 						<input
-							type="datetime"
+							type="datetime-local"
 							name="expires"
 							class="code ltr"
 							/>
