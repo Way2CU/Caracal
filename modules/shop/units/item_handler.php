@@ -531,7 +531,7 @@ class Handler {
 		if (isset($tag_params['show_expired']))
 			if ($tag_params['show_expired'] == 0) {
 				$conditions['expires'] = array(
-						'operator' => '<=',
+						'operator' => '>=',
 						'value'    => date('Y-m-d H:i:s')
 					);
 			} else {
@@ -700,7 +700,7 @@ class Handler {
 		if (isset($tag_params['show_expired']))
 			if ($tag_params['show_expired'] == 0) {
 				$conditions['expires'] = array(
-						'operator' => '<=',
+						'operator' => '>=',
 						'value'    => date('Y-m-d H:i:s')
 					);
 			} else {
