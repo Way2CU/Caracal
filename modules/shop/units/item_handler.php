@@ -208,7 +208,7 @@ class Handler {
 					'votes_down'      => $item->votes_down,
 					'priority'        => $item->priority,
 					'timestamp'       => $item->timestamp,
-					'expires'         => $item->expires,
+					'expires'         => date('Y-m-dTH:i:s', $item->expires),
 					'visible'         => $item->visible,
 					'deleted'         => $item->deleted,
 					'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
