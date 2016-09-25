@@ -483,11 +483,18 @@ Caracal.Shop.edit_property = function(event) {
 		.val(data.type)
 		.trigger('change');
 
+	// assign translations for each language
 	input_name.val(data.name[selector.current_language]);
 	var language_data = input_name.data('language');
 
-	for (var language in language_data)
-		language_data[language] = data.name[language];
+	for (var index in language_handler.languages) {
+		var language = language_handler.languages[index];
+		var short_name = language.short;
+
+		if (short_name in data.name)
+			language_data[short_name] = data.name[short_name]; else
+			language_data[short_name] = '';
+	}
 
 	// configure data
 	switch(data.type) {
