@@ -406,12 +406,8 @@ class gallery extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		if (!array_key_exists('image_extensions', $this->settings))
-<<<<<<< HEAD
-			$this->save_setting('image_extensions', 'jpg,jpeg,png');
-=======
-			$this->saveSetting('image_extensions', 'jpg,jpeg,png,gif');
->>>>>>> b7f7e80... Gallery: Added support for GIF files.
+		// save default supported extensions
+		$this->save_setting('image_extensions', 'jpg,jpeg,png,gif');
 	}
 
 	/**
