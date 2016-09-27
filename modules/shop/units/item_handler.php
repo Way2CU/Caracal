@@ -751,6 +751,9 @@ class Handler {
 							);
 		}
 
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']);
+
 		if (isset($tag_params['paginate'])) {
 			$per_page = is_numeric($tag_params['paginate']) ? $tag_params['paginate'] : 10;
 			$param = isset($tag_params['page_param']) ? fix_chars($tag_params['page_param']) : null;
