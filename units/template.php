@@ -356,10 +356,34 @@ class TemplateHandler {
 
 				// transfer control to module
 				case 'cms:module':
-					if (ModuleHandler::is_loaded($tag->tagAttrs['name'])) {
-						$module = call_user_func(array($tag->tagAttrs['name'], 'get_instance'));
-						$module->transfer_control($tag->tagAttrs, $tag->tagChildren);
+					$module_name = $tag->tagAttrs['name'];
+
+					// make sure module is loaded
+					if (!ModuleHandler::is_loaded($module_name)) {
+						trigger_error('Calling for unknown module "'.$module_name.'".', E_USER_NOTICE);
+						break;
 					}
+
+					// prepare tag children
+					$children = $tag->tagChildren;
+
+					foreach ($tag->tagChildren as $child) {
+						if ($child->tagName != 'transfer')
+							continue;
+
+						// collect information
+						$param_name = $child->tagAttrs['name'];
+						$param_value = isset($this->params[$param_name]) ? $this->params[$param_name] : null;
+						$target_name = isset($child->tagAttrs['target']) ? $child->tagAttrs['target'] : $param_name;
+						$tag_attributes = array($target_name => $param_value);
+
+						// create new tag
+						$children[] = new XMLTag('param', $tag_attributes);
+					}
+
+					// transfer control to specified module
+					$module = call_user_func(array($module_name, 'get_instance'));
+					$module->transfer_control($tag->tagAttrs, $children);
 					break;
 
 				// load other template
@@ -381,18 +405,17 @@ class TemplateHandler {
 				// raw text copy
 				case 'cms:raw':
 					if (key_exists('file', $tag->tagAttrs)) {
-						// if file attribute is specified
+						// show content of the file
 						$file = $tag->tagAttrs['file'];
 						$path = (key_exists('path', $tag->tagAttrs)) ? $tag->tagAttrs['path'] : $template_path;
-
 						$text= file_get_contents($path.$file);
 
 					} elseif (key_exists('text', $tag->tagAttrs)) {
-						// if text attribute is specified
+						// show raw text
 						$text = $tag->tagAttrs['text'];
 
 					} else {
-						// in any other case we display data inside tag
+						// show content of tag
 						$text = $tag->tagData;
 					}
 
