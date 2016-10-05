@@ -120,7 +120,7 @@ final class SectionHandler {
 	 * @param string $file
 	 * @return string
 	 */
-	public static function get_templates_for_file(string $file=null) {
+	public static function get_templates_for_file($file=null) {
 		$result = array();
 
 		// collect templates
