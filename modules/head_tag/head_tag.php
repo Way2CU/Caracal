@@ -7,6 +7,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -34,6 +35,9 @@ class head_tag extends Module {
 	 */
 	protected function __construct() {
 		parent::__construct(__FILE__);
+
+		// register events
+		Events::register('head-tag', 'before-print');
 	}
 
 	/**
@@ -143,9 +147,8 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
-		// if page_info module is loaded, ask it to add its own tags
-		if (ModuleHandler::is_loaded('page_info'))
-			page_info::get_instance()->addElements();
+		// give modules chance to add elements
+		Events::trigger('head-tag', 'before-print');
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
@@ -187,8 +190,8 @@ class head_tag extends Module {
 			$template->set_mapped_module($this->name);
 
 			$params = array(
-						'code'		=> $this->analytics,
-						'domain'	=> $this->analytics_domain
+						'code'   => $this->analytics,
+						'domain' => $this->analytics_domain
 					);
 
 			$template->restore_xml();
@@ -202,10 +205,10 @@ class head_tag extends Module {
 			$template->set_mapped_module($this->name);
 
 			$params = array(
-							'code'	=> $this->optimizer,
-							'key'	=> $this->optimizer_key,
-							'page'	=> $this->optimizer_page,
-							'show_control'	=> $this->optimizer_show_control
+							'code'         => $this->optimizer,
+							'key'          => $this->optimizer_key,
+							'page'         => $this->optimizer_page,
+							'show_control' => $this->optimizer_show_control
 						);
 
 			$template->restore_xml();
