@@ -232,6 +232,8 @@ class page_description extends Module {
 	 * @param array $children
 	 */
 	public function tag_DescriptionList($tag_params, $children) {
+		global $language;
+
 		$manager = Manager::get_instance();
 		$conditions = array();
 
