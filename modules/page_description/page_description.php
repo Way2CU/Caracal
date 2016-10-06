@@ -238,7 +238,7 @@ class page_description extends Module {
 		$conditions = array();
 
 		// get page descriptions from database
-		$items = $manager->get_items(array('id', 'url'), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) == 0)
 			return;
