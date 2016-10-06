@@ -7,6 +7,7 @@
 			<span class="column" style="width: 450px;">
 				<cms:text constant="column_url" module="page_description"/>
 			</span>
+			<span class="column" style="width: 50px;"/>
 			<span class="column">
 				<cms:text constant="column_options"/>
 			</span>
