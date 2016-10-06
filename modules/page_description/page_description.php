@@ -203,6 +203,7 @@ class page_description extends Module {
 
 		$value = '';
 		$head_tag = head_tag::get_instance();
+		$manager = Manager::get_instance();
 
 		// get query string
 		$query_string = $_SERVER['QUERY_STRING'];
@@ -212,13 +213,9 @@ class page_description extends Module {
 		// get page description
 		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $query_string));
 
-		if (!is_object($item)) {
-			$value = '';
-			$manager->insert_item(array('url' => $query_string));
-
-		} else {
+		if (!is_object($item))
+			$manager->insert_item(array('url' => $query_string)); else
 			$value = $item->content[$language];
-		}
 
 		// add description to head tag
 		$head_tag->addTag('meta',
