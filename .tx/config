@@ -145,3 +145,9 @@ type = KEYVALUEJSON
 file_filter = modules/ontop/data/language_<lang>.json
 source_lang = en
 type = KEYVALUEJSON
+
+[caracal.page_description]
+file_filter = modules/page_description/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+
