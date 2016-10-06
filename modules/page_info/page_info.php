@@ -230,10 +230,6 @@ class page_info extends Module {
 							'content'		=> join(', ', $language_list)
 						));
 
-		// add other languages if required
-		if (count($language_list) > 1 && $url_rewrite && ModuleHandler::is_loaded('language_menu'))
-			language_menu::get_instance()->addMeta();
-
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
