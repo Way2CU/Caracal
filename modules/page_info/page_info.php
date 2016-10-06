@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 use Core\Markdown;
 
@@ -23,9 +24,12 @@ class page_info extends Module {
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $section, $db_use;
+		global $section;
 
 		parent::__construct(__FILE__);
+
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_elements', $this);
 
 		// let the browser/crawler know we have different desktop/mobile styles
 		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
@@ -38,7 +42,7 @@ class page_info extends Module {
 		header('Content-Type: text/html; charset=UTF-8');
 
 		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
+		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
 			$backend = backend::get_instance();
 
 			$menu = $backend->getMenu($backend->name);
@@ -191,7 +195,7 @@ class page_info extends Module {
 	/**
 	 * Method called by the page module to add elements before printing
 	 */
-	public function addElements() {
+	public function add_elements() {
 		global $section, $db_use, $optimize_code, $url_rewrite, $styles_path,
 			$images_path, $scripts_path, $system_styles_path, $system_images_path,
 			$default_language;
