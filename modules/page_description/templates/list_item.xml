@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
-		<span class="column" style="width: 450px;">
+		<span class="column" style="width: 400px;">
 			<cms:var param="url"/>
 		</span>
 		<span class="column" style="width: 50px;">

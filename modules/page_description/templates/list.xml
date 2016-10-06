@@ -4,7 +4,7 @@
 	<!-- Header -->
 	<div class="scrollable_list">
 		<div class="list_header">
-			<span class="column" style="width: 450px;">
+			<span class="column" style="width: 400px;">
 				<cms:text constant="column_url" module="page_description"/>
 			</span>
 			<span class="column" style="width: 50px;"/>
