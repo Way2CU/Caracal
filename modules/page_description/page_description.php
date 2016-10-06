@@ -253,7 +253,7 @@ class page_description extends Module {
 				'id'          => $item->id,
 				'url'         => $item->url,
 				'content'     => $item->content,
-				'filled'      => count($item->content[$language]) == 0 ? CHAR_UNCHECKED : CHAR_CHECKED,
+				'filled'      => empty($item->content[$language]) ? CHAR_UNCHECKED : CHAR_CHECKED,
 				'item_change' => URL::make_hyperlink(
 									$this->get_language_constant('change'),
 									window_Open(
