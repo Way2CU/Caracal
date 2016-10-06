@@ -18,7 +18,6 @@ class page_info extends Module {
 	private $omit_elements = array();
 	private $optimizer_page = '';
 	private $optimizer_show_control = false;
-	private $page_description = null;
 
 	/**
 	 * Constructor
@@ -93,10 +92,6 @@ class page_info extends Module {
 						$this->optimizer_show_control = fix_id($params['show_control']) == 0 ? false : true;
 					break;
 
-				case 'set_description':
-					$this->setDescription($params, $children);
-					break;
-
 				default:
 					break;
 			}
@@ -121,9 +116,6 @@ class page_info extends Module {
 	 * Event triggered upon module initialization
 	 */
 	public function on_init() {
-		if (!isset($this->settings['description']))
-			$this->save_setting('description', '');
-
 		if (!isset($this->settings['analytics']))
 			$this->save_setting('analytics', '');
 
@@ -160,7 +152,6 @@ class page_info extends Module {
 	 * Save settings
 	 */
 	private function save_settings() {
-		$description = fix_chars($_REQUEST['description']);
 		$analytics = fix_chars($_REQUEST['analytics']);
 		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
 		$analytics_version = fix_chars($_REQUEST['analytics_version']);
@@ -169,7 +160,6 @@ class page_info extends Module {
 		$optimizer = fix_chars($_REQUEST['optimizer']);
 		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
 
-		$this->save_setting('description', $description);
 		$this->save_setting('analytics', $analytics);
 		$this->save_setting('analytics_domain', $analytics_domain);
 		$this->save_setting('analytics_version', $analytics_version);
@@ -282,16 +272,6 @@ class page_info extends Module {
 								'content' 	=> $this->settings['bing_wm_tools']
 							));
 
-			// page description
-			if (!is_null($this->page_description))
-				$value = $this->page_description; else
-				$value = isset($this->settings['description']) ? $this->settings['description'] : '';
-
-			$head_tag->addTag('meta',
-						array(
-							'name'		=> 'description',
-							'content'	=> $value
-						));
 		}
 
   		// copyright
@@ -401,38 +381,6 @@ class page_info extends Module {
 							'type'	=> 'text/javascript',
 							'src'	=> URL::from_file_path(_BASEPATH.'/'.$scripts_path.'main.js')
 						));
-		}
-	}
-
-	/**
-	 * Set page description for current execution.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	private function setDescription($tag_params, $children) {
-		global $language;
-
-		// set from language constant
-		if (isset($tag_params['constant'])) {
-			$constant = fix_chars($tag_params['constant']);
-			$this->page_description = Language::get_text($constant);
-
-		// set from article
-		} else if (isset($tag_params['article']) && ModuleHandler::is_loaded('articles')) {
-			$manager = Modules\Articles\Manager::get_instance();
-			$text_id = fix_chars($tag_params['article']);
-
-			// get article from database
-			$item = $manager->get_single_item(array('content'), array('text_id' => $text_id));
-
-			if (is_object($item)) {
-				$content = strip_tags(Markdown::parse($item->content[$language]));
-				$data = explode("\n", utf8_wordwrap($content, 150, "\n", true));
-
-				if (count($data) > 0)
-					$this->page_description = $data[0];
-			}
 		}
 	}
 
