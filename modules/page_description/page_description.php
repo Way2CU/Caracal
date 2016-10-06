@@ -195,8 +195,30 @@ class page_description extends Module {
 	 * it's not already added.
 	 */
 	public function add_description_tag() {
+		global $language;
+
+		// don't handle backend links
+		if (isset($_REQUEST['section']))
+			return;
+
 		$value = '';
 		$head_tag = head_tag::get_instance();
+
+		// get query string
+		$query_string = $_SERVER['QUERY_STRING'];
+		if (substr($query_string, 0, 1) != self::ROOT_KEY)
+			$query_string = self::ROOT_KEY.$query_string;
+
+		// get page description
+		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $query_string));
+
+		if (!is_object($item)) {
+			$value = '';
+			$manager->insert_item(array('url' => $query_string));
+
+		} else {
+			$value = $item->content[$language];
+		}
 
 		// add description to head tag
 		$head_tag->addTag('meta',
