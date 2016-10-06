@@ -266,6 +266,10 @@ class page_description extends Module {
 											array('id', $item->id)
 										)
 									)
+								),
+				'item_open' => URL::make_hyperlink(
+									$this->get_language_constant('open'),
+									URL::get_base().$item->url, null, null, '_blank'
 								));
 
 			$template->restore_xml();
