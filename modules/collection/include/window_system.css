@@ -489,6 +489,23 @@ div.window div.scrollable_list .list_content .list_item {
 	padding: 5px;
 }
 
+div.dialog div.scrollable_list .list_content .list_item.draggable,
+div.window div.scrollable_list .list_content .list_item.draggable {
+	border-top: 2px solid transparent;
+	border-bottom: 2px solid transparent;
+	cursor: move;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.dragging,
+div.window div.scrollable_list .list_content .list_item.dragging {
+	opacity: 0.5;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.drag-hover,
+div.window div.scrollable_list .list_content .list_item.drag-hover {
+	border-top-color: #345DC9;
+}
+
 div.dialog div.scrollable_list .list_content .list_item.group_title,
 div.window div.scrollable_list .list_content .list_item.group_title {
 	margin-top: 5px;
