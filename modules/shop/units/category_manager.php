@@ -23,6 +23,7 @@ class ShopCategoryManager extends ItemManager {
 		$this->add_property('text_id', 'varchar');
 		$this->add_property('title', 'ml_varchar');
 		$this->add_property('description', 'ml_text');
+		$this->add_property('order', 'int');
 	}
 
 	/**

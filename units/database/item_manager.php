@@ -453,6 +453,15 @@ abstract class ItemManager {
 	}
 
 	/**
+	 * Return table name this manager is using.
+	 *
+	 * @return string
+	 */
+	public function get_table_name() {
+		return $this->table_name;
+	}
+
+	/**
 	 * Load SQL file and prepare multi-language fields. If module is specified
 	 * file will be loaded relative to module's path.
 	 *

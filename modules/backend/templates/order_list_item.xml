@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div
+		class="list_item"
+		data-id="$param['id']"
+		cms:eval="data-id"
+		>
+		<span class="column" style="'width: '.($params['width'] - 100).'px'" cms:eval="style">
+			<cms:var param="title"/>
+		</span>
+		<span class="column">
+			<cms:var param="move_up"/><cms:raw text=" "/>
+			<cms:var param="move_down"/>
+		</span>
+	</div>
+</document>
