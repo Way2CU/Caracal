@@ -37,6 +37,7 @@ Caracal.Backend.OrderEditor = function() {
 		for (var i=0, count=items.length; i<count; i++) {
 			var item = items[i];
 			item.draggable = true;
+			item.classList.add('draggable');
 			item.addEventListener('dragstart', self.handlers.drag_start);
 			item.addEventListener('dragover', self.handlers.drag_over);
 			item.addEventListener('dragleave', self.handlers.drag_leave);

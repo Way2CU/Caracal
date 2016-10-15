@@ -35,7 +35,8 @@ final class OrderEditor {
 		$template->register_tag_handler('cms:list', $this, 'tag_List');
 
 		$params = array(
-				'width' => $this->window_size
+				'width'       => $this->window_size,
+				'form_action' => $this->form_action
 			);
 
 		$template->set_local_params($params);
