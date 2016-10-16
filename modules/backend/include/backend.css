@@ -513,7 +513,7 @@ nav#language:hover a.active {
 	-webkit-user-select: none;
 	user-select: none;
 
-	cursor: default !important;
+	cursor: default;
 }
 
 /**
