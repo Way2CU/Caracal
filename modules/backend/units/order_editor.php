@@ -137,7 +137,7 @@ final class OrderEditor {
 			return;
 
 		// load template
-		$template = $this->parent->load_template($tag_params, 'list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'order_list_item.xml');
 
 		// render items
 		foreach ($items as $item) {
