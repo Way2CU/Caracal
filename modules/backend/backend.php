@@ -11,6 +11,7 @@
 use Core\Events;
 use Core\Module;
 use Core\Cache\Manager as Cache;
+use Modules\Backend\OrderEditor as OrderEditor;
 
 define('_BACKEND_SECTION_', 'backend_module');
 
