@@ -547,7 +547,7 @@ class ShopCategoryHandler {
 										window_Open(
 											'shop_category_add', 	// window id
 											400,			// width
-											this->parent->get_language_constant('title_category_add'), // title
+											$this->parent->get_language_constant('title_category_add'), // title
 											false, false,
 											URL::make_query(
 												'backend_module',
