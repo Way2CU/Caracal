@@ -21,9 +21,9 @@ final class OrderEditor {
 	private $form_action = null;
 	private $window_size = 300;
 
-	private function __construct($parent, $manager_class) {
+	private function __construct($parent, $manager) {
 		$this->parent = $parent;
-		$this->manager = $manager_class::get_instance();
+		$this->manager = $manager;
 	}
 
 	/**

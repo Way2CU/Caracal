@@ -169,11 +169,11 @@ class backend extends Module {
 	/**
 	 * Create new order editor for backend.
 	 *
-	 * @param string $manager_class
+	 * @param object $manager_instance
 	 */
-	public static function get_order_editor($manager_class) {
+	public static function get_order_editor($manager_instance) {
 		$parent = self::get_instance();
-		$result = new OrderEditor($parent, $manager_class);
+		$result = new OrderEditor($parent, $manager_instance);
 
 		return $result;
 	}
