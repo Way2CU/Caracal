@@ -3,7 +3,7 @@
 <document>
 	<div
 		class="list_item"
-		data-id="$param['id']"
+		data-id="$params['id']"
 		cms:eval="data-id"
 		>
 		<span class="column" style="'width: '.($params['width'] - 100).'px'" cms:eval="style">
