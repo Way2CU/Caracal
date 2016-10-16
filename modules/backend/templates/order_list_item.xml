@@ -6,7 +6,7 @@
 		data-id="$params['id']"
 		cms:eval="data-id"
 		>
-		<span class="column" style="'width: '.($params['width'] - 100).'px'" cms:eval="style">
+		<span class="column">
 			<cms:var param="title" multilanguage="yes"/>
 		</span>
 	</div>
