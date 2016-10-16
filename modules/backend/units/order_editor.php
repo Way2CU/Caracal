@@ -131,7 +131,7 @@ final class OrderEditor {
 		$fields = array($this->index_field, $this->title_field, $this->order_field);
 
 		// get items from teh database
-		$items = $this->manager->get_items($feilds, array(), array($this->order_field), true);
+		$items = $this->manager->get_items($fields, array(), array($this->order_field), true);
 
 		if (count($items) == 0)
 			return;
