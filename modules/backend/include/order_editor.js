@@ -51,6 +51,7 @@ Caracal.Backend.OrderEditor = function() {
 	 * @param object event
 	 */
 	self.handlers.drag_start = function(event) {
+		event.preventDefault();
 		self.dragged_item = event.target;
 		self.dragged_item.classList.add('dragging');
 	};
@@ -61,6 +62,8 @@ Caracal.Backend.OrderEditor = function() {
 	 * @param object event
 	 */
 	self.handlers.drag_over = function(event) {
+		event.preventDefault();
+
 		// make sure hovered item is a different one
 		if (self.dragged_item === event.target)
 			return;
@@ -78,7 +81,7 @@ Caracal.Backend.OrderEditor = function() {
 	 * @param object event
 	 */
 	self.handlers.drag_leave = function(event) {
-		// update looks
+		event.preventDefault();
 		event.target.classList.remove('drag-hover');
 	};
 
@@ -88,6 +91,8 @@ Caracal.Backend.OrderEditor = function() {
 	 * @param object event
 	 */
 	self.handlers.drag_end = function(event) {
+		event.preventDefault();
+
 		// remove special looks of the dragged item
 		self.dragged_item.classList.remove('dragging');
 
