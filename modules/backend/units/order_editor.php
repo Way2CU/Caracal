@@ -11,6 +11,8 @@
  */
 namespace Modules\Backend;
 
+use \TemplateHandler as TemplateHandler;
+
 
 final class OrderEditor {
 	private $parent;
