@@ -21,6 +21,7 @@ require_once('units/action.php');
 require_once('units/menu_item.php');
 require_once('units/session_manager.php');
 require_once('units/user_manager.php');
+require_once('units/order_editor.php');
 
 
 class backend extends Module {
