@@ -92,7 +92,8 @@ Caracal.Backend.OrderEditor = function() {
 		self.dragged_item.classList.remove('dragging');
 
 		// swap two items
-		self.list.insertBefore(self.dragged_item, self.hovered_item);
+		var list_content = self.list.querySelector('div.list_content');
+		list_content.insertBefore(self.dragged_item, self.hovered_item);
 
 		// reset variables
 		self.dragged_item = null;
