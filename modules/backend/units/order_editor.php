@@ -56,7 +56,7 @@ final class OrderEditor {
 		global $db_type;
 
 		// make sure database type is supported
-		if ($db_type != DatabaseType::MYSQL)
+		if ($db_type != \DatabaseType::MYSQL)
 			return false;
 
 		// prepare data
