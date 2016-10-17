@@ -53,7 +53,7 @@ final class OrderEditor {
 	 * @return boolean
 	 */
 	public function save_changes() {
-		global $db_type;
+		global $db, $db_type;
 
 		// make sure database type is supported
 		if ($db_type != \DatabaseType::MYSQL)
@@ -71,7 +71,7 @@ final class OrderEditor {
 			ORDER BY FIELD (`{$this->index_field}`, {$order}) ASC;";
 
 		// update order
-		$this->manager->get_result($sql);
+		$db->multi_query($sql);
 
 		return true;
 	}
