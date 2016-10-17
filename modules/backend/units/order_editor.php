@@ -71,7 +71,7 @@ final class OrderEditor {
 			ORDER BY FIELD (`{$this->index_field}`, {$order}) ASC;";
 
 		// update order
-		$this->get_result($sql);
+		$this->manager->get_result($sql);
 
 		return true;
 	}
