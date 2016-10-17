@@ -3,6 +3,7 @@
 <document>
 	<form
 		action="$params['form_action']"
+		method="POST"
 		cms:eval="action"
 		>
 		<input type="hidden" name="order" value=""/>
