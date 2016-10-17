@@ -66,7 +66,7 @@ final class OrderEditor {
 		// prepare sql request
 		$sql = "
 			SELECT @i := 0;
-			UPDATE `{$table_name}`
+			UPDATE `{$table}`
 			SET `{$this->order_field}` = (SELECT @i := @i + 1)
 			ORDER BY FIELD (`{$this->index_field}`, {$order}) ASC;";
 
