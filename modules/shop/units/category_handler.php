@@ -307,7 +307,7 @@ class ShopCategoryHandler {
 	private function order_save() {
 		$backend = backend::get_instance();
 		$editor = $backend->get_order_editor(ShopCategoryManager::get_instance());
-		$saved = $editor->show_interface();
+		$saved = $editor->save_changes();
 
 		if ($saved)
 			$message = $this->parent->get_language_constant('message_category_order_saved'); else
