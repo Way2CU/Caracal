@@ -61,7 +61,7 @@ final class OrderEditor {
 
 		// prepare data
 		$table = $this->manager->get_table_name();
-		$order = fix_id(explode(',', $_REQUEST['order']));
+		$order = implode(',', fix_id(explode(',', $_REQUEST['order'])));
 
 		// prepare sql request
 		$sql = "
