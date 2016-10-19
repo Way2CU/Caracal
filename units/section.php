@@ -61,7 +61,7 @@ final class SectionHandler {
 			$match = self::wrap_pattern($match);
 
 			// store pattern params for later use
-			preg_match_all('|\{([\w\d_-]+)\}|is', $pattern, $params);
+			preg_match_all('|\{([\w\d_-]+)\}|ius', $pattern, $params);
 			self::$params[$pattern] = $params;
 
 			// successfully matched query string to template
@@ -173,7 +173,7 @@ final class SectionHandler {
 	 * @return string
 	 */
 	public static function wrap_pattern($pattern) {
-		return '|'.$pattern.'|is';
+		return '|'.$pattern.'|ius';
 	}
 }
 
