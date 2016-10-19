@@ -112,9 +112,7 @@ class language_menu extends Module {
 		} else {
 			// get values matched with URL
 			$pattern = SectionHandler::get_matched_pattern();
-			$query_string = $_SERVER['QUERY_STRING'];
-			if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-				$query_string = SectionHandler::ROOT_KEY.$query_string;
+			$query_string = URL::get_query_string();
 
 			// extract values
 			preg_match($pattern, $query_string, $link_params);
@@ -197,9 +195,7 @@ class language_menu extends Module {
 		} else {
 			// get values matched with URL
 			$pattern = SectionHandler::get_matched_pattern();
-			$query_string = $_SERVER['QUERY_STRING'];
-			if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-				$query_string = SectionHandler::ROOT_KEY.$query_string;
+			$query_string = URL::get_query_string();
 
 			// extract values
 			preg_match($pattern, $query_string, $link_params);

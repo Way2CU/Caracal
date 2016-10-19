@@ -202,10 +202,6 @@ class backend extends Module {
 				$session_manager->transfer_control();
 				return;
 			}
-
-			// fix input parameters
-			foreach($_REQUEST as $key => $value)
-				$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
 		}
 
 		if (isset($params['action']))
@@ -870,28 +866,6 @@ class backend extends Module {
 			$item->drawItem();
 
 		echo '</ul>';
-	}
-
-	/**
-	 * This function decodes characters encoded by JavaScript
-	 *
-	 * @param string/array $str
-	 * @return string/array
-	 */
-	private function utf8_urldecode($str) {
-		$result = '';
-
-		if (!is_array($str)) {
-			$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
-			$result = html_entity_decode($str, null, 'UTF-8');;
-
-		} else {
-			$result = array();
-			foreach ($str as $index => $value)
-				$result[$index] = $this->utf8_urldecode($value);
-		}
-
-		return $result;
 	}
 }
 

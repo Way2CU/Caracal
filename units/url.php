@@ -220,9 +220,7 @@ final class URL {
 			return;
 
 		// get query string
-		$query_string = $_SERVER['QUERY_STRING'];
-		if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-			$query_string = SectionHandler::ROOT_KEY.$query_string;
+		$query_string = URL::get_query_string();
 
 		// extract values
 		preg_match($pattern, $query_string, $values);
@@ -243,6 +241,42 @@ final class URL {
 				break;
 		}
 		$_REQUEST = array_merge($_GET, $_POST);
+	}
+
+	/**
+	 * This function decodes characters encoded by JavaScript and .
+	 *
+	 * @param string/array $str
+	 * @return string/array
+	 */
+	public static function decode($str) {
+		$result = '';
+
+		if (!is_array($str)) {
+			$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
+			$result = html_entity_decode($str, null, 'UTF-8');;
+
+		} else {
+			$result = array();
+			foreach ($str as $index => $value)
+				$result[$index] = self::decode($value);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Return query string properly decoded.
+	 *
+	 * @return string
+	 */
+	public static function get_query_string() {
+		$query_string = $_SERVER['QUERY_STRING'];
+		if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
+			$query_string = SectionHandler::ROOT_KEY.$query_string;
+
+		// decode html encoded unicode codes
+		return URL::decode($query_string);
 	}
 }
 

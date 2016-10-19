@@ -49,13 +49,11 @@ final class SectionHandler {
 		}
 
 		// get query string
-		$query_string = $_SERVER['QUERY_STRING'];
-		if (substr($query_string, 0, 1) != self::ROOT_KEY)
-			$query_string = self::ROOT_KEY.$query_string;
+		$query_string = URL::get_query_string();
 
 		// try to match whole query string
 		foreach (self::$data as $pattern => $template_file) {
-			$match = preg_replace('|\{([\w\d-_]+)\}|iu', '(?<\1>[\w\d-_\+%]+)', $pattern);
+			$match = preg_replace('|\{([\w\d-_]+)\}|iu', '(?<\1>[\w\d-_\+]+)', $pattern);
 			$match = self::PREFIX.$match;
 			if ($pattern == self::ROOT_KEY)
 				$match .= '?';  // make root slash optional as well

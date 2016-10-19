@@ -206,9 +206,7 @@ class page_description extends Module {
 		$manager = Manager::get_instance();
 
 		// get query string
-		$query_string = $_SERVER['QUERY_STRING'];
-		if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-			$query_string = SectionHandler::ROOT_KEY.$query_string;
+		$query_string = URL::get_query_string();
 
 		// get page description
 		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $query_string));
