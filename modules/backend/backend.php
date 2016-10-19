@@ -258,10 +258,6 @@ class backend extends Module {
 						return;
 					}
 
-					// fix input parameters
-					foreach($_REQUEST as $key => $value)
-						$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
-
 					// transfer control
 					$action = escape_chars($_REQUEST['backend_action']);
 					$module_name = escape_chars($_REQUEST['module']);
