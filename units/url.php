@@ -24,7 +24,7 @@ final class URL {
 
 		if (!(empty($params) && is_null($file))) {
 			// get list of URL templates matching specified file
-			$pattern_list = SectionHandler::get_templates_for_file($file);
+			$pattern_list = SectionHandler::get_patterns_for_file($file);
 
 			if (count($pattern_list) == 0)
 				return $result;

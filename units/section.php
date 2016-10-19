@@ -75,15 +75,6 @@ final class SectionHandler {
 			}
 		}
 
-		// matching failed, try to load home template
-		if (!$result)
-			if (array_key_exists(self::ROOT_KEY, self::$data)) {
-				self::$matched_file = self::$data[self::ROOT_KEY];
-				self::$matched_pattern = self::wrap_pattern(self::ROOT_KEY);
-				self::$matched_params = array();
-				$result = true;
-			}
-
 		return $result;
 	}
 
@@ -115,12 +106,12 @@ final class SectionHandler {
 	}
 
 	/**
-	 * Return list of matched templates for specified template file.
+	 * Return list of matched patterns for specified template file.
 	 *
 	 * @param string $file
 	 * @return string
 	 */
-	public static function get_templates_for_file($file=null) {
+	public static function get_patterns_for_file($file=null) {
 		$result = array();
 
 		// collect templates
@@ -129,7 +120,7 @@ final class SectionHandler {
 		} else {
 			foreach (self::$data as $pattern => $template_file)
 				if ($file == $template_file)
-					$result[$pattern] = self::$params[$template_file];
+					$result[$pattern] = self::$params[$pattern];
 		}
 
 		return $result;
