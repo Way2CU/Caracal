@@ -216,6 +216,9 @@ final class URL {
 		// get template for matching
 		$pattern = SectionHandler::get_matched_pattern();
 
+		if (is_null($pattern))
+			return;
+
 		// get query string
 		$query_string = $_SERVER['QUERY_STRING'];
 		if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
