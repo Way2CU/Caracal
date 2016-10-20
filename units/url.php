@@ -216,11 +216,15 @@ final class URL {
 		// get template for matching
 		$pattern = SectionHandler::get_matched_pattern();
 
-		if (is_null($pattern))
+		// url is not matched, decode parameters and return
+		if (is_null($pattern)) {
+			foreach ($_REQUEST as $key => $value)
+				$_REQUEST[$key] = self::decode($value)
 			return;
+		}
 
 		// get query string
-		$query_string = URL::get_query_string();
+		$query_string = self::get_query_string();
 
 		// extract values
 		preg_match($pattern, $query_string, $values);
