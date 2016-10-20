@@ -219,7 +219,7 @@ final class URL {
 		// url is not matched, decode parameters and return
 		if (is_null($pattern)) {
 			foreach ($_REQUEST as $key => $value)
-				$_REQUEST[$key] = self::decode($value)
+				$_REQUEST[$key] = self::decode($value);
 			return;
 		}
 
