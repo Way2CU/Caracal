@@ -907,7 +907,7 @@ class gallery extends Module {
 		$group_manager = GalleryGroupManager::get_instance();
 
 		// get image from the database
-		$image = $manager->get_single_item(array('group'), array('id'));
+		$image = $manager->get_single_item(array('group'), array('id' => $image_id));
 		if (!is_object($image))
 			return;
 
