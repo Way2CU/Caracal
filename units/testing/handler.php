@@ -61,19 +61,19 @@ final class Handler {
 		$name = null;
 		$version = null;
 
-		// make sure name and type of the test are specified
-		if (!isset($tag_params['name']) || !isset($tag_params['type'])) {
-			trigger_error('Missing `name` and/or `type` for `cms:test` tag.', E_USER_WARNING);
+		// make sure name and method of the test are specified
+		if (!isset($tag_params['name']) || !isset($tag_params['method'])) {
+			trigger_error('Missing `name` and/or `method` for `cms:test` tag.', E_USER_WARNING);
 			return;
 		}
 
-		// get name and type
-		$type = fix_chars($tag_params['type']);
+		// get name and method
+		$method = fix_chars($tag_params['method']);
 		$name = fix_chars($tag_params['name']);
 
-		// make sure we have a test with specified type
-		if (!array_key_exists($type, $this->tests)) {
-			trigger_error("Unknown test type `{$type}`.", E_USER_NOTICE);
+		// make sure we have a test with specified method
+		if (!array_key_exists($method, $this->tests)) {
+			trigger_error("Unknown test method `{$method}`.", E_USER_NOTICE);
 			return;
 		}
 
@@ -89,7 +89,7 @@ final class Handler {
 		} else {
 			// prepare options
 			$options = $tag_params;
-			unset($options['type']);
+			unset($options['method']);
 			unset($options['name']);
 
 			$versions = array();
@@ -106,7 +106,7 @@ final class Handler {
 			}
 
 			// ask test class to provide choice
-			$test = $this->tests[$type];
+			$test = $this->tests[$method];
 			$version = $test->get_version($name, $options, $versions);
 
 			// store choice for current session
