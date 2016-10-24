@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base class for testing mode.
+ * Base class for testing method.
  *
  * This class is used as a base for building different forms of automated
  * testing on sites.
@@ -15,7 +15,7 @@
 namespace Core\Testing;
 
 
-abstract class Test {
+abstract class Method {
 	/**
 	 * Return version of template to display. This value is automatically
 	 * recorded by the main Tests class as a choice for current session. This
