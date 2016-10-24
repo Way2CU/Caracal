@@ -671,6 +671,12 @@ class TemplateHandler {
 					}
 					break;
 
+				// automated testing support
+				case 'cms:test':
+					$handler = \Core\Testing\Handler::get_instance();
+					$handler->show_version($self, $tag->tagAttrs, $tag->tagChildren);
+					break;
+
 				// support for parameter based choice
 				case 'cms:choice':
 					$param_value = null;

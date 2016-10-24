@@ -41,6 +41,7 @@ require_once('units/xml_parser.php');
 require_once('units/markdown.php');
 require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
+require_once('units/testing/handler.php');
 require_once('units/page_switch.php');
 require_once('units/session.php');
 require_once('units/config.php');
