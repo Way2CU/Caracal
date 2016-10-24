@@ -11,17 +11,24 @@
  */
 namespace Core\Testing;
 
+require_once('base.php');
+require_once('manager.php');
 
-final class Tests {
+
+class TestExistsError extends Exception {}
+
+
+final class AutoTest {
 	private static $_instance;
 	private $tests;
-	private $manager;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
 		$this->tests = array();
+
+		// create built-in tests
 	}
 
 	/**
@@ -47,7 +54,7 @@ final class Tests {
 
 		// make sure name and type of the test are specified
 		if (!isset($tag_params['name']) || !isset($tag_params['type'])) {
-			trigger_error('Missing \'name\' and/or \'type\' for \'cms:test\' tag.', E_USER_WARNING);
+			trigger_error('Missing `name` and/or `type` for `cms:test` tag.', E_USER_WARNING);
 			return;
 		}
 
@@ -57,7 +64,7 @@ final class Tests {
 
 		// make sure we have a test with specified type
 		if (!array_key_exists($type, $this->tests)) {
-			trigger_error("Unknown test type '{$type}'.", E_USER_NOTICE);
+			trigger_error("Unknown test type `{$type}`.", E_USER_NOTICE);
 			return;
 		}
 
@@ -82,7 +89,7 @@ final class Tests {
 					continue;
 
 				if (!isset($tag->tagAttrs['name'])) {
-					trigger_error('Missing version name for \'cms:test\' tag with name \''.$name.'\'.', E_USER_WARNING);
+					trigger_error("Missing version name for `cms:test` tag with name `{$name}`.", E_USER_WARNING);
 					continue;
 				}
 
@@ -96,14 +103,31 @@ final class Tests {
 			// store choice for current session
 			$_SESSION['testing'][$name] = $version;
 		}
+
+		// show specified version
+		foreach ($children as $tag) {
+			// skip versions until we reach one we need
+			if (!isset($tag->tagAttrs['name']) || $tag->tagAttrs['name'] != $version)
+				continue;
+
+			// transfer control back to template handler and break the loop
+			$template->parse($tag->tagChildren);
+			break;
+		}
 	}
 
 	/**
-	 * Return manager used for saving and loading test related settings.
+	 * Register test to be used by the system.
 	 *
-	 * @return object
+	 * @param string $test_name
+	 * @param object $text
+	 * @throws TestExistsError
 	 */
-	public function get_manager() {
+	public function register_test($test_name, &$test) {
+		if (array_key_exists($test_name, $this->tests))
+			throw TestExistsError("Specified name `{$test_name}` is already present in the system!");
+
+		$this->tests[$test_name] = $test;
 	}
 }
 
