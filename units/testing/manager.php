@@ -19,7 +19,7 @@ class Manager extends ItemManager {
 		parent::__construct('system_tests');
 
 		$this->addProperty('id', 'int');
-		$this->addProperty('type', 'varchar');
+		$this->addProperty('method', 'varchar');
 		$this->addProperty('name', 'varchar');
 		$this->addProperty('version', 'varchar');
 		$this->addProperty('value', 'int');
