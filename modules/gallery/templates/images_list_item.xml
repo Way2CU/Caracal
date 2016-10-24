@@ -6,6 +6,7 @@
 		<div class="options">
 			<cms:var name="$params['item_change']"/>
 			<cms:var name="$params['item_delete']"/>
+			<cms:var name="$params['item_set_default']"/>
 		</div>
 
 		<div

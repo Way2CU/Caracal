@@ -3,6 +3,11 @@
 <document>
 	<div style="margin-bottom: 10px;">
 		<cms:var name="$params['message']"/>
+		<cms:if condition="isset($params['name'])">
+			<div style="padding: 10px; font-weight: bold;">
+				<cms:var name="$params['name']"/>
+			</div>
+		</cms:if>
 	</div>
 	<div class="button_bar">
 		<button type="button" onclick="$params['action']" cms:eval="onclick">

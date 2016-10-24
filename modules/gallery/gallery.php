@@ -294,6 +294,10 @@ class gallery extends Module {
 					$this->deleteGroup_Commit();
 					break;
 
+				case 'groups_set_thumbnail':
+					$this->set_group_thumbnail();
+					break;
+
 				// ---
 
 				case 'containers':
@@ -893,6 +897,44 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Set specified image as thumbnail for its parent group.
+	 */
+	private function set_group_thumbnail() {
+		global $language;
+
+		$image_id = fix_id($_REQUEST['id']);
+		$manager = GalleryManager::get_instance();
+		$group_manager = GalleryGroupManager::get_instance();
+
+		// get image from the database
+		$image = $manager->get_single_item(array('group'), array('id'));
+		if (!is_object($image))
+			return;
+
+		$group = $group_manager->get_single_item(array('name'), array('id' => $image->group));
+		if (!is_object($group))
+			return;
+
+		// update group thumbnail
+		$group_manager->update_items(array('thumbnail' => $image_id), array('id' => $image->group));
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+					'message' => $this->get_language_constant('message_group_thumbnail_set'),
+					'name'    => $group->name[$language],
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('gallery_groups_set_thumbnail')
+				);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
 	 * Show container management form
 	 */
 	private function showContainers() {
@@ -900,7 +942,7 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new'		=> window_OpenHyperlink(
+					'link_new' => window_OpenHyperlink(
 										$this->get_language_constant('create_container'),
 										'gallery_containers_create', 400,
 										$this->get_language_constant('title_containers_create'),
@@ -1218,6 +1260,8 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_ImageList($tag_params, $children) {
+		global $section;
+
 		$manager = GalleryManager::get_instance();
 
 		$limit = null;
@@ -1293,7 +1337,10 @@ class gallery extends Module {
 						'visible'		=> $item->visible,
 						'image'			=> $this->getImageURL($item),
 						'selected'		=> $selected,
-						'item_change'	=> URL::make_hyperlink(
+				);
+
+			if ($section == 'backend') {
+				$params['item_change'] = URL::make_hyperlink(
 												$this->get_language_constant('change'),
 												window_Open(
 													'gallery_images_change', 	// window id
@@ -1306,10 +1353,8 @@ class gallery extends Module {
 														array('module', $this->name),
 														array('backend_action', 'images_change'),
 														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'	=> URL::make_hyperlink(
+													)));
+				$params['item_delete'] = URL::make_hyperlink(
 												$this->get_language_constant('delete'),
 												window_Open(
 													'gallery_images_delete', 	// window id
@@ -1322,10 +1367,23 @@ class gallery extends Module {
 														array('module', $this->name),
 														array('backend_action', 'images_delete'),
 														array('id', $item->id)
-													)
-												)
-											),
-				);
+													)));
+				if (!is_null($item->group))
+					$params['item_set_default'] = URL::make_hyperlink(
+												$this->get_language_constant('set_default'),
+												window_Open(
+													'gallery_groups_set_thumbnail', 	// window id
+													320,						// width
+													$this->get_language_constant('title_groups_set_thumbnail'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'groups_set_thumbnail'),
+														array('id', $item->id)
+													)));
+			}
 
 			$template->restore_xml();
 			$template->set_local_params($params);
