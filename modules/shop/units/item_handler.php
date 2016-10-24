@@ -208,6 +208,7 @@ class Handler {
 					'votes_down'      => $item->votes_down,
 					'priority'        => $item->priority,
 					'timestamp'       => $item->timestamp,
+					'expires'         => date('Y-m-d\TH:i:s', strtotime($item->expires)),
 					'visible'         => $item->visible,
 					'deleted'         => $item->deleted,
 					'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
@@ -245,7 +246,8 @@ class Handler {
 				'priority'        => isset($_REQUEST['priority']) ? fix_id($_REQUEST['priority']) : 5,
 				'manufacturer'    => isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']) ? fix_id($_REQUEST['manufacturer']) : 0,
 				'visible'         => $this->parent->get_boolean_field('visible') ? 1 : 0,
-				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID()
+				'uid'             => isset($_REQUEST['uid']) ? fix_chars($_REQUEST['uid']) : $this->generateUID(),
+				'expires'         => date('Y-m-d H:i:s', strtotime(fix_chars($_REQUEST['expires'])))
 			);
 
 		if ($new_item) {
@@ -525,6 +527,20 @@ class Handler {
 				$conditions['id'] = $id_list[array_rand($id_list)];
 		}
 
+		// option to show or hide expired
+		if (isset($tag_params['show_expired']))
+			if ($tag_params['show_expired'] == 0) {
+				$conditions['expires'] = array(
+						'operator' => '>=',
+						'value'    => date('Y-m-d H:i:s')
+					);
+			} else {
+				$conditions['expires'] = array(
+						'operator' => 'IS NOT',
+						'value'    => 'NULL'
+					);
+			}
+
 		if (empty($conditions))
 			return;
 
@@ -680,6 +696,20 @@ class Handler {
 				$conditions['id'] = -1;  // make sure nothing is returned if category is empty
 		}
 
+		// option to show or hide expired items
+		if (isset($tag_params['show_expired']))
+			if ($tag_params['show_expired'] == 0) {
+				$conditions['expires'] = array(
+						'operator' => '>=',
+						'value'    => date('Y-m-d H:i:s')
+					);
+			} else {
+				$conditions['expires'] = array(
+						'operator' => 'IS NOT',
+						'value'    => 'NULL'
+					);
+			}
+
 		if (isset($tag_params['related'])) {
 			$item_id = -1;
 			$relation_manager = \ShopRelatedItemsManager::get_instance();
@@ -720,6 +750,9 @@ class Handler {
 								'value'		=> '%'.fix_chars($tag_params['filter']).'%'
 							);
 		}
+
+		if (isset($tag_params['limit']))
+			$limit = fix_id($tag_params['limit']);
 
 		if (isset($tag_params['paginate'])) {
 			$per_page = is_numeric($tag_params['paginate']) ? $tag_params['paginate'] : 10;

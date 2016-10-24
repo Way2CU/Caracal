@@ -5,6 +5,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -23,6 +24,9 @@ class language_menu extends Module {
 		global $section;
 
 		parent::__construct(__FILE__);
+
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
 
 		// load CSS and JScript
 		if (ModuleHandler::is_loaded('head_tag')) {
@@ -89,12 +93,16 @@ class language_menu extends Module {
 	/**
 	 * Add meta tags to head tag.
 	 */
-	public function addMeta() {
+	public function add_meta_tags() {
 		global $default_language;
 
 		$head_tag = head_tag::get_instance();
 		$language_list = Language::get_languages(false);
 		$in_backend = isset($_REQUEST['section']);
+
+		// we don't need to do this on sites with one language
+		if (count($language_list) <= 1)
+			return;
 
 		// get parameters for URL
 		if ($in_backend) {
@@ -104,9 +112,7 @@ class language_menu extends Module {
 		} else {
 			// get values matched with URL
 			$pattern = SectionHandler::get_matched_pattern();
-			$query_string = $_SERVER['QUERY_STRING'];
-			if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-				$query_string = SectionHandler::ROOT_KEY.$query_string;
+			$query_string = URL::get_query_string();
 
 			// extract values
 			preg_match($pattern, $query_string, $link_params);
@@ -189,9 +195,7 @@ class language_menu extends Module {
 		} else {
 			// get values matched with URL
 			$pattern = SectionHandler::get_matched_pattern();
-			$query_string = $_SERVER['QUERY_STRING'];
-			if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-				$query_string = SectionHandler::ROOT_KEY.$query_string;
+			$query_string = URL::get_query_string();
 
 			// extract values
 			preg_match($pattern, $query_string, $link_params);

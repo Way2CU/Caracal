@@ -279,7 +279,7 @@ ul#navigation li a {
 	font-weight: 300;
 	text-decoration: none;
 
-	cursor: pointer;
+	cursor: default;
 	transition: all 0.3s;
 }
 
@@ -505,15 +505,11 @@ nav#language:hover a.active {
  * Default element behavior
  */
 *:not(input):not(textarea) {
-	-moz-user-drag: none;
-	-webkit-user-drag: none;
-	user-drag: none;
-
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
 
-	cursor: default !important;
+	cursor: default;
 }
 
 /**

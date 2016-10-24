@@ -43,7 +43,7 @@ $db_config = array(
 $cache_method = CacheType::NONE;
 $cache_expire_period = 86400;
 $cache_ignore_params = array(
-		'gclid', '_rewrite', Session::COOKIE_ID, Session::COOKIE_TYPE
+		'gclid', Session::COOKIE_ID, Session::COOKIE_TYPE
 	);
 $memcached_config = array(
 		'host'	=> 'localhost',

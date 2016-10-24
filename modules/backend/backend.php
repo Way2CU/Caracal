@@ -11,6 +11,7 @@
 use Core\Events;
 use Core\Module;
 use Core\Cache\Manager as Cache;
+use Modules\Backend\OrderEditor as OrderEditor;
 
 define('_BACKEND_SECTION_', 'backend_module');
 
@@ -21,6 +22,7 @@ require_once('units/action.php');
 require_once('units/menu_item.php');
 require_once('units/session_manager.php');
 require_once('units/user_manager.php');
+require_once('units/order_editor.php');
 
 
 class backend extends Module {
@@ -78,7 +80,7 @@ class backend extends Module {
 
 			$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
-
+			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/order_editor.js'), 'type'=>'text/javascript'));
 		}
 
 		// add admin level menus
@@ -167,6 +169,18 @@ class backend extends Module {
 	}
 
 	/**
+	 * Create new order editor for backend.
+	 *
+	 * @param object $manager_instance
+	 */
+	public static function get_order_editor($manager_instance) {
+		$parent = self::get_instance();
+		$result = new OrderEditor($parent, $manager_instance);
+
+		return $result;
+	}
+
+	/**
 	 * Transfers control to module functions
 	 *
 	 * @param array $params
@@ -188,10 +202,6 @@ class backend extends Module {
 				$session_manager->transfer_control();
 				return;
 			}
-
-			// fix input parameters
-			foreach($_REQUEST as $key => $value)
-				$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
 		}
 
 		if (isset($params['action']))
@@ -247,10 +257,6 @@ class backend extends Module {
 						$session_manager->transfer_control();
 						return;
 					}
-
-					// fix input parameters
-					foreach($_REQUEST as $key => $value)
-						$_REQUEST[$key] = $this->utf8_urldecode($_REQUEST[$key]);
 
 					// transfer control
 					$action = escape_chars($_REQUEST['backend_action']);
@@ -856,28 +862,6 @@ class backend extends Module {
 			$item->drawItem();
 
 		echo '</ul>';
-	}
-
-	/**
-	 * This function decodes characters encoded by JavaScript
-	 *
-	 * @param string/array $str
-	 * @return string/array
-	 */
-	private function utf8_urldecode($str) {
-		$result = '';
-
-		if (!is_array($str)) {
-			$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
-			$result = html_entity_decode($str, null, 'UTF-8');;
-
-		} else {
-			$result = array();
-			foreach ($str as $index => $value)
-				$result[$index] = $this->utf8_urldecode($value);
-		}
-
-		return $result;
 	}
 }
 

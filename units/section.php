@@ -49,9 +49,7 @@ final class SectionHandler {
 		}
 
 		// get query string
-		$query_string = $_SERVER['QUERY_STRING'];
-		if (substr($query_string, 0, 1) != self::ROOT_KEY)
-			$query_string = self::ROOT_KEY.$query_string;
+		$query_string = URL::get_query_string();
 
 		// try to match whole query string
 		foreach (self::$data as $pattern => $template_file) {
@@ -63,7 +61,7 @@ final class SectionHandler {
 			$match = self::wrap_pattern($match);
 
 			// store pattern params for later use
-			preg_match_all('|\{([\w\d_-]+)\}|is', $pattern, $params);
+			preg_match_all('|\{([\w\d_-]+)\}|ius', $pattern, $params);
 			self::$params[$pattern] = $params;
 
 			// successfully matched query string to template
@@ -74,15 +72,6 @@ final class SectionHandler {
 				$result = true;
 			}
 		}
-
-		// matching failed, try to load home template
-		if (!$result)
-			if (array_key_exists(self::ROOT_KEY, self::$data)) {
-				self::$matched_file = self::$data[self::ROOT_KEY];
-				self::$matched_pattern = self::wrap_pattern(self::ROOT_KEY);
-				self::$matched_params = array();
-				$result = true;
-			}
 
 		return $result;
 	}
@@ -115,12 +104,12 @@ final class SectionHandler {
 	}
 
 	/**
-	 * Return list of matched templates for specified template file.
+	 * Return list of matched patterns for specified template file.
 	 *
 	 * @param string $file
 	 * @return string
 	 */
-	public static function get_templates_for_file(string $file=null) {
+	public static function get_patterns_for_file($file=null) {
 		$result = array();
 
 		// collect templates
@@ -129,7 +118,7 @@ final class SectionHandler {
 		} else {
 			foreach (self::$data as $pattern => $template_file)
 				if ($file == $template_file)
-					$result[$pattern] = self::$params[$template_file];
+					$result[$pattern] = self::$params[$pattern];
 		}
 
 		return $result;
@@ -184,7 +173,7 @@ final class SectionHandler {
 	 * @return string
 	 */
 	public static function wrap_pattern($pattern) {
-		return '|'.$pattern.'|is';
+		return '|'.$pattern.'|ius';
 	}
 }
 

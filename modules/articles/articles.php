@@ -821,74 +821,75 @@ class articles extends Module {
 		// load template
 		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->set_template_params_from_array($children);
-		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:article', $this, 'tag_Article');
 		$template->register_tag_handler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
 
-		if (count($items) > 0)
-			foreach($items as $item) {
-				$timestamp = strtotime($item->timestamp);
-				$date = date($this->get_language_constant('format_date_short'), $timestamp);
-				$time = date($this->get_language_constant('format_time_short'), $timestamp);
+		if (count($items) == 0)
+			return;
 
-				$params = array(
-							'id'			=> $item->id,
-							'text_id'		=> $item->text_id,
-							'group'			=> $item->group,
-							'timestamp'		=> $item->timestamp,
-							'date'			=> $date,
-							'time'			=> $time,
-							'title'			=> $item->title,
-							'content'		=> $item->content,
-							'author'		=> $admin_manager->get_item_value(
-																'fullname',
-																array('id' => $item->author)
-															),
-							'gallery'		=> $item->gallery,
-							'visible'		=> $item->visible,
-							'views'			=> $item->views,
-							'votes_up'		=> $item->votes_up,
-							'votes_down' 	=> $item->votes_down,
-							'rating'		=> $this->getArticleRating($item, 10),
-							'selected'		=> $selected,
-							'item_change'	=> URL::make_hyperlink(
-													$this->get_language_constant('change'),
-													window_Open(
-														'articles_change', 	// window id
-														730,				// width
-														$this->get_language_constant('title_articles_change'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'articles_change'),
-															array('id', $item->id)
-														)
-													)
-												),
-							'item_delete'	=> URL::make_hyperlink(
-													$this->get_language_constant('delete'),
-													window_Open(
-														'articles_delete', 	// window id
-														400,				// width
-														$this->get_language_constant('title_articles_delete'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'articles_delete'),
-															array('id', $item->id)
-														)
-													)
-												),
-						);
+		foreach($items as $item) {
+			$timestamp = strtotime($item->timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
-			}
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'group'			=> $item->group,
+						'timestamp'		=> $item->timestamp,
+						'date'			=> $date,
+						'time'			=> $time,
+						'title'			=> $item->title,
+						'content'		=> $item->content,
+						'author'		=> $admin_manager->get_item_value(
+															'fullname',
+															array('id' => $item->author)
+														),
+						'gallery'		=> $item->gallery,
+						'visible'		=> $item->visible,
+						'views'			=> $item->views,
+						'votes_up'		=> $item->votes_up,
+						'votes_down' 	=> $item->votes_down,
+						'rating'		=> $this->getArticleRating($item, 10),
+						'selected'		=> $selected,
+						'item_change'	=> URL::make_hyperlink(
+												$this->get_language_constant('change'),
+												window_Open(
+													'articles_change', 	// window id
+													730,				// width
+													$this->get_language_constant('title_articles_change'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'articles_change'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete'	=> URL::make_hyperlink(
+												$this->get_language_constant('delete'),
+												window_Open(
+													'articles_delete', 	// window id
+													400,				// width
+													$this->get_language_constant('title_articles_delete'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'articles_delete'),
+														array('id', $item->id)
+													)
+												)
+											),
+					);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
 	}
 
 	/**

@@ -886,6 +886,7 @@ class shop extends Module {
 			`votes_up` INT NOT NULL,
 			`votes_down` INT NOT NULL,
 			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			`expires` TIMESTAMP NULL,
 			`priority` INT(4) NOT NULL DEFAULT '5',
 			`visible` BOOLEAN NOT NULL DEFAULT '1',
 			`deleted` BOOLEAN NOT NULL DEFAULT '0',
@@ -982,6 +983,7 @@ class shop extends Module {
 			$sql .= "`description_{$language}` TEXT NOT NULL ,";
 
 		$sql .="
+			`order` INT NOT NULL DEFAULT '0',
 			PRIMARY KEY ( `id` ),
 			KEY `parent` (`parent`),
 			KEY `text_id` (`text_id`)

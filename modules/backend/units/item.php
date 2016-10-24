@@ -10,7 +10,7 @@
  * Author: Mladen Mijatov
  */
 
-namespace Modules/Backend/Menu;
+namespace Modules\Backend\Menu;
 
 
 interface Item {

@@ -406,8 +406,8 @@ class gallery extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		if (!array_key_exists('image_extensions', $this->settings))
-			$this->save_setting('image_extensions', 'jpg,jpeg,png');
+		// save default supported extensions
+		$this->save_setting('image_extensions', 'jpg,jpeg,png,gif');
 	}
 
 	/**
@@ -2612,8 +2612,13 @@ class gallery extends Module {
 
 		// create image resource
 		$img_source = null;
+		$save_function = null;
+		$save_quality = null;
 		$has_alpha = false;
-		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
+		$save_quality = null;
+		$extension = strtolower(pathinfo(strtolower($filename), PATHINFO_EXTENSION));
+
+		switch ($extension) {
 			case 'jpg':
 			case 'jpeg':
 				$img_source = imagecreatefromjpeg($filename);
@@ -2627,10 +2632,15 @@ class gallery extends Module {
 				$save_quality = 9;
 				$has_alpha = true;
 				break;
+
+			case 'gif':
+				$img_source = imagecreatefromgif($filename);
+				$save_function = @imagegif;
+				$has_alpha = true;
 		}
 
 		// we failed to load image, exit
-		if ($img_source === FALSE)
+		if ($img_source === FALSE || is_null($img_source))
 			return null;
 
 		// calculate width to height ratio
@@ -2687,7 +2697,9 @@ class gallery extends Module {
 			);
 
 		// save image to file
-		$save_function($thumbnail, $target_file, $save_quality);
+		if (!is_null($save_quality))
+			$save_function($thumbnail, $target_file, $save_quality); else
+			$save_function($thumbnail, $target_file);
 
 		return $target_file;
 	}

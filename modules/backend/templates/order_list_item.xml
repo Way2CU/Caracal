@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div
+		class="list_item"
+		data-id="$params['id']"
+		cms:eval="data-id"
+		>
+		<span class="column">
+			<cms:var param="title" multilanguage="yes"/>
+		</span>
+	</div>
+</document>

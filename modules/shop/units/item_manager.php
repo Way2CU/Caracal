@@ -36,6 +36,7 @@ class ShopItemManager extends ItemManager {
 		$this->add_property('votes_up', 'int');
 		$this->add_property('votes_down', 'int');
 		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('expires', 'timestamp');
 		$this->add_property('priority', 'int');
 		$this->add_property('visible', 'boolean');
 		$this->add_property('deleted', 'boolean');

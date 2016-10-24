@@ -34,17 +34,32 @@
 					</label>
 				</div>
 
-				<label style="clear: both; padding-top: 10px;">
-					<span><cms:text constant="label_uid" module="shop"/></span>
-					<input
-						name="uid"
-						class="code ltr"
-						type="text"
-						value="$params['uid']"
-						maxlength="13"
-						cms:eval="value"
-						/>
-				</label>
+				<div class="box left" style="width: 180px;">
+					<label style="clear: both; padding-top: 10px;">
+						<span><cms:text constant="label_uid" module="shop"/></span>
+						<input
+							name="uid"
+							class="code ltr"
+							type="text"
+							value="$params['uid']"
+							maxlength="13"
+							cms:eval="value"
+							/>
+					</label>
+				</div>
+
+				<div class="box left">
+					<label style="padding-top: 10px;">
+						<span><cms:text constant="label_item_expiration" module="shop"/></span>
+						<input
+							type="datetime-local"
+							name="expires"
+							class="code ltr"
+							value="$params['expires']"
+							cms:eval="value"
+							/>
+					</label>
+				</div>
 
 				<label style="clear: both; padding-top: 10px;">
 					<span><cms:text constant="label_description" module="shop"/></span>

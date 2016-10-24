@@ -3120,6 +3120,18 @@ class contact_form extends Module {
 		if (isset($tag_params['show_fieldsets']))
 			$show_fieldsets = $tag_params['show_fieldsets'] == 1;
 
+		// assign transfer parameters
+		if (count($children) > 0)
+			foreach ($children as $tag) {
+				if ($tag->tagName != 'transfer')
+					continue;
+
+				$transfer_name = fix_chars($tag->tagAttrs['name']);
+				$transfer_value = fix_chars($tag->tagAttrs['value']);
+
+				$_SESSION['contact_form_transfer_params'][$transfer_name] = $transfer_value;
+			}
+
 		// load template
 		$template = $this->load_template($tag_params, 'form.xml');
 		$template->set_template_params_from_array($children);
