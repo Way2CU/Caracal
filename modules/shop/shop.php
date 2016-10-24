@@ -934,7 +934,7 @@ class shop extends Module {
 			`item` INT NOT NULL,
 			`remark` text NOT NULL,
 			PRIMARY KEY ( `id` ),
-			KEY `item` (`item`),
+			KEY `item` (`item`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
