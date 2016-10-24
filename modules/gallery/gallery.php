@@ -919,7 +919,7 @@ class gallery extends Module {
 		$group_manager->update_items(array('thumbnail' => $image_id), array('id' => $image->group));
 
 		// show message
-		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template = new TemplateHandler('message_with_name.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
 		$params = array(
