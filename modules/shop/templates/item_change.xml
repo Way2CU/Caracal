@@ -351,21 +351,17 @@
 				</div>
 			</div>
 
-			<!-- Delivery methods -->
-			<div class="scrollable_list">
-				<div class="list_header">
-					<span class="column" style="width: 360px;">
-						<cms:text constant="column_name_and_price" module="shop"/>
-					</span>
-				</div>
-				<div class="list_content" style="height: 370px" id="related_items">
-					<cms:delivery_methods
-						template="item_delivery_list.xml"
-						local="1"
-						item="$params['id']"
-						cms:eval="item"
-						/>
-				</div>
+			<!-- Remarks -->
+			<div>
+				<label>
+					<span><cms:text constant="label_remark" module="shop"/></span>
+					<textarea
+						name="remark"
+						style="width: 500px; height: 400px"
+						>
+						<cms:var param="remark"/>
+					</textarea>
+				</label>
 			</div>
 		</div>
 
@@ -382,7 +378,7 @@
 		var notebook = new Notebook('shop_change_item_notebook');
 
 		// get language constants
-		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_delivery'];
+		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_remark'];
 		var data = language_handler.getTextArray('shop', titles);
 		notebook
 			.setPageTitle(0, data['tab_item'])
@@ -390,7 +386,7 @@
 			.setPageTitle(2, data['tab_colors'])
 			.setPageTitle(3, data['tab_category'])
 			.setPageTitle(4, data['tab_related'])
-			.setPageTitle(5, data['tab_delivery']);
+			.setPageTitle(5, data['tab_remark']);
 
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_array]');

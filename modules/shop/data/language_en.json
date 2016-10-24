@@ -250,6 +250,7 @@
 	"status_shipping": "Shipping",
 	"status_processed": "Processed",
 	"subtotal_amount": "Sub-total:",
+	"tab_remark": "Remark",
 	"tab_category": "Categories",
 	"tab_colors": "Colors",
 	"tab_email_templates": "Email Templates",
