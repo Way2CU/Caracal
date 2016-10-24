@@ -5,6 +5,7 @@
  */
 
 use Modules\Shop\Transaction;
+use Modules\Shop\Item\Manager as ItemManager;
 
 
 class ShopTransactionsHandler {
@@ -382,7 +383,7 @@ class ShopTransactionsHandler {
 	 */
 	public function tag_TransactionItemList($tag_params, $children) {
 		$manager = ShopTransactionItemsManager::get_instance();
-		$item_manager = ShopItemManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$transaction_manager = ShopTransactionsManager::get_instance();
 		$currency_manager = ShopCurrenciesManager::get_instance();
 		$conditions = array();

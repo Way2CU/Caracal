@@ -1,7 +1,16 @@
 <?php
 
+/**
+ * Handler for shop item sizes.
+ *
+ * Author: Mladen Mijatov
+ */
+
+use Modules\Shop\Item\Manager as ItemManager;
+
 require_once('item_sizes_manager.php');
 require_once('item_size_values_manager.php');
+
 
 class ShopItemSizesHandler {
 	private static $_instance;
@@ -417,7 +426,7 @@ class ShopItemSizesHandler {
 	 * @return string
 	 */
 	private function generateUID() {
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 
 		// generate Id
 		$uid = uniqid();

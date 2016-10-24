@@ -1,8 +1,7 @@
 <?php
 
 namespace Modules\Shop;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class TokenManager extends ItemManager {

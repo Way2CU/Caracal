@@ -6,8 +6,7 @@
  */
 
 namespace Modules\Shop\Transaction;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class PromotionManager extends ItemManager {

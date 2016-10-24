@@ -5,8 +5,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Articles;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class VoteManager extends ItemManager {

@@ -10,8 +10,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Backend;
-
-use \TemplateHandler as TemplateHandler;
+use TemplateHandler;
 
 
 final class OrderEditor {

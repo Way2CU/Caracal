@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Article manager class.
+ * Article manager class
+ *
  * Author: Mladen Mijatov
  */
 namespace Modules\Articles;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class Manager extends ItemManager {

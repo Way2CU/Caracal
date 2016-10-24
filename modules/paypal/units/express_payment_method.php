@@ -9,6 +9,7 @@
 
 use Core\Events;
 use Modules\Shop\Transaction;
+use Modules\Shop\Item\Manager as ItemManager;
 
 
 class PayPal_Express extends PaymentMethod {
@@ -273,7 +274,7 @@ class PayPal_Express extends PaymentMethod {
 		global $language, $section, $action;
 
 		$shop = shop::get_instance();
-		$item_manager = ShopItemManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$result = false;
 		$fields = array();
 		$request_id = 0;

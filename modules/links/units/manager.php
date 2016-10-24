@@ -8,8 +8,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Links;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class Manager extends ItemManager {

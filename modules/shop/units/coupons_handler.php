@@ -8,8 +8,8 @@ namespace Modules\Shop\Promotion;
 require_once('coupons_manager.php');
 require_once('coupon_codes_manager.php');
 
-use \URL as URL;
-use \TemplateHandler as TemplateHandler;
+use URL;
+use TemplateHandler;
 
 
 class CouponHandler {

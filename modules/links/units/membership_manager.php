@@ -9,8 +9,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Links;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class MembershipManager extends ItemManager {

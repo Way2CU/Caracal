@@ -6,8 +6,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Shop\Property;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 final class Manager extends ItemManager {

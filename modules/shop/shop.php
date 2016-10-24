@@ -45,12 +45,13 @@ require_once('units/delivery.php');
 require_once('units/transaction.php');
 require_once('units/token.php');
 
-use Modules\Shop\Delivery as Delivery;
-use Modules\Shop\Transaction as Transaction;
-use Modules\Shop\Token as Token;
+use Modules\Shop\Delivery;
+use Modules\Shop\Transaction;
+use Modules\Shop\Token;
 
 use Modules\Shop\TokenManager as TokenManager;
-use Modules\Shop\Item\Handler as ShopItemHandler;
+use Modules\Shop\Item\Handler as ItemHandler;
+use Modules\Shop\Item\Manager as ItemManager;
 
 
 final class TransactionType {
@@ -462,7 +463,7 @@ class shop extends Module {
 			return array();
 
 		// initialize managers and data
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 		$result = array();
 		$conditions = array(
 			'visible'	=> 1,
@@ -574,12 +575,12 @@ class shop extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 			case 'show_item':
-				$handler = ShopItemHandler::get_instance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->tag_Item($params, $children);
 				break;
 
 			case 'show_item_list':
-				$handler = ShopItemHandler::get_instance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->tag_ItemList($params, $children);
 				break;
 
@@ -695,7 +696,7 @@ class shop extends Module {
 				break;
 
 			case 'json_get_item':
-				$handler = ShopItemHandler::get_instance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->json_GetItem();
 				break;
 
@@ -787,7 +788,7 @@ class shop extends Module {
 
 			switch ($action) {
 			case 'items':
-				$handler = ShopItemHandler::get_instance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 
@@ -923,6 +924,17 @@ class shop extends Module {
 			PRIMARY KEY ( `id` ),
 			KEY `item` (`item`),
 			KEY `text_id` (`text_id`)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$db->query($sql);
+
+		// create shop item remarks table
+		$sql = "
+			CREATE TABLE `shop_item_remarks` (
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`item` INT NOT NULL,
+			`remark` text NOT NULL,
+			PRIMARY KEY ( `id` ),
+			KEY `item` (`item`),
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
@@ -1437,7 +1449,7 @@ class shop extends Module {
 	private function setItemAsCart($uid, $count, $variation_id=null) {
 		$cart = array();
 		$result = false;
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 
 		// make sure we have variation id
 		if (is_null($variation_id))
@@ -1477,7 +1489,7 @@ class shop extends Module {
 	private function setCartFromTemplate($params, $children) {
 		if (count($children) > 0) {
 			$cart = array();
-			$manager = ShopItemManager::get_instance();
+			$manager = ItemManager::get_instance();
 
 			foreach ($children as $data) {
 				$uid = array_key_exists('uid', $data->tagAttrs) ? fix_chars($data->tagAttrs['uid']) : null;
@@ -2108,7 +2120,7 @@ class shop extends Module {
 	 * Show shopping card in form of JSON object
 	 */
 	private function json_ShowCart() {
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 		$values_manager = ShopItemSizeValuesManager::get_instance();
 		$gallery = ModuleHandler::is_loaded('gallery') ? gallery::get_instance() : null;
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
@@ -2206,7 +2218,7 @@ class shop extends Module {
 	 */
 	private function json_SetCartFromTransaction() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$item_manager = ShopItemManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$transaction_manager = ShopTransactionsManager::get_instance();
 		$transaction_item_manager = ShopTransactionItemsManager::get_instance();
 
@@ -2316,7 +2328,7 @@ class shop extends Module {
 		$thumbnail_constraint = isset($_REQUEST['thumbnail_constraint']) ? fix_id($_REQUEST['thumbnail_constraint']) : Thumbnail::CONSTRAIN_BOTH;
 
 		// try to get item from database
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 		$item = $manager->get_single_item($manager->get_field_names(), array('uid' => $uid));
 
 		// default result is false
@@ -2615,7 +2627,7 @@ class shop extends Module {
 					break;
 
 				// get managers
-				$manager = ShopItemManager::get_instance();
+				$manager = ItemManager::get_instance();
 
 				// get items from database and prepare result
 				$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
@@ -3486,7 +3498,7 @@ class shop extends Module {
 		switch ($transaction->type) {
 			case TransactionType::REGULAR:
 				$subtotal = 0;
-				$item_manager = ShopItemManager::get_instance();
+				$item_manager = ItemManager::get_instance();
 				$transaction_item_manager = ShopTransactionItemsManager::get_instance();
 				$items = $transaction_item_manager->get_items(
 					$transaction_item_manager->get_field_names(),
@@ -3603,7 +3615,7 @@ class shop extends Module {
 
 			case TransactionType::DELAYED:
 				$subtotal = 0;
-				$item_manager = ShopItemManager::get_instance();
+				$item_manager = ItemManager::get_instance();
 				$transaction_item_manager = ShopTransactionItemsManager::get_instance();
 				$items = $transaction_item_manager->get_items(
 					$transaction_item_manager->get_field_names(),
@@ -4081,7 +4093,7 @@ class shop extends Module {
 	public function tag_CheckoutItems($tag_params, $children) {
 		global $language;
 
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$ids = array_keys($cart);
 		$transaction_type = $this->getTransactionType();
@@ -4302,7 +4314,7 @@ class shop extends Module {
 	 * @param array children
 	 */
 	public function tag_DiscountedItemList($tag_params, $children) {
-		$manager = ShopItemManager::get_instance();
+		$manager = ItemManager::get_instance();
 
 		// get items which have discounted price
 		$item_to_display = array();

@@ -6,10 +6,10 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Shop\Property;
+use Modules\Shop\Item\Manager as ItemManager;
+use TemplateHandler;
 
 require_once('property_manager.php');
-
-use \TemplateHandler as TemplateHandler;
 
 
 class Handler {
@@ -78,7 +78,7 @@ class Handler {
 	 */
 	public function json_GetProperty() {
 		$manager = Manager::get_instance();
-		$item_manager = \ShopItemManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$conditions = array();
 		$result = false;
 
@@ -129,7 +129,7 @@ class Handler {
 	 */
 	private function json_GetPropertyList() {
 		$manager = Manager::get_instance();
-		$item_manager = \ShopItemManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$conditions = array();
 		$result = false;
 

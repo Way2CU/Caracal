@@ -11,15 +11,14 @@
  */
 
 namespace Core;
+use Language;
+use LanguageHandler;
+use SettingsManager;
+use TemplateHandler;
+use Exception;
 
-// temporary fallbacks
-use \Language as Language;
-use \LanguageHandler as LanguageHandler;
-use \SettingsManager as SettingsManager;
-use \TemplateHandler as TemplateHandler;
 
-
-class AddActionError extends \Exception {}
+class AddActionError extends Exception {}
 
 
 abstract class Module {

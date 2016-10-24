@@ -9,8 +9,10 @@
  *
  * Author: Mladen Mijatov
  */
+namespace Modules\Shop\Item;
 
-class ShopItemManager extends ItemManager {
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**

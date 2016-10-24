@@ -7,9 +7,8 @@
  */
 
 namespace Modules\SendGrid;
-
 use Core\Events;
-use \ContactForm_Mailer as ContactForm_Mailer;
+use ContactForm_Mailer;
 
 
 class Mailer extends ContactForm_Mailer {

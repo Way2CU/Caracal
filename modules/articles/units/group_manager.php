@@ -4,8 +4,7 @@
  * Article group manager.
  */
 namespace Modules\Articles;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class GroupManager extends ItemManager {

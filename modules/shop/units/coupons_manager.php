@@ -4,8 +4,7 @@
  * Manager for coupons.
  */
 namespace Modules\Shop\Promotion;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class CouponsManager extends ItemManager {

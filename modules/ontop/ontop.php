@@ -11,12 +11,11 @@
  */
 use Core\Events;
 use Core\Module;
+use Modules\OnTop\Manager;
+use Modules\OnTop\Handler;
 
 require_once('units/manager.php');
 require_once('units/handler.php');
-
-use \Modules\OnTop\Manager as Manager;
-use \Modules\OnTop\Handler as Handler;
 
 
 class ontop extends Module {

@@ -5,8 +5,7 @@
  */
 
 namespace Core\Testing;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class Manager extends ItemManager {

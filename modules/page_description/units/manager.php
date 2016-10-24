@@ -1,8 +1,13 @@
 <?php
 
-namespace Modules\PageDescription;
+/**
+ * Manager for page descriptions.
+ *
+ * Author: Mladen Mijatov
+ */
 
-use \ItemManager as ItemManager;
+namespace Modules\PageDescription;
+use ItemManager;
 
 
 class Manager extends ItemManager {

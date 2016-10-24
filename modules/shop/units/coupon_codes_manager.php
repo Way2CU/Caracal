@@ -3,8 +3,7 @@
  * Manager for coupon codes.
  */
 namespace Modules\Shop\Promotion;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class CouponCodesManager extends ItemManager {

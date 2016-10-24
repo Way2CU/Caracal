@@ -7,6 +7,8 @@
  * Author: Mladen Mijatov
  */
 
+use Modules\Shop\Item\Manager as ItemManager;
+
 require_once('manufacturer_manager.php');
 
 
@@ -261,7 +263,7 @@ class ShopManufacturerHandler {
 	private function deleteManufacturer_Commit() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = ShopManufacturerManager::get_instance();
-		$item_manager = ShopItemManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 
 		$manager->delete_items(array('id' => $id));
 		$item_manager->update_items(array('manufacturer' => 0), array('manufacturer' => $id));
