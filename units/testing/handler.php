@@ -42,6 +42,15 @@ final class Handler {
 	}
 
 	/**
+	 * Return instace of database manager.
+	 *
+	 * @return object
+	 */
+	public function get_manager() {
+		return Manager::get_instance();
+	}
+
+	/**
 	 * Handle rendering test tag.
 	 *
 	 * @param object $template
@@ -117,13 +126,13 @@ final class Handler {
 	}
 
 	/**
-	 * Register test to be used by the system.
+	 * Register testing method to be used by the system.
 	 *
 	 * @param string $test_name
 	 * @param object $text
 	 * @throws TestExistsError
 	 */
-	public function register_test($test_name, &$test) {
+	public function register_method($test_name, &$test) {
 		if (array_key_exists($test_name, $this->tests))
 			throw TestExistsError("Specified name `{$test_name}` is already present in the system!");
 
