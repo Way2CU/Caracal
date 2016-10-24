@@ -482,7 +482,11 @@ abstract class ItemManager {
 			throw new LoadQueryError("Unable to find specified query file '{$file_name}' in '{$path}'.");
 
 		// load file
-		$raw_file = file_get_contents($path.$file_name);
+		$sql = file_get_contents($path.$file_name);
+
+		// parse matched fields
+		if (preg_match_all('|`(?P<field>[\w]+)`\s*(?P<type>[\w\d_]+)(.*),|ius', $sql, $matches)) {
+		}
 	}
 }
 
