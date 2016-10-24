@@ -673,6 +673,18 @@ class TemplateHandler {
 
 				// automated testing support
 				case 'cms:test':
+					// don't allow content of this tag to be cached
+					if ($this->cache->isCaching()) {
+						$this->cache->startDirtyArea();
+						$skip_cache = true;
+
+						// reconstruct template for cache,
+						// ugly but we are not doing it a lot
+						$data = $this->get_data_for_cache($tag);
+						$this->cache->setCacheForDirtyArea($data);
+					}
+
+					// select and show version
 					$handler = \Core\Testing\Handler::get_instance();
 					$handler->show_version($self, $tag->tagAttrs, $tag->tagChildren);
 					break;
