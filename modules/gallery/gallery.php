@@ -1339,7 +1339,7 @@ class gallery extends Module {
 						'selected'		=> $selected,
 				);
 
-			if ($section == 'backend') {
+			if ($section == 'backend' || $section == 'backend_module') {
 				$params['item_change'] = URL::make_hyperlink(
 												$this->get_language_constant('change'),
 												window_Open(
