@@ -11,14 +11,14 @@
  */
 namespace Core\Testing;
 
-require_once('base.php');
+require_once('method.php');
 require_once('manager.php');
 
 
 class TestExistsError extends Exception {}
 
 
-final class AutoTest {
+final class Handler {
 	private static $_instance;
 	private $tests;
 
