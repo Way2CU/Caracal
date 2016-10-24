@@ -32,6 +32,7 @@
     "message_group_delete": "You are about to remove the following group and all images within that group. Are you sure?",
     "message_group_deleted": "Specified group and images were removed.",
     "message_group_thumbnail_set": "Selected image was set as thumbnail for the following group.",
+    "message_group_thumbnail_set_error": "Unable to set thumbnail as selected image doesn't belong to any group.",
     "message_image_delete": "You are about to remove the following image. Are you sure?",
     "message_image_deleted": "Specified image was removed.",
     "message_image_invalid_type": "Invalid file type. Please contact system administrator.",

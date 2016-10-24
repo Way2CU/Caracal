@@ -911,23 +911,36 @@ class gallery extends Module {
 		if (!is_object($image))
 			return;
 
-		$group = $group_manager->get_single_item(array('name'), array('id' => $image->group));
-		if (!is_object($group))
-			return;
+		if (!is_null($image->group)) {
+			// set image as thumbnail for its parent group
+			$group = $group_manager->get_single_item(array('name'), array('id' => $image->group));
+			if (!is_object($group))
+				return;
 
-		// update group thumbnail
-		$group_manager->update_items(array('thumbnail' => $image_id), array('id' => $image->group));
+			// update group thumbnail
+			$group_manager->update_items(array('thumbnail' => $image_id), array('id' => $image->group));
 
-		// show message
-		$template = new TemplateHandler('message_with_name.xml', $this->path.'templates/');
-		$template->set_mapped_module($this->name);
+			// prepare message template
+			$template = new TemplateHandler('message_with_name.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
 
-		$params = array(
-					'message' => $this->get_language_constant('message_group_thumbnail_set'),
-					'name'    => $group->name[$language],
-					'button'  => $this->get_language_constant('close'),
-					'action'  => window_Close('gallery_groups_set_thumbnail')
-				);
+			$params = array(
+						'message' => $this->get_language_constant('message_group_thumbnail_set'),
+						'name'    => $group->name[$language],
+					);
+
+		} else {
+			// image doesn't belong to a group, show error message
+			$template = new TemplateHandler('message.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
+
+			$params = array(
+						'message' => $this->get_language_constant('message_group_thumbnail_set_error')
+					);
+		}
+
+		$params['button'] = $this->get_language_constant('close');
+		$params['action'] = window_Close('gallery_groups_set_thumbnail');
 
 		$template->restore_xml();
 		$template->set_local_params($params);
@@ -1368,21 +1381,20 @@ class gallery extends Module {
 														array('backend_action', 'images_delete'),
 														array('id', $item->id)
 													)));
-				if (!is_null($item->group))
-					$params['item_set_default'] = URL::make_hyperlink(
-												$this->get_language_constant('set_default'),
-												window_Open(
-													'gallery_groups_set_thumbnail', 	// window id
-													320,						// width
-													$this->get_language_constant('title_groups_set_thumbnail'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'groups_set_thumbnail'),
-														array('id', $item->id)
-													)));
+				$params['item_set_default'] = URL::make_hyperlink(
+											$this->get_language_constant('set_default'),
+											window_Open(
+												'gallery_groups_set_thumbnail', 	// window id
+												320,						// width
+												$this->get_language_constant('title_groups_set_thumbnail'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'groups_set_thumbnail'),
+													array('id', $item->id)
+												)));
 			}
 
 			$template->restore_xml();
