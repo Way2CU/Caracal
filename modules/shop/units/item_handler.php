@@ -171,11 +171,17 @@ class Handler {
 	private function changeItem() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = Manager::get_instance();
+		$remark_manager = RemarkManager::get_instance();
 
+		// get item from the database
 		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (!is_object($item))
 			return;
+
+		// try to load remark for specified item
+		$data = $remark_manager->get_single_item(array('remark'), array('item' => $id));
+		$remark = is_object($data) ? $data->remark : '';
 
 		// create template
 		$template = new TemplateHandler('item_change.xml', $this->path.'templates/');
@@ -183,14 +189,12 @@ class Handler {
 
 		// register tag handlers
 		$category_handler = ShopCategoryHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
-
 		$size_handler = ShopItemSizesHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
-
 		$manufacturer_handler = ShopManufacturerHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
+		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
+		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
+		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
 		// prepare parameters
@@ -216,6 +220,7 @@ class Handler {
 					'expires'         => date('Y-m-d\TH:i:s', strtotime($item->expires)),
 					'visible'         => $item->visible,
 					'deleted'         => $item->deleted,
+					'remark'          => $remark,
 					'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
 					'cancel_action'   => window_Close('shop_item_change')
 				);
@@ -232,6 +237,7 @@ class Handler {
 	private function saveItem() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$manager = Manager::get_instance();
+		$remark_manager = RemarkManager::get_instance();
 		$membership_manager = ShopItemMembershipManager::get_instance();
 		$related_items_manager = ShopRelatedItemsManager::get_instance();
 		$open_editor = '';
@@ -282,6 +288,9 @@ class Handler {
 		} else {
 			// remove membership data, we'll update those in a moment
 			$membership_manager->delete_items(array('item' => $id));
+
+			// remove remarks as well
+			$remark_manager->delete_items(array('item' => $id));
 		}
 
 		// store item data
@@ -319,6 +328,12 @@ class Handler {
 										'item'		=> $id
 									));
 			}
+
+		// update remark
+		$remark_manager->insert_item(array(
+					'item'   => $id,
+					'remark' => escape_chars($_REQUEST['remark'])
+				));
 
 		// store related items
 		if (!$new_item)

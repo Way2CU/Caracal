@@ -1213,6 +1213,7 @@ class shop extends Module {
 			'shop_items',
 			'shop_currencies',
 			'shop_categories',
+			'shop_item_remarks',
 			'shop_item_membership',
 			'shop_item_sizes',
 			'shop_item_size_values',
