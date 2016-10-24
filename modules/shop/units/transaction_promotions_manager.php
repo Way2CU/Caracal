@@ -18,10 +18,10 @@ class PromotionManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_transaction_promotions');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('transaction', 'int');
-		$this->addProperty('promotion', 'varchar');
-		$this->addProperty('discount', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('transaction', 'int');
+		$this->add_property('promotion', 'varchar');
+		$this->add_property('discount', 'varchar');
 	}
 
 	/**

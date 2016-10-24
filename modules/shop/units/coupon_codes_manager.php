@@ -15,12 +15,12 @@ class CouponCodesManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_coupon_codes');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('coupon', 'int');
-		$this->addProperty('code', 'varchar');
-		$this->addProperty('times_used', 'int');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('discount', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('coupon', 'int');
+		$this->add_property('code', 'varchar');
+		$this->add_property('times_used', 'int');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('discount', 'varchar');
 	}
 
 	/**

@@ -17,11 +17,11 @@ class Manager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_tests');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('method', 'varchar');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('version', 'varchar');
-		$this->addProperty('value', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('method', 'varchar');
+		$this->add_property('name', 'varchar');
+		$this->add_property('version', 'varchar');
+		$this->add_property('value', 'int');
 	}
 
 	/**

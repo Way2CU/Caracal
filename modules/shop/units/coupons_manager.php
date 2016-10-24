@@ -16,13 +16,13 @@ class CouponsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_coupons');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('has_limit', 'boolean');
-		$this->addProperty('has_timeout', 'boolean');
-		$this->addProperty('limit', 'int');
-		$this->addProperty('timeout', 'timestamp');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('has_limit', 'boolean');
+		$this->add_property('has_timeout', 'boolean');
+		$this->add_property('limit', 'int');
+		$this->add_property('timeout', 'timestamp');
 	}
 
 	/**

@@ -19,9 +19,9 @@ class RemarkManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_item_remarks');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('item', 'int');
-		$this->addProperty('remark', 'text');
+		$this->add_property('id', 'int');
+		$this->add_property('item', 'int');
+		$this->add_property('remark', 'text');
 	}
 
 	/**
