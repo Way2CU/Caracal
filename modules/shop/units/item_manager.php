@@ -10,6 +10,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Shop\Item;
+use ItemManager;
 
 
 class Manager extends ItemManager {
