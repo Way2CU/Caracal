@@ -1,6 +1,6 @@
-# Testing Tag - `cms:test`
+# Automated testing - `cms:test`
 
-	<cms:test type="exploration" name="contact_form" explore_percentage="10">
+	<cms:test method="simple" name="contact_form">
 		<version name="first">
 			...
 		</version>
