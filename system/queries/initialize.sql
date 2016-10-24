@@ -39,7 +39,7 @@ CREATE TABLE `system_modules` (
 	`active` smallint NOT NULL DEFAULT '1',
 	PRIMARY KEY (`id`),
 	KEY `index_by_preload` (`preload`),
-	KEY `idnex_by_active` (`active`)
+	KEY `index_by_active` (`active`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `system_retries` (
@@ -57,4 +57,15 @@ CREATE TABLE `system_settings` (
 	`value` text COLLATE utf8_bin,
 	PRIMARY KEY (`id`),
 	KEY `index_by_module` (`module`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `system_tests` (
+	`id` bigint NOT NULL AUTO_INCREMENT,
+	`type` varchar(30) NOT NULL,
+	`name` varchar(30) NOT NULL,
+	`version` varchar(30) NOT NULL,
+	`value` int NOT NULL,
+	PRIMARY KEY (`id`),
+	KEY `index_for_update` (`type`, `name`, `version`),
+	KEY `index_for_decision` (`type`, `name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
