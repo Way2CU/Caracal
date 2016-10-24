@@ -338,7 +338,7 @@
 		var notebook = new Notebook('shop_add_item_notebook');
 
 		// get language constants
-		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_delivery'];
+		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_remarks'];
 		var data = language_handler.getTextArray('shop', titles);
 		notebook
 			.setPageTitle(0, data['tab_item'])

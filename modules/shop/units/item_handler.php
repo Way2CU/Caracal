@@ -147,9 +147,6 @@ class Handler {
 		$manufacturer_handler = \ShopManufacturerHandler::get_instance($this->parent);
 		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 
-		$delivery_handler = \ShopDeliveryMethodsHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
-
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
 		$template->restore_xml();
@@ -182,9 +179,6 @@ class Handler {
 
 		$manufacturer_handler = \ShopManufacturerHandler::get_instance($this->parent);
 		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
-
-		$delivery_handler = \ShopDeliveryMethodsHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:delivery_methods', $delivery_handler, 'tag_DeliveryMethodsList');
 
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
@@ -229,7 +223,6 @@ class Handler {
 		$manager = \ShopItemManager::get_instance();
 		$membership_manager = \ShopItemMembershipManager::get_instance();
 		$related_items_manager = \ShopRelatedItemsManager::get_instance();
-		$delivery_item_relation_manager = \ShopDeliveryItemRelationsManager::get_instance();
 		$open_editor = '';
 
 		$new_item = is_null($id);
@@ -278,9 +271,6 @@ class Handler {
 		} else {
 			// remove membership data, we'll update those in a moment
 			$membership_manager->delete_items(array('item' => $id));
-
-			// remove delivery methods
-			$delivery_item_relation_manager->delete_items(array('item' => $id));
 		}
 
 		// store item data
@@ -318,16 +308,6 @@ class Handler {
 										'item'		=> $id
 									));
 			}
-
-		// update delivery methods
-		if (count($delivery_ids) > 0)
-			foreach ($delivery_ids as $delivery_id)
-				if (!empty($delivery_id)) {
-					$delivery_item_relation_manager->insert_item(array(
-											'item'		=> $id,
-											'price'		=> $delivery_id
-										));
-				}
 
 		// store related items
 		if (!$new_item)

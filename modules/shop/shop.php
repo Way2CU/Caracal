@@ -37,7 +37,6 @@ require_once('units/delivery_address_manager.php');
 require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
-require_once('units/delivery_methods_handler.php');
 require_once('units/coupons_handler.php');
 
 // helper classes
