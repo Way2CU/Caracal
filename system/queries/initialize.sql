@@ -61,11 +61,11 @@ CREATE TABLE `system_settings` (
 
 CREATE TABLE `system_tests` (
 	`id` bigint NOT NULL AUTO_INCREMENT,
-	`type` varchar(30) NOT NULL,
+	`method` varchar(30) NOT NULL,
 	`name` varchar(30) NOT NULL,
 	`version` varchar(30) NOT NULL,
 	`value` int NOT NULL,
 	PRIMARY KEY (`id`),
-	KEY `index_for_update` (`type`, `name`, `version`),
-	KEY `index_for_decision` (`type`, `name`)
+	KEY `index_for_update` (`method`, `name`, `version`),
+	KEY `index_for_decision` (`method`, `name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
