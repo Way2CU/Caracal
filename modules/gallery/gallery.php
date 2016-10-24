@@ -1382,7 +1382,7 @@ class gallery extends Module {
 														array('id', $item->id)
 													)));
 				$params['item_set_default'] = URL::make_hyperlink(
-											$this->get_language_constant('set_default'),
+											$this->get_language_constant('menu_set_default'),
 											window_Open(
 												'gallery_groups_set_thumbnail', 	// window id
 												320,						// width
