@@ -15,7 +15,7 @@ require_once('method.php');
 require_once('manager.php');
 
 
-class TestExistsError extends Exception {}
+class TestExistsError extends \Exception {}
 
 
 final class Handler {
