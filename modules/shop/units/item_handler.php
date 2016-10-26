@@ -4,6 +4,22 @@
  * Shop item handler class. This class manages all the operatiosn on shop items
  * and displaying them.
  *
+ * Triggered events:
+ * - Callback for `item-added`:
+ *		function ($item_id)
+ *
+ *		Called after new item has been added to the shop.
+ *
+ * - Callback for `item-changed`:
+ *		function ($item_id)
+ *
+ *		Called after existing item has been changed.
+ *
+ * - Callback for `item-deleted`:
+ *		- function ($item_id)
+ *
+ *		Called after item has been removed.
+ *
  * Author: Mladen Mijatov
  */
 namespace Modules\Shop\Item;
@@ -15,6 +31,7 @@ require_once('category_manager.php');
 require_once('related_items_manager.php');
 require_once('property_handler.php');
 
+use Core\Events;
 use TemplateHandler;
 use ModuleHandler;
 use URL;
@@ -46,6 +63,11 @@ class Handler {
 		$this->parent = $parent;
 		$this->name = $this->parent->name;
 		$this->path = $this->parent->path;
+
+		// register item related events with system
+		Events::register('shop', 'item-added', 1);
+		Events::register('shop', 'item-changed', 1);
+		Events::register('shop', 'item-deleted', 1);
 	}
 
 	/**
@@ -299,11 +321,13 @@ class Handler {
 			$manager->insert_item($data);
 			$window = 'shop_item_add';
 			$id = $manager->get_inserted_id();
+			Events::trigger('shop', 'item-added', $id);
 
 		} else {
 			// update existing data
 			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_item_change';
+			Events::trigger('shop', 'item-changed', $id);
 		}
 
 		// update categories and delivery method selection
@@ -422,6 +446,7 @@ class Handler {
 
 		$manager->update_items(array('deleted' => 1), array('id' => $id));
 		$membership_manager->delete_items(array('item' => $id));
+		Events::trigger('shop', 'item-deleted', $id);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->parent->name);
