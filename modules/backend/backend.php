@@ -849,6 +849,9 @@ class backend extends Module {
 			$directory->close();
 		}
 
+		// make the list easier to navigate
+		sort($result);
+
 		return $result;
 	}
 
