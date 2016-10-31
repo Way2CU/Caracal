@@ -368,7 +368,7 @@ class TemplateHandler {
 					$children = $tag->tagChildren;
 
 					foreach ($tag->tagChildren as $child) {
-						if ($child->tagName != 'transfer')
+						if ($child->tagName != 'cms:transfer')
 							continue;
 
 						// collect information

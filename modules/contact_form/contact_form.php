@@ -3152,19 +3152,19 @@ class contact_form extends Module {
 			);
 
 			$params = array(
-				'id'			=> $item->id,
-				'text_id'		=> $item->text_id,
-				'name'			=> $item->name,
-				'action'		=> !empty($item->action) ? $item->action : URL::make_query($this->name, 'submit'),
-				'template'		=> $item->template,
-				'use_ajax'		=> $item->use_ajax,
-				'show_submit'	=> $item->show_submit,
-				'show_reset'	=> $item->show_reset,
-				'show_cancel'	=> $item->show_cancel,
-				'show_controls'	=> $item->show_submit || $item->show_reset || $item->show_cancel,
-				'show_fieldsets'	=> $show_fieldsets,
-				'has_files'		=> count($fields) > 0
-			);
+					'id'             => $item->id,
+					'text_id'        => $item->text_id,
+					'name'           => $item->name,
+					'action'         => !empty($item->action) ? $item->action : URL::make_query($this->name, 'submit'),
+					'template'       => $item->template,
+					'use_ajax'       => $item->use_ajax,
+					'show_submit'    => $item->show_submit,
+					'show_reset'     => $item->show_reset,
+					'show_cancel'    => $item->show_cancel,
+					'show_controls'  => $item->show_submit || $item->show_reset || $item->show_cancel,
+					'show_fieldsets' => $show_fieldsets,
+					'has_files'      => count($fields) > 0
+				);
 
 			$template->restore_xml();
 			$template->set_local_params($params);
