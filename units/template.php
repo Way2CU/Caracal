@@ -632,6 +632,7 @@ class TemplateHandler {
 						$settings = $this->module->settings;
 
 					$params = $this->params;
+					$template = $this->template_params;
 					$output = '';
 
 					if (isset($tag->tagAttrs['name'])) {
