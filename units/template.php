@@ -372,8 +372,15 @@ class TemplateHandler {
 							continue;
 
 						// collect information
-						$param_name = $child->tagAttrs['name'];
-						$param_value = isset($this->params[$param_name]) ? $this->params[$param_name] : null;
+						if (isset($child->tagAttrs['name'])) {
+							$param_name = $child->tagAttrs['name'];
+							$param_value = isset($this->params[$param_name]) ? $this->params[$param_name] : null;
+
+						} else if (isset($child->tagAttrs['template'])) {
+							$param_name = $child->tagAttrs['template'];
+							$param_value = isset($this->template_params[$param_name]) ? $this->template_params[$param_name] : null;
+						}
+
 						$target_name = isset($child->tagAttrs['target']) ? $child->tagAttrs['target'] : $param_name;
 						$tag_attributes = array(
 								'name'  => $target_name,
