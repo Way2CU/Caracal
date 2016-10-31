@@ -633,6 +633,7 @@ class TemplateHandler {
 						$output = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 
 					} else if (isset($tag->tagAttrs['param'])) {
+						// object parameter
 						$param = $tag->tagAttrs['param'];
 						$multilanguage = isset($tag->tagAttrs['multilanguage']) ? $tag->tagAttrs['multilanguage'] == 'yes' : false;
 
@@ -640,6 +641,11 @@ class TemplateHandler {
 							if (!$multilanguage)
 								$output = $params[$param]; else
 								$output = $params[$param][$language];
+
+					} else if (isset($tag->tagAttrs['template'])) {
+						// template parameter
+						$param = $tag->tagAttrs['template'];
+						$output = $this->template_params[$param];
 					}
 
 					echo $output;
