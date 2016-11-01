@@ -28,6 +28,11 @@ final class Query {
 
 	 // list of multi-language fields
 	public static $multilanguage_fields = array('ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
+	private static $field_map = array(
+			'ML_VARCHAR' => 'VARCHAR',
+			'ML_TEXT'    => 'TEXT',
+			'ML_CHAR'    => 'CHAR'
+		);
 
 	/**
 	 * Load SQL file and prepare multi-language fields. If module is specified
@@ -66,12 +71,13 @@ final class Query {
 			$matched_definition = $matches['definition'][$index];
 			$field_name = preg_quote($matched_name);
 			$field_definition = preg_quote($matched_definition);
+			$real_type = self::field_map[strtoupper($field_type)];
 
 			// prepare search and replace patterns
 			$search = "|`{$field_name}`\s*{$field_type}{$field_definition}\s*,|iu";
 			$replace = '';
 			foreach ($languages as $language)
-				$replace .= "`{$matched_name}_{$language}` {$field_type}{$matched_definition},";
+				$replace .= "`{$matched_name}_{$language}` {$real_type}{$matched_definition},";
 
 			// update query to include all languages
 			$sql = preg_replace($search, $replace, $sql);
