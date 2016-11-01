@@ -282,6 +282,22 @@ final class URL {
 		// decode html encoded unicode codes
 		return URL::decode($query_string);
 	}
+
+	/**
+	 * Test for currently matched file and return class or false.
+	 * This function is commonly used with `cms:optional` attribute
+	 * to provide different highlight for active menu items.
+	 *
+	 * @return mixed
+	 */
+	public static function is_active($template_file, $class='active') {
+		$result = false;
+
+		if ($template_file == SectionHandler::get_matched_file())
+			$result = $class;
+
+		return $result;
+	}
 }
 
 ?>
