@@ -58,7 +58,7 @@ final class Query {
 
 		// prepare replace multi-language fields with localized ones
 		foreach ($matches['type'] as $index => $field_type) {
-			if (!in_array($field_type, self::$multilanguage_fields))
+			if (!in_array(strtoupper($field_type), self::$multilanguage_fields))
 				continue;
 
 			// prepare data to be used in search and replace
