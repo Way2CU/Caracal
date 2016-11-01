@@ -426,6 +426,8 @@ class contact_form extends Module {
 		$this->save_setting('recipient_address', 'sample@email.com');
 		$this->save_setting('smtp_server', 'smtp.gmail.com');
 		$this->save_setting('smtp_port', '465');
+		$this->save_setting('smtp_username', '');
+		$this->save_setting('smtp_password', '');
 		$this->save_setting('use_ssl', 1);
 		$this->save_setting('mailer', '');
 
