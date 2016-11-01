@@ -42,7 +42,7 @@ final class Query {
 
 		// get path to look for query
 		if (!is_null($module))
-			$path = $module->path; else
+			$path = $module->path.'queries/'; else
 			$path = $system_queries_path;
 
 		// throw error
