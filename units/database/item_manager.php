@@ -71,7 +71,7 @@ final class Query {
 			$matched_definition = $matches['definition'][$index];
 			$field_name = preg_quote($matched_name);
 			$field_definition = preg_quote($matched_definition);
-			$real_type = self::field_map[strtoupper($field_type)];
+			$real_type = self::$field_map[strtoupper($field_type)];
 
 			// prepare search and replace patterns
 			$search = "|`{$field_name}`\s*{$field_type}{$field_definition}\s*,|iu";
