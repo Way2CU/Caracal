@@ -127,19 +127,7 @@ class tips extends Module {
 	public function on_init() {
 		global $db;
 
-		$list = Language::get_languages(false);
-
-		$sql = "
-			CREATE TABLE `tips` (
-				`id` INT NOT NULL AUTO_INCREMENT ,";
-
-		foreach($list as $language)
-			$sql .= "`content_{$language}` TEXT NOT NULL ,";
-
-		$sql .= "
-				`visible` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$sql = Query::load_file('tips.sql', $this);
 		$db->query($sql);
 	}
 
