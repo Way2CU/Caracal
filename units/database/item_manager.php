@@ -18,24 +18,71 @@ final class Query {
 	const UPDATE = 1;
 	const DELETE = 2;
 	const SELECT = 3;
-}
+	const FIELD_PATTERN = '|`(?P<name>[\w\d_]+)`\s*(?P<type>[\w\d_]+)(?P<definition>.{0,1000}?(?=,\s*[\w`])),|isum';
 
-
-abstract class ItemManager {
-	/**
-	 * List of string based field types
-	 * @var array
-	 */
-	protected $string_fields = array(
+	 // list of string based field types
+	public static $string_fields = array(
 							'CHAR', 'TEXT', 'VARCHAR', 'DATE', 'TIMESTAMP', 'TIME',
 							'ML_VARCHAR', 'ML_TEXT', 'ML_CHAR'
 						);
 
+	 // list of multi-language fields
+	public static $multilanguage_fields = array('ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
+
 	/**
-	 * List of multi-language fields
-	 * @var array
+	 * Load SQL file and prepare multi-language fields. If module is specified
+	 * file will be loaded relative to module's path.
+	 *
+	 * @param string $file_name
+	 * @param object $module
+	 * @return string
 	 */
-	protected $ml_fields = array('ML_VARCHAR', 'ML_TEXT', 'ML_CHAR');
+	public static function load_file($file_name, $module=null) {
+		global $system_queries_path;
+
+		// get path to look for query
+		if (!is_null($module))
+			$path = $module->path; else
+			$path = $system_queries_path;
+
+		// throw error
+		if (!file_exists($path.$file_name))
+			throw new LoadQueryError("Unable to find specified query file '{$file_name}' in '{$path}'.");
+
+		// load file and find all the fields
+		$sql = file_get_contents($path.$file_name);
+		preg_match_all(self::FIELD_PATTERN, $sql, $matches);
+
+		// get languages from the system
+		$languages = Language::get_languages(false);
+
+		// prepare replace multi-language fields with localized ones
+		foreach ($matches['type'] as $index => $field_type) {
+			if (!in_array($field_type, self::$multilanguage_fields))
+				continue;
+
+			// prepare data to be used in search and replace
+			$matched_name = $matches['name'][$index];
+			$matched_definition = $matches['definition'][$index];
+			$field_name = preg_quote($matched_name);
+			$field_definition = preg_quote($matched_definition);
+
+			// prepare search and replace patterns
+			$search = "|`{$field_name}`\s*{$field_type}{$field_definition}\s*,|iu";
+			$replace = '';
+			foreach ($languages as $language)
+				$replace .= "`{$matched_name}_{$language}` {$field_type}{$matched_definition},";
+
+			// update query to include all languages
+			$sql = preg_replace($search, $replace, $sql);
+		}
+
+		return $sql;
+	}
+}
+
+
+abstract class ItemManager {
 
 	/**
 	 * List of item fields
@@ -85,7 +132,7 @@ abstract class ItemManager {
 		$this->fields[] = $field_name;
 		$this->field_types[$field_name] = $field_type;
 
-		if (in_array($field_type, $this->ml_fields))
+		if (in_array($field_type, Query::$multilanguage_fields))
 			foreach($this->languages as $lang)
 				$this->field_types["{$field_name}_{$lang}"] = strtoupper($field_type);
 	}
@@ -198,7 +245,7 @@ abstract class ItemManager {
 	public function get_item_value($item, $conditionals=array()) {
 		global $db, $language;
 
-		if (array_key_exists($item, $this->field_types) && in_array($this->field_types[$item], $this->ml_fields))
+		if (array_key_exists($item, $this->field_types) && in_array($this->field_types[$item], Query::$multilanguage_fields))
 			$item = "{$item}_{$language}";
 
 		$sql = "SELECT {$item} FROM {$this->table_name}";
@@ -310,7 +357,7 @@ abstract class ItemManager {
 
 		if ($has_keys) {
 			foreach ($temp as $field => $data)
-				if (in_array($field, $this->fields) && in_array($this->field_types[$field], $this->ml_fields)) {
+				if (in_array($field, $this->fields) && in_array($this->field_types[$field], Query::$multilanguage_fields)) {
 
 					if (!$only_current) {
 						// expand multi-language field to all languages
@@ -326,7 +373,7 @@ abstract class ItemManager {
 
 		} else {
 			foreach ($temp as $field)
-				if (in_array($field, $this->fields) && in_array($this->field_types[$field], $this->ml_fields)) {
+				if (in_array($field, $this->fields) && in_array($this->field_types[$field], Query::$multilanguage_fields)) {
 
 					if (!$only_current) {
 						// expand multi-language field to all languages
@@ -352,7 +399,7 @@ abstract class ItemManager {
 		$result = array();
 
 		foreach($fields as $field)
-			if (in_array($this->field_types[$field], $this->ml_fields))
+			if (in_array($this->field_types[$field], Query::$multilanguage_fields))
 				$result[] = $field;
 
 		return $result;
@@ -387,7 +434,7 @@ abstract class ItemManager {
 		$tmp = array();
 
 		foreach($data as $field_name => $field_value) {
-			$is_string = in_array($this->field_types[$field_name], $this->string_fields);
+			$is_string = in_array($this->field_types[$field_name], Query::$string_fields);
 			$tmp[] = ($is_string) ? "'{$field_value}'" : $field_value;
 		}
 
@@ -409,7 +456,7 @@ abstract class ItemManager {
 		$tmp = array();
 
 		foreach($data as $field_name => $field_value) {
-			$is_string = in_array($this->field_types[$field_name], $this->string_fields);
+			$is_string = in_array($this->field_types[$field_name], Query::$string_fields);
 			$field = array_key_exists($field_name, $this->field_types) ? "`{$field_name}`" : $field_name;
 
 			if (is_array($field_value)) {
@@ -459,34 +506,6 @@ abstract class ItemManager {
 	 */
 	public function get_table_name() {
 		return $this->table_name;
-	}
-
-	/**
-	 * Load SQL file and prepare multi-language fields. If module is specified
-	 * file will be loaded relative to module's path.
-	 *
-	 * @param string $file_name
-	 * @param object $module
-	 * @return string
-	 */
-	public static function load_query_file($file_name, $module=null) {
-		global $system_queries_path;
-
-		// get path to look for query
-		if (!is_null($module))
-			$path = $module->path; else
-			$path = $system_queries_path;
-
-		// throw error
-		if (!file_exists($path.$file_name))
-			throw new LoadQueryError("Unable to find specified query file '{$file_name}' in '{$path}'.");
-
-		// load file
-		$sql = file_get_contents($path.$file_name);
-
-		// parse matched fields
-		if (preg_match_all('|`(?P<field>[\w]+)`\s*(?P<type>[\w\d_]+)(.*),|ius', $sql, $matches)) {
-		}
 	}
 }
 
