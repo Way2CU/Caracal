@@ -93,6 +93,11 @@ class contact_form extends Module {
 					$this->settings['use_ssl']
 				);
 
+		$smtp_mailer->set_credentials(
+					$this->settings['smtp_username'],
+					$this->settings['smtp_password']
+				);
+
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
 			$backend = backend::getInstance();

@@ -228,7 +228,7 @@ class ContactForm_SystemMailer extends ContactForm_Mailer {
 
 		// create content
 		if ($this->headers['Content-Type'] == 'text/plain') {
-			$content .= base64_encode($plain_text_content)."\n";
+			$content .= base64_encode($plain_text_body)."\n";
 
 		} else {
 			// starting global boundary
