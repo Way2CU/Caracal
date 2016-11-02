@@ -83,7 +83,7 @@ function LanguageHandler() {
 		if (this.cache[id] == undefined) {
 			$.ajax({
 				url: this.backend_url,
-				type: 'GET',
+				method: 'GET',
 				async: false,
 				cache: true,
 				data: data,
@@ -120,7 +120,7 @@ function LanguageHandler() {
 		if (this.cache[id] == undefined) {
 			$.ajax({
 				url: this.backend_url,
-				type: 'GET',
+				method: 'GET',
 				async: true,
 				cache: true,
 				data: data,
@@ -177,7 +177,7 @@ function LanguageHandler() {
 
 			$.ajax({
 				url: this.backend_url,
-				type: 'GET',
+				method: 'GET',
 				async: false,
 				cache: true,
 				data: data,
@@ -234,7 +234,7 @@ function LanguageHandler() {
 
 			$.ajax({
 				url: this.backend_url,
-				type: 'GET',
+				method: 'GET',
 				async: true,
 				cache: true,
 				data: data,
@@ -261,7 +261,7 @@ function LanguageHandler() {
 	this.getCurrentLanguage = function() {
 		$.ajax({
 			url: this.backend_url,
-			type: 'GET',
+			method: 'GET',
 			async: false,
 			cache: true,
 			data: {
@@ -283,7 +283,7 @@ function LanguageHandler() {
 		// retireve languages from server
 		$.ajax({
 			url: this.backend_url,
-			type: 'GET',
+			method: 'GET',
 			async: false,
 			cache: true,
 			data: {

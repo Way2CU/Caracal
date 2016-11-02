@@ -168,7 +168,7 @@ function Communicator(module_name) {
 		// prepare general parameters
 		var params = {
 				url: self._url,
-				type: 'GET',
+				method: 'GET',
 				context: this,
 				data: {
 					section: self._module,

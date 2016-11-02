@@ -190,7 +190,7 @@ Caracal.Shop.update_transaction_status = function(button) {
 		url: $('meta[property=base-url]').attr('content') + '/index.php',
 		cache: false,
 		dataType: 'json',
-		type: 'POST',
+		method: 'POST',
 		data: data,
 		async: false,
 		success: function(result) {
@@ -235,7 +235,7 @@ Caracal.Shop.update_total_amount = function(button) {
 		url: $('meta[property=base-url]').attr('content') + '/index.php',
 		cache: false,
 		dataType: 'json',
-		type: 'POST',
+		method: 'POST',
 		data: data,
 		async: false,
 		success: function(result) {

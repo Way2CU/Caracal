@@ -53,7 +53,7 @@ function Beacon(activity, function_name, license) {
 	self._handle_interval = function() {
 		var params = {
 				url: self._url,
-				type: 'POST',
+				method: 'POST',
 				context: self,
 				dataType: 'json',
 				data: {
@@ -105,7 +105,7 @@ function Beacon(activity, function_name, license) {
 		var result = false;
 		var params = {
 				url: self._url,
-				type: 'POST',
+				method: 'POST',
 				context: self,
 				dataType: 'json',
 				data: {
