@@ -430,13 +430,13 @@ class contact_form extends Module {
 		$this->save_setting('mailer', '');
 
 		// create tables
-		$query_list = array(
+		$file_list = array(
 				'templates.sql', 'forms.sql', 'mailers.sql', 'domains.sql', 'fieldsets.sql',
 				'fieldset_fields.sql', 'fields.sql', 'field_values.sql', 'submissions.sql',
 				'submission_fields.sql'
 			);
 
-		foreach ($query_list as $file_name) {
+		foreach ($file_list as $file_name) {
 			$sql = Query::load_file($file_name, $this);
 			$db->query($sql);
 		}
