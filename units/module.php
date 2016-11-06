@@ -248,10 +248,10 @@ abstract class Module {
 	/**
 	 * Updates or creates new setting variable.
 	 *
-	 * @param string $var
+	 * @param string $name
 	 * @param string $value
 	 */
-	protected function save_setting($var, $value) {
+	protected function save_setting($name, $value) {
 		global $db, $db_use;
 
 		// this method is only meant for used with database
@@ -266,7 +266,7 @@ abstract class Module {
 								array('id'),
 								array(
 									'module'	=> $this->name,
-									'variable'	=> $var
+									'variable'	=> $name
 								));
 
 		// update or insert data
@@ -279,7 +279,7 @@ abstract class Module {
 		} else {
 			$manager->insert_item(array(
 						'module'	=> $this->name,
-						'variable'	=> $var,
+						'variable'	=> $name,
 						'value'		=> $value
 					));
 		}
