@@ -114,7 +114,7 @@ class callbox extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		$this->save_setting('account_id', '');
 		$this->save_setting('account_key', '');
 		$this->save_setting('account_secret', '');
@@ -124,7 +124,7 @@ class callbox extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**

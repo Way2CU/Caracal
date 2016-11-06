@@ -66,13 +66,13 @@ class search extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**

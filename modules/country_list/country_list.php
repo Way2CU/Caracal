@@ -80,7 +80,7 @@ class country_list extends Module {
 	/**
 	 * Create table and populate with data on module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		global $db;
 
 		// create tables
@@ -137,7 +137,7 @@ class country_list extends Module {
 	/**
 	 * Clean up database on module disable
 	 */
-	public function on_disable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('countries', 'country_states');

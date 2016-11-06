@@ -112,7 +112,7 @@ class tranzila extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		$this->save_setting('terminal', '');
 		$this->save_setting('terminal2', '');
 		$this->save_setting('terminal_password', '');
@@ -122,7 +122,7 @@ class tranzila extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	private function showSettings() {

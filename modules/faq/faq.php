@@ -113,7 +113,7 @@ class faq extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		global $db;
 
 		$list = Language::get_languages(false);
@@ -137,7 +137,7 @@ class faq extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 		global $db;
 
 		$db->drop_tables(array('faq'));

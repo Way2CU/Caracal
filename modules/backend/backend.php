@@ -340,13 +340,13 @@ class backend extends Module {
 	/**
 	 * Redefine abstract methods
 	 */
-	public function on_init() {
+	public function initialize() {
 		$this->save_setting('template_verify', '');
 		$this->save_setting('template_recovery', '');
 		$this->save_setting('require_verified', 1);
 	}
 
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**
@@ -550,7 +550,7 @@ class backend extends Module {
 			$module = $handler->load_module($module_name);
 
 			if (!is_null($module)) {
-				$module->on_init();
+				$module->initialize();
 				$message = $this->get_language_constant('message_module_initialised');
 			}
 
@@ -623,7 +623,7 @@ class backend extends Module {
 
 			if (ModuleHandler::is_loaded($module_name)) {
 				$module = call_user_func(array($module_name, 'get_instance'));
-				$module->on_disable();
+				$module->cleanup();
 
 				$message = $this->get_language_constant('message_module_disabled');
 

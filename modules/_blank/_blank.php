@@ -71,7 +71,7 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		global $db;
 
 		$sql = "";
@@ -82,7 +82,7 @@ class _blank extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 		global $db;
 
 		$sql = "";

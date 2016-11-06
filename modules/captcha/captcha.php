@@ -96,7 +96,7 @@ class captcha extends Module {
 	/**
 	 * Event called upon module initialisation
 	 */
-	public function on_init() {
+	public function initialize() {
 		$this->save_setting('char_count', 4);
 		$this->save_setting('char_type', 'numbers');
 		$this->save_setting('arc_count', 15);
@@ -105,7 +105,7 @@ class captcha extends Module {
 		$this->save_setting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
 	}
 
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**

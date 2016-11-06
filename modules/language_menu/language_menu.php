@@ -84,10 +84,10 @@ class language_menu extends Module {
 			}
 	}
 
-	public function on_init() {
+	public function initialize() {
 	}
 
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**

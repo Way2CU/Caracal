@@ -68,10 +68,10 @@ class head_tag extends Module {
 	/**
 	 * Redefine abstract methods
 	 */
-	public function on_init() {
+	public function initialize() {
 	}
 
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**

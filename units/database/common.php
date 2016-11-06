@@ -117,7 +117,7 @@ function database_initialize($create_database) {
 					$module = $module_handler->load_module($item->tagAttrs['name']);
 
 					if (!is_null($module))
-						$module->on_init();
+						$module->initialize();
 
 					break;
 

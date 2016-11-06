@@ -115,7 +115,7 @@ class page_info extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		if (!isset($this->settings['analytics']))
 			$this->save_setting('analytics', '');
 
@@ -126,7 +126,7 @@ class page_info extends Module {
 			$this->save_setting('bing_wm_tools', '');
 	}
 
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**

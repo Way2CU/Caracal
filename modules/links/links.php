@@ -207,7 +207,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		global $db;
 
 		// get list of languages
@@ -269,7 +269,7 @@ class links extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('links', 'link_groups', 'link_membership');

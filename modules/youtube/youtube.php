@@ -193,7 +193,7 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function on_init() {
+	public function initialize() {
 		global $db;
 
 		$list = Language::get_languages(false);
@@ -249,7 +249,7 @@ class youtube extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function on_disable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('youtube_video', 'youtube_groups', 'youtube_group_membership');

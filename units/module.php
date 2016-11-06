@@ -208,14 +208,14 @@ abstract class Module {
 	 * Function should be use to create tables and files specific to module
 	 * in question.
 	 */
-	public function on_init() {
+	public function initialize() {
 	}
 
 	/**
 	 * Function called when module is disabled. This function should be used to
 	 * clean up database and other module specific parts of the system.
 	 */
-	public function on_disable() {
+	public function cleanup() {
 	}
 
 	/**
