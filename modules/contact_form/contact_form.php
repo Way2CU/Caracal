@@ -417,8 +417,6 @@ class contact_form extends Module {
 	public function on_init() {
 		global $db;
 
-		$list = Language::get_languages(false);
-
 		// predefined settings stored in system wide tables
 		$this->save_setting('sender_name', '');
 		$this->save_setting('sender_address', 'sample@email.com');
@@ -431,163 +429,17 @@ class contact_form extends Module {
 		$this->save_setting('use_ssl', 1);
 		$this->save_setting('mailer', '');
 
-		// templates table
-		$sql = "
-			CREATE TABLE `contact_form_templates` (
-				`id` int NOT NULL AUTO_INCREMENT ,
-				`text_id` varchar(32) NULL ,
-			";
+		// create tables
+		$query_list = array(
+				'templates.sql', 'forms.sql', 'mailers.sql', 'domains.sql', 'fieldsets.sql',
+				'fieldset_fields.sql', 'fields.sql', 'field_values.sql', 'submissions.sql',
+				'submission_fields.sql'
+			);
 
-		foreach($list as $language) {
-			$sql .= "`name_{$language}` varchar(50) NOT NULL DEFAULT '',";
-			$sql .= "`subject_{$language}` varchar(255) NOT NULL DEFAULT '',";
-			$sql .= "`plain_{$language}` text NOT NULL,";
-			$sql .= "`html_{$language}` text NOT NULL,";
+		foreach ($query_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
 		}
-
-		$sql .= "
-				PRIMARY KEY(`id`),
-				INDEX `contact_form_templates_by_text_id` (`text_id`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// contact form table
-		$sql = "
-			CREATE TABLE `contact_forms` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`text_id` varchar(32) NULL,
-			";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` varchar(50) NOT NULL DEFAULT '',";
-
-		$sql .= "
-				`action` varchar(255) NULL,
-				`template` varchar(32) NOT NULL,
-				`use_ajax` boolean NOT NULL DEFAULT '1',
-				`show_submit` boolean NOT NULL DEFAULT '1',
-				`show_reset` boolean NOT NULL DEFAULT '1',
-				`show_cancel` boolean NOT NULL DEFAULT '0',
-				`include_reply_to` boolean NOT NULL DEFAULT '0',
-				`reply_to_field` int NULL,
-				PRIMARY KEY(`id`),
-				INDEX `contact_forms_by_text_id` (`text_id`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// selected mailers per form
-		$sql = "
-			CREATE TABLE `contact_form_mailers` (
-				`form` int NOT NULL,
-				`mailer` varchar(100) NOT NULL,
-				INDEX `contact_form_mailers_by_form` (`form`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
-		$db->query($sql);
-
-		// table for contact form domains
-		$sql = "
-			CREATE TABLE `contact_form_domains` (
-				`form` int NOT NULL,
-				`domain` varchar(255) NOT NULL,
-				INDEX `contact_forms_domains_by_form` (`form`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// table for fieldsets
-		$sql = "
-			CREATE TABLE `contact_form_fieldsets` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`form` int NOT NULL,
-				`name` varchar(50) NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`legend_{$language}` varchar(250) NOT NULL DEFAULT '',";
-
-		$sql .= "
-				PRIMARY KEY(`id`),
-				INDEX `contact_form_fieldsets_by_form` (`form`),
-				INDEX `contact_form_fieldsets_by_name` (`form`, `name`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// table for fieldset membership
-		$sql = "
-			CREATE TABLE `contact_form_fieldset_fields` (
-				`fieldset` int NOT NULL,
-				`field` int NOT NULL,
-				INDEX `contact_forms_fieldset_fields` (`fieldset`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// table for storing contact form fields
-		$sql = "
-			CREATE TABLE `contact_form_fields` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`form` int NOT NULL,
-				`name` varchar(32) NULL,
-				`type` varchar(32) NOT NULL,
-			";
-
-		foreach($list as $language) {
-			$sql .= "`label_{$language}` varchar(100) NOT NULL DEFAULT '',";
-			$sql .= "`placeholder_{$language}` varchar(100) NOT NULL DEFAULT '',";
-		}
-
-		$sql .= "
-				`min` int NOT NULL,
-				`max` int NOT NULL,
-				`maxlength` int NOT NULL,
-				`value` varchar(255) NOT NULL,
-				`pattern` varchar(255) NOT NULL,
-				`disabled` boolean NOT NULL DEFAULT '0',
-				`required` boolean NOT NULL DEFAULT '0',
-				`checked` boolean NOT NULL DEFAULT '0',
-				`autocomplete` boolean NOT NULL DEFAULT '0',
-				PRIMARY KEY(`id`),
-				INDEX `contact_form_fields_by_form` (`form`),
-				INDEX `contact_form_fields_by_form_and_type` (`form`, `type`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// table for storing contact field values
-		$sql = "
-			CREATE TABLE `contact_form_field_values` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`field` int NOT NULL,
-			";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` varchar(100) NOT NULL DEFAULT '',";
-
-		$sql .= "
-				`value` varchar(255) NOT NULL,
-				PRIMARY KEY(`id`),
-				INDEX `contact_form_values_by_field` (`field`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// form submissions table
-		$sql = "
-			CREATE TABLE `contact_form_submissions` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`form` int NOT NULL,
-				`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`address` varchar(45) NOT NULL,
-				PRIMARY KEY(`id`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// form submission fields table
-		$sql = "
-			CREATE TABLE `contact_form_submission_fields` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`submission` int NOT NULL,
-				`field` int NULL,
-				`value` text NOT NULL,
-				PRIMARY KEY(`id`),
-				INDEX `contact_form_submissions` (`submission`)
-			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
 	}
 
 	/**
