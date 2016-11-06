@@ -533,32 +533,26 @@ class downloads extends Module {
 					'items'			=> array()
 				);
 
-		if ($this->checkLicense()) {
-			// valid license or local API requested data
-			$manager = DownloadsManager::get_instance();
-			$conditions = array();
+		// valid license or local API requested data
+		$manager = DownloadsManager::get_instance();
+		$conditions = array();
 
-			$items = $manager->get_items($manager->get_field_names(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
-			if (count($items) > 0)
-				foreach($items as $item) {
-					$result['items'][] = array(
-								'id'			=> $item->id,
-								'name'			=> $item->name,
-								'description'	=> $item->description,
-								'count'			=> $item->count,
-								'filename'		=> $item->filename,
-								'size'			=> $item->size,
-								'visible'		=> $item->visible,
-								'timestamp'		=> $item->timestamp,
-								'download_url'	=> URL::make_query($this->name, 'get', array('id', $item->id))
-							);
-				}
-		} else {
-			// invalid license
-			$result['error'] = true;
-			$result['error_message'] = $this->get_language_constant('message_license_error');
-		}
+		if (count($items) > 0)
+			foreach($items as $item) {
+				$result['items'][] = array(
+							'id'			=> $item->id,
+							'name'			=> $item->name,
+							'description'	=> $item->description,
+							'count'			=> $item->count,
+							'filename'		=> $item->filename,
+							'size'			=> $item->size,
+							'visible'		=> $item->visible,
+							'timestamp'		=> $item->timestamp,
+							'download_url'	=> URL::make_query($this->name, 'get', array('id', $item->id))
+						);
+			}
 
 		print json_encode($result);
 	}

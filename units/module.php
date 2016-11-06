@@ -74,7 +74,7 @@ abstract class Module {
 		$backend_action_exists = !is_null($backend_action) && array_key_exists($backend_action, $this->backend_actions);
 
 		// call frontend action if defined
-		if ($action_exists && $this->checkLicense()) {
+		if ($action_exists) {
 			$config = $this->actions[$action_name];
 			$action = $config[0];
 
