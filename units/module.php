@@ -158,11 +158,9 @@ abstract class Module {
 			return '';
 		}
 
-		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
-		$result = $this->language->get_text($constant, $language_in_use);
-
+		$result = $this->language->get_text($constant, $language);
 		if (empty($result))
-			$result = Language::get_text($constant, $language_in_use);
+			$result = Language::get_text($constant, $language);
 
 		return $result;
 	}
