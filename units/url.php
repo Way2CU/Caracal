@@ -250,19 +250,19 @@ final class URL {
 	/**
 	 * This function decodes characters encoded by JavaScript and .
 	 *
-	 * @param string/array $str
+	 * @param string/array $text
 	 * @return string/array
 	 */
-	public static function decode($str) {
+	public static function decode($text) {
 		$result = '';
 
-		if (!is_array($str)) {
-			$str = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($str));
-			$result = html_entity_decode($str, null, 'UTF-8');;
+		if (!is_array($text)) {
+			$text = preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;", urldecode($text));
+			$result = html_entity_decode($text, null, 'UTF-8');;
 
 		} else {
 			$result = array();
-			foreach ($str as $index => $value)
+			foreach ($text as $index => $value)
 				$result[$index] = self::decode($value);
 		}
 
