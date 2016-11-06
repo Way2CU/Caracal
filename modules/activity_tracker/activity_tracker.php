@@ -138,31 +138,13 @@ class activity_tracker extends Module {
 	public function on_init() {
 		global $db;
 
-		$sql = "
-			CREATE TABLE `activities` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`activity` VARCHAR(32) NOT NULL,
-				`function` VARCHAR(32) NOT NULL,
-				`timeout` INT NOT NULL DEFAULT '900',
-				`ignore_address` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY (`id`),
-				KEY `index_activity_and_function` (`activity`, `function`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
+		// create tables
+		$file_list = array('activities.sql', 'activity_log.sql');
 
-		$sql = "
-			CREATE TABLE `activity_log` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`activity` INT NOT NULL,
-				`user` INT NULL,
-				`address` VARCHAR (15) NULL,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				PRIMARY KEY (`id`),
-				KEY `index_by_user` (`activity`, `user`),
-				KEY `index_by_address` (`activity`, `user`, `address`),
-				KEY `index_without_user` (`activity`, `address`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
+		foreach ($file_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
+		}
 	}
 
 	/**
