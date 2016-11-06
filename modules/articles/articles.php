@@ -221,62 +221,12 @@ class articles extends Module {
 	public function on_init() {
 		global $db;
 
-		$list = Language::get_languages(false);
-
-		$sql = "
-			CREATE TABLE `articles` (
-				`id` INT NOT NULL AUTO_INCREMENT ,
-				`group` int(11) DEFAULT NULL ,
-				`text_id` VARCHAR (32) NULL ,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-			";
-
-		foreach($list as $language) {
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-			$sql .= "`content_{$language}` TEXT NOT NULL ,";
+		// create tables
+		$file_list = array('articles.sql', 'groups.sql', 'votes.sql');
+		foreach ($file_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
 		}
-
-		$sql .= "
-				`author` INT NOT NULL ,
-				`gallery` INT NOT NULL ,
-				`visible` BOOLEAN NOT NULL DEFAULT '0',
-				`views` INT NOT NULL DEFAULT '0',
-				`votes_up` INT NOT NULL DEFAULT '0',
-				`votes_down` INT NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
-				INDEX ( `author` ),
-				INDEX ( `group` ),
-				INDEX ( `text_id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// article groups
-		$sql = "
-			CREATE TABLE `article_groups` (
-				`id` INT NOT NULL AUTO_INCREMENT ,
-				`text_id` VARCHAR (32) NULL ,
-			";
-
-		foreach($list as $language) {
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-		}
-
-		$sql .= "
-				`visible` BOOLEAN NOT NULL DEFAULT '1',
-				PRIMARY KEY ( `id` ),
-				INDEX ( `text_id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "CREATE TABLE `article_votes` (
-					`id` INT NOT NULL AUTO_INCREMENT ,
-					`address` VARCHAR( 15 ) NOT NULL ,
-					`article` INT NOT NULL ,
-				PRIMARY KEY (  `id` ),
-				INDEX ( `address`, `article` )
-				) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
 	}
 
 	/**
