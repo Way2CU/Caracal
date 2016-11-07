@@ -248,7 +248,7 @@ final class URL {
 	}
 
 	/**
-	 * This function decodes characters encoded by JavaScript and .
+	 * This function decodes characters encoded by JavaScript.
 	 *
 	 * @param string/array $text
 	 * @return string/array
