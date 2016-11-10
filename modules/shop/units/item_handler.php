@@ -565,6 +565,7 @@ class Handler {
 						'operator' => '>=',
 						'value'    => date('Y-m-d H:i:s')
 					);
+
 			} else {
 				$conditions['expires'] = array(
 						'operator' => 'IS NOT',

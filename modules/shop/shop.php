@@ -52,6 +52,7 @@ use Modules\Shop\Token;
 use Modules\Shop\TokenManager as TokenManager;
 use Modules\Shop\Item\Handler as ItemHandler;
 use Modules\Shop\Item\Manager as ItemManager;
+use Modules\Shop\Property\Manager as PropertyManager;
 
 
 final class TransactionType {
@@ -234,8 +235,8 @@ class shop extends Module {
 			Events::register('shop', $signal_name);
 
 		// connect to search module
-		Events::connect('search', 'get-results', 'getSearchResults', $this);
-		Events::connect('backend', 'user-create', 'handleUserCreate', $this);
+		Events::connect('search', 'get-results', 'get_search_results', $this);
+		Events::connect('backend', 'user-create', 'handle_user_create', $this);
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
@@ -451,7 +452,7 @@ class shop extends Module {
 	 * @param integer $threshold
 	 * @return array
 	 */
-	public function getSearchResults($module_list, $query, $threshold) {
+	public function get_search_results($module_list, $query, $threshold) {
 		global $language;
 
 		// make sure shop is in list of modules requested
@@ -464,11 +465,12 @@ class shop extends Module {
 
 		// initialize managers and data
 		$manager = ItemManager::get_instance();
+		$properties_manager = PropertyManager::get_instance();
 		$result = array();
 		$conditions = array(
-			'visible'	=> 1,
-			'deleted'	=> 0,
-		);
+				'visible' => 1,
+				'deleted' => 0,
+			);
 		$query = mb_strtolower($query);
 		$query_words = mb_split("\s", $query);
 
@@ -480,24 +482,18 @@ class shop extends Module {
 
 			if (!is_numeric($category)) {
 				$category_manager = ShopCategoryManager::get_instance();
-				$raw_category = $category_manager->get_single_item(
-					array('id'),
-					array('text_id' => $category)
-				);
+				$raw_category = $category_manager->get_single_item(array('id'), array('text_id' => $category));
 
 				if (is_object($raw_category))
 					$category = $raw_category->id; else
-						$category = -1;
+					$category = -1;
 
 			} else {
 				$category = fix_id($category);
 			}
 
 			// get list of item ids
-			$membership_list = $membership_manager->get_items(
-				array('item'),
-				array('category' => $category)
-			);
+			$membership_list = $membership_manager->get_items(array('item'), array('category' => $category));
 
 			if (count($membership_list) > 0) {
 				foreach($membership_list as $membership)
@@ -507,37 +503,74 @@ class shop extends Module {
 			}
 		}
 
-		// get all items and process them
-		$items = $manager->get_items(
-			array(
-				'id',
-				'name',
-				'description'
-			),
-			$conditions
-		);
+		// allow for exclusion of expired items
+		if (isset($this->search_params['show_expired'])) {
+			if ($this->search_params['show_expired'] == 0) {
+				$conditions['expires'] = array(
+						'operator' => '>=',
+						'value'    => date('Y-m-d H:i:s')
+					);
 
-		// search through items
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				$title = mb_strtolower($item->name[$language]);
-				$score = 0;
-
-				foreach ($query_words as $query_word)
-					if (is_numeric(mb_strpos($title, $query_word)))
-						$score += 10;
-
-				// add item to result list
-				if ($score >= $threshold)
-					$result[] = array(
-						'score'			=> $score,
-						'title'			=> $title,
-						'description'	=> limit_words($item->description[$language], 200),
-						'id'			=> $item->id,
-						'type'			=> 'item',
-						'module'		=> $this->name
+			} else {
+				$conditions['expires'] = array(
+						'operator' => 'IS NOT',
+						'value'    => 'NULL'
 					);
 			}
+		}
+
+		// get all items and process them
+		$items = $manager->get_items(array('id', 'name', 'description'), $conditions);
+		$properties = $properties_manager->get_items(array('item', 'value', array());
+
+		// prepare properties for easier use
+		$item_properties = array();
+		if (count($properties) > 0)
+			foreach ($properties as $property) {
+				$item = $property->item;
+				$value = $property->value;  // we don't unserialize on purpose for speed
+
+				if (isset($item_properties[$item]))
+					$item_properties[$item] .= $value; else
+					$item_properties[$item] = $value;
+			}
+
+		// make sure we have items to search through
+		if (count($items) == 0)
+			return $result;
+
+		// search through items
+		foreach ($items as $item) {
+			$title = mb_strtolower($item->name[$language]);
+			$description = mb_strtolower($item->description[$language]);
+			$properties = isset($item_properties[$item->id]) ? mb_strtolower($item_properties[$item->id]) : '';
+			$score = 0;
+
+			foreach ($query_words as $query_word) {
+				// search within title
+				if (is_numeric(mb_strpos($title, $query_word)))
+					$score += 10;
+
+				// search withing description
+				if (is_numeric(mb_strpos($description, $query_word)))
+					$score += 2;
+
+				// search through properties
+				if (is_numeric(mb_strpos($properties, $query_word)))
+						$score += 3;
+			}
+
+			// add item to result list
+			if ($score >= $threshold)
+				$result[] = array(
+					'score'			=> $score,
+					'title'			=> $title,
+					'description'	=> limit_words($item->description[$language], 200),
+					'id'			=> $item->id,
+					'type'			=> 'item',
+					'module'		=> $this->name
+				);
+		}
 
 		return $result;
 	}
@@ -547,7 +580,7 @@ class shop extends Module {
 	 *
 	 * @param object $user
 	 */
-	public function handleUserCreate($user) {
+	public function handle_user_create($user) {
 		$manager = ShopBuyersManager::get_instance();
 
 		// get user data
@@ -640,7 +673,7 @@ class shop extends Module {
 				break;
 
 			case 'configure_search':
-				$this->configureSearch($params, $children);
+				$this->configure_search($params, $children);
 				break;
 
 			case 'checkout':
@@ -1863,7 +1896,7 @@ class shop extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function configureSearch($tag_params, $children) {
+	private function configure_search($tag_params, $children) {
 		$this->search_params = $tag_params;
 	}
 
