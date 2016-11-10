@@ -473,6 +473,7 @@ class shop extends Module {
 			);
 		$query = mb_strtolower($query);
 		$query_words = mb_split("\s", $query);
+		$query_count = count($query_words);
 
 		// include pre-configured options
 		if (isset($this->search_params['category'])) {
@@ -545,20 +546,29 @@ class shop extends Module {
 			$description = mb_strtolower($item->description[$language]);
 			$properties = isset($item_properties[$item->id]) ? mb_strtolower($item_properties[$item->id]) : '';
 			$score = 0;
+			$title_matches = 0;
+			$description_matches = 0;
+			$property_matches = 0;
 
 			foreach ($query_words as $query_word) {
 				// search within title
 				if (is_numeric(mb_strpos($title, $query_word)))
-					$score += 10;
+					$title_matches += 1;
 
 				// search withing description
 				if (is_numeric(mb_strpos($description, $query_word)))
-					$score += 2;
+					$description_matches += 1;
 
 				// search through properties
 				if (is_numeric(mb_strpos($properties, $query_word)))
-						$score += 3;
+					$property_matches += 1;
 			}
+
+			// increase score for each individual part of the item
+			$score += 100 * ($title_matches / $query_count);
+			$score += 70 * ($description_matches / $query_count);
+			$score += 70 * ($property_matches / $query_count);
+			$score = (int) $score;
 
 			// add item to result list
 			if ($score >= $threshold)
