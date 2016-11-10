@@ -521,7 +521,7 @@ class shop extends Module {
 
 		// get all items and process them
 		$items = $manager->get_items(array('id', 'name', 'description'), $conditions);
-		$properties = $properties_manager->get_items(array('item', 'value', array());
+		$properties = $properties_manager->get_items(array('item', 'value'), array());
 
 		// prepare properties for easier use
 		$item_properties = array();
