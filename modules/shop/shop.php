@@ -472,7 +472,7 @@ class shop extends Module {
 				'deleted' => 0,
 			);
 		$query = mb_strtolower($query);
-		$query_words = mb_split("\s", $query);
+		$query_words = mb_split("[\-\s_]", $query);
 		$query_count = count($query_words);
 
 		// include pre-configured options

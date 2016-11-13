@@ -106,7 +106,7 @@ class search extends Module {
 		if (isset($tag_params['query']))
 			$query_string = mb_strtolower(fix_chars($tag_params['query']));
 
-		if (isset($_REQUEST['query']) && is_null($query_string))
+		if (is_null($query_string) && isset($_REQUEST['query']))
 			$query_string = mb_strtolower(fix_chars($_REQUEST['query']));
 
 		if (is_null($query_string))
@@ -116,7 +116,7 @@ class search extends Module {
 		if (isset($tag_params['threshold']))
 			$threshold = fix_chars($tag_params['threshold']);
 
-		if (isset($_REQUEST['threshold']) && is_null($threshold))
+		if (is_null($threshold) && isset($_REQUEST['threshold']))
 			$threshold = fix_chars($_REQUEST['threshold']);
 
 		// get limit
