@@ -189,7 +189,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			'sum'            => $data['total'] + $data['shipping'] + $data['handling'],
 			'cred_type'      => 1,
 			'pdesc'          => $description,
-			'tranmode'       => 'AK',
+			'tranmode'       => 'A',
 			'transaction_id' => $data['uid'],
 			'nologo'         => 1,
 			'lang'           => $interface_language
@@ -474,7 +474,8 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 				$shop->setTransactionStatus($id, TransactionStatus::PENDING);
 				break;
 
-			case 'AK':  // regular charge
+			case 'A':  // regular charge
+			case 'AK':  // token charge? Tranzila is not sure anymore.
 				// only regular payments require status change
 				$shop->setTransactionStatus($id, TransactionStatus::COMPLETED);
 				break;
