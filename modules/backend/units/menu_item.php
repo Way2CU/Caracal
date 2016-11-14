@@ -1,7 +1,6 @@
 <?php
 
 
-
 class backend_MenuItem {
 	/**
 	 * Menu text
@@ -62,7 +61,7 @@ class backend_MenuItem {
 
 		// register named item in backend
 		if (!is_null($name)) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$backend->registerNamedItem($name, $item);
 		}
 	}
@@ -163,16 +162,16 @@ class backend_MenuSeparator{
  */
 function backend_UrlMake($module, $action, $sub_action=null) {
 	if (is_null($sub_action)) {
-		$result = url_Make(
-				'transfer_control',
+		$result = URL::make_query(
 				'backend_module',
+				'transfer_control',
 				array('backend_action', $action),
 				array('module', $module)
 			);
 	} else {
-		$result = url_Make(
-				'transfer_control',
+		$result = URL::make_query(
 				'backend_module',
+				'transfer_control',
 				array('backend_action', $action),
 				array('sub_action', $sub_action),
 				array('module', $module)
@@ -191,9 +190,9 @@ function window_Open($id, $width, $title, $can_close, $can_minimize, $url) {
 }
 
 function window_OpenHyperlink($text, $id, $width, $title, $can_close, $can_minimize, $module, $action) {
-	$url = url_Make('transfer_control', _BACKEND_SECTION_, array('backend_action', $action), array('module', $module));
+	$url = URL::make_query(_BACKEND_SECTION_, 'transfer_control', array('backend_action', $action), array('module', $module));
 
-	return url_MakeHyperlink($text, window_Open($id, $width, $title, $can_close, $can_minimize, $url), $text);
+	return URL::make_hyperlink($text, window_Open($id, $width, $title, $can_close, $can_minimize, $url), $text);
 }
 
 function window_Close($window) {

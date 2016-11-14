@@ -1,0 +1,6 @@
+CREATE TABLE `tips` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`content` ml_text NOT NULL,
+	`visible` boolean NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;

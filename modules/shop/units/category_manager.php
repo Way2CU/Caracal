@@ -17,18 +17,19 @@ class ShopCategoryManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_categories');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('parent', 'int');
-		$this->addProperty('image', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
+		$this->add_property('id', 'int');
+		$this->add_property('parent', 'int');
+		$this->add_property('image', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('title', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('order', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 

@@ -2,7 +2,7 @@
  * Contact Form Style Sheet
  * Caracal Development Framework
  *
- * Copyright (c) 2014. by Way2CU, http://way2cu.com
+ * Copyright (c) 2016. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
  */
 
@@ -33,5 +33,30 @@ form[data-dynamic='1'] div.overlay {
 
 form[data-dynamic='1'] div.overlay.visible {
 	visibility: visible;
+	opacity: 1;
+}
+
+form input[pattern] + small.placeholder {
+	position: relative;
+	line-height: 0;
+}
+
+form input[pattern] + small.placeholder:after {
+	position: absolute;
+	top: -1em;
+	left: 0;
+	opacity: 0;
+	content: attr(data-content);
+
+	transition: all 0.3s;
+}
+
+html[dir=rtl] form input[pattern] + small.placeholder:after {
+	left: auto;
+	right: 0;
+}
+
+form input[pattern]:invalid + small.placeholder:after {
+	top: 0;
 	opacity: 1;
 }

@@ -7,6 +7,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -34,12 +35,15 @@ class head_tag extends Module {
 	 */
 	protected function __construct() {
 		parent::__construct(__FILE__);
+
+		// register events
+		Events::register('head-tag', 'before-print');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -52,7 +56,7 @@ class head_tag extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_tag':
@@ -64,10 +68,10 @@ class head_tag extends Module {
 	/**
 	 * Redefine abstract methods
 	 */
-	public function onInit() {
+	public function initialize() {
 	}
 
-	public function onDisable() {
+	public function cleanup() {
 	}
 
 	/**
@@ -143,16 +147,15 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
-		// if page_info module is loaded, ask it to add its own tags
-		if (ModuleHandler::is_loaded('page_info'))
-			page_info::getInstance()->addElements();
+		// give modules chance to add elements
+		Events::trigger('head-tag', 'before-print');
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 
 		if (class_exists('CodeOptimizer') && $optimize_code && !in_array($section, array('backend', 'backend_module'))) {
 			// use code optimizer if possible
-			$optimizer = CodeOptimizer::getInstance();
+			$optimizer = CodeOptimizer::get_instance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
 			foreach ($this->link_tags as $link) {
@@ -184,32 +187,32 @@ class head_tag extends Module {
 		// print google analytics code if needed
 		if (!is_null($this->analytics)) {
 			$template = new TemplateHandler("google_analytics_{$this->analytics_version}.xml", $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
-						'code'		=> $this->analytics,
-						'domain'	=> $this->analytics_domain
+						'code'   => $this->analytics,
+						'domain' => $this->analytics_domain
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
 		// print google site optimizer code if needed
 		if (!is_null($this->optimizer)) {
 			$template = new TemplateHandler('google_site_optimizer.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
-							'code'	=> $this->optimizer,
-							'key'	=> $this->optimizer_key,
-							'page'	=> $this->optimizer_page,
-							'show_control'	=> $this->optimizer_show_control
+							'code'         => $this->optimizer,
+							'key'          => $this->optimizer_key,
+							'page'         => $this->optimizer_page,
+							'show_control' => $this->optimizer_show_control
 						);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

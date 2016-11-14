@@ -11,12 +11,11 @@
  */
 use Core\Events;
 use Core\Module;
+use Modules\OnTop\Manager;
+use Modules\OnTop\Handler;
 
 require_once('units/manager.php');
 require_once('units/handler.php');
-
-use \Modules\OnTop\Manager as Manager;
-use \Modules\OnTop\Handler as Handler;
 
 
 class ontop extends Module {
@@ -36,15 +35,15 @@ class ontop extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$ontop_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_ontop'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_ontop'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					window_Open(
 						'ontop_applications',
 						450,
-						$this->getLanguageConstant('title_ontop'),
+						$this->get_language_constant('title_ontop'),
 						true, true,
 						backend_UrlMake($this->name, 'applications')
 					),
@@ -58,7 +57,7 @@ class ontop extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -71,7 +70,7 @@ class ontop extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -119,7 +118,7 @@ class ontop extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function initialize() {
 		global $db;
 
 		$sql = "
@@ -139,7 +138,7 @@ class ontop extends Module {
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('ontop_applications');
@@ -152,22 +151,22 @@ class ontop extends Module {
 	 */
 	private function show_applications() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'ontop_new_application', 350,
-										$this->getLanguageConstant('title_add_application'),
+										$this->get_language_constant('title_add_application'),
 										true, false,
 										$this->name,
 										'add'
 									),
 					);
 
-		$template->registerTagHandler('cms:list', $this, 'tag_ApplicationList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:list', $this, 'tag_ApplicationList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -176,15 +175,15 @@ class ontop extends Module {
 	 */
 	private function add_application() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
 					'cancel_action'	=> window_Close('ontop_new_application')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -193,13 +192,13 @@ class ontop extends Module {
 	 */
 	private function edit_application() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 						'id'                        => $item->id,
@@ -212,8 +211,8 @@ class ontop extends Module {
 						'cancel_action'             => window_Close('ontop_edit_application')
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -222,7 +221,7 @@ class ontop extends Module {
 	 * Save changed or new application data.
 	 */
 	private function save_application() {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		// collect data
@@ -244,24 +243,24 @@ class ontop extends Module {
 
 		if (is_null($id)) {
 			$window = 'ontop_new_application';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 
 		} else {
 			$window = 'ontop_edit_application';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_application_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_application_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('ontop_applications'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,23 +269,23 @@ class ontop extends Module {
 	 */
 	private function delete_application() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_application_delete'),
+					'message'		=> $this->get_language_constant('message_application_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'ontop_delete_application',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'delete_commit'),
 												array('id', $id)
@@ -295,8 +294,8 @@ class ontop extends Module {
 					'no_action'		=> window_Close('ontop_delete_application')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -305,21 +304,21 @@ class ontop extends Module {
 	 */
 	private function delete_application_commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_application_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_application_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('ontop_delete_application').';'.window_ReloadContent('ontop_applications')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -328,9 +327,9 @@ class ontop extends Module {
 	 */
 	private function test_application() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
-		$target = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$target = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		Handler::set_targets(array(array(
 				'id'  => $target->uid,
 				'key' => $target->key
@@ -342,13 +341,13 @@ class ontop extends Module {
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_test')."<br><b>{$numbers}</b>",
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_test')."<br><b>{$numbers}</b>",
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('ontop_test_application')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -405,17 +404,17 @@ class ontop extends Module {
 	 * @param array $children
 	 */
 	public function tag_ApplicationList($tag_params, $children) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// get application from the database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) == 0)
 			return;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
+		$template = $this->load_template($tag_params, 'list_item.xml');
 
 		// parse template
 		foreach ($items as $item) {
@@ -425,46 +424,46 @@ class ontop extends Module {
 				'key'                       => $item->key,
 				'shop_transaction_complete' => $item->shop_transaction_complete,
 				'contact_form_submit'       => $item->contact_form_submit,
-				'item_change' => url_MakeHyperlink(
-					$this->getLanguageConstant('change'),
+				'item_change' => URL::make_hyperlink(
+					$this->get_language_constant('change'),
 					window_Open(
 						'ontop_edit_application', 	// window id
 						350,				// width
-						$this->getLanguageConstant('title_edit_application'), // title
+						$this->get_language_constant('title_edit_application'), // title
 						false, false,
-						url_Make(
-							'transfer_control',
+						URL::make_query(
 							'backend_module',
+							'transfer_control',
 							array('module', $this->name),
 							array('backend_action', 'edit'),
 							array('id', $item->id)
 						)
 					)),
-				'item_delete' => url_MakeHyperlink(
-					$this->getLanguageConstant('delete'),
+				'item_delete' => URL::make_hyperlink(
+					$this->get_language_constant('delete'),
 					window_Open(
 						'ontop_delete_application', 	// window id
 						400,				// width
-						$this->getLanguageConstant('title_delete_application'), // title
+						$this->get_language_constant('title_delete_application'), // title
 						false, false,
-						url_Make(
-							'transfer_control',
+						URL::make_query(
 							'backend_module',
+							'transfer_control',
 							array('module', $this->name),
 							array('backend_action', 'delete'),
 							array('id', $item->id)
 						)
 					)),
-				'item_test' => url_MakeHyperlink(
-					$this->getLanguageConstant('test'),
+				'item_test' => URL::make_hyperlink(
+					$this->get_language_constant('test'),
 					window_Open(
 						'ontop_test_application', 	// window id
 						400,				// width
-						$this->getLanguageConstant('title_test_application'), // title
+						$this->get_language_constant('title_test_application'), // title
 						false, false,
-						url_Make(
-							'transfer_control',
+						URL::make_query(
 							'backend_module',
+							'transfer_control',
 							array('module', $this->name),
 							array('backend_action', 'test'),
 							array('id', $item->id)
@@ -472,8 +471,8 @@ class ontop extends Module {
 					))
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

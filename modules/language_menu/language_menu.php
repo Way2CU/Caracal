@@ -5,6 +5,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -24,21 +25,24 @@ class language_menu extends Module {
 
 		parent::__construct(__FILE__);
 
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
+
 		// load CSS and JScript
 		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
-			$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/language.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/language.js'), 'type'=>'text/javascript'));
 
 			if ($section == 'backend')
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/selector.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/selector.js'), 'type'=>'text/javascript'));
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -51,16 +55,12 @@ class language_menu extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print':
 					$this->tag_LanguageList($params, $children);
-					break;
-
-				case 'print_current':
-					$this->tag_CurrentLanguage($params, $children);
 					break;
 
 				case 'json':
@@ -84,30 +84,49 @@ class language_menu extends Module {
 			}
 	}
 
-	public function onInit() {
+	public function initialize() {
 	}
 
-	public function onDisable() {
+	public function cleanup() {
 	}
 
-	public function addMeta() {
+	/**
+	 * Add meta tags to head tag.
+	 */
+	public function add_meta_tags() {
 		global $default_language;
 
-		$head_tag = head_tag::getInstance();
-		$language_list = Language::getLanguages(false);
+		$head_tag = head_tag::get_instance();
+		$language_list = Language::get_languages(false);
+		$in_backend = isset($_REQUEST['section']);
 
-		// prepare params
-		$params = $_REQUEST;
-		$link_params = array();
+		// we don't need to do this on sites with one language
+		if (count($language_list) <= 1)
+			return;
 
-		foreach($params as $key => $value)
-			if (!in_array($key, $this->invalid_params))
-				$link_params[$key] = fix_chars($value);
+		// get parameters for URL
+		if ($in_backend) {
+			// get regular query parameters
+			$link_params = $this->get_params();
+
+		} else {
+			// get values matched with URL
+			$pattern = SectionHandler::get_matched_pattern();
+			$query_string = URL::get_query_string();
+
+			// extract values
+			preg_match($pattern, $query_string, $link_params);
+			foreach ($link_params as $key => $value)
+				if (is_int($key))
+					unset($link_params[$key]);
+		}
 
 		// add link to each language
 		foreach ($language_list as $language_code) {
 			$link_params['language'] = $language_code;
-			$url = url_MakeFromArray($link_params);
+			if ($in_backend)
+				$url = URL::get_base().'?'.http_build_query($link_params); else
+				$url = URL::make($link_params);
 
 			$head_tag->addTag('link',
 					array(
@@ -154,26 +173,44 @@ class language_menu extends Module {
 	private function tag_LanguageList($tag_params, $children) {
 		global $action, $section;
 
+		$in_backend = isset($_REQUEST['section']);
+
 		// check if we were asked to get languages from specific module
 		if (isset($tag_params['from_module']) && ModuleHandler::is_loaded($tag_params['from_module'])) {
-			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'getInstance'));
-			$list = $module->language->getLanguages(true);
+			$module = call_user_func(array(fix_chars($tag_params['from_module']), 'get_instance'));
+			$list = $module->language->get_languages(true);
 
 		} else {
-			$list = Language::getLanguages(true);
+			$list = Language::get_languages(true);
 		}
 
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'list_item.xml');
+		$template->set_template_params_from_array($children);
 
 		// get parameters for URL
-		$link_params = $this->get_params();
+		if ($in_backend) {
+			// get regular query parameters
+			$link_params = $this->get_params();
+
+		} else {
+			// get values matched with URL
+			$pattern = SectionHandler::get_matched_pattern();
+			$query_string = URL::get_query_string();
+
+			// extract values
+			preg_match($pattern, $query_string, $link_params);
+			foreach ($link_params as $key => $value)
+				if (is_int($key))
+					unset($link_params[$key]);
+		}
 
 		// print language list
 		if (count($list) > 0)
 			foreach ($list as $short => $long) {
 				$link_params['language'] = $short;
-				$link = url_MakeFromArray($link_params);
+				if ($in_backend)
+					$link = URL::get_base().'?'.http_build_query($link_params); else
+					$link = URL::make($link_params);
 
 				$params = array(
 					'short_name' => $short,
@@ -181,34 +218,10 @@ class language_menu extends Module {
 					'url'        => $link
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse( );
 			}
-	}
-
-	/**
-	 * Show currently selected language item.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	public function tag_CurrentLanguage($tag_params, $children) {
-		global $language;
-
-		$list = Language::getLanguages(true);
-		$link_params = $this->get_params();
-		$template = $this->loadTemplate($tag_params, 'current_language.xml');
-
-		$params = array(
-				'short_name' => $language,
-				'long_name'  => $list[$language],
-				'url'        => url_MakeFromArray($link_params)
-			);
-
-		$template->restoreXML();
-		$template->setLocalParams($params);
-		$template->parse();
 	}
 
 	/**
@@ -219,14 +232,14 @@ class language_menu extends Module {
 
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
-			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
-			$list = $module->language->getLanguages(true);
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
+			$list = $module->language->get_languages(true);
 
 		} else {
-			$list = Language::getLanguages(true);
+			$list = Language::get_languages(true);
 		}
 
-		$rtl = Language::getRTL();
+		$rtl = Language::get_rtl();
 		$result = array(
 					'error'				=> false,
 					'error_message'		=> '',
@@ -251,11 +264,11 @@ class language_menu extends Module {
 	private function json_GetText() {
 		// check if we were asked to get languages from specific module
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
-			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
-			$text = $module->language->getText(escape_chars($_REQUEST['constant']));
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
+			$text = $module->language->get_text(escape_chars($_REQUEST['constant']));
 
 		} else {
-			$text = Language::getText(escape_chars($_REQUEST['constant']));
+			$text = Language::get_text(escape_chars($_REQUEST['constant']));
 		}
 
 		$result = array(
@@ -272,7 +285,7 @@ class language_menu extends Module {
 		// check if we were asked to get languages from specific module
 		$language_handler = null;
 		if (isset($_REQUEST['from_module']) && ModuleHandler::is_loaded($_REQUEST['from_module'])) {
-			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'getInstance'));
+			$module = call_user_func(array(escape_chars($_REQUEST['from_module']), 'get_instance'));
 			$language_handler = $module->language;
 		}
 
@@ -286,8 +299,8 @@ class language_menu extends Module {
 		if (count($constants) > 0)
 			foreach ($constants as $constant)
 				if (!is_null($language_handler))
-					$result['text'][$constant] = $language_handler->getText($constant); else
-					$result['text'][$constant] = Language::getText($constant);
+					$result['text'][$constant] = $language_handler->get_text($constant); else
+					$result['text'][$constant] = Language::get_text($constant);
 
 		print json_encode($result);
 	}

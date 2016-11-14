@@ -5,15 +5,6 @@
 		<div id="page_info_notebook">
 			<div>
 				<label>
-					<span><cms:text constant="label_description" module="page_info"/></span>
-					<textarea name="description" style="width: 350px; height: 140px;">
-						<cms:var name="$settings['description']"/>
-					</textarea>
-				</label>
-			</div>
-
-			<div>
-				<label>
 					<span><cms:text constant="label_analytics" module="page_info"/></span>
 					<input type="text" name="analytics" value="$settings['analytics']" cms:eval="value"/>
 				</label>
@@ -71,9 +62,8 @@
 			// create notebook
 			var notebook = new Notebook('page_info_notebook');
 			notebook
-				.setPageTitle(0, language_handler.getText('page_info', 'tab_general'))
-				.setPageTitle(1, language_handler.getText('page_info', 'tab_google_analytics'))
-				.setPageTitle(2, language_handler.getText('page_info', 'tab_google_webmasters_tools'));
+				.setPageTitle(0, language_handler.getText('page_info', 'tab_google_analytics'))
+				.setPageTitle(1, language_handler.getText('page_info', 'tab_google_webmasters_tools'));
 		</script>
 	</form>
 </document>

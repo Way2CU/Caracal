@@ -106,6 +106,7 @@
 							</thead>
 							<tbody>
 								<cms:discounted_items/>
+								<cms:discounts/>
 							</tbody>
 						</table>
 					</cms:if>

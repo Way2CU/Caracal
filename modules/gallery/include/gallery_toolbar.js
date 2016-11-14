@@ -64,7 +64,7 @@ function ToolbarExtension_Gallery() {
 
 				$.ajax({
 					url: self.backend_url,
-					type: 'GET',
+					method: 'GET',
 					data: {
 						section: 'gallery',
 						action: 'json_image_list',

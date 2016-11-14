@@ -5,8 +5,7 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Articles;
-
-use \ItemManager as ItemManager;
+use ItemManager;
 
 
 class VoteManager extends ItemManager {
@@ -18,15 +17,15 @@ class VoteManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('article_votes');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('article', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('address', 'varchar');
+		$this->add_property('article', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

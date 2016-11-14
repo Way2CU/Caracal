@@ -9,15 +9,15 @@ class GalleryGroupMembershipManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('gallery_group_membership');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('group', 'int');
-		$this->addProperty('container', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('group', 'int');
+		$this->add_property('container', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

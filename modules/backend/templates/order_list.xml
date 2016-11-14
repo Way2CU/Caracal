@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form
+		action="$params['form_action']"
+		method="POST"
+		cms:eval="action"
+		>
+		<input type="hidden" name="order" value=""/>
+		<div class="scrollable_list">
+			<!-- Header -->
+			<div class="list_header">
+				<span class="column">
+					<cms:text constant="column_order_title" module="backend"/>
+				</span>
+			</div>
+
+			<!-- List -->
+			<div class="list_content" style="height: 400px">
+				<cms:list/>
+			</div>
+		</div>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="save"/></button>
+		</div>
+	</form>
+	<script type="text/javascript" charset="utf-8">
+		new Caracal.Backend.OrderEditor();
+	</script>
+</document>

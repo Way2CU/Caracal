@@ -9,17 +9,17 @@ class ActivityLogManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('activity_log');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('activity', 'int');
-		$this->addProperty('user', 'int');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('timestamp', 'timestamp');
+		$this->add_property('id', 'int');
+		$this->add_property('activity', 'int');
+		$this->add_property('user', 'int');
+		$this->add_property('address', 'varchar');
+		$this->add_property('timestamp', 'timestamp');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

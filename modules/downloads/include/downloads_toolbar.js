@@ -64,7 +64,7 @@ function ToolbarExtension_Downloads() {
 
 				$.ajax({
 					url: self.backend_url,
-					type: 'GET',
+					method: 'GET',
 					data: {
 						section: 'downloads',
 						action: 'json_list'

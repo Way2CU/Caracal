@@ -9,16 +9,16 @@ class ContactForm_SubmissionFieldManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_submission_fields');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('submission', 'int');
-		$this->addProperty('field', 'int');
-		$this->addProperty('value', 'text');
+		$this->add_property('id', 'int');
+		$this->add_property('submission', 'int');
+		$this->add_property('field', 'int');
+		$this->add_property('value', 'text');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

@@ -19,17 +19,17 @@ class ModuleManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_modules');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('order', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('preload', 'int');
-		$this->addProperty('active', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('order', 'int');
+		$this->add_property('name', 'varchar');
+		$this->add_property('preload', 'int');
+		$this->add_property('active', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -48,24 +48,24 @@ final class UserManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_access');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('username', 'varchar');
-		$this->addProperty('password', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('username', 'varchar');
+		$this->add_property('password', 'varchar');
 		// TODO: Get rid of `fullname` sometime.
-		$this->addProperty('fullname', 'varchar');
-		$this->addProperty('first_name', 'varchar');
-		$this->addProperty('last_name', 'varchar');
-		$this->addProperty('email', 'varchar');
-		$this->addProperty('level', 'int');
-		$this->addProperty('verified', 'boolean');
-		$this->addProperty('agreed', 'boolean');
-		$this->addProperty('salt', 'char');
+		$this->add_property('fullname', 'varchar');
+		$this->add_property('first_name', 'varchar');
+		$this->add_property('last_name', 'varchar');
+		$this->add_property('email', 'varchar');
+		$this->add_property('level', 'int');
+		$this->add_property('verified', 'boolean');
+		$this->add_property('agreed', 'boolean');
+		$this->add_property('salt', 'char');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -84,7 +84,7 @@ final class UserManager extends ItemManager {
 		$result = false;
 
 		// get user
-		$user = $this->getSingleItem(array('id'), array('username' => $username));
+		$user = $this->get_single_item(array('id'), array('username' => $username));
 		if (!is_object($user))
 			throw new InvalidUserError('Unable to change password!');
 
@@ -93,7 +93,7 @@ final class UserManager extends ItemManager {
 		$hashed_password = hash_hmac('sha256', $new_password, $salt);
 
 		// update password
-		$this->updateData(
+		$this->update_items(
 				array(
 					'password'	=> $hashed_password,
 					'salt'		=> $salt
@@ -116,12 +116,12 @@ final class UserManager extends ItemManager {
 		$result = false;
 
 		// get salt for user
-		$test_user = $this->getSingleItem(array('salt'), array('username' => $username));
+		$test_user = $this->get_single_item(array('salt'), array('username' => $username));
 
 		// check credentials
 		if (is_object($test_user)) {
 			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
-			$user = $this->getSingleItem(
+			$user = $this->get_single_item(
 						array('id'),
 						array(
 							'username'	=> $username,
@@ -146,7 +146,7 @@ final class UserManager extends ItemManager {
 		$result = false;
 
 		// get user from the database
-		$user = $this->getSingleItem($this->getFieldNames(), array('username' => $username));
+		$user = $this->get_single_item($this->get_field_names(), array('username' => $username));
 
 		// set session variables
 		if (is_object($user)) {
@@ -198,11 +198,11 @@ final class UserManager extends ItemManager {
 		$result = false;
 
 		// get user object to play with
-		$user = $this->getSingleItem(array('id', 'verified'), array('username' => $username));
+		$user = $this->get_single_item(array('id', 'verified'), array('username' => $username));
 
 		// set user as verified
 		if (is_object($user) && !$user->verified) {
-			$this->updateData(
+			$this->update_items(
 				array('verified' => $verified ? 1 : 0),
 				array('id' => $user->id)
 			);
@@ -220,7 +220,7 @@ final class UserManager extends ItemManager {
 	 * @return boolean
 	 */
 	public function is_user_verified($username) {
-		$user = $this->getSingleItem(array('verified'), array('username' => $username));
+		$user = $this->get_single_item(array('verified'), array('username' => $username));
 		$result = is_object($user) && $user->verified;
 
 		return $result;
@@ -237,16 +237,16 @@ final class UserDataManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_user_data');
 
-		$this->addProperty('user', 'int');
-		$this->addProperty('namespace', 'varchar');
-		$this->addProperty('key', 'varchar');
-		$this->addProperty('value', 'varchar');
+		$this->add_property('user', 'int');
+		$this->add_property('namespace', 'varchar');
+		$this->add_property('key', 'varchar');
+		$this->add_property('value', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -264,15 +264,15 @@ final class UserVerificationManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_access_verification');
 
-		$this->addProperty('user', 'int');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('code', 'varchar');
+		$this->add_property('user', 'int');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('code', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -290,16 +290,16 @@ final class LoginRetryManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_retries');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('day', 'int');
-		$this->addProperty('address', 'varchar');
-		$this->addProperty('count', 'int');
+		$this->add_property('id', 'int');
+		$this->add_property('day', 'int');
+		$this->add_property('address', 'varchar');
+		$this->add_property('count', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -310,7 +310,7 @@ final class LoginRetryManager extends ItemManager {
 	 * Purge outdated entries.
 	 */
 	private function purgeOutdated() {
-		$this->deleteData(array(
+		$this->delete_items(array(
 						'day' => array(
 							'operator'	=> '!=',
 							'value'		=> date('j')
@@ -332,7 +332,7 @@ final class LoginRetryManager extends ItemManager {
 
 		// try to get existing entry
 		$result = 0;
-		$entry = $this->getSingleItem(array('count'), array('address' => $address));
+		$entry = $this->get_single_item(array('count'), array('address' => $address));
 
 		if (is_object($entry))
 			$result = $entry->count;
@@ -351,12 +351,12 @@ final class LoginRetryManager extends ItemManager {
 			$address = $_SERVER['REMOTE_ADDR'];
 
 		// get existing entry if it exists
-		$entry = $this->getSingleItem($this->getFieldNames(), array('address' => $address));
+		$entry = $this->get_single_item($this->get_field_names(), array('address' => $address));
 
 		if (is_object($entry)) {
 			// don't allow counter to go over 10
 			$count = ($entry->count < 10) ? $entry->count+1 : 10;
-			$this->updateData(
+			$this->update_items(
 							array('count'	=> $count),
 							array('id'		=> $entry->id)
 						);
@@ -364,7 +364,7 @@ final class LoginRetryManager extends ItemManager {
 
 		} else {
 			// there's no existing entry so we create one
-			$this->insertData(array(
+			$this->insert_item(array(
 								'day'		=> date('j'),
 								'address'	=> $_SERVER['REMOTE_ADDR'],
 								'count'		=> 1
@@ -384,7 +384,7 @@ final class LoginRetryManager extends ItemManager {
 		if (is_null($address))
 			$address = $_SERVER['REMOTE_ADDR'];
 
-		$this->deleteData(array('address' => $address));
+		$this->delete_items(array('address' => $address));
 	}
 }
 
@@ -398,16 +398,16 @@ class SettingsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('system_settings');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('module', 'varchar');
-		$this->addProperty('variable', 'varchar');
-		$this->addProperty('value', 'text');
+		$this->add_property('id', 'int');
+		$this->add_property('module', 'varchar');
+		$this->add_property('variable', 'varchar');
+		$this->add_property('value', 'text');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

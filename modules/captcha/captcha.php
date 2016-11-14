@@ -31,7 +31,7 @@ class captcha extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -44,7 +44,7 @@ class captcha extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -96,16 +96,16 @@ class captcha extends Module {
 	/**
 	 * Event called upon module initialisation
 	 */
-	public function onInit() {
-		$this->saveSetting('char_count', 4);
-		$this->saveSetting('char_type', 'numbers');
-		$this->saveSetting('arc_count', 15);
-		$this->saveSetting('font_size', 28);
-		$this->saveSetting('accepted_hosts', $_SERVER['SERVER_NAME']);
-		$this->saveSetting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
+	public function initialize() {
+		$this->save_setting('char_count', 4);
+		$this->save_setting('char_type', 'numbers');
+		$this->save_setting('arc_count', 15);
+		$this->save_setting('font_size', 28);
+		$this->save_setting('accepted_hosts', $_SERVER['SERVER_NAME']);
+		$this->save_setting('colors', '#555555,#777777,#999999,#bbbbbb,#dddddd');
 	}
 
-	public function onDisable() {
+	public function cleanup() {
 	}
 
 	/**
@@ -257,7 +257,7 @@ class captcha extends Module {
 	 * @return string
 	 */
 	private function getImageURL() {
-		$result = url_Make('print_image', $this->name);
+		$result = URL::make_query($this->name, 'print_image');
 		return $result;
 	}
 
@@ -268,16 +268,16 @@ class captcha extends Module {
 	 * @param array $children
 	 */
 	private function printImageTag($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'image.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'image.xml');
+		$template->set_template_params_from_array($children);
 
 		$params = array(
 				'url'	=> $this->getImageURL(),
-				'alt'	=> $this->getLanguageConstant('captcha_message')
+				'alt'	=> $this->get_language_constant('captcha_message')
 			);
 
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 

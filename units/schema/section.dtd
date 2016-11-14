@@ -2,19 +2,19 @@
 <!--
 	Section File Specification
 	Copyright (c) 2013. by Way2CU
-	
+
 	Author: Mladen Mijatov
 -->
 <!ELEMENT document (section*)>
 
 <!ELEMENT section (language+)>
-<!ATTLIST section 
+<!ATTLIST section
 	name CDATA #REQUIRED
-	module CDATA #IMPLIED	
+	module CDATA #IMPLIED
 >
 
 <!ELEMENT language (action*)>
-<!ATTLIST language 
+<!ATTLIST language
 	name CDATA #REQUIRED
 	file CDATA #IMPLIED
 >
@@ -22,5 +22,5 @@
 <!ELEMENT action EMPTY>
 <!ATTLIST action
 	name CDATA #REQUIRED
-	file CDATA #REQUIRED 
+	file CDATA #REQUIRED
 >

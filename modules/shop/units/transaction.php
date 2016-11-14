@@ -28,7 +28,7 @@ final class Transaction {
 	 */
 	public static function get_manager() {
 		if (is_null(self::$manager))
-			self::$manager = TransactionsManager::getInstance();
+			self::$manager = TransactionsManager::get_instance();
 
 		return self::$manager;
 	}
@@ -44,8 +44,8 @@ final class Transaction {
 		$manager = self::get_manager();
 
 		// get transaction
-		$transaction = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+			$manager->get_field_names(),
 			array('uid' => $transaction_id)
 		);
 
@@ -74,7 +74,7 @@ final class Transaction {
 			return $result;
 
 		$manager = self::get_manager();
-		$result = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $id));
+		$result = $manager->get_single_item($manager->get_field_names(), array('uid' => $id));
 
 		return $result;
 	}
@@ -89,9 +89,9 @@ final class Transaction {
 		$result = null;
 
 		// get address
-		$manager = BuyersManager::getInstance();
-		$buyer = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$manager = BuyersManager::get_instance();
+		$buyer = $manager->get_single_item(
+				$manager->get_field_names(),
 				array('id' => $transaction->buyer)
 			);
 
@@ -127,9 +127,9 @@ final class Transaction {
 		$result = null;
 
 		// get address
-		$manager = DeliveryAddressManager::getInstance();
-		$address = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$manager = DeliveryAddressManager::get_instance();
+		$address = $manager->get_single_item(
+				$manager->get_field_names(),
 				array('id' => $transaction->address)
 			);
 
@@ -183,7 +183,7 @@ final class Transaction {
 	 */
 	public static function set_remote_id($transaction, $remote_id) {
 		$manager = self::get_manager();
-		$manager->updateData(
+		$manager->update_items(
 			array('remote_id' => $remote_id),
 			array('id' => $transaction->id)
 		);
@@ -197,7 +197,7 @@ final class Transaction {
 	 */
 	public static function set_token($transaction, $token) {
 		$manager = self::get_manager();
-		$manager->updateData(
+		$manager->update_items(
 			array('payment_token' => $token->id),
 			array('id' => $transaction->id)
 		);
@@ -226,7 +226,7 @@ final class Transaction {
 			$data['handling'] = $handling;
 
 		// update data
-		$manager->updateData($data, array('id' => $transaction->id));
+		$manager->update_items($data, array('id' => $transaction->id));
 	}
 
 	/**
@@ -239,7 +239,7 @@ final class Transaction {
 		$manager = self::get_manager();
 
 		// update data
-		$manager->updateData(
+		$manager->update_items(
 				array('shipping' => $value),
 				array('id' => $transaction->id)
 			);

@@ -330,6 +330,15 @@
 			<cms:if condition="!empty($params['label'][$language]) and in_array($params['type'], array('checkbox', 'radio'))">
 				<span><cms:var param="label" multilanguage="yes"/></span>
 			</cms:if>
+
+			<!-- Text for placeholder on fields which have pattern -->
+			<cms:if condition="!empty($params['pattern']) and !empty($params['placeholder']) and in_array($params['type'], array('text', 'email', 'textarea'))">
+				<small
+					class="placeholder"
+					data-content="$params['placeholder'][$language]"
+					cms:eval="data-text"
+					/>
+			</cms:if>
 		</label>
 	</cms:if>
 </document>

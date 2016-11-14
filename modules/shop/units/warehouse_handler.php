@@ -25,7 +25,7 @@ class ShopWarehouseHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -38,7 +38,7 @@ class ShopWarehouseHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -75,22 +75,22 @@ class ShopWarehouseHandler {
 		$template = new TemplateHandler('warehouse_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'warehouse_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_warehouse'),
+					'warehouse_new' => URL::make_hyperlink(
+										$this->_parent->get_language_constant('add_warehouse'),
 										window_Open( // on click open window
 											'shop_warehouse_add',
 											300,
-											$this->_parent->getLanguageConstant('title_warehouse_add'),
+											$this->_parent->get_language_constant('title_warehouse_add'),
 											true, true,
 											backend_UrlMake($this->name, 'warehouses', 'add')
 										)
 									),
 					);
 
-		$template->registerTagHandler('cms:warehouse_list', $this, 'tag_WarehouseList');
+		$template->register_tag_handler('cms:warehouse_list', $this, 'tag_WarehouseList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -99,15 +99,15 @@ class ShopWarehouseHandler {
 	 */
 	private function addWarehouse() {
 		$template = new TemplateHandler('warehouse_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'warehouses', 'save'),
 					'cancel_action'	=> window_Close('shop_warehouse_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -116,13 +116,13 @@ class ShopWarehouseHandler {
 	 */
 	private function changeWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$template = new TemplateHandler('warehouse_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			$params = array(
 					'id'		=> $item->id,
@@ -137,8 +137,8 @@ class ShopWarehouseHandler {
 					'cancel_action'	=> window_Close('shop_warehouse_change')
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -168,29 +168,29 @@ class ShopWarehouseHandler {
 			);
 
 		// get instance of warehouse manager
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
 		if (is_null($id)) {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_warehouse_add';
 
 		} else {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_warehouse_change';
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_warehouse_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_warehouse_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_warehouses')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -199,23 +199,23 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_warehouse_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_warehouse_delete"),
 					'name'			=> $item->name,
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_warehouse_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'warehouses'),
 												array('sub_action', 'delete_commit'),
@@ -225,8 +225,8 @@ class ShopWarehouseHandler {
 					'no_action'		=> window_Close('shop_warehouse_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -235,22 +235,22 @@ class ShopWarehouseHandler {
 	 */
 	private function deleteWarehouse_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->_parent->name);
+		$template->set_mapped_module($this->_parent->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_warehouse_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_warehouse_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_warehouse_delete').";".window_ReloadContent('shop_warehouses')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,13 +270,13 @@ class ShopWarehouseHandler {
 	 * @param array $children
 	 */
 	public function tag_WarehouseList($tag_params, $children) {
-		$manager = ShopWarehouseManager::getInstance();
+		$manager = ShopWarehouseManager::get_instance();
 		$conditions = array();
 
-		$template = $this->_parent->loadTemplate($tag_params, 'warehouse_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->_parent->load_template($tag_params, 'warehouse_list_item.xml');
+		$template->set_template_params_from_array($children);
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -288,16 +288,16 @@ class ShopWarehouseHandler {
 						'zip'		=> $item->zip,
 						'country'	=> $item->country,
 						'state'		=> $item->state,
-						'item_change'	=> url_MakeHyperlink(
-												$this->_parent->getLanguageConstant('change'),
+						'item_change'	=> URL::make_hyperlink(
+												$this->_parent->get_language_constant('change'),
 												window_Open(
 													'shop_warehouse_change', 	// window id
 													300,				// width
-													$this->_parent->getLanguageConstant('title_warehouse_change'), // title
+													$this->_parent->get_language_constant('title_warehouse_change'), // title
 													true, true,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'warehouses'),
 														array('sub_action', 'change'),
@@ -305,16 +305,16 @@ class ShopWarehouseHandler {
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
-												$this->_parent->getLanguageConstant('delete'),
+						'item_delete'	=> URL::make_hyperlink(
+												$this->_parent->get_language_constant('delete'),
 												window_Open(
 													'shop_warehouse_delete', 	// window id
 													400,				// width
-													$this->_parent->getLanguageConstant('title_warehouse_delete'), // title
+													$this->_parent->get_language_constant('title_warehouse_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'warehouses'),
 														array('sub_action', 'delete'),
@@ -324,8 +324,8 @@ class ShopWarehouseHandler {
 											)
 					);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

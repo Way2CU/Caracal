@@ -560,7 +560,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 			cache: false,
 			context: self,
 			dataType: 'html',
-			type: 'POST',
+			method: 'POST',
 			data: data,
 			success: self.contentLoaded,
 			error: self.contentError,

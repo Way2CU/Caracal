@@ -101,7 +101,7 @@ class collection extends Module {
 
 		// get instance of head tag early on
 		if (ModuleHandler::is_loaded('head_tag'))
-			$this->head_tag = head_tag::getInstance();
+			$this->head_tag = head_tag::get_instance();
 
 		// include scripts by default
 		$this->includeScriptById(collection::JQUERY);
@@ -111,7 +111,7 @@ class collection extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -124,18 +124,18 @@ class collection extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 	}
 
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {}
+	public function initialize() {}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {}
+	public function cleanup() {}
 
 	/**
 	 * Get script id from its name.
@@ -182,7 +182,7 @@ class collection extends Module {
 						$this->head_tag->addTag(
 							'link',
 							array(
-								'href'	=> url_GetFromFilePath($this->path.'include/'.$file_name),
+								'href'	=> URL::from_file_path($this->path.'include/'.$file_name),
 								'type'	=> 'text/css',
 								'rel'	=> 'stylesheet'
 							)
@@ -195,7 +195,7 @@ class collection extends Module {
 						$this->head_tag->addTag(
 							'script',
 							array(
-								'src'	=> url_GetFromFilePath($this->path.'include/'.$file_name),
+								'src'	=> URL::from_file_path($this->path.'include/'.$file_name),
 								'type'	=> 'text/javascript'
 							)
 						);
@@ -208,7 +208,7 @@ class collection extends Module {
 			$this->head_tag->addTag(
 						'script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/'.$data),
+							'src'	=> URL::from_file_path($this->path.'include/'.$data),
 							'type'	=> 'text/javascript'
 						)
 					);

@@ -9,8 +9,11 @@
  *
  * Author: Mladen Mijatov
  */
+namespace Modules\Shop\Item;
+use ItemManager;
 
-class ShopItemManager extends ItemManager {
+
+class Manager extends ItemManager {
 	private static $_instance;
 
 	/**
@@ -19,32 +22,33 @@ class ShopItemManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_items');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('uid', 'varchar');
-		$this->addProperty('name', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('gallery', 'int');
-		$this->addProperty('manufacturer', 'int');
-		$this->addProperty('size_definition', 'int');
-		$this->addProperty('colors', 'varchar');
-		$this->addProperty('author', 'int');
-		$this->addProperty('views', 'int');
-		$this->addProperty('price', 'decimal');
-		$this->addProperty('discount', 'decimal');
-		$this->addProperty('tax', 'decimal');
-		$this->addProperty('weight', 'decimal');
-		$this->addProperty('votes_up', 'int');
-		$this->addProperty('votes_down', 'int');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('priority', 'int');
-		$this->addProperty('visible', 'boolean');
-		$this->addProperty('deleted', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('uid', 'varchar');
+		$this->add_property('name', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('gallery', 'int');
+		$this->add_property('manufacturer', 'int');
+		$this->add_property('size_definition', 'int');
+		$this->add_property('colors', 'varchar');
+		$this->add_property('author', 'int');
+		$this->add_property('views', 'int');
+		$this->add_property('price', 'decimal');
+		$this->add_property('discount', 'decimal');
+		$this->add_property('tax', 'decimal');
+		$this->add_property('weight', 'decimal');
+		$this->add_property('votes_up', 'int');
+		$this->add_property('votes_down', 'int');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('expires', 'timestamp');
+		$this->add_property('priority', 'int');
+		$this->add_property('visible', 'boolean');
+		$this->add_property('deleted', 'boolean');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

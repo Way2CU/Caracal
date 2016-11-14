@@ -472,14 +472,15 @@ div.window div.scrollable_list .list_content h4 {
 	padding: 5px;
 }
 
-div.dialog div.scrollable_list .list_content .list_group .list_item,
-div.window div.scrollable_list .list_content .list_group .list_item {
+div.dialog div.scrollable_list .list_content .list_group,
+div.window div.scrollable_list .list_content .list_group {
 	padding-left: 15px;
+	overflow-x: hidden;
 }
 
-html[dir=rtl] div.dialog div.scrollable_list .list_content .list_group .list_item,
-html[dir=rtl] div.window div.scrollable_list .list_content .list_group .list_item {
-	padding-left: 5px;
+html[dir=rtl] div.dialog div.scrollable_list .list_content .list_group,
+html[dir=rtl] div.window div.scrollable_list .list_content .list_group {
+	padding-left: 0px;
 	padding-right: 15px;
 }
 
@@ -487,6 +488,23 @@ div.dialog div.scrollable_list .list_content .list_item,
 div.window div.scrollable_list .list_content .list_item {
 	display: block;
 	padding: 5px;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.draggable,
+div.window div.scrollable_list .list_content .list_item.draggable {
+	border-top: 2px solid transparent;
+	border-bottom: 2px solid transparent;
+	cursor: move;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.dragging,
+div.window div.scrollable_list .list_content .list_item.dragging {
+	opacity: 0.5;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.drag-hover,
+div.window div.scrollable_list .list_content .list_item.drag-hover {
+	border-top-color: #345DC9;
 }
 
 div.dialog div.scrollable_list .list_content .list_item.group_title,
@@ -744,13 +762,15 @@ div.dialog div.container div.content {
 /**
  * Floated boxes
  */
-div.window div.box {
+div.window div.box,
+div.window div.content label.box {
 	display: inline-block;
 	vertical-align: top;
 }
 
-div.window div.box.left {
-	margin-right: 7px;
+div.window div.box.left,
+div.window div.content label.box {
+	margin-right: 10px;
 }
 
 html[dir=rtl] div.window div.box.left {

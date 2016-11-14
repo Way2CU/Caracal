@@ -154,7 +154,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -185,7 +185,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 	 * @return array
 	 */
 	public function getDeliveryTypes($items, $shipper, $recipient, $transaction=null) {
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 		$debug = $shop->isDebug();
 		$result = array();
 		$request = array();
@@ -282,7 +282,7 @@ class FedEx_DeliveryMethod extends DeliveryMethod {
 			foreach ($response->RateReplyDetails as $type) {
 				// extract data from response
 				$id = $type->ServiceType;
-				$name = $this->parent->getLanguageConstant($id);
+				$name = $this->parent->get_language_constant($id);
 				$timestamp = strtotime($type->DeliveryTimestamp);
 				$amount = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
 				$currency = $type->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Currency;

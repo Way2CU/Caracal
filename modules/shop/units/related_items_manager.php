@@ -15,14 +15,14 @@ class ShopRelatedItemsManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_related_items');
 
-		$this->addProperty('item', 'int');
-		$this->addProperty('related', 'int');
+		$this->add_property('item', 'int');
+		$this->add_property('related', 'int');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 

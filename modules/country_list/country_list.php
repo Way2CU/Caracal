@@ -28,16 +28,16 @@ class country_list extends Module {
 		parent::__construct(__FILE__);
 
 		if (ModuleHandler::is_loaded('contact_form')) {
-			$contact_form = contact_form::getInstance();
+			$contact_form = contact_form::get_instance();
 			$contact_form->registerField(
 				'country_list',
-				$this->getLanguageConstant('country_field_name'),
+				$this->get_language_constant('country_field_name'),
 				$this,
 				'field_CountryList'
 			);
 			$contact_form->registerField(
 				'state_list',
-				$this->getLanguageConstant('state_field_name'),
+				$this->get_language_constant('state_field_name'),
 				$this,
 				'field_StateList'
 			);
@@ -47,7 +47,7 @@ class country_list extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -60,7 +60,7 @@ class country_list extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -80,7 +80,7 @@ class country_list extends Module {
 	/**
 	 * Create table and populate with data on module initialization
 	 */
-	public function onInit() {
+	public function initialize() {
 		global $db;
 
 		// create tables
@@ -110,14 +110,14 @@ class country_list extends Module {
 			$this->_loadStateList();
 
 		// get managers
-		$country_manager = CountryManager::getInstance();
-		$state_manager = CountryStateManager::getInstance();
+		$country_manager = CountryManager::get_instance();
+		$state_manager = CountryStateManager::get_instance();
 
 		$country_list = $this->country_list->document->tagChildren;
 		$state_list = $this->state_list->document->tagChildren;
 
 		foreach ($country_list as $country)
-			$country_manager->insertData(array(
+			$country_manager->insert_item(array(
 								'name'	=> escape_chars($country->tagData),
 								'short'	=> $country->tagAttrs['short']
 							));
@@ -126,7 +126,7 @@ class country_list extends Module {
 			$country_code = $country->tagAttrs['short'];
 
 			foreach ($country->tagChildren as $state)
-				$state_manager->insertData(array(
+				$state_manager->insert_item(array(
 									'country'	=> $country_code,
 									'name'		=> $state->tagData,
 									'short'		=> $state->tagAttrs['short']
@@ -137,7 +137,7 @@ class country_list extends Module {
 	/**
 	 * Clean up database on module disable
 	 */
-	public function onDisable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('countries', 'country_states');
@@ -151,7 +151,7 @@ class country_list extends Module {
 	 * @param array $children
 	 */
 	public function tag_CountryList($tag_params, $children) {
-		$manager = CountryManager::getInstance();
+		$manager = CountryManager::get_instance();
 		$conditions = array();
 
 		// filter results if specified
@@ -162,9 +162,9 @@ class country_list extends Module {
 		$selected = isset($tag_params['selected']) ? fix_chars($tag_params['selected']) : null;
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'country_option.xml');
-		$template->setTemplateParamsFromArray($children);
-		$country_list = $manager->getItems($manager->getFieldNames(), $conditions);
+		$template = $this->load_template($tag_params, 'country_option.xml');
+		$template->set_template_params_from_array($children);
+		$country_list = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// parse template
 		if (count($country_list) > 0)
@@ -175,8 +175,8 @@ class country_list extends Module {
 							'short'		=> $country->short
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -188,7 +188,7 @@ class country_list extends Module {
 	 * @param array $children
 	 */
 	public function tag_StateList($tag_params, $children) {
-		$manager = CountryStateManager::getInstance();
+		$manager = CountryStateManager::get_instance();
 		$conditions = array();
 
 		// get tag params
@@ -203,9 +203,9 @@ class country_list extends Module {
 			$conditions['country'] = fix_chars($_REQUEST['country']);
 		}
 
-		$template = $this->loadTemplate($tag_params, 'state_option.xml');
-		$template->setTemplateParamsFromArray($children);
-		$state_list = $manager->getItems($manager->getFieldNames(), $conditions);
+		$template = $this->load_template($tag_params, 'state_option.xml');
+		$template->set_template_params_from_array($children);
+		$state_list = $manager->get_items($manager->get_field_names(), $conditions);
 
 		foreach ($state_list as $state) {
 			$params = array(
@@ -214,8 +214,8 @@ class country_list extends Module {
 						'short'		=> $state->short
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -226,11 +226,11 @@ class country_list extends Module {
 	 * @param array $params
 	 */
 	public function field_CountryList($params) {
-		$template = $this->loadTemplate($params, 'country_list_field.xml');
-		$template->registerTagHandler('cms:country_list', $this, 'tag_CountryList');
+		$template = $this->load_template($params, 'country_list_field.xml');
+		$template->register_tag_handler('cms:country_list', $this, 'tag_CountryList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -240,11 +240,11 @@ class country_list extends Module {
 	 * @param array $params
 	 */
 	public function field_StateList($params) {
-		$template = $this->loadTemplate($params, 'state_list_field.xml');
-		$template->registerTagHandler('cms:state_list', $this, 'tag_StateList');
+		$template = $this->load_template($params, 'state_list_field.xml');
+		$template->register_tag_handler('cms:state_list', $this, 'tag_StateList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -281,15 +281,15 @@ class CountryManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('countries');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('short', 'char');
+		$this->add_property('id', 'int');
+		$this->add_property('name', 'varchar');
+		$this->add_property('short', 'char');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -307,16 +307,16 @@ class CountryStateManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('country_states');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('country', 'char');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('short', 'char');
+		$this->add_property('id', 'int');
+		$this->add_property('country', 'char');
+		$this->add_property('name', 'varchar');
+		$this->add_property('short', 'char');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

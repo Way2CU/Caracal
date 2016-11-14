@@ -79,7 +79,7 @@ class CodeOptimizer {
 		} else {
 			$cache_time = filemtime($file_name);
 			foreach ($list as $file)
-				if (filemtime(path_GetFromURL($file)) > $cache_time) {
+				if (filemtime(URL::to_file_path($file)) > $cache_time) {
 					$result = true;
 					break;
 				}
@@ -104,7 +104,7 @@ class CodeOptimizer {
 
 		// get absolute local path
 		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
-			$file_name = path_GetFromURL($file_name);
+			$file_name = URL::to_file_path($file_name);
 
 		switch ($extension) {
 			case 'less':
@@ -228,7 +228,7 @@ class CodeOptimizer {
 	 * Get a single instance of this object.
 	 * @return object
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -250,7 +250,7 @@ class CodeOptimizer {
 		// add script to be compiled
 		if ($data['host'] == _DOMAIN) {
 			$this->script_list []= $url;
-			$this->closure_compiler->add_file(path_GetFromURL($url));
+			$this->closure_compiler->add_file(URL::to_file_path($url));
 			$result = true;
 		}
 

@@ -30,17 +30,30 @@
 					</label>
 				</div>
 
-				<label style="clear: both; padding-top: 10px;">
-					<span><cms:text constant="label_uid" module="shop"/></span>
-					<input
-						name="uid"
-						class="code ltr"
-						type="text"
-						value="$params['uid']"
-						maxlength="13"
-						cms:eval="value"
-						/>
-				</label>
+				<div class="box left" style="width: 180px;">
+					<label style="clear: both; padding-top: 10px;">
+						<span><cms:text constant="label_uid" module="shop"/></span>
+						<input
+							name="uid"
+							class="code ltr"
+							type="text"
+							value="$params['uid']"
+							maxlength="13"
+							cms:eval="value"
+							/>
+					</label>
+				</div>
+
+				<div class="box left">
+					<label style="padding-top: 10px;">
+						<span><cms:text constant="label_item_expiration" module="shop"/></span>
+						<input
+							type="datetime-local"
+							name="expires"
+							class="code ltr"
+							/>
+					</label>
+				</div>
 
 				<label style="clear: both; padding-top: 10px;">
 					<span><cms:text constant="label_description" module="shop"/></span>
@@ -296,19 +309,12 @@
 				</div>
 			</div>
 
-			<!-- Delivery methods -->
-			<div class="scrollable_list">
-				<div class="list_header">
-					<span class="column" style="width: 360px;">
-						<cms:text constant="column_name_and_price" module="shop"/>
-					</span>
-				</div>
-				<div class="list_content" style="height: 370px" id="related_items">
-					<cms:delivery_methods
-						template="item_delivery_list.xml"
-						local="1"
-						/>
-				</div>
+			<!-- Remarks -->
+			<div>
+				<label>
+					<span><cms:text constant="label_remark" module="shop"/></span>
+					<textarea name="remark" style="width: 500px; height: 400px"/>
+				</label>
 			</div>
 		</div>
 
@@ -325,15 +331,15 @@
 		var notebook = new Notebook('shop_add_item_notebook');
 
 		// get language constants
-		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_delivery'];
+		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_remark'];
 		var data = language_handler.getTextArray('shop', titles);
 		notebook
-		.setPageTitle(0, data['tab_item'])
-		.setPageTitle(1, data['tab_properties'])
-		.setPageTitle(2, data['tab_colors'])
-		.setPageTitle(3, data['tab_category'])
-		.setPageTitle(4, data['tab_related'])
-		.setPageTitle(5, data['tab_delivery']);
+			.setPageTitle(0, data['tab_item'])
+			.setPageTitle(1, data['tab_properties'])
+			.setPageTitle(2, data['tab_colors'])
+			.setPageTitle(3, data['tab_category'])
+			.setPageTitle(4, data['tab_related'])
+			.setPageTitle(5, data['tab_remark']);
 
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
@@ -341,9 +347,9 @@
 
 		// create toolbar
 		toolbar_api
-		.createToolbar('shop_item_add_form', '[name=description]:input')
-		.addControl('common', 'markdown')
-		.addControl('gallery', 'article_image')
-		.addControl('downloads', 'link');
+			.createToolbar('shop_item_add_form', '[name=description]:input')
+			.addControl('common', 'markdown')
+			.addControl('gallery', 'article_image')
+			.addControl('downloads', 'link');
 	</script>
 </document>

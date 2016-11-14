@@ -33,7 +33,7 @@ class ContactForm_SmtpMailer extends ContactForm_SystemMailer {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->language->getText('mailer_smtp');
+		return $this->language->get_text('mailer_smtp');
 	}
 
 	/**

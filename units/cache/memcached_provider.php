@@ -9,8 +9,7 @@
  * Author: Mladen Mijatov
  */
 namespace Core\Cache;
-
-use \Memcached as Memcached;
+use Memcached;
 
 
 class MemcachedProvider implements Provider {
