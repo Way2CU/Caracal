@@ -884,6 +884,7 @@ class Handler {
 							'priority'              => $item->priority,
 							'timestamp'             => $item->timestamp,
 							'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
+							'expires'               => strtotime($item->expires),
 							'visible'               => $item->visible,
 							'deleted'               => $item->deleted,
 							'item_change'           => URL::make_hyperlink(
