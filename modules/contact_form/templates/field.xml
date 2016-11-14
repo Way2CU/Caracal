@@ -336,7 +336,7 @@
 				<small
 					class="placeholder"
 					data-content="$params['placeholder'][$language]"
-					cms:eval="data-text"
+					cms:eval="data-content"
 					/>
 			</cms:if>
 		</label>
