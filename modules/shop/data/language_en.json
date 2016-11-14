@@ -36,6 +36,7 @@
 	"column_price": "Price",
 	"column_quantity": "Quantity",
 	"column_rating": "Rating",
+	"column_expires": "Expires",
 	"column_shipping": "Shipping",
 	"column_subtotal": "Sub-total",
 	"column_tax": "Tax",

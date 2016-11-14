@@ -36,6 +36,7 @@
     "column_price": "מחיר",
     "column_quantity": "כמות",
     "column_rating": "ניקוד",
+    "column_expires": "Expires",
     "column_shipping": "משלוח",
     "column_subtotal": "סיכום ביניים",
     "column_tax": "מעמ",
