@@ -5,6 +5,17 @@
 	<div class="main_menu">
 		<cms:var name="$params['link_new']"/>
 		<cms:var name="$params['link_categories']"/>
+
+		<!-- Simple filter options -->
+		<div class="floated">
+			<select name="manufacturer">
+				<option/>
+				<cms:manufacturer_list
+					template="manufacturer_option.xml"
+					local="1"
+					/>
+			</select>
+		</div>
 	</div>
 
 	<!-- Header -->

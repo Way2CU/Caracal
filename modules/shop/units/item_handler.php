@@ -152,6 +152,9 @@ class Handler {
 		// register tag handler
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
 
+		$manufacturer_handler = ShopManufacturerHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
