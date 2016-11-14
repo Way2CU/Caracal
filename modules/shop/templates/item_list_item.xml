@@ -14,7 +14,7 @@
 		<span class="column" style="width: 50px;">
 			<cms:var param="rating"/>
 		</span>
-		<span class="column" style="width: 70px;">
+		<span class="column" style="width: 100px;">
 			<cms:var name="date(Language::get_text('format_date_short'), $params['expires'])"/>
 		</span>
 		<span class="column">

@@ -22,7 +22,7 @@
 			<span class="column" style="width: 50px;">
 				<cms:text constant="column_rating" module="shop"/>
 			</span>
-			<span class="column" style="width: 70px;">
+			<span class="column" style="width: 100px;">
 				<cms:text constant="column_expires" module="shop"/>
 			</span>
 			<span class="column">
