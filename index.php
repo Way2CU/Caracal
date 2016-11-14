@@ -24,7 +24,7 @@ define('_BASEPATH', dirname(__FILE__));
 define('_LIBPATH', _BASEPATH.'/libraries/');
 define('_DOMAIN', $_SERVER['SERVER_NAME']);
 define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
-define('_VERSION', 0.3);
+define('_VERSION', 0.4);
 
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
