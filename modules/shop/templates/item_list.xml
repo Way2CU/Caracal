@@ -8,13 +8,16 @@
 
 		<!-- Simple filter options -->
 		<div class="floated">
-			<select name="manufacturer">
-				<option/>
-				<cms:manufacturer_list
-					template="manufacturer_option.xml"
-					local="1"
-					/>
-			</select>
+			<label>
+				<span><cms:text constant="label_manufacturer" module="shop"/></span>
+				<select name="manufacturer">
+					<option/>
+					<cms:manufacturer_list
+						template="manufacturer_option.xml"
+						local="1"
+						/>
+				</select>
+			</label>
 		</div>
 	</div>
 
