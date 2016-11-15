@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Currency converter and manager
- *
- * http://www.google.com/ig/calculator?hl=en&q=100EUR%3D%3Frsd
- *
+ * Item category handler.
  */
 
 class ShopCategoryHandler {

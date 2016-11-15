@@ -26,6 +26,7 @@
 					selected="isset($_REQUEST['category']) ? $_REQUEST['category'] : null"
 					template="category_option.xml"
 					local="1"
+					show_all="1"
 					cms:optional="selected"
 					/>
 			</select>
