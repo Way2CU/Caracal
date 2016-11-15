@@ -61,7 +61,10 @@
 		</div>
 		<div class="list_content" style="height: 400px">
 			<!-- List Content -->
-			<cms:item_list/>
+			<cms:item_list
+				category="isset($_REQUEST['category']) ? $_REQUEST['category'] : false"
+				cms:optional="category"
+				/>
 		</div>
 	</div>
 </document>
