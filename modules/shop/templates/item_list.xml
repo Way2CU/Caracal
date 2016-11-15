@@ -18,6 +18,17 @@
 					cms:optional="selected"
 					/>
 			</select>
+
+			<cms:text constant="label_category" module="shop"/>
+			<select name="category" onchange="Caracal.Shop.update_item_list(this);">
+				<option/>
+				<cms:category_list
+					selected="isset($_REQUEST['category']) ? $_REQUEST['category'] : null"
+					template="category_option.xml"
+					local="1"
+					cms:optional="selected"
+					/>
+			</select>
 		</div>
 	</div>
 

@@ -762,11 +762,13 @@ Caracal.Shop.delete_coupon_code = function(sender) {
  */
 Caracal.Shop.update_item_list = function(sender) {
 	var items_window = Caracal.window_system.getWindow('shop_items');
-	var manufacturer_input = items_window.container.find('select[name=manufacturer]');
+	var manufacturer = items_window.container.find('select[name=manufacturer]');
+	var category = items_window.container.find('select[name=category]');
 
 	// prepare data to send to server
 	var data = {
-			manufacturer: manufacturer_input.val()
+			manufacturer: manufacturer.val(),
+			category: category.val()
 		};
 
 	// save original url for later use
