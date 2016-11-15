@@ -681,6 +681,12 @@ class Handler {
 		$limit = null;
 
 		// create conditions
+		if (isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']))
+			$conditions['manufacturer'] = fix_id($_REQUEST['manufacturer']);
+
+		if (isset($tag_params['manufacturer']) && !empty($tag_params['manufacturer']))
+			$conditions['manufacturer'] = fix_id($tag_params['manufacturer']);
+
 		if (isset($tag_params['category'])) {
 			$categories = explode(',', $tag_params['category']);
 

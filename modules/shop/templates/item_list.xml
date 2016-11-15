@@ -9,11 +9,13 @@
 		<!-- Simple filter options -->
 		<div class="floated">
 			<cms:text constant="label_manufacturer" module="shop"/>
-			<select name="manufacturer">
+			<select name="manufacturer" onchange="Caracal.Shop.update_item_list(this);">
 				<option/>
 				<cms:manufacturer_list
+					selected="isset($_REQUEST['manufacturer']) ? $_REQUEST['manufacturer'] : null"
 					template="manufacturer_option.xml"
 					local="1"
+					cms:optional="selected"
 					/>
 			</select>
 		</div>

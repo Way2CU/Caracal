@@ -754,3 +754,21 @@ Caracal.Shop.delete_coupon_code = function(sender) {
 	var list_item = button.parentNode.parentNode;
 	list_item.parentNode.removeChild(list_item);
 };
+
+/**
+ * Update item management window when filters change.
+ *
+ * @param object sender
+ */
+Caracal.Shop.update_item_list = function(sender) {
+	var gallery_window = Caracal.window_system.getWindow('shop_items');
+	var manufacturer_input = gallery_window.container.find('select[name=manufacturer]');
+
+	// prepare data to send to server
+	var data = {
+			manufacturer: manufacturer_input.val()
+		};
+
+	// reload window
+	gallery_window.loadContent(gallery_window.original_url + '&' + $.param(data));
+};
