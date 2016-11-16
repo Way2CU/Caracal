@@ -59,6 +59,7 @@
 				<cms:text constant="column_options"/>
 			</span>
 		</div>
+
 		<div class="list_content" style="height: 400px">
 			<!-- List Content -->
 			<cms:item_list

@@ -97,7 +97,6 @@ URL::unpack_values();
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
 if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
-$action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
 // initialize language system and apply language
 Language::apply_for_session();

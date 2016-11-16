@@ -787,6 +787,11 @@ class Handler {
 			$conditions['deleted'] = 0;
 		}
 
+		if (!(isset($tag_params['show_hidden']) && $tag_params['show_hidden'] == 1)) {
+			// force skipping hidden items
+			$conditions['visible'] = 0;
+		}
+
 		if (isset($tag_params['filter']) && !empty($tag_params['filter'])) {
 			// filter items with name matching
 			$conditions['name_'.$language] = array(
