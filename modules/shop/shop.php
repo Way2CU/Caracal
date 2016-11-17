@@ -240,7 +240,6 @@ class shop extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$head_tag = head_tag::get_instance();
 			$backend = backend::get_instance();
 
 			// include collection scripts
@@ -251,6 +250,7 @@ class shop extends Module {
 
 			// include local scripts
 			if (ModuleHandler::is_loaded('head_tag')) {
+				$head_tag = head_tag::get_instance();
 				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
 				$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
