@@ -64,6 +64,7 @@
 			<!-- List Content -->
 			<cms:item_list
 				category="isset($_REQUEST['category']) ? $_REQUEST['category'] : false"
+				show_hidden="1"
 				cms:optional="category"
 				/>
 		</div>
