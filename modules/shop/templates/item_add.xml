@@ -230,7 +230,7 @@
 							<cms:text constant="column_name" module="shop"/>
 						</span>
 						<span class="column" style="width: 60px;">
-							<cms:text constant="column_price" module="shop"/>
+							<cms:text constant="column_type" module="shop"/>
 						</span>
 						<span class="column">
 							<cms:text constant="column_options" module="shop"/>
