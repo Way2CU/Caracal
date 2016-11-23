@@ -839,139 +839,142 @@ class Handler {
 		$template->register_tag_handler('cms:color_list', $this, 'tag_ColorList');
 		$template->register_tag_handler('cms:value_list', $size_handler, 'tag_ValueList');
 
-		if (count($items) > 0) {
-			$gallery = null;
-			if (ModuleHandler::is_loaded('gallery'))
-				$gallery = gallery::get_instance();
+		// make sure we have items
+		if (count($items) > 0)
+			return;
 
-			$manufacturer_manager = ShopManufacturerManager::get_instance();
+		// prepare template for parsing
+		$gallery = null;
+		if (ModuleHandler::is_loaded('gallery'))
+			$gallery = gallery::get_instance();
 
-			// time marker after which all added items are considered new
-			$days_until_old = 7;
-			if (isset($tag_params['days_until_old']))
-				$days_until_old = fix_id($tag_params['days_until_old']);
-			$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
+		$manufacturer_manager = ShopManufacturerManager::get_instance();
 
-			foreach ($items as $item) {
-				if (!is_null($gallery)) {
-					// get manufacturer logo
-					$manufacturer_logo_url = '';
+		// time marker after which all added items are considered new
+		$days_until_old = 7;
+		if (isset($tag_params['days_until_old']))
+			$days_until_old = fix_id($tag_params['days_until_old']);
+		$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
 
-					if ($item->manufacturer != 0) {
-						$manufacturer = $manufacturer_manager->get_single_item(
-														$manufacturer_manager->get_field_names(),
-														array('id' => $item->manufacturer)
-													);
+		foreach ($items as $item) {
+			if (!is_null($gallery)) {
+				// get manufacturer logo
+				$manufacturer_logo_url = '';
 
-						if (is_object($manufacturer))
-							$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
-					}
+				if ($item->manufacturer != 0) {
+					$manufacturer = $manufacturer_manager->get_single_item(
+													$manufacturer_manager->get_field_names(),
+													array('id' => $item->manufacturer)
+												);
 
-					// get urls for image and thumbnail
-					$image_url = gallery::getGroupImageById($item->gallery);
-
-				} else {
-					// default values if gallery is not enabled
-					$image_url = '';
-					$manufacturer_logo_url = '';
+					if (is_object($manufacturer))
+						$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
 				}
 
-				$rating = 0;
-				$variation_id = $shop->generateVariationId($item->uid);
+				// get urls for image and thumbnail
+				$image_url = gallery::getGroupImageById($item->gallery);
 
-				$params = array(
-							'id'                    => $item->id,
-							'uid'                   => $item->uid,
-							'variation_id'          => $variation_id,
-							'cid'                   => $item->uid.'/'.$variation_id,
-							'name'                  => $item->name,
-							'description'           => $item->description,
-							'gallery'               => $item->gallery,
-							'size_definition'       => $item->size_definition,
-							'colors'                => $item->colors,
-							'image'                 => $image_url,
-							'manufacturer'          => $item->manufacturer,
-							'manufacturer_logo_url' => $manufacturer_logo_url,
-							'author'                => $item->author,
-							'views'                 => $item->views,
-							'price'                 => $item->price,
-							'discount'              => $item->discount,
-							'discount_price'        => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
-							'tax'                   => $item->tax,
-							'currency'              => $this->parent->settings['default_currency'],
-							'weight'                => $item->weight,
-							'votes_up'              => $item->votes_up,
-							'votes_down'            => $item->votes_down,
-							'rating'                => $rating,
-							'priority'              => $item->priority,
-							'timestamp'             => $item->timestamp,
-							'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
-							'expires'               => strtotime($item->expires),
-							'visible'               => $item->visible,
-							'deleted'               => $item->deleted,
-							'item_change'           => URL::make_hyperlink(
-													$this->parent->get_language_constant('change'),
-													window_Open(
-														'shop_item_change', 	// window id
-														550,				// width
-														$this->parent->get_language_constant('title_item_change'), // title
-														true, true,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', self::SUB_ACTION),
-															array('sub_action', 'change'),
-															array('id', $item->id)
-														)
-													)
-												),
-							'item_delete'           => URL::make_hyperlink(
-													$this->parent->get_language_constant('delete'),
-													window_Open(
-														'shop_item_delete', 	// window id
-														400,				// width
-														$this->parent->get_language_constant('title_item_delete'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', self::SUB_ACTION),
-															array('sub_action', 'delete'),
-															array('id', $item->id)
-														)
-													)
-												),
-						);
-
-				// add images link
-				if (!is_null($gallery)) {
-					$open_gallery_window = window_Open(
-										'gallery_images',
-										670,
-										$gallery->get_language_constant('title_images'),
-										true, true,
-										URL::make_query(
-											'backend_module',
-											'transfer_control',
-											array('backend_action', 'images'),
-											array('module', 'gallery'),
-											array('group', $item->gallery)
-										)
-									);
-					$params['item_images'] = URL::make_hyperlink(
-														$this->parent->get_language_constant('images'),
-														$open_gallery_window
-													);
-				} else {
-					$params['item_images'] = '';
-				}
-
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
+			} else {
+				// default values if gallery is not enabled
+				$image_url = '';
+				$manufacturer_logo_url = '';
 			}
+
+			$rating = 0;
+			$variation_id = $shop->generateVariationId($item->uid);
+
+			$params = array(
+						'id'                    => $item->id,
+						'uid'                   => $item->uid,
+						'variation_id'          => $variation_id,
+						'cid'                   => $item->uid.'/'.$variation_id,
+						'name'                  => $item->name,
+						'description'           => $item->description,
+						'gallery'               => $item->gallery,
+						'size_definition'       => $item->size_definition,
+						'colors'                => $item->colors,
+						'image'                 => $image_url,
+						'manufacturer'          => $item->manufacturer,
+						'manufacturer_logo_url' => $manufacturer_logo_url,
+						'author'                => $item->author,
+						'views'                 => $item->views,
+						'price'                 => $item->price,
+						'discount'              => $item->discount,
+						'discount_price'        => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
+						'tax'                   => $item->tax,
+						'currency'              => $this->parent->settings['default_currency'],
+						'weight'                => $item->weight,
+						'votes_up'              => $item->votes_up,
+						'votes_down'            => $item->votes_down,
+						'rating'                => $rating,
+						'priority'              => $item->priority,
+						'timestamp'             => $item->timestamp,
+						'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
+						'expires'               => strtotime($item->expires),
+						'visible'               => $item->visible,
+						'deleted'               => $item->deleted,
+						'item_change'           => URL::make_hyperlink(
+												$this->parent->get_language_constant('change'),
+												window_Open(
+													'shop_item_change', 	// window id
+													550,				// width
+													$this->parent->get_language_constant('title_item_change'), // title
+													true, true,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', self::SUB_ACTION),
+														array('sub_action', 'change'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete'           => URL::make_hyperlink(
+												$this->parent->get_language_constant('delete'),
+												window_Open(
+													'shop_item_delete', 	// window id
+													400,				// width
+													$this->parent->get_language_constant('title_item_delete'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', self::SUB_ACTION),
+														array('sub_action', 'delete'),
+														array('id', $item->id)
+													)
+												)
+											),
+					);
+
+			// add images link
+			if (!is_null($gallery)) {
+				$open_gallery_window = window_Open(
+									'gallery_images',
+									670,
+									$gallery->get_language_constant('title_images'),
+									true, true,
+									URL::make_query(
+										'backend_module',
+										'transfer_control',
+										array('backend_action', 'images'),
+										array('module', 'gallery'),
+										array('group', $item->gallery)
+									)
+								);
+				$params['item_images'] = URL::make_hyperlink(
+													$this->parent->get_language_constant('images'),
+													$open_gallery_window
+												);
+			} else {
+				$params['item_images'] = '';
+			}
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
 		}
 
 		// draw page switch if needed
