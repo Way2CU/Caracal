@@ -36,6 +36,7 @@
     "column_price": "Цена",
     "column_quantity": "Количина",
     "column_rating": "Оцена",
+    "column_expires": "Expires",
     "column_shipping": "Испорука",
     "column_subtotal": "Рачун",
     "column_tax": "Порез",

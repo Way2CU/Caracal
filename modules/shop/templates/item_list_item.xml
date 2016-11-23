@@ -14,6 +14,9 @@
 		<span class="column" style="width: 50px;">
 			<cms:var param="rating"/>
 		</span>
+		<span class="column" style="width: 100px;">
+			<cms:var name="date(Language::get_text('format_date_short'), $params['expires'])"/>
+		</span>
 		<span class="column">
 			<cms:var param="item_change"/><cms:raw text=" "/>
 			<cms:var param="item_delete"/><cms:raw text=" "/>

@@ -149,8 +149,14 @@ class Handler {
 									)
 					);
 
-		// register tag handler
+		// register tag handlers
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
+
+		$manufacturer_handler = ShopManufacturerHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+
+		$category_handler = ShopCategoryHandler::get_instance($this->parent);
+		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
 
 		$template->restore_xml();
 		$template->set_local_params($params);
@@ -682,6 +688,12 @@ class Handler {
 		$limit = null;
 
 		// create conditions
+		if (isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']))
+			$conditions['manufacturer'] = fix_id($_REQUEST['manufacturer']);
+
+		if (isset($tag_params['manufacturer']) && !empty($tag_params['manufacturer']))
+			$conditions['manufacturer'] = fix_id($tag_params['manufacturer']);
+
 		if (isset($tag_params['category'])) {
 			$categories = explode(',', $tag_params['category']);
 
@@ -777,6 +789,12 @@ class Handler {
 		if (!(isset($tag_params['show_deleted']) && $tag_params['show_deleted'] == 1)) {
 			// force hiding deleted items
 			$conditions['deleted'] = 0;
+		}
+
+		$conditions['visible'] = 1;
+		if (isset($tag_params['show_hidden']) && $tag_params['show_hidden'] == 1) {
+			// force skipping hidden items
+			unset($conditions['visible']);
 		}
 
 		if (isset($tag_params['filter']) && !empty($tag_params['filter'])) {
@@ -888,6 +906,7 @@ class Handler {
 							'priority'              => $item->priority,
 							'timestamp'             => $item->timestamp,
 							'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
+							'expires'               => strtotime($item->expires),
 							'visible'               => $item->visible,
 							'deleted'               => $item->deleted,
 							'item_change'           => URL::make_hyperlink(
