@@ -840,7 +840,7 @@ class Handler {
 		$template->register_tag_handler('cms:value_list', $size_handler, 'tag_ValueList');
 
 		// make sure we have items
-		if (count($items) > 0)
+		if (count($items) == 0)
 			return;
 
 		// prepare template for parsing
