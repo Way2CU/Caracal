@@ -585,6 +585,13 @@ class Handler {
 		// get item from database
 		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
+		if (!is_object($item))
+			return;
+
+		// update item views count
+		if (isset($tag_params['update_view_count']) && $tag_params['update_view_count'] == 1)
+			$manager->update_items(array('views' => $item->views + 1), array('id' => $item->id));
+
 		// create template handler
 		$template = $this->parent->load_template($tag_params, 'item.xml');
 		$template->set_template_params_from_array($children);
@@ -599,71 +606,68 @@ class Handler {
 		$template->register_tag_handler('cms:color_list', $this, 'tag_ColorList');
 
 		// parse template
-		if (is_object($item)) {
-			// get gallery module
-			if (ModuleHandler::is_loaded('gallery'))
-				$gallery = gallery::get_instance();
+		if (ModuleHandler::is_loaded('gallery'))
+			$gallery = gallery::get_instance();
 
-			if (!is_null($gallery)) {
-				// get manufacturer logo
-				$manufacturer_logo_url = '';
+		if (!is_null($gallery)) {
+			// get manufacturer logo
+			$manufacturer_logo_url = '';
 
-				if ($item->manufacturer != 0) {
-					$manufacturer = $manufacturer_manager->get_single_item(
-													$manufacturer_manager->get_field_names(),
-													array('id' => $item->manufacturer)
-												);
+			if ($item->manufacturer != 0) {
+				$manufacturer = $manufacturer_manager->get_single_item(
+												$manufacturer_manager->get_field_names(),
+												array('id' => $item->manufacturer)
+											);
 
-					if (is_object($manufacturer))
-						$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
-				}
-
-				// get urls for image and thumbnail
-				$image_url = gallery::getGroupImageById($item->gallery);
-
-			} else {
-				// default values if gallery is not enabled
-				$image_url = '';
-				$manufacturer_logo_url = '';
+				if (is_object($manufacturer))
+					$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
 			}
 
-			$rating = 0;
-			$variation_id = $shop->generateVariationId($item->uid);
+			// get urls for image and thumbnail
+			$image_url = gallery::getGroupImageById($item->gallery);
 
-			$params = array(
-						'id'                    => $item->id,
-						'uid'                   => $item->uid,
-						'variation_id'          => $variation_id,
-						'cid'                   => $item->uid.'/'.$variation_id,
-						'name'                  => $item->name,
-						'description'           => $item->description,
-						'gallery'               => $item->gallery,
-						'image'                 => $image_url,
-						'manufacturer'          => $item->manufacturer,
-						'manufacturer_logo_url' => $manufacturer_logo_url,
-						'size_definition'       => $item->size_definition,
-						'colors'                => $item->colors,
-						'author'                => $item->author,
-						'views'                 => $item->views,
-						'price'                 => $item->price,
-						'discount'              => $item->discount,
-						'discount_price'        => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
-						'tax'                   => $item->tax,
-						'currency'              => $this->parent->settings['default_currency'],
-						'weight'                => $item->weight,
-						'votes_up'              => $item->votes_up,
-						'votes_down'            => $item->votes_down,
-						'rating'                => $rating,
-						'priority'              => $item->priority,
-						'timestamp'             => $item->timestamp,
-						'visible'               => $item->visible,
-						'deleted'               => $item->deleted,
-					);
-
-			$template->restore_xml();
-			$template->set_local_params($params);
-			$template->parse();
+		} else {
+			// default values if gallery is not enabled
+			$image_url = '';
+			$manufacturer_logo_url = '';
 		}
+
+		$rating = 0;
+		$variation_id = $shop->generateVariationId($item->uid);
+
+		$params = array(
+					'id'                    => $item->id,
+					'uid'                   => $item->uid,
+					'variation_id'          => $variation_id,
+					'cid'                   => $item->uid.'/'.$variation_id,
+					'name'                  => $item->name,
+					'description'           => $item->description,
+					'gallery'               => $item->gallery,
+					'image'                 => $image_url,
+					'manufacturer'          => $item->manufacturer,
+					'manufacturer_logo_url' => $manufacturer_logo_url,
+					'size_definition'       => $item->size_definition,
+					'colors'                => $item->colors,
+					'author'                => $item->author,
+					'views'                 => $item->views,
+					'price'                 => $item->price,
+					'discount'              => $item->discount,
+					'discount_price'        => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
+					'tax'                   => $item->tax,
+					'currency'              => $this->parent->settings['default_currency'],
+					'weight'                => $item->weight,
+					'votes_up'              => $item->votes_up,
+					'votes_down'            => $item->votes_down,
+					'rating'                => $rating,
+					'priority'              => $item->priority,
+					'timestamp'             => $item->timestamp,
+					'visible'               => $item->visible,
+					'deleted'               => $item->deleted,
+				);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
 	}
 
 	/**
