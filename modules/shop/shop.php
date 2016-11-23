@@ -268,7 +268,7 @@ class shop extends Module {
 				URL::from_file_path($this->path.'images/items.svg'),
 				window_Open( // on click open window
 					'shop_items',
-					700,
+					800,
 					$this->get_language_constant('title_manage_items'),
 					true, true,
 					backend_UrlMake($this->name, 'items')
