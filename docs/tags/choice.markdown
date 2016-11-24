@@ -26,7 +26,7 @@ specified, otherwise no rendering will occur.
 </cms:choice>
 ```
 
-_Note: Due to way XML is parsed, default option can only be last one._
+_Note: Due to way XML is parsed, `default` option can only be the last one._
 
 This tag supports the following attributes:
 
