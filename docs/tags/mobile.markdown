@@ -24,7 +24,7 @@ tag is equivalent to `cms:if` with predefined `condition` parameter.
 If there's a need for more complex condition use of `cms:if` is recommended. For example:
 
 ```xml
-<cms:if condition="_MOBILE_VERSION && $action == 'show'">
+<cms:if condition="_MOBILE_VERSION and $action == 'show'">
 </cms:if>
 ```
 

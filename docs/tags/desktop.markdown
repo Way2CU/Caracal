@@ -23,7 +23,7 @@ System determines if request is made from desktop or mobile browser based on bro
 If there's a need for more complex condition use of `cms:if` is recommended. For example:
 
 ```xml
-	<cms:if condition="_DESKTOP_VERSION && $action == 'show'">
+	<cms:if condition="_DESKTOP_VERSION and $action == 'show'">
 	</cms:if>
 ```
 
