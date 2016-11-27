@@ -402,7 +402,7 @@ class downloads extends Module {
 
 			// redirect
 			$url = $this->_getDownloadURL($item);
-			header("Location: {$url}");
+			header('Location: '.$url, true, 302);
 
 		} else {
 			die('Invalid download ID!');

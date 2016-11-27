@@ -777,13 +777,14 @@ class links extends Module {
 			$url = $link->url;
 			$data = array();
 
+			// update click count
 			$data['total_clicks'] = $link->total_clicks + 1;
 			if ($link->sponsored == 1)
 				$data['sponsored_clicks'] = $link->sponsored_clicks + 1;
-
 			$manager->update_items($data, array('id' => $link_id));
 
-			URL::set_refresh($url, 0);
+			// redirect browser
+			header('Location: '.$url, true, 302);
 		}
 	}
 
