@@ -89,9 +89,16 @@ $time_start = $time_start[0] + $time_start[1];
 // start session
 Session::start();
 
-// unpack parameters if needed
-SectionHandler::prepare();
-URL::unpack_values();
+// prepare for page rendering
+if (SectionHandler::prepare()) {
+	// unpack parameters
+	URL::unpack_values();
+
+} else {
+	// no page was matched, show error
+	http_response_code(404);
+	return;
+}
 
 // set default values for variables
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
