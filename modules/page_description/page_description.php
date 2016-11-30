@@ -18,6 +18,7 @@ use Modules\PageDescription\Manager as Manager;
 
 class page_description extends Module {
 	private static $_instance;
+	private $skip_page = false;
 
 	/**
 	 * Constructor
@@ -84,6 +85,13 @@ class page_description extends Module {
 					break;
 
 				default:
+					break;
+			}
+
+		if (isset($params['action']))
+			switch ($params['action']) {
+				case 'set_page_skip':
+					$this->skip_page = true;
 					break;
 			}
 	}
@@ -196,6 +204,10 @@ class page_description extends Module {
 	 */
 	public function add_description_tag() {
 		global $language;
+
+		// skip page if requested
+		if ($this->skip_page)
+			return;
 
 		// don't handle backend links
 		if (isset($_REQUEST['section']))
