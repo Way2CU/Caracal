@@ -94,7 +94,7 @@ if (SectionHandler::prepare()) {
 	// unpack parameters
 	URL::unpack_values();
 
-} else {
+} else if (!isset($_REQUEST['section'])) {
 	// no page was matched, show error
 	http_response_code(404);
 	return;
