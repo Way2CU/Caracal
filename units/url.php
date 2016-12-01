@@ -213,17 +213,8 @@ final class URL {
 	public static function unpack_values() {
 		global $url_rewrite;
 
-		// get template for matching
+		// get pattern and data for matching
 		$pattern = SectionHandler::get_matched_pattern();
-
-		// url is not matched, decode parameters and return
-		if (is_null($pattern)) {
-			foreach ($_REQUEST as $key => $value)
-				$_REQUEST[$key] = self::decode($value);
-			return;
-		}
-
-		// get query string
 		$query_string = self::get_query_string();
 
 		// extract values
@@ -267,6 +258,14 @@ final class URL {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Decode all request parameter values.
+	 */
+	public static function decode_values() {
+		foreach ($_REQUEST as $key => $value)
+			$_REQUEST[$key] = self::decode($value);
 	}
 
 	/**
