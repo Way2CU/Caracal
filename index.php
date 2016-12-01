@@ -94,10 +94,15 @@ if (SectionHandler::prepare()) {
 	// unpack parameters
 	URL::unpack_values();
 
-} else if (!isset($_REQUEST['section'])) {
+} else {
+	// decode unicode parameter values
+	URL::decode_values();
+
 	// no page was matched, show error
-	http_response_code(404);
-	return;
+	if (!isset($_REQUEST['section'])) {
+		http_response_code(404);
+		return;
+	}
 }
 
 // set default values for variables
