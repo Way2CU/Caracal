@@ -1153,7 +1153,10 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->get_items($group_manager->get_field_names(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items(
+						$group_manager->get_field_names(),
+						array('text_id' => $group_names)
+					);
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -1196,6 +1199,7 @@ class articles extends Module {
 									'date'			=> $date,
 									'time'			=> $time,
 									'title'			=> $all_languages ? $item->title : $item->title[$language],
+									'content'		=> $all_languages ? $item->content : $item->content[$language],
 									'author'		=> $admin_manager->get_item_value(
 																		'fullname',
 																		array('id' => $item->author)
