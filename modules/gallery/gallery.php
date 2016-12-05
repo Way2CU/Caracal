@@ -2193,12 +2193,19 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public function getImageURL($item) {
+		$result = '';
+
+		// if only item id is specified retrieve object from database
 		if (!is_object($item) && is_numeric($item)) {
 			$manager = GalleryManager::get_instance();
 			$item = $manager->get_single_item(array('filename'), array('id' => $item));
 		}
 
-		return URL::from_file_path($this->image_path.$item->filename);
+		// try to generate result from specified item
+		if (is_object($item))
+			$result = URL::from_file_path($this->image_path.$item->filename);
+
+		return $result;
 	}
 
 	/**

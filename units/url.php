@@ -36,7 +36,7 @@ final class URL {
 			$param_names = array_keys($temp);
 
 			foreach ($pattern_list as $pattern => $pattern_params)
-				if ($pattern_params[1] == $param_names) {
+				if ($pattern_params[2] == $param_names) {
 					$matched_pattern = $pattern;
 					$matched_params = $pattern_params[0];
 					break;
