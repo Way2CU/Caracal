@@ -23,7 +23,7 @@ final class SectionHandler {
 	 * Match template based on URL and extract parameters.
 	 */
 	public static function prepare() {
-		global $url_rewrite, $data_path;
+		global $data_path;
 		$result = false;
 
 		// prepare storage
@@ -49,7 +49,7 @@ final class SectionHandler {
 		}
 
 		// get query string
-		$query_string = URL::get_query_string();
+		$request_path = URL::get_request_path();
 
 		// try to match whole query string
 		foreach (self::$data as $pattern => $template_file) {
@@ -69,7 +69,7 @@ final class SectionHandler {
 			self::$params[$pattern] = $params;
 
 			// successfully matched query string to template
-			if (!$result && preg_match($match, $query_string, $matches)) {
+			if (!$result && preg_match($match, $request_path, $matches)) {
 				self::$matched_file = $template_file;
 				self::$matched_pattern = $match;
 				self::$matched_params = $params;

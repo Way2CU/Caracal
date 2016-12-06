@@ -112,10 +112,10 @@ class language_menu extends Module {
 		} else {
 			// get values matched with URL
 			$pattern = SectionHandler::get_matched_pattern();
-			$query_string = URL::get_query_string();
+			$request_path = URL::get_request_path();
 
-			// extract values
-			preg_match($pattern, $query_string, $link_params);
+			// extract parameter values from request path
+			preg_match($pattern, $request_path, $link_params);
 			foreach ($link_params as $key => $value)
 				if (is_int($key))
 					unset($link_params[$key]);
@@ -195,10 +195,10 @@ class language_menu extends Module {
 		} else {
 			// get values matched with URL
 			$pattern = SectionHandler::get_matched_pattern();
-			$query_string = URL::get_query_string();
+			$request_path = URL::get_request_path();
 
-			// extract values
-			preg_match($pattern, $query_string, $link_params);
+			// extract parameter values from request path
+			preg_match($pattern, $request_path, $link_params);
 			foreach ($link_params as $key => $value)
 				if (is_int($key))
 					unset($link_params[$key]);
