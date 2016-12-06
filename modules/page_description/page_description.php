@@ -217,14 +217,14 @@ class page_description extends Module {
 		$head_tag = head_tag::get_instance();
 		$manager = Manager::get_instance();
 
-		// get query string
-		$query_string = URL::get_query_string();
+		// get request path
+		$request_path = URL::get_request_path();
 
 		// get page description
-		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $query_string));
+		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $request_path));
 
 		if (!is_object($item))
-			$manager->insert_item(array('url' => $query_string)); else
+			$manager->insert_item(array('url' => $request_path)); else
 			$value = $item->content[$language];
 
 		// add description to head tag

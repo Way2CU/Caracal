@@ -211,28 +211,32 @@ final class URL {
 	 * template used to match page template file.
 	 */
 	public static function unpack_values() {
-		global $url_rewrite;
-
 		// get pattern and data for matching
 		$pattern = SectionHandler::get_matched_pattern();
+		$request_path = self::get_request_path();
 		$query_string = self::get_query_string();
 
-		// extract values
-		preg_match($pattern, $query_string, $values);
+		// update GET parameters
+		parse_str($query_string, $query_string_values);
+		$_GET = array_merge($_GET, $query_string_values);
 
-		$result = array();
-		foreach ($values as $name => $value)
+		// extract parameter values from request path
+		preg_match($pattern, $request_path, $request_path_matches);
+
+		// filter matched request path values
+		$request_path_values = array();
+		foreach ($request_path_matches as $name => $value)
 			if (!is_int($name))
-				$result[$name] = $value;
+				$request_path_values[$name] = $value;
 
 		// modify global variables
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
-				$_GET = array_merge($_GET, $result);
+				$_GET = array_merge($_GET, $request_path_values);
 				break;
 
 			case 'POST':
-				$_POST = array_merge($_POST, $result);
+				$_POST = array_merge($_POST, $request_path_values);
 				break;
 		}
 		$_REQUEST = array_merge($_GET, $_POST);
@@ -269,17 +273,44 @@ final class URL {
 	}
 
 	/**
+	 * Return request URI.
+	 *
+	 * @return string
+	 */
+	public static function get_request_uri() {
+		$result = $_SERVER['REQUEST_URI'];
+		if (substr($result, 0, 1) != SectionHandler::ROOT_KEY)
+			$result = SectionHandler::ROOT_KEY.$result;
+
+		return $result;
+	}
+
+	/**
 	 * Return query string properly decoded.
 	 *
 	 * @return string
 	 */
 	public static function get_query_string() {
-		$query_string = $_SERVER['QUERY_STRING'];
-		if (substr($query_string, 0, 1) != SectionHandler::ROOT_KEY)
-			$query_string = SectionHandler::ROOT_KEY.$query_string;
+		// split request path from query string
+		$uri = explode('?', self::get_request_uri(), 2);
+		$result = $uri[1];
 
 		// decode html encoded unicode codes
-		return URL::decode($query_string);
+		return URL::decode($result);
+	}
+
+	/**
+	 * Get path for the request.
+	 *
+	 * @return string
+	 */
+	public static function get_request_path() {
+		// split request path from query string
+		$uri = explode('?', self::get_request_uri(), 2);
+		$result = $uri[0];
+
+		// decode html encoded unicode codes
+		return URL::decode($result);
 	}
 
 	/**

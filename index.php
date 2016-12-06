@@ -113,10 +113,6 @@ $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home
 // initialize language system and apply language
 Language::apply_for_session();
 
-// turn off URL rewrite for backend
-if ($section == 'backend' || $section == 'backend_module')
-	$url_rewrite = false;
-
 // start database engine
 if ($db_use && !database_connect())
 	die('There was an error while trying to connect database.');
