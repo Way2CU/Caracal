@@ -217,8 +217,10 @@ final class URL {
 		$query_string = self::get_query_string();
 
 		// update GET parameters
-		parse_str($query_string, $query_string_values);
-		$_GET = array_merge($_GET, $query_string_values);
+		if (!is_null($query_string)) {
+			parse_str($query_string, $query_string_values);
+			$_GET = array_merge($_GET, $query_string_values);
+		}
 
 		// extract parameter values from request path
 		preg_match($pattern, $request_path, $request_path_matches);
@@ -291,9 +293,12 @@ final class URL {
 	 * @return string
 	 */
 	public static function get_query_string() {
+		$result = null;
+
 		// split request path from query string
 		$uri = explode('?', self::get_request_uri(), 2);
-		$result = $uri[1];
+		if (count($uri) > 1)
+			$result = $uri[1];
 
 		// decode html encoded unicode codes
 		return $result;
