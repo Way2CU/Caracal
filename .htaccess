@@ -19,7 +19,8 @@
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	# take whole URI and give it to main index file
-	RewriteRule (.*) index.php?$1 [QSA,L]
+	RewriteCond %{QUERY_STRING} (.*)
+	RewriteRule (.*) index.php?/$1?%1 [L]
 </IfModule>
 
 <FilesMatch "\.(xml|json)$">

@@ -278,7 +278,7 @@ final class URL {
 	 * @return string
 	 */
 	public static function get_request_uri() {
-		$result = $_SERVER['REQUEST_URI'];
+		$result = $_SERVER['QUERY_STRING'];
 		if (substr($result, 0, 1) != SectionHandler::ROOT_KEY)
 			$result = SectionHandler::ROOT_KEY.$result;
 
