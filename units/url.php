@@ -296,7 +296,7 @@ final class URL {
 		$result = $uri[1];
 
 		// decode html encoded unicode codes
-		return URL::decode($result);
+		return $result;
 	}
 
 	/**
