@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<cms:if condition="$params['type'] == 'button'">
-		<button
-			type="button"
-			name="$params['name']"
-			disabled="$params['disabled'] ? 'disabled' : false"
-			cms:eval="name"
-			cms:optional="disabled"
-			>
-			<cms:var param="label" multilanguage="yes"/>
-		</button>
+	<!-- Elements without label -->
+	<cms:if condition="in_array($params['type'], array('button', 'hidden'))">
+		<cms:choice value="$params['type']" cms:eval="value">
+			<option value="button">
+				<button
+					type="button"
+					name="$params['name']"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:eval="name"
+					cms:optional="disabled"
+					>
+					<cms:var param="label" multilanguage="yes"/>
+				</button>
+			</option>
+
+			<!-- Hidden -->
+			<option value="hidden">
+				<input
+					name="$params['name']"
+					type="hidden"
+					value="$params['value']"
+					cms:eval="name,value"
+					/>
+			</option>
+		</cms:choice>
 	</cms:if>
 
-	<cms:if condition="$params['type'] != 'button'">
+	<!-- Elements with label -->
+	<cms:if condition="!in_array($params['type'], array('button', 'hidden'))">
 		<label
 			class="in_array($params['type'], array('checkbox', 'radio')) ? $params['type'] : false"
 			style="$params['type'] == 'honey-pot' ? 'display: none;' : false"
@@ -26,16 +42,6 @@
 			</cms:if>
 
 			<cms:choice value="$params['type']" cms:eval="value">
-				<!-- Hidden -->
-				<option value="hidden" default="0">
-					<input
-						name="$params['name']"
-						type="hidden"
-						value="$params['value']"
-						cms:eval="name,value"
-						/>
-				</option>
-
 				<!-- Radio button -->
 				<option value="radio" default="0">
 					<input
