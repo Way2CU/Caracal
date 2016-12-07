@@ -123,19 +123,18 @@ class CodeOptimizer {
 				$module_directory = _BASEPATH.'/'.$system_module_path;
 				$data = file_get_contents($file_name);
 
-				// change path for module urls
+				// change path for relative module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('/url\(.*\.\.\/(.*)\)([;,])/ium', 'url('.$directory_url.'\1)\2', $data);
-
+					$data = preg_replace('|url\(\s*(\.\./){1}(.*)\)([;,])|ium', 'url('.$directory_url.'\1)\2', $data);
 				break;
 		}
 
 		// remove comments
-		$data = preg_replace('/\/\*.*?(?=\*\/)\*\//imus', '', $data);
+		$data = preg_replace('|/\*.*?(?=\*/)\*/|imus', '', $data);
 
 		// fix relative paths
-		$data = preg_replace('/url\s*\(\s*(\.\.\/){2,}/imus', 'url(../', $data);
-		$data = preg_replace('/url\(..\/([^\)]+)\)/imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
+		$data = preg_replace('|url\s*\(\s*(\.\./){2,}|imus', 'url(../', $data);
+		$data = preg_replace('|url\(\.\./([^\)]+)\)|imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
 
 		// parse most important
 		$data = str_replace("\r", '', $data);
@@ -202,11 +201,10 @@ class CodeOptimizer {
 		// prepare data for last optimization
 		$data = implode('', $result);
 
-		// remove units from zero values and remove - if present as there's no such thing as -0
+		// remove units from zero values and remove `-` if present as there's no such thing as -0
 		$data = preg_replace('/([^\d])-?(0+)(px|pt|rem|em|vw|vh|vmax|vmin|cm|mm|m\%)/imus', '\1\2', $data);
 
-		// remove excess spaces around symbols
-		// skipping + on purpose to keep calc working
+		// remove excess spaces around symbols, skipping + on purpose to keep calc working
 		$data = preg_replace('/\s*([>~:;,\{\}])\s*/imus', '\1', $data);
 		$data = preg_replace('/\s*([\(\)])\s*([^\w+-\/\*\^])/imus', '\1\2', $data);
 		$data = preg_replace('/([\+])\s*([^\d])/imus', '\1\2', $data);
@@ -214,7 +212,7 @@ class CodeOptimizer {
 		// shorten color codes when possible
 		$data = preg_replace('/#([\dabcdef])\1([\dabcdef])\2([\dabcdef])\3/imus', '#\1\2\3', $data);
 
-		// remove semicolor before curly brace
+		// remove semicolon before curly brace
 		$data = preg_replace('/;\}/imus', '}', $data);
 
 		// save compiled file
