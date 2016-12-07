@@ -46,7 +46,7 @@ div#lightbox a.close_button {
 
 	border-radius: 2px;
 	background-color: white;
-	background-image: url(../../collection/images/close_button.svg);
+	background-image: url(../images/close_button.svg);
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 60% 60%;
@@ -100,7 +100,7 @@ div#lightbox div.content img {
 }
 
 div#lightbox div.content.loading {
-	background-image: url(../../backend/images/loading.gif);
+	background-image: url(../images/loading.gif);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
