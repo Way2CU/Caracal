@@ -56,7 +56,7 @@ class Jaro {
 	}
 
 	/**
-	 * Get distance between two string.
+	 * Get distance between two strings.
 	 *
 	 * @param string $first
 	 * @param string $second
