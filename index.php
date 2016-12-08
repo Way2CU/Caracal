@@ -90,19 +90,21 @@ $time_start = $time_start[0] + $time_start[1];
 Session::start();
 
 // prepare for page rendering
+$page_match = false;
+$module_match = false;
+
 if (SectionHandler::prepare()) {
 	// unpack parameters
 	URL::unpack_values();
+	$page_match = true;
 
 } else {
 	// decode unicode parameter values
 	URL::decode_values();
 
-	// no page was matched, show error
-	if (!isset($_REQUEST['section'])) {
-		http_response_code(404);
-		return;
-	}
+	// no page was matched try to find module
+	if (isset($_REQUEST['section']) && ModuleHandler::is_loaded($_REQUEST['section']))
+		$module_match = true;
 }
 
 // set default values for variables
@@ -133,9 +135,15 @@ if ($cache->isCached()) {
 	$module_handler->load_modules();
 
 	// show page and cache it along the way
-	$cache->startCapture();
-	SectionHandler::transfer_control();
-	$cache->endCapture();
+	if ($page_match || $module_match) {
+		$cache->startCapture();
+		SectionHandler::transfer_control();
+		$cache->endCapture();
+
+	} else {
+		// neither page nor module were matched, show error
+		SectionHandler::show_error_page(404);
+	}
 }
 
 // print out copyright and timing

@@ -171,6 +171,23 @@ final class SectionHandler {
 	}
 
 	/**
+	 * Show information for specified error code.
+	 *
+	 * @param integer $error_code
+	 */
+	public static function show_error_page($error_code) {
+		global $system_template_path;
+
+		// get page error template
+		if (array_key_exists($error_code, self::$data))
+			$template = new TemplateHandler(self::$data[$error_code]); else
+			$template = new TemplateHandler($error_code.'.xml', $system_template_path);
+
+		// parse template
+		$template->parse();
+	}
+
+	/**
 	 * Wrap pattern in match safe delimiters and apply flags.
 	 *
 	 * @param string
