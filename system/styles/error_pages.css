@@ -24,13 +24,7 @@ html[dir=rtl] body {
 
 div.message {
 	max-width: 30em;
-	padding-left: 10em;
-	padding-top: 10em;
-}
-
-html[dir=rtl] div.message {
-	padding-left: auto;
-	padding-right: 10em;
+	padding: 10em;
 }
 
 div.message:before {
@@ -38,7 +32,8 @@ div.message:before {
 	vertical-align: top;
 	content: '';
 	padding: 0.2em;
-	margin-right: 0.2em;
+	padding-right: 1em;
+	margin-right: 1em;
 
 	border-right: 2px solid red;
 
@@ -49,7 +44,7 @@ div.message:before {
 
 html[dir=rtl] div.message:before {
 	margin-right: auto;
-	margin-left: 0.2em;
+	margin-left: 1em;
 }
 
 body.e404 div.message:before {
