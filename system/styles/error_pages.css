@@ -1,0 +1,57 @@
+/**
+ * Generic Error Pages Style Sheet
+ *
+ * Copyright (c) 2016. by Way2CU
+ * Author: Mladen Mijatov
+ */
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	background-color: white;
+	background-image: url(../images/error_pages_background.jpg);
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	color: #333333;
+}
+
+html[dir=rtl] body {
+	background-position: bottom left;
+}
+
+div.message {
+	max-width: 30em;
+	padding-left: 10em;
+	padding-top: 10em;
+}
+
+html[dir=rtl] div.message {
+	padding-left: auto;
+	padding-right: 10em;
+}
+
+div.message:before {
+	display: inline-block;
+	vertical-align: top;
+	content: '';
+	padding: 0.2em;
+	margin-right: 0.2em;
+
+	border-right: 2px solid red;
+
+	color: red;
+	font-size: 3em;
+	font-stretch: condensed;
+}
+
+html[dir=rtl] div.message:before {
+	margin-right: auto;
+	margin-left: 0.2em;
+}
+
+body.e404 div.message:before {
+	content: '404';
+}
