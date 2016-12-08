@@ -230,12 +230,8 @@ class TemplateHandler {
 			$tag = $tag_array[$i];
 
 			// if tag has eval set
-			if (isset($tag->tagAttrs['cms:eval']) || isset($tag->tagAttrs['eval'])) {
-				// get evaluation values
-				if (isset($tag->tagAttrs['eval']))
-					$value = $tag->tagAttrs['eval']; else
-					$value = $tag->tagAttrs['cms:eval'];
-
+			if (isset($tag->tagAttrs['cms:eval'])) {
+				$value = $tag->tagAttrs['cms:eval'];
 				$eval_params = explode(',', $value);
 
 				foreach ($eval_params as $param) {
@@ -248,7 +244,7 @@ class TemplateHandler {
 					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
 
-					$response = @eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$response = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
 
 					if ($response !== false)
 						$tag->tagAttrs[$param] = $response; else
