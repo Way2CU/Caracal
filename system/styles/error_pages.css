@@ -24,21 +24,15 @@ html[dir=rtl] body {
 
 div.message {
 	max-width: 30em;
-	padding: 10em;
-	padding-left: 0;
-}
-
-html[dir=rtl] div.message {
-	padding-left: 10em;
-	padding-right: 0;
+	padding: 5em;
 }
 
 div.message:before {
 	display: block;
 	float: left;
 	content: '';
-	padding-right: 1em;
-	margin-right: 1em;
+	padding-right: 0.3em;
+	margin-right: 0.3em;
 
 	border-right: 2px solid red;
 
@@ -50,9 +44,9 @@ div.message:before {
 html[dir=rtl] div.message:before {
 	float: right;
 	margin-right: 0;
-	margin-left: 1em;
+	margin-left: 0.3em;
 	padding-right: 0;
-	padding-left: 1em;
+	padding-left: 0.3em;
 	border-left: 2px solid red;
 	border-right: 0;
 }
