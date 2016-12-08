@@ -23,8 +23,9 @@ html[dir=rtl] body {
 }
 
 div.message {
-	max-width: 30em;
+	max-width: 25em;
 	padding: 5em;
+	font-size: 2em;
 }
 
 div.message:before {
