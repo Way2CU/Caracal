@@ -33,6 +33,7 @@ require_once('units/event_handler.php');
 require_once('units/module.php');
 require_once('units/module_handler.php');
 require_once('units/url.php');
+require_once('units/string/distance.php');
 require_once('units/common.php');
 require_once('units/language.php');
 require_once('units/template.php');
