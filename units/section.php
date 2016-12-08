@@ -184,7 +184,7 @@ final class SectionHandler {
 			$template_file = $system_template_path.$error_code.'.xml';
 
 		// load template and parse it
-		$template = new TemplateHandler(self::$matched_file);
+		$template = new TemplateHandler($template_file);
 		$template->parse();
 	}
 
