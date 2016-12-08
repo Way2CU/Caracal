@@ -28,10 +28,9 @@ div.message {
 }
 
 div.message:before {
-	display: inline-block;
-	vertical-align: top;
+	display: block;
+	float: left;
 	content: '';
-	padding: 0.2em;
 	padding-right: 1em;
 	margin-right: 1em;
 
@@ -43,10 +42,18 @@ div.message:before {
 }
 
 html[dir=rtl] div.message:before {
+	float: right;
 	margin-right: auto;
 	margin-left: 1em;
+	border-left: 2px solid red;
+	border-right: 0;
 }
 
 body.e404 div.message:before {
 	content: '404';
+}
+
+div.message a {
+	display: block;
+	color: red;
 }
