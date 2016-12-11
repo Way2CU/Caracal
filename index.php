@@ -91,7 +91,7 @@ $time_start = $time_start[0] + $time_start[1];
 Session::start();
 
 // prepare for page rendering
-$page_match = SectionHandler::prepare() {
+$page_match = SectionHandler::prepare();
 
 // update parameter storage arrays
 URL::unpack_values();
