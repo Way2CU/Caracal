@@ -96,9 +96,6 @@ $page_match = SectionHandler::prepare();
 // update parameter storage arrays
 URL::unpack_values();
 
-// check if module is being requested and is available
-$module_match = isset($_REQUEST['section']) && ModuleHandler::is_loaded($_REQUEST['section']);
-
 // set default values for variables
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
 if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
@@ -125,6 +122,9 @@ if ($cache->isCached()) {
 } else {
 	// load all the modules
 	$module_handler->load_modules();
+
+	// check if module is being requested and is available
+	$module_match = isset($_REQUEST['section']) && ModuleHandler::is_loaded($_REQUEST['section']);
 
 	// show page and cache it along the way
 	if ($page_match || $module_match) {
