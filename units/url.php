@@ -240,7 +240,8 @@ final class URL {
 					break;
 
 				case 'POST':
-					$_POST = array_merge($_POST, $request_path_values);
+					$post_values = self::decode_values($_POST);
+					$_POST = array_merge($post_values, $request_path_values);
 					break;
 			}
 		}
@@ -273,10 +274,16 @@ final class URL {
 
 	/**
 	 * Decode all request parameter values.
+	 *
+	 * @param array $input
 	 */
-	public static function decode_values() {
-		foreach ($_REQUEST as $key => $value)
-			$_REQUEST[$key] = self::decode($value);
+	public static function decode_values($input) {
+		$result = array();
+
+		foreach ($input as $key => $value)
+			$result[$key] = self::decode($value);
+
+		return $result;
 	}
 
 	/**
