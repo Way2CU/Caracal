@@ -299,11 +299,17 @@ final class URL {
 	 */
 	public static function get_query_string() {
 		$result = null;
+		$raw_uri = self::get_request_uri();
 
-		// split request path from query string
-		$uri = explode('?', self::get_request_uri(), 2);
-		if (count($uri) > 1)
+		if (strpos($raw_uri, '?') !== false) {
+			// split path and query string
+			$uri = explode('?', self::get_request_uri(), 2);
 			$result = $uri[1];
+
+		} else {
+			// no path was specified, use whole query string
+			$result = $raw_uri;
+		}
 
 		// decode html encoded unicode codes
 		return $result;
@@ -315,9 +321,17 @@ final class URL {
 	 * @return string
 	 */
 	public static function get_request_path() {
+		$raw_uri = self::get_request_uri();
+
 		// split request path from query string
-		$uri = explode('?', self::get_request_uri(), 2);
-		$result = $uri[0];
+		if (strpos($raw_uri, '?') !== false) {
+			$uri = explode('?', self::get_request_uri(), 2);
+			$result = $uri[0];
+
+		} else {
+			// no path was specified, default to root
+			$result = SectionHandler::ROOT_KEY;
+		}
 
 		// decode html encoded unicode codes
 		return URL::decode($result);
