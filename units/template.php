@@ -243,8 +243,7 @@ class TemplateHandler {
 					$params = $this->params;
 					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
-
-					$response = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$response = $this->get_evaluted_value($to_eval);
 
 					if ($response !== false)
 						$tag->tagAttrs[$param] = $response; else
@@ -268,8 +267,7 @@ class TemplateHandler {
 					$params = $this->params;
 					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
-
-					$value = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+					$value = $this->get_evaluted_value($to_eval);
 
 					if ($value == false)
 						unset($tag->tagAttrs[$param]); else
@@ -583,7 +581,7 @@ class TemplateHandler {
 					// check custom condition
 					if (isset($tag->tagAttrs['condition'])) {
 						$to_eval = $tag->tagAttrs['condition'];
-						$eval_result = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';') == true;
+						$eval_result = $this->get_evaluted_value($to_eval) == true;
 						$condition &= $eval_result;
 					}
 
@@ -634,7 +632,7 @@ class TemplateHandler {
 					if (isset($tag->tagAttrs['name'])) {
 						// old method with eval
 						$to_eval = $tag->tagAttrs['name'];
-						$output = eval('global $section, $action, $language, $language_rtl; return '.$to_eval.';');
+						$output = $this->get_evaluted_value($to_eval);
 
 					} else if (isset($tag->tagAttrs['param'])) {
 						// object parameter
@@ -834,6 +832,22 @@ class TemplateHandler {
 		$result .= '</'.$tag->tagName.'>';
 
 		return $result;
+	}
+
+	/**
+	 * Evaluate specified string as PHP code and return value.
+	 *
+	 * @param string $code
+	 * @return mixed
+	 */
+	private function get_evaluted_value($code) {
+		$function = '
+			$call = function() {
+				global $section, $language, $language_rtl;
+				return '.$code.';
+			}; return $call();';
+
+		return eval($function);
 	}
 
 	/**
