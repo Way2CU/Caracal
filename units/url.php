@@ -222,25 +222,30 @@ final class URL {
 			$_GET = array_merge($_GET, $query_string_values);
 		}
 
-		// extract parameter values from request path
-		preg_match($pattern, $request_path, $request_path_matches);
+		// update POST parameters
+		if (!is_null($pattern)) {
+			// extract parameter values from request path
+			preg_match($pattern, $request_path, $request_path_matches);
 
-		// filter matched request path values
-		$request_path_values = array();
-		foreach ($request_path_matches as $name => $value)
-			if (!is_int($name))
-				$request_path_values[$name] = $value;
+			// filter matched request path values
+			$request_path_values = array();
+			foreach ($request_path_matches as $name => $value)
+				if (!is_int($name))
+					$request_path_values[$name] = $value;
 
-		// modify global variables
-		switch ($_SERVER['REQUEST_METHOD']) {
-			case 'GET':
-				$_GET = array_merge($_GET, $request_path_values);
-				break;
+			// modify global variables
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'GET':
+					$_GET = array_merge($_GET, $request_path_values);
+					break;
 
-			case 'POST':
-				$_POST = array_merge($_POST, $request_path_values);
-				break;
+				case 'POST':
+					$_POST = array_merge($_POST, $request_path_values);
+					break;
+			}
 		}
+
+		// update joint parameter storage
 		$_REQUEST = array_merge($_GET, $_POST);
 	}
 

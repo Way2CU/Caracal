@@ -91,22 +91,10 @@ $time_start = $time_start[0] + $time_start[1];
 Session::start();
 
 // prepare for page rendering
-$page_match = false;
-$module_match = false;
+$page_match = SectionHandler::prepare();
 
-if (SectionHandler::prepare()) {
-	// unpack parameters
-	URL::unpack_values();
-	$page_match = true;
-
-} else {
-	// decode unicode parameter values
-	URL::decode_values();
-
-	// no page was matched try to find module
-	if (isset($_REQUEST['section']) && ModuleHandler::is_loaded($_REQUEST['section']))
-		$module_match = true;
-}
+// update parameter storage arrays
+URL::unpack_values();
 
 // set default values for variables
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
@@ -134,6 +122,9 @@ if ($cache->isCached()) {
 } else {
 	// load all the modules
 	$module_handler->load_modules();
+
+	// check if module is being requested and is available
+	$module_match = isset($_REQUEST['section']) && ModuleHandler::is_loaded($_REQUEST['section']);
 
 	// show page and cache it along the way
 	if ($page_match || $module_match) {
