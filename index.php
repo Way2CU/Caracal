@@ -124,7 +124,8 @@ if ($cache->isCached()) {
 	$module_handler->load_modules();
 
 	// check if module is being requested and is available
-	$module_match = isset($_REQUEST['section']) && ModuleHandler::is_loaded($_REQUEST['section']);
+	$module_match = ModuleHandler::is_loaded($section);
+	$module_match |= $section == 'backend_module';
 
 	// show page and cache it along the way
 	if ($page_match || $module_match) {
