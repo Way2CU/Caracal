@@ -240,8 +240,6 @@ class TemplateHandler {
 					if (!is_null($this->module))
 						$settings = $this->module->settings;
 
-					$params = $this->params;
-					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
 					$response = $this->get_evaluted_value($to_eval);
 
@@ -264,8 +262,6 @@ class TemplateHandler {
 					if (!is_null($this->module))
 						$settings = $this->module->settings;
 
-					$params = $this->params;
-					$template = $this->template_params;
 					$to_eval = $tag->tagAttrs[$param];
 					$value = $this->get_evaluted_value($to_eval);
 
@@ -566,8 +562,6 @@ class TemplateHandler {
 				// conditional tag
 				case 'cms:if':
 					$settings = !is_null($this->module) ? $this->module->settings : array();
-					$params = $this->params;
-					$template = $this->template_params;
 					$condition = true;
 
 					// check if section is specified and matches
@@ -841,11 +835,16 @@ class TemplateHandler {
 	 * @return mixed
 	 */
 	private function get_evaluted_value($code) {
+		// variables to be used in evaluation
+		$params = $this->params;
+		$template = $this->template_params;
+
+		// construct function call
 		$function = '
-			$call = function() {
+			$call = function($params, $template) {
 				global $section, $language, $language_rtl;
 				return '.$code.';
-			}; return $call();';
+			}; return $call($params, $template);';
 
 		return eval($function);
 	}
