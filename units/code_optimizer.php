@@ -125,7 +125,7 @@ class CodeOptimizer {
 
 				// change path for relative module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('|url\(\s*(\.\./){1}(.*)\)([;,])|ium', 'url('.$directory_url.'\1)\2', $data);
+					$data = preg_replace('|url\(\s*(\.\./){1}(.*)\)([;,])|ium', 'url('.$directory_url.'\2)\3', $data);
 				break;
 		}
 
