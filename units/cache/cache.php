@@ -92,13 +92,16 @@ class Manager {
 	private function generate_storage_key($fields=null) {
 		global $language, $optimize_code;
 
-		// generate key from various server states
+		// include different variables representative of page state
 		$key = _DESKTOP_VERSION ? 'desktop' : 'mobile';
 		$key .= '>opt:'.($optimize_code ? 'y' : 'n');
 		$key .= '>port:'.$_SERVER['SERVER_PORT'];
 		$key .= '>lang:'.$language;
 		$key .= '>path:'.URL::get_request_path();
 		$key = str_replace('/', '|', $key);
+
+		// include query string in key generation
+		$key .= '>qs:'.hash('sha256', URL::get_query_string());
 
 		return $key;
 	}
