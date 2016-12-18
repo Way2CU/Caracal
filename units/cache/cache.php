@@ -108,6 +108,7 @@ class Manager {
 	 */
 	private function store_cache() {
 		global $cache_expire_period;
+
 		$this->provider->storeData(
 					$this->uid,
 					$this->cache,
@@ -121,7 +122,7 @@ class Manager {
 	public function is_cached() {
 		$result = false;
 
-		if (!is_null($this->provider))
+		if (!is_null($this->provider) && $this->is_caching)
 			$result = $this->provider->is_cached($this->uid);
 
 		return $result;
