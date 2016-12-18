@@ -93,11 +93,11 @@ class Manager {
 		global $language;
 
 		// generate key from various server states
-		$key = _DESKTOP_VERSION ? 'd' : 'm';
-		$key .= '_'.$_SERVER['SERVER_PORT'];
-		$key .= '_'.$language;
+		$key = _DESKTOP_VERSION ? 'desktop' : 'mobile';
+		$key .= '_port='.$_SERVER['SERVER_PORT'];
+		$key .= '_language='.$language;
 		$key .= URL::get_request_path();
-		$key = str_replace('/', '-', $key);
+		$key = str_replace('/', '|', $key);
 
 		return $key;
 	}
