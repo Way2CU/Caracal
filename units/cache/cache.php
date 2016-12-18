@@ -122,7 +122,7 @@ class Manager {
 	public function is_cached() {
 		$result = false;
 
-		if (!is_null($this->provider) && $this->is_caching)
+		if (!is_null($this->provider) && $this->should_cache)
 			$result = $this->provider->is_cached($this->uid);
 
 		return $result;
