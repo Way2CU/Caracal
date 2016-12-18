@@ -16,6 +16,7 @@ require_once('memcached_provider.php');
 
 use Session;
 use TemplateHandler;
+use Core\URL;
 
 
 class Type {
