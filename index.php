@@ -112,12 +112,12 @@ if ($db_use && !database_connect())
 $cache = Cache::get_instance();
 $module_handler = ModuleHandler::get_instance();
 
-if ($cache->isCached()) {
+if ($cache->is_cached()) {
 	// only include specified modules
 	$module_handler->load_modules(true);
 
-	// show cached page
-	$cache->printCache();
+	// show cached content
+	$cache->show_cached_page();
 
 } else {
 	// load all the modules
@@ -129,9 +129,9 @@ if ($cache->isCached()) {
 
 	// show page and cache it along the way
 	if ($page_match || $module_match) {
-		$cache->startCapture();
+		$cache->start_capture();
 		SectionHandler::transfer_control();
-		$cache->endCapture();
+		$cache->end_capture();
 
 	} else {
 		// neither page nor module were matched, show error

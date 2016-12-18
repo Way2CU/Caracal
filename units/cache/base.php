@@ -44,12 +44,12 @@ interface Provider {
 	 * @param string $uid
 	 * @return boolean
 	 */
-	public function isCached($uid);
+	public function is_cached($uid);
 
 	/**
 	 * Clear all cache.
 	 */
-	public function clearCache();
+	public function clear();
 }
 
 ?>

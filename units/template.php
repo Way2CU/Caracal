@@ -306,14 +306,14 @@ class TemplateHandler {
 				unset($tag->tagAttrs['cms:skip_cache']);
 
 				// only if current URL is being cached, we start dirty area
-				if ($this->cache->isCaching()) {
-					$this->cache->startDirtyArea();
+				if ($this->cache->is_caching()) {
+					$this->cache->start_dirty_area();
 					$skip_cache = true;
 
 					// reconstruct template for cache,
 					// ugly but we are not doing it a lot
 					$data = $this->get_data_for_cache($tag);
-					$this->cache->setCacheForDirtyArea($data);
+					$this->cache->set_dirty_area_template($data);
 				}
 			}
 
@@ -676,14 +676,14 @@ class TemplateHandler {
 				// automated testing support
 				case 'cms:test':
 					// don't allow content of this tag to be cached
-					if ($this->cache->isCaching()) {
-						$this->cache->startDirtyArea();
+					if ($this->cache->is_caching()) {
+						$this->cache->start_dirty_area();
 						$skip_cache = true;
 
 						// reconstruct template for cache,
 						// ugly but we are not doing it a lot
 						$data = $this->get_data_for_cache($tag);
-						$this->cache->setCacheForDirtyArea($data);
+						$this->cache->set_dirty_area_template($data);
 					}
 
 					// select and show version
@@ -774,7 +774,7 @@ class TemplateHandler {
 
 			// end cache dirty area if initialized
 			if ($skip_cache)
-				$this->cache->endDirtyArea();
+				$this->cache->end_dirty_area();
 		}
 
 		// restore previous error handler
