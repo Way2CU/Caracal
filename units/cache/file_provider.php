@@ -80,7 +80,7 @@ class FileProvider implements Provider {
 	 * @param string $uid
 	 * @return boolean
 	 */
-	function isCached($uid) {
+	function is_cached($uid) {
 		global $cache_path, $cache_expire_period;
 
 		$file_name = $cache_path.$uid.'.cache';
@@ -92,7 +92,7 @@ class FileProvider implements Provider {
 	/**
 	 * Clear all cache.
 	 */
-	function clearCache() {
+	function clear() {
 		global $cache_path;
 		array_map('unlink', glob($cache_path.'*.cache'));
 	}

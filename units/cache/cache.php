@@ -16,6 +16,7 @@ require_once('memcached_provider.php');
 
 use Session;
 use TemplateHandler;
+use URL;
 
 
 class Type {
@@ -78,38 +79,36 @@ class Manager {
 			$this->provider->initialize();
 
 		// prepare for caching
-		$this->uid = $this->generateUniqueID();
+		$this->uid = $this->generate_storage_key();
 		$this->is_cached = file_exists($cache_path.$this->uid) && $this->should_cache;
 	}
 
 	/**
-	 * Generate unique id based on URL.
+	 * Generate storage key for the current path.
 	 *
 	 * @param array $fields
 	 * @return string
 	 */
-	private function generateUniqueID($fields=null) {
-		global $cache_ignore_params, $language;
-		$data = '';
+	private function generate_storage_key($fields=null) {
+		global $language, $optimize_code;
 
-		if (is_null($fields))
-			$fields = $_REQUEST;
+		// generate key from various server states
+		$key = _DESKTOP_VERSION ? 'desktop' : 'mobile';
+		$key .= '>opt:'.($optimize_code ? 'y' : 'n');
+		$key .= '>port:'.$_SERVER['SERVER_PORT'];
+		$key .= '>lang:'.$language;
+		$key .= '>path:'.URL::get_request_path();
+		$key = str_replace('/', '|', $key);
 
-		foreach ($fields as $key => $value)
-			if (!in_array($key, $cache_ignore_params)) {
-				if (!is_array($value))
-					$data .= '/'.$key.'='.$value; else
-					$data .= '/'.$key.'='.$this->generateUniqueID($value);
-			}
-
-		return md5($data).'_'.$_SERVER['SERVER_PORT'].'_'.$language.'_'.(_DESKTOP_VERSION ? 'd' : 'm');
+		return $key;
 	}
 
 	/**
 	 * Store cached page to file.
 	 */
-	private function storeCache() {
+	private function store_cache() {
 		global $cache_expire_period;
+
 		$this->provider->storeData(
 					$this->uid,
 					$this->cache,
@@ -120,11 +119,11 @@ class Manager {
 	/**
 	 * Check if page is cached.
 	 */
-	public function isCached() {
+	public function is_cached() {
 		$result = false;
 
-		if (!is_null($this->provider))
-			$result = $this->provider->isCached($this->uid);
+		if (!is_null($this->provider) && $this->should_cache)
+			$result = $this->provider->is_cached($this->uid);
 
 		return $result;
 	}
@@ -133,7 +132,7 @@ class Manager {
 	 * Whether cache is working for current URL.
 	 * @return boolean
 	 */
-	public function isCaching() {
+	public function is_caching() {
 		return $this->should_cache;
 	}
 
@@ -143,7 +142,7 @@ class Manager {
 	 *
 	 * @return boolean
 	 */
-	public function printCache() {
+	public function show_cached_page() {
 		$data = $this->provider->getData($this->uid);
 
 		// show cached page
@@ -177,7 +176,7 @@ class Manager {
 	/**
 	 * Stop capturing data and take raw data in.
 	 */
-	public function startDirtyArea() {
+	public function start_dirty_area() {
 		if (!$this->should_cache || $this->in_dirty_area)
 			return;
 
@@ -197,7 +196,7 @@ class Manager {
 	 * Start capturing data globally again after
 	 * appending data to output buffer.
 	 */
-	public function endDirtyArea() {
+	public function end_dirty_area() {
 		if (!$this->should_cache || !$this->in_dirty_area)
 			return;
 
@@ -214,11 +213,11 @@ class Manager {
 
 	/**
 	 * Set cached data for dirty area. This function can
-	 * only be called after calling startDirtyArea.
+	 * only be called after calling `start_dirty_area`.
 	 *
 	 * @param string $data
 	 */
-	public function setCacheForDirtyArea($data) {
+	public function set_dirty_area_template($data) {
 		if (!$this->should_cache || !$this->in_dirty_area)
 			return;
 
@@ -228,7 +227,7 @@ class Manager {
 	/**
 	 * Start capturing output of a page.
 	 */
-	public function startCapture() {
+	public function start_capture() {
 		if ($this->should_cache)
 			ob_start();
 	}
@@ -236,7 +235,7 @@ class Manager {
 	/**
 	 * Stop capturin output and store it to the cache.
 	 */
-	public function endCapture() {
+	public function end_capture() {
 		if (!$this->should_cache)
 			return;
 
@@ -251,7 +250,7 @@ class Manager {
 		ob_end_clean();
 
 		// store data
-		$this->storeCache();
+		$this->store_cache();
 
 		// print output
 		print $this->output;
@@ -265,9 +264,9 @@ class Manager {
 	 * clearing of complete cache is recommended to be used
 	 * only in case of a problem or important update.
 	 */
-	public function clearCache() {
+	public function clear() {
 		if (!is_null($this->provider))
-			$this->provider->clearCache();
+			$this->provider->clear();
 	}
 
 	/**

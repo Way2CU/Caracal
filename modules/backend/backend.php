@@ -654,7 +654,7 @@ class backend extends Module {
 	private function clearCache() {
 		// clear cache
 		$cache = Cache::get_instance();
-		$cache->clearCache();
+		$cache->clear();
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');

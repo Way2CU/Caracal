@@ -42,9 +42,6 @@ $db_config = array(
 // cache
 $cache_method = CacheType::NONE;
 $cache_expire_period = 86400;
-$cache_ignore_params = array(
-		'gclid', Session::COOKIE_ID, Session::COOKIE_TYPE
-	);
 $memcached_config = array(
 		'host'	=> 'localhost',
 		'port'	=> 11211
