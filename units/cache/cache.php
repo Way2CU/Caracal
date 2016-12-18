@@ -94,9 +94,9 @@ class Manager {
 
 		// generate key from various server states
 		$key = _DESKTOP_VERSION ? 'desktop' : 'mobile';
-		$key .= '_port='.$_SERVER['SERVER_PORT'];
-		$key .= '_language='.$language;
-		$key .= URL::get_request_path();
+		$key .= ' port='.$_SERVER['SERVER_PORT'];
+		$key .= ' language='.$language;
+		$key .= ' path='.URL::get_request_path();
 		$key = str_replace('/', '|', $key);
 
 		return $key;
