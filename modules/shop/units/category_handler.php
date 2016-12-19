@@ -357,32 +357,14 @@ class ShopCategoryHandler {
 
 			// get number of children for this category
 			$child_count = $manager->get_item_value('count(*)', array('parent' => $item->id));
-
-			// get image urls
-			if (ModuleHandler::is_loaded('gallery')) {
-				$gallery = gallery::get_instance();
-				$gallery_manager = GalleryManager::get_instance();
-				$image = $gallery_manager->get_single_item(
-												array('filename'),
-												array('id' => $item->image)
-											);
-
-				if (!is_null($image)) {
-					$image_url = $gallery->getImageURL($image);
-					$thumbnail_url = $gallery->getThumbnailURL($image);
-				}
-			}
-
 			$params = array(
-						'id'			=> $item->id,
-						'parent'		=> $item->parent,
-						'image_id'		=> $item->image,
-						'image'			=> $image_url,
-						'thumbnail'		=> $thumbnail_url,
-						'text_id'		=> $item->text_id,
-						'title'			=> $item->title,
-						'description'	=> $item->description,
-						'has_children'	=> $child_count > 0
+						'id'           => $item->id,
+						'parent'       => $item->parent,
+						'image'        => $item->image,
+						'text_id'      => $item->text_id,
+						'title'        => $item->title,
+						'description'  => $item->description,
+						'has_children' => $child_count > 0
 					);
 
 			$template->restore_xml();
@@ -474,38 +456,20 @@ class ShopCategoryHandler {
 
 				// get number of children for this category
 				$child_count = $manager->get_item_value('count(*)', array('parent' => $item->id));
-
-				// get image urls
-				if (ModuleHandler::is_loaded('gallery')) {
-					$gallery = gallery::get_instance();
-					$gallery_manager = GalleryManager::get_instance();
-					$image = $gallery_manager->get_single_item(
-													array('filename'),
-													array('id' => $item->image)
-												);
-
-					if (!is_null($image)) {
-						$image_url = $gallery->getImageURL($image);
-						$thumbnail_url = $gallery->getThumbnailURL($image);
-					}
-				}
-
 				$params = array(
-							'id'			=> $item->id,
-							'index'			=> $index++,
-							'item_id'		=> $item_id,
-							'parent'		=> $item->parent,
-							'image_id'		=> $item->image,
-							'image'			=> $image_url,
-							'thumbnail'		=> $thumbnail_url,
-							'text_id'		=> $item->text_id,
-							'title'			=> $item->title,
-							'description'	=> $item->description,
-							'has_children'	=> $child_count > 0,
-							'level'			=> $level,
-							'in_category'	=> in_array($item->id, $item_category_ids) ? 1 : 0,
-							'selected'		=> isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
-							'item_change'	=> URL::make_hyperlink(
+							'id'           => $item->id,
+							'index'        => $index++,
+							'item_id'      => $item_id,
+							'parent'       => $item->parent,
+							'image'        => $item->image,
+							'text_id'      => $item->text_id,
+							'title'        => $item->title,
+							'description'  => $item->description,
+							'has_children' => $child_count > 0,
+							'level'        => $level,
+							'in_category'  => in_array($item->id, $item_category_ids) ? 1 : 0,
+							'selected'     => isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
+							'item_change'  => URL::make_hyperlink(
 										$this->parent->get_language_constant('change'),
 										window_Open(
 											'shop_category_change', 	// window id
@@ -522,7 +486,7 @@ class ShopCategoryHandler {
 											)
 										)
 									),
-							'item_delete'	=> URL::make_hyperlink(
+							'item_delete'  => URL::make_hyperlink(
 										$this->parent->get_language_constant('delete'),
 										window_Open(
 											'shop_category_delete', 	// window id
@@ -539,7 +503,7 @@ class ShopCategoryHandler {
 											)
 										)
 									),
-							'item_add'		=> URL::make_hyperlink(
+							'item_add'     => URL::make_hyperlink(
 										$this->parent->get_language_constant('add'),
 										window_Open(
 											'shop_category_add', 	// window id
