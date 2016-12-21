@@ -13,6 +13,12 @@ require_once(_LIBPATH.'closure/closure.php');
 
 use Library\Closure\Compiler as Closure;
 use Library\Closure\Level as ClosureLevel;
+use Library\Closure\InvalidResponseError;
+use Library\Closure\RemoteServerError;
+
+
+class StyleCompileError extends \Exception {};
+class ScriptCompileError extends \Exception {};
 
 
 class CodeOptimizer {
@@ -58,7 +64,7 @@ class CodeOptimizer {
 	 * @param array $list
 	 * @return string
 	 */
-	private function getCachedName($list) {
+	private function get_cached_name($list) {
 		$all_files = implode($list);
 		return md5($all_files);
 	}
@@ -70,7 +76,7 @@ class CodeOptimizer {
 	 * @param array $list
 	 * @return boolean
 	 */
-	private function needsRecompile($file_name, $list) {
+	private function needs_recompile($file_name, $list) {
 		$result = false;
 
 		if (!file_exists($file_name)) {
@@ -95,7 +101,7 @@ class CodeOptimizer {
 	 * @param array $priority_commands
 	 * @return string
 	 */
-	private function includeStyle($file_name, &$priority_commands) {
+	private function include_style($file_name, &$priority_commands) {
 		global $system_module_path, $styles_path, $site_path;
 
 		$result = array();
@@ -159,7 +165,7 @@ class CodeOptimizer {
 
 					} else {
 						// in place import of styles
-						$data = $this->includeStyle(trim($command[1], '\'";'), $priority_commands);
+						$data = $this->include_style(trim($command[1], '\'";'), $priority_commands);
 						$result = array_merge($result, $data);
 					}
 
@@ -183,7 +189,7 @@ class CodeOptimizer {
 	 * @param string $file_name
 	 * @param array $list
 	 */
-	private function recompileStyles($file_name, $list) {
+	private function recompile_styles($file_name, $list) {
 		global $cache_path;
 
 		$result = array();
@@ -191,7 +197,7 @@ class CodeOptimizer {
 
 		// gather data
 		foreach($list as $original_file) {
-			$file_result = $this->includeStyle($original_file, $priority_commands);
+			$file_result = $this->include_style($original_file, $priority_commands);
 			$result = array_merge($result, $file_result);
 		}
 
@@ -239,7 +245,7 @@ class CodeOptimizer {
 	 * @param string $url
 	 * @return boolean
 	 */
-	public function addScript($url) {
+	public function add_script($url) {
 		global $section;
 
 		$result = false;
@@ -261,7 +267,7 @@ class CodeOptimizer {
 	 * @param string $url
 	 * @return boolean
 	 */
-	public function addStyle($url) {
+	public function add_style($url) {
 		global $module_path;
 
 		$result = false;
@@ -281,18 +287,27 @@ class CodeOptimizer {
 	 *
 	 * @return string
 	 */
-	public function printData() {
+	public function print_data() {
 		global $cache_path, $include_styles;
 
 		// compile styles if needed
-		$style_cache = $cache_path.$this->getCachedName($this->style_list).'.css';
-		if ($this->needsRecompile($style_cache, $this->style_list))
-			$this->recompileStyles($style_cache, $this->style_list);
+		$style_cache = $cache_path.$this->get_cached_name($this->style_list).'.css';
+		if ($this->needs_recompile($style_cache, $this->style_list))
+			$this->recompile_styles($style_cache, $this->style_list);
 
 		// compile scripts
-		$script_cache = $cache_path.$this->getCachedName($this->script_list).'.js';
-		if ($this->needsRecompile($script_cache, $this->script_list)) {
-			$this->closure_compiler->compile_and_save($script_cache);
+		$script_cache = $cache_path.$this->get_cached_name($this->script_list).'.js';
+		if ($this->needs_recompile($script_cache, $this->script_list)) {
+			// send data to closure server for compilation
+			try {
+				$this->closure_compiler->compile_and_save($script_cache);
+
+			} catch (InvalidResponseError $error) {
+				throw new ScriptCompileError('Invalid response from Closure server.');
+
+			} catch (RemoteServerError $error) {
+				throw new ScriptCompileError('Server side error occurred.');
+			}
 
 			// store integrity hash
 			file_put_contents($script_cache.'.sha384', hash_file('sha384', $script_cache, true));
