@@ -153,30 +153,41 @@ class head_tag extends Module {
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 
-		if (class_exists('CodeOptimizer') && $optimize_code && !in_array($section, array('backend', 'backend_module'))) {
+		if ($optimize_code && !in_array($section, array('backend', 'backend_module'))) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::get_instance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
+			// add tags for compilation
 			foreach ($this->link_tags as $link) {
 				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
 
 				if ($can_be_compiled)
-					$added = $optimizer->addStyle($link[1]['href']);
+					$added = $optimizer->add_style($link[1]['href']);
 
 				if (!$can_be_compiled || !$added)
 					$unhandled_tags [] = $link;
 			}
 
+			// add scripts for compilation
+			$handled_tags = array();
 			foreach ($this->script_tags as $script)
-				if (!$optimizer->addScript($script[1]['src']))
-					$unhandled_tags []= $script;
+				if (!$optimizer->add_script($script[1]['src']))
+					$unhandled_tags []= $script; else
+					$handled_tags []= $script;  // collect scripts in case compile fails
 
 			foreach ($unhandled_tags as $tag)
 				$this->printTag($tag);
 
 			// print optimized code
-			$optimizer->printData();
+			try {
+				$optimizer->print_data();
+
+			} catch (ScriptCompileError $error) {
+				// there was a problem compiling script, show tags traditional way
+				foreach ($handled_tags as $tag)
+					$this->printTag($tag);
+			}
 
 		} else {
 			// no optimization
