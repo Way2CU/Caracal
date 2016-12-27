@@ -235,13 +235,8 @@ class TemplateHandler {
 				$eval_params = explode(',', $value);
 
 				foreach ($eval_params as $param) {
-					// prepare module includes for evaluation
-					$settings = array();
-					if (!is_null($this->module))
-						$settings = $this->module->settings;
-
 					$to_eval = $tag->tagAttrs[$param];
-					$response = $this->get_evaluted_value($to_eval);
+					$response = $this->get_evaluated_value($to_eval);
 
 					if ($response !== false)
 						$tag->tagAttrs[$param] = $response; else
@@ -257,13 +252,8 @@ class TemplateHandler {
 				$optional_params = explode(',', $tag->tagAttrs['cms:optional']);
 
 				foreach ($optional_params as $param) {
-					// prepare module includes for evaluation
-					$settings = array();
-					if (!is_null($this->module))
-						$settings = $this->module->settings;
-
 					$to_eval = $tag->tagAttrs[$param];
-					$value = $this->get_evaluted_value($to_eval);
+					$value = $this->get_evaluated_value($to_eval);
 
 					if ($value == false)
 						unset($tag->tagAttrs[$param]); else
@@ -561,7 +551,6 @@ class TemplateHandler {
 
 				// conditional tag
 				case 'cms:if':
-					$settings = !is_null($this->module) ? $this->module->settings : array();
 					$condition = true;
 
 					// check if section is specified and matches
@@ -575,7 +564,7 @@ class TemplateHandler {
 					// check custom condition
 					if (isset($tag->tagAttrs['condition'])) {
 						$to_eval = $tag->tagAttrs['condition'];
-						$eval_result = $this->get_evaluted_value($to_eval) == true;
+						$eval_result = $this->get_evaluated_value($to_eval) == true;
 						$condition &= $eval_result;
 					}
 
@@ -615,10 +604,6 @@ class TemplateHandler {
 
 				// variable
 				case 'cms:var':
-					$settings = array();
-					if (!is_null($this->module))
-						$settings = $this->module->settings;
-
 					$params = $this->params;
 					$template = $this->template_params;
 					$output = '';
@@ -626,7 +611,7 @@ class TemplateHandler {
 					if (isset($tag->tagAttrs['name'])) {
 						// old method with eval
 						$to_eval = $tag->tagAttrs['name'];
-						$output = $this->get_evaluted_value($to_eval);
+						$output = $this->get_evaluated_value($to_eval);
 
 					} else if (isset($tag->tagAttrs['param'])) {
 						// object parameter
@@ -834,17 +819,18 @@ class TemplateHandler {
 	 * @param string $code
 	 * @return mixed
 	 */
-	private function get_evaluted_value($code) {
+	private function get_evaluated_value($code) {
 		// variables to be used in evaluation
 		$params = $this->params;
 		$template = $this->template_params;
+		$settings = !is_null($this->module) ? $this->module->settings : array();
 
 		// construct function call
 		$function = '
-			$call = function($params, $template) {
+			$call = function($params, $template, $settings) {
 				global $section, $language, $language_rtl;
 				return '.$code.';
-			}; return $call($params, $template);';
+			}; return $call($params, $template, $settings);';
 
 		return eval($function);
 	}
