@@ -44,7 +44,7 @@ form input[pattern] + small.placeholder {
 
 form input[pattern] + small.placeholder:before {
 	position: absolute;
-	top: calc(-1em + -5px);
+	top: calc(-1em - 5px);
 	left: 10px;
 	width: 0;
 	height: 0;
@@ -55,6 +55,7 @@ form input[pattern] + small.placeholder:before {
 	border-bottom-color: #909090;
 
 	line-height: 0;
+	transition: all 0.3s;
 }
 
 form input[pattern] + small.placeholder:after {
