@@ -42,15 +42,44 @@ form input[pattern] + small.placeholder {
 	line-height: 0;
 }
 
+form input[pattern] + small.placeholder:before {
+	position: absolute;
+	top: calc(-1em - 5px);
+	left: 10px;
+	width: 0;
+	height: 0;
+	content: '';
+	opacity: 0;
+
+	border: 8px solid transparent;
+	border-bottom-color: #909090;
+
+	line-height: 0;
+	transition: all 0.3s;
+}
+
 form input[pattern] + small.placeholder:after {
 	position: absolute;
-	bottom: 0.6em;
+	top: -1em;
 	left: 0;
 	opacity: 0;
 	content: attr(data-content);
+	padding: 0.2em 0.3em;
+
+	border: 1px solid #909090;
+	border-radius: 2px;
+	background-color: white;
+
+	color: #909090;
+	font-size: 1rem;
+	line-height: normal;
 
 	transition: all 0.3s;
-	font-size: 1rem;
+}
+
+html[dir=rtl] form input[pattern] + small.placeholder:before {
+	left: auto;
+	right: 10px;
 }
 
 html[dir=rtl] form input[pattern] + small.placeholder:after {
@@ -58,7 +87,12 @@ html[dir=rtl] form input[pattern] + small.placeholder:after {
 	right: 0;
 }
 
-form input[pattern]:invalid + small.placeholder:after {
-	top: 0;
+form input[pattern]:focus:invalid + small.placeholder:before {
+	top: -5px;
+	opacity: 1;
+}
+
+form input[pattern]:focus:invalid + small.placeholder:after {
+	top: 10px;
 	opacity: 1;
 }
