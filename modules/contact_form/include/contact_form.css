@@ -44,13 +44,21 @@ form input[pattern] + small.placeholder {
 
 form input[pattern] + small.placeholder:after {
 	position: absolute;
-	bottom: 0.6em;
+	top: -1em;
 	left: 0;
 	opacity: 0;
 	content: attr(data-content);
+	padding: 0.2em;
+
+	border: 1px solid #909090;
+	border-radius: 2px;
+	background-color: white;
+
+	color: #909090;
+	font-size: 1rem;
+	line-height: normal;
 
 	transition: all 0.3s;
-	font-size: 1rem;
 }
 
 html[dir=rtl] form input[pattern] + small.placeholder:after {
