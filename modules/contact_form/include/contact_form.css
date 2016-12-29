@@ -37,18 +37,20 @@ form[data-dynamic='1'] div.overlay.visible {
 }
 
 form input[pattern] + small.placeholder {
+	display: block;
 	position: relative;
 	line-height: 0;
 }
 
 form input[pattern] + small.placeholder:after {
 	position: absolute;
-	top: -1em;
+	bottom: 0.6em;
 	left: 0;
 	opacity: 0;
 	content: attr(data-content);
 
 	transition: all 0.3s;
+	font-size: 1rem;
 }
 
 html[dir=rtl] form input[pattern] + small.placeholder:after {
@@ -56,7 +58,7 @@ html[dir=rtl] form input[pattern] + small.placeholder:after {
 	right: 0;
 }
 
-form input[pattern]:invalid + small.placeholder:after {
+form input[pattern]:invalid:not(:empty:focus) + small.placeholder:after {
 	top: 0;
 	opacity: 1;
 }
