@@ -42,13 +42,28 @@ form input[pattern] + small.placeholder {
 	line-height: 0;
 }
 
+form input[pattern] + small.placeholder:before {
+	position: absolute;
+	top: -10px;
+	left: 40px;
+	width: 0;
+	height: 0;
+	content: '';
+	opacity: 0;
+
+	border: 20px solid transparent;
+	border-bottom-color: #909090;
+
+	line-height: 0;
+}
+
 form input[pattern] + small.placeholder:after {
 	position: absolute;
 	top: -1em;
 	left: 0;
 	opacity: 0;
 	content: attr(data-content);
-	padding: 0.2em;
+	padding: 0.3em 0.2em;
 
 	border: 1px solid #909090;
 	border-radius: 2px;
@@ -61,12 +76,21 @@ form input[pattern] + small.placeholder:after {
 	transition: all 0.3s;
 }
 
+html[dir=rtl] form input[pattern] + small.placeholder:before {
+	left: auto;
+	right: 40px;
+}
+
 html[dir=rtl] form input[pattern] + small.placeholder:after {
 	left: auto;
 	right: 0;
 }
 
+form input[pattern]:invalid + small.placeholder:before {
+	opacity: 1;
+}
+
 form input[pattern]:invalid + small.placeholder:after {
-	top: 0;
+	top: 10px;
 	opacity: 1;
 }
