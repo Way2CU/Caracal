@@ -63,7 +63,7 @@ form input[pattern] + small.placeholder:after {
 	left: 0;
 	opacity: 0;
 	content: attr(data-content);
-	padding: 0.3em 0.2em;
+	padding: 0.2em 0.3em;
 
 	border: 1px solid #909090;
 	border-radius: 2px;
