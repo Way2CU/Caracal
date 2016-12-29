@@ -195,15 +195,15 @@
 					<input
 						name="$params['name']"
 						type="email"
-						placeholder="$params['placeholder'][$language]"
+						placeholder="empty($params['pattern']) ? $params['placeholder'][$language] : false"
 						autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 						value="$params['value']"
 						pattern="!empty($params['pattern']) ? $params['pattern'] : false"
-						cms:optional="required,disabled,maxlength,pattern"
-						cms:eval="name,placeholder,autocomplete,value"
+						cms:optional="placeholder,required,disabled,maxlength,pattern"
+						cms:eval="name,autocomplete,value"
 						/>
 				</option>
 
@@ -262,12 +262,12 @@
 						name="$params['name']"
 						rows="4"
 						cols="30"
-						placeholder="$params['placeholder'][$language]"
+						placeholder="empty($params['pattern']) ? $params['placeholder'][$language] : false"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
-						cms:optional="required,disabled,maxlength"
-						cms:eval="name,placeholder"
+						cms:optional="required,disabled,maxlength,placeholder"
+						cms:eval="name"
 						>
 						<cms:var name="$params['value']"/>
 					</textarea>
@@ -319,15 +319,15 @@
 					<input
 						name="$params['name']"
 						type="text"
-						placeholder="$params['placeholder'][$language]"
+						placeholder="empty($params['pattern']) ? $params['placeholder'][$language] : false"
 						autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						value="$params['value']"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 						pattern="!empty($params['pattern']) ? $params['pattern'] : false"
-						cms:optional="required,pattern,disabled,maxlength"
-						cms:eval="name,placeholder,autocomplete,value"
+						cms:optional="placeholder,required,pattern,disabled,maxlength"
+						cms:eval="name,autocomplete,value"
 						/>
 				</option>
 			</cms:choice>

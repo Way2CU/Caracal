@@ -58,7 +58,7 @@ html[dir=rtl] form input[pattern] + small.placeholder:after {
 	right: 0;
 }
 
-form input[pattern]:invalid:not(:empty:focus) + small.placeholder:after {
+form input[pattern]:invalid + small.placeholder:after {
 	top: 0;
 	opacity: 1;
 }
