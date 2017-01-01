@@ -554,7 +554,7 @@ class shop extends Module {
 		// search through items
 		foreach ($items as $item) {
 			$title = mb_split('\s', mb_strtolower($item->name[$language]));
-			$description = mb_split('\s', mb_strtolower($item->description[$language]);
+			$description = mb_split('\s', mb_strtolower($item->description[$language]));
 			$properties = isset($item_properties[$item->id]) ? mb_split('\s', mb_strtolower($item_properties[$item->id])) : array();
 			$score = 0;
 			$title_matches = 0;
