@@ -472,7 +472,7 @@ class shop extends Module {
 				'deleted' => 0,
 			);
 		$query = mb_strtolower($query);
-		$query_words = mb_split("[\-\s_]", $query);
+		$query_words = mb_split('\s', $query);
 		$query_count = count($query_words);
 
 		// include pre-configured options
@@ -540,35 +540,37 @@ class shop extends Module {
 		if (count($items) == 0)
 			return $result;
 
+		// comparison function
+		$compare = function($a, $b) {
+			$score = String\Distance\JaroWinkler::get($a, $b);
+
+			if ($score >= 0.8)
+				$result = 0; else
+				$result = strcmp($a, $b);
+
+			return $result;
+		};
+
 		// search through items
 		foreach ($items as $item) {
-			$title = mb_strtolower($item->name[$language]);
-			$description = mb_strtolower($item->description[$language]);
-			$properties = isset($item_properties[$item->id]) ? mb_strtolower($item_properties[$item->id]) : '';
+			$title = mb_split('\s', mb_strtolower($item->name[$language]));
+			$description = mb_split('\s', mb_strtolower($item->description[$language]);
+			$properties = isset($item_properties[$item->id]) ? mb_split('\s', mb_strtolower($item_properties[$item->id])) : array();
 			$score = 0;
 			$title_matches = 0;
 			$description_matches = 0;
 			$property_matches = 0;
 
-			foreach ($query_words as $query_word) {
-				// search within title
-				if (is_numeric(mb_strpos($title, $query_word)))
-					$title_matches += 1;
-
-				// search withing description
-				if (is_numeric(mb_strpos($description, $query_word)))
-					$description_matches += 1;
-
-				// search through properties
-				if (is_numeric(mb_strpos($properties, $query_word)))
-					$property_matches += 1;
-			}
+			// count number of matching words
+			$title_matches = count(array_uintersect($query_words, $title, $compare));
+			$description_matches = count(array_uintersect($query_words, $description, $compare));
+			$property_matches = count(array_uintersect($query_words, $properties, $compare));
 
 			// increase score for each individual part of the item
 			$score += 100 * ($title_matches / $query_count);
 			$score += 70 * ($description_matches / $query_count);
 			$score += 70 * ($property_matches / $query_count);
-			$score = (int) $score;
+			$score = ((int) $score * 100) / 240;  // make score fit range 0-100
 
 			// add item to result list
 			if ($score >= $threshold)

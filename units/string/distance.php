@@ -64,7 +64,7 @@ class Jaro {
 	 */
 	public static function get($first, $second) {
 		// convert to array of invididual unicode characters
-		$first = preg_split('//u', $first, null, PREG_SPLIT_NO_EMPTY);  
+		$first = preg_split('//u', $first, null, PREG_SPLIT_NO_EMPTY);
 		$second = preg_split('//u', $second, null, PREG_SPLIT_NO_EMPTY);
 		$size_first = count($first);
 		$size_second = count($second);
@@ -121,7 +121,7 @@ final class JaroWinkler extends Jaro {
 		$result = 0;
 
 		// convert to array of invididual unicode characters
-		$first = preg_split('//u', $first, null, PREG_SPLIT_NO_EMPTY);  
+		$first = preg_split('//u', $first, null, PREG_SPLIT_NO_EMPTY);
 		$second = preg_split('//u', $second, null, PREG_SPLIT_NO_EMPTY);
 		$max_chars = min(4, count($first), count($second));
 
