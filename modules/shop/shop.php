@@ -541,17 +541,7 @@ class shop extends Module {
 			return $result;
 
 		// comparison function
-		$compare_title = function($a, $b) {
-			$score = String\Distance\JaroWinkler::get($a, $b);
-
-			if ($score >= 0.9)
-				$result = 0; else
-				$result = strcmp($a, $b);
-
-			return $result;
-		};
-
-		$compare_properties = function($a, $b) {
+		$compare = function($a, $b) {
 			$score = String\Distance\Jaro::get($a, $b);
 
 			if ($score >= 0.9)
@@ -572,9 +562,9 @@ class shop extends Module {
 			$property_matches = 0;
 
 			// count number of matching words
-			$title_matches = count(array_uintersect($query_words, $title, $compare_title));
+			$title_matches = count(array_uintersect($query_words, $title, $compare));
 			$description_matches = count(array_uintersect($query_words, $description, 'strcmp'));
-			$property_matches = count(array_uintersect($query_words, $properties, $compare_properties));
+			$property_matches = count(array_uintersect($query_words, $properties, $compare));
 
 			// increase score for each individual part of the item
 			$score += 120 * ($title_matches / $query_count);
