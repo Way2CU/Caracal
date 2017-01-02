@@ -544,7 +544,7 @@ class shop extends Module {
 		$compare_title = function($a, $b) {
 			$score = String\Distance\JaroWinkler::get($a, $b);
 
-			if ($score >= 0.8)
+			if ($score >= 0.9)
 				$result = 0; else
 				$result = strcmp($a, $b);
 
