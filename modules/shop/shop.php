@@ -577,9 +577,9 @@ class shop extends Module {
 			$property_matches = count(array_uintersect($query_words, $properties, $compare_properties));
 
 			// increase score for each individual part of the item
-			$score += 100 * ($title_matches / $query_count);
-			$score += 70 * ($description_matches / $query_count);
-			$score += 70 * ($property_matches / $query_count);
+			$score += 120 * ($title_matches / $query_count);
+			$score += 60 * ($description_matches / $query_count);
+			$score += 60 * ($property_matches / $query_count);
 			$score = ((int) $score * 100) / 240;  // make score fit range 0-100
 
 			// add item to result list
