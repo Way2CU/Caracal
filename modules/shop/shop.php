@@ -569,11 +569,13 @@ class shop extends Module {
 			$description_matches = count(array_uintersect($query_words, $description, 'strcmp'));
 			$property_matches = count(array_uintersect($query_words, $properties, $compare));
 
-			// increase score for each individual part of the item
-			$score += 120 * ($title_matches / $query_count);
-			$score += 60 * ($description_matches / $query_count);
-			$score += 60 * ($property_matches / $query_count);
-			$score = ((int) $score * 100) / 240;  // make score fit range 0-100
+			// calculate individual scores according to their importance
+			$title_score = 100 * ($title_matches / $query_count);
+			$description_score = 50 * ($description_matches / $query_count);
+			$property_score = 80 * ($property_matches / $query_count);
+
+			// calculate final score
+			$score = (($title_score + $description_score + $property_score) * 100) / (100 + 50 + 80);
 
 			// add item to result list
 			if ($score >= $threshold)
