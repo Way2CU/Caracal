@@ -531,8 +531,8 @@ class shop extends Module {
 				$item = $property->item;
 				$value = unserialize($property->value);
 
-				if (!is_array($value))
-					$value = (string) $value;
+				if (is_array($value) || empty($value))
+					continue;
 
 				if (isset($item_properties[$item]))
 					$item_properties[$item] []= $value; else
