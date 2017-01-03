@@ -13,7 +13,7 @@ $document_types = array(
 	'html5'      => array(
 		'code' => '<!DOCTYPE html>',
 		'mime' => 'text/html'
-	)
+	),
 	'xml1.0'     => array(
 		'code' => '<?xml version="1.0" encoding="UTF-8"?>',
 		'mime' => 'application/xml'
