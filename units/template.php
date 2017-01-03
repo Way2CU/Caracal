@@ -16,7 +16,7 @@ use Core\Cache\Manager as Cache;
 
 class TemplateHandler {
 	/**
-	 * Used for debugging
+	 * Used for debugging.
 	 * @var string
 	 */
 	public $file;
@@ -28,13 +28,13 @@ class TemplateHandler {
 	public $engine;
 
 	/**
-	 * If XML parser is active and ready
+	 * If XML parser is active and ready.
 	 * @var boolean
 	 */
 	public $active;
 
 	/**
-	 * Transfer params available from within template
+	 * Transfer params available from within template.
 	 * @var array
 	 */
 	private $params;
@@ -46,13 +46,13 @@ class TemplateHandler {
 	private $template_params;
 
 	/**
-	 * Handling module name
+	 * Handling module name.
 	 * @var object
 	 */
 	public $module;
 
 	/**
-	 * Custom tag handlers
+	 * Custom tag handlers.
 	 * @var array
 	 */
 	private $handlers = array();
@@ -64,13 +64,13 @@ class TemplateHandler {
 	private $tag_children = array();
 
 	/**
-	 * List of tags that shouldn't be closed
+	 * List of tags that shouldn't be closed.
 	 * @var array
 	 */
 	private $tags_without_end = array('br', 'wbr', 'hr', 'img', 'base', 'input', 'link', 'meta');
 
 	/**
-	 * Summary list of HTML boolean attributes
+	 * Summary list of HTML boolean attributes.
 	 * @var array
 	 */
 	private $boolean_attributes = array(
@@ -82,6 +82,12 @@ class TemplateHandler {
 					'scoped', 'seamless', 'selected', 'sortable', 'spellcheck', 'translate', 'truespeed',
 					'typemustmatch', 'visible'
 				);
+
+	/**
+	 * Whether template is top level.
+	 * @var boolean
+	 */
+	private $is_top_level = false;
 
 	/**
 	 * If we should close all tags
@@ -125,6 +131,15 @@ class TemplateHandler {
 
 			$this->active = true;
 		}
+	}
+
+	/**
+	 * Set top level template indicator flag.
+	 *
+	 * @param boolean $top_level
+	 */
+	private function set_top_level($top_level=true) {
+		$this->is_top_level = $top_level;
 	}
 
 	/**
@@ -223,7 +238,7 @@ class TemplateHandler {
 			// assign tags from recursion
 			$tag_array = $tags;
 
-		} else {
+		} else if ($this->is_top_level) {
 			// allow for special attributes in top-level tag
 			$document = $this->engine->document->tagAttrs;
 

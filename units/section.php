@@ -134,8 +134,19 @@ final class SectionHandler {
 	public static function transfer_control() {
 		$section = isset($_REQUEST['section']) ? escape_chars($_REQUEST['section']) : null;
 
+		// transfer call to template parser
+		if (is_null($section)) {
+			// make sure we have matched page template
+			if (is_null(self::$matched_file))
+				return;
+
+			// create template handler
+			$template = new TemplateHandler(self::$matched_file);
+			$template->set_top_level();
+			$template->parse();
+
 		// transfer call to modules
-		if (!is_null($section)) {
+		} else {
 			// call named module
 			if (ModuleHandler::is_loaded($section)) {
 				$module = call_user_func(array($section, 'get_instance'));
@@ -157,16 +168,6 @@ final class SectionHandler {
 				// transfer control to backend module
 				$module->transfer_control($params, array());
 			}
-
-		// transfer call to module parser
-		} else {
-			// make sure we have matched page template
-			if (is_null(self::$matched_file))
-				return;
-
-			// create template handler
-			$template = new TemplateHandler(self::$matched_file);
-			$template->parse();
 		}
 	}
 
