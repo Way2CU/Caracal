@@ -30,16 +30,6 @@ class page_info extends Module {
 		// connect events
 		Events::connect('head-tag', 'before-print', 'add_elements', $this);
 
-		// let the browser/crawler know we have different desktop/mobile styles
-		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-			header('Vary: User-Agent');
-
-		// change powered by header
-		header('X-Powered-By: Caracal/'._VERSION);
-
-		// send encoding
-		header('Content-Type: text/html; charset=UTF-8');
-
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
 			$backend = backend::get_instance();
@@ -172,9 +162,9 @@ class page_info extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->get_language_constant('message_saved'),
-					'button'	=> $this->get_language_constant('close'),
-					'action'	=> window_Close('page_settings')
+					'message' => $this->get_language_constant('message_saved'),
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('page_settings')
 				);
 
 		$template->restore_xml();

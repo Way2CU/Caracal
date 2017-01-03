@@ -206,20 +206,46 @@ class TemplateHandler {
 	 *
 	 * @param array $tags Leave blank, used for recursion
 	 */
-	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path, $images_path, $cache_method;
+	public function parse(&$tags=null) {
+		global $section, $action, $language, $template_path, $system_template_path,
+			$images_path, $cache_method, $document_types;
 
 		// turn on custom error hanlder
 		set_error_handler(array($this, 'handle_error'));
 
-		if ((!$this->active) && empty($tags))
+		if ((!$this->active) && is_null($tags))
 			return;
 
 		// take the tag list for parsing
 		$tag_array = array();
 
-		if (!empty($tags))
+		if (!is_null($tags)) {
+			// assign tags from recursion
 			$tag_array = $tags;
+
+		} else {
+			// allow for special attributes in top-level tag
+			$document = $this->engine->document->tagAttrs;
+
+			if (isset($document['content-type']))
+				header('Content-Type: '.$document['content-type'].'; charset=UTF-8'); else
+				header('Content-Type: text/html; charset=UTF-8');
+
+			// change powered by header
+			header('X-Powered-By: Caracal/'._VERSION);
+
+			// let the browser/crawler know we have different desktop/mobile styles
+			if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
+				header('Vary: User-Agent');
+
+			// print document type
+			$document_type = 'html5';
+
+			if (isset($document['type']) && array_key_exists($document['type'], $document_types))
+				$document_type = $document['type'];
+
+			echo $document_types[$document_type];
+		}
 
 		if (empty($tag_array) && $this->active)
 			$tag_array = $this->engine->document->tagChildren;
@@ -501,6 +527,7 @@ class TemplateHandler {
 						$new->set_local_params($this->params);
 						$new->set_mapped_module($this->module);
 						$new->parse();
+
 					} else {
 						// log error
 						trigger_error('Mapped module is not loaded! File: '.$this->file, E_USER_WARNING);
