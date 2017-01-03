@@ -529,11 +529,14 @@ class shop extends Module {
 		if (count($properties) > 0)
 			foreach ($properties as $property) {
 				$item = $property->item;
-				$value = $property->value;  // we don't unserialize on purpose for speed
+				$value = unserialize($property->value);
+
+				if (!is_array($value))
+					$value = (string) $value;
 
 				if (isset($item_properties[$item]))
-					$item_properties[$item] .= $value; else
-					$item_properties[$item] = $value;
+					$item_properties[$item] []= $value; else
+					$item_properties[$item] = array($value);
 			}
 
 		// make sure we have items to search through
@@ -555,7 +558,7 @@ class shop extends Module {
 		foreach ($items as $item) {
 			$title = mb_split('\s', mb_strtolower($item->name[$language]));
 			$description = mb_split('\s', mb_strtolower($item->description[$language]));
-			$properties = isset($item_properties[$item->id]) ? mb_split('\s', mb_strtolower($item_properties[$item->id])) : array();
+			$properties = isset($item_properties[$item->id]) ? $item_properties[$item->id] : array();
 			$score = 0;
 			$title_matches = 0;
 			$description_matches = 0;
