@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
-<document type="xml1.0" content-type="application/xml">
+<document type="xml1.0">
 	<rss version="2.0">
 		<channel>
 			<title><cms:var name="$params['title'][$language]"/></title>

@@ -257,7 +257,7 @@ class TemplateHandler {
 
 			$document_type = $document_types[$type];
 
-			header('Content-Type: '.$document_type['mime'].'; charset=UTF-8'); else
+			header('Content-Type: '.$document_type['mime'].'; charset=UTF-8');
 			echo $document_type['code'];
 		}
 
