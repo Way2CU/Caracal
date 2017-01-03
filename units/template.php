@@ -138,7 +138,7 @@ class TemplateHandler {
 	 *
 	 * @param boolean $top_level
 	 */
-	private function set_top_level($top_level=true) {
+	public function set_top_level($top_level=true) {
 		$this->is_top_level = $top_level;
 	}
 
