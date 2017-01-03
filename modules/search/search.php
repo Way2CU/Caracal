@@ -114,10 +114,10 @@ class search extends Module {
 
 		// get threshold
 		if (isset($tag_params['threshold']))
-			$threshold = fix_chars($tag_params['threshold']);
+			$threshold = fix_id($tag_params['threshold']);
 
-		if (is_null($threshold) && isset($_REQUEST['threshold']))
-			$threshold = fix_chars($_REQUEST['threshold']);
+		if (isset($_REQUEST['threshold']))
+			$threshold = fix_id($_REQUEST['threshold']);
 
 		// get limit
 		if (isset($tag_params['limit']))

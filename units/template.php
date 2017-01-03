@@ -16,7 +16,7 @@ use Core\Cache\Manager as Cache;
 
 class TemplateHandler {
 	/**
-	 * Used for debugging
+	 * Used for debugging.
 	 * @var string
 	 */
 	public $file;
@@ -28,13 +28,13 @@ class TemplateHandler {
 	public $engine;
 
 	/**
-	 * If XML parser is active and ready
+	 * If XML parser is active and ready.
 	 * @var boolean
 	 */
 	public $active;
 
 	/**
-	 * Transfer params available from within template
+	 * Transfer params available from within template.
 	 * @var array
 	 */
 	private $params;
@@ -46,13 +46,13 @@ class TemplateHandler {
 	private $template_params;
 
 	/**
-	 * Handling module name
+	 * Handling module name.
 	 * @var object
 	 */
 	public $module;
 
 	/**
-	 * Custom tag handlers
+	 * Custom tag handlers.
 	 * @var array
 	 */
 	private $handlers = array();
@@ -64,13 +64,13 @@ class TemplateHandler {
 	private $tag_children = array();
 
 	/**
-	 * List of tags that shouldn't be closed
+	 * List of tags that shouldn't be closed.
 	 * @var array
 	 */
 	private $tags_without_end = array('br', 'wbr', 'hr', 'img', 'base', 'input', 'link', 'meta');
 
 	/**
-	 * Summary list of HTML boolean attributes
+	 * Summary list of HTML boolean attributes.
 	 * @var array
 	 */
 	private $boolean_attributes = array(
@@ -82,6 +82,12 @@ class TemplateHandler {
 					'scoped', 'seamless', 'selected', 'sortable', 'spellcheck', 'translate', 'truespeed',
 					'typemustmatch', 'visible'
 				);
+
+	/**
+	 * Whether template is top level.
+	 * @var boolean
+	 */
+	private $is_top_level = false;
 
 	/**
 	 * If we should close all tags
@@ -125,6 +131,15 @@ class TemplateHandler {
 
 			$this->active = true;
 		}
+	}
+
+	/**
+	 * Set top level template indicator flag.
+	 *
+	 * @param boolean $top_level
+	 */
+	public function set_top_level($top_level=true) {
+		$this->is_top_level = $top_level;
 	}
 
 	/**
@@ -206,20 +221,45 @@ class TemplateHandler {
 	 *
 	 * @param array $tags Leave blank, used for recursion
 	 */
-	public function parse($tags=array()) {
-		global $section, $action, $language, $template_path, $system_template_path, $images_path, $cache_method;
+	public function parse(&$tags=null) {
+		global $section, $action, $language, $template_path, $system_template_path,
+			$images_path, $cache_method, $document_types;
 
 		// turn on custom error hanlder
 		set_error_handler(array($this, 'handle_error'));
 
-		if ((!$this->active) && empty($tags))
+		if ((!$this->active) && is_null($tags))
 			return;
 
 		// take the tag list for parsing
 		$tag_array = array();
 
-		if (!empty($tags))
+		if (!is_null($tags)) {
+			// assign tags from recursion
 			$tag_array = $tags;
+
+		} else if ($this->is_top_level) {
+			// allow for special attributes in top-level tag
+			$document = $this->engine->document->tagAttrs;
+
+			// change powered by header
+			header('X-Powered-By: Caracal/'._VERSION);
+
+			// let the browser/crawler know we have different desktop/mobile styles
+			if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
+				header('Vary: User-Agent');
+
+			// print document type
+			$type = 'html5';
+
+			if (isset($document['type']) && array_key_exists($document['type'], $document_types))
+				$type = $document['type'];
+
+			$document_type = $document_types[$type];
+
+			header('Content-Type: '.$document_type['mime'].'; charset=UTF-8');
+			echo $document_type['code'];
+		}
 
 		if (empty($tag_array) && $this->active)
 			$tag_array = $this->engine->document->tagChildren;
@@ -501,6 +541,7 @@ class TemplateHandler {
 						$new->set_local_params($this->params);
 						$new->set_mapped_module($this->module);
 						$new->parse();
+
 					} else {
 						// log error
 						trigger_error('Mapped module is not loaded! File: '.$this->file, E_USER_WARNING);
