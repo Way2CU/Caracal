@@ -242,10 +242,6 @@ class TemplateHandler {
 			// allow for special attributes in top-level tag
 			$document = $this->engine->document->tagAttrs;
 
-			if (isset($document['content-type']))
-				header('Content-Type: '.$document['content-type'].'; charset=UTF-8'); else
-				header('Content-Type: text/html; charset=UTF-8');
-
 			// change powered by header
 			header('X-Powered-By: Caracal/'._VERSION);
 
@@ -254,12 +250,15 @@ class TemplateHandler {
 				header('Vary: User-Agent');
 
 			// print document type
-			$document_type = 'html5';
+			$type = 'html5';
 
 			if (isset($document['type']) && array_key_exists($document['type'], $document_types))
-				$document_type = $document['type'];
+				$type = $document['type'];
 
-			echo $document_types[$document_type];
+			$document_type = $document_types[$type];
+
+			header('Content-Type: '.$document_type['mime'].'; charset=UTF-8'); else
+			echo $document_type['code'];
 		}
 
 		if (empty($tag_array) && $this->active)
