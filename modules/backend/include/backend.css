@@ -568,5 +568,10 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 
 	div#container {
 		z-index: 1;
+		height: calc(100% - 6em - 1px);
+	}
+
+	ul#navigation {
+		padding-top: 6em;
 	}
 }
