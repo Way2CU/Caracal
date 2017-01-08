@@ -247,7 +247,7 @@ ul#navigation {
 	list-style-image: none;
 
 	z-index: 2000;
-	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 }
 
 html[dir=rtl] ul#navigation {
