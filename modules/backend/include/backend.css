@@ -548,11 +548,16 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 	}
 
 	div#logo {
-		font-size: 0.9em;
+		padding-left: 4.6em;
+	}
+
+	html[dir=rtl] div#logo {
+		padding: 0.5em;
+		padding-right: 4.6em;
 	}
 
 	div#logo img {
-		height: 20px;
+		height: 2.5em;
 	}
 
 	nav#language {
