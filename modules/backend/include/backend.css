@@ -39,7 +39,7 @@ header {
 div#logo {
 	display: block;
 	padding: 0.5em;
-	padding-right: 4.5em;
+	padding-right: 5.5em;
 
 	background-image: url(../images/logo.svg);
 	background-position: left center;
@@ -52,7 +52,7 @@ div#logo {
 
 html[dir=rtl] div#logo {
 	padding: 0.5em;
-	padding-right: 4.5em;
+	padding-right: 5.5em;
 	background-position: right center;
 }
 
