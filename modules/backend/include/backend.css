@@ -173,7 +173,6 @@ ul#window_list li {
 	display: inline-block;
 	min-width: 100px;
 
-	margin-right: 2px;
 	padding: 0.5em;
 	padding-left: 44px;
 
@@ -186,8 +185,6 @@ ul#window_list li {
 }
 
 html[dir=rtl] ul#window_list li {
-	margin: 0px;
-	margin-left: 2px;
 	padding: 0.5em;
 	padding-right: 44px;
 }
