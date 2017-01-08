@@ -548,7 +548,8 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 		z-index: 2;
 	}
 
-	div#logo {
+	div#logo,
+	html[dir=rtl] div#logo {
 		padding: 0.5em;
 		background-image: none;
 	}
