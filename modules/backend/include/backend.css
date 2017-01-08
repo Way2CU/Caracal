@@ -544,7 +544,7 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 @media (max-height: 900px) {
 	header {
 		position: absolute;
-		width: calc(200px - 20px + 1px);
+		width: 200px;
 		z-index: 2;
 	}
 
