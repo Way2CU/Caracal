@@ -40,7 +40,7 @@ header {
 div#logo {
 	display: block;
 	padding: 0.5em;
-	padding-right: 5.5em;
+	padding-left: 5.5em;
 
 	background-image: url(../images/logo.svg);
 	background-position: left center;
