@@ -4359,15 +4359,6 @@ class shop extends Module {
 	}
 
 	/**
-	 * Render custom applied custom discounts.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	public function tag_DiscountAppliedList($tag_params, $children) {
-	}
-
-	/**
 	 * Show list of discounts for current transaction.
 	 *
 	 * @param array $tag_params
