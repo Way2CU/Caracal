@@ -2,7 +2,7 @@
  * Main Style Sheet
  * Backend Module
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2017. by Way2CU
  * Author: Mladen Mijatov
  */
 
@@ -10,8 +10,9 @@
 @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono:400);
 
 body {
-	margin: 0px;
-	padding: 0px;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 
 	background-color: #d5d5d5;
 
@@ -29,17 +30,17 @@ html[dir=rtl] {
  */
 header {
 	display: block;
-	padding: 10px;
-
+	padding: 0.5em;
 	position: relative;
+	box-sizing: border-box;
 
 	background-color: #2c3e50;
 }
 
 div#logo {
 	display: block;
-	padding: 6px;
-	padding-left: 75px;
+	padding: 0.5em;
+	padding-left: 5.5em;
 
 	background-image: url(../images/logo.svg);
 	background-position: left center;
@@ -51,15 +52,14 @@ div#logo {
 }
 
 html[dir=rtl] div#logo {
-	padding: 6px;
-	padding-right: 75px;
+	padding: 0.5em;
+	padding-right: 5.5em;
 	background-position: right center;
 }
 
 div#logo img {
 	display: block;
-	height: 40px;
-	margin-bottom: 5px;
+	height: 3em;
 }
 
 /**
@@ -67,8 +67,8 @@ div#logo img {
  */
 div#container {
 	display: block;
-
 	position: relative;
+	height: calc(100% - 8em - 1px);
 
 	background-image: url(../images/background.svg);
 	background-repeat: no-repeat;
@@ -91,12 +91,10 @@ div#container.guest {
  */
 footer {
 	display: block;
-
 	position: relative;
 
-	border-top: 2px solid #2c3e50;
+	border-top: 1px solid #595959;
 	background-color: #2c3e50;
-
 	line-height: 100%;
 }
 
@@ -129,6 +127,8 @@ html[dir=rtl] footer:before {
 nav#common {
 	display: block;
 	float: right;
+
+	line-height: 100%;
 }
 
 html[dir=rtl] nav#common {
@@ -137,7 +137,7 @@ html[dir=rtl] nav#common {
 
 nav#common a {
 	display: inline-block;
-	padding: 10px;
+	padding: 0.5em;
 
 	color: white;
 	text-decoration: none;
@@ -161,6 +161,7 @@ ul#window_list {
 	left: 201px;
 	top: 0px;
 
+	line-height: 100%;
 	list-style-type: none;
 	list-style-image: none;
 }
@@ -174,8 +175,7 @@ ul#window_list li {
 	display: inline-block;
 	min-width: 100px;
 
-	margin-right: 2px;
-	padding: 10px;
+	padding: 0.5em;
 	padding-left: 44px;
 
 	position: relative;
@@ -187,9 +187,7 @@ ul#window_list li {
 }
 
 html[dir=rtl] ul#window_list li {
-	margin: 0px;
-	margin-left: 2px;
-	padding: 10px;
+	padding: 0.5em;
 	padding-right: 44px;
 }
 
@@ -248,7 +246,7 @@ ul#navigation {
 	list-style-image: none;
 
 	z-index: 2000;
-	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 }
 
 html[dir=rtl] ul#navigation {
@@ -546,16 +544,18 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 @media (max-height: 900px) {
 	header {
 		position: absolute;
-		width: calc(200px - 20px + 1px);
+		width: 200px;
 		z-index: 2;
 	}
 
-	div#logo {
-		font-size: 0.9em;
+	div#logo,
+	html[dir=rtl] div#logo {
+		padding: 0.5em;
+		background-image: none;
 	}
 
 	div#logo img {
-		height: 20px;
+		height: 3em;
 	}
 
 	nav#language {
@@ -568,5 +568,10 @@ div.window div.scrollable_list.modules div.list_item:hover span.icon {
 
 	div#container {
 		z-index: 1;
+		height: calc(100% - 2em - 1px);
+	}
+
+	ul#navigation {
+		padding-top: 6em;
 	}
 }

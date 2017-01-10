@@ -29,7 +29,7 @@ div.window {
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 
 	transition: top 0.5s, left 0.5s, opacity 0.5s;
-	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 }
 
 html[dir=rtl] div.window {
@@ -564,6 +564,12 @@ div.dialog div.scrollable_list .column a:hover,
 div.window div.scrollable_list .column a:hover {
 	background-color: #595959;
 	color: #FFFFFF;
+}
+
+div.dialog form,
+div.window form {
+	margin: 0;
+	padding: 0;
 }
 
 /**

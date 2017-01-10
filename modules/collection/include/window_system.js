@@ -364,9 +364,6 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 		if (center != undefined && center) {
 			params.top = (self.parent.height() - self.container.height()) / 2;
 			params.left = (self.parent.width() - self.container.width()) / 2;
-
-			// move window to the top
-			params.top -= 50;
 		}
 
 		// apply params and show window
