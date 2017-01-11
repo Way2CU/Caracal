@@ -349,6 +349,12 @@ div.window div.content textarea:focus {
 	transition: all 0.3s;
 }
 
+div.window div.content input:disabled,
+div.window div.content select:disabled,
+div.window div.content textarea:disabled {
+	background-color: #f5f5f5;
+}
+
 div.window button {
 	display: inline-block;
 	min-width: 100px;
