@@ -975,9 +975,13 @@ class links extends Module {
 		if (isset($tag_params['order_by']))
 			$order_by = explode(',', fix_chars($tag_params['order_by']));
 
+		if (isset($tag_params['random']) && $tag_params['random'] == 1)
+			$order_by = array('RAND()');
+
 		if (isset($tag_params['order_asc']))
 			$order_asc = $tag_params['order_asc'] == 1 ? true : false;
 
+		// get links
 		$items = $manager->get_items(
 								$manager->get_field_names(),
 								$conditions,
