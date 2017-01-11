@@ -2,13 +2,13 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item">
+		<input
+			type="hidden"
+			name="'property_data_'.$params['index']"
+			value="htmlspecialchars($params['data'])"
+			cms:eval="name,value"
+			/>
 		<span class="column" style="width: 250px;">
-			<input
-				type="hidden"
-				name="'property_data_'.$params['index']"
-				value="htmlspecialchars($params['data'])"
-				cms:eval="name,value"
-				/>
 			<cms:var param="name" multilanguage="yes"/>
 		</span>
 		<span class="column" style="width: 60px;">

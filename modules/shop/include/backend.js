@@ -420,7 +420,7 @@ Caracal.Shop.save_property = function(button) {
 		data_field.val(JSON.stringify(data));
 
 		// update column
-		row.find('span.column').eq(0).text(data.name[language_handler.current_language]);
+		row.find('span.column').eq(0).html(data.name[language_handler.current_language]);
 	}
 
 	// clear input fields
