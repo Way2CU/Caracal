@@ -1094,7 +1094,7 @@ class links extends Module {
 	 * @param array $children
 	 */
 	public function tag_Group($tag_params, $children) {
-		if (!isset($tag_params['id'])) return;
+		$conditions = array();
 
 		// get parameters
 		if (isset($tag_params['id']))
