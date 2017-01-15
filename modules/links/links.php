@@ -1188,7 +1188,7 @@ class links extends Module {
 		// get groups from database
 		$items = $manager->get_items(
 								$manager->get_field_names(),
-								$conditions,
+								$conditions
 							);
 
 		$template = $this->load_template($tag_params, 'groups_item.xml');
