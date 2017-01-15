@@ -115,10 +115,16 @@ class language_menu extends Module {
 			$request_path = URL::get_request_path();
 
 			// extract parameter values from request path
-			preg_match($pattern, $request_path, $link_params);
-			foreach ($link_params as $key => $value)
-				if (is_int($key))
-					unset($link_params[$key]);
+			if (!is_null($pattern)) {
+				preg_match($pattern, $request_path, $link_params);
+				foreach ($link_params as $key => $value)
+					if (is_int($key))
+						unset($link_params[$key]);
+
+			} else {
+				// there are no parameters matched in URL
+				$link_params = array();
+			}
 		}
 
 		// add link to each language
@@ -198,10 +204,16 @@ class language_menu extends Module {
 			$request_path = URL::get_request_path();
 
 			// extract parameter values from request path
-			preg_match($pattern, $request_path, $link_params);
-			foreach ($link_params as $key => $value)
-				if (is_int($key))
-					unset($link_params[$key]);
+			if (!is_null($pattern))
+				preg_match($pattern, $request_path, $link_params);
+				foreach ($link_params as $key => $value)
+					if (is_int($key))
+						unset($link_params[$key]);
+
+			} else {
+				// there are no parameters matched in URL
+				$link_params = array();
+			}
 		}
 
 		// print language list
