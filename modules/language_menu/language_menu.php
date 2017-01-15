@@ -204,7 +204,7 @@ class language_menu extends Module {
 			$request_path = URL::get_request_path();
 
 			// extract parameter values from request path
-			if (!is_null($pattern))
+			if (!is_null($pattern)) {
 				preg_match($pattern, $request_path, $link_params);
 				foreach ($link_params as $key => $value)
 					if (is_int($key))
