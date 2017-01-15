@@ -1096,7 +1096,12 @@ class links extends Module {
 	public function tag_Group($tag_params, $children) {
 		if (!isset($tag_params['id'])) return;
 
-		$id = fix_id($tag_params['id']);
+		// get parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id($tag_params['id']);
+
+		if (isset($tag_params['text_id']))
+			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// save some CPU time by getting this early
 		if (ModuleHandler::is_loaded('gallery')) {
@@ -1107,26 +1112,93 @@ class links extends Module {
 			$use_images = false;
 		}
 
+		// get manager instances
 		$manager = \Modules\Links\GroupManager::get_instance();
 		$link_manager = \Modules\Links\Manager::get_instance();
 		$membership_manager = \Modules\Links\MembershipManager::get_instance();
 
-		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
+		// get matching group
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-
-		} else {
-			$template = new TemplateHandler('group.xml', $this->path.'templates/');
-		}
-
-		$template->set_mapped_module($this->name);
+		// load template
+		$template = $this->load_template($tag_params, 'group.xml');
 		$template->register_tag_handler('cms:link', $this, 'tag_Link');
 		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
 
-		if (is_object($item)) {
+		if (!is_object($item))
+			return;
+
+		$thumbnail = '';
+
+		if ($use_images) {
+			$first_link_id = $membership_manager->get_item_value('link', array('group' => $item->id));
+
+			// we have some links assigned to the group, get thumbnail
+			if (!empty($first_link_id)) {
+				$image_id = $link_manager->get_item_value('image', array('id' => $first_link_id));
+
+				if (!empty($image_id)) {
+					$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
+					$thumbnail = $gallery->getThumbnailURL($image);
+				}
+			}
+		}
+
+		$params = array(
+					'id'		=> $item->id,
+					'name'		=> $item->name,
+					'text_id'	=> $item->text_id,
+					'thumbnail'	=> $thumbnail,
+				);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Tag handler for printing link groups
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_GroupList($tag_params, $children) {
+		$conditions = array();
+		$manager = \Modules\Links\GroupManager::get_instance();
+		$link_manager = \Modules\Links\Manager::get_instance();
+		$membership_manager = \Modules\Links\MembershipManager::get_instance();
+
+		// save some CPU time by getting this early
+		if (ModuleHandler::is_loaded('gallery')) {
+			$use_images = true;
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
+
+		} else {
+			$use_images = false;
+		}
+
+		// get parameters
+		if (isset($tag_params['id']))
+			$conditions['id'] = fix_id(explode(',', $tag_params['id']));
+
+		if (isset($tag_params['id']))
+			$conditions['text_id'] = fix_chars(explode(',', $tag_params['id']));
+
+		// get groups from database
+		$items = $manager->get_items(
+								$manager->get_field_names(),
+								$conditions
+							);
+
+		$template = $this->load_template($tag_params, 'groups_item.xml');
+		$template->register_tag_handler('cms:link', $this, 'tag_Link');
+		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
+
+		if (count($items) == 0)
+			return;
+
+		foreach ($items as $item) {
 			$thumbnail = '';
 
 			if ($use_images) {
@@ -1144,140 +1216,64 @@ class links extends Module {
 			}
 
 			$params = array(
-						'id'		=> $item->id,
-						'name'		=> $item->name,
-						'text_id'	=> $item->text_id,
-						'thumbnail'	=> $thumbnail,
+						'id'          => $item->id,
+						'name'        => $item->name,
+						'text_id'     => $item->text_id,
+						'thumbnail'   => $thumbnail,
+						'item_change' => URL::make_hyperlink(
+												$this->get_language_constant('change'),
+												window_Open(
+													'groups_change', 	// window id
+													400,				// width
+													$this->get_language_constant('title_groups_change'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'groups_change'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_delete' => URL::make_hyperlink(
+												$this->get_language_constant('delete'),
+												window_Open(
+													'groups_delete', 	// window id
+													400,				// width
+													$this->get_language_constant('title_groups_delete'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'groups_delete'),
+														array('id', $item->id)
+													)
+												)
+											),
+						'item_links'  => URL::make_hyperlink(
+												$this->get_language_constant('links'),
+												window_Open(
+													'groups_links', 	// window id
+													400,				// width
+													$this->get_language_constant('title_groups_links'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'groups_links'),
+														array('id', $item->id)
+													)
+												)
+											),
 					);
 
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();
 		}
-	}
-
-	/**
-	 * Tag handler for printing link groups
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	public function tag_GroupList($tag_params, $children) {
-		$manager = \Modules\Links\GroupManager::get_instance();
-		$link_manager = \Modules\Links\Manager::get_instance();
-		$membership_manager = \Modules\Links\MembershipManager::get_instance();
-
-		// save some CPU time by getting this early
-		if (ModuleHandler::is_loaded('gallery')) {
-			$use_images = true;
-			$gallery = gallery::get_instance();
-			$gallery_manager = GalleryManager::get_instance();
-
-		} else {
-			$use_images = false;
-		}
-
-		$conditions = array();
-
-		if (isset($tag_params['sponsored']) && $tag_params['sponsored'] == '1')
-			$conditions['sponsored'] = 1;
-
-		$items = $manager->get_items(
-								$manager->get_field_names(),
-								$conditions,
-								array('id')
-							);
-
-		if (isset($tag_params['template'])) {
-			if (isset($tag_params['local']) && $tag_params['local'] == 1)
-				$template = new TemplateHandler($tag_params['template'], $this->path.'templates/'); else
-				$template = new TemplateHandler($tag_params['template']);
-		} else {
-			$template = new TemplateHandler('groups_item.xml', $this->path.'templates/');
-		}
-
-		$template->set_mapped_module($this->name);
-		$template->register_tag_handler('cms:link', $this, 'tag_Link');
-		$template->register_tag_handler('cms:link_list', $this, 'tag_LinkList');
-
-		if (count($items) > 0)
-			foreach ($items as $item) {
-
-				$thumbnail = '';
-
-				if ($use_images) {
-					$first_link_id = $membership_manager->get_item_value('link', array('group' => $item->id));
-
-					// we have some links assigned to the group, get thumbnail
-					if (!empty($first_link_id)) {
-						$image_id = $link_manager->get_item_value('image', array('id' => $first_link_id));
-
-						if (!empty($image_id)) {
-							$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
-							$thumbnail = $gallery->getThumbnailURL($image);
-						}
-					}
-				}
-
-				$params = array(
-							'id'          => $item->id,
-							'name'        => $item->name,
-							'text_id'     => $item->text_id,
-							'thumbnail'   => $thumbnail,
-							'item_change' => URL::make_hyperlink(
-													$this->get_language_constant('change'),
-													window_Open(
-														'groups_change', 	// window id
-														400,				// width
-														$this->get_language_constant('title_groups_change'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'groups_change'),
-															array('id', $item->id)
-														)
-													)
-												),
-							'item_delete' => URL::make_hyperlink(
-													$this->get_language_constant('delete'),
-													window_Open(
-														'groups_delete', 	// window id
-														400,				// width
-														$this->get_language_constant('title_groups_delete'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'groups_delete'),
-															array('id', $item->id)
-														)
-													)
-												),
-							'item_links'  => URL::make_hyperlink(
-													$this->get_language_constant('links'),
-													window_Open(
-														'groups_links', 	// window id
-														400,				// width
-														$this->get_language_constant('title_groups_links'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'groups_links'),
-															array('id', $item->id)
-														)
-													)
-												),
-						);
-
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
-			}
 	}
 
 	/**
