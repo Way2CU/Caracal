@@ -309,8 +309,8 @@
 					<cms:category_list
 						template="category_checkbox_list_item.xml"
 						local="1"
-						item_id="$params['id']"
-						cms:eval="item_id"
+						item="$params['id']"
+						cms:eval="item"
 						/>
 				</div>
 			</div>
