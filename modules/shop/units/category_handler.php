@@ -459,7 +459,7 @@ class ShopCategoryHandler {
 				$params = array(
 							'id'           => $item->id,
 							'index'        => $index++,
-							'item_id'      => $item_id,
+							'item'         => $item_id,
 							'parent'       => $item->parent,
 							'image'        => $item->image,
 							'text_id'      => $item->text_id,

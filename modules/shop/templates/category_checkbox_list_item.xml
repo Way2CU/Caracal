@@ -21,8 +21,8 @@
 		<cms:children
 			parent_id="$params['id']"
 			level="$params['level'] + 1"
-			item_id="$params['item_id']"
-			cms:eval="parent_id,level,item_id"
+			item="$params['item']"
+			cms:eval="parent_id,level,item"
 			template="category_checkbox_list_item.xml"
 			local="1"
 			/>
