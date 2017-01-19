@@ -4420,12 +4420,32 @@ class shop extends Module {
 	public function tag_DiscountAppliedList($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'discount_item.xml');
 
-		foreach ($discount_items as $item) {
+		foreach ($this->discounts as $item) {
 			$params = array(
-				'text'   => $item[0],
-				'count'  => $item[1],
-				'amount' => $item[2]
-			);
+					'text'   => $item[0],
+					'count'  => $item[1],
+					'amount' => $item[2]
+				);
+
+			$template->set_local_params($params);
+			$template->restore_xml();
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Render tag for list of qualified promotions.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_QualifiedPromotionList($tag_params, $children) {
+		$template = $this->load_template($tag_params, 'qualified_promotion.xml');
+
+		foreach ($this->promotions as $promotion) {
+			$params = array(
+
+				);
 
 			$template->set_local_params($params);
 			$template->restore_xml();
