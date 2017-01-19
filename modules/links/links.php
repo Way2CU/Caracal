@@ -784,7 +784,7 @@ class links extends Module {
 			$manager->update_items($data, array('id' => $link_id));
 
 			// redirect browser
-			header('Location: '.$url, true, 301);
+			header('Location: '.$url, true, 302);
 		}
 	}
 
