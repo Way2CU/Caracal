@@ -429,8 +429,12 @@ class ShopCategoryHandler {
 					$item_category_ids[] = $membership->category;
 
 			if (isset($tag_params['contains_item']))
-				$conditions['id'] = $item_category_ids; else
-				$conditions['id'] = array('operator' => 'NOT IN', 'value' => $item_category_ids);
+				if ($tag_params['contains_item'] == 1)
+					$conditions['id'] = $item_category_ids; else
+					$conditions['id'] = array(
+							'operator' => 'NOT IN',
+							'value'    => $item_category_ids
+						);
 		}
 
 		// get order list
