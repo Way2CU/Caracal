@@ -11,8 +11,8 @@ class ShopCategoryHandler {
 	private $path;
 
 	/**
-	* Constructor
-	*/
+	 * Constructor
+	 */
 	protected function __construct($parent) {
 		$this->parent = $parent;
 		$this->name = $this->parent->name;
@@ -20,8 +20,8 @@ class ShopCategoryHandler {
 	}
 
 	/**
-	* Public function that creates a single instance
-	*/
+	 * Public function that creates a single instance
+	 */
 	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
@@ -427,6 +427,10 @@ class ShopCategoryHandler {
 			if (count($membership_items) > 0)
 				foreach($membership_items as $membership)
 					$item_category_ids[] = $membership->category;
+
+			if (isset($tag_params['contains_item']))
+				$conditions['id'] = $item_category_ids; else
+				$conditions['id'] = array('operator' => 'NOT IN', 'value' => $item_category_ids);
 		}
 
 		// get order list
