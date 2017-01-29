@@ -4444,7 +4444,8 @@ class shop extends Module {
 
 		foreach ($this->promotions as $promotion) {
 			$params = array(
-
+					'name'  => $promotion->get_name(),
+					'title' => $promotion->get_title()
 				);
 
 			$template->set_local_params($params);
