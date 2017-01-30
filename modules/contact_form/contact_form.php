@@ -609,8 +609,8 @@ class contact_form extends Module {
 					break;
 
 				case 'transfer-param':
-					if (isset($transfer_params[$field->id]))
-						$value = $transfer_params[$field->id]; else
+					if (isset($transfer_params[$field->name]))
+						$value = $transfer_params[$field->name]; else
 						$value = $field->value;
 
 					// prepare data for insertion
