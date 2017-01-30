@@ -151,6 +151,15 @@ class Handler {
 			$conditions['item'] = fix_id($tag_params['item']); else
 			$conditions['item'] = -1;
 
+		if (isset($tag_params['item_uid'])) {
+			$item_manager = ItemManager::get_instance();
+			$item = $item_manager->get_single_item(array('id'), array('uid' => fix_chars($tag_params['item_uid'])));
+
+			if (is_object($item))
+				$conditions['item'] = $item->id; else
+				$conditions['item'] = -1;
+		}
+
 		if (isset($tag_params['text_id']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
