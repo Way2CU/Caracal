@@ -188,7 +188,8 @@ class Handler {
 				'name'      => $item->name,
 				'type'      => $item->type,
 				'value'     => unserialize($item->value),
-				'raw_value' => $item->value
+				'raw_value' => $item->value,
+				'data'      => json_encode($data)
 			);
 
 		// parse template
@@ -213,6 +214,15 @@ class Handler {
 		// prepare conditions
 		if (isset($tag_params['item']))
 			$conditions['item'] = fix_id($tag_params['item']);
+
+		if (isset($tag_params['item_uid'])) {
+			$item_manager = ItemManager::get_instance();
+			$item = $item_manager->get_single_item(array('id'), array('uid' => fix_chars($tag_params['item_uid'])));
+
+			if (is_object($item))
+				$conditions['item'] = $item->id; else
+				$conditions['item'] = -1;
+		}
 
 		if (isset($tag_params['starts_with']))
 			$conditions['text_id'] = array(
