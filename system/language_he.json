@@ -15,7 +15,7 @@
     "format_time_short": "H:i:s",
     "import": "ייבא",
     "message_server_error": "השרת חווה את הבעיה הבאה:",
-    "message_client_error_404": "Page or file you requested could not be found. Sorry about that.",
+    "message_client_error_404": "העמוד או הקובץ שבקשתם לא נמצא. עמכם הסליחה.",
     "new": "חדש",
     "next": "הבא",
     "open": "פתח",
@@ -32,5 +32,5 @@
     "upload": "העלה",
     "refresh": "רענן",
     "reload": "טען מחדש",
-    "back_to_home": "Back to home page"
+    "back_to_home": "חזרה לעמוד הבית"
 }
