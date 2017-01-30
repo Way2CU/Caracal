@@ -401,6 +401,12 @@ class TemplateHandler {
 							$param_value = isset($this->template_params[$param_name]) ? $this->template_params[$param_name] : null;
 						}
 
+						// get new tag name
+						$tag_name = 'param';
+						if (isset($child->tagAttrs['tag']))
+							$tag_name = $child->tagAttrs['tag'];
+
+						// prepare attributes
 						$target_name = isset($child->tagAttrs['target']) ? $child->tagAttrs['target'] : $param_name;
 						$tag_attributes = array(
 								'name'  => $target_name,
@@ -408,7 +414,7 @@ class TemplateHandler {
 							);
 
 						// create new tag
-						$children[] = new XMLTag('param', $tag_attributes);
+						$children[] = new XMLTag($tag_name, $tag_attributes);
 					}
 
 					// transfer control to specified module
