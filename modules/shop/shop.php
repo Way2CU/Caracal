@@ -1301,25 +1301,23 @@ class shop extends Module {
 	/**
 	 * Method used with promotions to register with main module.
 	 *
-	 * @param string $name
 	 * @param object $promotion
 	 */
-	public function registerPromotion($name, &$promotion) {
-		if (!array_key_exists($name, $this->promotions))
-			$this->promotions[$name] = $promotion; else
-			throw new Exception("Promotion '{$name}' is already registered with the system.");
+	public function registerPromotion(&$promotion) {
+		if (!array_key_exists($promotion->name, $this->promotions))
+			$this->promotions[$promotion->name] = $promotion; else
+			throw new Exception("Promotion '{$promotion->name}' is already registered with the system.");
 	}
 
 	/**
 	 * Register discount to be used with promotions.
 	 *
-	 * @param string $name
 	 * @param object $discount
 	 */
-	public function registerDiscount($name, &$discount) {
-		if (!array_key_exists($name, $this->discounts))
-			$this->discounts[$name] = $discount; else
-			throw new Exception("Discount '{$name}' is already registered with the system.");
+	public function registerDiscount(&$discount) {
+		if (!array_key_exists($discount->name, $this->discounts))
+			$this->discounts[$discount->name] = $discount; else
+			throw new Exception("Discount '{$discount->name}' is already registered with the system.");
 	}
 
 	/**
