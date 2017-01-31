@@ -4104,6 +4104,7 @@ class shop extends Module {
 				$template->register_tag_handler('cms:payment_method', $this, 'tag_PaymentMethod');
 				$template->register_tag_handler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
 				$template->register_tag_handler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+				$template->register_tag_handler('cms:qualified_promotion_list', $this, 'tag_PromotionList');
 
 				// get fixed country if set
 				$fixed_country = '';
@@ -4119,13 +4120,14 @@ class shop extends Module {
 					$buyer_terms_link = $_SESSION['buyer_terms_link'];
 
 				$params = array(
-					'include_shipping'	=> $include_shipping,
-					'fixed_country'		=> $fixed_country,
-					'bad_fields'		=> $bad_fields,
-					'recurring'			=> $transaction_type == TransactionType::SUBSCRIPTION,
-					'show_captcha'		=> $count > 3,
-					'terms_link'		=> $buyer_terms_link,
-					'payment_method'	=> isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null
+					'include_shipping'     => $include_shipping,
+					'fixed_country'        => $fixed_country,
+					'bad_fields'           => $bad_fields,
+					'recurring'            => $transaction_type == TransactionType::SUBSCRIPTION,
+					'show_captcha'         => $count > 3,
+					'terms_link'           => $buyer_terms_link,
+					'payment_method'       => isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null,
+					'qualified_promotions' => $this->get_qualified_promotion_count()
 				);
 
 				$template->restore_xml();
@@ -4439,13 +4441,17 @@ class shop extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_QualifiedPromotionList($tag_params, $children) {
+	public function tag_PromotionList($tag_params, $children) {
+		$transaction = Transaction::get_current();
 		$template = $this->load_template($tag_params, 'qualified_promotion.xml');
+
+		$only_qualified
 
 		foreach ($this->promotions as $promotion) {
 			$params = array(
-					'name'  => $promotion->get_name(),
-					'title' => $promotion->get_title()
+					'name'      => $promotion->get_name(),
+					'title'     => $promotion->get_title(),
+					'qualifies' => $promotion->qualifies($transaction)
 				);
 
 			$template->set_local_params($params);
@@ -4624,6 +4630,22 @@ class shop extends Module {
 			array($price, $period, $setup, $trial_period),
 			$template
 		);
+
+		return $result;
+	}
+
+	/**
+	 * Get number of quailified promotions.
+	 *
+	 * @return integer
+	 */
+	public function get_qualified_promotion_count() {
+		$result = 0;
+		$transaction = Transaction::get_current();
+
+		foreach ($this->promotions as $promotion)
+			if ($promotion->qualifies($transaction))
+				$result++;
 
 		return $result;
 	}
