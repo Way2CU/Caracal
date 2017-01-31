@@ -4452,7 +4452,7 @@ class shop extends Module {
 
 		foreach ($this->promotions as $promotion) {
 			// if specified skip unqualified promotions
-			if ($only_qualified && !$promotion->qualifies($transaction)
+			if ($only_qualified && !$promotion->qualifies($transaction))
 				continue;
 
 			// prepare parameters
