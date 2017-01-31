@@ -4445,15 +4445,24 @@ class shop extends Module {
 		$transaction = Transaction::get_current();
 		$template = $this->load_template($tag_params, 'qualified_promotion.xml');
 
-		$only_qualified
+		// get configuration parameters
+		$only_qualified = true;
+		if (isset($tag_params['only_qualified']))
+			$only_qualified = $tag_params['only_qualified'] == 1;
 
 		foreach ($this->promotions as $promotion) {
+			// if specified skip unqualified promotions
+			if ($only_qualified && !$promotion->qualifies($transaction)
+				continue;
+
+			// prepare parameters
 			$params = array(
 					'name'      => $promotion->get_name(),
 					'title'     => $promotion->get_title(),
 					'qualifies' => $promotion->qualifies($transaction)
 				);
 
+			// parse template
 			$template->set_local_params($params);
 			$template->restore_xml();
 			$template->parse();
