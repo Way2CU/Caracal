@@ -1304,9 +1304,10 @@ class shop extends Module {
 	 * @param object $promotion
 	 */
 	public function registerPromotion(&$promotion) {
-		if (!array_key_exists($promotion->name, $this->promotions))
-			$this->promotions[$promotion->name] = $promotion; else
-			throw new Exception("Promotion '{$promotion->name}' is already registered with the system.");
+		$name = $promotion->get_name();
+		if (!array_key_exists($name, $this->promotions))
+			$this->promotions[$name] = $promotion; else
+			throw new Exception("Promotion '{$name}' is already registered with the system.");
 	}
 
 	/**
@@ -1315,9 +1316,10 @@ class shop extends Module {
 	 * @param object $discount
 	 */
 	public function registerDiscount(&$discount) {
-		if (!array_key_exists($discount->name, $this->discounts))
-			$this->discounts[$discount->name] = $discount; else
-			throw new Exception("Discount '{$discount->name}' is already registered with the system.");
+		$name = $discount->get_name();
+		if (!array_key_exists($name, $this->discounts))
+			$this->discounts[$dname] = $discount; else
+			throw new Exception("Discount '{$name}' is already registered with the system.");
 	}
 
 	/**
