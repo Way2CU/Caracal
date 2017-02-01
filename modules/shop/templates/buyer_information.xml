@@ -656,6 +656,7 @@
 									type="radio"
 									name="qualified_promotion"
 									value=""
+									checked="checked"
 									/>
 								<span><cms:text constant="no_promotion" module="shop"/></span>
 							</label>
