@@ -661,6 +661,11 @@
 								<span><cms:text constant="no_promotion" module="shop"/></span>
 							</label>
 							<cms:qualified_promotion_list only_qualified="1"/>
+
+							<div class="checkout_controls">
+								<button class="previous"><cms:text constant="back"/></button>
+								<button class="next"><cms:text constant="next"/></button>
+							</div>
 						</div>
 					</cms:if>
 
