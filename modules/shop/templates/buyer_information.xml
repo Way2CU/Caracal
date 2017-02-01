@@ -651,6 +651,7 @@
 					<cms:if condition="$params['qualified_promotions'] > 0">
 						<div class="page" id="qualified_promotions">
 							<h1><cms:text constant="title_qualified_promotions" module="shop"/></h1>
+							<cms:qualified_promotion_list only_qualified="1"/>
 						</div>
 					</cms:if>
 
