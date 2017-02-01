@@ -320,7 +320,7 @@
     "title_warehouse_change": "חנות: שנה מחסן",
     "title_warehouse_delete": "חנות: מחק מחסן",
     "title_warehouses": "חנות:מחסנים",
-    "title_qualified_promotions": "Promotions",
+    "title_qualified_promotions": "מבצעים",
     "total_amount": "סהכ:",
     "update_currencies": "עדכן רשימת מטבעות",
     "values": "ערכים",
@@ -345,5 +345,5 @@
     "codes": "קודים",
     "generate_codes": "צור קודים",
     "add_code": "הוסף קוד",
-    "no_promotion": "I don't want be a part of promotion."
+    "no_promotion": "איני רוצה להיות חלק ממבצע"
 }
