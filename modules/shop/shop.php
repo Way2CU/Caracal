@@ -4442,7 +4442,6 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_PromotionList($tag_params, $children) {
-		$transaction = Transaction::get_current();
 		$template = $this->load_template($tag_params, 'qualified_promotion.xml');
 
 		// get configuration parameters
@@ -4452,14 +4451,14 @@ class shop extends Module {
 
 		foreach ($this->promotions as $promotion) {
 			// if specified skip unqualified promotions
-			if ($only_qualified && !$promotion->qualifies($transaction))
+			if ($only_qualified && !$promotion->qualifies())
 				continue;
 
 			// prepare parameters
 			$params = array(
 					'name'      => $promotion->get_name(),
 					'title'     => $promotion->get_title(),
-					'qualifies' => $promotion->qualifies($transaction)
+					'qualifies' => $promotion->qualifies()
 				);
 
 			// parse template
@@ -4650,10 +4649,9 @@ class shop extends Module {
 	 */
 	public function get_qualified_promotion_count() {
 		$result = 0;
-		$transaction = Transaction::get_current();
 
 		foreach ($this->promotions as $promotion)
-			if ($promotion->qualifies($transaction))
+			if ($promotion->qualifies())
 				$result++;
 
 		return $result;
