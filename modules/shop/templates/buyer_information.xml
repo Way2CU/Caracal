@@ -651,6 +651,14 @@
 					<cms:if condition="$params['qualified_promotions'] > 0">
 						<div class="page" id="qualified_promotions">
 							<h1><cms:text constant="title_qualified_promotions" module="shop"/></h1>
+							<label class="radio">
+								<input
+									type="radio"
+									name="qualified_promotion"
+									value=""
+									/>
+								<span><cms:text constant="no_promotion" module="shop"/></span>
+							</label>
 							<cms:qualified_promotion_list only_qualified="1"/>
 						</div>
 					</cms:if>
