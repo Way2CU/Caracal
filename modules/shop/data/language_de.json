@@ -344,5 +344,6 @@
     "format_coupon_timeout": "yyyy-mm-dd hh:mm:ss",
     "codes": "Codes",
     "generate_codes": "Generate codes",
-    "add_code": "Add code"
+    "add_code": "Add code",
+    "no_promotion": "I don't want be a part of promotion."
 }

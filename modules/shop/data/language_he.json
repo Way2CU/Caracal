@@ -344,5 +344,6 @@
     "format_coupon_timeout": "yyyy-mm-dd hh:mm:ss",
     "codes": "קודים",
     "generate_codes": "צור קודים",
-    "add_code": "הוסף קוד"
+    "add_code": "הוסף קוד",
+    "no_promotion": "I don't want be a part of promotion."
 }

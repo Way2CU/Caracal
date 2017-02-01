@@ -344,5 +344,6 @@
     "format_coupon_timeout": "yyyy-mm-dd hh:mm:ss",
     "codes": "Кодови",
     "generate_codes": "Генерисање кодова",
-    "add_code": "Унос кода"
+    "add_code": "Унос кода",
+    "no_promotion": "I don't want be a part of promotion."
 }
