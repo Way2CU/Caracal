@@ -8,6 +8,6 @@
 			value="$params['name']"
 			cms:eval="value"
 			/>
-		<span><cms:var param="title" multilanguage="yes"/></span>
+		<span><cms:var param="title"/></span>
 	</label>
 </document>
