@@ -320,7 +320,7 @@
     "title_warehouse_change": "Продавница: Измена складишта",
     "title_warehouse_delete": "Продавница: Брисање складишта",
     "title_warehouses": "Продавница: Складишта",
-    "title_qualified_promotions": "Promotions",
+    "title_qualified_promotions": "Промоције",
     "total_amount": "Укупно:",
     "update_currencies": "Освежи листу валута",
     "values": "Вредности",
@@ -345,5 +345,5 @@
     "codes": "Кодови",
     "generate_codes": "Генерисање кодова",
     "add_code": "Унос кода",
-    "no_promotion": "I don't want be a part of promotion."
+    "no_promotion": "Не желим да учествујем у промоцији."
 }
