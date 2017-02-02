@@ -168,6 +168,7 @@ class ShopTransactionsHandler {
 		// register tag handler
 		$template->register_tag_handler('cms:item_list', $this, 'tag_TransactionItemList');
 		$template->register_tag_handler('cms:transaction_status', $this, 'tag_TransactionStatus');
+		$template->register_tag_handler('cms:applied_promotions', $this->parent, 'tag_AppliedPromotions');
 
 		$template->restore_xml();
 		$template->set_local_params($params);

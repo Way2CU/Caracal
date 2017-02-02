@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<div class="list_item">
+		<span class="column">
+			<cms:var param="promotion_title"/><br/>
+			<cms:var param="discount_title"/>
+		</span>
+	</div>
+</document>
