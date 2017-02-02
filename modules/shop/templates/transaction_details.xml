@@ -225,49 +225,48 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="scrollable_list box right" style="width: 475px;">
-			<div class="list_header">
-				<span class="column" style="width: 220px;">
-					<cms:text constant="column_name" module="shop"/>
-				</span>
-				<span class="column" style="width: 70px;">
-					<cms:text constant="column_count" module="shop"/>
-				</span>
-				<span class="column" style="width: 70px;">
-					<cms:text constant="column_price" module="shop"/>
-				</span>
-				<span class="column" style="width: 70px;">
-					<cms:text constant="column_total" module="shop"/>
-				</span>
-			</div>
-			<div class="list_content" style="height: 470px">
-				<cms:item_list
-					transaction="$params['id']"
-					cms:eval="transaction"
-					/>
-			</div>
+	<div class="scrollable_list box right" style="width: 475px;">
+		<div class="list_header">
+			<span class="column" style="width: 220px;">
+				<cms:text constant="column_name" module="shop"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<cms:text constant="column_count" module="shop"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<cms:text constant="column_price" module="shop"/>
+			</span>
+			<span class="column" style="width: 70px;">
+				<cms:text constant="column_total" module="shop"/>
+			</span>
 		</div>
-		<div style="clear: both;"/>
-
-		<div class="button_bar">
-			<button
-				type="button"
-				onclick="javascript:Caracal.Shop.print_transaction(this);"
-				data-print-url="$params['print_url']"
-				cms:eval="data-print-url"
-				>
-				<cms:text constant="print"/>
-			</button>
-			<button
-				type="button"
-				onclick="$params['cancel_action']"
-				cms:eval="onclick"
-				>
-				<cms:text constant="close"/>
-			</button>
+		<div class="list_content" style="height: 470px">
+			<cms:item_list
+				transaction="$params['id']"
+				cms:eval="transaction"
+				/>
 		</div>
+	</div>
+	<div style="clear: both;"/>
 
+	<div class="button_bar">
+		<button
+			type="button"
+			onclick="javascript:Caracal.Shop.print_transaction(this);"
+			data-print-url="$params['print_url']"
+			cms:eval="data-print-url"
+			>
+			<cms:text constant="print"/>
+		</button>
+		<button
+			type="button"
+			onclick="$params['cancel_action']"
+			cms:eval="onclick"
+			>
+			<cms:text constant="close"/>
+		</button>
 	</div>
 
 	<script type="text/javascript">
@@ -275,8 +274,8 @@
 
 		var notebook = new Notebook('transaction_details_notebook');
 		notebook
-			.setPageTitle(0, text['tab_general'])
-			.setPageTitle(1, text['tab_shipping'])
-			.setPageTitle(2, text['tab_promotions']);
+		.setPageTitle(0, text['tab_general'])
+		.setPageTitle(1, text['tab_shipping'])
+		.setPageTitle(2, text['tab_promotions']);
 	</script>
 </document>
