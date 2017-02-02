@@ -4419,7 +4419,7 @@ class shop extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_DiscountAppliedList($tag_params, $children) {
+	public function tag_DiscountsAppliedList($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'discount_item.xml');
 
 		foreach ($this->discounts as $item) {
