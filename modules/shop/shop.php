@@ -3397,16 +3397,16 @@ class shop extends Module {
 
 		// get transaction from database
 		$transaction = $transaction_manager->get_single_item(
-			array('id', 'buyer'),
-			array('uid' => $transaction_uid)
-		);
+				array('id', 'buyer'),
+				array('uid' => $transaction_uid)
+			);
 
 		// try to get buyer from the system based on uid
 		if (isset($buyer_data['uid']))
 			$buyer = $buyer_manager->get_single_item(
-				$buyer_manager->get_field_names(),
-				array('uid' => $buyer_data['uid'])
-			);
+					$buyer_manager->get_field_names(),
+					array('uid' => $buyer_data['uid'])
+				);
 
 		// update buyer information
 		if (is_object($transaction)) {
@@ -3425,9 +3425,9 @@ class shop extends Module {
 
 			// update transaction buyer
 			$transaction_manager->update_items(
-				array('buyer'	=> $buyer_id),
-				array('id'		=> $transaction->id)
-			);
+					array('buyer'	=> $buyer_id),
+					array('id'		=> $transaction->id)
+				);
 
 			$result = true;
 

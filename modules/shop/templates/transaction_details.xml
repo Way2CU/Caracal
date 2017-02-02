@@ -2,6 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="transaction_details_notebook" class="box left" style="width: 300px;">
+		<!-- General tab -->
 		<div>
 			<label>
 				<span><cms:text constant="label_full_name" module="shop"/></span>
@@ -210,53 +211,70 @@
 				</textarea>
 			</label>
 		</div>
-	</div>
-	<div class="scrollable_list box right" style="width: 475px;">
-		<div class="list_header">
-			<span class="column" style="width: 220px;">
-				<cms:text constant="column_name" module="shop"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_count" module="shop"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_price" module="shop"/>
-			</span>
-			<span class="column" style="width: 70px;">
-				<cms:text constant="column_total" module="shop"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 470px">
-			<cms:item_list
-				transaction="$params['id']"
-				cms:eval="transaction"
-				/>
-		</div>
-	</div>
-	<div style="clear: both;"/>
 
-	<div class="button_bar">
-		<button
-			type="button"
-			onclick="javascript:Caracal.Shop.print_transaction(this);"
-			data-print-url="$params['print_url']"
-			cms:eval="data-print-url"
-			>
-			<cms:text constant="print"/>
-		</button>
-		<button
-			type="button"
-			onclick="$params['cancel_action']"
-			cms:eval="onclick"
-			>
-			<cms:text constant="close"/>
-		</button>
-	</div>
+		<!-- Promotions tab -->
+		<div>
+			<div class="scrollable_list">
+				<div class="list_header">
+					<span class="column">
+						<cms:text constant="column_promotion_discounts" module="shop"/>
+					</span>
+				</div>
 
-	<script type="text/javascript">
-		var notebook = new Notebook('transaction_details_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_shipping'));
-	</script>
-</document>
+				<div class="list_content" style="height: 600px">
+				</div>
+			</div>
+		</div>
+
+		<div class="scrollable_list box right" style="width: 475px;">
+			<div class="list_header">
+				<span class="column" style="width: 220px;">
+					<cms:text constant="column_name" module="shop"/>
+				</span>
+				<span class="column" style="width: 70px;">
+					<cms:text constant="column_count" module="shop"/>
+				</span>
+				<span class="column" style="width: 70px;">
+					<cms:text constant="column_price" module="shop"/>
+				</span>
+				<span class="column" style="width: 70px;">
+					<cms:text constant="column_total" module="shop"/>
+				</span>
+			</div>
+			<div class="list_content" style="height: 470px">
+				<cms:item_list
+					transaction="$params['id']"
+					cms:eval="transaction"
+					/>
+			</div>
+		</div>
+		<div style="clear: both;"/>
+
+		<div class="button_bar">
+			<button
+				type="button"
+				onclick="javascript:Caracal.Shop.print_transaction(this);"
+				data-print-url="$params['print_url']"
+				cms:eval="data-print-url"
+				>
+				<cms:text constant="print"/>
+			</button>
+			<button
+				type="button"
+				onclick="$params['cancel_action']"
+				cms:eval="onclick"
+				>
+				<cms:text constant="close"/>
+			</button>
+		</div>
+
+		<script type="text/javascript">
+			var text = language_handler.getTextArray('shop', ['tab_general', 'tab_shipping', 'tab_promotions']);
+
+			var notebook = new Notebook('transaction_details_notebook');
+			notebook
+				.setPageTitle(0, text['tab_general'])
+				.setPageTitle(1, text['tab_shipping'])
+				.setPageTitle(2, text['tab_promotions']);
+		</script>
+	</document>
