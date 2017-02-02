@@ -3361,7 +3361,7 @@ class shop extends Module {
 				$promotion_manager->insert_item($data);
 
 				// apply discount
-				$discount_amounts = array_merge($discount_amounts, $discount->apply($transaction));
+				$discount_amounts []= $discount->apply($transaction);
 				$promotion_count++;
 			}
 
