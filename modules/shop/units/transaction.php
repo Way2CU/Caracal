@@ -37,18 +37,21 @@ final class Transaction {
 	/**
 	 * Get transaction object based on specified unique id.
 	 *
-	 * @param string $transaction_id
+	 * @param mixed $transaction_id
 	 * @return object
 	 * @throws UnknownTransactionError
 	 */
 	public static function get($transaction_id) {
 		$manager = self::get_manager();
 
+		// prepare conditions
+		$conditions = array();
+		if (is_numeric($transaction_id)) {
+			$conditions['id'] = $transaction_id; else
+			$conditions['uid'] = $transaction_id;
+
 		// get transaction
-		$transaction = $manager->get_single_item(
-			$manager->get_field_names(),
-			array('uid' => $transaction_id)
-		);
+		$transaction = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// make sure transaction is valid
 		if (!is_object($transaction))
