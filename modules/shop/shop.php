@@ -4429,7 +4429,7 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_AppliedPromotions($tag_params, $children) {
-		$template = $this->load_template($tag_params, 'discount_item.xml');
+		$template = $this->load_template($tag_params, 'promotion_item.xml');
 		$promotions = Transaction::get_promotions();
 
 		if (count($promotions) == 0)

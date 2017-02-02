@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<tr>
+		<td colspan="3"><cms:var param="promotion"/></td>
+		<td colspan="3"><cms:var param="discount"/></td>
+	</tr>
+</document>
