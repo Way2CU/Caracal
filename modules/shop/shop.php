@@ -3343,6 +3343,7 @@ class shop extends Module {
 
 		// remove associated promotions from the table
 		$discount_items = array();
+		$promotion_count = 0;
 		$promotion_manager->delete_items(array('transaction' => $result['id']));
 
 		foreach ($this->promotions as $promotion)
@@ -3361,7 +3362,10 @@ class shop extends Module {
 
 				// apply discount
 				$discount_items = array_merge($discount_items, $discount->apply($transaction));
+				$promotion_count++;
 			}
+
+		$result['promotion_count'] = $promotion_count;
 
 		// store discounts to transaction
 		$_SESSION['transaction']['discounts'] = $discount_items;
