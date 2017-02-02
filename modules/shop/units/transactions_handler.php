@@ -10,7 +10,7 @@ use Modules\Shop\Item\Manager as ItemManager;
 
 class ShopTransactionsHandler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
@@ -18,9 +18,9 @@ class ShopTransactionsHandler {
 	* Constructor
 	*/
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
@@ -73,7 +73,7 @@ class ShopTransactionsHandler {
 
 		$params = array(
 			'link_reload'	=> URL::make_hyperlink(
-							$this->_parent->get_language_constant('reload'),
+							$this->parent->get_language_constant('reload'),
 							window_ReloadContent('shop_transactions')
 						)
 			);
@@ -145,7 +145,7 @@ class ShopTransactionsHandler {
 				'print_url'			=> URL::make_query(
 											'backend_module',
 											'transfer_control',
-											array('module', $this->_parent->name),
+											array('module', $this->parent->name),
 											array('backend_action', 'transactions'),
 											array('sub_action', 'print'),
 											array('id', $transaction->id)
@@ -302,9 +302,9 @@ class ShopTransactionsHandler {
 		}
 
 		// load template
-		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::get_instance($this->_parent);
+		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::get_instance($this->parent);
 
-		$template = $this->_parent->load_template($tag_params, 'transaction_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'transaction_list_item.xml');
 		$template->set_template_params_from_array($children);
 		$template->register_tag_handler('cms:item_list', $this, 'tag_TransactionItemList');
 		$template->register_tag_handler('cms:address', $delivery_address_handler, 'tag_DeliveryAddress');
@@ -323,7 +323,7 @@ class ShopTransactionsHandler {
 		if (count($items) > 0)
 			foreach($items as $item) {
 				// prepare window parameters
-				$title = $this->_parent->get_language_constant('title_transaction_details');
+				$title = $this->parent->get_language_constant('title_transaction_details');
 				$title .= ' '.$item->uid;
 				$window = 'shop_transaction_details_'.$item->id;
 
@@ -333,8 +333,8 @@ class ShopTransactionsHandler {
 					$name = $buyer_names[$item->buyer];
 
 				// prepare language constants
-				$transaction_status = $this->_parent->get_language_constant(TransactionStatus::$reverse[$item->status]);
-				$transaction_type = $this->_parent->get_language_constant(TransactionType::$reverse[$item->type]);
+				$transaction_status = $this->parent->get_language_constant(TransactionStatus::$reverse[$item->status]);
+				$transaction_type = $this->parent->get_language_constant(TransactionType::$reverse[$item->type]);
 
 				// prepare template parameters
 				$params = array(
@@ -358,7 +358,7 @@ class ShopTransactionsHandler {
 							'remark'			=> $item->remark,
 							'timestamp'			=> $item->timestamp,
 							'item_details'		=> URL::make_hyperlink(
-													$this->_parent->get_language_constant('details'),
+													$this->parent->get_language_constant('details'),
 													window_Open(
 														$window, 810, $title, true, false,
 														URL::make_query(
@@ -462,8 +462,8 @@ class ShopTransactionsHandler {
 			}
 
 		if (count($items) > 0) {
-			$sizes_handler = ShopItemSizesHandler::get_instance($this->_parent);
-			$template = $this->_parent->load_template($tag_params, 'transaction_details_item.xml');
+			$sizes_handler = ShopItemSizesHandler::get_instance($this->parent);
+			$template = $this->parent->load_template($tag_params, 'transaction_details_item.xml');
 			$template->set_template_params_from_array($children);
 			$template->register_tag_handler('cms:value_list', $sizes_handler, 'tag_ValueList');
 
@@ -479,7 +479,7 @@ class ShopTransactionsHandler {
 	 * Print transaction status
 	 */
 	public function tag_TransactionStatus($tag_params, $children) {
-		$template = $this->_parent->load_template($tag_params, 'transaction_status_option.xml');
+		$template = $this->parent->load_template($tag_params, 'transaction_status_option.xml');
 		$template->set_template_params_from_array($children);
 		$transaction = null;
 
@@ -526,7 +526,7 @@ class ShopTransactionsHandler {
 		foreach ($status_list as $id => $constant) {
 			$params = array(
 					'id'		=> $id,
-					'text'		=> $this->_parent->get_language_constant($constant),
+					'text'		=> $this->parent->get_language_constant($constant),
 					'selected'	=> $active
 				);
 
