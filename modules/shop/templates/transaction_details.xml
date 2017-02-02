@@ -268,13 +268,15 @@
 			</button>
 		</div>
 
-		<script type="text/javascript">
-			var text = language_handler.getTextArray('shop', ['tab_general', 'tab_shipping', 'tab_promotions']);
+	</div>
 
-			var notebook = new Notebook('transaction_details_notebook');
-			notebook
-				.setPageTitle(0, text['tab_general'])
-				.setPageTitle(1, text['tab_shipping'])
-				.setPageTitle(2, text['tab_promotions']);
-		</script>
-	</document>
+	<script type="text/javascript">
+		var text = language_handler.getTextArray('shop', ['tab_general', 'tab_shipping', 'tab_promotions']);
+
+		var notebook = new Notebook('transaction_details_notebook');
+		notebook
+			.setPageTitle(0, text['tab_general'])
+			.setPageTitle(1, text['tab_shipping'])
+			.setPageTitle(2, text['tab_promotions']);
+	</script>
+</document>
