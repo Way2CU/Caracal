@@ -4435,8 +4435,36 @@ class shop extends Module {
 		if (count($promotions) == 0)
 			return;
 
-		foreach ($promotions as $promotion) {
-			$template->set_local_params($promotion);
+		foreach ($promotions as $data) {
+			$promotion_name = $data['promotion'];
+			$discount_name = $data['discount'];
+
+			// get promotion title
+			if (isset($this->promotions[$promotion_name])) {
+				$promotion = $this->promotions[$promotion_name];
+				$promotion_title = $promotion->get_title();
+			} else {
+				$promotion_title = $promotion_name;
+			}
+
+			// get discount title
+			if (isset($this->discounts[$discount_name])) {
+				$discount = $this->discounts[$discount_name];
+				$discount_title = $discount->get_title();
+			} else {
+				$discount_title = $discount_name;
+			}
+
+			// prepare template parameters
+			$params = array(
+					'promotion'       => $promotion_name,
+					'promotion_title' => $promotion_title,
+					'discount'        => $discount_name,
+					'discount_title'  => $discount_title
+				);
+
+			// parse template
+			$template->set_local_params($params);
 			$template->restore_xml();
 			$template->parse();
 		}

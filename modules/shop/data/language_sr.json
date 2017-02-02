@@ -16,6 +16,7 @@
     "order_categories": "Измена редоследа",
     "column_code": "Код",
     "column_times_used": "Кориштен",
+    "column_promotion": "Promotion",
     "column_discount": "Попуст",
     "column_discounted_item_name": "Артикал на попусту",
     "column_discount_amount": "Свота",

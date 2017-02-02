@@ -16,6 +16,7 @@
     "order_categories": "Set order",
     "column_code": "Code",
     "column_times_used": "Used",
+    "column_promotion": "Promotion",
     "column_discount": "скидки",
     "column_discounted_item_name": "Позиция со скидкой",
     "column_discount_amount": "Сумма",

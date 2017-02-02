@@ -108,9 +108,8 @@
 
 							<cms:if condition="$params['promotions'] > 0">
 								<tr>
-									<th colspan="6">
-										<cms:text constant="column_discounted_item_name" module="shop"/>
-									</th>
+									<th colspan="3"><cms:text constant="column_promotion" module="shop"/></th>
+									<th colspan="3"><cms:text constant="column_discount" module="shop"/></th>
 								</tr>
 								<cms:applied_promotions/>
 							</cms:if>

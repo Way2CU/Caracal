@@ -16,6 +16,7 @@
 	"order_categories": "Set order",
 	"column_code": "Code",
 	"column_times_used": "Used",
+	"column_promotion": "Promotion",
 	"column_discount": "Discount",
 	"column_discounted_item_name": "Discounted item",
 	"column_discount_amount": "Amount",
