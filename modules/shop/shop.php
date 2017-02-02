@@ -4430,7 +4430,13 @@ class shop extends Module {
 	 */
 	public function tag_AppliedPromotions($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'promotion_item.xml');
-		$promotions = Transaction::get_promotions();
+
+		// check if transaction id was specified
+		$transaction_id = null;
+		if (isset($tag_params['transaction']))
+			$transaction_id = fix_chars($tag_params['transaction']);
+
+		$promotions = Transaction::get_promotions($transaction_id);
 
 		if (count($promotions) == 0)
 			return;

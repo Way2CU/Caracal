@@ -223,8 +223,10 @@
 
 				<div class="list_content" style="height: 400px">
 					<cms:applied_promotions
+						transaction="$params['id']"
 						template="transaction_promotion_list_item.xml"
 						local="1"
+						cms:eval="transaction"
 						/>
 				</div>
 			</div>
