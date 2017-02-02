@@ -46,7 +46,7 @@ final class Transaction {
 
 		// prepare conditions
 		$conditions = array();
-		if (is_numeric($transaction_id)) {
+		if (is_numeric($transaction_id))
 			$conditions['id'] = $transaction_id; else
 			$conditions['uid'] = $transaction_id;
 
