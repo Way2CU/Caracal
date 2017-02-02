@@ -359,7 +359,7 @@ class ShopTransactionsHandler {
 							'item_details'		=> URL::make_hyperlink(
 													$this->_parent->get_language_constant('details'),
 													window_Open(
-														$window, 800, $title, true, false,
+														$window, 810, $title, true, false,
 														URL::make_query(
 															'backend_module',
 															'transfer_control',
