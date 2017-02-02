@@ -4043,7 +4043,7 @@ class shop extends Module {
 				$template->set_template_params_from_array($children);
 				$template->register_tag_handler('cms:checkout_items', $this, 'tag_CheckoutItems');
 				$template->register_tag_handler('cms:discounted_items', $this, 'tag_DiscountedItemList');
-				$template->register_tag_handler('cms:discounts', $this, 'tag_DiscountsAppliedList');
+				$template->register_tag_handler('cms:applied_promotions', $this, 'tag_AppliedPromotions');
 
 				// parse template
 				$params = array(
@@ -4081,6 +4081,7 @@ class shop extends Module {
 					$params['total_weight'] = number_format($summary['weight'], 2);
 					$params['total'] = number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2);
 					$params['discounts'] = number_format($summary['discounts'], 2);
+					$params['promotions'] = $summary['promotion_count'];
 				}
 
 				// add transaction specific data
