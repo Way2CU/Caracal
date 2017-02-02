@@ -92,7 +92,7 @@
 					</table>
 
 					<!-- Discounts table -->
-					<cms:if condition="$params['type'] != TransactionType::DELAYED and $params['discounts'] > 0">
+					<cms:if condition="$params['type'] != TransactionType::DELAYED and ($params['discounts'] > 0 or $params['promotions'] > 0)">
 						<table border="0" cellspacing="0" cellpadding="0" class="discounts_and_promotions">
 							<cms:if condition="$params['discounts'] > 0">
 								<tr>
@@ -106,7 +106,7 @@
 								<cms:discounted_items/>
 							</cms:if>
 
-							<cms:if condition="$params['promotion_count'] > 0">
+							<cms:if condition="$params['promotions'] > 0">
 								<tr>
 									<th colspan="6">
 										<cms:text constant="column_discounted_item_name" module="shop"/>
