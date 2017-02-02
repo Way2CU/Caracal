@@ -1318,7 +1318,7 @@ class shop extends Module {
 	public function registerDiscount(&$discount) {
 		$name = $discount->get_name();
 		if (!array_key_exists($name, $this->discounts))
-			$this->discounts[$dname] = $discount; else
+			$this->discounts[$name] = $discount; else
 			throw new Exception("Discount '{$name}' is already registered with the system.");
 	}
 
