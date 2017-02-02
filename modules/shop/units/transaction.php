@@ -176,7 +176,7 @@ final class Transaction {
 		$manager = PromotionManager::get_instance();
 		$promotions = $manager->get_items(
 				$manager->get_field_names(),
-				array('transaction' => $transaction->id
+				array('transaction' => $transaction->id)
 			);
 
 		if (count($promotions) == 0)
