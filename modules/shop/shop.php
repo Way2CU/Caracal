@@ -4415,22 +4415,22 @@ class shop extends Module {
 	}
 
 	/**
-	 * Render tag for list of applied discounts.
+	 * Render tag for list of applied promotions and discounts for current
+	 * transaction. If transaction is not created yet function returns without
+	 * rendering anything.
 	 *
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function tag_DiscountsAppliedList($tag_params, $children) {
+	public function tag_AppliedPromotions($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'discount_item.xml');
+		$promotions = Transaction::get_promotions();
 
-		foreach ($this->discounts as $item) {
-			$params = array(
-					'text'   => $item[0],
-					'count'  => $item[1],
-					'amount' => $item[2]
-				);
+		if (count($promotions) == 0)
+			return;
 
-			$template->set_local_params($params);
+		foreach ($promotions as $promotion) {
+			$template->set_local_params($promotion);
 			$template->restore_xml();
 			$template->parse();
 		}
@@ -4558,8 +4558,14 @@ class shop extends Module {
 	/**
  	 * Render list of discounts.
 	 *
+	 * TODO: This is deprecated and apparently deals with coupons. Many parts
+	 * of the code refer to it and for that reason is not yet removed. Coupons
+	 * are supposed to be implemented through promotions mechanism which renders
+	 * this rendering function useless. Needs to be removed!!!
+	 *
 	 * @param array $tag_params
 	 * @param array $children
+	 * @deprecated
 	 */
 	public function tag_DiscountList($tag_params, $children) {
 		$template = $this->load_template($tag_params, 'discount_list_item.xml');

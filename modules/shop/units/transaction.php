@@ -12,6 +12,7 @@ namespace Modules\Shop;
 use \ShopTransactionsManager as TransactionsManager;
 use \ShopDeliveryAddressManager as DeliveryAddressManager;
 use \ShopBuyersManager as BuyersManager;
+use Modules\Shop\Transaction\PromotionManager as PromotionManager;
 
 
 class UnknownTransactionError extends \Exception {}
@@ -152,6 +153,43 @@ final class Transaction {
 			return $result;
 
 		return self::get_address($transaction);
+	}
+
+	/**
+	 * Get promotions for specified transaction. If no transaction is
+	 * specified system will try to return promotions for current transaction.
+	 *
+	 * @param object $transaction
+	 * @return array
+	 */
+	public static function get_promotions($transaction=null) {
+		$result = array();
+
+		// make sure we have transaction to work with
+		if ($transaction === null)
+			$transaction = self::get_current();
+
+		if (is_null($transaction))
+			return $result;
+
+		// get promotions
+		$manager = PromotionManager::get_instance();
+		$promotions = $manager->get_items(
+				$manager->get_field_names(),
+				array('transaction' => $transaction->id
+			);
+
+		if (count($promotions) == 0)
+			return $result;
+
+		// prepare result
+		foreach ($promotions as $promotion)
+			$result []= array(
+					'promotion' => $promotion->promotion,
+					'discount' => $promotion->discount
+				);
+
+		return $result;
 	}
 
 	/**
