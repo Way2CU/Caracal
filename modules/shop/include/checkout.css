@@ -51,7 +51,7 @@ div#checkout div.clear_float {
 	clear: both;
 }
 
-table.discounted_items,
+table.discounts_and_promotions,
 table.checkout_details {
 	width: 100%;
 	margin-bottom: 20px;
@@ -64,7 +64,7 @@ table.checkout_details {
 	color: #333333;
 }
 
-table.discounted_items {
+table.discounts_and_promotions {
 	border-radius: 0;
 }
 
@@ -448,7 +448,7 @@ html[dir=rtl] table.checkout_details thead td:first-child {
 	border-radius: 0px 7px 0px 0px;
 }
 
-table.discounted_items thead th {
+table.discounts_and_promotions th {
 	padding: 5px;
 	padding-left: 7px;
 	padding-right: 7px;
@@ -461,21 +461,21 @@ table.discounted_items thead th {
 	font-weight: bold;
 }
 
-html[dir=rtl] table.discounted_items thead th {
+html[dir=rtl] table.discounts_and_promotions th {
 	text-align: right;
 }
 
 /**
  * Body
  */
-table.discounted_items tbody td,
+table.discounts_and_promotions tbody td,
 table.checkout_details tbody td {
 	padding: 5px;
 	padding-left: 7px;
 	padding-right: 7px;
 }
 
-table.discounted_items tbody td small,
+table.discounts_and_promotions tbody td small,
 table.checkout_details tbody td small {
 	display: block;
 
