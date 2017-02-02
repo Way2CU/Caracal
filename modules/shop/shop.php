@@ -4432,11 +4432,12 @@ class shop extends Module {
 		$template = $this->load_template($tag_params, 'promotion_item.xml');
 
 		// check if transaction id was specified
-		$transaction_id = null;
+		$transaction = null;
 		if (isset($tag_params['transaction']))
-			$transaction_id = fix_chars($tag_params['transaction']);
+			$transaction = Transaction::get(fix_id($tag_params['transaction']));
 
-		$promotions = Transaction::get_promotions($transaction_id);
+		// get promotions for specified or current transaction
+		$promotions = Transaction::get_promotions($transaction);
 
 		if (count($promotions) == 0)
 			return;
