@@ -299,12 +299,21 @@ Caracal.Dialog = function(config, constants) {
 	 * @return object
 	 */
 	self.set_content = function(content) {
-		// set specified content
-		self._inner_content.innerHTML = content;
-		self._inner_content.style.top = 0;  // reset scroll position
+		if (content instanceof jQuery) {
+			content = content.get(0);
+			self._inner_content.appendChild(content);
+
+		} else if (content instanceof HTMLElement) {
+			self._inner_content.appendChild(content);
+
+		} else {
+			// treat content as text
+			self._inner_content.innerHTML = content;
+		}
 
 		// set content state flag
 		self._content_loaded = true;
+		self._inner_content.style.top = 0;  // reset scroll position
 
 		return self;
 	};
