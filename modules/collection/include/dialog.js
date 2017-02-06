@@ -191,10 +191,10 @@ Caracal.Dialog = function(config, constants) {
 
 		// create scrollbar
 		if (typeof Scrollbar == 'function')
-			self._scrollbar = new Scrollbar(self._content, 'div.inner_content');
+			self._scrollbar = new Scrollbar($(self._content), 'div.inner_content');
 
 		if (typeof Caracal.Scrollbar == 'function')
-			self._scrollbar = new Caracal.Scrollbar(self._content, 'div.inner_content');
+			self._scrollbar = new Caracal.Scrollbar($(self._content), 'div.inner_content');
 
 		// create events handling system
 		self.events = new Caracal.EventSystem();
