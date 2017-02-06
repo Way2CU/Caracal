@@ -523,10 +523,8 @@ Caracal.Dialog = function(config, constants) {
 		self._visible = false;
 
 		// clear content if neede
-		if (self.config.clear_on_close) {
-			self._inner_content.innerHTML = '';
-			self._content_loaded = false;
-		}
+		if (self.config.clear_on_close)
+			setTimeout(self.handler.content_clear, 1000);
 	};
 
 	self.__make_deprecated('hide', 'close');
@@ -556,6 +554,16 @@ Caracal.Dialog = function(config, constants) {
 		// show dialog if needed
 		if (self.config.open_on_load)
 			self.open();
+	};
+
+	/**
+	 * Handle timeout for clearing inner content.
+	 *
+	 * @param object event
+	 */
+	self.handler.content_clear = function(event) {
+		self._inner_content.innerHTML = '';
+		self._content_loaded = false;
 	};
 
 	/**
