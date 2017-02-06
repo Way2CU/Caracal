@@ -121,9 +121,9 @@ Caracal.Dialog = function(config, constants) {
 
 	// configuration
 	self.config = config || new Object();
-	self.config.include_close_button = self.config.include_close_button || true;
-	self.config.clear_on_close = self.config.clear_on_close || false;
-	self.config.open_on_load = self.config.open_on_load || false;
+	self.config.include_close_button = config.include_close_button || true;
+	self.config.clear_on_close = config.clear_on_close || false;
+	self.config.open_on_load = config.open_on_load || false;
 
 	self._content_loaded = false;
 
@@ -205,8 +205,7 @@ Caracal.Dialog = function(config, constants) {
 			.register('close');
 
 		// connect with dialog controller
-		if (Caracal.dialog_controller)
-			Caracal.dialog_controller.connect(self);
+		Caracal.dialog_controller.connect(self);
 	};
 
 	/**
