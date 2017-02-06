@@ -120,7 +120,7 @@ Caracal.Dialog = function(config, constants) {
 	self._command_bar = null;
 
 	// configuration
-	self.config = config || new Object();
+	var config = config || new Object();
 	self.config.include_close_button = config.include_close_button || true;
 	self.config.clear_on_close = config.clear_on_close || false;
 	self.config.open_on_load = config.open_on_load || false;
