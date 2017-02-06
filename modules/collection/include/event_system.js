@@ -89,14 +89,9 @@ Caracal.EventSystem = function() {
 			return result;
 
 		// prepare for execution
-		var params = new Array();
+		var params = Array.prototype.slice.call(arguments);
 		var response_type = self.response_types[real_name];
 		var list = self.events[real_name];
-
-		// prepare arguments
-		for (var index in arguments)
-			params.push(arguments[index]);
-		params = params.slice(1);
 
 		// prepare result
 		switch (response_type) {
