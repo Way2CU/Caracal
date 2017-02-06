@@ -121,9 +121,11 @@ Caracal.Dialog = function(config, constants) {
 
 	// configuration
 	var config = config || new Object();
-	self.config.include_close_button = config.include_close_button || true;
-	self.config.clear_on_close = config.clear_on_close || false;
-	self.config.open_on_load = config.open_on_load || false;
+	self.config = {
+			'include_close_button': config.include_close_button || true,
+			'clear_on_close': config.clear_on_close || false,
+			'open_on_load': config.open_on_load || false
+		}
 
 	self._content_loaded = false;
 
