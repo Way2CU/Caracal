@@ -214,9 +214,9 @@ Caracal.Dialog = function(config, constants) {
 	 */
 	self._load_constants = function() {
 		var constants = new Array();
-		for (var i=0, count=self.constants.length; i<count; i++)
-			if (self.constants[i])
-				constants.push(self.constants[i]);
+		for (var index in self.constants)
+			if (self.constants[index])
+				constants.push(self.constants[index]);
 
 		language_handler.getTextArrayAsync(null, constants, self.handler.constants_load);
 	};
