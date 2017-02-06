@@ -610,6 +610,4 @@ function Dialog() {
 
 
 // initialize dialog system
-window.addEventListener('load', function() {
-	Caracal.dialog_controller = new Caracal.DialogController();
-});
+Caracal.dialog_controller = new Caracal.DialogController();
