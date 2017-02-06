@@ -262,6 +262,10 @@ Caracal.Dialog = function(config, constants) {
 	 * @return object
 	 */
 	self.add_control = function(control) {
+		// support jQuery objects
+		if (control instanceof jQuery)
+			control = control.get(0);
+
 		self._command_bar.appendChild(control);
 		return self;
 	};
