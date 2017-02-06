@@ -43,20 +43,13 @@ Caracal.Shop.BuyerInformationForm = function() {
 			.attachForm('div#input_details form');
 
 		// create password recovery dialog
-		self.account.password_dialog = new Dialog();
-
-		self.account.password_dialog
-				.setSize(400, 300)
-				.setScroll(false)
-				.setClearOnClose(false);
+		self.account.password_dialog = new Caracal.Dialog();
 
 		// create cvv information dialog
-		self.billing.cvv_dialog = new Dialog();
+		self.billing.cvv_dialog = new Caracal.Dialog();
 		self.billing.cvv_dialog
-				.setSize(642, 265)
-				.setScroll(false)
-				.setClearOnClose(false)
-				.setContentFromDOM('img#what_is_cvv');
+				.set_size(642, 265)
+				.set_contentFromDOM('img#what_is_cvv');
 
 		language_handler.getTextArrayAsync(
 				'shop',
@@ -114,8 +107,8 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 * Function called once async load of text variables is completed.
 	 */
 	self._configure_dialogs = function(data) {
-		self.account.password_dialog.setTitle(data['title_password_dialog']);
-		self.billing.cvv_dialog.setTitle(data['title_cvv_dialog']);
+		self.account.password_dialog.set_title(data['title_password_dialog']);
+		self.billing.cvv_dialog.set_title(data['title_cvv_dialog']);
 	};
 
 	/**
@@ -125,7 +118,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._show_password_dialog = function(event) {
 		event.preventDefault();
-		self.account.password_dialog.show();
+		self.account.password_dialog.open();
 	};
 	/**
 	 * Show CVV explanation dialog.
@@ -134,7 +127,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 	 */
 	self._show_cvv_dialog = function(event) {
 		event.preventDefault();
-		self.billing.cvv_dialog.show();
+		self.billing.cvv_dialog.open();
 	};
 
 	/**
