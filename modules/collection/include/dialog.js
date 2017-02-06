@@ -242,11 +242,14 @@ Caracal.Dialog = function(config, constants) {
 	/**
 	 * Add additional class to dialog.
 	 *
-	 * @param string class_name
+	 * @param string class_names
 	 * @return object
 	 */
-	self.add_class = function(name) {
-		self._container.classList.add(name);
+	self.add_class = function(class_names) {
+		var class_list = class_names.split(' ');
+
+		for (var i=0, count=class_list.length; i<count; i++)
+			self._container.classList.add(class_list[i]);
 		return self;
 	};
 
