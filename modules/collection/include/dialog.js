@@ -185,7 +185,6 @@ Caracal.Dialog = function(config, constants) {
 				setAttribute('href', 'javascript: void(0);');
 				addEventListener('click', self.handler.close_click);
 			}
-			self._load_constants();
 			self._command_bar.appendChild(self._close_button);
 		}
 
@@ -195,6 +194,9 @@ Caracal.Dialog = function(config, constants) {
 
 		if (typeof Caracal.Scrollbar == 'function')
 			self._scrollbar = new Caracal.Scrollbar($(self._content), 'div.inner_content');
+
+		// load language constants used
+		self._load_constants();
 
 		// create events handling system
 		self.events = new Caracal.EventSystem();
