@@ -31,6 +31,7 @@ div.dialog-background {
 	transition-delay: 0.3s;
 	pointer-events: none;
 	will-change: opacity;
+	z-index: 100000;
 }
 
 div.dialog-background.visible {
@@ -55,6 +56,7 @@ div.dialog {
 	transform-origin: 50% 0%;
 	transform: translateX(-50%) perspective(1000px) rotate3d(1, 0, 0, 90deg);
 	pointer-events: none;
+	z-index: 100001;
 }
 
 div.dialog.visible {
