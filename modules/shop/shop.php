@@ -3008,7 +3008,7 @@ class shop extends Module {
 							$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 							// send notification email
-							if (class_exists('Backend_UserManager')) {
+							if (ModuleHandler::is_loaded('backend')) {
 								$backed_user_manager = Backend_UserManager::get_instance();
 								$backed_user_manager->sendNotificationEmail($user->id);
 							}
