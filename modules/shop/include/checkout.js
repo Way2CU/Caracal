@@ -49,7 +49,7 @@ Caracal.Shop.BuyerInformationForm = function() {
 		self.billing.cvv_dialog = new Caracal.Dialog();
 		self.billing.cvv_dialog
 				.set_size(642, 265)
-				.set_contentFromDOM('img#what_is_cvv');
+				.set_content_from_dom('img#what_is_cvv');
 
 		language_handler.getTextArrayAsync(
 				'shop',
