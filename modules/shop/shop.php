@@ -3018,7 +3018,6 @@ class shop extends Module {
 						$user_data = array(
 								'username'   => $data['email'],
 								'email'      => $data['email'],
-								'phone'      => $data['phone'],
 								'fullname'   => $data['first_name'].' '.$data['last_name'],
 								'first_name' => $data['first_name'],
 								'last_name'  => $data['last_name'],
@@ -3100,9 +3099,9 @@ class shop extends Module {
 		} else if ($_SESSION['logged']) {
 			// user is already logged in, get associated buyer
 			$buyer = $manager->get_single_item(
-				$manager->get_field_names(),
-				array('system_user' => $_SESSION['uid'])
-			);
+					$manager->get_field_names(),
+					array('system_user' => $_SESSION['uid'])
+				);
 
 			if (is_object($buyer))
 				$result = $buyer;
