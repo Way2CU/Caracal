@@ -2152,12 +2152,15 @@ class shop extends Module {
 	 */
 	private function json_GetAccountExists() {
 		$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
-		$manager = ShopBuyersManager::get_instance();
+		$manager = UserManager::get_instance();
+
+		// prepare result
 		$result = array(
 			'account_exists'	=> false,
 			'message'			=> ''
 		);
 
+		// check if user with specified email already exists
 		if (!is_null($email)) {
 			$account = $manager->get_single_item(array('id'), array('email' => $email));
 			$result['account_exists'] = is_object($account);
