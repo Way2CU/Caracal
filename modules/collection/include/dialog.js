@@ -359,6 +359,10 @@ Caracal.Dialog = function(config, constants) {
 	self.set_content_from_dom = function(selection) {
 		var element = document.querySelector(selection);
 
+		// make sure selection exists
+		if (!element)
+			return self;
+
 		// detach and reattach content
 		with (self._inner_content) {
 			appendChild(element);
