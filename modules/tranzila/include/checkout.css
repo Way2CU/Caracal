@@ -2,16 +2,14 @@
  * Checkout Style Sheet
  * Tranzila Payment Method
  *
- * Copyright (c) 2017. by Way2CU, http://way2cu.com
+ * Copyright (c) 2015. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
  */
 
 iframe#tranzila_checkout {
-	width: 500px;
+	width: 400px;
 	height: 300px;
 
 	border: 0px;
 	overflow-y: hidden;
-	transform: scale(0.75);
-	transform-origin: right top;
 }
