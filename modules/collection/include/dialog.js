@@ -38,7 +38,7 @@ Caracal.DialogController = function() {
 			self.dialog.close();
 
 		if (self.background === null) {
-			self.background = dialog._background;
+			self.background = dialog.get_background();
 			self.background.addEventListener('click', self.handler.background_click);
 		}
 
@@ -479,6 +479,15 @@ Caracal.Dialog = function(config, constants) {
 	};
 
 	self.__make_deprecated('setError', 'set_error');
+
+	/**
+	 * Get dialog background.
+	 *
+	 * @return object
+	 */
+	self.get_background = function() {
+		return self._background;
+	};
 
 	/**
 	 * Open dialog.
