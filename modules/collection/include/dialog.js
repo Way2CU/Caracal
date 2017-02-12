@@ -33,7 +33,7 @@ Caracal.DialogController = function() {
 	 *
 	 * @param object dialog
 	 */
-	self.handler.dialog_open = function(event, dialog) {
+	self.handler.dialog_open = function(dialog) {
 		if (self.dialog !== null)
 			self.dialog.close();
 
@@ -50,7 +50,7 @@ Caracal.DialogController = function() {
 	 *
 	 * @param object dialog
 	 */
-	self.handler.dialog_close = function(event, dialog) {
+	self.handler.dialog_close = function(dialog) {
 		if (self.dialog === dialog)
 			self.dialog = null;
 	};
