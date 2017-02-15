@@ -80,14 +80,6 @@ class gallery extends Module {
 							'type'	=> 'text/javascript'
 						));
 
-				if (Language::is_rtl())
-					$head_tag->addTag('link',
-						array(
-							'href'	=> URL::from_file_path($this->path.'include/gallery_rtl.css'),
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css'
-						));
-
 			} else {
 				// load frontend scripts
 				$head_tag->addTag('script',
@@ -1281,6 +1273,7 @@ class gallery extends Module {
 		$order_by = array();
 		$order_asc = true;
 		$conditions = array();
+		$default_image = null;
 
 		if (!isset($tag_params['show_invisible']))
 			$conditions['visible'] = 1;
@@ -1322,6 +1315,11 @@ class gallery extends Module {
 		if (isset($tag_params['order_asc']))
 			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
 
+		// get default image if group is specified
+		if (isset($conditions['group'])) {
+		}
+
+		// get items from the database
 		$items = $manager->get_items(
 							$manager->get_field_names(),
 							$conditions,
@@ -1330,57 +1328,60 @@ class gallery extends Module {
 							$limit
 						);
 
+		// load template
 		$template = $this->load_template($tag_params, 'images_list_item.xml');
 		$template->set_template_params_from_array($children);
-		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:image', $this, 'tag_Image');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
-		if (count($items) > 0)
+		if (count($items) == 0)
+			return;
+
 		foreach ($items as $item) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'group'			=> $item->group,
-						'title'			=> $item->title,
-						'description'	=> $item->description,
-						'filename'		=> $item->filename,
-						'timestamp'		=> $item->timestamp,
-						'visible'		=> $item->visible,
-						'image'			=> $this->getImageURL($item),
-						'selected'		=> $selected,
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'group'       => $item->group,
+						'title'       => $item->title,
+						'description' => $item->description,
+						'filename'    => $item->filename,
+						'timestamp'   => $item->timestamp,
+						'visible'     => $item->visible,
+						'image'       => $this->getImageURL($item),
+						'selected'    => $selected,
+						'default'     => $default_image == $item->id
 				);
 
 			if ($section == 'backend' || $section == 'backend_module') {
 				$params['item_change'] = URL::make_hyperlink(
-												$this->get_language_constant('change'),
-												window_Open(
-													'gallery_images_change', 	// window id
-													400,						// width
-													$this->get_language_constant('title_images_change'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'images_change'),
-														array('id', $item->id)
-													)));
+											$this->get_language_constant('change'),
+											window_Open(
+												'gallery_images_change', 	// window id
+												400,						// width
+												$this->get_language_constant('title_images_change'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'images_change'),
+													array('id', $item->id)
+												)));
 				$params['item_delete'] = URL::make_hyperlink(
-												$this->get_language_constant('delete'),
-												window_Open(
-													'gallery_images_delete', 	// window id
-													400,						// width
-													$this->get_language_constant('title_images_delete'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'images_delete'),
-														array('id', $item->id)
-													)));
+											$this->get_language_constant('delete'),
+											window_Open(
+												'gallery_images_delete', 	// window id
+												400,						// width
+												$this->get_language_constant('title_images_delete'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'images_delete'),
+													array('id', $item->id)
+												)));
 				$params['item_set_default'] = URL::make_hyperlink(
 											$this->get_language_constant('menu_set_default'),
 											window_Open(
@@ -1397,6 +1398,7 @@ class gallery extends Module {
 												)));
 			}
 
+			// set template parameters and render it
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();

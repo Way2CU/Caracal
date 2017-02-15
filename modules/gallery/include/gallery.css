@@ -22,6 +22,14 @@ div.list_content.thumbnails div.list_item {
 	background-color: #F5F5F5;
 }
 
+html[dir=rtl] div.list_content.thumbnails div.list_item {
+	float: right;
+}
+
+div.list_content.thumbnails div.list_item.default {
+	border-color: #2E67AA;
+}
+
 div.list_content.thumbnails div.list_item:hover {
 	background-color: #EBEBEB !important;
 }
@@ -98,6 +106,10 @@ div.dialog div.thumbnail {
 	background-color: #F5F5F5;
 
 	cursor: pointer;
+}
+
+html[dir=rtl] div.dialog div.thumbnail {
+	float: right;
 }
 
 div.dialog div.thumbnail:hover {
