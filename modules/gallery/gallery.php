@@ -1317,6 +1317,11 @@ class gallery extends Module {
 
 		// get default image if group is specified
 		if (isset($conditions['group'])) {
+			$group_manager = GalleryGroupManager::get_instance();
+			$default_image = $group_manager->get_item_value(
+					'thumbnail',
+					array('id' => $conditions['group'])
+				);
 		}
 
 		// get items from the database
