@@ -8,7 +8,9 @@
 		<div class="options">
 			<cms:var param="item_change"/>
 			<cms:var param="item_delete"/>
-			<cms:var param="item_set_default"/>
+			<cms:if condition="$params['default']">
+				<cms:var param="item_set_default"/>
+			</cms:if>
 		</div>
 
 		<div
