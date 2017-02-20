@@ -216,24 +216,28 @@ class language_menu extends Module {
 			}
 		}
 
+		// make sure language list is not empty
+		if (count($list) == 0)
+			return;
+
 		// print language list
-		if (count($list) > 0)
-			foreach ($list as $short => $long) {
-				$link_params['language'] = $short;
-				if ($in_backend)
-					$link = URL::get_base().'?'.http_build_query($link_params); else
-					$link = URL::make($link_params);
+		$matched_file = SectionHandler::get_matched_file();
+		foreach ($list as $short => $long) {
+			$link_params['language'] = $short;
+			if ($in_backend)
+				$link = URL::get_base().'?'.http_build_query($link_params); else
+				$link = URL::make($link_params, $matched_file);
 
-				$params = array(
-					'short_name' => $short,
-					'long_name'  => $long,
-					'url'        => $link
-				);
+			$params = array(
+				'short_name' => $short,
+				'long_name'  => $long,
+				'url'        => $link
+			);
 
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse( );
-			}
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse( );
+		}
 	}
 
 	/**
