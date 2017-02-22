@@ -246,13 +246,16 @@ class CodeOptimizer {
 	 * @return boolean
 	 */
 	public function add_script($url) {
-		global $section;
-
 		$result = false;
 		$data = parse_url($url);
 
+		// detect if file is hosted locally
+		$hosted_locally = true;
+		if (array_key_exists('host', $data))
+			$hosted_locally = $data['host'] == _DOMAIN;
+
 		// add script to be compiled
-		if ($data['host'] == _DOMAIN) {
+		if ($hosted_locally) {
 			$this->script_list []= $url;
 			$this->closure_compiler->add_file(URL::to_file_path($url));
 			$result = true;
