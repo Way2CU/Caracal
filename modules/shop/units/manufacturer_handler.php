@@ -387,7 +387,7 @@ class ShopManufacturerHandler {
 				);
 
 
-			if ($seciton == 'backend' || $section == 'backend_module') {
+			if ($section == 'backend' || $section == 'backend_module') {
 				$params['item_change'] = URL::make_hyperlink(
 									$this->_parent->get_language_constant('change'),
 									window_Open(
