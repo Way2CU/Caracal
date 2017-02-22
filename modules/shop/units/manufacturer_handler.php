@@ -326,8 +326,12 @@ class ShopManufacturerHandler {
 	 * @param array $children
 	 */
 	public function tag_ManufacturerList($tag_params, $children) {
+		global $section;
+
 		$manager = ShopManufacturerManager::get_instance();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 		$selected = -1;
 
 		if (ModuleHandler::is_loaded('gallery')) {
@@ -339,76 +343,92 @@ class ShopManufacturerHandler {
 			$use_images = false;
 		}
 
+		// parse parameters
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
-		$items = $manager->get_items($manager->get_field_names(), $conditions);
+		// get items from the database
+		$items = $manager->get_items(
+				$manager->get_field_names(),
+				$conditions,
+				$order_by,
+				$order_asc
+			);
+
+		// load template
 		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
 		$template->set_template_params_from_array($children);
 
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				// get image
-				$image = '';
+		if (count($items) == 0)
+			return;
 
-				if ($use_images && !empty($item->logo)) {
-					$image_item = $gallery_manager->get_single_item(
-											$gallery_manager->get_field_names(),
-											array('id' => $item->logo)
-										);
+		// parse the template
+		foreach ($items as $item) {
+			// get image
+			$image = '';
 
-					if (is_object($image_item))
-						$image = $gallery->getImageURL($image_item);
-				}
+			if ($use_images && !empty($item->logo)) {
+				$image_item = $gallery_manager->get_single_item(
+										$gallery_manager->get_field_names(),
+										array('id' => $item->logo)
+									);
 
-				// prepare parameters
-				$params = array(
-						'id'		=> $item->id,
-						'name'		=> $item->name,
-						'web_site'	=> $item->web_site,
-						'logo'		=> $image,
-						'selected'	=> $selected == $item->id ? 1 : 0,
-						'item_change'	=> URL::make_hyperlink(
-												$this->_parent->get_language_constant('change'),
-												window_Open(
-													'shop_manufacturer_change', 	// window id
-													360,				// width
-													$this->_parent->get_language_constant('title_manufacturer_change'), // title
-													true, true,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'manufacturers'),
-														array('sub_action', 'change'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'	=> URL::make_hyperlink(
-												$this->_parent->get_language_constant('delete'),
-												window_Open(
-													'shop_manufacturer_delete', 	// window id
-													400,				// width
-													$this->_parent->get_language_constant('title_manufacturer_delete'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'manufacturers'),
-														array('sub_action', 'delete'),
-														array('id', $item->id)
-													)
-												)
-											)
-					);
-
-				// parse template
-				$template->set_local_params($params);
-				$template->restore_xml();
-				$template->parse();
+				if (is_object($image_item))
+					$image = $gallery->getImageURL($image_item);
 			}
+
+			// prepare parameters
+			$params = array(
+					'id'		=> $item->id,
+					'name'		=> $item->name,
+					'web_site'	=> $item->web_site,
+					'logo'		=> $image,
+					'selected'	=> $selected == $item->id ? 1 : 0
+				);
+
+
+			if ($seciton == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
+									$this->_parent->get_language_constant('change'),
+									window_Open(
+										'shop_manufacturer_change', 	// window id
+										360,				// width
+										$this->_parent->get_language_constant('title_manufacturer_change'), // title
+										true, true,
+										URL::make_query(
+											'backend_module',
+											'transfer_control',
+											array('module', $this->name),
+											array('backend_action', 'manufacturers'),
+											array('sub_action', 'change'),
+											array('id', $item->id)
+										))
+								);
+
+				$params['item_delete'] = URL::make_hyperlink(
+										$this->_parent->get_language_constant('delete'),
+										window_Open(
+											'shop_manufacturer_delete', 	// window id
+											400,				// width
+											$this->_parent->get_language_constant('title_manufacturer_delete'), // title
+											false, false,
+											URL::make_query(
+												'backend_module',
+												'transfer_control',
+												array('module', $this->name),
+												array('backend_action', 'manufacturers'),
+												array('sub_action', 'delete'),
+												array('id', $item->id)
+											)
+										)
+									);
+			}
+
+			// parse template
+			$template->set_local_params($params);
+			$template->restore_xml();
+			$template->parse();
+		}
 	}
 }
 
