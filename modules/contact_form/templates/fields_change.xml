@@ -35,7 +35,7 @@
 				name="label"
 				class="multi-language"
 				type="text"
-				maxlength="50"
+				maxlength="100"
 				style="width: 370px"
 				/>
 			<cms:language_data param="label"/>
@@ -47,7 +47,7 @@
 				name="placeholder"
 				class="multi-language"
 				type="text"
-				maxlength="50"
+				maxlength="100"
 				style="width: 370px"
 				/>
 			<cms:language_data param="placeholder"/>

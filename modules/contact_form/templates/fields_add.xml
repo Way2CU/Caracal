@@ -20,12 +20,12 @@
 
 		<label>
 			<span><cms:text constant="label_label" module="contact_form"/></span>
-			<input name="label" class="multi-language" type="text" maxlength="50" style="width: 370px"/>
+			<input name="label" class="multi-language" type="text" maxlength="100" style="width: 370px"/>
 		</label>
 
 		<label>
 			<span><cms:text constant="label_placeholder" module="contact_form"/></span>
-			<input name="placeholder" class="multi-language" type="text" maxlength="50" style="width: 370px"/>
+			<input name="placeholder" class="multi-language" type="text" maxlength="100" style="width: 370px"/>
 		</label>
 
 		<fieldset class="range" style="display: none;">
