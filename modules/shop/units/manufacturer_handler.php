@@ -347,6 +347,12 @@ class ShopManufacturerHandler {
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
+		if (isset($tag_params['order_by']))
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
+
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
+
 		// get items from the database
 		$items = $manager->get_items(
 				$manager->get_field_names(),
