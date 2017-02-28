@@ -694,6 +694,9 @@ class Handler {
 		if (isset($tag_params['manufacturer']) && !empty($tag_params['manufacturer']))
 			$conditions['manufacturer'] = fix_id($tag_params['manufacturer']);
 
+		if (isset($tag_params['priority']) && !empty($tag_params['priority']))
+			$conditions['priority'] = fix_id($tag_params['priority']);
+
 		if (isset($tag_params['category'])) {
 			$categories = explode(',', $tag_params['category']);
 
@@ -828,6 +831,9 @@ class Handler {
 
 		if (isset($tag_params['order_asc']))
 			$order_asc = $tag_params['order_asc'] == 1;
+
+		if (isset($tag_params['random']) && $tag_params['random'] == 1)
+			$order_by = array('RAND()');
 
 		// get items
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
