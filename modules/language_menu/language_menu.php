@@ -177,8 +177,9 @@ class language_menu extends Module {
 	 * @param array $children
 	 */
 	private function tag_LanguageList($tag_params, $children) {
-		global $action, $section;
+		global $section, $language;
 
+		$skip_current = false;
 		$in_backend = isset($_REQUEST['section']);
 
 		// check if we were asked to get languages from specific module
@@ -189,6 +190,10 @@ class language_menu extends Module {
 		} else {
 			$list = Language::get_languages(true);
 		}
+
+		// allow for showing only available languages
+		if (isset($tag_params['skip_current']))
+			$skip_current = $tag_params['skip_current'] == 1;
 
 		$template = $this->load_template($tag_params, 'list_item.xml');
 		$template->set_template_params_from_array($children);
@@ -223,17 +228,24 @@ class language_menu extends Module {
 		// print language list
 		$matched_file = SectionHandler::get_matched_file();
 		foreach ($list as $short => $long) {
+			// skip current language if requested
+			if ($skip_current && $short == $language)
+				continue;
+
+			// prepare parameters for link creation
 			$link_params['language'] = $short;
 			if ($in_backend)
 				$link = URL::get_base().'?'.http_build_query($link_params); else
 				$link = URL::make($link_params, $matched_file);
 
+			// prepare template parameters
 			$params = array(
 				'short_name' => $short,
 				'long_name'  => $long,
 				'url'        => $link
 			);
 
+			// render tag
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse( );
