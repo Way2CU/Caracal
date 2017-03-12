@@ -16,7 +16,7 @@ final class URL {
 	 * @return string
 	 */
 	public static function make($params=array(), $file=null) {
-		global $url_language_optional, $url_rewrite, $language;
+		global $url_rewrite, $language, $default_language;
 
 		$result = '';
 		$matched_pattern = null;
@@ -54,11 +54,9 @@ final class URL {
 		}
 
 		// append language if specified
-		$set_language = array_key_exists('language', $params) && $params['language'] != $language;
-		$add_language = !$url_language_optional || ($url_language_optional && $set_language);
 		$language_to_add = isset($params['language']) ? $params['language'] : $language;
 
-		if ($add_language)
+		if ($language != $default_language)
 			$result = '/'.$language_to_add.$result;
 
 		// add URL base
