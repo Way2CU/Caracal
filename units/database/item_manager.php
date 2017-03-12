@@ -358,8 +358,9 @@ abstract class ItemManager {
 	 * @return array
 	 */
 	private function expand_multilanguage_fields(&$fields, $has_keys=true, $only_current=false) {
+		global $language;
+
 		$temp = $fields;
-		$current_language = $_SESSION['language'];
 
 		if ($has_keys) {
 			foreach ($temp as $field => $data)
@@ -371,7 +372,7 @@ abstract class ItemManager {
 							$fields["{$field}_{$language}"] = $data[$language];
 
 					} else {
-						$fields["{$field}_{$current_language}"] = $data[$current_language];
+						$fields["{$field}_{$language}"] = $data[$language];
 					}
 
 					unset($fields[$field]);
@@ -388,7 +389,7 @@ abstract class ItemManager {
 
 					} else {
 						// expand multi-language field only to current language
-						$fields[] = "{$field}_{$current_language}";
+						$fields[] = "{$field}_{$language}";
 					}
 
 					unset($fields[array_search($field, $fields)]);

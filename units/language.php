@@ -255,29 +255,13 @@ final class Language {
 		global $section, $language, $default_language, $available_languages, $language_rtl,
 	 		$data_path, $system_path;
 
-		if (empty($_REQUEST['language'])) {
-			// no language change was specified, check session
-			if (!isset($_SESSION['language']) || empty($_SESSION['language']))
-				$_SESSION['language'] = self::match_browser_language($available_languages, $default_language);
-
-		} else {
-			// language change was specified, make sure it's valid
-			if (in_array($_REQUEST['language'], $available_languages)) {
-				$_SESSION['language'] = fix_chars($_REQUEST['language']);
-
-			} else {
-				// set language without asking if module is backend
-				if (in_array($section, array('backend', 'backend_module')))
-					$_SESSION['language'] = fix_chars($_REQUEST['language']); else
-					$_SESSION['language'] = self::match_browser_language($available_languages, $default_language);
-			}
-		}
-
 		// load language definitions
 		self::$list = json_decode(file_get_contents($system_path.'languages.json'));
 
 		// store language to global variable
-		$language = $_SESSION['language'];
+		$language = isset($_REQUEST['language']) ? $_REQUEST['language'] : $default_language;
+		if (in_array($language, $available_languages))
+			$language = $default_language;
 		$language_rtl = self::is_rtl($language);
 
 		// create language handlers
