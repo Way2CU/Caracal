@@ -32,10 +32,16 @@ class language_menu extends Module {
 		if (ModuleHandler::is_loaded('head_tag')) {
 			$head_tag = head_tag::get_instance();
 
-			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/language.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('script', array(
+					'src'  => URL::from_file_path($this->path.'include/language.js'),
+					'type' => 'text/javascript'
+				));
 
 			if ($section == 'backend')
-				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/selector.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array(
+					'src'  => URL::from_file_path($this->path.'include/selector.js'),
+					'type' => 'text/javascript'
+				));
 		}
 	}
 
@@ -91,7 +97,7 @@ class language_menu extends Module {
 	}
 
 	/**
-	 * Add meta tags to head tag.
+	 * Add meta and other tags to head.
 	 */
 	public function add_meta_tags() {
 		global $default_language;
@@ -129,16 +135,17 @@ class language_menu extends Module {
 
 		// add link to each language
 		foreach ($language_list as $language_code) {
+			// prepare parameters for url building
 			$link_params['language'] = $language_code;
 			if ($in_backend)
 				$url = URL::get_base().'?'.http_build_query($link_params); else
 				$url = URL::make($link_params);
 
-			$head_tag->addTag('link',
-					array(
-						'rel'		=> 'alternate',
-						'href'		=> $url,
-						'hreflang'	=> $language_code == $default_language ? 'x-default' : $language_code
+			// add new tag to the head
+			$head_tag->addTag('link', array(
+						'rel'      => 'alternate',
+						'href'     => $url,
+						'hreflang' => $language_code == $default_language ? 'x-default' : $language_code
 					));
 		}
 	}
