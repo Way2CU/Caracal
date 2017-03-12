@@ -1,4 +1,4 @@
-# Release notes for 0.1
+# Release notes for v0.1
 
 This is the first public release for Caracal. After long development period
 we decided to share our code with others. This code has been in production for
