@@ -229,12 +229,12 @@ html[dir=rtl] div.window div.content label.horizontal:last-of-type {
 	margin-right: 0px;
 }
 
-div.window div.content label > span {
+div.window div.content label span {
 	display: block;
 	margin-bottom: 2px;
 }
 
-div.window div.content label > span small {
+div.window div.content label span small {
 	color: #7F7F7F;
 }
 
