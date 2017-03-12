@@ -368,8 +368,8 @@ abstract class ItemManager {
 
 					if (!$only_current) {
 						// expand multi-language field to all languages
-						foreach($this->languages as $language)
-							$fields["{$field}_{$language}"] = $data[$language];
+						foreach($this->languages as $code)
+							$fields["{$field}_{$code}"] = $data[$code];
 
 					} else {
 						$fields["{$field}_{$language}"] = $data[$language];
@@ -384,8 +384,8 @@ abstract class ItemManager {
 
 					if (!$only_current) {
 						// expand multi-language field to all languages
-						foreach($this->languages as $language)
-							$fields[] = "{$field}_{$language}";
+						foreach($this->languages as $code)
+							$fields[] = "{$field}_{$code}";
 
 					} else {
 						// expand multi-language field only to current language
