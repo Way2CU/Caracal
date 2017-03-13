@@ -2,19 +2,24 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div class="list_item with_details">
-		<input
-			type="checkbox"
-			class="trigger"
-			id="'category_'.$params['id']"
-			cms:eval="id"
-			/>
+		<cms:if condition="$params['has_children']">
+			<input
+				type="checkbox"
+				class="trigger"
+				id="'category_'.$params['id']"
+				cms:eval="id"
+				/>
+		</cms:if>
 
 		<span class="column" style="display: block;">
-			<label
-				class="trigger"
-				for="'category_'.$params['id']"
-				cms:eval="for"
-				/>
+			<cms:if condition="$params['has_children']">
+				<label
+					class="trigger"
+					for="'category_'.$params['id']"
+					cms:eval="for"
+					/>
+			</cms:if>
+
 			<label>
 				<input
 					type="checkbox"
@@ -28,15 +33,17 @@
 			</label>
 		</span>
 
-		<div class="children details">
-			<cms:children
-				parent_id="$params['id']"
-				level="$params['level'] + 1"
-				item="$params['item']"
-				cms:eval="parent_id,level,item"
-				template="category_checkbox_list_item.xml"
-				local="1"
-				/>
-		</div>
+		<cms:if condition="$params['has_children']">
+			<div class="children details">
+				<cms:children
+					parent_id="$params['id']"
+					level="$params['level'] + 1"
+					item="$params['item']"
+					cms:eval="parent_id,level,item"
+					template="category_checkbox_list_item.xml"
+					local="1"
+					/>
+			</div>
+		</cms:if>
 	</div>
 </document>
