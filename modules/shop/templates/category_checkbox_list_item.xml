@@ -8,13 +8,13 @@
 			id="'category_'.$params['id']"
 			cms:eval="id"
 			/>
-		<label
-			class="trigger"
-			for="'category_'.$params['id']"
-			cms:eval="for"
-			/>
 
 		<span class="column" style="display: block;">
+			<label
+				class="trigger"
+				for="'category_'.$params['id']"
+				cms:eval="for"
+				/>
 			<label>
 				<input
 					type="checkbox"
