@@ -28,7 +28,7 @@
 			</label>
 		</span>
 
-		<div class="children">
+		<div class="children details">
 			<cms:children
 				parent_id="$params['id']"
 				level="$params['level'] + 1"
