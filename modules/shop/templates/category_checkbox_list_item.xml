@@ -11,7 +11,7 @@
 		<label
 			class="trigger"
 			for="'category_'.$params['id']"
-			cms:eval="id"
+			cms:eval="for"
 			/>
 
 		<span class="column" style="display: block;">
