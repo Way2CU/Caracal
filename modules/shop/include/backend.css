@@ -71,15 +71,18 @@ div.window div.list_item.with_details div.details,
 div.window div.list_item.with_details small.details {
 	display: block;
 	max-height: 0;
+	padding: 0;
 	overflow: hidden;
 	transition: max-height 0.3s;
 }
 
 div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ div.details:nth-of-type(1) {
+	display: block;
 	max-height: initial;
 }
 
 div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ small.details:nth-of-type(1) {
+	display: block;
 	max-height: 100px;
 }
 
