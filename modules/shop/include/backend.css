@@ -27,7 +27,8 @@ div.window div.list_item.with_details input.trigger {
 	display: none;
 }
 
-div.window div.list_item.with_details input.trigger + label.trigger:before {
+div.window div.list_item.with_details input.trigger + label.trigger:before,
+div.window div.list_item.with_details input.trigger + span label.trigger:before {
 	display: inline-block;
 	content: '';
 	width: 0;
