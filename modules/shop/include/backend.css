@@ -29,6 +29,11 @@ div.window div.list_item.with_details input.trigger {
 
 div.window div.list_item.with_details label.trigger {
 	display: inline-block;
+	float: left;
+}
+
+html[dir=rtl] div.window div.list_item.with_details label.trigger {
+	float: right;
 }
 
 div.window div.list_item.with_details input.trigger + label.trigger:before,
@@ -38,7 +43,7 @@ div.window div.list_item.with_details input.trigger + span label.trigger:before 
 	width: 0;
 	height: 0;
 	line-height: 0;
-	border: 5px solid transparent;
+	border: 0.6em solid transparent;
 	border-left-color: #333333;
 
 	transition: transform 0.3s;

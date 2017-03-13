@@ -11,11 +11,6 @@
 	to { background-position: 10px 0px; }
 }
 
-@-webkit-keyframes title_animation {
-	from { background-position: 0px 0px; }
-	to { background-position: 10px 0px; }
-}
-
 div.window {
 	display: block;
 	position: absolute;
@@ -96,9 +91,6 @@ div.window.loading div.title {
 	animation: title_animation 0.5s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;
-	-webkit-animation: title_animation 0.5s;
-	-webkit-animation-timing-function: linear;
-	-webkit-animation-iteration-count: infinite;
 }
 
 div.window div.title div.wrap {
@@ -288,6 +280,9 @@ div.window div.content textarea.ltr {
 
 div.window div.content input[type=radio],
 div.window div.content input[type=checkbox] {
+	position: relative;
+	bottom: -1px;
+
 	margin-right: 3px;
 	padding: 0px;
 }
