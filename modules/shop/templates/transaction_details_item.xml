@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
+	<div class="list_item with_details">
+		<cms:if condition="!empty($params['description'])">
+			<input class="trigger" type="checkbox" id="'properties_'.$params['id']" cms:eval="id"/>
+			<label class="trigger" for="'properties_'.$params['id']" cms:eval="for">
+				<cms:text constant="tab_properties" module="shop"/>
+			</label>
+			<small class="details"><cms:var name="$params['description']"/></small>
+		</cms:if>
+
 		<span class="column" style="width: 220px;">
 			<cms:var name="is_array($params['name']) ? $params['name'][$language] : $params['name']"/>
-
-			<cms:if condition="!empty($params['description'])">
-				<input type="checkbox" id="'properties_'.$params['id']" cms:eval="id"/>
-				<label for="'properties_'.$params['id']" cms:eval="for">
-					<cms:text constant="tab_properties" module="shop"/>
-				</label>
-				<small><cms:var name="$params['description']"/></small>
-			</cms:if>
 		</span>
 		<span class="column" style="width: 70px;">
 			<cms:var param="amount"/>
