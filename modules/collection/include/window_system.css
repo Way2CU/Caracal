@@ -288,21 +288,14 @@ div.window div.content textarea.ltr {
 
 div.window div.content input[type=radio],
 div.window div.content input[type=checkbox] {
-	position: relative;
-	bottom: -1px;
-
 	margin-right: 3px;
 	padding: 0px;
-
-	float: left;
-	clear: both;
 }
 
 html[dir=rtl] div.window div.content input[type=radio],
 html[dir=rtl] div.window div.content input[type=checkbox] {
 	margin-left: 3px;
 	margin-right: 0px;
-	float: right;
 }
 
 div.window div.content input[type=color] {
