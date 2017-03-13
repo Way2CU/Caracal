@@ -10,7 +10,7 @@
 			/>
 		<label
 			class="trigger"
-			id="'category_'.$params['id']"
+			for="'category_'.$params['id']"
 			cms:eval="id"
 			/>
 
