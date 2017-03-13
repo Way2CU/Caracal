@@ -40,17 +40,20 @@ div.window div.list_item.with_details input.trigger + label.trigger:before {
 	transform-origin: 20% 50%;
 }
 
-html[dir=rtl] div.window div.list_item.with_details input.trigger + label.trigger:before {
+html[dir=rtl] div.window div.list_item.with_details input.trigger + label.trigger:before,
+html[dir=rtl] div.window div.list_item.with_details input.trigger + span label.trigger:before {
 	border-color: transparent;
 	border-right-color: #333333;
 	transform-origin: 80% 50%;
 }
 
-div.window div.list_item.with_details input.trigger:checked ~ label.trigger:before {
+div.window div.list_item.with_details input.trigger:checked ~ label.trigger:before,
+div.window div.list_item.with_details input.trigger:checked ~ span label.trigger:before {
 	transform: rotate(90deg);
 }
 
-html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ label.trigger:before {
+html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ label.trigger:before,
+html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ span label.trigger:before {
 	transform: rotate(-90deg);
 }
 
