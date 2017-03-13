@@ -75,11 +75,11 @@ div.window div.list_item.with_details small.details {
 	transition: max-height 0.3s;
 }
 
-div.window div.list_item.with_details input[type=checkbox]:checked ~ div.details:nth-of-type(1) {
+div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ div.details:nth-of-type(1) {
 	max-height: initial;
 }
 
-div.window div.list_item.with_details input[type=checkbox]:checked ~ small.details:nth-of-type(1) {
+div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ small.details:nth-of-type(1) {
 	max-height: 100px;
 }
 
