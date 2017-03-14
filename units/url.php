@@ -75,6 +75,8 @@ final class URL {
 	 * @return string
 	 */
 	public static function make_query($section=null, $action=null) {
+		global $language, $default_language;
+
 		$result = self::get_base();
 		$arguments = array();
 
@@ -84,6 +86,10 @@ final class URL {
 
 		if (!is_null($action) && !empty($action))
 			$arguments['action'] = $action;
+
+		// keep cross-page language selection
+		if ($language != $default_language)
+			$arguments['language'] = $language;
 
 		// add remaining arguments
 		if (func_num_args() > 2) {
