@@ -260,7 +260,7 @@ final class Language {
 
 		// store language to global variable
 		$language = isset($_REQUEST['language']) ? $_REQUEST['language'] : $default_language;
-		if (in_array($language, $available_languages))
+		if (!in_array($language, $available_languages))
 			$language = $default_language;
 		$language_rtl = self::is_rtl($language);
 
