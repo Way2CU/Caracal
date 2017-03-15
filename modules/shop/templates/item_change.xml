@@ -73,7 +73,7 @@
 						type="text"
 						name="tags"
 						maxlength="255"
-						value="$params['tags']"
+						value="htmlspecialchars($params['tags'])"
 						cms:eval="value"
 						/>
 				</label>
@@ -84,7 +84,7 @@
 						<input
 							type="text"
 							name="price"
-							value="htmlspecialchars($params['price'])"
+							value="$params['price']"
 							cms:eval="value"
 							style="width: 100px;"
 							maxlength="30"
