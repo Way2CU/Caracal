@@ -84,7 +84,7 @@
 						<input
 							type="text"
 							name="price"
-							value="$params['price']"
+							value="urlencode($params['price'])"
 							cms:eval="value"
 							style="width: 100px;"
 							maxlength="30"
