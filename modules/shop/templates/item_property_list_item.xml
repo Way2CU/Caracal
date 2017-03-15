@@ -5,7 +5,7 @@
 		<input
 			type="hidden"
 			name="'property_data_'.$params['index']"
-			value="htmlspecialchars($params['data'], ENT_QUOTES)"
+			value="htmlspecialchars($params['data'])"
 			cms:eval="name,value"
 			/>
 		<span class="column" style="width: 250px;">
