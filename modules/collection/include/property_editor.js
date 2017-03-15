@@ -50,7 +50,8 @@ Caracal.PropertyEditor = function(selector) {
 				.detach().appendTo(self._container);
 
 		// load value if exists
-		self._handlers.component_value_changed(null);
+		if (self._component.val() != '')
+			self._handlers.component_value_changed(null);
 	};
 
 	/**
