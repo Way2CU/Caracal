@@ -66,6 +66,18 @@
 					<textarea name="description" class="multi-language" style="width: 500px; height: 155px;"/>
 					<cms:language_data param="description"/>
 				</label>
+
+				<label>
+					<span><cms:text constant="label_tags" module="shop"/></span>
+					<input
+						type="text"
+						name="tags"
+						maxlength="255"
+						value="$params['tags']"
+						cms:eval="value"
+						/>
+				</label>
+
 				<div class="box left" style="width: 120px;">
 					<label>
 						<span><cms:text constant="label_price" module="shop"/></span>
@@ -391,6 +403,7 @@
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_array]');
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_ml_array]');
+		new Caracal.PropertyEditor('#shop_item_change_form input[name=tags]');
 
 		// add colors
 		Caracal.Shop.parse_colors();

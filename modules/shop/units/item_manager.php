@@ -30,6 +30,7 @@ class Manager extends ItemManager {
 		$this->add_property('manufacturer', 'int');
 		$this->add_property('size_definition', 'int');
 		$this->add_property('colors', 'varchar');
+		$this->add_property('tags', 'varchar');
 		$this->add_property('author', 'int');
 		$this->add_property('views', 'int');
 		$this->add_property('price', 'decimal');

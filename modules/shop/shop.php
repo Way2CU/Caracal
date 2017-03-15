@@ -927,6 +927,7 @@ class shop extends Module {
 			`manufacturer` INT NOT NULL,
 			`size_definition` INT NULL,
 			`colors` VARCHAR(255) NOT NULL DEFAULT '',
+			`tags` VARCHAR(255) NOT NULL DEFAULT '',
 			`author` INT NOT NULL,
 			`views` INT NOT NULL,
 			`price` DECIMAL(10,2) NOT NULL,
