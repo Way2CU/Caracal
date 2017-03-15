@@ -279,7 +279,7 @@ class Handler {
 				'price'           => isset($_REQUEST['price']) && !empty($_REQUEST['price']) ? fix_chars($_REQUEST['price']) : 0,
 				'discount'        => isset($_REQUEST['discount']) && !empty($_REQUEST['discount']) ? fix_chars($_REQUEST['discount']) : 0,
 				'colors'          => fix_chars($_REQUEST['colors']),
-				'tags'            => fix_chars($_REQUEST['tags']),
+				'tags'            => escape_chars($_REQUEST['tags']),
 				'tax'             => isset($_REQUEST['tax']) && !empty($_REQUEST['tax']) ? fix_chars($_REQUEST['tax']) : 0,
 				'weight'          => isset($_REQUEST['weight']) && !empty($_REQUEST['weight']) ? fix_chars($_REQUEST['weight']) : 0,
 				'size_definition' => isset($_REQUEST['size_definition']) ? fix_id($_REQUEST['size_definition']) : null,
