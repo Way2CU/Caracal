@@ -24,9 +24,11 @@
 				<input
 					type="checkbox"
 					name="'category_id_'.$params['id']"
+					data-id="$params['id']"
+					data-text-id="$params['text_id']"
 					value="1"
 					checked="$params['in_category'] ? 'checked' : false"
-					cms:eval="name"
+					cms:eval="name,data-id,data-text-id"
 					cms:optional="checked"
 					/>
 				<cms:var name="$params['title'][$language]"/>
