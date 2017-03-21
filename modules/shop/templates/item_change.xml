@@ -61,6 +61,20 @@
 					</label>
 				</div>
 
+				<div class="box left">
+					<label style="padding-top: 10px;">
+						<span><cms:text constant="label_item_created" module="shop"/></span>
+						<input
+							type="datetime-local"
+							name="expires"
+							class="code ltr"
+							value="$params['timestamp']"
+							cms:eval="value"
+							readonly="readonly"
+							/>
+					</label>
+				</div>
+
 				<label style="clear: both; padding-top: 10px;">
 					<span><cms:text constant="label_description" module="shop"/></span>
 					<textarea name="description" class="multi-language" style="width: 500px; height: 155px;"/>
