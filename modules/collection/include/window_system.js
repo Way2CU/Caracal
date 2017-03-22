@@ -745,7 +745,7 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	self.container = $(container);
 	self.list_container = $(list_container);
 	self.list = [];
-	self.window_list = $('<ul>');
+	self.window_list = $('nav#windows');
 	self.container_offset = self.container.offset();
 
 	self.events = null;
@@ -755,7 +755,7 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	 */
 	self.init = function() {
 		self.window_list
-				.attr('id', 'window_list')
+				.attr('id', 'windows')
 				.appendTo(self.list_container);
 
 		// create event storage arrays

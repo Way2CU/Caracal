@@ -45,15 +45,20 @@
 			</header>
 
 			<cms:user>
-				<div id="container">
-					<nav id="main">
-						<cms:menu_items/>
-					</nav>
-				</div>
+				<!-- Main menu -->
+				<nav id="main">
+					<cms:menu_items/>
+				</nav>
+
+				<!-- Window container -->
+				<div id="container"/>
 			</cms:user>
 
 			<cms:guest>
+				<!-- Window container -->
 				<div id="container" class="guest"/>
+
+				<!-- Create login window -->
 				<script type="text/javascript">
 					$(document).ready(function() {
 						Caracal.window_system.showLoginWindow();
