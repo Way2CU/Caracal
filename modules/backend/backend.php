@@ -78,8 +78,15 @@ class backend extends Module {
 				$collection->includeScript(collection::TOOLBAR);
 			}
 
-			$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/order_editor.js'), 'type'=>'text/javascript'));
+			$head_tag->addTag('link', array(
+					'href' => URL::from_file_path($this->path.'include/main.less'),
+					'rel'  => 'stylesheet/less',
+					'type' => 'text/css'
+				));
+			$head_tag->addTag('script', array(
+					'src'  => URL::from_file_path($this->path.'include/order_editor.js'),
+					'type' => 'text/javascript'
+				));
 		}
 
 		// add admin level menus
