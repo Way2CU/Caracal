@@ -754,10 +754,6 @@ Caracal.WindowSystem.System = function(container, list_container) {
 	 * Finish object initialization.
 	 */
 	self.init = function() {
-		self.window_list
-				.attr('id', 'windows')
-				.appendTo(self.list_container);
-
 		// create event storage arrays
 		self.events = new Caracal.EventSystem();
 		self.events
