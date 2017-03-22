@@ -6,16 +6,29 @@
  * Author: Mladen Mijatov
  */
 
+@import (reference) 'colors.less';
+@import (reference) 'spacing.less';
 @import 'fonts.less';
-@import 'colors.less';
+@import 'header.less';
 @import 'menu.less';
 
-
 body {
+	margin: 0;
+	padding: 0;
 	background-color: @color_body;
 
 	color: @color_dark;
 	font-family: 'Ubuntu', sans-serif;
 	font-weight: 400;
 	font-style: normal;
+}
+
+body > section {
+	display: flex;
+	flex-flow: row;
+	align-items: stretch;
+}
+
+div#container {
+	flex: 1 0 auto;
 }

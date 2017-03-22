@@ -737,13 +737,12 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 /**
  * Window System
  */
-Caracal.WindowSystem.System = function(container, list_container) {
+Caracal.WindowSystem.System = function(container) {
 	var self = this;  // used internally for events
 
 	self.modal_dialog = null;
 	self.modal_dialog_container = null;
 	self.container = $(container);
-	self.list_container = $(list_container);
 	self.list = [];
 	self.window_list = $('nav#windows');
 	self.container_offset = self.container.offset();
@@ -966,5 +965,5 @@ Caracal.WindowSystem.System = function(container, list_container) {
 };
 
 $(function() {
-	Caracal.window_system = new Caracal.WindowSystem.System('div#container', 'footer');
+	Caracal.window_system = new Caracal.WindowSystem.System('div#container');
 });

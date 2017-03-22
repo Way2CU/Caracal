@@ -1,0 +1,17 @@
+/**
+ * Common Spacing Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+@padding_unit: 0.5rem;
+
+.link-padding(@multiplier: 1) {
+	padding: (@padding_unit * @multiplier) (@padding_unit * @multiplier + @padding_unit);
+}
+
+.container-padding(@multiplier: 1) {
+	padding: @padding_unit * @multiplier;
+}

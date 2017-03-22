@@ -32,6 +32,12 @@ class backend_MenuItem {
 	private $children = array();
 
 	/**
+	 * Template parser used for rendering tags.
+	 * @var object
+	 */
+	private $template;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $title
@@ -86,31 +92,41 @@ class backend_MenuItem {
 	}
 
 	/**
-	 * Draws item on screen
+	 * Render menu item using specified template.
+	 *
+	 * @param object $template
 	 */
-	function drawItem() {
-		if (!$this->isDrawable()) return;
+	function drawItem($template) {
+		if (!$this->isDrawable())
+			return;
 
-		$icon = '<span style="background-image: url('.$this->icon.')"></span>';
+		// prepare params
+		$params = array(
+				'action'       => $this->action,
+				'title'        => $this->title,
+				'icon'         => $this->icon,
+				'has_children' => count($this->children) > 0
+			);
 
-		if (!empty($this->action))
-			$link =  "<a onclick=\"{$this->action}\">{$icon}{$this->title}</a>"; else
-			$link =  "<a>{$icon}{$this->title}</a>";
+		// store template handler so children can render with same object
+		$this->template = $template;
 
-		$class = (count($this->children) > 0) ? ' class="submenu"' : '';
+		// render tag
+		$template->register_tag_handler('cms:children', $this, 'render_children');
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
 
-		echo "<li{$class}>{$link}";
-
-		if (count($this->children) > 0) {
-			echo '<ul>';
-
-			foreach ($this->children as $child)
-				$child->drawItem();
-
-			echo '</ul>';
-		}
-
-		echo '</li>';
+	/**
+	 * Render child tags.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function render_children($tag_params, $children) {
+		foreach ($this->children as $child)
+			$child->drawItem($this->template);
 	}
 
 	/**
@@ -140,8 +156,9 @@ class backend_MenuSeparator{
 	 * @param integer $level
 	 */
 	function drawItem() {
-		if (!$this->isDrawable()) return;
-		echo '<li class="separator"></li>';
+		if (!$this->isDrawable())
+			return;
+		echo '<hr>';
 	}
 
 	/**

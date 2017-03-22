@@ -862,8 +862,10 @@ class backend extends Module {
 	 * Draws all menus for current level
 	 */
 	public function tag_MainMenu($tag_params, $children) {
+		$template = new TemplateHandler('menu_item.xml', $this->path.'templates/');
+
 		foreach ($this->menus as $item)
-			$item->drawItem();
+			$item->drawItem($template);
 	}
 }
 

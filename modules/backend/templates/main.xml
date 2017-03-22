@@ -44,27 +44,26 @@
 				</nav>
 			</header>
 
-			<cms:user>
-				<!-- Main menu -->
-				<nav id="main">
-					<cms:menu_items/>
-				</nav>
+			<section>
+				<cms:user>
+					<!-- Main menu -->
+					<nav id="main">
+						<cms:menu_items/>
+					</nav>
+				</cms:user>
 
 				<!-- Window container -->
 				<div id="container"/>
-			</cms:user>
 
-			<cms:guest>
-				<!-- Window container -->
-				<div id="container" class="guest"/>
-
-				<!-- Create login window -->
-				<script type="text/javascript">
-					$(document).ready(function() {
+				<cms:guest>
+					<!-- Create login window -->
+					<script type="text/javascript">
+						$(document).ready(function() {
 						Caracal.window_system.showLoginWindow();
-					});
-				</script>
-			</cms:guest>
+						});
+					</script>
+				</cms:guest>
+			</section>
 		</body>
 	</html>
 </document>

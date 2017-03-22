@@ -6,7 +6,155 @@
  * Author: Mladen Mijatov
  */
 
+@icon_size: 24;
+
+/**
+ * Main menu
+ */
 nav#main {
+	flex: 0 0 14rem;
 	background-color: @color_menu;
 	color: @color_bright;
+}
+
+nav#main.minimized {
+	width: 5rem;
+}
+
+nav#main.minimized span {
+	display: none;
+}
+
+nav#main a {
+	display: block;
+	// padding: @padding_unit;
+	padding-right: 0;
+
+	border-right: @padding_unit solid transparent;
+
+	&:hover {
+		color: @color_active;
+		border-color: @color_active;
+	}
+
+	html[dir=rtl] & {
+		padding-left: 0;
+		padding-right: @padding_unit;
+	}
+}
+
+nav#main a img {
+	width: @icon_size;
+	height: @icon_size;
+}
+
+nav#main div {
+	position: relative;
+
+	&:hover > a {
+		color: @color_active;
+		border-color: @color_active;
+	}
+}
+
+nav#main div > nav {
+	position: absolute;
+	top: 0;
+	left: 100%;
+	width: 14rem;
+
+	background-color: @color_bright;
+	box-shadow: 0px 2px 3px fade(@color_dark, 20);
+
+	color: @color_dark;
+
+	opacity: 0;
+	pointer-events: none;
+}
+
+nav#main div:hover > nav {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/**
+ * Windows menu
+ */
+nav#windows {
+}
+
+/**
+ * Common menu
+ */
+nav#common {
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	.container-padding();
+}
+
+html[dir=rtl] nav#common {
+	right: auto;
+	left: 0;
+}
+
+nav#common a {
+	display: inline-block;
+	margin-left: @padding_unit;
+	.link-padding(0.5);
+
+	border-right: 1px solid fade(@color_dark, 50);
+
+	color: fade(@color_dark, 50);
+	text-decoration: none;
+
+	&:last-of-type {
+		margin-left: 0;
+		border-right: 0;
+	}
+
+	&:hover {
+		color: @color_dark;
+	}
+}
+
+/**
+ * Language menu
+ */
+nav#language {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+
+	.container-padding();
+}
+
+html[dir=rtl] nav#language {
+	right: auto;
+	left: 0;
+}
+
+nav#language a {
+	display: inline-block;
+	margin-left: @padding_unit;
+	.link-padding(0.5);
+
+	border-right: 1px solid fade(@color_dark, 50);
+
+	color: fade(@color_dark, 50);
+	text-decoration: none;
+
+	&:last-of-type {
+		margin-left: 0;
+		border-right: 0;
+	}
+
+	&.active {
+		text-decoration: underline;
+	}
+
+	&:hover {
+		color: @color_dark;
+	}
 }
