@@ -176,11 +176,10 @@ class head_tag extends Module {
 				}
 
 			// add script tags for compilation
-			if ($optimize_scripts)
-				foreach ($this->script_tags as $script)
-					if (!$optimizer->add_script($script[1]['src']))
-						$unhandled_tags []= $script; else
-						$handled_tags []= $script;  // collect scripts in case compile fails
+			foreach ($this->script_tags as $script)
+				if ($optimize_scripts && $optimizer->add_script($script[1]['src']))
+					$handled_tags []= $script; else  // collect scripts in case compile fails
+					$unhandled_tags []= $script;
 
 			// show unhandled tags manually
 			foreach ($unhandled_tags as $tag)
