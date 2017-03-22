@@ -106,17 +106,19 @@ class CodeOptimizer {
 
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
-		$directory_url = dirname(dirname($file_name)).'/';
 
 		// get absolute local path
 		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
 			$file_name = URL::to_file_path($file_name);
 
+		// get reference for replacing relative paths in styles
+		$reference_url = URL::from_file_path(dirname(dirname($file_name)));
+
 		switch ($extension) {
 			case 'less':
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
+					$this->less_compiler->parseFile($file_name);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
@@ -126,12 +128,7 @@ class CodeOptimizer {
 
 			case 'css':
 			default:
-				$module_directory = _BASEPATH.'/'.$system_module_path;
 				$data = file_get_contents($file_name);
-
-				// change path for relative module urls
-				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('|url\(\s*(\.\./){1}(.*)\)([;,])|ium', 'url('.$directory_url.'\2)\3', $data);
 				break;
 		}
 
@@ -139,8 +136,7 @@ class CodeOptimizer {
 		$data = preg_replace('|/\*.*?(?=\*/)\*/|imus', '', $data);
 
 		// fix relative paths
-		$data = preg_replace('|url\s*\(\s*(\.\./){2,}|imus', 'url(../', $data);
-		$data = preg_replace('|url\(\.\./([^\)]+)\)|imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
+		$data = preg_replace('|url\(\.\./([^\)]+)\)|imus', 'url('.$reference_url.'/\1)', $data);
 
 		// parse most important
 		$data = str_replace("\r", '', $data);
