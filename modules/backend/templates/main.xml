@@ -13,17 +13,29 @@
 
 		<body>
 			<header>
+				<!-- Logo -->
 				<div id="logo">
 					<img
 						src="_BASEURL.'/modules/backend/images/logo_text.svg'"
 						alt="Caracal"
 						cms:eval="src"
 						/>
-					<cms:text constant="slogan" module="backend"/>
 				</div>
 
-				<div id="user_widget"/>
+				<!-- Window list -->
+				<nav id="windows"/>
 
+				<!-- Common links -->
+				<nav id="common">
+					<a href="https://github.com/Way2CU/Caracal/issues" target="_blank">
+						<cms:text constant="menu_report_bug" module="backend"/>
+					</a>
+					<a href="http://webchat.freenode.net/?channels=%23caracal&amp;uio=OT10cnVlJjEwPXRydWUmMTE9MjM218" target="_blank">
+						<cms:text constant="menu_help" module="backend"/>
+					</a>
+				</nav>
+
+				<!-- Language menu -->
 				<nav id="language">
 					<cms:module
 						name="language_menu"
@@ -34,7 +46,9 @@
 
 			<cms:user>
 				<div id="container">
-					<cms:main_menu/>
+					<nav id="main">
+						<cms:menu_items/>
+					</nav>
 				</div>
 			</cms:user>
 
@@ -46,18 +60,6 @@
 					});
 				</script>
 			</cms:guest>
-
-			<footer>
-				<nav id="common">
-					<a href="https://github.com/Way2CU/Caracal/issues" target="_blank">
-						<cms:text constant="menu_report_bug" module="backend"/>
-					</a>
-					<a href="http://webchat.freenode.net/?channels=%23caracal&amp;uio=OT10cnVlJjEwPXRydWUmMTE9MjM218" target="_blank">
-						<cms:text constant="menu_help" module="backend"/>
-					</a>
-				</nav>
-				<div style="clear: both;"/>
-			</footer>
 		</body>
 	</html>
 </document>

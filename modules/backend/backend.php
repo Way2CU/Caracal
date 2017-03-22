@@ -373,12 +373,9 @@ class backend extends Module {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
 
 		$template->set_mapped_module($this->name);
-		$template->register_tag_handler('cms:main_menu', $this, 'tag_MainMenu');
-
-		$params = array();
+		$template->register_tag_handler('cms:menu_items', $this, 'tag_MainMenu');
 
 		$template->restore_xml();
-		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -865,12 +862,8 @@ class backend extends Module {
 	 * Draws all menus for current level
 	 */
 	public function tag_MainMenu($tag_params, $children) {
-		echo '<ul id="navigation">';
-
 		foreach ($this->menus as $item)
 			$item->drawItem();
-
-		echo '</ul>';
 	}
 }
 
