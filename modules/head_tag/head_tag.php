@@ -147,35 +147,42 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
+		// determine whether we shuold optimize code
+		$optimize_styles = $section == 'backend' || $optimize_code;
+		$optimize_scripts = $optimize_code && !in_array($section, array('backend', 'backend_module'));
+
 		// give modules chance to add elements
 		Events::trigger('head-tag', 'before-print');
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 
-		if ($optimize_code && !in_array($section, array('backend', 'backend_module'))) {
+		if ($optimize_styles || $optimize_scripts) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::get_instance();
+			$handled_tags = array();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
-			// add tags for compilation
-			foreach ($this->link_tags as $link) {
-				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
+			// add stylesheet tags for optimization
+			if ($optimize_styles)
+				foreach ($this->link_tags as $link) {
+					$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
 
-				if ($can_be_compiled)
-					$added = $optimizer->add_style($link[1]['href']);
+					if ($can_be_compiled)
+						$added = $optimizer->add_style($link[1]['href']);
 
-				if (!$can_be_compiled || !$added)
-					$unhandled_tags [] = $link;
-			}
+					if (!$can_be_compiled || !$added)
+						$unhandled_tags []= $link;
+				}
 
-			// add scripts for compilation
-			$handled_tags = array();
-			foreach ($this->script_tags as $script)
-				if (!$optimizer->add_script($script[1]['src']))
-					$unhandled_tags []= $script; else
-					$handled_tags []= $script;  // collect scripts in case compile fails
+			// add script tags for compilation
+			if ($optimize_scripts)
+				foreach ($this->script_tags as $script)
+					if (!$optimizer->add_script($script[1]['src']))
+						$unhandled_tags []= $script; else
+						$handled_tags []= $script;  // collect scripts in case compile fails
 
+			// show unhandled tags manually
 			foreach ($unhandled_tags as $tag)
 				$this->printTag($tag);
 
