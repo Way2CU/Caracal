@@ -187,7 +187,7 @@ class head_tag extends Module {
 
 			// print optimized code
 			try {
-				$optimizer->print_data();
+				$optimizer->print_data($optimize_styles, $optimize_scripts);
 
 			} catch (ScriptCompileError $error) {
 				// there was a problem compiling script, show tags traditional way

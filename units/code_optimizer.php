@@ -288,9 +288,11 @@ class CodeOptimizer {
 	/**
 	 * Return compiled scripts and styles.
 	 *
+	 * @param boolean $show_styles
+	 * @param boolean $show_scripts
 	 * @return string
 	 */
-	public function print_data() {
+	public function print_data($show_styles=true, $show_scripts=true) {
 		global $cache_path, $include_styles;
 
 		// compile styles if needed
@@ -333,16 +335,18 @@ class CodeOptimizer {
 		if (file_exists($style_cache.'.sha384'))
 			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
 
-		if (!$include_styles)
-			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
-			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+		if ($show_styles)
+			if (!$include_styles)
+				print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
+				print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
 
 		// show javascript tags
 		$integrity = '';
 		if (file_exists($script_cache.'.sha384'))
 			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
 
-		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
+		if ($show_scripts)
+			print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
 	}
 }
 
