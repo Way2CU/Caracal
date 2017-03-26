@@ -229,61 +229,61 @@ class gallery extends Module {
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
 				case 'images':
-					$this->showImages();
+					$this->show_images();
 					break;
 
 				case 'images_upload':
-					$this->uploadImage();
+					$this->upload_image();
 					break;
 
 				case 'images_upload_bulk':
-					$this->uploadMultipleImages();
+					$this->upload_multiple_images();
 					break;
 
 				case 'images_upload_save':
-					$this->uploadImage_Save();
+					$this->upload_image_save();
 					break;
 
 				case 'images_change':
-					$this->changeImage();
+					$this->change_image();
 					break;
 
 				case 'images_save':
-					$this->saveImage();
+					$this->save_image();
 					break;
 
 				case 'images_delete':
-					$this->deleteImage();
+					$this->delete_image();
 					break;
 
 				case 'images_delete_commit':
-					$this->deleteImage_Commit();
+					$this->delete_image_commit();
 					break;
 
 				// ---
 
 				case 'groups':
-					$this->showGroups();
+					$this->show_groups();
 					break;
 
 				case 'groups_create':
-					$this->createGroup();
+					$this->create_group();
 					break;
 
 				case 'groups_change':
-					$this->changeGroup();
+					$this->change_group();
 					break;
 
 				case 'groups_save':
-					$this->saveGroup();
+					$this->save_group();
 					break;
 
 				case 'groups_delete':
-					$this->deleteGroup();
+					$this->delete_group();
 					break;
 
 				case 'groups_delete_commit':
-					$this->deleteGroup_Commit();
+					$this->delete_group_commit();
 					break;
 
 				case 'groups_set_thumbnail':
@@ -293,35 +293,35 @@ class gallery extends Module {
 				// ---
 
 				case 'containers':
-					$this->showContainers();
+					$this->show_containers();
 					break;
 
 				case 'containers_create':
-					$this->createContainer();
+					$this->create_container();
 					break;
 
 				case 'containers_change':
-					$this->changeContainer();
+					$this->change_container();
 					break;
 
 				case 'containers_save':
-					$this->saveContainer();
+					$this->save_container();
 					break;
 
 				case 'containers_delete':
-					$this->deleteContainer();
+					$this->delete_container();
 					break;
 
 				case 'containers_delete_commit':
-					$this->deleteContainer_Commit();
+					$this->delete_container_commit();
 					break;
 
 				case 'containers_groups':
-					$this->containerGroups();
+					$this->container_groups();
 					break;
 
 				case 'containers_groups_save':
-					$this->containerGroups_Save();
+					$this->container_groups_save();
 					break;
 
 				default:
@@ -335,72 +335,16 @@ class gallery extends Module {
 	public function initialize() {
 		global $db;
 
-		$list = Language::get_languages(false);
+		// create tables
+		$file_list = array(
+			'gallery.sql', 'groups.sql', 'group_membership.sql',
+			'containers.sql'
+			);
 
-		$sql = "
-			CREATE TABLE `gallery` (
-				`id` int(11) NOT NULL AUTO_INCREMENT ,
-				`text_id` VARCHAR( 32 ) NOT NULL,
-				`group` int(11) DEFAULT NULL ,";
-
-		foreach($list as $language)
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-
-		$sql .= "`size` BIGINT NOT NULL ,
-				`filename` VARCHAR( 40 ) NOT NULL ,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-				`visible` BOOLEAN NOT NULL DEFAULT '1',
-				`protected` BOOLEAN NOT NULL DEFAULT '0',
-				`slideshow` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
-				KEY `text_id` (`text_id`),
-				KEY `group` (`group`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "
-			CREATE TABLE IF NOT EXISTS `gallery_groups` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`text_id` varchar(32) COLLATE utf8_bin NULL,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL,";
-
-		$sql .= "`thumbnail` int(11) NULL,
-				PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "
-			CREATE TABLE IF NOT EXISTS `gallery_containers` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`text_id` varchar(32) COLLATE utf8_bin NULL,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR( 50 ) NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL,";
-
-		$sql .= "PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "
-			CREATE TABLE IF NOT EXISTS `gallery_group_membership` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`group` int(11) NOT NULL,
-				`container` int(11) NOT NULL,
-				PRIMARY KEY (`id`),
-				KEY `container` (`container`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
+		foreach ($file_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
+		}
 
 		// save default supported extensions
 		$this->save_setting('image_extensions', 'jpg,jpeg,png,gif');
@@ -419,7 +363,7 @@ class gallery extends Module {
 	/**
 	 * Show images management form
 	 */
-	private function showImages() {
+	private function show_images() {
 		// load template
 		$template = new TemplateHandler('images_list.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
@@ -491,7 +435,7 @@ class gallery extends Module {
 	/**
 	 * Provides a form for uploading multiple images
 	 */
-	private function uploadImage() {
+	private function upload_image() {
 		$template = new TemplateHandler('images_upload.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -509,7 +453,7 @@ class gallery extends Module {
 	/**
 	 * Show multiple image upload form.
 	 */
-	private function uploadMultipleImages() {
+	private function upload_multiple_images() {
 		$template = new TemplateHandler('images_bulk_upload.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -527,7 +471,7 @@ class gallery extends Module {
 	/**
 	 * Save uploaded images
 	 */
-	private function uploadImage_Save() {
+	private function upload_image_save() {
 		$manager = GalleryManager::get_instance();
 
 		$multiple_images = isset($_REQUEST['multiple_upload']) ? $_REQUEST['multiple_upload'] == 1 : false;
@@ -538,7 +482,7 @@ class gallery extends Module {
 		if ($multiple_images) {
 			// store multiple uploaded images
 			$window_name = 'gallery_images_upload_bulk';
-			$result = $this->createImage('image');
+			$result = $this->create_image('image');
 
 			if (!$result['error'])
 				$manager->update_items(
@@ -553,7 +497,7 @@ class gallery extends Module {
 			$description = $this->get_multilanguage_field('description');
 			$window_name = 'gallery_images_upload';
 
-			$result = $this->createImage('image');
+			$result = $this->create_image('image');
 
 			if (!$result['error']) {
 				$data = array(
@@ -586,7 +530,7 @@ class gallery extends Module {
 	/**
 	 * Pring image data editing form
 	 */
-	private function changeImage() {
+	private function change_image() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::get_instance();
 
@@ -619,7 +563,7 @@ class gallery extends Module {
 	/**
 	 * Save changed image data
 	 */
-	private function saveImage() {
+	private function save_image() {
 		$manager = GalleryManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
@@ -658,7 +602,7 @@ class gallery extends Module {
 	/**
 	 * Print confirmation dialog
 	 */
-	private function deleteImage() {
+	private function delete_image() {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
@@ -695,7 +639,7 @@ class gallery extends Module {
 	/**
 	 * Complete removal of specified image
 	 */
-	private function deleteImage_Commit() {
+	private function delete_image_commit() {
 		$id = fix_id($_REQUEST['id']);
 
 		$manager = GalleryManager::get_instance();
@@ -719,7 +663,7 @@ class gallery extends Module {
 	/**
 	 * Show group management form
 	 */
-	private function showGroups() {
+	private function show_groups() {
 		$template = new TemplateHandler('groups_list.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -743,7 +687,7 @@ class gallery extends Module {
 	/**
 	 * Input form for creating new group
 	 */
-	private function createGroup() {
+	private function create_group() {
 		$template = new TemplateHandler('groups_create.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -760,7 +704,7 @@ class gallery extends Module {
 	/**
 	 * Group change form
 	 */
-	private function changeGroup() {
+	private function change_group() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryGroupManager::get_instance();
 
@@ -788,7 +732,7 @@ class gallery extends Module {
 	/**
 	 * Save new or changed group data
 	 */
-	private function saveGroup() {
+	private function save_group() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
@@ -829,7 +773,7 @@ class gallery extends Module {
 	/**
 	 * Delete group confirmation dialog
 	 */
-	private function deleteGroup() {
+	private function delete_group() {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
@@ -866,7 +810,7 @@ class gallery extends Module {
 	/**
 	 * Delete group from the system
 	 */
-	private function deleteGroup_Commit() {
+	private function delete_group_commit() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryManager::get_instance();
 		$group_manager = GalleryGroupManager::get_instance();
@@ -942,7 +886,7 @@ class gallery extends Module {
 	/**
 	 * Show container management form
 	 */
-	private function showContainers() {
+	private function show_containers() {
 		$template = new TemplateHandler('containers_list.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -966,7 +910,7 @@ class gallery extends Module {
 	/**
 	 * Input form for creating new group container
 	 */
-	private function createContainer() {
+	private function create_container() {
 		$template = new TemplateHandler('containers_create.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
@@ -983,7 +927,7 @@ class gallery extends Module {
 	/**
 	 * Container change form
 	 */
-	private function changeContainer() {
+	private function change_container() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::get_instance();
 
@@ -1009,7 +953,7 @@ class gallery extends Module {
 	/**
 	 * Save new or changed group container data
 	 */
-	private function saveContainer() {
+	private function save_container() {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
@@ -1047,7 +991,7 @@ class gallery extends Module {
 	/**
 	 * Delete container confirmation dialog
 	 */
-	private function deleteContainer() {
+	private function delete_container() {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
@@ -1084,7 +1028,7 @@ class gallery extends Module {
 	/**
 	 * Delete container from the system
 	 */
-	private function deleteContainer_Commit() {
+	private function delete_container_commit() {
 		$id = fix_id($_REQUEST['id']);
 		$manager = GalleryContainerManager::get_instance();
 		$membership_manager = GalleryGroupMembershipManager::get_instance();
@@ -1109,7 +1053,7 @@ class gallery extends Module {
 	/**
 	 * Print a form containing all the links within a group
 	 */
-	private function containerGroups() {
+	private function container_groups() {
 		$container_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('containers_groups.xml', $this->path.'templates/');
@@ -1130,7 +1074,7 @@ class gallery extends Module {
 	/**
 	 * Save container group memberships
 	 */
-	private function containerGroups_Save() {
+	private function container_groups_save() {
 		$container = fix_id($_REQUEST['container']);
 		$membership_manager = GalleryGroupMembershipManager::get_instance();
 
@@ -1249,7 +1193,7 @@ class gallery extends Module {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'slideshow'		=> $item->slideshow,
-						'image'			=> $this->getImageURL($item)
+						'image'			=> $this->get_raw_image_url($item)
 				);
 
 			$template->restore_xml();
@@ -1353,7 +1297,7 @@ class gallery extends Module {
 						'filename'    => $item->filename,
 						'timestamp'   => $item->timestamp,
 						'visible'     => $item->visible,
-						'image'       => $this->getImageURL($item),
+						'image'       => self::get_raw_image_url($item),
 						'selected'    => $selected,
 						'default'     => $default_image == $item->id
 				);
@@ -1870,7 +1814,7 @@ class gallery extends Module {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'slideshow'		=> $item->slideshow,
-						'image'			=> $this->getImageURL($item),
+						'image'			=> self::get_raw_image_url($item),
 					);
 		} else {
 			$result = array(
@@ -1975,7 +1919,7 @@ class gallery extends Module {
 							'filename'		=> $item->filename,
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
-							'image'			=> $this->getImageURL($item),
+							'image'			=> self::get_raw_image_url($item),
 							'thumbnail'		=> $thumbnail_url
 						);
 			}
@@ -2189,7 +2133,7 @@ class gallery extends Module {
 	 *
 	 * @param $filename
 	 */
-	private function getFileName($filename) {
+	private function get_file_name($filename) {
 		return hash('md5', $filename.strval(time())).'.'.pathinfo(strtolower($filename), PATHINFO_EXTENSION);
 	}
 
@@ -2198,8 +2142,20 @@ class gallery extends Module {
 	 *
 	 * @param resource $item
 	 * @return string
+	 * @deprecated
 	 */
 	public function getImageURL($item) {
+		trigger_error('Deprecated, use `get_raw_image_url`.', E_USER_WARNING);
+		return $this->get_raw_image_url($item);
+	}
+
+	/**
+	 * Get URL to the raw, unmodified and unoptimized image.
+	 *
+	 * @param object/integer $item
+	 * @return string
+	 */
+	public static function get_raw_image_url($item) {
 		$result = '';
 
 		// if only item id is specified retrieve object from database
@@ -2223,28 +2179,8 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public static function getImageById($id=null, $text_id=null) {
-		$result = '';
-		$conditions = array();
-		$manager = GalleryManager::get_instance();
-
-		// get params
-		if (!is_null($id))
-			$conditions['id'] = $id;
-
-		if (!is_null($text_id))
-			$conditions['text_id'] = $text_id;
-
-		// get image from the database
-		$item = $manager->get_single_item(
-				$manager->get_field_names(),
-				$conditions
-			);
-
-		// prepare result
-		if (is_object($item))
-			$result = URL::from_file_path(self::get_instance()->image_path.$item->filename);
-
-		return $result;
+		trigger_error('Deprecated, use `get_raw_image_url`.', E_USER_WARNING);
+		return self::get_raw_image_url($id);
 	}
 
 	/**
@@ -2447,11 +2383,11 @@ class gallery extends Module {
 									);
 
 			if (is_object($image))
-				$result = self::getImageById($image->id, null);
+				$result = self::get_raw_image_url($image->id);
 
 		} else {
 			// return thumbnail from specified image
-			$result = self::getImageById($group->thumbnail, null);
+			$result = self::get_raw_image_url($group->thumbnail);
 		}
 
 		return $result;
@@ -2492,7 +2428,7 @@ class gallery extends Module {
 		if (is_object($image))
 			if (!$big_image)
 				$result = $this->getThumbnailURL($image); else
-				$result = $this->getImageURL($image);
+				$result = self::get_raw_image_url($image);
 
 		return $result;
 	}
@@ -2534,7 +2470,7 @@ class gallery extends Module {
 	 * @param integer $protected
 	 * @return array
 	 */
-	public function createImage($field_name, $protected=0) {
+	public function create_image($field_name, $protected=0) {
 		global $site_path;
 
 		// prepare result
@@ -2556,7 +2492,6 @@ class gallery extends Module {
 			$file_temp_names = array($_FILES[$field_name]['tmp_name']);
 			$file_sizes = array($_FILES[$field_name]['size']);
 			$multiple_upload = false;
-
 		}
 
 		// filter out unwanted files
@@ -2599,7 +2534,8 @@ class gallery extends Module {
 
 		for ($i = 0; $i < count($file_names); $i++) {
 			// get unique file name for this image to be stored
-			$filename = $this->getFileName($file_names[$i]);
+			$extension = pathinfo(strtolower($file_names[$i]), PATHINFO_EXTENSION);
+			$filename = hash('md5', time().$file_names[$i]).'.'.$extension;
 
 			// try moving file to new destination
 			if (move_uploaded_file($file_temp_names[$i], $this->image_path.$filename)) {
@@ -2644,24 +2580,7 @@ class gallery extends Module {
 	 * @param array $name Multi-language name for newly created gallery
 	 * @return integer Newly created gallery Id
 	 */
-	public function createGallery($name) {
-		$image_manager = GalleryManager::get_instance();
-		$gallery_manager = GalleryGroupManager::get_instance();
-
-		// create gallery
-		$gallery_manager->insert_item(array('name' => $name));
-		$result = $gallery_manager->get_inserted_id();
-
-		return $result;
-	}
-
-	/**
-	 * Create empty gallery
-	 *
-	 * @param array $name Multi-language name
-	 * @return integer Id of newly created gallery
-	 */
-	public function createEmptyGallery($name) {
+	public function create_gallery($name) {
 		$gallery_manager = GalleryGroupManager::get_instance();
 
 		// create gallery

@@ -296,7 +296,7 @@ class Handler {
 
 			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::get_instance();
-				$gallery_id = $gallery->createGallery($data['name']);
+				$gallery_id = $gallery->create_gallery($data['name']);
 				$data['gallery'] = $gallery_id;
 
 				// create action for opening gallery editor
