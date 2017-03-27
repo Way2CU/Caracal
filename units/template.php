@@ -108,6 +108,12 @@ class TemplateHandler {
 	private $cache = null;
 
 	/**
+	 * Storage for last code evaled to help with debugging.
+	 * @var string
+	 */
+	private $last_eval = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $file
@@ -879,6 +885,9 @@ class TemplateHandler {
 				return '.$code.';
 			}; return $call($params, $template, $settings);';
 
+		// store code to help with debugging
+		$this->last_eval = $code;
+
 		return eval($function);
 	}
 
@@ -949,6 +958,9 @@ class TemplateHandler {
 		// if errors is in file include it
 		if (!is_null($file))
 			$data[] = ' ('.$file.' on line '.$line.')';
+
+		// show last evaluated code
+		$data[] = ' last eval -> '.$this->last_eval;
 
 		$text = implode('', $data);
 		error_log($text);
