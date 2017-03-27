@@ -957,7 +957,7 @@ class TemplateHandler {
 
 		// if errors is in file include it
 		if (!is_null($file))
-			$data[] = ' ('.$file.' on line '.$line.')';
+			$data[] = ' ['.$file.' on line '.$line.']';
 
 		// show last evaluated code
 		$data[] = ' last eval -> '.$this->last_eval;
