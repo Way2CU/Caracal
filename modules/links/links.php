@@ -1312,7 +1312,7 @@ class links extends Module {
 		if (is_object($item)) {
 			$image_url = null;
 			if (ModuleHandler::is_loaded('gallery'))
-				$image_url = gallery::get_raw_image_url($item->image);
+				$image_url = gallery::get_raw_image($item->image);
 
 			$result['error'] = false;
 			$result['item'] = array(
@@ -1407,7 +1407,7 @@ class links extends Module {
 			foreach ($items as $item) {
 				$image_url = null;
 				if ($gallery_present && !is_null($item->image))
-					$image_url = gallery::get_raw_image_url($item->image);
+					$image_url = gallery::get_raw_image($item->image);
 
 				$result['items'][] = array(
 									'id'               => $item->id,

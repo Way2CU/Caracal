@@ -1193,7 +1193,7 @@ class gallery extends Module {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'slideshow'		=> $item->slideshow,
-						'image'			=> $this->get_raw_image_url($item)
+						'image'			=> $this->get_raw_image($item)
 				);
 
 			$template->restore_xml();
@@ -1297,7 +1297,7 @@ class gallery extends Module {
 						'filename'    => $item->filename,
 						'timestamp'   => $item->timestamp,
 						'visible'     => $item->visible,
-						'image'       => self::get_raw_image_url($item),
+						'image'       => self::get_raw_image($item),
 						'selected'    => $selected,
 						'default'     => $default_image == $item->id
 				);
@@ -1814,7 +1814,7 @@ class gallery extends Module {
 						'timestamp'		=> $item->timestamp,
 						'visible'		=> $item->visible,
 						'slideshow'		=> $item->slideshow,
-						'image'			=> self::get_raw_image_url($item),
+						'image'			=> self::get_raw_image($item),
 					);
 		} else {
 			$result = array(
@@ -1919,7 +1919,7 @@ class gallery extends Module {
 							'filename'		=> $item->filename,
 							'timestamp'		=> $item->timestamp,
 							'visible'		=> $item->visible,
-							'image'			=> self::get_raw_image_url($item),
+							'image'			=> self::get_raw_image($item),
 							'thumbnail'		=> $thumbnail_url
 						);
 			}
@@ -2129,15 +2129,6 @@ class gallery extends Module {
 	}
 
 	/**
-	 * Returns hash based filename
-	 *
-	 * @param $filename
-	 */
-	private function get_file_name($filename) {
-		return hash('md5', $filename.strval(time())).'.'.pathinfo(strtolower($filename), PATHINFO_EXTENSION);
-	}
-
-	/**
 	 * Get image URL
 	 *
 	 * @param resource $item
@@ -2145,8 +2136,20 @@ class gallery extends Module {
 	 * @deprecated
 	 */
 	public function getImageURL($item) {
-		trigger_error('Deprecated, use `get_raw_image_url`.', E_USER_WARNING);
-		return $this->get_raw_image_url($item);
+		trigger_error('Deprecated, use `get_raw_image`.', E_USER_WARNING);
+		return $this->get_raw_image($item);
+	}
+
+	/**
+	 * Get image URL based on id or text_id.
+	 *
+	 * @param integer $id
+	 * @param string $text_id
+	 * @return string
+	 */
+	public static function getImageById($id=null, $text_id=null) {
+		trigger_error('Deprecated, use `get_raw_image`.', E_USER_WARNING);
+		return self::get_raw_image($id);
 	}
 
 	/**
@@ -2155,7 +2158,7 @@ class gallery extends Module {
 	 * @param object/integer $item
 	 * @return string
 	 */
-	public static function get_raw_image_url($item) {
+	public static function get_raw_image($item) {
 		$result = '';
 
 		// if only item id is specified retrieve object from database
@@ -2172,15 +2175,49 @@ class gallery extends Module {
 	}
 
 	/**
-	 * Get image URL based on id or text_id.
+	 * Get URL to the raw, unmodified and unoptimized image for
+	 * specified group. Parameter can be either object or id.
 	 *
-	 * @param integer $id
-	 * @param string $text_id
+	 * @param object/integer $group
 	 * @return string
 	 */
-	public static function getImageById($id=null, $text_id=null) {
-		trigger_error('Deprecated, use `get_raw_image_url`.', E_USER_WARNING);
-		return self::get_raw_image_url($id);
+	public static function get_raw_group_image($group) {
+	}
+
+	/**
+	 * Get URL to the raw, unmodified and unoptimized image for
+	 * specified container. Parameter can be either object or id.
+	 *
+	 * @param object/integer $container
+	 * @return string
+	 */
+	public static function get_raw_container_image($container) {
+	}
+
+	/**
+	 * Get URL to the resized and optimized image from specified object,
+	 * numerical or textual id. 
+	 *
+	 * @param mixed $item
+	 * @param integer $size
+	 * @param Thumbnail $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+	}
+
+	/**
+	 * Get URL to the resized and optimized image from specified object,
+	 * numerical or textual id of the image group. 
+	 *
+	 * @param mixed $item
+	 * @param integer $size
+	 * @param Thumbnail $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 	}
 
 	/**
@@ -2383,11 +2420,11 @@ class gallery extends Module {
 									);
 
 			if (is_object($image))
-				$result = self::get_raw_image_url($image->id);
+				$result = self::get_raw_image($image->id);
 
 		} else {
 			// return thumbnail from specified image
-			$result = self::get_raw_image_url($group->thumbnail);
+			$result = self::get_raw_image($group->thumbnail);
 		}
 
 		return $result;
@@ -2428,7 +2465,7 @@ class gallery extends Module {
 		if (is_object($image))
 			if (!$big_image)
 				$result = $this->getThumbnailURL($image); else
-				$result = self::get_raw_image_url($image);
+				$result = self::get_raw_image($image);
 
 		return $result;
 	}
