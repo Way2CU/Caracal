@@ -217,12 +217,12 @@
 
 				<label class="horizontal">
 					<span><cms:text constant="label_weight" module="shop"/></span>
-					<input name="weight" value="$params['weight']" style="width: 100px;" cms:eval="value"/>
+					<input name="weight" style="width: 100px;"/>
 				</label>
 
 				<label class="horizontal">
 					<span><cms:text constant="label_priority" module="shop"/></span>
-					<input name="priority" value="$params['priority']" style="width: 60px;" cms:eval="value"/>
+					<input name="priority" style="width: 60px;"/>
 				</label>
 
 				<label class="horizontal">
