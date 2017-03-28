@@ -38,6 +38,8 @@
 						/>
 				</label>
 
+				<br/>
+
 				<label class="horizontal">
 					<span><cms:text constant="label_item_expiration" module="shop"/></span>
 					<input
