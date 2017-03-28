@@ -245,7 +245,7 @@ class Handler {
 					'votes_up'        => $item->votes_up,
 					'votes_down'      => $item->votes_down,
 					'priority'        => $item->priority,
-					'timestamp'       => $item->timestamp,
+					'created'         => date('Y-m-d\TH:i:s', strtotime($item->timestamp))
 					'expires'         => date('Y-m-d\TH:i:s', strtotime($item->expires)),
 					'visible'         => $item->visible,
 					'deleted'         => $item->deleted,

@@ -58,7 +58,7 @@
 					<input
 						type="datetime-local"
 						class="code ltr"
-						value="$params['timestamp']"
+						value="$params['created']"
 						cms:eval="value"
 						readonly="readonly"
 						/>
