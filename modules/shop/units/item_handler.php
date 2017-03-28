@@ -131,7 +131,7 @@ class Handler {
 										$this->parent->get_language_constant('add_item'),
 										window_Open( // on click open window
 											'shop_item_add',
-											550,
+											700,
 											$this->parent->get_language_constant('title_item_add'),
 											true, true,
 											backend_UrlMake($this->name, self::SUB_ACTION, 'add')
@@ -679,7 +679,7 @@ class Handler {
 	 * @param array $chilren
 	 */
 	public function tag_ItemList($tag_params, $children) {
-		global $language;
+		global $language, $section;
 
 		$shop = shop::get_instance();
 		$manager = Manager::get_instance();
@@ -920,42 +920,44 @@ class Handler {
 						'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
 						'expires'               => strtotime($item->expires),
 						'visible'               => $item->visible,
-						'deleted'               => $item->deleted,
-						'item_change'           => URL::make_hyperlink(
-												$this->parent->get_language_constant('change'),
-												window_Open(
-													'shop_item_change', 	// window id
-													550,				// width
-													$this->parent->get_language_constant('title_item_change'), // title
-													true, true,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', self::SUB_ACTION),
-														array('sub_action', 'change'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'           => URL::make_hyperlink(
-												$this->parent->get_language_constant('delete'),
-												window_Open(
-													'shop_item_delete', 	// window id
-													400,				// width
-													$this->parent->get_language_constant('title_item_delete'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', self::SUB_ACTION),
-														array('sub_action', 'delete'),
-														array('id', $item->id)
-													)
-												)
-											),
+						'deleted'               => $item->deleted
 					);
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
+							$this->parent->get_language_constant('change'),
+							window_Open(
+								'shop_item_change', 	// window id
+								700,				// width
+								$this->parent->get_language_constant('title_item_change'), // title
+								true, true,
+								URL::make_query(
+									'backend_module',
+									'transfer_control',
+									array('module', $this->name),
+									array('backend_action', self::SUB_ACTION),
+									array('sub_action', 'change'),
+									array('id', $item->id)
+								))
+						);
+
+				$params['item_delete'] = URL::make_hyperlink(
+							$this->parent->get_language_constant('delete'),
+							window_Open(
+								'shop_item_delete', 	// window id
+								400,				// width
+								$this->parent->get_language_constant('title_item_delete'), // title
+								false, false,
+								URL::make_query(
+									'backend_module',
+									'transfer_control',
+									array('module', $this->name),
+									array('backend_action', self::SUB_ACTION),
+									array('sub_action', 'delete'),
+									array('id', $item->id)
+								))
+						);
+			}
 
 			// add images link
 			if (!is_null($gallery)) {
