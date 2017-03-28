@@ -66,7 +66,6 @@
 						<span><cms:text constant="label_item_created" module="shop"/></span>
 						<input
 							type="datetime-local"
-							name="expires"
 							class="code ltr"
 							value="$params['timestamp']"
 							cms:eval="value"
