@@ -2211,13 +2211,26 @@ class gallery extends Module {
 	 * Get URL to the resized and optimized image from specified object,
 	 * numerical or textual id of the image group. 
 	 *
-	 * @param mixed $item
+	 * @param mixed $group
 	 * @param integer $size
 	 * @param Thumbnail $constraint
 	 * @param integer $crop_size
 	 * @return string
 	 */
-	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+	public static function get_group_image($group, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+	}
+
+	/**
+	 * Get URL to the resized and optimized image from specified object,
+	 * numerical or textual id of the image container. 
+	 *
+	 * @param mixed $container
+	 * @param integer $size
+	 * @param Thumbnail $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public static function get_container_image($container, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 	}
 
 	/**
