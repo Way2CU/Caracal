@@ -105,7 +105,7 @@ $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home
 Language::apply_for_session();
 
 // start database engine
-if ($db_type != DatabaseType::NONE && !database_connect())
+if ($db_type !== DatabaseType::NONE && !database_connect())
 	die('There was an error while trying to connect database.');
 
 // transfer display control
