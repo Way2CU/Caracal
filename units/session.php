@@ -1,15 +1,19 @@
 <?php
 
+
+class SessionType {
+	const TYPE_NORMAL = 0;
+	const TYPE_BROWSER = 1;
+	const TYPE_EXTENDED = 2;
+}
+
+
 /**
  * Session Handling Class
  */
 class Session {
 	const COOKIE_ID = 'Caracal_SessionID';
 	const COOKIE_TYPE = 'Caracal_SessionType';
-
-	const TYPE_NORMAL = 0;
-	const TYPE_BROWSER = 1;
-	const TYPE_EXTENDED = 2;
 
 	const DEFAULT_DURATION = 15;
 	const EXTENDED_DURATION = 43200;  // 30 days
@@ -39,13 +43,13 @@ class Session {
 	 * once by main initialization script and should not
 	 * be used in other parts of the system.
 	 *
-	 * @note: When session is set to TYPE_NORMAL some
+	 * @note: When session is set to SessionType::NORMAL some
 	 * versions of IE will create new session on each page
 	 * load. This is due to bug in IE which accepts
 	 * cookies in GMT but checks for their validity in
 	 * local time zone. Since our cookies are set to
 	 * expire in 15 minutes, they are expired before they
-	 * are stored. Using TYPE_BROWSER solves this issue.
+	 * are stored. Using SessionType::BROWSER solves this issue.
 	 */
 	public static function start() {
 		global $session_type;
@@ -60,16 +64,16 @@ class Session {
 
 		// configure default duration
 		switch ($type) {
-		case self::TYPE_BROWSER:
+		case SessionType::BROWSER:
 				session_set_cookie_params(0, self::get_path());
 				break;
 
-		case self::TYPE_EXTENDED:
+		case SessionType::EXTENDED:
 				$duration = self::EXTENDED_DURATION * 60;
 				session_set_cookie_params($duration, self::get_path());
 				break;
 
-		case self::TYPE_NORMAL:
+		case SessionType::NORMAL:
 			default:
 				$duration = self::DEFAULT_DURATION * 60;
 				session_set_cookie_params($duration, self::get_path());
@@ -81,7 +85,7 @@ class Session {
 		session_start();
 
 		// extend expiration for all types other than browser
-		if ($type == self::TYPE_NORMAL || $type == self::TYPE_EXTENDED) {
+		if ($type == SessionType::NORMAL || $type == SessionType::EXTENDED) {
 			setcookie(self::COOKIE_ID, session_id(), time() + $duration, self::get_path());
 			setcookie(self::COOKIE_TYPE, $type, time() + $duration, self::get_path());
 		}
@@ -101,7 +105,7 @@ class Session {
 
 		// calculate duration based on type
 		switch ($type) {
-		case self::TYPE_EXTENDED:
+		case SessionType::EXTENDED:
 				if (is_null($duration))
 					$duration = 30 * 24 * 60; else
 					$duration = self::EXTENDED_DURATION;
@@ -109,11 +113,11 @@ class Session {
 				$timestamp = time() + ($duration * 60);
 				break;
 
-		case self::TYPE_BROWSER:
+		case SessionType::BROWSER:
 				$timestamp = 0;
 				break;
 
-		case self::TYPE_NORMAL:
+		case SessionType::NORMAL:
 			default:
 				$timestamp = time() + (self::DEFAULT_DURATION * 60);
 				break;

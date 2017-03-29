@@ -128,7 +128,7 @@ class SessionManager {
 
 			// reset session
 			if ($lasting_session)
-				Session::change_type(Session::TYPE_EXTENDED);
+				Session::change_type(SessionType::EXTENDED);
 
 			// set session variables
 			$manager->login_user($username);
@@ -277,7 +277,7 @@ class SessionManager {
 
 			// change session type
 			if ($lasting_session)
-				Session::change_type(Session::TYPE_EXTENDED);
+				Session::change_type(SessionType::EXTENDED);
 
 			// set session variables
 			$manager->login_user($username);
