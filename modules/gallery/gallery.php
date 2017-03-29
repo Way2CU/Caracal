@@ -29,7 +29,7 @@ class gallery extends Module {
 	private static $_instance;
 
 	public $image_path = null;
-	public $thumbnail_path = null;
+	public $optimized_path = null;
 
 	/**
 	 * Constructor
@@ -41,7 +41,7 @@ class gallery extends Module {
 
 		// make paths absolute so function can easily convert them to URL
 		$this->image_path = _BASEPATH.'/'.$site_path.'gallery/images/';
-		$this->thumbnail_path = _BASEPATH.'/'.$site_path.'gallery/thumbnails/';
+		$this->optimized_path = _BASEPATH.'/'.$site_path.'gallery/optimized/';
 
 		// make sure storage path exists
 		if (!file_exists($this->image_path))
@@ -51,8 +51,8 @@ class gallery extends Module {
 			}
 
 		// make sure storage path exists
-		if (!file_exists($this->thumbnail_path))
-			if (mkdir($this->thumbnail_path, 0775, true) === false) {
+		if (!file_exists($this->optimized_path))
+			if (mkdir($this->optimized_path, 0775, true) === false) {
 				trigger_error('Gallery: Error creating storage directory.', E_USER_WARNING);
 				return;
 			}
@@ -1437,8 +1437,7 @@ class gallery extends Module {
 						'text_id'		=> $item->text_id,
 						'name'			=> $item->name,
 						'description'	=> $item->description,
-						'thumbnail'		=> $this->getGroupImage($item),
-						'image'			=> $this->getGroupImage($item, true)
+						'thumbnail'		=> $item->thumbnail
 					);
 
 			$template->restore_xml();
@@ -1454,14 +1453,14 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_GroupList($tag_params, $children) {
-		global $language;
+		global $language, $section;
 
 		$manager = GalleryGroupManager::get_instance();
-
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
 
+		// get conditions
 		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->get_field_names()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
@@ -1507,7 +1506,7 @@ class gallery extends Module {
 			}
 		}
 
-		// get groups
+		// get groups from database
 		$items = $manager->get_items(
 								$manager->get_field_names(),
 								$conditions,
@@ -1524,55 +1523,58 @@ class gallery extends Module {
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				$params = array(
-							'id'			=> $item->id,
-							'text_id'		=> $item->text_id,
-							'name'			=> $item->name,
-							'description'	=> $item->description,
-							'thumbnail'		=> $item->thumbnail,
-							'thumbnail_url'	=> $this->getGroupImage($item),
-							'image'			=> $this->getGroupImage($item, true),
-							'selected'		=> $selected,
-							'item_change'	=> URL::make_hyperlink(
-													$this->get_language_constant('change'),
-													window_Open(
-														'gallery_groups_change', 	// window id
-														400,						// width
-														$this->get_language_constant('title_groups_change'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'groups_change'),
-															array('id', $item->id)
-														)
-													)
-												),
-							'item_delete'	=> URL::make_hyperlink(
-													$this->get_language_constant('delete'),
-													window_Open(
-														'gallery_groups_delete', 	// window id
-														400,						// width
-														$this->get_language_constant('title_groups_delete'), // title
-														false, false,
-														URL::make_query(
-															'backend_module',
-															'transfer_control',
-															array('module', $this->name),
-															array('backend_action', 'groups_delete'),
-															array('id', $item->id)
-														)
-													)
-												)
-						);
+		// return if there's nothing to show
+		if (count($items) == 0)
+			return;
 
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
+		// render output
+		foreach ($items as $item) {
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'name'			=> $item->name,
+						'description'	=> $item->description,
+						'thumbnail'		=> $item->thumbnail,
+						'selected'		=> $selected
+					);
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
+												$this->get_language_constant('change'),
+												window_Open(
+													'gallery_groups_change', 	// window id
+													400,						// width
+													$this->get_language_constant('title_groups_change'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'groups_change'),
+														array('id', $item->id)
+													))
+												);
+				$params['item_delete'] = URL::make_hyperlink(
+												$this->get_language_constant('delete'),
+												window_Open(
+													'gallery_groups_delete', 	// window id
+													400,						// width
+													$this->get_language_constant('title_groups_delete'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'groups_delete'),
+														array('id', $item->id)
+													))
+											);
 			}
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
 
 	}
 
@@ -1907,7 +1909,7 @@ class gallery extends Module {
 				// generate thumbnail if specified
 				$thumbnail_url = '';
 				if (!is_null($thumbnail_size))
-					$thumbnail_url = $this->getThumbnailURL($item, $thumbnail_size, $constraint);
+					$thumbnail_url = self::get_image($item, $thumbnail_size, $constraint);
 
 				// add image to result list
 				$result['items'][] = array(
@@ -2053,8 +2055,7 @@ class gallery extends Module {
 				$result['items'][] = array(
 							'id'			=> $item->id,
 							'name'			=> $item->name,
-							'description'	=> $item->description,
-							'image'			=> $this->getGroupImage($item)
+							'description'	=> $item->description
 						);
 		} else {
 			$result['error'] = true;
@@ -2129,6 +2130,313 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Get URL to the raw, unmodified and unoptimized image.
+	 *
+	 * @param object/integer $item
+	 * @return string
+	 */
+	public static function get_raw_image($item) {
+		$result = '';
+		$conditions = array();
+
+		// try to detect which identifier was specified
+		if (is_int($item)) {
+			$conditions['id'] = $item;
+
+		} else if (is_string($item)) {
+			$conditions['text_id'] = $item;
+
+		} else if (is_object($item)) {
+			// mark as invalid item if property is missing
+			if (!property_exists($item, 'filename'))
+				$item = null;
+		}
+
+		// try to get item from the database
+		if (!empty($conditions)) {
+			$manager = GalleryManager::get_instance();
+			$item = $manager->get_single_item(array('filename'), $conditions);
+		}
+
+		// try to generate result from specified item
+		if (is_object($item)) {
+			$gallery = self::get_instance();
+			$result = URL::from_file_path($gallery->image_path.$item->filename);
+
+		} else {
+			trigger_error('Gallery: No suitable image identifier specified!', E_USER_NOTICE);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get URL to the raw, unmodified and unoptimized image for
+	 * specified group. Parameter can be either object or id.
+	 *
+	 * @param object/integer $group
+	 * @return string
+	 */
+	public static function get_raw_group_image($group) {
+		$result = '';
+		$conditions = array();
+
+		// try to detect which identifier was specified
+		if (is_int($group)) {
+			$conditions['id'] = $group;
+
+		} else if (is_string($group)) {
+			$conditions['text_id'] = $group;
+
+		} else if (is_object($group)) {
+			// mark as invalid group if property is missing
+			if (!property_exists($group, 'thumbnail') || !property_exists($group, 'id'))
+				$group = null;
+		}
+
+		// try to get item from the database
+		if (!empty($conditions)) {
+			$manager = GalleryGroupManager::get_instance();
+			$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
+		}
+
+		// try to generate result from specified item
+		if (is_object($group)) {
+			if (!is_null($group->thumbnail)) {
+				// get image from selected thumbnail
+				$result = self::get_raw_image($group->thumbnail);
+
+			} else {
+				// get image randomly from the group
+				$image_manager = GalleryManager::get_instance();
+				$image = $image_manager->get_single_item(
+						array('filename'),
+						array(
+							'group'   => $group->id,
+							'visible' => 1
+						)
+						array('RAND()')
+					);
+
+				if (is_object($image))
+					$result = self::get_raw_image($image);
+			}
+
+		} else {
+			trigger_error('Gallery: No suitable group identifier specified!', E_USER_NOTICE);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get URL to the raw, unmodified and unoptimized image for
+	 * specified container. Parameter can be either object or id.
+	 *
+	 * @param object/integer $container
+	 * @return string
+	 */
+	public static function get_raw_container_image($container) {
+		$result = '';
+		$container_id = null;
+
+		// try to get container id depending on parameter type
+		if (is_int($container)) {
+			$container_id = $container;
+
+		} else if (is_string($container)) {
+			$manager = GalleryContainerManager::get_instance();
+			$container = $manager->get_single_item(
+					array('id'),
+					array('text_id' => $container)
+				);
+
+			if (is_object($container))
+				$container_id = $container->id;
+
+		} else if (is_object($container)) {
+			if (property_exists($container, 'id'))
+				$container_id = $container->id;
+		}
+
+		// get random group and then get its image
+		if (!is_null($container_id)) {
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
+			$group_id = $membership_manager->get_item_value(
+					'group',
+					array('container' => $container_id),
+					array('RAND()')
+				);
+
+			if (!is_null($group_id))
+				$result = self::get_raw_group_image($group_id);
+
+		} else {
+			trigger_error('Gallery: No suitable container identifier specified!', E_USER_NOTICE);
+		}
+	}
+
+	/**
+	 * Get URL to the resized and optimized image from specified object,
+	 * numerical or textual id.
+	 *
+	 * @param mixed $item
+	 * @param integer $size
+	 * @param Thumbnail $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		$result = '';
+		$conditions = array();
+
+		// try to detect which identifier was specified
+		if (is_int($item)) {
+			$conditions['id'] = $item;
+
+		} else if (is_string($item)) {
+			$conditions['text_id'] = $item;
+
+		} else if (is_object($item)) {
+			// mark as invalid item if property is missing
+			if (!property_exists($item, 'filename'))
+				$item = null;
+		}
+
+		// try to get item from the database
+		if (!empty($conditions)) {
+			$manager = GalleryManager::get_instance();
+			$item = $manager->get_single_item(array('filename'), $conditions);
+		}
+
+		// no suitable identifier has been found, report and return
+		if (is_object($item)) {
+			$gallery = gallery::get_instance();
+			$raw_file = $gallery->image_path.$item->filename;
+
+			$generated_file = $gallery->create_optimized_image($raw_file, $size, $constraint, $crop_size);
+			$result = URL::from_file_path($generated_file);
+
+		} else {
+			trigger_error('Gallery: No suitable image identifier specified!', E_USER_NOTICE);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get URL to the resized and optimized image from specified object,
+	 * numerical or textual id of the image group.
+	 *
+	 * @param mixed $group
+	 * @param integer $size
+	 * @param Thumbnail $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public static function get_group_image($group, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		$result = '';
+		$conditions = array();
+
+		// try to detect which identifier was specified
+		if (is_int($group)) {
+			$conditions['id'] = $group;
+
+		} else if (is_string($group)) {
+			$conditions['text_id'] = $group;
+
+		} else if (is_object($group)) {
+			// mark as invalid group if property is missing
+			if (!property_exists($group, 'thumbnail') || !property_exists($group, 'id'))
+				$group = null;
+		}
+
+		// try to get item from the database
+		if (!empty($conditions)) {
+			$manager = GalleryGroupManager::get_instance();
+			$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
+		}
+
+		// try to generate result from specified item
+		if (is_object($group)) {
+			if (!is_null($group->thumbnail)) {
+				// get image from selected thumbnail
+				$result = self::get_image($group->thumbnail, $size, $constraint, $crop_size);
+
+			} else {
+				// get image randomly from the group
+				$image_manager = GalleryManager::get_instance();
+				$image = $image_manager->get_single_item(
+						array('filename'),
+						array(
+							'group'   => $group->id,
+							'visible' => 1
+						)
+						array('RAND()')
+					);
+
+				if (is_object($image)
+					$result = self::get_image($image, $size, $constraint, $crop_size);
+			}
+
+		} else {
+			trigger_error('Gallery: No suitable group identifier specified!', E_USER_NOTICE);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get URL to the resized and optimized image from specified object,
+	 * numerical or textual id of the image container.
+	 *
+	 * @param mixed $container
+	 * @param integer $size
+	 * @param Thumbnail $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public static function get_container_image($container, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		$result = '';
+		$container_id = null;
+
+		// try to get container id depending on parameter type
+		if (is_int($container)) {
+			$container_id = $container;
+
+		} else if (is_string($container)) {
+			$manager = GalleryContainerManager::get_instance();
+			$container = $manager->get_single_item(
+					array('id'),
+					array('text_id' => $container)
+				);
+
+			if (is_object($container))
+				$container_id = $container->id;
+
+		} else if (is_object($container)) {
+			if (property_exists($container, 'id'))
+				$container_id = $container->id;
+		}
+
+		// get random group and then get its image
+		if (!is_null($container_id)) {
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
+			$group_id = $membership_manager->get_item_value(
+					'group',
+					array('container' => $container_id),
+					array('RAND()')
+				);
+
+			if (!is_null($group_id))
+				$result = self::get_group_image($group_id, $size, $constraint, $crop_size);
+
+		} else {
+			trigger_error('Gallery: No suitable container identifier specified!', E_USER_NOTICE);
+		}
+	}
+
+	/**
 	 * Get image URL
 	 *
 	 * @param resource $item
@@ -2146,93 +2454,25 @@ class gallery extends Module {
 	 * @param integer $id
 	 * @param string $text_id
 	 * @return string
+	 * @deprecated
 	 */
 	public static function getImageById($id=null, $text_id=null) {
 		trigger_error('Deprecated, use `get_raw_image`.', E_USER_WARNING);
-		return self::get_raw_image($id);
+		return self::get_raw_image(is_null($id) ? $text_id : $id);
 	}
 
 	/**
-	 * Get URL to the raw, unmodified and unoptimized image.
+	 * Get group image URL based on one of the specified ids.
 	 *
-	 * @param object/integer $item
+	 * @param integer $id
+	 * @param string $text_id
 	 * @return string
+	 * @deprecated
 	 */
-	public static function get_raw_image($item) {
-		$result = '';
-
-		// if only item id is specified retrieve object from database
-		if (!is_object($item) && is_numeric($item)) {
-			$manager = GalleryManager::get_instance();
-			$item = $manager->get_single_item(array('filename'), array('id' => $item));
-		}
-
-		// try to generate result from specified item
-		if (is_object($item))
-			$result = URL::from_file_path($this->image_path.$item->filename);
-
-		return $result;
+	public static function getGroupImageById($id=null, $text_id=null) {
+		trigger_error('Deprecated, use `get_raw_group_image`.', E_USER_WARNING);
+		return self::get_raw_group_image(is_null($id) ? $text_id : $id);
 	}
-
-	/**
-	 * Get URL to the raw, unmodified and unoptimized image for
-	 * specified group. Parameter can be either object or id.
-	 *
-	 * @param object/integer $group
-	 * @return string
-	 */
-	public static function get_raw_group_image($group) {
-	}
-
-	/**
-	 * Get URL to the raw, unmodified and unoptimized image for
-	 * specified container. Parameter can be either object or id.
-	 *
-	 * @param object/integer $container
-	 * @return string
-	 */
-	public static function get_raw_container_image($container) {
-	}
-
-	/**
-	 * Get URL to the resized and optimized image from specified object,
-	 * numerical or textual id. 
-	 *
-	 * @param mixed $item
-	 * @param integer $size
-	 * @param Thumbnail $constraint
-	 * @param integer $crop_size
-	 * @return string
-	 */
-	public static function get_image($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-	}
-
-	/**
-	 * Get URL to the resized and optimized image from specified object,
-	 * numerical or textual id of the image group. 
-	 *
-	 * @param mixed $group
-	 * @param integer $size
-	 * @param Thumbnail $constraint
-	 * @param integer $crop_size
-	 * @return string
-	 */
-	public static function get_group_image($group, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-	}
-
-	/**
-	 * Get URL to the resized and optimized image from specified object,
-	 * numerical or textual id of the image container. 
-	 *
-	 * @param mixed $container
-	 * @param integer $size
-	 * @param Thumbnail $constraint
-	 * @param integer $crop_size
-	 * @return string
-	 */
-	public static function get_container_image($container, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-	}
-
 	/**
 	 * Get thumbnail URL
 	 *
@@ -2241,17 +2481,11 @@ class gallery extends Module {
 	 * @param integer $constraint
 	 * @param integer $crop_size
 	 * @return string
+	 * @deprecated
 	 */
 	public function getThumbnailURL($item, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		global $site_path;
-
-		$result = '';
-
-		// prepare result
-		$image_file = $this->image_path.$item->filename;
-		$thumbnail_file = self::get_instance()->createThumbnail($image_file, $size, $constraint, $crop_size);
-
-		return URL::from_file_path($thumbnail_file);
+		trigger_error('Deprecated, use `get_image`.', E_USER_WARNING);
+		return self::get_image($item, $size, $constraint, $crop_size);
 	}
 
 	/**
@@ -2263,36 +2497,11 @@ class gallery extends Module {
 	 * @param integer $constraint
 	 * @param integer $crop_size
 	 * @return string
+	 * @deprecated
 	 */
 	public static function getThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$result = '';
-		$conditions = array();
-		$manager = GalleryManager::get_instance();
-
-		// get params
-		if (!is_null($id))
-			$conditions['id'] = $id;
-
-		if (!is_null($text_id))
-			$conditions['text_id'] = $text_id;
-
-		// get image from the database
-		$item = $manager->get_single_item(
-				$manager->get_field_names(),
-				$conditions
-			);
-
-		// prepare result
-		if (is_object($item)) {
-			$path = dirname(__FILE__);
-			$gallery = gallery::get_instance();
-			$image_file = $gallery->image_path.$item->filename;
-
-			$thumbnail_file = self::get_instance()->createThumbnail($image_file, $size, $constraint, $crop_size);
-			$result = URL::from_file_path($thumbnail_file);
-		}
-
-		return $result;
+		trigger_error('Deprecated, use `get_image`.', E_USER_WARNING);
+		return self::get_image(is_null($id) ? $text_id : $id, $size, $constraint, $crop_size);
 	}
 
 	/**
@@ -2304,48 +2513,11 @@ class gallery extends Module {
 	 * @param integer $constraint
 	 * @param integer $crop_size
 	 * @return string
+	 * @deprecated
 	 */
 	public static function getGroupThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$manager = GalleryGroupManager::get_instance();
-		$image_manager = GalleryManager::get_instance();
-		$conditions = array();
-		$result = '';
-
-		// prepare conditions
-		if (!is_null($id))
-			$conditions['id'] = $id;
-
-		if (!is_null($text_id))
-			$conditions['text_id'] = $text_id;
-
-		// get group from database
-		$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
-
-		// specified group doesn't exist
-		if (!is_object($group))
-			return $result;
-
-		if (empty($group->thumbnail)) {
-			// no image was set as thumbnail, get one at random
-			$image = $image_manager->get_single_item(
-										array('id'),
-										array(
-											'group' 	=> $group->id,
-											'protected'	=> 0,
-											'visible'	=> 1
-										),
-										array('RAND()')
-									);
-
-			if (is_object($image))
-				$result = self::getThumbnailById($image->id, null, $size, $constraint, $crop_size);
-
-		} else {
-			// return thumbnail from specified image
-			$result = self::getThumbnailById($group->thumbnail, null, $size, $constraint, $crop_size);
-		}
-
-		return $result;
+		trigger_error('Deprecated, use `get_group_image`.', E_USER_WARNING);
+		return self::get_group_image(is_null($id) ? $text_id : $id, $size, $constraint, $crop_size);
 	}
 
 	/**
@@ -2357,128 +2529,29 @@ class gallery extends Module {
 	 * @param integer $constraint
 	 * @param integer $crop_size
 	 * @return string
+	 * @deprecated
 	 */
 	public static function getContainerThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$manager = GalleryContainerManager::get_instance();
-		$membership_manager = GalleryGroupMembershipManager::get_instance();
-		$conditions = array();
-		$result = '';
-
-		// prepare conditions
-		if (!is_null($id))
-			$conditions['id'] = $id;
-
-		if (!is_null($text_id))
-			$conditions['text_id'] = $text_id;
-
-		// get container
-		$container = $manager->get_single_item(array('id'), $conditions);
-
-		if (!is_object($container))
-			return $result;
-
-		// get random group for container
-		$membership = $membership_manager->get_single_item(
-				array('group'),
-				array('container' => $container->id),
-				array('RAND()')  // order by
-			);
-
-		// get thumbnail url for specified group
-		if (is_object($membership))
-			$result = self::getGroupThumbnailById($membership->group, null, $size, $constraint, $crop_size);
-
-		return $result;
+		trigger_error('Deprecated, use `get_container_image`.', E_USER_WARNING);
+		return self::get_container_image(is_null($id) ? $text_id : $id, $size, $constraint, $crop_size);
 	}
 
-	/**
-	 * Get group image URL based on one of the specified ids.
-	 *
-	 * @param integer $id
-	 * @param string $text_id
-	 * @param integer $size
-	 * @param integer $constraint
-	 * @return string
-	 */
-	public static function getGroupImageById($id=null, $text_id=null) {
-		$manager = GalleryGroupManager::get_instance();
-		$image_manager = GalleryManager::get_instance();
-		$conditions = array();
-		$result = '';
-
-		// prepare conditions
-		if (!is_null($id))
-			$conditions['id'] = $id;
-
-		if (!is_null($text_id))
-			$conditions['text_id'] = $text_id;
-
-		// get group from database
-		$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
-
-		// specified group doesn't exist
-		if (!is_object($group))
-			return $result;
-
-		if (empty($group->thumbnail)) {
-			// no image was set as thumbnail, get one at random
-			$image = $image_manager->get_single_item(
-										array('id'),
-										array(
-											'group' 	=> $group->id,
-											'protected'	=> 0,
-											'visible'	=> 1
-										),
-										array('RAND()')
-									);
-
-			if (is_object($image))
-				$result = self::get_raw_image($image->id);
-
-		} else {
-			// return thumbnail from specified image
-			$result = self::get_raw_image($group->thumbnail);
-		}
-
-		return $result;
-	}
 
 	/**
 	 * Get group image
 	 *
 	 * @param resource $group
+	 * @param boolean $big_image
 	 * @return string
+	 * @deprecated
 	 */
 	private function getGroupImage($group, $big_image=false) {
+		trigger_error('Deprecated, use `get_raw_group_image` or `get_group_image`.', E_USER_WARNING);
+
 		$result = '';
-		$manager = GalleryManager::get_instance();
-
-		if (empty($group->thumbnail)) {
-			// group doesn't have specified thumbnail, get random
-			$image = $manager->get_single_item(
-										array('filename'),
-										array(
-											'group' 	=> $group->id,
-											'protected'	=> 0
-										),
-										array('RAND()')
-									);
-
-		} else {
-			// group has specified thumbnail
-			if (is_array($group)) {
-				$group_id = array_rand($group);
-				$group_manager = GalleryGroupManager::get_instance();
-
-				$group = $group_manager->get_single_item(array('thumbnail'), array('id' => $group_id));
-			}
-			$image = $manager->get_single_item(array('filename'), array('id' => $group->thumbnail));
-		}
-
-		if (is_object($image))
-			if (!$big_image)
-				$result = $this->getThumbnailURL($image); else
-				$result = self::get_raw_image($image);
+		if ($big_image)
+			$result = self::get_raw_group_image($group); else
+			$result = self::get_group_image($group);
 
 		return $result;
 	}
@@ -2488,29 +2561,11 @@ class gallery extends Module {
 	 *
 	 * @param resource $container
 	 * @return string
+	 * @deprecated
 	 */
 	private function getContainerImage($container) {
-		$result = '';
-		$group_manager = GalleryGroupManager::get_instance();
-		$membership_manager = GalleryGroupMembershipManager::get_instance();
-
-		$items = $membership_manager->get_items(
-											array('group'),
-											array('container' => $container->id),
-											array('RAND()')
-										);
-
-		if (count($items) > 0) {
-			$membership = $items[array_rand($items)];
-			$id = $membership->group;
-
-			$group = $group_manager->get_single_item(array('id', 'thumbnail'), array('id' => $id));
-
-			if (is_object($group))
-				$result = $this->getGroupImage($group);
-		}
-
-		return $result;
+		trigger_error('Deprecated, use `get_container_image`.', E_USER_WARNING);
+		return self::get_raw_container_image($container);
 	}
 
 	/**
@@ -2644,16 +2699,19 @@ class gallery extends Module {
 	 * Create thumbnail from specified image
 	 *
 	 * @param string $filename
-	 * @param integer $thumb_size
+	 * @param integer $size
 	 * @param integer $constraint
 	 * @param integer $crop_size
 	 * @return string
 	 */
-	private function createThumbnail($filename, $thumb_size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		// prepare thumbnail file name
-		$addon = is_null($crop_size) ? '' : '_'.$crop_size;
-		$target_file = $this->thumbnail_path.$thumb_size.$addon.'_'.$constraint;
-		$target_file .= '_'.pathinfo($filename, PATHINFO_BASENAME);
+	private function create_optimized_image($filename, $size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		// generate file name
+		$target_file = $this->optimized_path;
+		$target_file .= $size.'_';
+		if (!is_null($crop_size))
+			$target_file .= 'crp'.$crop_size.'_';
+		$target_file .= 'cs'.$constraint.'_';
+		$target_file .= pathinfo($filename, PATHINFO_BASENAME);
 
 		// if target file exists, don't create it
 		if (file_exists($target_file))
@@ -2704,13 +2762,13 @@ class gallery extends Module {
 
 		switch ($constraint) {
 			case Thumbnail::CONSTRAIN_WIDTH:
-				$scale = $thumb_size / $source_height;
+				$scale = $size / $source_height;
 				if (!is_null($crop_size))
 					$max_width = $crop_size;
 				break;
 
 			case Thumbnail::CONSTRAIN_HEIGHT:
-				$scale = $thumb_size / $source_width;
+				$scale = $size / $source_width;
 				if (!is_null($crop_size))
 					$max_height = $crop_size;
 				break;
@@ -2718,16 +2776,16 @@ class gallery extends Module {
 			case Thumbnail::CONSTRAIN_BOTH:
 			default:
 				if ($source_width >= $source_height)
-					$scale = $thumb_size / $source_width; else
-					$scale = $thumb_size / $source_height;
+					$scale = $size / $source_width; else
+					$scale = $size / $source_height;
 				break;
 		}
 
-		// calculate thumbnail size
+		// calculate final image size
 		$thumb_width = floor($scale * $source_width);
 		$thumb_height = floor($scale * $source_height);
 
-		// create thumbnail
+		// create new image
 		$thumbnail = imagecreatetruecolor(
 				is_null($max_width) ? $thumb_width : $max_width,
 				is_null($max_height) ? $thumb_height : $max_height
@@ -2738,7 +2796,7 @@ class gallery extends Module {
 			imagesavealpha($thumbnail, true);
 		}
 
-		// resize image
+		// copy and resample to new size
 		imagecopyresampled(
 				$thumbnail,
 				$img_source,
@@ -2756,6 +2814,7 @@ class gallery extends Module {
 
 		return $target_file;
 	}
+
 }
 
 ?>
