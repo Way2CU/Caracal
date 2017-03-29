@@ -11,6 +11,7 @@
  */
 
 namespace Core;
+use \ModuleHandler;
 
 require_once(_LIBPATH.'parsedown/Parsedown.php');
 
@@ -64,22 +65,23 @@ final class ExtendedParsedown extends \Parsedown {
 		$original_source = $image['element']['attributes']['src'];
 
 		if (is_numeric($original_source)) {
-			if (class_exists('\gallery')) {
+			if (ModuleHandler::is_loaded('gallery')) {
 				// shorthand gallery image
 				$gallery = \gallery::get_instance();
 				$manager = \GalleryManager::get_instance();
 				$gallery_image = $manager->get_single_item(
-					array('title', 'filename', 'visible'),
-					array('id' => fix_id($original_source))
-				);
+						array('title', 'filename', 'visible'),
+						array(
+							'id'      => fix_id($original_source),
+							'visible' => 1
+						));
 
-				// don't show invisible images
-				if (is_object($gallery_image) && !$gallery_image->visible)
+				if (is_object($gallery_image))
 					return;
 
 				// replace values
 				if (is_object($gallery_image)) {
-					$image['element']['attributes']['src'] = $gallery->getImageURL($gallery_image);
+					$image['element']['attributes']['src'] = $gallery->get_raw_image($gallery_image);
 					$image['element']['attributes']['alt'] = $gallery_image->title[$language];
 				}
 
