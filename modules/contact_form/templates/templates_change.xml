@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_template_add">
+	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_template_change">
 		<div>
 			<label class="horizontal" cms:tooltip="tooltip_template_name">
 				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
@@ -66,7 +66,7 @@
 	</form>
 
 	<script type="text/javascript">
-		new LanguageSelector('contact_form_template_add');
+		new LanguageSelector('contact_form_template_change');
 		var converter = new Showdown.converter();
 
 		// create notebook
@@ -84,7 +84,7 @@
 
 		// create toolbar
 		toolbar_api
-				.createToolbar('contact_form_template_add', '[name=html_content]:input')
+				.createToolbar('contact_form_template_change', '[name=html_content]:input')
 				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image')
 				.addControl('downloads', 'link');
