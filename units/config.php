@@ -30,7 +30,6 @@ $default_language = 'en';
 
 // database
 $db = null;
-$db_use = false;
 $db_type = DatabaseType::MYSQL;
 $db_config = array(
 		'host' => 'localhost',

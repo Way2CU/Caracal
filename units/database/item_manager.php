@@ -495,13 +495,14 @@ abstract class ItemManager {
 	 * @return boolean
 	 */
 	public function table_exists() {
-		global $db, $db_use;
+		global $db;
 		$result = false;
 
-		if ($db_use) {
-			$db->query("SHOW TABLES LIKE '{$this->table_name}'");
-			$result = $db->num_rows() > 0;
-		}
+		if (is_null($db))
+			return $result;
+
+		$db->query("SHOW TABLES LIKE '{$this->table_name}'");
+		$result = $db->num_rows() > 0;
 
 		return $result;
 	}
