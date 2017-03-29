@@ -2,9 +2,9 @@
 
 
 class SessionType {
-	const TYPE_NORMAL = 0;
-	const TYPE_BROWSER = 1;
-	const TYPE_EXTENDED = 2;
+	const NORMAL = 0;
+	const BROWSER = 1;
+	const EXTENDED = 2;
 }
 
 
