@@ -65,38 +65,38 @@ class gallery extends Module {
 			if ($section == 'backend') {
 				$head_tag->addTag('link',
 						array(
-							'href'	=> URL::from_file_path($this->path.'include/gallery.css'),
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css'
+							'href' => URL::from_file_path($this->path.'include/gallery.css'),
+							'rel'  => 'stylesheet',
+							'type' => 'text/css'
 						));
 				$head_tag->addTag('script',
 						array(
-							'src'	=> URL::from_file_path($this->path.'include/gallery_toolbar.js'),
-							'type'	=> 'text/javascript'
+							'src'  => URL::from_file_path($this->path.'include/gallery_toolbar.js'),
+							'type' => 'text/javascript'
 						));
 				$head_tag->addTag('script',
 						array(
-							'src'	=> URL::from_file_path($this->path.'include/backend.js'),
-							'type'	=> 'text/javascript'
+							'src'  => URL::from_file_path($this->path.'include/backend.js'),
+							'type' => 'text/javascript'
 						));
 
 			} else {
 				// load frontend scripts
 				$head_tag->addTag('script',
 							array(
-								'src'	=> URL::from_file_path($this->path.'include/gallery.js'),
-								'type'	=> 'text/javascript'
+								'src'  => URL::from_file_path($this->path.'include/gallery.js'),
+								'type' => 'text/javascript'
 							));
 				$head_tag->addTag('script',
 							array(
-								'src' 	=> URL::from_file_path($this->path.'include/lightbox.js'),
-								'type'	=> 'text/javascript'
+								'src'  => URL::from_file_path($this->path.'include/lightbox.js'),
+								'type' => 'text/javascript'
 							));
 				$head_tag->addTag('link',
 							array(
-								'href'	=> URL::from_file_path($this->path.'include/lightbox.css'),
-								'rel'	=> 'stylesheet',
-								'type'	=> 'text/css'
+								'href' => URL::from_file_path($this->path.'include/lightbox.css'),
+								'rel'  => 'stylesheet',
+								'type' => 'text/css'
 							));
 			}
 		}
@@ -413,9 +413,9 @@ class gallery extends Module {
 
 		// prepare parameters
 		$params = array(
-					'link_new'		=> $link_new,
-					'link_new_bulk'	=> $link_new_bulk,
-					'link_groups'	=> URL::make_hyperlink(
+					'link_new'      => $link_new,
+					'link_new_bulk' => $link_new_bulk,
+					'link_groups'   => URL::make_hyperlink(
 										$this->get_language_constant('groups'),
 										window_Open( // on click open window
 											'gallery_groups',
@@ -440,8 +440,8 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'form_action'	=> backend_UrlMake($this->name, 'images_upload_save'),
-					'cancel_action'	=> window_Close('gallery_images_upload')
+					'form_action'   => backend_UrlMake($this->name, 'images_upload_save'),
+					'cancel_action' => window_Close('gallery_images_upload')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
@@ -458,8 +458,8 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'form_action'	=> backend_UrlMake($this->name, 'images_upload_save'),
-					'cancel_action'	=> window_Close('gallery_images_upload_bulk')
+					'form_action'   => backend_UrlMake($this->name, 'images_upload_save'),
+					'cancel_action' => window_Close('gallery_images_upload_bulk')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
@@ -486,8 +486,8 @@ class gallery extends Module {
 
 			if (!$result['error'])
 				$manager->update_items(
-						array('group'	=> $group),
-						array('id'		=> $result['id'])
+						array('group' => $group),
+						array('id' => $result['id'])
 					);
 
 		} else {
@@ -501,12 +501,12 @@ class gallery extends Module {
 
 			if (!$result['error']) {
 				$data = array(
-							'group'			=> $group,
-							'text_id'		=> $text_id,
-							'title'			=> $title,
-							'description'	=> $description,
-							'visible'		=> $visible,
-							'slideshow'		=> $slideshow,
+							'group'       => $group,
+							'text_id'     => $text_id,
+							'title'       => $title,
+							'description' => $description,
+							'visible'     => $visible,
+							'slideshow'   => $slideshow,
 						);
 
 				$manager->update_items($data, array('id' => $result['id']));
@@ -517,9 +517,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $result['message'],
-					'button'	=> $this->get_language_constant('close'),
-					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_images')
+					'message' => $result['message'],
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close($window_name).";".window_ReloadContent('gallery_images')
 				);
 
 		$template->restore_xml();
@@ -541,18 +541,18 @@ class gallery extends Module {
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		$params = array(
-					'id'			=> $item->id,
-					'group'			=> $item->group,
-					'text_id'		=> $item->text_id,
-					'title'			=> unfix_chars($item->title),
-					'description'	=> $item->description,
-					'size'			=> $item->size,
-					'filename'		=> $item->filename,
-					'timestamp'		=> $item->timestamp,
-					'visible'		=> $item->visible,
-					'slideshow'		=> $item->slideshow,
-					'form_action'	=> backend_UrlMake($this->name, 'images_save'),
-					'cancel_action'	=> window_Close('gallery_images_change')
+					'id'            => $item->id,
+					'group'         => $item->group,
+					'text_id'       => $item->text_id,
+					'title'         => unfix_chars($item->title),
+					'description'   => $item->description,
+					'size'          => $item->size,
+					'filename'      => $item->filename,
+					'timestamp'     => $item->timestamp,
+					'visible'       => $item->visible,
+					'slideshow'     => $item->slideshow,
+					'form_action'   => backend_UrlMake($this->name, 'images_save'),
+					'cancel_action' => window_Close('gallery_images_change')
 				);
 
 		$template->restore_xml();
@@ -575,12 +575,12 @@ class gallery extends Module {
 		$slideshow = $this->get_boolean_field('slideshow') ? 1 : 0;
 
 		$data = array(
-					'text_id'		=> $text_id,
-					'title'			=> $title,
-					'group'			=> $group,
-					'description'	=> $description,
-					'visible'		=> $visible,
-					'slideshow'		=> $slideshow
+					'text_id'     => $text_id,
+					'title'       => $title,
+					'group'       => $group,
+					'description' => $description,
+					'visible'     => $visible,
+					'slideshow'   => $slideshow
 				);
 
 		$manager->update_items($data, array('id' => $id));
@@ -589,9 +589,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->get_language_constant('message_image_saved'),
-					'button'	=> $this->get_language_constant('close'),
-					'action'	=> window_Close('gallery_images_change').";".window_ReloadContent('gallery_images')
+					'message' => $this->get_language_constant('message_image_saved'),
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('gallery_images_change').";".window_ReloadContent('gallery_images')
 				);
 
 		$template->restore_xml();
@@ -614,11 +614,11 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->get_language_constant("message_image_delete"),
-					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->get_language_constant("delete"),
-					'no_text'		=> $this->get_language_constant("cancel"),
-					'yes_action'	=> window_LoadContent(
+					'message'    => $this->get_language_constant("message_image_delete"),
+					'name'       => $item->title[$language],
+					'yes_text'   => $this->get_language_constant("delete"),
+					'no_text'    => $this->get_language_constant("cancel"),
+					'yes_action' => window_LoadContent(
 											'gallery_images_delete',
 											URL::make_query(
 												'backend_module',
@@ -628,7 +628,7 @@ class gallery extends Module {
 												array('id', $id)
 											)
 										),
-					'no_action'		=> window_Close('gallery_images_delete')
+					'no_action'  => window_Close('gallery_images_delete')
 				);
 
 		$template->restore_xml();
@@ -650,9 +650,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->get_language_constant("message_image_deleted"),
-					'button'	=> $this->get_language_constant("close"),
-					'action'	=> window_Close('gallery_images_delete').";".window_ReloadContent('gallery_images')
+					'message' => $this->get_language_constant("message_image_deleted"),
+					'button'  => $this->get_language_constant("close"),
+					'action'  => window_Close('gallery_images_delete').";".window_ReloadContent('gallery_images')
 				);
 
 		$template->restore_xml();
@@ -668,7 +668,7 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new'		=> window_OpenHyperlink(
+					'link_new' => window_OpenHyperlink(
 										$this->get_language_constant('create_group'),
 										'gallery_groups_create', 400,
 										$this->get_language_constant('title_groups_create'),
@@ -692,8 +692,8 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('gallery_groups_create')
+					'form_action'   => backend_UrlMake($this->name, 'groups_save'),
+					'cancel_action' => window_Close('gallery_groups_create')
 				);
 
 		$template->restore_xml();
@@ -714,13 +714,13 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'id'			=> $item->id,
-					'text_id'		=> unfix_chars($item->text_id),
-					'name'			=> unfix_chars($item->name),
-					'description'	=> $item->description,
-					'thumbnail'		=> $item->thumbnail,
-					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('gallery_groups_change')
+					'id'            => $item->id,
+					'text_id'       => unfix_chars($item->text_id),
+					'name'          => unfix_chars($item->name),
+					'description'   => $item->description,
+					'thumbnail'     => $item->thumbnail,
+					'form_action'   => backend_UrlMake($this->name, 'groups_save'),
+					'cancel_action' => window_Close('gallery_groups_change')
 				);
 
 		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
@@ -736,9 +736,9 @@ class gallery extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
-			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> $this->get_multilanguage_field('name'),
-			'description' 	=> $this->get_multilanguage_field('description'),
+			'text_id'     => fix_chars($_REQUEST['text_id']),
+			'name'        => $this->get_multilanguage_field('name'),
+			'description' => $this->get_multilanguage_field('description'),
 		);
 
 		if (isset($_REQUEST['thumbnail']))
@@ -760,9 +760,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $message,
-					'button'	=> $this->get_language_constant('close'),
-					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_groups')
+					'message' => $message,
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close($window_name).";".window_ReloadContent('gallery_groups')
 				);
 
 		$template->restore_xml();
@@ -785,11 +785,11 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->get_language_constant("message_group_delete"),
-					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->get_language_constant("delete"),
-					'no_text'		=> $this->get_language_constant("cancel"),
-					'yes_action'	=> window_LoadContent(
+					'message'    => $this->get_language_constant("message_group_delete"),
+					'name'       => $item->name[$language],
+					'yes_text'   => $this->get_language_constant("delete"),
+					'no_text'    => $this->get_language_constant("cancel"),
+					'yes_action' => window_LoadContent(
 											'gallery_groups_delete',
 											URL::make_query(
 												'backend_module',
@@ -799,7 +799,7 @@ class gallery extends Module {
 												array('id', $id)
 											)
 										),
-					'no_action'		=> window_Close('gallery_groups_delete')
+					'no_action'  => window_Close('gallery_groups_delete')
 				);
 
 		$template->restore_xml();
@@ -822,9 +822,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->get_language_constant("message_group_deleted"),
-					'button'	=> $this->get_language_constant("close"),
-					'action'	=> window_Close('gallery_groups_delete').";".window_ReloadContent('gallery_groups').";".window_ReloadContent('gallery_images')
+					'message' => $this->get_language_constant("message_group_deleted"),
+					'button'  => $this->get_language_constant("close"),
+					'action'  => window_Close('gallery_groups_delete').";".window_ReloadContent('gallery_groups').";".window_ReloadContent('gallery_images')
 				);
 
 		$template->restore_xml();
@@ -915,8 +915,8 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'form_action'	=> backend_UrlMake($this->name, 'containers_save'),
-					'cancel_action'	=> window_Close('gallery_containers_create')
+					'form_action'   => backend_UrlMake($this->name, 'containers_save'),
+					'cancel_action' => window_Close('gallery_containers_create')
 				);
 
 		$template->restore_xml();
@@ -937,12 +937,12 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'id'			=> $item->id,
-					'text_id'		=> unfix_chars($item->text_id),
-					'name'			=> unfix_chars($item->name),
-					'description'	=> $item->description,
-					'form_action'	=> backend_UrlMake($this->name, 'containers_save'),
-					'cancel_action'	=> window_Close('gallery_containers_change')
+					'id'            => $item->id,
+					'text_id'       => unfix_chars($item->text_id),
+					'name'          => unfix_chars($item->name),
+					'description'   => $item->description,
+					'form_action'   => backend_UrlMake($this->name, 'containers_save'),
+					'cancel_action' => window_Close('gallery_containers_change')
 				);
 
 		$template->restore_xml();
@@ -957,9 +957,9 @@ class gallery extends Module {
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 
 		$data = array(
-			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> $this->get_multilanguage_field('name'),
-			'description' 	=> $this->get_multilanguage_field('description'),
+			'text_id'     => fix_chars($_REQUEST['text_id']),
+			'name'        => $this->get_multilanguage_field('name'),
+			'description' => $this->get_multilanguage_field('description'),
 		);
 
 		$manager = GalleryContainerManager::get_instance();
@@ -968,6 +968,7 @@ class gallery extends Module {
 			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_containers_change';
 			$message = $this->get_language_constant('message_container_changed');
+
 		} else {
 			$manager->insert_item($data);
 			$window_name = 'gallery_containers_create';
@@ -978,9 +979,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $message,
-					'button'	=> $this->get_language_constant('close'),
-					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_containers')
+					'message' => $message,
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close($window_name).";".window_ReloadContent('gallery_containers')
 				);
 
 		$template->restore_xml();
@@ -1003,11 +1004,11 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->get_language_constant('message_container_delete'),
-					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->get_language_constant('delete'),
-					'no_text'		=> $this->get_language_constant('cancel'),
-					'yes_action'	=> window_LoadContent(
+					'message'    => $this->get_language_constant('message_container_delete'),
+					'name'       => $item->name[$language],
+					'yes_text'   => $this->get_language_constant('delete'),
+					'no_text'    => $this->get_language_constant('cancel'),
+					'yes_action' => window_LoadContent(
 											'gallery_containers_delete',
 											URL::make_query(
 												'backend_module',
@@ -1017,7 +1018,7 @@ class gallery extends Module {
 												array('id', $id)
 											)
 										),
-					'no_action'		=> window_Close('gallery_containers_delete')
+					'no_action'  => window_Close('gallery_containers_delete')
 				);
 
 		$template->restore_xml();
@@ -1040,9 +1041,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->get_language_constant("message_container_deleted"),
-					'button'	=> $this->get_language_constant("close"),
-					'action'	=> window_Close('gallery_containers_delete').";".window_ReloadContent('gallery_containers')
+					'message' => $this->get_language_constant("message_container_deleted"),
+					'button'  => $this->get_language_constant("close"),
+					'action'  => window_Close('gallery_containers_delete').";".window_ReloadContent('gallery_containers')
 				);
 
 		$template->restore_xml();
@@ -1060,9 +1061,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'container'		=> $container_id,
-					'form_action'	=> backend_UrlMake($this->name, 'containers_groups_save'),
-					'cancel_action'	=> window_Close('gallery_containers_groups')
+					'container'     => $container_id,
+					'form_action'   => backend_UrlMake($this->name, 'containers_groups_save'),
+					'cancel_action' => window_Close('gallery_containers_groups')
 				);
 
 		$template->register_tag_handler('_container_groups', $this, 'tag_ContainerGroups');
@@ -1091,8 +1092,8 @@ class gallery extends Module {
 		// save new memberships
 		foreach ($gallery_ids as $id)
 			$membership_manager->insert_item(array(
-											'group'		=> $id,
-											'container'	=> $container
+											'group'     => $id,
+											'container' => $container
 										));
 
 		// display message
@@ -1100,9 +1101,9 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->get_language_constant("message_container_groups_updated"),
-					'button'	=> $this->get_language_constant("close"),
-					'action'	=> window_Close('gallery_containers_groups')
+					'message' => $this->get_language_constant("message_container_groups_updated"),
+					'button'  => $this->get_language_constant("close"),
+					'action'  => window_Close('gallery_containers_groups')
 				);
 
 		$template->restore_xml();
@@ -1184,16 +1185,16 @@ class gallery extends Module {
 
 		if (is_object($item)) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'group'			=> $item->group,
-						'title'			=> $item->title,
-						'description'	=> $item->description,
-						'filename'		=> $item->filename,
-						'timestamp'		=> $item->timestamp,
-						'visible'		=> $item->visible,
-						'slideshow'		=> $item->slideshow,
-						'image'			=> $this->get_raw_image($item)
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'group'       => $item->group,
+						'title'       => $item->title,
+						'description' => $item->description,
+						'filename'    => $item->filename,
+						'timestamp'   => $item->timestamp,
+						'visible'     => $item->visible,
+						'slideshow'   => $item->slideshow,
+						'image'       => $this->get_raw_image($item)
 				);
 
 			$template->restore_xml();
@@ -1433,11 +1434,11 @@ class gallery extends Module {
 		// parse template
 		if (is_object($item)) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
-						'thumbnail'		=> $item->thumbnail
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'name'        => $item->name,
+						'description' => $item->description,
+						'thumbnail'   => $item->thumbnail
 					);
 
 			$template->restore_xml();
@@ -1530,12 +1531,12 @@ class gallery extends Module {
 		// render output
 		foreach ($items as $item) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
-						'thumbnail'		=> $item->thumbnail,
-						'selected'		=> $selected
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'name'        => $item->name,
+						'description' => $item->description,
+						'thumbnail'   => $item->thumbnail,
+						'selected'    => $selected
 					);
 
 			if ($section == 'backend' || $section == 'backend_module') {
@@ -1609,11 +1610,11 @@ class gallery extends Module {
 
 		if (is_object($item)) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
-						'image'			=> $this->getContainerImage($item)
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'name'        => $item->name,
+						'description' => $item->description,
+						'image'       => $this->getContainerImage($item)
 					);
 
 			$template->restore_xml();
@@ -1639,8 +1640,8 @@ class gallery extends Module {
 		// grab parameters
 		if (isset($tag_params['exclude'])) {
 			$conditions['text_id'] = array(
-									'operator'	=> 'NOT IN',
-									'value'		=> fix_chars(explode(',', $tag_params['exclude']))
+									'operator' => 'NOT IN',
+									'value'    => fix_chars(explode(',', $tag_params['exclude']))
 								);
 		}
 
@@ -1664,13 +1665,16 @@ class gallery extends Module {
 		if (count($items) > 0)
 		foreach ($items as $item) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
-						'image'			=> $this->getContainerImage($item),
-						'selected'		=> $selected,
-						'item_change'	=> URL::make_hyperlink(
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'name'        => $item->name,
+						'description' => $item->description,
+						'image'       => $this->getContainerImage($item),
+						'selected'    => $selected
+					);
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
 												$this->get_language_constant('change'),
 												window_Open(
 													'gallery_containers_change', 	// window id
@@ -1685,8 +1689,9 @@ class gallery extends Module {
 														array('id', $item->id)
 													)
 												)
-											),
-						'item_delete'	=> URL::make_hyperlink(
+											);
+
+				$params['item_delete'] = URL::make_hyperlink(
 												$this->get_language_constant('delete'),
 												window_Open(
 													'gallery_containers_delete', 	// window id
@@ -1699,10 +1704,10 @@ class gallery extends Module {
 														array('module', $this->name),
 														array('backend_action', 'containers_delete'),
 														array('id', $item->id)
-													)
-												)
-											),
-						'item_groups'	=> URL::make_hyperlink(
+													))
+											);
+
+				$params['item_groups'] = URL::make_hyperlink(
 												$this->get_language_constant('container_groups'),
 												window_Open(
 													'gallery_containers_groups', 	// window id
@@ -1715,10 +1720,9 @@ class gallery extends Module {
 														array('module', $this->name),
 														array('backend_action', 'containers_groups'),
 														array('id', $item->id)
-													)
-												)
-											),
-					);
+													))
+											);
+			}
 
 			$template->restore_xml();
 			$template->set_local_params($params);
@@ -1760,10 +1764,10 @@ class gallery extends Module {
 		if (count($items) > 0)
 			foreach ($items as $item) {
 				$params = array(
-								'id'				=> $item->id,
-								'in_group'			=> in_array($item->id, $gallery_ids) ? 1 : 0,
-								'name'				=> $item->name,
-								'description'		=> $item->description,
+								'id'          => $item->id,
+								'in_group'    => in_array($item->id, $gallery_ids) ? 1 : 0,
+								'name'        => $item->name,
+								'description' => $item->description,
 							);
 
 				$template->restore_xml();
@@ -1784,8 +1788,8 @@ class gallery extends Module {
 		if (!isset($_REQUEST['id']) && !isset($_REQUEST['group'])) {
 			// invalid params, print blank JSON object with message
 			$result = array(
-						'error'			=> true,
-						'error_message'	=> $this->get_language_constant('message_json_error_params'),
+						'error'         => true,
+						'error_message' => $this->get_language_constant('message_json_error_params'),
 					);
 
 			print json_encode($result);
@@ -1806,22 +1810,22 @@ class gallery extends Module {
 
 		if (is_object($item)) {
 			$result = array(
-						'error'			=> false,
-						'error_message'	=> '',
-						'id'			=> $item->id,
-						'group'			=> $item->group,
-						'title'			=> $all_languages ? $item->title : $item->title[$language],
-						'description'	=> $all_languages ? $item->description : Markdown::parse($item->description[$language]),
-						'filename'		=> $item->filename,
-						'timestamp'		=> $item->timestamp,
-						'visible'		=> $item->visible,
-						'slideshow'		=> $item->slideshow,
-						'image'			=> self::get_raw_image($item),
+						'error'         => false,
+						'error_message' => '',
+						'id'            => $item->id,
+						'group'         => $item->group,
+						'title'         => $all_languages ? $item->title : $item->title[$language],
+						'description'   => $all_languages ? $item->description : Markdown::parse($item->description[$language]),
+						'filename'      => $item->filename,
+						'timestamp'     => $item->timestamp,
+						'visible'       => $item->visible,
+						'slideshow'     => $item->slideshow,
+						'image'         => self::get_raw_image($item),
 					);
 		} else {
 			$result = array(
-						'error'			=> true,
-						'error_message'	=> $this->get_language_constant('message_json_error_object'),
+						'error'         => true,
+						'error_message' => $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -1899,9 +1903,9 @@ class gallery extends Module {
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
-					'error'			=> false,
-					'error_message'	=> '',
-					'items'			=> array()
+					'error'         => false,
+					'error_message' => '',
+					'items'         => array()
 				);
 
 		if (count($items) > 0) {
@@ -1913,16 +1917,16 @@ class gallery extends Module {
 
 				// add image to result list
 				$result['items'][] = array(
-							'id'			=> $item->id,
-							'text_id'		=> $item->text_id,
-							'group'			=> $item->group,
-							'title'			=> $all_languages ? $item->title : $item->title[$language],
-							'description'	=> $all_languages ? $item->description : Markdown::parse($item->description[$language]),
-							'filename'		=> $item->filename,
-							'timestamp'		=> $item->timestamp,
-							'visible'		=> $item->visible,
-							'image'			=> self::get_raw_image($item),
-							'thumbnail'		=> $thumbnail_url
+							'id'          => $item->id,
+							'text_id'     => $item->text_id,
+							'group'       => $item->group,
+							'title'       => $all_languages ? $item->title : $item->title[$language],
+							'description' => $all_languages ? $item->description : Markdown::parse($item->description[$language]),
+							'filename'    => $item->filename,
+							'timestamp'   => $item->timestamp,
+							'visible'     => $item->visible,
+							'image'       => self::get_raw_image($item),
+							'thumbnail'   => $thumbnail_url
 						);
 			}
 		} else {
@@ -1966,16 +1970,16 @@ class gallery extends Module {
 
 		if (is_object($item)) {
 			$result = array(
-						'error'			=> false,
-						'error_message'	=> '',
-						'id'			=> $item->id,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
+						'error'         => false,
+						'error_message' => '',
+						'id'            => $item->id,
+						'name'          => $item->name,
+						'description'   => $item->description,
 					);
 		} else {
 			$result = array(
-						'error'			=> true,
-						'error_message'	=> $this->get_language_constant('message_json_error_object'),
+						'error'         => true,
+						'error_message' => $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -2045,18 +2049,19 @@ class gallery extends Module {
 							);
 
 		$result = array(
-					'error' 			=> false,
-					'error_message'		=> '',
-					'items'				=> array()
+					'error'         => false,
+					'error_message' => '',
+					'items'         => array()
 				);
 
 		if (count($items) > 0) {
 			foreach ($items as $item)
 				$result['items'][] = array(
-							'id'			=> $item->id,
-							'name'			=> $item->name,
-							'description'	=> $item->description
+							'id'          => $item->id,
+							'name'        => $item->name,
+							'description' => $item->description
 						);
+
 		} else {
 			$result['error'] = true;
 			$result['error_message'] = $this->get_language_constant('message_json_error_object');
@@ -2079,16 +2084,16 @@ class gallery extends Module {
 
 		if (is_object($item)) {
 			$result = array(
-						'error'			=> false,
-						'error_message'	=> '',
-						'id'			=> $item->id,
-						'name'			=> $item->name,
-						'description'	=> $item->description,
+						'error'         => false,
+						'error_message' => '',
+						'id'            => $item->id,
+						'name'          => $item->name,
+						'description'   => $item->description,
 					);
 		} else {
 			$result = array(
-						'error'			=> true,
-						'error_message'	=> $this->get_language_constant('message_json_error_object'),
+						'error'         => true,
+						'error_message' => $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -2109,17 +2114,17 @@ class gallery extends Module {
 							);
 
 		$result = array(
-					'error' 			=> false,
-					'error_message'		=> '',
-					'items'				=> array()
+					'error'         => false,
+					'error_message' => '',
+					'items'         => array()
 				);
 
 		if (count($items) > 0) {
 			foreach ($items as $item)
 				$result['items'][] = array(
-							'id'			=> $item->id,
-							'name'			=> $item->name,
-							'description'	=> $item->description
+							'id'          => $item->id,
+							'name'        => $item->name,
+							'description' => $item->description
 						);
 		} else {
 			$result['error'] = true;
@@ -2580,9 +2585,9 @@ class gallery extends Module {
 
 		// prepare result
 		$result = array(
-					'error'		=> false,
-					'message'	=> '',
-					'id'		=> null
+					'error'   => false,
+					'message' => '',
+					'id'      => null
 				);
 
 		// preload uploaded file values
@@ -2646,11 +2651,11 @@ class gallery extends Module {
 			if (move_uploaded_file($file_temp_names[$i], $this->image_path.$filename)) {
 				// store empty data in database
 				$data = array(
-							'size'			=> $file_sizes[$i],
-							'filename'		=> $filename,
-							'visible'		=> 1,
-							'slideshow'		=> 0,
-							'protected'		=> $protected
+							'size'      => $file_sizes[$i],
+							'filename'  => $filename,
+							'visible'   => 1,
+							'slideshow' => 0,
+							'protected' => $protected
 						);
 
 				$manager->insert_item($data);
