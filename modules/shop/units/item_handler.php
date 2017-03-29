@@ -873,7 +873,7 @@ class Handler {
 					);
 
 			if ($section == 'backend' || $section == 'backend_module') {
-				$params['item_change' = URL::make_hyperlink(
+				$params['item_change'] = URL::make_hyperlink(
 											$this->parent->get_language_constant('change'),
 											window_Open(
 												'shop_item_change', 	// window id
@@ -889,7 +889,7 @@ class Handler {
 													array('id', $item->id)
 												))
 										);
-				$params['item_delete' = URL::make_hyperlink(
+				$params['item_delete'] = URL::make_hyperlink(
 											$this->parent->get_language_constant('delete'),
 											window_Open(
 												'shop_item_delete', 	// window id
