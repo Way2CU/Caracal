@@ -2219,7 +2219,7 @@ class gallery extends Module {
 						array(
 							'group'   => $group->id,
 							'visible' => 1
-						)
+						),
 						array('RAND()')
 					);
 
