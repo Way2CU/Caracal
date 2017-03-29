@@ -2815,6 +2815,82 @@ class gallery extends Module {
 		return $target_file;
 	}
 
+	/**
+	 * Generate SVG sprite composite image. This image will embed other images
+	 * and provide easy mechanism for displaying them. While this process does generate
+	 * files 15-20% bigger (on average) TCP/IP protocol, due to its initial throttling,
+	 * will favor these composites over individual requests for separate small files.
+	 *
+	 * @param array $id_list,
+	 * @param integer $size
+	 * @param integer $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public function create_sprite_image($id_list, $size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		// prepare id hash
+		sort($id_list);
+		$set_hash = hash('sha256', implode('-', $id_list));
+
+		// generate target file name
+		$target_file = $this->optimized_path;
+		$target_file .= $size.'_';
+		if (!is_null($crop_size))
+			$target_file .= 'crp'.$crop_size.'_';
+		$target_file .= 'cs'.$constraint.'_';
+		$target_file .= $set_hash.'.svg';
+
+		// if target file exists, don't create it
+		if (file_exists($target_file))
+			return $target_file;
+
+		// get image data
+		$manager = GalleryManager::get_instance();
+		$images = $manager->get_items(
+				array('id', 'filename'),
+				array('id' => $id_list)
+			);
+
+		// report potential misbehavior
+		if (count($images) == 0) {
+			trigger_error('Gallery: Requested empty sprite!', E_USER_NOTICE);
+			return '';
+		}
+
+		// open target file for writing
+		$file = fopen($target_file, 'w');
+
+		if ($file === false) {
+			trigger_error('Gallery: Unable to create sprite file for writing!', E_USER_ERROR);
+			return '';
+		}
+
+		// generate header code
+		fwrite($file, '<svg version="1.1" baseProfile="tiny" width="100%" height="100%" ');
+		fwrite($file, 'viewBox="0 0 '.$size.' '.$size.'" ');
+		fwrite($file, 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">');
+		fwrite($file, '<defs><style type="text/css">image{visibility:hidden;}image:target{visibility:visible;}</style></defs>');
+
+		// embed each image individually
+		foreach ($images as $image) {
+			$original_file = $this->optimized_path.$image->filename;
+			$image_file = $this->create_optimized_image($original_file, $size, $constraint, $crop_size);
+
+			// skip images which can't be loaded
+			if (!file_exists($image_file))
+				continue;
+
+			fwrite($file, '<image id="'.$image->id.'" x="0" y="0" width="'.$size.'" height="'.$size.'" ');
+			fwrite($file, 'xlink:href="data:image/jpg;base64,'.base64_encode(file_get_contents($image_file)));
+			fwrite($file, '"/>');
+		}
+
+		// close target file and clean up
+		fwrite($file, '</svg>');
+		fclose($file);
+
+		return $target_file;
+	}
 }
 
 ?>
