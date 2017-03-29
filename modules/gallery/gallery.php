@@ -2376,11 +2376,11 @@ class gallery extends Module {
 						array(
 							'group'   => $group->id,
 							'visible' => 1
-						)
+						),
 						array('RAND()')
 					);
 
-				if (is_object($image)
+				if (is_object($image))
 					$result = self::get_image($image, $size, $constraint, $crop_size);
 			}
 
