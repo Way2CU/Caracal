@@ -607,33 +607,7 @@ class Handler {
 		$template->register_tag_handler('cms:value_list', $size_handler, 'tag_ValueList');
 		$template->register_tag_handler('cms:color_list', $this, 'tag_ColorList');
 
-		// parse template
-		if (ModuleHandler::is_loaded('gallery'))
-			$gallery = gallery::get_instance();
-
-		if (!is_null($gallery)) {
-			// get manufacturer logo
-			$manufacturer_logo_url = '';
-
-			if ($item->manufacturer != 0) {
-				$manufacturer = $manufacturer_manager->get_single_item(
-												$manufacturer_manager->get_field_names(),
-												array('id' => $item->manufacturer)
-											);
-
-				if (is_object($manufacturer))
-					$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
-			}
-
-			// get urls for image and thumbnail
-			$image_url = gallery::getGroupImageById($item->gallery);
-
-		} else {
-			// default values if gallery is not enabled
-			$image_url = '';
-			$manufacturer_logo_url = '';
-		}
-
+		// prepare parameters
 		$rating = 0;
 		$variation_id = $shop->generateVariationId($item->uid);
 
@@ -645,9 +619,7 @@ class Handler {
 					'name'                  => $item->name,
 					'description'           => $item->description,
 					'gallery'               => $item->gallery,
-					'image'                 => $image_url,
 					'manufacturer'          => $item->manufacturer,
-					'manufacturer_logo_url' => $manufacturer_logo_url,
 					'size_definition'       => $item->size_definition,
 					'colors'                => $item->colors,
 					'author'                => $item->author,
@@ -667,6 +639,7 @@ class Handler {
 					'deleted'               => $item->deleted,
 				);
 
+		// render template
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -679,7 +652,7 @@ class Handler {
 	 * @param array $chilren
 	 */
 	public function tag_ItemList($tag_params, $children) {
-		global $language;
+		global $language, $section;
 
 		$shop = shop::get_instance();
 		$manager = Manager::get_instance();
@@ -865,29 +838,7 @@ class Handler {
 		$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
 
 		foreach ($items as $item) {
-			if (!is_null($gallery)) {
-				// get manufacturer logo
-				$manufacturer_logo_url = '';
-
-				if ($item->manufacturer != 0) {
-					$manufacturer = $manufacturer_manager->get_single_item(
-													$manufacturer_manager->get_field_names(),
-													array('id' => $item->manufacturer)
-												);
-
-					if (is_object($manufacturer))
-						$manufacturer_logo_url = $gallery->getImageURL($manufacturer->logo);
-				}
-
-				// get urls for image and thumbnail
-				$image_url = gallery::getGroupImageById($item->gallery);
-
-			} else {
-				// default values if gallery is not enabled
-				$image_url = '';
-				$manufacturer_logo_url = '';
-			}
-
+			// prepare parameters
 			$rating = 0;
 			$variation_id = $shop->generateVariationId($item->uid);
 
@@ -901,9 +852,7 @@ class Handler {
 						'gallery'               => $item->gallery,
 						'size_definition'       => $item->size_definition,
 						'colors'                => $item->colors,
-						'image'                 => $image_url,
 						'manufacturer'          => $item->manufacturer,
-						'manufacturer_logo_url' => $manufacturer_logo_url,
 						'author'                => $item->author,
 						'views'                 => $item->views,
 						'price'                 => $item->price,
@@ -920,42 +869,43 @@ class Handler {
 						'is_new'                => strtotime($item->timestamp) >= $new_timestamp,
 						'expires'               => strtotime($item->expires),
 						'visible'               => $item->visible,
-						'deleted'               => $item->deleted,
-						'item_change'           => URL::make_hyperlink(
-												$this->parent->get_language_constant('change'),
-												window_Open(
-													'shop_item_change', 	// window id
-													550,				// width
-													$this->parent->get_language_constant('title_item_change'), // title
-													true, true,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', self::SUB_ACTION),
-														array('sub_action', 'change'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'           => URL::make_hyperlink(
-												$this->parent->get_language_constant('delete'),
-												window_Open(
-													'shop_item_delete', 	// window id
-													400,				// width
-													$this->parent->get_language_constant('title_item_delete'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', self::SUB_ACTION),
-														array('sub_action', 'delete'),
-														array('id', $item->id)
-													)
-												)
-											),
+						'deleted'               => $item->deleted
 					);
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change' = URL::make_hyperlink(
+											$this->parent->get_language_constant('change'),
+											window_Open(
+												'shop_item_change', 	// window id
+												550,				// width
+												$this->parent->get_language_constant('title_item_change'), // title
+												true, true,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', self::SUB_ACTION),
+													array('sub_action', 'change'),
+													array('id', $item->id)
+												))
+										);
+				$params['item_delete' = URL::make_hyperlink(
+											$this->parent->get_language_constant('delete'),
+											window_Open(
+												'shop_item_delete', 	// window id
+												400,				// width
+												$this->parent->get_language_constant('title_item_delete'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', self::SUB_ACTION),
+													array('sub_action', 'delete'),
+													array('id', $item->id)
+												))
+										);
+			}
 
 			// add images link
 			if (!is_null($gallery)) {
@@ -976,10 +926,12 @@ class Handler {
 													$this->parent->get_language_constant('images'),
 													$open_gallery_window
 												);
+
 			} else {
 				$params['item_images'] = '';
 			}
 
+			// render template
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();

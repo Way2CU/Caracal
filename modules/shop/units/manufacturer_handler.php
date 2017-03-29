@@ -334,15 +334,6 @@ class ShopManufacturerHandler {
 		$order_asc = true;
 		$selected = -1;
 
-		if (ModuleHandler::is_loaded('gallery')) {
-			$use_images = true;
-			$gallery = gallery::get_instance();
-			$gallery_manager = GalleryManager::get_instance();
-
-		} else {
-			$use_images = false;
-		}
-
 		// parse parameters
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
@@ -373,25 +364,13 @@ class ShopManufacturerHandler {
 			// get image
 			$image = '';
 
-			if ($use_images && !empty($item->logo)) {
-				$image_item = $gallery_manager->get_single_item(
-										$gallery_manager->get_field_names(),
-										array('id' => $item->logo)
-									);
-
-				if (is_object($image_item))
-					$image = $gallery->getImageURL($image_item);
-			}
-
 			// prepare parameters
 			$params = array(
 					'id'		=> $item->id,
 					'name'		=> $item->name,
 					'web_site'	=> $item->web_site,
-					'logo'		=> $image,
 					'selected'	=> $selected == $item->id ? 1 : 0
 				);
-
 
 			if ($section == 'backend' || $section == 'backend_module') {
 				$params['item_change'] = URL::make_hyperlink(
