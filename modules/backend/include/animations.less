@@ -1,0 +1,24 @@
+/**
+ * Animations Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+@keyframes slide-from-top {
+	from {
+		transform: translateY(-100%);
+	}
+	to {
+		transform: translateY(0%);
+	}
+}
+
+.animation-slide-from-top(@duration: 1, @delay: 0) {
+	animation-name: slide-from-top;
+	animation-duration: unit(@duration, s);
+	animation-delay: unit(@delay, s);
+	animation-fill-mode: backwards;
+	animation-iteration-count: 1;
+}

@@ -8,6 +8,8 @@
 
 @import (reference) 'colors.less';
 @import (reference) 'spacing.less';
+@import (reference) 'common.less';
+@import 'animations.less';
 @import 'fonts.less';
 @import 'header.less';
 @import 'menu.less';
@@ -25,10 +27,16 @@ body {
 
 body > section {
 	display: flex;
+	height: calc(~'100vh - ' @header_unit + (4 * @padding_unit));
 	flex-flow: row;
 	align-items: stretch;
 }
 
 div#container {
 	flex: 1 0 auto;
+
+	background-image: url(../images/background.svg);
+	background-size: 50% auto;
+	background-position: center;
+	background-repeat: no-repeat;
 }

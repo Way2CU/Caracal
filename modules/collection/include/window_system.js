@@ -219,7 +219,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 	self.content = null;
 	self.close_button = null;
 	self.main_menu = null;
-	self.window_list_item = $('<li>');
+	self.window_list_item = $('<a>');
 	self.icon = null;
 
 	self.parent = null;
@@ -256,10 +256,8 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 					.appendTo(self.title_bar);
 
 			// create window icon
-			self.icon = $('<span>');
-			self.icon
-					.addClass('icon')
-					.appendTo(self.title_bar);
+			self.icon = $('<svg>');
+			self.icon.appendTo(self.title_bar);
 
 			var window_container = $('<div>');
 			window_container
@@ -417,8 +415,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 
 		// add window list item
 		self.window_list_item
-				.html(self._title_string)
-				.prepend($('<span>'))
+				.attr('title', self._title_string)
 				.appendTo(self.window_system.window_list)
 				.click(self._handleWindowListClick);
 
@@ -726,8 +723,8 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 	 * @param string background
 	 */
 	self.setIcon = function(background) {
-		self.icon[0].style.backgroundImage = background;
-		self.window_list_item.find('span')[0].style.backgroundImage = background;
+		// self.icon[0].style.backgroundImage = background;
+		self.window_list_item[0].innerHTML = background;
 	};
 
 	// finish object initialization
@@ -790,16 +787,6 @@ Caracal.WindowSystem.System = function(container) {
 	 * @return object
 	 */
 	self.openWindow = function(id, width, title, can_close, url, caller) {
-		var window_icon = null;
-
-		// get window icon from caller
-		if (caller != undefined) {
-			var icon = $(caller).find('span');
-
-			if (icon.length > 0)
-				window_icon = icon[0].style.backgroundImage;
-		}
-
 		if (self.windowExists(id)) {
 			// window already exists, reload content and show it
 			var window = self.getWindow(id);
@@ -817,8 +804,10 @@ Caracal.WindowSystem.System = function(container) {
 			window.attach(self);
 
 			// set window icon
-			if (window_icon != null)
-				window.setIcon(window_icon);
+			var icon = $(caller).find('svg');
+			if (icon.length)
+				window.setIcon(icon[0].outerHTML); else
+				window.setIcon('<svg></svg>');
 
 			// show window
 			window

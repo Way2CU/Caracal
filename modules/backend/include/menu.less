@@ -27,8 +27,6 @@ nav#main.minimized span {
 
 nav#main a {
 	display: block;
-	// padding: @padding_unit;
-	padding-right: 0;
 
 	border-right: @padding_unit solid transparent;
 
@@ -43,7 +41,7 @@ nav#main a {
 	}
 }
 
-nav#main a img {
+nav#main a svg {
 	width: @icon_size;
 	height: @icon_size;
 }
@@ -70,17 +68,55 @@ nav#main div > nav {
 
 	opacity: 0;
 	pointer-events: none;
+
+	transform-origin: 0 50%;
+	transform: perspective(1000px) rotate3d(0, 1, 0, 90deg);
+	transition: opacity 0.5s, transform 0.5s;
+
+	html[dir=rtl] & {
+		transform-origin: 100% 50%;
+	}
 }
 
 nav#main div:hover > nav {
 	opacity: 1;
 	pointer-events: auto;
+
+	transform: perspective(1000px) rotate3d(0, 0, 0, 90deg);
+}
+
+nav#main div > nav hr {
+	border: 0;
+	border-bottom: 1px solid fade(@color_dark, 25);
 }
 
 /**
  * Windows menu
  */
 nav#windows {
+	flex: 1 1;
+}
+
+nav#windows a {
+	display: inline-block;
+	background-color: fade(@color_dark, 10);
+	color: @color_dark;
+
+	.container-padding(2);
+	.animation-slide-from-top(0.3);
+
+	&.active {
+		background-color: @color_active;
+		color: @color_bright;
+	}
+
+	svg, span {
+		display: block;
+		width: unit(@header_unit, em);
+		height: unit(@header_unit, em);
+
+		fill: fade(@color_dark, 70);
+	}
 }
 
 /**
@@ -104,7 +140,7 @@ nav#common a {
 	margin-left: @padding_unit;
 	.link-padding(0.5);
 
-	border-right: 1px solid fade(@color_dark, 50);
+	border-right: 1px solid fade(@color_dark, 25);
 
 	color: fade(@color_dark, 50);
 	text-decoration: none;
@@ -140,7 +176,7 @@ nav#language a {
 	margin-left: @padding_unit;
 	.link-padding(0.5);
 
-	border-right: 1px solid fade(@color_dark, 50);
+	border-right: 1px solid fade(@color_dark, 25);
 
 	color: fade(@color_dark, 50);
 	text-decoration: none;
