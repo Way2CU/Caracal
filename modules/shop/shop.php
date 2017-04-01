@@ -38,6 +38,7 @@ require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
 require_once('units/coupons_handler.php');
+require_once('units/supplier_handler.php');
 
 // helper classes
 require_once('units/token_manager.php');
@@ -819,12 +820,12 @@ class shop extends Module {
 				break;
 
 			case 'json_get_property':
-				$handler = \Modules\Shop\Property\Handler::get_instance($this);
+				$handler = Modules\Shop\Property\Handler::get_instance($this);
 				$handler->json_GetProperty();
 				break;
 
 			case 'json_get_property_list':
-				$handler = \Modules\Shop\Property\Handler::get_instance($this);
+				$handler = Modules\Shop\Property\Handler::get_instance($this);
 				$handler->json_GetPropertyList();
 				break;
 
@@ -853,9 +854,13 @@ class shop extends Module {
 				break;
 
 			case 'coupons':
-				$handler = \Modules\Shop\Promotion\CouponHandler::get_instance($this);
+				$handler = Modules\Shop\Promotion\CouponHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
+
+			case 'suppliers':
+				$handler = Modules\Shop\Supplier\Handler::get_instance($this);
+				$handler->transfer_control($params, $children);
 
 			case 'sizes':
 				$handler = ShopItemSizesHandler::get_instance($this);
@@ -870,9 +875,6 @@ class shop extends Module {
 			case 'manufacturers':
 				$handler = ShopManufacturerHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
-				break;
-
-			case 'special_offers':
 				break;
 
 			case 'warehouses':
@@ -910,348 +912,21 @@ class shop extends Module {
 		$this->save_setting('send_copy', 0);
 		$this->save_setting('default_account_option', User::GUEST);
 
-		// create shop items table
-		$sql = "
-			CREATE TABLE `shop_items` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`uid` VARCHAR(64) NOT NULL,";
+		// create tables
+		$file_list = array(
+			'buyer_address.sql', 'buyers.sql', 'categories.sql', 'coupon_codes.sql',
+			'coupons.sql', 'currencies.sql', 'item_membership.sql', 'item_properties.sql',
+			'item_remarks.sql', 'items.sql', 'manufacturers.sql', 'payment_tokens.sql',
+			'recurring_payments.sql', 'related_items.sql', 'size_definitions.sql',
+			'size_definition_values.sql', 'stock.sql', 'transaction_items.sql',
+			'transaction_plans.sql', 'transaction_promotions.sql', 'transactions.sql',
+			'warehouses.sql', 'suppliers.sql'
+		);
 
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-
-		$sql .= "
-			`gallery` INT NOT NULL,
-			`manufacturer` INT NOT NULL,
-			`size_definition` INT NULL,
-			`colors` VARCHAR(255) NOT NULL DEFAULT '',
-			`tags` VARCHAR(255) NOT NULL DEFAULT '',
-			`author` INT NOT NULL,
-			`views` INT NOT NULL,
-			`price` DECIMAL(10,2) NOT NULL,
-			`discount` DECIMAL(5,2) NOT NULL,
-			`tax` DECIMAL(5,2) NOT NULL,
-			`weight` DECIMAL(10,4) NOT NULL,
-			`votes_up` INT NOT NULL,
-			`votes_down` INT NOT NULL,
-			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			`expires` TIMESTAMP NULL,
-			`priority` INT(4) NOT NULL DEFAULT '5',
-			`visible` BOOLEAN NOT NULL DEFAULT '1',
-			`deleted` BOOLEAN NOT NULL DEFAULT '0',
-			PRIMARY KEY ( `id` ),
-			KEY `visible` (`visible`),
-			KEY `deleted` (`deleted`),
-			KEY `uid` (`uid`),
-			KEY `author` (`author`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item membership table
-		$sql = "
-			CREATE TABLE `shop_item_membership` (
-			`category` INT NOT NULL,
-			`item` INT NOT NULL,
-			KEY `category` (`category`),
-			KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item properties table
-		$sql = "
-			CREATE TABLE `shop_item_properties` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`item` INT NOT NULL,
-			`text_id` VARCHAR(32) NOT NULL,
-			`type` VARCHAR(32) NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
-
-		$sql .= "
-			`value` TEXT NOT NULL,
-			PRIMARY KEY ( `id` ),
-			KEY `item` (`item`),
-			KEY `text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item remarks table
-		$sql = "
-			CREATE TABLE `shop_item_remarks` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`item` INT NOT NULL,
-			`remark` text NOT NULL,
-			PRIMARY KEY ( `id` ),
-			KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create table for related shop items
-		$sql = "
-			CREATE TABLE `shop_related_items` (
-			`item` INT NOT NULL,
-			`related` INT NOT NULL,
-			KEY `item` (`item`,`related`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
-		$db->query($sql);
-
-		// create shop currencies tableshop_related_items
-		$sql = "
-			CREATE TABLE `shop_currencies` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`currency` VARCHAR(5) NOT NULL,
-			PRIMARY KEY ( `id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item sizes table
-		$sql = "
-			CREATE TABLE `shop_item_sizes` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`name` VARCHAR(25) NOT NULL,
-			PRIMARY KEY ( `id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item size values table
-		$sql = "
-			CREATE TABLE `shop_item_size_values` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`definition` INT NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
-
-		$sql .= "PRIMARY KEY ( `id` ),
-			KEY `definition` (`definition`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop categories table
-		$sql = "
-			CREATE TABLE `shop_categories` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`text_id` VARCHAR(32) NOT NULL,
-			`parent` INT NOT NULL DEFAULT '0',
-			`image` INT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-
-		$sql .="
-			`order` INT NOT NULL DEFAULT '0',
-			PRIMARY KEY ( `id` ),
-			KEY `parent` (`parent`),
-			KEY `text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop buyers table
-		$sql = "CREATE TABLE `shop_buyers` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`first_name` varchar(64) NOT NULL,
-			`last_name` varchar(64) NOT NULL,
-			`email` varchar(127) NOT NULL,
-			`phone` varchar(200) NOT NULL,
-			`guest` boolean NOT NULL DEFAULT '0',
-			`system_user` int NULL,
-			`agreed` boolean NOT NULL DEFAULT '0',
-			`promotions` boolean NOT NULL DEFAULT '0',
-			`uid` varchar(50) NOT NULL,
-			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop buyer addresses table
-		$sql = "CREATE TABLE `shop_delivery_address` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`buyer` INT NOT NULL,
-			`name` varchar(128) NOT NULL,
-			`street` varchar(200) NOT NULL,
-			`street2` varchar(200) NOT NULL,
-			`email` varchar(127) NOT NULL,
-			`phone` varchar(200) NOT NULL,
-			`city` varchar(40) NOT NULL,
-			`zip` varchar(20) NOT NULL,
-			`state` varchar(40) NOT NULL,
-			`country` varchar(64) NOT NULL,
-			`access_code` varchar(100) NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `buyer` (`buyer`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transactions table
-		$sql = "CREATE TABLE `shop_transactions` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`buyer` INT NOT NULL,
-			`address` INT NOT NULL,
-			`uid` varchar(30) NOT NULL,
-			`type` smallint(6) NOT NULL,
-			`status` smallint(6) NOT NULL,
-			`currency` INT NOT NULL,
-			`handling` decimal(8,2) NOT NULL,
-			`shipping` decimal(8,2) NOT NULL,
-			`weight` decimal(4,2) NOT NULL,
-			`payment_method` varchar(255) NOT NULL,
-			`payment_token` int NOT NULL DEFAULT '0',
-			`delivery_method` varchar(255) NOT NULL,
-			`delivery_type` varchar(255) NOT NULL,
-			`remark` text NOT NULL,
-			`remote_id` varchar(255) NOT NULL,
-			`total` decimal(8,2) NOT NULL,
-			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			PRIMARY KEY (`id`),
-			KEY `buyer` (`buyer`),
-			KEY `address` (`address`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transaction items table
-		$sql = "CREATE TABLE `shop_transaction_items` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`transaction` int NOT NULL,
-			`item` int NOT NULL,
-			`price` decimal(8,2) NOT NULL,
-			`tax` decimal(8,2) NOT NULL,
-			`amount` int NOT NULL,
-			`description` varchar(500) NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `transaction` (`transaction`),
-			KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop payment tokens table
-		$sql = "CREATE TABLE `shop_payment_tokens` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`payment_method` varchar(64) NOT NULL,
-			`buyer` int NOT NULL,
-			`name` varchar(50) NOT NULL,
-			`token` varchar(200) NOT NULL,
-			`expires` boolean NOT NULL DEFAULT '0',
-			`expiration_month` int NOT NULL,
-			`expiration_year` int NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `index_by_name` (`payment_method`, `buyer`, `name`),
-			KEY `index_by_buyer` (`payment_method`, `buyer`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transaction plans table
-		$sql = "CREATE TABLE `shop_transaction_plans` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`transaction` int NOT NULL,
-			`plan_name` varchar(64) NOT NULL,
-			`trial` int NOT NULL,
-			`trial_count` int NOT NULL,
-			`interval` int NOT NULL,
-			`interval_count` int NOT NULL,
-			`start_time` timestamp NULL,
-			`end_time` timestamp NULL,
-			PRIMARY KEY (`id`),
-			KEY `transaction` (`transaction`),
-			KEY `plan_name` (`plan_name`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transaction promotions table
-		$sql = "CREATE TABLE `shop_transaction_promotions` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`transaction` int NOT NULL,
-			`promotion` varchar(64) NOT NULL,
-			`discount` varchar(64) NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `transaction` (`transaction`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create show recurring payments table
-		$sql = "CREATE TABLE `shop_recurring_payments` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`plan` INT NOT NULL,
-			`amount` DECIMAL(8,2) NOT NULL,
-			`status` INT NOT NULL,
-			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY (`id`),
-			KEY `index_by_plan` (`plan`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop stock table
-		$sql = "CREATE TABLE `shop_warehouse` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`name` varchar(60) NOT NULL,
-			`street` varchar(200) NOT NULL,
-			`street2` varchar(200) NOT NULL,
-			`city` varchar(40) NOT NULL,
-			`zip` varchar(20) NOT NULL,
-			`country` varchar(64) NOT NULL,
-			`state` varchar(40) NOT NULL,
-			PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop stock table
-		$sql = "CREATE TABLE `shop_stock` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`item` int NOT NULL,
-			`size` int DEFAULT NULL,
-			`amount` int NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop manufacturers table
-		$sql = "CREATE TABLE `shop_manufacturers` (
-			`id` int NOT NULL AUTO_INCREMENT,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
-
-		$sql .= " `web_site` varchar(255) NOT NULL,
-			`logo` int NOT NULL,
-			PRIMARY KEY (`id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create coupons storage
-		$sql = "CREATE TABLE `shop_coupons` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`text_id` varchar(64) NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
-
-		$sql .= "`has_limit` boolean NOT NULL DEFAULT '0',
-			`has_timeout` boolean NOT NULL DEFAULT '0',
-			`limit` int NOT NULL DEFAULT '0',
-			`timeout` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY (`id`),
-			KEY `index_by_text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "CREATE TABLE `shop_coupon_codes` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`coupon` int NOT NULL,
-			`code` varchar(64) NOT NULL,
-			`times_used` int NOT NULL DEFAULT '0',
-			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			`discount` varchar(64) NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `index_by_timestamp` (`timestamp`),
-			KEY `index_by_code` (`code`),
-			KEY `index_by_coupon` (`coupon`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
+		foreach ($file_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
+		}
 	}
 
 	/**

@@ -26,12 +26,12 @@ class ModuleHandler {
 	 * @param boolean $include_only
 	 */
 	public function load_modules($include_only=false) {
-		global $db_use, $data_path;
+		global $db, $data_path;
 
 		$preload_list = array();
 		$normal_list = array();
 
-		if ($db_use) {
+		if (!is_null($db)) {
 			// database available, form module list from database entries
 			$manager = ModuleManager::get_instance();
 

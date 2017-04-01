@@ -8,6 +8,7 @@
  */
 
 class DatabaseType {
+	const NONE = null;
 	const MYSQL = 0;
 	const PGSQL = 1;
 	const SQLITE = 2;

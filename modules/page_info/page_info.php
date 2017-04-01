@@ -176,7 +176,7 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function add_elements() {
-		global $section, $db_use, $optimize_code, $styles_path, $images_path,
+		global $section, $db_type, $optimize_code, $styles_path, $images_path,
 			$scripts_path, $system_styles_path, $system_images_path, $default_language;
 
 		$head_tag = head_tag::get_instance();
@@ -223,7 +223,7 @@ class page_info extends Module {
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
 
-		if (!$ignored_section && $db_use) {
+		if (!$ignored_section && $db_type != DatabaseType::NONE) {
 			// google analytics
 			if (!empty($this->settings['analytics']))
 				$head_tag->addGoogleAnalytics(

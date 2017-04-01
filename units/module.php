@@ -222,12 +222,12 @@ abstract class Module {
 	 * @return array
 	 */
 	protected function load_settings() {
-		global $db, $db_use;
+		global $db;
 
 		$result = array();
 
 		// make sure we have database connection
-		if (!$db_use)
+		if (is_null($db))
 			return $result;
 
 		// get manager
@@ -250,10 +250,10 @@ abstract class Module {
 	 * @param string $value
 	 */
 	protected function save_setting($name, $value) {
-		global $db, $db_use;
+		global $db;
 
 		// this method is only meant for used with database
-		if (!$db_use)
+		if (is_null($db))
 			return;
 
 		// get settings manager
