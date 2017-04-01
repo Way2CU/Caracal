@@ -858,7 +858,7 @@ class shop extends Module {
 				$handler->transfer_control($params, $children);
 				break;
 
-			case 'suppliers']:
+			case 'suppliers':
 				$handler = Modules\Shop\Supplier\Handler::get_instance($this);
 				$handler->transfer_control($params, $children);
 
