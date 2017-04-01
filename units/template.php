@@ -471,7 +471,11 @@ class TemplateHandler {
 					$symbol = isset($tag->tagAttrs['symbol']) ? $tag->tagAttrs['symbol'] : null;
 
 					if (is_null($symbol)) {
-						echo file_get_contents($path.$file);
+						if ($file[0] != '/')
+							$file = $path.$file;
+
+						if (file_exists($file))
+							echo file_get_contents($file);
 
 					} else {
 						$params = array(
