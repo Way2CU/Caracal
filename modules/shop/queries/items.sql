@@ -1,0 +1,32 @@
+-- Shop items
+
+CREATE TABLE `shop_items` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`uid` varchar(64) NOT NULL,
+	`name` ml_varchar(255) NOT NULL DEFAULT '',
+	`description` ml_text NOT NULL ,
+	`gallery` int NOT NULL,
+	`manufacturer` int NOT NULL,
+	`supplier` int NOT NULL,
+	`size_definition` int NULL,
+	`colors` varchar(255) NOT NULL DEFAULT '',
+	`tags` varchar(255) NOT NULL DEFAULT '',
+	`author` int NOT NULL,
+	`views` int NOT NULL,
+	`price` decimal(10,2) NOT NULL,
+	`discount` decimal(5,2) NOT NULL,
+	`tax` decimal(5,2) NOT NULL,
+	`weight` decimal(10,4) NOT NULL,
+	`votes_up` int NOT NULL,
+	`votes_down` int NOT NULL,
+	`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`expires` timestamp NULL,
+	`priority` int(4) NOT NULL DEFAULT '5',
+	`visible` boolean NOT NULL DEFAULT '1',
+	`deleted` boolean NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`),
+	KEY `index_by_visible` (`visible`),
+	KEY `index_by_deleted` (`deleted`),
+	KEY `index_by_uid` (`uid`),
+	KEY `index_by_author` (`author`)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;
