@@ -38,7 +38,7 @@ class CouponHandler {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new \backend_MenuItem(
 									$this->parent->get_language_constant('menu_coupons'),
-									URL::from_file_path($this->path.'images/coupons.svg'),
+									$this->path.'images/coupons.svg',
 
 									window_Open( // on click open window
 												'shop_coupons',

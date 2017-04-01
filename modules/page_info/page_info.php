@@ -39,7 +39,7 @@ class page_info extends Module {
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->get_language_constant('menu_page_info'),
-										URL::from_file_path($this->path.'images/icon.svg'),
+										$this->path.'images/icon.svg',
 										window_Open( // on click open window
 													'page_settings',
 													400,

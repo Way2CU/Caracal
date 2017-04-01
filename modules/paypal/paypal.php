@@ -36,7 +36,7 @@ class paypal extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_paypal'),
-									URL::from_file_path($this->path.'images/icon.svg'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'paypal',
 												400,
@@ -50,7 +50,7 @@ class paypal extends Module {
 			if (!is_null($recurring_menu))
 				$recurring_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_paypal'),
-									URL::from_file_path($this->path.'images/icon.svg'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'paypal_recurring_plans',
 												400,

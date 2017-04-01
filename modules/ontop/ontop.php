@@ -39,7 +39,7 @@ class ontop extends Module {
 
 			$ontop_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_ontop'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					window_Open(
 						'ontop_applications',
 						450,

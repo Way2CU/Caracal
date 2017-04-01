@@ -93,14 +93,14 @@ class backend extends Module {
 		if ($section == 'backend') {
 			$system_menu = new backend_MenuItem(
 									$this->get_language_constant('menu_system'),
-									URL::from_file_path($this->path.'images/system.svg'),
+									$this->path.'images/system.svg',
 									'javascript:void(0);',
 									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_modules'),
-									URL::from_file_path($this->path.'images/modules.svg'),
+									$this->path.'images/modules.svg',
 									window_Open( // on click open window
 												'system_modules',
 												610,
@@ -112,7 +112,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_users'),
-									URL::from_file_path($this->path.'images/users.svg'),
+									$this->path.'images/users.svg',
 									window_Open( // on click open window
 												'system_users',
 												690,
@@ -124,7 +124,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_clear_cache'),
-									URL::from_file_path($this->path.'images/clear_cache.svg'),
+									$this->path.'images/clear_cache.svg',
 									window_Open( // on click open window
 												'system_clear_cache',
 												350,
@@ -137,7 +137,7 @@ class backend extends Module {
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_change_password'),
-									URL::from_file_path($this->path.'images/change_password.svg'),
+									$this->path.'images/change_password.svg',
 									window_Open( // on click open window
 												'change_password_window',
 												350,
@@ -149,7 +149,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_logout'),
-									URL::from_file_path($this->path.'images/logout.svg'),
+									$this->path.'images/logout.svg',
 									window_Open( // on click open window
 												'logout_window',
 												350,
@@ -737,7 +737,7 @@ class backend extends Module {
 
 			if (file_exists($icon_file))
 				$icon = URL::from_file_path($icon_file); else
-				$icon = URL::from_file_path($this->path.'images/modules.svg');
+				$this->path.'images/modules.svg';
 
 			$params = array(
 							'name'				=> $name,

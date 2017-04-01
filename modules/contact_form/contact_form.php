@@ -105,14 +105,14 @@ class contact_form extends Module {
 			// create menu
 			$contact_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_contact'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_forms'),
-								URL::from_file_path($this->path.'images/forms.svg'),
+								$this->path.'images/forms.svg',
 
 								window_Open( // on click open window
 											'contact_forms',
@@ -125,7 +125,7 @@ class contact_form extends Module {
 							));
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_templates'),
-								URL::from_file_path($this->path.'images/templates.svg'),
+								$this->path.'images/templates.svg',
 
 								window_Open( // on click open window
 											'contact_form_templates',
@@ -139,7 +139,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(6);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_settings'),
-								URL::from_file_path($this->path.'images/settings.svg'),
+								$this->path.'images/settings.svg',
 
 								window_Open( // on click open window
 											'contact_form_settings',
@@ -153,7 +153,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_submissions'),
-								URL::from_file_path($this->path.'images/submissions.svg'),
+								$this->path.'images/submissions.svg',
 
 								window_Open( // on click open window
 											'contact_form_submissions',

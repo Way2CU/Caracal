@@ -26,14 +26,14 @@ class tips extends Module {
 
 			$tips_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_tips'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$tips_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_tips_manage'),
-								URL::from_file_path($this->path.'images/manage.svg'),
+								$this->path.'images/manage.svg',
 
 								window_Open( // on click open window
 											'tips',

@@ -37,7 +37,7 @@ class page_description extends Module {
 
 			$menu_item = new backend_MenuItem(
 					$this->get_language_constant('menu_page_descriptions'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					window_Open(
 							'page_descriptions',
 							600,

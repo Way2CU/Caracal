@@ -26,14 +26,14 @@ class faq extends Module {
 
 			$faq_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_faq'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=4
 				);
 
 			$faq_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_questions'),
-								URL::from_file_path($this->path.'images/questions.svg'),
+								$this->path.'images/questions.svg',
 
 								window_Open( // on click open window
 											'faq',

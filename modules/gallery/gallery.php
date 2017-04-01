@@ -107,14 +107,14 @@ class gallery extends Module {
 
 			$gallery_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_gallery'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_images'),
-								URL::from_file_path($this->path.'images/images.svg'),
+								$this->path.'images/images.svg',
 								window_Open( // on click open window
 											'gallery_images',
 											670,
@@ -127,7 +127,7 @@ class gallery extends Module {
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_groups'),
-								URL::from_file_path($this->path.'images/groups.svg'),
+								$this->path.'images/groups.svg',
 								window_Open( // on click open window
 											'gallery_groups',
 											450,
@@ -140,7 +140,7 @@ class gallery extends Module {
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_containers'),
-								URL::from_file_path($this->path.'images/containers.svg'),
+								$this->path.'images/containers.svg',
 								window_Open( // on click open window
 											'gallery_containers',
 											490,
