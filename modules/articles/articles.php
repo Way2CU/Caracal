@@ -16,7 +16,6 @@ use Core\Module;
 use Core\Markdown;
 
 
-
 final class ImageType {
 	const Stars = 1;
 	const Circles = 2;
