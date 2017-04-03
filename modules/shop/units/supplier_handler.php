@@ -9,6 +9,8 @@
 
 namespace Modules\Shop\Supplier;
 
+use \TemplateHandler;
+
 
 class Handler {
 	private static $_instance;
