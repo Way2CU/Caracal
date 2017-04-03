@@ -9,6 +9,7 @@
 
 namespace Modules\Shop\Supplier;
 
+use \URL;
 use \TemplateHandler;
 
 
