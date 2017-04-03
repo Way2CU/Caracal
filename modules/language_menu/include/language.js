@@ -14,20 +14,25 @@ var language_handler = null;
 
 
 function LanguageHandler() {
-	// language containers
-	this.languages = [];
-	this.rtl_languages = [];
-	this.default_language = 'en';
-	this.current_language = 'en';
+	var self = this;
 
-	// base url for this site
-	this.backend_url = $('meta[property=base-url]').attr('content') + '/index.php';
+	// language containers
+	self.languages = [];
+	self.rtl_languages = [];
+	self.default_language = 'en';
+	self.current_language = 'en';
+
+	// base url for self site
+	self.backend_url = $('meta[property=base-url]').attr('content') + '/index.php';
 
 	// local language constant cache
-	this.cache = {};
+	self.cache = {};
 
-	this.init = function() {
-		this.loadLanguages();
+	/**
+	 * Finalize object initialization.
+	 */
+	self._init = function() {
+		self.loadLanguages();
 	};
 
 	/**
@@ -35,8 +40,8 @@ function LanguageHandler() {
 	 *
 	 * @return json object
 	 */
-	this.getLanguages = function() {
-		return this.languages;
+	self.getLanguages = function() {
+		return self.languages;
 	};
 
 	/**
@@ -44,8 +49,8 @@ function LanguageHandler() {
 	 *
 	 * @return array
 	 */
-	this.getRTL = function() {
-		return this.rtl_languages;
+	self.getRTL = function() {
+		return self.rtl_languages;
 	};
 
 	/**
@@ -53,13 +58,13 @@ function LanguageHandler() {
 	 *
 	 * @return boolean
 	 */
-	this.isRTL = function(language) {
+	self.isRTL = function(language) {
 		// in case language is not specified use current
 		if (language == undefined || language == null)
-			var language = this.current_language;
+			var language = self.current_language;
 
 		// return boolean result
-		return !(this.rtl_languages.indexOf(language) == -1);
+		return !(self.rtl_languages.indexOf(language) == -1);
 	};
 
 	/**
@@ -70,7 +75,7 @@ function LanguageHandler() {
 	 * @param string language
 	 * @return string
 	 */
-	this.getText = function(module, constant) {
+	self.getText = function(module, constant) {
 		var id = (module == null ? '_global' : module) + '.' + constant;
 		var data = {
 					section: 'language_menu',
@@ -83,22 +88,22 @@ function LanguageHandler() {
 			data.from_module = module;
 
 		// check local cache first
-		if (this.cache[id] == undefined) {
+		if (self.cache[id] == undefined) {
 			$.ajax({
-				url: this.backend_url,
+				url: self.backend_url,
 				method: 'GET',
 				async: false,
 				cache: true,
 				data: data,
 				dataType: 'json',
-				context: this,
+				context: self,
 				success: function(data) {
-					this.cache[id] = data.text;
+					self.cache[id] = data.text;
 				}
 			});
 		}
 
-		return this.cache[id];
+		return self.cache[id];
 	};
 
 	/**
@@ -108,7 +113,7 @@ function LanguageHandler() {
 	 * @param string constant
 	 * @param object callback
 	 */
-	this.getTextAsync = function(module, constant, callback) {
+	self.getTextAsync = function(module, constant, callback) {
 		var id = (module == null ? '_global' : module) + '.' + constant;
 		var data = {
 					section: 'language_menu',
@@ -121,24 +126,24 @@ function LanguageHandler() {
 			data.from_module = module;
 
 		// check local cache first
-		if (this.cache[id] == undefined) {
+		if (self.cache[id] == undefined) {
 			$.ajax({
-				url: this.backend_url,
+				url: self.backend_url,
 				method: 'GET',
 				async: true,
 				cache: true,
 				data: data,
 				dataType: 'json',
-				context: this,
+				context: self,
 				success: function(data) {
-					this.cache[id] = data.text;
+					self.cache[id] = data.text;
 					callback(constant, data.text);
 				}
 			});
 
 		} else {
 			// we have local cache, send that
-			callback(constant, this.cache[id]);
+			callback(constant, self.cache[id]);
 		}
 	};
 
@@ -149,7 +154,7 @@ function LanguageHandler() {
 	 * @param array constants
 	 * @return array
 	 */
-	this.getTextArray = function(module, constants) {
+	self.getTextArray = function(module, constants) {
 		var id = (module == null ? '_global' : module) + '.';
 		var data = {
 					section: 'language_menu',
@@ -166,9 +171,9 @@ function LanguageHandler() {
 		for (var i=0; i < constants.length; i++) {
 			var key = id + constants[i];
 
-			if (key in this.cache) {
+			if (key in self.cache) {
 				// add cached value to result
-				result[constants[i]] = this.cache[key];
+				result[constants[i]] = self.cache[key];
 
 			} else {
 				// add constant to requested list
@@ -181,16 +186,16 @@ function LanguageHandler() {
 			data.constants = request;
 
 			$.ajax({
-				url: this.backend_url,
+				url: self.backend_url,
 				method: 'GET',
 				async: false,
 				cache: true,
 				data: data,
 				dataType: 'json',
-				context: this,
+				context: self,
 				success: function(data) {
 					for (var key in data.text) {
-						this.cache[id + key] = data.text[key];
+						self.cache[id + key] = data.text[key];
 						result[key] = data.text[key];
 					}
 				}
@@ -207,7 +212,7 @@ function LanguageHandler() {
 	 * @param array constants
 	 * @param object callback
 	 */
-	this.getTextArrayAsync = function(module, constants, callback) {
+	self.getTextArrayAsync = function(module, constants, callback) {
 		var id = (module == null ? '_global' : module) + '.';
 		var data = {
 					section: 'language_menu',
@@ -224,9 +229,9 @@ function LanguageHandler() {
 		for (var i=0; i < constants.length; i++) {
 			var key = id + constants[i];
 
-			if (key in this.cache) {
+			if (key in self.cache) {
 				// add cached value to result
-				result[constants[i]] = this.cache[key];
+				result[constants[i]] = self.cache[key];
 
 			} else {
 				// add constant to requested list
@@ -239,16 +244,16 @@ function LanguageHandler() {
 			data.constants = request;
 
 			$.ajax({
-				url: this.backend_url,
+				url: self.backend_url,
 				method: 'GET',
 				async: true,
 				cache: true,
 				data: data,
 				dataType: 'json',
-				context: this,
+				context: self,
 				success: function(data) {
 					for (var key in data.text) {
-						this.cache[id + key] = data.text[key];
+						self.cache[id + key] = data.text[key];
 						result[key] = data.text[key];
 					}
 
@@ -264,9 +269,9 @@ function LanguageHandler() {
 	/**
 	 * Get current language and store it localy
 	 */
-	this.getCurrentLanguage = function() {
+	self.getCurrentLanguage = function() {
 		$.ajax({
-			url: this.backend_url,
+			url: self.backend_url,
 			method: 'GET',
 			async: false,
 			cache: true,
@@ -275,9 +280,9 @@ function LanguageHandler() {
 				action: 'json_get_current_language',
 			},
 			dataType: 'json',
-			context: this,
+			context: self,
 			success: function(data) {
-				this.current_language = data;
+				self.current_language = data;
 			}
 		});
 	};
@@ -285,10 +290,10 @@ function LanguageHandler() {
 	/**
 	 * Load language list from server
 	 */
-	this.loadLanguages = function() {
+	self.loadLanguages = function() {
 		// retireve languages from server
 		$.ajax({
-			url: this.backend_url,
+			url: self.backend_url,
 			method: 'GET',
 			async: false,
 			cache: true,
@@ -297,8 +302,8 @@ function LanguageHandler() {
 				action: 'json',
 			},
 			dataType: 'json',
-			context: this,
-			success: this.loadLanguages_Complete
+			context: self,
+			success: self.loadLanguages_Complete
 		});
 	};
 
@@ -308,15 +313,15 @@ function LanguageHandler() {
 	 * @param object data
 	 * @param string status
 	 */
-	this.loadLanguages_Complete = function(data, status) {
-		this.languages = data.items;
-		this.rtl_languages = data.rtl;
-		this.default_language = data.default_language;
-		this.current_language = data.current_language;
+	self.loadLanguages_Complete = function(data, status) {
+		self.languages = data.items;
+		self.rtl_languages = data.rtl;
+		self.default_language = data.default_language;
+		self.current_language = data.current_language;
 	};
 
 	// initialize
-	this.init();
+	self._init();
 }
 
 $(document).ready(function() {
