@@ -17,6 +17,7 @@
 				type="text"
 				name="phone"
 				class="code"
+				style="min-width: 270px;"
 				maxlength="100"
 				/>
 		</label>
@@ -27,6 +28,7 @@
 				type="text"
 				name="email"
 				class="code"
+				style="min-width: 270px;"
 				maxlength="100"
 				/>
 		</label>
@@ -37,6 +39,7 @@
 				type="text"
 				name="url"
 				class="code"
+				style="min-width: 270px;"
 				maxlength="255"
 				/>
 		</label>
