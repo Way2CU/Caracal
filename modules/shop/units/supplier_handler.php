@@ -9,6 +9,8 @@
 
 namespace Modules\Shop\Supplier;
 
+require_once('supplier_manager.php');
+
 use \URL;
 use \TemplateHandler;
 use Modules\Shop\Item\Manager as ItemManager;
