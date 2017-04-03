@@ -104,6 +104,17 @@ class Handler {
 	 * Show form for adding new supplier to the system.
 	 */
 	private function add_supplier() {
+		$template = new TemplateHandler('supplier_add.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
+					'cancel_action'	=> window_Close('shop_supplier_add')
+				);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
 	}
 
 	/**
