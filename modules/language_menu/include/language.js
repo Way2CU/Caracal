@@ -7,6 +7,8 @@
  * Provides language services to browser side of the framework.
  *
  * Requires jQuery 1.4.2+
+ *
+ * TODO: Modernize and get rid of jQuery. Usage of Communicator should come in to place.
  */
 
 var Caracal = Caracal || new Object();
