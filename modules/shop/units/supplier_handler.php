@@ -207,8 +207,6 @@ class Handler {
 	 * Show confirmation dialog before removing supplier.
 	 */
 	private function delete_supplier() {
-		global $language;
-
 		// get supplier data
 		$id = fix_id($_REQUEST['id']);
 		$manager = Manager::get_instance();
@@ -221,7 +219,7 @@ class Handler {
 		// prepare parameters
 		$params = array(
 					'message'		=> $this->parent->get_language_constant('message_supplier_delete'),
-					'name'			=> $item->name[$language],
+					'name'			=> $item->name,
 					'yes_text'		=> $this->parent->get_language_constant('delete'),
 					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
