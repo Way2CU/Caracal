@@ -32,6 +32,7 @@ function LanguageHandler() {
 	 * Finalize object initialization.
 	 */
 	self._init = function() {
+		self.current_language = document.querySelector('html').getAttribute('lang');
 		self.loadLanguages();
 	};
 
@@ -267,27 +268,6 @@ function LanguageHandler() {
 	};
 
 	/**
-	 * Get current language and store it localy
-	 */
-	self.getCurrentLanguage = function() {
-		$.ajax({
-			url: self.backend_url,
-			method: 'GET',
-			async: false,
-			cache: true,
-			data: {
-				section: 'language_menu',
-				action: 'json_get_current_language',
-			},
-			dataType: 'json',
-			context: self,
-			success: function(data) {
-				self.current_language = data;
-			}
-		});
-	};
-
-	/**
 	 * Load language list from server
 	 */
 	self.loadLanguages = function() {
@@ -317,7 +297,6 @@ function LanguageHandler() {
 		self.languages = data.items;
 		self.rtl_languages = data.rtl;
 		self.default_language = data.default_language;
-		self.current_language = data.current_language;
 	};
 
 	// initialize
