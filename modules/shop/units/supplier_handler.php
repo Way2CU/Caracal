@@ -87,7 +87,7 @@ class Handler {
 										360,
 										$this->parent->get_language_constant('title_supplier_add'),
 										true, true,
-										backend_UrlMake($this->name, $this->SUB_ACTION, 'add')
+										backend_UrlMake($this->name, self::SUB_ACTION, 'add')
 									)
 								),
 					);
