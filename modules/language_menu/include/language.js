@@ -9,7 +9,9 @@
  * Requires jQuery 1.4.2+
  */
 
+var Caracal = Caracal || new Object();
 var language_handler = null;
+
 
 function LanguageHandler() {
 	// language containers
@@ -73,6 +75,7 @@ function LanguageHandler() {
 		var data = {
 					section: 'language_menu',
 					action: 'json_get_text',
+					language: self.current_language,
 					constant: constant
 				};
 
@@ -110,6 +113,7 @@ function LanguageHandler() {
 		var data = {
 					section: 'language_menu',
 					action: 'json_get_text',
+					language: self.current_language,
 					constant: constant
 				};
 
@@ -150,6 +154,7 @@ function LanguageHandler() {
 		var data = {
 					section: 'language_menu',
 					action: 'json_get_text_array',
+					language: self.current_language,
 				};
 		var result = {};
 		var request = [];
@@ -207,6 +212,7 @@ function LanguageHandler() {
 		var data = {
 					section: 'language_menu',
 					action: 'json_get_text_array',
+					language: self.current_language,
 				};
 		var result = {};
 		var request = [];
@@ -315,4 +321,5 @@ function LanguageHandler() {
 
 $(document).ready(function() {
 	language_handler = new LanguageHandler();
+	Caracal.language_handler = language_handler;
 });
