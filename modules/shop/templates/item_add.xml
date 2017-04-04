@@ -47,7 +47,8 @@
 						class="code ltr"
 						type="text"
 						value="$params['uid']"
-						maxlength="13"
+						maxlength="64"
+						style="width: 250px;"
 						cms:eval="value"
 						/>
 				</label>

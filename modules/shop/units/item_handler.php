@@ -177,17 +177,18 @@ class Handler {
 					'cancel_action'	=> window_Close('shop_item_add')
 				);
 
-		// register external tag handlers
+		// get all the handlers needed
 		$category_handler = ShopCategoryHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
-
 		$size_handler = ShopItemSizesHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
-
 		$manufacturer_handler = ShopManufacturerHandler::get_instance($this->parent);
-		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
+		$supplier_handler = SupplierHandler::get_instance($this->parent);
 
+		// register tag handlers
+		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
+		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
+		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
+		$template->register_tag_handler('cms:supplier_list', $supplier_handler, 'tag_SupplierList');
 
 		$template->restore_xml();
 		$template->set_local_params($params);
