@@ -46,6 +46,7 @@ use ShopRelatedItemsManager;
 use ShopManufacturerManager;
 use ShopCategoryManager;
 use Modules\Shop\Property\Handler as PropertyHandler;
+use Modules\Shop\Supplier\Handler as SupplierHandler;
 
 
 class Handler {
@@ -219,11 +220,13 @@ class Handler {
 		$category_handler = ShopCategoryHandler::get_instance($this->parent);
 		$size_handler = ShopItemSizesHandler::get_instance($this->parent);
 		$manufacturer_handler = ShopManufacturerHandler::get_instance($this->parent);
+		$supplier_handler = SupplierHandler::get_instance($this->parent);
 
 		$template->register_tag_handler('cms:category_list', $category_handler, 'tag_CategoryList');
 		$template->register_tag_handler('cms:size_list', $size_handler, 'tag_SizeList');
 		$template->register_tag_handler('cms:manufacturer_list', $manufacturer_handler, 'tag_ManufacturerList');
 		$template->register_tag_handler('cms:item_list', $this, 'tag_ItemList');
+		$template->register_tag_handler('cms:supplier_list', $supplier_handler, 'tag_SupplierList');
 
 		// prepare parameters
 		$params = array(

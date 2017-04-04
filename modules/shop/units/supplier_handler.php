@@ -11,8 +11,8 @@ namespace Modules\Shop\Supplier;
 
 require_once('supplier_manager.php');
 
-use \URL;
-use \TemplateHandler;
+use URL;
+use TemplateHandler;
 use Modules\Shop\Item\Manager as ItemManager;
 
 
@@ -285,6 +285,11 @@ class Handler {
 		$manager = Manager::get_instance();
 		$conditions = array();
 
+		// get selected supplier
+		$selected = null;
+		if (isset($tag_params['selected']))
+			$selected = $tag_params['selected'];
+
 		// get suppliers from the database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
@@ -297,11 +302,12 @@ class Handler {
 		// render tags
 		foreach ($items as $item) {
 			$params = array(
-					'id'    => $item->id,
-					'name'  => $item->name,
-					'phone' => $item->phone,
-					'email' => $item->email,
-					'url'   => $item->url
+					'id'       => $item->id,
+					'name'     => $item->name,
+					'phone'    => $item->phone,
+					'email'    => $item->email,
+					'url'      => $item->url,
+					'selected' => $selected == $item->id ? 1 : 0
 				);
 
 			if ($section == 'backend' || $section == 'backend_module') {
