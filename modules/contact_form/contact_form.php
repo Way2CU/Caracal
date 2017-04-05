@@ -3038,6 +3038,8 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_FormList($tag_params, $children) {
+		global $section;
+
 		$conditions = array();
 		$manager = ContactForm_FormManager::get_instance();
 
