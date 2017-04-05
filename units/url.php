@@ -56,7 +56,7 @@ final class URL {
 		// append language if specified
 		$language_to_add = isset($params['language']) ? $params['language'] : $language;
 
-		if ($language != $default_language)
+		if ($language_to_add != $default_language)
 			$result = '/'.$language_to_add.$result;
 
 		// add URL base
