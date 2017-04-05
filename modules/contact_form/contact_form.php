@@ -3121,6 +3121,7 @@ class contact_form extends Module {
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();
+		}
 	}
 
 	/**
