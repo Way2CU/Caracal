@@ -240,7 +240,10 @@ class language_menu extends Module {
 				continue;
 
 			// prepare parameters for link creation
-			$link_params['language'] = $short;
+			if ($short !== $language)
+				$link_params['language'] = $short; else
+				unset($link_params['language']);
+
 			if ($in_backend)
 				$link = URL::get_base().'?'.http_build_query($link_params); else
 				$link = URL::make($link_params, $matched_file);
