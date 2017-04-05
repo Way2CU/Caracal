@@ -116,7 +116,7 @@ class contact_form extends Module {
 
 								window_Open( // on click open window
 											'contact_forms',
-											700,
+											750,
 											$this->get_language_constant('title_forms_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'forms_manage')
