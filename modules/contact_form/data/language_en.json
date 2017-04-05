@@ -9,6 +9,7 @@
     "column_type": "Type",
     "column_value": "Value",
     "column_mailer": "Enabled mailers for this form",
+    "column_template": "Template",
     "details": "Details",
     "dialog_title": "Contact Form",
     "export": "Export",

@@ -8,6 +8,9 @@
 		<span class="column" style="width: 250px;">
 			<cms:var name="$params['name'][$language]"/>
 		</span>
+		<span class="column" style="width: 150px;">
+			<cms:var name="$params['template']"/>
+		</span>
 		<span class="column">
 			<cms:var name="$params['item_fields']"/><cms:raw text=" "/>
 			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
