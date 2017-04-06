@@ -8,10 +8,8 @@
  */
 
 namespace Modules\Shop;
-
-use \PackageType as PackageType;
-use \UnitType as UnitType;
-use \ShopItemManager as ItemManager;
+use UnitType;
+use PackageType;
 
 
 final class Delivery {
@@ -154,7 +152,7 @@ final class Delivery {
 			);
 
 			// update data
-			$manager->updateData($data, array('id' => $transaction->id));
+			$manager->update_items($data, array('id' => $transaction->id));
 			$result = true;
 		}
 
@@ -245,8 +243,8 @@ final class Delivery {
 				}
 
 		// populate missing fields
-		$manager = ItemManager::getInstance();
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
+		$manager = Item\Manager::get_instance();
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 		$item_map = array();
 
 		// cache item data

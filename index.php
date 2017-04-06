@@ -24,7 +24,7 @@ define('_BASEPATH', dirname(__FILE__));
 define('_LIBPATH', _BASEPATH.'/libraries/');
 define('_DOMAIN', $_SERVER['SERVER_NAME']);
 define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
-define('_VERSION', 0.2);
+define('_VERSION', 0.4);
 
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
@@ -33,6 +33,7 @@ require_once('units/event_handler.php');
 require_once('units/module.php');
 require_once('units/module_handler.php');
 require_once('units/url.php');
+require_once('units/string/distance.php');
 require_once('units/common.php');
 require_once('units/language.php');
 require_once('units/template.php');
@@ -41,6 +42,7 @@ require_once('units/xml_parser.php');
 require_once('units/markdown.php');
 require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
+require_once('units/testing/handler.php');
 require_once('units/page_switch.php');
 require_once('units/session.php');
 require_once('units/config.php');
@@ -65,7 +67,7 @@ if (!defined('DEBUG'))
 	error_reporting(E_ALL | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 
 // define constants
-define('_BASEURL', url_GetBaseURL());
+define('_BASEURL', URL::get_base());
 define('_DESKTOP_VERSION', get_desktop_version());
 define('_MOBILE_VERSION', !_DESKTOP_VERSION);
 define('_AJAX_REQUEST',
@@ -76,7 +78,7 @@ define('_BROWSER_OK', is_browser_ok());
 
 // force secure connection if requested
 if (!_SECURE && $force_https) {
-	$url = url_GetBaseURL(true).$_SERVER['REQUEST_URI'];
+	$url = URL::get_base(true).$_SERVER['REQUEST_URI'];
 	header('Location: '.$url, true, 301);
 	exit();
 }
@@ -88,49 +90,53 @@ $time_start = $time_start[0] + $time_start[1];
 // start session
 Session::start();
 
-// unpack parameters if needed
-if ($url_rewrite)
-	url_UnpackValues();
+// prepare for page rendering
+$page_match = SectionHandler::prepare();
+
+// update parameter storage arrays
+URL::unpack_values();
 
 // set default values for variables
 if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
 if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
-$action = (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) ? '_default' : fix_chars($_REQUEST['action']);
 
 // initialize language system and apply language
-Language::applyForSession();
-
-// turn off URL rewrite for backend
-if ($section == 'backend' || $section == 'backend_module')
-	$url_rewrite = false;
+Language::apply_for_session();
 
 // start database engine
-if ($db_use && !database_connect())
+if ($db_type !== DatabaseType::NONE && !database_connect())
 	die('There was an error while trying to connect database.');
 
 // transfer display control
-$cache = Cache::getInstance();
-$module_handler = ModuleHandler::getInstance();
+$cache = Cache::get_instance();
+$module_handler = ModuleHandler::get_instance();
 
-if ($cache->isCached()) {
+if ($cache->is_cached()) {
 	// only include specified modules
-	$module_handler->loadModules(true);
+	$module_handler->load_modules(true);
 
-	// show cached page
-	$cache->printCache();
+	// show cached content
+	$cache->show_cached_page();
 
 } else {
-	// get main section handler so we can transfer control
-	$section_handler = SectionHandler::getInstance();
-
 	// load all the modules
-	$module_handler->loadModules();
+	$module_handler->load_modules();
+
+	// check if module is being requested and is available
+	$module_match = ModuleHandler::is_loaded($section);
+	$module_match |= $section == 'backend_module';
 
 	// show page and cache it along the way
-	$cache->startCapture();
-	$section_handler->transferControl($section, $action, $language);
-	$cache->endCapture();
+	if ($page_match || $module_match) {
+		$cache->start_capture();
+		SectionHandler::transfer_control();
+		$cache->end_capture();
+
+	} else {
+		// neither page nor module were matched, show error
+		SectionHandler::show_error_page(404);
+	}
 }
 
 // print out copyright and timing

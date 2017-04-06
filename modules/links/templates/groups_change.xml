@@ -8,12 +8,11 @@
 			<input
 				type="text"
 				name="name"
-				value="$params['name']"
 				class="multi-language"
 				style="width: 360px;"
 				maxlength="50"
-				cms:eval="value"
 				/>
+			<cms:language_data param="name"/>
 		</label>
 		<label>
 			<span><cms:text constant="label_text_id" module="links"/></span>

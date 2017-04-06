@@ -25,7 +25,7 @@ class DeliveryAddressHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -38,7 +38,7 @@ class DeliveryAddressHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 	}
 
 	/**
@@ -48,7 +48,7 @@ class DeliveryAddressHandler {
 	 * @param array $children
 	 */
 	public function tag_DeliveryAddress($tag_params, $children) {
-		$manager = DeliveryAddressManager::getInstance();
+		$manager = DeliveryAddressManager::get_instance();
 		$conditions = array();
 
 		// get conditions
@@ -59,11 +59,11 @@ class DeliveryAddressHandler {
 			$conditions['buyer'] = fix_id($tag_params['buyer']);
 
 		// get address
-		$address = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$address = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->_parent->loadTemplate($tag_params, 'address.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->_parent->load_template($tag_params, 'address.xml');
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (is_object($address)) {
@@ -82,8 +82,8 @@ class DeliveryAddressHandler {
 					'access_code' => $address->access_code
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

@@ -5,112 +5,120 @@
 		<div id="shop_change_item_notebook">
 			<!-- Generic -->
 			<div>
-				<div class="box left" style="width: 290px;">
-					<label>
-						<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
-						<span><cms:text constant="label_name" module="shop"/></span>
-						<input
-							type="text"
-							class="multi-language"
-							name="name"
-							style="width: 270px;"
-							maxlength="255"
-							/>
-						<cms:language_data param="name"/>
-					</label>
-				</div>
-				<div class="box left" style="width: 160px;">
-					<label>
-						<span><cms:text constant="label_manufacturer" module="shop"/></span>
-						<select name="manufacturer" style="width: 160px;">
-							<option/>
-							<cms:manufacturer_list
-								template="manufacturer_option.xml"
-								local="1"
-								selected="$params['manufacturer']"
-								cms:eval="selected"
-								/>
-						</select>
-					</label>
-				</div>
+				<label class="horizontal">
+					<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
+					<span><cms:text constant="label_name" module="shop"/></span>
+					<input
+						type="text"
+						class="multi-language"
+						name="name"
+						style="width: 270px;"
+						maxlength="255"
+						/>
+					<cms:language_data param="name"/>
+				</label>
 
-				<label style="clear: both; padding-top: 10px;">
+				<label class="horizontal">
+					<span><cms:text constant="label_manufacturer" module="shop"/></span>
+					<select name="manufacturer" style="width: 160px;">
+						<option/>
+						<cms:manufacturer_list
+							template="manufacturer_option.xml"
+							local="1"
+							selected="$params['manufacturer']"
+							cms:eval="selected"
+							/>
+					</select>
+				</label>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_supplier" module="shop"/></span>
+					<select name="supplier" style="width: 160px;">
+						<option/>
+						<cms:supplier_list
+							template="supplier_option.xml"
+							local="1"
+							selected="$params['supplier']"
+							cms:eval="selected"
+							/>
+					</select>
+				</label>
+
+				<br/>
+
+				<label class="horizontal">
 					<span><cms:text constant="label_uid" module="shop"/></span>
 					<input
 						name="uid"
 						class="code ltr"
 						type="text"
 						value="$params['uid']"
-						maxlength="13"
+						maxlength="64"
+						style="width: 250px;"
 						cms:eval="value"
 						/>
 				</label>
 
-				<label style="clear: both; padding-top: 10px;">
+				<label class="horizontal">
+					<span><cms:text constant="label_item_expiration" module="shop"/></span>
+					<input
+						type="datetime-local"
+						name="expires"
+						class="code ltr"
+						value="$params['expires']"
+						cms:eval="value"
+						/>
+				</label>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_item_created" module="shop"/></span>
+					<input
+						type="datetime-local"
+						class="code ltr"
+						value="$params['created']"
+						cms:eval="value"
+						readonly="readonly"
+						/>
+				</label>
+
+				<label>
 					<span><cms:text constant="label_description" module="shop"/></span>
-					<textarea name="description" class="multi-language" style="width: 500px; height: 155px;"/>
+					<textarea name="description" class="multi-language" style="height: 155px;"/>
 					<cms:language_data param="description"/>
 				</label>
-				<div class="box left" style="width: 120px;">
-					<label>
-						<span><cms:text constant="label_price" module="shop"/></span>
-						<input
-							type="text"
-							name="price"
-							value="$params['price']"
-							cms:eval="value"
-							style="width: 100px;"
-							maxlength="30"
-							/>
-					</label>
-				</div>
-				<div class="box left" style="width: 100px">
-					<label>
-						<span><cms:text constant="label_discount" module="shop"/></span>
-						<input
-							type="text"
-							name="discount"
-							style="width: 80px;"
-							maxlength="6"
-							value="$params['discount']"
-							cms:eval="value"
-							/>
-					</label>
-				</div>
-				<div class="box left" style="width: 120px;">
-					<label>
-						<span><cms:text constant="label_size_definition" module="shop"/></span>
-						<select name="size_definition" style="width: 200px;">
-							<option></option>
-							<cms:size_list
-								template="size_option.xml"
-								local="1"
-								selected="$params['size_definition']"
-								cms:eval="selected"
-								/>
-						</select>
-					</label>
-				</div>
-				<div style="clear: both; padding-top: 10px; padding-bottom: 10px;">
-					<div class="box left" style="width: 120px;">
-						<label>
-							<span><cms:text constant="label_tax" module="shop"/></span>
-							<input name="tax" value="$params['tax']" style="width: 100px;" cms:eval="value"/>
-						</label>
-					</div>
-					<div class="box left" style="width: 120px;">
-						<label>
-							<span><cms:text constant="label_weight" module="shop"/></span>
-							<input name="weight" value="$params['weight']" style="width: 100px;" cms:eval="value"/>
-						</label>
-					</div>
-					<div class="box left">
-						<label>
-							<span><cms:text constant="label_priority" module="shop"/></span>
-							<input name="priority" value="$params['priority']" style="width: 60px;" cms:eval="value"/>
-						</label>
-					</div>
-				</div>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_price" module="shop"/></span>
+					<input
+						type="text"
+						name="price"
+						value="$params['price']"
+						cms:eval="value"
+						style="width: 100px;"
+						maxlength="30"
+						/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_discount" module="shop"/></span>
+					<input
+						type="text"
+						name="discount"
+						style="width: 80px;"
+						maxlength="6"
+						value="$params['discount']"
+						cms:eval="value"
+						/>
+				</label>
+				<label class="horizontal">
+					<span><cms:text constant="label_tax" module="shop"/></span>
+					<input
+						name="tax"
+						value="$params['tax']"
+						style="width: 100px;"
+						cms:eval="value"
+						/>
+				</label>
+
 				<label class="checkbox" cms:tooltip="tooltip_item_visible">
 					<span><cms:text constant="label_item_visible" module="shop"/></span>
 					<input
@@ -127,119 +135,118 @@
 
 			<!-- Properties -->
 			<div>
-				<label class="horizontal">
-					<span><cms:text constant="label_text_id" module="shop"/></span>
-					<input
-						type="text"
-						class="code ltr"
-						name="property_text_id"
-						maxlength="32"
-						/>
-				</label>
-				<label class="horizontal">
-					<span><cms:text constant="label_property_name" module="shop"/></span>
-					<input
-						type="text"
-						class="multi-language"
-						name="property_name"
-						maxlength="255"
-						/>
-				</label>
-				<label class="property-selector number">
-					<span><cms:text constant="label_property_type" module="shop"/></span>
-					<select
-						name="property_type"
-						onchange="this.parentNode.className = 'property-selector ' + this.value"
-						>
-						<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
-						<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
-						<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
-						<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
-						<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
-						<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
-					</select>
-				</label>
-				<div class="property-container">
-					<label class="horizontal property number">
-						<span><cms:text constant="label_property_value" module="shop"/></span>
+				<div class="box left">
+					<label>
+						<span><cms:text constant="label_text_id" module="shop"/></span>
 						<input
 							type="text"
-							name="property_number"
-							style="width: 500px"
+							class="code ltr"
+							name="property_text_id"
+							maxlength="32"
 							/>
 					</label>
-					<label class="horizontal property decimal">
-						<span><cms:text constant="label_property_value" module="shop"/></span>
+					<label>
+						<span><cms:text constant="label_property_name" module="shop"/></span>
 						<input
 							type="text"
-							name="property_decimal"
-							style="width: 500px"
-							/>
-					</label>
-					<label class="horizontal property text">
-						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input
-							type="text"
-							name="property_text"
-							style="width: 500px"
-							/>
-					</label>
-					<label class="horizontal property ml_text">
-						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input
-							type="text"
-							name="property_ml_text"
 							class="multi-language"
-							style="width: 500px"
+							name="property_name"
+							maxlength="255"
 							/>
 					</label>
-					<label class="horizontal property array">
-						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input
-							type="text"
-							name="property_array"
-							/>
+					<label class="property-selector number">
+						<span><cms:text constant="label_property_type" module="shop"/></span>
+						<select
+							name="property_type"
+							onchange="this.parentNode.className = 'property-selector ' + this.value"
+							>
+							<option value="number"><cms:text constant="property_type_number" module="shop"/></option>
+							<option value="decimal"><cms:text constant="property_type_decimal" module="shop"/></option>
+							<option value="text"><cms:text constant="property_type_text" module="shop"/></option>
+							<option value="ml_text"><cms:text constant="property_type_ml_text" module="shop"/></option>
+							<option value="array"><cms:text constant="property_type_array" module="shop"/></option>
+							<option value="ml_array"><cms:text constant="property_type_ml_array" module="shop"/></option>
+						</select>
 					</label>
-					<label class="horizontal property ml_array">
-						<span><cms:text constant="label_property_value" module="shop"/></span>
-						<input
-							type="text"
-							name="property_ml_array"
-							class="multi-language"
-							/>
-					</label>
-					<div style="margin-bottom: 10px;">
-						<button
-							type="button"
-							name="add"
-							onclick="Caracal.Shop.save_property(this)"
-							>
-							<cms:text constant="add"/>
-						</button>
-						<button
-							type="button"
-							name="reset"
-							onclick="Caracal.Shop.reset_property_fields(this)"
-							>
-							<cms:text constant="reset"/>
-						</button>
-						<button
-							type="button"
-							name="cancel"
-							onclick="Caracal.Shop.cancel_property_edit(this)"
-							style="display: none;"
-							>
-							<cms:text constant="cancel"/>
-						</button>
+					<div class="property-container">
+						<label class="property number">
+							<span><cms:text constant="label_property_value" module="shop"/></span>
+							<input
+								type="text"
+								name="property_number"
+								/>
+						</label>
+						<label class="property decimal">
+							<span><cms:text constant="label_property_value" module="shop"/></span>
+							<input
+								type="text"
+								name="property_decimal"
+								/>
+						</label>
+						<label class="property text">
+							<span><cms:text constant="label_property_value" module="shop"/></span>
+							<input
+								type="text"
+								name="property_text"
+								/>
+						</label>
+						<label class="property ml_text">
+							<span><cms:text constant="label_property_value" module="shop"/></span>
+							<input
+								type="text"
+								name="property_ml_text"
+								class="multi-language"
+								/>
+						</label>
+						<label class="property array" style="max-width: 210px">
+							<span><cms:text constant="label_property_value" module="shop"/></span>
+							<input
+								type="text"
+								name="property_array"
+								/>
+						</label>
+						<label class="horizontal property ml_array" style="max-width: 210px">
+							<span><cms:text constant="label_property_value" module="shop"/></span>
+							<input
+								type="text"
+								name="property_ml_array"
+								class="multi-language"
+								/>
+						</label>
+						<div style="margin-bottom: 10px;">
+							<button
+								type="button"
+								name="add"
+								onclick="Caracal.Shop.save_property(this)"
+								>
+								<cms:text constant="add"/>
+							</button>
+							<button
+								type="button"
+								name="reset"
+								onclick="Caracal.Shop.reset_property_fields(this)"
+								>
+								<cms:text constant="reset"/>
+							</button>
+							<button
+								type="button"
+								name="cancel"
+								onclick="Caracal.Shop.cancel_property_edit(this)"
+								style="display: none;"
+								>
+								<cms:text constant="cancel"/>
+							</button>
+						</div>
 					</div>
 				</div>
-				<div class="scrollable_list">
+
+				<div class="scrollable_list box">
 					<div class="list_header">
 						<span class="column" style="width: 250px;">
 							<cms:text constant="column_name" module="shop"/>
 						</span>
 						<span class="column" style="width: 60px;">
-							<cms:text constant="column_price" module="shop"/>
+							<cms:text constant="column_type" module="shop"/>
 						</span>
 						<span class="column">
 							<cms:text constant="column_options" module="shop"/>
@@ -254,6 +261,42 @@
 							/>
 					</div>
 				</div>
+
+				<hr/>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_weight" module="shop"/></span>
+					<input name="weight" value="$params['weight']" style="width: 100px;" cms:eval="value"/>
+				</label>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_priority" module="shop"/></span>
+					<input name="priority" value="$params['priority']" style="width: 60px;" cms:eval="value"/>
+				</label>
+
+				<label class="horizontal">
+					<span><cms:text constant="label_size_definition" module="shop"/></span>
+					<select name="size_definition" style="width: 200px;">
+						<option></option>
+						<cms:size_list
+							template="size_option.xml"
+							local="1"
+							selected="$params['size_definition']"
+							cms:eval="selected"
+							/>
+					</select>
+				</label>
+
+				<label>
+					<span><cms:text constant="label_tags" module="shop"/></span>
+					<input
+						type="text"
+						name="tags"
+						maxlength="255"
+						value="htmlspecialchars($params['tags'])"
+						cms:eval="value"
+						/>
+				</label>
 			</div>
 
 			<!-- Colors -->
@@ -270,6 +313,7 @@
 						<cms:text constant="add"/>
 					</button>
 				</label>
+
 				<div class="list_header">
 					<span class="column" style="width: 250px;">
 						<cms:text constant="column_color_name" module="shop"/>
@@ -281,21 +325,21 @@
 						<cms:text constant="column_options"/>
 					</span>
 				</div>
-				<div class="list_content" style="height: 415px" id="color_list">
+				<div class="list_content" style="height: 350px" id="color_list">
 				</div>
 			</div>
 
 			<!-- Categories -->
 			<div class="scrollable_list">
 				<div class="list_header">
-					<cms:text constant="label_categories" module="shop"/>
+					<cms:text constant="column_categories" module="shop"/>
 				</div>
-				<div class="list_content" style="height: 480px">
+				<div class="list_content" style="height: 390px">
 					<cms:category_list
 						template="category_checkbox_list_item.xml"
 						local="1"
-						item_id="$params['id']"
-						cms:eval="item_id"
+						item="$params['id']"
+						cms:eval="item"
 						/>
 				</div>
 			</div>
@@ -326,7 +370,7 @@
 						<cms:text constant="column_options"/>
 					</span>
 				</div>
-				<div class="list_content" style="height: 440px" id="related_items">
+				<div class="list_content" style="height: 350px" id="related_items">
 					<cms:item_list
 						related="$params['id']"
 						cms:eval="related"
@@ -336,21 +380,14 @@
 				</div>
 			</div>
 
-			<!-- Delivery methods -->
-			<div class="scrollable_list">
-				<div class="list_header">
-					<span class="column" style="width: 360px;">
-						<cms:text constant="column_name_and_price" module="shop"/>
-					</span>
-				</div>
-				<div class="list_content" style="height: 370px" id="related_items">
-					<cms:delivery_methods
-						template="item_delivery_list.xml"
-						local="1"
-						item="$params['id']"
-						cms:eval="item"
-						/>
-				</div>
+			<!-- Remarks -->
+			<div>
+				<label>
+					<span><cms:text constant="label_remark" module="shop"/></span>
+					<textarea name="remark" style="height: 395px">
+						<cms:var param="remark"/>
+					</textarea>
+				</label>
 			</div>
 		</div>
 
@@ -367,7 +404,7 @@
 		var notebook = new Notebook('shop_change_item_notebook');
 
 		// get language constants
-		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_delivery'];
+		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_remark'];
 		var data = language_handler.getTextArray('shop', titles);
 		notebook
 			.setPageTitle(0, data['tab_item'])
@@ -375,11 +412,12 @@
 			.setPageTitle(2, data['tab_colors'])
 			.setPageTitle(3, data['tab_category'])
 			.setPageTitle(4, data['tab_related'])
-			.setPageTitle(5, data['tab_delivery']);
+			.setPageTitle(5, data['tab_remark']);
 
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_array]');
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_ml_array]');
+		new Caracal.PropertyEditor('#shop_item_change_form input[name=tags]');
 
 		// add colors
 		Caracal.Shop.parse_colors();

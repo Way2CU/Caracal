@@ -190,7 +190,7 @@ Caracal.Shop.update_transaction_status = function(button) {
 		url: $('meta[property=base-url]').attr('content') + '/index.php',
 		cache: false,
 		dataType: 'json',
-		type: 'POST',
+		method: 'POST',
 		data: data,
 		async: false,
 		success: function(result) {
@@ -235,7 +235,7 @@ Caracal.Shop.update_total_amount = function(button) {
 		url: $('meta[property=base-url]').attr('content') + '/index.php',
 		cache: false,
 		dataType: 'json',
-		type: 'POST',
+		method: 'POST',
 		data: data,
 		async: false,
 		success: function(result) {
@@ -401,24 +401,16 @@ Caracal.Shop.save_property = function(button) {
 		column_options.appendTo(row);
 
 		// create options
-		var option_change = $('<a>');
 		var option_remove = $('<a>');
 		var space = document.createTextNode(' ');
-
-		option_change
-			.on('click', Caracal.Shop.edit_property)
-			.appendTo(column_options);
-
-		column_options.append(space);
 
 		option_remove
 			.on('click', Caracal.Shop.delete_property)
 			.appendTo(column_options);
 
 		// load language constants for options
-		language_handler.getTextArrayAsync(null, ['change', 'delete'], function(data) {
-				option_change.html(data['change']);
-				option_remove.html(data['delete']);
+		language_handler.getTextAsync(null, 'delete', function(data) {
+				option_remove.html(data);
 			});
 
 	} else {
@@ -625,4 +617,164 @@ Caracal.Shop.cancel_property_edit = function(button) {
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
+};
+
+/**
+ * Add coupon code data to the parent list.
+ *
+ * @param object button
+ */
+Caracal.Shop.add_coupon_code = function(button, code, discount) {
+	// create new nodes
+	var list_item = document.createElement('div');
+	var column_code = document.createElement('span');
+	var column_discount = document.createElement('span');
+	var column_times = document.createElement('span');
+	var column_options = document.createElement('span');
+	var option_delete = document.createElement('a');
+
+	// configure and pack user interface
+	column_code.classList.add('column');
+	column_code.style.width = '180px';
+	column_discount.classList.add('column');
+	column_discount.style.width = '180px';
+	column_times.classList.add('column');
+	column_times.style.width = '80px';
+
+	var data = language_handler.getTextArray(null, ['delete', 'change']);
+	option_delete.appendChild(document.createTextNode(data['delete']));
+	option_delete.addEventListener('click', Caracal.Shop.delete_coupon_code);
+
+	with (column_options) {
+		classList.add('column');
+		appendChild(option_delete);
+	}
+
+	with (list_item) {
+		appendChild(column_code);
+		appendChild(column_discount);
+		appendChild(column_times);
+		appendChild(column_options);
+		classList.add('list_item');
+	}
+
+	// store data in the list
+	var get_data = !code && !discount;
+	if (get_data) {
+		var content = button.parentNode.parentNode;
+		var code = content.querySelector('input[name=code]').value;
+		var discount = content.querySelector('select[name=discount]').value;
+	}
+
+	var hash_code = function(string) {
+		var hash = 0;
+		if (string.length == 0)
+			return hash;
+
+		for (i = 0; i < string.length; i++) {
+			char = string.charCodeAt(i);
+			hash = ((hash << 5) - hash) + char;
+			hash = hash & hash; // convert to 32bit integer
+		}
+		return hash;
+	};
+	var index = hash_code(code);
+
+	column_code.appendChild(document.createTextNode(code));
+	column_times.appendChild(document.createTextNode(0));
+
+	var data_code = document.createElement('input');
+	with (data_code) {
+		setAttribute('type', 'hidden');
+		setAttribute('name', 'code_' + index.toString());
+		setAttribute('value', code);
+	}
+
+	var data_discount = document.createElement('input');
+	with (data_discount) {
+		setAttribute('type', 'hidden');
+		setAttribute('name', 'discount_' + index.toString());
+		setAttribute('value', discount);
+	}
+
+	column_code.appendChild(data_code);
+	column_code.appendChild(data_discount);
+
+	// find parent window and add new option to it
+	var codes_window = document.getElementById('shop_coupon_codes');
+	var list = codes_window.querySelector('div.list_content');
+	list.appendChild(list_item);
+
+	// close window
+	if (get_data)
+		Caracal.window_system.closeWindow('shop_coupon_codes_add');
+};
+
+/**
+ * Generate coupon codes and add them to the parent list.
+ *
+ * @param object button
+ */
+Caracal.Shop.generate_coupon_codes = function(sender) {
+	var button = sender.target || sender;
+	var content = button.parentNode.parentNode;
+	var count = content.querySelector('input[name=count]').value;
+	var length = content.querySelector('input[name=length]').value;
+	var charset = content.querySelector('select[name=charset]').value;
+	var prefix = content.querySelector('input[name=prefix]').value;
+	var suffix = content.querySelector('input[name=suffix]').value;
+	var discount = content.querySelector('select[name=discount]').value;
+
+	generate_code = function() {
+		var result = '';
+		var charset_size = charset.length;
+
+		for (var i=0; i<length; i++)
+			result += charset[Math.floor(Math.random() * charset_size)];
+
+		return prefix + result + suffix;
+	};
+
+	for (var i=0; i<count; i++) {
+		var code = generate_code().toUpperCase();
+		Caracal.Shop.add_coupon_code(sender, code, discount);
+	}
+
+	// close window
+	Caracal.window_system.closeWindow('shop_coupon_codes_generate');
+};
+
+/**
+ * Handle coupon code removal.
+ *
+ * @param object sender
+ */
+Caracal.Shop.delete_coupon_code = function(sender) {
+	var button = sender.target || sender;
+	var list_item = button.parentNode.parentNode;
+	list_item.parentNode.removeChild(list_item);
+};
+
+/**
+ * Update item management window when filters change.
+ *
+ * @param object sender
+ */
+Caracal.Shop.update_item_list = function(sender) {
+	var items_window = Caracal.window_system.getWindow('shop_items');
+	var manufacturer = items_window.container.find('select[name=manufacturer]');
+	var category = items_window.container.find('select[name=category]');
+
+	// prepare data to send to server
+	var data = {
+			manufacturer: manufacturer.val(),
+			category: category.val()
+		};
+
+	// save original url for later use
+	if (items_window.original_url == undefined)
+		items_window.original_url = items_window.url;
+
+	// reload window
+	items_window.loadContent(items_window.original_url + '&' + $.param(data));
 };

@@ -9,27 +9,27 @@ class ContactForm_FormFieldManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('contact_form_fields');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('form', 'int');
-		$this->addProperty('name', 'varchar');
-		$this->addProperty('type', 'varchar');
-		$this->addProperty('label', 'ml_varchar');
-		$this->addProperty('placeholder', 'ml_varchar');
-		$this->addProperty('min', 'int');
-		$this->addProperty('max', 'int');
-		$this->addProperty('maxlength', 'int');
-		$this->addProperty('value', 'varchar');
-		$this->addProperty('pattern', 'varchar');
-		$this->addProperty('disabled', 'boolean');
-		$this->addProperty('required', 'boolean');
-		$this->addProperty('checked', 'boolean');
-		$this->addProperty('autocomplete', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('form', 'int');
+		$this->add_property('name', 'varchar');
+		$this->add_property('type', 'varchar');
+		$this->add_property('label', 'ml_varchar');
+		$this->add_property('placeholder', 'ml_varchar');
+		$this->add_property('min', 'int');
+		$this->add_property('max', 'int');
+		$this->add_property('maxlength', 'int');
+		$this->add_property('value', 'varchar');
+		$this->add_property('pattern', 'varchar');
+		$this->add_property('disabled', 'boolean');
+		$this->add_property('required', 'boolean');
+		$this->add_property('checked', 'boolean');
+		$this->add_property('autocomplete', 'boolean');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<cms:if condition="$params['type'] == 'button'">
-		<button
-			type="button"
-			name="$params['name']"
-			disabled="$params['disabled'] ? 'disabled' : false"
-			cms:eval="name"
-			cms:optional="disabled"
-			>
-			<cms:var param="label" multilanguage="yes"/>
-		</button>
+	<!-- Elements without label -->
+	<cms:if condition="in_array($params['type'], array('button', 'hidden'))">
+		<cms:choice value="$params['type']" cms:eval="value">
+			<option value="button">
+				<button
+					type="button"
+					name="$params['name']"
+					disabled="$params['disabled'] ? 'disabled' : false"
+					cms:eval="name"
+					cms:optional="disabled"
+					>
+					<cms:var param="label" multilanguage="yes"/>
+				</button>
+			</option>
+
+			<!-- Hidden -->
+			<option value="hidden">
+				<input
+					name="$params['name']"
+					type="hidden"
+					value="$params['value']"
+					cms:eval="name,value"
+					/>
+			</option>
+		</cms:choice>
 	</cms:if>
 
-	<cms:if condition="$params['type'] != 'button'">
+	<!-- Elements with label -->
+	<cms:if condition="!in_array($params['type'], array('button', 'hidden'))">
 		<label
 			class="in_array($params['type'], array('checkbox', 'radio')) ? $params['type'] : false"
 			style="$params['type'] == 'honey-pot' ? 'display: none;' : false"
@@ -26,16 +42,6 @@
 			</cms:if>
 
 			<cms:choice value="$params['type']" cms:eval="value">
-				<!-- Hidden -->
-				<option value="hidden" default="0">
-					<input
-						name="$params['name']"
-						type="hidden"
-						value="$params['value']"
-						cms:eval="name,value"
-						/>
-				</option>
-
 				<!-- Radio button -->
 				<option value="radio" default="0">
 					<input
@@ -189,15 +195,15 @@
 					<input
 						name="$params['name']"
 						type="email"
-						placeholder="$params['placeholder'][$language]"
+						placeholder="empty($params['pattern']) ? $params['placeholder'][$language] : false"
 						autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 						value="$params['value']"
 						pattern="!empty($params['pattern']) ? $params['pattern'] : false"
-						cms:optional="required,disabled,maxlength,pattern"
-						cms:eval="name,placeholder,autocomplete,value"
+						cms:optional="placeholder,required,disabled,maxlength,pattern"
+						cms:eval="name,autocomplete,value"
 						/>
 				</option>
 
@@ -210,8 +216,8 @@
 						autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
-						min="$params['minimum']"
-						max="$params['maximum']"
+						min="$params['min']"
+						max="$params['max']"
 						value="$params['value']"
 						cms:optional="required,disabled"
 						cms:eval="name,placeholder,autocomplete,value,min,max"
@@ -227,8 +233,8 @@
 						autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
-						min="$params['minimum']"
-						max="$params['maximum']"
+						min="$params['min']"
+						max="$params['max']"
 						value="$params['value']"
 						cms:optional="required,disabled"
 						cms:eval="name,placeholder,autocomplete,value,min,max"
@@ -256,12 +262,12 @@
 						name="$params['name']"
 						rows="4"
 						cols="30"
-						placeholder="$params['placeholder'][$language]"
+						placeholder="empty($params['pattern']) ? $params['placeholder'][$language] : false"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
-						cms:optional="required,disabled,maxlength"
-						cms:eval="name,placeholder"
+						cms:optional="required,disabled,maxlength,placeholder"
+						cms:eval="name"
 						>
 						<cms:var name="$params['value']"/>
 					</textarea>
@@ -313,15 +319,15 @@
 					<input
 						name="$params['name']"
 						type="text"
-						placeholder="$params['placeholder'][$language]"
+						placeholder="empty($params['pattern']) ? $params['placeholder'][$language] : false"
 						autocomplete="$params['autocomplete'] ? 'on' : 'off'"
 						required="$params['required'] ? 'required' : false"
 						disabled="$params['disabled'] ? 'disabled' : false"
 						value="$params['value']"
 						maxlength="$params['maxlength'] > 0 ? $params['maxlength'] : false"
 						pattern="!empty($params['pattern']) ? $params['pattern'] : false"
-						cms:optional="required,pattern,disabled,maxlength"
-						cms:eval="name,placeholder,autocomplete,value"
+						cms:optional="placeholder,required,pattern,disabled,maxlength"
+						cms:eval="name,autocomplete,value"
 						/>
 				</option>
 			</cms:choice>
@@ -329,6 +335,15 @@
 			<!-- Label text for radio and checkbox buttons -->
 			<cms:if condition="!empty($params['label'][$language]) and in_array($params['type'], array('checkbox', 'radio'))">
 				<span><cms:var param="label" multilanguage="yes"/></span>
+			</cms:if>
+
+			<!-- Text for placeholder on fields which have pattern -->
+			<cms:if condition="!empty($params['pattern']) and !empty($params['placeholder']) and in_array($params['type'], array('text', 'email', 'textarea'))">
+				<small
+					class="placeholder"
+					data-content="$params['placeholder'][$language]"
+					cms:eval="data-content"
+					/>
 			</cms:if>
 		</label>
 	</cms:if>

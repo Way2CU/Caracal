@@ -1,0 +1,74 @@
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label class="horizontal">
+		<span><cms:text constant="label_length" module="shop"/></span>
+		<input
+			type="number"
+			min="0"
+			max="10"
+			value="5"
+			name="length"
+			style="width: 50px;"
+			/>
+	</label>
+
+	<label class="horizontal">
+		<span><cms:text constant="label_charset" module="shop"/></span>
+		<select name="charset">
+			<option value="012345689">Numbers</option>
+			<option value="012345679abcdef">Hexadecimal</option>
+			<option value="abcdefghijklmnopqrstuvwxyz">Alphabet</option>
+		</select>
+	</label>
+
+	<label class="horizontal">
+		<span><cms:text constant="label_prefix" module="shop"/></span>
+		<input
+			type="text"
+			name="prefix"
+			style="width: 100px;"
+			maxlength="10"
+			/>
+	</label>
+
+	<label class="horizontal">
+		<span><cms:text constant="label_suffix" module="shop"/></span>
+		<input
+			type="text"
+			name="suffix"
+			style="width: 100px;"
+			maxlength="10"
+			/>
+	</label>
+
+	<label>
+		<span><cms:text constant="label_codes_count" module="shop"/></span>
+		<input
+			type="number"
+			name="count"
+			min="1"
+			value="5"
+			style="width: 200px;"
+			/>
+	</label>
+
+	<label>
+		<span><cms:text constant="label_coupon_code_discount" module="shop"/></span>
+		<select
+			name="discount"
+			style="width: 270px;"
+			>
+			<cms:discount_list/>
+		</select>
+	</label>
+
+
+	<div class="button_bar">
+		<button type="button" onclick="javascript: Caracal.Shop.generate_coupon_codes(this);">
+			<cms:text constant="add"/>
+		</button>
+		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+			<cms:text constant="cancel"/>
+		</button>
+	</div>
+</document>

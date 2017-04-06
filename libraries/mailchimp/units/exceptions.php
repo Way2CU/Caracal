@@ -1,7 +1,7 @@
 <?php
 
 namespace Library\Mailchimp;
-use \Exception as Exception;
+use Exception;
 
 
 class Mailchimp_Error extends Exception {}

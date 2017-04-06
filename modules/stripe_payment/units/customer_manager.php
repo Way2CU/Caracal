@@ -9,15 +9,15 @@ class Stripe_CustomerManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('stripe_customers');
 
-		$this->addProperty('system_user', 'int');
-		$this->addProperty('buyer', 'int');
-		$this->addProperty('text_id', 'varchar');
+		$this->add_property('system_user', 'int');
+		$this->add_property('buyer', 'int');
+		$this->add_property('text_id', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

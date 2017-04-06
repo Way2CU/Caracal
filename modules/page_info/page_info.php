@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 use Core\Markdown;
 
@@ -17,40 +18,32 @@ class page_info extends Module {
 	private $omit_elements = array();
 	private $optimizer_page = '';
 	private $optimizer_show_control = false;
-	private $page_description = null;
 
 	/**
 	 * Constructor
 	 */
 	protected function __construct() {
-		global $section, $db_use;
+		global $section;
 
 		parent::__construct(__FILE__);
 
-		// let the browser/crawler know we have different desktop/mobile styles
-		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-			header('Vary: User-Agent');
-
-		// change powered by header
-		header('X-Powered-By: Caracal/'._VERSION);
-
-		// send encoding
-		header('Content-Type: text/html; charset=UTF-8');
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_elements', $this);
 
 		// register backend
-		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
+			$backend = backend::get_instance();
 
 			$menu = $backend->getMenu($backend->name);
 
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
-										$this->getLanguageConstant('menu_page_info'),
-										url_GetFromFilePath($this->path.'images/icon.svg'),
+										$this->get_language_constant('menu_page_info'),
+										URL::from_file_path($this->path.'images/icon.svg'),
 										window_Open( // on click open window
 													'page_settings',
 													400,
-													$this->getLanguageConstant('title_page_info'),
+													$this->get_language_constant('title_page_info'),
 													true, false, // disallow minimize, safety feature
 													backend_UrlMake($this->name, 'show')
 												),
@@ -62,7 +55,7 @@ class page_info extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -75,7 +68,7 @@ class page_info extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -87,10 +80,6 @@ class page_info extends Module {
 					$this->optimizer_page = fix_chars($params['page']);
 					if (isset($params['show_control']))
 						$this->optimizer_show_control = fix_id($params['show_control']) == 0 ? false : true;
-					break;
-
-				case 'set_description':
-					$this->setDescription($params, $children);
 					break;
 
 				default:
@@ -105,7 +94,7 @@ class page_info extends Module {
 					break;
 
 				case 'save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -116,21 +105,18 @@ class page_info extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		if (!isset($this->settings['description']))
-			$this->saveSetting('description', '');
-
+	public function initialize() {
 		if (!isset($this->settings['analytics']))
-			$this->saveSetting('analytics', '');
+			$this->save_setting('analytics', '');
 
 		if (!isset($this->settings['wm_tools']))
-			$this->saveSetting('wm_tools', '');
+			$this->save_setting('wm_tools', '');
 
 		if (!isset($this->settings['bing_wm_tools']))
-			$this->saveSetting('bing_wm_tools', '');
+			$this->save_setting('bing_wm_tools', '');
 	}
 
-	public function onDisable() {
+	public function cleanup() {
 	}
 
 	/**
@@ -138,25 +124,24 @@ class page_info extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
 						'cancel_action'	=> window_Close('page_settings')
 					);
 
-		$template->registerTagHandler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
+		$template->register_tag_handler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
-		$description = fix_chars($_REQUEST['description']);
+	private function save_settings() {
 		$analytics = fix_chars($_REQUEST['analytics']);
 		$analytics_domain = fix_chars($_REQUEST['analytics_domain']);
 		$analytics_version = fix_chars($_REQUEST['analytics_version']);
@@ -165,40 +150,38 @@ class page_info extends Module {
 		$optimizer = fix_chars($_REQUEST['optimizer']);
 		$optimizer_key = fix_chars($_REQUEST['optimizer_key']);
 
-		$this->saveSetting('description', $description);
-		$this->saveSetting('analytics', $analytics);
-		$this->saveSetting('analytics_domain', $analytics_domain);
-		$this->saveSetting('analytics_version', $analytics_version);
-		$this->saveSetting('wm_tools', $wm_tools);
-		$this->saveSetting('bing_wm_tools', $bing_wm_tools);
-		$this->saveSetting('optimizer', $optimizer);
-		$this->saveSetting('optimizer_key', $optimizer_key);
+		$this->save_setting('analytics', $analytics);
+		$this->save_setting('analytics_domain', $analytics_domain);
+		$this->save_setting('analytics_version', $analytics_version);
+		$this->save_setting('wm_tools', $wm_tools);
+		$this->save_setting('bing_wm_tools', $bing_wm_tools);
+		$this->save_setting('optimizer', $optimizer);
+		$this->save_setting('optimizer_key', $optimizer_key);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
-					'action'	=> window_Close('page_settings')
+					'message' => $this->get_language_constant('message_saved'),
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('page_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
 	/**
 	 * Method called by the page module to add elements before printing
 	 */
-	public function addElements() {
-		global $section, $db_use, $optimize_code, $url_rewrite, $styles_path,
-			$images_path, $scripts_path, $system_styles_path, $system_images_path,
-			$default_language;
+	public function add_elements() {
+		global $section, $db_type, $optimize_code, $styles_path, $images_path,
+			$scripts_path, $system_styles_path, $system_images_path, $default_language;
 
-		$head_tag = head_tag::getInstance();
-		$collection = collection::getInstance();
-		$language_list = Language::getLanguages(false);
+		$head_tag = head_tag::get_instance();
+		$collection = collection::get_instance();
+		$language_list = Language::get_languages(false);
 		$ignored_section = in_array($section, array('backend', 'backend_module'));
 
 		// add base url tag
@@ -236,15 +219,11 @@ class page_info extends Module {
 							'content'		=> join(', ', $language_list)
 						));
 
-		// add other languages if required
-		if (count($language_list) > 1 && $url_rewrite && ModuleHandler::is_loaded('language_menu'))
-			language_menu::getInstance()->addMeta();
-
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
 
-		if (!$ignored_section && $db_use) {
+		if (!$ignored_section && $db_type != DatabaseType::NONE) {
 			// google analytics
 			if (!empty($this->settings['analytics']))
 				$head_tag->addGoogleAnalytics(
@@ -278,21 +257,11 @@ class page_info extends Module {
 								'content' 	=> $this->settings['bing_wm_tools']
 							));
 
-			// page description
-			if (!is_null($this->page_description))
-				$value = $this->page_description; else
-				$value = isset($this->settings['description']) ? $this->settings['description'] : '';
-
-			$head_tag->addTag('meta',
-						array(
-							'name'		=> 'description',
-							'content'	=> $value
-						));
 		}
 
   		// copyright
 		if (!in_array('copyright', $this->omit_elements) && _STANDARD == 'html401') {
-			$copyright = Language::getText('copyright');
+			$copyright = Language::get_text('copyright');
 			$copyright = strip_tags($copyright);
 			$head_tag->addTag('meta',
 						array(
@@ -332,7 +301,7 @@ class page_info extends Module {
 							'rel'	=> 'icon',
 							'type'	=> 'image/png',
 							'sizes'	=> $sizes,
-							'href'	=> url_GetFromFilePath($icon)
+							'href'	=> URL::from_file_path($icon)
 						));
 
 		// add default styles and script if they exists
@@ -373,7 +342,7 @@ class page_info extends Module {
 							array(
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css',
-								'href'	=> url_GetFromFilePath(_BASEPATH.'/'.$style)
+								'href'	=> URL::from_file_path(_BASEPATH.'/'.$style)
 							));
 			}
 
@@ -383,7 +352,7 @@ class page_info extends Module {
 						array(
 							'rel'	=> 'stylesheet/less',
 							'type'	=> 'text/css',
-							'href'	=> url_GetFromFilePath(_BASEPATH.'/'.$less_style)
+							'href'	=> URL::from_file_path(_BASEPATH.'/'.$less_style)
 						));
 
 				if (!$optimize_code)
@@ -395,40 +364,8 @@ class page_info extends Module {
 				$head_tag->addTag('script',
 						array(
 							'type'	=> 'text/javascript',
-							'src'	=> url_GetFromFilePath(_BASEPATH.'/'.$scripts_path.'main.js')
+							'src'	=> URL::from_file_path(_BASEPATH.'/'.$scripts_path.'main.js')
 						));
-		}
-	}
-
-	/**
-	 * Set page description for current execution.
-	 *
-	 * @param array $tag_params
-	 * @param array $children
-	 */
-	private function setDescription($tag_params, $children) {
-		global $language;
-
-		// set from language constant
-		if (isset($tag_params['constant'])) {
-			$constant = fix_chars($tag_params['constant']);
-			$this->page_description = Language::getText($constant);
-
-		// set from article
-		} else if (isset($tag_params['article']) && ModuleHandler::is_loaded('articles')) {
-			$manager = Modules\Articles\Manager::getInstance();
-			$text_id = fix_chars($tag_params['article']);
-
-			// get article from database
-			$item = $manager->getSingleItem(array('content'), array('text_id' => $text_id));
-
-			if (is_object($item)) {
-				$content = strip_tags(Markdown::parse($item->content[$language]));
-				$data = explode("\n", utf8_wordwrap($content, 150, "\n", true));
-
-				if (count($data) > 0)
-					$this->page_description = $data[0];
-			}
 		}
 	}
 
@@ -442,8 +379,8 @@ class page_info extends Module {
 		global $system_module_path;
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'analytics_version.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'analytics_version.xml');
+		$template->set_template_params_from_array($children);
 		$selected = isset($tag_params['selected']) ? $tag_params['selected'] : '0';
 
 		// get available versions
@@ -461,8 +398,8 @@ class page_info extends Module {
 						'version'	=> $version,
 						'selected'	=> $selected
 					);
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}

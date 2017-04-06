@@ -14,8 +14,8 @@
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
     "import": "ייבא",
-    "message_license_error": "אינך מורשה לקבל שירותים מאתר זה",
     "message_server_error": "השרת חווה את הבעיה הבאה:",
+    "message_client_error_404": "העמוד או הקובץ שבקשתם לא נמצא. עמכם הסליחה.",
     "new": "חדש",
     "next": "הבא",
     "open": "פתח",
@@ -31,5 +31,6 @@
     "submit": "עדכן",
     "upload": "העלה",
     "refresh": "רענן",
-    "reload": "טען מחדש"
+    "reload": "טען מחדש",
+    "back_to_home": "חזרה לעמוד הבית"
 }

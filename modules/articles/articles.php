@@ -16,7 +16,6 @@ use Core\Module;
 use Core\Markdown;
 
 
-
 final class ImageType {
 	const Stars = 1;
 	const Circles = 2;
@@ -36,23 +35,23 @@ class articles extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$articles_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_articles'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_articles'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_articles_new'),
-								url_GetFromFilePath($this->path.'images/new_article.svg'),
+								$this->get_language_constant('menu_articles_new'),
+								URL::from_file_path($this->path.'images/new_article.svg'),
 
 								window_Open( // on click open window
 											'articles_new',
 											730,
-											$this->getLanguageConstant('title_articles_new'),
+											$this->get_language_constant('title_articles_new'),
 											true, true,
 											backend_UrlMake($this->name, 'articles_new')
 										),
@@ -61,26 +60,26 @@ class articles extends Module {
 			$articles_menu->addSeparator(5);
 
 			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_articles_manage'),
-								url_GetFromFilePath($this->path.'images/manage.svg'),
+								$this->get_language_constant('menu_articles_manage'),
+								URL::from_file_path($this->path.'images/manage.svg'),
 
 								window_Open( // on click open window
 											'articles',
 											720,
-											$this->getLanguageConstant('title_articles_manage'),
+											$this->get_language_constant('title_articles_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'articles')
 										),
 								$level=5
 							));
 			$articles_menu->addChild('', new backend_MenuItem(
-								$this->getLanguageConstant('menu_article_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								$this->get_language_constant('menu_article_groups'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 
 								window_Open( // on click open window
 											'article_groups',
 											650,
-											$this->getLanguageConstant('title_article_groups'),
+											$this->get_language_constant('title_article_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										),
@@ -94,7 +93,7 @@ class articles extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -107,7 +106,7 @@ class articles extends Module {
 	 * @param string $action
 	 * @param integer $level
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -218,71 +217,21 @@ class articles extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function initialize() {
 		global $db;
 
-		$list = Language::getLanguages(false);
-
-		$sql = "
-			CREATE TABLE `articles` (
-				`id` INT NOT NULL AUTO_INCREMENT ,
-				`group` int(11) DEFAULT NULL ,
-				`text_id` VARCHAR (32) NULL ,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-			";
-
-		foreach($list as $language) {
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-			$sql .= "`content_{$language}` TEXT NOT NULL ,";
+		// create tables
+		$file_list = array('articles.sql', 'groups.sql', 'votes.sql');
+		foreach ($file_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
 		}
-
-		$sql .= "
-				`author` INT NOT NULL ,
-				`gallery` INT NOT NULL ,
-				`visible` BOOLEAN NOT NULL DEFAULT '0',
-				`views` INT NOT NULL DEFAULT '0',
-				`votes_up` INT NOT NULL DEFAULT '0',
-				`votes_down` INT NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
-				INDEX ( `author` ),
-				INDEX ( `group` ),
-				INDEX ( `text_id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// article groups
-		$sql = "
-			CREATE TABLE `article_groups` (
-				`id` INT NOT NULL AUTO_INCREMENT ,
-				`text_id` VARCHAR (32) NULL ,
-			";
-
-		foreach($list as $language) {
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-		}
-
-		$sql .= "
-				`visible` BOOLEAN NOT NULL DEFAULT '1',
-				PRIMARY KEY ( `id` ),
-				INDEX ( `text_id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		$sql = "CREATE TABLE `article_votes` (
-					`id` INT NOT NULL AUTO_INCREMENT ,
-					`address` VARCHAR( 15 ) NOT NULL ,
-					`article` INT NOT NULL ,
-				PRIMARY KEY (  `id` ),
-				INDEX ( `address`, `article` )
-				) ENGINE = MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('articles', 'article_group', 'article_votes');
@@ -294,23 +243,23 @@ class articles extends Module {
 	 */
 	private function showArticles() {
 		$template = new TemplateHandler('list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'articles_new', 730,
-										$this->getLanguageConstant('title_articles_new'),
+										$this->get_language_constant('title_articles_new'),
 										true, false,
 										$this->name,
 										'articles_new'
 									),
 					);
 
-		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:article_list', $this, 'tag_ArticleList');
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -319,12 +268,12 @@ class articles extends Module {
 	 */
 	private function addArticle() {
 		$template = new TemplateHandler('add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		if (ModuleHandler::is_loaded('gallery')) {
-			$gallery = gallery::getInstance();
-			$template->registerTagHandler('cms:gallery_list', $gallery, 'tag_GroupList');
+			$gallery = gallery::get_instance();
+			$template->register_tag_handler('cms:gallery_list', $gallery, 'tag_GroupList');
 		}
 
 		$params = array(
@@ -332,8 +281,8 @@ class articles extends Module {
 					'cancel_action'	=> window_Close('articles_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -342,20 +291,20 @@ class articles extends Module {
 	 */
 	private function changeArticle() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Modules\Articles\Manager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (!is_object($item))
 			return;
 
 		$template = new TemplateHandler('change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		if (ModuleHandler::is_loaded('gallery')) {
-			$gallery = gallery::getInstance();
-			$template->registerTagHandler('cms:gallery_list', $gallery, 'tag_GroupList');
+			$gallery = gallery::get_instance();
+			$template->register_tag_handler('cms:gallery_list', $gallery, 'tag_GroupList');
 		}
 
 		$params = array(
@@ -370,8 +319,8 @@ class articles extends Module {
 					'cancel_action'	=> window_Close('articles_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -379,13 +328,13 @@ class articles extends Module {
 	 * Save article data
 	 */
 	private function saveArticle() {
-		$manager = Modules\Articles\Manager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
-		$content = $this->getMultilanguageField('content');
-		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
+		$title = $this->get_multilanguage_field('title');
+		$content = $this->get_multilanguage_field('content');
+		$visible = $this->get_boolean_field('visible') ? 1 : 0;
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
 
 		$data = array(
@@ -400,23 +349,23 @@ class articles extends Module {
 
 		if (is_null($id)) {
 			$window = 'articles_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'articles_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_article_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_article_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('articles'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -427,23 +376,23 @@ class articles extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = Modules\Articles\Manager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_article_delete'),
+					'message'		=> $this->get_language_constant('message_article_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'articles_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'articles_delete_commit'),
 												array('id', $id)
@@ -452,8 +401,8 @@ class articles extends Module {
 					'no_action'		=> window_Close('articles_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -462,21 +411,21 @@ class articles extends Module {
 	 */
 	private function deleteArticle_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Modules\Articles\Manager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_article_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_article_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('articles_delete').';'.window_ReloadContent('articles')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -485,22 +434,22 @@ class articles extends Module {
 	 */
 	private function showGroups() {
 		$template = new TemplateHandler('group_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('new'),
+										$this->get_language_constant('new'),
 										'article_groups_new', 400,
-										$this->getLanguageConstant('title_article_groups_new'),
+										$this->get_language_constant('title_article_groups_new'),
 										true, false,
 										$this->name,
 										'groups_new'
 									),
 					);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -509,15 +458,15 @@ class articles extends Module {
 	 */
 	private function addGroup() {
 		$template = new TemplateHandler('group_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('article_groups_new')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -526,12 +475,12 @@ class articles extends Module {
 	 */
 	private function changeGroup() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Modules\Articles\GroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('group_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'			=> $item->id,
@@ -542,8 +491,8 @@ class articles extends Module {
 					'cancel_action'	=> window_Close('article_groups_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -554,23 +503,23 @@ class articles extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = Modules\Articles\GroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::get_instance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_group_delete'),
+					'message'		=> $this->get_language_constant('message_group_delete'),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'article_groups_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'groups_delete_commit'),
 												array('id', $id)
@@ -579,8 +528,8 @@ class articles extends Module {
 					'no_action'		=> window_Close('article_groups_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -589,25 +538,25 @@ class articles extends Module {
 	 */
 	private function deleteGroup_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = Modules\Articles\GroupManager::getInstance();
-		$article_manager = Modules\Articles\Manager::getInstance();
+		$manager = Modules\Articles\GroupManager::get_instance();
+		$article_manager = Modules\Articles\Manager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
-		$article_manager->updateData(array('group' => null), array('group' => $id));
+		$manager->delete_items(array('id' => $id));
+		$article_manager->update_items(array('group' => null), array('group' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_deleted'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_deleted'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('article_groups_delete').';'
 									.window_ReloadContent('articles').';'
 									.window_ReloadContent('article_groups')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -615,12 +564,12 @@ class articles extends Module {
 	 * Save changed group data
 	 */
 	private function saveGroup() {
-		$manager = Modules\Articles\GroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$text_id = escape_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
-		$description = $this->getMultilanguageField('description');
+		$title = $this->get_multilanguage_field('title');
+		$description = $this->get_multilanguage_field('description');
 
 		$data = array(
 					'text_id'		=> $text_id,
@@ -630,23 +579,23 @@ class articles extends Module {
 
 		if (is_null($id)) {
 			$window = 'article_groups_new';
-			$manager->insertData($data);
+			$manager->insert_item($data);
 		} else {
 			$window = 'article_groups_change';
-			$manager->updateData($data,	array('id' => $id));
+			$manager->update_items($data,	array('id' => $id));
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_group_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_group_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window).';'.window_ReloadContent('article_groups'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -657,9 +606,9 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_Article($tag_params, $children) {
-		$manager = Modules\Articles\Manager::getInstance();
-		$group_manager = Modules\Articles\GroupManager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
+		$group_manager = Modules\Articles\GroupManager::get_instance();
+		$admin_manager = UserManager::get_instance();
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;
@@ -690,7 +639,7 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items($group_manager->get_field_names(), array('text_id' => $group_names));
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -703,19 +652,19 @@ class articles extends Module {
 		}
 
 		// get single item from the database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'article.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
+		$template = $this->load_template($tag_params, 'article.xml');
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
 
 		// parse article
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$params = array(
 						'id'			=> $item->id,
@@ -726,7 +675,7 @@ class articles extends Module {
 						'time'			=> $time,
 						'title'			=> $item->title,
 						'content'		=> $item->content,
-						'author'		=> $admin_manager->getItemValue(
+						'author'		=> $admin_manager->get_item_value(
 																'fullname',
 																array('id' => $item->author)
 															),
@@ -738,8 +687,8 @@ class articles extends Module {
 						'rating'		=> $this->getArticleRating($item, 5),
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -751,9 +700,9 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_ArticleList($tag_params, $children) {
-		$manager = Modules\Articles\Manager::getInstance();
-		$group_manager = Modules\Articles\GroupManager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
+		$group_manager = Modules\Articles\GroupManager::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		$conditions = array();
 		$selected = -1;
@@ -797,7 +746,7 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items($group_manager->get_field_names(), array('text_id' => $group_names));
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -816,79 +765,80 @@ class articles extends Module {
 				);
 
 		// get items from manager
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:article', $this, 'tag_Article');
-		$template->registerTagHandler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
+		$template = $this->load_template($tag_params, 'list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:article', $this, 'tag_Article');
+		$template->register_tag_handler('cms:article_rating_image', $this, 'tag_ArticleRatingImage');
 
-		if (count($items) > 0)
-			foreach($items as $item) {
-				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+		if (count($items) == 0)
+			return;
 
-				$params = array(
-							'id'			=> $item->id,
-							'text_id'		=> $item->text_id,
-							'group'			=> $item->group,
-							'timestamp'		=> $item->timestamp,
-							'date'			=> $date,
-							'time'			=> $time,
-							'title'			=> $item->title,
-							'content'		=> $item->content,
-							'author'		=> $admin_manager->getItemValue(
-																'fullname',
-																array('id' => $item->author)
-															),
-							'gallery'		=> $item->gallery,
-							'visible'		=> $item->visible,
-							'views'			=> $item->views,
-							'votes_up'		=> $item->votes_up,
-							'votes_down' 	=> $item->votes_down,
-							'rating'		=> $this->getArticleRating($item, 10),
-							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
-													window_Open(
-														'articles_change', 	// window id
-														730,				// width
-														$this->getLanguageConstant('title_articles_change'), // title
-														false, false,
-														url_Make(
-															'transfer_control',
-															'backend_module',
-															array('module', $this->name),
-															array('backend_action', 'articles_change'),
-															array('id', $item->id)
-														)
+		foreach($items as $item) {
+			$timestamp = strtotime($item->timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
+
+			$params = array(
+						'id'			=> $item->id,
+						'text_id'		=> $item->text_id,
+						'group'			=> $item->group,
+						'timestamp'		=> $item->timestamp,
+						'date'			=> $date,
+						'time'			=> $time,
+						'title'			=> $item->title,
+						'content'		=> $item->content,
+						'author'		=> $admin_manager->get_item_value(
+															'fullname',
+															array('id' => $item->author)
+														),
+						'gallery'		=> $item->gallery,
+						'visible'		=> $item->visible,
+						'views'			=> $item->views,
+						'votes_up'		=> $item->votes_up,
+						'votes_down' 	=> $item->votes_down,
+						'rating'		=> $this->getArticleRating($item, 10),
+						'selected'		=> $selected,
+						'item_change'	=> URL::make_hyperlink(
+												$this->get_language_constant('change'),
+												window_Open(
+													'articles_change', 	// window id
+													730,				// width
+													$this->get_language_constant('title_articles_change'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'articles_change'),
+														array('id', $item->id)
 													)
-												),
-							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
-													window_Open(
-														'articles_delete', 	// window id
-														400,				// width
-														$this->getLanguageConstant('title_articles_delete'), // title
-														false, false,
-														url_Make(
-															'transfer_control',
-															'backend_module',
-															array('module', $this->name),
-															array('backend_action', 'articles_delete'),
-															array('id', $item->id)
-														)
+												)
+											),
+						'item_delete'	=> URL::make_hyperlink(
+												$this->get_language_constant('delete'),
+												window_Open(
+													'articles_delete', 	// window id
+													400,				// width
+													$this->get_language_constant('title_articles_delete'), // title
+													false, false,
+													URL::make_query(
+														'backend_module',
+														'transfer_control',
+														array('module', $this->name),
+														array('backend_action', 'articles_delete'),
+														array('id', $item->id)
 													)
-												),
-						);
+												)
+											),
+					);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
-				$template->parse();
-			}
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
 	}
 
 	/**
@@ -902,17 +852,17 @@ class articles extends Module {
 			// print image tag with specified URL
 			$id = fix_id($tag_params['id']);
 			$type = isset($tag_params['type']) ? fix_id($tag_params['type']) : ImageType::Stars;
-			$manager = Modules\Articles\Manager::getInstance();
+			$manager = Modules\Articles\Manager::get_instance();
 
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			$template = new TemplateHandler('rating_image.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			if (is_object($item)) {
-				$url = url_Make(
-							'get_rating_image',
+				$url = URL::make_query(
 							$this->name,
+							'get_rating_image',
 							array('type', $type),
 							array('id', $id)
 						);
@@ -922,8 +872,8 @@ class articles extends Module {
 							'rating'	=> round($this->getArticleRating($item, 5), 2)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 
@@ -931,9 +881,9 @@ class articles extends Module {
 			// print image itself
 			$id = fix_id($_REQUEST['id']);
 			$type = isset($_REQUEST['type']) ? fix_id($_REQUEST['type']) : ImageType::Stars;
-			$manager = Modules\Articles\Manager::getInstance();
+			$manager = Modules\Articles\Manager::get_instance();
 
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 			switch ($type) {
 				case ImageType::Stars:
@@ -992,17 +942,17 @@ class articles extends Module {
 		// we need at least one of IDs in order to display article
 		if (is_null($id) && is_null($text_id)) return;
 
-		$manager = Modules\Articles\GroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::get_instance();
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'group.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
+		$template = $this->load_template($tag_params, 'group.xml');
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:article_list', $this, 'tag_ArticleList');
 
 		if (!is_null($id))
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id)); else
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $text_id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id)); else
+			$item = $manager->get_single_item($manager->get_field_names(), array('text_id' => $text_id));
 
 		if (is_object($item)) {
 			$params = array(
@@ -1012,8 +962,8 @@ class articles extends Module {
 						'description'	=> $item->description,
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1025,19 +975,19 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_GroupList($tag_params, $children) {
-		$manager = Modules\Articles\GroupManager::getInstance();
+		$manager = Modules\Articles\GroupManager::get_instance();
 		$conditions = array();
 
 		if (isset($tag_params['only_visible']) && $tag_params['only_visible'] == 'yes')
 			$conditions['visible'] = 1;
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'group_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:article_list', $this, 'tag_ArticleList');
+		$template = $this->load_template($tag_params, 'group_list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:article_list', $this, 'tag_ArticleList');
 
 		// give the ability to limit number of links to display
 		if (isset($tag_params['limit']))
@@ -1053,32 +1003,32 @@ class articles extends Module {
 							'title'			=> $item->title,
 							'description'	=> $item->description,
 							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+							'item_change'	=> URL::make_hyperlink(
+													$this->get_language_constant('change'),
 													window_Open(
 														'article_groups_change', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_article_groups_change'), // title
+														$this->get_language_constant('title_article_groups_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+							'item_delete'	=> URL::make_hyperlink(
+													$this->get_language_constant('delete'),
 													window_Open(
 														'article_groups_delete', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_article_groups_delete'), // title
+														$this->get_language_constant('title_article_groups_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_delete'),
 															array('id', $item->id)
@@ -1087,8 +1037,8 @@ class articles extends Module {
 												),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1103,8 +1053,8 @@ class articles extends Module {
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ImageType::Stars;
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
 
-		$manager = Modules\Articles\Manager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		$result = array(
 					'error'			=> false,
@@ -1112,19 +1062,19 @@ class articles extends Module {
 				);
 
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
-		$rating_image_url = url_Make(
-					'get_rating_image',
+		$rating_image_url = URL::make_query(
 					$this->name,
+					'get_rating_image',
 					array('type', $type),
 					array('id', $id)
 				);
 
 		if (is_object($item)) {
 			$timestamp = strtotime($item->timestamp);
-			$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-			$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
+			$date = date($this->get_language_constant('format_date_short'), $timestamp);
+			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$result['item'] = array(
 								'id'			=> $item->id,
@@ -1134,7 +1084,7 @@ class articles extends Module {
 								'time'			=> $time,
 								'title'			=> $all_languages ? $item->title : $item->title[$language],
 								'content'		=> $all_languages ? $item->content : Markdown::parse($item->content[$language]),
-								'author'		=> $admin_manager->getItemValue(
+								'author'		=> $admin_manager->get_item_value(
 																	'fullname',
 																	array('id' => $item->author)
 																),
@@ -1148,7 +1098,7 @@ class articles extends Module {
 		} else {
 			// no item was found
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_article_not_found');
+			$result['error_message'] = $this->get_language_constant('message_json_article_not_found');
 		}
 
 		print json_encode($result);
@@ -1160,9 +1110,9 @@ class articles extends Module {
 	private function json_ArticleList() {
 		global $language;
 
-		$manager = Modules\Articles\Manager::getInstance();
-		$group_manager = Modules\Articles\GroupManager::getInstance();
-		$admin_manager = UserManager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
+		$group_manager = Modules\Articles\GroupManager::get_instance();
+		$admin_manager = UserManager::get_instance();
 
 		$conditions = array();
 		$order_by = array('id');
@@ -1202,7 +1152,10 @@ class articles extends Module {
 
 			} else {
 				// get id's from specitifed text_id
-				$groups = $group_manager->getItems($group_manager->getFieldNames(), array('text_id' => $group_names));
+				$groups = $group_manager->get_items(
+						$group_manager->get_field_names(),
+						array('text_id' => $group_names)
+					);
 
 				if (count($groups) > 0)
 					foreach ($groups as $group)
@@ -1218,7 +1171,7 @@ class articles extends Module {
 		$rating_image_type = isset($_REQUEST['rating_image_type']) ? $_REQUEST['rating_image_type'] : ImageType::Stars;
 
 		// get items from manager
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,
@@ -1229,11 +1182,11 @@ class articles extends Module {
 		if (count($items) > 0) {
 			foreach($items as $item) {
 				$timestamp = strtotime($item->timestamp);
-				$date = date($this->getLanguageConstant('format_date_short'), $timestamp);
-				$time = date($this->getLanguageConstant('format_time_short'), $timestamp);
-				$rating_image_url = url_Make(
-							'get_rating_image',
+				$date = date($this->get_language_constant('format_date_short'), $timestamp);
+				$time = date($this->get_language_constant('format_time_short'), $timestamp);
+				$rating_image_url = URL::make_query(
 							$this->name,
+							'get_rating_image',
 							array('type', $rating_image_type),
 							array('id', $item->id)
 						);
@@ -1245,7 +1198,8 @@ class articles extends Module {
 									'date'			=> $date,
 									'time'			=> $time,
 									'title'			=> $all_languages ? $item->title : $item->title[$language],
-									'author'		=> $admin_manager->getItemValue(
+									'content'		=> $all_languages ? $item->content : $item->content[$language],
+									'author'		=> $admin_manager->get_item_value(
 																		'fullname',
 																		array('id' => $item->author)
 																	),
@@ -1261,7 +1215,7 @@ class articles extends Module {
 		} else {
 			// no articles were found for specified cirteria
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_articles_not_found');
+			$result['error_message'] = $this->get_language_constant('message_json_articles_not_found');
 		}
 
 		print json_encode($result);
@@ -1273,10 +1227,10 @@ class articles extends Module {
 	private function json_Vote() {
 		$id = fix_id($_REQUEST['id']);
 		$value = $_REQUEST['value'];
-		$manager = Modules\Articles\Manager::getInstance();
-		$vote_manager = Modules\Articles\VoteManager::getInstance();
+		$manager = Modules\Articles\Manager::get_instance();
+		$vote_manager = Modules\Articles\VoteManager::get_instance();
 
-		$vote = $vote_manager->getSingleItem(
+		$vote = $vote_manager->get_single_item(
 									array('id'),
 									array(
 										'article'	=> $id,
@@ -1292,14 +1246,14 @@ class articles extends Module {
 		if (is_object($vote)) {
 			// that address already voted
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_vote_already');
+			$result['error_message'] = $this->get_language_constant('message_vote_already');
 
 		} else {
 			// stupid but we need to make sure article exists
-			$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
+			$article = $manager->get_single_item(array('id', 'votes_up', 'votes_down'), array('id' => $id));
 
 			if (is_object($article)) {
-				$vote_manager->insertData(array(
+				$vote_manager->insert_item(array(
 										'article'	=> $article->id,
 										'address'	=> $_SERVER['REMOTE_ADDR']
 									));
@@ -1316,14 +1270,14 @@ class articles extends Module {
 					if ($value == 1)
 						$data['votes_up']++;
 
-					$manager->updateData($data, array('id' => $article->id));
+					$manager->update_items($data, array('id' => $article->id));
 				}
 
-				$article = $manager->getSingleItem(array('id', 'votes_up', 'votes_down'), array('id' => $id));
+				$article = $manager->get_single_item(array('id', 'votes_up', 'votes_down'), array('id' => $id));
 				$result['rating'] = $this->getArticleRating($article, 10);
 			} else {
 				$result['error'] = true;
-				$result['error_message'] = $this->getLanguageConstant('message_vote_error');
+				$result['error_message'] = $this->get_language_constant('message_vote_error');
 			}
 		}
 

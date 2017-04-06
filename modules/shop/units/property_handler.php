@@ -6,10 +6,10 @@
  * Author: Mladen Mijatov
  */
 namespace Modules\Shop\Property;
+use Modules\Shop\Item\Manager as ItemManager;
+use TemplateHandler;
 
 require_once('property_manager.php');
-
-use \TemplateHandler as TemplateHandler;
 
 
 class Handler {
@@ -30,7 +30,7 @@ class Handler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$instance))
 			self::$instance = new self($parent);
 
@@ -44,10 +44,10 @@ class Handler {
 	 * @return integer
 	 */
 	public function save_properties($item_id) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 
 		// remove existing properties
-		$manager->deleteData(array('item' => $item_id));
+		$manager->delete_items(array('item' => $item_id));
 
 		// insert new data
 		$count = 0;
@@ -66,7 +66,7 @@ class Handler {
 					'value'   => serialize($decoded['value'])
 				);
 
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$count++;
 		}
 
@@ -77,8 +77,8 @@ class Handler {
 	 * Get specified item property.
 	 */
 	public function json_GetProperty() {
-		$manager = Manager::getInstance();
-		$item_manager = \ShopItemManager::getInstance();
+		$manager = Manager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$conditions = array();
 		$result = false;
 
@@ -87,7 +87,7 @@ class Handler {
 			$conditions['item'] = fix_id($_REQUEST['item']);
 
 		if (isset($_REQUEST['item_uid'])) {
-			$item = $item_manager->getSingleItem(
+			$item = $item_manager->get_single_item(
 					array('id'),
 					array('uid' => fix_chars($_REQUEST['item_uid']))
 				);
@@ -104,7 +104,7 @@ class Handler {
 			$conditions['text_id'] = fix_chars($_REQUEST['text_id']);
 
 		// get property from the database
-		$property = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$property = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// bail if no property was found
 		if (!is_object($property)) {
@@ -128,8 +128,8 @@ class Handler {
 	 * Get property list for specified item as JSON object.
 	 */
 	private function json_GetPropertyList() {
-		$manager = Manager::getInstance();
-		$item_manager = \ShopItemManager::getInstance();
+		$manager = Manager::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$conditions = array();
 		$result = false;
 
@@ -143,7 +143,7 @@ class Handler {
 	 * @param array $children
 	 */
 	public function tag_Property($tag_params, $children) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 
 		// prepare conditions
@@ -151,18 +151,27 @@ class Handler {
 			$conditions['item'] = fix_id($tag_params['item']); else
 			$conditions['item'] = -1;
 
+		if (isset($tag_params['item_uid'])) {
+			$item_manager = ItemManager::get_instance();
+			$item = $item_manager->get_single_item(array('id'), array('uid' => fix_chars($tag_params['item_uid'])));
+
+			if (is_object($item))
+				$conditions['item'] = $item->id; else
+				$conditions['item'] = -1;
+		}
+
 		if (isset($tag_params['text_id']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item properties from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// we need items to display
 		if (!is_object($item))
 			return;
 
 		// create template
-		$template = $this->parent->loadTemplate($tag_params, 'item_property.xml');
+		$template = $this->parent->load_template($tag_params, 'item_property.xml');
 
 		// prepare data
 		$data = array(
@@ -179,12 +188,13 @@ class Handler {
 				'name'      => $item->name,
 				'type'      => $item->type,
 				'value'     => unserialize($item->value),
-				'raw_value' => $item->value
+				'raw_value' => $item->value,
+				'data'      => json_encode($data)
 			);
 
 		// parse template
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -195,7 +205,7 @@ class Handler {
 	 * @param array $children
 	 */
 	public function tag_PropertyList($tag_params, $children) {
-		$manager = Manager::getInstance();
+		$manager = Manager::get_instance();
 		$conditions = array();
 		$sort_by = array('id');
 		$sort_asc = true;
@@ -204,6 +214,15 @@ class Handler {
 		// prepare conditions
 		if (isset($tag_params['item']))
 			$conditions['item'] = fix_id($tag_params['item']);
+
+		if (isset($tag_params['item_uid'])) {
+			$item_manager = ItemManager::get_instance();
+			$item = $item_manager->get_single_item(array('id'), array('uid' => fix_chars($tag_params['item_uid'])));
+
+			if (is_object($item))
+				$conditions['item'] = $item->id; else
+				$conditions['item'] = -1;
+		}
 
 		if (isset($tag_params['starts_with']))
 			$conditions['text_id'] = array(
@@ -221,14 +240,14 @@ class Handler {
 			$discount = floatval($tag_params['discount']);
 
 		// get item properties from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $sort_by, $sort_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $sort_by, $sort_asc);
 
 		// we need items to display
 		if (count($items) == 0)
 			return;
 
 		// create template
-		$template = $this->parent->loadTemplate($tag_params, 'item_property_list_item.xml');
+		$template = $this->parent->load_template($tag_params, 'item_property_list_item.xml');
 
 		$index = 0;
 		foreach ($items as $item) {
@@ -259,8 +278,8 @@ class Handler {
 				$params['discount_price'] = number_format($params['value'] * ((100 - $discount) / 100), 2);
 
 			// parse template
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}

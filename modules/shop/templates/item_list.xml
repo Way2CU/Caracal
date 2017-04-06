@@ -5,6 +5,36 @@
 	<div class="main_menu">
 		<cms:var name="$params['link_new']"/>
 		<cms:var name="$params['link_categories']"/>
+
+		<!-- Simple filter options -->
+		<div class="floated">
+			<cms:text constant="label_manufacturer" module="shop"/>
+			<select name="manufacturer" onchange="Caracal.Shop.update_item_list(this);">
+				<option/>
+				<cms:manufacturer_list
+					selected="isset($_REQUEST['manufacturer']) ? $_REQUEST['manufacturer'] : null"
+					template="manufacturer_option.xml"
+					local="1"
+					cms:optional="selected"
+					/>
+			</select>
+
+			<cms:text constant="label_category" module="shop"/>
+			<select
+				name="category"
+				onchange="Caracal.Shop.update_item_list(this);"
+				style="max-width: 150px;"
+				>
+				<option/>
+				<cms:category_list
+					selected="isset($_REQUEST['category']) ? $_REQUEST['category'] : null"
+					template="category_option.xml"
+					local="1"
+					show_all="1"
+					cms:optional="selected"
+					/>
+			</select>
+		</div>
 	</div>
 
 	<!-- Header -->
@@ -22,13 +52,21 @@
 			<span class="column" style="width: 50px;">
 				<cms:text constant="column_rating" module="shop"/>
 			</span>
+			<span class="column" style="width: 100px;">
+				<cms:text constant="column_expires" module="shop"/>
+			</span>
 			<span class="column">
 				<cms:text constant="column_options"/>
 			</span>
 		</div>
-		<div class="list_content" style="height: 250px">
+
+		<div class="list_content" style="height: 400px">
 			<!-- List Content -->
-			<cms:item_list/>
+			<cms:item_list
+				category="isset($_REQUEST['category']) ? $_REQUEST['category'] : false"
+				show_hidden="1"
+				cms:optional="category"
+				/>
 		</div>
 	</div>
 </document>

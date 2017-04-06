@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
+	<div class="list_item with_details">
+		<cms:if condition="$params['has_children']">
+			<input
+				type="checkbox"
+				class="trigger"
+				id="'category_'.$params['id']"
+				cms:eval="id"
+				/>
+		</cms:if>
+
 		<span class="column" style="display: block;">
+			<cms:if condition="$params['has_children']">
+				<label
+					class="trigger"
+					for="'category_'.$params['id']"
+					cms:eval="for"
+					/>
+			</cms:if>
+
 			<label>
 				<input
 					type="checkbox"
 					name="'category_id_'.$params['id']"
+					data-id="$params['id']"
+					data-text-id="$params['text_id']"
 					value="1"
 					checked="$params['in_category'] ? 'checked' : false"
-					cms:eval="name"
+					cms:eval="name,data-id,data-text-id"
 					cms:optional="checked"
 					/>
 				<cms:var name="$params['title'][$language]"/>
 			</label>
 		</span>
-	</div>
 
-	<div style="'padding-'.($language_rtl ? 'right' : 'left').': 15px;'" cms:eval="style">
-		<cms:children
-			parent_id="$params['id']"
-			level="$params['level'] + 1"
-			item_id="$params['item_id']"
-			cms:eval="parent_id,level,item_id"
-			template="category_checkbox_list_item.xml"
-			local="1"
-			/>
+		<cms:if condition="$params['has_children']">
+			<div class="children details">
+				<cms:children
+					parent_id="$params['id']"
+					level="$params['level'] + 1"
+					item="$params['item']"
+					cms:eval="parent_id,level,item"
+					template="category_checkbox_list_item.xml"
+					local="1"
+					/>
+			</div>
+		</cms:if>
 	</div>
 </document>

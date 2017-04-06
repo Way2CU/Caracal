@@ -12,6 +12,7 @@ namespace Modules\Shop;
 use \ShopTransactionsManager as TransactionsManager;
 use \ShopDeliveryAddressManager as DeliveryAddressManager;
 use \ShopBuyersManager as BuyersManager;
+use Modules\Shop\Transaction\PromotionManager as PromotionManager;
 
 
 class UnknownTransactionError extends \Exception {}
@@ -28,7 +29,7 @@ final class Transaction {
 	 */
 	public static function get_manager() {
 		if (is_null(self::$manager))
-			self::$manager = TransactionsManager::getInstance();
+			self::$manager = TransactionsManager::get_instance();
 
 		return self::$manager;
 	}
@@ -36,18 +37,21 @@ final class Transaction {
 	/**
 	 * Get transaction object based on specified unique id.
 	 *
-	 * @param string $transaction_id
+	 * @param mixed $transaction_id
 	 * @return object
 	 * @throws UnknownTransactionError
 	 */
 	public static function get($transaction_id) {
 		$manager = self::get_manager();
 
+		// prepare conditions
+		$conditions = array();
+		if (is_numeric($transaction_id))
+			$conditions['id'] = $transaction_id; else
+			$conditions['uid'] = $transaction_id;
+
 		// get transaction
-		$transaction = $manager->getSingleItem(
-			$manager->getFieldNames(),
-			array('uid' => $transaction_id)
-		);
+		$transaction = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// make sure transaction is valid
 		if (!is_object($transaction))
@@ -74,7 +78,7 @@ final class Transaction {
 			return $result;
 
 		$manager = self::get_manager();
-		$result = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $id));
+		$result = $manager->get_single_item($manager->get_field_names(), array('uid' => $id));
 
 		return $result;
 	}
@@ -89,9 +93,9 @@ final class Transaction {
 		$result = null;
 
 		// get address
-		$manager = BuyersManager::getInstance();
-		$buyer = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$manager = BuyersManager::get_instance();
+		$buyer = $manager->get_single_item(
+				$manager->get_field_names(),
 				array('id' => $transaction->buyer)
 			);
 
@@ -127,9 +131,9 @@ final class Transaction {
 		$result = null;
 
 		// get address
-		$manager = DeliveryAddressManager::getInstance();
-		$address = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$manager = DeliveryAddressManager::get_instance();
+		$address = $manager->get_single_item(
+				$manager->get_field_names(),
 				array('id' => $transaction->address)
 			);
 
@@ -152,6 +156,43 @@ final class Transaction {
 			return $result;
 
 		return self::get_address($transaction);
+	}
+
+	/**
+	 * Get promotions for specified transaction. If no transaction is
+	 * specified system will try to return promotions for current transaction.
+	 *
+	 * @param object $transaction
+	 * @return array
+	 */
+	public static function get_promotions($transaction=null) {
+		$result = array();
+
+		// make sure we have transaction to work with
+		if ($transaction === null)
+			$transaction = self::get_current();
+
+		if (is_null($transaction))
+			return $result;
+
+		// get promotions
+		$manager = PromotionManager::get_instance();
+		$promotions = $manager->get_items(
+				$manager->get_field_names(),
+				array('transaction' => $transaction->id)
+			);
+
+		if (count($promotions) == 0)
+			return $result;
+
+		// prepare result
+		foreach ($promotions as $promotion)
+			$result []= array(
+					'promotion' => $promotion->promotion,
+					'discount' => $promotion->discount
+				);
+
+		return $result;
 	}
 
 	/**
@@ -183,7 +224,7 @@ final class Transaction {
 	 */
 	public static function set_remote_id($transaction, $remote_id) {
 		$manager = self::get_manager();
-		$manager->updateData(
+		$manager->update_items(
 			array('remote_id' => $remote_id),
 			array('id' => $transaction->id)
 		);
@@ -197,7 +238,7 @@ final class Transaction {
 	 */
 	public static function set_token($transaction, $token) {
 		$manager = self::get_manager();
-		$manager->updateData(
+		$manager->update_items(
 			array('payment_token' => $token->id),
 			array('id' => $transaction->id)
 		);
@@ -226,7 +267,7 @@ final class Transaction {
 			$data['handling'] = $handling;
 
 		// update data
-		$manager->updateData($data, array('id' => $transaction->id));
+		$manager->update_items($data, array('id' => $transaction->id));
 	}
 
 	/**
@@ -239,7 +280,7 @@ final class Transaction {
 		$manager = self::get_manager();
 
 		// update data
-		$manager->updateData(
+		$manager->update_items(
 				array('shipping' => $value),
 				array('id' => $transaction->id)
 			);

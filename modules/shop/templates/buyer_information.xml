@@ -23,6 +23,11 @@
 				<cms:text constant="title_billing_information" module="shop"/>
 			</a>
 			-->
+			<cms:if condition="$params['qualified_promotions'] > 0">
+				<a href="javascript:void(0);">
+					<cms:text constant="title_qualified_promotions" module="shop"/>
+				</a>
+			</cms:if>
 			<a href="javascript:void(0);">
 				<cms:text constant="title_checkout" module="shop"/>
 			</a>
@@ -641,6 +646,28 @@
 					<input type="hidden" name="billing_expire_month" />
 					<input type="hidden" name="billing_expire_year" />
 					<input type="hidden" name="billing_cvv" />
+
+					<!-- List of promotions user is eligible to recive -->
+					<cms:if condition="$params['qualified_promotions'] > 0">
+						<div class="page" id="qualified_promotions">
+							<h1><cms:text constant="title_qualified_promotions" module="shop"/></h1>
+							<label class="radio">
+								<input
+									type="radio"
+									name="qualified_promotion"
+									value=""
+									checked="checked"
+									/>
+								<span><cms:text constant="no_promotion" module="shop"/></span>
+							</label>
+							<cms:qualified_promotion_list only_qualified="1"/>
+
+							<div class="checkout_controls">
+								<button class="previous"><cms:text constant="back"/></button>
+								<button class="next"><cms:text constant="next"/></button>
+							</div>
+						</div>
+					</cms:if>
 
 					<!-- Dummy checkout page -->
 					<div class="page" id="checkout"/>

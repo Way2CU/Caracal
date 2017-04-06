@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-
+	<div
+		class="$params['default'] ? 'default list_item' : 'list_item'"
+		cms:eval="class"
+		>
 		<div class="options">
-			<cms:var name="$params['item_change']"/>
-			<cms:var name="$params['item_delete']"/>
+			<cms:var param="item_change"/>
+			<cms:var param="item_delete"/>
+			<cms:if condition="!$params['default']">
+				<cms:var param="item_set_default"/>
+			</cms:if>
 		</div>
 
 		<div
@@ -14,8 +19,6 @@
 			cms:eval="style"
 			/>
 
-		<span class="title">
-			<cms:var name="$params['title'][$language]"/>
-		</span>
+		<span class="title"><cms:var param="title" multilanguage="yes"/></span>
 	</div>
 </document>

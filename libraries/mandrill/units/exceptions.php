@@ -1,7 +1,7 @@
 <?php
 
 namespace Library\Mandrill;
-use \Exception as Exception;
+use Exception;
 
 class Mandrill_Error extends Exception {}
 class Mandrill_HttpError extends Mandrill_Error {}

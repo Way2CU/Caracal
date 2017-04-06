@@ -141,12 +141,13 @@ file_filter = modules/country_list/data/language_<lang>.json
 source_lang = en
 type = KEYVALUEJSON
 
-[caracal.affiliates]
-file_filter = modules/affiliates/data/language_<lang>.json
-source_lang = en
-type = KEYVALUEJSON
-
 [caracal.ontop]
 file_filter = modules/ontop/data/language_<lang>.json
 source_lang = en
 type = KEYVALUEJSON
+
+[caracal.page_description]
+file_filter = modules/page_description/data/language_<lang>.json
+source_lang = en
+type = KEYVALUEJSON
+

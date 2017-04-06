@@ -19,7 +19,8 @@
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	# take whole URI and give it to main index file
-	RewriteRule (.*) index.php?_rewrite=$1 [QSA,L]
+	RewriteCond %{QUERY_STRING} (.*)
+	RewriteRule (.*) index.php?/$1?%1 [L]
 </IfModule>
 
 <FilesMatch "\.(xml|json)$">
@@ -55,7 +56,7 @@ Header unset Pragma
 	SetOutputFilter DEFLATE
 </FilesMatch>
 
-<FilesMatch "\.(js|css|less|ttf|otf|woff)$">
+<FilesMatch "\.(js|css|less|ttf|otf|woff|woff2)$">
 	Header set Cache-Control "max-age=864000, must-revalidate"
 	SetOutputFilter DEFLATE
 </FilesMatch>

@@ -9,22 +9,22 @@ class Stripe_PlansManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('stripe_recurring_plans');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('name', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('name', 'varchar');
 
-		$this->addProperty('trial_days', 'int');
-		$this->addProperty('interval', 'int');
-		$this->addProperty('interval_count', 'int');
+		$this->add_property('trial_days', 'int');
+		$this->add_property('interval', 'int');
+		$this->add_property('interval_count', 'int');
 
-		$this->addProperty('price', 'decimal');
-		$this->addProperty('currency', 'varchar');
+		$this->add_property('price', 'decimal');
+		$this->add_property('currency', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 

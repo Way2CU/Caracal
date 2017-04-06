@@ -17,7 +17,7 @@ abstract class PaymentMethod {
 	 */
 	protected function registerPaymentMethod() {
 		if (ModuleHandler::is_loaded('shop')) {
-			$shop = shop::getInstance();
+			$shop = shop::get_instance();
 			$shop->registerPaymentMethod($this->name, $this);
 		}
 	}

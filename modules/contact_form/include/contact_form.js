@@ -76,11 +76,8 @@ Caracal.ContactForm.Form = function(form_object) {
 
 		// create dialog
 		if (Caracal.ContactForm.dialog == null) {
-			Caracal.ContactForm.dialog = new Dialog();
-			Caracal.ContactForm.dialog.setTitle(language_handler.getText('contact_form', 'dialog_title'));
-			Caracal.ContactForm.dialog.setSize(400, 100);
-			Caracal.ContactForm.dialog.setScroll(false);
-			Caracal.ContactForm.dialog.setClearOnClose(true);
+			Caracal.ContactForm.dialog = new Caracal.Dialog({clear_on_close: true});
+			Caracal.ContactForm.dialog.set_title(language_handler.getText('contact_form', 'dialog_title'));
 		}
 
 		// create message container
@@ -214,9 +211,9 @@ Caracal.ContactForm.Form = function(form_object) {
 		var response = self.events.trigger('submit-success', data);
 		if (response) {
 			self._message.html(data.message);
-			Caracal.ContactForm.dialog.setError(data.error);
-			Caracal.ContactForm.dialog.setContent(self._message);
-			Caracal.ContactForm.dialog.show();
+			Caracal.ContactForm.dialog.set_error(data.error);
+			Caracal.ContactForm.dialog.set_content(self._message);
+			Caracal.ContactForm.dialog.open();
 		}
 
 		// clear form on success
@@ -239,9 +236,9 @@ Caracal.ContactForm.Form = function(form_object) {
 		var response = self.events.trigger('submit-error', request_status, description);
 		if (response) {
 			self._message.html(description);
-			Caracal.ContactForm.dialog.setError(true);
-			Caracal.ContactForm.dialog.setContent(self._message);
-			Caracal.ContactForm.dialog.show();
+			Caracal.ContactForm.dialog.set_error(true);
+			Caracal.ContactForm.dialog.set_content(self._message);
+			Caracal.ContactForm.dialog.open();
 		}
 	};
 
@@ -262,9 +259,9 @@ Caracal.ContactForm.Form = function(form_object) {
 		var response = self.events.trigger('submit-success', data);
 		if (response) {
 			self._message.html(content.html());
-			Caracal.ContactForm.dialog.setError(false);
-			Caracal.ContactForm.dialog.setContent(self._message);
-			Caracal.ContactForm.dialog.show();
+			Caracal.ContactForm.dialog.set_error(false);
+			Caracal.ContactForm.dialog.set_content(self._message);
+			Caracal.ContactForm.dialog.open();
 		}
 
 		// clear form on success

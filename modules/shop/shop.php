@@ -13,8 +13,13 @@
 use Core\Events;
 use Core\Module;
 
+// base classes
 require_once('units/payment_method.php');
 require_once('units/delivery_method.php');
+require_once('units/promotion.php');
+require_once('units/discount.php');
+
+// data managers and handlers
 require_once('units/item_handler.php');
 require_once('units/category_handler.php');
 require_once('units/currencies_handler.php');
@@ -25,24 +30,30 @@ require_once('units/transactions_handler.php');
 require_once('units/warehouse_handler.php');
 require_once('units/transaction_items_manager.php');
 require_once('units/transaction_plans_manager.php');
+require_once('units/transaction_promotions_manager.php');
 require_once('units/recurring_payments_manager.php');
 require_once('units/buyers_manager.php');
 require_once('units/delivery_address_manager.php');
 require_once('units/delivery_address_handler.php');
 require_once('units/related_items_manager.php');
 require_once('units/manufacturer_handler.php');
-require_once('units/delivery_methods_handler.php');
+require_once('units/coupons_handler.php');
+require_once('units/supplier_handler.php');
+
+// helper classes
 require_once('units/token_manager.php');
 require_once('units/delivery.php');
 require_once('units/transaction.php');
 require_once('units/token.php');
 
-use Modules\Shop\Delivery as Delivery;
-use Modules\Shop\Transaction as Transaction;
-use Modules\Shop\Token as Token;
+use Modules\Shop\Delivery;
+use Modules\Shop\Transaction;
+use Modules\Shop\Token;
 
 use Modules\Shop\TokenManager as TokenManager;
-use Modules\Shop\Item\Handler as ShopItemHandler;
+use Modules\Shop\Item\Handler as ItemHandler;
+use Modules\Shop\Item\Manager as ItemManager;
+use Modules\Shop\Property\Manager as PropertyManager;
 
 
 final class TransactionType {
@@ -191,16 +202,15 @@ class PaymentMethodError extends Exception {};
 class shop extends Module {
 	private static $_instance;
 	private $payment_methods;
+	private $promotions;
+	private $discounts;
 	private $checkout_scripts = array();
 	private $checkout_styles = array();
+	private $search_params = array();
 
 	private $excluded_properties = array(
 		'size_value', 'color_value', 'count', 'price'
 	);
-
-	private $search_params = array();
-
-	const BUYER_SECRET = 'oz$9=7if~db/MP|BBN>)63T}6w{D6no[^79L]9>8(8wrv6:$/n63YsvCa<BR4379De1d035wvi]]iqA<P=3gHNv1H';
 
 	/**
 	 * Constructor
@@ -210,8 +220,10 @@ class shop extends Module {
 
 		parent::__construct(__FILE__);
 
-		// create methods storage
+		// create extension storage
 		$this->payment_methods = array();
+		$this->promotions = array();
+		$this->discounts = array();
 
 		// create events
 		Events::register('shop', 'shopping-cart-changed');
@@ -224,41 +236,41 @@ class shop extends Module {
 			Events::register('shop', $signal_name);
 
 		// connect to search module
-		Events::connect('search', 'get-results', 'getSearchResults', $this);
-		Events::connect('backend', 'user-create', 'handleUserCreate', $this);
+		Events::connect('search', 'get-results', 'get_search_results', $this);
+		Events::connect('backend', 'user-create', 'handle_user_create', $this);
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$head_tag = head_tag::getInstance();
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			// include collection scripts
 			if (ModuleHandler::is_loaded('collection')) {
-				$collection = collection::getInstance();
+				$collection = collection::get_instance();
 				$collection->includeScript(collection::PROPERTY_EDITOR);
 			}
 
 			// include local scripts
 			if (ModuleHandler::is_loaded('head_tag')) {
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/backend.js'), 'type'=>'text/javascript'));
-				$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
+				$head_tag = head_tag::get_instance();
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/multiple_images.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/backend.js'), 'type'=>'text/javascript'));
+				$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
 			}
 
 			$shop_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_shop'),
-				url_GetFromFilePath($this->path.'images/icon.svg'),
+				$this->get_language_constant('menu_shop'),
+				URL::from_file_path($this->path.'images/icon.svg'),
 				'javascript:void(0);',
 				5  // level
 			);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_items'),
-				url_GetFromFilePath($this->path.'images/items.svg'),
+				$this->get_language_constant('menu_items'),
+				URL::from_file_path($this->path.'images/items.svg'),
 				window_Open( // on click open window
 					'shop_items',
-					650,
-					$this->getLanguageConstant('title_manage_items'),
+					800,
+					$this->get_language_constant('title_manage_items'),
 					true, true,
 					backend_UrlMake($this->name, 'items')
 				),
@@ -266,15 +278,15 @@ class shop extends Module {
 			));
 
 			$recurring_plans_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_recurring_plans'),
-				url_GetFromFilePath($this->path.'images/recurring_plans.svg'),
+				$this->get_language_constant('menu_recurring_plans'),
+				URL::from_file_path($this->path.'images/recurring_plans.svg'),
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
 
 			$import_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_import'),
-				url_GetFromFilePath($this->path.'images/import.svg'),
+				$this->get_language_constant('menu_import'),
+				URL::from_file_path($this->path.'images/import.svg'),
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_import', $import_menu);
@@ -282,12 +294,12 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_categories'),
-				url_GetFromFilePath($this->path.'images/categories.svg'),
+				$this->get_language_constant('menu_categories'),
+				URL::from_file_path($this->path.'images/categories.svg'),
 				window_Open( // on click open window
 					'shop_categories',
 					550,
-					$this->getLanguageConstant('title_manage_categories'),
+					$this->get_language_constant('title_manage_categories'),
 					true, true,
 					backend_UrlMake($this->name, 'categories')
 				),
@@ -295,12 +307,12 @@ class shop extends Module {
 			));
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_item_sizes'),
-				url_GetFromFilePath($this->path.'images/item_sizes.svg'),
+				$this->get_language_constant('menu_item_sizes'),
+				URL::from_file_path($this->path.'images/item_sizes.svg'),
 				window_Open( // on click open window
 					'shop_item_sizes',
 					400,
-					$this->getLanguageConstant('title_manage_item_sizes'),
+					$this->get_language_constant('title_manage_item_sizes'),
 					true, true,
 					backend_UrlMake($this->name, 'sizes')
 				),
@@ -308,60 +320,67 @@ class shop extends Module {
 			));
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_manufacturers'),
-				url_GetFromFilePath($this->path.'images/manufacturers.svg'),
+				$this->get_language_constant('menu_manufacturers'),
+				URL::from_file_path($this->path.'images/manufacturers.svg'),
 				window_Open( // on click open window
 					'shop_manufacturers',
 					400,
-					$this->getLanguageConstant('title_manufacturers'),
+					$this->get_language_constant('title_manufacturers'),
 					true, true,
 					backend_UrlMake($this->name, 'manufacturers')
 				),
 				5  // level
 			));
 
-			// delivery methods menu
-			$delivery_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_delivery_methods'),
-				url_GetFromFilePath($this->path.'images/delivery.svg'),
-				'javascript: void(0);', 5
-			);
-
-			$shop_menu->addChild('shop_delivery_methods', $delivery_menu);
-
-			$shop_menu->addSeparator(5);
-
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_special_offers'),
-				url_GetFromFilePath($this->path.'images/special_offers.svg'),
+				$this->get_language_constant('menu_suppliers'),
+				URL::from_file_path($this->path.'images/suppliers.svg'),
 				window_Open( // on click open window
-					'shop_special_offers',
-					490,
-					$this->getLanguageConstant('title_special_offers'),
+					'shop_suppliers',
+					400,
+					$this->get_language_constant('title_suppliers'),
 					true, true,
-					backend_UrlMake($this->name, 'special_offers')
+					backend_UrlMake($this->name, 'suppliers')
 				),
 				5  // level
 			));
 
+			// delivery methods menu
+			$delivery_menu = new backend_MenuItem(
+				$this->get_language_constant('menu_delivery_methods'),
+				URL::from_file_path($this->path.'images/delivery.svg'),
+				'javascript: void(0);', 5
+			);
+
+			$shop_menu->addChild('shop_delivery_methods', $delivery_menu);
+			$shop_menu->addSeparator(5);
+
+			// special offers menu
+			$special_offers = new backend_MenuItem(
+				$this->get_language_constant('menu_special_offers'),
+				URL::from_file_path($this->path.'images/special_offers.svg'),
+				'javascript: void(0);', 5
+			);
+
+			$shop_menu->addChild('shop_special_offers', $special_offers);
 			$shop_menu->addSeparator(5);
 
 			// payment methods menu
 			$methods_menu = new backend_MenuItem(
-				$this->getLanguageConstant('menu_payment_methods'),
-				url_GetFromFilePath($this->path.'images/payment_methods.svg'),
+				$this->get_language_constant('menu_payment_methods'),
+				URL::from_file_path($this->path.'images/payment_methods.svg'),
 				'javascript: void(0);', 5
 			);
 
 			$shop_menu->addChild('shop_payment_methods', $methods_menu);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_currencies'),
-				url_GetFromFilePath($this->path.'images/currencies.svg'),
+				$this->get_language_constant('menu_currencies'),
+				URL::from_file_path($this->path.'images/currencies.svg'),
 				window_Open( // on click open window
 					'shop_currencies',
 					350,
-					$this->getLanguageConstant('title_currencies'),
+					$this->get_language_constant('title_currencies'),
 					true, true,
 					backend_UrlMake($this->name, 'currencies')
 				),
@@ -371,36 +390,36 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_transactions'),
-				url_GetFromFilePath($this->path.'images/transactions.svg'),
+				$this->get_language_constant('menu_transactions'),
+				URL::from_file_path($this->path.'images/transactions.svg'),
 				window_Open( // on click open window
 					'shop_transactions',
 					800,
-					$this->getLanguageConstant('title_transactions'),
+					$this->get_language_constant('title_transactions'),
 					true, true,
 					backend_UrlMake($this->name, 'transactions')
 				),
 				5  // level
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_warehouses'),
-				url_GetFromFilePath($this->path.'images/warehouse.svg'),
+				$this->get_language_constant('menu_warehouses'),
+				URL::from_file_path($this->path.'images/warehouse.svg'),
 				window_Open( // on click open window
 					'shop_warehouses',
 					490,
-					$this->getLanguageConstant('title_warehouses'),
+					$this->get_language_constant('title_warehouses'),
 					true, true,
 					backend_UrlMake($this->name, 'warehouses')
 				),
 				5  // level
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
-				$this->getLanguageConstant('menu_stocks'),
-				url_GetFromFilePath($this->path.'images/stock.svg'),
+				$this->get_language_constant('menu_stocks'),
+				URL::from_file_path($this->path.'images/stock.svg'),
 				window_Open( // on click open window
 					'shop_stocks',
 					490,
-					$this->getLanguageConstant('title_stocks'),
+					$this->get_language_constant('title_stocks'),
 					true, true,
 					backend_UrlMake($this->name, 'stocks')
 				),
@@ -409,13 +428,13 @@ class shop extends Module {
 
 			$shop_menu->addSeparator(5);
 			$shop_menu->addChild('', new backend_MenuItem(
-				$this->getLanguageConstant('menu_settings'),
-				url_GetFromFilePath($this->path.'images/settings.svg'),
+				$this->get_language_constant('menu_settings'),
+				URL::from_file_path($this->path.'images/settings.svg'),
 
 				window_Open( // on click open window
 					'shop_settings',
 					400,
-					$this->getLanguageConstant('title_settings'),
+					$this->get_language_constant('title_settings'),
 					true, true,
 					backend_UrlMake($this->name, 'settings')
 				),
@@ -423,13 +442,16 @@ class shop extends Module {
 			));
 
 			$backend->addMenu($this->name, $shop_menu);
+
+			// create custom handlers
+			$coupons_handler = \Modules\Shop\Promotion\CouponHandler::get_instance($this);
 		}
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -444,7 +466,7 @@ class shop extends Module {
 	 * @param integer $threshold
 	 * @return array
 	 */
-	public function getSearchResults($module_list, $query, $threshold) {
+	public function get_search_results($module_list, $query, $threshold) {
 		global $language;
 
 		// make sure shop is in list of modules requested
@@ -456,41 +478,37 @@ class shop extends Module {
 			return array();
 
 		// initialize managers and data
-		$manager = ShopItemManager::getInstance();
+		$manager = ItemManager::get_instance();
+		$properties_manager = PropertyManager::get_instance();
 		$result = array();
 		$conditions = array(
-			'visible'	=> 1,
-			'deleted'	=> 0,
-		);
+				'visible' => 1,
+				'deleted' => 0,
+			);
 		$query = mb_strtolower($query);
-		$query_words = mb_split("\s", $query);
+		$query_words = mb_split('\s', $query);
+		$query_count = count($query_words);
 
 		// include pre-configured options
 		if (isset($this->search_params['category'])) {
-			$membership_manager = ShopItemMembershipManager::getInstance();
+			$membership_manager = ShopItemMembershipManager::get_instance();
 			$category = fix_chars($this->search_params['category']);
 			$item_ids = array();
 
 			if (!is_numeric($category)) {
-				$category_manager = ShopCategoryManager::getInstance();
-				$raw_category = $category_manager->getSingleItem(
-					array('id'),
-					array('text_id' => $category)
-				);
+				$category_manager = ShopCategoryManager::get_instance();
+				$raw_category = $category_manager->get_single_item(array('id'), array('text_id' => $category));
 
 				if (is_object($raw_category))
 					$category = $raw_category->id; else
-						$category = -1;
+					$category = -1;
 
 			} else {
 				$category = fix_id($category);
 			}
 
 			// get list of item ids
-			$membership_list = $membership_manager->getItems(
-				array('item'),
-				array('category' => $category)
-			);
+			$membership_list = $membership_manager->get_items(array('item'), array('category' => $category));
 
 			if (count($membership_list) > 0) {
 				foreach($membership_list as $membership)
@@ -500,37 +518,90 @@ class shop extends Module {
 			}
 		}
 
-		// get all items and process them
-		$items = $manager->getItems(
-			array(
-				'id',
-				'name',
-				'description'
-			),
-			$conditions
-		);
+		// allow for exclusion of expired items
+		if (isset($this->search_params['show_expired'])) {
+			if ($this->search_params['show_expired'] == 0) {
+				$conditions['expires'] = array(
+						'operator' => '>=',
+						'value'    => date('Y-m-d H:i:s')
+					);
 
-		// search through items
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				$title = mb_strtolower($item->name[$language]);
-				$score = 0;
-
-				foreach ($query_words as $query_word)
-					if (is_numeric(mb_strpos($title, $query_word)))
-						$score += 10;
-
-				// add item to result list
-				if ($score >= $threshold)
-					$result[] = array(
-						'score'			=> $score,
-						'title'			=> $title,
-						'description'	=> limit_words($item->description[$language], 200),
-						'id'			=> $item->id,
-						'type'			=> 'item',
-						'module'		=> $this->name
+			} else {
+				$conditions['expires'] = array(
+						'operator' => 'IS NOT',
+						'value'    => 'NULL'
 					);
 			}
+		}
+
+		// get all items and process them
+		$items = $manager->get_items(array('id', 'name', 'description'), $conditions);
+		$properties = $properties_manager->get_items(array('item', 'value'), array());
+
+		// prepare properties for easier use
+		$item_properties = array();
+		if (count($properties) > 0)
+			foreach ($properties as $property) {
+				$item = $property->item;
+				$value = unserialize($property->value);
+
+				if (is_array($value) || empty($value))
+					continue;
+
+				if (isset($item_properties[$item]))
+					$item_properties[$item] []= $value; else
+					$item_properties[$item] = array($value);
+			}
+
+		// make sure we have items to search through
+		if (count($items) == 0)
+			return $result;
+
+		// comparison function
+		$compare = function($a, $b) {
+			$score = String\Distance\Jaro::get($a, $b);
+
+			if ($score >= 0.9)
+				$result = 0; else
+				$result = strcmp($a, $b);
+
+			return $result;
+		};
+
+		// search through items
+		foreach ($items as $item) {
+			$title = mb_split('\s', mb_strtolower($item->name[$language]));
+			$description = mb_split('\s', mb_strtolower($item->description[$language]));
+			$properties = isset($item_properties[$item->id]) ? $item_properties[$item->id] : array();
+			$score = 0;
+			$title_matches = 0;
+			$description_matches = 0;
+			$property_matches = 0;
+
+			// count number of matching words
+			$title_matches = count(array_uintersect($query_words, $title, $compare));
+			$description_matches = count(array_uintersect($query_words, $description, 'strcmp'));
+			$property_matches = count(array_uintersect($query_words, $properties, $compare));
+
+			// calculate individual scores according to their importance
+			$title_score = 100 * ($title_matches / $query_count);
+			$description_score = 50 * ($description_matches / $query_count);
+			$property_score = 80 * ($property_matches / $query_count);
+
+			// calculate final score
+			$score = (($title_score + $description_score + $property_score) * 100) / (100 + 50 + 80);
+
+			// add item to result list
+			if ($score >= $threshold)
+				$result[] = array(
+					'score'			=> $score,
+					'title'			=> $title,
+					'description'	=> limit_words($item->description[$language], 200),
+					'id'			=> $item->id,
+					'type'			=> 'item',
+					'module'		=> $this->name
+				);
+		}
 
 		return $result;
 	}
@@ -540,8 +611,8 @@ class shop extends Module {
 	 *
 	 * @param object $user
 	 */
-	public function handleUserCreate($user) {
-		$manager = ShopBuyersManager::getInstance();
+	public function handle_user_create($user) {
+		$manager = ShopBuyersManager::get_instance();
 
 		// get user data
 		$data = array(
@@ -554,7 +625,7 @@ class shop extends Module {
 		);
 
 		// create new buyer
-		$manager->insertData($data);
+		$manager->insert_item($data);
 	}
 
 	/**
@@ -563,47 +634,47 @@ class shop extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
 			case 'show_item':
-				$handler = ShopItemHandler::getInstance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->tag_Item($params, $children);
 				break;
 
 			case 'show_item_list':
-				$handler = ShopItemHandler::getInstance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->tag_ItemList($params, $children);
 				break;
 
 			case 'show_category':
-				$handler = ShopCategoryHandler::getInstance($this);
+				$handler = ShopCategoryHandler::get_instance($this);
 				$handler->tag_Category($params, $children);
 				break;
 
 			case 'show_category_list':
-				$handler = ShopCategoryHandler::getInstance($this);
+				$handler = ShopCategoryHandler::get_instance($this);
 				$handler->tag_CategoryList($params, $children);
 				break;
 
 			case 'show_property':
-				$handler = \Modules\Shop\Property\Handler::getInstance($this);
+				$handler = \Modules\Shop\Property\Handler::get_instance($this);
 				$handler->tag_Property($params, $children);
 				break;
 
 			case 'show_property_list':
-				$handler = \Modules\Shop\Property\Handler::getInstance($this);
+				$handler = \Modules\Shop\Property\Handler::get_instance($this);
 				$handler->tag_PropertyList($params, $children);
 				break;
 
 			case 'show_manufacturer':
-				$handler = ShopManufacturerHandler::getInstance($this);
+				$handler = ShopManufacturerHandler::get_instance($this);
 				$handler->tag_Manufacturer($params, $children);
 				break;
 
 			case 'show_manufacturer_list':
-				$handler = ShopManufacturerHandler::getInstance($this);
+				$handler = ShopManufacturerHandler::get_instance($this);
 				$handler->tag_ManufacturerList($params, $children);
 				break;
 
@@ -628,12 +699,12 @@ class shop extends Module {
 				break;
 
 			case 'show_transaction_list':
-				$handler = ShopTransactionsHandler::getInstance($this);
+				$handler = ShopTransactionsHandler::get_instance($this);
 				$handler->tag_TransactionList($params, $children);
 				break;
 
 			case 'configure_search':
-				$this->configureSearch($params, $children);
+				$this->configure_search($params, $children);
 				break;
 
 			case 'checkout':
@@ -689,7 +760,7 @@ class shop extends Module {
 				break;
 
 			case 'json_get_item':
-				$handler = ShopItemHandler::getInstance($this);
+				$handler = ItemHandler::get_instance($this);
 				$handler->json_GetItem();
 				break;
 
@@ -762,12 +833,12 @@ class shop extends Module {
 				break;
 
 			case 'json_get_property':
-				$handler = \Modules\Shop\Property\Handler::getInstance($this);
+				$handler = Modules\Shop\Property\Handler::get_instance($this);
 				$handler->json_GetProperty();
 				break;
 
 			case 'json_get_property_list':
-				$handler = \Modules\Shop\Property\Handler::getInstance($this);
+				$handler = Modules\Shop\Property\Handler::get_instance($this);
 				$handler->json_GetPropertyList();
 				break;
 
@@ -781,41 +852,48 @@ class shop extends Module {
 
 			switch ($action) {
 			case 'items':
-				$handler = ShopItemHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ItemHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'currencies':
-				$handler = ShopCurrenciesHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ShopCurrenciesHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'categories':
-				$handler = ShopCategoryHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ShopCategoryHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
+				break;
+
+			case 'coupons':
+				$handler = Modules\Shop\Promotion\CouponHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'sizes':
-				$handler = ShopItemSizesHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ShopItemSizesHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'transactions':
-				$handler = ShopTransactionsHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ShopTransactionsHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'manufacturers':
-				$handler = ShopManufacturerHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ShopManufacturerHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
-			case 'special_offers':
+			case 'suppliers':
+				$handler = Modules\Shop\Supplier\Handler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'warehouses':
-				$handler = ShopWarehouseHandler::getInstance($this);
-				$handler->transferControl($params, $children);
+				$handler = ShopWarehouseHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
 				break;
 
 			case 'stocks':
@@ -826,7 +904,7 @@ class shop extends Module {
 				break;
 
 			case 'settings_save':
-				$this->saveSettings();
+				$this->save_settings();
 				break;
 
 			default:
@@ -838,314 +916,44 @@ class shop extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function initialize() {
 		global $db;
 
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		// set shop in testing mode by default
-		$this->saveSetting('testing_mode', 1);
-		$this->saveSetting('send_copy', 0);
-		$this->saveSetting('default_account_option', User::GUEST);
+		$this->save_setting('testing_mode', 1);
+		$this->save_setting('send_copy', 0);
+		$this->save_setting('default_account_option', User::GUEST);
 
-		// create shop items table
-		$sql = "
-			CREATE TABLE `shop_items` (
-				`id` int NOT NULL AUTO_INCREMENT,
-				`uid` VARCHAR(64) NOT NULL,";
+		// create tables
+		$file_list = array(
+			'buyer_address.sql', 'buyers.sql', 'categories.sql', 'coupon_codes.sql',
+			'coupons.sql', 'currencies.sql', 'item_membership.sql', 'item_properties.sql',
+			'item_remarks.sql', 'items.sql', 'manufacturers.sql', 'payment_tokens.sql',
+			'recurring_payments.sql', 'related_items.sql', 'size_definitions.sql',
+			'size_definition_values.sql', 'stock.sql', 'transaction_items.sql',
+			'transaction_plans.sql', 'transaction_promotions.sql', 'transactions.sql',
+			'warehouses.sql', 'suppliers.sql'
+		);
 
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-
-		$sql .= "
-				`gallery` INT NOT NULL,
-				`manufacturer` INT NOT NULL,
-				`size_definition` INT NULL,
-				`colors` VARCHAR(255) NOT NULL DEFAULT '',
-				`author` INT NOT NULL,
-				`views` INT NOT NULL,
-				`price` DECIMAL(10,2) NOT NULL,
-				`discount` DECIMAL(5,2) NOT NULL,
-				`tax` DECIMAL(5,2) NOT NULL,
-				`weight` DECIMAL(10,4) NOT NULL,
-				`votes_up` INT NOT NULL,
-				`votes_down` INT NOT NULL,
-				`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`priority` INT(4) NOT NULL DEFAULT '5',
-				`visible` BOOLEAN NOT NULL DEFAULT '1',
-				`deleted` BOOLEAN NOT NULL DEFAULT '0',
-				PRIMARY KEY ( `id` ),
-				KEY `visible` (`visible`),
-				KEY `deleted` (`deleted`),
-				KEY `uid` (`uid`),
-				KEY `author` (`author`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item membership table
-		$sql = "
-			CREATE TABLE `shop_item_membership` (
-				`category` INT NOT NULL,
-				`item` INT NOT NULL,
-				KEY `category` (`category`),
-				KEY `item` (`item`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item properties table
-		$sql = "
-			CREATE TABLE `shop_item_properties` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`item` INT NOT NULL,
-				`text_id` VARCHAR(32) NOT NULL,
-				`type` VARCHAR(32) NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
-
-		$sql .= "
-				`value` TEXT NOT NULL,
-				PRIMARY KEY ( `id` ),
-				KEY `item` (`item`),
-				KEY `text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create table for related shop items
-		$sql = "
-			CREATE TABLE `shop_related_items` (
-				`item` INT NOT NULL,
-				`related` INT NOT NULL,
-				KEY `item` (`item`,`related`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
-		$db->query($sql);
-
-		// create shop currencies tableshop_related_items
-		$sql = "
-			CREATE TABLE `shop_currencies` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`currency` VARCHAR(5) NOT NULL,
-				PRIMARY KEY ( `id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item sizes table
-		$sql = "
-			CREATE TABLE `shop_item_sizes` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`name` VARCHAR(25) NOT NULL,
-				PRIMARY KEY ( `id` )
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop item size values table
-		$sql = "
-			CREATE TABLE `shop_item_size_values` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`definition` INT NOT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`value_{$language}` VARCHAR( 50 ) NOT NULL DEFAULT '',";
-
-		$sql .= "PRIMARY KEY ( `id` ),
-			KEY `definition` (`definition`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop categories table
-		$sql = "
-			CREATE TABLE `shop_categories` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`text_id` VARCHAR(32) NOT NULL,
-				`parent` INT NOT NULL DEFAULT '0',
-				`image` INT NULL,";
-
-		foreach($list as $language)
-			$sql .= "`title_{$language}` VARCHAR( 255 ) NOT NULL DEFAULT '',";
-
-		foreach($list as $language)
-			$sql .= "`description_{$language}` TEXT NOT NULL ,";
-
-		$sql .="
-				PRIMARY KEY ( `id` ),
-				KEY `parent` (`parent`),
-				KEY `text_id` (`text_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop buyers table
-		$sql = "CREATE TABLE `shop_buyers` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`first_name` varchar(64) NOT NULL,
-			`last_name` varchar(64) NOT NULL,
-			`email` varchar(127) NOT NULL,
-			`phone` varchar(200) NOT NULL,
-			`guest` boolean NOT NULL DEFAULT '0',
-			`system_user` int NULL,
-			`agreed` boolean NOT NULL DEFAULT '0',
-			`promotions` boolean NOT NULL DEFAULT '0',
-			`uid` varchar(50) NOT NULL,
-			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop buyer addresses table
-		$sql = "CREATE TABLE `shop_delivery_address` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`buyer` INT NOT NULL,
-			`name` varchar(128) NOT NULL,
-			`street` varchar(200) NOT NULL,
-			`street2` varchar(200) NOT NULL,
-			`email` varchar(127) NOT NULL,
-			`phone` varchar(200) NOT NULL,
-			`city` varchar(40) NOT NULL,
-			`zip` varchar(20) NOT NULL,
-			`state` varchar(40) NOT NULL,
-			`country` varchar(64) NOT NULL,
-			`access_code` varchar(100) NOT NULL,
-			PRIMARY KEY (`id`),
-				  KEY `buyer` (`buyer`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transactions table
-		$sql = "CREATE TABLE `shop_transactions` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`buyer` INT NOT NULL,
-			`address` INT NOT NULL,
-			`uid` varchar(30) NOT NULL,
-			`type` smallint(6) NOT NULL,
-			`status` smallint(6) NOT NULL,
-			`currency` INT NOT NULL,
-			`handling` decimal(8,2) NOT NULL,
-			`shipping` decimal(8,2) NOT NULL,
-			`weight` decimal(4,2) NOT NULL,
-			`payment_method` varchar(255) NOT NULL,
-			`payment_token` int NOT NULL DEFAULT '0',
-			`delivery_method` varchar(255) NOT NULL,
-			`delivery_type` varchar(255) NOT NULL,
-			`remark` text NOT NULL,
-			`remote_id` varchar(255) NOT NULL,
-			`total` decimal(8,2) NOT NULL,
-			`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			PRIMARY KEY (`id`),
-			KEY `buyer` (`buyer`),
-			KEY `address` (`address`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transaction items table
-		$sql = "CREATE TABLE `shop_transaction_items` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`transaction` int NOT NULL,
-			`item` int NOT NULL,
-			`price` decimal(8,2) NOT NULL,
-			`tax` decimal(8,2) NOT NULL,
-			`amount` int NOT NULL,
-			`description` varchar(500) NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `transaction` (`transaction`),
-			KEY `item` (`item`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop payment tokens table
-		$sql = "CREATE TABLE `shop_payment_tokens` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`payment_method` varchar(64) NOT NULL,
-			`buyer` int NOT NULL,
-			`name` varchar(50) NOT NULL,
-			`token` varchar(200) NOT NULL,
-			`expires` boolean NOT NULL DEFAULT '0',
-			`expiration_month` int NOT NULL,
-			`expiration_year` int NOT NULL,
-			PRIMARY KEY (`id`),
-			KEY `index_by_name` (`payment_method`, `buyer`, `name`),
-			KEY `index_by_buyer` (`payment_method`, `buyer`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop transaction plans table
-		$sql = "CREATE TABLE `shop_transaction_plans` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`transaction` int NOT NULL,
-			`plan_name` varchar(64) NOT NULL,
-			`trial` int NOT NULL,
-			`trial_count` int NOT NULL,
-			`interval` int NOT NULL,
-			`interval_count` int NOT NULL,
-			`start_time` timestamp NULL,
-			`end_time` timestamp NULL,
-			PRIMARY KEY (`id`),
-				  KEY `transaction` (`transaction`),
-				  KEY `plan_name` (`plan_name`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create show recurring payments table
-		$sql = "CREATE TABLE `shop_recurring_payments` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`plan` INT NOT NULL,
-			`amount` DECIMAL(8,2) NOT NULL,
-			`status` INT NOT NULL,
-			`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY (`id`),
-				  KEY `index_by_plan` (`plan`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop stock table
-		$sql = "CREATE TABLE `shop_warehouse` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`name` varchar(60) NOT NULL,
-			`street` varchar(200) NOT NULL,
-			`street2` varchar(200) NOT NULL,
-			`city` varchar(40) NOT NULL,
-			`zip` varchar(20) NOT NULL,
-			`country` varchar(64) NOT NULL,
-			`state` varchar(40) NOT NULL,
-			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop stock table
-		$sql = "CREATE TABLE `shop_stock` (
-			`id` int NOT NULL AUTO_INCREMENT,
-			`item` int NOT NULL,
-			`size` int DEFAULT NULL,
-			`amount` int NOT NULL,
-			PRIMARY KEY (`id`),
-				  KEY `item` (`item`)
-			  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
-
-		// create shop manufacturers table
-		$sql = "CREATE TABLE `shop_manufacturers` (
-			`id` int NOT NULL AUTO_INCREMENT,";
-
-		foreach($list as $language)
-			$sql .= "`name_{$language}` VARCHAR(255) NOT NULL DEFAULT '',";
-
-		$sql .= " `web_site` varchar(255) NOT NULL,
-			`logo` int NOT NULL,
-			PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
-		$db->query($sql);
+		foreach ($file_list as $file_name) {
+			$sql = Query::load_file($file_name, $this);
+			$db->query($sql);
+		}
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array(
 			'shop_items',
 			'shop_currencies',
 			'shop_categories',
+			'shop_item_remarks',
 			'shop_item_membership',
 			'shop_item_sizes',
 			'shop_item_size_values',
@@ -1154,13 +962,15 @@ class shop extends Module {
 			'shop_transactions',
 			'shop_transaction_items',
 			'shop_transaction_plans',
+			'shop_transaction_promotions',
 			'shop_recurring_payments',
 			'shop_warehouse',
 			'shop_stock',
 			'shop_related_items',
 			'shop_manufacturers',
 			'shop_payment_tokens',
-			'shop_item_properties'
+			'shop_item_properties',
+			'shop_coupons'
 		);
 
 		$db->drop_tables($tables);
@@ -1170,12 +980,36 @@ class shop extends Module {
 	 * Method used by payment providers to register with main module.
 	 *
 	 * @param string $name
-	 * @param object $module
+	 * @param object $method
 	 */
-	public function registerPaymentMethod($name, &$module) {
+	public function registerPaymentMethod($name, &$method) {
 		if (!array_key_exists($name, $this->payment_methods))
-			$this->payment_methods[$name] = $module; else
+			$this->payment_methods[$name] = $method; else
 			throw new Exception("Payment method '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Method used with promotions to register with main module.
+	 *
+	 * @param object $promotion
+	 */
+	public function registerPromotion(&$promotion) {
+		$name = $promotion->get_name();
+		if (!array_key_exists($name, $this->promotions))
+			$this->promotions[$name] = $promotion; else
+			throw new Exception("Promotion '{$name}' is already registered with the system.");
+	}
+
+	/**
+	 * Register discount to be used with promotions.
+	 *
+	 * @param object $discount
+	 */
+	public function registerDiscount(&$discount) {
+		$name = $discount->get_name();
+		if (!array_key_exists($name, $this->discounts))
+			$this->discounts[$name] = $discount; else
+			throw new Exception("Discount '{$name}' is already registered with the system.");
 	}
 
 	/**
@@ -1205,15 +1039,15 @@ class shop extends Module {
 		if (!ModuleHandler::is_loaded('head_tag') || !ModuleHandler::is_loaded('collection'))
 			return;
 
-		$head_tag = head_tag::getInstance();
-		$collection = collection::getInstance();
+		$head_tag = head_tag::get_instance();
+		$collection = collection::get_instance();
 		$css_file = _DESKTOP_VERSION ? 'checkout.css' : 'checkout_mobile.css';
 
 		$collection->includeScript(collection::DIALOG);
 		$collection->includeScript(collection::PAGE_CONTROL);
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('link', array('href'=>url_GetFromFilePath($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
-		$head_tag->addTag('script', array('src'=>url_GetFromFilePath($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/'.$css_file), 'rel'=>'stylesheet', 'type'=>'text/css'));
+		$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/checkout.js'), 'type'=>'text/javascript'));
 
 		// add custom scripts
 		if (count($this->checkout_scripts) > 0)
@@ -1233,11 +1067,11 @@ class shop extends Module {
 		if (!ModuleHandler::is_loaded('head_tag') || !ModuleHandler::is_loaded('collection'))
 			return;
 
-		$head_tag = head_tag::getInstance();
-		$collection = collection::getInstance();
+		$head_tag = head_tag::get_instance();
+		$collection = collection::get_instance();
 
 		$collection->includeScript(collection::COMMUNICATOR);
-		$head_tag->addTag('script', array('src' => url_GetFromFilePath($this->path.'include/cart.js'), 'type'=>'text/javascript'));
+		$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/cart.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -1247,8 +1081,8 @@ class shop extends Module {
 		if (!ModuleHandler::is_loaded('head_tag'))
 			return;
 
-		$head_tag = head_tag::getInstance();
-		$head_tag->addTag('script', array('src' => url_GetFromFilePath($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
+		$head_tag = head_tag::get_instance();
+		$head_tag->addTag('script', array('src' => URL::from_file_path($this->path.'include/redirect.js'), 'type'=>'text/javascript'));
 	}
 
 	/**
@@ -1256,8 +1090,8 @@ class shop extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:account_options', $this, 'tag_AccountOptions');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:account_options', $this, 'tag_AccountOptions');
 
 		$params = array(
 			'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
@@ -1265,19 +1099,19 @@ class shop extends Module {
 		);
 
 		if (ModuleHandler::is_loaded('contact_form')) {
-			$contact_form = contact_form::getInstance();
-			$template->registerTagHandler('cms:template_list', $contact_form, 'tag_TemplateList');
+			$contact_form = contact_form::get_instance();
+			$template->register_tag_handler('cms:template_list', $contact_form, 'tag_TemplateList');
 		}
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
 	/**
 	 * Save settings
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// save new settings
 		$regular_template = fix_chars($_REQUEST['regular_template']);
 		$recurring_template = fix_chars($_REQUEST['recurring_template']);
@@ -1288,27 +1122,27 @@ class shop extends Module {
 		$send_copy = fix_id($_REQUEST['send_copy']);
 		$default_account_option = escape_chars($_REQUEST['default_account_option']);
 
-		$this->saveSetting('regular_template', $regular_template);
-		$this->saveSetting('recurring_template', $recurring_template);
-		$this->saveSetting('delayed_template', $delayed_template);
-		$this->saveSetting('shop_location', $shop_location);
-		$this->saveSetting('fixed_country', $fixed_country);
-		$this->saveSetting('testing_mode', $testing_mode);
-		$this->saveSetting('send_copy', $send_copy);
-		$this->saveSetting('default_account_option', $default_account_option);
+		$this->save_setting('regular_template', $regular_template);
+		$this->save_setting('recurring_template', $recurring_template);
+		$this->save_setting('delayed_template', $delayed_template);
+		$this->save_setting('shop_location', $shop_location);
+		$this->save_setting('fixed_country', $fixed_country);
+		$this->save_setting('testing_mode', $testing_mode);
+		$this->save_setting('send_copy', $send_copy);
+		$this->save_setting('default_account_option', $default_account_option);
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-			'message'	=> $this->getLanguageConstant('message_settings_saved'),
-			'button'	=> $this->getLanguageConstant('close'),
+			'message'	=> $this->get_language_constant('message_settings_saved'),
+			'button'	=> $this->get_language_constant('close'),
 			'action'	=> window_Close('shop_settings')
 		);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1356,14 +1190,14 @@ class shop extends Module {
 	private function setItemAsCart($uid, $count, $variation_id=null) {
 		$cart = array();
 		$result = false;
-		$manager = ShopItemManager::getInstance();
+		$manager = ItemManager::get_instance();
 
 		// make sure we have variation id
 		if (is_null($variation_id))
 			$variation_id = $this->generateVariationId($uid, array());
 
 		// check if item exists in database to avoid poluting shopping cart
-		$item = $manager->getSingleItem(array('id', 'price'), array('uid' => $uid));
+		$item = $manager->get_single_item(array('id', 'price'), array('uid' => $uid));
 
 		// make new content of shopping cart
 		if (is_object($item) && $count > 0) {
@@ -1396,7 +1230,7 @@ class shop extends Module {
 	private function setCartFromTemplate($params, $children) {
 		if (count($children) > 0) {
 			$cart = array();
-			$manager = ShopItemManager::getInstance();
+			$manager = ItemManager::get_instance();
 
 			foreach ($children as $data) {
 				$uid = array_key_exists('uid', $data->tagAttrs) ? fix_chars($data->tagAttrs['uid']) : null;
@@ -1406,7 +1240,7 @@ class shop extends Module {
 				$item = null;
 
 				if (!is_null($uid))
-					$item = $manager->getSingleItem(array('id'), array('uid' => $uid));
+					$item = $manager->get_single_item(array('id'), array('uid' => $uid));
 
 				// make sure item actually exists in database to avoid poluting
 				if (is_object($item) && $amount > 0) {
@@ -1449,7 +1283,7 @@ class shop extends Module {
 		$user_id = null;
 		$transaction_id = null;
 
-		$transaction_manager = ShopTransactionsManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
 
 		// try to get user id
 		if (isset($tag_params['user']))
@@ -1463,7 +1297,7 @@ class shop extends Module {
 			$transaction_id = fix_chars($tag_params['transaction']);
 
 		if (is_null($transaction_id) && !is_null($user_id)) {
-			$transaction = $transaction_manager->getSingleItem(
+			$transaction = $transaction_manager->get_single_item(
 				array('id'),
 				array('system_user' => $user_id)
 			);
@@ -1526,9 +1360,9 @@ class shop extends Module {
 		$result = null;
 
 		// get managers
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$plan_manager = ShopTransactionPlansManager::getInstance();
-		$recurring_manager = ShopRecurringPaymentsManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$plan_manager = ShopTransactionPlansManager::get_instance();
+		$recurring_manager = ShopRecurringPaymentsManager::get_instance();
 
 		// try to get currently logged user
 		if (is_null($user_id) && $_SESSION['logged'])
@@ -1539,7 +1373,7 @@ class shop extends Module {
 			return $result;
 
 		// get all recurring payment transactions for current buyer
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 			array('id'),
 			array(
 				'type'			=> TransactionType::SUBSCRIPTION,
@@ -1554,14 +1388,14 @@ class shop extends Module {
 		if (!is_object($transaction))
 			return $result;
 
-		$plan = $plan_manager->getSingleItem(
-			$plan_manager->getFieldNames(),
+		$plan = $plan_manager->get_single_item(
+			$plan_manager->get_field_names(),
 			array('transaction' => $transaction->id)
 		);
 
 		// get last payment
-		$last_payment = $recurring_manager->getSingleItem(
-			$recurring_manager->getFieldNames(),
+		$last_payment = $recurring_manager->get_single_item(
+			$recurring_manager->get_field_names(),
 			array('plan' => $plan->id),
 			array('timestamp'),
 			false  // ascending
@@ -1582,17 +1416,17 @@ class shop extends Module {
 	 */
 	public function setTransactionStatus($transaction_id, $status) {
 		$result = false;
-		$manager = ShopTransactionsManager::getInstance();
+		$manager = ShopTransactionsManager::get_instance();
 
 		// try to get transaction with specified id
-		$transaction = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+			$manager->get_field_names(),
 			array('uid' => $transaction_id)
 		);
 
 		// set status of transaction
 		if (is_object($transaction)) {
-			$manager->updateData(
+			$manager->update_items(
 				array('status' => $status),
 				array('id' => $transaction->id)
 			);
@@ -1688,8 +1522,8 @@ class shop extends Module {
 			$conditions['token'] = $token;
 
 		// get transaction
-		$manager = ShopTransactionsManager::getInstance();
-		$transaction = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$manager = ShopTransactionsManager::get_instance();
+		$transaction = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// cancel transaction
 		if (is_object($transaction) && array_key_exists($transaction->payment_method, $this->payment_methods)) {
@@ -1719,14 +1553,14 @@ class shop extends Module {
 		$result = false;
 
 		// get managers
-		$manager = ShopRecurringPaymentsManager::getInstance();
-		$plan_manager = ShopTransactionPlansManager::getInstance();
-		$buyer_manager = ShopBuyersManager::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
+		$manager = ShopRecurringPaymentsManager::get_instance();
+		$plan_manager = ShopTransactionPlansManager::get_instance();
+		$buyer_manager = ShopBuyersManager::get_instance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
 
 		// get transaction and associated plan
-		$plan = $plan_manager->getSingleItem(
-			$plan_manager->getFieldNames(),
+		$plan = $plan_manager->get_single_item(
+			$plan_manager->get_field_names(),
 			array('id' => $plan_id)
 		);
 
@@ -1741,19 +1575,19 @@ class shop extends Module {
 			'status'	=> $status
 		);
 
-		$manager->insertData($data);
-		$payment_id = $manager->getInsertedID();
+		$manager->insert_item($data);
+		$payment_id = $manager->get_inserted_id();
 		$result = true;
 
 		// get newly inserted data
-		$payment = $manager->getSingleItem(
-			$manager->getFieldNames(),
+		$payment = $manager->get_single_item(
+			$manager->get_field_names(),
 			array('id' => $payment_id)
 		);
 
 		// get transaction and buyer
-		$transaction = $transaction_manager->getSingleItem(
-			$transaction_manager->getFieldNames(),
+		$transaction = $transaction_manager->get_single_item(
+			$transaction_manager->get_field_names(),
 			array('id' => $plan->transaction)
 		);
 
@@ -1769,7 +1603,7 @@ class shop extends Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	private function configureSearch($tag_params, $children) {
+	private function configure_search($tag_params, $children) {
 		$this->search_params = $tag_params;
 	}
 
@@ -1781,15 +1615,15 @@ class shop extends Module {
 			return;
 
 		$template = new TemplateHandler('checkout.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array();
 
 		// register tag handler
-		$template->registerTagHandler('cms:checkout_form', $this, 'tag_CheckoutForm');
+		$template->register_tag_handler('cms:checkout_form', $this, 'tag_CheckoutForm');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1798,10 +1632,10 @@ class shop extends Module {
 	 */
 	private function showCheckoutCompleted() {
 		$template = new TemplateHandler('checkout_completed.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:completed_message', $this, 'tag_CompletedMessage');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:completed_message', $this, 'tag_CompletedMessage');
 
-		$template->restoreXML();
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -1810,17 +1644,17 @@ class shop extends Module {
 	 */
 	private function showCheckoutRedirect() {
 		$template = new TemplateHandler('checkout_message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-			'message'		=> $this->getLanguageConstant('message_checkout_redirect'),
-			'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-			'button_action'	=> url_Make('', 'home'),
+			'message'		=> $this->get_language_constant('message_checkout_redirect'),
+			'button_text'	=> $this->get_language_constant('button_take_me_back'),
+			'button_action'	=> URL::make_query(),
 			'redirect'		=> true
 		);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1829,10 +1663,10 @@ class shop extends Module {
 	 */
 	private function showCheckoutCanceled() {
 		$template = new TemplateHandler('checkout_canceled.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:canceled_message', $this, 'tag_CanceledMessage');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:canceled_message', $this, 'tag_CanceledMessage');
 
-		$template->restoreXML();
+		$template->restore_xml();
 		$template->parse();
 	}
 
@@ -1933,14 +1767,14 @@ class shop extends Module {
 	 */
 	private function json_GetAccountInfo() {
 		// get managers
-		$buyer_manager = ShopBuyersManager::getInstance();
-		$delivery_address_manager = ShopDeliveryAddressManager::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
+		$buyer_manager = ShopBuyersManager::get_instance();
+		$delivery_address_manager = ShopDeliveryAddressManager::get_instance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
 
 		// get buyer from specified email
 		if ($_SESSION['logged'])
-			$buyer = $buyer_manager->getSingleItem(
-				$buyer_manager->getFieldNames(),
+			$buyer = $buyer_manager->get_single_item(
+				$buyer_manager->get_field_names(),
 				array(
 					'guest'			=> 0,
 					'system_user'	=> $_SESSION['uid']
@@ -1965,8 +1799,8 @@ class shop extends Module {
 			);
 
 			// populate delivery addresses
-			$address_list = $delivery_address_manager->getItems(
-				$delivery_address_manager->getFieldNames(),
+			$address_list = $delivery_address_manager->get_items(
+				$delivery_address_manager->get_field_names(),
 				array('buyer' => $buyer->id)
 			);
 
@@ -1988,8 +1822,8 @@ class shop extends Module {
 				}
 
 			// get last used payment and delivery method
-			$transaction = $transaction_manager->getSingleItem(
-				$transaction_manager->getFieldNames(),
+			$transaction = $transaction_manager->get_single_item(
+				$transaction_manager->get_field_names(),
 				array('buyer' => $buyer->id),
 				array('timestamp'), false
 			);
@@ -2008,16 +1842,19 @@ class shop extends Module {
 	 */
 	private function json_GetAccountExists() {
 		$email = isset($_REQUEST['email']) ? fix_chars($_REQUEST['email']) : null;
-		$manager = ShopBuyersManager::getInstance();
+		$manager = UserManager::get_instance();
+
+		// prepare result
 		$result = array(
 			'account_exists'	=> false,
 			'message'			=> ''
 		);
 
+		// check if user with specified email already exists
 		if (!is_null($email)) {
-			$account = $manager->getSingleItem(array('id'), array('email' => $email));
+			$account = $manager->get_single_item(array('id'), array('email' => $email));
 			$result['account_exists'] = is_object($account);
-			$result['message'] = $this->getLanguageConstant('message_error_account_exists');
+			$result['message'] = $this->get_language_constant('message_error_account_exists');
 		}
 
 		print json_encode($result);
@@ -2027,9 +1864,9 @@ class shop extends Module {
 	 * Show shopping card in form of JSON object
 	 */
 	private function json_ShowCart() {
-		$manager = ShopItemManager::getInstance();
-		$values_manager = ShopItemSizeValuesManager::getInstance();
-		$gallery = ModuleHandler::is_loaded('gallery') ? gallery::getInstance() : null;
+		$manager = ItemManager::get_instance();
+		$values_manager = ShopItemSizeValuesManager::get_instance();
+		$gallery = ModuleHandler::is_loaded('gallery') ? gallery::get_instance() : null;
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 
 		$result = array();
@@ -2053,8 +1890,8 @@ class shop extends Module {
 		$ids = array_keys($cart);
 
 		// get items from database and prepare result
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
-		$values = $values_manager->getItems($values_manager->getFieldNames(), array());
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
+		$values = $values_manager->get_items($values_manager->get_field_names(), array());
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -2125,12 +1962,12 @@ class shop extends Module {
 	 */
 	private function json_SetCartFromTransaction() {
 		$uid = fix_chars($_REQUEST['uid']);
-		$item_manager = ShopItemManager::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$transaction_item_manager = ShopTransactionItemsManager::getInstance();
+		$item_manager = ItemManager::get_instance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$transaction_item_manager = ShopTransactionItemsManager::get_instance();
 
 		// find specified transaction
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 				array('id'),
 				array(
 					'uid'	=> $uid,
@@ -2148,8 +1985,8 @@ class shop extends Module {
 		}
 
 		// get transaction items
-		$items = $transaction_item_manager->getItems(
-			$transaction_item_manager->getFieldNames(),
+		$items = $transaction_item_manager->get_items(
+			$transaction_item_manager->get_field_names(),
 			array('transaction' => $transaction->id)
 		);
 
@@ -2170,8 +2007,8 @@ class shop extends Module {
 		}
 
 		// get active shop items
-		$items = $item_manager->getItems(
-			$item_manager->getFieldNames(),
+		$items = $item_manager->get_items(
+			$item_manager->get_field_names(),
 			array(
 				'deleted'	=> 0,
 				'visible'	=> 1,
@@ -2235,8 +2072,8 @@ class shop extends Module {
 		$thumbnail_constraint = isset($_REQUEST['thumbnail_constraint']) ? fix_id($_REQUEST['thumbnail_constraint']) : Thumbnail::CONSTRAIN_BOTH;
 
 		// try to get item from database
-		$manager = ShopItemManager::getInstance();
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('uid' => $uid));
+		$manager = ItemManager::get_instance();
+		$item = $manager->get_single_item($manager->get_field_names(), array('uid' => $uid));
 
 		// default result is false
 		$result = null;
@@ -2267,8 +2104,8 @@ class shop extends Module {
 
 			// get item price
 			if (!is_null($price_property)) {
-				$properties_manager = \Modules\Shop\Property\Manager::getInstance();
-				$property = $properties_manager->getSingleItem(
+				$properties_manager = \Modules\Shop\Property\Manager::get_instance();
+				$property = $properties_manager->get_single_item(
 						array('value'),
 						array(
 							'item'    => $item->id,
@@ -2394,12 +2231,12 @@ class shop extends Module {
 	private function json_GetShoppingCartSummary() {
 		$result = array();
 		$uid = $_SESSION['transaction']['uid'];
-		$transaction_manager = ShopTransactionsManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
 		$payment_method = $this->getPaymentMethod(null);
 
 		// get specified transaction
-		$transaction = $transaction_manager->getSingleItem(
-			$transaction_manager->getFieldNames(),
+		$transaction = $transaction_manager->get_single_item(
+			$transaction_manager->get_field_names(),
 			array('uid' => $uid)
 		);
 
@@ -2419,14 +2256,14 @@ class shop extends Module {
 	private function json_SaveRemark() {
 		$result = false;
 		$transaction = Transaction::get_current();
-		$manager = ShopTransactionsManager::getInstance();
+		$manager = ShopTransactionsManager::get_instance();
 		$append = isset($_REQUEST['append']) && $_REQUEST['append'] == 1 ? true : false;
 
 		if (!is_null($transaction)) {
 			$remark = $append ? $transaction->remark."\n" : '';
 			$remark .= escape_chars($_REQUEST['remark']);
 
-			$manager->updateData(
+			$manager->update_items(
 					array('remark' => $remark),
 					array('id' => $transaction->id)
 				);
@@ -2444,7 +2281,7 @@ class shop extends Module {
 	 * @param string $currency
 	 */
 	public function saveDefaultCurrency($currency) {
-		$this->saveSetting('default_currency', $currency);
+		$this->save_setting('default_currency', $currency);
 	}
 
 	/**
@@ -2452,7 +2289,7 @@ class shop extends Module {
 	 * @return string
 	 */
 	public static function getDefaultCurrency() {
-		$shop = self::getInstance();
+		$shop = self::get_instance();
 		return $shop->settings['default_currency'];
 	}
 
@@ -2481,17 +2318,17 @@ class shop extends Module {
 		$currency = null;
 
 		// get currency associated with transaction
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$currency_manager = ShopCurrenciesManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$currency_manager = ShopCurrenciesManager::get_instance();
 
-		$transaction = $transaction_manager->getSingleItem(
+		$transaction = $transaction_manager->get_single_item(
 							array('currency', 'shipping', 'handling'),
 							array('uid' => $transaction_id)
 						);
 
 		if (is_object($transaction)) {
-			$currency = $currency_manager->getSingleItem(
-				$currency_manager->getFieldNames(),
+			$currency = $currency_manager->get_single_item(
+				$currency_manager->get_field_names(),
 				array('id' => $transaction->currency)
 			);
 
@@ -2534,10 +2371,10 @@ class shop extends Module {
 					break;
 
 				// get managers
-				$manager = ShopItemManager::getInstance();
+				$manager = ItemManager::get_instance();
 
 				// get items from database and prepare result
-				$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+				$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
 
 				// parse items from database
 				foreach ($items as $item) {
@@ -2610,6 +2447,21 @@ class shop extends Module {
 			'discounts'          => $total_discount,
 			'currency'           => $preferred_currency
 		);
+
+		return $result;
+	}
+
+	/**
+	 * Get discount for specified name.
+	 *
+	 * @param string $name
+	 * @return object
+	 */
+	private function getDiscount($name) {
+		$result = null;
+
+		if (array_key_exists($name, $this->discounts))
+			$result = $this->discounts[$name];
 
 		return $result;
 	}
@@ -2714,8 +2566,8 @@ class shop extends Module {
 		// get warehouse address
 		// TODO: Instead of picking up the first warehouse we need to
 		// choose proper one based on location of items
-		$warehouse_manager = ShopWarehouseManager::getInstance();
-		$warehouse = $warehouse_manager->getSingleItem($warehouse_manager->getFieldNames(), array());
+		$warehouse_manager = ShopWarehouseManager::get_instance();
+		$warehouse = $warehouse_manager->get_single_item($warehouse_manager->get_field_names(), array());
 
 		if (!is_object($warehouse)) {
 			trigger_error('Shop: No warehouse defined!', E_USER_NOTICE);
@@ -2768,7 +2620,7 @@ class shop extends Module {
 	 */
 	private function getUserAccount() {
 		$result = null;
-		$manager = ShopBuyersManager::getInstance();
+		$manager = ShopBuyersManager::get_instance();
 		$existing_user = isset($_POST['existing_user']) ? escape_chars($_POST['existing_user']) : null;
 
 		// set proper account data based on users choice
@@ -2776,8 +2628,8 @@ class shop extends Module {
 			switch ($existing_user) {
 				case User::EXISTING:
 					// get managers
-					$user_manager = UserManager::getInstance();
-					$retry_manager = LoginRetryManager::getInstance();
+					$user_manager = UserManager::get_instance();
+					$retry_manager = LoginRetryManager::get_instance();
 
 					// get user data
 					$email = escape_chars($_REQUEST['sign_in_email']);
@@ -2789,8 +2641,8 @@ class shop extends Module {
 
 					// get user account if sign in is valid
 					if ($credentials_ok && $retry_count <= 3)
-						$result = $manager->getSingleItem(
-								$manager->getFieldNames(),
+						$result = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('email' => $email)
 							);
 
@@ -2798,15 +2650,12 @@ class shop extends Module {
 
 				case User::CREATE:
 					// get manager
-					$user_manager = UserManager::getInstance();
-					$retry_manager = LoginRetryManager::getInstance();
+					$user_manager = UserManager::get_instance();
+					$retry_manager = LoginRetryManager::get_instance();
 
 					// check if user agrees
-					$agree_to_terms = false;
-					if (isset($_REQUEST['agree_to_terms']))
-					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
-
-					$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+					$agree_to_terms = $this->get_boolean_field('agree_to_terms');
+					$want_promotions = $this->get_boolean_field('want_promotions');
 
 					// get user data
 					$data = array(
@@ -2816,7 +2665,7 @@ class shop extends Module {
 						'phone'      => escape_chars($_REQUEST['new_phone']),
 						'uid'        => isset($_REQUEST['uid']) ? escape_chars($_REQUEST['uid']) : '',
 						'guest'      => 0,
-						'agreed'     => $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1',
+						'agreed'     => $agree_to_terms ? 1 : 0,
 						'promotions' => $want_promotions ? 1 : 0
 					);
 
@@ -2824,12 +2673,12 @@ class shop extends Module {
 					$password_confirm = $_REQUEST['new_password_confirm'];
 
 					// check if system user already exists
-					$user = $user_manager->getSingleItem(array('id'), array('email' => $data['email']));
+					$user = $user_manager->get_single_item(array('id'), array('email' => $data['email']));
 
 					if (is_object($user)) {
 						// check if buyer exists
-						$buyer = $manager->getSingleItem(
-									$manager->getFieldNames(),
+						$buyer = $manager->get_single_item(
+									$manager->get_field_names(),
 									array('system_user' => $user->id)
 								);
 
@@ -2842,15 +2691,15 @@ class shop extends Module {
 							$data['system_user'] = $user->id;
 
 							// create new account
-							$manager->insertData($data);
+							$manager->insert_item($data);
 
 							// get account object
-							$id = $manager->getInsertedID();
-							$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+							$id = $manager->get_inserted_id();
+							$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 							// send notification email
-							if (class_exists('Backend_UserManager')) {
-								$backed_user_manager = Backend_UserManager::getInstance();
+							if (ModuleHandler::is_loaded('backend')) {
+								$backed_user_manager = Backend_UserManager::get_instance();
 								$backed_user_manager->sendNotificationEmail($user->id);
 							}
 						}
@@ -2859,7 +2708,6 @@ class shop extends Module {
 						$user_data = array(
 								'username'   => $data['email'],
 								'email'      => $data['email'],
-								'phone'      => $data['phone'],
 								'fullname'   => $data['first_name'].' '.$data['last_name'],
 								'first_name' => $data['first_name'],
 								'last_name'  => $data['last_name'],
@@ -2867,20 +2715,20 @@ class shop extends Module {
 								'verified'   => 0,
 								'agreed'     => 0
 							);
-						$user_manager->insertData($user_data);
-						$data['system_user'] = $user_manager->getInsertedID();
+						$user_manager->insert_item($user_data);
+						$data['system_user'] = $user_manager->get_inserted_id();
 						$user_manager->change_password($user_data['username'], $password);
 
 						// create new account
-						$manager->insertData($data);
+						$manager->insert_item($data);
 
 						// get account object
-						$id = $manager->getInsertedID();
-						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+						$id = $manager->get_inserted_id();
+						$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 						// send notification email
 						if (ModuleHandler::is_loaded('backend')) {
-							$backed_user_manager = Backend_UserManager::getInstance();
+							$backed_user_manager = Backend_UserManager::get_instance();
 							$backed_user_manager->sendNotificationEmail($result->system_user);
 						}
 					}
@@ -2889,14 +2737,10 @@ class shop extends Module {
 				case User::GUEST:
 				default:
 					// check if user agrees
-					$agree_to_terms = false;
-					if (isset($_REQUEST['agree_to_terms']))
-					   $agree_to_terms = $_REQUEST['agree_to_terms'] == 'on' || $_REQUEST['agree_to_terms'] == '1';
+					$agree_to_terms = $this->get_boolean_field('agree_to_terms');
 
 					// check if user wants to receive promotional emails
-					$want_promotions = false;
-					if (isset($_REQUEST['want_promotions']))
-						$want_promotions = $_REQUEST['want_promotions'] == 'on' || $_REQUEST['want_promotions'] == '1';
+					$want_promotions = $this->get_boolean_field('want_promotions');
 
 					// collect data
 					$conditions = array();
@@ -2906,7 +2750,7 @@ class shop extends Module {
 						'phone'       => escape_chars($_REQUEST['guest_phone']),
 						'guest'       => 1,
 						'system_user' => 0,
-						'agreed'      => $agree_to_terms,
+						'agreed'      => $agree_to_terms ? 1 : 0,
 						'promotions'  => $want_promotions ? 1 : 0
 					);
 
@@ -2924,7 +2768,7 @@ class shop extends Module {
 
 					// try finding existing account
 					if (count($conditions) > 0) {
-						$account = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+						$account = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 						if (is_object($account))
 							$result = $account;
@@ -2932,11 +2776,11 @@ class shop extends Module {
 
 					// create new account
 					if (!is_object($result)) {
-						$manager->insertData($data);
+						$manager->insert_item($data);
 
 						// get account object
-						$id = $manager->getInsertedID();
-						$result = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+						$id = $manager->get_inserted_id();
+						$result = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 					}
 
 					break;
@@ -2944,10 +2788,10 @@ class shop extends Module {
 
 		} else if ($_SESSION['logged']) {
 			// user is already logged in, get associated buyer
-			$buyer = $manager->getSingleItem(
-				$manager->getFieldNames(),
-				array('system_user' => $_SESSION['uid'])
-			);
+			$buyer = $manager->get_single_item(
+					$manager->get_field_names(),
+					array('system_user' => $_SESSION['uid'])
+				);
 
 			if (is_object($buyer))
 				$result = $buyer;
@@ -2960,11 +2804,11 @@ class shop extends Module {
 	 * Get user's address.
 	 */
 	private function getAddress($buyer, $shipping_information) {
-		$address_manager = ShopDeliveryAddressManager::getInstance();
+		$address_manager = ShopDeliveryAddressManager::get_instance();
 
 		// try to associate address with transaction
-		$address = $address_manager->getSingleItem(
-			$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+			$address_manager->get_field_names(),
 			array(
 				'buyer'   => $buyer->id,
 				'name'    => $shipping_information['name'],
@@ -2982,7 +2826,7 @@ class shop extends Module {
 
 		} else {
 			// create new address
-			$address_manager->insertData(array(
+			$address_manager->insert_item(array(
 				'buyer'       => $buyer->id,
 				'name'        => $shipping_information['name'],
 				'street'      => $shipping_information['street'],
@@ -2996,8 +2840,8 @@ class shop extends Module {
 				'access_code' => $shipping_information['access_code']
 			));
 
-			$id = $address_manager->getInsertedID();
-			$result = $address_manager->getSingleItem($address_manager->getFieldNames(), array('id' => $id));
+			$id = $address_manager->get_inserted_id();
+			$result = $address_manager->get_single_item($address_manager->get_field_names(), array('id' => $id));
 		}
 
 		return $result;
@@ -3018,9 +2862,10 @@ class shop extends Module {
 		global $db;
 
 		$result = array();
-		$transactions_manager = ShopTransactionsManager::getInstance();
-		$transaction_items_manager = ShopTransactionItemsManager::getInstance();
-		$transaction_plans_manager = ShopTransactionPlansManager::getInstance();
+		$transactions_manager = ShopTransactionsManager::get_instance();
+		$transaction_items_manager = ShopTransactionItemsManager::get_instance();
+		$transaction_plans_manager = ShopTransactionPlansManager::get_instance();
+		$promotion_manager = \Modules\Shop\Transaction\PromotionManager::get_instance();
 
 		// update buyer
 		if (!is_null($buyer))
@@ -3031,7 +2876,7 @@ class shop extends Module {
 
 		if (isset($_SESSION['transaction']) && isset($_SESSION['transaction']['uid'])) {
 			$uid = $_SESSION['transaction']['uid'];
-			$transaction = $transactions_manager->getSingleItem(array('status'), array('uid' => $uid));
+			$transaction = $transactions_manager->get_single_item(array('status'), array('uid' => $uid));
 			$new_transaction = !(is_object($transaction) && $transaction->status == TransactionStatus::PENDING);
 		}
 
@@ -3095,9 +2940,9 @@ class shop extends Module {
 			$result['total'] = $summary['total'];
 
 			// get default currency
-			$currency_manager = ShopCurrenciesManager::getInstance();
+			$currency_manager = ShopCurrenciesManager::get_instance();
 			$default_currency = $this->settings['default_currency'];
-			$currency = $currency_manager->getSingleItem(array('id'), array('currency' => $default_currency));
+			$currency = $currency_manager->get_single_item(array('id'), array('currency' => $default_currency));
 
 			if (is_object($currency))
 				$result['currency'] = $currency->id;
@@ -3107,8 +2952,8 @@ class shop extends Module {
 				$result['address'] = $address->id;
 
 			// create new transaction
-			$transactions_manager->insertData($result);
-			$result['id'] = $transactions_manager->getInsertedID();
+			$transactions_manager->insert_item($result);
+			$result['id'] = $transactions_manager->get_inserted_id();
 
 			// add discounts to result
 			$result['discounts'] = $summary['discounts'];
@@ -3139,7 +2984,7 @@ class shop extends Module {
 				$data['address'] = $address->id;
 
 			// update existing transaction
-			$transactions_manager->updateData($data, array('uid' => $uid));
+			$transactions_manager->update_items($data, array('uid' => $uid));
 
 			// add discounts to result
 			$result['discounts'] = $summary['discounts'];
@@ -3149,15 +2994,15 @@ class shop extends Module {
 		}
 
 		// remove items associated with transaction
-		$transaction_items_manager->deleteData(array('transaction' => $result['id']));
+		$transaction_items_manager->delete_items(array('transaction' => $result['id']));
 
 		// remove plans associated with transaction
-		$transaction_plans_manager->deleteData(array('transaction' => $result['id']));
+		$transaction_plans_manager->delete_items(array('transaction' => $result['id']));
 
 		// store items
 		if (count($summary['items_for_checkout']) > 0)
 			foreach($summary['items_for_checkout'] as $uid => $item) {
-				$transaction_items_manager->insertData(array(
+				$transaction_items_manager->insert_item(array(
 					'transaction'	=> $result['id'],
 					'item'			=> $item['id'],
 					'price'			=> $item['price'],
@@ -3176,7 +3021,7 @@ class shop extends Module {
 			$plan = isset($plan_list[$plan_name]) ? $plan_list[$plan_name] : null;
 
 			if (!is_null($plan))
-				$transaction_plans_manager->insertData(array(
+				$transaction_plans_manager->insert_item(array(
 					'transaction'		=> $result['id'],
 					'plan_name'			=> $plan_name,
 					'trial'				=> $plan['trial'],
@@ -3188,16 +3033,43 @@ class shop extends Module {
 				));
 		}
 
-		// if affiliate system is active, update referral
-		if (isset($_SESSION['referral_id']) && ModuleHandler::is_loaded('affiliates')) {
-			$referral_id = $_SESSION['referral_id'];
-			$referrals_manager = AffiliateReferralsManager::getInstance();
+		// remove associated promotions from the table
+		$discount_amounts = array();
+		$promotion_count = 0;
+		$promotion_manager->delete_items(array('transaction' => $result['id']));
 
-			$referrals_manager->updateData(
-				array('transaction' => $result['id']),
-				array('id' => $referral_id)
-			);
-		}
+		foreach ($this->promotions as $promotion)
+			if ($promotion->qualifies($transaction)) {
+				// store discount for application later
+				$discount = $promotion->get_discount();
+
+				// insert data to database
+				$data = array(
+						'transaction' => $result['id'],
+						'promotion'   => $promotion->get_name(),
+						'discount'    => $discount->get_name()
+					);
+
+				$promotion_manager->insert_item($data);
+
+				// apply discount
+				$discount_amounts []= $discount->apply($transaction);
+				$promotion_count++;
+			}
+
+		$result['promotion_count'] = $promotion_count;
+
+		// store discounts to transaction
+		$_SESSION['transaction']['discounts'] = $discount_amounts;
+
+		// deduce discounts from total amount
+		$discount_total = 0;
+
+		if (count($discount_amounts) > 0)
+			foreach ($discount_amounts as $discount)
+				$discount_total += $discount[2];
+
+		$_SESSION['transaction']['total'] -= $discount_total;
 
 		return $result;
 	}
@@ -3214,25 +3086,25 @@ class shop extends Module {
 	 */
 	public function updateBuyerInformation($transaction_uid, $buyer_data) {
 		$result = false;
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$buyer_manager = ShopBuyersManager::getInstance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$buyer_manager = ShopBuyersManager::get_instance();
 
 		// make sure buyer is marked as guest if password is not specified
 		if (!isset($buyer_data['password']))
 			$buyer_data['guest'] = 1;
 
 		// get transaction from database
-		$transaction = $transaction_manager->getSingleItem(
-			array('id', 'buyer'),
-			array('uid' => $transaction_uid)
-		);
+		$transaction = $transaction_manager->get_single_item(
+				array('id', 'buyer'),
+				array('uid' => $transaction_uid)
+			);
 
 		// try to get buyer from the system based on uid
 		if (isset($buyer_data['uid']))
-			$buyer = $buyer_manager->getSingleItem(
-				$buyer_manager->getFieldNames(),
-				array('uid' => $buyer_data['uid'])
-			);
+			$buyer = $buyer_manager->get_single_item(
+					$buyer_manager->get_field_names(),
+					array('uid' => $buyer_data['uid'])
+				);
 
 		// update buyer information
 		if (is_object($transaction)) {
@@ -3241,19 +3113,19 @@ class shop extends Module {
 				$buyer_id = $buyer->id;
 
 				// update buyer information
-				$buyer_manager->updateData($buyer_data, array('id' => $buyer->id));
+				$buyer_manager->update_items($buyer_data, array('id' => $buyer->id));
 
 			} else {
 				// create new buyer
-				$buyer_manager->insertData($buyer_data);
-				$buyer_id = $buyer_manager->getInsertedID();
+				$buyer_manager->insert_item($buyer_data);
+				$buyer_id = $buyer_manager->get_inserted_id();
 			}
 
 			// update transaction buyer
-			$transaction_manager->updateData(
-				array('buyer'	=> $buyer_id),
-				array('id'		=> $transaction->id)
-			);
+			$transaction_manager->update_items(
+					array('buyer'	=> $buyer_id),
+					array('id'		=> $transaction->id)
+				);
 
 			$result = true;
 
@@ -3300,10 +3172,10 @@ class shop extends Module {
 			return $result;
 
 		$email_address = null;
-		$contact_form = contact_form::getInstance();
+		$contact_form = contact_form::get_instance();
 
 		// template replacement data
-		$status_text = $this->getLanguageConstant(TransactionStatus::$reverse[$transaction->status]);
+		$status_text = $this->get_language_constant(TransactionStatus::$reverse[$transaction->status]);
 		$fields = array(
 			'transaction_id'				=> $transaction->id,
 			'transaction_uid'				=> $transaction->uid,
@@ -3322,13 +3194,13 @@ class shop extends Module {
 		);
 
 		$timestamp = strtotime($transaction->timestamp);
-		$fields['date'] = date($this->getLanguageConstant('format_date_short'), $timestamp);
-		$fields['time'] = date($this->getLanguageConstant('format_time_short'), $timestamp);
+		$fields['date'] = date($this->get_language_constant('format_date_short'), $timestamp);
+		$fields['time'] = date($this->get_language_constant('format_time_short'), $timestamp);
 
 		// get currency
-		$currency_manager = ShopCurrenciesManager::getInstance();
-		$currency = $currency_manager->getSingleItem(
-				$currency_manager->getFieldNames(),
+		$currency_manager = ShopCurrenciesManager::get_instance();
+		$currency = $currency_manager->get_single_item(
+				$currency_manager->get_field_names(),
 				array('id' => $transaction->currency)
 			);
 
@@ -3336,9 +3208,9 @@ class shop extends Module {
 			$fields['currency'] = $currency->currency;
 
 		// add buyer information
-		$buyer_manager = ShopBuyersManager::getInstance();
-		$buyer = $buyer_manager->getSingleItem(
-				$buyer_manager->getFieldNames(),
+		$buyer_manager = ShopBuyersManager::get_instance();
+		$buyer = $buyer_manager->get_single_item(
+				$buyer_manager->get_field_names(),
 				array('id' => $transaction->buyer)
 			);
 
@@ -3353,9 +3225,9 @@ class shop extends Module {
 		}
 
 		// add buyer address
-		$address_manager = ShopDeliveryAddressManager::getInstance();
-		$address = $address_manager->getSingleItem(
-			$address_manager->getFieldNames(),
+		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$address = $address_manager->get_single_item(
+			$address_manager->get_field_names(),
 			array('id' => $transaction->address)
 		);
 
@@ -3375,10 +3247,10 @@ class shop extends Module {
 		switch ($transaction->type) {
 			case TransactionType::REGULAR:
 				$subtotal = 0;
-				$item_manager = ShopItemManager::getInstance();
-				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
-				$items = $transaction_item_manager->getItems(
-					$transaction_item_manager->getFieldNames(),
+				$item_manager = ItemManager::get_instance();
+				$transaction_item_manager = ShopTransactionItemsManager::get_instance();
+				$items = $transaction_item_manager->get_items(
+					$transaction_item_manager->get_field_names(),
 					array('transaction' => $transaction->id)
 				);
 
@@ -3389,23 +3261,23 @@ class shop extends Module {
 						$id_list[] = $item->item;
 
 					$item_names = array();
-					$item_list = $item_manager->getItems(array('id', 'name'), array('id' => $id_list));
+					$item_list = $item_manager->get_items(array('id', 'name'), array('id' => $id_list));
 					foreach ($item_list as $item)
 						$item_names[$item->id] = $item->name[$language];
 
 					// create items table
-					$text_table = str_pad($this->getLanguageConstant('column_name'), 60);
-					$text_table .= str_pad($this->getLanguageConstant('column_price'), 8);
-					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
-					$text_table .= str_pad($this->getLanguageConstant('column_item_total'), 8);
+					$text_table = str_pad($this->get_language_constant('column_name'), 60);
+					$text_table .= str_pad($this->get_language_constant('column_price'), 8);
+					$text_table .= str_pad($this->get_language_constant('column_amount'), 6);
+					$text_table .= str_pad($this->get_language_constant('column_item_total'), 8);
 					$text_table .= "\n" . str_repeat('-', 60 + 8 + 6 + 8) . "\n";
 
 					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
 					$html_table .= '<thead><tr>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_price').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_item_total').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_name').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_price').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_amount').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_item_total').'</td>';
 					$html_table .= '</td></thead><tbody>';
 
 					foreach ($items as $item) {
@@ -3453,30 +3325,30 @@ class shop extends Module {
 					$html_table .= '</tbody>';
 
 					// create totals
-					$text_table .= str_pad($this->getLanguageConstant('column_subtotal'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_subtotal'), 15);
 					$text_table .= str_pad($subtotal, 10, ' ', STR_PAD_LEFT) . "\n";
 
-					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_shipping'), 15);
 					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
 
-					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_handling'), 15);
 					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$text_table .= str_repeat('-', 25);
-					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_total'), 15);
 					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$html_table .= '<tfoot>';
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_subtotal') . '</td>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->get_language_constant('column_subtotal') . '</td>';
 					$html_table .= '<td>' . $subtotal . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->get_language_constant('column_shipping') . '</td>';
 					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<tr><td colspan="2"></td><td>' . $this->get_language_constant('column_handling') . '</td>';
 					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
 
-					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<tr><td colspan="2"></td><td><b>' . $this->get_language_constant('column_total') . '</b></td>';
 					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
 
 					$html_table .= '</tfoot>';
@@ -3492,10 +3364,10 @@ class shop extends Module {
 
 			case TransactionType::DELAYED:
 				$subtotal = 0;
-				$item_manager = ShopItemManager::getInstance();
-				$transaction_item_manager = ShopTransactionItemsManager::getInstance();
-				$items = $transaction_item_manager->getItems(
-					$transaction_item_manager->getFieldNames(),
+				$item_manager = ItemManager::get_instance();
+				$transaction_item_manager = ShopTransactionItemsManager::get_instance();
+				$items = $transaction_item_manager->get_items(
+					$transaction_item_manager->get_field_names(),
 					array('transaction' => $transaction->id)
 				);
 
@@ -3506,19 +3378,19 @@ class shop extends Module {
 						$id_list[] = $item->item;
 
 					$item_names = array();
-					$item_list = $item_manager->getItems(array('id', 'name'), array('id' => $id_list));
+					$item_list = $item_manager->get_items(array('id', 'name'), array('id' => $id_list));
 					foreach ($item_list as $item)
 						$item_names[$item->id] = $item->name[$language];
 
 					// create items table
-					$text_table = str_pad($this->getLanguageConstant('column_name'), 60);
-					$text_table .= str_pad($this->getLanguageConstant('column_amount'), 6);
+					$text_table = str_pad($this->get_language_constant('column_name'), 60);
+					$text_table .= str_pad($this->get_language_constant('column_amount'), 6);
 					$text_table .= "\n" . str_repeat('-', 60 + 6) . "\n";
 
 					$html_table = '<table border="0" cellspacing="5" cellpadding="0">';
 					$html_table .= '<thead><tr>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_name').'</td>';
-					$html_table .= '<td>'.$this->getLanguageConstant('column_amount').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_name').'</td>';
+					$html_table .= '<td>'.$this->get_language_constant('column_amount').'</td>';
 					$html_table .= '</td></thead><tbody>';
 
 					foreach ($items as $item) {
@@ -3559,24 +3431,24 @@ class shop extends Module {
 					$html_table .= '</tbody>';
 
 					// create totals
-					$text_table .= str_pad($this->getLanguageConstant('column_shipping'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_shipping'), 15);
 					$text_table .= str_pad($transaction->shipping, 10, ' ', STR_PAD_LEFT) . "\n";
 
-					$text_table .= str_pad($this->getLanguageConstant('column_handling'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_handling'), 15);
 					$text_table .= str_pad($transaction->handling, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$text_table .= str_repeat('-', 25);
-					$text_table .= str_pad($this->getLanguageConstant('column_total'), 15);
+					$text_table .= str_pad($this->get_language_constant('column_total'), 15);
 					$text_table .= str_pad($transaction->total, 10, ' ', STR_PAD_LEFT) . "\n";
 
 					$html_table .= '<tfoot>';
-					$html_table .= '<tr><td></td><td>' . $this->getLanguageConstant('column_shipping') . '</td>';
+					$html_table .= '<tr><td></td><td>' . $this->get_language_constant('column_shipping') . '</td>';
 					$html_table .= '<td>' . $transaction->shipping . '</td></tr>';
 
-					$html_table .= '<tr><td></td><td>' . $this->getLanguageConstant('column_handling') . '</td>';
+					$html_table .= '<tr><td></td><td>' . $this->get_language_constant('column_handling') . '</td>';
 					$html_table .= '<td>' . $transaction->handling . '</td></tr>';
 
-					$html_table .= '<tr><td></td><td><b>' . $this->getLanguageConstant('column_total') . '</b></td>';
+					$html_table .= '<tr><td></td><td><b>' . $this->get_language_constant('column_total') . '</b></td>';
 					$html_table .= '<td><b>' . $transaction->total . '</b></td></tr>';
 
 					$html_table .= '</tfoot>';
@@ -3591,9 +3463,9 @@ class shop extends Module {
 				break;
 
 			case TransactionType::SUBSCRIPTION:
-				$plan_manager = ShopTransactionPlansManager::getInstance();
-				$plan = $plan_manager->getSingleItem(
-					$plan_manager->getFieldNames(),
+				$plan_manager = ShopTransactionPlansManager::get_instance();
+				$plan = $plan_manager->get_single_item(
+					$plan_manager->get_field_names(),
 					array('transaction' => $transaction->id)
 				);
 
@@ -3673,16 +3545,16 @@ class shop extends Module {
 
 		// show plan
 		if (count($plans) > 0 && !is_null($plan_name) && isset($plans[$plan_name])) {
-			$template = $this->loadTemplate($tag_params, 'plan.xml');
-			$template->setTemplateParamsFromArray($children);
+			$template = $this->load_template($tag_params, 'plan.xml');
+			$template->set_template_params_from_array($children);
 			$current_plan = $this->getRecurringPlan();
 
 			$params = $plans[$plan_name];
 			$params['selected'] = is_object($current_plan) && $current_plan->plan_name == $plan_name;
 			$params['text_id'] = $plan_name;
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -3730,19 +3602,19 @@ class shop extends Module {
 				$billing_information = $this->getBillingInformation($payment_method);
 
 				// get buyer and address associated with transaction
-				$buyer_manager = ShopBuyersManager::getInstance();
-				$address_manager = ShopDeliveryAddressManager::getInstance();
+				$buyer_manager = ShopBuyersManager::get_instance();
+				$address_manager = ShopDeliveryAddressManager::get_instance();
 
 				// get transaction with specified unique id
 				$transaction = Transaction::get_current();
 
 				if (is_object($transaction)) {
-					$buyer = $buyer_manager->getSingleItem(
-							$buyer_manager->getFieldNames(),
+					$buyer = $buyer_manager->get_single_item(
+							$buyer_manager->get_field_names(),
 							array('id' => $transaction->buyer)
 						);
-					$address = $address_manager->getSingleItem(
-							$address_manager->getFieldNames(),
+					$address = $address_manager->get_single_item(
+							$address_manager->get_field_names(),
 							array('id' => $transaction->address)
 						);
 					$stage = Stage::CHECKOUT;
@@ -3796,8 +3668,8 @@ class shop extends Module {
 		switch ($stage) {
 			case Stage::CHECKOUT:
 				// get fields for payment method
-				$return_url = url_Make('checkout-completed', 'shop', array('payment_method', $payment_method->get_name()));
-				$cancel_url = url_Make('checkout-canceled', 'shop', array('payment_method', $payment_method->get_name()));
+				$return_url = URL::make_query('shop', 'checkout-completed', array('payment_method', $payment_method->get_name()));
+				$cancel_url = URL::make_query('shop', 'checkout-canceled', array('payment_method', $payment_method->get_name()));
 
 				// update transaction
 				$summary = $this->updateTransaction(
@@ -3865,10 +3737,11 @@ class shop extends Module {
 				}
 
 				// load template
-				$template = $this->loadTemplate($tag_params, 'checkout_form.xml', 'checkout_template');
-				$template->setTemplateParamsFromArray($children);
-				$template->registerTagHandler('cms:checkout_items', $this, 'tag_CheckoutItems');
-				$template->registerTagHandler('cms:discounted_items', $this, 'tag_DiscountedItemList');
+				$template = $this->load_template($tag_params, 'checkout_form.xml', 'checkout_template');
+				$template->set_template_params_from_array($children);
+				$template->register_tag_handler('cms:checkout_items', $this, 'tag_CheckoutItems');
+				$template->register_tag_handler('cms:discounted_items', $this, 'tag_DiscountedItemList');
+				$template->register_tag_handler('cms:applied_promotions', $this, 'tag_AppliedPromotions');
 
 				// parse template
 				$params = array(
@@ -3906,6 +3779,7 @@ class shop extends Module {
 					$params['total_weight'] = number_format($summary['weight'], 2);
 					$params['total'] = number_format($summary['total'] + $summary['shipping'] + $summary['handling'], 2);
 					$params['discounts'] = number_format($summary['discounts'], 2);
+					$params['promotions'] = $summary['promotion_count'];
 				}
 
 				// add transaction specific data
@@ -3914,8 +3788,8 @@ class shop extends Module {
 					$params['remarks'] = $transaction->remark;
 				}
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 				break;
 
@@ -3923,12 +3797,13 @@ class shop extends Module {
 			case Stage::INPUT:
 			default:
 				// no information available, show form
-				$template = $this->loadTemplate($tag_params, 'buyer_information.xml');
-				$template->setTemplateParamsFromArray($children);
-				$template->registerTagHandler('cms:card_type', $this, 'tag_CardType');
-				$template->registerTagHandler('cms:payment_method', $this, 'tag_PaymentMethod');
-				$template->registerTagHandler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
-				$template->registerTagHandler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+				$template = $this->load_template($tag_params, 'buyer_information.xml');
+				$template->set_template_params_from_array($children);
+				$template->register_tag_handler('cms:card_type', $this, 'tag_CardType');
+				$template->register_tag_handler('cms:payment_method', $this, 'tag_PaymentMethod');
+				$template->register_tag_handler('cms:payment_method_list', $this, 'tag_PaymentMethodsList');
+				$template->register_tag_handler('cms:delivery_methods', $this, 'tag_DeliveryMethodsList');
+				$template->register_tag_handler('cms:qualified_promotion_list', $this, 'tag_PromotionList');
 
 				// get fixed country if set
 				$fixed_country = '';
@@ -3936,7 +3811,7 @@ class shop extends Module {
 					$fixed_country = $this->settings['fixed_country'];
 
 				// get login retry count
-				$retry_manager = LoginRetryManager::getInstance();
+				$retry_manager = LoginRetryManager::get_instance();
 				$count = $retry_manager->getRetryCount();
 				$buyer_terms_link = null;
 
@@ -3944,17 +3819,18 @@ class shop extends Module {
 					$buyer_terms_link = $_SESSION['buyer_terms_link'];
 
 				$params = array(
-					'include_shipping'	=> $include_shipping,
-					'fixed_country'		=> $fixed_country,
-					'bad_fields'		=> $bad_fields,
-					'recurring'			=> $transaction_type == TransactionType::SUBSCRIPTION,
-					'show_captcha'		=> $count > 3,
-					'terms_link'		=> $buyer_terms_link,
-					'payment_method'	=> isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null
+					'include_shipping'     => $include_shipping,
+					'fixed_country'        => $fixed_country,
+					'bad_fields'           => $bad_fields,
+					'recurring'            => $transaction_type == TransactionType::SUBSCRIPTION,
+					'show_captcha'         => $count > 3,
+					'terms_link'           => $buyer_terms_link,
+					'payment_method'       => isset($tag_params['payment_method']) ? $tag_params['payment_method'] : null,
+					'qualified_promotions' => $this->get_qualified_promotion_count()
 				);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 				break;
 		}
@@ -3969,13 +3845,13 @@ class shop extends Module {
 	public function tag_CheckoutItems($tag_params, $children) {
 		global $language;
 
-		$manager = ShopItemManager::getInstance();
+		$manager = ItemManager::get_instance();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$ids = array_keys($cart);
 		$transaction_type = $this->getTransactionType();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $ids));
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $ids));
 		$items_by_uid = array();
 		$items_for_checkout = array();
 
@@ -4020,14 +3896,14 @@ class shop extends Module {
 		}
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'checkout_form_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'checkout_form_item.xml');
+		$template->set_template_params_from_array($children);
 
 		// parse template
 		if (count($items_for_checkout) > 0)
 			foreach ($items_for_checkout as $params) {
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}
@@ -4040,24 +3916,24 @@ class shop extends Module {
 	 */
 	public function tag_CompletedMessage($tag_params, $children) {
 		// show message
-		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'checkout_message.xml');
+		$template->set_template_params_from_array($children);
 
 		// get message to show
-		$message = Language::getText('message_checkout_completed');
+		$message = Language::get_text('message_checkout_completed');
 		if (empty($message))
-			$message = $this->getLanguageConstant('message_checkout_completed');
+			$message = $this->get_language_constant('message_checkout_completed');
 
 		// prepare template parameters
 		$params = array(
 				'message'		=> $message,
-				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-				'button_action'	=> url_Make('', 'home'),
+				'button_text'	=> $this->get_language_constant('button_take_me_back'),
+				'button_action'	=> URL::make_query(),
 				'redirect'		=> false
 			);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -4069,24 +3945,24 @@ class shop extends Module {
 	 */
 	public function tag_CanceledMessage($tag_params, $children) {
 		// show message
-		$template = $this->loadTemplate($tag_params, 'checkout_message.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'checkout_message.xml');
+		$template->set_template_params_from_array($children);
 
 		// get message to show
-		$message = Language::getText('message_checkout_canceled');
+		$message = Language::get_text('message_checkout_canceled');
 		if (empty($message))
-			$message = $this->getLanguageConstant('message_checkout_canceled');
+			$message = $this->get_language_constant('message_checkout_canceled');
 
 		// prepare template parameters
 		$params = array(
 				'message'		=> $message,
-				'button_text'	=> $this->getLanguageConstant('button_take_me_back'),
-				'button_action'	=> url_Make('', 'home'),
+				'button_text'	=> $this->get_language_constant('button_take_me_back'),
+				'button_action'	=> URL::make_query(),
 				'redirect'		=> false
 			);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -4126,10 +4002,10 @@ class shop extends Module {
 		);
 
 		// load and parse template
-		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template = $this->load_template($tag_params, 'payment_method.xml');
+		$template->set_template_params_from_array($children);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -4140,8 +4016,8 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_PaymentMethodsList($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'payment_method.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'payment_method.xml');
+		$template->set_template_params_from_array($children);
 		$only_recurring = isset($_SESSION['recurring_plan']) && !empty($_SESSION['recurring_plan']);
 
 		if (count($this->payment_methods) > 0)
@@ -4155,8 +4031,8 @@ class shop extends Module {
 						'needs_credit_card' => $module->needs_credit_card_information()
 					);
 
-					$template->restoreXML();
-					$template->setLocalParams($params);
+					$template->restore_xml();
+					$template->set_local_params($params);
 					$template->parse();
 				}
 	}
@@ -4168,8 +4044,8 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_DeliveryMethodsList($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'delivery_method.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'delivery_method.xml');
+		$template->set_template_params_from_array($children);
 		$selected = Delivery::get_current_name();
 
 		if (Delivery::method_count() > 0)
@@ -4177,8 +4053,8 @@ class shop extends Module {
 				$params = $data;
 				$params['selected'] = ($selected == $name);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -4190,16 +4066,16 @@ class shop extends Module {
 	 * @param array children
 	 */
 	public function tag_DiscountedItemList($tag_params, $children) {
-		$manager = ShopItemManager::getInstance();
+		$manager = ItemManager::get_instance();
 
 		// get items which have discounted price
 		$item_to_display = array();
 		$cart = isset($_SESSION['shopping_cart']) ? $_SESSION['shopping_cart'] : array();
 		$uid_list = array_keys($cart);
-		$items = $manager->getItems($manager->getFieldNames(), array('uid' => $uid_list));
+		$items = $manager->get_items($manager->get_field_names(), array('uid' => $uid_list));
 
 		// prepare template
-		$template = $this->loadTemplate($tag_params, 'checkout_form_discounted_items.xml');
+		$template = $this->load_template($tag_params, 'checkout_form_discounted_items.xml');
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -4229,11 +4105,101 @@ class shop extends Module {
 							'final_price'     => number_format($price, 2)
 						);
 
-					$template->restoreXML();
-					$template->setLocalParams($params);
+					$template->restore_xml();
+					$template->set_local_params($params);
 					$template->parse();
 				}
 			}
+	}
+
+	/**
+	 * Render tag for list of applied promotions and discounts for current
+	 * transaction. If transaction is not created yet function returns without
+	 * rendering anything.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_AppliedPromotions($tag_params, $children) {
+		$template = $this->load_template($tag_params, 'promotion_item.xml');
+
+		// check if transaction id was specified
+		$transaction = null;
+		if (isset($tag_params['transaction']))
+			$transaction = Transaction::get(fix_id($tag_params['transaction']));
+
+		// get promotions for specified or current transaction
+		$promotions = Transaction::get_promotions($transaction);
+
+		if (count($promotions) == 0)
+			return;
+
+		foreach ($promotions as $data) {
+			$promotion_name = $data['promotion'];
+			$discount_name = $data['discount'];
+
+			// get promotion title
+			if (isset($this->promotions[$promotion_name])) {
+				$promotion = $this->promotions[$promotion_name];
+				$promotion_title = $promotion->get_title();
+			} else {
+				$promotion_title = $promotion_name;
+			}
+
+			// get discount title
+			if (isset($this->discounts[$discount_name])) {
+				$discount = $this->discounts[$discount_name];
+				$discount_title = $discount->get_title();
+			} else {
+				$discount_title = $discount_name;
+			}
+
+			// prepare template parameters
+			$params = array(
+					'promotion'       => $promotion_name,
+					'promotion_title' => $promotion_title,
+					'discount'        => $discount_name,
+					'discount_title'  => $discount_title
+				);
+
+			// parse template
+			$template->set_local_params($params);
+			$template->restore_xml();
+			$template->parse();
+		}
+	}
+
+	/**
+	 * Render tag for list of qualified promotions.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_PromotionList($tag_params, $children) {
+		$template = $this->load_template($tag_params, 'qualified_promotion.xml');
+
+		// get configuration parameters
+		$only_qualified = true;
+		if (isset($tag_params['only_qualified']))
+			$only_qualified = $tag_params['only_qualified'] == 1;
+
+		foreach ($this->promotions as $promotion) {
+			// if specified skip unqualified promotions
+			if ($only_qualified && !$promotion->qualifies())
+				continue;
+
+			// prepare parameters
+			$params = array(
+					'name'      => $promotion->get_name(),
+					'title'     => $promotion->get_title(),
+					'qualifies' => $promotion->qualifies()
+				);
+
+			// parse template
+			$template->set_local_params($params);
+			$template->restore_xml();
+			$template->parse();
+		}
 	}
 
 	/**
@@ -4244,15 +4210,15 @@ class shop extends Module {
 	 */
 	public function tag_CycleUnit($tag_params, $children) {
 		$units = array(
-			RecurringPayment::DAY 	=> $this->getLanguageConstant('cycle_day'),
-			RecurringPayment::WEEK	=> $this->getLanguageConstant('cycle_week'),
-			RecurringPayment::MONTH	=> $this->getLanguageConstant('cycle_month'),
-			RecurringPayment::YEAR	=> $this->getLanguageConstant('cycle_year')
+			RecurringPayment::DAY 	=> $this->get_language_constant('cycle_day'),
+			RecurringPayment::WEEK	=> $this->get_language_constant('cycle_week'),
+			RecurringPayment::MONTH	=> $this->get_language_constant('cycle_month'),
+			RecurringPayment::YEAR	=> $this->get_language_constant('cycle_year')
 		);
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : null;
-		$template = $this->loadTemplate($tag_params, 'cycle_unit_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'cycle_unit_option.xml');
+		$template->set_template_params_from_array($children);
 
 		foreach($units as $id => $text) {
 			$params = array(
@@ -4261,8 +4227,8 @@ class shop extends Module {
 				'selected'	=> $id == $selected
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -4274,8 +4240,8 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_CardType($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'card_type.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'card_type.xml');
+		$template->set_template_params_from_array($children);
 
 		foreach (CardType::$names as $id => $name) {
 			$params = array(
@@ -4283,8 +4249,8 @@ class shop extends Module {
 				'name'	=> $name
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -4296,17 +4262,17 @@ class shop extends Module {
 	 * @param array $children
 	 */
 	public function tag_AccountOptions($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'account_type_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'account_type_option.xml');
+		$template->set_template_params_from_array($children);
 
 		if (isset($tag_params['selected']))
 			$selected = escape_chars($tag_params['selected']); else
 			$selected = User::GUEST;
 
 		$options = array(
-			User::EXISTING => $this->getLanguageConstant('label_existing_user'),
-			User::CREATE => $this->getLanguageConstant('label_new_user'),
-			User::GUEST => $this->getLanguageConstant('label_guest')
+			User::EXISTING => $this->get_language_constant('label_existing_user'),
+			User::CREATE => $this->get_language_constant('label_new_user'),
+			User::GUEST => $this->get_language_constant('label_guest')
 		);
 
 		foreach ($options as $value => $text) {
@@ -4316,8 +4282,47 @@ class shop extends Module {
 				'selected' => $selected == $value
 			);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
+	}
+
+	/**
+ 	 * Render list of discounts.
+	 *
+	 * TODO: This is deprecated and apparently deals with coupons. Many parts
+	 * of the code refer to it and for that reason is not yet removed. Coupons
+	 * are supposed to be implemented through promotions mechanism which renders
+	 * this rendering function useless. Needs to be removed!!!
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 * @deprecated
+	 */
+	public function tag_DiscountList($tag_params, $children) {
+		$template = $this->load_template($tag_params, 'discount_list_item.xml');
+		$selected = null;
+
+		// make sure we have registered discounts
+		if (count($this->discounts) == 0)
+			return;
+
+		// collect extra parameters
+		if (isset($tag_params['selected']))
+			$selected = fix_chars($tag_params['selected']);
+
+		foreach ($this->discounts as $text_id => $discount) {
+			// prepare parameters
+			$params = array(
+				'text_id'  => $text_id,
+				'selected' => $selected == $text_id,
+				'title'    => $discount->get_title()
+			);
+
+			// parse template
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -4353,14 +4358,14 @@ class shop extends Module {
 	 */
 	public function formatRecurring($params) {
 		$units = array(
-			RecurringPayment::DAY 	=> mb_strtolower($this->getLanguageConstant('cycle_day')),
-			RecurringPayment::WEEK	=> mb_strtolower($this->getLanguageConstant('cycle_week')),
-			RecurringPayment::MONTH	=> mb_strtolower($this->getLanguageConstant('cycle_month')),
-			RecurringPayment::YEAR	=> mb_strtolower($this->getLanguageConstant('cycle_year'))
+			RecurringPayment::DAY 	=> mb_strtolower($this->get_language_constant('cycle_day')),
+			RecurringPayment::WEEK	=> mb_strtolower($this->get_language_constant('cycle_week')),
+			RecurringPayment::MONTH	=> mb_strtolower($this->get_language_constant('cycle_month')),
+			RecurringPayment::YEAR	=> mb_strtolower($this->get_language_constant('cycle_year'))
 		);
 
-		$template = $this->getLanguageConstant('recurring_description');
-		$zero_word = $this->getLanguageConstant('recurring_period_zero');
+		$template = $this->get_language_constant('recurring_description');
+		$zero_word = $this->get_language_constant('recurring_period_zero');
 		$currency = self::getDefaultCurrency();
 
 		$price = $params['price'].' '.$currency;
@@ -4373,6 +4378,21 @@ class shop extends Module {
 			array($price, $period, $setup, $trial_period),
 			$template
 		);
+
+		return $result;
+	}
+
+	/**
+	 * Get number of quailified promotions.
+	 *
+	 * @return integer
+	 */
+	public function get_qualified_promotion_count() {
+		$result = 0;
+
+		foreach ($this->promotions as $promotion)
+			if ($promotion->qualifies())
+				$result++;
 
 		return $result;
 	}

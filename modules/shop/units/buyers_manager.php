@@ -16,22 +16,22 @@ class ShopBuyersManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_buyers');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('first_name', 'varchar');
-		$this->addProperty('last_name', 'varchar');
-		$this->addProperty('email', 'varchar');
-		$this->addProperty('phone', 'varchar');
-		$this->addProperty('guest', 'boolean');
-		$this->addProperty('system_user', 'int');
-		$this->addProperty('agreed', 'boolean');
-		$this->addProperty('promotions', 'boolean');
-		$this->addProperty('uid', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('first_name', 'varchar');
+		$this->add_property('last_name', 'varchar');
+		$this->add_property('email', 'varchar');
+		$this->add_property('phone', 'varchar');
+		$this->add_property('guest', 'boolean');
+		$this->add_property('system_user', 'int');
+		$this->add_property('agreed', 'boolean');
+		$this->add_property('promotions', 'boolean');
+		$this->add_property('uid', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 

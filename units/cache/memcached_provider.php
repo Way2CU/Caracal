@@ -9,8 +9,7 @@
  * Author: Mladen Mijatov
  */
 namespace Core\Cache;
-
-use \Memcached as Memcached;
+use Memcached;
 
 
 class MemcachedProvider implements Provider {
@@ -74,7 +73,7 @@ class MemcachedProvider implements Provider {
 	 * @param string $uid
 	 * @return boolean
 	 */
-	public function isCached($uid) {
+	public function is_cached($uid) {
 		$response = $this->api->add($uid, '');
 
 		// remove dummy value
@@ -87,7 +86,7 @@ class MemcachedProvider implements Provider {
 	/**
 	 * Clear all cache.
 	 */
-	public function clearCache() {
+	public function clear() {
 		$this->api->flush();
 	}
 }

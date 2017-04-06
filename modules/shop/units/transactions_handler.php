@@ -5,11 +5,12 @@
  */
 
 use Modules\Shop\Transaction;
+use Modules\Shop\Item\Manager as ItemManager;
 
 
 class ShopTransactionsHandler {
 	private static $_instance;
-	private $_parent;
+	private $parent;
 	private $name;
 	private $path;
 
@@ -17,15 +18,15 @@ class ShopTransactionsHandler {
 	* Constructor
 	*/
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
 	* Public function that creates a single instance
 	*/
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -38,7 +39,7 @@ class ShopTransactionsHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -71,18 +72,18 @@ class ShopTransactionsHandler {
 		$template = new TemplateHandler('transaction_list.xml', $this->path.'templates/');
 
 		$params = array(
-			'link_reload'	=> url_MakeHyperlink(
-							$this->_parent->getLanguageConstant('reload'),
+			'link_reload'	=> URL::make_hyperlink(
+							$this->parent->get_language_constant('reload'),
 							window_ReloadContent('shop_transactions')
 						)
 			);
 
 		// register tag handlers
-		$template->registerTagHandler('cms:transaction_list', $this, 'tag_TransactionList');
-		$template->registerTagHandler('cms:status_list', $this, 'tag_TransactionStatus');
+		$template->register_tag_handler('cms:transaction_list', $this, 'tag_TransactionList');
+		$template->register_tag_handler('cms:status_list', $this, 'tag_TransactionStatus');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -90,18 +91,18 @@ class ShopTransactionsHandler {
 	 * Show details for specified transaction
 	 */
 	private function showTransactionDetails() {
-		$manager = ShopTransactionsManager::getInstance();
-		$buyer_manager = ShopBuyersManager::getInstance();
-		$address_manager = ShopDeliveryAddressManager::getInstance();
-		$user_manager = UserManager::getInstance();
+		$manager = ShopTransactionsManager::get_instance();
+		$buyer_manager = ShopBuyersManager::get_instance();
+		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$user_manager = UserManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
-		$transaction = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => $id)
 							);
-		$address = $address_manager->getSingleItem(
-								$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+								$address_manager->get_field_names(),
 								array('id' => $transaction->address)
 							);
 
@@ -141,10 +142,10 @@ class ShopTransactionsHandler {
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
 				'cancel_action'		=> window_Close('shop_transaction_details_'.$transaction->id),
-				'print_url'			=> url_Make(
-											'transfer_control',
+				'print_url'			=> URL::make_query(
 											'backend_module',
-											array('module', $this->_parent->name),
+											'transfer_control',
+											array('module', $this->parent->name),
 											array('backend_action', 'transactions'),
 											array('sub_action', 'print'),
 											array('id', $transaction->id)
@@ -152,8 +153,8 @@ class ShopTransactionsHandler {
 			);
 
 		// regular or guest buyer
-		$buyer = $buyer_manager->getSingleItem(
-								$buyer_manager->getFieldNames(),
+		$buyer = $buyer_manager->get_single_item(
+								$buyer_manager->get_field_names(),
 								array('id' => $transaction->buyer)
 							);
 
@@ -165,11 +166,12 @@ class ShopTransactionsHandler {
 		$template = new TemplateHandler('transaction_details.xml', $this->path.'templates/');
 
 		// register tag handler
-		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
-		$template->registerTagHandler('cms:transaction_status', $this, 'tag_TransactionStatus');
+		$template->register_tag_handler('cms:item_list', $this, 'tag_TransactionItemList');
+		$template->register_tag_handler('cms:transaction_status', $this, 'tag_TransactionStatus');
+		$template->register_tag_handler('cms:applied_promotions', $this->parent, 'tag_AppliedPromotions');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -177,19 +179,19 @@ class ShopTransactionsHandler {
 	 * Show template for printing and automatically show print dialog.
 	 */
 	private function printTransaction() {
-		$manager = ShopTransactionsManager::getInstance();
-		$buyer_manager = ShopBuyersManager::getInstance();
-		$address_manager = ShopDeliveryAddressManager::getInstance();
-		$user_manager = UserManager::getInstance();
-		$item_manager = ShopTransactionItemsManager::getInstance();
+		$manager = ShopTransactionsManager::get_instance();
+		$buyer_manager = ShopBuyersManager::get_instance();
+		$address_manager = ShopDeliveryAddressManager::get_instance();
+		$user_manager = UserManager::get_instance();
+		$item_manager = ShopTransactionItemsManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
-		$transaction = $manager->getSingleItem(
-								$manager->getFieldNames(),
+		$transaction = $manager->get_single_item(
+								$manager->get_field_names(),
 								array('id' => $id)
 							);
-		$address = $address_manager->getSingleItem(
-								$address_manager->getFieldNames(),
+		$address = $address_manager->get_single_item(
+								$address_manager->get_field_names(),
 								array('id' => $transaction->address)
 							);
 
@@ -228,12 +230,12 @@ class ShopTransactionsHandler {
 				'address_phone'		=> $address->phone,
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
-				'style_url'			=> url_GetFromFilePath($this->path.'include/transaction_print.css'),
+				'style_url'			=> URL::from_file_path($this->path.'include/transaction_print.css'),
 			);
 
 		// regular or guest buyer
-		$buyer = $buyer_manager->getSingleItem(
-								$buyer_manager->getFieldNames(),
+		$buyer = $buyer_manager->get_single_item(
+								$buyer_manager->get_field_names(),
 								array('id' => $transaction->buyer)
 							);
 
@@ -243,7 +245,7 @@ class ShopTransactionsHandler {
 
 		// calculate total count
 		$total_count = 0;
-		$item_list = $item_manager->getItems(array('amount'), array('transaction' => $transaction->id));
+		$item_list = $item_manager->get_items(array('amount'), array('transaction' => $transaction->id));
 
 		if (count($item_list) > 0)
 			foreach ($item_list as $item)
@@ -255,11 +257,11 @@ class ShopTransactionsHandler {
 		$template = new TemplateHandler('transaction_print.xml', $this->path.'templates/');
 
 		// register tag handler
-		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
-		$template->registerTagHandler('cms:transaction_status', $this, 'tag_TransactionStatus');
+		$template->register_tag_handler('cms:item_list', $this, 'tag_TransactionItemList');
+		$template->register_tag_handler('cms:transaction_status', $this, 'tag_TransactionStatus');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -270,9 +272,9 @@ class ShopTransactionsHandler {
 	 * @param array $children
 	 */
 	public function tag_TransactionList($tag_params, $children) {
-		$manager = ShopTransactionsManager::getInstance();
-		$buyers_manager = ShopBuyersManager::getInstance();
-		$user_manager = UserManager::getInstance();
+		$manager = ShopTransactionsManager::get_instance();
+		$buyers_manager = ShopBuyersManager::get_instance();
+		$user_manager = UserManager::get_instance();
 		$conditions = array();
 		$order_by = array('id');
 		$order_asc = true;
@@ -292,7 +294,7 @@ class ShopTransactionsHandler {
 
 		if (isset($tag_params['system_user']) && $_SESSION['logged']) {
 			$user_id = fix_id($tag_params['system_user']);
-			$buyer = $buyers_manager->getSingleItem(array('id'), array('system_user' => $user_id));
+			$buyer = $buyers_manager->get_single_item(array('id'), array('system_user' => $user_id));
 
 			if (is_object($buyer))
 				$conditions['buyer'] = $buyer->id; else
@@ -300,28 +302,28 @@ class ShopTransactionsHandler {
 		}
 
 		// load template
-		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::getInstance($this->_parent);
+		$delivery_address_handler = \Modules\Shop\DeliveryAddressHandler::get_instance($this->parent);
 
-		$template = $this->_parent->loadTemplate($tag_params, 'transaction_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:item_list', $this, 'tag_TransactionItemList');
-		$template->registerTagHandler('cms:address', $delivery_address_handler, 'tag_DeliveryAddress');
+		$template = $this->parent->load_template($tag_params, 'transaction_list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:item_list', $this, 'tag_TransactionItemList');
+		$template->register_tag_handler('cms:address', $delivery_address_handler, 'tag_DeliveryAddress');
 
 		// get all buyers
 		$buyer_names = array();
-		$buyers = $buyers_manager->getItems(array('id', 'first_name', 'last_name'), array());
+		$buyers = $buyers_manager->get_items(array('id', 'first_name', 'last_name'), array());
 
 		if (count($buyers) > 0)
 			foreach ($buyers as $buyer)
 				$buyer_names[$buyer->id] = $buyer->first_name.' '.$buyer->last_name;
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		if (count($items) > 0)
 			foreach($items as $item) {
 				// prepare window parameters
-				$title = $this->_parent->getLanguageConstant('title_transaction_details');
+				$title = $this->parent->get_language_constant('title_transaction_details');
 				$title .= ' '.$item->uid;
 				$window = 'shop_transaction_details_'.$item->id;
 
@@ -331,8 +333,8 @@ class ShopTransactionsHandler {
 					$name = $buyer_names[$item->buyer];
 
 				// prepare language constants
-				$transaction_status = $this->_parent->getLanguageConstant(TransactionStatus::$reverse[$item->status]);
-				$transaction_type = $this->_parent->getLanguageConstant(TransactionType::$reverse[$item->type]);
+				$transaction_status = $this->parent->get_language_constant(TransactionStatus::$reverse[$item->status]);
+				$transaction_type = $this->parent->get_language_constant(TransactionType::$reverse[$item->type]);
 
 				// prepare template parameters
 				$params = array(
@@ -355,13 +357,13 @@ class ShopTransactionsHandler {
 							'delivery_type'		=> $item->delivery_type,
 							'remark'			=> $item->remark,
 							'timestamp'			=> $item->timestamp,
-							'item_details'		=> url_MakeHyperlink(
-													$this->_parent->getLanguageConstant('details'),
+							'item_details'		=> URL::make_hyperlink(
+													$this->parent->get_language_constant('details'),
 													window_Open(
-														$window, 800, $title, true, false,
-														url_Make(
-															'transfer_control',
+														$window, 810, $title, true, false,
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'transactions'),
 															array('sub_action', 'details'),
@@ -371,8 +373,8 @@ class ShopTransactionsHandler {
 												)
 						);
 
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 	}
@@ -381,10 +383,10 @@ class ShopTransactionsHandler {
 	 * Handle drawing list of items in transaction
 	 */
 	public function tag_TransactionItemList($tag_params, $children) {
-		$manager = ShopTransactionItemsManager::getInstance();
-		$item_manager = ShopItemManager::getInstance();
-		$transaction_manager = ShopTransactionsManager::getInstance();
-		$currency_manager = ShopCurrenciesManager::getInstance();
+		$manager = ShopTransactionItemsManager::get_instance();
+		$item_manager = ItemManager::get_instance();
+		$transaction_manager = ShopTransactionsManager::get_instance();
+		$currency_manager = ShopCurrenciesManager::get_instance();
 		$conditions = array();
 
 		// get conditions
@@ -395,12 +397,12 @@ class ShopTransactionsHandler {
 		if (!isset($conditions['transaction']))
 			return;
 
-		$currency_id = $transaction_manager->getItemValue('currency', array('id' => $conditions['transaction']));
-		$currency = $currency_manager->getItemValue('currency', array('id' => $currency_id));
+		$currency_id = $transaction_manager->get_item_value('currency', array('id' => $conditions['transaction']));
+		$currency = $currency_manager->get_item_value('currency', array('id' => $currency_id));
 
 		// get items from database
 		$items = array();
-		$raw_items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$raw_items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
@@ -437,7 +439,7 @@ class ShopTransactionsHandler {
 
 		// get the rest of item details from database
 		$id_list = array_keys($items);
-		$raw_items = $item_manager->getItems($item_manager->getFieldNames(), array('id' => $id_list));
+		$raw_items = $item_manager->get_items($item_manager->get_field_names(), array('id' => $id_list));
 
 		if (count($raw_items) > 0)
 			foreach ($raw_items as $item) {
@@ -460,14 +462,14 @@ class ShopTransactionsHandler {
 			}
 
 		if (count($items) > 0) {
-			$sizes_handler = ShopItemSizesHandler::getInstance($this->_parent);
-			$template = $this->_parent->loadTemplate($tag_params, 'transaction_details_item.xml');
-			$template->setTemplateParamsFromArray($children);
-			$template->registerTagHandler('cms:value_list', $sizes_handler, 'tag_ValueList');
+			$sizes_handler = ShopItemSizesHandler::get_instance($this->parent);
+			$template = $this->parent->load_template($tag_params, 'transaction_details_item.xml');
+			$template->set_template_params_from_array($children);
+			$template->register_tag_handler('cms:value_list', $sizes_handler, 'tag_ValueList');
 
 			foreach ($items as $id => $params) {
-				$template->setLocalParams($params);
-				$template->restoreXML();
+				$template->set_local_params($params);
+				$template->restore_xml();
 				$template->parse();
 			}
 		}
@@ -477,8 +479,8 @@ class ShopTransactionsHandler {
 	 * Print transaction status
 	 */
 	public function tag_TransactionStatus($tag_params, $children) {
-		$template = $this->_parent->loadTemplate($tag_params, 'transaction_status_option.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->parent->load_template($tag_params, 'transaction_status_option.xml');
+		$template->set_template_params_from_array($children);
 		$transaction = null;
 
 		// get selected
@@ -490,14 +492,14 @@ class ShopTransactionsHandler {
 
 		// get transaction id
 		if (isset($tag_params['transaction'])) {
-			$manager = ShopTransactionsManager::getInstance();
+			$manager = ShopTransactionsManager::get_instance();
 			$conditions = array();
 
 			if (is_numeric($tag_params['transaction']))
 				$conditions['id'] = fix_id($tag_params['transaction']); else
 				$conditions['uid'] = escape_chars($tag_params['transaction']);
 
-			$transaction = $manager->getSingleItem(array('type', 'status'), $conditions);
+			$transaction = $manager->get_single_item(array('type', 'status'), $conditions);
 		}
 
 		// prepare available statuses
@@ -524,12 +526,12 @@ class ShopTransactionsHandler {
 		foreach ($status_list as $id => $constant) {
 			$params = array(
 					'id'		=> $id,
-					'text'		=> $this->_parent->getLanguageConstant($constant),
+					'text'		=> $this->parent->get_language_constant($constant),
 					'selected'	=> $active
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -543,7 +545,7 @@ class ShopTransactionsHandler {
 		$result = false;
 
 		// set transaction status
-		$result = shop::getInstance()->setTransactionStatus($id, $status);
+		$result = shop::get_instance()->setTransactionStatus($id, $status);
 
 		print json_encode($result);
 	}

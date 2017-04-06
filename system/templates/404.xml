@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../units/schema/language.dtd">
+<document>
+	<html lang="$language" dir="$language_rtl ? 'rtl' : 'ltr'" cms:eval="lang,dir">
+		<head>
+			<title>
+				<cms:text constant="site_title"/>
+			</title>
+			<link href="_BASEURL.'/system/styles/common.css'" rel="stylesheet" type="text/css" cms:eval="href"/>
+			<link href="_BASEURL.'/system/styles/error_pages.css'" rel="stylesheet" type="text/css" cms:eval="href"/>
+		</head>
+
+		<body class="e404">
+			<div class="message">
+				<cms:text constant="message_client_error_404"/>
+				<a
+					href="URL::make()"
+					cms:eval="href"
+					>
+					<cms:text constant="back_to_home"/>
+				</a>
+			</div>
+		</body>
+	</html>
+</document>

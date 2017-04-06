@@ -11,15 +11,14 @@
  */
 
 namespace Core;
+use Language;
+use LanguageHandler;
+use SettingsManager;
+use TemplateHandler;
+use Exception;
 
-// temporary fallbacks
-use \Language as Language;
-use \LanguageHandler as LanguageHandler;
-use \SettingsManager as SettingsManager;
-use \TemplateHandler as TemplateHandler;
 
-
-class AddActionError extends \Exception {}
+class AddActionError extends Exception {}
 
 
 abstract class Module {
@@ -56,7 +55,7 @@ abstract class Module {
 
 		// load settings from database
 		if ($load_settings)
-			$this->settings = $this->loadSettings();
+			$this->settings = $this->load_settings();
 	}
 
 	/**
@@ -65,7 +64,7 @@ abstract class Module {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		$result = false;
 		$action_name = isset($params['action']) ? $params['action'] : null;
 		$backend_action = isset($params['backend_action']) ? $params['backend_action'] : null;
@@ -75,7 +74,7 @@ abstract class Module {
 		$backend_action_exists = !is_null($backend_action) && array_key_exists($backend_action, $this->backend_actions);
 
 		// call frontend action if defined
-		if ($action_exists && $this->checkLicense()) {
+		if ($action_exists) {
 			$config = $this->actions[$action_name];
 			$action = $config[0];
 
@@ -123,7 +122,7 @@ abstract class Module {
 	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function createAction($name, $callable, $params) {
+	protected function create_action($name, $callable, $params) {
 		if (array_key_exists($name, $this->actions))
 			throw new AddActionError("Action '{$name}' is already defined!");
 
@@ -138,7 +137,7 @@ abstract class Module {
 	 * @param integer $params
 	 * @throws AddActionError
 	 */
-	protected function createBackendAction($name, $callable, $params) {
+	protected function create_backend_action($name, $callable, $params) {
 		if (array_key_exists($name, $this->backend_actions))
 			throw new AddActionError("Backend action '{$name}' is already defined!");
 
@@ -152,18 +151,16 @@ abstract class Module {
 	 * @param string $language
 	 * @return string
 	 */
-	public function getLanguageConstant($constant, $language=null) {
+	public function get_language_constant($constant, $language=null) {
 		// make sure language is loaded
 		if (is_null($this->language)) {
 			trigger_error("Requested '{$constant}' but language file was not loaded for module '{$this->name}'.", E_USER_WARNING);
 			return '';
 		}
 
-		$language_in_use = empty($language) ? $_SESSION['language'] : $language;
-		$result = $this->language->getText($constant, $language_in_use);
-
+		$result = $this->language->get_text($constant, $language);
 		if (empty($result))
-			$result = Language::getText($constant, $language_in_use);
+			$result = Language::get_text($constant, $language);
 
 		return $result;
 	}
@@ -174,14 +171,29 @@ abstract class Module {
 	 * @param string $name
 	 * @return array
 	 */
-	public function getMultilanguageField($name) {
+	public function get_multilanguage_field($name) {
 		$result = array();
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		foreach($list as $lang) {
 			$param_name = "{$name}_{$lang}";
 			$result[$lang] = escape_chars($_REQUEST[$param_name], false);
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Get boolean field value.
+	 *
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function get_boolean_field($name) {
+		$result = false;
+
+		if (isset($_REQUEST[$name]))
+			$result = $_REQUEST[$name] == 'on' || $_REQUEST[$name] == 1;
 
 		return $result;
 	}
@@ -194,14 +206,14 @@ abstract class Module {
 	 * Function should be use to create tables and files specific to module
 	 * in question.
 	 */
-	public function onInit() {
+	public function initialize() {
 	}
 
 	/**
 	 * Function called when module is disabled. This function should be used to
 	 * clean up database and other module specific parts of the system.
 	 */
-	public function onDisable() {
+	public function cleanup() {
 	}
 
 	/**
@@ -209,20 +221,20 @@ abstract class Module {
 	 *
 	 * @return array
 	 */
-	protected function loadSettings() {
-		global $db, $db_use;
+	protected function load_settings() {
+		global $db;
 
 		$result = array();
 
 		// make sure we have database connection
-		if (!$db_use)
+		if (is_null($db))
 			return $result;
 
 		// get manager
-		$manager = SettingsManager::getInstance();
+		$manager = SettingsManager::get_instance();
 
 		// get values from the database
-		$settings = $manager->getItems($manager->getFieldNames(), array('module' => $this->name));
+		$settings = $manager->get_items($manager->get_field_names(), array('module' => $this->name));
 
 		if (count($settings) > 0)
 			foreach ($settings as $setting)
@@ -234,51 +246,51 @@ abstract class Module {
 	/**
 	 * Updates or creates new setting variable.
 	 *
-	 * @param string $var
+	 * @param string $name
 	 * @param string $value
 	 */
-	protected function saveSetting($var, $value) {
-		global $db, $db_use;
+	protected function save_setting($name, $value) {
+		global $db;
 
 		// this method is only meant for used with database
-		if (!$db_use)
+		if (is_null($db))
 			return;
 
 		// get settings manager
-		$manager = SettingsManager::getInstance();
+		$manager = SettingsManager::get_instance();
 
 		// check if specified setting already exists
-		$setting = $manager->getSingleItem(
+		$setting = $manager->get_single_item(
 								array('id'),
 								array(
 									'module'	=> $this->name,
-									'variable'	=> $var
+									'variable'	=> $name
 								));
 
 		// update or insert data
 		if (is_object($setting)) {
-			$manager->updateData(
+			$manager->update_items(
 						array('value' => $value),
 						array('id' => $setting->id)
 					);
 
 		} else {
-			$manager->insertData(array(
+			$manager->insert_item(array(
 						'module'	=> $this->name,
-						'variable'	=> $var,
+						'variable'	=> $name,
 						'value'		=> $value
 					));
 		}
 	}
 
 	/**
-	 * Create TemplateHandler object from specified tag params
+	 * Create TemplateHandler object from specified tag parameters.
 	 *
 	 * @param array $params
 	 * @param string $default_file
 	 * @return TemplateHandler
 	 */
-	public function loadTemplate($params, $default_file, $param_name='template') {
+	public function load_template($params, $default_file, $param_name='template') {
 		if (isset($params[$param_name])) {
 			$path = '';
 			$file_name = $params[$param_name];
@@ -299,7 +311,7 @@ abstract class Module {
 
 		// load template
 		$template = new TemplateHandler($file_name, $path);
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		return $template;
 	}

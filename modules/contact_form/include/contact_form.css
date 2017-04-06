@@ -2,7 +2,7 @@
  * Contact Form Style Sheet
  * Caracal Development Framework
  *
- * Copyright (c) 2014. by Way2CU, http://way2cu.com
+ * Copyright (c) 2016. by Way2CU, http://way2cu.com
  * Authors: Mladen Mijatov
  */
 
@@ -33,5 +33,66 @@ form[data-dynamic='1'] div.overlay {
 
 form[data-dynamic='1'] div.overlay.visible {
 	visibility: visible;
+	opacity: 1;
+}
+
+form input[pattern] + small.placeholder {
+	display: block;
+	position: relative;
+	line-height: 0;
+}
+
+form input[pattern] + small.placeholder:before {
+	position: absolute;
+	top: calc(-1em - 5px);
+	left: 10px;
+	width: 0;
+	height: 0;
+	content: '';
+	opacity: 0;
+
+	border: 8px solid transparent;
+	border-bottom-color: #909090;
+
+	line-height: 0;
+	transition: all 0.3s;
+}
+
+form input[pattern] + small.placeholder:after {
+	position: absolute;
+	top: -1em;
+	left: 0;
+	opacity: 0;
+	content: attr(data-content);
+	padding: 0.2em 0.3em;
+
+	border: 1px solid #909090;
+	border-radius: 2px;
+	background-color: white;
+
+	color: #909090;
+	font-size: 1rem;
+	line-height: normal;
+
+	transition: all 0.3s;
+}
+
+html[dir=rtl] form input[pattern] + small.placeholder:before {
+	left: auto;
+	right: 10px;
+}
+
+html[dir=rtl] form input[pattern] + small.placeholder:after {
+	left: auto;
+	right: 0;
+}
+
+form input[pattern]:focus:invalid + small.placeholder:before {
+	top: -5px;
+	opacity: 1;
+}
+
+form input[pattern]:focus:invalid + small.placeholder:after {
+	top: 10px;
 	opacity: 1;
 }

@@ -7,6 +7,8 @@
  * Author: Mladen Mijatov
  */
 
+use Modules\Shop\Item\Manager as ItemManager;
+
 require_once('manufacturer_manager.php');
 
 
@@ -28,7 +30,7 @@ class ShopManufacturerHandler {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -41,7 +43,7 @@ class ShopManufacturerHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -78,12 +80,12 @@ class ShopManufacturerHandler {
 		$template = new TemplateHandler('manufacturer_list.xml', $this->path.'templates/');
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_manufacturer'),
+					'link_new' => URL::make_hyperlink(
+										$this->_parent->get_language_constant('add_manufacturer'),
 										window_Open( // on click open window
 											'shop_manufacturer_add',
 											360,
-											$this->_parent->getLanguageConstant('title_manufacturer_add'),
+											$this->_parent->get_language_constant('title_manufacturer_add'),
 											true, true,
 											backend_UrlMake($this->name, 'manufacturers', 'add')
 										)
@@ -91,10 +93,10 @@ class ShopManufacturerHandler {
 					);
 
 		// register tag handler
-		$template->registerTagHandler('cms:manufacturer_list', $this, 'tag_ManufacturerList');
+		$template->register_tag_handler('cms:manufacturer_list', $this, 'tag_ManufacturerList');
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -103,15 +105,15 @@ class ShopManufacturerHandler {
 	 */
 	private function addManufacturer() {
 		$template = new TemplateHandler('manufacturer_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'manufacturers', 'save'),
 					'cancel_action'	=> window_Close('shop_manufacturer_add')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -120,19 +122,19 @@ class ShopManufacturerHandler {
 	 */
 	private function changeManufacturer() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopManufacturerManager::getInstance();
+		$manager = ShopManufacturerManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (!is_object($item))
 			return;
 
 		$template = new TemplateHandler('manufacturer_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		if (ModuleHandler::is_loaded('gallery')) {
-			$gallery = gallery::getInstance();
-			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
+			$gallery = gallery::get_instance();
+			$template->register_tag_handler('cms:image_list', $gallery, 'tag_ImageList');
 		}
 
 		$params = array(
@@ -144,8 +146,8 @@ class ShopManufacturerHandler {
 					'cancel_action'	=> window_Close('shop_manufacturer_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -154,7 +156,7 @@ class ShopManufacturerHandler {
 	 */
 	private function saveManufacturer() {
 		$id = null;
-		$manager = ShopManufacturerManager::getInstance();
+		$manager = ShopManufacturerManager::get_instance();
 		$gallery_addon = '';
 
 		if (isset($_REQUEST['id']))
@@ -162,7 +164,7 @@ class ShopManufacturerHandler {
 
 		// get data from request
 		$data = array(
-				'name'		=> $this->_parent->getMultilanguageField('name'),
+				'name'		=> $this->_parent->get_multilanguage_field('name'),
 				'web_site'	=> escape_chars($_REQUEST['web_site']),
 			);
 
@@ -170,8 +172,8 @@ class ShopManufacturerHandler {
 		if (is_null($id)) {
 			// get new image inserted
 			if (ModuleHandler::is_loaded('gallery') && isset($_FILES['logo'])) {
-				$gallery = gallery::getInstance();
-				$gallery_manager = GalleryManager::getInstance();
+				$gallery = gallery::get_instance();
+				$gallery_manager = GalleryManager::get_instance();
 
 				$result = $gallery->createImage('logo');
 
@@ -182,7 +184,7 @@ class ShopManufacturerHandler {
 								'protected'		=> 1
 							);
 
-					$gallery_manager->updateData($image_data, array('id' => $result['id']));
+					$gallery_manager->update_items($image_data, array('id' => $result['id']));
 
 					$data['logo'] = $result['id'];
 					$gallery_addon = ';'.window_ReloadContent('gallery_images');
@@ -190,7 +192,7 @@ class ShopManufacturerHandler {
 			}
 
 			// insert new manufacturer data
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window = 'shop_manufacturer_add';
 
 		} else {
@@ -198,22 +200,22 @@ class ShopManufacturerHandler {
 			$data['logo'] = isset($_REQUEST['logo']) && !empty($_REQUEST['logo']) ? fix_id($_REQUEST['logo']) : 0;
 
 			// update existing data
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window = 'shop_manufacturer_change';
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_manufacturer_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->_parent->get_language_constant('message_manufacturer_saved'),
+					'button'	=> $this->_parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_manufacturers').$gallery_addon
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -224,23 +226,23 @@ class ShopManufacturerHandler {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopManufacturerManager::getInstance();
+		$manager = ShopManufacturerManager::get_instance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant("message_manufacturer_delete"),
+					'message'		=> $this->_parent->get_language_constant("message_manufacturer_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->_parent->getLanguageConstant("delete"),
-					'no_text'		=> $this->_parent->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->_parent->get_language_constant("delete"),
+					'no_text'		=> $this->_parent->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'shop_manufacturer_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'manufacturers'),
 												array('sub_action', 'delete_commit'),
@@ -250,8 +252,8 @@ class ShopManufacturerHandler {
 					'no_action'		=> window_Close('shop_manufacturer_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -260,23 +262,23 @@ class ShopManufacturerHandler {
 	 */
 	private function deleteManufacturer_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopManufacturerManager::getInstance();
-		$item_manager = ShopItemManager::getInstance();
+		$manager = ShopManufacturerManager::get_instance();
+		$item_manager = ItemManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
-		$item_manager->updateData(array('manufacturer' => 0), array('manufacturer' => $id));
+		$manager->delete_items(array('id' => $id));
+		$item_manager->update_items(array('manufacturer' => 0), array('manufacturer' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant("message_manufacturer_deleted"),
-					'button'	=> $this->_parent->getLanguageConstant("close"),
+					'message'	=> $this->_parent->get_language_constant("message_manufacturer_deleted"),
+					'button'	=> $this->_parent->get_language_constant("close"),
 					'action'	=> window_Close('shop_manufacturer_delete').";".window_ReloadContent('shop_manufacturers')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -287,7 +289,7 @@ class ShopManufacturerHandler {
 	 * @param array $children
 	 */
 	public function tag_Manufacturer($tag_params, $children) {
-		$manager = ShopManufacturerManager::getInstance();
+		$manager = ShopManufacturerManager::get_instance();
 		$conditions = array();
 
 		// collect params
@@ -295,11 +297,11 @@ class ShopManufacturerHandler {
 			$conditions['id'] = fix_id($tag_params['id']);
 
 		// get single item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
+		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
 			// prepare parameters
@@ -311,8 +313,8 @@ class ShopManufacturerHandler {
 				);
 
 			// parse template
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -324,89 +326,115 @@ class ShopManufacturerHandler {
 	 * @param array $children
 	 */
 	public function tag_ManufacturerList($tag_params, $children) {
-		$manager = ShopManufacturerManager::getInstance();
+		global $section;
+
+		$manager = ShopManufacturerManager::get_instance();
 		$conditions = array();
+		$order_by = array('id');
+		$order_asc = true;
 		$selected = -1;
 
 		if (ModuleHandler::is_loaded('gallery')) {
 			$use_images = true;
-			$gallery = gallery::getInstance();
-			$gallery_manager = GalleryManager::getInstance();
+			$gallery = gallery::get_instance();
+			$gallery_manager = GalleryManager::get_instance();
 
 		} else {
 			$use_images = false;
 		}
 
+		// parse parameters
 		if (isset($tag_params['selected']))
 			$selected = fix_id($tag_params['selected']);
 
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
-		$template = $this->_parent->loadTemplate($tag_params, 'manufacturer_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		if (isset($tag_params['order_by']))
+			$order_by = fix_chars(explode(',', $tag_params['order_by']));
 
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				// get image
-				$image = '';
+		if (isset($tag_params['order_asc']))
+			$order_asc = $tag_params['order_asc'] == 1;
 
-				if ($use_images && !empty($item->logo)) {
-					$image_item = $gallery_manager->getSingleItem(
-											$gallery_manager->getFieldNames(),
-											array('id' => $item->logo)
-										);
+		// get items from the database
+		$items = $manager->get_items(
+				$manager->get_field_names(),
+				$conditions,
+				$order_by,
+				$order_asc
+			);
 
-					if (is_object($image_item))
-						$image = $gallery->getImageURL($image_item);
-				}
+		// load template
+		$template = $this->_parent->load_template($tag_params, 'manufacturer_list_item.xml');
+		$template->set_template_params_from_array($children);
 
-				// prepare parameters
-				$params = array(
-						'id'		=> $item->id,
-						'name'		=> $item->name,
-						'web_site'	=> $item->web_site,
-						'logo'		=> $image,
-						'selected'	=> $selected == $item->id ? 1 : 0,
-						'item_change'	=> url_MakeHyperlink(
-												$this->_parent->getLanguageConstant('change'),
-												window_Open(
-													'shop_manufacturer_change', 	// window id
-													360,				// width
-													$this->_parent->getLanguageConstant('title_manufacturer_change'), // title
-													true, true,
-													url_Make(
-														'transfer_control',
-														'backend_module',
-														array('module', $this->name),
-														array('backend_action', 'manufacturers'),
-														array('sub_action', 'change'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'	=> url_MakeHyperlink(
-												$this->_parent->getLanguageConstant('delete'),
-												window_Open(
-													'shop_manufacturer_delete', 	// window id
-													400,				// width
-													$this->_parent->getLanguageConstant('title_manufacturer_delete'), // title
-													false, false,
-													url_Make(
-														'transfer_control',
-														'backend_module',
-														array('module', $this->name),
-														array('backend_action', 'manufacturers'),
-														array('sub_action', 'delete'),
-														array('id', $item->id)
-													)
-												)
-											)
-					);
+		if (count($items) == 0)
+			return;
 
-				// parse template
-				$template->setLocalParams($params);
-				$template->restoreXML();
-				$template->parse();
+		// parse the template
+		foreach ($items as $item) {
+			// get image
+			$image = '';
+
+			if ($use_images && !empty($item->logo)) {
+				$image_item = $gallery_manager->get_single_item(
+										$gallery_manager->get_field_names(),
+										array('id' => $item->logo)
+									);
+
+				if (is_object($image_item))
+					$image = $gallery->getImageURL($image_item);
 			}
+
+			// prepare parameters
+			$params = array(
+					'id'		=> $item->id,
+					'name'		=> $item->name,
+					'web_site'	=> $item->web_site,
+					'logo'		=> $image,
+					'selected'	=> $selected == $item->id ? 1 : 0
+				);
+
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
+									$this->_parent->get_language_constant('change'),
+									window_Open(
+										'shop_manufacturer_change', 	// window id
+										360,				// width
+										$this->_parent->get_language_constant('title_manufacturer_change'), // title
+										true, true,
+										URL::make_query(
+											'backend_module',
+											'transfer_control',
+											array('module', $this->name),
+											array('backend_action', 'manufacturers'),
+											array('sub_action', 'change'),
+											array('id', $item->id)
+										))
+								);
+
+				$params['item_delete'] = URL::make_hyperlink(
+										$this->_parent->get_language_constant('delete'),
+										window_Open(
+											'shop_manufacturer_delete', 	// window id
+											400,				// width
+											$this->_parent->get_language_constant('title_manufacturer_delete'), // title
+											false, false,
+											URL::make_query(
+												'backend_module',
+												'transfer_control',
+												array('module', $this->name),
+												array('backend_action', 'manufacturers'),
+												array('sub_action', 'delete'),
+												array('id', $item->id)
+											)
+										)
+									);
+			}
+
+			// parse template
+			$template->set_local_params($params);
+			$template->restore_xml();
+			$template->parse();
+		}
 	}
 }
 

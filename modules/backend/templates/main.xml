@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<cms:var name="_HTML_5"/>
 	<html lang="$language" dir="$language_rtl ? 'rtl' : 'ltr'" cms:eval="lang,dir">
 		<head>
 			<title>
@@ -18,7 +17,7 @@
 					<img
 						src="_BASEURL.'/modules/backend/images/logo_text.svg'"
 						alt="Caracal"
-						eval="src"
+						cms:eval="src"
 						/>
 					<cms:text constant="slogan" module="backend"/>
 				</div>

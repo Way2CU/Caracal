@@ -9,6 +9,7 @@
 
 use Core\Events;
 use Modules\Shop\Transaction;
+use Modules\Shop\Item\Manager as ItemManager;
 
 
 class PayPal_Express extends PaymentMethod {
@@ -40,7 +41,7 @@ class PayPal_Express extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -80,7 +81,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		return url_Make('express-checkout', 'paypal');
+		return URL::make_query('paypal', 'express-checkout');
 	}
 
 	/**
@@ -88,7 +89,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->parent->getLanguageConstant('express_method_title');
+		return $this->parent->get_language_constant('express_method_title');
 	}
 
 	/**
@@ -96,7 +97,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.svg');
+		return URL::from_file_path($this->parent->path.'images/icon.svg');
 	}
 
 	/**
@@ -104,7 +105,7 @@ class PayPal_Express extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/express_image.png');
+		return URL::from_file_path($this->parent->path.'images/express_image.png');
 	}
 
 	/**
@@ -114,10 +115,10 @@ class PayPal_Express extends PaymentMethod {
 	public function get_recurring_plans() {
 		$result = array();
 		$conditions = array();
-		$manager = PayPal_PlansManager::getInstance();
+		$manager = PayPal_PlansManager::get_instance();
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions);
+		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
 		// populate result array
 		if (count($items) > 0)
@@ -204,8 +205,8 @@ class PayPal_Express extends PaymentMethod {
 	 */
 	public function new_recurring_payment($data, $billing_information, $plan_name, $return_url, $cancel_url) {
 		$result = '';
-		$manager = PayPal_PlansManager::getInstance();
-		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+		$manager = PayPal_PlansManager::get_instance();
+		$plan = $manager->get_single_item($manager->get_field_names(), array('text_id' => $plan_name));
 
 		if (is_object($plan)) {
 			$params = array(
@@ -246,7 +247,7 @@ class PayPal_Express extends PaymentMethod {
 
 		// handle response
 		if ($response['ACK'] == 'Success' || $response['ACK'] == 'SuccessWithWarning') {
-			$shop = shop::getInstance();
+			$shop = shop::get_instance();
 			$shop->setTransactionStatus($transaction->uid, TransactionStatus::CANCELED);
 
 			$result = true;
@@ -272,8 +273,8 @@ class PayPal_Express extends PaymentMethod {
 	public function beforeCheckout($method, $return_url, $cancel_url) {
 		global $language, $section, $action;
 
-		$shop = shop::getInstance();
-		$item_manager = ShopItemManager::getInstance();
+		$shop = shop::get_instance();
+		$item_manager = ItemManager::get_instance();
 		$result = false;
 		$fields = array();
 		$request_id = 0;
@@ -285,8 +286,8 @@ class PayPal_Express extends PaymentMethod {
 
 		// add recurring payment plan
 		if (!is_null($recurring_plan)) {
-			$manager = PayPal_PlansManager::getInstance();
-			$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $recurring_plan));
+			$manager = PayPal_PlansManager::get_instance();
+			$plan = $manager->get_single_item($manager->get_field_names(), array('text_id' => $recurring_plan));
 			$params = array(
 				'price'			=> $plan->price,
 				'period'		=> $plan->interval_count,
@@ -311,7 +312,7 @@ class PayPal_Express extends PaymentMethod {
 				if ($plan->setup_price > 0) {
 					$fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
 					$fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
-					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
+					$fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->get_language_constant('api_setup_fee');
 					$fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 					$fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 					$request_id++;
@@ -351,9 +352,9 @@ class PayPal_Express extends PaymentMethod {
 			$request_id++;
 		}
 
-		$return_url = url_Make(
-							$action,
+		$return_url = URL::make_query(
 							$section,
+							$action,
 							array('stage', 'resume'),
 							array('payment_method', $this->name)
 						);
@@ -396,7 +397,7 @@ class PayPal_Express extends PaymentMethod {
 		global $language;
 
 		// prepare data for new recurring profile
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 		$token = escape_chars($_REQUEST['token']);
 		$payer_id = escape_chars($_REQUEST['payer_id']);
 		$return_url = fix_chars($_REQUEST['return_url']);
@@ -434,9 +435,9 @@ class PayPal_Express extends PaymentMethod {
 		if ($recurring) {
 			$plan_name = $_SESSION['recurring_plan'];
 
-			$manager = PayPal_PlansManager::getInstance();
-			$plan = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$manager = PayPal_PlansManager::get_instance();
+			$plan = $manager->get_single_item(
+									$manager->get_field_names(),
 									array('text_id' => $plan_name)
 								);
 			$current_plan = $shop->getRecurringPlan();
@@ -470,7 +471,7 @@ class PayPal_Express extends PaymentMethod {
 				$setup_fields = $fields;
 				$setup_fields["PAYMENTREQUEST_{$request_id}_AMT"] = $plan->setup_price;
 				$setup_fields["PAYMENTREQUEST_{$request_id}_CURRENCYCODE"] = shop::getDefaultCurrency();
-				$setup_fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->getLanguageConstant('api_setup_fee');
+				$setup_fields["PAYMENTREQUEST_{$request_id}_DESC"] = $this->parent->get_language_constant('api_setup_fee');
 				$setup_fields["PAYMENTREQUEST_{$request_id}_INVNUM"] = $_SESSION['transaction']['uid'];
 				$setup_fields["PAYMENTREQUEST_{$request_id}_PAYMENTACTION"] = 'Sale';
 

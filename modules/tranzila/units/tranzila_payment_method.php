@@ -51,7 +51,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -112,7 +112,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.svg');
+		return URL::from_file_path($this->parent->path.'images/icon.svg');
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/image.png');
+		return URL::from_file_path($this->parent->path.'images/image.png');
 	}
 
 	/**
@@ -339,9 +339,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		}
 
 		// get token
-		$token_manager = Modules\Shop\TokenManager::getInstance();
-		$token = $token_manager->getSingleItem(
-			$token_manager->getFieldNames(),
+		$token_manager = Modules\Shop\TokenManager::get_instance();
+		$token = $token_manager->get_single_item(
+			$token_manager->get_field_names(),
 			array('id' => $transaction->payment_token)
 		);
 
@@ -355,9 +355,9 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$expiration_date = str_pad($expiration_month.$expiration_year, 4, '0', STR_PAD_LEFT);
 
 		// prepare currency
-		$currency_manager = ShopCurrenciesManager::getInstance();
-		$currency = $currency_manager->getSingleItem(
-			$currency_manager->getFieldNames(),
+		$currency_manager = ShopCurrenciesManager::get_instance();
+		$currency = $currency_manager->get_single_item(
+			$currency_manager->get_field_names(),
 			array('id' => $transaction->currency)
 		);
 
@@ -395,7 +395,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		}
 
 		// update transaction status
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 
 		if ($result)
 			$shop->setTransactionStatus($transaction->uid, TransactionStatus::COMPLETED); else
@@ -411,7 +411,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		$id = escape_chars($_REQUEST['transaction_id']);
 		$response = escape_chars($_REQUEST['Response']);
 		$mode = escape_chars($_REQUEST['tranmode']);
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 
 		// get transaction
 		try {
@@ -419,7 +419,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 
 		} catch (UnknownTransactionError $error) {
 			// redirect user to error page
-			$return_url = url_Make('checkout-error', 'shop');
+			$return_url = URL::make_query('shop', 'checkout-error');
 			header('Location: '.$return_url, true, 302);
 			return;
 		}
@@ -430,7 +430,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 			$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
 
 			// redirect buyer
-			$return_url = url_Make('checkout-error', 'shop');
+			$return_url = URL::make_query('shop', 'checkout-error');
 			header('Location: '.$return_url, true, 302);
 			return;
 		}
@@ -482,7 +482,7 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 		}
 
 		// redirect browser
-		$return_url = url_Make('checkout-completed', 'shop');
+		$return_url = URL::make_query('shop', 'checkout-completed');
 		header('Location: '.$return_url, true, 302);
 	}
 
@@ -491,13 +491,13 @@ class Tranzila_PaymentMethod extends PaymentMethod {
 	 */
 	public function handle_cancel_payment() {
 		$id = escape_chars($_REQUEST['transaction_id']);
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 
 		// set transaction status
 		$shop->setTransactionStatus($id, TransactionStatus::CANCELED);
 
 		// redirect browser
-		$return_url = url_Make('checkout-canceled', 'shop');
+		$return_url = URL::make_query('shop', 'checkout-canceled');
 		header('Location: '.$return_url, true, 302);
 	}
 }

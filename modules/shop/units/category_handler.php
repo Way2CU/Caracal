@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Currency converter and manager
- *
- * http://www.google.com/ig/calculator?hl=en&q=100EUR%3D%3Frsd
- *
+ * Item category handler.
  */
 
 class ShopCategoryHandler {
@@ -14,18 +11,18 @@ class ShopCategoryHandler {
 	private $path;
 
 	/**
-	* Constructor
-	*/
+	 * Constructor
+	 */
 	protected function __construct($parent) {
-		$this->_parent = $parent;
-		$this->name = $this->_parent->name;
-		$this->path = $this->_parent->path;
+		$this->parent = $parent;
+		$this->name = $this->parent->name;
+		$this->path = $this->parent->path;
 	}
 
 	/**
-	* Public function that creates a single instance
-	*/
-	public static function getInstance($parent) {
+	 * Public function that creates a single instance
+	 */
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 		self::$_instance = new self($parent);
 
@@ -38,7 +35,7 @@ class ShopCategoryHandler {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		$action = isset($params['sub_action']) ? $params['sub_action'] : null;
 
 		switch ($action) {
@@ -62,6 +59,14 @@ class ShopCategoryHandler {
 				$this->deleteCategory_Commit();
 				break;
 
+			case 'order':
+				$this->order_show();
+				break;
+
+			case 'order_save':
+				$this->order_save();
+				break;
+
 			default:
 				$this->showCategories();
 				break;
@@ -73,25 +78,35 @@ class ShopCategoryHandler {
 	 */
 	private function showCategories() {
 		$template = new TemplateHandler('category_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new' => url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add_category'),
+					'link_new'   => URL::make_hyperlink(
+										$this->parent->get_language_constant('add_category'),
 										window_Open( // on click open window
 											'shop_category_add',
 											400,
-											$this->_parent->getLanguageConstant('title_category_add'),
+											$this->parent->get_language_constant('title_category_add'),
 											true, true,
 											backend_UrlMake($this->name, 'categories', 'add')
+										)
+									),
+					'link_order' => URL::make_hyperlink(
+										$this->parent->get_language_constant('order_categories'),
+										window_Open( // on click open window
+											'shop_category_order',
+											300,
+											$this->parent->get_language_constant('title_category_order'),
+											true, true,
+											backend_UrlMake($this->name, 'categories', 'order')
 										)
 									)
 				);
 
- 		$template->registerTagHandler('cms:category', $this, 'tag_Category');
- 		$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+ 		$template->register_tag_handler('cms:category', $this, 'tag_Category');
+ 		$template->register_tag_handler('cms:category_list', $this, 'tag_CategoryList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -100,7 +115,7 @@ class ShopCategoryHandler {
 	 */
 	private function addCategory() {
 		$template = new TemplateHandler('category_add.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'parent'		=> isset($_REQUEST['parent']) ? fix_id($_REQUEST['parent']) : null,
@@ -109,16 +124,16 @@ class ShopCategoryHandler {
 				);
 
 		// register tag handlers
-		$template->registerTagHandler('cms:category', $this, 'tag_Category');
-		$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
+		$template->register_tag_handler('cms:category', $this, 'tag_Category');
+		$template->register_tag_handler('cms:category_list', $this, 'tag_CategoryList');
 
 		if (ModuleHandler::is_loaded('gallery')) {
-			$gallery = gallery::getInstance();
-			$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
+			$gallery = gallery::get_instance();
+			$template->register_tag_handler('cms:image_list', $gallery, 'tag_ImageList');
 		}
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -127,21 +142,21 @@ class ShopCategoryHandler {
 	 */
 	private function changeCategory() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCategoryManager::getInstance();
+		$manager = ShopCategoryManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			// create template
 			$template = new TemplateHandler('category_change.xml', $this->path.'templates/');
-			$template->setMappedModule($this->name);
+			$template->set_mapped_module($this->name);
 
 			// register tag handlers
-			$template->registerTagHandler('cms:category_list', $this, 'tag_CategoryList');
+			$template->register_tag_handler('cms:category_list', $this, 'tag_CategoryList');
 
 			if (ModuleHandler::is_loaded('gallery')) {
-				$gallery = gallery::getInstance();
-				$template->registerTagHandler('cms:image_list', $gallery, 'tag_ImageList');
+				$gallery = gallery::get_instance();
+				$template->register_tag_handler('cms:image_list', $gallery, 'tag_ImageList');
 			}
 
 			// prepare parameters
@@ -157,8 +172,8 @@ class ShopCategoryHandler {
 					);
 
 			// parse template
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -167,14 +182,14 @@ class ShopCategoryHandler {
 	 * Save new or changed category data
 	 */
 	private function saveCategory() {
-		$manager = ShopCategoryManager::getInstance();
+		$manager = ShopCategoryManager::get_instance();
 
 		$id = isset($_REQUEST['id']) ? fix_id($_REQUEST['id']) : null;
 		$data = array(
 				'parent'		=> fix_id($_REQUEST['parent']),
 				'text_id'		=> fix_chars($_REQUEST['text_id']),
-				'title'			=> $this->_parent->getMultilanguageField('title'),
-				'description'	=> $this->_parent->getMultilanguageField('description')
+				'title'			=> $this->parent->get_multilanguage_field('title'),
+				'description'	=> $this->parent->get_multilanguage_field('description')
 			);
 
 		// get image if set and gallery is activated
@@ -183,29 +198,29 @@ class ShopCategoryHandler {
 
 		if (is_null($id)) {
 			// write new data
-			$manager->insertData($data);
+			$manager->insert_item($data);
 
 			$window = 'shop_category_add';
 
 		} else {
 			// update existing data
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 
 			$window = 'shop_category_change';
 		}
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_category_saved'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_category_saved'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close($window).";".window_ReloadContent('shop_categories'),
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -214,23 +229,23 @@ class ShopCategoryHandler {
 	 */
 	private function deleteCategory() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCategoryManager::getInstance();
+		$manager = ShopCategoryManager::get_instance();
 
-		$title = $manager->getItemValue('title', array('id' => $id));
+		$title = $manager->get_item_value('title', array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->_parent->getLanguageConstant('message_category_delete'),
+					'message'		=> $this->parent->get_language_constant('message_category_delete'),
 					'name'			=> $title,
-					'yes_text'		=> $this->_parent->getLanguageConstant('delete'),
-					'no_text'		=> $this->_parent->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->parent->get_language_constant('delete'),
+					'no_text'		=> $this->parent->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'shop_category_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'delete_commit'),
@@ -240,8 +255,8 @@ class ShopCategoryHandler {
 					'no_action'		=> window_Close('shop_category_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -250,22 +265,63 @@ class ShopCategoryHandler {
 	 */
 	private function deleteCategory_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = ShopCategoryManager::getInstance();
+		$manager = ShopCategoryManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->_parent->getLanguageConstant('message_category_deleted'),
-					'button'	=> $this->_parent->getLanguageConstant('close'),
+					'message'	=> $this->parent->get_language_constant('message_category_deleted'),
+					'button'	=> $this->parent->get_language_constant('close'),
 					'action'	=> window_Close('shop_category_delete').";"
 									.window_ReloadContent('shop_categories')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show content of order editor for categories.
+	 */
+	private function order_show() {
+		$backend = backend::get_instance();
+
+		// get order editor and configure it
+		$editor = $backend->get_order_editor(ShopCategoryManager::get_instance());
+		$editor->set_form_action(backend_UrlMake($this->name, 'categories', 'order_save'));
+
+		// show interface
+		$editor->show_interface();
+	}
+
+	/**
+	 * Save category order.
+	 */
+	private function order_save() {
+		$backend = backend::get_instance();
+		$editor = $backend->get_order_editor(ShopCategoryManager::get_instance());
+		$saved = $editor->save_changes();
+
+		if ($saved)
+			$message = $this->parent->get_language_constant('message_category_order_saved'); else
+			$message = $this->parent->get_language_constant('message_category_order_not_saved');
+
+		// show message
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+					'message'	=> $message,
+					'button'	=> $this->parent->get_language_constant('close'),
+					'action'	=> window_Close('shop_category_order')
+				);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -276,7 +332,7 @@ class ShopCategoryHandler {
 	 * @param arrat $children
 	 */
 	public function tag_Category($tag_params, $children) {
-		$manager = ShopCategoryManager::getInstance();
+		$manager = ShopCategoryManager::get_instance();
 		$conditions = array();
 
 		// create conditions
@@ -287,12 +343,12 @@ class ShopCategoryHandler {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get item from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// create template handler
-		$template = $this->_parent->loadTemplate($tag_params, 'category.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
+		$template = $this->parent->load_template($tag_params, 'category.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:children', $this, 'tag_CategoryList');
 
 		// parse template
 		if (is_object($item)) {
@@ -300,37 +356,19 @@ class ShopCategoryHandler {
 			$thumbnail_url = '';
 
 			// get number of children for this category
-			$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
-
-			// get image urls
-			if (ModuleHandler::is_loaded('gallery')) {
-				$gallery = gallery::getInstance();
-				$gallery_manager = GalleryManager::getInstance();
-				$image = $gallery_manager->getSingleItem(
-												array('filename'),
-												array('id' => $item->image)
-											);
-
-				if (!is_null($image)) {
-					$image_url = $gallery->getImageURL($image);
-					$thumbnail_url = $gallery->getThumbnailURL($image);
-				}
-			}
-
+			$child_count = $manager->get_item_value('count(*)', array('parent' => $item->id));
 			$params = array(
-						'id'			=> $item->id,
-						'parent'		=> $item->parent,
-						'image_id'		=> $item->image,
-						'image'			=> $image_url,
-						'thumbnail'		=> $thumbnail_url,
-						'text_id'		=> $item->text_id,
-						'title'			=> $item->title,
-						'description'	=> $item->description,
-						'has_children'	=> $child_count > 0
+						'id'           => $item->id,
+						'parent'       => $item->parent,
+						'image'        => $item->image,
+						'text_id'      => $item->text_id,
+						'title'        => $item->title,
+						'description'  => $item->description,
+						'has_children' => $child_count > 0
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -344,12 +382,11 @@ class ShopCategoryHandler {
 	public function tag_CategoryList($tag_params, $children) {
 		global $language;
 
-		$manager = ShopCategoryManager::getInstance();
+		$manager = ShopCategoryManager::get_instance();
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
 		$item_category_ids = array();
-		$item_id = isset($tag_params['item_id']) ? fix_id($tag_params['item_id']) : null;
 
 		// create conditions
 		if (isset($tag_params['parent_id'])) {
@@ -359,7 +396,7 @@ class ShopCategoryHandler {
 		} else if (isset($tag_params['parent'])) {
 			// get parent id from specified text id
 			$text_id = fix_chars($tag_params['parent']);
-			$parent = $manager->getSingleItem(array('id'), array('text_id' => $text_id));
+			$parent = $manager->get_single_item(array('id'), array('text_id' => $text_id));
 
 			if (is_object($parent))
 				$conditions['parent'] = $parent->id; else
@@ -379,9 +416,10 @@ class ShopCategoryHandler {
 			$conditions['id'] = array('operator' => 'NOT IN', 'value' => $list);
 		}
 
+		$item_id = isset($tag_params['item']) ? fix_id($tag_params['item']) : null;
 		if (!is_null($item_id)) {
-			$membership_manager = ShopItemMembershipManager::getInstance();
-			$membership_items = $membership_manager->getItems(
+			$membership_manager = ShopItemMembershipManager::get_instance();
+			$membership_items = $membership_manager->get_items(
 												array('category'),
 												array('item' => $item_id)
 											);
@@ -389,6 +427,14 @@ class ShopCategoryHandler {
 			if (count($membership_items) > 0)
 				foreach($membership_items as $membership)
 					$item_category_ids[] = $membership->category;
+
+			if (isset($tag_params['contains_item']))
+				if ($tag_params['contains_item'] == 1)
+					$conditions['id'] = $item_category_ids; else
+					$conditions['id'] = array(
+							'operator' => 'NOT IN',
+							'value'    => $item_category_ids
+						);
 		}
 
 		// get order list
@@ -400,12 +446,12 @@ class ShopCategoryHandler {
 			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes'; else
 
 		// get items from database
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template handler
-		$template = $this->_parent->loadTemplate($tag_params, 'category_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('cms:children', $this, 'tag_CategoryList');
+		$template = $this->parent->load_template($tag_params, 'category_list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:children', $this, 'tag_CategoryList');
 
 		// initialize index
 		$index = 0;
@@ -417,48 +463,30 @@ class ShopCategoryHandler {
 				$thumbnail_url = '';
 
 				// get number of children for this category
-				$child_count = $manager->getItemValue('count(*)', array('parent' => $item->id));
-
-				// get image urls
-				if (ModuleHandler::is_loaded('gallery')) {
-					$gallery = gallery::getInstance();
-					$gallery_manager = GalleryManager::getInstance();
-					$image = $gallery_manager->getSingleItem(
-													array('filename'),
-													array('id' => $item->image)
-												);
-
-					if (!is_null($image)) {
-						$image_url = $gallery->getImageURL($image);
-						$thumbnail_url = $gallery->getThumbnailURL($image);
-					}
-				}
-
+				$child_count = $manager->get_item_value('count(*)', array('parent' => $item->id));
 				$params = array(
-							'id'			=> $item->id,
-							'index'			=> $index++,
-							'item_id'		=> $item_id,
-							'parent'		=> $item->parent,
-							'image_id'		=> $item->image,
-							'image'			=> $image_url,
-							'thumbnail'		=> $thumbnail_url,
-							'text_id'		=> $item->text_id,
-							'title'			=> $item->title,
-							'description'	=> $item->description,
-							'has_children'	=> $child_count > 0,
-							'level'			=> $level,
-							'in_category'	=> in_array($item->id, $item_category_ids) ? 1 : 0,
-							'selected'		=> isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
-							'item_change'	=> url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('change'),
+							'id'           => $item->id,
+							'index'        => $index++,
+							'item'         => $item_id,
+							'parent'       => $item->parent,
+							'image'        => $item->image,
+							'text_id'      => $item->text_id,
+							'title'        => $item->title,
+							'description'  => $item->description,
+							'has_children' => $child_count > 0,
+							'level'        => $level,
+							'in_category'  => in_array($item->id, $item_category_ids) ? 1 : 0,
+							'selected'     => isset($tag_params['selected']) ? fix_id($tag_params['selected']) : 0,
+							'item_change'  => URL::make_hyperlink(
+										$this->parent->get_language_constant('change'),
 										window_Open(
 											'shop_category_change', 	// window id
 											400,			// width
-											$this->_parent->getLanguageConstant('title_category_change'), // title
+											$this->parent->get_language_constant('title_category_change'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'change'),
@@ -466,16 +494,16 @@ class ShopCategoryHandler {
 											)
 										)
 									),
-							'item_delete'	=> url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('delete'),
+							'item_delete'  => URL::make_hyperlink(
+										$this->parent->get_language_constant('delete'),
 										window_Open(
 											'shop_category_delete', 	// window id
 											270,			// width
-											$this->_parent->getLanguageConstant('title_category_delete'), // title
+											$this->parent->get_language_constant('title_category_delete'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'delete'),
@@ -483,16 +511,16 @@ class ShopCategoryHandler {
 											)
 										)
 									),
-							'item_add'		=> url_MakeHyperlink(
-										$this->_parent->getLanguageConstant('add'),
+							'item_add'     => URL::make_hyperlink(
+										$this->parent->get_language_constant('add'),
 										window_Open(
 											'shop_category_add', 	// window id
 											400,			// width
-											$this->_parent->getLanguageConstant('title_category_add'), // title
+											$this->parent->get_language_constant('title_category_add'), // title
 											false, false,
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'categories'),
 												array('sub_action', 'add'),
@@ -502,8 +530,8 @@ class ShopCategoryHandler {
 									),
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}

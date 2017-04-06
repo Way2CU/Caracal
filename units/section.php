@@ -6,124 +6,196 @@
  * Author: Mladen Mijatov
  */
 
-class SectionHandler {
+final class SectionHandler {
 	private static $_instance;
-	public $engine;
-	public $active = false;
+
+	private static $data;
+	private static $params;
+	private static $matched_file = null;
+	private static $matched_pattern = null;
+	private static $matched_params = null;
+
+	const PREFIX = '^(/(?<language>[a-z]{2}))?';
+	const SUFFIX = '/?$';
+	const ROOT_KEY = '/';
 
 	/**
-	 * Constructor
+	 * Match template based on URL and extract parameters.
 	 */
-	private function __construct() {
+	public static function prepare() {
 		global $data_path;
+		$result = false;
 
-		$file = $data_path.'section.xml';
+		// prepare storage
+		self::$data = array();
+		self::$params = array();
 
-		if (file_exists($file)) {
-			$this->engine = new XMLParser(@file_get_contents($file), $file);
-			$this->engine->Parse();
-			$this->active = true;
+		// load section data
+		$raw_data = file_get_contents($data_path.'section.json');
+		if ($raw_data !== FALSE) {
+			// decode section file
+			self::$data = json_decode($raw_data, true);
+
+		} else {
+			// report loading error
+			error_log('Missing section file!');
+			return $result;
 		}
-	}
 
-	/**
-	 * Public function that creates a single instance
-	 */
-	public static function getInstance() {
-		if (!isset(self::$_instance))
-			self::$_instance = new self();
+		// report decoding error
+		if (self::$data == NULL) {
+			error_log('Invalid section file!');
+			return $result;
+		}
 
-		return self::$_instance;
-	}
+		// get query string
+		$request_path = URL::get_request_path();
 
-	/**
-	 * Retrieves file for parsing
-	 *
-	 * @param string $section
-	 * @param string $action
-	 * @param string $language
-	 * @return string
-	 */
-	public function getFile($section, $action, $language='') {
-		global $default_language;
+		// try to match whole query string
+		foreach (self::$data as $pattern => $template_file) {
+			// match different types of parameters
+			$match = preg_replace('|\{a:([\w\d-_]+)\}|iu', '(?<\1>.+)', $pattern);  // any characters, must be at the end
+			$match = preg_replace('|\{n:([\w\d-_]+)\}|iu', '(?<\1>-?[\d]+([\.,]\d+)?)', $match);  // numbers only
+			$match = preg_replace('|\{(s:)?([\w\d-_]+)\}|iu', '(?<\2>[\w\d-_\.]+)', $match);  // text ids only
 
-		$result = '';
+			$match = self::PREFIX.$match;
+			if ($pattern == self::ROOT_KEY)
+				$match .= '?';  // make root slash optional as well
+			$match .= self::SUFFIX;
+			$match = self::wrap_pattern($match);
 
-		if (!$this->active) return;
-		$action = (empty($action)) ? '_default' : $action;
-		$language = (empty($language)) ? $default_language : $language;
+			// store pattern params for later use
+			preg_match_all('|\{(\w:)?([\w\d_-]+)\}|ius', $pattern, $params);
+			self::$params[$pattern] = $params;
 
-		$xml_languages = null;
-		$xml_actions = null;
-
-		// cycle through xml file and find the apropriate action
-		foreach ($this->engine->document->section as $xml_section)
-			if ($xml_section->tagAttrs['name'] == $section) {
-				$xml_languages = $xml_section->language;
-				break;
+			// successfully matched query string to template
+			if (!$result && preg_match($match, $request_path, $matches)) {
+				self::$matched_file = $template_file;
+				self::$matched_pattern = $match;
+				self::$matched_params = $params;
+				$result = true;
 			}
-
-		if (!is_null($xml_languages) && count($xml_languages) > 0)
-			foreach ($xml_languages as $xml_language)
-				if ($xml_language->tagAttrs['name'] == $language || $xml_language->tagAttrs['name'] == 'all') {
-					if (array_key_exists('file', $xml_language->tagAttrs))
-						$result = $xml_language->tagAttrs['file']; else
-						$xml_actions = $xml_language->action;
-
-					break;
-				}
-
-		if (empty($result) && !is_null($xml_actions) && count($xml_actions) > 0)
-			foreach ($xml_actions as $xml_action)
-				if ($xml_action->tagAttrs['name'] == $action) {
-					$result = $xml_action->tagAttrs['file'];
-					break;
-				}
+		}
 
 		return $result;
 	}
 
 	/**
-	 * Transfers control to preconfigured template.
+	 * Return matched template file based on query string.
 	 *
-	 * @param string $section
-	 * @param string $action
-	 * @param string $language
+	 * @return string
 	 */
-	public function transferControl($section, $action, $language='') {
-		$file = '';
+	public static function get_matched_file() {
+		return self::$matched_file;
+	}
 
-		if (!_AJAX_REQUEST)
-			$file = $this->getFile($section, $action, $language);
+	/**
+	 * Return regular expression template used to match template file.
+	 *
+	 * @return string
+	 */
+	public static function get_matched_pattern() {
+		return self::$matched_pattern;
+	}
 
-		if (_AJAX_REQUEST || empty($file)) {
-			// request came from script, transfer control to modules
+	/**
+	 * Get parameter names for matched pattern.
+	 *
+	 * @return string
+	 */
+	public static function get_matched_params() {
+		return self::$matched_params;
+	}
+
+	/**
+	 * Return list of matched patterns for specified template file.
+	 *
+	 * @param string $file
+	 * @return string
+	 */
+	public static function get_patterns_for_file($file=null) {
+		$result = array();
+
+		// collect templates
+		if (is_null($file)) {
+			$result = self::$params;
+		} else {
+			foreach (self::$data as $pattern => $template_file)
+				if ($file == $template_file)
+					$result[$pattern] = self::$params[$pattern];
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Find matching template and transfer control to it.
+	 */
+	public static function transfer_control() {
+		$section = isset($_REQUEST['section']) ? escape_chars($_REQUEST['section']) : null;
+
+		// transfer call to template parser
+		if (is_null($section)) {
+			// make sure we have matched page template
+			if (is_null(self::$matched_file))
+				return;
+
+			// create template handler
+			$template = new TemplateHandler(self::$matched_file);
+			$template->set_top_level();
+			$template->parse();
+
+		// transfer call to modules
+		} else {
+			// call named module
 			if (ModuleHandler::is_loaded($section)) {
-				$module = call_user_func(array(escape_chars($section), 'getInstance'));
-				$params = array('action' => $action);
+				$module = call_user_func(array($section, 'get_instance'));
+
+				// prepare parameters
+				$params = array();
+				if (isset($_REQUEST['action']))
+					$params['action'] = fix_chars($_REQUEST['action']); else
+					$params['action'] = '_default';
 
 				// transfer control to module
-				$module->transferControl($params, array());
+				$module->transfer_control($params, array());
 
+			// call backend and allow it to transfer control
 			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {
-				// transfer control to backend modules
-				$module = backend::getInstance();
+				$module = call_user_func(array('backend', 'get_instance'));
 				$params = array('action' => 'transfer_control');
 
-				// transfer control to module
-				$module->transferControl($params, array());
-
-			} else {
-				// no matching module exist, try loading template
-				$template = new TemplateHandler($file);
-				$template->parse();
+				// transfer control to backend module
+				$module->transfer_control($params, array());
 			}
-
-		} else {
-			// section file is defined, load and parse it
-			$template = new TemplateHandler($file);
-			$template->parse();
 		}
+	}
+
+	/**
+	 * Show information for specified error code.
+	 *
+	 * @param integer $error_code
+	 */
+	public static function show_error_page($error_code) {
+		global $system_template_path;
+
+		// get page error template
+		if (array_key_exists($error_code, self::$data))
+			$template = new TemplateHandler(self::$data[$error_code]); else
+			$template = new TemplateHandler($error_code.'.xml', $system_template_path);
+
+		// parse template
+		$template->parse();
+	}
+
+	/**
+	 * Wrap pattern in match safe delimiters and apply flags.
+	 *
+	 * @param string
+	 * @return string
+	 */
+	public static function wrap_pattern($pattern) {
+		return '|'.$pattern.'|ius';
 	}
 }
 

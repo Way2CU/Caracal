@@ -2,6 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<div id="transaction_details_notebook" class="box left" style="width: 300px;">
+		<!-- General tab -->
 		<div>
 			<label>
 				<span><cms:text constant="label_full_name" module="shop"/></span>
@@ -210,7 +211,28 @@
 				</textarea>
 			</label>
 		</div>
+
+		<!-- Promotions tab -->
+		<div>
+			<div class="scrollable_list">
+				<div class="list_header">
+					<span class="column">
+						<cms:text constant="column_promotion_discounts" module="shop"/>
+					</span>
+				</div>
+
+				<div class="list_content" style="height: 400px">
+					<cms:applied_promotions
+						transaction="$_REQUEST['id']"
+						template="transaction_promotion_list_item.xml"
+						local="1"
+						cms:eval="transaction"
+						/>
+				</div>
+			</div>
+		</div>
 	</div>
+
 	<div class="scrollable_list box right" style="width: 475px;">
 		<div class="list_header">
 			<span class="column" style="width: 220px;">
@@ -254,9 +276,12 @@
 	</div>
 
 	<script type="text/javascript">
+		var text = language_handler.getTextArray('shop', ['tab_general', 'tab_shipping', 'tab_promotions']);
+
 		var notebook = new Notebook('transaction_details_notebook');
 		notebook
-			.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_shipping'));
+		.setPageTitle(0, text['tab_general'])
+		.setPageTitle(1, text['tab_shipping'])
+		.setPageTitle(2, text['tab_promotions']);
 	</script>
 </document>

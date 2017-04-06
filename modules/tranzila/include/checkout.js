@@ -14,7 +14,7 @@ var Site = Site || {};
 Site.configure_tranzila_checkout = function() {
 	var form = $('div#checkout form');
 	var iframe = $('<iframe>');
-	var dialog = new Dialog();
+	var dialog = new Caracal.Dialog();
 
 	// configure iframe
 	iframe
@@ -28,17 +28,17 @@ Site.configure_tranzila_checkout = function() {
 
 	// configure dialog
 	dialog
-		.setTitle(language_handler.getText('tranzila', 'payment_method_title'))
-		.setContent(iframe);
+		.set_title(language_handler.getText('tranzila', 'payment_method_title'))
+		.set_content(iframe);
 
 	if (!Site.is_mobile())
-		dialog.setSize(400, 250); else
-		dialog.setSize('90vw', 250);
+		dialog.set_size(400, 250); else
+		dialog.set_size('90vw', 250);
 
 	// show dialog when form is submitted
 	form.on('submit', function(event) {
 		// show tranzila page
-		dialog.show();
+		dialog.open();
 	});
 };
 

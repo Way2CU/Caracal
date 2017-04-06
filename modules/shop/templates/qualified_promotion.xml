@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<label class="radio">
+		<input
+			type="radio"
+			name="qualified_promotion"
+			value="$params['name']"
+			cms:eval="value"
+			/>
+		<span><cms:var param="title"/></span>
+	</label>
+</document>

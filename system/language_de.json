@@ -14,8 +14,8 @@
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
     "import": "Import",
-    "message_license_error": "You are not authorized to use services from this site!",
     "message_server_error": "Server experienced the following error:",
+    "message_client_error_404": "Page or file you requested could not be found. Sorry about that.",
     "new": "New",
     "next": "Next",
     "open": "Open",
@@ -31,5 +31,6 @@
     "submit": "Submit",
     "upload": "Upload",
     "refresh": "Refresh",
-    "reload": "Reload"
+    "reload": "Reload",
+    "back_to_home": "Back to home page"
 }

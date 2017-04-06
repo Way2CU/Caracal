@@ -44,7 +44,7 @@ class PayPal_Direct extends PaymentMethod {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance($parent) {
+	public static function get_instance($parent) {
 		if (!isset(self::$_instance))
 			self::$_instance = new self($parent);
 
@@ -82,7 +82,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_url() {
-		return url_Make('direct-checkout', 'paypal');
+		return URL::make_query('paypal', 'direct-checkout');
 	}
 
 	/**
@@ -90,7 +90,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_title() {
-		return $this->parent->getLanguageConstant('direct_method_title');
+		return $this->parent->get_language_constant('direct_method_title');
 	}
 
 	/**
@@ -98,7 +98,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_icon_url() {
-		return url_GetFromFilePath($this->parent->path.'images/icon.png');
+		return URL::from_file_path($this->parent->path.'images/icon.png');
 	}
 
 	/**
@@ -106,7 +106,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return string
 	 */
 	public function get_image_url() {
-		return url_GetFromFilePath($this->parent->path.'images/direct_image.png');
+		return URL::from_file_path($this->parent->path.'images/direct_image.png');
 	}
 
 	/**
@@ -114,7 +114,7 @@ class PayPal_Direct extends PaymentMethod {
 	 * @return array
 	 */
 	public function get_recurring_plans() {
-		$method = PayPal_Express::getInstance($this->parent);
+		$method = PayPal_Express::get_instance($this->parent);
 		return $method->get_recurring_plans();
 	}
 
@@ -168,8 +168,8 @@ class PayPal_Direct extends PaymentMethod {
 	 */
 	public function new_recurring_payment($data, $billing_information, $plan_name, $return_url, $cancel_url) {
 		$result = '';
-		$manager = PayPal_PlansManager::getInstance();
-		$plan = $manager->getSingleItem($manager->getFieldNames(), array('text_id' => $plan_name));
+		$manager = PayPal_PlansManager::get_instance();
+		$plan = $manager->get_single_item($manager->get_field_names(), array('text_id' => $plan_name));
 
 		if (is_object($plan)) {
 			$params = array(
@@ -206,7 +206,7 @@ class PayPal_Direct extends PaymentMethod {
 	public function completeCheckout() {
 		global $language;
 
-		$shop = shop::getInstance();
+		$shop = shop::get_instance();
 		$return_url = fix_chars($_REQUEST['return_url']);
 		$recurring = isset($_REQUEST['type']) && $_REQUEST['type'] == 'recurring';
 		$transaction_uid = $_SESSION['transaction']['uid'];
@@ -227,9 +227,9 @@ class PayPal_Direct extends PaymentMethod {
 			$request_id = 0;
 			$plan_name = $_SESSION['recurring_plan'];
 
-			$manager = PayPal_PlansManager::getInstance();
-			$plan = $manager->getSingleItem(
-									$manager->getFieldNames(),
+			$manager = PayPal_PlansManager::get_instance();
+			$plan = $manager->get_single_item(
+									$manager->get_field_names(),
 									array('text_id' => $plan_name)
 								);
 			$current_plan = $shop->getRecurringPlan();

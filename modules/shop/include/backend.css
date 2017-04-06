@@ -19,66 +19,87 @@ div.window label.property-selector.ml_array ~ div.property-container label.prope
 	display: block;
 }
 
-div.window div.scrollable_list div.list_item small {
-	display: block;
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height 0.3s;
-}
 
-div.window div.scrollable_list div.list_item small span.property {
-	display: block;
-}
-
-div.window div.scrollable_list div.list_item small span.property:first-of-type {
-	padding-top: 5px;
-}
-
-div.window div.scrollable_list div.list_item small span.value {
-	display: inline-block;
-	padding-left: 10px;
-}
-
-html[dir=rtl] div.window div.scrollable_list div.list_item small span.value {
-	padding-left: 0;
-	padding-right: 10px;
-}
-
-div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input {
+/**
+ * Expandable list item.
+ */
+div.window div.list_item.with_details input.trigger {
 	display: none;
 }
 
-div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label {
-	margin-bottom: 0;
+div.window div.list_item.with_details label.trigger {
+	display: inline-block;
+	float: left;
 }
 
-div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label:before {
+html[dir=rtl] div.window div.list_item.with_details label.trigger {
+	float: right;
+}
+
+div.window div.list_item.with_details input.trigger + label.trigger:before,
+div.window div.list_item.with_details input.trigger + span label.trigger:before {
 	display: inline-block;
 	content: '';
 	width: 0;
 	height: 0;
 	line-height: 0;
-	border: 5px solid transparent;
+	border: 0.6em solid transparent;
 	border-left-color: #333333;
 
 	transition: transform 0.3s;
 	transform-origin: 20% 50%;
 }
 
-html[dir=rtl] div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input + label:before {
+html[dir=rtl] div.window div.list_item.with_details input.trigger + label.trigger:before,
+html[dir=rtl] div.window div.list_item.with_details input.trigger + span label.trigger:before {
 	border-color: transparent;
 	border-right-color: #333333;
 	transform-origin: 80% 50%;
 }
 
-div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+div.window div.list_item.with_details input.trigger:checked ~ label.trigger:before,
+div.window div.list_item.with_details input.trigger:checked ~ span label.trigger:before {
 	transform: rotate(90deg);
 }
 
-html[dir=rtl] div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ label:before {
+html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ label.trigger:before,
+html[dir=rtl] div.window div.list_item.with_details input.trigger[type=checkbox]:checked ~ span label.trigger:before {
 	transform: rotate(-90deg);
 }
 
-div.window[id^=shop_transaction_details] div.scrollable_list div.list_item input[type=checkbox]:checked ~ small {
+div.window div.list_item.with_details div.details,
+div.window div.list_item.with_details small.details {
+	display: block;
+	max-height: 0;
+	padding: 0;
+	overflow: hidden;
+	transition: max-height 0.3s;
+}
+
+div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ div.details:nth-of-type(1) {
+	display: block;
+	max-height: initial;
+}
+
+div.window div.content div.list_item.with_details input[type=checkbox]:checked ~ small.details:nth-of-type(1) {
+	display: block;
 	max-height: 100px;
+}
+
+div.window div.list_item.with_details small.details span.property {
+	display: block;
+}
+
+div.window div.list_item.with_details small.details span.property:first-of-type {
+	padding-top: 5px;
+}
+
+div.window div.list_item.with_details small.details span.value {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+html[dir=rtl] div.window div.list_item.with_details small.details span.value {
+	padding-left: 0;
+	padding-right: 10px;
 }

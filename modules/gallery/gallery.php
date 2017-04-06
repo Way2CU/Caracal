@@ -59,50 +59,42 @@ class gallery extends Module {
 
 		// load module style and scripts
 		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::getInstance();
+			$head_tag = head_tag::get_instance();
 
 			// load backend files if needed
 			if ($section == 'backend') {
 				$head_tag->addTag('link',
 						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/gallery.css'),
+							'href'	=> URL::from_file_path($this->path.'include/gallery.css'),
 							'rel'	=> 'stylesheet',
 							'type'	=> 'text/css'
 						));
 				$head_tag->addTag('script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/gallery_toolbar.js'),
+							'src'	=> URL::from_file_path($this->path.'include/gallery_toolbar.js'),
 							'type'	=> 'text/javascript'
 						));
 				$head_tag->addTag('script',
 						array(
-							'src'	=> url_GetFromFilePath($this->path.'include/backend.js'),
+							'src'	=> URL::from_file_path($this->path.'include/backend.js'),
 							'type'	=> 'text/javascript'
-						));
-
-				if (Language::isRTL())
-					$head_tag->addTag('link',
-						array(
-							'href'	=> url_GetFromFilePath($this->path.'include/gallery_rtl.css'),
-							'rel'	=> 'stylesheet',
-							'type'	=> 'text/css'
 						));
 
 			} else {
 				// load frontend scripts
 				$head_tag->addTag('script',
 							array(
-								'src'	=> url_GetFromFilePath($this->path.'include/gallery.js'),
+								'src'	=> URL::from_file_path($this->path.'include/gallery.js'),
 								'type'	=> 'text/javascript'
 							));
 				$head_tag->addTag('script',
 							array(
-								'src' 	=> url_GetFromFilePath($this->path.'include/lightbox.js'),
+								'src' 	=> URL::from_file_path($this->path.'include/lightbox.js'),
 								'type'	=> 'text/javascript'
 							));
 				$head_tag->addTag('link',
 							array(
-								'href'	=> url_GetFromFilePath($this->path.'include/lightbox.css'),
+								'href'	=> URL::from_file_path($this->path.'include/lightbox.css'),
 								'rel'	=> 'stylesheet',
 								'type'	=> 'text/css'
 							));
@@ -111,22 +103,22 @@ class gallery extends Module {
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$gallery_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_gallery'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_gallery'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_images'),
-								url_GetFromFilePath($this->path.'images/images.svg'),
+								$this->get_language_constant('menu_images'),
+								URL::from_file_path($this->path.'images/images.svg'),
 								window_Open( // on click open window
 											'gallery_images',
 											670,
-											$this->getLanguageConstant('title_images'),
+											$this->get_language_constant('title_images'),
 											true, true,
 											backend_UrlMake($this->name, 'images')
 										),
@@ -134,12 +126,12 @@ class gallery extends Module {
 							));
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_groups'),
-								url_GetFromFilePath($this->path.'images/groups.svg'),
+								$this->get_language_constant('menu_groups'),
+								URL::from_file_path($this->path.'images/groups.svg'),
 								window_Open( // on click open window
 											'gallery_groups',
 											450,
-											$this->getLanguageConstant('title_groups'),
+											$this->get_language_constant('title_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										),
@@ -147,12 +139,12 @@ class gallery extends Module {
 							));
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
-								$this->getLanguageConstant('menu_containers'),
-								url_GetFromFilePath($this->path.'images/containers.svg'),
+								$this->get_language_constant('menu_containers'),
+								URL::from_file_path($this->path.'images/containers.svg'),
 								window_Open( // on click open window
 											'gallery_containers',
 											490,
-											$this->getLanguageConstant('title_containers'),
+											$this->get_language_constant('title_containers'),
 											true, true,
 											backend_UrlMake($this->name, 'containers')
 										),
@@ -166,7 +158,7 @@ class gallery extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -179,7 +171,7 @@ class gallery extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params, $children) {
+	public function transfer_control($params, $children) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -294,6 +286,10 @@ class gallery extends Module {
 					$this->deleteGroup_Commit();
 					break;
 
+				case 'groups_set_thumbnail':
+					$this->set_group_thumbnail();
+					break;
+
 				// ---
 
 				case 'containers':
@@ -336,10 +332,10 @@ class gallery extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
+	public function initialize() {
 		global $db;
 
-		$list = Language::getLanguages(false);
+		$list = Language::get_languages(false);
 
 		$sql = "
 			CREATE TABLE `gallery` (
@@ -406,14 +402,14 @@ class gallery extends Module {
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
 		$db->query($sql);
 
-		if (!array_key_exists('image_extensions', $this->settings))
-			$this->saveSetting('image_extensions', 'jpg,jpeg,png');
+		// save default supported extensions
+		$this->save_setting('image_extensions', 'jpg,jpeg,png,gif');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function cleanup() {
 		global $db;
 
 		$tables = array('gallery', 'gallery_groups', 'gallery_containers', 'gallery_group_membership');
@@ -426,46 +422,46 @@ class gallery extends Module {
 	private function showImages() {
 		// load template
 		$template = new TemplateHandler('images_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
-		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		// upload image menu item
-		$url_new = url_Make(
-						'transfer_control',
+		$url_new = URL::make_query(
 						_BACKEND_SECTION_,
+						'transfer_control',
 						array('backend_action', 'images_upload'),
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
 
-		$link_new = url_MakeHyperlink(
-					$this->getLanguageConstant('upload_images'),
+		$link_new = URL::make_hyperlink(
+					$this->get_language_constant('upload_images'),
 					window_Open(
 						'gallery_images_upload',
 						400,
-						$this->getLanguageConstant('title_images_upload'),
+						$this->get_language_constant('title_images_upload'),
 						true, false,
 						$url_new
 					)
 				);
 
 		// bulk upload image menu item
-		$url_new_bulk = url_Make(
-						'transfer_control',
+		$url_new_bulk = URL::make_query(
 						_BACKEND_SECTION_,
+						'transfer_control',
 						array('backend_action', 'images_upload_bulk'),
 						array('module', $this->name),
 						array('group', isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0)
 					);
 
-		$link_new_bulk = url_MakeHyperlink(
-					$this->getLanguageConstant('upload_images_bulk'),
+		$link_new_bulk = URL::make_hyperlink(
+					$this->get_language_constant('upload_images_bulk'),
 					window_Open(
 						'gallery_images_upload_bulk',
 						400,
-						$this->getLanguageConstant('title_images_upload_bulk'),
+						$this->get_language_constant('title_images_upload_bulk'),
 						true, false,
 						$url_new_bulk
 					)
@@ -475,20 +471,20 @@ class gallery extends Module {
 		$params = array(
 					'link_new'		=> $link_new,
 					'link_new_bulk'	=> $link_new_bulk,
-					'link_groups'	=> url_MakeHyperlink(
-										$this->getLanguageConstant('groups'),
+					'link_groups'	=> URL::make_hyperlink(
+										$this->get_language_constant('groups'),
 										window_Open( // on click open window
 											'gallery_groups',
 											500,
-											$this->getLanguageConstant('title_groups'),
+											$this->get_language_constant('title_groups'),
 											true, true,
 											backend_UrlMake($this->name, 'groups')
 										)
 									)
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -497,16 +493,16 @@ class gallery extends Module {
 	 */
 	private function uploadImage() {
 		$template = new TemplateHandler('images_upload.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'images_upload_save'),
 					'cancel_action'	=> window_Close('gallery_images_upload')
 				);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -515,16 +511,16 @@ class gallery extends Module {
 	 */
 	private function uploadMultipleImages() {
 		$template = new TemplateHandler('images_bulk_upload.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'images_upload_save'),
 					'cancel_action'	=> window_Close('gallery_images_upload_bulk')
 				);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -532,7 +528,7 @@ class gallery extends Module {
 	 * Save uploaded images
 	 */
 	private function uploadImage_Save() {
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		$multiple_images = isset($_REQUEST['multiple_upload']) ? $_REQUEST['multiple_upload'] == 1 : false;
 		$group = fix_id($_REQUEST['group']);
@@ -545,7 +541,7 @@ class gallery extends Module {
 			$result = $this->createImage('image');
 
 			if (!$result['error'])
-				$manager->updateData(
+				$manager->update_items(
 						array('group'	=> $group),
 						array('id'		=> $result['id'])
 					);
@@ -553,8 +549,8 @@ class gallery extends Module {
 		} else {
 			// store single uploaded image
 			$text_id = fix_chars($_REQUEST['text_id']);
-			$title = $this->getMultilanguageField('title');
-			$description = $this->getMultilanguageField('description');
+			$title = $this->get_multilanguage_field('title');
+			$description = $this->get_multilanguage_field('description');
 			$window_name = 'gallery_images_upload';
 
 			$result = $this->createImage('image');
@@ -569,21 +565,21 @@ class gallery extends Module {
 							'slideshow'		=> $slideshow,
 						);
 
-				$manager->updateData($data, array('id' => $result['id']));
+				$manager->update_items($data, array('id' => $result['id']));
 			}
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $result['message'],
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_images')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -592,13 +588,13 @@ class gallery extends Module {
 	 */
 	private function changeImage() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('images_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		$params = array(
 					'id'			=> $item->id,
@@ -615,8 +611,8 @@ class gallery extends Module {
 					'cancel_action'	=> window_Close('gallery_images_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -624,15 +620,15 @@ class gallery extends Module {
 	 * Save changed image data
 	 */
 	private function saveImage() {
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		$id = fix_id($_REQUEST['id']);
 		$text_id = fix_chars($_REQUEST['text_id']);
-		$title = $this->getMultilanguageField('title');
+		$title = $this->get_multilanguage_field('title');
 		$group = !empty($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 'null';
-		$description = $this->getMultilanguageField('description');
-		$visible = isset($_REQUEST['visible']) && ($_REQUEST['visible'] == 'on' || $_REQUEST['visible'] == '1') ? 1 : 0;
-		$slideshow = isset($_REQUEST['slideshow']) && ($_REQUEST['slideshow'] == 'on' || $_REQUEST['slideshow'] == '1') ? 1 : 0;
+		$description = $this->get_multilanguage_field('description');
+		$visible = $this->get_boolean_field('visible') ? 1 : 0;
+		$slideshow = $this->get_boolean_field('slideshow') ? 1 : 0;
 
 		$data = array(
 					'text_id'		=> $text_id,
@@ -643,19 +639,19 @@ class gallery extends Module {
 					'slideshow'		=> $slideshow
 				);
 
-		$manager->updateData($data, array('id' => $id));
+		$manager->update_items($data, array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_image_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_image_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('gallery_images_change').";".window_ReloadContent('gallery_images')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -666,23 +662,23 @@ class gallery extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
-		$item = $manager->getSingleItem(array('title'), array('id' => $id));
+		$item = $manager->get_single_item(array('title'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_image_delete"),
+					'message'		=> $this->get_language_constant("message_image_delete"),
 					'name'			=> $item->title[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'gallery_images_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'images_delete_commit'),
 												array('id', $id)
@@ -691,8 +687,8 @@ class gallery extends Module {
 					'no_action'		=> window_Close('gallery_images_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -702,21 +698,21 @@ class gallery extends Module {
 	private function deleteImage_Commit() {
 		$id = fix_id($_REQUEST['id']);
 
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_image_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_image_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_images_delete').";".window_ReloadContent('gallery_images')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -725,22 +721,22 @@ class gallery extends Module {
 	 */
 	private function showGroups() {
 		$template = new TemplateHandler('groups_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('create_group'),
+										$this->get_language_constant('create_group'),
 										'gallery_groups_create', 400,
-										$this->getLanguageConstant('title_groups_create'),
+										$this->get_language_constant('title_groups_create'),
 										true, false,
 										$this->name,
 										'groups_create'
 									),
 					);
 
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -749,15 +745,15 @@ class gallery extends Module {
 	 */
 	private function createGroup() {
 		$template = new TemplateHandler('groups_create.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
 					'cancel_action'	=> window_Close('gallery_groups_create')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -766,12 +762,12 @@ class gallery extends Module {
 	 */
 	private function changeGroup() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryGroupManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('groups_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'			=> $item->id,
@@ -783,9 +779,9 @@ class gallery extends Module {
 					'cancel_action'	=> window_Close('gallery_groups_change')
 				);
 
-		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -797,36 +793,36 @@ class gallery extends Module {
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> $this->getMultilanguageField('name'),
-			'description' 	=> $this->getMultilanguageField('description'),
+			'name' 			=> $this->get_multilanguage_field('name'),
+			'description' 	=> $this->get_multilanguage_field('description'),
 		);
 
 		if (isset($_REQUEST['thumbnail']))
 			$data['thumbnail'] = isset($_REQUEST['thumbnail']) ? fix_id($_REQUEST['thumbnail']) : null;
 
-		$manager = GalleryGroupManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_groups_change';
-			$message = $this->getLanguageConstant('message_group_changed');
+			$message = $this->get_language_constant('message_group_changed');
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'gallery_groups_create';
-			$message = $this->getLanguageConstant('message_group_created');
+			$message = $this->get_language_constant('message_group_created');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_groups')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -837,23 +833,23 @@ class gallery extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryGroupManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant("message_group_delete"),
+					'message'		=> $this->get_language_constant("message_group_delete"),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant("delete"),
-					'no_text'		=> $this->getLanguageConstant("cancel"),
+					'yes_text'		=> $this->get_language_constant("delete"),
+					'no_text'		=> $this->get_language_constant("cancel"),
 					'yes_action'	=> window_LoadContent(
 											'gallery_groups_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'groups_delete_commit'),
 												array('id', $id)
@@ -862,8 +858,8 @@ class gallery extends Module {
 					'no_action'		=> window_Close('gallery_groups_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -872,23 +868,74 @@ class gallery extends Module {
 	 */
 	private function deleteGroup_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryManager::getInstance();
-		$group_manager = GalleryGroupManager::getInstance();
+		$manager = GalleryManager::get_instance();
+		$group_manager = GalleryGroupManager::get_instance();
 
-		$manager->deleteData(array('group' => $id));
-		$group_manager->deleteData(array('id' => $id));
+		$manager->delete_items(array('group' => $id));
+		$group_manager->delete_items(array('id' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_group_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_group_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_groups_delete').";".window_ReloadContent('gallery_groups').";".window_ReloadContent('gallery_images')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Set specified image as thumbnail for its parent group.
+	 */
+	private function set_group_thumbnail() {
+		global $language;
+
+		$image_id = fix_id($_REQUEST['id']);
+		$manager = GalleryManager::get_instance();
+		$group_manager = GalleryGroupManager::get_instance();
+
+		// get image from the database
+		$image = $manager->get_single_item(array('group'), array('id' => $image_id));
+		if (!is_object($image))
+			return;
+
+		if (!is_null($image->group)) {
+			// set image as thumbnail for its parent group
+			$group = $group_manager->get_single_item(array('name'), array('id' => $image->group));
+			if (!is_object($group))
+				return;
+
+			// update group thumbnail
+			$group_manager->update_items(array('thumbnail' => $image_id), array('id' => $image->group));
+
+			// prepare message template
+			$template = new TemplateHandler('message_with_name.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
+
+			$params = array(
+						'message' => $this->get_language_constant('message_group_thumbnail_set'),
+						'name'    => $group->name[$language],
+					);
+
+		} else {
+			// image doesn't belong to a group, show error message
+			$template = new TemplateHandler('message.xml', $this->path.'templates/');
+			$template->set_mapped_module($this->name);
+
+			$params = array(
+						'message' => $this->get_language_constant('message_group_thumbnail_set_error')
+					);
+		}
+
+		$params['button'] = $this->get_language_constant('close');
+		$params['action'] = window_Close('gallery_groups_set_thumbnail');
+
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -897,22 +944,22 @@ class gallery extends Module {
 	 */
 	private function showContainers() {
 		$template = new TemplateHandler('containers_list.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'link_new'		=> window_OpenHyperlink(
-										$this->getLanguageConstant('create_container'),
+					'link_new' => window_OpenHyperlink(
+										$this->get_language_constant('create_container'),
 										'gallery_containers_create', 400,
-										$this->getLanguageConstant('title_containers_create'),
+										$this->get_language_constant('title_containers_create'),
 										true, false,
 										$this->name,
 										'containers_create'
 									),
 					);
 
-		$template->registerTagHandler('_container_list', $this, 'tag_ContainerList');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_container_list', $this, 'tag_ContainerList');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -921,15 +968,15 @@ class gallery extends Module {
 	 */
 	private function createContainer() {
 		$template = new TemplateHandler('containers_create.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'containers_save'),
 					'cancel_action'	=> window_Close('gallery_containers_create')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -938,12 +985,12 @@ class gallery extends Module {
 	 */
 	private function changeContainer() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		$template = new TemplateHandler('containers_change.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'id'			=> $item->id,
@@ -954,8 +1001,8 @@ class gallery extends Module {
 					'cancel_action'	=> window_Close('gallery_containers_change')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -967,33 +1014,33 @@ class gallery extends Module {
 
 		$data = array(
 			'text_id'		=> fix_chars($_REQUEST['text_id']),
-			'name' 			=> $this->getMultilanguageField('name'),
-			'description' 	=> $this->getMultilanguageField('description'),
+			'name' 			=> $this->get_multilanguage_field('name'),
+			'description' 	=> $this->get_multilanguage_field('description'),
 		);
 
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 
 		if (!is_null($id)) {
-			$manager->updateData($data, array('id' => $id));
+			$manager->update_items($data, array('id' => $id));
 			$window_name = 'gallery_containers_change';
-			$message = $this->getLanguageConstant('message_container_changed');
+			$message = $this->get_language_constant('message_container_changed');
 		} else {
-			$manager->insertData($data);
+			$manager->insert_item($data);
 			$window_name = 'gallery_containers_create';
-			$message = $this->getLanguageConstant('message_container_created');
+			$message = $this->get_language_constant('message_container_created');
 		}
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'message'	=> $message,
-					'button'	=> $this->getLanguageConstant('close'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close($window_name).";".window_ReloadContent('gallery_containers')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1004,23 +1051,23 @@ class gallery extends Module {
 		global $language;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 
-		$item = $manager->getSingleItem(array('name'), array('id' => $id));
+		$item = $manager->get_single_item(array('name'), array('id' => $id));
 
 		$template = new TemplateHandler('confirmation.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'		=> $this->getLanguageConstant('message_container_delete'),
+					'message'		=> $this->get_language_constant('message_container_delete'),
 					'name'			=> $item->name[$language],
-					'yes_text'		=> $this->getLanguageConstant('delete'),
-					'no_text'		=> $this->getLanguageConstant('cancel'),
+					'yes_text'		=> $this->get_language_constant('delete'),
+					'no_text'		=> $this->get_language_constant('cancel'),
 					'yes_action'	=> window_LoadContent(
 											'gallery_containers_delete',
-											url_Make(
-												'transfer_control',
+											URL::make_query(
 												'backend_module',
+												'transfer_control',
 												array('module', $this->name),
 												array('backend_action', 'containers_delete_commit'),
 												array('id', $id)
@@ -1029,8 +1076,8 @@ class gallery extends Module {
 					'no_action'		=> window_Close('gallery_containers_delete')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1039,23 +1086,23 @@ class gallery extends Module {
 	 */
 	private function deleteContainer_Commit() {
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryContainerManager::getInstance();
-		$membership_manager = GalleryGroupMembershipManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
 
-		$manager->deleteData(array('id' => $id));
-		$membership_manager->deleteData(array('container' => $id));
+		$manager->delete_items(array('id' => $id));
+		$membership_manager->delete_items(array('container' => $id));
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_container_deleted"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_container_deleted"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_containers_delete').";".window_ReloadContent('gallery_containers')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1066,7 +1113,7 @@ class gallery extends Module {
 		$container_id = fix_id($_REQUEST['id']);
 
 		$template = new TemplateHandler('containers_groups.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 					'container'		=> $container_id,
@@ -1074,9 +1121,9 @@ class gallery extends Module {
 					'cancel_action'	=> window_Close('gallery_containers_groups')
 				);
 
-		$template->registerTagHandler('_container_groups', $this, 'tag_ContainerGroups');
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->register_tag_handler('_container_groups', $this, 'tag_ContainerGroups');
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1085,7 +1132,7 @@ class gallery extends Module {
 	 */
 	private function containerGroups_Save() {
 		$container = fix_id($_REQUEST['container']);
-		$membership_manager = GalleryGroupMembershipManager::getInstance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
 
 		// fetch all ids being set to specific group
 		$gallery_ids = array();
@@ -1095,27 +1142,27 @@ class gallery extends Module {
 		}
 
 		// remove old memberships
-		$membership_manager->deleteData(array('container' => $container));
+		$membership_manager->delete_items(array('container' => $container));
 
 		// save new memberships
 		foreach ($gallery_ids as $id)
-			$membership_manager->insertData(array(
+			$membership_manager->insert_item(array(
 											'group'		=> $id,
 											'container'	=> $container
 										));
 
 		// display message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant("message_container_groups_updated"),
-					'button'	=> $this->getLanguageConstant("close"),
+					'message'	=> $this->get_language_constant("message_container_groups_updated"),
+					'button'	=> $this->get_language_constant("close"),
 					'action'	=> window_Close('gallery_containers_groups')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1127,7 +1174,7 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_Image($tag_params, $children) {
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		$item = null;
 		$order_by = array();
@@ -1150,9 +1197,9 @@ class gallery extends Module {
 			$conditions['group'] = fix_id($tag_params['group_id']);
 
 		if (isset($tag_params['group'])) {
-			$group_manager = GalleryGroupManager::getInstance();
+			$group_manager = GalleryGroupManager::get_instance();
 
-			$group_id = $group_manager->getItemValue(
+			$group_id = $group_manager->get_item_value(
 												'id',
 												array('text_id' => fix_chars($tag_params['group']))
 											);
@@ -1180,16 +1227,16 @@ class gallery extends Module {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 		}
 
-		$item = $manager->getSingleItem(
-							$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+							$manager->get_field_names(),
 							$conditions,
 							$order_by,
 							$order_asc
 						);
 
 		// create template parser
-		$template = $this->loadTemplate($tag_params, 'image.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'image.xml');
+		$template->set_template_params_from_array($children);
 
 		if (is_object($item)) {
 			$params = array(
@@ -1205,8 +1252,8 @@ class gallery extends Module {
 						'image'			=> $this->getImageURL($item)
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1218,12 +1265,15 @@ class gallery extends Module {
 	 * @param array $children
 	 */
 	public function tag_ImageList($tag_params, $children) {
-		$manager = GalleryManager::getInstance();
+		global $section;
+
+		$manager = GalleryManager::get_instance();
 
 		$limit = null;
 		$order_by = array();
 		$order_asc = true;
 		$conditions = array();
+		$default_image = null;
 
 		if (!isset($tag_params['show_invisible']))
 			$conditions['visible'] = 1;
@@ -1244,9 +1294,9 @@ class gallery extends Module {
 			$limit = fix_id($tag_params['limit']);
 
 		if (isset($tag_params['group'])) {
-			$group_manager = GalleryGroupManager::getInstance();
+			$group_manager = GalleryGroupManager::get_instance();
 
-			$group_id = $group_manager->getItemValue(
+			$group_id = $group_manager->get_item_value(
 												'id',
 												array('text_id' => fix_chars($tag_params['group']))
 											);
@@ -1265,70 +1315,97 @@ class gallery extends Module {
 		if (isset($tag_params['order_asc']))
 			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
 
-		$items = $manager->getItems(
-							$manager->getFieldNames(),
+		// get default image if group is specified
+		if (isset($conditions['group'])) {
+			$group_manager = GalleryGroupManager::get_instance();
+			$default_image = $group_manager->get_item_value(
+					'thumbnail',
+					array('id' => $conditions['group'])
+				);
+		}
+
+		// get items from the database
+		$items = $manager->get_items(
+							$manager->get_field_names(),
 							$conditions,
 							$order_by,
 							$order_asc,
 							$limit
 						);
 
-		$template = $this->loadTemplate($tag_params, 'images_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->setMappedModule($this->name);
-		$template->registerTagHandler('cms:image', $this, 'tag_Image');
+		// load template
+		$template = $this->load_template($tag_params, 'images_list_item.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:image', $this, 'tag_Image');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
-		if (count($items) > 0)
+		if (count($items) == 0)
+			return;
+
 		foreach ($items as $item) {
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'group'			=> $item->group,
-						'title'			=> $item->title,
-						'description'	=> $item->description,
-						'filename'		=> $item->filename,
-						'timestamp'		=> $item->timestamp,
-						'visible'		=> $item->visible,
-						'image'			=> $this->getImageURL($item),
-						'selected'		=> $selected,
-						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
-												window_Open(
-													'gallery_images_change', 	// window id
-													400,						// width
-													$this->getLanguageConstant('title_images_change'), // title
-													false, false,
-													url_Make(
-														'transfer_control',
-														'backend_module',
-														array('module', $this->name),
-														array('backend_action', 'images_change'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
-												window_Open(
-													'gallery_images_delete', 	// window id
-													400,						// width
-													$this->getLanguageConstant('title_images_delete'), // title
-													false, false,
-													url_Make(
-														'transfer_control',
-														'backend_module',
-														array('module', $this->name),
-														array('backend_action', 'images_delete'),
-														array('id', $item->id)
-													)
-												)
-											),
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'group'       => $item->group,
+						'title'       => $item->title,
+						'description' => $item->description,
+						'filename'    => $item->filename,
+						'timestamp'   => $item->timestamp,
+						'visible'     => $item->visible,
+						'image'       => $this->getImageURL($item),
+						'selected'    => $selected,
+						'default'     => $default_image == $item->id
 				);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
+											$this->get_language_constant('change'),
+											window_Open(
+												'gallery_images_change', 	// window id
+												400,						// width
+												$this->get_language_constant('title_images_change'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'images_change'),
+													array('id', $item->id)
+												)));
+				$params['item_delete'] = URL::make_hyperlink(
+											$this->get_language_constant('delete'),
+											window_Open(
+												'gallery_images_delete', 	// window id
+												400,						// width
+												$this->get_language_constant('title_images_delete'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'images_delete'),
+													array('id', $item->id)
+												)));
+				$params['item_set_default'] = URL::make_hyperlink(
+											$this->get_language_constant('menu_set_default'),
+											window_Open(
+												'gallery_groups_set_thumbnail', 	// window id
+												320,						// width
+												$this->get_language_constant('title_groups_set_thumbnail'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'groups_set_thumbnail'),
+													array('id', $item->id)
+												)));
+			}
+
+			// set template parameters and render it
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1342,7 +1419,7 @@ class gallery extends Module {
 	public function tag_Group($tag_params, $children) {
 		global $language;
 
-		$manager = GalleryGroupManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
 
 		$conditions = array();
 		$order_by = array();
@@ -1354,7 +1431,7 @@ class gallery extends Module {
 		if (isset($tag_params['text_id']))
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
-		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
+		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->get_field_names()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
 
@@ -1362,8 +1439,8 @@ class gallery extends Module {
 			$order_asc = $tag_params['order_asc'] == 1;
 
 		if (isset($tag_params['container']) || isset($tag_params['container_id'])) {
-			$container_manager = GalleryContainerManager::getInstance();
-			$membership_manager = GalleryGroupMembershipManager::getInstance();
+			$container_manager = GalleryContainerManager::get_instance();
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
 			$container_id = null;
 
 			if (isset($tag_params['container_id'])) {
@@ -1372,7 +1449,7 @@ class gallery extends Module {
 
 			} else {
 				// container text_id was specified, get ID
-				$container = $container_manager->getSingleItem(
+				$container = $container_manager->get_single_item(
 													array('id'),
 													array('text_id' => fix_chars($tag_params['container']))
 												);
@@ -1384,7 +1461,7 @@ class gallery extends Module {
 
 			// grab all groups for specified container
 			if (!is_null($container_id)) {
-				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+				$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
 
 				// extract object values
 				$list = array();
@@ -1400,14 +1477,14 @@ class gallery extends Module {
 		}
 
 		// get group from database
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions, $order_by, $order_asc);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions, $order_by, $order_asc);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'group.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'group.xml');
+		$template->set_template_params_from_array($children);
 
-		$template->registerTagHandler('cms:image', $this, 'tag_Image');
-		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
+		$template->register_tag_handler('cms:image', $this, 'tag_Image');
+		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
 
 		// parse template
 		if (is_object($item)) {
@@ -1420,8 +1497,8 @@ class gallery extends Module {
 						'image'			=> $this->getGroupImage($item, true)
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1435,13 +1512,13 @@ class gallery extends Module {
 	public function tag_GroupList($tag_params, $children) {
 		global $language;
 
-		$manager = GalleryGroupManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
 
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
 
-		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->getFieldNames()))
+		if (isset($tag_params['order_by']) && in_array($tag_params['order_by'], $manager->get_field_names()))
 			$order_by[] = fix_chars($tag_params['order_by']); else
 			$order_by[] = 'name_'.$language;
 
@@ -1449,8 +1526,8 @@ class gallery extends Module {
 			$order_asc = $tag_params['order_asc'] == 1;
 
 		if (isset($tag_params['container']) || isset($tag_params['container_id'])) {
-			$container_manager = GalleryContainerManager::getInstance();
-			$membership_manager = GalleryGroupMembershipManager::getInstance();
+			$container_manager = GalleryContainerManager::get_instance();
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
 			$container_id = null;
 
 			if (isset($tag_params['container_id'])) {
@@ -1459,7 +1536,7 @@ class gallery extends Module {
 
 			} else {
 				// container text_id was specified, get ID
-				$container = $container_manager->getSingleItem(
+				$container = $container_manager->get_single_item(
 													array('id'),
 													array('text_id' => fix_chars($tag_params['container']))
 												);
@@ -1471,7 +1548,7 @@ class gallery extends Module {
 
 			// grab all groups for specified container
 			if (!is_null($container_id)) {
-				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+				$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
 
 				// extract object values
 				$list = array();
@@ -1487,19 +1564,19 @@ class gallery extends Module {
 		}
 
 		// get groups
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
 							);
 
 		// create template
-		$template = $this->loadTemplate($tag_params, 'groups_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'groups_list_item.xml');
+		$template->set_template_params_from_array($children);
 
-		$template->registerTagHandler('cms:image', $this, 'tag_Image');
-		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
+		$template->register_tag_handler('cms:image', $this, 'tag_Image');
+		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
@@ -1514,32 +1591,32 @@ class gallery extends Module {
 							'thumbnail_url'	=> $this->getGroupImage($item),
 							'image'			=> $this->getGroupImage($item, true),
 							'selected'		=> $selected,
-							'item_change'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('change'),
+							'item_change'	=> URL::make_hyperlink(
+													$this->get_language_constant('change'),
 													window_Open(
 														'gallery_groups_change', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_groups_change'), // title
+														$this->get_language_constant('title_groups_change'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_change'),
 															array('id', $item->id)
 														)
 													)
 												),
-							'item_delete'	=> url_MakeHyperlink(
-													$this->getLanguageConstant('delete'),
+							'item_delete'	=> URL::make_hyperlink(
+													$this->get_language_constant('delete'),
 													window_Open(
 														'gallery_groups_delete', 	// window id
 														400,						// width
-														$this->getLanguageConstant('title_groups_delete'), // title
+														$this->get_language_constant('title_groups_delete'), // title
 														false, false,
-														url_Make(
-															'transfer_control',
+														URL::make_query(
 															'backend_module',
+															'transfer_control',
 															array('module', $this->name),
 															array('backend_action', 'groups_delete'),
 															array('id', $item->id)
@@ -1548,8 +1625,8 @@ class gallery extends Module {
 												)
 						);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 
@@ -1563,7 +1640,7 @@ class gallery extends Module {
 	 */
 	public function tag_Container($tag_params, $children) {
 		$conditions = array();
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 
 		// get conditions
 		if (isset($tag_params['id']))
@@ -1573,16 +1650,16 @@ class gallery extends Module {
 			$conditions['text_id'] = fix_chars($tag_params['text_id']);
 
 		// get container
-		$item = $manager->getSingleItem($manager->getFieldNames(), $conditions);
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		// load template
-		$template = $this->loadTemplate($tag_params, 'container.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'container.xml');
+		$template->set_template_params_from_array($children);
 
-		$template->registerTagHandler('cms:image', $this, 'tag_Image');
-		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
-		$template->registerTagHandler('cms:group', $this, 'tag_Group');
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->register_tag_handler('cms:image', $this, 'tag_Image');
+		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
+		$template->register_tag_handler('cms:group', $this, 'tag_Group');
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		if (is_object($item)) {
 			$params = array(
@@ -1593,8 +1670,8 @@ class gallery extends Module {
 						'image'			=> $this->getContainerImage($item)
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 	}
@@ -1608,7 +1685,7 @@ class gallery extends Module {
 	public function tag_ContainerList($tag_params, $children) {
 		global $language;
 
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 		$conditions = array();
 		$order_by = array('name_'.$language);
 		$order_asc = true;
@@ -1621,20 +1698,20 @@ class gallery extends Module {
 								);
 		}
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
 							);
 
-		$template = $this->loadTemplate($tag_params, 'containers_list_item.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'containers_list_item.xml');
+		$template->set_template_params_from_array($children);
 
-		$template->registerTagHandler('cms:image', $this, 'tag_Image');
-		$template->registerTagHandler('cms:image_list', $this, 'tag_ImageList');
-		$template->registerTagHandler('cms:group', $this, 'tag_Group');
-		$template->registerTagHandler('cms:group_list', $this, 'tag_GroupList');
+		$template->register_tag_handler('cms:image', $this, 'tag_Image');
+		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
+		$template->register_tag_handler('cms:group', $this, 'tag_Group');
+		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
 
 		$selected = isset($tag_params['selected']) ? fix_id($tag_params['selected']) : -1;
 
@@ -1647,48 +1724,48 @@ class gallery extends Module {
 						'description'	=> $item->description,
 						'image'			=> $this->getContainerImage($item),
 						'selected'		=> $selected,
-						'item_change'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('change'),
+						'item_change'	=> URL::make_hyperlink(
+												$this->get_language_constant('change'),
 												window_Open(
 													'gallery_containers_change', 	// window id
 													400,							// width
-													$this->getLanguageConstant('title_containers_change'), // title
+													$this->get_language_constant('title_containers_change'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'containers_change'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_delete'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('delete'),
+						'item_delete'	=> URL::make_hyperlink(
+												$this->get_language_constant('delete'),
 												window_Open(
 													'gallery_containers_delete', 	// window id
 													400,							// width
-													$this->getLanguageConstant('title_containers_delete'), // title
+													$this->get_language_constant('title_containers_delete'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'containers_delete'),
 														array('id', $item->id)
 													)
 												)
 											),
-						'item_groups'	=> url_MakeHyperlink(
-												$this->getLanguageConstant('container_groups'),
+						'item_groups'	=> URL::make_hyperlink(
+												$this->get_language_constant('container_groups'),
 												window_Open(
 													'gallery_containers_groups', 	// window id
 													400,							// width
-													$this->getLanguageConstant('title_containers_groups'), // title
+													$this->get_language_constant('title_containers_groups'), // title
 													false, false,
-													url_Make(
-														'transfer_control',
+													URL::make_query(
 														'backend_module',
+														'transfer_control',
 														array('module', $this->name),
 														array('backend_action', 'containers_groups'),
 														array('id', $item->id)
@@ -1697,8 +1774,8 @@ class gallery extends Module {
 											),
 					);
 
-			$template->restoreXML();
-			$template->setLocalParams($params);
+			$template->restore_xml();
+			$template->set_local_params($params);
 			$template->parse();
 		}
 
@@ -1716,10 +1793,10 @@ class gallery extends Module {
 		if (!isset($tag_params['container'])) return;
 
 		$container = fix_id($tag_params['container']);
-		$manager = GalleryGroupManager::getInstance();
-		$membership_manager = GalleryGroupMembershipManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
 
-		$memberships = $membership_manager->getItems(
+		$memberships = $membership_manager->get_items(
 												array('group'),
 												array('container' => $container)
 											);
@@ -1729,10 +1806,10 @@ class gallery extends Module {
 			foreach($memberships as $membership)
 				$gallery_ids[] = $membership->group;
 
-		$items = $manager->getItems($manager->getFieldNames(), array(), array('name_'.$language));
+		$items = $manager->get_items($manager->get_field_names(), array(), array('name_'.$language));
 
 		$template = new TemplateHandler('containers_groups_item.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
@@ -1743,8 +1820,8 @@ class gallery extends Module {
 								'description'		=> $item->description,
 							);
 
-				$template->restoreXML();
-				$template->setLocalParams($params);
+				$template->restore_xml();
+				$template->set_local_params($params);
 				$template->parse();
 			}
 	}
@@ -1762,23 +1839,23 @@ class gallery extends Module {
 			// invalid params, print blank JSON object with message
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_params'),
+						'error_message'	=> $this->get_language_constant('message_json_error_params'),
 					);
 
 			print json_encode($result);
 			return;
 		};
 
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		if (isset($_REQUEST['id'])) {
 			// get specific image
 			$id = fix_id($_REQUEST['id']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 		} else {
 			// get first image from group (useful for group thumbnails)
 			$id = fix_id($_REQUEST['group']);
-			$item = $manager->getSingleItem($manager->getFieldNames(), array('group' => $id));
+			$item = $manager->get_single_item($manager->get_field_names(), array('group' => $id));
 		}
 
 		if (is_object($item)) {
@@ -1798,7 +1875,7 @@ class gallery extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+						'error_message'	=> $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -1812,7 +1889,7 @@ class gallery extends Module {
 	private function json_ImageList() {
 		global $language;
 
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
@@ -1849,9 +1926,9 @@ class gallery extends Module {
 
 		// group text_id was specified, get group ID
 		if (isset($_REQUEST['group'])) {
-			$group_manager = GalleryGroupManager::getInstance();
+			$group_manager = GalleryGroupManager::get_instance();
 
-			$group_id = $group_manager->getItemValue(
+			$group_id = $group_manager->get_item_value(
 												'id',
 												array('text_id' => $_REQUEST['group'])
 											);
@@ -1873,7 +1950,7 @@ class gallery extends Module {
 			$limit = fix_id($_REQUEST['limit']);
 
 		// get items
-		$items = $manager->getItems($manager->getFieldNames(), $conditions, $order_by, $order_asc, $limit);
+		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
 		$result = array(
 					'error'			=> false,
@@ -1904,7 +1981,7 @@ class gallery extends Module {
 			}
 		} else {
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+			$result['error_message'] = $this->get_language_constant('message_json_error_object');
 		}
 
 		print json_encode($result);
@@ -1922,24 +1999,24 @@ class gallery extends Module {
 		} else if (isset($_REQUEST['container'])) {
 			// display first group in specific container
 			$container = fix_id($_REQUEST['container']);
-			$manager = GalleryGroupManager::getInstance();
-			$membership_manager = GalleryGroupMembershipManager::getInstance();
+			$manager = GalleryGroupManager::get_instance();
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
 
-			$id = $membership_manager->getSingleItem('group', array('container' => $container));
+			$id = $membership_manager->get_single_item('group', array('container' => $container));
 		} else {
 			// no container nor group id was specified
 			// invalid params, print blank JSON object with message
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_params'),
+						'error_message'	=> $this->get_language_constant('message_json_error_params'),
 					);
 
 			print json_encode($result);
 			return;
 		}
 
-		$manager = GalleryGroupManager::getInstance();
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$manager = GalleryGroupManager::get_instance();
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$result = array(
@@ -1952,7 +2029,7 @@ class gallery extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+						'error_message'	=> $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -1966,20 +2043,20 @@ class gallery extends Module {
 	private function json_GroupList() {
 		global $language;
 
-		$manager = GalleryGroupManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
 		$conditions = array();
 		$order_by = array();
 		$order_asc = true;
 
 		if (isset($_REQUEST['container']) || isset($_REQUEST['container_id'])) {
 			$container_id = isset($_REQUEST['container_id']) ? fix_id($_REQUEST['container_id']) : null;
-			$membership_manager = GalleryGroupMembershipManager::getInstance();
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
 
 			// in case text_id was suplied, get id
 			if (is_null($container_id)) {
 				$container_text_id = fix_chars($_REQUEST['container']);
-				$container_manager = GalleryContainerManager::getInstance();
-				$container = $container_manager->getSingleItem(
+				$container_manager = GalleryContainerManager::get_instance();
+				$container = $container_manager->get_single_item(
 														array('id'),
 														array('text_id' => $container_text_id)
 													);
@@ -1991,7 +2068,7 @@ class gallery extends Module {
 			// grab all groups for specified container
 			$memberships = array();
 			if (!is_null($container_id))
-				$memberships = $membership_manager->getItems(array('group'), array('container' => $container_id));
+				$memberships = $membership_manager->get_items(array('group'), array('container' => $container_id));
 
 			// extract object values
 			$list = array();
@@ -2014,8 +2091,8 @@ class gallery extends Module {
 		if (isset($_REQUEST['order_asc']))
 			$order_asc = $tag_params['order_asc'] == '1' or $tag_params['order_asc'] == 'yes';
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								$conditions,
 								$order_by,
 								$order_asc
@@ -2037,7 +2114,7 @@ class gallery extends Module {
 						);
 		} else {
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+			$result['error_message'] = $this->get_language_constant('message_json_error_object');
 		}
 
 		print json_encode($result);
@@ -2051,9 +2128,9 @@ class gallery extends Module {
 		if (!isset($_REQUEST['id'])) return;
 
 		$id = fix_id($_REQUEST['id']);
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 
-		$item = $manager->getSingleItem($manager->getFieldNames(), array('id' => $id));
+		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
 
 		if (is_object($item)) {
 			$result = array(
@@ -2066,7 +2143,7 @@ class gallery extends Module {
 		} else {
 			$result = array(
 						'error'			=> true,
-						'error_message'	=> $this->getLanguageConstant('message_json_error_object'),
+						'error_message'	=> $this->get_language_constant('message_json_error_object'),
 					);
 		}
 
@@ -2078,10 +2155,10 @@ class gallery extends Module {
 	 * HTML (XML) output. Function takes all the parameters from $_REQUEST.
 	 */
 	private function json_ContainerList() {
-		$manager = GalleryContainerManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
 
-		$items = $manager->getItems(
-								$manager->getFieldNames(),
+		$items = $manager->get_items(
+								$manager->get_field_names(),
 								array(),
 								array('name')
 							);
@@ -2101,7 +2178,7 @@ class gallery extends Module {
 						);
 		} else {
 			$result['error'] = true;
-			$result['error_message'] = $this->getLanguageConstant('message_json_error_object');
+			$result['error_message'] = $this->get_language_constant('message_json_error_object');
 		}
 
 		print json_encode($result);
@@ -2123,12 +2200,19 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public function getImageURL($item) {
+		$result = '';
+
+		// if only item id is specified retrieve object from database
 		if (!is_object($item) && is_numeric($item)) {
-			$manager = GalleryManager::getInstance();
-			$item = $manager->getSingleItem(array('filename'), array('id' => $item));
+			$manager = GalleryManager::get_instance();
+			$item = $manager->get_single_item(array('filename'), array('id' => $item));
 		}
 
-		return url_GetFromFilePath($this->image_path.$item->filename);
+		// try to generate result from specified item
+		if (is_object($item))
+			$result = URL::from_file_path($this->image_path.$item->filename);
+
+		return $result;
 	}
 
 	/**
@@ -2141,7 +2225,7 @@ class gallery extends Module {
 	public static function getImageById($id=null, $text_id=null) {
 		$result = '';
 		$conditions = array();
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		// get params
 		if (!is_null($id))
@@ -2151,14 +2235,14 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get image from the database
-		$item = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+				$manager->get_field_names(),
 				$conditions
 			);
 
 		// prepare result
 		if (is_object($item))
-			$result = url_GetFromFilePath(self::getInstance()->image_path.$item->filename);
+			$result = URL::from_file_path(self::get_instance()->image_path.$item->filename);
 
 		return $result;
 	}
@@ -2179,9 +2263,9 @@ class gallery extends Module {
 
 		// prepare result
 		$image_file = $this->image_path.$item->filename;
-		$thumbnail_file = self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
+		$thumbnail_file = self::get_instance()->createThumbnail($image_file, $size, $constraint, $crop_size);
 
-		return url_GetFromFilePath($thumbnail_file);
+		return URL::from_file_path($thumbnail_file);
 	}
 
 	/**
@@ -2197,7 +2281,7 @@ class gallery extends Module {
 	public static function getThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
 		$result = '';
 		$conditions = array();
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		// get params
 		if (!is_null($id))
@@ -2207,19 +2291,19 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get image from the database
-		$item = $manager->getSingleItem(
-				$manager->getFieldNames(),
+		$item = $manager->get_single_item(
+				$manager->get_field_names(),
 				$conditions
 			);
 
 		// prepare result
 		if (is_object($item)) {
 			$path = dirname(__FILE__);
-			$gallery = gallery::getInstance();
+			$gallery = gallery::get_instance();
 			$image_file = $gallery->image_path.$item->filename;
 
-			$thumbnail_file = self::getInstance()->createThumbnail($image_file, $size, $constraint, $crop_size);
-			$result = url_GetFromFilePath($thumbnail_file);
+			$thumbnail_file = self::get_instance()->createThumbnail($image_file, $size, $constraint, $crop_size);
+			$result = URL::from_file_path($thumbnail_file);
 		}
 
 		return $result;
@@ -2236,8 +2320,8 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public static function getGroupThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$manager = GalleryGroupManager::getInstance();
-		$image_manager = GalleryManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
+		$image_manager = GalleryManager::get_instance();
 		$conditions = array();
 		$result = '';
 
@@ -2249,7 +2333,7 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get group from database
-		$group = $manager->getSingleItem(array('id', 'thumbnail'), $conditions);
+		$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
 
 		// specified group doesn't exist
 		if (!is_object($group))
@@ -2257,7 +2341,7 @@ class gallery extends Module {
 
 		if (empty($group->thumbnail)) {
 			// no image was set as thumbnail, get one at random
-			$image = $image_manager->getSingleItem(
+			$image = $image_manager->get_single_item(
 										array('id'),
 										array(
 											'group' 	=> $group->id,
@@ -2289,8 +2373,8 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public static function getContainerThumbnailById($id=null, $text_id=null, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$manager = GalleryContainerManager::getInstance();
-		$membership_manager = GalleryGroupMembershipManager::getInstance();
+		$manager = GalleryContainerManager::get_instance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
 		$conditions = array();
 		$result = '';
 
@@ -2302,13 +2386,13 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get container
-		$container = $manager->getSingleItem(array('id'), $conditions);
+		$container = $manager->get_single_item(array('id'), $conditions);
 
 		if (!is_object($container))
 			return $result;
 
 		// get random group for container
-		$membership = $membership_manager->getSingleItem(
+		$membership = $membership_manager->get_single_item(
 				array('group'),
 				array('container' => $container->id),
 				array('RAND()')  // order by
@@ -2331,8 +2415,8 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public static function getGroupImageById($id=null, $text_id=null) {
-		$manager = GalleryGroupManager::getInstance();
-		$image_manager = GalleryManager::getInstance();
+		$manager = GalleryGroupManager::get_instance();
+		$image_manager = GalleryManager::get_instance();
 		$conditions = array();
 		$result = '';
 
@@ -2344,7 +2428,7 @@ class gallery extends Module {
 			$conditions['text_id'] = $text_id;
 
 		// get group from database
-		$group = $manager->getSingleItem(array('id', 'thumbnail'), $conditions);
+		$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
 
 		// specified group doesn't exist
 		if (!is_object($group))
@@ -2352,7 +2436,7 @@ class gallery extends Module {
 
 		if (empty($group->thumbnail)) {
 			// no image was set as thumbnail, get one at random
-			$image = $image_manager->getSingleItem(
+			$image = $image_manager->get_single_item(
 										array('id'),
 										array(
 											'group' 	=> $group->id,
@@ -2381,11 +2465,11 @@ class gallery extends Module {
 	 */
 	private function getGroupImage($group, $big_image=false) {
 		$result = '';
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		if (empty($group->thumbnail)) {
 			// group doesn't have specified thumbnail, get random
-			$image = $manager->getSingleItem(
+			$image = $manager->get_single_item(
 										array('filename'),
 										array(
 											'group' 	=> $group->id,
@@ -2398,11 +2482,11 @@ class gallery extends Module {
 			// group has specified thumbnail
 			if (is_array($group)) {
 				$group_id = array_rand($group);
-				$group_manager = GalleryGroupManager::getInstance();
+				$group_manager = GalleryGroupManager::get_instance();
 
-				$group = $group_manager->getSingleItem(array('thumbnail'), array('id' => $group_id));
+				$group = $group_manager->get_single_item(array('thumbnail'), array('id' => $group_id));
 			}
-			$image = $manager->getSingleItem(array('filename'), array('id' => $group->thumbnail));
+			$image = $manager->get_single_item(array('filename'), array('id' => $group->thumbnail));
 		}
 
 		if (is_object($image))
@@ -2421,10 +2505,10 @@ class gallery extends Module {
 	 */
 	private function getContainerImage($container) {
 		$result = '';
-		$group_manager = GalleryGroupManager::getInstance();
-		$membership_manager = GalleryGroupMembershipManager::getInstance();
+		$group_manager = GalleryGroupManager::get_instance();
+		$membership_manager = GalleryGroupMembershipManager::get_instance();
 
-		$items = $membership_manager->getItems(
+		$items = $membership_manager->get_items(
 											array('group'),
 											array('container' => $container->id),
 											array('RAND()')
@@ -2434,7 +2518,7 @@ class gallery extends Module {
 			$membership = $items[array_rand($items)];
 			$id = $membership->group;
 
-			$group = $group_manager->getSingleItem(array('id', 'thumbnail'), array('id' => $id));
+			$group = $group_manager->get_single_item(array('id', 'thumbnail'), array('id' => $id));
 
 			if (is_object($group))
 				$result = $this->getGroupImage($group);
@@ -2487,7 +2571,7 @@ class gallery extends Module {
 				unset($file_sizes[$i]);
 
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_invalid_type');
+				$result['message'] = $this->get_language_constant('message_image_invalid_type');
 
 				trigger_error('Gallery: Invalid file type uploaded.', E_USER_NOTICE);
 
@@ -2501,7 +2585,7 @@ class gallery extends Module {
 				unset($file_sizes[$i]);
 
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_upload_error');
+				$result['message'] = $this->get_language_constant('message_image_upload_error');
 
 				trigger_error('Gallery: Not an uploaded file. This should not happen!', E_USER_ERROR);
 
@@ -2511,7 +2595,7 @@ class gallery extends Module {
 		}
 
 		// process uploaded images
-		$manager = GalleryManager::getInstance();
+		$manager = GalleryManager::get_instance();
 
 		for ($i = 0; $i < count($file_names); $i++) {
 			// get unique file name for this image to be stored
@@ -2528,11 +2612,11 @@ class gallery extends Module {
 							'protected'		=> $protected
 						);
 
-				$manager->insertData($data);
-				$id = $manager->getInsertedID();
+				$manager->insert_item($data);
+				$id = $manager->get_inserted_id();
 
 				$result['filename'] = $filename;
-				$result['message'] = $this->getLanguageConstant('message_image_uploaded');
+				$result['message'] = $this->get_language_constant('message_image_uploaded');
 
 				// append result
 				if ($multiple_upload) {
@@ -2547,7 +2631,7 @@ class gallery extends Module {
 
 			} else {
 				$result['error'] = true;
-				$result['message'] = $this->getLanguageConstant('message_image_save_error');
+				$result['message'] = $this->get_language_constant('message_image_save_error');
 			}
 		}
 
@@ -2561,12 +2645,12 @@ class gallery extends Module {
 	 * @return integer Newly created gallery Id
 	 */
 	public function createGallery($name) {
-		$image_manager = GalleryManager::getInstance();
-		$gallery_manager = GalleryGroupManager::getInstance();
+		$image_manager = GalleryManager::get_instance();
+		$gallery_manager = GalleryGroupManager::get_instance();
 
 		// create gallery
-		$gallery_manager->insertData(array('name' => $name));
-		$result = $gallery_manager->getInsertedID();
+		$gallery_manager->insert_item(array('name' => $name));
+		$result = $gallery_manager->get_inserted_id();
 
 		return $result;
 	}
@@ -2578,11 +2662,11 @@ class gallery extends Module {
 	 * @return integer Id of newly created gallery
 	 */
 	public function createEmptyGallery($name) {
-		$gallery_manager = GalleryGroupManager::getInstance();
+		$gallery_manager = GalleryGroupManager::get_instance();
 
 		// create gallery
-		$gallery_manager->insertData(array('name' => $name));
-		$result = $gallery_manager->getInsertedID();
+		$gallery_manager->insert_item(array('name' => $name));
+		$result = $gallery_manager->get_inserted_id();
 
 		return $result;
 	}
@@ -2612,8 +2696,13 @@ class gallery extends Module {
 
 		// create image resource
 		$img_source = null;
+		$save_function = null;
+		$save_quality = null;
 		$has_alpha = false;
-		switch (pathinfo(strtolower($filename), PATHINFO_EXTENSION)) {
+		$save_quality = null;
+		$extension = strtolower(pathinfo(strtolower($filename), PATHINFO_EXTENSION));
+
+		switch ($extension) {
 			case 'jpg':
 			case 'jpeg':
 				$img_source = imagecreatefromjpeg($filename);
@@ -2627,10 +2716,15 @@ class gallery extends Module {
 				$save_quality = 9;
 				$has_alpha = true;
 				break;
+
+			case 'gif':
+				$img_source = imagecreatefromgif($filename);
+				$save_function = @imagegif;
+				$has_alpha = true;
 		}
 
 		// we failed to load image, exit
-		if ($img_source === FALSE)
+		if ($img_source === FALSE || is_null($img_source))
 			return null;
 
 		// calculate width to height ratio
@@ -2687,7 +2781,9 @@ class gallery extends Module {
 			);
 
 		// save image to file
-		$save_function($thumbnail, $target_file, $save_quality);
+		if (!is_null($save_quality))
+			$save_function($thumbnail, $target_file, $save_quality); else
+			$save_function($thumbnail, $target_file);
 
 		return $target_file;
 	}

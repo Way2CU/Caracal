@@ -14,8 +14,8 @@
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
     "import": "Import",
-    "message_license_error": "أنت لا تملك الصلاحيه لتلقي لخدمات من هذا الموقع",
     "message_server_error": "خادم يواجه المشكلة التالية:",
+    "message_client_error_404": "Page or file you requested could not be found. Sorry about that.",
     "new": "جديد",
     "next": "التالي",
     "open": "فتح",
@@ -31,5 +31,6 @@
     "submit": "اعتماد",
     "upload": "رفع",
     "refresh": "Refresh",
-    "reload": "Reload"
+    "reload": "Reload",
+    "back_to_home": "Back to home page"
 }

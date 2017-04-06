@@ -30,21 +30,21 @@ class mandrill extends Module {
 		if (ModuleHandler::is_loaded('contact_form')) {
 			$mailer = new Mandrill_Mailer($this->language, $this->settings['api_key']);
 
-			$contact_form = contact_form::getInstance();
+			$contact_form = contact_form::get_instance();
 			$contact_form->registerMailer('mandrill', $mailer);
 		}
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 
 			$mandrill_menu = new backend_MenuItem(
-					$this->getLanguageConstant('menu_mandrill'),
-					url_GetFromFilePath($this->path.'images/icon.svg'),
+					$this->get_language_constant('menu_mandrill'),
+					URL::from_file_path($this->path.'images/icon.svg'),
 					window_Open( // on click open window
 								'mandrill_settings',
 								370,
-								$this->getLanguageConstant('title_settings'),
+								$this->get_language_constant('title_settings'),
 								true, true,
 								backend_UrlMake($this->name, 'settings')
 							),
@@ -58,7 +58,7 @@ class mandrill extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -71,7 +71,7 @@ class mandrill extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['backend_action']))
 			switch ($params['backend_action']) {
@@ -80,7 +80,7 @@ class mandrill extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -91,14 +91,14 @@ class mandrill extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		$this->saveSetting('api_key', '');
+	public function initialize() {
+		$this->save_setting('api_key', '');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function cleanup() {
 	}
 
 	/**
@@ -106,37 +106,37 @@ class mandrill extends Module {
 	 */
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 						'cancel_action'	=> window_Close('mandrill_settings')
 					);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
 	/**
 	 * Save new settings.
 	 */
-	private function saveSettings() {
+	private function save_settings() {
 		// save setting
-		$this->saveSetting('api_key', trim(fix_chars($_REQUEST['api_key'])));
+		$this->save_setting('api_key', trim(fix_chars($_REQUEST['api_key'])));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('mandrill_settings')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

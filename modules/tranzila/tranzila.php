@@ -23,18 +23,17 @@ class tranzila extends Module {
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && ModuleHandler::is_loaded('shop')) {
-			$backend = backend::getInstance();
+			$backend = backend::get_instance();
 			$method_menu = $backend->getMenu('shop_payment_methods');
 
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
-									$this->getLanguageConstant('menu_tranzila'),
-									url_GetFromFilePath($this->path.'images/icon.png'),
-
+									$this->get_language_constant('menu_tranzila'),
+									URL::from_file_path($this->path.'images/icon.png'),
 									window_Open( // on click open window
 												'tranzila',
 												400,
-												$this->getLanguageConstant('title_settings'),
+												$this->get_language_constant('title_settings'),
 												true, true,
 												backend_UrlMake($this->name, 'settings')
 											),
@@ -46,16 +45,16 @@ class tranzila extends Module {
 		if (ModuleHandler::is_loaded('shop')) {
 			// register payment method
 			require_once('units/tranzila_payment_method.php');
-			$this->method = Tranzila_PaymentMethod::getInstance($this);
+			$this->method = Tranzila_PaymentMethod::get_instance($this);
 
 			// add tranzila scripts to checkout page
 			if ($section != 'backend') {
-				$shop = shop::getInstance();
-				$collection = collection::getInstance();
+				$shop = shop::get_instance();
+				$collection = collection::get_instance();
 
 				$collection->includeScript(collection::DIALOG);
-				$shop->addCheckoutScript(url_GetFromFilePath($this->path.'include/checkout.js'));
-				$shop->addCheckoutStyle(url_GetFromFilePath($this->path.'include/checkout.css'));
+				$shop->addCheckoutScript(URL::from_file_path($this->path.'include/checkout.js'));
+				$shop->addCheckoutStyle(URL::from_file_path($this->path.'include/checkout.css'));
 			}
 		}
 	}
@@ -63,7 +62,7 @@ class tranzila extends Module {
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
@@ -76,7 +75,7 @@ class tranzila extends Module {
 	 * @param array $params
 	 * @param array $children
 	 */
-	public function transferControl($params = array(), $children = array()) {
+	public function transfer_control($params = array(), $children = array()) {
 		// global control actions
 		if (isset($params['action']))
 			switch ($params['action']) {
@@ -102,7 +101,7 @@ class tranzila extends Module {
 					break;
 
 				case 'settings_save':
-					$this->saveSettings();
+					$this->save_settings();
 					break;
 
 				default:
@@ -113,56 +112,56 @@ class tranzila extends Module {
 	/**
 	 * Event triggered upon module initialization
 	 */
-	public function onInit() {
-		$this->saveSetting('terminal', '');
-		$this->saveSetting('terminal2', '');
-		$this->saveSetting('terminal_password', '');
-		$this->saveSetting('custom_template', '0');
+	public function initialize() {
+		$this->save_setting('terminal', '');
+		$this->save_setting('terminal2', '');
+		$this->save_setting('terminal_password', '');
+		$this->save_setting('custom_template', '0');
 	}
 
 	/**
 	 * Event triggered upon module deinitialization
 	 */
-	public function onDisable() {
+	public function cleanup() {
 	}
 
 	private function showSettings() {
 		$template = new TemplateHandler('settings.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
 				'cancel_action'	=> window_Close('tranzila'),
-				'confirm_url'	=> url_Make('payment-confirm', $this->name),
-				'cancel_url'	=> url_Make('payment-cancel', $this->name),
+				'confirm_url'	=> URL::make_query($this->name, 'payment-confirm'),
+				'cancel_url'	=> URL::make_query($this->name, 'payment-cancel'),
 			);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
-	private function saveSettings() {
+	private function save_settings() {
 		$terminal_name = fix_chars($_REQUEST['terminal']);
 		$terminal2_name = fix_chars($_REQUEST['terminal2']);
 		$terminal_password = fix_chars($_REQUEST['terminal_password']);
-		$custom_template = isset($_REQUEST['custom_template']) && ($_REQUEST['custom_template'] == 1 || $_REQUEST['custom_template'] == 'on') ? 1 : 0;
-		$this->saveSetting('terminal', $terminal_name);
-		$this->saveSetting('terminal2', $terminal2_name);
-		$this->saveSetting('terminal_password', $terminal_password);
-		$this->saveSetting('custom_template', $custom_template);
+		$custom_template = $this->get_boolean_field('custom_template') ? 1 : 0;
+		$this->save_setting('terminal', $terminal_name);
+		$this->save_setting('terminal2', $terminal2_name);
+		$this->save_setting('terminal_password', $terminal_password);
+		$this->save_setting('custom_template', $custom_template);
 
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
-		$template->setMappedModule($this->name);
+		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message'	=> $this->getLanguageConstant('message_settings_saved'),
-					'button'	=> $this->getLanguageConstant('close'),
+					'message'	=> $this->get_language_constant('message_settings_saved'),
+					'button'	=> $this->get_language_constant('close'),
 					'action'	=> window_Close('tranzila')
 				);
 
-		$template->restoreXML();
-		$template->setLocalParams($params);
+		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 }

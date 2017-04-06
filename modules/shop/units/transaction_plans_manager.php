@@ -9,21 +9,21 @@ class ShopTransactionPlansManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_transaction_plans');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('transaction', 'int');
-		$this->addProperty('plan_name', 'varchar');
-		$this->addProperty('trial', 'int');
-		$this->addProperty('trial_count', 'int');
-		$this->addProperty('interval', 'int');
-		$this->addProperty('interval_count', 'int');
-		$this->addProperty('start_time', 'timestamp');
-		$this->addProperty('end_time', 'timestamp');
+		$this->add_property('id', 'int');
+		$this->add_property('transaction', 'int');
+		$this->add_property('plan_name', 'varchar');
+		$this->add_property('trial', 'int');
+		$this->add_property('trial_count', 'int');
+		$this->add_property('interval', 'int');
+		$this->add_property('interval_count', 'int');
+		$this->add_property('start_time', 'timestamp');
+		$this->add_property('end_time', 'timestamp');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 

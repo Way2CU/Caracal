@@ -1,0 +1,6 @@
+# Release notes for v0.2
+
+After almost two years of development new version is finally out with many
+changes and bug fixes. One of most notable features is fully functioning shop
+module. Some other modules were removed, some were added. All in all too many
+changes to list.

@@ -17,14 +17,14 @@ class ShopCurrenciesManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('shop_currencies');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('currency', 'varchar');
+		$this->add_property('id', 'int');
+		$this->add_property('currency', 'varchar');
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 		self::$_instance = new self();
 

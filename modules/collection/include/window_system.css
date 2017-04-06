@@ -11,11 +11,6 @@
 	to { background-position: 10px 0px; }
 }
 
-@-webkit-keyframes title_animation {
-	from { background-position: 0px 0px; }
-	to { background-position: 10px 0px; }
-}
-
 div.window {
 	display: block;
 	position: absolute;
@@ -29,7 +24,7 @@ div.window {
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 
 	transition: top 0.5s, left 0.5s, opacity 0.5s;
-	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 }
 
 html[dir=rtl] div.window {
@@ -96,9 +91,6 @@ div.window.loading div.title {
 	animation: title_animation 0.5s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;
-	-webkit-animation: title_animation 0.5s;
-	-webkit-animation-timing-function: linear;
-	-webkit-animation-iteration-count: infinite;
 }
 
 div.window div.title div.wrap {
@@ -293,16 +285,12 @@ div.window div.content input[type=checkbox] {
 
 	margin-right: 3px;
 	padding: 0px;
-
-	float: left;
-	clear: both;
 }
 
 html[dir=rtl] div.window div.content input[type=radio],
 html[dir=rtl] div.window div.content input[type=checkbox] {
 	margin-left: 3px;
 	margin-right: 0px;
-	float: right;
 }
 
 div.window div.content input[type=color] {
@@ -347,6 +335,12 @@ div.window div.content textarea:focus {
 	color: #000000;
 
 	transition: all 0.3s;
+}
+
+div.window div.content input:disabled,
+div.window div.content select:disabled,
+div.window div.content textarea:disabled {
+	background-color: #f5f5f5;
 }
 
 div.window button {
@@ -460,6 +454,8 @@ div.window div.scrollable_list .list_content {
 	min-height: 100px;
 
 	overflow-y: scroll;
+	will-change: scroll-position;
+	transform: translateZ(0);  /* force Chrome to use layer */
 
 	border: 1px solid #B8B8B8;
 	border-top: 0px;
@@ -472,14 +468,15 @@ div.window div.scrollable_list .list_content h4 {
 	padding: 5px;
 }
 
-div.dialog div.scrollable_list .list_content .list_group .list_item,
-div.window div.scrollable_list .list_content .list_group .list_item {
+div.dialog div.scrollable_list .list_content .list_group,
+div.window div.scrollable_list .list_content .list_group {
 	padding-left: 15px;
+	overflow-x: hidden;
 }
 
-html[dir=rtl] div.dialog div.scrollable_list .list_content .list_group .list_item,
-html[dir=rtl] div.window div.scrollable_list .list_content .list_group .list_item {
-	padding-left: 5px;
+html[dir=rtl] div.dialog div.scrollable_list .list_content .list_group,
+html[dir=rtl] div.window div.scrollable_list .list_content .list_group {
+	padding-left: 0px;
 	padding-right: 15px;
 }
 
@@ -487,6 +484,23 @@ div.dialog div.scrollable_list .list_content .list_item,
 div.window div.scrollable_list .list_content .list_item {
 	display: block;
 	padding: 5px;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.draggable,
+div.window div.scrollable_list .list_content .list_item.draggable {
+	border-top: 2px solid transparent;
+	border-bottom: 2px solid transparent;
+	cursor: move;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.dragging,
+div.window div.scrollable_list .list_content .list_item.dragging {
+	opacity: 0.5;
+}
+
+div.dialog div.scrollable_list .list_content .list_item.drag-hover,
+div.window div.scrollable_list .list_content .list_item.drag-hover {
+	border-top-color: #345DC9;
 }
 
 div.dialog div.scrollable_list .list_content .list_item.group_title,
@@ -544,6 +558,12 @@ div.dialog div.scrollable_list .column a:hover,
 div.window div.scrollable_list .column a:hover {
 	background-color: #595959;
 	color: #FFFFFF;
+}
+
+div.dialog form,
+div.window form {
+	margin: 0;
+	padding: 0;
 }
 
 /**
@@ -653,12 +673,11 @@ div.window div.toolbar a.button img {
  */
 div.dialog {
 	display: block;
-	width: 100%;
-	height: 100%;
-
-	position: absolute;
-	top: 0px;
-	left: 0px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 
 	background-color: rgba(0, 0, 0, 0.7);
 	z-index: 5000;
@@ -744,13 +763,15 @@ div.dialog div.container div.content {
 /**
  * Floated boxes
  */
-div.window div.box {
+div.window div.box,
+div.window div.content label.box {
 	display: inline-block;
 	vertical-align: top;
 }
 
-div.window div.box.left {
-	margin-right: 7px;
+div.window div.box.left,
+div.window div.content label.box {
+	margin-right: 10px;
 }
 
 html[dir=rtl] div.window div.box.left {

@@ -94,8 +94,8 @@ class PageSwitch {
 	 * @param array $children
 	 */
 	public function tag_Pages($tag_params, $children) {
-		$template = $this->loadTemplate($tag_params, 'page_switch_page.xml');
-		$template->setTemplateParamsFromArray($children);
+		$template = $this->load_template($tag_params, 'page_switch_page.xml');
+		$template->set_template_params_from_array($children);
 
 		// calculate number of total pages
 		$total_pages = ceil($this->total_items / $this->per_page);
@@ -140,8 +140,8 @@ class PageSwitch {
 					'class'		=> $page == $this->current_page ? 'active' : 'normal'
 				);
 
-			$template->setLocalParams($params);
-			$template->restoreXML();
+			$template->set_local_params($params);
+			$template->restore_xml();
 			$template->parse();
 		}
 	}
@@ -154,9 +154,9 @@ class PageSwitch {
 	 */
 	public function tag_PageSwitch($tag_params, $children) {
 		// create template handler
-		$template = $this->loadTemplate($tag_params, 'page_switch.xml');
-		$template->setTemplateParamsFromArray($children);
-		$template->registerTagHandler('_pages', $this, 'tag_Pages');
+		$template = $this->load_template($tag_params, 'page_switch.xml');
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('_pages', $this, 'tag_Pages');
 
 		// calculate number of total pages
 		$total_pages = ceil($this->total_items / $this->per_page);
@@ -214,8 +214,8 @@ class PageSwitch {
 			);
 
 		// parse template
-		$template->setLocalParams($params);
-		$template->restoreXML();
+		$template->set_local_params($params);
+		$template->restore_xml();
 		$template->parse();
 	}
 

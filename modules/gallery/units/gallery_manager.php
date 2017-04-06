@@ -9,17 +9,17 @@ class GalleryManager extends ItemManager {
 	protected function __construct() {
 		parent::__construct('gallery');
 
-		$this->addProperty('id', 'int');
-		$this->addProperty('text_id', 'varchar');
-		$this->addProperty('group', 'int');
-		$this->addProperty('title', 'ml_varchar');
-		$this->addProperty('description', 'ml_text');
-		$this->addProperty('size', 'bigint');
-		$this->addProperty('filename', 'varchar');
-		$this->addProperty('timestamp', 'timestamp');
-		$this->addProperty('visible', 'boolean');
-		$this->addProperty('protected', 'boolean');
-		$this->addProperty('slideshow', 'boolean');
+		$this->add_property('id', 'int');
+		$this->add_property('text_id', 'varchar');
+		$this->add_property('group', 'int');
+		$this->add_property('title', 'ml_varchar');
+		$this->add_property('description', 'ml_text');
+		$this->add_property('size', 'bigint');
+		$this->add_property('filename', 'varchar');
+		$this->add_property('timestamp', 'timestamp');
+		$this->add_property('visible', 'boolean');
+		$this->add_property('protected', 'boolean');
+		$this->add_property('slideshow', 'boolean');
 	}
 
 	/**
@@ -28,10 +28,10 @@ class GalleryManager extends ItemManager {
 	 * @param array $conditionals
 	 * @param integer $limit
 	 */
-	function deleteData($conditionals, $limit=null) {
+	function delete_items($conditionals, $limit=null) {
 		global $site_path;
 
-		$items = $this->getItems(array('filename'), $conditionals);
+		$items = $this->get_items(array('filename'), $conditionals);
 
 		$image_path = _BASEPATH.'/'.$site_path.'gallery/images/';
 		$thumbnail_path = _BASEPATH.'/'.$site_path.'gallery/thumbnails/';
@@ -42,13 +42,13 @@ class GalleryManager extends ItemManager {
 				array_map('unlink', glob($thumbnail_path.'*'.$item->filename));
 			}
 
-		parent::deleteData($conditionals, $limit);
+		parent::delete_items($conditionals, $limit);
 	}
 
 	/**
 	 * Public function that creates a single instance
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if (!isset(self::$_instance))
 			self::$_instance = new self();
 
