@@ -892,7 +892,7 @@ class TemplateHandler {
 	 * @param string $document_type
 	 */
 	private function set_headers($document_type) {
-		global $referrer_policy, $frame_options;
+		global $referrer_policy, $frame_options, $content_security_policy;
 
 		header('X-Powered-By: Caracal/'._VERSION);
 		header('Content-Type: '.$document_type.'; charset=UTF-8');
@@ -906,6 +906,12 @@ class TemplateHandler {
 
 			// prevent site loading from different origins
 			header('X-Frame-Options: '.$frame_options);
+
+			// enforce cross-site scripting protection
+			header('X-Xss-Protection: 1; mode=block');
+
+			// define content security policy
+			header('Content-Security-Policy: '.$content_security_policy);
 
 			// set referrer policy
 			header('Referrer-Policy: '.$referrer_policy);
