@@ -892,7 +892,7 @@ class TemplateHandler {
 	 * @param string $document_type
 	 */
 	private function set_headers($document_type) {
-		global $referrer_policy;
+		global $referrer_policy, $frame_options;
 
 		header('X-Powered-By: Caracal/'._VERSION);
 		header('Content-Type: '.$document_type.'; charset=UTF-8');
@@ -900,6 +900,12 @@ class TemplateHandler {
 		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
 			// let the browser/crawler know we have different desktop/mobile styles
 			header('Vary: User-Agent');
+
+			// prevent drive-by downloads and site being treated as different type
+			header('X-Content-Type-Options: nosniff');
+
+			// prevent site loading from different origins
+			header('X-Frame-Options: '.$frame_options);
 
 			// set referrer policy
 			header('Referrer-Policy: '.$referrer_policy);
