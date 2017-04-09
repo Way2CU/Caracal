@@ -248,22 +248,17 @@ class TemplateHandler {
 			// allow for special attributes in top-level tag
 			$document = $this->engine->document->tagAttrs;
 
-			// change powered by header
-			header('X-Powered-By: Caracal/'._VERSION);
-
-			// let the browser/crawler know we have different desktop/mobile styles
-			if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-				header('Vary: User-Agent');
-
 			// print document type
 			$type = 'html5';
-
 			if (isset($document['type']) && array_key_exists($document['type'], $document_types))
 				$type = $document['type'];
 
 			$document_type = $document_types[$type];
 
-			header('Content-Type: '.$document_type['mime'].'; charset=UTF-8');
+			// set headers
+			$this->set_headers($document_type['mime']);
+
+			// show document type
 			echo $document_type['code'];
 		}
 
@@ -889,6 +884,24 @@ class TemplateHandler {
 		$this->last_eval = $code;
 
 		return eval($function);
+	}
+
+	/**
+	 * Set response headers for page templates.
+	 *
+	 * @param string $document_type
+	 */
+	private function set_headers($document_type) {
+		header('X-Powered-By: Caracal/'._VERSION);
+		header('Content-Type: '.$document_type.'; charset=UTF-8');
+
+		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+			// let the browser/crawler know we have different desktop/mobile styles
+			header('Vary: User-Agent');
+
+			// set referrer policy
+			header('Referrer-Policy: strict-origin-when-cross-origin');
+		}
 	}
 
 	/**
