@@ -934,7 +934,7 @@ class TemplateHandler {
 	}
 
 	/**
-	 * Set tag children tags to be overriden.
+	 * Set tag children tags to be overridden.
 	 *
 	 * @param string $tag_name
 	 * @param array $children
