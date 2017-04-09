@@ -48,6 +48,7 @@ $memcached_config = array(
 
 // security
 $force_https = false;
+$referrer_policy = 'strict-origin-when-cross-origin';
 
 // head tag
 $include_styles = false;

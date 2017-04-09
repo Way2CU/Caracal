@@ -892,6 +892,8 @@ class TemplateHandler {
 	 * @param string $document_type
 	 */
 	private function set_headers($document_type) {
+		global $referrer_policy;
+
 		header('X-Powered-By: Caracal/'._VERSION);
 		header('Content-Type: '.$document_type.'; charset=UTF-8');
 
@@ -900,7 +902,7 @@ class TemplateHandler {
 			header('Vary: User-Agent');
 
 			// set referrer policy
-			header('Referrer-Policy: strict-origin-when-cross-origin');
+			header('Referrer-Policy: '.$referrer_policy);
 		}
 	}
 
