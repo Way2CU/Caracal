@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div class="list_item">
-		<span class="column" style="width: 250px; vertical-align: top;">
+	<tr>
+		<td>
 			<cms:var name="$params['title'][$language]"/>
-		</span>
-		<span class="column" style="width: 100px;">
+		</td>
+		<td>
 			<small>
 				<cms:var name="$params['time']"/>
-				<cms:raw><![CDATA[<br>]]></cms:raw>
+				<br/>
 				<cms:var name="$params['date']"/>
 			</small>
-		</span>
-		<span class="column" style="vertical-align: top;">
+		</td>
+		<td>
 			<cms:var name="$params['item_change']"/><cms:raw text=" "/>
 			<cms:var name="$params['item_delete']"/>
-		</span>
-	</div>
+		</td>
+	</tr>
 </document>
