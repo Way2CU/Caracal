@@ -69,7 +69,6 @@ class backend extends Module {
 
 			$collection->includeScript(collection::JQUERY);
 			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-			$collection->includeScript(collection::WINDOW_SYSTEM);
 
 			if ($_SESSION['logged']) {
 				$collection->includeScript(collection::JQUERY_EXTENSIONS);
@@ -85,6 +84,10 @@ class backend extends Module {
 				));
 			$head_tag->addTag('script', array(
 					'src'  => URL::from_file_path($this->path.'include/order_editor.js'),
+					'type' => 'text/javascript'
+				));
+			$head_tag->addTag('script', array(
+					'src'  => URL::from_file_path($this->path.'include/window_system.js'),
 					'type' => 'text/javascript'
 				));
 		}

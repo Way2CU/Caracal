@@ -15,7 +15,6 @@ class collection extends Module {
 	private static $_instance;
 
 	// internal scripts
-	const WINDOW_SYSTEM = 0;
 	const NOTEBOOK = 1;
 	const TOOLBAR = 2;
 	const ANIMATION_CHAIN = 3;
@@ -42,7 +41,6 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::WINDOW_SYSTEM        => array('window_system.js', 'window_system.css'),
 				collection::NOTEBOOK             => array('notebook.js', 'notebook.css'),
 				collection::TOOLBAR              => 'toolbar.js',
 				collection::ANIMATION_CHAIN      => 'animation_chain.js',
@@ -65,7 +63,6 @@ class collection extends Module {
 			);
 
 	private $script_names = array(
-				'window_system'        => collection::WINDOW_SYSTEM,
 				'notebook'             => collection::NOTEBOOK,
 				'toolbar'              => collection::TOOLBAR,
 				'animation_chain'      => collection::ANIMATION_CHAIN,
