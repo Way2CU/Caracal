@@ -6,7 +6,7 @@
  * Author: Mladen Mijatov
  */
 
-@icon_size: 24;
+@icon_size: 30;
 
 /**
  * Main menu
@@ -26,9 +26,22 @@ nav#main.minimized span {
 }
 
 nav#main a {
+	cursor: default;
+}
+
+nav#main a svg {
+	width: @icon_size;
+	height: @icon_size;
+	vertical-align: middle;
+}
+
+// first level of menu items
+nav#main > a,
+nav#main > div > a {
 	display: block;
 
 	border-right: @padding_unit solid transparent;
+	padding: 0.3rem;
 
 	&:hover {
 		color: @color_active;
@@ -41,11 +54,6 @@ nav#main a {
 	}
 }
 
-nav#main a svg {
-	width: @icon_size;
-	height: @icon_size;
-}
-
 nav#main div {
 	position: relative;
 
@@ -55,6 +63,7 @@ nav#main div {
 	}
 }
 
+// second level and up
 nav#main div > nav {
 	position: absolute;
 	top: 0;
@@ -85,7 +94,21 @@ nav#main div:hover > nav {
 	transform: perspective(1000px) rotate3d(0, 0, 0, 90deg);
 }
 
-nav#main div > nav hr {
+nav#main nav a {
+	display: block;
+	padding: 0.3rem;
+
+	&:hover {
+		background-color: mix(@color_dark, @color_bright, 10);
+	}
+
+	html[dir=rtl] & {
+		padding-left: 0;
+		padding-right: @padding_unit;
+	}
+}
+
+nav#main nav hr {
 	border: 0;
 	border-bottom: 1px solid fade(@color_dark, 25);
 }

@@ -7,3 +7,16 @@
  */
 
 @header_unit: 3;
+
+.deprecated() {
+	position: relative;
+
+	&:after {
+		position: absolute;
+		top: 0;
+		right: 0;
+
+		content: '*';
+		color: red;
+	}
+}

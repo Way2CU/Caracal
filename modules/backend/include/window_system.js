@@ -248,16 +248,15 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 					.bind('mousedown', self._handleClick)
 					.appendTo(self.container);
 
-			// title container
-			self.title = $('<div>');
-			self.title
-					.addClass('wrap')
-					.html(title)
-					.appendTo(self.title_bar);
-
 			// create window icon
 			self.icon = $('<svg>');
 			self.icon.appendTo(self.title_bar);
+
+			// title container
+			self.title = $('<span>');
+			self.title
+					.html(title)
+					.appendTo(self.title_bar);
 
 			var window_container = $('<div>');
 			window_container
@@ -280,7 +279,8 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 		if (can_close) {
 			self.close_button = $('<a>');
 			self.close_button
-					.addClass('close_button')
+					.html('<svg><use xlink:href="#icon-close"/></svg>')
+					.addClass('button close')
 					.click(self.close)
 					.appendTo(self.title_bar);
 		}
@@ -723,7 +723,7 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 	 * @param string background
 	 */
 	self.setIcon = function(background) {
-		// self.icon[0].style.backgroundImage = background;
+		self.icon[0].outerHTML = background;
 		self.window_list_item[0].innerHTML = background;
 	};
 

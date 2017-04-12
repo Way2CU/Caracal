@@ -2,27 +2,23 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Window Menu -->
-	<div class="main_menu">
+	<nav class="main">
 		<cms:var name="$params['link_new']"/>
 		<cms:var name="$params['link_groups']"/>
-	</div>
+	</nav>
 
 	<!-- Header -->
-	<div class="scrollable_list">
-		<div class="list_header">
-			<span class="column" style="width: 250px;">
-				<cms:text constant="column_title" module="news"/>
-			</span>
-			<span class="column" style="width: 100px;">
-				<cms:text constant="column_time" module="news"/>
-			</span>
-			<span class="column">
-				<cms:text constant="column_options"/>
-			</span>
-		</div>
-		<div class="list_content" style="height: 250px">
-			<_news_list show_invisible="1"/>
-		</div>
-	</div>
+	<table class="list">
+		<thead>
+			<tr>
+				<td><cms:text constant="column_title" module="news"/></td>
+				<td><cms:text constant="column_time" module="news"/></td>
+				<td><cms:text constant="column_options"/></td>
+			</tr>
+		</thead>
 
+		<tbody>
+			<cms:news_list show_invisible="1"/>
+		</tbody>
+	</table>
 </document>

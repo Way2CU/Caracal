@@ -1,0 +1,54 @@
+/**
+ * List Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.window table.list {
+	width: 100%;
+	border-spacing: 0;
+
+	color: mix(@color_dark, @color_bright, 80);
+
+	thead td {
+		.container-padding();
+		background-color: mix(@color_dark, @color_bright, 5);
+	}
+
+	tbody {
+		display: block;
+		height: 15em;
+		overflow-y: auto;
+
+		td {
+			.container-padding();
+		}
+	}
+}
+
+div.window div.scrollable_list {
+	.deprecated();
+	color: mix(@color_dark, @color_bright, 80);
+
+	div.list_header {
+		.container-padding();
+		background-color: mix(@color_dark, @color_bright, 5);
+
+		> span {
+			display: inline-block;
+		}
+	}
+
+	div.list_content {
+		display: block;
+		height: 15em;
+		overflow-y: auto;
+
+		span.column {
+			.container-padding();
+			display: inline-block;
+		}
+	}
+}

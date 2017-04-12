@@ -1,0 +1,24 @@
+/**
+ * Window Menu Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.window div.content div.main_menu {
+	.deprecated();
+	z-index: 1;
+}
+
+div.window div.content nav.main,
+div.window div.content div.main_menu {
+	position: absolute;
+	bottom: @padding_unit;
+	right: @padding_unit;
+
+	html[dir=rtl] & {
+		right: auto;
+		left: @padding_unit;
+	}
+}

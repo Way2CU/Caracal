@@ -373,12 +373,19 @@ class backend extends Module {
 	 * Parse main backend template.
 	 */
 	private function showBackend() {
+		// create template parser
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
-
 		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:menu_items', $this, 'tag_MainMenu');
 
+		// prepare parameters
+		$params = array(
+				'sprite' => $this->path.'images/sprite.svg'
+			);
+
+		// render template
 		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
