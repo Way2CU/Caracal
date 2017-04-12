@@ -464,6 +464,10 @@ Caracal.Shop.Cart = function() {
 			if (url[0] != '/')
 				url = '/' + url;
 
+			// add language if different from default
+			if (language_handler.current_language != language_handler.default_language)
+				url = '/' + language_handler.current_language + url;
+
 			url = $('meta[property=base-url]').attr('content') + url;
 		}
 

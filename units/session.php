@@ -60,23 +60,23 @@ class Session {
 		// get current session type
 		if (isset($_COOKIE[self::COOKIE_TYPE]))
 			$type = fix_id($_COOKIE[self::COOKIE_TYPE]); else
-			setcookie(self::COOKIE_TYPE, $type, 0, self::get_path());
+			setcookie(self::COOKIE_TYPE, $type, 0, self::get_path(), '', false, true);
 
 		// configure default duration
 		switch ($type) {
 		case SessionType::BROWSER:
-				session_set_cookie_params(0, self::get_path());
+				session_set_cookie_params(0, self::get_path(), '', false, true);
 				break;
 
 		case SessionType::EXTENDED:
 				$duration = self::EXTENDED_DURATION * 60;
-				session_set_cookie_params($duration, self::get_path());
+				session_set_cookie_params($duration, self::get_path(), '', false, true);
 				break;
 
 		case SessionType::NORMAL:
 			default:
 				$duration = self::DEFAULT_DURATION * 60;
-				session_set_cookie_params($duration, self::get_path());
+				session_set_cookie_params($duration, self::get_path(), '', false, true);
 				break;
 		}
 
@@ -86,8 +86,8 @@ class Session {
 
 		// extend expiration for all types other than browser
 		if ($type == SessionType::NORMAL || $type == SessionType::EXTENDED) {
-			setcookie(self::COOKIE_ID, session_id(), time() + $duration, self::get_path());
-			setcookie(self::COOKIE_TYPE, $type, time() + $duration, self::get_path());
+			setcookie(self::COOKIE_ID, session_id(), time() + $duration, self::get_path(), '', false, true);
+			setcookie(self::COOKIE_TYPE, $type, time() + $duration, self::get_path(), '', false, true);
 		}
 	}
 

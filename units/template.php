@@ -248,22 +248,17 @@ class TemplateHandler {
 			// allow for special attributes in top-level tag
 			$document = $this->engine->document->tagAttrs;
 
-			// change powered by header
-			header('X-Powered-By: Caracal/'._VERSION);
-
-			// let the browser/crawler know we have different desktop/mobile styles
-			if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1')
-				header('Vary: User-Agent');
-
 			// print document type
 			$type = 'html5';
-
 			if (isset($document['type']) && array_key_exists($document['type'], $document_types))
 				$type = $document['type'];
 
 			$document_type = $document_types[$type];
 
-			header('Content-Type: '.$document_type['mime'].'; charset=UTF-8');
+			// set headers
+			$this->set_headers($document_type['mime']);
+
+			// show document type
 			echo $document_type['code'];
 		}
 
@@ -896,6 +891,38 @@ class TemplateHandler {
 	}
 
 	/**
+	 * Set response headers for page templates.
+	 *
+	 * @param string $document_type
+	 */
+	private function set_headers($document_type) {
+		global $referrer_policy, $frame_options, $content_security_policy;
+
+		header('X-Powered-By: Caracal/'._VERSION);
+		header('Content-Type: '.$document_type.'; charset=UTF-8');
+
+		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+			// let the browser/crawler know we have different desktop/mobile styles
+			header('Vary: User-Agent');
+
+			// prevent drive-by downloads and site being treated as different type
+			header('X-Content-Type-Options: nosniff');
+
+			// prevent site loading from different origins
+			header('X-Frame-Options: '.$frame_options);
+
+			// enforce cross-site scripting protection
+			header('X-Xss-Protection: 1; mode=block');
+
+			// define content security policy
+			header('Content-Security-Policy: '.$content_security_policy);
+
+			// set referrer policy
+			header('Referrer-Policy: '.$referrer_policy);
+		}
+	}
+
+	/**
 	 * Registers handler function for specified tag
 	 *
 	 * @param string $tag_name Name of a tag to be handled
@@ -911,7 +938,7 @@ class TemplateHandler {
 	}
 
 	/**
-	 * Set tag children tags to be overriden.
+	 * Set tag children tags to be overridden.
 	 *
 	 * @param string $tag_name
 	 * @param array $children

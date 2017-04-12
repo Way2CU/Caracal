@@ -332,6 +332,19 @@ class shop extends Module {
 				5  // level
 			));
 
+			$shop_menu->addChild(null, new backend_MenuItem(
+				$this->get_language_constant('menu_suppliers'),
+				URL::from_file_path($this->path.'images/suppliers.svg'),
+				window_Open( // on click open window
+					'shop_suppliers',
+					400,
+					$this->get_language_constant('title_suppliers'),
+					true, true,
+					backend_UrlMake($this->name, 'suppliers')
+				),
+				5  // level
+			));
+
 			// delivery methods menu
 			$delivery_menu = new backend_MenuItem(
 				$this->get_language_constant('menu_delivery_methods'),
@@ -858,10 +871,6 @@ class shop extends Module {
 				$handler->transfer_control($params, $children);
 				break;
 
-			case 'suppliers':
-				$handler = Modules\Shop\Supplier\Handler::get_instance($this);
-				$handler->transfer_control($params, $children);
-
 			case 'sizes':
 				$handler = ShopItemSizesHandler::get_instance($this);
 				$handler->transfer_control($params, $children);
@@ -874,6 +883,11 @@ class shop extends Module {
 
 			case 'manufacturers':
 				$handler = ShopManufacturerHandler::get_instance($this);
+				$handler->transfer_control($params, $children);
+				break;
+
+			case 'suppliers':
+				$handler = Modules\Shop\Supplier\Handler::get_instance($this);
 				$handler->transfer_control($params, $children);
 				break;
 

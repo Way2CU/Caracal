@@ -116,7 +116,7 @@ class contact_form extends Module {
 
 								window_Open( // on click open window
 											'contact_forms',
-											600,
+											750,
 											$this->get_language_constant('title_forms_manage'),
 											true, true,
 											backend_UrlMake($this->name, 'forms_manage')
@@ -3038,6 +3038,8 @@ class contact_form extends Module {
 	 * @param array $children
 	 */
 	public function tag_FormList($tag_params, $children) {
+		global $section;
+
 		$conditions = array();
 		$manager = ContactForm_FormManager::get_instance();
 
@@ -3052,73 +3054,76 @@ class contact_form extends Module {
 		// get items from database
 		$items = $manager->get_items($manager->get_field_names(), $conditions);
 
-		if (count($items) > 0)
-			foreach ($items as $item) {
-				$params = array(
-					'id'			=> $item->id,
-					'text_id'		=> $item->text_id,
-					'name'			=> $item->name,
-					'action'		=> $item->action,
-					'template'		=> $item->template,
-					'use_ajax'		=> $item->use_ajax,
-					'show_submit'	=> $item->show_submit,
-					'show_reset'	=> $item->show_reset,
-					'show_cancel'	=> $item->show_cancel,
-					'selected'		=> $selected == $item->id,
-					'item_fields'	=> URL::make_hyperlink(
-											$this->get_language_constant('fields'),
-											window_Open(
-												'contact_form_fields_'.$item->id, 	// window id
-												500,				// width
-												$this->get_language_constant('title_form_fields'), // title
-												true, false,
-												URL::make_query(
-													'backend_module',
-													'transfer_control',
-													array('module', $this->name),
-													array('backend_action', 'fields_manage'),
-													array('form', $item->id)
-												)
-											)
-										),
-					'item_change'	=> URL::make_hyperlink(
-											$this->get_language_constant('change'),
-											window_Open(
-												'contact_forms_edit', 	// window id
-												430,				// width
-												$this->get_language_constant('title_forms_edit'), // title
-												false, false,
-												URL::make_query(
-													'backend_module',
-													'transfer_control',
-													array('module', $this->name),
-													array('backend_action', 'forms_edit'),
-													array('id', $item->id)
-												)
-											)
-										),
-					'item_delete'	=> URL::make_hyperlink(
-											$this->get_language_constant('delete'),
-											window_Open(
-												'contact_forms_delete', 	// window id
-												400,				// width
-												$this->get_language_constant('title_forms_delete'), // title
-												false, false,
-												URL::make_query(
-													'backend_module',
-													'transfer_control',
-													array('module', $this->name),
-													array('backend_action', 'forms_delete'),
-													array('id', $item->id)
-												)
-											)
-										)
-				);
+		if (count($items) == 0)
+			return;
 
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
+		foreach ($items as $item) {
+			$params = array(
+				'id'			=> $item->id,
+				'text_id'		=> $item->text_id,
+				'name'			=> $item->name,
+				'action'		=> $item->action,
+				'template'		=> $item->template,
+				'use_ajax'		=> $item->use_ajax,
+				'show_submit'	=> $item->show_submit,
+				'show_reset'	=> $item->show_reset,
+				'show_cancel'	=> $item->show_cancel,
+				'selected'		=> $selected == $item->id
+			);
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_fields'] = URL::make_hyperlink(
+								$this->get_language_constant('fields'),
+								window_Open(
+									'contact_form_fields_'.$item->id, 	// window id
+									500,				// width
+									$this->get_language_constant('title_form_fields'), // title
+									true, false,
+									URL::make_query(
+										'backend_module',
+										'transfer_control',
+										array('module', $this->name),
+										array('backend_action', 'fields_manage'),
+										array('form', $item->id)
+									)
+								));
+				$params['item_change'] = URL::make_hyperlink(
+								$this->get_language_constant('change'),
+								window_Open(
+									'contact_forms_edit', 	// window id
+									430,				// width
+									$this->get_language_constant('title_forms_edit'), // title
+									false, false,
+									URL::make_query(
+										'backend_module',
+										'transfer_control',
+										array('module', $this->name),
+										array('backend_action', 'forms_edit'),
+										array('id', $item->id)
+									)
+								));
+				$params['item_delete'] = URL::make_hyperlink(
+								$this->get_language_constant('delete'),
+								window_Open(
+									'contact_forms_delete', 	// window id
+									400,				// width
+									$this->get_language_constant('title_forms_delete'), // title
+									false, false,
+									URL::make_query(
+										'backend_module',
+										'transfer_control',
+										array('module', $this->name),
+										array('backend_action', 'forms_delete'),
+										array('id', $item->id)
+									)
+								));
 			}
+
+			// render template
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
 	}
 
 	/**

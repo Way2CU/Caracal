@@ -17,6 +17,7 @@
 						/>
 					<cms:language_data param="name"/>
 				</label>
+
 				<label class="horizontal">
 					<span><cms:text constant="label_manufacturer" module="shop"/></span>
 					<select name="manufacturer" style="width: 160px;">
@@ -31,18 +32,32 @@
 				</label>
 
 				<label class="horizontal">
+					<span><cms:text constant="label_supplier" module="shop"/></span>
+					<select name="supplier" style="width: 160px;">
+						<option/>
+						<cms:supplier_list
+							template="supplier_option.xml"
+							local="1"
+							selected="$params['supplier']"
+							cms:eval="selected"
+							/>
+					</select>
+				</label>
+
+				<br/>
+
+				<label class="horizontal">
 					<span><cms:text constant="label_uid" module="shop"/></span>
 					<input
 						name="uid"
 						class="code ltr"
 						type="text"
 						value="$params['uid']"
-						maxlength="13"
+						maxlength="64"
+						style="width: 250px;"
 						cms:eval="value"
 						/>
 				</label>
-
-				<br/>
 
 				<label class="horizontal">
 					<span><cms:text constant="label_item_expiration" module="shop"/></span>
