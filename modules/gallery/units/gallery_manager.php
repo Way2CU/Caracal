@@ -31,15 +31,13 @@ class GalleryManager extends ItemManager {
 	function delete_items($conditionals, $limit=null) {
 		global $site_path;
 
+		$gallery = gallery::get_instance();
 		$items = $this->get_items(array('filename'), $conditionals);
-
-		$image_path = _BASEPATH.'/'.$site_path.'gallery/images/';
-		$thumbnail_path = _BASEPATH.'/'.$site_path.'gallery/thumbnails/';
 
 		if (count($items) > 0)
 			foreach ($items as $item) {
-				unlink($image_path.$item->filename);
-				array_map('unlink', glob($thumbnail_path.'*'.$item->filename));
+				unlink($gallery->image_path.$item->filename);
+				array_map('unlink', glob($gallery->optimized_path.'*'.$item->filename));
 			}
 
 		parent::delete_items($conditionals, $limit);

@@ -393,7 +393,7 @@ class links extends Module {
 			$gallery = gallery::get_instance();
 			$gallery_manager = GalleryManager::get_instance();
 
-			$result = $gallery->createImage('image');
+			$result = $gallery->create_image('image');
 
 			if (!$result['error']) {
 				$image_data = array(
@@ -868,27 +868,7 @@ class links extends Module {
 				$percent = 100;
 		}
 
-		// get thumbnail image if exists
-		$image = null;
-		$thumbnail = null;
-
-		if (ModuleHandler::is_loaded('gallery')) {
-			$gallery = gallery::get_instance();
-			$gallery_manager = GalleryManager::get_instance();
-
-			if (is_numeric($item->image)) {
-				$image_item = $gallery_manager->get_single_item(
-													$gallery_manager->get_field_names(),
-													array('id' => $item->image)
-												);
-
-				if (is_object($image_item)) {
-					$image = $gallery->getImageURL($image_item);
-					$thumbnail = $gallery->getThumbnailURL($image_item);
-				}
-			}
-		}
-
+		// prepare parameters
 		$params = array(
 					'id'                  => $item->id,
 					'text'                => $item->text,
@@ -897,17 +877,17 @@ class links extends Module {
 					'url'                 => $item->url,
 					'redirect_url'        => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 					'external'            => $item->external,
-					'external_character'  => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+					'external_character'  => $item->external == '1' ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'sponsored'           => $item->sponsored,
-					'sponsored_character' => ($item->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+					'sponsored_character' => $item->sponsored == '1' ? CHAR_CHECKED : CHAR_UNCHECKED,
 					'display_limit'       => $item->display_limit,
 					'display_percent'     => $percent,
 					'sponsored_clicks'    => $item->sponsored_clicks,
 					'total_clicks'        => $item->total_clicks,
-					'image'               => $image,
-					'thumbnail'           => $thumbnail,
+					'image'               => $item->image
 				);
 
+		// set parameters and render template
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -920,6 +900,8 @@ class links extends Module {
 	 * @param array $children
 	 */
 	public function tag_LinkList($tag_params, $children) {
+		global $section;
+
 		$manager = \Modules\Links\Manager::get_instance();
 		$group_manager = \Modules\Links\GroupManager::get_instance();
 		$membership_manager = \Modules\Links\MembershipManager::get_instance();
@@ -1007,23 +989,14 @@ class links extends Module {
 			// calculate display progress
 			if (($item->sponsored_clicks >= $item->display_limit) || ($item->display_limit == 0)) {
 				$percent = 100;
+
 			} else {
 				$percent = round(($item->sponsored_clicks / $item->display_limit) * 100, 0);
-				if ($percent > 100) $percent = 100;
+				if ($percent > 100)
+					$percent = 100;
 			}
 
-			// if gallery is loaded
-			$image = '';
-			$thumbnail = '';
-			if ($use_images && !empty($item->image)) {
-				$image_item = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $item->image));
-
-				if (is_object($image_item)) {
-					$image = $gallery->getImageURL($image_item);
-					$thumbnail = $gallery->getThumbnailURL($image_item);
-				}
-			}
-
+			// prepare parameters
 			$params = array(
 						'id'                  => $item->id,
 						'text'                => $item->text,
@@ -1032,55 +1005,58 @@ class links extends Module {
 						'url'                 => $item->url,
 						'redirect_url'        => URL::make_query($this->name, 'redirect', array('id', $item->id)),
 						'external'            => $item->external,
-						'external_character'  => ($item->external == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+						'external_character'  => $item->external == '1' ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'sponsored'           => $item->sponsored,
-						'sponsored_character' => ($item->sponsored == '1') ? CHAR_CHECKED : CHAR_UNCHECKED,
+						'sponsored_character' => $item->sponsored == '1' ? CHAR_CHECKED : CHAR_UNCHECKED,
 						'display_limit'       => $item->display_limit,
 						'display_percent'     => $percent,
 						'sponsored_clicks'    => $item->sponsored_clicks,
 						'total_clicks'        => $item->total_clicks,
-						'image'               => $image,
-						'thumbnail'           => $thumbnail,
-						'item_change'         => URL::make_hyperlink(
-												$this->get_language_constant('change'),
-												window_Open(
-													'links_change', 	// window id
-													600,				// width
-													$this->get_language_constant('title_links_change'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'links_change'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_delete'         => URL::make_hyperlink(
-												$this->get_language_constant('delete'),
-												window_Open(
-													'links_delete', 	// window id
-													400,				// width
-													$this->get_language_constant('title_links_delete'), // title
-													false, false,
-													URL::make_query(
-														'backend_module',
-														'transfer_control',
-														array('module', $this->name),
-														array('backend_action', 'links_delete'),
-														array('id', $item->id)
-													)
-												)
-											),
-						'item_open'           => URL::make_hyperlink(
-												$this->get_language_constant('open'),
-												$item->url,
-												'', '',
-												'_blank'
-											),
+						'image'               => $item->image
 					);
 
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
+											$this->get_language_constant('change'),
+											window_Open(
+												'links_change', 	// window id
+												600,				// width
+												$this->get_language_constant('title_links_change'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'links_change'),
+													array('id', $item->id)
+												))
+										);
+
+				$params['item_delete'] = URL::make_hyperlink(
+											$this->get_language_constant('delete'),
+											window_Open(
+												'links_delete', 	// window id
+												400,				// width
+												$this->get_language_constant('title_links_delete'), // title
+												false, false,
+												URL::make_query(
+													'backend_module',
+													'transfer_control',
+													array('module', $this->name),
+													array('backend_action', 'links_delete'),
+													array('id', $item->id)
+												))
+										);
+
+				$params['item_open'] = URL::make_hyperlink(
+											$this->get_language_constant('open'),
+											$item->url,
+											'', '',
+											'_blank'
+										);
+			}
+
+			// render template
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();
@@ -1312,7 +1288,7 @@ class links extends Module {
 		if (is_object($item)) {
 			$image_url = null;
 			if (ModuleHandler::is_loaded('gallery'))
-				$image_url = gallery::getImageById($item->image);
+				$image_url = gallery::get_raw_image($item->image);
 
 			$result['error'] = false;
 			$result['item'] = array(
@@ -1407,7 +1383,7 @@ class links extends Module {
 			foreach ($items as $item) {
 				$image_url = null;
 				if ($gallery_present && !is_null($item->image))
-					$image_url = gallery::getImageById($item->image);
+					$image_url = gallery::get_raw_image($item->image);
 
 				$result['items'][] = array(
 									'id'               => $item->id,

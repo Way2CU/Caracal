@@ -302,7 +302,7 @@ class Handler {
 
 			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::get_instance();
-				$gallery_id = $gallery->createGallery($data['name']);
+				$gallery_id = $gallery->create_gallery($data['name']);
 				$data['gallery'] = $gallery_id;
 
 				// create action for opening gallery editor
@@ -613,7 +613,7 @@ class Handler {
 		$template->register_tag_handler('cms:value_list', $size_handler, 'tag_ValueList');
 		$template->register_tag_handler('cms:color_list', $this, 'tag_ColorList');
 
-		// parse template
+		// prepare parameters
 		$rating = 0;
 		$variation_id = $shop->generateVariationId($item->uid);
 
@@ -646,6 +646,7 @@ class Handler {
 					'deleted'               => $item->deleted,
 				);
 
+		// render template
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -844,6 +845,7 @@ class Handler {
 		$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
 
 		foreach ($items as $item) {
+			// prepare parameters
 			$rating = 0;
 			$variation_id = $shop->generateVariationId($item->uid);
 
@@ -933,10 +935,12 @@ class Handler {
 													$this->parent->get_language_constant('images'),
 													$open_gallery_window
 												);
+
 			} else {
 				$params['item_images'] = '';
 			}
 
+			// render template
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();
