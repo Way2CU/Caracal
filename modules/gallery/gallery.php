@@ -2145,8 +2145,8 @@ class gallery extends Module {
 		$conditions = array();
 
 		// try to detect which identifier was specified
-		if (is_int($item)) {
-			$conditions['id'] = $item;
+		if (is_numeric($item)) {
+			$conditions['id'] = (int) $item;
 
 		} else if (is_string($item)) {
 			$conditions['text_id'] = $item;
@@ -2187,8 +2187,8 @@ class gallery extends Module {
 		$conditions = array();
 
 		// try to detect which identifier was specified
-		if (is_int($group)) {
-			$conditions['id'] = $group;
+		if (is_numeric($group)) {
+			$conditions['id'] = (int) $group;
 
 		} else if (is_string($group)) {
 			$conditions['text_id'] = $group;
@@ -2246,8 +2246,8 @@ class gallery extends Module {
 		$container_id = null;
 
 		// try to get container id depending on parameter type
-		if (is_int($container)) {
-			$container_id = $container;
+		if (is_numeric($container)) {
+			$container_id = (int) $container;
 
 		} else if (is_string($container)) {
 			$manager = GalleryContainerManager::get_instance();
@@ -2296,8 +2296,8 @@ class gallery extends Module {
 		$conditions = array();
 
 		// try to detect which identifier was specified
-		if (is_int($item)) {
-			$conditions['id'] = $item;
+		if (is_numeric($item)) {
+			$conditions['id'] = (int) $item;
 
 		} else if (is_string($item)) {
 			$conditions['text_id'] = $item;
@@ -2344,8 +2344,8 @@ class gallery extends Module {
 		$conditions = array();
 
 		// try to detect which identifier was specified
-		if (is_int($group)) {
-			$conditions['id'] = $group;
+		if (is_numeric($group)) {
+			$conditions['id'] = (int) $group;
 
 		} else if (is_string($group)) {
 			$conditions['text_id'] = $group;
@@ -2406,8 +2406,8 @@ class gallery extends Module {
 		$container_id = null;
 
 		// try to get container id depending on parameter type
-		if (is_int($container)) {
-			$container_id = $container;
+		if (is_numeric($container)) {
+			$container_id = (int) $container;
 
 		} else if (is_string($container)) {
 			$manager = GalleryContainerManager::get_instance();
