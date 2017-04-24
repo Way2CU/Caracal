@@ -185,6 +185,7 @@ final class SectionHandler {
 			$template = new TemplateHandler($error_code.'.xml', $system_template_path);
 
 		// parse template
+		$template->set_top_level(true);
 		$template->parse();
 	}
 
