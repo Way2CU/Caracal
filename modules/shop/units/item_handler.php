@@ -668,6 +668,7 @@ class Handler {
 		$order_by = array('id');
 		$order_asc = true;
 		$limit = null;
+		$generate_sprite = false;
 
 		// create conditions
 		if (isset($_REQUEST['manufacturer']) && !empty($_REQUEST['manufacturer']))
@@ -817,6 +818,9 @@ class Handler {
 		if (isset($tag_params['random']) && $tag_params['random'] == 1)
 			$order_by = array('RAND()');
 
+		if (isset($tag_params['generate_sprite']))
+			$generate_sprite = $tag_params['generate_sprite'] == 1;
+
 		// get items
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
@@ -844,6 +848,31 @@ class Handler {
 			$days_until_old = fix_id($tag_params['days_until_old']);
 		$new_timestamp = time() - ($days_until_old * 24 * 60 * 60);
 
+		// collect associated images and generate sprite
+		$sprite_image = '';
+
+		if ($generate_sprite && !is_null($gallery)) {
+			$gallery_ids = array();
+
+			// collect gallery ids
+			foreach ($items as $item)
+				$gallery_ids []= $item->gallery;
+
+			// get image parameters
+			$image_size = isset($tag_params['image_size']) ? fix_id($tag_params['image_size']) : null;
+			$image_constraint = isset($tag_params['image_constraint']) ? fix_id($tag_params['image_constraint']) : null;
+			$image_crop = isset($tag_params['image_crop']) ? fix_id($tag_params['image_crop']) : null;
+
+			// generate sprite
+			$sprite_image = gallery::create_group_sprite_image(
+					$gallery_ids,
+					$image_size,
+					$image_constraint,
+					$image_crop
+				);
+		}
+
+		// render template for each individual item
 		foreach ($items as $item) {
 			// prepare parameters
 			$rating = 0;
@@ -877,7 +906,8 @@ class Handler {
 						'is_new'          => strtotime($item->timestamp) >= $new_timestamp,
 						'expires'         => strtotime($item->expires),
 						'visible'         => $item->visible,
-						'deleted'         => $item->deleted
+						'deleted'         => $item->deleted,
+						'sprite'          => $sprite_image
 					);
 
 			if ($section == 'backend' || $section == 'backend_module') {
