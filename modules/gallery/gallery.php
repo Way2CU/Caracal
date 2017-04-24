@@ -1288,6 +1288,32 @@ class gallery extends Module {
 		if (count($items) == 0)
 			return;
 
+		// collect associated images and generate sprite
+		$sprite_image = '';
+
+		if ($generate_sprite && !is_null($gallery)) {
+			$image_ids = array();
+
+			// collect gallery ids
+			foreach ($items as $item)
+				$image_ids []= $item->id;
+
+			// get image parameters
+			$image_size = isset($tag_params['image_size']) ? fix_id($tag_params['image_size']) : null;
+			$image_constraint = isset($tag_params['image_constraint']) ? fix_id($tag_params['image_constraint']) : null;
+			$image_crop = isset($tag_params['image_crop']) ? fix_id($tag_params['image_crop']) : null;
+
+			// generate sprite
+			$sprite_image = gallery::create_sprite_image(
+					$image_ids,
+					$image_size,
+					$image_constraint,
+					$image_crop
+				);
+		}
+
+
+		// render template for each image
 		foreach ($items as $item) {
 			$params = array(
 						'id'          => $item->id,
@@ -1300,7 +1326,8 @@ class gallery extends Module {
 						'visible'     => $item->visible,
 						'image'       => self::get_raw_image($item),
 						'selected'    => $selected,
-						'default'     => $default_image == $item->id
+						'default'     => $default_image == $item->id,
+						'sprite'      => $sprite_image
 				);
 
 			if ($section == 'backend' || $section == 'backend_module') {
