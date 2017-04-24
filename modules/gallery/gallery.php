@@ -2135,6 +2135,109 @@ class gallery extends Module {
 	}
 
 	/**
+	 * Get image id from specified group.
+	 *
+	 * @param mixed $group
+	 * @return integer
+	 */
+	private static function get_group_image_id($group) {
+		$result = null;
+		$conditions = array();
+
+		// try to detect which identifier was specified
+		if (is_numeric($group)) {
+			$conditions['id'] = (int) $group;
+
+		} else if (is_string($group)) {
+			$conditions['text_id'] = $group;
+
+		} else if (is_object($group)) {
+			// mark as invalid group if property is missing
+			if (!property_exists($group, 'thumbnail') || !property_exists($group, 'id'))
+				$group = null;
+		}
+
+		// try to get item from the database
+		if (!empty($conditions)) {
+			$manager = GalleryGroupManager::get_instance();
+			$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
+		}
+
+		// try to generate result from specified item
+		if (is_object($group)) {
+			if (!is_null($group->thumbnail)) {
+				// get image from selected thumbnail
+				$result = $group->thumbnail;
+
+			} else {
+				// get image randomly from the group
+				$image_manager = GalleryManager::get_instance();
+				$image = $image_manager->get_single_item(
+						array('id'),
+						array(
+							'group'   => $group->id,
+							'visible' => 1
+						),
+						array('RAND()')
+					);
+
+				if (is_object($image))
+					$result = $image->id;
+			}
+
+		} else {
+			trigger_error('Gallery: No suitable group identifier specified!', E_USER_NOTICE);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Get image id from specified container.
+	 *
+	 * @param mixed $group
+	 * @return integer
+	 */
+	private static function get_container_image_id($container) {
+		$result = null;
+		$container_id = null;
+
+		// try to get container id depending on parameter type
+		if (is_numeric($container)) {
+			$container_id = (int) $container;
+
+		} else if (is_string($container)) {
+			$manager = GalleryContainerManager::get_instance();
+			$container = $manager->get_single_item(
+					array('id'),
+					array('text_id' => $container)
+				);
+
+			if (is_object($container))
+				$container_id = $container->id;
+
+		} else if (is_object($container)) {
+			if (property_exists($container, 'id'))
+				$container_id = $container->id;
+		}
+
+		// get random group and then get its image
+		if (!is_null($container_id)) {
+			$membership_manager = GalleryGroupMembershipManager::get_instance();
+			$result = $membership_manager->get_item_value(
+					'group',
+					array('container' => $container_id),
+					array('RAND()')
+				);
+
+		} else {
+			trigger_error('Gallery: No suitable container identifier specified!', E_USER_NOTICE);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Get URL to the raw, unmodified and unoptimized image.
 	 *
 	 * @param object/integer $item
@@ -2340,55 +2443,7 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public static function get_group_image($group, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$result = '';
-		$conditions = array();
-
-		// try to detect which identifier was specified
-		if (is_numeric($group)) {
-			$conditions['id'] = (int) $group;
-
-		} else if (is_string($group)) {
-			$conditions['text_id'] = $group;
-
-		} else if (is_object($group)) {
-			// mark as invalid group if property is missing
-			if (!property_exists($group, 'thumbnail') || !property_exists($group, 'id'))
-				$group = null;
-		}
-
-		// try to get item from the database
-		if (!empty($conditions)) {
-			$manager = GalleryGroupManager::get_instance();
-			$group = $manager->get_single_item(array('id', 'thumbnail'), $conditions);
-		}
-
-		// try to generate result from specified item
-		if (is_object($group)) {
-			if (!is_null($group->thumbnail)) {
-				// get image from selected thumbnail
-				$result = self::get_image($group->thumbnail, $size, $constraint, $crop_size);
-
-			} else {
-				// get image randomly from the group
-				$image_manager = GalleryManager::get_instance();
-				$image = $image_manager->get_single_item(
-						array('filename'),
-						array(
-							'group'   => $group->id,
-							'visible' => 1
-						),
-						array('RAND()')
-					);
-
-				if (is_object($image))
-					$result = self::get_image($image, $size, $constraint, $crop_size);
-			}
-
-		} else {
-			trigger_error('Gallery: No suitable group identifier specified!', E_USER_NOTICE);
-		}
-
-		return $result;
+		return self::get_image(self::get_group_image_id($group), $size, $constraint, $crop_size);
 	}
 
 	/**
@@ -2402,43 +2457,7 @@ class gallery extends Module {
 	 * @return string
 	 */
 	public static function get_container_image($container, $size=100, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
-		$result = '';
-		$container_id = null;
-
-		// try to get container id depending on parameter type
-		if (is_numeric($container)) {
-			$container_id = (int) $container;
-
-		} else if (is_string($container)) {
-			$manager = GalleryContainerManager::get_instance();
-			$container = $manager->get_single_item(
-					array('id'),
-					array('text_id' => $container)
-				);
-
-			if (is_object($container))
-				$container_id = $container->id;
-
-		} else if (is_object($container)) {
-			if (property_exists($container, 'id'))
-				$container_id = $container->id;
-		}
-
-		// get random group and then get its image
-		if (!is_null($container_id)) {
-			$membership_manager = GalleryGroupMembershipManager::get_instance();
-			$group_id = $membership_manager->get_item_value(
-					'group',
-					array('container' => $container_id),
-					array('RAND()')
-				);
-
-			if (!is_null($group_id))
-				$result = self::get_group_image($group_id, $size, $constraint, $crop_size);
-
-		} else {
-			trigger_error('Gallery: No suitable container identifier specified!', E_USER_NOTICE);
-		}
+		return self::get_group_image(self::get_container_image_id, $size, $constraint, $crop_size);
 	}
 
 	/**
@@ -2839,7 +2858,7 @@ class gallery extends Module {
 
 		// generate target file name
 		$target_file = $this->optimized_path;
-		$target_file .= $size.'_';
+		$target_file .= 'images_'.$size.'_';
 		if (!is_null($crop_size))
 			$target_file .= 'crp'.$crop_size.'_';
 		$target_file .= 'cs'.$constraint.'_';
@@ -2886,6 +2905,188 @@ class gallery extends Module {
 				continue;
 
 			fwrite($file, '<image id="'.$image->id.'" x="0" y="0" width="'.$size.'" height="'.$size.'" ');
+			fwrite($file, 'xlink:href="data:image/jpg;base64,'.base64_encode(file_get_contents($image_file)));
+			fwrite($file, '"/>');
+		}
+
+		// close target file and clean up
+		fwrite($file, '</svg>');
+		fclose($file);
+
+		return $target_file;
+	}
+
+	/**
+	 * Generate SVG sprite composite image based on group id list. This image will embed
+	 * other images and provide easy mechanism for displaying them. While this process does
+	 * generate files 15-20% bigger (on average) TCP/IP protocol, due to its initial
+	 * throttling, will favor these composites over individual requests for separate small
+	 * files.
+	 *
+	 * Note: Instead of image id, thumbnails will be stored under group id for easier access.
+	 *
+	 * @param array $id_list,
+	 * @param integer $size
+	 * @param integer $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public function create_group_sprite_image($id_list, $size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		// prepare id hash
+		sort($id_list);
+		$set_hash = hash('sha256', implode('-', $id_list));
+
+		// generate target file name
+		$target_file = $this->optimized_path;
+		$target_file .= 'groups_'.$size.'_';
+		if (!is_null($crop_size))
+			$target_file .= 'crp'.$crop_size.'_';
+		$target_file .= 'cs'.$constraint.'_';
+		$target_file .= $set_hash.'.svg';
+
+		// if target file exists, don't create it
+		if (file_exists($target_file))
+			return $target_file;
+
+		// get image data
+		$manager = GalleryManager::get_instance();
+
+		$group_image_ids = array();
+		foreach ($id_list as $group_id)
+			$group_image_ids[$group_id] = self::get_group_image_id($group_id);
+
+		if (count($group_image_ids) == 0) {
+			$images = array();  // make empty array so we can fail properly
+
+		} else {
+			$images = $manager->get_items(
+					array('filename'),
+					array('id' => array_values($group_image_ids)
+				);
+		}
+
+		// report potential misbehavior
+		if (count($images) == 0) {
+			trigger_error('Gallery: Requested empty sprite!', E_USER_NOTICE);
+			return '';
+		}
+
+		// open target file for writing
+		$file = fopen($target_file, 'w');
+
+		if ($file === false) {
+			trigger_error('Gallery: Unable to create sprite file for writing!', E_USER_ERROR);
+			return '';
+		}
+
+		// generate header code
+		fwrite($file, '<svg version="1.1" baseProfile="tiny" width="100%" height="100%" ');
+		fwrite($file, 'viewBox="0 0 '.$size.' '.$size.'" ');
+		fwrite($file, 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">');
+		fwrite($file, '<defs><style type="text/css">image{visibility:hidden;}image:target{visibility:visible;}</style></defs>');
+
+		// embed each image individually
+		foreach ($images as $image) {
+			$original_file = $this->optimized_path.$image->filename;
+			$image_file = $this->create_optimized_image($original_file, $size, $constraint, $crop_size);
+			$group_id = array_search($image->id, $group_image_ids);
+
+			// skip images which can't be loaded
+			if (!file_exists($image_file))
+				continue;
+
+			fwrite($file, '<image id="'.$group_id.'" x="0" y="0" width="'.$size.'" height="'.$size.'" ');
+			fwrite($file, 'xlink:href="data:image/jpg;base64,'.base64_encode(file_get_contents($image_file)));
+			fwrite($file, '"/>');
+		}
+
+		// close target file and clean up
+		fwrite($file, '</svg>');
+		fclose($file);
+
+		return $target_file;
+	}
+
+	/**
+	 * Generate SVG sprite composite image based on container id list. This image will embed
+	 * other images and provide easy mechanism for displaying them. While this process does
+	 * generate files 15-20% bigger (on average) TCP/IP protocol, due to its initial
+	 * throttling, will favor these composites over individual requests for separate small
+	 * files.
+	 *
+	 * Note: Instead of image id, thumbnails will be stored under container id for easier access.
+	 *
+	 * @param array $id_list,
+	 * @param integer $size
+	 * @param integer $constraint
+	 * @param integer $crop_size
+	 * @return string
+	 */
+	public function create_container_sprite_image($id_list, $size, $constraint=Thumbnail::CONSTRAIN_BOTH, $crop_size=null) {
+		// prepare id hash
+		sort($id_list);
+		$set_hash = hash('sha256', implode('-', $id_list));
+
+		// generate target file name
+		$target_file = $this->optimized_path;
+		$target_file .= 'containers_'.$size.'_';
+		if (!is_null($crop_size))
+			$target_file .= 'crp'.$crop_size.'_';
+		$target_file .= 'cs'.$constraint.'_';
+		$target_file .= $set_hash.'.svg';
+
+		// if target file exists, don't create it
+		if (file_exists($target_file))
+			return $target_file;
+
+		// get image data
+		$manager = GalleryManager::get_instance();
+
+		$container_image_ids = array();
+		foreach ($id_list as $container_id)
+			$container_image_ids[$container_id] = self::get_container_image_id($container_id);
+
+		if (count($container_image_ids) == 0) {
+			$images = array();  // make empty array so we can fail properly
+
+		} else {
+			$images = $manager->get_items(
+					array('filename'),
+					array('id' => array_values($container_image_ids)
+				);
+		}
+
+		// report potential misbehavior
+		if (count($images) == 0) {
+			trigger_error('Gallery: Requested empty sprite!', E_USER_NOTICE);
+			return '';
+		}
+
+		// open target file for writing
+		$file = fopen($target_file, 'w');
+
+		if ($file === false) {
+			trigger_error('Gallery: Unable to create sprite file for writing!', E_USER_ERROR);
+			return '';
+		}
+
+		// generate header code
+		fwrite($file, '<svg version="1.1" baseProfile="tiny" width="100%" height="100%" ');
+		fwrite($file, 'viewBox="0 0 '.$size.' '.$size.'" ');
+		fwrite($file, 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">');
+		fwrite($file, '<defs><style type="text/css">image{visibility:hidden;}image:target{visibility:visible;}</style></defs>');
+
+		// embed each image individually
+		foreach ($images as $image) {
+			$original_file = $this->optimized_path.$image->filename;
+			$image_file = $this->create_optimized_image($original_file, $size, $constraint, $crop_size);
+			$container_id = array_search($image->id, $container_image_ids);
+
+			// skip images which can't be loaded
+			if (!file_exists($image_file))
+				continue;
+
+			fwrite($file, '<image id="'.$container_id.'" x="0" y="0" width="'.$size.'" height="'.$size.'" ');
 			fwrite($file, 'xlink:href="data:image/jpg;base64,'.base64_encode(file_get_contents($image_file)));
 			fwrite($file, '"/>');
 		}
