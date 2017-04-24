@@ -1219,6 +1219,7 @@ class gallery extends Module {
 		$order_asc = true;
 		$conditions = array();
 		$default_image = null;
+		$generate_sprite = false;
 
 		if (!isset($tag_params['show_invisible']))
 			$conditions['visible'] = 1;
@@ -1259,6 +1260,9 @@ class gallery extends Module {
 
 		if (isset($tag_params['order_asc']))
 			$order_asc = fix_id($tag_params['order_asc']) == 1 ? true : false;
+
+		if (isset($tag_params['generate_sprite']))
+			$generate_sprite = $tag_params['generate_sprite'] == 1;
 
 		// get default image if group is specified
 		if (isset($conditions['group'])) {
@@ -1311,7 +1315,6 @@ class gallery extends Module {
 					$image_crop
 				);
 		}
-
 
 		// render template for each image
 		foreach ($items as $item) {
