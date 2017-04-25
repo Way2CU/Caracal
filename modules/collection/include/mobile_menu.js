@@ -1,11 +1,11 @@
 /**
  * Mobile Menu JavaScript
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2017. by Way2CU
  * Author: Mladen Mijatov
  */
 
-var Caracal = Caracal || {};
+var Caracal = Caracal || new Object();
 
 
 Caracal.MobileMenu = function() {
@@ -36,17 +36,6 @@ Caracal.MobileMenu = function() {
 		self._top_bar = $('.mobile_title').eq(0);
 		self._menu = $('.mobile_menu').eq(0);
 
-		// configure top bar
-		self._top_bar.css('z-index', 10001);
-
-		// configure main menu
-		self._menu
-			.css({
-				top: self._top_bar.height(),
-				height: $(window).height() - self._top_bar.height(),
-				zIndex: 10000
-			});
-
 		// connect events in main menu
 		self._menu.find('a').click(self._handle_menu_item_click);
 
@@ -66,17 +55,9 @@ Caracal.MobileMenu = function() {
 
 		// connect window events
 		$(window)
-			.bind('resize', self._update_menu_size)
 			.bind('touchstart', self._handle_touch_start)
 			.bind('touchmove', self._handle_touch_move)
 			.bind('touchend', self._handle_touch_end);
-	};
-
-	/**
-	 * Update size of menu container.
-	 */
-	self._update_menu_size = function(event) {
-		self._menu.css('height', $(window).height() - self._top_bar.height());
 	};
 
 	/**
@@ -199,5 +180,3 @@ Caracal.MobileMenu = function() {
 	// complete initialization
 	self._init();
 };
-
-window['MobileMenu'] = Caracal.MobileMenu;
