@@ -2931,7 +2931,7 @@ class gallery extends Module {
 
 		// embed each image individually
 		foreach ($images as $image) {
-			$original_file = $this->optimized_path.$image->filename;
+			$original_file = $this->image_path.$image->filename;
 			$image_file = $this->create_optimized_image($original_file, $size, $constraint, $crop_size);
 
 			// skip images which can't be loaded
@@ -2955,8 +2955,7 @@ class gallery extends Module {
 	 * other images and provide easy mechanism for displaying them. While this process does
 	 * generate files 15-20% bigger (on average) TCP/IP protocol, due to its initial
 	 * throttling, will favor these composites over individual requests for separate small
-	 * files.
-	 *
+	 * files.  *
 	 * Note: Instead of image id, thumbnails will be stored under group id for easier access.
 	 *
 	 * @param array $id_list,
@@ -3025,7 +3024,7 @@ class gallery extends Module {
 
 		// embed each image individually
 		foreach ($images as $image) {
-			$original_file = $this->optimized_path.$image->filename;
+			$original_file = $this->image_path.$image->filename;
 			$image_file = $this->create_optimized_image($original_file, $size, $constraint, $crop_size);
 			$group_id = array_search($image->id, $group_image_ids);
 
@@ -3120,7 +3119,7 @@ class gallery extends Module {
 
 		// embed each image individually
 		foreach ($images as $image) {
-			$original_file = $this->optimized_path.$image->filename;
+			$original_file = $this->image_path.$image->filename;
 			$image_file = $this->create_optimized_image($original_file, $size, $constraint, $crop_size);
 			$container_id = array_search($image->id, $container_image_ids);
 
