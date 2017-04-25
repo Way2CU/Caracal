@@ -1308,7 +1308,7 @@ class gallery extends Module {
 			$image_crop = isset($tag_params['image_crop']) ? fix_id($tag_params['image_crop']) : null;
 
 			// generate sprite
-			$sprite_image = gallery::create_sprite_image(
+			$sprite_image = $this->create_sprite_image(
 					$image_ids,
 					$image_size,
 					$image_constraint,

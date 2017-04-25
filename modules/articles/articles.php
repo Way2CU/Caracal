@@ -786,6 +786,7 @@ class articles extends Module {
 		$sprite_image = '';
 
 		if ($generate_sprite && ModuleHandler::is_loaded('gallery')) {
+			$gallery = gallery::get_instance();
 			$gallery_ids = array();
 
 			// collect gallery ids
@@ -798,7 +799,7 @@ class articles extends Module {
 			$image_crop = isset($tag_params['image_crop']) ? fix_id($tag_params['image_crop']) : null;
 
 			// generate sprite
-			$sprite_image = gallery::create_group_sprite_image(
+			$sprite_image = $gallery->create_group_sprite_image(
 					$gallery_ids,
 					$image_size,
 					$image_constraint,
