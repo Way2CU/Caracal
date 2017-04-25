@@ -2900,7 +2900,7 @@ class gallery extends Module {
 
 		// if target file exists, don't create it
 		if (file_exists($target_file))
-			return $target_file;
+			return URL::from_file_path($target_file);
 
 		// get image data
 		$manager = GalleryManager::get_instance();
@@ -2983,7 +2983,7 @@ class gallery extends Module {
 
 		// if target file exists, don't create it
 		if (file_exists($target_file))
-			return $target_file;
+			return URL::from_file_path($target_file);
 
 		// get image data
 		$manager = GalleryManager::get_instance();
@@ -3078,7 +3078,7 @@ class gallery extends Module {
 
 		// if target file exists, don't create it
 		if (file_exists($target_file))
-			return $target_file;
+			return URL::from_file_path($target_file);
 
 		// get image data
 		$manager = GalleryManager::get_instance();
