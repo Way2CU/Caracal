@@ -2886,6 +2886,10 @@ class gallery extends Module {
 		sort($id_list);
 		$set_hash = hash('sha256', implode('-', $id_list));
 
+		// make sure constraint is specified
+		if (is_null($constraint))
+			$constraint = Thumbnail::CONSTRAIN_BOTH;
+
 		// generate target file name
 		$target_file = $this->optimized_path;
 		$target_file .= 'images_'.$size.'_';
@@ -2965,6 +2969,10 @@ class gallery extends Module {
 		// prepare id hash
 		sort($id_list);
 		$set_hash = hash('sha256', implode('-', $id_list));
+
+		// make sure constraint is specified
+		if (is_null($constraint))
+			$constraint = Thumbnail::CONSTRAIN_BOTH;
 
 		// generate target file name
 		$target_file = $this->optimized_path;
@@ -3056,6 +3064,10 @@ class gallery extends Module {
 		// prepare id hash
 		sort($id_list);
 		$set_hash = hash('sha256', implode('-', $id_list));
+
+		// make sure constraint is specified
+		if (is_null($constraint))
+			$constraint = Thumbnail::CONSTRAIN_BOTH;
 
 		// generate target file name
 		$target_file = $this->optimized_path;
