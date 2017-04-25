@@ -2947,7 +2947,7 @@ class gallery extends Module {
 		fwrite($file, '</svg>');
 		fclose($file);
 
-		return $target_file;
+		return URL::from_file_path($target_file);
 	}
 
 	/**
@@ -3041,7 +3041,7 @@ class gallery extends Module {
 		fwrite($file, '</svg>');
 		fclose($file);
 
-		return $target_file;
+		return URL::from_file_path($target_file);
 	}
 
 	/**
@@ -3136,7 +3136,7 @@ class gallery extends Module {
 		fwrite($file, '</svg>');
 		fclose($file);
 
-		return $target_file;
+		return URL::from_file_path($target_file);
 	}
 }
 
