@@ -2998,7 +2998,7 @@ class gallery extends Module {
 
 		} else {
 			$images = $manager->get_items(
-					array('filename'),
+					array('id', 'filename'),
 					array('id' => array_values($group_image_ids))
 				);
 		}
@@ -3093,7 +3093,7 @@ class gallery extends Module {
 
 		} else {
 			$images = $manager->get_items(
-					array('filename'),
+					array('id', 'filename'),
 					array('id' => array_values($container_image_ids))
 				);
 		}
