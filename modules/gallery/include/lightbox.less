@@ -1,0 +1,51 @@
+/**
+ * LightBox Style Sheet
+ * Gallery Module
+ *
+ * Copyright (c) 2017. by Way2CU
+ * Author: Mladen Mijatov
+ */
+
+section.lightbox {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	padding: 10rem;
+
+	box-sizing: border-box;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.5s;
+
+	&.visible {
+		pointer-events: auto;
+		opacity: 1;
+	}
+
+	// image container
+	div.image {
+		a.control {
+			display: inline-block;
+
+			&.previous {
+			}
+
+			&.next {
+			}
+
+			&.close {
+			}
+		}
+
+		figure {
+			display: inline-block;
+			width: calc(~'100% - 4rem');
+		}
+	}
+
+	// thumbnails container
+	div.thumbnails {
+	}
+}

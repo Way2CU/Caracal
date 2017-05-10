@@ -1,25 +1,355 @@
 /**
  * LightBox System
  *
- * Copyright (c) 2013. by Way2CU
+ * Copyright (c) 2017. by Way2CU
  * Author: Mladen Mijatov
  *
  * This system provides developers with simple picture zoom
  * optionally displayed with title and description.
- *
- * Example:
- * <a href="link/to/big/image.jpg" title="Image title">
- *    <img src="link/to/thumbnal.jpg" alt="Image title">
- *    <span class="title">Image title</span>
- *    <span class="description">Image description</span>
- * </a>
- *
- * Please note that only *ONE* method of including image title is
- * needed but you can use them all.
- *
- * Requires: jQuery 1.4.2+, Animation Chain 0.1+
  */
 
+// create namespace
+var Caracal = Caracal || new Object();
+Caracal.Gallery = Caracal.Gallery || new Object();
+
+
+Caracal.Gallery.Lightbox = function() {
+	var self = this;
+
+	self.is_open = false;
+	self.show_title = true;
+	self.show_controls = true;
+	self.show_thumbnails = false;
+	self.show_description = false;
+
+	// local containers
+	self.images = new Array();
+	self.handlers = new Object();
+	self.ui = new Object();
+
+	/**
+	 * Complete object initialization.
+	 */
+	self._init = function() {
+		// create controls
+		self.ui.previous_control = document.createElement('a');
+		self.ui.next_control = document.createElement('a');
+		self.ui.close_control = document.createElement('a');
+
+		with (self.ui.previous_control) {
+			classList.add('control', 'previous');
+			addEventListener('click', self.handlers.previous_click);
+
+			if (!self.show_controls)
+				classList.add('hidden');
+		}
+
+		with (self.ui.next_control) {
+			classList.add('control', 'next');
+			addEventListener('click', self.handlers.next_click);
+
+			if (!self.show_controls)
+				classList.add('hidden');
+		}
+
+		with (self.ui.close_control) {
+			classList.add('control', 'close');
+			addEventListener('click', self.handlers.close_click);
+		}
+
+		// create image and its caption
+		self.ui.title = document.createElement('h4');
+		self.ui.description = document.createElement('div');
+
+		if (!self.show_description)
+			self.ui.description.classList.add('hidden');
+
+		self.ui.caption_container = document.createElement('figcaption');
+		with (self.ui.caption_container) {
+			appendChild(self.ui.title);
+			appendChild(self.ui.description);
+
+			if (!self.show_title)
+				classList.add('hidden');
+		}
+
+		// create figure container
+		self.ui.image = document.createElement('figure');
+		with (self.ui.image) {
+			appendChild(self.ui.caption_container);
+			appendChild(self.ui.close_control);
+		}
+
+		// create image container
+		self.ui.image_container = document.createElement('div');
+		with (self.ui.image_container) {
+			classList.add('image');
+			appendChild(self.ui.previous_control);
+			appendChild(self.ui.image);
+			appendChild(self.ui.next_control);
+		}
+
+		// create thumbnail container
+		self.ui.thumbnail_container = document.createElement('div');
+		with (self.ui.thumbnail_container) {
+			classList.add('thumbnails');
+
+			if (!self.show_thumbnails)
+				classList.add('hidden');
+		}
+
+		// create main container
+		self.ui.container = document.createElement('section');
+		with (self.ui.container) {
+			classList.add('lightbox');
+			appendChild(self.ui.image_container);
+			appendChild(self.ui.thumbnail_container);
+		}
+
+		// connect window events
+		window.addEventListener('keypress', self.handlers.key_press);
+	};
+
+	/**
+	 * Configure lightbox to show or hide image title. System will use `alt` attribute
+	 * of the added image as default source for title. You can also provide `title` attribute
+	 * to the link added or element with class `title` inside of the specified link.
+	 *
+	 * Example:
+	 *	<a href="link/to/big/image.jpg" title="Image title">
+	 *	   <img src="link/to/thumbnal.jpg" alt="Image title">
+	 *	   <span class="title">Image title</span>
+	 *	</a>
+	 *
+	 * @param boolean show_title
+	 * @return object
+	 */
+	self.set_show_title = function(show_title) {
+		self.show_title = show_title;
+
+		// apply change
+		if (self.show_title)
+			self.ui.caption_container.classList.remove('hidden'); else
+			self.ui.caption_container.classList.add('hidden');
+
+		return self;
+	};
+
+	/**
+	 * Configure lightbox to show or hide controls for next/previous image. Note that
+	 * keyboard shortcuts will also not work when controls are hidden.
+	 *
+	 * @param boolean show_controls
+	 * @return object
+	 */
+	self.set_show_controls = function(show_controls) {
+		self.show_controls = show_controls;
+
+		// apply change
+		if (self.show_title) {
+			self.ui.previous_control.classList.remove('hidden');
+			self.ui.next_control.classList.remove('hidden');
+
+		} else {
+			self.ui.previous_control.classList.add('hidden');
+			self.ui.next_control.classList.add('hidden');
+		}
+
+		return self;
+	};
+
+	/**
+	 * Configure lightbox to show or hide image description. System will look for
+	 * attribute `data-description` in added `img` to the list, or for element with
+	 * class `description` and use its content.
+	 *
+	 * @param boolean show_description
+	 * @return object
+	 */
+	self.set_show_description = function(show_description) {
+		self.show_description = show_description;
+
+		// apply change
+		if (self.show_description)
+			self.ui.description.classList.remove('hidden'); else
+			self.ui.description.classList.add('hidden');
+
+		return self;
+	};
+
+	/**
+	 * Configure lightbox to show or hide thumbnails. System will use all the images
+	 * added to the lightbox object to show thumbnails. No additiona network activity
+	 * will be generated.
+	 *
+	 * @param boolean show_thumbnails
+	 * @return object
+	 */
+	self.set_show_thumbnails = function(show_thumbnails) {
+		self.show_thumbnails = show_thumbnails;
+
+		// apply change
+		if (self.show_thumbnails)
+			self.ui.thumbnail_container.classList.remove('hidden'); else
+			self.ui.thumbnail_container.classList.add('hidden');
+
+		return self;
+	};
+
+	/**
+	 * Switch to next image.
+	 */
+	self.next = function() {
+	};
+
+	/**
+	 * Switch to previous image.
+	 */
+	self.previous = function() {
+	};
+
+	/**
+	 * Open lightbox and set specified image as focused one. Please note that
+	 * upon adding images to lightbox `click` event will be connected to local
+	 * handler.
+	 *
+	 * @param object focused_image
+	 */
+	self.open = function(focused_image) {
+		// show background and container
+		self.ui.container.classList.add('visible');
+
+		// toggle flag to enable keyboard controls
+		self.is_open = true;
+	};
+
+	/**
+	 * Close lightbox.
+	 */
+	self.close = function() {
+		// show background and container
+		self.ui.container.classList.remove('visible');
+
+		// toggle flag to enable keyboard controls
+		self.is_open = false;
+	};
+
+	/**
+	 * Add specified images by selector or set of previously queried nodes to the
+	 * image list handled by the lightbox. Pressing on next/previous button will cycle
+	 * images in order they are added.
+	 *
+	 * @param mixed images
+	 * @return object
+	 */
+	self.images.add = function(params) {
+		return self;
+	};
+
+	/**
+	 * Clear images from list of handled by the lightbox.
+	 *
+	 * @return object
+	 */
+	self.images.clear = function() {
+		return self;
+	};
+
+	/**
+	 * Handle clicking on next control.
+	 *
+	 * @param object event
+	 */
+	self.handlers.next_click = function(event) {
+		event.preventDefault();
+		self.next();
+	};
+
+	/**
+	 * Handle clicking on previous control.
+	 *
+	 * @param object event
+	 */
+	self.handlers.previous_click = function(event) {
+		event.preventDefault();
+		self.previous();
+	};
+
+	/**
+	 * Handle clicking on close button.
+	 *
+	 * @param object event
+	 */
+	self.handlers.close_click = function(event) {
+	};
+
+	/**
+	 * Handle clicking on background shade.
+	 *
+	 * @param object event
+	 */
+	self.handlers.background_click = function(event) {
+	};
+
+	/**
+	 * Handle clicking on image thumbnail.
+	 *
+	 * @param object event
+	 */
+	self.handlers.thumbnail_click = function(event) {
+	};
+
+	/**
+	 * Handle keyboard shortcuts.
+	 *
+	 * @param object event
+	 */
+	self.handlers.key_press = function(event) {
+		// skip handling when closed
+		if (!self.is_open)
+			return;
+
+		// handle key press
+		var key = event.which || event.keyCode;
+		switch (key) {
+			// escape
+			case 27:
+				self.close();
+				break;
+
+			// left arrow
+			case 37:
+				// don't allow keyboard switching
+				if (!self.show_controls)
+					break;
+
+				// take into account page direction
+				if (!self.is_rtl)
+					self.previous(); else
+					self.next();
+				break;
+
+			// right arrow
+			case 39:
+				// don't allow keyboard switching
+				if (!self.show_controls)
+					break;
+
+				// take into account page direction
+				if (!self.is_rtl)
+					self.next(); else
+					self.previous();
+				break;
+		}
+
+		// prevent others from handling
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	};
+
+	// finalize object
+	self._init();
+}
 
 /**
  * LightBox constructor function
