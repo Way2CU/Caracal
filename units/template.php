@@ -12,6 +12,7 @@
 use Core\Markdown;
 use Core\Cache\Type as CacheType;
 use Core\Cache\Manager as Cache;
+use Core\Testing\Handler as TestingHandler;
 
 
 class TemplateHandler {
@@ -720,7 +721,7 @@ class TemplateHandler {
 					}
 
 					// select and show version
-					$handler = \Core\Testing\Handler::get_instance();
+					$handler = TestingHandler::get_instance();
 					$handler->show_version($self, $tag->tagAttrs, $tag->tagChildren);
 					break;
 

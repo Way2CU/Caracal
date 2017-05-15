@@ -19,11 +19,11 @@ class Simple extends Method {
 	private $handler;
 	private $method_name;
 
-	public function __construct() {
+	public function __construct($handler) {
 		$this->method_name = 'simple';
 
 		// register testing method
-		$this->handler = Handler::get_instance();
+		$this->handler = $handler;
 		$this->handler->register_method($this->method_name, $this);
 	}
 

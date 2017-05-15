@@ -30,7 +30,7 @@ final class Handler {
 		$this->tests = array();
 
 		// create built-in tests
-		new Methods\Simple();
+		new Methods\Simple($this);
 	}
 
 	/**
