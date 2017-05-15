@@ -18,7 +18,7 @@ class Simple extends Method {
 	private $handler;
 	private $method_name;
 
-	private function __construct() {
+	public function __construct() {
 		$this->method_name = 'simple';
 
 		// register testing method
