@@ -37,6 +37,7 @@ class Simple extends Method {
 	 */
 	public function get_version($name, $options, $versions) {
 		$result = null;
+		$value = null;
 		$manager = $this->handler->get_manager();
 
 		// get status of choices from database
@@ -54,6 +55,7 @@ class Simple extends Method {
 			foreach ($choices as $data)
 				if (in_array($data->version, $versions)) {
 					$result = $data->version;
+					$value = $data->value;
 					break;
 				}
 
@@ -68,6 +70,15 @@ class Simple extends Method {
 						'version' => $version,
 						'value'   => $version == $result ? 1 : 0
 					));
+		} else {
+			// update existing choice
+			$manager->update_items(
+						array('value' => $value + 1),
+						array(
+							'method'  => $method,
+							'name'    => $name,
+							'version' => $version
+						));
 		}
 
 		return $result;
