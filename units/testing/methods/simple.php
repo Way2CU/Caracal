@@ -11,8 +11,10 @@
  */
 namespace Core\Testing\Methods;
 
+use \Core\Testing\Method;
 
-class Simple extends Core\Testing\Method {
+
+class Simple extends Method {
 	private $handler;
 	private $method_name;
 
