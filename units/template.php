@@ -722,7 +722,7 @@ class TemplateHandler {
 
 					// select and show version
 					$handler = TestingHandler::get_instance();
-					$handler->show_version($self, $tag->tagAttrs, $tag->tagChildren);
+					$handler->show_version($this, $tag->tagAttrs, $tag->tagChildren);
 					break;
 
 				// support for parameter based choice

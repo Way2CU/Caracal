@@ -59,7 +59,7 @@ final class Handler {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function show_version($template, $tag_params, $children) {
+	public function show_version(&$template, $tag_params, $children) {
 		$name = null;
 		$version = null;
 
