@@ -11,7 +11,8 @@
  */
 namespace Core\Testing\Methods;
 
-use \Core\Testing\Method;
+use Core\Testing\Method;
+use Core\Testing\Handler;
 
 
 class Simple extends Method {
@@ -22,7 +23,7 @@ class Simple extends Method {
 		$this->method_name = 'simple';
 
 		// register testing method
-		$this->handler = Core\Testing\Handler::get_instance();
+		$this->handler = Handler::get_instance();
 		$this->handler->register_method($this->method_name, $this);
 	}
 
