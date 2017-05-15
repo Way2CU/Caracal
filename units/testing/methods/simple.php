@@ -46,8 +46,7 @@ class Simple extends Method {
 					'method' => $this->method_name,
 					'name'   => $name
 				),
-				array('value'),  // sort descending by value
-				false
+				array('value')
 			);
 
 		// try to match database selection to template provided versions
