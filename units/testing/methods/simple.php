@@ -42,7 +42,7 @@ class Simple extends Method {
 
 		// get status of choices from database
 		$choices = $manager->get_items(
-				array('version'),
+				array('version', 'value'),
 				array(
 					'method' => $this->method_name,
 					'name'   => $name
@@ -75,9 +75,9 @@ class Simple extends Method {
 			$manager->update_items(
 						array('value' => $value + 1),
 						array(
-							'method'  => $method,
+							'method'  => $this->method_name,
 							'name'    => $name,
-							'version' => $version
+							'version' => $result
 						));
 		}
 
