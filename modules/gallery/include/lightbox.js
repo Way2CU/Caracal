@@ -106,6 +106,8 @@ Caracal.Gallery.Lightbox = function() {
 			appendChild(self.ui.thumbnail_container);
 		}
 
+		document.querySelector('body').appendChild(self.ui.container);
+
 		// connect window events
 		window.addEventListener('keypress', self.handlers.key_press);
 	};
@@ -281,6 +283,8 @@ Caracal.Gallery.Lightbox = function() {
 	 * @param object event
 	 */
 	self.handlers.close_click = function(event) {
+		event.preventDefault();
+		self.close();
 	};
 
 	/**
@@ -300,6 +304,15 @@ Caracal.Gallery.Lightbox = function() {
 	};
 
 	/**
+	 * Handle clicking on image.
+	 *
+	 * @param object event
+	 */
+	self.handlers.image_click = function(event) {
+		
+	};
+
+	/**
 	 * Handle keyboard shortcuts.
 	 *
 	 * @param object event
@@ -311,10 +324,13 @@ Caracal.Gallery.Lightbox = function() {
 
 		// handle key press
 		var key = event.which || event.keyCode;
+		var handled = false;
 		switch (key) {
 			// escape
 			case 27:
 				self.close();
+
+				handled = true;
 				break;
 
 			// left arrow
@@ -327,6 +343,8 @@ Caracal.Gallery.Lightbox = function() {
 				if (!self.is_rtl)
 					self.previous(); else
 					self.next();
+
+				handled = true;
 				break;
 
 			// right arrow
@@ -339,12 +357,16 @@ Caracal.Gallery.Lightbox = function() {
 				if (!self.is_rtl)
 					self.next(); else
 					self.previous();
+
+				handled = true;
 				break;
 		}
 
 		// prevent others from handling
-		event.preventDefault();
-		event.stopImmediatePropagation();
+		if (handled) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+		}
 	};
 
 	// finalize object

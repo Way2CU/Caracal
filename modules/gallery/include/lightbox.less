@@ -6,13 +6,18 @@
  * Author: Mladen Mijatov
  */
 
+@color_bright: white;
+@color_dark: black;
+
 section.lightbox {
 	position: fixed;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
-	padding: 10rem;
+	padding: 3rem;
+
+	background-color: fade(@color_dark, 80);
 
 	box-sizing: border-box;
 	pointer-events: none;
@@ -26,26 +31,142 @@ section.lightbox {
 
 	// image container
 	div.image {
+		display: table;
+		width: 100%;
+		height: 80%;
+
 		a.control {
 			display: inline-block;
 
+			// create arrows from border elements
+			&.previous,
+			&.next {
+				display: table-cell;
+				position: relative;
+				width: 5rem;
+				height: 10rem;
+
+				border: 1px solid fade(@color_bright, 10);
+				cursor: pointer;
+				transition: all 0.3s;
+
+				&:hover {
+					background-color: fade(@color_bright, 20);
+				}
+
+				&:before {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					content: '';
+					width: 3rem;
+					height: 3rem;
+
+					border: 3px solid transparent;
+					line-height: 1;
+					transform-origin: 50% 50%;
+				}
+
+				&.hidden {
+					display: none;
+				}
+			}
+
 			&.previous {
+				&:before {
+					border-left-color: @color_bright;
+					border-top-color: @color_bright;
+					transform: translate(-20%, -50%) rotate(-45deg);
+				}
+
+				html[dir=rtl] &:before {
+					transform: translate(-80%, -50%) rotate(135deg);
+				}
 			}
 
 			&.next {
+				&:before {
+					border-right-color: @color_bright;
+					border-bottom-color: @color_bright;
+					transform: translate(-80%, -50%) rotate(-45deg);
+				}
+
+				html[dir=rtl] &:before {
+					transform: translate(-20%, -50%) rotate(135deg);
+				}
 			}
 
 			&.close {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.5rem;
+				width: 2rem;
+				height: 2rem;
+
+				transition: all 0.3s;
+				cursor: pointer;
+
+				html[dir=rtl] & {
+					right: auto;
+					left: 0.5rem;
+				}
+
+				&:hover {
+					background-color: fade(@color_bright, 20);
+				}
+
+				&:before,
+				&:after {
+					position: absolute;
+					content: '';
+					width: 1.5rem;
+					height: 2px;
+					top: 50%;
+					left: 50%;
+
+					background-color: @color_bright;
+					line-height: 0;
+
+					transform-origin: 50% 50%;
+					transform: translatex(-50%) rotate(-45deg);
+				}
+				
+				&:after {
+					transform: translatex(-50%) rotate(45deg);
+				}
 			}
 		}
 
+		// image view
 		figure {
-			display: inline-block;
-			width: calc(~'100% - 4rem');
+			display: table-cell;
+			position: relative;
+
+			// image title
+			figcaption {
+				position: absolute;
+				top: 0.5rem;
+				left: 0.5rem;
+				right: 3rem;
+				border: 1px solid red;
+
+				html[dir=rtl] & {
+					left: 3rem;
+					right: 0.5rem;
+				}
+
+				&.hidden {
+					display: none;
+				}
+			}
 		}
 	}
 
 	// thumbnails container
 	div.thumbnails {
+
+		&.hidden {
+			display: none;
+		}
 	}
 }
