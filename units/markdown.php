@@ -76,14 +76,12 @@ final class ExtendedParsedown extends \Parsedown {
 							'visible' => 1
 						));
 
-				if (is_object($gallery_image))
+				if (!is_object($gallery_image))
 					return;
 
 				// replace values
-				if (is_object($gallery_image)) {
-					$image['element']['attributes']['src'] = $gallery->get_raw_image($gallery_image);
-					$image['element']['attributes']['alt'] = $gallery_image->title[$language];
-				}
+				$image['element']['attributes']['src'] = $gallery->get_raw_image($gallery_image);
+				$image['element']['attributes']['alt'] = $gallery_image->title[$language];
 
 			} else {
 				// don't show gallery images if gallery is not loaded
