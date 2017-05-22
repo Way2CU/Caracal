@@ -21,6 +21,7 @@ class Manager extends ItemManager {
 
 		$this->add_property('id', 'int');
 		$this->add_property('url', 'varchar');
+		$this->add_property('title', 'ml_varchar');
 		$this->add_property('content', 'ml_varchar');
 	}
 

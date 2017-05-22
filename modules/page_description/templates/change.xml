@@ -14,6 +14,20 @@
 				cms:eval="value"
 				/>
 		</label>
+
+		<label>
+			<span><cms:text constant="label_title" module="page_description"/></span>
+			<textarea
+				class="multi-language"
+				name="title"
+				rows="5"
+				cols="40"
+				style="width: 300px;"
+				maxlength="140"
+				/>
+			<cms:language_data param="title"/>
+		</label>
+
 		<label>
 			<span><cms:text constant="label_content" module="page_description"/></span>
 			<textarea

@@ -102,20 +102,7 @@ class page_description extends Module {
 	public function initialize() {
 		global $db;
 
-		$list = Language::get_languages(false);
-		$sql = "
-			CREATE TABLE `page_descriptions` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`url` varchar(200) NOT NULL,
-			";
-
-		foreach($list as $language)
-			$sql .= "`content_{$language}` VARCHAR(160) NOT NULL DEFAULT '',";
-
-		$sql .= "
-				PRIMARY KEY (`id`),
-				KEY `index_by_url` (`url`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$sql = Query::load_file('descriptions.sql', $this);
 		$db->query($sql);
 	}
 
@@ -162,6 +149,7 @@ class page_description extends Module {
 		$params = array(
 					'id'            => $item->id,
 					'url'           => $item->url,
+					'title'         => $item->title,
 					'content'       => $item->content,
 					'form_action'   => backend_UrlMake($this->name, 'save'),
 					'cancel_action' => window_Close('page_descriptions_change_'.$id)
@@ -177,11 +165,14 @@ class page_description extends Module {
 	 */
 	private function save_page_description() {
 		$id = fix_id($_REQUEST['id']);
-		$content = $this->get_multilanguage_field('content');
 		$manager = Manager::get_instance();
 
 		// update data
-		$manager->update_items(array('content' => $content), array('id' => $id));
+		$data = array(
+				'title'   => $this->get_multilanguage_field('title'),
+				'content' => $this->get_multilanguage_field('content')
+			);
+		$manager->update_items($data, array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -262,6 +253,7 @@ class page_description extends Module {
 			$params = array(
 				'id'          => $item->id,
 				'url'         => $item->url,
+				'title'       => $item->title,
 				'content'     => $item->content,
 				'filled'      => empty($item->content[$language]) ? CHAR_UNCHECKED : CHAR_CHECKED,
 				'item_change' => URL::make_hyperlink(
