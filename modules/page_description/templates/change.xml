@@ -23,6 +23,7 @@
 				type="text"
 				style="width: 300px;"
 				maxlength="140"
+				cms:tooltip="tooltip_title"
 				/>
 			<cms:language_data param="title"/>
 		</label>
