@@ -17,11 +17,10 @@
 
 		<label>
 			<span><cms:text constant="label_title" module="page_description"/></span>
-			<textarea
+			<input
 				class="multi-language"
 				name="title"
-				rows="5"
-				cols="40"
+				type="text"
 				style="width: 300px;"
 				maxlength="140"
 				/>
