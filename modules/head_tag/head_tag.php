@@ -19,6 +19,8 @@ class head_tag extends Module {
 	private $script_tags = array();
 	private $closeable_tags = array('script', 'style');
 
+	private $title_parts = array();
+
 	private $analytics = null;
 	private $analytics_domain = null;
 	private $analytics_version = 'v1';
@@ -38,6 +40,7 @@ class head_tag extends Module {
 
 		// register events
 		Events::register('head-tag', 'before-print');
+		Events::register('head-tag', 'before-title-print');
 	}
 
 	/**
@@ -60,7 +63,15 @@ class head_tag extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_tag':
+					trigger_error('Calling `print_tag` from `head_tag` module is deprecated, use `show`!', E_USER_WARNING);
+					// skipped break on purpose, we still need to handle
+
+				case 'show':
 					$this->printTags();
+					break;
+
+				case 'add_to_title':
+					$this->add_attribute_to_title($params, $children);
 					break;
 			}
 	}
@@ -72,6 +83,28 @@ class head_tag extends Module {
 	}
 
 	public function cleanup() {
+	}
+
+	/**
+	 * Add specified value as part of the title.
+	 *
+	 * @param string $value
+	 */
+	public function add_to_title($value) {
+		$this->title_parts []= $value;
+	}
+
+	/**
+	 * Add tag attribute content to page title.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function add_attribute_to_title($tag_params, $children) {
+		if (!isset($tag_params['value']))
+			return;
+
+		$this->title_parts []= fix_chars($tag_params['value']);
 	}
 
 	/**
