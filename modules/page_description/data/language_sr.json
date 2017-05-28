@@ -2,8 +2,9 @@
 	"menu_page_descriptions": "Описи страница",
 	"column_url": "URL",
 	"label_url": "URL:",
+	"label_title": "Title:",
 	"label_description": "Опис:",
-	"message_saved": "Опис странице за одабрани URL је снимљен.",
+	"message_saved": "Page title and description for selected URL has been saved.",
 	"title_manage": "Описи страница",
 	"title_change": "Описи страница: Измена"
 }
