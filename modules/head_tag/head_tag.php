@@ -5,6 +5,17 @@
  *
  * This module provides simplified interface for adding links and scripts.
  *
+ * Events provided by this module:
+ *  - before-print
+ *		Event triggered before head tags are rendered to final template.
+ *
+ *	- before-title-print
+ *		function(); returns array(string $title, int $priority)
+ *
+ *		Event triggered before page title is generated. Return value is an array
+ *		containing page title and priority. System will choose title with highest
+ *		priority.
+ *
  * Author: Mladen Mijatov
  */
 use Core\Events;
@@ -17,9 +28,10 @@ class head_tag extends Module {
 	private $meta_tags = array();
 	private $link_tags = array();
 	private $script_tags = array();
-	private $closeable_tags = array('script', 'style');
+	private $closeable_tags = array('script', 'style', 'title');
 
 	private $title_parts = array();
+	private $title_glue = ' - ';
 
 	private $analytics = null;
 	private $analytics_domain = null;
@@ -180,8 +192,31 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
+		// give modules chance to set title if needed
+		$event_results = Events::trigger('head-tag', 'before-title-print');
+		$priority = 0;
+
+		if (count($event_results) > 0) {
+			// get title from the event results
+			foreach ($event_results as $title_data) {
+				if ($title_data[1] > $priority) {
+					$priority = $title_data[1];
+					$title_body = $title_data[0];
+				}
+			}
+
+		} else {
+			// generate title from fragments provided by template
+			$title_body = Language::get_text('site_title');
+			if (count($this->title_parts) > 0)
+				$title_body .= $this->title_glue.implode($this->title_glue, $this->title_parts);
+		}
+
 		// give modules chance to add elements
 		Events::trigger('head-tag', 'before-print');
+
+		// print title tag
+		$this->printTag(array('title', array()), $title_body);
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
