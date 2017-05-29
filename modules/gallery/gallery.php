@@ -205,6 +205,18 @@ class gallery extends Module {
 					$this->tag_ContainerList($params, $children);
 					break;
 
+				case 'add_to_title':
+					$this->add_to_title($params);
+					break;
+
+				case 'add_group_to_title':
+					$this->add_group_to_title($params);
+					break;
+
+				case 'add_container_to_title':
+					$this->add_container_to_title($params);
+					break;
+
 				case 'json_image':
 					$this->json_Image();
 					break;
@@ -1107,8 +1119,8 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message' => $this->get_language_constant("message_container_groups_updated"),
-					'button'  => $this->get_language_constant("close"),
+					'message' => $this->get_language_constant('message_container_groups_updated'),
+					'button'  => $this->get_language_constant('close'),
 					'action'  => window_Close('gallery_containers_groups')
 				);
 
@@ -1117,6 +1129,98 @@ class gallery extends Module {
 		$template->parse();
 	}
 
+	/**
+	 * Add image title to the page title.
+	 *
+	 * @param array $params
+	 */
+	private function add_to_title($params) {
+		global $language;
+
+		// make sure module is loaded
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
+
+		// collect conditions
+		$conditions = array();
+
+		if (isset($params['id']))
+			$conditions['id'] = fix_id($params['id']);
+
+		if (isset($params['text_id']))
+			$conditions['text_id'] = fix_chars($params['text_id']);
+
+		// get item from the database
+		$manager = GalleryManager::get_instance();
+		$item = $manager->get_single_item(array('title'), $conditions);
+
+		if (is_object($item)) {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_to_title($item->title[$language]);
+		}
+	}
+
+	/**
+	 * Add group title to the page title.
+	 *
+	 * @param array $params
+	 */
+	private function add_group_to_title($params) {
+		global $language;
+
+		// make sure module is loaded
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
+
+		// collect conditions
+		$conditions = array();
+
+		if (isset($params['id']))
+			$conditions['id'] = fix_id($params['id']);
+
+		if (isset($params['text_id']))
+			$conditions['text_id'] = fix_chars($params['text_id']);
+
+		// get item from the database
+		$manager = GalleryGroupManager::get_instance();
+		$item = $manager->get_single_item(array('name'), $conditions);
+
+		if (is_object($item)) {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_to_title($item->name[$language]);
+		}
+	}
+
+	/**
+	 * Add container title to the page name.
+	 *
+	 * @param array $params
+	 */
+	private function add_container_to_title($params) {
+		global $language;
+
+		// make sure module is loaded
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
+
+		// collect conditions
+		$conditions = array();
+
+		if (isset($params['id']))
+			$conditions['id'] = fix_id($params['id']);
+
+		if (isset($params['text_id']))
+			$conditions['text_id'] = fix_chars($params['text_id']);
+
+		// get item from the database
+		$manager = GalleryContainerManager::get_instance();
+		$item = $manager->get_single_item(array('name'), $conditions);
+
+		if (is_object($item)) {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_to_title($item->name[$language]);
+		}
+	}
 
 	/**
 	 * Image tag handler
