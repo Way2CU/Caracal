@@ -131,6 +131,14 @@ class articles extends Module {
 					$this->tag_ArticleRatingImage($params, $children);
 					break;
 
+				case 'add_to_title':
+					$this->add_to_title($params);
+					break;
+
+				case 'add_group_to_title':
+					$this->add_group_to_title($params);
+					break;
+
 				case 'json_article':
 					$this->json_Article();
 					break;
@@ -597,6 +605,68 @@ class articles extends Module {
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
+	}
+
+	/**
+	 * Add article title to the page title.
+	 *
+	 * @param array $params
+	 */
+	private function add_to_title($params) {
+		global $language;
+
+		// make sure module is loaded
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
+
+		// collect conditions
+		$conditions = array();
+
+		if (isset($params['id']))
+			$conditions['id'] = fix_id($params['id']);
+
+		if (isset($params['text_id']))
+			$conditions['text_id'] = fix_chars($params['text_id']);
+
+		// get item from the database
+		$manager = Modules\Articles\Manager::get_instance();
+		$item = $manager->get_single_item(array('title'), $conditions);
+
+		if (is_object($item)) {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_to_title($item->title[$language]);
+		}
+	}
+
+	/**
+	 * Add group title to the page title.
+	 *
+	 * @param array $params
+	 */
+	private function add_group_to_title($params) {
+		global $language;
+
+		// make sure module is loaded
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
+
+		// collect conditions
+		$conditions = array();
+
+		if (isset($params['id']))
+			$conditions['id'] = fix_id($params['id']);
+
+		if (isset($params['text_id']))
+			$conditions['text_id'] = fix_chars($params['text_id']);
+
+		// get item from the database
+		$manager = Modules\Articles\GroupManager::get_instance();
+		$item = $manager->get_single_item(array('title'), $conditions);
+
+		if (is_object($item)) {
+			$head_tag = head_tag::get_instance();
+			$head_tag->add_to_title($item->title[$language]);
+		}
 	}
 
 	/**
