@@ -205,7 +205,7 @@ class head_tag extends Module {
 					$title_body = $response[0];
 				}
 
-		if (is_null($title_body))
+		if (is_null($title_body)) {
 			// generate title from fragments provided by template
 			$title_body = Language::get_text('site_title');
 			if (count($this->title_parts) > 0)
