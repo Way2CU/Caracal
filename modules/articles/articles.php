@@ -132,11 +132,13 @@ class articles extends Module {
 					break;
 
 				case 'add_to_title':
-					$this->add_to_title($params);
+					$manager = Modules\Articles\Manager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
 					break;
 
 				case 'add_group_to_title':
-					$this->add_group_to_title($params);
+					$manager = Modules\Articles\GroupManager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
 					break;
 
 				case 'json_article':
