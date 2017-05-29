@@ -223,7 +223,8 @@ class page_description extends Module {
 						));
 
 			// store title in return value
-			$result = array($item->title[$language], 10);
+			if (!empty($item->title[$language]))
+				$result = array($item->title[$language], 10);
 
 		} else {
 			// no entry was found, insert and ignore
