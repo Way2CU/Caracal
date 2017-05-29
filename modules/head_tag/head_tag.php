@@ -193,19 +193,19 @@ class head_tag extends Module {
 		global $optimize_code, $section;
 
 		// give modules chance to set title if needed
-		$event_results = Events::trigger('head-tag', 'before-title-print');
+		$response_list = Events::trigger('head-tag', 'before-title-print');
 		$priority = 0;
+		$title_body = null;
 
-		if (count($event_results) > 0) {
-			// get title from the event results
-			foreach ($event_results as $title_data) {
-				if ($title_data[1] > $priority) {
-					$priority = $title_data[1];
-					$title_body = $title_data[0];
+		// get title from the event results
+		if (count($response_list) > 0)
+			foreach ($response_list as $response)
+				if ($response[1] > $priority) {
+					$priority = $response[1];
+					$title_body = $response[0];
 				}
-			}
 
-		} else {
+		if (is_null($title_body))
 			// generate title from fragments provided by template
 			$title_body = Language::get_text('site_title');
 			if (count($this->title_parts) > 0)
