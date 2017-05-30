@@ -29,7 +29,7 @@ class page_description extends Module {
 		parent::__construct(__FILE__);
 
 		// connect to events
-		Events::connect('head-tag', 'before-print', 'add_description_tag', $this);
+		Events::connect('head-tag', 'before-title-print', 'set_title_and_description', $this);
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
@@ -190,40 +190,48 @@ class page_description extends Module {
 	}
 
 	/**
-	 * Handle head tag event and add page description to the page if
-	 * it's not already added.
+	 * Handle head tag event and set page title and add page description to the
+	 * page if it's not already added.
 	 */
-	public function add_description_tag() {
+	public function set_title_and_description() {
 		global $language;
+
+		$result = array('', -1);  // ignore title with negative priority
 
 		// skip page if requested
 		if ($this->skip_page)
-			return;
+			return $result;
 
 		// don't handle backend links
 		if (isset($_REQUEST['section']))
-			return;
-
-		$value = '';
-		$head_tag = head_tag::get_instance();
-		$manager = Manager::get_instance();
+			return $result;
 
 		// get request path
 		$request_path = URL::get_request_path();
 
 		// get page description
+		$manager = Manager::get_instance();
 		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $request_path));
 
-		if (!is_object($item))
-			$manager->insert_item(array('url' => $request_path)); else
-			$value = $item->content[$language];
+		if (is_object($item)) {
+			// add description to head tag
+			$head_tag = head_tag::get_instance();
+			$head_tag->addTag('meta',
+						array(
+							'name'		=> 'description',
+							'content'	=> $item->content[$language]
+						));
 
-		// add description to head tag
-		$head_tag->addTag('meta',
-					array(
-						'name'		=> 'description',
-						'content'	=> $value
-					));
+			// store title in return value
+			if (!empty($item->title[$language]))
+				$result = array($item->title[$language], 10);
+
+		} else {
+			// no entry was found, insert and ignore
+			$manager->insert_item(array('url' => $request_path));
+		}
+
+		return $result;
 	}
 
 	/**

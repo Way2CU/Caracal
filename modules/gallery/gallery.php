@@ -205,6 +205,21 @@ class gallery extends Module {
 					$this->tag_ContainerList($params, $children);
 					break;
 
+				case 'add_to_title':
+					$manager = GalleryManager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
+				case 'add_group_to_title':
+					$manager = GalleryGroupManager::get_instance();
+					$manager->add_property_to_title('name', array('id', 'text_id'), $params);
+					break;
+
+				case 'add_container_to_title':
+					$manager = GalleryContainerManager::get_instance();
+					$manager->add_property_to_title('name', array('id', 'text_id'), $params);
+					break;
+
 				case 'json_image':
 					$this->json_Image();
 					break;
@@ -1107,8 +1122,8 @@ class gallery extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message' => $this->get_language_constant("message_container_groups_updated"),
-					'button'  => $this->get_language_constant("close"),
+					'message' => $this->get_language_constant('message_container_groups_updated'),
+					'button'  => $this->get_language_constant('close'),
 					'action'  => window_Close('gallery_containers_groups')
 				);
 
@@ -1116,7 +1131,6 @@ class gallery extends Module {
 		$template->set_local_params($params);
 		$template->parse();
 	}
-
 
 	/**
 	 * Image tag handler

@@ -131,6 +131,16 @@ class articles extends Module {
 					$this->tag_ArticleRatingImage($params, $children);
 					break;
 
+				case 'add_to_title':
+					$manager = Modules\Articles\Manager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
+				case 'add_group_to_title':
+					$manager = Modules\Articles\GroupManager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
 				case 'json_article':
 					$this->json_Article();
 					break;

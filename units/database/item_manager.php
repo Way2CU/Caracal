@@ -144,6 +144,54 @@ abstract class ItemManager {
 	}
 
 	/**
+	 * Add item property to title as fragment.
+	 *
+	 * @param string $property_name
+	 * @param array $condition_properties
+	 * @param array $tag_params
+	 * @return boolean
+	 */
+	public function add_property_to_title($property_name, $condition_properties, $tag_params) {
+		global $language;
+
+		// make sure module is loaded
+		if (!ModuleHandler::is_loaded('head_tag'))
+			return;
+
+		// prepare dynamic conditions
+		$conditions = array();
+
+		foreach ($condition_properties as $property) {
+			if (!isset($tag_params[$property]))
+				continue;
+
+			$property_type = $this->field_types[$property];
+			if (in_array($property_type, Query::$string_fields))
+				$conditions[$property] = fix_chars($tag_params[$property]); else
+				$conditions[$property] = fix_id($tag_params[$property]);
+		}
+
+		// get item from the database
+		$item = $this->get_single_item(array($property_name), $conditions);
+
+		if (!is_object($item))
+			return;
+
+		// add property value to head tag
+		$head_tag = head_tag::get_instance();
+		$property_type = $this->field_types[$property_name];
+
+		if (in_array($property_type, Query::$multilanguage_fields)) {
+			$values = $item->$property_name;
+			$value = isset($values[$language]) ? $values[$language] : '';
+		} else {
+			$value = $item->$property_name;
+		}
+
+		$head_tag->add_to_title($value);
+	}
+
+	/**
 	 * Inserts data into specified table
 	 *
 	 * @global resource $db
