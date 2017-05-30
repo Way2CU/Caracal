@@ -181,9 +181,12 @@ abstract class ItemManager {
 		$head_tag = head_tag::get_instance();
 		$property_type = $this->field_types[$property_name];
 
-		if (in_array($property_type, Query::$multilanguage_fields))
-			$value = isset($item->$property_name[$language]) ? $item->$property_name[$language] : ''; else
+		if (in_array($property_type, Query::$multilanguage_fields)) {
+			$values = $item->$property_name;
+			$value = isset($values[$language]) ? $values[$language] : '';
+		} else {
 			$value = $item->$property_name;
+		}
 
 		$head_tag->add_to_title($value);
 	}
