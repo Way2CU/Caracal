@@ -496,7 +496,7 @@ class gallery extends Module {
 		$manager = GalleryManager::get_instance();
 
 		$multiple_images = isset($_REQUEST['multiple_upload']) ? $_REQUEST['multiple_upload'] == 1 : false;
-		$group = fix_id($_REQUEST['group']);
+		$group = isset($_REQUEST['group']) ? fix_id($_REQUEST['group']) : 0;
 		$visible = isset($_REQUEST['visible']) ? 1 : 0;
 		$slideshow = isset($_REQUEST['slideshow']) ? 1 : 0;
 
@@ -505,22 +505,20 @@ class gallery extends Module {
 			$window_name = 'gallery_images_upload_bulk';
 			$result = $this->create_image('image');
 
-			if (!$result['error'])
-				$manager->update_items(
-						array('group' => $group),
-						array('id' => $result['id'])
-					);
+			$manager->update_items(
+					array('group' => $group),
+					array('id' => array_keys($result['filenames']))
+				);
 
 		} else {
 			// store single uploaded image
+			$window_name = 'gallery_images_upload';
 			$text_id = fix_chars($_REQUEST['text_id']);
 			$title = $this->get_multilanguage_field('title');
 			$description = $this->get_multilanguage_field('description');
-			$window_name = 'gallery_images_upload';
-
 			$result = $this->create_image('image');
 
-			if (!$result['error']) {
+			if (count($result['errors']) == 0) {
 				$data = array(
 							'group'       => $group,
 							'text_id'     => $text_id,
@@ -530,15 +528,16 @@ class gallery extends Module {
 							'slideshow'   => $slideshow,
 						);
 
-				$manager->update_items($data, array('id' => $result['id']));
+				$manager->update_items($data, array('id' => array_keys($result['filenames'])));
 			}
 		}
 
+		error_log(var_export($result, true));
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'message' => $result['message'],
+					'message' => '<ul><li>'.implode('</li><li>', $result['messages']).'</li></ul>',
 					'button'  => $this->get_language_constant('close'),
 					'action'  => window_Close($window_name).";".window_ReloadContent('gallery_images')
 				);
@@ -2651,9 +2650,9 @@ class gallery extends Module {
 
 		// prepare result
 		$result = array(
-					'error'   => false,
-					'message' => '',
-					'id'      => null
+					'errors'   => array(),
+					'messages' => array(),
+					'filenames' => array()
 				);
 
 		// preload uploaded file values
@@ -2672,18 +2671,14 @@ class gallery extends Module {
 
 		// filter out unwanted files
 		$allowed_extensions = explode(',', strtolower($this->settings['image_extensions']));
-		for ($i = count($file_names) - 1; $i >= 0; $i--) {
+		$files = array();
+
+		for ($i = 0; $i < count($file_names); $i++) {
 			$extension = pathinfo(strtolower($file_names[$i]), PATHINFO_EXTENSION);
 
 			// check extension
 			if (!in_array($extension, $allowed_extensions)) {
-				unset($file_names[$i]);
-				unset($file_temp_names[$i]);
-				unset($file_sizes[$i]);
-
-				$result['error'] = true;
-				$result['message'] = $this->get_language_constant('message_image_invalid_type');
-
+				$result['errors'][] = $file_names[$i].' - '.$this->get_language_constant('message_image_invalid_type');
 				trigger_error('Gallery: Invalid file type uploaded.', E_USER_NOTICE);
 
 				// skip to next file
@@ -2691,33 +2686,34 @@ class gallery extends Module {
 			}
 
 			if (!is_uploaded_file($file_temp_names[$i])) {
-				unset($file_names[$i]);
-				unset($file_temp_names[$i]);
-				unset($file_sizes[$i]);
-
-				$result['error'] = true;
-				$result['message'] = $this->get_language_constant('message_image_upload_error');
-
+				$result['errors'][] = $file_names[$i].' - '.$this->get_language_constant('message_image_upload_error');
 				trigger_error('Gallery: Not an uploaded file. This should not happen!', E_USER_ERROR);
 
 				// skip to next file
 				continue;
 			}
+
+			// store image data for upload
+			$files []= array(
+					'name' => $file_names[$i],
+					'temp' => $file_temp_names[$i],
+					'size' => $file_sizes[$i]
+				);
 		}
 
 		// process uploaded images
 		$manager = GalleryManager::get_instance();
 
-		for ($i = 0; $i < count($file_names); $i++) {
+		foreach ($files as $file) {
 			// get unique file name for this image to be stored
-			$extension = pathinfo(strtolower($file_names[$i]), PATHINFO_EXTENSION);
-			$filename = hash('md5', time().$file_names[$i]).'.'.$extension;
+			$extension = pathinfo(strtolower($file['name']), PATHINFO_EXTENSION);
+			$filename = hash('md5', time().$file['name']).'.'.$extension;
 
 			// try moving file to new destination
-			if (move_uploaded_file($file_temp_names[$i], $this->image_path.$filename)) {
+			if (move_uploaded_file($file['temp'], $this->image_path.$filename)) {
 				// store empty data in database
 				$data = array(
-							'size'      => $file_sizes[$i],
+							'size'      => $file['size'],
 							'filename'  => $filename,
 							'visible'   => 1,
 							'slideshow' => 0,
@@ -2727,23 +2723,11 @@ class gallery extends Module {
 				$manager->insert_item($data);
 				$id = $manager->get_inserted_id();
 
-				$result['filename'] = $filename;
-				$result['message'] = $this->get_language_constant('message_image_uploaded');
-
-				// append result
-				if ($multiple_upload) {
-					if (is_null($result['id']))
-						$result['id'] = array();
-
-					$result['id'][] = $id;
-
-				} else {
-					$result['id'] = $id;
-				}
+				$result['filenames'][$id] = $filename;
+				$result['messages'][] = $file['name'].' - '.$this->get_language_constant('message_image_uploaded');
 
 			} else {
-				$result['error'] = true;
-				$result['message'] = $this->get_language_constant('message_image_save_error');
+				$result['errors'] = $file['name'].' - '.$this->get_language_constant('message_image_save_error');
 			}
 		}
 
