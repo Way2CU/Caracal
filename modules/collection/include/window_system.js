@@ -644,8 +644,16 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 					});
 				});
 
-				var iframe = self.getUploaderFrame();
-				$(this).attr('target', iframe.attr('id'));
+				var id = 'upload_frame_' + (Math.random() * 100).toString(16);
+				var iframe = $('<iframe>');
+				iframe
+					.attr('name', id)
+					.attr('id', id)
+					.css('display', 'none');
+
+				$(this)
+					.after(iframe)
+					.attr('target', id);
 
 				// handle frame load event through event set in
 				// timeout to avoid initial triggering in some browsers
@@ -704,19 +712,6 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 	 * @return resource
 	 */
 	self.getUploaderFrame = function() {
-		var result = $('iframe#file_upload_frame');
-
-		if (result.length == 0) {
-			// element does not exist, create it
-			result = $('<iframe>');
-
-			result
-				.attr('name', 'file_upload_frame')
-				.attr('id', 'file_upload_frame')
-				.css('display', 'none')
-				.appendTo($('body'));
-		}
-
 		return result;
 	};
 
