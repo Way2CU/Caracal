@@ -532,7 +532,6 @@ class gallery extends Module {
 			}
 		}
 
-		error_log(var_export($result, true));
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 
