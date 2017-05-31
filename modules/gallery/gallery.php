@@ -863,18 +863,15 @@ class gallery extends Module {
 		$manager = GalleryManager::get_instance();
 		$group_manager = GalleryGroupManager::get_instance();
 
-		// get image from the database
+		// get image and its group from the database
 		$image = $manager->get_single_item(array('group'), array('id' => $image_id));
 		if (!is_object($image))
 			return;
 
-		if (!is_null($image->group)) {
-			// set image as thumbnail for its parent group
-			$group = $group_manager->get_single_item(array('name'), array('id' => $image->group));
-			if (!is_object($group))
-				return;
+		$group = $group_manager->get_single_item(array('name'), array('id' => $image->group));
 
-			// update group thumbnail
+		if (!is_null($image->group) && is_object($group)) {
+			// set image as thumbnail for its parent group
 			$group_manager->update_items(array('thumbnail' => $image_id), array('id' => $image->group));
 
 			// prepare message template
@@ -897,7 +894,7 @@ class gallery extends Module {
 		}
 
 		$params['button'] = $this->get_language_constant('close');
-		$params['action'] = window_Close('gallery_groups_set_thumbnail');
+		$params['action'] = window_Close('gallery_groups_set_thumbnail').window_ReloadContent('gallery_images');
 
 		$template->restore_xml();
 		$template->set_local_params($params);
