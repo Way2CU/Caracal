@@ -1091,20 +1091,66 @@ class articles extends Module {
 	private function json_Article() {
 		global $language;
 
-		$id = fix_id($_REQUEST['id']);
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ImageType::Stars;
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
-
-		$manager = Modules\Articles\Manager::get_instance();
-		$admin_manager = UserManager::get_instance();
-
+		$order_by = array('id');
+		$order_asc = true;
+		$conditions = array();
 		$result = array(
 					'error'			=> false,
 					'error_message'	=> ''
 				);
 
+		// collect query conditions
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id($_REQUEST['id']);
 
-		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
+		if (isset($_REQUEST['text_id']))
+			$conditions['text_id'] = explode(',', $_REQUEST['text_id']);
+
+		if (isset($_REQUEST['order_by']))
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
+
+		if (isset($_REQUEST['random']) && $_REQUEST['random'] == 1)
+			$order_by = array('RAND()');
+
+		if (isset($_REQUEST['order_asc']))
+			$order_asc = $_REQUEST['order_asc'] == 1 ? true : false;
+
+		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 1)
+			$conditions['visible'] = 1;
+
+		if (isset($_REQUEST['group'])) {
+			$group_id_list = array();
+			$group_names = explode(',', $_REQUEST['group']);
+
+			if (count($group_names) > 0 && is_numeric($group_names[0])) {
+				// specified group is a number, treat it as group id
+				$group_id_list = $group_names;
+
+			} else {
+				// get id's from specitifed text_id
+				$groups = $group_manager->get_items(
+						$group_manager->get_field_names(),
+						array('text_id' => $group_names)
+					);
+
+				if (count($groups) > 0)
+					foreach ($groups as $group)
+						$group_id_list []= $group->id;
+			}
+
+			if (count($group_id_list) > 0)
+				$conditions['group'] = $group_id_list; else
+				$conditions['group'] = -1;
+		}
+
+		// get managers
+		$manager = Modules\Articles\Manager::get_instance();
+		$admin_manager = UserManager::get_instance();
+
+		// get item from the database
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		$rating_image_url = URL::make_query(
 					$this->name,
