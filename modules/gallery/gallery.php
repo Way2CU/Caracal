@@ -98,12 +98,6 @@ class gallery extends Module {
 								'rel'  => 'stylesheet/less',
 								'type' => 'text/css'
 							));
-				$head_tag->addTag('link',
-							array(
-								'href' => URL::from_file_path($this->path.'include/lightbox.css'),
-								'rel'  => 'stylesheet',
-								'type' => 'text/css'
-							));
 			}
 		}
 
