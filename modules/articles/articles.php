@@ -131,6 +131,16 @@ class articles extends Module {
 					$this->tag_ArticleRatingImage($params, $children);
 					break;
 
+				case 'add_to_title':
+					$manager = Modules\Articles\Manager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
+				case 'add_group_to_title':
+					$manager = Modules\Articles\GroupManager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
 				case 'json_article':
 					$this->json_Article();
 					break;
@@ -700,6 +710,8 @@ class articles extends Module {
 	 * @param array $children
 	 */
 	public function tag_ArticleList($tag_params, $children) {
+		global $section;
+
 		$manager = Modules\Articles\Manager::get_instance();
 		$group_manager = Modules\Articles\GroupManager::get_instance();
 		$admin_manager = UserManager::get_instance();
@@ -708,6 +720,7 @@ class articles extends Module {
 		$selected = -1;
 		$order_by = array('id');
 		$order_asc = true;
+		$generate_sprite = false;
 
 		// give the ability to limit number of articles to display
 		if (isset($tag_params['limit']))
@@ -764,6 +777,9 @@ class articles extends Module {
 					'value'    => 'NULL'
 				);
 
+		if (isset($tag_params['generate_sprite']))
+			$generate_sprite = $tag_params['generate_sprite'] == 1;
+
 		// get items from manager
 		$items = $manager->get_items($manager->get_field_names(), $conditions, $order_by, $order_asc, $limit);
 
@@ -776,32 +792,59 @@ class articles extends Module {
 		if (count($items) == 0)
 			return;
 
+		// collect associated images and generate sprite
+		$sprite_image = '';
+
+		if ($generate_sprite && ModuleHandler::is_loaded('gallery')) {
+			$gallery = gallery::get_instance();
+			$gallery_ids = array();
+
+			// collect gallery ids
+			foreach ($items as $item)
+				$gallery_ids []= $item->id;
+
+			// get image parameters
+			$image_size = isset($tag_params['image_size']) ? fix_id($tag_params['image_size']) : null;
+			$image_constraint = isset($tag_params['image_constraint']) ? fix_id($tag_params['image_constraint']) : null;
+			$image_crop = isset($tag_params['image_crop']) ? fix_id($tag_params['image_crop']) : null;
+
+			// generate sprite
+			$sprite_image = $gallery->create_group_sprite_image(
+					$gallery_ids,
+					$image_size,
+					$image_constraint,
+					$image_crop
+				);
+		}
+
+		// render template for each article
 		foreach($items as $item) {
 			$timestamp = strtotime($item->timestamp);
 			$date = date($this->get_language_constant('format_date_short'), $timestamp);
 			$time = date($this->get_language_constant('format_time_short'), $timestamp);
 
 			$params = array(
-						'id'			=> $item->id,
-						'text_id'		=> $item->text_id,
-						'group'			=> $item->group,
-						'timestamp'		=> $item->timestamp,
-						'date'			=> $date,
-						'time'			=> $time,
-						'title'			=> $item->title,
-						'content'		=> $item->content,
-						'author'		=> $admin_manager->get_item_value(
-															'fullname',
-															array('id' => $item->author)
-														),
-						'gallery'		=> $item->gallery,
-						'visible'		=> $item->visible,
-						'views'			=> $item->views,
-						'votes_up'		=> $item->votes_up,
-						'votes_down' 	=> $item->votes_down,
-						'rating'		=> $this->getArticleRating($item, 10),
-						'selected'		=> $selected,
-						'item_change'	=> URL::make_hyperlink(
+						'id'          => $item->id,
+						'text_id'     => $item->text_id,
+						'group'       => $item->group,
+						'timestamp'   => $item->timestamp,
+						'date'        => $date,
+						'time'        => $time,
+						'title'       => $item->title,
+						'content'     => $item->content,
+						'author'      => $item->author,
+						'gallery'     => $item->gallery,
+						'visible'     => $item->visible,
+						'views'       => $item->views,
+						'votes_up'    => $item->votes_up,
+						'votes_down'  => $item->votes_down,
+						'rating'      => $this->getArticleRating($item, 10),
+						'selected'    => $selected,
+						'sprite'      => $sprite_image
+					);
+
+			if ($section == 'backend' || $section == 'backend_module') {
+				$params['item_change'] = URL::make_hyperlink(
 												$this->get_language_constant('change'),
 												window_Open(
 													'articles_change', 	// window id
@@ -815,9 +858,8 @@ class articles extends Module {
 														array('backend_action', 'articles_change'),
 														array('id', $item->id)
 													)
-												)
-											),
-						'item_delete'	=> URL::make_hyperlink(
+												));
+				$params['item_delete'] = URL::make_hyperlink(
 												$this->get_language_constant('delete'),
 												window_Open(
 													'articles_delete', 	// window id
@@ -831,10 +873,10 @@ class articles extends Module {
 														array('backend_action', 'articles_delete'),
 														array('id', $item->id)
 													)
-												)
-											),
-					);
+												));
+			}
 
+			// render template
 			$template->restore_xml();
 			$template->set_local_params($params);
 			$template->parse();
@@ -1049,20 +1091,66 @@ class articles extends Module {
 	private function json_Article() {
 		global $language;
 
-		$id = fix_id($_REQUEST['id']);
 		$type = isset($_REQUEST['type']) ? $_REQUEST['type'] : ImageType::Stars;
 		$all_languages = isset($_REQUEST['all_languages']) && $_REQUEST['all_languages'] == 1;
-
-		$manager = Modules\Articles\Manager::get_instance();
-		$admin_manager = UserManager::get_instance();
-
+		$order_by = array('id');
+		$order_asc = true;
+		$conditions = array();
 		$result = array(
 					'error'			=> false,
 					'error_message'	=> ''
 				);
 
+		// collect query conditions
+		if (isset($_REQUEST['id']))
+			$conditions['id'] = fix_id($_REQUEST['id']);
 
-		$item = $manager->get_single_item($manager->get_field_names(), array('id' => $id));
+		if (isset($_REQUEST['text_id']))
+			$conditions['text_id'] = explode(',', $_REQUEST['text_id']);
+
+		if (isset($_REQUEST['order_by']))
+			$order_by = explode(',', fix_chars($_REQUEST['order_by']));
+
+		if (isset($_REQUEST['random']) && $_REQUEST['random'] == 1)
+			$order_by = array('RAND()');
+
+		if (isset($_REQUEST['order_asc']))
+			$order_asc = $_REQUEST['order_asc'] == 1 ? true : false;
+
+		if (isset($_REQUEST['only_visible']) && $_REQUEST['only_visible'] == 1)
+			$conditions['visible'] = 1;
+
+		if (isset($_REQUEST['group'])) {
+			$group_id_list = array();
+			$group_names = explode(',', $_REQUEST['group']);
+
+			if (count($group_names) > 0 && is_numeric($group_names[0])) {
+				// specified group is a number, treat it as group id
+				$group_id_list = $group_names;
+
+			} else {
+				// get id's from specitifed text_id
+				$groups = $group_manager->get_items(
+						$group_manager->get_field_names(),
+						array('text_id' => $group_names)
+					);
+
+				if (count($groups) > 0)
+					foreach ($groups as $group)
+						$group_id_list []= $group->id;
+			}
+
+			if (count($group_id_list) > 0)
+				$conditions['group'] = $group_id_list; else
+				$conditions['group'] = -1;
+		}
+
+		// get managers
+		$manager = Modules\Articles\Manager::get_instance();
+		$admin_manager = UserManager::get_instance();
+
+		// get item from the database
+		$item = $manager->get_single_item($manager->get_field_names(), $conditions);
 
 		$rating_image_url = URL::make_query(
 					$this->name,

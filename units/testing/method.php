@@ -16,6 +16,8 @@ namespace Core\Testing;
 
 
 abstract class Method {
+	abstract public function __construct($handler);
+
 	/**
 	 * Return version of template to display. This value is automatically
 	 * recorded by the main Tests class as a choice for current session. This

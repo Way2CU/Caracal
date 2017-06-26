@@ -108,6 +108,16 @@ class youtube extends Module {
 					$this->includeApiScript();
 					break;
 
+				case 'add_to_title':
+					$manager = YouTube_VideoManager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
+				case 'add_group_to_title':
+					$manager = YouTube_GroupManager::get_instance();
+					$manager->add_property_to_title('name', array('id', 'text_id'), $params);
+					break;
+
 				case 'json_video':
 					$this->json_Video();
 					break;

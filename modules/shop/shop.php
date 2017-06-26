@@ -759,6 +759,21 @@ class shop extends Module {
 				$this->includeRedirectScript();
 				break;
 
+			case 'add_to_title':
+				$manager = ItemManager::get_instance();
+				$manager->add_property_to_title('name', array('id', 'uid'), $params);
+				break;
+
+			case 'add_category_to_title':
+				$manager = ShopCategoryManager::get_instance();
+				$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+				break;
+
+			case 'add_manufacturer_to_title':
+				$manager = ShopManufacturerManager::get_instance();
+				$manager->add_property_to_title('name', array('id'), $params);
+				break;
+
 			case 'json_get_item':
 				$handler = ItemHandler::get_instance($this);
 				$handler->json_GetItem();

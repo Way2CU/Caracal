@@ -5,6 +5,17 @@
  *
  * This module provides simplified interface for adding links and scripts.
  *
+ * Events provided by this module:
+ *  - before-print
+ *		Event triggered before head tags are rendered to final template.
+ *
+ *	- before-title-print
+ *		function(); returns array(string $title, int $priority)
+ *
+ *		Event triggered before page title is generated. Return value is an array
+ *		containing page title and priority. System will choose title with highest
+ *		priority.
+ *
  * Author: Mladen Mijatov
  */
 use Core\Events;
@@ -17,7 +28,10 @@ class head_tag extends Module {
 	private $meta_tags = array();
 	private $link_tags = array();
 	private $script_tags = array();
-	private $closeable_tags = array('script', 'style');
+	private $closeable_tags = array('script', 'style', 'title');
+
+	private $title_parts = array();
+	private $title_glue = ' - ';
 
 	private $analytics = null;
 	private $analytics_domain = null;
@@ -38,6 +52,7 @@ class head_tag extends Module {
 
 		// register events
 		Events::register('head-tag', 'before-print');
+		Events::register('head-tag', 'before-title-print');
 	}
 
 	/**
@@ -60,7 +75,15 @@ class head_tag extends Module {
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'print_tag':
+					trigger_error('Calling `print_tag` from `head_tag` module is deprecated, use `show`!', E_USER_WARNING);
+					// skipped break on purpose, we still need to handle
+
+				case 'show':
 					$this->printTags();
+					break;
+
+				case 'add_to_title':
+					$this->add_attribute_to_title($params, $children);
 					break;
 			}
 	}
@@ -72,6 +95,28 @@ class head_tag extends Module {
 	}
 
 	public function cleanup() {
+	}
+
+	/**
+	 * Add specified value as part of the title.
+	 *
+	 * @param string $value
+	 */
+	public function add_to_title($value) {
+		$this->title_parts []= $value;
+	}
+
+	/**
+	 * Add tag attribute content to page title.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	private function add_attribute_to_title($tag_params, $children) {
+		if (!isset($tag_params['value']))
+			return;
+
+		$this->title_parts []= fix_chars($tag_params['value']);
 	}
 
 	/**
@@ -147,12 +192,31 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
-		// determine whether we shuold optimize code
-		$optimize_styles = $section == 'backend' || $optimize_code;
-		$optimize_scripts = $optimize_code && !in_array($section, array('backend', 'backend_module'));
+		// give modules chance to set title if needed
+		$response_list = Events::trigger('head-tag', 'before-title-print');
+		$priority = 0;
+		$title_body = null;
+
+		// get title from the event results
+		if (count($response_list) > 0)
+			foreach ($response_list as $response)
+				if ($response[1] > $priority) {
+					$priority = $response[1];
+					$title_body = $response[0];
+				}
+
+		if (is_null($title_body)) {
+			// generate title from fragments provided by template
+			$title_body = Language::get_text('site_title');
+			if (count($this->title_parts) > 0)
+				$title_body .= $this->title_glue.implode($this->title_glue, $this->title_parts);
+		}
 
 		// give modules chance to add elements
 		Events::trigger('head-tag', 'before-print');
+
+		// print title tag
+		$this->printTag(array('title', array()), $title_body);
 
 		// merge tag lists
 		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);

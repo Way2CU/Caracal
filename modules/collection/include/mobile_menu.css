@@ -6,11 +6,9 @@
  */
 
 .mobile_menu {
-	display: block;
-	width: 200px;
-
 	position: fixed;
-	left: -200px;
+	top: 0;
+	left: 0;
 
 	background-color: white;
 	transition: all 0.5s;
@@ -20,62 +18,32 @@
 	backface-visibility: hidden;
 	perspective: 1000;
 
-	/* optimize crhome */
-	transform: translateZ(0);
+	transform: translate3d(-100%, 0, 0);
+	pointer-events: none;
+	z-index: 1000000;
 }
 
 .mobile_menu.visible {
-	left: 0px;
-}
-
-.mobile_menu a {
-	display: block;
-
-	padding: 0.5em;
-	padding-left: 1em;
-	padding-right: 1em;
-
-	color: #333333;
-	text-decoration: none;
-}
-
-.mobile_menu a:active {
-	color: white;
-	background-color: #333333;
+	pointer-events: auto;
+	transform: translate3d(0, 0, 0);
 }
 
 .mobile_title {
-	display: block;
-	width: 100%;
-
 	position: fixed;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	right: 0;
+	top: 0;
 
-	background-color: #303030;
-	background-position: 0px center;
-	background-repeat: no-repeat;
-	box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
-
-	color: white;
-
-	transition: 0.3s all;
 	transform: translateZ(0);
+	z-index: 1000001;
 }
 
 html[dir=rtl] .mobile_menu {
 	left: auto;
-	right: -200px;
+	right: 0;
+	transform: translate3d(100%, 0, 0);
 }
 
 html[dir=rtl] .mobile_menu.visible {
-	right: 0px;
-}
-
-html[dir=rtl] .mobile_title {
-	background-position: right center;
-}
-
-html[dir=rtl] .mobile_title.visible {
-	background-position: 105% center;
+	transform: translate3d(0, 0, 0);
 }

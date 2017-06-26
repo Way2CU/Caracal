@@ -1,0 +1,272 @@
+/**
+ * LightBox Style Sheet
+ * Gallery Module
+ *
+ * Copyright (c) 2017. by Way2CU
+ * Author: Mladen Mijatov
+ */
+
+@color_bright: white;
+@color_dark: black;
+@thumbnail_size: 6rem;
+
+@keyframes lightbox-loading-animation {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+section.lightbox {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	padding: 3rem;
+
+	background-color: fade(@color_dark, 90);
+
+	box-sizing: border-box;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.5s;
+
+	&.visible {
+		pointer-events: auto;
+		opacity: 1;
+	}
+
+	// image container
+	div.image {
+		display: table;
+		width: 100%;
+		height: 100%;
+
+		a.control {
+			display: inline-block;
+
+			// create arrows from border elements
+			&.previous,
+			&.next {
+				display: table-cell;
+				position: relative;
+				width: 5rem;
+				height: 10rem;
+
+				border: 1px solid fade(@color_bright, 10);
+				cursor: pointer;
+				transition: all 0.3s;
+
+				&:hover {
+					background-color: fade(@color_bright, 20);
+				}
+
+				&:before {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					content: '';
+					width: 3rem;
+					height: 3rem;
+
+					border: 3px solid transparent;
+					line-height: 1;
+					transform-origin: 50% 50%;
+				}
+
+				&.hidden {
+					display: none;
+				}
+			}
+
+			&.previous {
+				&:before {
+					border-left-color: @color_bright;
+					border-top-color: @color_bright;
+					transform: translate(-20%, -50%) rotate(-45deg);
+				}
+
+				html[dir=rtl] &:before {
+					transform: translate(-80%, -50%) rotate(135deg);
+				}
+			}
+
+			&.next {
+				&:before {
+					border-right-color: @color_bright;
+					border-bottom-color: @color_bright;
+					transform: translate(-80%, -50%) rotate(-45deg);
+				}
+
+				html[dir=rtl] &:before {
+					transform: translate(-20%, -50%) rotate(135deg);
+				}
+			}
+
+			&.close {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.5rem;
+				width: 2rem;
+				height: 2rem;
+
+				transition: all 0.3s;
+				cursor: pointer;
+
+				html[dir=rtl] & {
+					right: auto;
+					left: 0.5rem;
+				}
+
+				&:hover {
+					background-color: fade(@color_bright, 20);
+				}
+
+				&:before,
+				&:after {
+					position: absolute;
+					content: '';
+					width: 1.5rem;
+					height: 2px;
+					top: 50%;
+					left: 50%;
+
+					background-color: @color_bright;
+					line-height: 0;
+
+					transform-origin: 50% 50%;
+					transform: translatex(-50%) rotate(-45deg);
+				}
+
+				&:after {
+					transform: translatex(-50%) rotate(45deg);
+				}
+			}
+		}
+
+		// image view
+		figure {
+			display: table-cell;
+			position: relative;
+
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-position: center;
+
+			&:before,
+			&:after {
+				display: block;
+				position: absolute;
+				width: 2rem;
+				height: 2rem;
+				content: '';
+				top: 50%;
+				left: 50%;
+				margin-top: -1rem;
+				margin-left: -1rem;
+
+				border: 1px solid @color_bright;
+
+				opacity: 0;
+				pointer-events: none;
+				transform-origin: 50% 50%;
+				transition: opacity 0.3s;
+
+				line-height: 0;
+			}
+
+			&.loading:before,
+			&.loading:after {
+				opacity: 1;
+				animation-name: lightbox-loading-animation;
+				animation-duration: 3s;
+				animation-iteration-count: infinite;
+				animation-timing-function: linear;
+				animation-fill-mode: both;
+			}
+
+			&.loading:after {
+				animation-direction: reverse;
+			}
+
+			// title container
+			figcaption {
+				position: absolute;
+				top: 0.5rem;
+				left: 0.5rem;
+				right: 3rem;
+
+				html[dir=rtl] & {
+					left: 3rem;
+					right: 0.5rem;
+				}
+
+				&.hidden {
+					display: none;
+				}
+
+				// image title
+				h4 {
+					margin: 0;
+					padding: 0;
+					padding-bottom: 0.2rem;
+
+					color: @color_bright;
+					text-shadow: 0px 0px 2px @color_dark;
+				}
+
+				// image descirption
+				div {
+					color: @color_bright;
+					text-shadow: 0px 0px 2px @color_dark;
+				}
+			}
+		}
+	}
+
+	&.with_thumbnails div.image {
+		height: calc(~'100% - ' @thumbnail_size);
+	}
+
+	// thumbnails container
+	div.thumbnails {
+		display: none;
+	}
+
+	&.with_thumbnails div.thumbnails {
+		display: block;
+		height: @thumbnail_size;
+		padding-top: 1rem;
+		box-sizing: border-box;
+
+		text-align: center;
+
+		img {
+			height: 100%;
+			margin-right: 0.5rem;
+			border: 1px solid @color_dark;
+
+			transition: all 0.3s;
+			cursor: pointer;
+			box-shadow: 0px 0px 0px @color_dark;
+			transition: all 0.5s;
+
+			&.active {
+				box-shadow: 0px 0px 6px @color_bright;
+			}
+
+			&:hover {
+				border-color: @color_bright;
+			}
+
+			html[dir=rtl] & {
+				margin-left: 0.5rem;
+				margin-right: 0;
+			}
+
+			&:last-of-type,
+			html[dir=rtl] &:last-of-type {
+				margin: 0;
+			}
+		}
+	}
+}

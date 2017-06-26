@@ -29,7 +29,7 @@ class page_description extends Module {
 		parent::__construct(__FILE__);
 
 		// connect to events
-		Events::connect('head-tag', 'before-print', 'add_description_tag', $this);
+		Events::connect('head-tag', 'before-title-print', 'set_title_and_description', $this);
 
 		// register backend
 		if (ModuleHandler::is_loaded('backend') && $section == 'backend') {
@@ -102,20 +102,7 @@ class page_description extends Module {
 	public function initialize() {
 		global $db;
 
-		$list = Language::get_languages(false);
-		$sql = "
-			CREATE TABLE `page_descriptions` (
-				`id` INT NOT NULL AUTO_INCREMENT,
-				`url` varchar(200) NOT NULL,
-			";
-
-		foreach($list as $language)
-			$sql .= "`content_{$language}` VARCHAR(160) NOT NULL DEFAULT '',";
-
-		$sql .= "
-				PRIMARY KEY (`id`),
-				KEY `index_by_url` (`url`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=0;";
+		$sql = Query::load_file('descriptions.sql', $this);
 		$db->query($sql);
 	}
 
@@ -162,6 +149,7 @@ class page_description extends Module {
 		$params = array(
 					'id'            => $item->id,
 					'url'           => $item->url,
+					'title'         => $item->title,
 					'content'       => $item->content,
 					'form_action'   => backend_UrlMake($this->name, 'save'),
 					'cancel_action' => window_Close('page_descriptions_change_'.$id)
@@ -177,11 +165,14 @@ class page_description extends Module {
 	 */
 	private function save_page_description() {
 		$id = fix_id($_REQUEST['id']);
-		$content = $this->get_multilanguage_field('content');
 		$manager = Manager::get_instance();
 
 		// update data
-		$manager->update_items(array('content' => $content), array('id' => $id));
+		$data = array(
+				'title'   => $this->get_multilanguage_field('title'),
+				'content' => $this->get_multilanguage_field('content')
+			);
+		$manager->update_items($data, array('id' => $id));
 
 		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
@@ -199,40 +190,48 @@ class page_description extends Module {
 	}
 
 	/**
-	 * Handle head tag event and add page description to the page if
-	 * it's not already added.
+	 * Handle head tag event and set page title and add page description to the
+	 * page if it's not already added.
 	 */
-	public function add_description_tag() {
+	public function set_title_and_description() {
 		global $language;
+
+		$result = array('', -1);  // ignore title with negative priority
 
 		// skip page if requested
 		if ($this->skip_page)
-			return;
+			return $result;
 
 		// don't handle backend links
 		if (isset($_REQUEST['section']))
-			return;
-
-		$value = '';
-		$head_tag = head_tag::get_instance();
-		$manager = Manager::get_instance();
+			return $result;
 
 		// get request path
 		$request_path = URL::get_request_path();
 
 		// get page description
+		$manager = Manager::get_instance();
 		$item = $manager->get_single_item($manager->get_field_names(), array('url' => $request_path));
 
-		if (!is_object($item))
-			$manager->insert_item(array('url' => $request_path)); else
-			$value = $item->content[$language];
+		if (is_object($item)) {
+			// add description to head tag
+			$head_tag = head_tag::get_instance();
+			$head_tag->addTag('meta',
+						array(
+							'name'		=> 'description',
+							'content'	=> $item->content[$language]
+						));
 
-		// add description to head tag
-		$head_tag->addTag('meta',
-					array(
-						'name'		=> 'description',
-						'content'	=> $value
-					));
+			// store title in return value
+			if (!empty($item->title[$language]))
+				$result = array($item->title[$language], 10);
+
+		} else {
+			// no entry was found, insert and ignore
+			$manager->insert_item(array('url' => $request_path));
+		}
+
+		return $result;
 	}
 
 	/**
@@ -262,6 +261,7 @@ class page_description extends Module {
 			$params = array(
 				'id'          => $item->id,
 				'url'         => $item->url,
+				'title'       => $item->title,
 				'content'     => $item->content,
 				'filled'      => empty($item->content[$language]) ? CHAR_UNCHECKED : CHAR_CHECKED,
 				'item_change' => URL::make_hyperlink(

@@ -141,6 +141,16 @@ class news extends Module {
 					$this->tag_Feed($params, $children);
 					break;
 
+				case 'add_to_title':
+					$manager = NewsManager::get_instance();
+					$manager->add_property_to_title('title', array('id'), $params);
+					break;
+
+				case 'add_group_to_title':
+					$manager = NewsGroupManager::get_instance();
+					$manager->add_property_to_title('title', array('id', 'text_id'), $params);
+					break;
+
 				default:
 					break;
 			}

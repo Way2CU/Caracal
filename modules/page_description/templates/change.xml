@@ -14,6 +14,20 @@
 				cms:eval="value"
 				/>
 		</label>
+
+		<label>
+			<span><cms:text constant="label_title" module="page_description"/></span>
+			<input
+				class="multi-language"
+				name="title"
+				type="text"
+				style="width: 300px;"
+				maxlength="140"
+				cms:tooltip="tooltip_title"
+				/>
+			<cms:language_data param="title"/>
+		</label>
+
 		<label>
 			<span><cms:text constant="label_content" module="page_description"/></span>
 			<textarea

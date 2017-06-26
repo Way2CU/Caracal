@@ -125,6 +125,7 @@
     "label_logo": "Logo:",
     "label_manufacturer": "Manufacturer:",
     "label_manufacturer_name": "Manufacturer name:",
+    "label_supplier": "Supplier:",
     "label_supplier_name": "Supplier name:",
     "label_name": "Name:",
     "label_new_user": "Создать новый аккаунт.",

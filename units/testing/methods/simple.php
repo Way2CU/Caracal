@@ -11,16 +11,19 @@
  */
 namespace Core\Testing\Methods;
 
+use Core\Testing\Method;
+use Core\Testing\Handler;
 
-class Simple extends Core\Testing\Method {
+
+class Simple extends Method {
 	private $handler;
 	private $method_name;
 
-	private function __construct() {
+	public function __construct($handler) {
 		$this->method_name = 'simple';
 
 		// register testing method
-		$this->handler = Core\Testing\Handler::get_instance();
+		$this->handler = $handler;
 		$this->handler->register_method($this->method_name, $this);
 	}
 
@@ -34,17 +37,17 @@ class Simple extends Core\Testing\Method {
 	 */
 	public function get_version($name, $options, $versions) {
 		$result = null;
+		$value = null;
 		$manager = $this->handler->get_manager();
 
 		// get status of choices from database
 		$choices = $manager->get_items(
-				array('version'),
+				array('version', 'value'),
 				array(
 					'method' => $this->method_name,
 					'name'   => $name
 				),
-				array('value'),  // sort descending by value
-				false
+				array('value')
 			);
 
 		// try to match database selection to template provided versions
@@ -52,6 +55,7 @@ class Simple extends Core\Testing\Method {
 			foreach ($choices as $data)
 				if (in_array($data->version, $versions)) {
 					$result = $data->version;
+					$value = $data->value;
 					break;
 				}
 
@@ -66,6 +70,15 @@ class Simple extends Core\Testing\Method {
 						'version' => $version,
 						'value'   => $version == $result ? 1 : 0
 					));
+		} else {
+			// update existing choice
+			$manager->update_items(
+						array('value' => $value + 1),
+						array(
+							'method'  => $this->method_name,
+							'name'    => $name,
+							'version' => $result
+						));
 		}
 
 		return $result;

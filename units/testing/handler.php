@@ -13,6 +13,7 @@ namespace Core\Testing;
 
 require_once('method.php');
 require_once('manager.php');
+require_once('methods/simple.php');
 
 
 class TestExistsError extends \Exception {}
@@ -29,6 +30,7 @@ final class Handler {
 		$this->tests = array();
 
 		// create built-in tests
+		new Methods\Simple($this);
 	}
 
 	/**
@@ -57,7 +59,7 @@ final class Handler {
 	 * @param array $tag_params
 	 * @param array $children
 	 */
-	public function show_version($template, $tag_params, $children) {
+	public function show_version(&$template, $tag_params, $children) {
 		$name = null;
 		$version = null;
 

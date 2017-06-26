@@ -8,7 +8,7 @@
 				<cms:raw text=" - "/>
 				<cms:text constant="title" module="backend"/>
 			</title>
-			<cms:module name="head_tag" action="print_tag"/>
+			<cms:module name="head_tag" action="show"/>
 		</head>
 
 		<body>
