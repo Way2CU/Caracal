@@ -192,6 +192,10 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
+		// determine whether we shuold optimize code
+		$optimize_styles = $section == 'backend' || $optimize_code;
+		$optimize_scripts = $optimize_code && !in_array($section, array('backend', 'backend_module'));
+
 		// give modules chance to set title if needed
 		$response_list = Events::trigger('head-tag', 'before-title-print');
 		$priority = 0;
@@ -218,10 +222,7 @@ class head_tag extends Module {
 		// print title tag
 		$this->printTag(array('title', array()), $title_body);
 
-		// merge tag lists
-		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
-
-		if ($optimize_code && !in_array($section, array('backend', 'backend_module'))) {
+		if ($optimize_styles || $optimize_scripts) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::get_instance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
@@ -259,6 +260,7 @@ class head_tag extends Module {
 
 		} else {
 			// no optimization
+			$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 			foreach ($tags as $tag)
 				$this->printTag($tag);
 		}

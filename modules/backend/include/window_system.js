@@ -948,6 +948,11 @@ Caracal.WindowSystem.System = function(container) {
 	self.init();
 };
 
+
 $(function() {
 	Caracal.window_system = new Caracal.WindowSystem.System('div#container');
+
+	// show login window is menu is not present
+	if (document.querySelector('nav#main') == null)
+		Caracal.window_system.showLoginWindow();
 });

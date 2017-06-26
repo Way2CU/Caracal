@@ -62,38 +62,18 @@ class backend extends Module {
 		Events::register('backend', 'user-delete', 1);
 		Events::register('backend', 'user-password-change', 1);
 
-		// load CSS and JScript
-		if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
-			$head_tag = head_tag::get_instance();
-			$collection = collection::get_instance();
-
-			$collection->includeScript(collection::JQUERY);
-			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-
-			if ($_SESSION['logged']) {
-				$collection->includeScript(collection::JQUERY_EXTENSIONS);
-				$collection->includeScript(collection::NOTEBOOK);
-				$collection->includeScript(collection::SHOWDOWN);
-				$collection->includeScript(collection::TOOLBAR);
-			}
-
-			$head_tag->addTag('link', array(
-					'href' => URL::from_file_path($this->path.'include/main.less'),
-					'rel'  => 'stylesheet/less',
-					'type' => 'text/css'
-				));
-			$head_tag->addTag('script', array(
-					'src'  => URL::from_file_path($this->path.'include/order_editor.js'),
-					'type' => 'text/javascript'
-				));
-			$head_tag->addTag('script', array(
-					'src'  => URL::from_file_path($this->path.'include/window_system.js'),
-					'type' => 'text/javascript'
-				));
-		}
-
 		// add admin level menus
 		if ($section == 'backend') {
+			Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
+
+			$collection = collection::get_instance();
+			$collection->includeScript(collection::JQUERY);
+			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
+			$collection->includeScript(collection::JQUERY_EXTENSIONS);
+			$collection->includeScript(collection::NOTEBOOK);
+			$collection->includeScript(collection::SHOWDOWN);
+			$collection->includeScript(collection::TOOLBAR);
+
 			$system_menu = new backend_MenuItem(
 									$this->get_language_constant('menu_system'),
 									$this->path.'images/system.svg',
@@ -356,6 +336,27 @@ class backend extends Module {
 	}
 
 	public function cleanup() {
+	}
+
+	/**
+	 * Add required scripts and styles.
+	 */
+	public function add_meta_tags() {
+		$head_tag = head_tag::get_instance();
+
+		$head_tag->addTag('link', array(
+				'href' => URL::from_file_path($this->path.'include/main.less'),
+				'rel'  => 'stylesheet/less',
+				'type' => 'text/css'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/order_editor.js'),
+				'type' => 'text/javascript'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/window_system.js'),
+				'type' => 'text/javascript'
+			));
 	}
 
 	/**

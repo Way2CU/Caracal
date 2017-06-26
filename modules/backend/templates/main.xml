@@ -3,11 +3,12 @@
 <document>
 	<html lang="$language" dir="$language_rtl ? 'rtl' : 'ltr'" cms:eval="lang,dir">
 		<head>
-			<title>
-				<cms:text constant="site_title" />
-				<cms:raw text=" - "/>
-				<cms:text constant="title" module="backend"/>
-			</title>
+			<cms:module
+				name="head_tag"
+				action="add_to_title"
+				value="title"
+				cms:constant="value"
+				/>
 			<cms:module name="head_tag" action="show"/>
 		</head>
 
@@ -57,15 +58,6 @@
 
 				<!-- Window container -->
 				<div id="container"/>
-
-				<cms:guest>
-					<!-- Create login window -->
-					<script type="text/javascript">
-						$(document).ready(function() {
-						Caracal.window_system.showLoginWindow();
-						});
-					</script>
-				</cms:guest>
 			</section>
 		</body>
 	</html>
