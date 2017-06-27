@@ -26,9 +26,7 @@ select,
 textarea,
 button {
 	margin: 0px;
-
 	font-size: 1em;
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 a:focus,
@@ -43,7 +41,6 @@ button:focus {
  * Page switcher
  */
 div.page_switch {
-	display: block;
 	clear: both;
 }
 
@@ -90,7 +87,6 @@ div.page_switch span a:hover {
  * Scrollbar
  */
 div.scrollbar_thumb {
-	display: block;
 	width: 20px;
 	height: 70px;
 
@@ -246,5 +242,5 @@ button::-moz-focus-inner {
  * Video IFrame
  */
 iframe.video {
-	border: 0px;
+	border: 0;
 }
