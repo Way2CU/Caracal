@@ -131,16 +131,38 @@ class CodeOptimizer {
 
 				// change path for relative module urls
 				if (substr($file_name, 0, strlen($module_directory)) == $module_directory)
-					$data = preg_replace('|url\(\s*(\.\./){1}(.*)\)([;,])|ium', 'url('.$directory_url.'\2)\3', $data);
+					$data = preg_replace(
+						'|url\s*\('.      // `url` keyword
+						'\s*'.            // allow for arbitraty space
+						'[\'"]?'.         // leading quotation marks
+						'(\.\./){1}(.*)'. // path matching
+						'[\'"]?'.         // trailing quotation marks
+						'\)'.             // closing `url`
+						'([;,])|ium',     // end of statement or next value
+						'url('.$directory_url.'\2)\3', $data);
 				break;
 		}
 
 		// remove comments
-		$data = preg_replace('|/\*.*?(?=\*/)\*/|imus', '', $data);
+		$data = preg_replace(
+			'|/\*'.       // block start
+			'.*?(?=\*/)'. // any characters in between
+			'\*/|imus',   // block end
+			'', $data);
 
 		// fix relative paths
-		$data = preg_replace('|url\s*\(\s*(\.\./){2,}|imus', 'url(../', $data);
-		$data = preg_replace('|url\(\.\./([^\)]+)\)|imus', 'url('._BASEURL.'/'.$site_path.'\1)', $data);
+		$data = preg_replace(
+			'|url\s*\('.                 // `url` keyword
+			'\s*[\'"]?(\.\./){2,}|imus', // multiple parent directories
+			'url(../', $data);
+
+		// expand relative paths
+		$data = preg_replace(
+			'|url\('.        // `url` keyword
+			'[\'"]?\.\./'.   // parent directory
+			'([^\)"]+)'.     // path fragment
+			'[\'"]?\)|imus', // optional closing quotes, and bracket
+			'url('._BASEURL.'/'.$site_path.'\1)', $data);
 
 		// parse most important
 		$data = str_replace("\r", '', $data);
