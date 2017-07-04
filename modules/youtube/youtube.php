@@ -61,6 +61,16 @@ class youtube extends Module {
 							));
 
 			$backend->addMenu($this->name, $youtube_menu);
+
+		} else {
+			// add frontend scripts
+			$head_tag = head_tag::get_instance();
+
+			// load backend files if needed
+			$head_tag->addTag('script', array(
+						'src'  => URL::from_file_path($this->path.'include/interactive.js'),
+						'type' => 'text/javascript'
+					));
 		}
 	}
 
@@ -461,7 +471,7 @@ class youtube extends Module {
 
 			$params = array(
 						'video_id'	=> $video_id,
-						'button'	=> $this->get_language_constant("close"),
+						'button'	=> $this->get_language_constant('close'),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
 
@@ -476,8 +486,8 @@ class youtube extends Module {
 			$template->set_mapped_module($this->name);
 
 			$params = array(
-						'message'	=> $this->get_language_constant("message_video_error"),
-						'button'	=> $this->get_language_constant("close"),
+						'message'	=> $this->get_language_constant('message_video_error'),
+						'button'	=> $this->get_language_constant('close'),
 						'action'	=> window_Close($this->name.'_video_preview')
 					);
 
@@ -745,6 +755,7 @@ class youtube extends Module {
 
 		$video = null;
 		$manager = YouTube_VideoManager::get_instance();
+		$embed = isset($tag_params['embed']) && $tag_params['embed'] == '1';
 
 		if (isset($tag_params['id'])) {
 			// video is was specified
@@ -771,69 +782,59 @@ class youtube extends Module {
 								);
 		}
 
-		// no id was specified
-		if (is_object($video))
-			if (isset($tag_params['embed']) && ($tag_params['embed'] == '1')) {
-				// player parameters
-				$player_params = array(
-						'rel'			=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
-						'showinfo'		=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0,
-						'autoplay'		=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
-						'autohide'		=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
-						'controls'		=> isset($tag_params['controls']) ? fix_id($tag_params['controls']) : 1,
-						'color'			=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
-						'origin'		=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : _DOMAIN,
-						'theme'			=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
-						'start'			=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
-						'loop'			=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
-						'enablejsapi'	=> isset($tag_params['enable_api']) ? fix_id($tag_params['enable_api']) : 0,
-						'hl'			=> $language,
-						'fs'			=> 1
-					);
+		// no id was specified bail
+		if (!is_object($video))
+			return;
 
-				// looping requires playlist
-				if ($player_params['loop'] > 0 && !isset($player_params['playlist']))
-					$player_params['playlist'] = $video->video_id;
+		// player parameters
+		$player_params = array(
+				'rel'			=> isset($tag_params['show_related']) ? fix_id($tag_params['show_related']) : 0,
+				'showinfo'		=> isset($tag_params['show_info']) ? fix_id($tag_params['show_info']) : 0,
+				'autoplay'		=> isset($tag_params['autoplay']) ? fix_chars($tag_params['autoplay']) : 0,
+				'autohide'		=> isset($tag_params['autohide']) ? fix_chars($tag_params['autohide']) : 2,
+				'controls'		=> isset($tag_params['controls']) ? fix_id($tag_params['controls']) : 1,
+				'color'			=> isset($tag_params['color']) ? fix_chars($tag_params['color']) : 'default',
+				'origin'		=> isset($tag_params['origin']) ? fix_chars($tag_params['origin']) : _DOMAIN,
+				'theme'			=> isset($tag_params['theme']) ? fix_chars($tag_params['theme']) : 'dark',
+				'start'			=> isset($tag_params['start_time']) ? fix_id($tag_params['start_time']) : 0,
+				'loop'			=> isset($tag_params['loop']) ? fix_id($tag_params['loop']) : 0,
+				'enablejsapi'	=> isset($tag_params['enable_api']) ? fix_id($tag_params['enable_api']) : 0,
+				'hl'			=> $language,
+				'fs'			=> 1
+			);
 
-				$params = array(
-						'width'		=> isset($tag_params['width']) ? fix_id($tag_params['width']) : 320,
-						'height'	=> isset($tag_params['height']) ? fix_id($tag_params['height']) : 240,
-						'player_id'	=> isset($tag_params['player_id']) ? fix_chars($tag_params['player_id']) : false
-					);
+		// autoplay interactive videos
+		if (!$embed)
+			$player_params['autoplay'] = 1;
 
-				// prepare embedding URL
-				$query_data = http_build_query($player_params, '', '&amp;');
+		// looping requires playlist
+		if ($player_params['loop'] > 0 && !isset($player_params['playlist']))
+			$player_params['playlist'] = $video->video_id;
 
-				$url = 'https://youtube.com/embed/'.$video->video_id;
-				$url .= '?'.$query_data;
+		// prepare template parameters
+		$query_data = http_build_query($player_params, '', '&amp;');
+		$params = array(
+				'width'        => isset($tag_params['width']) ? fix_id($tag_params['width']) : 320,
+				'height'       => isset($tag_params['height']) ? fix_id($tag_params['height']) : 240,
+				'player_id'    => isset($tag_params['player_id']) ? fix_chars($tag_params['player_id']) : false,
+				'url'          => 'https://youtube.com/embed/'.$video->video_id.'?'.$query_data,
+				'outside_url'  => 'https://youtube.com/watch?v='.$video->video_id,
+				'id'           => $video->id,
+				'video_id'     => $video->video_id,
+				'title'        => $video->title,
+				'image_number' => isset($tag_params['image_number']) ? fix_id($tag_params['image_number']) : 0
+			);
 
-				$params['url'] = $url;
+		// load and render template
+		$template_file = $embed ? 'embed.xml' : 'video.xml';
+		$template = $this->load_template($tag_params, $template_file);
 
-				// embed video player
-				$template = $this->load_template($tag_params, 'embed.xml');
-				$template->set_template_params_from_array($children);
+		$template->set_template_params_from_array($children);
+		$template->register_tag_handler('cms:thumbnail', $this, 'tag_Thumbnail');
 
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
-
-			} else {
-				// parse specified template
-				$template = $this->load_template($tag_params, 'video.xml');
-				$template->set_template_params_from_array($children);
-				$template->register_tag_handler('cms:thumbnail', $this, 'tag_Thumbnail');
-
-				$params = array(
-								'id'			=> $video->id,
-								'video_id'		=> $video->video_id,
-								'title'			=> $video->title,
-								'thumbnail'		=> $this->getThumbnailURL($video->video_id)
-							);
-
-				$template->restore_xml();
-				$template->set_local_params($params);
-				$template->parse();
-			}
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
 	}
 
 	/**
@@ -994,6 +995,8 @@ class youtube extends Module {
 		$manager = YouTube_VideoManager::get_instance();
 		$video = null;
 		$image_list = null;
+		$image_width = null;
+		$image_height = null;
 
 		// get parameters
 		if (isset($tag_params['id'])) {
@@ -1010,6 +1013,12 @@ class youtube extends Module {
 		if (isset($tag_params['image_number']))
 			$image_list = fix_id(explode(',', $tag_params['image_number']));
 
+		if (isset($tag_params['width']))
+			$image_width = fix_id($tag_params['width']);
+
+		if (isset($tag_params['height']))
+			$image_height = fix_id($tag_params['height']);
+
 		// make sure image number is within valid range
 		if (count($image_list) == 0 || min($image_list) < 1 || max($image_list) > 3)
 			$image_number = array(2);
@@ -1024,10 +1033,12 @@ class youtube extends Module {
 				$image_url = $this->getThumbnailURL($video->video_id, $image_number);
 
 				$params = array(
-								'id'		=> $video->id,
-								'video_id'	=> $video->video_id,
-								'title'		=> $video->title,
-								'thumbnail'	=> $image_url
+								'id'        => $video->id,
+								'video_id'  => $video->video_id,
+								'title'     => $video->title,
+								'thumbnail' => $image_url,
+								'width'     => $image_width,
+								'height'    => $image_height
 							);
 
 				$template->restore_xml();
