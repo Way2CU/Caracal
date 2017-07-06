@@ -15,3 +15,11 @@ Example which replaces article `id` inside of JavaScript block and redirects pag
 	</cms:replace>
 </script>
 ```
+
+Output:
+
+```xml
+<script type="text/javascript">
+	window.location = '/articles/15';
+</script>
+```
