@@ -568,7 +568,7 @@ class TemplateHandler {
 						$keys = explode(',', fix_chars($tag->tagAttrs['param']));
 						$pool = array();
 
-						foreach ($keys as $key) {
+						foreach ($keys as $key)
 							$pool[$key] = $this->params[$key];
 
 					} else {
