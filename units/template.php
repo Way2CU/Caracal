@@ -564,7 +564,16 @@ class TemplateHandler {
 
 				// replace tag data string with matching params
 				case 'cms:replace':
-					$pool = isset($tag->tagAttrs['param']) ? $this->params[$tag->tagAttrs['param']] : $this->params;
+					if (isset($tag->tagAttrs['param'])) {
+						$keys = explode(',', fix_chars($tag->tagAttrs['param']));
+						$pool = array();
+
+						foreach ($keys as $key) {
+							$pool[$key] = $this->params[$key];
+
+					} else {
+					   	$this->params;
+					}
 
 					$keys = array_keys($pool);
 					$values = array_values($pool);
