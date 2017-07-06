@@ -16,7 +16,7 @@ Tag `option` can be used in this form only inside of `cms:choice` with following
 
 _Note: Due to way XML is parsed, `default` option can only be the last one._
 
-Example:
+Example in which value of `$params['version']` is compared to each option:
 
 ```xml
 <cms:choice param="version">
