@@ -540,22 +540,6 @@ class TemplateHandler {
 					echo $content;
 					break;
 
-				// call section specific data
-				case 'cms:section_data':
-					if (!is_null($this->module)) {
-						$file = $this->module->getSectionFile($section, $action, $language);
-
-						$new = new TemplateHandler(basename($file), dirname($file).'/');
-						$new->set_local_params($this->params);
-						$new->set_mapped_module($this->module);
-						$new->parse();
-
-					} else {
-						// log error
-						trigger_error('Mapped module is not loaded! File: '.$this->file, E_USER_WARNING);
-					}
-					break;
-
 				// print multilanguage data
 				case 'cms:language_data':
 					$name = isset($tag->tagAttrs['param']) ? $tag->tagAttrs['param'] : null;

@@ -31,8 +31,6 @@
 	clear_text CDATA #IMPLIED
 >
 
-<!ELEMENT cms:section_data EMPTY>
-
 <!ELEMENT cms:language_data EMPTY>
 <!ATTLIST cms:language_data
 	param CDATA #REQUIRED
