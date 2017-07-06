@@ -6,7 +6,7 @@ Tag recognizes the following attribute:
 
 - `param` - Optional comma separated list of parameters to replace. If omitted all of the parameters are searched and replaced. 
 
-Example which replaces article `id` inside of JavaScript block and redirects page:
+Example which replaces article `id` inside of JavaScript block with value of `$params['id']`:
 
 ```xml
 <script type="text/javascript">
