@@ -79,7 +79,7 @@ For example:
 <cms:transfer name="title" target="text"/>
 ```
 
-Would generate tag inside of `cms:module` call that looks like like this where `value_of_title` would be result of evaluating `$params['title']`:
+Would generate tag inside of `cms:module` call that looks like this where `value_of_title` would be result of evaluating `$params['title']`:
 
 ```xml
 <param text="value_of_title"/>
