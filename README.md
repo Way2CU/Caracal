@@ -56,7 +56,7 @@ Contents:
 	- [v0.4](docs/release_notes/v0.4.markdown)
 	- [v0.4.1](docs/release_notes/v0.4.1.markdown)
 9. Version specific SQL changes
-	- [v0.2](docs/release_notes/v0.2)
-	- [v0.3](docs/release_notes/v0.3)
-	- [v0.4](docs/release_notes/v0.4)
-	- [v0.5](docs/release_notes/v0.5)
+	- [v0.2](docs/version_changes/v0.2)
+	- [v0.3](docs/version_changes/v0.3)
+	- [v0.4](docs/version_changes/v0.4)
+	- [v0.5](docs/version_changes/v0.5)
