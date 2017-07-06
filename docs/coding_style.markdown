@@ -460,7 +460,7 @@ div.box { display: block; border-color: blue; }
 
 ## <a name="css/selectors">Selectors</a>
 
-Selectors need to ordered by they specificity and grouped by similarity. This ensures code is easy to find and change later in the process. This way of coding also ensures any ambiguity about priority of selectors is avoided.
+Selectors need to ordered by their specificity and grouped by similarity. This ensures code is easy to find and change later in the process. This way of coding also ensures any ambiguity about priority of selectors is avoided.
 
 Good:
 ```css
