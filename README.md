@@ -7,7 +7,13 @@ Fast, lightweight, developer oriented framework.
 
 Contents:
 
-1. Framework tags
+1. Quick start guide
+2. Site configuration
+	1. Configuration file
+	2. Multiple language support
+	3. Path handling and template loading
+	4. Error pages
+3. Framework tags
 	1. [Set session variable - `cms:session`](docs/tags/session.markdown)
 	2. [Call module function - `cms:module`](docs/tags/module.markdown)
 	3. [Include and parse template - `cms:template`](docs/tags/template.markdown)
@@ -28,13 +34,13 @@ Contents:
 	18. Include script from system collection - `cms:collection`
 	19. Include style in head tag - `cms:link`
 	20. [Automated testing - `cms:test`](docs/tags/test.markdown)
-2. Framework attributes
+4. Framework attributes
 	1. Evaluating attribute - `cms:eval`
 	2. Optional attribute evaluation - `cms:eval`
 	3. Language constant tooltip - `cms:tooltip`
 	4. Treating attribute value as language constant name - `cms:constant`
 	5. Marking dirty block for cache handling - `cms:skip_cache`
-3. Modules
+5. Modules
 	1. Articles
 	2. Gallery
 	3. Shop
@@ -43,19 +49,18 @@ Contents:
 	6. News
 	7. Language menu
 	8. Contact form
-4. Path handling and template loading
-	1. Error pages
-5. Globally available functions and constants in evaluation
-6. [Coding style guidelines](docs/coding_style.markdown)
-7. [License](docs/COPYING)
-8. Release notes
+6. Globally available functions and constants in evaluation
+7. [Coding style guidelines](docs/coding_style.markdown)
+8. [License](docs/COPYING)
+9. Contributing
+10. Release notes
 	- [v0.1](docs/release_notes/v0.1.markdown)
 	- [v0.2](docs/release_notes/v0.2.markdown)
 	- [v0.2.1](docs/release_notes/v0.2.1.markdown)
 	- [v0.3](docs/release_notes/v0.3.markdown)
 	- [v0.4](docs/release_notes/v0.4.markdown)
 	- [v0.4.1](docs/release_notes/v0.4.1.markdown)
-9. Version specific SQL changes
+11. Version specific SQL changes
 	- [v0.2](docs/version_changes/0.2)
 	- [v0.3](docs/version_changes/0.3)
 	- [v0.4](docs/version_changes/0.4)
