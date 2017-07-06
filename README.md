@@ -11,7 +11,7 @@ Contents:
 	1. [Set session variable - `cms:session`](docs/tags/session.markdown)
 	2. [Call module function - `cms:module`](docs/tags/module.markdown)
 	3. [Include and parse template - `cms:template`](docs/tags/template.markdown)
-	4. Add raw text or include raw text file - `cms:raw`
+	4. [Add raw text or include raw text file - `cms:raw`](docs/tags/raw.markdown)
 	5. Include or use SVG sprite - `cms:svg`
 	6. Show localized content from text constants - `cms:text`
 	7. Parse parameter value as Markdown text - `cms:markdown`
