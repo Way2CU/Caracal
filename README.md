@@ -8,8 +8,8 @@ Fast, lightweight, developer oriented framework.
 Contents:
 
 1. Framework tags
-	1. Set session variable - `cms:session`
-	2. Call module function - `cms:module`
+	1. [Set session variable - `cms:session`](docs/tags/session.markdown)
+	2. [Call module function - `cms:module`](docs/tags/module.markdown)
 	3. Include and parse template - `cms:template`
 	4. Add raw text or include raw text file - `cms:raw`
 	5. Include or use SVG sprite - `cms:svg`
