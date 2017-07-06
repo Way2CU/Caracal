@@ -20,3 +20,5 @@ Example which shows article and its content:
 	<cms:markdown param="content" multilanguage="yes"/>
 </document>
 ```
+
+[markdown]: https://daringfireball.net/projects/markdown/basics
