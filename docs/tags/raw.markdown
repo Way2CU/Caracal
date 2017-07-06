@@ -12,7 +12,7 @@ Example for adding raw text:
 ```xml
 <cms:raw>Sample text</cms:raw>
 <hr/>
-<cms:raw text="-"/>
+<cms:raw text="Extra text"/>
 ```
 
 This tag can also be used to include raw text files. This is useful when integrating with services such as Facebook and Google Analytics which require developers to put code snippets in specific areas of their site. 
