@@ -58,3 +58,29 @@ Nested calls can be used to show information related to current context. In exam
 		/>
 </document>
 ```
+
+
+## Child nodes and transferring parameters
+
+Tags inside of `cms:module` will be passed to function called as they are. System doesn't parse or evaluate values inside of `cms:module` tag. It is up to function to handle these tags however large number of standard modules does nothing with these tags and will simply ignore them. Refer to individual module documentation for more information on this.
+
+There is a way, however, to pass individual values of `$template` or `$params` to function. Only inside of `cms:module` call is `cms:transfer` recognized and handled.
+
+This tag supports the following attributes:
+
+- `name` - Optional name of parameter to transfer, equal to `$params['name']`;
+- `template` - Optional name of template parameter to transfer, equal to `$template['name']`;
+- `tag` - Optional resulting tag name, defaults to `param` if omitted;
+- `target` - Optional target parameter name, defaults to either `name` or `template` value if specified.
+
+For example:
+
+```xml
+<cms:transfer name="title" target="text"/>
+```
+
+Would generate tag inside of `cms:module` call that looks like like this where `value_of_title` would be result of evaluating `$params['title']`:
+
+```xml
+<param text="value_of_title"/>
+```
