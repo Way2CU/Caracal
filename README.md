@@ -14,7 +14,7 @@ Contents:
 	4. [Add raw text or include raw text file - `cms:raw`](docs/tags/raw.markdown)
 	5. [Include or use SVG sprite - `cms:svg`](docs/tags/svg.markdown)
 	6. [Show localized content from text constants - `cms:text`](docs/tags/text.markdown)
-	7. Parse parameter value as Markdown text - `cms:markdown`
+	7. [Parse parameter value as Markdown text - `cms:markdown`](docs/tags/markdown.markdown)
 	8. Include data from all languages for backend use - `cms:language_data`
 	9. Search and replace string with values in parameters - `cms:replace`
 	10. Conditional template parsing - `cms:if`
