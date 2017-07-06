@@ -46,7 +46,13 @@ Contents:
 4. Path handling and template loading
 	1. Error pages
 5. Globally available functions and constants in evaluation
-6. Coding style guidelines
-7. License
+6. [Coding style guidelines](docs/coding_style.markdown)
+7. [License](docs/COPYING)
 8. Release notes
+	- [v0.1](docs/release_notes/v0.1.markdown)
+	- [v0.2](docs/release_notes/v0.2.markdown)
+	- [v0.2.1](docs/release_notes/v0.2.1.markdown)
+	- [v0.3](docs/release_notes/v0.3.markdown)
+	- [v0.4](docs/release_notes/v0.4.markdown)
+	- [v0.4.1](docs/release_notes/v0.4.1.markdown)
 9. Version specific SQL changes
