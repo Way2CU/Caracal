@@ -1,6 +1,6 @@
 # Parse parameter value as Markdown text - `cms:markdown`
 
-[Markdown][markdown] is a useful format for writing content without implicit style attached. It provides people who are not well-versed in HTML to write content and still get proper structure and formatting in place. This tag in allows treating any parameter value as Markdown notation and during rendering output is as HTML.
+[Markdown][markdown] is a useful format for writing content without implicit style attached. It provides people who are not well-versed in HTML to write content and still get proper structure and formatting in place. This tag in allows treating any parameter value as Markdown notation and during rendering output is as HTML. It can only be used inside of contextual templates which have access to `$params` variable, like showing article, gallery image, etc.
 
 Tag recognizes the following attributes:
 
