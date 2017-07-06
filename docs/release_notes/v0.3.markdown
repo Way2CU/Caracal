@@ -1,10 +1,5 @@
 # Release notes for v0.3
 
-This version brings new URL scheme and mechanism for creating it. Old
-section.xml file is no longer being used and is replaced by section.json. In
-addition to URL changes system now supports number of string string distance
-algorithms and initial implementation of these in shop search. Support for
-error pages was added as well. New `page_description` module was added.
+This version brings new URL scheme and mechanism for creating it. Old section.xml file is no longer being used and is replaced by section.json. In addition to URL changes system now supports number of string string distance algorithms and initial implementation of these in shop search. Support for error pages was added as well. New `page_description` module was added.
 
-Apart from many new features number of bugs were fixed. Most notable ones
-include CSS code optimizer, few caching issues, unified eval function, etc.
+Apart from many new features number of bugs were fixed. Most notable ones include CSS code optimizer, few caching issues, unified eval function, etc.

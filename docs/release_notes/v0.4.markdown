@@ -1,7 +1,9 @@
+# Release notes for v0.4
+
 This release marks a turning point for some system level objects. Most notable ones are:
 
-- Old set of url_Make and similar functions has been grouped into URL class and reworked for simpler functionality;
-- Session::TYPE_BROWSER and similar constants have been moved to separate class SessionType::BROWSER;
+- Old set of `url_Make` and similar functions has been grouped into URL class and reworked for simpler functionality;
+- `Session::TYPE_BROWSER` and similar constants have been moved to separate class `SessionType::BROWSER`;
 - Language is no longer stored in session menu. This was a huge mistake as it presented content to the search engines as single language. New approach always includes language in URL for languages other than default;
 - Additional optimization of CSS compiler;
 - Shop received support for suppliers, discounts and promotions;
