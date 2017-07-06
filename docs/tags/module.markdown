@@ -2,16 +2,7 @@
 
 This tag calls module to render content in its place. Optionally user can specify custom template and attributes to be passed to function being called. Only `name` and `action` attributes are required.
 
-```xml
-<cms:module
-	name="articles"
-	action="show"
-	text_id="test"
-	template="custom_article.xml"
-	/>
-```
-
-Tag recognizes the follwing attributes:
+Tag recognizes the following attributes:
 
 - `name` - Name of the module where function resides;
 - `action` - Function name to call;
@@ -20,6 +11,17 @@ Tag recognizes the follwing attributes:
 - `local` - Optional flag which indicates where template file should be loaded from.
 
 If `local` attribute is set to `1` system will ignore `template_path` attribute and look for template file inside of module specific template directory. This is meant for internal use and when developing modules and is rarely used when developing sites. Omitting this attribute or setting it `0` indicates that template should be loaded from `template_path` if specified, or from default `$template_path` specified in configuration file. Most of the times user will just specify `template` and not worry about other attributes.
+
+Example:
+
+```xml
+<cms:module
+	name="articles"
+	action="show"
+	text_id="test"
+	template="custom_article.xml"
+	/>
+```
 
 
 ## Custom templates and use of `$params`

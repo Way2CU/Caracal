@@ -9,6 +9,7 @@ In the following example, `H1` will be displayed only for user that is currently
 	<cms:user>
 		<h1>Title</h1>
 	</cms:user>
+
 	<p>Article content</p>
 </div>
 ```

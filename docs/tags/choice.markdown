@@ -4,6 +4,20 @@ This tag provides a way to do easy selection between multiple choices with suppo
 
 In the following example, value of request (`GET`, `POST`) parameter `version` will be compared to values in `option`. If matching `option` is found, it will be rendered. If no match was found `default` option will be rendered if specified, otherwise no rendering will occur.
 
+Tag `cms:choice` supports following attributes:
+
+- `param` - Parameter name whose value is compared to options;
+- `value` - Manually set or [`cms:eval`-ed](eval.markdown) value to compare.
+
+Tag `option` can be used in this form only inside of `cms:choice` with following attributes:
+
+- `value` - Value to compare to;
+- `default` - Optionally set to mark option as default is matching against values fails.
+
+_Note: Due to way XML is parsed, `default` option can only be the last one._
+
+Example:
+
 ```xml
 <cms:choice param="version">
 	<option value="one">
@@ -19,15 +33,3 @@ In the following example, value of request (`GET`, `POST`) parameter `version` w
 	</option>
 </cms:choice>
 ```
-
-_Note: Due to way XML is parsed, `default` option can only be the last one._
-
-Tag `cms:choice` supports following attributes:
-
-- `param` - value of request parameter to option value;
-- `value` - manually set or evaled value.
-
-Tag `option` can be used in this form only inside of `cms:choice` with following attributes:
-
-- `value` - value to compare to;
-- `default` - optionally set to denote which option should be rendered in case no matching option has been found.
