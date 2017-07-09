@@ -14,9 +14,9 @@ Example which loads `parts/header.xml` from `site/templates` directory:
 ```
 
 
-## Transfering parameters
+## Setting template parameters
 
-Similarly to [`cms:module`](module.markdown) call, `cms:template` tag allows transfering parameters to the new template. This is done by creating child `param` tags. These parameters are later available in included template through `$template` variable.
+Similarly to [`cms:module`](module.markdown) call, `cms:template` tag allows setting parameters to be used in template. This is done by creating child `param` tags. These parameters are later available in included template through `$template` variable.
 
 Tag, recognizes the following attributes:
 
@@ -42,4 +42,28 @@ Example usage:
 		<!-- Content -->
 	</header>
 </document>
+```
+
+
+## Transferring parameters
+
+System doesn't parse or evaluate values inside of `cms:template` tag. It is up to function to handle these tags however large number of standard modules does nothing with these tags and will simply ignore them. Refer to individual module documentation for more information on this. There is a way, however, to pass individual values of `$template` or `$params` to function. Only inside of `cms:template` and `cms:module` call is `cms:transfer` recognized and handled.
+
+This tag supports the following attributes:
+
+- `name` - Optional name of parameter to transfer, equal to `$params['name']`;
+- `template` - Optional name of template parameter to transfer, equal to `$template['name']`;
+- `tag` - Optional resulting tag name, defaults to `param` if omitted;
+- `target` - Optional target parameter name, defaults to either `name` or `template` value if specified.
+
+For example:
+
+```xml
+<cms:transfer template="title" target="text"/>
+```
+
+Would generate tag inside of `cms:module` call that looks like this where `value_of_title` would be result of evaluating `$template['title']`:
+
+```xml
+<param name="text" value="value_of_title"/>
 ```

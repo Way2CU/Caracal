@@ -72,11 +72,40 @@ Nested calls can be used to show information related to current context. In exam
 ```
 
 
-## Child nodes and transferring parameters
+## Setting template parameters
 
-Tags inside of `cms:module` will be passed to function called as they are. System doesn't parse or evaluate values inside of `cms:module` tag. It is up to function to handle these tags however large number of standard modules does nothing with these tags and will simply ignore them. Refer to individual module documentation for more information on this.
+Similarly to [`cms:template`](template.markdown) call, `cms:module` tag allows setting parameters to be used in template. This is done by creating child `param` tags. These parameters are later available in included template through `$template` variable.
 
-There is a way, however, to pass individual values of `$template` or `$params` to function. Only inside of `cms:module` call is `cms:transfer` recognized and handled.
+Tag, recognizes the following attributes:
+
+- `name` - Parameter name;
+- `value` - Parameter value;
+
+Example call:
+
+```xml
+<cms:template file="parts/header.xml">
+	<param name="class" value="fixed"/>
+</cms:template>
+```
+
+Example usage:
+
+```xml
+<document>
+	<header
+		class="$template['class']"
+		cms:eval="class">
+
+		<!-- Content -->
+	</header>
+</document>
+```
+
+
+## Transferring parameters
+
+System doesn't parse or evaluate values inside of `cms:module` tag. It is up to function to handle these tags however large number of standard modules does nothing with these tags and will simply ignore them. Refer to individual module documentation for more information on this. There is a way, however, to pass individual values of `$template` or `$params` to function. Only inside of `cms:module` and `cms:template` call is `cms:transfer` recognized and handled.
 
 This tag supports the following attributes:
 
