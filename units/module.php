@@ -315,6 +315,39 @@ abstract class Module {
 
 		return $template;
 	}
+
+	/**
+	 * Handle and process imported data.
+	 *
+	 * It's important this functions supports all the previous structures
+	 * of exported data as one of intended usages for exports is to allow easy
+	 * data transfer between different system versions. Function will be called
+	 * with `$options` array to allow for greater versatility. Please refer to
+	 * `ModuleHandler::export_data` for more detailed information on this
+	 * parameter.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 */
+	public function import_data(&$data, &$options) {
+	}
+
+	/**
+	 * Generate data for export.
+	 *
+	 * Resulting structure must be compatible with import function. Since
+	 * one of the intended usages for exports is to allow easy data transfer
+	 * between different versions of the system it's important that structure
+	 * is carefully planned ahead. Function will be called with `$options`
+	 * array to allow for greater versatility. Please refer to
+	 * `ModuleHandler::export_data` for more detailed information on this
+	 * parameter.
+	 *
+	 * @param array $options
+	 * @return array
+	 */
+	public function export_data(&$options) {
+	}
 }
 
 ?>
