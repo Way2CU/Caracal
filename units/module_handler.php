@@ -6,6 +6,10 @@
  * Author: Mladen Mijatov
  */
 
+// make sure constant exists, it was added in 5.4
+if (!defined('OPENSSL_RAW_DATA'))
+	define('OPENSSL_RAW_DATA', 1);
+
 
 class InvalidKeyException extends Exception{};
 
@@ -236,8 +240,6 @@ class ModuleHandler {
 	 * the following list must be supported if applicable:
 	 *
 	 *	- include_files: boolean - Whether files should be included in export;
-	 *	- include_settings: boolean - Whether module settings should be included. This
-	 *		one is handled by the system itself modules can ignore it;
 	 *	- description: string - Description for backup file, handled by the system. Modules
 	 *		should ignore this.
 	 *
@@ -248,6 +250,8 @@ class ModuleHandler {
 	 * @return boolean
 	 */
 	public static function export_data($key, $file_name, $options=array(), $modules=null) {
+		global $backup_path;
+
 		// increase security a little bit by extending key length through hash function
 		// as people don't have a tendency to choose long passwords
 		$key = hash('sha512', $key, true);
@@ -257,13 +261,13 @@ class ModuleHandler {
 
 		// default export data structure
 		$result = array(
-			'timestamp'   => date('c'),
-			'domain'      => _DOMAIN,
-			'description' => isset($options['description']) ? $options['description'] : '',
-			'key_hash'    => hash('sha256', $key),  // used for password verification
-			'encryption'  => self::CIPHER,
-			'settings'    => array(),
-			'data'        => array()
+			'timestamp'       => date('c'),
+			'domain'          => _DOMAIN,
+			'description'     => isset($options['description']) ? $options['description'] : '',
+			'key_hash'        => hash('sha256', $key),  // used for password verification
+			'encryption'      => self::CIPHER,
+			'module_data'     => array(),
+			'module_settings' => array()
 		);
 
 		// bail if no modules are specified
@@ -291,7 +295,7 @@ class ModuleHandler {
 			// get settings from systems table
 			$variable_list = $manager->get_items(array('variable', 'value'), array('module' => $module_name));
 			$raw_settings = array();
-			if (count($value_list) > 0)
+			if (count($variable_list) > 0)
 				foreach($variable_list as $variable => $value)
 					$raw_settings[$variable] = $value;
 			$raw_settings = serialize($raw_settings);
@@ -301,8 +305,8 @@ class ModuleHandler {
 			$settings = openssl_encrypt($raw_settings, self::CIPHER, $key, OPENSSL_RAW_DATA, $settings_iv);
 
 			// store encrypted data
-			$result['data'][$module_name] = base64_encode($data_iv.$data);
-			$result['settings'][$module_name] = base64_encode($settings_iv.$settings);
+			$result['module_data'][$module_name] = base64_encode($data_iv.$data);
+			$result['module_settings'][$module_name] = base64_encode($settings_iv.$settings);
 		}
 
 		// make sure storage path exists
@@ -313,13 +317,18 @@ class ModuleHandler {
 			}
 
 		// save backup file
-		file_put_contents($backup_path.$file_name.'.backup');
+		file_put_contents($backup_path.$file_name, json_encode($result));
 
 		return true;
 	}
 
 	/**
 	 * Load specified file and restore backup for specified modules.
+	 *
+	 * The following options are recognized:
+	 *	- include_files: boolean - Whether files should be included in export;
+	 *	- include_settings: boolean - Whether module settings should be included. This
+	 *		one is handled by the system itself modules can ignore it;
 	 *
 	 * @param string $key
 	 * @param string $file_name
@@ -365,8 +374,8 @@ class ModuleHandler {
 				continue;
 
 			// clear existing and import new settings for specific module
-			if ($import_settings && isset($backup['settings'][$module_name])) {
-				$raw_settings = base64_decode($backup['settings'][$module_name]);
+			if ($import_settings && isset($backup['module_settings'][$module_name])) {
+				$raw_settings = base64_decode($backup['module_settings'][$module_name]);
 
 				// get initialization vector for settings
 				$settings_iv = substr($raw_settings, 0, $iv_size);
@@ -390,9 +399,9 @@ class ModuleHandler {
 			}
 
 			// restore module data
-			if (isset($backup['data'][$module_name])) {
+			if (isset($backup['module_data'][$module_name])) {
 				// get initialization vector for data
-				$raw_data = base64_decode($backup['data'][$module_name]);
+				$raw_data = base64_decode($backup['module_data'][$module_name]);
 				$data_iv = substr($raw_data, 0, $iv_size);
 				$raw_data = substr($raw_data, $iv_size);
 
