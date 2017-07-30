@@ -1020,7 +1020,7 @@ class backend extends Module {
 
 			$params = array(
 					'name'        => $file_name,
-					'size'        => round(filesize($backup_path.$file_name) / 1024, 2).' kB',
+					'size'        => round(filesize($backup_path.$file_name) / 1000, 2).' kB',
 					'item_import' => URL::make_hyperlink(
 							$this->get_language_constant('import'),
 							window_Open(
