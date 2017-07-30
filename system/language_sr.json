@@ -7,13 +7,13 @@
     "close": "Затвори",
     "column_options": "Опције",
     "delete": "Брисање",
+    "import": "Увоз",
     "export": "Извоз",
     "filter": "Филтер",
     "format_date": "d.m.Y.",
     "format_date_short": "d.m.Y.",
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
-    "import": "Увоз",
     "message_server_error": "Сервер је наишао на следећу грешку:",
     "message_client_error_404": "Жао нам је али страница или датотека коју сте затражили није пронађена.",
     "new": "Ново",
@@ -32,5 +32,6 @@
     "upload": "Пошаљи",
     "refresh": "Освежи",
     "reload": "Поново учитај",
+    "download": "Download",
     "back_to_home": "Назад на почетну страницу"
 }
