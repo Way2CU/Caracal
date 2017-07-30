@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<label>
+			<span><cms:text constant="label_file_name" module="backend"/></span>
+			<input
+				type="text"
+				name="file_name"
+				class="code"
+				value="date('Y-m-d h:i:s')"
+				style="width: 300px;"
+				required="required"
+				cms:eval="value"
+				/>
+		</label>
+
+		<label>
+			<span><cms:text constant="label_encryption_key" module="backend"/></span>
+			<input
+				type="text"
+				name="key"
+				class="code"
+				style="width: 300px;"
+				required="required"
+				/>
+		</label>
+
+		<fieldset>
+			<label>
+				<cms:text constant="label_description" module="backend"/>
+				<textarea name="description" rows="4" cols="30"/>
+			</label>
+
+			<legend><cms:text constant="legend_options" module="backend"/></legend>
+			<label class="checkbox">
+				<span><cms:text constant="label_include_files" module="backend"/></span>
+				<input
+					type="checkbox"
+					name="include_files"
+					/>
+			</label>
+		</fieldset>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="export"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+</document>
