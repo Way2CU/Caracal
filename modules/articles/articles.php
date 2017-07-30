@@ -365,6 +365,7 @@ class articles extends Module {
 			$manager->update_items($data,	array('id' => $id));
 		}
 
+		// show message
 		$template = new TemplateHandler('message.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 

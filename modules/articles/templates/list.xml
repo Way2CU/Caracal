@@ -3,7 +3,7 @@
 <document>
 	<!-- Window Menu -->
 	<div class="main_menu">
-		<cms:var name="$params['link_new']"/>
+		<cms:var param="link_new"/>
 	</div>
 
 	<!-- Header -->
