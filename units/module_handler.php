@@ -262,8 +262,8 @@ class ModuleHandler {
 		$file = new Core\Exports\File($file_name, $key);
 		$file->write(Core\Exports\Section::TIMESTAMP, date('c'));
 		$file->write(Core\Exports\Section::DOMAIN, _DOMAIN);
-		if (isset($options['description']))
-			$file->write(Core\Exports\Section::DESCRIPTION, $options['description']);
+		if (isset($options['description']))  // write non-encrypted description
+			$file->write(Core\Exports\Section::DESCRIPTION, $options['description'], null, false);
 
 		// collect export data from each module
 		foreach ($modules as $module_name) {

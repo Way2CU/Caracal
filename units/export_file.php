@@ -218,15 +218,21 @@ class File {
 	 * @param integer $section
 	 * @param string $raw_data
 	 * @param string $key_name
+	 * @param string $encrypted
 	 * @return integer
 	 */
-	public function write($section, $raw_data, $key_name=null) {
+	public function write($section, $raw_data, $key_name=null, $encrypted=true) {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
 
 		// protect data
-		$data_iv = openssl_random_pseudo_bytes($this->iv_size);
-		$data = openssl_encrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+		if ($encrypted) {
+			$data_iv = openssl_random_pseudo_bytes($this->iv_size);
+			$data = openssl_encrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+		} else {
+			$data_iv = '';
+			$data = $raw_data;
+		}
 
 		// write section
 		fseek($this->handle, 0, SEEK_END);
@@ -240,7 +246,7 @@ class File {
 		}
 
 		// write data
-		$size = strlen($data) + $this->iv_size;
+		$size = strlen($data) + strlen($data_iv);
 		fwrite($this->handle, pack(Format::DATA, $size));
 		fwrite($this->handle, $data_iv);
 		fwrite($this->handle, $data);
@@ -281,9 +287,10 @@ class File {
 	 *
 	 * @param integer $section
 	 * @param string $key_name
+	 * @param boolean $encrypted
 	 * @return string
 	 */
-	public function read($section, $key_name=null) {
+	public function read($section, $key_name=null, $encrypted=true) {
 		if ($this->handle === FALSE)
 			throw new InvalidExportException('No export file open.');
 
@@ -292,11 +299,17 @@ class File {
 
 		// read raw data and initialization vector
 		$size = $this->read_size(Format::DATA);
-		$data_iv = fread($this->handle, $this->iv_size);
-		$raw_data = fread($this->handle, $size - $this->iv_size);
 
-		// decrypt data
-		$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+		if ($encrypted) {
+			// decrypt data
+			$data_iv = fread($this->handle, $this->iv_size);
+			$raw_data = fread($this->handle, $size - $this->iv_size);
+			$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+
+		} else {
+			// read unencrypted data
+			$data = fread($this->handle, $size);
+		}
 
 		if ($data === FALSE)  // should not happen, but account for it anyway
 			throw new Exception("Unable to decrypt data for section {$section} and/or {$key_name}.");
