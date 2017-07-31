@@ -5,19 +5,14 @@
  *
  * Author: Mladen Mijatov
  */
+require_once('export_file.php');
 
-// make sure constant exists, it was added in 5.4
-if (!defined('OPENSSL_RAW_DATA'))
-	define('OPENSSL_RAW_DATA', 1);
-
-
-class InvalidKeyException extends Exception{};
+use Core\Exports;
 
 
 class ModuleHandler {
 	private static $_instance;
 	private static $loaded_modules = array();
-	const CIPHER = 'aes-256-ctr';
 
 	/**
 	 * Get single instance of ModuleHandler
@@ -243,6 +238,9 @@ class ModuleHandler {
 	 *	- description: string - Description for backup file, handled by the system. Modules
 	 *		should ignore this.
 	 *
+	 * When calling `export` on each individual module, handler will pass current
+	 * export file to provide modules with opportunity to store custom data and files.
+	 *
 	 * @param string $key
 	 * @param string $file_name
 	 * @param array $options
@@ -252,24 +250,6 @@ class ModuleHandler {
 	public static function export_data($key, $file_name, $options=array(), $modules=null) {
 		global $backup_path;
 
-		// increase security a little bit by extending key length through hash function
-		// as people don't have a tendency to choose long passwords
-		$key = hash('sha512', $key, true);
-
-		// get size of initialization vector to use
-		$iv_size = openssl_cipher_iv_length(self::CIPHER);
-
-		// default export data structure
-		$result = array(
-			'timestamp'       => date('c'),
-			'domain'          => _DOMAIN,
-			'description'     => isset($options['description']) ? $options['description'] : '',
-			'key_hash'        => hash('sha256', $key),  // used for password verification
-			'encryption'      => self::CIPHER,
-			'module_data'     => array(),
-			'module_settings' => array()
-		);
-
 		// bail if no modules are specified
 		$modules = is_null($modules) ? self::$loaded_modules : $modules;
 		if (empty($modules))
@@ -277,6 +257,13 @@ class ModuleHandler {
 
 		// get settings manager instance for later use
 		$manager = SettingsManager::get_instance();
+
+		// create new exports file
+		$file = new Core\Exports\File($file_name, $key);
+		$file->write(Core\Exports\Section::TIMESTAMP, date('c'));
+		$file->write(Core\Exports\Section::DOMAIN, _DOMAIN);
+		if (isset($options['description']))
+			$file->write(Core\Exports\Section::DESCRIPTION, $options['description']);
 
 		// collect export data from each module
 		foreach ($modules as $module_name) {
@@ -286,11 +273,7 @@ class ModuleHandler {
 
 			// get module instance and its data
 			$module = call_user_func(array($module_name, 'get_instance'));
-			$raw_data = serialize($module->export_data($options));
-
-			// encrypt module data
-			$data_iv = openssl_random_pseudo_bytes($iv_size);
-			$data = openssl_encrypt($raw_data, self::CIPHER, $key, OPENSSL_RAW_DATA, $data_iv);
+			$raw_data = serialize($module->export_data($options, $file));
 
 			// get settings from systems table
 			$variable_list = $manager->get_items(array('variable', 'value'), array('module' => $module_name));
@@ -300,24 +283,12 @@ class ModuleHandler {
 					$raw_settings[$variable] = $value;
 			$raw_settings = serialize($raw_settings);
 
-			// encrypt settings
-			$settings_iv = openssl_random_pseudo_bytes($iv_size);
-			$settings = openssl_encrypt($raw_settings, self::CIPHER, $key, OPENSSL_RAW_DATA, $settings_iv);
-
 			// store encrypted data
-			$result['module_data'][$module_name] = base64_encode($data_iv.$data);
-			$result['module_settings'][$module_name] = base64_encode($settings_iv.$settings);
+			$file->write(Core\Exports\Section::DATA, $raw_data, $module_name);
+			$file->write(Core\Exports\Section::SETTINGS, $raw_settings, $module_name);
 		}
 
-		// make sure storage path exists
-		if (!file_exists($backup_path))
-			if (mkdir($backup_path, 0775, true) === false) {
-				trigger_error('Module handler: Error creating backup storage directory.', E_USER_WARNING);
-				return false;
-			}
-
-		// save backup file
-		file_put_contents($backup_path.$file_name, json_encode($result));
+		$file->close();
 
 		return true;
 	}

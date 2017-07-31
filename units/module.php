@@ -326,10 +326,15 @@ abstract class Module {
 	 * `ModuleHandler::export_data` for more detailed information on this
 	 * parameter.
 	 *
+	 * Export file object is provided to give modules opportunity to import
+	 * its custom data. Files should not be imported as system itself will
+	 * import them if requested.
+	 *
 	 * @param array $data
 	 * @param array $options
+	 * @param object $export_file
 	 */
-	public function import_data(&$data, &$options) {
+	public function import_data(&$data, &$options, &$export_file) {
 	}
 
 	/**
@@ -343,10 +348,14 @@ abstract class Module {
 	 * `ModuleHandler::export_data` for more detailed information on this
 	 * parameter.
 	 *
+	 * Export file object is provided to give modules opportunity to export
+	 * its custom data and files if options is set to include files.
+	 *
 	 * @param array $options
+	 * @param object $export_file
 	 * @return array
 	 */
-	public function export_data(&$options) {
+	public function export_data(&$options, &$export_file) {
 	}
 }
 
