@@ -27,12 +27,13 @@
 		</label>
 
 		<fieldset>
+			<legend><cms:text constant="legend_options" module="backend"/></legend>
+
 			<label>
 				<cms:text constant="label_description" module="backend"/>
 				<textarea name="description" rows="4" cols="30"/>
 			</label>
 
-			<legend><cms:text constant="legend_options" module="backend"/></legend>
 			<label class="checkbox">
 				<span><cms:text constant="label_include_files" module="backend"/></span>
 				<input

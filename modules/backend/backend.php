@@ -10,6 +10,7 @@
  */
 use Core\Events;
 use Core\Module;
+use Core\Exports\File;
 use Core\Cache\Manager as Cache;
 use Modules\Backend\OrderEditor as OrderEditor;
 
@@ -737,14 +738,26 @@ class backend extends Module {
 	 * Show configuration dialog
 	 */
 	private function import_options() {
+		// load information from the file
+		$file_name = fix_chars($_REQUEST['file_name']);
+		$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
+		$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
+		$file->close();
+
+		// render user interface
 		$template = new TemplateHandler('import_options.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:module_import_list', $this, 'tag_ModuleImportList');
 
 		$params = array(
-				'file_name' => fix_chars($_REQUEST['file_name'])
+				'file_name'     => $file_name,
+				'description'   => $description,
+				'form_action'   => backend_UrlMake($this->name, 'import_commit'),
+				'cancel_action' => window_Close('system_import_data')
 			);
 
 		$template->restore_xml();
+		$template->set_local_params($params);
 		$template->parse();
 	}
 
@@ -1040,6 +1053,41 @@ class backend extends Module {
 							$this->get_language_constant('download'),
 							URL::from_file_path(_BASEPATH.'/'.$backup_path.$file_name)
 						)
+				);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * List rendering function for module configuration and data checkboxes.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ModuleImportList($tag_params, $children) {
+		$file_name = str_replace(array('/', '\\'), '_', fix_chars($tag_params['file_name']));
+		$file = new Core\Exports\File($file_name, '', false);  // open file without hash verification
+		$module_data = $file->get_key_names(Core\Exports\Section::DATA);
+		$module_settings = $file->get_key_names(Core\Exports\Section::SETTINGS);
+		$file->close();
+
+		// combine lists
+		$module_list = array_merge($module_data, $module_settings);
+
+		if (count($module_list) == 0)
+			return;
+
+		// load template for parsing
+		$template = $this->load_template($tag_params, 'import_options_module_list_item.xml');
+
+		foreach ($module_list as $module_name) {
+			$params = array(
+					'has_settings' => in_array($module_name, $module_settings),
+					'has_data'     => in_array($module_name, $module_data),
+					'name'         => $module_name
 				);
 
 			$template->restore_xml();

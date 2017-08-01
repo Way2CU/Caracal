@@ -78,7 +78,7 @@ class File {
 			Section::FILES, Section::DATA, Section::SETTINGS
 		);
 
-	public function __construct($file_name, $key) {
+	public function __construct($file_name, $key, $verify_hash=true) {
 		global $backup_path;
 
 		// increase security a little bit by extending key length through hash function
@@ -100,7 +100,7 @@ class File {
 		// create new file header
 		if ($this->is_new_file)
 			$this->write_header(); else
-			$this->read_header();
+			$this->read_header($verify_hash);
 
 		// get size of initialization vector to use
 		$this->iv_size = openssl_cipher_iv_length($this->cipher);
@@ -129,8 +129,10 @@ class File {
 
 	/**
 	 * Read and verify header.
+	 *
+	 * @param boolean $verify_hash
 	 */
-	private function read_header() {
+	private function read_header($verify_hash) {
 		fseek($this->handle, 0);
 		$header = fread($this->handle, strlen(Section::HEADER));
 
@@ -140,14 +142,15 @@ class File {
 
 		// read version
 		$version_length = strlen(pack(Format::VERSION, ''));
-		$this->version = unpack(Format::VERSION, fread($this->handle, $version_length));
+		$unpacked_data = unpack(Format::VERSION, fread($this->handle, $version_length));
+		$this->version = array_pop($unpacked_data);
 
 		// read encryption information
 		if ($this->find_section(Section::KEY_HASH)) {
 			$hash_size = $this->read_size(Format::DATA);
 			$hash = fread($this->handle, $hash_size);
 
-			if ($hash != hash('sha256', $this->key, true))
+			if ($verify_hash && $hash != hash('sha256', $this->key, true))
 				throw new InvalidKeyException('Hash mismatch!');
 		}
 
@@ -165,7 +168,8 @@ class File {
 	 */
 	private function read_size($format) {
 		$size = strlen(pack($format, 0));
-		return unpack($format, fread($this->handle, $size));
+		$unpacked_data = unpack($format, fread($this->handle, $size));
+		return array_pop($unpacked_data);
 	}
 
 	/**
@@ -179,24 +183,26 @@ class File {
 	 */
 	private function find_section($section, $key_name=null) {
 		$result = false;
-		$section_size = strlen(pack($format, 0));
+		$section_size = strlen(pack(Format::SECTION, 0));
 
 		// jump to beginning of all sections
+		$stats = fstat($this->handle);
 		fseek($this->handle, strlen(Section::HEADER) + strlen(pack(Format::VERSION, '')));
 
 		// search through sections
-		while (!feof($this->handle)) {
-			$current_section = unpack(Format::SECTION, fread($this->handle, $section_size));
+		while (True) {
+			$unpacked_data = unpack(Format::SECTION, fread($this->handle, $section_size));
+			$current_section = array_pop($unpacked_data);
 			$current_key_name = null;
 
 			// read key name if needed
-			if (in_array($section, $this->extended_sections)) {
+			if (in_array($current_section, $this->extended_sections)) {
 				$key_size = $this->read_size(Format::KEY_NAME);
 				$current_key_name = fread($this->handle, $key_size);
 			}
 
 			// bail if we found requested section
-			if ($current_section == $section && $current_key_name == $key_name) {
+			if ($current_section == $section && (is_null($key_name) || $current_key_name == $key_name)) {
 				$result = true;
 				break;
 			}
@@ -204,6 +210,10 @@ class File {
 			// move file pointer forward by data size
 			$data_size = $this->read_size(Format::DATA);
 			fseek($this->handle, $data_size, SEEK_CUR);
+
+			// make sure we stop parsing after we pass end of bounds
+			if (ftell($this->handle) >= $stats['size'])
+				break;
 		}
 
 		return $result;
@@ -357,27 +367,34 @@ class File {
 			throw new Exception("Section {$section} doesn't contain keys.");
 
 		$result = array();
+		$section_size = strlen(pack(Format::SECTION, 0));
 
-		// find first occurrence of section
-		if (!$this->find_section($section))
-			throw new UnknownSectionException("Unable to find section {$section}.");
+		// jump to beginning of all sections
+		$stats = fstat($this->handle);
+		fseek($this->handle, strlen(Section::HEADER) + strlen(pack(Format::VERSION, '')));
 
-		// read first key
-		$key_size = $this->read_size(Format::KEY_NAME);
-		$result []= fread($this->handle, $key_size);
+		// search through sections
+		while (True) {
+			$unpacked_data = unpack(Format::SECTION, fread($this->handle, $section_size));
+			$current_section = array_pop($unpacked_data);
+			$current_key_name = null;
 
-		// move file pointer forward by data size
-		$data_size = $this->read_size(Format::DATA);
-		fseek($this->handle, $data_size, SEEK_CUR);
+			// read key name if needed
+			if (in_array($current_section, $this->extended_sections)) {
+				$key_size = $this->read_size(Format::KEY_NAME);
+				$current_key_name = fread($this->handle, $key_size);
 
-		while (!feof($this->handle)) {
-			// read key name
-			$key_size = $this->read_size(Format::KEY_NAME);
-			$result []= fread($this->handle, $key_size);
+				if ($current_section == $section)
+					$result []= $current_key_name;
+			}
 
 			// move file pointer forward by data size
 			$data_size = $this->read_size(Format::DATA);
 			fseek($this->handle, $data_size, SEEK_CUR);
+
+			// make sure we stop parsing after we pass end of bounds
+			if (ftell($this->handle) >= $stats['size'])
+				break;
 		}
 
 		return $result;

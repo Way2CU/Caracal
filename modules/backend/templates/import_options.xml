@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<div id="system_import_options_notebook">
+			<div>
+				<label>
+					<span><cms:text constant="label_encryption_key" module="backend"/></span>
+					<input
+						type="text"
+						name="key"
+						class="code"
+						style="width: 300px;"
+						required="required"
+						/>
+				</label>
+
+				<label>
+					<span><cms:text constant="label_description" module="backend"/></span>
+					<textarea name="description" rows="4" cols="30" readonly="readonly">
+						<cms:var param="description"/>
+					</textarea>
+				</label>
+			</div>
+
+			<!-- Modules tab -->
+			<div class="scrollable_list modules">
+				<!-- Header -->
+				<div class="list_header">
+					<span class="column" style="width: 170px;">
+						<cms:text constant="column_module_name" module="backend"/>
+					</span>
+					<span class="column" style="width: 70px;">
+						<cms:text constant="column_module_data" module="backend"/>
+					</span>
+					<span class="column" style="width: 70px;">
+						<cms:text constant="column_module_settings" module="backend"/>
+					</span>
+				</div>
+
+				<!-- List -->
+				<div class="list_content" style="height: 250px">
+					<cms:module_import_list
+						file_name="$params['file_name']"
+						cms:eval="file_name"
+						/>
+				</div>
+			</div>
+
+			<!-- Options tab -->
+			<div>
+				<label class="checkbox">
+					<span><cms:text constant="label_include_files" module="backend"/></span>
+					<input
+						type="checkbox"
+						name="include_files"
+						/>
+				</label>
+			</div>
+		</div>
+
+		<div class="button_bar">
+			<button type="submit"><cms:text constant="import"/></button>
+			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
+				<cms:text constant="cancel"/>
+			</button>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		// create notebook
+		var notebook = new Notebook('system_import_options_notebook');
+		notebook
+		.setPageTitle(0, language_handler.getText('backend', 'tab_general'))
+		.setPageTitle(1, language_handler.getText('backend', 'tab_modules'))
+		.setPageTitle(2, language_handler.getText('backend', 'tab_options'));
+	</script>
+</document>
