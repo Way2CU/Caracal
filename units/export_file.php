@@ -78,6 +78,12 @@ class File {
 			Section::FILES, Section::DATA, Section::SETTINGS
 		);
 
+	/**
+	 * List of supported export file versions.
+	 * @var array
+	 */
+	private $supported_versions = array('1.0');
+
 	public function __construct($file_name, $key, $verify_hash=true) {
 		global $backup_path;
 
@@ -143,7 +149,10 @@ class File {
 		// read version
 		$version_length = strlen(pack(Format::VERSION, ''));
 		$unpacked_data = unpack(Format::VERSION, fread($this->handle, $version_length));
-		$this->version = array_pop($unpacked_data);
+		$this->version = trim(array_pop($unpacked_data));
+
+		if (!in_array($this->version, $this->supported_versions))
+			throw new InvalidExportException('Unsupported version: '.$this->version);
 
 		// read encryption information
 		if ($this->find_section(Section::KEY_HASH)) {
