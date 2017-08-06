@@ -6,22 +6,26 @@
 			<cms:var param="name"/>
 		</span>
 		<span class="column" style="width: 70px;">
-			<input
-				type="checkbox"
-				name="'data_'.$params['name']"
-				disabled="$params['has_data'] ? false : 'disabled'"
-				cms:eval="name"
-				cms:optional="disabled"
-				/>
+			<label>
+				<input
+					type="checkbox"
+					name="'data_'.$params['name']"
+					disabled="$params['has_data'] ? false : 'disabled'"
+					cms:eval="name"
+					cms:optional="disabled"
+					/>
+			</label>
 		</span>
 		<span class="column" style="width: 70px;">
-			<input
-				type="checkbox"
-				name="'settings_'.$params['name']"
-				disabled="$params['has_settings'] ? false : 'disabled'"
-				cms:eval="name"
-				cms:optional="disabled"
-				/>
+			<label>
+				<input
+					type="checkbox"
+					name="'settings_'.$params['name']"
+					disabled="$params['has_settings'] ? false : 'disabled'"
+					cms:eval="name"
+					cms:optional="disabled"
+					/>
+			</label>
 		</span>
 	</div>
 </document>

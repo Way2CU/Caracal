@@ -2,6 +2,12 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
+		<input
+			type="hidden"
+			name="file_name"
+			value="$params['file_name']"
+			cms:eval="value"
+			/>
 		<div id="system_import_options_notebook">
 			<div>
 				<label>
