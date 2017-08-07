@@ -316,18 +316,24 @@ class File {
 		if (!$this->find_section($section, $key_name))
 			throw new UnknownSectionException("Unable to find section {$section} and/or {$key_name}.");
 
-		// read raw data and initialization vector
+		// get size of data to read
 		$size = $this->read_size(Format::DATA);
 
-		if ($encrypted) {
-			// decrypt data
-			$data_iv = fread($this->handle, $this->iv_size);
-			$raw_data = fread($this->handle, $size - $this->iv_size);
-			$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+		if ($size > 0) {
+			if ($encrypted) {
+				// decrypt data
+				$data_iv = fread($this->handle, $this->iv_size);
+				$raw_data = fread($this->handle, $size - $this->iv_size);
+				$data = openssl_decrypt($raw_data, $this->cipher, $this->key, OPENSSL_RAW_DATA, $data_iv);
+
+			} else {
+				// read unencrypted data
+				$data = fread($this->handle, $size);
+			}
 
 		} else {
-			// read unencrypted data
-			$data = fread($this->handle, $size);
+			// section is empty
+			$data = '';
 		}
 
 		if ($data === FALSE)  // should not happen, but account for it anyway
