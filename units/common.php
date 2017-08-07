@@ -25,8 +25,6 @@ function get_desktop_version() {
 
 /**
  * Remove illegal characters and tags from input strings to avoid XSS.
- * It also replaces few tags such as [b] [small] [big] [i] [u] [tt] into
- * <b> <small> <big> <i> <u> <tt>
  *
  * @param string $string Input string
  * @return string
