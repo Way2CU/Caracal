@@ -249,6 +249,62 @@ class articles extends Module {
 	}
 
 	/**
+	 * Import provided data to system.
+	 *
+	 * @param array $data
+	 * @param array $options
+	 * @param object $export_file
+	 */
+	public function import_data(&$data, &$options, &$export_file) {
+		$manager = Modules\Articles\Manager::get_instance();
+		$group_manager = Modules\Articles\GroupManager::get_instance();
+
+		// restore groups
+		if (isset($data['groups'])) {
+			// remove all groups
+			$group_manager->delete_items(array());
+
+			// insert groups from exports file
+			foreach ($data['groups'] as $group) {
+				$group_data = $group_manager->get_data_from_object($group);
+				$group_manager->insert_item($group_data);
+			}
+		}
+
+		// restore articles
+		if (isset($data['articles'])) {
+			// remove all articles
+			$manager->delete_items(array());
+
+			// insert articles from exports file
+			foreach ($data['articles'] as $article) {
+				$article_data = $manager->get_data_from_object($article);
+				error_log(var_export($article_data, true));
+				$manager->insert_item($article_data);
+			}
+		}
+	}
+
+	/**
+	 * Prepare data for export.
+	 *
+	 * @param array $options
+	 * @param object $export_file
+	 * @return array
+	 */
+	public function export_data(&$options, &$export_file) {
+		$result = array();
+		$manager = Modules\Articles\Manager::get_instance();
+		$group_manager = Modules\Articles\GroupManager::get_instance();
+
+		// export data
+		$result['articles'] = $manager->get_items($manager->get_field_names(), array());
+		$result['groups'] = $group_manager->get_items($group_manager->get_field_names(), array());
+
+		return $result;
+	}
+
+	/**
 	 * Show administration form for articles
 	 */
 	private function showArticles() {
