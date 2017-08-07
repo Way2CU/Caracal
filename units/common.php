@@ -149,6 +149,24 @@ function is_browser_ok() {
 }
 
 /**
+ * Function which returns boolean value denoting if system should enforce
+ * HTTPS protocol and redirect user to new page. Value is determined based
+ * on couple factors but it does allow user to override the value.
+ *
+ * @return boolean
+ */
+function should_force_https() {
+	global $force_https;
+
+	if (in_array(_DOMAIN, array('127.0.0.1', '127.0.1.1', 'localhost')))
+		return false;
+
+	$forced_sections = array('backend', 'backend_module');
+	$forced_section = isset($_REQUEST['section']) && in_array($_REQUEST['section'], $forced_sections);
+	return !_SECURE && ($force_https || $forced_section);
+}
+
+/**
  * Return abbreviated string containing specified number of words ending
  * given string. If number of words in string is lower than limit whole
  * string is returned. This function is effective for all languages
