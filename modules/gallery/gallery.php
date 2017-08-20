@@ -2738,9 +2738,7 @@ class gallery extends Module {
 
 		// create gallery
 		$gallery_manager->insert_item(array('name' => $name));
-		$result = $gallery_manager->get_inserted_id();
-
-		return $result;
+		return $gallery_manager->get_inserted_id();
 	}
 
 	/**

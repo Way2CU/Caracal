@@ -745,6 +745,22 @@ class youtube extends Module {
 	}
 
 	/**
+	 * Create YouTube video list group and return its id.
+	 *
+	 * @param array $group_name
+	 * @return integer
+	 */
+	public function create_group($group_name) {
+		$group_manager = YouTube_GroupManager::get_instance();
+		$group_manager->insert_item(array(
+				'name'    => $group_name,
+				'visible' => 0
+			));
+
+		return $group_manager->get_inserted_id();
+	}
+
+	/**
 	 * Handler for _video tag which embeds player in page.
 	 *
 	 * @param array $tag_params
