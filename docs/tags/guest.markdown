@@ -9,6 +9,7 @@ In the following example, `H1` will be displayed only for guests.
 	<cms:guest>
 		<h1>Title</h1>
 	</cms:guest>
+
 	<p>Article content</p>
 </div>
 ```

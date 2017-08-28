@@ -7,13 +7,13 @@
     "close": "اغلاق",
     "column_options": "خيارات",
     "delete": "حذف",
+    "import": "Import",
     "export": "Export",
     "filter": "مرشح",
     "format_date": "d.m.Y.",
     "format_date_short": "d.m.Y.",
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
-    "import": "Import",
     "message_server_error": "خادم يواجه المشكلة التالية:",
     "message_client_error_404": "Page or file you requested could not be found. Sorry about that.",
     "new": "جديد",
@@ -32,5 +32,6 @@
     "upload": "رفع",
     "refresh": "Refresh",
     "reload": "Reload",
+    "download": "Download",
     "back_to_home": "Back to home page"
 }

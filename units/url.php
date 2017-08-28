@@ -349,6 +349,15 @@ final class URL {
 	}
 
 	/**
+	 * Return current URL.
+	 *
+	 * @return string
+	 */
+	public static function get_current() {
+		return self::get_base().self::get_request_path();
+	}
+
+	/**
 	 * Test for currently matched file and return class or false.
 	 * This function is commonly used with `cms:optional` attribute
 	 * to provide different highlight for active menu items.

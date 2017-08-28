@@ -7,13 +7,13 @@
     "close": "סגור",
     "column_options": "אפשרויות",
     "delete": "מחק",
+    "import": "ייבא",
     "export": "ייצא",
     "filter": "לסנן",
     "format_date": "d/m/Y",
     "format_date_short": "d/m/Y",
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
-    "import": "ייבא",
     "message_server_error": "השרת חווה את הבעיה הבאה:",
     "message_client_error_404": "העמוד או הקובץ שבקשתם לא נמצא. עמכם הסליחה.",
     "new": "חדש",
@@ -32,5 +32,6 @@
     "upload": "העלה",
     "refresh": "רענן",
     "reload": "טען מחדש",
+    "download": "Download",
     "back_to_home": "חזרה לעמוד הבית"
 }

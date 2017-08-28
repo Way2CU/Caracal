@@ -300,9 +300,28 @@ class Handler {
 			// add elements first time
 			$data['author'] = $_SESSION['uid'];
 
+			if (ModuleHandler::is_loaded('youtube')) {
+				$youtube = youtube::get_instance();
+
+				// create new videos group
+				$videos_name = $data['name'];
+				foreach ($videos_name as $key => $value)
+					$videos_name[$key] = $this->get_language_constant('menu_shop', $key).': '.$value;
+
+				// store new videos group id
+				$data['videos'] = $youtube->create_group($videos_name);
+			}
+
 			if (ModuleHandler::is_loaded('gallery')) {
 				$gallery = gallery::get_instance();
-				$gallery_id = $gallery->create_gallery($data['name']);
+
+				// create new gallery for item images
+				$gallery_name = $data['name'];
+				foreach ($gallery_name as $key => $value)
+					$gallery_name[$key] = $this->get_language_constant('menu_shop', $key).': '.$value;
+				$gallery_id = $gallery->create_gallery($gallery_name);
+
+				// store new gallery id
 				$data['gallery'] = $gallery_id;
 
 				// create action for opening gallery editor
@@ -618,32 +637,33 @@ class Handler {
 		$variation_id = $shop->generateVariationId($item->uid);
 
 		$params = array(
-					'id'                    => $item->id,
-					'uid'                   => $item->uid,
-					'variation_id'          => $variation_id,
-					'cid'                   => $item->uid.'/'.$variation_id,
-					'name'                  => $item->name,
-					'description'           => $item->description,
-					'gallery'               => $item->gallery,
-					'manufacturer'          => $item->manufacturer,
-					'supplier'              => $item->supplier,
-					'size_definition'       => $item->size_definition,
-					'colors'                => $item->colors,
-					'author'                => $item->author,
-					'views'                 => $item->views,
-					'price'                 => $item->price,
-					'discount'              => $item->discount,
-					'discount_price'        => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
-					'tax'                   => $item->tax,
-					'currency'              => $this->parent->settings['default_currency'],
-					'weight'                => $item->weight,
-					'votes_up'              => $item->votes_up,
-					'votes_down'            => $item->votes_down,
-					'rating'                => $rating,
-					'priority'              => $item->priority,
-					'timestamp'             => $item->timestamp,
-					'visible'               => $item->visible,
-					'deleted'               => $item->deleted,
+					'id'              => $item->id,
+					'uid'             => $item->uid,
+					'variation_id'    => $variation_id,
+					'cid'             => $item->uid.'/'.$variation_id,
+					'name'            => $item->name,
+					'description'     => $item->description,
+					'gallery'         => $item->gallery,
+					'videos'          => $item->videos,
+					'manufacturer'    => $item->manufacturer,
+					'supplier'        => $item->supplier,
+					'size_definition' => $item->size_definition,
+					'colors'          => $item->colors,
+					'author'          => $item->author,
+					'views'           => $item->views,
+					'price'           => $item->price,
+					'discount'        => $item->discount,
+					'discount_price'  => $item->discount ? number_format($item->price * ((100 - $item->discount) / 100), 2) : $item->price,
+					'tax'             => $item->tax,
+					'currency'        => $this->parent->settings['default_currency'],
+					'weight'          => $item->weight,
+					'votes_up'        => $item->votes_up,
+					'votes_down'      => $item->votes_down,
+					'rating'          => $rating,
+					'priority'        => $item->priority,
+					'timestamp'       => $item->timestamp,
+					'visible'         => $item->visible,
+					'deleted'         => $item->deleted,
 				);
 
 		// render template
@@ -887,6 +907,7 @@ class Handler {
 						'name'            => $item->name,
 						'description'     => $item->description,
 						'gallery'         => $item->gallery,
+						'videos'          => $item->videos,
 						'size_definition' => $item->size_definition,
 						'colors'          => $item->colors,
 						'manufacturer'    => $item->manufacturer,

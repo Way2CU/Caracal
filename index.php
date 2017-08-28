@@ -77,7 +77,7 @@ define('_AJAX_REQUEST',
 define('_BROWSER_OK', is_browser_ok());
 
 // force secure connection if requested
-if (!_SECURE && $force_https) {
+if (should_force_https()) {
 	$url = URL::get_base(true).$_SERVER['REQUEST_URI'];
 	header('Location: '.$url, true, 301);
 	exit();
@@ -87,13 +87,9 @@ if (!_SECURE && $force_https) {
 $time_start = explode(" ", microtime());
 $time_start = $time_start[0] + $time_start[1];
 
-// start session
-Session::start();
-
 // prepare for page rendering
+Session::start();
 $page_match = SectionHandler::prepare();
-
-// update parameter storage arrays
 URL::unpack_values();
 
 // set default values for variables

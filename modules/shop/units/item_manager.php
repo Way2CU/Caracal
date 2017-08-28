@@ -27,6 +27,7 @@ class Manager extends ItemManager {
 		$this->add_property('name', 'ml_varchar');
 		$this->add_property('description', 'ml_text');
 		$this->add_property('gallery', 'int');
+		$this->add_property('videos', 'int');
 		$this->add_property('manufacturer', 'int');
 		$this->add_property('supplier', 'int');
 		$this->add_property('size_definition', 'int');

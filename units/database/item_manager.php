@@ -342,6 +342,33 @@ abstract class ItemManager {
 	}
 
 	/**
+	 * Get data array from provided object properties.
+	 *
+	 * @param object $object
+	 * @param array $field_names
+	 * @param array $exclude_fields
+	 * @return array
+	 */
+	public function get_data_from_object(&$object, $field_names=null, $exclude_fields=null) {
+		// make sure we have sensible defaults
+		if (is_null($field_names))
+			$field_names = $this->fields;
+
+		if (is_null($exclude_fields))
+			$exclude_fields = array();
+
+		// collect data from the object
+		$result = array();
+		foreach ($field_names as $field) {
+			if (!property_exists($object, $field) || in_array($field, $exclude_fields))
+				continue;
+			$result[$field] = $object->$field;
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Forms database query for specified command
 	 *
 	 * @param integer $command
@@ -490,6 +517,12 @@ abstract class ItemManager {
 
 		foreach($data as $field_name => $field_value) {
 			$is_string = in_array($this->field_types[$field_name], Query::$string_fields);
+
+			if (is_null($field_value)) {
+				$field_value = 'NULL';
+				$is_string = false;
+			}
+
 			$tmp[] = ($is_string) ? "'{$field_value}'" : $field_value;
 		}
 

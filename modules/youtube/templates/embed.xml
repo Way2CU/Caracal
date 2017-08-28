@@ -7,7 +7,6 @@
 		width="$params['width']"
 		height="$params['height']"
 		frameborder="_STANDARD != 'html5' ? 0 : false"
-		seamless="_STANDARD == 'html5' ? 'seamless' : false"
 		src="$params['url']"
 		allowfullscreen="allowfullscreen"
 		cms:optional="frameborder,seamless,id"

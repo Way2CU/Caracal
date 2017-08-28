@@ -2,9 +2,7 @@
 
 This release brings the following bug fixes:
 
-- Warning in error logs regarding missing SMTP username missing. For fix to
-  have effect, open default configuration of contact form and save it without
-  changing anything;
+- Warning in error logs regarding missing SMTP username. For fix to have effect, open default configuration of contact form and save it without changing anything;
 - System and SMTP mailer not sending plaintext body;
 - Property editing in backend for Shop module;
 - Tranzila transaction charging.

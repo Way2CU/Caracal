@@ -4,6 +4,9 @@
 	<img
 		src="$params['thumbnail']"
 		alt="$params['title'][$language]"
+		width="$params['width']"
+		height="$params['height']"
 		cms:eval="src,alt"
+		cms:optional="width,height"
 	/>
 </document>

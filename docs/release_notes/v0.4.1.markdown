@@ -1,0 +1,5 @@
+# Release notes for v0.4.1
+
+This release includes a bug fix which caused issues with Callbox/CTM module and code optimizer. Issue was reported very vaguely in error log and silently failed.
+
+There's no need to upgrade unless you are using these two features in combination.

@@ -23,6 +23,7 @@ $template_path = $site_path.'templates/';
 $scripts_path = $site_path.'scripts/';
 $styles_path = $site_path.'styles/';
 $images_path = $site_path.'images/';
+$backup_path = $site_path.'backups/';
 
 // language configuration
 $available_languages = array('en');

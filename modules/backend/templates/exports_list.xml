@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<!-- Window menu -->
+	<div class="main_menu">
+		<cms:var param="link_export"/>
+	</div>
+
+	<!-- Exports list -->
+	<div class="scrollable_list modules">
+		<!-- Header -->
+		<div class="list_header">
+			<span class="column" style="width: 220px;">
+				<cms:text constant="column_file_name" module="backend"/>
+			</span>
+			<span class="column" style="width: 100px;">
+				<cms:text constant="column_file_size" module="backend"/>
+			</span>
+			<span class="column">
+				<cms:text constant="column_options"/>
+			</span>
+		</div>
+
+		<!-- List -->
+		<div class="list_content" style="height: 250px">
+			<cms:list/>
+		</div>
+	</div>
+</document>

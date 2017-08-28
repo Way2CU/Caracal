@@ -10,6 +10,7 @@
  */
 use Core\Events;
 use Core\Module;
+use Core\Exports\File;
 use Core\Cache\Manager as Cache;
 use Modules\Backend\OrderEditor as OrderEditor;
 
@@ -117,6 +118,19 @@ class backend extends Module {
 											),
 									$level=10
 								));
+			$system_menu->addChild(null, new backend_MenuItem(
+									$this->get_language_constant('menu_exports'),
+									URL::from_file_path($this->path.'images/exports.svg'),
+									window_Open( // on click open window
+												'system_exports',
+												500,
+												$this->get_language_constant('title_exports'),
+												true, false, // disallow minimize, safety feature
+												backend_UrlMake($this->name, 'exports')
+											),
+									$level=10
+								));
+
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_change_password'),
@@ -300,6 +314,27 @@ class backend extends Module {
 
 				case 'clear_cache':
 					$this->clearCache();
+					break;
+
+				// data import and export
+				case 'exports':
+					$this->exports();
+					break;
+
+				case 'import_options':
+					$this->import_options();
+					break;
+
+				case 'import_commit':
+					$this->import_commit();
+					break;
+
+				case 'export_options':
+					$this->export_options();
+					break;
+
+				case 'export_commit':
+					$this->export_commit();
 					break;
 
 				// ---
@@ -685,6 +720,222 @@ class backend extends Module {
 	}
 
 	/**
+	 * Show import file selection list.
+	 */
+	private function exports() {
+		$template = new TemplateHandler('exports_list.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:list', $this, 'tag_ExportsList');
+
+		$params = array(
+				'link_export' => URL::make_hyperlink(
+						$this->get_language_constant('export'),
+						window_Open(
+							'system_export_data',	 	// window id
+							350,						// width
+							$this->get_language_constant('title_export_data'), // title
+							false, false,
+							URL::make_query(
+								'backend_module',
+								'transfer_control',
+								array('module', $this->name),
+								array('backend_action', 'export_options')
+							)
+						)),
+			);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show configuration dialog
+	 */
+	private function import_options() {
+		// load information from the file
+		$file_name = fix_chars($_REQUEST['file_name']);
+		$file = new Core\Exports\File($file_name, '', false);  // open file without verifying hash
+		$description = $file->read(Core\Exports\Section::DESCRIPTION, null, false);
+		$file->close();
+
+		// render user interface
+		$template = new TemplateHandler('import_options.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+		$template->register_tag_handler('cms:module_import_list', $this, 'tag_ModuleImportList');
+
+		$params = array(
+				'file_name'     => $file_name,
+				'description'   => $description,
+				'form_action'   => backend_UrlMake($this->name, 'import_commit'),
+				'cancel_action' => window_Close('system_import_data')
+			);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Perform data import.
+	 */
+	private function import_commit() {
+		$manager = SettingsManager::get_instance();
+		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
+		$encryption_key = $_REQUEST['key'];
+		$options = array (
+				'include_files' => $this->get_boolean_field('include_files')
+			);
+
+		// preload message template
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+		$params = array(
+					'button'  => $this->get_language_constant('close'),
+					'action'  => window_Close('system_import_data')
+				);
+
+		// collect list of data and settings to import
+		$module_data = array();
+		$module_settings = array();
+
+		foreach ($_REQUEST as $key => $value) {
+			if (substr($key, 0, 5) == 'data_' && $value == 1)
+				$module_data []= substr($key, 5);
+			if (substr($key, 0, 9) == 'settings_' && $value == 1)
+				$module_settings []= substr($key, 9);
+		}
+
+		// load import file and log the whole process
+		error_log("Loading export file for import '{$file_name}'...");
+		try {
+			$file = new Core\Exports\File($file_name, $encryption_key);
+
+		} catch (Core\Exports\InvalidKeyException $error) {
+			error_log('Invalid key specified. Unable to import!');
+
+			// show error message about invalid key
+			$params['message'] = $this->get_language_constant('message_import_error_key');
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+			return;
+
+		} catch (Core\Exports\InvalidExportException $error) {
+			error_log('Invalid exports file provided. Unable to import!');
+
+			// show error message about invalid key
+			$params['message'] = $this->get_language_constant('message_import_error_file');
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+			return;
+		}
+
+		// restore data
+		$key_list_data = $file->get_key_names(Core\Exports\Section::DATA);
+		$key_list_settings = $file->get_key_names(Core\Exports\Section::SETTINGS);
+		$module_list = array_unique(array_merge($key_list_data, $key_list_settings), SORT_REGULAR);
+
+		foreach ($module_list as $module_name) {
+			// make sure module is loaded
+			if (!ModuleHandler::is_loaded($module_name))
+				continue;
+
+			// get module instance
+			$module = call_user_func(array($module_name, 'get_instance'));
+
+			// import module data
+			if (in_array($module_name, $module_data)) {
+				$data = $file->read(Core\Exports\Section::DATA, $module_name);
+				$data = unserialize($data);
+				$module->import_data($data, $options, $file);
+			}
+
+			// import module settings
+			if (in_array($module_name, $module_settings)) {
+				$data = $file->read(Core\Exports\Section::SETTINGS, $module_name);
+				$data = unserialize($data);
+
+				if ($data !== FALSE)
+					// Replace variable value instead of calling
+					// update. This way we ensure value is inserted.
+					foreach ($data as $row) {
+						$manager->delete_items(array(
+							'module'   => $module_name,
+							'variable' => $row->variable
+						));
+						$manager->insert_item(array(
+							'module'   => $module_name,
+							'variable' => $row->variable,
+							'value'    => $row->value
+						));
+					}
+			}
+		}
+
+		// complete import
+		$file->close();
+		error_log('Import completed!');
+
+		// show completed message
+		$params['message'] = $this->get_language_constant('message_import_completed');
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Show configuration dialog for exporting data.
+	 */
+	private function export_options() {
+		$template = new TemplateHandler('export_options.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+				'form_action'	=> backend_UrlMake($this->name, 'export_commit'),
+				'cancel_action'	=> window_Close('system_export_data')
+			);
+
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
+	 * Create data export with specified configuration.
+	 */
+	private function export_commit() {
+		// collect data
+		$file_name = str_replace(array('/', '\\'), '_', fix_chars($_REQUEST['file_name']));
+		$key = $_REQUEST['key'];
+		$options = array(
+				'include_files' => $this->get_boolean_field('include_files'),
+				'include_settings' => $this->get_boolean_field('include_settings'),
+				'description' => fix_chars($_REQUEST['description'])
+			);
+
+		// load message template
+		$template = new TemplateHandler('message.xml', $this->path.'templates/');
+		$template->set_mapped_module($this->name);
+
+		$params = array(
+					'button'	=> $this->get_language_constant('close'),
+					'action'	=> window_Close('system_export_data').';'.window_ReloadContent('system_exports')
+				);
+
+		// perform export
+		if (ModuleHandler::export_data($key, $file_name, $options))
+			$params['message'] = $this->get_language_constant('message_export_completed'); else
+			$params['message'] = $this->get_language_constant('message_export_error');
+
+		// render message
+		$template->restore_xml();
+		$template->set_local_params($params);
+		$template->parse();
+	}
+
+	/**
 	 * Handle tag _module_list used to display list of all modules on the system
 	 *
 	 * @param array $params
@@ -877,6 +1128,88 @@ class backend extends Module {
 
 		foreach ($this->menus as $item)
 			$item->drawItem($template);
+	}
+
+	/**
+	 * Render list of data exports available for import.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ExportsList($tag_params, $children) {
+		global $backup_path;
+
+		// load template
+		$template = $this->load_template($tag_params, 'exports_list_item.xml');
+
+		// render template if there are files for import
+		foreach(scandir($backup_path) as $file_name) {
+			if ($file_name == '.' || $file_name == '..')
+				continue;
+
+			$params = array(
+					'name'        => $file_name,
+					'size'        => round(filesize($backup_path.$file_name) / 1000, 2).' kB',
+					'item_import' => URL::make_hyperlink(
+							$this->get_language_constant('import'),
+							window_Open(
+								'system_import_data',	 	// window id
+								400,						// width
+								$this->get_language_constant('title_import_data').' '.$file_name, // title
+								false, false,
+								URL::make_query(
+									'backend_module',
+									'transfer_control',
+									array('module', $this->name),
+									array('backend_action', 'import_options'),
+									array('file_name', $file_name)
+								)
+							)),
+					'item_download' => URL::make_hyperlink(
+							$this->get_language_constant('download'),
+							URL::from_file_path(_BASEPATH.'/'.$backup_path.$file_name)
+						)
+				);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
+	}
+
+	/**
+	 * List rendering function for module configuration and data checkboxes.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_ModuleImportList($tag_params, $children) {
+		$file_name = str_replace(array('/', '\\'), '_', fix_chars($tag_params['file_name']));
+		$file = new Core\Exports\File($file_name, '', false);  // open file without hash verification
+		$module_data = $file->get_key_names(Core\Exports\Section::DATA);
+		$module_settings = $file->get_key_names(Core\Exports\Section::SETTINGS);
+		$file->close();
+
+		// combine lists
+		$module_list = array_unique(array_merge($module_data, $module_settings), SORT_REGULAR);
+
+		if (count($module_list) == 0)
+			return;
+
+		// load template for parsing
+		$template = $this->load_template($tag_params, 'import_options_module_list_item.xml');
+
+		foreach ($module_list as $module_name) {
+			$params = array(
+					'has_settings' => in_array($module_name, $module_settings),
+					'has_data'     => in_array($module_name, $module_data),
+					'name'         => $module_name
+				);
+
+			$template->restore_xml();
+			$template->set_local_params($params);
+			$template->parse();
+		}
 	}
 }
 

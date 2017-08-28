@@ -9,6 +9,7 @@ In the following example, `H1` will be displayed only in mobile version.
 	<cms:mobile>
 		<h1>Title</h1>
 	</cms:mobile>
+
 	<p>Article content</p>
 </div>
 ```
@@ -18,6 +19,7 @@ tag is equivalent to `cms:if` with predefined `condition` parameter.
 
 ```xml
 <cms:if condition="_MOBILE_VERSION">
+	<!-- Content -->
 </cms:if>
 ```
 
@@ -25,6 +27,7 @@ If there's a need for more complex condition use of `cms:if` is recommended. For
 
 ```xml
 <cms:if condition="_MOBILE_VERSION and $action == 'show'">
+	<!-- Content -->
 </cms:if>
 ```
 

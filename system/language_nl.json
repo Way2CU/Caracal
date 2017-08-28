@@ -7,13 +7,13 @@
     "close": "Close",
     "column_options": "Options",
     "delete": "Delete",
+    "import": "Import",
     "export": "Export",
     "filter": "Filter",
     "format_date": "m/d/Y",
     "format_date_short": "m/d/Y",
     "format_time": "H:i:s",
     "format_time_short": "H:i:s",
-    "import": "Import",
     "message_server_error": "Server experienced the following error:",
     "message_client_error_404": "Page or file you requested could not be found. Sorry about that.",
     "new": "New",
@@ -32,5 +32,6 @@
     "upload": "Upload",
     "refresh": "Refresh",
     "reload": "Reload",
+    "download": "Download",
     "back_to_home": "Back to home page"
 }
