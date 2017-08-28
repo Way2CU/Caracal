@@ -354,9 +354,6 @@ class page_info extends Module {
 							'type'	=> 'text/css',
 							'href'	=> URL::from_file_path(_BASEPATH.'/'.$less_style)
 						));
-
-				if (!$optimize_code)
-					$collection->includeScript(collection::LESS);
 			}
 
 			// add main javascript
