@@ -331,10 +331,9 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url, existin
 		event.stopPropagation();
 
 		// get container offset
-		var container_offset = self.window_system.container_offset;
 		var position = {
-					top: position.offsetY - container_offset.top,
-					left: position.offsetX - container_offset.left
+					top: position.offsetY,
+					left: position.offsetX
 				};
 
 		// make sure window doesn't run away
