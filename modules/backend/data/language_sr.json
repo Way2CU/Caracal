@@ -9,6 +9,8 @@
     "column_module_name": "Име модула",
     "column_module_order": "Редослед",
     "column_module_preload": "Preload",
+    "column_module_data": "Data",
+    "column_module_settings": "Settings",
     "column_users_agreed": "Сагласност",
     "column_users_fullname": "Име и презиме",
     "column_users_level": "Ниво",
@@ -55,6 +57,9 @@
     "menu_users": "Администрација корисника",
     "message_export_completed": "Data export is completed.",
     "message_export_error": "There was a problem while exporting data.",
+    "message_import_completed": "Data import is completed.",
+    "message_import_error_key": "Invalid decryption key was provided! Please try again!",
+    "message_import_error_file": "Unknown exports file type. We are unable to load and restore data from this file.",
     "message_cleared_cache": "Системски кеш је избрисан!",
     "message_invalid_code": "Погрешан верификациони код.",
     "message_invalid_password": "Погрешна тренутна лозинка.",
@@ -117,5 +122,8 @@
     "toolbar_markdown_ordered_list": "Нумерисана листа",
     "toolbar_markdown_quote": "Цитат",
     "toolbar_markdown_unordered_list": "Листа",
-    "username": "Корисничко име:"
+    "username": "Корисничко име:",
+    "tab_general": "General",
+    "tab_modules": "Modules",
+    "tab_options": "Options"
 }

@@ -9,6 +9,8 @@
     "column_module_name": "الاسم",
     "column_module_order": "اطلب",
     "column_module_preload": "حمّل",
+    "column_module_data": "Data",
+    "column_module_settings": "Settings",
     "column_users_agreed": "Agreed",
     "column_users_fullname": "الاسم الكامل",
     "column_users_level": "Level",
@@ -55,6 +57,9 @@
     "menu_users": "إدارة المستخدمين",
     "message_export_completed": "Data export is completed.",
     "message_export_error": "There was a problem while exporting data.",
+    "message_import_completed": "Data import is completed.",
+    "message_import_error_key": "Invalid decryption key was provided! Please try again!",
+    "message_import_error_file": "Unknown exports file type. We are unable to load and restore data from this file.",
     "message_cleared_cache": "System cache has been cleared!",
     "message_invalid_code": "Invalid verification code.",
     "message_invalid_password": "Invalid current password.",
@@ -117,5 +122,8 @@
     "toolbar_markdown_ordered_list": "قائمة مرتبة",
     "toolbar_markdown_quote": "اضف اقتباس",
     "toolbar_markdown_unordered_list": "قائمة غير مرتبة",
-    "username": "اسم المستخدم:"
+    "username": "اسم المستخدم:",
+    "tab_general": "General",
+    "tab_modules": "Modules",
+    "tab_options": "Options"
 }
