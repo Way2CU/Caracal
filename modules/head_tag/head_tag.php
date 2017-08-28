@@ -206,7 +206,7 @@ class head_tag extends Module {
 			$optimize_scripts = $optimize_code && !in_array($section, array('backend', 'backend_module'));
 
 		} else {
-			$optimize_styles = true;
+			$optimize_styles = false;
 			$optimize_scripts = false;
 		}
 
