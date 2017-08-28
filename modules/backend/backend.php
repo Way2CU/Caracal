@@ -392,6 +392,10 @@ class backend extends Module {
 				'src'  => URL::from_file_path($this->path.'include/window_system.js'),
 				'type' => 'text/javascript'
 			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/window.js'),
+				'type' => 'text/javascript'
+			));
 	}
 
 	/**
