@@ -13,6 +13,9 @@
 		</head>
 
 		<body>
+			<!-- Sprite icons -->
+			<cms:svg file="$params['sprite']" cms:eval="file"/>
+
 			<header>
 				<!-- Logo -->
 				<div id="logo">

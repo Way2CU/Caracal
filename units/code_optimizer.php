@@ -171,7 +171,7 @@ class CodeOptimizer {
 
 		$in_comment = false;
 
-		foreach ($data as $line) {
+		foreach($data as $line) {
 			$line_data = trim($line);
 			$command = explode(' ', $line_data);
 
