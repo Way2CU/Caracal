@@ -1,0 +1,23 @@
+/**
+ * Icons Style Sheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+// regular icon classes
+.add-icon-behavior(regular) {
+	svg .fill-bright { fill: @color_bright; }
+	svg .fill-active { fill: @color_active; }
+	svg .stroke-bright { stroke: @color_bright; }
+	svg .stroke-active { stroke: @color_active; }
+}
+
+// flipped active and bright color
+.add-icon-behavior(active) {
+	svg .fill-bright { fill: @color_active; }
+	svg .fill-active { fill: @color_bright; }
+	svg .stroke-bright { stroke: @color_active; }
+	svg .stroke-active { stroke: @color_bright; }
+}
