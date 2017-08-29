@@ -479,6 +479,27 @@ Caracal.WindowSystem.Window = function(id, width, title, can_close, url) {
 			var form = forms[i];
 			var file_inputs = form.querySelectorAll('input[type="file"]');
 
+			// integrate vector icons in checkboxes and radio buttons
+			var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+			var radio_buttons = form.querySelectorAll('input[type="radio"]');
+
+			for (var j = 0; j < checkboxes.length; j++) {
+				var checkbox = checkboxes[j];
+				var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+				sprite.innerHTML = '<use xlink:href="#icon-checkmark"/>';
+
+				checkbox.parentNode.insertBefore(sprite, checkbox.nextSibling);
+			}
+
+			for (var j = 0; j < radio_buttons.length; j++) {
+				var radio_button = radio_buttons[j];
+				var sprite = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+				sprite.innerHTML = '<use xlink:href="#icon-radio"/>';
+
+				radio_button.parentNode.insertBefore(sprite, radio_button.nextSibling);
+			}
+
+			// integrate form event listeners
 			if (file_inputs.length == 0) {
 				// normal case submission without file uploads
 				form.addEventListener('submit', function(event) {
