@@ -34,6 +34,7 @@
 							style="width: 160px;"
 							/>
 					</label>
+
 					<cms:if condition="$params['show_captcha']">
 						<label class="captcha">
 							<span><cms:text constant="captcha" module="backend"/></span>
@@ -41,12 +42,10 @@
 							<input type="text" name="captcha" value=""/>
 						</label>
 					</cms:if>
+
 					<label class="checkbox">
+						<input type="checkbox" name="lasting"/>
 						<span><cms:text constant="label_lasting_session" module="backend"/></span>
-						<input
-							type="checkbox"
-							name="lasting"
-							/>
 					</label>
 				</div>
 			</div>
