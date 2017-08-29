@@ -176,7 +176,6 @@ class faq extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('faq_new')
 				);
 
 		$template->restore_xml();
@@ -203,7 +202,6 @@ class faq extends Module {
 						'answer'		=> $item->answer,
 						'visible' 		=> $item->visible,
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
-						'cancel_action'	=> window_Close('faq_change')
 					);
 
 			$template->restore_xml();

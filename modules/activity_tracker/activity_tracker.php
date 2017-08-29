@@ -196,7 +196,6 @@ class activity_tracker extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('activities_new')
 				);
 
 		$template->restore_xml();
@@ -224,7 +223,6 @@ class activity_tracker extends Module {
 						'timeout'			=> $activity->timeout,
 						'ignore_address'	=> $activity->ignore_address,
 						'form_action'		=> backend_UrlMake($this->name, 'save'),
-						'cancel_action'		=> window_Close('activities_change')
 					);
 
 			$template->restore_xml();

@@ -772,7 +772,6 @@ class backend extends Module {
 				'file_name'     => $file_name,
 				'description'   => $description,
 				'form_action'   => backend_UrlMake($this->name, 'import_commit'),
-				'cancel_action' => window_Close('system_import_data')
 			);
 
 		$template->restore_xml();
@@ -898,7 +897,6 @@ class backend extends Module {
 
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'export_commit'),
-				'cancel_action'	=> window_Close('system_export_data')
 			);
 
 		$template->restore_xml();

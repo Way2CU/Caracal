@@ -330,7 +330,6 @@ class links extends Module {
 		$params = array(
 					'with_images'	=> ModuleHandler::is_loaded('gallery'),
 					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
-					'cancel_action'	=> window_Close('links_add')
 				);
 
 		$template->restore_xml();
@@ -361,7 +360,6 @@ class links extends Module {
 					'display_limit'    => $item->display_limit,
 					'sponsored_clicks' => $item->sponsored_clicks,
 					'form_action'      => backend_UrlMake($this->name, 'links_save'),
-					'cancel_action'    => window_Close('links_change')
 				);
 
 		$template->restore_xml();
@@ -553,7 +551,6 @@ class links extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('groups_add')
 				);
 
 		$template->restore_xml();
@@ -579,7 +576,6 @@ class links extends Module {
 					'name'			=> $item->name,
 					'text_id'		=> $item->text_id,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('groups_change')
 				);
 
 		$template->restore_xml();
@@ -699,7 +695,6 @@ class links extends Module {
 		$params = array(
 					'group'			=> $group_id,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_links_save'),
-					'cancel_action'	=> window_Close('groups_links')
 				);
 
 		$template->register_tag_handler('cms:group_links', $this, 'tag_GroupLinks');

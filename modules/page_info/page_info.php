@@ -128,7 +128,6 @@ class page_info extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
-						'cancel_action'	=> window_Close('page_settings')
 					);
 
 		$template->register_tag_handler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');

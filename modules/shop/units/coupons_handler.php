@@ -153,7 +153,6 @@ class CouponHandler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-					'cancel_action'	=> window_Close('shop_coupon_add')
 				);
 
 		$template->restore_xml();
@@ -188,7 +187,6 @@ class CouponHandler {
 			'limit'         => $item->limit,
 			'timeout'       => $item->timeout,
 			'form_action'   => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-			'cancel_action' => window_Close('shop_coupon_change')
 			);
 
 		// parse template
@@ -314,7 +312,6 @@ class CouponHandler {
 		$params = array(
 					'coupon'        => $coupon_id,
 					'form_action'   => backend_UrlMake($this->name, self::SUB_ACTION, 'codes_save'),
-					'cancel_action' => window_Close('shop_coupon_codes'),
 					'link_new'      => URL::make_hyperlink(
 							$this->parent->get_language_constant('add_code'),
 							window_Open( // on click open window
@@ -353,7 +350,6 @@ class CouponHandler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-					'cancel_action'	=> window_Close('shop_coupon_codes_add')
 				);
 
 		$template->restore_xml();
@@ -376,7 +372,6 @@ class CouponHandler {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-					'cancel_action'	=> window_Close('shop_coupon_codes_generate')
 				);
 
 		$template->restore_xml();

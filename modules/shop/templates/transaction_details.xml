@@ -266,13 +266,6 @@
 			>
 			<cms:text constant="print"/>
 		</button>
-		<button
-			type="button"
-			onclick="$params['cancel_action']"
-			cms:eval="onclick"
-			>
-			<cms:text constant="close"/>
-		</button>
 	</div>
 
 	<script type="text/javascript">

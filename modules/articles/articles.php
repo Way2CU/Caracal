@@ -344,7 +344,6 @@ class articles extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
-					'cancel_action'	=> window_Close('articles_new')
 				);
 
 		$template->restore_xml();
@@ -382,7 +381,6 @@ class articles extends Module {
 					'visible' 		=> $item->visible,
 					'gallery'		=> $item->gallery,
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
-					'cancel_action'	=> window_Close('articles_change')
 				);
 
 		$template->restore_xml();
@@ -529,7 +527,6 @@ class articles extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('article_groups_new')
 				);
 
 		$template->restore_xml();
@@ -555,7 +552,6 @@ class articles extends Module {
 					'title'			=> unfix_chars($item->title),
 					'description'	=> $item->description,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('article_groups_change')
 				);
 
 		$template->restore_xml();

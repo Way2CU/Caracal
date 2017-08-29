@@ -110,7 +110,6 @@ class mandrill extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('mandrill_settings')
 					);
 
 		$template->restore_xml();

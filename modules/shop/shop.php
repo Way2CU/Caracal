@@ -1110,7 +1110,6 @@ class shop extends Module {
 
 		$params = array(
 			'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-			'cancel_action'	=> window_Close('shop_settings')
 		);
 
 		if (ModuleHandler::is_loaded('contact_form')) {

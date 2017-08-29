@@ -24,8 +24,5 @@
 		<button type="button" onclick="javascript: Caracal.Shop.add_coupon_code(this);">
 			<cms:text constant="add"/>
 		</button>
-		<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-			<cms:text constant="cancel"/>
-		</button>
 	</div>
 </document>

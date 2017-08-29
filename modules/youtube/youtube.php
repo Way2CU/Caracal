@@ -324,7 +324,6 @@ class youtube extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
-					'cancel_action'	=> window_Close($this->name.'_video_add')
 				);
 
 		$template->restore_xml();
@@ -350,7 +349,6 @@ class youtube extends Module {
 					'video_id'		=> unfix_chars($video->video_id),
 					'title'			=> unfix_chars($video->title),
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
-					'cancel_action'	=> window_Close($this->name.'_video_change')
 				);
 
 		$template->restore_xml();
@@ -530,7 +528,6 @@ class youtube extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'group_save'),
-					'cancel_action'	=> window_Close($this->name.'_group_create')
 				);
 
 		$template->restore_xml();
@@ -557,7 +554,6 @@ class youtube extends Module {
 					'description'	=> $group->description,
 					'visible'		=> $group->visible,
 					'form_action'	=> backend_UrlMake($this->name, 'group_save'),
-					'cancel_action'	=> window_Close($this->name.'_group_change')
 				);
 
 		$template->restore_xml();
@@ -696,7 +692,6 @@ class youtube extends Module {
 		$params = array(
 					'group'			=> $id,
 					'form_action'	=> backend_UrlMake($this->name, 'group_videos_save'),
-					'cancel_action'	=> window_Close($this->name.'_group_videos')
 				);
 
 		$template->register_tag_handler('_group_videos', $this, 'tag_GroupVideos');

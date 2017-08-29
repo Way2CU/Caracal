@@ -53,9 +53,6 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript">

@@ -174,7 +174,6 @@ class tips extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'tips_save'),
-					'cancel_action'	=> window_Close('tips_new')
 				);
 
 		$template->restore_xml();
@@ -200,7 +199,6 @@ class tips extends Module {
 						'content'		=> unfix_chars($item->content),
 						'visible'		=> $item->visible,
 						'form_action'	=> backend_UrlMake($this->name, 'tips_save'),
-						'cancel_action'	=> window_Close('tips_change')
 					);
 
 			$template->restore_xml();

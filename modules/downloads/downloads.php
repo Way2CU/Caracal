@@ -228,7 +228,6 @@ class downloads extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'upload_save'),
-					'cancel_action'	=> window_Close('upload_file')
 				);
 
 		$template->restore_xml();
@@ -289,7 +288,6 @@ class downloads extends Module {
 					'filename'		=> $item->filename,
 					'visible'		=> $item->visible,
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('downloads_change')
 				);
 
 		$template->restore_xml();

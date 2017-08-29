@@ -131,7 +131,6 @@ class tranzila extends Module {
 
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-				'cancel_action'	=> window_Close('tranzila'),
 				'confirm_url'	=> URL::make_query($this->name, 'payment-confirm'),
 				'cancel_url'	=> URL::make_query($this->name, 'payment-cancel'),
 			);

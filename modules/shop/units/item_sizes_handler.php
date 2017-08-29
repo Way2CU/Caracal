@@ -170,7 +170,6 @@ class ShopItemSizesHandler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'sizes', 'save'),
-					'cancel_action'	=> window_Close('shop_item_size_add')
 				);
 
 		$template->restore_xml();
@@ -188,7 +187,6 @@ class ShopItemSizesHandler {
 		$params = array(
 					'definition'	=> fix_id($_REQUEST['definition']),
 					'form_action'	=> backend_UrlMake($this->name, 'sizes', 'value_save'),
-					'cancel_action'	=> window_Close('shop_item_size_values_add')
 				);
 
 		$template->restore_xml();
@@ -216,7 +214,6 @@ class ShopItemSizesHandler {
 						'definition'	=> $item->definition,
 						'value'			=> $item->value,
 						'form_action'	=> backend_UrlMake($this->name, 'sizes', 'value_save'),
-						'cancel_action'	=> window_Close('shop_item_size_values_change')
 					);
 
 			// parse template

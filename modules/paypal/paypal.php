@@ -221,7 +221,6 @@ class paypal extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('paypal')
 					);
 
 		$template->restore_xml();
@@ -289,7 +288,6 @@ class paypal extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'recurring_plans_save'),
-					'cancel_action'	=> window_Close('paypal_recurring_plans_new')
 				);
 
 		$template->restore_xml();
@@ -325,7 +323,6 @@ class paypal extends Module {
 						'start_time'		=> $plan->start_time,
 						'group_name'		=> $plan->group_name,
 						'form_action'	=> backend_UrlMake($this->name, 'recurring_plans_save'),
-						'cancel_action'	=> window_Close('paypal_recurring_plans_change')
 					);
 
 			$template->restore_xml();

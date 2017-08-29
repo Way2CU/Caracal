@@ -134,8 +134,7 @@ class callbox extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('callbox_settings')
+						'form_action'	=> backend_UrlMake($this->name, 'settings_save')
 					);
 
 		$template->restore_xml();

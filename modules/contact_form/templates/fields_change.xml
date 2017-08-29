@@ -161,9 +161,6 @@
 			<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 

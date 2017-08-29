@@ -152,7 +152,6 @@ class page_description extends Module {
 					'title'         => $item->title,
 					'content'       => $item->content,
 					'form_action'   => backend_UrlMake($this->name, 'save'),
-					'cancel_action' => window_Close('page_descriptions_change_'.$id)
 				);
 
 		$template->restore_xml();

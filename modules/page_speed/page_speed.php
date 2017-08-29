@@ -175,7 +175,6 @@ class page_speed extends Module {
 		$params = array(
 					'api_key'		=> isset($this->settings['api_key']) ? $this->settings['api_key'] : '',
 					'form_action'	=> backend_UrlMake($this->name, 'save_api_key'),
-					'cancel_action'	=> window_Close('page_speed_set_api_key')
 				);
 
 		$template->register_tag_handler('_module_list', $this, 'tag_ModuleList');

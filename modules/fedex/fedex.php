@@ -110,8 +110,7 @@ class fedex extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
-						'cancel_action'	=> window_Close('fedex')
+						'form_action'	=> backend_UrlMake($this->name, 'save_settings')
 					);
 
 		$template->set_local_params($params);

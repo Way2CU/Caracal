@@ -112,7 +112,6 @@ class Handler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-					'cancel_action'	=> window_Close('shop_supplier_add')
 				);
 
 		$template->restore_xml();
@@ -149,7 +148,6 @@ class Handler {
 					'email'			=> $item->email,
 					'url'			=> $item->url,
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-					'cancel_action'	=> window_Close('shop_supplier_change')
 				);
 
 		// render form template
