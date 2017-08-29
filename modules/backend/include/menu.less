@@ -27,6 +27,7 @@ nav#main.minimized span {
 
 nav#main a {
 	cursor: default;
+	.add-icon-behavior(regular);
 }
 
 nav#main a svg {
@@ -118,27 +119,31 @@ nav#main nav hr {
  */
 nav#windows {
 	flex: 1 1;
-}
 
-nav#windows a {
-	display: inline-block;
-	background-color: fade(@color_dark, 10);
-	color: @color_dark;
+	a {
+		display: inline-block;
+		background-color: fade(@color_dark, 10);
+		color: @color_dark;
 
-	.container-padding(2);
-	.animation-slide-from-top(0.3);
+		.container-padding(2);
+		.animation-slide-from-top(0.3);
 
-	&.active {
-		background-color: @color_active;
-		color: @color_bright;
-	}
+		svg, span {
+			display: block;
+			width: unit(@header_unit, em);
+			height: unit(@header_unit, em);
 
-	svg, span {
-		display: block;
-		width: unit(@header_unit, em);
-		height: unit(@header_unit, em);
+			fill: fade(@color_dark, 70);
+		}
 
-		fill: fade(@color_dark, 70);
+		.add-icon-behavior(regular);
+
+		&.active {
+			background-color: @color_active;
+			color: @color_bright;
+
+			.add-icon-behavior(active);
+		}
 	}
 }
 
@@ -151,30 +156,30 @@ nav#common {
 	right: 0;
 
 	.container-padding();
-}
 
-html[dir=rtl] nav#common {
-	right: auto;
-	left: 0;
-}
-
-nav#common a {
-	display: inline-block;
-	margin-left: @padding_unit;
-	.link-padding(0.5);
-
-	border-right: 1px solid fade(@color_dark, 25);
-
-	color: fade(@color_dark, 50);
-	text-decoration: none;
-
-	&:last-of-type {
-		margin-left: 0;
-		border-right: 0;
+	html[dir=rtl] & {
+		right: auto;
+		left: 0;
 	}
 
-	&:hover {
-		color: @color_dark;
+	a {
+		display: inline-block;
+		margin-left: @padding_unit;
+		.link-padding(0.5);
+
+		border-right: 1px solid fade(@color_dark, 25);
+
+		color: fade(@color_dark, 50);
+		text-decoration: none;
+
+		&:last-of-type {
+			margin-left: 0;
+			border-right: 0;
+		}
+
+		&:hover {
+			color: @color_dark;
+		}
 	}
 }
 
@@ -187,33 +192,33 @@ nav#language {
 	right: 0;
 
 	.container-padding();
-}
 
-html[dir=rtl] nav#language {
-	right: auto;
-	left: 0;
-}
-
-nav#language a {
-	display: inline-block;
-	margin-left: @padding_unit;
-	.link-padding(0.5);
-
-	border-right: 1px solid fade(@color_dark, 25);
-
-	color: fade(@color_dark, 50);
-	text-decoration: none;
-
-	&:last-of-type {
-		margin-left: 0;
-		border-right: 0;
+	html[dir=rtl] & {
+		right: auto;
+		left: 0;
 	}
 
-	&.active {
-		text-decoration: underline;
-	}
+	a {
+		display: inline-block;
+		margin-left: @padding_unit;
+		.link-padding(0.5);
 
-	&:hover {
-		color: @color_dark;
+		border-right: 1px solid fade(@color_dark, 25);
+
+		color: fade(@color_dark, 50);
+		text-decoration: none;
+
+		&:last-of-type {
+			margin-left: 0;
+			border-right: 0;
+		}
+
+		&.active {
+			text-decoration: underline;
+		}
+
+		&:hover {
+			color: @color_dark;
+		}
 	}
 }
