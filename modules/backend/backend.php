@@ -16,7 +16,7 @@ use Modules\Backend\OrderEditor as OrderEditor;
 
 define('_BACKEND_SECTION_', 'backend_module');
 
-define('CHAR_CHECKED', '✔');
+define('CHAR_CHECKED', '<svg class="check-mark"><use xlink:href="#icon-checkmark"/></svg>');
 define('CHAR_UNCHECKED', '');
 
 require_once('units/action.php');
