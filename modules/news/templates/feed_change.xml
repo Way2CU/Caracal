@@ -24,13 +24,13 @@
 			<cms:language_data param="description"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_active" module="news"/></span>
 			<input
 				type="checkbox"
 				name="active"
 				checked="$params['active'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_active" module="news"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

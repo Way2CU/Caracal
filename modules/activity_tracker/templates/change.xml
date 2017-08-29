@@ -39,20 +39,13 @@
 			/>
 		</label>
 		<label class="checkbox">
+			<input
+				type="checkbox"
+				name="ignore_address"
+				checked="$params['ignore_address] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 			<span><cms:text constant="label_ignore_address" module="activity_tracker"/></span>
-			<cms:if condition="$params['ignore_address']">
-				<input
-					type="checkbox"
-					name="ignore_address"
-					checked="checked"
-				/>
-			</cms:if>
-			<cms:if condition="!$params['ignore_address']">
-				<input
-					type="checkbox"
-					name="ignore_address"
-				/>
-			</cms:if>
 		</label>
 
 		<div class="button_bar">

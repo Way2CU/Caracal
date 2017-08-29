@@ -21,13 +21,14 @@
 			<input type="file" name="image[]" multiple="multiple"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="gallery"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
+			<span><cms:text constant="label_visible" module="gallery"/></span>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_slideshow" module="gallery"/></span>
 			<input type="checkbox" name="slideshow"/>
+			<span><cms:text constant="label_slideshow" module="gallery"/></span>
 		</label>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="upload"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">

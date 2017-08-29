@@ -33,11 +33,8 @@
 
 		<div class="box left" style="min-width: 170px;">
 			<label class="checkbox">
+				<input type="checkbox" name="has_limit"/>
 				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
-				<input
-					type="checkbox"
-					name="has_limit"
-					/>
 			</label>
 
 			<label>
@@ -55,11 +52,8 @@
 		<!-- Time limit -->
 		<div class="box">
 			<label class="checkbox">
+				<input type="checkbox" name="has_timeout"/>
 				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
-				<input
-					type="checkbox"
-					name="has_timeout"
-					/>
 			</label>
 
 			<label>

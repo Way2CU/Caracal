@@ -6,13 +6,13 @@
 			<!-- General settings -->
 			<div>
 				<label class="checkbox">
-					<span><cms:text constant="label_testing_mode" module="shop"/></span>
 					<input
 						type="checkbox"
 						name="testing_mode"
 						checked="$settings['testing_mode'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_testing_mode" module="shop"/></span>
 				</label>
 
 				<label>
@@ -97,13 +97,13 @@
 					</select>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_send_copy" module="shop"/></span>
 					<input
 						type="checkbox"
 						name="send_copy"
 						checked="$settings['send_copy'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_send_copy" module="shop"/></span>
 				</label>
 			</div>
 		</div>

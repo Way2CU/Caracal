@@ -44,22 +44,22 @@
 		<fieldset>
 			<legend><cms:text constant="legend_system_events" module="ontop"/></legend>
 			<label class="checkbox">
-				<span><cms:text constant="label_shop_transaction_complete" module="ontop"/></span>
 				<input
 					type="checkbox"
 					name="shop_transaction_complete"
 					checked="$params['shop_transaction_complete'] ? 'checked' : false"
 					cms:optional="checked"
 					/>
+				<span><cms:text constant="label_shop_transaction_complete" module="ontop"/></span>
 			</label>
 			<label class="checkbox">
-				<span><cms:text constant="label_contact_form_submit" module="ontop"/></span>
 				<input
 					type="checkbox"
 					name="contact_form_submit"
 					checked="$params['contact_form_submit'] ? 'checked' : false"
 					cms:optional="checked"
 					/>
+				<span><cms:text constant="label_contact_form_submit" module="ontop"/></span>
 			</label>
 		</fieldset>
 

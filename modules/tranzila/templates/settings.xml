@@ -39,13 +39,13 @@
 						/>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_custom_template" module="tranzila"/></span>
 					<input
 						type="checkbox"
 						name="custom_template"
 						checked="$settings['custom_template'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_custom_template" module="tranzila"/></span>
 				</label>
 			</div>
 

@@ -21,8 +21,8 @@
 			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_active" module="news"/></span>
 			<input type="checkbox" name="active" checked="checked"/>
+			<span><cms:text constant="label_active" module="news"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

@@ -56,11 +56,11 @@
 			<!-- Options tab -->
 			<div>
 				<label class="checkbox">
-					<span><cms:text constant="label_include_files" module="backend"/></span>
 					<input
 						type="checkbox"
 						name="include_files"
 						/>
+					<span><cms:text constant="label_include_files" module="backend"/></span>
 				</label>
 			</div>
 		</div>

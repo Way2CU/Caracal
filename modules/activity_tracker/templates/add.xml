@@ -33,11 +33,8 @@
 			/>
 		</label>
 		<label class="checkbox">
+			<input type="checkbox" name="ignore_address"/>
 			<span><cms:text constant="label_ignore_address" module="activity_tracker"/></span>
-			<input
-				type="checkbox"
-				name="ignore_address"
-			/>
 		</label>
 
 		<div class="button_bar">

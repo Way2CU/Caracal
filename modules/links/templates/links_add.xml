@@ -49,19 +49,12 @@
 				/>
 		</label>
 		<label class="checkbox">
+			<input type="checkbox" name="external" checked="checked"/>
 			<span><cms:text constant="label_external" module="links"/></span>
-			<input
-				type="checkbox"
-				name="external"
-				checked="checked"
-				/>
 		</label>
 		<label class="checkbox">
+			<input type="checkbox" name="sponsored"/>
 			<span><cms:text constant="label_sponsored" module="links"/></span>
-			<input
-				type="checkbox"
-				name="sponsored"
-				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_display_limit" module="links"/></span>

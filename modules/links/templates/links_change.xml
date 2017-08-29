@@ -55,22 +55,22 @@
 				/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_external" module="links"/></span>
 			<input
 				type="checkbox"
 				name="external"
 				checked="$params['external'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_external" module="links"/></span>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_sponsored" module="links"/></span>
 			<input
 				type="checkbox"
 				name="sponsored"
 				checked="$params['sponsored'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_sponsored" module="links"/></span>
 		</label>
 		<label>
 			<span><cms:text constant="label_display_limit" module="links"/></span>

@@ -48,18 +48,18 @@
 
 				<div class="box left" style="width: 200px;">
 					<label class="checkbox" cms:tooltip="tooltip_include_headers">
-						<span><cms:text constant="label_export_include_headers" module="contact_form"/></span>
 						<input type="checkbox" name="headers_included" checked="checked"/>
+						<span><cms:text constant="label_export_include_headers" module="contact_form"/></span>
 					</label>
 
 					<label class="checkbox">
-						<span><cms:text constant="label_export_ip" module="contact_form"/></span>
 						<input type="checkbox" name="export_ip"/>
+						<span><cms:text constant="label_export_ip" module="contact_form"/></span>
 					</label>
 
 					<label class="checkbox">
-						<span><cms:text constant="label_export_timestamp" module="contact_form"/></span>
 						<input type="checkbox" name="export_timestamp"/>
+						<span><cms:text constant="label_export_timestamp" module="contact_form"/></span>
 					</label>
 				</div>
 

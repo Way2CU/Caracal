@@ -91,15 +91,17 @@
 					/>
 				</label>
 				<label class="checkbox">
+					<input
+						type="checkbox"
+						name="use_ssl"
+						checked="$settings['use_ssl'] ? 'checked': false"
+						cms:optional="checked"
+						/>
 					<span><cms:text constant="label_use_ssl" module="contact_form"/></span>
-					<cms:if condition="$settings['use_ssl']">
-						<input type="checkbox" name="use_ssl" checked="checked"/>
-					</cms:if>
-					<cms:if condition="!$settings['use_ssl']">
-						<input type="checkbox" name="use_ssl"/>
-					</cms:if>
 				</label>
+
 				<hr/>
+
 				<label class="radio">
 					<span><cms:text constant="label_smtp_no_authentication" module="contact_form"/></span>
 					<input

@@ -34,23 +34,24 @@
 			<cms:language_data param="description"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="gallery"/></span>
 			<input
 				type="checkbox"
 				name="visible"
 				checked="$params['visible'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_visible" module="gallery"/></span>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_slideshow" module="gallery"/></span>
 			<input
 				type="checkbox"
 				name="slideshow"
 				checked="$params['slideshow'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_slideshow" module="gallery"/></span>
 		</label>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">

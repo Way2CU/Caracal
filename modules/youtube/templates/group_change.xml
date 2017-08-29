@@ -32,14 +32,15 @@
 			<cms:language_data param="description"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="youtube"/></span>
 			<input
 				type="checkbox"
 				name="visible"
 				checked="$params['visible'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_visible" module="youtube"/></span>
 		</label>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>

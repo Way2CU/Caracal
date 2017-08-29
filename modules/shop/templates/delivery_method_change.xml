@@ -10,23 +10,23 @@
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_international" module="shop"/></span>
 			<input
 				type="checkbox"
 				name="international"
 				checked="$params['international'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_international" module="shop"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_domestic" module="shop"/></span>
 			<input
 				type="checkbox"
 				name="domestic"
 				checked="$params['domestic'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_domestic" module="shop"/></span>
 		</label>
 
 		<div class="button_bar">

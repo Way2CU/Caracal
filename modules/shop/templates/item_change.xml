@@ -120,13 +120,13 @@
 				</label>
 
 				<label class="checkbox" cms:tooltip="tooltip_item_visible">
-					<span><cms:text constant="label_item_visible" module="shop"/></span>
 					<input
 						type="checkbox"
 						name="visible"
 						checked="$params['visible'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_item_visible" module="shop"/></span>
 				</label>
 				<div style="clear: both; padding-bottom: 25px;">
 					<cms:text constant="message_images_upload" module="shop"/>

@@ -14,13 +14,13 @@
 			<cms:language_data param="content"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="news"/></span>
 			<input
 				type="checkbox"
 				name="visible"
 				checked="$params['visible'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_visible" module="news"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

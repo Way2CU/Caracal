@@ -7,12 +7,12 @@
 			<input class="multi-language" type="text" name="name" style="width: 270px;" maxlength="50"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_international" module="shop"/></span>
 			<input type="checkbox" name="international"/>
+			<span><cms:text constant="label_international" module="shop"/></span>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_domestic" module="shop"/></span>
 			<input type="checkbox" name="domestic"/>
+			<span><cms:text constant="label_domestic" module="shop"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

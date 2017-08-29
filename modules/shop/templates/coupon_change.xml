@@ -37,13 +37,13 @@
 
 		<div class="box left" style="min-width: 170px;">
 			<label class="checkbox">
-				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
 				<input
 					type="checkbox"
 					name="has_limit"
 					checked="$params['has_limit'] ? 'checked' : false"
 					cms:optional="checked"
 					/>
+				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
 			</label>
 
 			<label>
@@ -62,13 +62,13 @@
 		<!-- Time limit -->
 		<div class="box">
 			<label class="checkbox">
-				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
 				<input
 					type="checkbox"
 					name="has_timeout"
 					checked="$params['has_timeout'] ? 'checked' : false"
 					cms:optional="checked"
 					/>
+				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
 			</label>
 
 			<label>

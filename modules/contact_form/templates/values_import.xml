@@ -20,12 +20,8 @@
 			</label>
 
 			<label class="checkbox">
+				<input type="checkbox" name="remove_existing" checked="checked"/>
 				<span><cms:text constant="label_remove_existing" module="contact_form"/></span>
-				<input
-					type="checkbox"
-					name="remove_existing"
-					checked="checked"
-					/>
 			</label>
 		</div>
 

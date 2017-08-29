@@ -57,23 +57,23 @@
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_disabled" module="contact_form"/></span>
 			<input type="checkbox" name="disabled"/>
+			<span><cms:text constant="label_disabled" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_required" module="contact_form"/></span>
 			<input type="checkbox" name="required"/>
+			<span><cms:text constant="label_required" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_checked" module="contact_form"/></span>
 			<input type="checkbox" name="checked"/>
+			<span><cms:text constant="label_checked" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 			<input type="checkbox" name="autocomplete" checked="checked"/>
+			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 		</label>
 
 		<div class="button_bar">

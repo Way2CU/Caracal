@@ -19,8 +19,8 @@
 			/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="faq"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
+			<span><cms:text constant="label_visible" module="faq"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

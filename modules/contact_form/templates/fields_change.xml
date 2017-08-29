@@ -117,43 +117,43 @@
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_disabled" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="disabled"
 				checked="$params['disabled'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_disabled" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_required" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="required"
 				checked="$params['required'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_required" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_checked" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="checked"
 				checked="$params['checked'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_checked" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="autocomplete"
 				checked="$params['autocomplete'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 		</label>
 
 		<div class="button_bar">

@@ -31,8 +31,8 @@
 				</label>
 
 				<label class="checkbox" cms:tooltip="tooltip_use_ajax">
-					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
 					<input name="use_ajax" type="checkbox" checked="checked"/>
+					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
 				</label>
 
 				<hr/>
@@ -69,18 +69,18 @@
 				<fieldset>
 					<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
 					<label class="checkbox">
-						<span><cms:text constant="label_show_submit" module="contact_form"/></span>
 						<input name="show_submit" type="checkbox" checked="checked"/>
+						<span><cms:text constant="label_show_submit" module="contact_form"/></span>
 					</label>
 
 					<label class="checkbox">
-						<span><cms:text constant="label_show_reset" module="contact_form"/></span>
 						<input name="show_reset" type="checkbox" checked="checked"/>
+						<span><cms:text constant="label_show_reset" module="contact_form"/></span>
 					</label>
 
 					<label class="checkbox">
-						<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
 						<input name="show_cancel" type="checkbox"/>
+						<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
 					</label>
 				</fieldset>
 			</div>

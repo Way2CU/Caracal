@@ -34,13 +34,13 @@
 					<cms:language_data param="title"/>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_visible" module="articles"/></span>
 					<input
 						type="checkbox"
 						name="visible"
 						checked="$params['visible'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_visible" module="articles"/></span>
 				</label>
 			</div>
 			<div>

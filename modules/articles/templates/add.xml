@@ -30,8 +30,8 @@
 					<input type="text" class="multi-language" name="title" style="width: 400px;" maxlength="255"/>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_visible" module="articles"/></span>
 					<input type="checkbox" name="visible" checked="checked"/>
+					<span><cms:text constant="label_visible" module="articles"/></span>
 				</label>
 			</div>
 			<div>

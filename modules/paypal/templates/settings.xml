@@ -13,7 +13,7 @@
 						value="$settings['api_username']"
 						cms:eval="value"
 						style="width: 250px;"
-					/>
+						/>
 				</label>
 				<label>
 					<span><cms:text constant="label_password" module="paypal"/></span>
@@ -24,7 +24,7 @@
 						value="$settings['api_password']"
 						cms:eval="value"
 						style="width: 250px;"
-					/>
+						/>
 				</label>
 				<label>
 					<span><cms:text constant="label_signature" module="paypal"/></span>
@@ -35,28 +35,28 @@
 						value="$settings['api_signature']"
 						cms:eval="value"
 						style="width: 350px;"
-					/>
+						/>
 				</label>
 			</div>
 
 			<div>
 				<label class="checkbox">
-					<span><cms:text constant="label_express_enabled" module="paypal"/></span>
 					<input
 						type="checkbox"
 						name="express_enabled"
 						checked="$settings['express_enabled'] ? 'checked' : false"
 						cms:optional="checked"
-					/>
+						/>
+					<span><cms:text constant="label_express_enabled" module="paypal"/></span>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_direct_enabled" module="paypal"/></span>
 					<input
 						type="checkbox"
 						name="direct_enabled"
 						checked="$settings['direct_enabled'] ? 'checked' : false"
 						cms:optional="checked"
-					/>
+						/>
+					<span><cms:text constant="label_direct_enabled" module="paypal"/></span>
 				</label>
 			</div>
 
@@ -70,7 +70,7 @@
 						cms:eval="value"
 						style="width: 350px;"
 						readonly="readonly"
-					/>
+						/>
 				</label>
 			</div>
 		</div>
@@ -86,8 +86,8 @@
 	<script type="text/javascript">
 		var notebook = new Notebook('paypal_settings_notebook');
 		notebook
-			.setPageTitle(0, language_handler.getText('paypal', 'tab_api'))
-			.setPageTitle(1, language_handler.getText('paypal', 'tab_methods'))
-			.setPageTitle(2, language_handler.getText('paypal', 'tab_ipn'));
+		.setPageTitle(0, language_handler.getText('paypal', 'tab_api'))
+		.setPageTitle(1, language_handler.getText('paypal', 'tab_methods'))
+		.setPageTitle(2, language_handler.getText('paypal', 'tab_ipn'));
 	</script>
 </document>

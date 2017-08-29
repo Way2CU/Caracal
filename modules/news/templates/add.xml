@@ -18,8 +18,8 @@
 			<textarea name="content" class="multi-language" style="width: 460px; height: 150px;"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="news"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
+			<span><cms:text constant="label_visible" module="news"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>

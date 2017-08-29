@@ -94,12 +94,8 @@
 				</label>
 
 				<label class="checkbox" cms:tooltip="tooltip_item_visible">
+					<input type="checkbox" name="visible" checked="checked"/>
 					<span><cms:text constant="label_item_visible" module="shop"/></span>
-					<input
-						type="checkbox"
-						name="visible"
-						checked="checked"
-						/>
 				</label>
 				<div style="clear: both; padding-bottom: 25px;">
 					<cms:text constant="message_images_upload" module="shop"/>

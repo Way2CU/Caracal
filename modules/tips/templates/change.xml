@@ -10,13 +10,13 @@
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="tips"/></span>
 			<input
 				type="checkbox"
 				name="visible"
 				checked="$params['visible'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_visible" module="tips"/></span>
 		</label>
 
 		<div class="button_bar">

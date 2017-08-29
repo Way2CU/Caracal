@@ -7,8 +7,8 @@
 			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="tips"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
+			<span><cms:text constant="label_visible" module="tips"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
