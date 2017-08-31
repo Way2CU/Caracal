@@ -501,7 +501,7 @@ class contact_form extends Module {
 
 				// store parameter value
 				$value = fix_chars($_REQUEST[$field->name]);
-				$params[$field->id] = $value;
+				$params[$field->name] = $value;
 			}
 
 		// store array to session
