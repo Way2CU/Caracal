@@ -203,7 +203,6 @@ Caracal.Dialog = function(config, constants) {
 		self.events
 			.register('open')
 			.register('close');
-		with (
 
 		// connect with dialog controller
 		Caracal.dialog_controller.connect(self);
