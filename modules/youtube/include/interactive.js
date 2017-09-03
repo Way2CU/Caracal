@@ -55,10 +55,10 @@ Caracal.YouTube.VideoLoader = function(selector) {
 		event.preventDefault();
 
 		// create new embedded container
-		var fullscreen = this.dataset.fullscreen == '1';
 		var container = document.createElement('iframe');
 
 		// configure container
+		container.setAttribute('allowfullscreen', 'allowfullscreen');
 		container.width = this.dataset.width;
 		container.height = this.dataset.height;
 		container.src = this.dataset.embedUrl;

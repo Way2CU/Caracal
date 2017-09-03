@@ -9,7 +9,7 @@
 		frameborder="_STANDARD != 'html5' ? 0 : false"
 		src="$params['url']"
 		allowfullscreen="allowfullscreen"
-		cms:optional="frameborder,seamless,id"
+		cms:optional="frameborder,id"
 		cms:eval="width,height,src"
 		/>
 </document>
