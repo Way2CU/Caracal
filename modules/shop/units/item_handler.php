@@ -36,6 +36,7 @@ use TemplateHandler;
 use ModuleHandler;
 use URL;
 use gallery;
+use youtube;
 use shop;
 
 use ShopCategoryHandler;
@@ -306,7 +307,7 @@ class Handler {
 				// create new videos group
 				$videos_name = $data['name'];
 				foreach ($videos_name as $key => $value)
-					$videos_name[$key] = $this->get_language_constant('menu_shop', $key).': '.$value;
+					$videos_name[$key] = $this->parent->get_language_constant('menu_shop', $key).': '.$value;
 
 				// store new videos group id
 				$data['videos'] = $youtube->create_group($videos_name);
@@ -318,7 +319,7 @@ class Handler {
 				// create new gallery for item images
 				$gallery_name = $data['name'];
 				foreach ($gallery_name as $key => $value)
-					$gallery_name[$key] = $this->get_language_constant('menu_shop', $key).': '.$value;
+					$gallery_name[$key] = $this->parent->get_language_constant('menu_shop', $key).': '.$value;
 				$gallery_id = $gallery->create_gallery($gallery_name);
 
 				// store new gallery id
