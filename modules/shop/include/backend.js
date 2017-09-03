@@ -645,18 +645,14 @@ Caracal.Shop.add_coupon_code = function(button, code, discount) {
 	option_delete.appendChild(document.createTextNode(data['delete']));
 	option_delete.addEventListener('click', Caracal.Shop.delete_coupon_code);
 
-	with (column_options) {
-		classList.add('column');
-		appendChild(option_delete);
-	}
+	column_options.classList.add('column');
+	column_options.appendChild(option_delete);
 
-	with (list_item) {
-		appendChild(column_code);
-		appendChild(column_discount);
-		appendChild(column_times);
-		appendChild(column_options);
-		classList.add('list_item');
-	}
+	list_item.appendChild(column_code);
+	list_item.appendChild(column_discount);
+	list_item.appendChild(column_times);
+	list_item.appendChild(column_options);
+	list_item.classList.add('list_item');
 
 	// store data in the list
 	var get_data = !code && !discount;
@@ -684,18 +680,14 @@ Caracal.Shop.add_coupon_code = function(button, code, discount) {
 	column_times.appendChild(document.createTextNode(0));
 
 	var data_code = document.createElement('input');
-	with (data_code) {
-		setAttribute('type', 'hidden');
-		setAttribute('name', 'code_' + index.toString());
-		setAttribute('value', code);
-	}
+	data_code.setAttribute('type', 'hidden');
+	data_code.setAttribute('name', 'code_' + index.toString());
+	data_code.setAttribute('value', code);
 
 	var data_discount = document.createElement('input');
-	with (data_discount) {
-		setAttribute('type', 'hidden');
-		setAttribute('name', 'discount_' + index.toString());
-		setAttribute('value', discount);
-	}
+	data_discount.setAttribute('type', 'hidden');
+	data_discount.setAttribute('name', 'discount_' + index.toString());
+	data_discount.setAttribute('value', discount);
 
 	column_code.appendChild(data_code);
 	column_code.appendChild(data_discount);
