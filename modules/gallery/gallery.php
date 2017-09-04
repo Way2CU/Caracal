@@ -512,7 +512,7 @@ class gallery extends Module {
 			$description = $this->get_multilanguage_field('description');
 			$result = $this->create_image('image');
 
-			if (count($result['errors']) == 0) {
+			if (empty($result['errors'])) {
 				$data = array(
 							'group'       => $group,
 							'text_id'     => $text_id,
