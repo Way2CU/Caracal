@@ -334,7 +334,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_suppliers'),
-				URL::from_file_path($this->path.'images/suppliers.svg'),
+				$this->path.'images/suppliers.svg',
 				window_Open( // on click open window
 					'shop_suppliers',
 					400,

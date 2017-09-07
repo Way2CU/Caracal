@@ -120,7 +120,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_exports'),
-									URL::from_file_path($this->path.'images/exports.svg'),
+									$this->path.'images/exports.svg',
 									window_Open( // on click open window
 												'system_exports',
 												500,

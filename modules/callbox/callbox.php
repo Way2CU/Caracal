@@ -31,23 +31,15 @@ class callbox extends Module {
 			$callbox_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_callbox'),
 					$this->path.'images/icon.svg',
-					'javascript:void(0);',
+					window_Open( // on click open window
+								'callbox_settings',
+								400,
+								$this->get_language_constant('title_settings'),
+								true, true,
+								backend_UrlMake($this->name, 'settings')
+							),
 					$level=5
 				);
-
-			$callbox_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_settings'),
-								$this->path.'images/settings.svg',
-
-								window_Open( // on click open window
-											'callbox_settings',
-											400,
-											$this->get_language_constant('title_settings'),
-											true, true,
-											backend_UrlMake($this->name, 'settings')
-										),
-								$level=5
-							));
 
 			$backend->addMenu($this->name, $callbox_menu);
 		}
