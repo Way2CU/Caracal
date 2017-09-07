@@ -173,18 +173,18 @@ class ShopManufacturerHandler {
 				$gallery = gallery::get_instance();
 				$gallery_manager = GalleryManager::get_instance();
 
-				$result = $gallery->create_image('logo');
+				// store logo as protected image in gallery
+				$result = $gallery->create_image('logo', 1);
 
-				if (!$result['error']) {
-					$image_data = array(
-								'title'			=> $data['name'],
-								'visible'		=> 0,
-								'protected'		=> 1
-							);
+				if (empty($result['errors'])) {
+					$id_list = array_keys($result['filenames']);
 
-					$gallery_manager->update_items($image_data, array('id' => $result['id']));
+					$gallery_manager->update_items(
+							array('title' => $data['name']),
+							array('id' => $id_list[0])
+						);
 
-					$data['logo'] = $result['id'];
+					$data['logo'] = $id_list[0];
 					$gallery_addon = ';'.window_ReloadContent('gallery_images');
 				}
 			}

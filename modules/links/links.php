@@ -391,18 +391,18 @@ class links extends Module {
 			$gallery = gallery::get_instance();
 			$gallery_manager = GalleryManager::get_instance();
 
-			$result = $gallery->create_image('image');
+			// store image in gallery as protected
+			$result = $gallery->create_image('image', 1);
 
-			if (!$result['error']) {
-				$image_data = array(
-							'title'			=> $data['text'],
-							'visible'		=> 0,
-							'protected'		=> 1
-						);
+			if (empty($result['errors'])) {
+				$id_list = array_keys($result['filenames']);
 
-				$gallery_manager->update_items($image_data, array('id' => $result['id']));
+				$gallery_manager->update_items(
+						array('title' => $data['text']),
+						array('id' => $id_list[0])
+					);
 
-				$data['image'] = $result['id'];
+				$data['image'] = $id_list[0];
 				$gallery_addon = ';'.window_ReloadContent('gallery_images');
 			}
 		}
@@ -410,6 +410,7 @@ class links extends Module {
 		if (!is_null($id)) {
 			$manager->update_items($data, array('id' => $id));
 			$window_name = 'links_change';
+
 		} else {
 			$manager->insert_item($data);
 			$window_name = 'links_add';

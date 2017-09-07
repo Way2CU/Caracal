@@ -204,7 +204,7 @@ class callbox extends Module {
 			if ($strip_slashes)
 				$value = stripslashes($value);
 
-			$data[] = $param.'='.urlencode($value);
+			$data[] = $param.'='.rawurlencode($value);
 		}
 
 		// add visitor session id
