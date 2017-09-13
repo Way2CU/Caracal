@@ -3,11 +3,7 @@
 <document>
 	<div class="list_item">
 			<span class="column" style="'width: 220px;'.($params['status'] == 'not_initialized' ? 'color: silver;' : '')" cms:eval="style">
-				<span
-					class="icon"
-					style="'background-image: url('.$params['icon'].');'"
-					cms:eval="style"
-					/>
+				<cms:svg file="$params['icon']" cms:eval="file"/>
 				<cms:var name="$params['name']"/>
 			</span>
 			<span class="column" style="width: 50px; text-align: center;">

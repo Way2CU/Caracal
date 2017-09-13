@@ -23,7 +23,7 @@
 
 		<!-- List -->
 		<div class="list_content" style="height: 250px">
-			<_module_list/>
+			<cms:module_list/>
 		</div>
 	</div>
 </document>

@@ -27,7 +27,7 @@
 				</div>
 
 				<!-- Window list -->
-				<nav id="windows"/>
+				<nav id="window_list"/>
 
 				<!-- Common links -->
 				<nav id="common">
