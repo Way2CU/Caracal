@@ -232,7 +232,6 @@ nav#common {
 
 	a {
 		display: inline-block;
-		margin-left: @padding_unit;
 		.link-padding(0.5);
 
 		border-right: 1px solid fade(@color_dark, 25);
@@ -240,8 +239,8 @@ nav#common {
 		color: fade(@color_dark, 50);
 		text-decoration: none;
 
-		&:last-of-type {
-			margin-left: 0;
+		html[dir=ltr] &:last-of-type,
+		html[dir=rtl] &:first-of-type {
 			border-right: 0;
 		}
 
@@ -268,7 +267,6 @@ nav#language {
 
 	a {
 		display: inline-block;
-		margin-left: @padding_unit;
 		.link-padding(0.5);
 
 		border-right: 1px solid fade(@color_dark, 25);
@@ -276,9 +274,9 @@ nav#language {
 		color: fade(@color_dark, 50);
 		text-decoration: none;
 
-		&:last-of-type {
-			margin-left: 0;
-			border-right: 0;
+		html[dir=ltr] &:last-of-type,
+		html[dir=rtl] &:first-of-type {
+			border: 0;
 		}
 
 		&.active {
