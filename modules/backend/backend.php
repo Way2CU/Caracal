@@ -420,7 +420,8 @@ class backend extends Module {
 
 		// prepare parameters
 		$params = array(
-				'sprite' => $this->path.'images/sprite.svg'
+				'sprite'       => $this->path.'images/sprite.svg',
+				'default_icon' => $this->path.'images/system.svg'
 			);
 
 		// render template
@@ -473,7 +474,7 @@ class backend extends Module {
 
 		$params = array();
 
-		$template->register_tag_handler('_module_list', $this, 'tag_ModuleList');
+		$template->register_tag_handler('cms:module_list', $this, 'tag_ModuleList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -938,7 +939,7 @@ class backend extends Module {
 	}
 
 	/**
-	 * Handle tag _module_list used to display list of all modules on the system
+	 * Render module list tag.
 	 *
 	 * @param array $params
 	 * @param array $children
@@ -985,13 +986,10 @@ class backend extends Module {
 									);
 		}
 
-		$template = new TemplateHandler(
-							isset($params['template']) ? $params['template'] : 'module.xml',
-							$this->path.'templates/'
-						);
+		// load template
+		$template = $this->load_template($tag_params, 'module.xml');
 
-		$template->set_mapped_module($this->name);
-
+		// render data
 		foreach($list as $name => $definition) {
 			// locate module icon
 			$icon_file = null;

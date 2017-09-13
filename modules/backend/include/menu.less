@@ -15,15 +15,20 @@ nav#main {
 	flex: 0 0 14rem;
 	background-color: @color_menu;
 	color: @color_bright;
-	transition: flex 1s;
 
-	// minimized main menu
-	&.minimized {
+	// collapsed main menu
+	&.collapsed {
 		flex: 0 0 0rem;
 
 		> a > span,
 		> div > a > span {
 			display: none;
+		}
+
+		// rotate collapse menu icon
+		a.collapse-menu svg {
+			transform: scaleX(-1);
+			html[dir=rtl] & { transform: scaleX(1); }
 		}
 	}
 
@@ -33,21 +38,23 @@ nav#main {
 		border-bottom: 1px solid fade(@color_dark, 25);
 	}
 
-	// generic menu item
-	a {
+	// first level menu items
+	> a,
+	> div > a {
 		display: block;
 		padding: 0.3rem;
 		cursor: default;
 
-		.add-icon-behavior(regular);
+		border-left: @padding_unit / 2 solid transparent;
+		border-right: @padding_unit / 2 solid transparent;
+
+		.add-icon-behavior(dull);
 
 		&:hover {
-			background-color: mix(@color_dark, @color_bright, 10);
-		}
+			border-color: @color_active;
+			color: @color_active;
 
-		html[dir=rtl] & {
-			padding-left: 0;
-			padding-right: @padding_unit;
+			.add-icon-behavior(regular);
 		}
 
 		svg {
@@ -57,19 +64,36 @@ nav#main {
 		}
 	}
 
-	// first level of menu items
-	> a,
-	> div > a {
-		border-right: @padding_unit solid transparent;
+	// separator after system menu
+	> div:first-of-type {
+		// margin-bottom: @padding_unit;
+		// padding-bottom: @padding_unit;
+		border-top: 1px solid lighten(@color_menu, 5);
+		border-bottom: 1px solid lighten(@color_menu, 5);
+	}
 
-		&:hover {
-			color: @color_active;
-			border-color: @color_active;
-		}
+	// sub-menu parent item highlight
+	> div:hover > a {
+		color: @color_active;
+		border-color: @color_active;
+		background-color: transparent;
+
+		.add-icon-behavior(regular);
+	}
+
+	// collapse menu item
+	a.collapse-menu {
+		text-align: right;
 
 		html[dir=rtl] & {
-			padding-left: 0;
-			padding-right: @padding_unit;
+			text-align: left;
+			svg { transform: scaleX(-1); }
+		}
+
+		svg {
+			width: 0.8rem;
+			height: 0.8rem;
+			fill: lighten(@color_menu, 10);
 		}
 	}
 
@@ -83,7 +107,9 @@ nav#main {
 			top: 0;
 			left: 100%;
 			width: 14rem;
+			z-index: 2000;
 
+			border-left: 1px solid @color_bright;
 			background-color: @color_bright;
 			box-shadow: 0px 2px 3px fade(@color_dark, 20);
 
@@ -93,35 +119,62 @@ nav#main {
 			pointer-events: none;
 
 			transform-origin: 0 50%;
-			// transform: perspective(1000px) rotate3d(0, 1, 0, 90deg);
-			transform: scaleX(0);
+			transform: perspective(1000px) rotate3d(0, 1, 0, 90deg);
 			transition: opacity 0.5s, transform 0.5s;
 
 			html[dir=rtl] & {
+				left: auto;
+				right: 100%;
+				border-left: 0;
+				border-right: 1px solid @color_bright;
 				transform-origin: 100% 50%;
+				transform: perspective(1000px) rotate3d(0, 1, 0, -90deg);
 			}
+
+			// sub-menu items
+			> a,
+			> div > a {
+				display: block;
+				padding: 0.3rem;
+				cursor: default;
+
+				.add-icon-behavior(dull);
+
+				&:hover {
+					background-color: @color_active;
+					color: @color_bright;
+
+					.add-icon-behavior(active);
+				}
+
+				svg {
+					width: @icon_size;
+					height: @icon_size;
+					vertical-align: middle;
+				}
+			}
+
+			// sub-menu parent item highlight
+			> div:hover > a {
+				background-color: @color_active;
+				color: @color_bright;
+				.add-icon-behavior(active);
+			}
+
 		}
 
 		// active sub-menu
-		&:hover {
-			background-color: mix(@color_dark, @color_bright, 10);
+		&:hover > nav {
+			opacity: 1;
+			pointer-events: auto;
+			transform: perspective(1000px) rotate3d(0, 0, 0, 90deg);
 
-			> a {
-				color: @color_active;
-				border-color: @color_active;
-			}
-
-			> nav {
-				opacity: 1;
-				pointer-events: auto;
-
-				// transform: perspective(1000px) rotate3d(0, 0, 0, 90deg);
-				transform: scaleX(1);
+			html[dir=rtl] & {
+				transform: perspective(1000px) rotate3d(0, 0, 0, -90deg);
 			}
 		}
 	}
 }
-
 
 /**
  * Windows menu
@@ -131,11 +184,17 @@ nav#window_list {
 
 	a {
 		display: inline-block;
+		margin-right: 2px;
 		background-color: fade(@color_dark, 10);
 		color: @color_dark;
 
 		.container-padding(2);
 		.animation-slide-from-top(0.3);
+
+		html[dir=rtl] & {
+			margin-left: 2px;
+			margin-right: 0;
+		}
 
 		svg, span {
 			display: block;
@@ -145,7 +204,7 @@ nav#window_list {
 			fill: fade(@color_dark, 70);
 		}
 
-		.add-icon-behavior(regular);
+		.add-icon-behavior(dull);
 
 		&.active {
 			background-color: @color_active;

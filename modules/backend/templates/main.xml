@@ -15,6 +15,7 @@
 		<body>
 			<!-- Sprite icons -->
 			<cms:svg file="$params['sprite']" cms:eval="file"/>
+			<cms:svg file="$params['default_icon']" cms:eval="file"/>
 
 			<header>
 				<!-- Logo -->
@@ -52,6 +53,12 @@
 				<cms:user>
 					<!-- Main menu -->
 					<nav id="main">
+						<a
+							onclick="javascript:this.parentNode.classList.toggle('collapsed')"
+							class="collapse-menu"
+							>
+							<svg><use xlink:href="#icon-collapse"/></svg>
+						</a>
 						<cms:menu_items/>
 					</nav>
 				</cms:user>

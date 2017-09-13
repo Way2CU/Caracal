@@ -1,14 +1,10 @@
 /**
  * Window Management System
- *
- * Copyright (c) 2013. by Way2CU
- * Author: Mladen Mijatov
+ * Main System
  *
  * This window management system was designed to be used with Caracal framework
  * administration system and has very little use outside of it. Is you are going
  * to take parts from this file leave credits intact.
- *
- * Requires jQuery 1.4.2+
  *
  * Events available from WindowSystem:
  *  window-open
@@ -25,11 +21,10 @@
  * 		if (affected_window.id == 'login')
  * 			console.log('test');
  * 	}
- *
  */
 
-var Caracal = Caracal || {};
-Caracal.WindowSystem = Caracal.WindowSystem || {};
+var Caracal = Caracal || new Object();
+Caracal.WindowSystem = Caracal.WindowSystem || new Object();
 
 
 /**
@@ -196,24 +191,26 @@ Caracal.WindowSystem.Dialog = function() {
 
 
 /**
- * Window System
+ * Constructur function for window system.
+ *
+ * @param string container    - Query selector for window container
+ * @param string window_list  - Query selector for window list
+ * @param string default_icon - Query selector for default window icon
  */
-Caracal.WindowSystem.System = function(container) {
+Caracal.WindowSystem.System = function(container, window_list, default_icon) {
 	var self = this;  // used internally for events
 
-	self.modal_dialog = null;
-	self.modal_dialog_container = null;
-	self.container = $(container);
-	self.list = [];
-	self.window_list = $('nav#windows');
-	self.container_offset = self.container.offset();
+	self._default_icon = null;
+	self.container = document.querySelector(container);
+	self.window_list = document.querySelector(window_list);
 
+	self.list = [];
 	self.events = null;
 
 	/**
 	 * Finish object initialization.
 	 */
-	self.init = function() {
+	self._init = function() {
 		// create event storage arrays
 		self.events = new Caracal.EventSystem();
 		self.events
@@ -223,19 +220,21 @@ Caracal.WindowSystem.System = function(container) {
  				.register('window-focus-lost')
  				.register('window-content-load')
  				.register('window-before-submit');
+
+ 		// get default icon
+ 		if (default_icon)
+ 			self._default_icon = document.querySelector(default_icon);
 	};
 
 	/**
 	 * Show login window.
 	 */
-	self.showLoginWindow = function() {
-		var base = $('meta[property=base-url]').attr('content');
+	self.open_login_window = function() {
+		var base = document.querySelector('meta[property=base-url]').getAttribute('content');
 
-		self.openWindow(
-			'login_window',
-			350,
+		self.open_window(
+			'login_window', 350,
 			language_handler.getText('backend', 'title_login'),
-			false,
 			base+'/index.php?section=backend&action=login'
 		);
 	};
@@ -246,40 +245,46 @@ Caracal.WindowSystem.System = function(container) {
 	 * @param string id
 	 * @param integer width
 	 * @param string title
-	 * @param boolean can_close
 	 * @param string url
 	 * @return object
 	 */
-	self.openWindow = function(id, width, title, can_close, url, caller) {
-		if (self.windowExists(id)) {
-			// window already exists, reload content and show it
-			var window = self.getWindow(id);
+	self.open_window = function(id, width, title, url, caller) {
+		var result = null;
 
-			window
-				.focus()
-				.loadContent(url);
+		if (self.window_exists(id)) {
+			// window already exists, reload content and show it
+			result = self.get_window(id);
+			result.focus().load_content(url);
 
 		} else {
 			// window does not exist, create it
-			var window = new Caracal.WindowSystem.Window(id, width, title, can_close, url, false);
+			result = new Caracal.WindowSystem.Window(id, width, title, url, false);
 
 			// preconfigure window
-			self.list[id] = window;
-			window.attach(self);
+			self.list[id] = result;
+			result.attach_to_system(self);
 
 			// set window icon
-			var icon = $(caller).find('svg');
-			if (icon.length)
-				window.setIcon(icon[0].outerHTML); else
-				window.setIcon('<svg></svg>');
+			var caller_icon = null;
 
-			// show window
-			window
-				.show(true)
-				.loadContent();
+			// get icon from caller
+			if (caller)
+				var caller_icon = caller.querySelector('svg');
+
+			if (caller_icon) {
+				// set icon same as caller
+				result.set_icon(caller_icon.outerHTML);
+
+			} else if (self._default_icon) {
+				// set system default icon
+				result.set_icon(self._default_icon.outerHTML);
+			}
+
+			// load content after opening the window
+			result.open(true).load_content();
 		}
 
-		return window;
+		return result;
 	};
 
 	/**
@@ -288,9 +293,12 @@ Caracal.WindowSystem.System = function(container) {
 	 * @param string id
 	 * @return boolean
 	 */
-	self.closeWindow = function(id) {
-		if (self.windowExists(id))
-			self.getWindow(id).close();
+	self.close_window = function(id) {
+		if (!self.window_exists(id))
+			return false;
+
+		self.get_window(id).close();
+		return true;
 	};
 
 	/**
@@ -298,7 +306,7 @@ Caracal.WindowSystem.System = function(container) {
 	 *
 	 * @param object window
 	 */
-	self.removeWindow = function(window) {
+	self.remove_window = function(window) {
 		delete self.list[window.id];
 	};
 
@@ -307,10 +315,14 @@ Caracal.WindowSystem.System = function(container) {
 	 *
 	 * @param string id
 	 * @param string url
+	 * @return boolean
 	 */
-	self.loadWindowContent = function(id, url) {
-		if (self.windowExists(id))
-			self.getWindow(id).loadContent(url);
+	self.load_window_content = function(id, url) {
+		if (!self.window_exists(id))
+			return false;
+
+		self.get_window(id).load_content(url);
+		return true;
 	};
 
 	/**
@@ -318,22 +330,27 @@ Caracal.WindowSystem.System = function(container) {
 	 *
 	 * @param string id
 	 */
-	self.focusWindow = function(id) {
-		if (self.windowExists(id))
-			for (var window_id in self.list)
-				if (window_id != id)
-					self.list[window_id].loseFocus(); else
-					self.list[window_id].gainFocus();
+	self.focus_window = function(id) {
+		if (!self.window_exists(id))
+			return;
+
+		for (var index in self.list) {
+			var current_window = self.list[index];
+
+			if (current_window.id != id)
+				current_window.lose_focus(); else
+				current_window.gain_focus();
+		}
 	};
 
 	/**
 	 * Focuses top level window.
 	 */
-	self.focusTopWindow = function() {
-		var highest_id = self.getTopWindowId();
+	self.focus_top_window = function() {
+		var top_window = self.get_top_window();
 
-		if (highest_id != null)
-			self.focusWindow(highest_id);
+		if (top_window)
+			self.focus_window(top_window.id);
 	};
 
 	/**
@@ -342,7 +359,7 @@ Caracal.WindowSystem.System = function(container) {
 	 * @param string id
 	 * @return object
 	 */
-	self.getWindow = function(id) {
+	self.get_window = function(id) {
 		return self.list[id];
 	};
 
@@ -351,26 +368,17 @@ Caracal.WindowSystem.System = function(container) {
 	 *
 	 * @return object
 	 */
-	self.getTopWindow = function() {
-		return self.getWindow(self.getTopWindowId());
-	};
+	self.get_top_window = function() {
+		var result = null;
 
-	/**
-	 * Get top window id.
-	 *
-	 * @return string
-	 */
-	self.getTopWindowId = function() {
-		var highest_id = null;
-		var highest_index = 0;
+		for (var index in self.list) {
+			var current_window = self.list[index];
 
-		for (var window_id in self.list)
-			if (self.list[window_id].stack_position > highest_index) {
-				highest_id = self.list[window_id].id;
-				highest_index = self.list[window_id].stack_position;
-			}
+			if (result == null || current_window.stack_position > result.stack_position)
+				result = current_window;
+		}
 
-		return highest_id;
+		return result;
 	};
 
 	/**
@@ -379,48 +387,23 @@ Caracal.WindowSystem.System = function(container) {
 	 * @param string id
 	 * @return boolean
 	 */
-	self.windowExists = function(id) {
+	self.window_exists = function(id) {
 		return id in self.list;
 	};
 
-	/**
-	 * Block backend, show modal dialog and return container.
-	 *
-	 * @return jquery object
-	 */
-	self.showModalDialog = function() {
-		self.modal_dialog_container.css({
-						top: Math.round(($(document).height() - self.modal_dialog_container.height()) / 2),
-						left: Math.round(($(document).width() - self.modal_dialog_container.width()) / 2)
-					});
-
-		self.modal_dialog
-					.css({
-						opacity: 0,
-						display: 'block'
-					})
-					.animate({opacity: 1}, 500);
-	};
-
-	/**
-	 * Hide modal dialog and clear its content.
-	 */
-	self.hideModalDialog = function() {
-		self.modal_dialog.animate({opacity: 0}, 500, function() {
-			$(this).css('display', 'none');
-			self.modal_dialog_container.html('');
-		});
-	};
-
 	// finish object initialization
-	self.init();
+	self._init();
 };
 
 
 $(function() {
-	Caracal.window_system = new Caracal.WindowSystem.System('div#container');
+	Caracal.window_system = new Caracal.WindowSystem.System(
+			'div#container',
+			'nav#window_list',
+			'svg:nth-child(2)'
+		);
 
 	// show login window is menu is not present
 	if (document.querySelector('nav#main') == null)
-		Caracal.window_system.showLoginWindow();
+		Caracal.window_system.open_login_window();
 });

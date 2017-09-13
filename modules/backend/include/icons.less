@@ -6,6 +6,14 @@
  * Author: Mladen Mijatov
  */
 
+// unfocused color
+.add-icon-behavior(dull) {
+	svg .fill-bright { fill: @color_bright; }
+	svg .fill-active { fill: @color_dull; }
+	svg .stroke-bright { stroke: @color_bright; }
+	svg .stroke-active { stroke: @color_dull; }
+}
+
 // regular icon classes
 .add-icon-behavior(regular) {
 	svg .fill-bright { fill: @color_bright; }

@@ -9,9 +9,6 @@
  *
  * This class will check for access rights for currently
  * logged in user before transfering control to specified module.
- *
- * Copyright © 2015 Way2CU. All Rights Reserved.
- * Author: Mladen Mijatov
  */
 
 namespace Core;
@@ -47,7 +44,7 @@ class Action {
 	 *
 	 * @param string $name;
 	 */
-	public function setSubaction($name) {
+	public function set_subaction($name) {
 		$this->sub_action = $name;
 	}
 
@@ -56,7 +53,7 @@ class Action {
 	 *
 	 * @return boolean
 	 */
-	public function hasPermission() {
+	public function has_permission() {
 		$result = false;
 
 		return $result;
@@ -67,7 +64,7 @@ class Action {
 	 *
 	 * @return string/array
 	 */
-	public function getCallable() {
+	public function get_callable() {
 		return $this->callable;
 	}
 
@@ -76,7 +73,10 @@ class Action {
 	 *
 	 * @return string
 	 */
-	public function getURL() {
+	public function get_url() {
+		if (!$this->has_permission())
+			return '';
+
 		$params = array(
 				'transfer_control',  // action
 				'backend_module',  // section

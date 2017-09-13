@@ -31,20 +31,25 @@ body {
 	font-family: generic;
 	font-weight: 400;
 	font-style: normal;
-}
 
-body > section {
-	display: flex;
-	height: calc(~'100vh - ' @header_unit + (4 * @padding_unit));
-	flex-flow: row;
-	align-items: stretch;
-}
+	// hide sprite and default window icon
+	> svg {
+		display: none;
+	}
 
-div#container {
-	flex: 1 0 auto;
+	> section {
+		display: flex;
+		height: calc(~'100vh - ' @header_unit + (4 * @padding_unit));
+		flex-flow: row;
+		align-items: stretch;
+	}
 
-	background-image: url(../images/background.svg);
-	background-size: 50% auto;
-	background-position: center;
-	background-repeat: no-repeat;
+	div#container {
+		flex: 1 0 auto;
+
+		background-image: url(../images/background.svg);
+		background-size: 50% auto;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
 }
