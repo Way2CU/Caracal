@@ -232,6 +232,30 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 		// set new window content
 		self.ui.content.innerHTML = data;
 
+		// find and execute all the scripts in newly loaded content
+		var scripts = self.ui.content.querySelectorAll('script');
+
+		if (scripts != null) {
+			for (var i=0, count=scripts.length; i<count; i++) {
+				var inactive_script = scripts[i];
+				var new_script = document.createElement('script');
+
+				// configure new script
+				new_script.type = inactive_script.type;
+				new_script.async = inactive_script.async;
+				if (inactive_script.src)
+					new_script.src = inactive_script.src;
+
+				var code = document.createTextNode(inactive_script.textContent);
+				new_script.appendChild(code);
+
+				// add new script and remove inactive one
+				var parent = inactive_script.parentNode;
+				parent.insertBefore(new_script, inactive_script);
+				parent.removeChild(inactive_script);
+			}
+		}
+
 		var top_position = start_position + Math.floor((start_height - self.ui.content.offsetHeight) / 2);
 
 		// animate
