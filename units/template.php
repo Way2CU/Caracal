@@ -680,7 +680,14 @@ class TemplateHandler {
 
 				// support for script tag
 				case 'cms:script':
-					if (ModuleHandler::is_loaded('head_tag')) {
+					if (isset($tag->tagAttrs['local'])) {
+						// include local module script
+						$script = fix_chars($tag->tagAttrs['local']);
+						$path = URL::from_file_path($this->module->path.'include/'.$script);
+						echo '<script type="text/javascript" src="'.$path.'"/>';
+
+					} else if (ModuleHandler::is_loaded('head_tag')) {
+						// treat script as generic page script and pass it on to head tag
 						$head_tag = head_tag::get_instance();
 						$head_tag->addTag('script', $tag->tagAttrs);
 					}
@@ -751,11 +758,6 @@ class TemplateHandler {
 						}
 					}
 
-					break;
-
-				// support for automated testing
-				case 'cms:test':
-					// TODO: Link to autotesting class.
 					break;
 
 				// force flush on common elements
