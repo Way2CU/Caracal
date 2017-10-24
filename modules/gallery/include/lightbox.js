@@ -13,7 +13,7 @@ var Caracal = Caracal || new Object();
 Caracal.Gallery = Caracal.Gallery || new Object();
 
 
-Caracal.Gallery.Lightbox = function() {
+Caracal.Gallery.LightBox = function() {
 	var self = this;
 
 	self.is_rtl = document.querySelector('html').getAttribute('dir') == 'rtl';

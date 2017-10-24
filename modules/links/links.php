@@ -1111,7 +1111,7 @@ class links extends Module {
 
 				if (!empty($image_id)) {
 					$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
-					$thumbnail = $gallery->getThumbnailURL($image);
+					$thumbnail = $gallery->get_image($image);
 				}
 			}
 		}
@@ -1182,7 +1182,7 @@ class links extends Module {
 
 					if (!empty($image_id)) {
 						$image = $gallery_manager->get_single_item($gallery_manager->get_field_names(), array('id' => $image_id));
-						$thumbnail = $gallery->getThumbnailURL($image);
+						$thumbnail = $gallery->get_image($image);
 					}
 				}
 			}
