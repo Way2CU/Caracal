@@ -51,10 +51,18 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 			self.ui.controls.push(control);
 		}
 
-		// collect language data associated with fields
+		// create data storage for each field
 		self.data.initial = new Object();
 		self.data.current = new Object();
 
+		for (var i=0, count=self.fields.length; i<count; i++) {
+			var field = self.fields[i];
+
+			self.data.initial[field.name] = new Object();
+			self.data.current[field.name] = new Object();
+		}
+
+		// collect language data associated with fields
 		var data_tags = self.ui.window.ui.content.querySelectorAll('language-data');
 
 		for (var i=0, count=data_tags.length; i<count; i++) {
@@ -130,6 +138,7 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		if (self.language == new_language)
 			return;
 
+		console.log(new_language, self.language);
 		var new_language_is_rtl = language_handler.isRTL(new_language);
 
 		// highlight active control
