@@ -6,6 +6,39 @@
  * Author: Mladen Mijatov
  */
 
+// main window menu
+div.window > nav {
+	display: block;
+	padding: 0.3rem;
+	min-height: 1.6rem;
+
+	background-color: mix(@color_dull, @color_bright, 10);
+	line-height: 1;
+
+	// hide empty menu
+	&:empty {
+		display: none;
+	}
+
+	div.language-selector {
+		float: right;
+
+		html[dir=rtl] & {
+			float: left;
+		}
+
+		a {
+			display: inline-block;
+			padding: 0.3rem;
+			cursor: default;
+
+			&.active {
+				color: @color_active;
+			}
+		}
+	}
+}
+
 div.window div.content div.main_menu {
 	.deprecated();
 	z-index: 1;
