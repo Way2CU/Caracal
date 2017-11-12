@@ -1,6 +1,5 @@
 /**
  * Window Management System
- * Main System
  *
  * This window management system was designed to be used with Caracal framework
  * administration system and has very little use outside of it. Is you are going
