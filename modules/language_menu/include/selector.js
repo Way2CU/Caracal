@@ -29,11 +29,11 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 
 		// create button container and configure it
 		self.ui.container = document.createElement('div');
-		self.ui.container.classes.add('language-selector');
+		self.ui.container.classList.add('language-selector');
 		self.ui.window.ui.window_menu.append(self.ui.container);
 
 		// find fields to integrate with
-		self.fields = self.ui.window.ui.content.find('input.multi-language, textarea.multi-language');
+		self.fields = self.ui.window.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
 
 		// create language controls
 		var default_language = null;
@@ -137,8 +137,8 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 			var control = self.ui.controls[i];
 
 			if (control.dataset.short == new_language)
-				control.classes.add('active'); else
-				control.classes.remove('active');
+				control.classList.add('active'); else
+				control.classList.remove('active');
 		}
 
 		// change input field values
