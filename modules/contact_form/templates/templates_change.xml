@@ -63,7 +63,6 @@
 	</form>
 
 	<script type="text/javascript">
-		new LanguageSelector('contact_form_template_change');
 		var converter = new Showdown.converter();
 
 		// create notebook

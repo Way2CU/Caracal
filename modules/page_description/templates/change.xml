@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="page_description_change">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
 			<span><cms:text constant="label_url" module="page_description"/></span>
@@ -46,7 +46,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('page_description_change');
-	</script>
 </document>

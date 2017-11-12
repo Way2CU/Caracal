@@ -397,7 +397,6 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		var selector = new LanguageSelector('shop_item_change_form');
 		var notebook = new Notebook('shop_change_item_notebook');
 
 		// get language constants

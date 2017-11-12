@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="group_create_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_text_id" module="youtube"/></span>
 			<input type="text" name="text_id" class="code" style="width: 200px;" maxlength="32"/>
@@ -30,7 +30,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('group_create_form');
-	</script>
 </document>

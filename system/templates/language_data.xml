@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../schema/template.dtd">
 <document>
-	<data
+	<language-data
 		field="$params['param']"
 		language="$params['language']"
-		style="display: none;"
 		cms:eval="field,language"
-	>
+		>
 		<cms:var name="$params['data']"/>
-	</data>
+	</language-data>
 </document>

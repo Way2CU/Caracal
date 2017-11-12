@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_fields_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div>
 			<label class="horizontal">
 				<span><cms:text constant="label_name" module="contact_form"/></span>
@@ -82,8 +82,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		new LanguageSelector('contact_form_fields_add_form');
-	</script>
 </document>

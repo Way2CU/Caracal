@@ -4,7 +4,6 @@
 		action="$params['form_action']"
 		cms:eval="action"
 		method="POST"
-		id="shop_coupon_add_form"
 		>
 		<!-- General page -->
 		<label>
@@ -79,8 +78,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript" charset="utf-8">
-		var selector = new LanguageSelector('shop_coupon_add_form');
-	</script>
 </document>

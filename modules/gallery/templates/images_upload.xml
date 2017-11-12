@@ -46,8 +46,6 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('image_upload_form');
-
 		// create toolbar
 		toolbar_api
 				.createToolbar('image_upload_form', '[name=description]:input')

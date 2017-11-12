@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="downloads_upload_form" enctype="multipart/form-data">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_name" module="downloads"/></span>
 			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="100"/>
@@ -29,7 +29,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('downloads_upload_form');
-	</script>
 </document>

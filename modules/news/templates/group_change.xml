@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_group_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
 			<span><cms:text constant="label_text_id" module="news"/></span>
@@ -25,8 +25,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		new LanguageSelector('news_group_change_form');
-	</script>
 </document>

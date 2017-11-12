@@ -183,8 +183,6 @@
 	</form>
 
 	<script type="text/javascript">
-		new LanguageSelector('contact_form_edit');
-
 		// create notebook
 		var notebook = new Notebook('contact_form_edit_notebook');
 		notebook

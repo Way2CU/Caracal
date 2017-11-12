@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_delivery_method_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_name" module="shop"/></span>
 			<input class="multi-language" type="text" name="name" style="width: 270px;" maxlength="50"/>
@@ -19,7 +19,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		var selector = new LanguageSelector('shop_delivery_method_add_form');
-	</script>
 </document>

@@ -56,7 +56,6 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('article_add_form');
 		var converter = new Showdown.converter();
 
 		// create toolbar

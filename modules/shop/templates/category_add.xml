@@ -55,8 +55,6 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('shop_category_add_form');
-
 		// create toolbar
 		toolbar_api
 				.createToolbar('shop_category_add_form', '[name=description]:input')

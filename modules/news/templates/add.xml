@@ -27,8 +27,6 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('news_add_form');
-
 		// create toolbar
 		toolbar_api
 				.createToolbar('news_add_form', '[name=content]:input')

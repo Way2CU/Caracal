@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="downloads_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_name" module="downloads"/></span>
@@ -37,7 +37,4 @@
 			<button type="submit"><cms:text constant="save"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('downloads_change_form');
-	</script>
 </document>
