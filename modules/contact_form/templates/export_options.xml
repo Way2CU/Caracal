@@ -2,8 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" target="contact_form_export_target">
-		<div style="margin-bottom: 10px;" id="contact_form_export_notebook">
-			<div>
+		<div style="margin-bottom: 10px;" class="notebook">
+			<!-- Export fields tab -->
+			<div class="page" data-title="tab_export_fields" cms:constant="data-title">
 				<div class="scrollable_list">
 					<div class="list_header">
 						<span class="column" style="width: 150px;">
@@ -30,7 +31,8 @@
 				</div>
 			</div>
 
-			<div>
+			<!-- Export options tab -->
+			<div class="page" data-title="tab_export_options" cms:constant="data-title">
 				<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>
 				<label>
 					<span><cms:text constant="label_export_filename" module="contact_form"/></span>
@@ -96,12 +98,4 @@
 	</form>
 
 	<iframe name="contact_form_export_target" class="target"/>
-
-	<script type="text/javascript">
-		// create notebook
-		var notebook = new Notebook('contact_form_export_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_export_fields'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_export_options'));
-	</script>
 </document>

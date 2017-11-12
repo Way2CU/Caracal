@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div id="shop_settings_notebook">
+		<div class="notebook">
 			<!-- General settings -->
-			<div>
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label class="checkbox">
 					<input
 						type="checkbox"
@@ -59,7 +59,7 @@
 			</div>
 
 			<!-- Email templates -->
-			<div>
+			<div class="page" data-title="tab_email_templates" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_regular_template" module="shop"/></span>
 					<select name="regular_template" style="width: 300px">
@@ -113,11 +113,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		var notebook = new Notebook('shop_settings_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('shop', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('shop', 'tab_email_templates'));
-	</script>
 </document>

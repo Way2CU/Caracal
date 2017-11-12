@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div id="tranzila_settings_notebook">
+		<div class="notebook">
 			<!-- Terminal page -->
-			<div>
+			<div class="page" data-title="tab_terminal" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_terminal" module="tranzila"/></span>
 					<input
@@ -50,7 +50,7 @@
 			</div>
 
 			<!-- URLs page -->
-			<div>
+			<div class="page" data-title="tab_urls" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
 					<input
@@ -81,12 +81,4 @@
 			<button type="submit"><cms:text constant="save"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript" charset="utf-8">
-		// create notebook
-		var notebook = new Notebook('tranzila_settings_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('tranzila', 'tab_terminal'))
-			.setPageTitle(1, language_handler.getText('tranzila', 'tab_urls'));
-	</script>
 </document>

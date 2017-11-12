@@ -2,8 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div id="page_info_notebook">
-			<div>
+		<div class="notebook">
+			<!-- Google Analytics tab -->
+			<div class="page" data-title="tab_google_analytics" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_analytics" module="page_info"/></span>
 					<input type="text" name="analytics" value="$settings['analytics']" cms:eval="value"/>
@@ -20,7 +21,8 @@
 				</label>
 			</div>
 
-			<div>
+			<!-- Google Webmasters Tools tab -->
+			<div class="page" data-title="tab_google_webmasters_tools" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_wm_tools" module="page_info"/></span>
 					<input type="text" name="wm_tools" value="$settings['wm_tools']" cms:eval="value" style="width: 350px;"/>
@@ -54,13 +56,5 @@
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
-
-		<script type="text/javascript">
-			// create notebook
-			var notebook = new Notebook('page_info_notebook');
-			notebook
-				.setPageTitle(0, language_handler.getText('page_info', 'tab_google_analytics'))
-				.setPageTitle(1, language_handler.getText('page_info', 'tab_google_webmasters_tools'));
-		</script>
 	</form>
 </document>

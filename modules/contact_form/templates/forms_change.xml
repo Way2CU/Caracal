@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_edit">
-		<div id="contact_form_edit_notebook">
+		<div class="notebook">
 			<!-- General options -->
-			<div>
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label cms:tooltip="tooltip_text_id">
 					<span><cms:text constant="label_text_id" module="contact_form"/></span>
 					<input
@@ -31,7 +31,7 @@
 			</div>
 
 			<!-- Submission options -->
-			<div>
+			<div class="page" data-title="tab_submission" cms:constant="data-title">
 				<label cms:tooltip="tooltip_action">
 					<span><cms:text constant="label_action" module="contact_form"/></span>
 					<input
@@ -98,7 +98,7 @@
 			</div>
 
 			<!-- Mailer selection -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_mailers" cms:constant="data-title">
 				<div class="list_header">
 					<span class="column">
 						<cms:text constant="column_mailer" module="contact_form"/>
@@ -115,7 +115,7 @@
 			</div>
 
 			<!-- Appearance options -->
-			<div>
+			<div class="page" data-title="tab_appearance" cms:constant="data-title">
 				<fieldset>
 					<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
 					<label class="checkbox">
@@ -151,7 +151,7 @@
 			</div>
 
 			<!-- Accepted domains -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_domains" cms:constant="data-title">
 				<label class="inline">
 					<span><cms:text constant="label_domain" module="contact_form"/></span>
 					<input name="domain" type="text"/>
@@ -183,15 +183,6 @@
 	</form>
 
 	<script type="text/javascript">
-		// create notebook
-		var notebook = new Notebook('contact_form_edit_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_mailers'))
-			.setPageTitle(3, language_handler.getText('contact_form', 'tab_appearance'))
-			.setPageTitle(4, language_handler.getText('contact_form', 'tab_domains'));
-
 		// connect list item options
 		$('#contact_form_domain_list a').click(ContactForm.remove_domain);
 	</script>

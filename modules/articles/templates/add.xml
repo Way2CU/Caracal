@@ -2,8 +2,8 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="article_add_form">
-		<div id="article_write_notebook">
-			<div>
+		<div class="notebook">
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_text_id" module="articles"/></span>
 					<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
@@ -34,7 +34,9 @@
 					<span><cms:text constant="label_visible" module="articles"/></span>
 				</label>
 			</div>
-			<div>
+
+			<!-- Content -->
+			<div class="page" data-title="tab_content" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_content" module="articles"/></span>
 					<textarea
@@ -46,7 +48,9 @@
 						/>
 				</label>
 			</div>
-			<div>
+
+			<!-- Preview -->
+			<div class="page" data-title="tab_preview" cms:constant="data-title">
 				<div class="markdown_preview" id="article_preview"/>
 			</div>
 		</div>
@@ -64,13 +68,6 @@
 				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image')
 				.addControl('downloads', 'link');
-
-		// create notebook
-		var notebook = new Notebook('article_write_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('articles', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('articles', 'tab_content'))
-			.setPageTitle(2, language_handler.getText('articles', 'tab_preview'));
 
 		// update preview on blur
 		$('div#article_write_notebook textarea[name=content]').blur(function() {

@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_add">
-		<div id="contact_form_add_notebook">
+		<div class="notebook">
 			<!-- General options -->
-			<div>
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label cms:tooltip="tooltip_text_id">
 					<span><cms:text constant="label_text_id" module="contact_form"/></span>
 					<input name="text_id" class="code" type="text" maxlength="32"/>
@@ -24,7 +24,7 @@
 			</div>
 
 			<!-- Submission options -->
-			<div>
+			<div class="page" data-title="tab_submission" cms:constant="data-title">
 				<label cms:tooltip="tooltip_action">
 					<span><cms:text constant="label_action" module="contact_form"/></span>
 					<input name="action" class="code" type="text" maxlength="255" style="width: 350px;;"/>
@@ -50,7 +50,7 @@
 			</div>
 
 			<!-- Mailer selection -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_mailers" cms:constant="data-title">
 				<div class="list_header">
 					<span class="column">
 						<cms:text constant="column_mailer" module="contact_form"/>
@@ -65,7 +65,7 @@
 			</div>
 
 			<!-- Appearance options -->
-			<div>
+			<div class="page" data-title="tab_appearance" cms:constant="data-title">
 				<fieldset>
 					<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
 					<label class="checkbox">
@@ -86,7 +86,7 @@
 			</div>
 
 			<!-- Accepted domains -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_domains" cms:constant="data-title">
 				<label class="inline">
 					<span><cms:text constant="label_domain" module="contact_form"/></span>
 					<input name="domain" type="text"/>
@@ -114,15 +114,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		// create notebook
-		var notebook = new Notebook('contact_form_add_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_mailers'))
-			.setPageTitle(3, language_handler.getText('contact_form', 'tab_appearance'))
-			.setPageTitle(4, language_handler.getText('contact_form', 'tab_domains'));
-	</script>
 </document>

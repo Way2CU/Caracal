@@ -8,8 +8,8 @@
 			value="$params['file_name']"
 			cms:eval="value"
 			/>
-		<div id="system_import_options_notebook">
-			<div>
+		<div class="notebook">
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_encryption_key" module="backend"/></span>
 					<input
@@ -30,7 +30,7 @@
 			</div>
 
 			<!-- Modules tab -->
-			<div class="scrollable_list modules">
+			<div class="scrollable_list modules page" data-title="tab_modules" cms:constant="data-title">
 				<!-- Header -->
 				<div class="list_header">
 					<span class="column" style="width: 170px;">
@@ -54,7 +54,7 @@
 			</div>
 
 			<!-- Options tab -->
-			<div>
+			<div class="page" data-title="tab_options" cms:constant="data-title">
 				<label class="checkbox">
 					<input
 						type="checkbox"
@@ -69,13 +69,4 @@
 			<button type="submit"><cms:text constant="import"/></button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		// create notebook
-		var notebook = new Notebook('system_import_options_notebook');
-		notebook
-		.setPageTitle(0, language_handler.getText('backend', 'tab_general'))
-		.setPageTitle(1, language_handler.getText('backend', 'tab_modules'))
-		.setPageTitle(2, language_handler.getText('backend', 'tab_options'));
-	</script>
 </document>
