@@ -15,7 +15,6 @@ class collection extends Module {
 	private static $_instance;
 
 	// internal scripts
-	const NOTEBOOK = 1;
 	const TOOLBAR = 2;
 	const ANIMATION_CHAIN = 3;
 	const DIALOG = 4;
@@ -41,7 +40,6 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::NOTEBOOK             => array('notebook.js', 'notebook.css'),
 				collection::TOOLBAR              => 'toolbar.js',
 				collection::ANIMATION_CHAIN      => 'animation_chain.js',
 				collection::DIALOG               => array('dialog.js', 'dialog.css'),
@@ -63,7 +61,6 @@ class collection extends Module {
 			);
 
 	private $script_names = array(
-				'notebook'             => collection::NOTEBOOK,
 				'toolbar'              => collection::TOOLBAR,
 				'animation_chain'      => collection::ANIMATION_CHAIN,
 				'dialog'               => collection::DIALOG,

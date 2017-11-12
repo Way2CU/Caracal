@@ -9,8 +9,7 @@
 // main window menu
 div.window > nav {
 	display: block;
-	padding: 0.3rem;
-	min-height: 1.6rem;
+	min-height: 2.4rem;
 
 	background-color: mix(@color_dull, @color_bright, 10);
 	line-height: 1;
@@ -29,15 +28,34 @@ div.window > nav {
 
 		a {
 			display: inline-block;
-			padding: 0.3rem;
+			padding: 0.7rem;
 			cursor: default;
+			transition: all 0.3s;
 
 			&.active {
 				color: @color_active;
 			}
 		}
 	}
+
+	div.notebook-controls {
+		a {
+			display: inline-block;
+			padding: 0.7rem 1rem;
+			padding-bottom: 0.6rem;
+
+			border-bottom: 0.1rem solid transparent;
+			cursor: default;
+			transition: all 0.3s;
+
+			&.active {
+				color: @color_active;
+				border-bottom-color: @color_active;
+			}
+		}
+	}
 }
+
 
 div.window div.content div.main_menu {
 	.deprecated();

@@ -71,7 +71,6 @@ class backend extends Module {
 			$collection->includeScript(collection::JQUERY);
 			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
 			$collection->includeScript(collection::JQUERY_EXTENSIONS);
-			$collection->includeScript(collection::NOTEBOOK);
 			$collection->includeScript(collection::SHOWDOWN);
 			$collection->includeScript(collection::TOOLBAR);
 
@@ -390,6 +389,10 @@ class backend extends Module {
 			));
 		$head_tag->addTag('script', array(
 				'src'  => URL::from_file_path($this->path.'include/window_system.js'),
+				'type' => 'text/javascript'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/notebook.js'),
 				'type' => 'text/javascript'
 			));
 		$head_tag->addTag('script', array(

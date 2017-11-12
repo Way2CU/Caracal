@@ -86,8 +86,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 
 		self.ui.title_bar.append(self.ui.close_button);
 
-		// empty placeholder for language selector
+		// empty placeholders
 		self.ui.language_selector = null;
+		self.ui.notebook = null;
 	};
 
 	/**
@@ -263,6 +264,10 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 		var fields = self.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
 		if (fields.length > 0)
 			self.ui.language_selector = new Caracal.WindowSystem.LanguageSelector(self);
+
+		// check if form requires notebook
+		if (self.ui.content.querySelectorAll('div.notebook').length > 0)
+			self.ui.notebook = new Caracal.WindowSystem.Notebook(self);
 
 		// animate
 		var top_position = start_position + Math.floor((start_height - self.ui.content.offsetHeight) / 2);
