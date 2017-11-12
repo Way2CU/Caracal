@@ -66,14 +66,14 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 		self.ui.title.innerHTML = title;
 		self.ui.title_bar.append(self.ui.title);
 
-		var window_container = document.createElement('div');
-		window_container.classList.add('container');
-		self.ui.container.append(window_container);
+		// window menu
+		self.ui.window_menu = document.createElement('nav');
+		self.ui.container.append(self.ui.window_menu);
 
 		// window content
 		self.ui.content = document.createElement('div');
 		self.ui.content.classList.add('content')
-		window_container.append(self.ui.content);
+		self.ui.container.append(self.ui.content);
 
 		// add close button if needed
 		self.ui.close_button = document.createElement('a');
@@ -85,6 +85,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 		}
 
 		self.ui.title_bar.append(self.ui.close_button);
+
+		// empty placeholder for language selector
+		self.ui.language_selector = null;
 	};
 
 	/**
@@ -256,9 +259,13 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 			}
 		}
 
-		var top_position = start_position + Math.floor((start_height - self.ui.content.offsetHeight) / 2);
+		// check if form contains multi-language fields
+		var fields = self.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
+		if (fields.length > 0)
+			self.ui.language_selector = new Caracal.WindowSystem.LanguageSelector(self);
 
 		// animate
+		var top_position = start_position + Math.floor((start_height - self.ui.content.offsetHeight) / 2);
 		self.ui.container.style.top = top_position;
 		self.ui.container.classList.add('loaded');
 
@@ -453,8 +460,9 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 
 				if (field.classList.contains('multi-language')) {
 					// multi-language input field, we need to gather other data
-					for (var language in field.dataset.language)
-						data[name + '_' + language] = encodeURIComponent(field.dataset.language[language]);
+					var language_data = self.ui.language_selector.data.current[field.name];
+					for (var language in language_data)
+						data[name + '_' + language] = encodeURIComponent(language_data[language]);
 
 				} else {
 					if (type == 'checkbox') {
