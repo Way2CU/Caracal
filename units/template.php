@@ -232,11 +232,11 @@ class TemplateHandler {
 		global $section, $action, $language, $template_path, $system_template_path,
 			$images_path, $cache_method, $document_types;
 
-		// turn on custom error hanlder
-		set_error_handler(array($this, 'handle_error'));
-
 		if ((!$this->active) && is_null($tags))
 			return;
+
+		// turn on custom error hanlder
+		set_error_handler(array($this, 'handle_error'));
 
 		// take the tag list for parsing
 		$tag_array = array();
