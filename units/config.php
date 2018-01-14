@@ -56,6 +56,7 @@ $content_security_policy = 'script-src \'self\'';
 // head tag
 $include_styles = false;
 $optimize_code = false;
+$accepted_style_namespaces = array();
 
 // various
 $url_rewrite = false;
