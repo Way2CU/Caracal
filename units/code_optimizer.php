@@ -6,12 +6,6 @@
  *
  * There's no need to use this class manually as both template handler and head tag
  * module will automatically use this class if configured.
- *
- *
- * When optimizing CSS/LESS code, Caracal supports optional namespaces specified
- * through dedicated request header `Caracal-Style-Namespace`. Value for this
- * header must be in global list of accepted namespaces configured
- * through `config.php` file.
  */
 
 require_once(_LIBPATH.'less/lib/Less/Autoloader.php');
@@ -65,37 +59,14 @@ class CodeOptimizer {
 	}
 
 	/**
-	 * Generate name based on list of URLs and optionally style namespace if
-	 * specified through request header and supported by the system.
+	 * Generate name based on list of URL's
 	 *
 	 * @param array $list
-	 * @param boolean $is_style
 	 * @return string
 	 */
-	private function get_cached_name($list, $is_style=false) {
+	private function get_cached_name($list) {
 		$all_files = implode($list);
-
-		if ($is_style)
-			$all_files .= $this->get_style_namespace();
-
 		return md5($all_files);
-	}
-
-	/**
-	 * Check if custom namespace for code optimizer was specified and return
-	 * its value. Otherwise returns empty string.
-	 *
-	 * @return string/null
-	 */
-	private function get_style_namespace() {
-		global $accepted_style_namespaces;
-
-		$result = null;
-
-		if (isset($_SERVER['HTTP_CARACAL_STYLE_NAMESPACE']) && in_array($_SERVER['HTTP_CARACAL_STYLE_NAMESPACE'], $accepted_style_namespaces))
-			$result = $_SERVER['HTTP_CARACAL_STYLE_NAMESPACE'];
-
-		return $result;
 	}
 
 	/**
@@ -143,15 +114,9 @@ class CodeOptimizer {
 
 		switch ($extension) {
 			case 'less':
-				// include namespace if specified
-				$namespace = $this->get_style_namespace();
-
 				// compile files
 				try {
-					if (empty($namespace))
-						$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path); else
-						$this->less_compiler->parse($namespace.'{@import \''.basename($file_name).'\';', $file_name);
-
+					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
@@ -253,7 +218,7 @@ class CodeOptimizer {
 		$priority_commands = array();
 
 		// gather data
-		foreach ($list as $original_file) {
+		foreach($list as $original_file) {
 			$file_result = $this->include_style($original_file, $priority_commands);
 			$result = array_merge($result, $file_result);
 		}
@@ -351,7 +316,7 @@ class CodeOptimizer {
 		global $cache_path, $include_styles;
 
 		// compile styles if needed
-		$style_cache = $cache_path.$this->get_cached_name($this->style_list, true).'.css';
+		$style_cache = $cache_path.$this->get_cached_name($this->style_list).'.css';
 		if ($this->needs_recompile($style_cache, $this->style_list))
 			$this->recompile_styles($style_cache, $this->style_list);
 
