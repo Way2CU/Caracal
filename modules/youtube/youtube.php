@@ -29,14 +29,14 @@ class youtube extends Module {
 
 			$youtube_menu = new backend_MenuItem(
 								$this->get_language_constant('menu_youtube'),
-								URL::from_file_path($this->path.'images/icon.svg'),
+								$this->path.'images/icon.svg',
 								'javascript:void(0);',
 								$level=5
 							);
 
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_video_list'),
-								URL::from_file_path($this->path.'images/list.svg'),
+								$this->path.'images/list.svg',
 								window_Open( // on click open window
 											$this->name.'_video_list',
 											650,
@@ -49,7 +49,7 @@ class youtube extends Module {
 
 			$youtube_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_video_groups'),
-								URL::from_file_path($this->path.'images/groups.svg'),
+								$this->path.'images/groups.svg',
 								window_Open( // on click open window
 											$this->name.'_group_list',
 											570,
@@ -324,7 +324,6 @@ class youtube extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
-					'cancel_action'	=> window_Close($this->name.'_video_add')
 				);
 
 		$template->restore_xml();
@@ -350,7 +349,6 @@ class youtube extends Module {
 					'video_id'		=> unfix_chars($video->video_id),
 					'title'			=> unfix_chars($video->title),
 					'form_action'	=> backend_UrlMake($this->name, 'video_save'),
-					'cancel_action'	=> window_Close($this->name.'_video_change')
 				);
 
 		$template->restore_xml();
@@ -530,7 +528,6 @@ class youtube extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'group_save'),
-					'cancel_action'	=> window_Close($this->name.'_group_create')
 				);
 
 		$template->restore_xml();
@@ -557,7 +554,6 @@ class youtube extends Module {
 					'description'	=> $group->description,
 					'visible'		=> $group->visible,
 					'form_action'	=> backend_UrlMake($this->name, 'group_save'),
-					'cancel_action'	=> window_Close($this->name.'_group_change')
 				);
 
 		$template->restore_xml();
@@ -696,7 +692,6 @@ class youtube extends Module {
 		$params = array(
 					'group'			=> $id,
 					'form_action'	=> backend_UrlMake($this->name, 'group_videos_save'),
-					'cancel_action'	=> window_Close($this->name.'_group_videos')
 				);
 
 		$template->register_tag_handler('_group_videos', $this, 'tag_GroupVideos');

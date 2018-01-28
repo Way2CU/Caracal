@@ -3,51 +3,34 @@
 <document>
 	<html lang="$language" dir="$language_rtl ? 'rtl' : 'ltr'" cms:eval="lang,dir">
 		<head>
-			<title>
-				<cms:text constant="site_title" />
-				<cms:raw text=" - "/>
-				<cms:text constant="title" module="backend"/>
-			</title>
+			<cms:module
+				name="head_tag"
+				action="add_to_title"
+				value="title"
+				cms:constant="value"
+				/>
 			<cms:module name="head_tag" action="show"/>
 		</head>
 
 		<body>
+			<!-- Sprite icons -->
+			<cms:svg file="$params['sprite']" cms:eval="file"/>
+			<cms:svg file="$params['default_icon']" cms:eval="file"/>
+
 			<header>
+				<!-- Logo -->
 				<div id="logo">
 					<img
 						src="_BASEURL.'/modules/backend/images/logo_text.svg'"
 						alt="Caracal"
 						cms:eval="src"
 						/>
-					<cms:text constant="slogan" module="backend"/>
 				</div>
 
-				<div id="user_widget"/>
+				<!-- Window list -->
+				<nav id="window_list"/>
 
-				<nav id="language">
-					<cms:module
-						name="language_menu"
-						action="print"
-						/>
-				</nav>
-			</header>
-
-			<cms:user>
-				<div id="container">
-					<cms:main_menu/>
-				</div>
-			</cms:user>
-
-			<cms:guest>
-				<div id="container" class="guest"/>
-				<script type="text/javascript">
-					$(document).ready(function() {
-						Caracal.window_system.showLoginWindow();
-					});
-				</script>
-			</cms:guest>
-
-			<footer>
+				<!-- Common links -->
 				<nav id="common">
 					<a href="https://github.com/Way2CU/Caracal/issues" target="_blank">
 						<cms:text constant="menu_report_bug" module="backend"/>
@@ -56,8 +39,33 @@
 						<cms:text constant="menu_help" module="backend"/>
 					</a>
 				</nav>
-				<div style="clear: both;"/>
-			</footer>
+
+				<!-- Language menu -->
+				<nav id="language">
+					<cms:module
+						name="language_menu"
+						action="print"
+						/>
+				</nav>
+			</header>
+
+			<section>
+				<cms:user>
+					<!-- Main menu -->
+					<nav id="main">
+						<a
+							onclick="javascript:this.parentNode.classList.toggle('collapsed')"
+							class="collapse-menu"
+							>
+							<svg><use xlink:href="#icon-collapse"/></svg>
+						</a>
+						<cms:menu_items/>
+					</nav>
+				</cms:user>
+
+				<!-- Window container -->
+				<div id="container"/>
+			</section>
 		</body>
 	</html>
 </document>

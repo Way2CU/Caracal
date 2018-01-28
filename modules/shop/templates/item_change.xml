@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_item_change_form">
-		<div id="shop_change_item_notebook">
+		<div class="notebook">
 			<!-- Generic -->
-			<div>
+			<div class="page" data-title="tab_item" cms:constant="data-title">
 				<label class="horizontal">
 					<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 					<span><cms:text constant="label_name" module="shop"/></span>
@@ -120,13 +120,13 @@
 				</label>
 
 				<label class="checkbox" cms:tooltip="tooltip_item_visible">
-					<span><cms:text constant="label_item_visible" module="shop"/></span>
 					<input
 						type="checkbox"
 						name="visible"
 						checked="$params['visible'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_item_visible" module="shop"/></span>
 				</label>
 				<div style="clear: both; padding-bottom: 25px;">
 					<cms:text constant="message_images_upload" module="shop"/>
@@ -134,7 +134,7 @@
 			</div>
 
 			<!-- Properties -->
-			<div>
+			<div class="page" data-title="tab_properties" cms:constant="data-title">
 				<div class="box left">
 					<label>
 						<span><cms:text constant="label_text_id" module="shop"/></span>
@@ -300,7 +300,7 @@
 			</div>
 
 			<!-- Colors -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_colors" cms:constant="data-title">
 				<input name="colors" type="hidden" value="$params['colors']" cms:eval="value"/>
 				<label class="horizontal inline">
 					<span><cms:text constant="label_color_value" module="shop"/></span>
@@ -330,7 +330,7 @@
 			</div>
 
 			<!-- Categories -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_category" cms:constant="data-title">
 				<div class="list_header">
 					<cms:text constant="column_categories" module="shop"/>
 				</div>
@@ -345,7 +345,7 @@
 			</div>
 
 			<!-- Related items -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_related" cms:constant="data-title">
 				<label class="inline">
 					<span><cms:text constant="label_search_query" module="shop"/></span>
 					<input name="search_query" type="text"/>
@@ -381,7 +381,7 @@
 			</div>
 
 			<!-- Remarks -->
-			<div>
+			<div class="page" data-title="tab_remark" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_remark" module="shop"/></span>
 					<textarea name="remark" style="height: 395px">
@@ -394,26 +394,9 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript">
-		var selector = new LanguageSelector('shop_item_change_form');
-		var notebook = new Notebook('shop_change_item_notebook');
-
-		// get language constants
-		var titles = ['tab_item', 'tab_properties', 'tab_colors', 'tab_category', 'tab_related', 'tab_remark'];
-		var data = language_handler.getTextArray('shop', titles);
-		notebook
-			.setPageTitle(0, data['tab_item'])
-			.setPageTitle(1, data['tab_properties'])
-			.setPageTitle(2, data['tab_colors'])
-			.setPageTitle(3, data['tab_category'])
-			.setPageTitle(4, data['tab_related'])
-			.setPageTitle(5, data['tab_remark']);
-
 		// create property editors
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_array]');
 		new Caracal.PropertyEditor('#shop_item_change_form input[name=property_ml_array]');

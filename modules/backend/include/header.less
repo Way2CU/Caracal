@@ -1,0 +1,28 @@
+/**
+ * Header Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+@logo_ratio: 4;
+
+header {
+	display: flex;
+	flex-flow: row;
+	position: relative;
+
+	box-shadow: 0px 2px 3px fade(@color_dark, 20);
+	background-color: @color_top_bar;
+}
+
+header div#logo {
+	flex: 0 0;
+	.container-padding(2);
+}
+
+header div#logo img {
+	height: unit(@header_unit, em);
+	width: unit(@logo_ratio * @header_unit, em);
+}

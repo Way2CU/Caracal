@@ -10,14 +10,16 @@
  * Copyright © 2015 Way2CU. All Rights Reserved.
  * Author: Mladen Mijatov
  */
+namespace Modules\Backend\Menu;
+
 
 class WindowItem implements Item {
 	protected $name;
 	protected $title;
 	protected $icon;
 	protected $window;
-	protected $action;
 	protected $separator;
+	protected $actions = array();
 	protected $children = array();
 	protected $module_name;
 
@@ -37,24 +39,19 @@ class WindowItem implements Item {
 		$this->title = $title;
 		$this->icon = $icon;
 		$this->action = $action;
+		$this->window = $window;
 	}
 
 	/**
-	 * Add child menu item.
+	 * Add specified action to chain of execution.
 	 *
-	 * @param MenuItem $child
+	 * @param object $action
 	 */
-	public function addChild($child) {
-		$this->children[] = $child;
-	}
+	public function add_action($action) {
+		if (is_subclass_of($action, WindowAction))
+			$action->set_menu_item($this);
 
-	/**
-	 * Set if menu item has separator following.
-	 *
-	 * @param boolean $separator
-	 */
-	public function setSeparator($separator) {
-		$this->separator = $separator;
+		$this->actions[] = $action;
 	}
 
 	/**
@@ -64,7 +61,7 @@ class WindowItem implements Item {
 	 *
 	 * @param string $name
 	 */
-	public function setName($name) {
+	public function set_name($name) {
 		// store name locally
 		$this->name = $name;
 
@@ -78,38 +75,14 @@ class WindowItem implements Item {
 	 *
 	 * @param string $window
 	 */
-	public function setWindowName($window) {
+	public function set_window($window) {
 		$this->window = $window;
-	}
-
-	/**
-	 * Set module name to be used if Action is not set. This
-	 * name is only used for icon path generation.
-	 *
-	 * @param string $name
-	 */
-	public function setModuleName($name) {
-		$this->module_name = $name;
 	}
 
 	/**
 	 * Draw menu item.
 	 */
 	public function draw() {
-		if (!$this->action->hasPermission())
-			return;
-
-		// prepare classes required for this menu item
-		$classes = array();
-
-		if (count($this->children) > 0)
-			$classes[] = 'submenu';
-
-		if ($this->separator)
-			$classes[] = 'separator';
-
-		$class_string = implode(' ', $classes);
-
 		// load template
 		if (is_null(self::$template)) {
 			$backend = backend::get_instance();
@@ -117,18 +90,15 @@ class WindowItem implements Item {
 		}
 
 		// prepare action
-		$action = 'javascript: Caracal.window_system.openWindow(';
-		$action .= "'{$this->window}',";
-		$action .= $this->window_width.',';
-		$action .= '\''.$this->window_title.'\',';
-		$action .= ($this->window_can_close ? 'true' : 'false').',';
-		$action .= '\''.$this->action->getUrl().'\', this);';
+		$result = 'javascript:';
+		foreach ($this->actions as $action)
+			$result .= $action->get_url().';';
 
 		// prepare parameters
 		$params = array(
 				'title'		=> $this->title,
 				'icon'		=> $this->icon,
-				'classes'	=> $class_string,
+				'classes'	=> '',
 				'action'	=> $action
 			);
 	}

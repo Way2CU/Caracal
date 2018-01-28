@@ -33,14 +33,14 @@ class links extends Module {
 
 			$links_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_links'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_links_manage'),
-								URL::from_file_path($this->path.'images/manage.svg'),
+								$this->path.'images/manage.svg',
 								window_Open( // on click open window
 											'links_list',
 											720,
@@ -53,7 +53,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_links_groups'),
-								URL::from_file_path($this->path.'images/groups.svg'),
+								$this->path.'images/groups.svg',
 								window_Open( // on click open window
 											'groups_list',
 											500,
@@ -66,7 +66,7 @@ class links extends Module {
 
 			$links_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_links_overview'),
-								URL::from_file_path($this->path.'images/overview.svg'),
+								$this->path.'images/overview.svg',
 								window_Open( // on click open window
 											'links_overview',
 											650,
@@ -330,7 +330,6 @@ class links extends Module {
 		$params = array(
 					'with_images'	=> ModuleHandler::is_loaded('gallery'),
 					'form_action'	=> backend_UrlMake($this->name, 'links_save'),
-					'cancel_action'	=> window_Close('links_add')
 				);
 
 		$template->restore_xml();
@@ -361,7 +360,6 @@ class links extends Module {
 					'display_limit'    => $item->display_limit,
 					'sponsored_clicks' => $item->sponsored_clicks,
 					'form_action'      => backend_UrlMake($this->name, 'links_save'),
-					'cancel_action'    => window_Close('links_change')
 				);
 
 		$template->restore_xml();
@@ -554,7 +552,6 @@ class links extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('groups_add')
 				);
 
 		$template->restore_xml();
@@ -580,7 +577,6 @@ class links extends Module {
 					'name'			=> $item->name,
 					'text_id'		=> $item->text_id,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('groups_change')
 				);
 
 		$template->restore_xml();
@@ -700,7 +696,6 @@ class links extends Module {
 		$params = array(
 					'group'			=> $group_id,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_links_save'),
-					'cancel_action'	=> window_Close('groups_links')
 				);
 
 		$template->register_tag_handler('cms:group_links', $this, 'tag_GroupLinks');

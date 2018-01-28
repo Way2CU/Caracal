@@ -74,17 +74,24 @@ class SessionManager {
 		// check if user has more than 3 failed atempts
 		$show_captcha = $manager->getRetryCount() > 3;
 
-		// create template and show login form
-		$template = new TemplateHandler('session_login.xml', $this->parent->path.'templates/');
+		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'login') {
+			// create template and show login form
+			$template = new TemplateHandler('session_login.xml', $this->parent->path.'templates/');
+			$params = array(
+						'show_captcha'	=> $show_captcha,
+						'username'		=> isset($_REQUEST['username']) ? escape_chars($_REQUEST['username']) : '',
+						'image'			=> URL::from_file_path($this->parent->path.'images/icons/login.png'),
+						'message'		=> $message
+					);
+
+		} else {
+			// we were previously logged in, show new login window
+			$template = new TemplateHandler('session_show_login.xml', $this->parent->path.'templates/');
+			$template->set_mapped_module($this->parent->name);
+			$params = array();
+		}
+
 		$template->set_mapped_module($this->parent->name);
-
-		$params = array(
-					'show_captcha'	=> $show_captcha,
-					'username'		=> isset($_REQUEST['username']) ? escape_chars($_REQUEST['username']) : '',
-					'image'			=> URL::from_file_path($this->parent->path.'images/icons/login.png'),
-					'message'		=> $message
-				);
-
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();

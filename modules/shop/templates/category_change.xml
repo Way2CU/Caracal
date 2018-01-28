@@ -62,14 +62,9 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('shop_category_add_form');
-
 		// create toolbar
 		toolbar_api
 				.createToolbar('shop_category_add_form', '[name=description]:input')

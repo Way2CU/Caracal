@@ -175,7 +175,6 @@ class Handler {
 		$params = array(
 					'uid'			=> $this->generateUID(),
 					'form_action'	=> backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-					'cancel_action'	=> window_Close('shop_item_add')
 				);
 
 		// get all the handlers needed
@@ -257,7 +256,6 @@ class Handler {
 					'deleted'         => $item->deleted,
 					'remark'          => $remark,
 					'form_action'     => backend_UrlMake($this->name, self::SUB_ACTION, 'save'),
-					'cancel_action'   => window_Close('shop_item_change')
 				);
 
 		// parse template

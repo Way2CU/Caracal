@@ -259,14 +259,14 @@ class shop extends Module {
 
 			$shop_menu = new backend_MenuItem(
 				$this->get_language_constant('menu_shop'),
-				URL::from_file_path($this->path.'images/icon.svg'),
+				$this->path.'images/icon.svg',
 				'javascript:void(0);',
 				5  // level
 			);
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_items'),
-				URL::from_file_path($this->path.'images/items.svg'),
+				$this->path.'images/items.svg',
 				window_Open( // on click open window
 					'shop_items',
 					800,
@@ -279,14 +279,14 @@ class shop extends Module {
 
 			$recurring_plans_menu = new backend_MenuItem(
 				$this->get_language_constant('menu_recurring_plans'),
-				URL::from_file_path($this->path.'images/recurring_plans.svg'),
+				$this->path.'images/recurring_plans.svg',
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_recurring_plans', $recurring_plans_menu);
 
 			$import_menu = new backend_MenuItem(
 				$this->get_language_constant('menu_import'),
-				URL::from_file_path($this->path.'images/import.svg'),
+				$this->path.'images/import.svg',
 				'javascript: void(0);', 5
 			);
 			$shop_menu->addChild('shop_import', $import_menu);
@@ -295,7 +295,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_categories'),
-				URL::from_file_path($this->path.'images/categories.svg'),
+				$this->path.'images/categories.svg',
 				window_Open( // on click open window
 					'shop_categories',
 					550,
@@ -308,7 +308,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_item_sizes'),
-				URL::from_file_path($this->path.'images/item_sizes.svg'),
+				$this->path.'images/item_sizes.svg',
 				window_Open( // on click open window
 					'shop_item_sizes',
 					400,
@@ -321,7 +321,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_manufacturers'),
-				URL::from_file_path($this->path.'images/manufacturers.svg'),
+				$this->path.'images/manufacturers.svg',
 				window_Open( // on click open window
 					'shop_manufacturers',
 					400,
@@ -334,7 +334,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_suppliers'),
-				URL::from_file_path($this->path.'images/suppliers.svg'),
+				$this->path.'images/suppliers.svg',
 				window_Open( // on click open window
 					'shop_suppliers',
 					400,
@@ -348,7 +348,7 @@ class shop extends Module {
 			// delivery methods menu
 			$delivery_menu = new backend_MenuItem(
 				$this->get_language_constant('menu_delivery_methods'),
-				URL::from_file_path($this->path.'images/delivery.svg'),
+				$this->path.'images/delivery.svg',
 				'javascript: void(0);', 5
 			);
 
@@ -358,7 +358,7 @@ class shop extends Module {
 			// special offers menu
 			$special_offers = new backend_MenuItem(
 				$this->get_language_constant('menu_special_offers'),
-				URL::from_file_path($this->path.'images/special_offers.svg'),
+				$this->path.'images/special_offers.svg',
 				'javascript: void(0);', 5
 			);
 
@@ -368,7 +368,7 @@ class shop extends Module {
 			// payment methods menu
 			$methods_menu = new backend_MenuItem(
 				$this->get_language_constant('menu_payment_methods'),
-				URL::from_file_path($this->path.'images/payment_methods.svg'),
+				$this->path.'images/payment_methods.svg',
 				'javascript: void(0);', 5
 			);
 
@@ -376,7 +376,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_currencies'),
-				URL::from_file_path($this->path.'images/currencies.svg'),
+				$this->path.'images/currencies.svg',
 				window_Open( // on click open window
 					'shop_currencies',
 					350,
@@ -391,7 +391,7 @@ class shop extends Module {
 
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_transactions'),
-				URL::from_file_path($this->path.'images/transactions.svg'),
+				$this->path.'images/transactions.svg',
 				window_Open( // on click open window
 					'shop_transactions',
 					800,
@@ -403,7 +403,7 @@ class shop extends Module {
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_warehouses'),
-				URL::from_file_path($this->path.'images/warehouse.svg'),
+				$this->path.'images/warehouse.svg',
 				window_Open( // on click open window
 					'shop_warehouses',
 					490,
@@ -415,7 +415,7 @@ class shop extends Module {
 			));
 			$shop_menu->addChild(null, new backend_MenuItem(
 				$this->get_language_constant('menu_stocks'),
-				URL::from_file_path($this->path.'images/stock.svg'),
+				$this->path.'images/stock.svg',
 				window_Open( // on click open window
 					'shop_stocks',
 					490,
@@ -429,7 +429,7 @@ class shop extends Module {
 			$shop_menu->addSeparator(5);
 			$shop_menu->addChild('', new backend_MenuItem(
 				$this->get_language_constant('menu_settings'),
-				URL::from_file_path($this->path.'images/settings.svg'),
+				$this->path.'images/settings.svg',
 
 				window_Open( // on click open window
 					'shop_settings',
@@ -1110,7 +1110,6 @@ class shop extends Module {
 
 		$params = array(
 			'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-			'cancel_action'	=> window_Close('shop_settings')
 		);
 
 		if (ModuleHandler::is_loaded('contact_form')) {

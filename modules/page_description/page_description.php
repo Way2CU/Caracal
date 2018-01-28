@@ -37,7 +37,7 @@ class page_description extends Module {
 
 			$menu_item = new backend_MenuItem(
 					$this->get_language_constant('menu_page_descriptions'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					window_Open(
 							'page_descriptions',
 							600,
@@ -152,7 +152,6 @@ class page_description extends Module {
 					'title'         => $item->title,
 					'content'       => $item->content,
 					'form_action'   => backend_UrlMake($this->name, 'save'),
-					'cancel_action' => window_Close('page_descriptions_change_'.$id)
 				);
 
 		$template->restore_xml();

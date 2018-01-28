@@ -39,7 +39,7 @@ class page_info extends Module {
 			if (!is_null($menu))
 				$menu->insertChild(new backend_MenuItem(
 										$this->get_language_constant('menu_page_info'),
-										URL::from_file_path($this->path.'images/icon.svg'),
+										$this->path.'images/icon.svg',
 										window_Open( // on click open window
 													'page_settings',
 													400,
@@ -128,7 +128,6 @@ class page_info extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
-						'cancel_action'	=> window_Close('page_settings')
 					);
 
 		$template->register_tag_handler('cms:analytics_versions', $this, 'tag_AnalyticsVersions');
@@ -354,9 +353,6 @@ class page_info extends Module {
 							'type'	=> 'text/css',
 							'href'	=> URL::from_file_path(_BASEPATH.'/'.$less_style)
 						));
-
-				if (!$optimize_code)
-					$collection->includeScript(collection::LESS);
 			}
 
 			// add main javascript

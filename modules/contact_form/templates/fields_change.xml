@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_fields_edit_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<div>
 			<label class="horizontal">
 				<span><cms:text constant="label_name" module="contact_form"/></span>
@@ -117,43 +117,43 @@
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_disabled" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="disabled"
 				checked="$params['disabled'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_disabled" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_required" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="required"
 				checked="$params['required'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_required" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_checked" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="checked"
 				checked="$params['checked'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_checked" module="contact_form"/></span>
 		</label>
 
 		<label class="checkbox">
-			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 			<input
 				type="checkbox"
 				name="autocomplete"
 				checked="$params['autocomplete'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_autocomplete" module="contact_form"/></span>
 		</label>
 
 		<div class="button_bar">
@@ -161,13 +161,6 @@
 			<input type="hidden" name="form" value="$params['form']" cms:eval="value"/>
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		new LanguageSelector('contact_form_fields_edit_form');
-	</script>
 </document>

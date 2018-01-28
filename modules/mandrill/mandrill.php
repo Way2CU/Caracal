@@ -40,7 +40,7 @@ class mandrill extends Module {
 
 			$mandrill_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_mandrill'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					window_Open( // on click open window
 								'mandrill_settings',
 								370,
@@ -110,7 +110,6 @@ class mandrill extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('mandrill_settings')
 					);
 
 		$template->restore_xml();

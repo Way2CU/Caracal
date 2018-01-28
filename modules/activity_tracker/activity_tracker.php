@@ -29,14 +29,14 @@ class activity_tracker extends Module {
 
 			$activities_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_activities'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$activities_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage'),
-								URL::from_file_path($this->path.'images/activities.svg'),
+								$this->path.'images/activities.svg',
 
 								window_Open( // on click open window
 											'activities',
@@ -49,7 +49,7 @@ class activity_tracker extends Module {
 							));
 			$activities_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_log'),
-								URL::from_file_path($this->path.'images/log.svg'),
+								$this->path.'images/log.svg',
 
 								window_Open( // on click open window
 											'activities_log',
@@ -196,7 +196,6 @@ class activity_tracker extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('activities_new')
 				);
 
 		$template->restore_xml();
@@ -224,7 +223,6 @@ class activity_tracker extends Module {
 						'timeout'			=> $activity->timeout,
 						'ignore_address'	=> $activity->ignore_address,
 						'form_action'		=> backend_UrlMake($this->name, 'save'),
-						'cancel_action'		=> window_Close('activities_change')
 					);
 
 			$template->restore_xml();

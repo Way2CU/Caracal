@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Window Menu -->
-	<div class="main_menu">
+	<nav class="window">
 		<cms:var param="link_new"/>
 		<cms:var param="link_new_bulk"/>
 		<cms:var param="link_groups"/>
@@ -20,11 +20,11 @@
 					template="groups_option.xml"
 					local="1"
 					cms:eval="selected"
-				/>
+					/>
 			</select>
 		</div>
 		<div style="clear: both;"/>
-	</div>
+	</nav>
 
 	<!-- Header -->
 	<div class="scrollable_list">

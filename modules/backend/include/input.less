@@ -1,0 +1,39 @@
+/**
+ * Input Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.content {
+	input {
+		padding: @input_padding;
+
+		border: 1px solid @color_input_border;
+		border-radius: @input_radius;
+		background-color: @color_input_background;
+
+		font-family: generic;
+
+		.input-transition();
+
+		&.ltr {
+			direction: ltr;
+		}
+
+		&.code {
+			font-family: generic-mono;
+		}
+
+		&:disabled {
+			border-color: lighten(@color_input_border, 50);
+			color: lighten(@color_input_border, 50);
+		}
+
+		&:focus {
+			border-color: @color_input_active;
+			color: @color_input_active;
+		}
+	}
+}

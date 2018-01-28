@@ -5,7 +5,6 @@
 		action="$params['form_action']"
 		cms:eval="action"
 		method="POST"
-		id="shop_manufacturer_add_form"
 		enctype="multipart/form-data"
 		>
 		<label>
@@ -23,13 +22,6 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-
-	<script type="text/javascript">
-		var selector = new LanguageSelector('shop_manufacturer_add_form');
-	</script>
 </document>

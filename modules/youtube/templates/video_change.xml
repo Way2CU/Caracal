@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="video_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<label>
 			<span><cms:text constant="label_text_id" module="youtube"/></span>
@@ -19,12 +19,6 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('video_change_form');
-	</script>
 </document>

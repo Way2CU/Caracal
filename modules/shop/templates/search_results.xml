@@ -32,7 +32,7 @@
 
 			<button
 				type="button"
-				onclick="javascript: Caracal.window_system.closeWindow('shop_search_results');"
+				onclick="javascript: Caracal.window_system.close_window('shop_search_results');"
 			>
 				<cms:text constant="close"/>
 			</button>
@@ -66,10 +66,10 @@
 				}
 			});
 
-			Caracal.window_system.getWindow('shop_search_results').close();
+			Caracal.window_system.get_window('shop_search_results').close();
 		}
 
-		Caracal.window_system.getWindow('shop_search_results').focus();
+		Caracal.window_system.get_window('shop_search_results').focus();
 		]]>
 	</script>
 </document>

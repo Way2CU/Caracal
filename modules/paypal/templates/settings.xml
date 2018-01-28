@@ -2,8 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div id="paypal_settings_notebook">
-			<div>
+		<div class="notebook">
+			<!-- API tab -->
+			<div class="page" data-title="tab_api" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_username" module="paypal"/></span>
 					<input
@@ -13,7 +14,7 @@
 						value="$settings['api_username']"
 						cms:eval="value"
 						style="width: 250px;"
-					/>
+						/>
 				</label>
 				<label>
 					<span><cms:text constant="label_password" module="paypal"/></span>
@@ -24,7 +25,7 @@
 						value="$settings['api_password']"
 						cms:eval="value"
 						style="width: 250px;"
-					/>
+						/>
 				</label>
 				<label>
 					<span><cms:text constant="label_signature" module="paypal"/></span>
@@ -35,32 +36,34 @@
 						value="$settings['api_signature']"
 						cms:eval="value"
 						style="width: 350px;"
-					/>
+						/>
 				</label>
 			</div>
 
-			<div>
+			<!-- Methods tab -->
+			<div class="page" data-title="tab_methods" cms:constant="data-title">
 				<label class="checkbox">
-					<span><cms:text constant="label_express_enabled" module="paypal"/></span>
 					<input
 						type="checkbox"
 						name="express_enabled"
 						checked="$settings['express_enabled'] ? 'checked' : false"
 						cms:optional="checked"
-					/>
+						/>
+					<span><cms:text constant="label_express_enabled" module="paypal"/></span>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_direct_enabled" module="paypal"/></span>
 					<input
 						type="checkbox"
 						name="direct_enabled"
 						checked="$settings['direct_enabled'] ? 'checked' : false"
 						cms:optional="checked"
-					/>
+						/>
+					<span><cms:text constant="label_direct_enabled" module="paypal"/></span>
 				</label>
 			</div>
 
-			<div>
+			<!-- IPN tab -->
+			<div class="page" data-title="tab_ipn" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_handler_url" module="paypal"/></span>
 					<input
@@ -70,7 +73,7 @@
 						cms:eval="value"
 						style="width: 350px;"
 						readonly="readonly"
-					/>
+						/>
 				</label>
 			</div>
 		</div>
@@ -78,16 +81,6 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		var notebook = new Notebook('paypal_settings_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('paypal', 'tab_api'))
-			.setPageTitle(1, language_handler.getText('paypal', 'tab_methods'))
-			.setPageTitle(2, language_handler.getText('paypal', 'tab_ipn'));
-	</script>
 </document>

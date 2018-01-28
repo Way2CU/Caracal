@@ -107,14 +107,14 @@ class gallery extends Module {
 
 			$gallery_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_gallery'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_images'),
-								URL::from_file_path($this->path.'images/images.svg'),
+								$this->path.'images/images.svg',
 								window_Open( // on click open window
 											'gallery_images',
 											670,
@@ -127,7 +127,7 @@ class gallery extends Module {
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_groups'),
-								URL::from_file_path($this->path.'images/groups.svg'),
+								$this->path.'images/groups.svg',
 								window_Open( // on click open window
 											'gallery_groups',
 											450,
@@ -140,7 +140,7 @@ class gallery extends Module {
 
 			$gallery_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_containers'),
-								URL::from_file_path($this->path.'images/containers.svg'),
+								$this->path.'images/containers.svg',
 								window_Open( // on click open window
 											'gallery_containers',
 											490,
@@ -456,7 +456,6 @@ class gallery extends Module {
 
 		$params = array(
 					'form_action'   => backend_UrlMake($this->name, 'images_upload_save'),
-					'cancel_action' => window_Close('gallery_images_upload')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
@@ -474,7 +473,6 @@ class gallery extends Module {
 
 		$params = array(
 					'form_action'   => backend_UrlMake($this->name, 'images_upload_save'),
-					'cancel_action' => window_Close('gallery_images_upload_bulk')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
@@ -565,7 +563,6 @@ class gallery extends Module {
 					'visible'       => $item->visible,
 					'slideshow'     => $item->slideshow,
 					'form_action'   => backend_UrlMake($this->name, 'images_save'),
-					'cancel_action' => window_Close('gallery_images_change')
 				);
 
 		$template->restore_xml();
@@ -706,7 +703,6 @@ class gallery extends Module {
 
 		$params = array(
 					'form_action'   => backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action' => window_Close('gallery_groups_create')
 				);
 
 		$template->restore_xml();
@@ -733,7 +729,6 @@ class gallery extends Module {
 					'description'   => $item->description,
 					'thumbnail'     => $item->thumbnail,
 					'form_action'   => backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action' => window_Close('gallery_groups_change')
 				);
 
 		$template->register_tag_handler('cms:image_list', $this, 'tag_ImageList');
@@ -926,7 +921,6 @@ class gallery extends Module {
 
 		$params = array(
 					'form_action'   => backend_UrlMake($this->name, 'containers_save'),
-					'cancel_action' => window_Close('gallery_containers_create')
 				);
 
 		$template->restore_xml();
@@ -952,7 +946,6 @@ class gallery extends Module {
 					'name'          => unfix_chars($item->name),
 					'description'   => $item->description,
 					'form_action'   => backend_UrlMake($this->name, 'containers_save'),
-					'cancel_action' => window_Close('gallery_containers_change')
 				);
 
 		$template->restore_xml();
@@ -1073,7 +1066,6 @@ class gallery extends Module {
 		$params = array(
 					'container'     => $container_id,
 					'form_action'   => backend_UrlMake($this->name, 'containers_groups_save'),
-					'cancel_action' => window_Close('gallery_containers_groups')
 				);
 
 		$template->register_tag_handler('_container_groups', $this, 'tag_ContainerGroups');

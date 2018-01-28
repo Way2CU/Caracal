@@ -41,7 +41,7 @@ class sendgrid extends Module {
 
 			$sendgrid_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_sendgrid'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					window_Open( // on click open window
 								'sendgrid_settings',
 								370,
@@ -111,7 +111,6 @@ class sendgrid extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('sendgrid_settings')
 					);
 
 		$template->restore_xml();

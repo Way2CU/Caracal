@@ -55,22 +55,22 @@
 				/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_external" module="links"/></span>
 			<input
 				type="checkbox"
 				name="external"
 				checked="$params['external'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_external" module="links"/></span>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_sponsored" module="links"/></span>
 			<input
 				type="checkbox"
 				name="sponsored"
 				checked="$params['sponsored'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_sponsored" module="links"/></span>
 		</label>
 		<label>
 			<span><cms:text constant="label_display_limit" module="links"/></span>
@@ -87,19 +87,14 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript" charset="utf-8">
-		new LanguageSelector('link_change_form');
-
 		// create toolbar
 		toolbar_api
-		.createToolbar('link_change_form', '[name=description]:input')
-		.addControl('common', 'markdown')
-		.addControl('gallery', 'article_image')
-		.addControl('downloads', 'link');
+			.createToolbar('link_change_form', '[name=description]:input')
+			.addControl('common', 'markdown')
+			.addControl('gallery', 'article_image')
+			.addControl('downloads', 'link');
 	</script>
 </document>

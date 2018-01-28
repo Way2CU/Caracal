@@ -141,7 +141,6 @@ class ShopTransactionsHandler {
 				'address_phone'		=> $address->phone,
 				'address_access_code'	=> $address->access_code,
 				'full_address'		=> $full_address,
-				'cancel_action'		=> window_Close('shop_transaction_details_'.$transaction->id),
 				'print_url'			=> URL::make_query(
 											'backend_module',
 											'transfer_control',

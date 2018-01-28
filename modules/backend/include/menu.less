@@ -1,0 +1,290 @@
+/**
+ * Main Menu Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+@icon_size: 30;
+
+/**
+ * Main menu
+ */
+nav#main {
+	flex: 0 0 14rem;
+	background-color: @color_menu;
+	color: @color_bright;
+
+	// collapsed main menu
+	&.collapsed {
+		flex: 0 0 0rem;
+
+		> a > span,
+		> div > a > span {
+			display: none;
+		}
+
+		// rotate collapse menu icon
+		a.collapse-menu svg {
+			transform: scaleX(-1);
+			html[dir=rtl] & { transform: scaleX(1); }
+		}
+	}
+
+	// generic ruler
+	hr {
+		border: 0;
+		border-bottom: 1px solid fade(@color_dark, 25);
+	}
+
+	// first level menu items
+	> a,
+	> div > a {
+		display: block;
+		padding: 0.3rem;
+		cursor: default;
+
+		border-left: @padding_unit / 2 solid transparent;
+		border-right: @padding_unit / 2 solid transparent;
+
+		.add-icon-behavior(dull);
+
+		&:hover {
+			border-color: @color_active;
+			color: @color_active;
+
+			.add-icon-behavior(regular);
+		}
+
+		svg {
+			width: @icon_size;
+			height: @icon_size;
+			vertical-align: middle;
+		}
+	}
+
+	// separator after system menu
+	> div:first-of-type {
+		// margin-bottom: @padding_unit;
+		// padding-bottom: @padding_unit;
+		border-top: 1px solid lighten(@color_menu, 5);
+		border-bottom: 1px solid lighten(@color_menu, 5);
+	}
+
+	// sub-menu parent item highlight
+	> div:hover > a {
+		color: @color_active;
+		border-color: @color_active;
+		background-color: transparent;
+
+		.add-icon-behavior(regular);
+	}
+
+	// collapse menu item
+	a.collapse-menu {
+		text-align: right;
+
+		html[dir=rtl] & {
+			text-align: left;
+			svg { transform: scaleX(-1); }
+		}
+
+		svg {
+			width: 0.8rem;
+			height: 0.8rem;
+			fill: lighten(@color_menu, 10);
+		}
+	}
+
+	// sub-menu container
+	div {
+		position: relative;
+
+		// second level menu
+		> nav {
+			position: absolute;
+			top: 0;
+			left: 100%;
+			width: 14rem;
+			z-index: 2000;
+
+			border-left: 1px solid @color_bright;
+			background-color: @color_bright;
+			box-shadow: 0px 2px 3px fade(@color_dark, 20);
+
+			color: @color_dark;
+
+			opacity: 0;
+			pointer-events: none;
+
+			transform-origin: 0 50%;
+			transform: perspective(1000px) rotate3d(0, 1, 0, 90deg);
+			transition: opacity 0.5s, transform 0.5s;
+
+			html[dir=rtl] & {
+				left: auto;
+				right: 100%;
+				border-left: 0;
+				border-right: 1px solid @color_bright;
+				transform-origin: 100% 50%;
+				transform: perspective(1000px) rotate3d(0, 1, 0, -90deg);
+			}
+
+			// sub-menu items
+			> a,
+			> div > a {
+				display: block;
+				padding: 0.3rem;
+				cursor: default;
+
+				.add-icon-behavior(dull);
+
+				&:hover {
+					background-color: @color_active;
+					color: @color_bright;
+
+					.add-icon-behavior(active);
+				}
+
+				svg {
+					width: @icon_size;
+					height: @icon_size;
+					vertical-align: middle;
+				}
+			}
+
+			// sub-menu parent item highlight
+			> div:hover > a {
+				background-color: @color_active;
+				color: @color_bright;
+				.add-icon-behavior(active);
+			}
+
+		}
+
+		// active sub-menu
+		&:hover > nav {
+			opacity: 1;
+			pointer-events: auto;
+			transform: perspective(1000px) rotate3d(0, 0, 0, 90deg);
+
+			html[dir=rtl] & {
+				transform: perspective(1000px) rotate3d(0, 0, 0, -90deg);
+			}
+		}
+	}
+}
+
+/**
+ * Windows menu
+ */
+nav#window_list {
+	flex: 1 1;
+
+	a {
+		display: inline-block;
+		margin-right: 2px;
+		background-color: fade(@color_dark, 10);
+		color: @color_dark;
+
+		.container-padding(2);
+		.animation-slide-from-top(0.3);
+
+		html[dir=rtl] & {
+			margin-left: 2px;
+			margin-right: 0;
+		}
+
+		svg, span {
+			display: block;
+			width: unit(@header_unit, em);
+			height: unit(@header_unit, em);
+
+			fill: fade(@color_dark, 70);
+		}
+
+		.add-icon-behavior(dull);
+
+		&.active {
+			background-color: @color_active;
+			color: @color_bright;
+
+			.add-icon-behavior(active);
+		}
+	}
+}
+
+/**
+ * Common menu
+ */
+nav#common {
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	.container-padding();
+
+	html[dir=rtl] & {
+		right: auto;
+		left: 0;
+	}
+
+	a {
+		display: inline-block;
+		.link-padding(0.5);
+
+		border-right: 1px solid fade(@color_dark, 25);
+
+		color: fade(@color_dark, 50);
+		text-decoration: none;
+
+		html[dir=ltr] &:last-of-type,
+		html[dir=rtl] &:first-of-type {
+			border-right: 0;
+		}
+
+		&:hover {
+			color: @color_dark;
+		}
+	}
+}
+
+/**
+ * Language menu
+ */
+nav#language {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+
+	.container-padding();
+
+	html[dir=rtl] & {
+		right: auto;
+		left: 0;
+	}
+
+	a {
+		display: inline-block;
+		.link-padding(0.5);
+
+		border-right: 1px solid fade(@color_dark, 25);
+
+		color: fade(@color_dark, 50);
+		text-decoration: none;
+
+		html[dir=ltr] &:last-of-type,
+		html[dir=rtl] &:first-of-type {
+			border: 0;
+		}
+
+		&.active {
+			text-decoration: underline;
+		}
+
+		&:hover {
+			color: @color_dark;
+		}
+	}
+}

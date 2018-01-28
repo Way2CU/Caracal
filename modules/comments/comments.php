@@ -27,14 +27,14 @@ class comments extends Module {
 
 			$comments_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_comments'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$comments_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_administration'),
-								URL::from_file_path($this->path.'images/administration.svg'),
+								$this->path.'images/administration.svg',
 								window_Open( // on click open window
 											'links_list',
 											730,
@@ -47,7 +47,7 @@ class comments extends Module {
 
 			$comments_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_settings'),
-								URL::from_file_path($this->path.'images/settings.svg'),
+								$this->path.'images/settings.svg',
 								window_Open( // on click open window
 											'comments_settings',
 											400,

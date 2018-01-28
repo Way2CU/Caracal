@@ -39,7 +39,7 @@ class ontop extends Module {
 
 			$ontop_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_ontop'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					window_Open(
 						'ontop_applications',
 						450,
@@ -179,7 +179,6 @@ class ontop extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('ontop_new_application')
 				);
 
 		$template->restore_xml();
@@ -208,7 +207,6 @@ class ontop extends Module {
 						'shop_transaction_complete' => $item->shop_transaction_complete,
 						'contact_form_submit'       => $item->contact_form_submit,
 						'form_action'               => backend_UrlMake($this->name, 'save'),
-						'cancel_action'             => window_Close('ontop_edit_application')
 					);
 
 			$template->restore_xml();

@@ -106,17 +106,19 @@ class CodeOptimizer {
 
 		$result = array();
 		$extension = pathinfo($file_name, PATHINFO_EXTENSION);
-		$directory_url = dirname(dirname($file_name)).'/';
 
 		// get absolute local path
 		if (strpos($file_name, 'http://') === 0 || strpos($file_name, 'https://') === 0 || strpos($file_name, '//') === 0)
 			$file_name = URL::to_file_path($file_name);
 
+		// get reference for replacing relative paths in styles
+		$reference_url = URL::from_file_path(dirname(dirname($file_name)));
+
 		switch ($extension) {
 			case 'less':
 				// compile files
 				try {
-					$this->less_compiler->parseFile($file_name, _BASEPATH.'/'.$styles_path);
+					$this->less_compiler->parseFile($file_name);
 					$data = $this->less_compiler->getCss();
 
 				} catch (Exception $error) {
@@ -126,7 +128,6 @@ class CodeOptimizer {
 
 			case 'css':
 			default:
-				$module_directory = _BASEPATH.'/'.$system_module_path;
 				$data = file_get_contents($file_name);
 
 				// change path for relative module urls
@@ -310,9 +311,11 @@ class CodeOptimizer {
 	/**
 	 * Return compiled scripts and styles.
 	 *
+	 * @param boolean $show_styles
+	 * @param boolean $show_scripts
 	 * @return string
 	 */
-	public function print_data() {
+	public function print_data($show_styles=true, $show_scripts=true) {
 		global $cache_path, $include_styles;
 
 		// compile styles if needed
@@ -355,16 +358,19 @@ class CodeOptimizer {
 		if (file_exists($style_cache.'.sha384'))
 			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
 
-		if (!$include_styles)
-			print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
-			print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+		if ($show_styles) {
+			if (!$include_styles)
+				print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
+				print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
+		}
 
 		// show javascript tags
 		$integrity = '';
 		if (file_exists($script_cache.'.sha384'))
 			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
 
-		print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
+		if ($show_scripts)
+			print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
 	}
 }
 

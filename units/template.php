@@ -467,7 +467,11 @@ class TemplateHandler {
 					$symbol = isset($tag->tagAttrs['symbol']) ? $tag->tagAttrs['symbol'] : null;
 
 					if (is_null($symbol)) {
-						echo file_get_contents($path.$file);
+						if ($file[0] != '/')
+							$file = $path.$file;
+
+						if (file_exists($file))
+							echo file_get_contents($file);
 
 					} else {
 						$params = array(
@@ -676,7 +680,14 @@ class TemplateHandler {
 
 				// support for script tag
 				case 'cms:script':
-					if (ModuleHandler::is_loaded('head_tag')) {
+					if (isset($tag->tagAttrs['local'])) {
+						// include local module script
+						$script = fix_chars($tag->tagAttrs['local']);
+						$path = URL::from_file_path($this->module->path.'include/'.$script);
+						echo '<script type="text/javascript" src="'.$path.'"/>';
+
+					} else if (ModuleHandler::is_loaded('head_tag')) {
+						// treat script as generic page script and pass it on to head tag
 						$head_tag = head_tag::get_instance();
 						$head_tag->addTag('script', $tag->tagAttrs);
 					}
@@ -747,11 +758,6 @@ class TemplateHandler {
 						}
 					}
 
-					break;
-
-				// support for automated testing
-				case 'cms:test':
-					// TODO: Link to autotesting class.
 					break;
 
 				// force flush on common elements

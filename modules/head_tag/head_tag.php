@@ -126,6 +126,8 @@ class head_tag extends Module {
 	 * @param array $params
 	 */
 	public function addTag($name, $params) {
+		global $optimize_code;
+
 		$name = strtolower($name);
 		$data = array($name, $params);
 
@@ -135,6 +137,12 @@ class head_tag extends Module {
 				break;
 
 			case 'link':
+				// include LESS JavaScript parser
+				if ((isset($params['rel']) && $params['rel'] == 'stylesheet/less') && !$optimize_code) {
+					$collection = collection::get_instance();
+					$collection->includeScript(collection::LESS);
+				}
+
 				$this->link_tags[] = $data;
 				break;
 
@@ -192,6 +200,16 @@ class head_tag extends Module {
 	private function printTags() {
 		global $optimize_code, $section;
 
+		// determine whether we should optimize code
+		if (!defined('DEBUG')) {
+			$optimize_styles = $section == 'backend' || $optimize_code;
+			$optimize_scripts = $optimize_code && !in_array($section, array('backend', 'backend_module'));
+
+		} else {
+			$optimize_styles = false;
+			$optimize_scripts = false;
+		}
+
 		// give modules chance to set title if needed
 		$response_list = Events::trigger('head-tag', 'before-title-print');
 		$priority = 0;
@@ -218,31 +236,42 @@ class head_tag extends Module {
 		// print title tag
 		$this->printTag(array('title', array()), $title_body);
 
-		// merge tag lists
-		$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
-
-		if ($optimize_code && !in_array($section, array('backend', 'backend_module'))) {
+		if ($optimize_styles || $optimize_scripts) {
 			// use code optimizer if possible
 			$optimizer = CodeOptimizer::get_instance();
 			$unhandled_tags = array_merge($this->tags, $this->meta_tags);
 
 			// add tags for compilation
-			foreach ($this->link_tags as $link) {
-				$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
+			if (!$optimize_styles) {
+				// skip optimizing styles
+				$unhandled_tags = array_merge($unhandled_tags, $this->link_tags);
 
-				if ($can_be_compiled)
-					$added = $optimizer->add_style($link[1]['href']);
+			} else {
+				// add each style for compilation
+				foreach ($this->link_tags as $link) {
+					$can_be_compiled = isset($link[1]['rel']) && in_array($link[1]['rel'], $this->supported_styles);
 
-				if (!$can_be_compiled || !$added)
-					$unhandled_tags [] = $link;
+					if ($can_be_compiled)
+						$added = $optimizer->add_style($link[1]['href']);
+
+					if (!$can_be_compiled || !$added)
+						$unhandled_tags [] = $link;
+				}
 			}
 
 			// add scripts for compilation
-			$handled_tags = array();
-			foreach ($this->script_tags as $script)
-				if (!$optimizer->add_script($script[1]['src']))
-					$unhandled_tags []= $script; else
-					$handled_tags []= $script;  // collect scripts in case compile fails
+			if (!$optimize_code) {
+				// skip compiling code
+				$unhandled_tags = array_merge($unhandled_tags, $this->script_tags);
+
+			} else {
+				// add each script link for compilation
+				$handled_tags = array();
+				foreach ($this->script_tags as $script)
+					if (!$optimizer->add_script($script[1]['src']))
+						$unhandled_tags []= $script; else
+						$handled_tags []= $script;  // collect scripts in case compile fails
+			}
 
 			foreach ($unhandled_tags as $tag)
 				$this->printTag($tag);
@@ -252,6 +281,9 @@ class head_tag extends Module {
 				$optimizer->print_data();
 
 			} catch (ScriptCompileError $error) {
+				// report error for debugging
+				trigger_error($error->getMessage(), E_USER_WARNING);
+
 				// there was a problem compiling script, show tags traditional way
 				foreach ($handled_tags as $tag)
 					$this->printTag($tag);
@@ -259,6 +291,7 @@ class head_tag extends Module {
 
 		} else {
 			// no optimization
+			$tags = array_merge($this->tags, $this->meta_tags, $this->link_tags, $this->script_tags);
 			foreach ($tags as $tag)
 				$this->printTag($tag);
 		}

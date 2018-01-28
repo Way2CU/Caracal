@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Window Menu -->
-	<div class="main_menu">
+	<nav class="window">
 		<div class="floated">
 			<cms:text constant="type" module="survey"/>
 			<select onchange="javascript: submissions_update_result_list();" id="submission_form_list">
@@ -12,7 +12,7 @@
 					template="form_option.xml"
 					local="1"
 					cms:eval="selected"
-				/>
+					/>
 			</select>
 		</div>
 
@@ -21,7 +21,7 @@
 		</cms:if>
 
 		<div style="clear: both;"/>
-	</div>
+	</nav>
 
 	<!-- Header -->
 	<cms:if condition="isset($_REQUEST['form']) and !empty($_REQUEST['form'])">

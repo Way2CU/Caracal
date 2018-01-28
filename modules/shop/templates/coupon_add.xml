@@ -4,7 +4,6 @@
 		action="$params['form_action']"
 		cms:eval="action"
 		method="POST"
-		id="shop_coupon_add_form"
 		>
 		<!-- General page -->
 		<label>
@@ -33,11 +32,8 @@
 
 		<div class="box left" style="min-width: 170px;">
 			<label class="checkbox">
+				<input type="checkbox" name="has_limit"/>
 				<span><cms:text constant="label_coupon_has_limit" module="shop"/></span>
-				<input
-					type="checkbox"
-					name="has_limit"
-					/>
 			</label>
 
 			<label>
@@ -55,11 +51,8 @@
 		<!-- Time limit -->
 		<div class="box">
 			<label class="checkbox">
+				<input type="checkbox" name="has_timeout"/>
 				<span><cms:text constant="label_coupon_has_timeout" module="shop"/></span>
-				<input
-					type="checkbox"
-					name="has_timeout"
-					/>
 			</label>
 
 			<label>
@@ -83,13 +76,6 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-
-	<script type="text/javascript" charset="utf-8">
-		var selector = new LanguageSelector('shop_coupon_add_form');
-	</script>
 </document>

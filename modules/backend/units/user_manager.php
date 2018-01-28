@@ -120,7 +120,6 @@ class Backend_UserManager {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'users_save'),
-					'cancel_action'	=> window_Close('system_users_create')
 				);
 
 		$template->restore_xml();
@@ -148,7 +147,6 @@ class Backend_UserManager {
 						'email'			=> $item->email,
 						'level'			=> $item->level,
 						'form_action'	=> backend_UrlMake($this->parent->name, 'users_save'),
-						'cancel_action'	=> window_Close('system_users_change')
 					);
 
 			$template->restore_xml();
@@ -892,7 +890,6 @@ class Backend_UserManager {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->parent->name, 'save_password'),
-					'cancel_action'	=> window_Close('change_password_window')
 				);
 
 		$template->restore_xml();
@@ -963,7 +960,6 @@ class Backend_UserManager {
 
 			$params = array(
 						'form_action'	=> backend_UrlMake($this->parent->name, 'email_templates_save'),
-						'cancel_action'	=> window_Close('system_users_email_templates')
 					);
 
 			$template->restore_xml();

@@ -103,7 +103,6 @@ class ShopWarehouseHandler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'warehouses', 'save'),
-					'cancel_action'	=> window_Close('shop_warehouse_add')
 				);
 
 		$template->restore_xml();
@@ -134,7 +133,6 @@ class ShopWarehouseHandler {
 					'country'	=> $item->country,
 					'state'		=> $item->state,
 					'form_action'	=> backend_UrlMake($this->name, 'warehouses', 'save'),
-					'cancel_action'	=> window_Close('shop_warehouse_change')
 				);
 
 			$template->set_local_params($params);

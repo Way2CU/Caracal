@@ -2,7 +2,7 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Window menu -->
-	<div class="main_menu">
+	<nav class="window">
 		<cms:var param="link_reload"/>
 		<div class="floated">
 			<cms:text constant="label_status" module="shop"/>
@@ -14,7 +14,7 @@
 				<cms:status_list/>
 			</select>
 		</div>
-	</div>
+	</nav>
 
 	<!-- Header -->
 	<div class="scrollable_list">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="news_feed_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_feed_group" module="news"/></span>
 			<select name="group" style="width: 250px;">
@@ -21,18 +21,12 @@
 			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_active" module="news"/></span>
 			<input type="checkbox" name="active" checked="checked"/>
+			<span><cms:text constant="label_active" module="news"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		new LanguageSelector('news_feed_add_form');
-	</script>
 </document>

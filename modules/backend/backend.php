@@ -16,7 +16,7 @@ use Modules\Backend\OrderEditor as OrderEditor;
 
 define('_BACKEND_SECTION_', 'backend_module');
 
-define('CHAR_CHECKED', '✔');
+define('CHAR_CHECKED', '<svg class="check-mark"><use xlink:href="#icon-checkmark"/></svg>');
 define('CHAR_UNCHECKED', '');
 
 require_once('units/action.php');
@@ -63,38 +63,27 @@ class backend extends Module {
 		Events::register('backend', 'user-delete', 1);
 		Events::register('backend', 'user-password-change', 1);
 
-		// load CSS and JScript
-		if (ModuleHandler::is_loaded('head_tag') && $section == 'backend') {
-			$head_tag = head_tag::get_instance();
-			$collection = collection::get_instance();
-
-			$collection->includeScript(collection::JQUERY);
-			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
-			$collection->includeScript(collection::WINDOW_SYSTEM);
-
-			if ($_SESSION['logged']) {
-				$collection->includeScript(collection::JQUERY_EXTENSIONS);
-				$collection->includeScript(collection::NOTEBOOK);
-				$collection->includeScript(collection::SHOWDOWN);
-				$collection->includeScript(collection::TOOLBAR);
-			}
-
-			$head_tag->addTag('link', array('href'=>URL::from_file_path($this->path.'include/backend.css'), 'rel'=>'stylesheet', 'type'=>'text/css'));
-			$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/order_editor.js'), 'type'=>'text/javascript'));
-		}
-
 		// add admin level menus
 		if ($section == 'backend') {
+			Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
+
+			$collection = collection::get_instance();
+			$collection->includeScript(collection::JQUERY);
+			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
+			$collection->includeScript(collection::JQUERY_EXTENSIONS);
+			$collection->includeScript(collection::SHOWDOWN);
+			$collection->includeScript(collection::TOOLBAR);
+
 			$system_menu = new backend_MenuItem(
 									$this->get_language_constant('menu_system'),
-									URL::from_file_path($this->path.'images/system.svg'),
+									$this->path.'images/system.svg',
 									'javascript:void(0);',
 									$level=1
 								);
 
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_modules'),
-									URL::from_file_path($this->path.'images/modules.svg'),
+									$this->path.'images/modules.svg',
 									window_Open( // on click open window
 												'system_modules',
 												610,
@@ -106,7 +95,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_users'),
-									URL::from_file_path($this->path.'images/users.svg'),
+									$this->path.'images/users.svg',
 									window_Open( // on click open window
 												'system_users',
 												690,
@@ -118,7 +107,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_clear_cache'),
-									URL::from_file_path($this->path.'images/clear_cache.svg'),
+									$this->path.'images/clear_cache.svg',
 									window_Open( // on click open window
 												'system_clear_cache',
 												350,
@@ -130,7 +119,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_exports'),
-									URL::from_file_path($this->path.'images/exports.svg'),
+									$this->path.'images/exports.svg',
 									window_Open( // on click open window
 												'system_exports',
 												500,
@@ -144,7 +133,7 @@ class backend extends Module {
 			$system_menu->addSeparator(10);
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_change_password'),
-									URL::from_file_path($this->path.'images/change_password.svg'),
+									$this->path.'images/change_password.svg',
 									window_Open( // on click open window
 												'change_password_window',
 												350,
@@ -156,7 +145,7 @@ class backend extends Module {
 								));
 			$system_menu->addChild(null, new backend_MenuItem(
 									$this->get_language_constant('menu_logout'),
-									URL::from_file_path($this->path.'images/logout.svg'),
+									$this->path.'images/logout.svg',
 									window_Open( // on click open window
 												'logout_window',
 												350,
@@ -384,6 +373,35 @@ class backend extends Module {
 	}
 
 	/**
+	 * Add required scripts and styles.
+	 */
+	public function add_meta_tags() {
+		$head_tag = head_tag::get_instance();
+
+		$head_tag->addTag('link', array(
+				'href' => URL::from_file_path($this->path.'include/main.less'),
+				'rel'  => 'stylesheet/less',
+				'type' => 'text/css'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/order_editor.js'),
+				'type' => 'text/javascript'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/window_system.js'),
+				'type' => 'text/javascript'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/notebook.js'),
+				'type' => 'text/javascript'
+			));
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/window.js'),
+				'type' => 'text/javascript'
+			));
+	}
+
+	/**
 	 * Save template selection.
 	 *
 	 * @param string $verify
@@ -398,13 +416,18 @@ class backend extends Module {
 	 * Parse main backend template.
 	 */
 	private function showBackend() {
+		// create template parser
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
-
 		$template->set_mapped_module($this->name);
-		$template->register_tag_handler('cms:main_menu', $this, 'tag_MainMenu');
+		$template->register_tag_handler('cms:menu_items', $this, 'tag_MainMenu');
 
-		$params = array();
+		// prepare parameters
+		$params = array(
+				'sprite'       => $this->path.'images/sprite.svg',
+				'default_icon' => $this->path.'images/system.svg'
+			);
 
+		// render template
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -454,7 +477,7 @@ class backend extends Module {
 
 		$params = array();
 
-		$template->register_tag_handler('_module_list', $this, 'tag_ModuleList');
+		$template->register_tag_handler('cms:module_list', $this, 'tag_ModuleList');
 		$template->restore_xml();
 		$template->set_local_params($params);
 		$template->parse();
@@ -753,7 +776,6 @@ class backend extends Module {
 				'file_name'     => $file_name,
 				'description'   => $description,
 				'form_action'   => backend_UrlMake($this->name, 'import_commit'),
-				'cancel_action' => window_Close('system_import_data')
 			);
 
 		$template->restore_xml();
@@ -879,7 +901,6 @@ class backend extends Module {
 
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'export_commit'),
-				'cancel_action'	=> window_Close('system_export_data')
 			);
 
 		$template->restore_xml();
@@ -921,7 +942,7 @@ class backend extends Module {
 	}
 
 	/**
-	 * Handle tag _module_list used to display list of all modules on the system
+	 * Render module list tag.
 	 *
 	 * @param array $params
 	 * @param array $children
@@ -968,13 +989,10 @@ class backend extends Module {
 									);
 		}
 
-		$template = new TemplateHandler(
-							isset($params['template']) ? $params['template'] : 'module.xml',
-							$this->path.'templates/'
-						);
+		// load template
+		$template = $this->load_template($tag_params, 'module.xml');
 
-		$template->set_mapped_module($this->name);
-
+		// render data
 		foreach($list as $name => $definition) {
 			// locate module icon
 			$icon_file = null;
@@ -984,7 +1002,7 @@ class backend extends Module {
 
 			if (file_exists($icon_file))
 				$icon = URL::from_file_path($icon_file); else
-				$icon = URL::from_file_path($this->path.'images/modules.svg');
+				$this->path.'images/modules.svg';
 
 			$params = array(
 							'name'				=> $name,
@@ -1109,12 +1127,10 @@ class backend extends Module {
 	 * Draws all menus for current level
 	 */
 	public function tag_MainMenu($tag_params, $children) {
-		echo '<ul id="navigation">';
+		$template = new TemplateHandler('menu_item.xml', $this->path.'templates/');
 
 		foreach ($this->menus as $item)
-			$item->drawItem();
-
-		echo '</ul>';
+			$item->drawItem($template);
 	}
 
 	/**

@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div id="tranzila_settings_notebook">
+		<div class="notebook">
 			<!-- Terminal page -->
-			<div>
+			<div class="page" data-title="tab_terminal" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_terminal" module="tranzila"/></span>
 					<input
@@ -39,18 +39,18 @@
 						/>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_custom_template" module="tranzila"/></span>
 					<input
 						type="checkbox"
 						name="custom_template"
 						checked="$settings['custom_template'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_custom_template" module="tranzila"/></span>
 				</label>
 			</div>
 
 			<!-- URLs page -->
-			<div>
+			<div class="page" data-title="tab_urls" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_url_confirm" module="tranzila"/></span>
 					<input
@@ -79,17 +79,6 @@
 		</div>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-
-	<script type="text/javascript" charset="utf-8">
-		// create notebook
-		var notebook = new Notebook('tranzila_settings_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('tranzila', 'tab_terminal'))
-			.setPageTitle(1, language_handler.getText('tranzila', 'tab_urls'));
-	</script>
 </document>

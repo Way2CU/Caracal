@@ -109,7 +109,6 @@ class ShopManufacturerHandler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'manufacturers', 'save'),
-					'cancel_action'	=> window_Close('shop_manufacturer_add')
 				);
 
 		$template->restore_xml();
@@ -143,7 +142,6 @@ class ShopManufacturerHandler {
 					'web_site'		=> $item->web_site,
 					'logo'			=> $item->logo,
 					'form_action'	=> backend_UrlMake($this->name, 'manufacturers', 'save'),
-					'cancel_action'	=> window_Close('shop_manufacturer_change')
 				);
 
 		$template->restore_xml();

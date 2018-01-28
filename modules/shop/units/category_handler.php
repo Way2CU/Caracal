@@ -120,7 +120,6 @@ class ShopCategoryHandler {
 		$params = array(
 					'parent'		=> isset($_REQUEST['parent']) ? fix_id($_REQUEST['parent']) : null,
 					'form_action'	=> backend_UrlMake($this->name, 'categories', 'save'),
-					'cancel_action'	=> window_Close('shop_category_add')
 				);
 
 		// register tag handlers
@@ -168,7 +167,6 @@ class ShopCategoryHandler {
 						'text_id'		=> $item->text_id,
 						'description'	=> $item->description,
 						'form_action'	=> backend_UrlMake($this->name, 'categories', 'save'),
-						'cancel_action'	=> window_Close('shop_category_change')
 					);
 
 			// parse template

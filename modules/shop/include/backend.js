@@ -24,9 +24,8 @@ Caracal.Shop.open_item_search = function() {
 		};
 	var url = $('meta[property=base-url]').attr('content') + '?' + $.param(data);
 
-	Caracal.window_system.openWindow(
-					'shop_search_results',
-					450,
+	Caracal.window_system.open_window(
+					'shop_search_results', 450,
 					language_handler.getText('shop', 'title_search_results'),
 					true, url
 				);
@@ -249,7 +248,7 @@ Caracal.Shop.update_total_amount = function(button) {
  * Handle changing filter in transaction lists.
  */
 Caracal.Shop.handle_filter_change = function() {
-	var transactions_window = Caracal.window_system.getWindow('shop_transactions');
+	var transactions_window = Caracal.window_system.get_window('shop_transactions');
 	var selected_status = Caracal.window_system.container.find('select[name=status]');
 
 	// store original URL for later use
@@ -440,7 +439,7 @@ Caracal.Shop.save_property = function(button) {
 
 	// show and hide buttons
 	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
-	current_window.find('button[name=reset]').show();
+	current_window.find('button[name=reset]').open();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
@@ -540,7 +539,7 @@ Caracal.Shop.edit_property = function(event) {
 	// show and hide buttons
 	current_window.find('button[name=add]').html(language_handler.getText(null, 'save'));
 	current_window.find('button[name=reset]').hide();
-	current_window.find('button[name=cancel]').show();
+	current_window.find('button[name=cancel]').open();
 	input_type.attr('disabled', 'disabled');
 };
 
@@ -613,7 +612,7 @@ Caracal.Shop.cancel_property_edit = function(button) {
 
 	// show and hide buttons
 	current_window.find('button[name=add]').html(language_handler.getText(null, 'add'));
-	current_window.find('button[name=reset]').show();
+	current_window.find('button[name=reset]').open();
 	current_window.find('button[name=cancel]').hide();
 	current_window.removeData('editing_row');
 	input_type.attr('disabled', null);
@@ -699,7 +698,7 @@ Caracal.Shop.add_coupon_code = function(button, code, discount) {
 
 	// close window
 	if (get_data)
-		Caracal.window_system.closeWindow('shop_coupon_codes_add');
+		Caracal.window_system.close_window('shop_coupon_codes_add');
 };
 
 /**
@@ -733,7 +732,7 @@ Caracal.Shop.generate_coupon_codes = function(sender) {
 	}
 
 	// close window
-	Caracal.window_system.closeWindow('shop_coupon_codes_generate');
+	Caracal.window_system.close_window('shop_coupon_codes_generate');
 };
 
 /**
@@ -753,7 +752,7 @@ Caracal.Shop.delete_coupon_code = function(sender) {
  * @param object sender
  */
 Caracal.Shop.update_item_list = function(sender) {
-	var items_window = Caracal.window_system.getWindow('shop_items');
+	var items_window = Caracal.window_system.get_window('shop_items');
 	var manufacturer = items_window.container.find('select[name=manufacturer]');
 	var category = items_window.container.find('select[name=category]');
 
@@ -768,5 +767,5 @@ Caracal.Shop.update_item_list = function(sender) {
 		items_window.original_url = items_window.url;
 
 	// reload window
-	items_window.loadContent(items_window.original_url + '&' + $.param(data));
+	items_window.load_content(items_window.original_url + '&' + $.param(data));
 };

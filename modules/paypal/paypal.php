@@ -36,7 +36,7 @@ class paypal extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_paypal'),
-									URL::from_file_path($this->path.'images/icon.svg'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'paypal',
 												400,
@@ -50,7 +50,7 @@ class paypal extends Module {
 			if (!is_null($recurring_menu))
 				$recurring_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_paypal'),
-									URL::from_file_path($this->path.'images/icon.svg'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'paypal_recurring_plans',
 												400,
@@ -221,7 +221,6 @@ class paypal extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('paypal')
 					);
 
 		$template->restore_xml();
@@ -289,7 +288,6 @@ class paypal extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'recurring_plans_save'),
-					'cancel_action'	=> window_Close('paypal_recurring_plans_new')
 				);
 
 		$template->restore_xml();
@@ -325,7 +323,6 @@ class paypal extends Module {
 						'start_time'		=> $plan->start_time,
 						'group_name'		=> $plan->group_name,
 						'form_action'	=> backend_UrlMake($this->name, 'recurring_plans_save'),
-						'cancel_action'	=> window_Close('paypal_recurring_plans_change')
 					);
 
 			$template->restore_xml();

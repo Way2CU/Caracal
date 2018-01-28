@@ -33,19 +33,13 @@
 			/>
 		</label>
 		<label class="checkbox">
+			<input type="checkbox" name="ignore_address"/>
 			<span><cms:text constant="label_ignore_address" module="activity_tracker"/></span>
-			<input
-				type="checkbox"
-				name="ignore_address"
-			/>
 		</label>
 
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 </document>

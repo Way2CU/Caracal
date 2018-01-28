@@ -18,8 +18,9 @@
 			<input name="subject" class="multi-language" type="text" maxlength="255" style="width: 600px"/>
 		</label>
 
-		<div id="contact_form_templates_notebook">
-			<div>
+		<div class="notebook">
+			<!-- Plain text tab -->
+			<div class="page" data-title="tab_plain_text" cms:constant="data-title">
 				<textarea
 					name="plain_text_content"
 					class="code multi-language"
@@ -29,7 +30,8 @@
 				/>
 			</div>
 
-			<div>
+			<!-- HTML tab -->
+			<div class="page" data-title="tab_html" cms:constant="data-title">
 				<textarea
 					name="html_content"
 					class="code multi-language"
@@ -39,29 +41,20 @@
 				/>
 			</div>
 
-			<div>
+			<!-- Preview tab -->
+			<div class="page" data-title="tab_preview" cms:constant="data-title">
 				<div class="markdown_preview" id="contact_form_template_preview"/>
 			</div>
 		</div>
+
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 
 	<script type="text/javascript">
-		new LanguageSelector('contact_form_template_add');
 		var converter = new Showdown.converter();
-
-		// create notebook
-		var notebook = new Notebook('contact_form_templates_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_plain_text'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_html'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_preview'));
 
 		// update preview on blur
 		$('div#contact_form_templates_notebook textarea[name=html_content]').blur(function() {

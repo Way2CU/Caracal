@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="contact_form_edit">
-		<div id="contact_form_edit_notebook">
+		<div class="notebook">
 			<!-- General options -->
-			<div>
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label cms:tooltip="tooltip_text_id">
 					<span><cms:text constant="label_text_id" module="contact_form"/></span>
 					<input
@@ -31,7 +31,7 @@
 			</div>
 
 			<!-- Submission options -->
-			<div>
+			<div class="page" data-title="tab_submission" cms:constant="data-title">
 				<label cms:tooltip="tooltip_action">
 					<span><cms:text constant="label_action" module="contact_form"/></span>
 					<input
@@ -46,13 +46,13 @@
 				</label>
 
 				<label class="checkbox" cms:tooltip="tooltip_use_ajax">
-					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
 					<input
 						name="use_ajax"
 						type="checkbox"
 						checked="$params['use_ajax'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_use_ajax" module="contact_form"/></span>
 				</label>
 
 				<hr/>
@@ -74,13 +74,13 @@
 				<hr/>
 
 				<label class="checkbox" cms:tooltip="tooltip_include_reply_to">
-					<span><cms:text constant="label_include_reply_to" module="contact_form"/></span>
 					<input
 						name="include_reply_to"
 						type="checkbox"
 						checked="$params['include_reply_to'] ? 'checked' : false"
 						cms:optional="checked"
 						/>
+					<span><cms:text constant="label_include_reply_to" module="contact_form"/></span>
 				</label>
 
 				<label>
@@ -98,7 +98,7 @@
 			</div>
 
 			<!-- Mailer selection -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_mailers" cms:constant="data-title">
 				<div class="list_header">
 					<span class="column">
 						<cms:text constant="column_mailer" module="contact_form"/>
@@ -115,43 +115,43 @@
 			</div>
 
 			<!-- Appearance options -->
-			<div>
+			<div class="page" data-title="tab_appearance" cms:constant="data-title">
 				<fieldset>
 					<legend><cms:text constant="legend_controls" module="contact_form"/></legend>
 					<label class="checkbox">
-						<span><cms:text constant="label_show_submit" module="contact_form"/></span>
 						<input
 							name="show_submit"
 							type="checkbox"
 							checked="$params['show_submit'] ? 'checked' : false"
 							cms:optional="checked"
 							/>
+						<span><cms:text constant="label_show_submit" module="contact_form"/></span>
 					</label>
 
 					<label class="checkbox">
-						<span><cms:text constant="label_show_reset" module="contact_form"/></span>
 						<input
 							name="show_reset"
 							type="checkbox"
 							checked="$params['show_reset'] ? 'checkend' : false"
 							cms:optional="checked"
 							/>
+						<span><cms:text constant="label_show_reset" module="contact_form"/></span>
 					</label>
 
 					<label class="checkbox">
-						<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
 						<input
 							name="show_cancel"
 							type="checkbox"
 							checked="$params['show_cancel'] ? 'checked' : false"
 							cms:optional="checked"
 							/>
+						<span><cms:text constant="label_show_cancel" module="contact_form"/></span>
 					</label>
 				</fieldset>
 			</div>
 
 			<!-- Accepted domains -->
-			<div class="scrollable_list">
+			<div class="scrollable_list page" data-title="tab_domains" cms:constant="data-title">
 				<label class="inline">
 					<span><cms:text constant="label_domain" module="contact_form"/></span>
 					<input name="domain" type="text"/>
@@ -179,24 +179,10 @@
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 
 	<script type="text/javascript">
-		new LanguageSelector('contact_form_edit');
-
-		// create notebook
-		var notebook = new Notebook('contact_form_edit_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_submission'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_mailers'))
-			.setPageTitle(3, language_handler.getText('contact_form', 'tab_appearance'))
-			.setPageTitle(4, language_handler.getText('contact_form', 'tab_domains'));
-
 		// connect list item options
 		$('#contact_form_domain_list a').click(ContactForm.remove_domain);
 	</script>

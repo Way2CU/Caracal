@@ -45,14 +45,14 @@ class downloads extends Module {
 
 			$downloads_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_downloads'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_upload_file'),
-								URL::from_file_path($this->path.'images/upload.svg'),
+								$this->path.'images/upload.svg',
 								window_Open( // on click open window
 											'upload_file',
 											400,
@@ -65,7 +65,7 @@ class downloads extends Module {
 
 			$downloads_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_manage'),
-								URL::from_file_path($this->path.'images/manage.svg'),
+								$this->path.'images/manage.svg',
 								window_Open( // on click open window
 											'downloads',
 											520,
@@ -228,7 +228,6 @@ class downloads extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'upload_save'),
-					'cancel_action'	=> window_Close('upload_file')
 				);
 
 		$template->restore_xml();
@@ -289,7 +288,6 @@ class downloads extends Module {
 					'filename'		=> $item->filename,
 					'visible'		=> $item->visible,
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('downloads_change')
 				);
 
 		$template->restore_xml();

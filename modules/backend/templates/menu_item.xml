@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
+<document>
+	<cms:if condition="!$params['has_children']">
+		<a
+			onclick="!empty($params['action']) ? $params['action'] : false"
+			cms:optional="onclick"
+			>
+			<cms:svg file="$params['icon']" cms:eval="file"/>
+			<span><cms:var param="title"/></span>
+		</a>
+	</cms:if>
+
+	<cms:if condition="$params['has_children']">
+		<div>
+			<a
+				onclick="!empty($params['action']) ? $params['action'] : false"
+				cms:optional="onclick"
+				>
+				<cms:svg file="$params['icon']" cms:eval="file"/>
+				<span><cms:var param="title"/></span>
+			</a>
+
+			<nav>
+				<cms:children/>
+			</nav>
+		</div>
+	</cms:if>
+</document>

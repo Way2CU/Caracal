@@ -2,8 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST">
-		<div id="contact_form_settings_notebook">
-			<div>
+		<div class="notebook">
+			<!-- General tab -->
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_mailer" module="contact_form"/></span>
 					<select name="mailer" style="width: 150px">
@@ -15,7 +16,8 @@
 				</label>
 			</div>
 
-			<div>
+			<!-- Identity tab -->
+			<div class="page" data-title="tab_identity" cms:constant="data-title">
 				<fieldset>
 					<legend><cms:text constant="legend_sender" module="contact_form"/></legend>
 					<label cms:tooltip="tooltip_sender_name">
@@ -26,7 +28,7 @@
 							value="$settings['sender_name']"
 							cms:eval="value"
 							style="width: 250px;"
-						/>
+							/>
 					</label>
 					<label cms:tooltip="tooltip_sender_address">
 						<span><cms:text constant="label_address" module="contact_form"/></span>
@@ -37,7 +39,7 @@
 							cms:eval="value"
 							style="width: 250px;"
 							class="code ltr"
-						/>
+							/>
 					</label>
 				</fieldset>
 
@@ -51,7 +53,7 @@
 							value="$settings['recipient_name']"
 							cms:eval="value"
 							style="width: 250px;"
-						/>
+							/>
 					</label>
 					<label cms:tooltip="tooltip_recipient_address">
 						<span><cms:text constant="label_address" module="contact_form"/></span>
@@ -62,12 +64,13 @@
 							cms:eval="value"
 							style="width: 250px;"
 							class="code ltr"
-						/>
+							/>
 					</label>
 				</fieldset>
 			</div>
 
-			<div>
+			<!-- SMTP tab -->
+			<div class="page" data-title="tab_smtp" cms:constant="data-title">
 				<label class="horizontal">
 					<span><cms:text constant="label_server" module="contact_form"/></span>
 					<input
@@ -77,7 +80,7 @@
 						cms:eval="value"
 						style="width: 240px;"
 						class="code ltr"
-					/>
+						/>
 				</label>
 				<label class="horizontal">
 					<span><cms:text constant="label_port" module="contact_form"/></span>
@@ -88,18 +91,20 @@
 						cms:eval="value"
 						style="width: 50px;"
 						class="code ltr"
-					/>
+						/>
 				</label>
 				<label class="checkbox">
+					<input
+						type="checkbox"
+						name="use_ssl"
+						checked="$settings['use_ssl'] ? 'checked': false"
+						cms:optional="checked"
+						/>
 					<span><cms:text constant="label_use_ssl" module="contact_form"/></span>
-					<cms:if condition="$settings['use_ssl']">
-						<input type="checkbox" name="use_ssl" checked="checked"/>
-					</cms:if>
-					<cms:if condition="!$settings['use_ssl']">
-						<input type="checkbox" name="use_ssl"/>
-					</cms:if>
 				</label>
+
 				<hr/>
+
 				<label class="radio">
 					<span><cms:text constant="label_smtp_no_authentication" module="contact_form"/></span>
 					<input
@@ -130,7 +135,7 @@
 						cms:eval="value"
 						style="width: 140px;"
 						class="code rtl"
-					/>
+						/>
 				</label>
 				<label class="horizontal">
 					<span><cms:text constant="label_smtp_password" module="contact_form"/></span>
@@ -141,7 +146,7 @@
 						cms:eval="value"
 						style="width: 140px;"
 						class="code rtl"
-					/>
+						/>
 				</label>
 
 				<em><cms:text constant="message_smtp_password_warning" module="contact_form"/></em>
@@ -151,16 +156,6 @@
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		var notebook = new Notebook('contact_form_settings_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('contact_form', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('contact_form', 'tab_identity'))
-			.setPageTitle(2, language_handler.getText('contact_form', 'tab_smtp'));
-	</script>
 </document>

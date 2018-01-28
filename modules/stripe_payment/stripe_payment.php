@@ -39,7 +39,7 @@ class stripe_payment extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_stripe'),
-									URL::from_file_path($this->path.'images/icon.svg'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'stripe',
 												350,
@@ -53,7 +53,7 @@ class stripe_payment extends Module {
 			if (!is_null($plans_menu))
 				$plans_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_stripe'),
-									URL::from_file_path($this->path.'images/icon.svg'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'stripe_recurring_plans',
 												460,
@@ -183,7 +183,6 @@ class stripe_payment extends Module {
 		$template->set_mapped_module($this->name);
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
-						'cancel_action'	=> window_Close('stripe')
 					);
 
 		$template->set_local_params($params);

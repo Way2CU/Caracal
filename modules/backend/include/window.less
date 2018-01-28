@@ -1,0 +1,113 @@
+/**
+ * Window Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.window {
+	position: absolute;
+
+	border-radius: 0.5rem 0.5rem 0 0;
+	background-color: @color_bright;
+	box-shadow: 0 0.1rem 0.5rem fade(@color_dark, 20);
+
+	color: mix(@color_dark, @color_bright, 70);
+
+	&.visible {
+	}
+
+	&.focused {
+	}
+
+	// window title
+	div.title {
+		position: relative;
+		.container-padding(2);
+		padding-left: calc(unit(@icon_size, px) ~'+ 1rem');
+
+		font-size: 1.1em;
+		cursor: default;
+
+		html[dir=rtl] & {
+			padding-left: 0;
+			padding-right: calc(unit(@icon_size, px) ~'+ 1rem');
+		}
+
+		// window icon
+		> svg {
+			position: absolute;
+			top: 50%;
+			left: @padding_unit;
+
+			width: @icon_size;
+			height: @icon_size;
+			transform: translateY(-50%);
+
+			html[dir=rtl] & {
+				left: auto;
+				right: @padding_unit;
+			}
+		}
+
+		.add-icon-behavior(regular);
+	}
+
+	&.focused div.title {
+		color: @color_active;
+	}
+
+	// title bottom border
+	div.title:after {
+		position: absolute;
+		height: 2px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		content: '';
+
+		background-color: fade(@color_dark, 50);
+
+		line-height: 0;
+	}
+
+	&.loading div.title:after {
+		.animation-window-loading();
+	}
+
+	&.focused div.title:after {
+		background-color: @color_active;
+	}
+
+	// title buttons
+	div.title a.button {
+		position: absolute;
+		top: 50%;
+		right: 0;
+
+		line-height: 1;
+		transform: translate(-50%, -50%);
+
+		// right to left support for buttons
+		html[dir=rtl] & {
+			right: auto;
+			left: 0;
+			transform: translate(50%, -50%);
+		}
+
+		// icon styling
+		svg {
+			width: 1.5rem;
+			height: 1.5rem;
+		}
+
+		svg path {
+			fill: mix(@color_dark, @color_bright, 30);
+		}
+
+		&:hover svg path {
+			fill: @color_active;
+		}
+	}
+}

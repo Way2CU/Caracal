@@ -43,14 +43,14 @@ class articles extends Module {
 
 			$articles_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_articles'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_articles_new'),
-								URL::from_file_path($this->path.'images/new_article.svg'),
+								$this->path.'images/new_article.svg',
 
 								window_Open( // on click open window
 											'articles_new',
@@ -65,7 +65,7 @@ class articles extends Module {
 
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_articles_manage'),
-								URL::from_file_path($this->path.'images/manage.svg'),
+								$this->path.'images/manage.svg',
 
 								window_Open( // on click open window
 											'articles',
@@ -78,7 +78,7 @@ class articles extends Module {
 							));
 			$articles_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_article_groups'),
-								URL::from_file_path($this->path.'images/groups.svg'),
+								$this->path.'images/groups.svg',
 
 								window_Open( // on click open window
 											'article_groups',
@@ -428,7 +428,6 @@ class articles extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
-					'cancel_action'	=> window_Close('articles_new')
 				);
 
 		$template->restore_xml();
@@ -466,7 +465,6 @@ class articles extends Module {
 					'visible' 		=> $item->visible,
 					'gallery'		=> $item->gallery,
 					'form_action'	=> backend_UrlMake($this->name, 'articles_save'),
-					'cancel_action'	=> window_Close('articles_change')
 				);
 
 		$template->restore_xml();
@@ -613,7 +611,6 @@ class articles extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('article_groups_new')
 				);
 
 		$template->restore_xml();
@@ -639,7 +636,6 @@ class articles extends Module {
 					'title'			=> unfix_chars($item->title),
 					'description'	=> $item->description,
 					'form_action'	=> backend_UrlMake($this->name, 'groups_save'),
-					'cancel_action'	=> window_Close('article_groups_change')
 				);
 
 		$template->restore_xml();

@@ -11,12 +11,12 @@ var ContactForm = ContactForm || {};
 
 function submissions_update_result_list() {
 	var list = $('select#submission_form_list');
-	var submissions_window = Caracal.window_system.getWindow('contact_form_submissions');
+	var submissions_window = Caracal.window_system.get_window('contact_form_submissions');
 
 	if (submissions_window.original_url == undefined)
 		submissions_window.original_url = submissions_window.url;
 
-	submissions_window.loadContent(submissions_window.original_url + '&form=' + list.val());
+	submissions_window.load_content(submissions_window.original_url + '&form=' + list.val());
 }
 
 /**

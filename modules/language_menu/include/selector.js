@@ -1,215 +1,194 @@
 /**
- * Multi-language Selector
+ * Editor Language Selector
  *
- * Copyright (c) 2014. by Way2CU
- * Author: Mladen Mijatov
- *
- * You need to create new language selector for each window.
- *
- * Requires jQuery 1.4.2+
+ * Language selector is used to add support for multiple-languages in backend
+ * while editing content. Window system will automatically create new language
+ * selector for each window if it detects multi-language input fields.
  */
 
-var language_selector = null;
+var Caracal = Caracal || new Object();
+Caracal.WindowSystem = Caracal.WindowSystem || new Object();
 
-function LanguageSelector(id) {
+
+Caracal.WindowSystem.LanguageSelector = function(window) {
 	var self = this;
 
-	self.current_language = null;
-	self.container = $('#' + id);
 	self.fields = null;
+	self.language = null;
 
-	self.button_container = $('<div>').addClass('language_selector');
+	// container namespaces
+	self.ui = new Object();
+	self.handler = new Object();
+	self.data = new Object();
 
 	/**
-	 * Process result from server
-	 *
-	 * @param object data
+	 * Complete object initialization.
 	 */
-	self.init = function() {
-		self.container.prepend(self.button_container);
-		self.button_container
-				.addClass('loading')
-				.data('selector', self);
+	self._init = function() {
+		self.ui.window = window;
 
-		// find fields
-		self.fields = self.container.find('input.multi-language, textarea.multi-language');
+		// create button container and configure it
+		self.ui.container = document.createElement('div');
+		self.ui.container.classList.add('language-selector');
+		self.ui.window.ui.window_menu.append(self.ui.container);
 
-		// create options
-		var languages = language_handler.languages;
-		var default_supported = false;
+		// find fields to integrate with
+		self.fields = self.ui.window.ui.content.querySelectorAll('input.multi-language, textarea.multi-language');
+
+		// create language controls
 		var default_language = null;
+		self.ui.controls = new Array();
 
-		for(var i in languages) {
-			var language = languages[i];
-			var button = $('<span>');
+		for (var i=0, count=language_handler.languages.length; i<count; i++) {
+			var language = language_handler.languages[i];
 
-			// configure button
-			button
-				.html(language.long)
-				.attr('data-short', language.short)
-				.click(self._handle_button_click);
-
-			// add button to container
-			self.button_container.append(button);
-
-			// check if language matches default one
-			if (language.short == language_handler.default_language) {
-				default_supported = true;
-				default_language = language.short;
-			}
+			// create controls
+			var control = document.createElement('a');
+			control.text = language.long;
+			control.dataset.short = language.short;
+			control.addEventListener('click', self.handler.control_click);
+			self.ui.container.append(control);
+			self.ui.controls.push(control);
 		}
 
-		// make sure we have default language to set
-		if (default_language === null)
-			default_language = languages[0].short;
+		// create data storage for each field
+		self.data.initial = new Object();
+		self.data.current = new Object();
 
-		// attach reset event to forms in container
-		self.container.find('form').on('reset', self._handle_form_reset);
+		for (var i=0, count=self.fields.length; i<count; i++) {
+			var field = self.fields[i];
 
-		// collect multi-language data
-		var field_data = {};
+			self.data.initial[field.name] = new Object();
+			self.data.current[field.name] = new Object();
+		}
 
-		self.container.find('data').each(function() {
-			var data_tag = $(this);
-			var field = data_tag.attr('field');
-			var language = data_tag.attr('language');
+		// collect language data associated with fields
+		var data_tags = self.ui.window.ui.content.querySelectorAll('language-data');
 
-			if (field_data[field] == undefined)
-				field_data[field] = {};
+		for (var i=0, count=data_tags.length; i<count; i++) {
+			var data_tag = data_tags[i];
+			var field = data_tag.getAttribute('field');
+			var language = data_tag.getAttribute('language');
 
-			field_data[field][language] = data_tag.html();
+			if (self.data.initial[field] == undefined)
+				self.data.initial[field] = new Object();
+
+			if (self.data.current[field] == undefined)
+				self.data.current[field] = new Object();
+
+			self.data.initial[field][language] = data_tag.innerText;
+			self.data.current[field][language] = data_tag.innerText;
 			data_tag.remove();
-		});
+		}
 
-		// set language data
-		self.fields.each(function() {
-			var field = $(this);
-			var name = field.attr('name');
-			var data = field_data[name];
-
-			if (data == undefined)
-				data = {};
-
-			var original_data = $.extend({}, data);
-
-			field.data('language', data);
-			field.data('original_data', original_data);
-
-			// upon leaving input element, store data
-			field.blur(self._handle_field_lost_focus);
-		});
+		// connect events
+		for (var i=0, count=self.fields.lenght; i<count; i++)
+			self.fields[i].addEventListener('blur', self.handler.field_lost_focus);
+		self.ui.window.ui.content.querySelector('form').addEventListener('reset', self.handler.form_reset);
 
 		// select default language
-		self.set_language(default_language);
-
-		// stop the loading animation
-		self.button_container.removeClass('loading');
+		self.set_language();
 	};
 
 	/**
-	 * Handle clicking on language button.
+	 * Handle clicking on control.
 	 *
 	 * @param object event
 	 */
-	self._handle_button_click = function(event) {
-		// get data
-		var button = $(this);
-		var language = button.data('short');
-
-		// prevent default behavior
-		event.preventDefault();
-
+	self.handler.control_click = function(event) {
 		// change language
+		var language = event.target.dataset.short;
 		self.set_language(language);
+
+		// stop default handler
+		event.preventDefault();
 	};
 
 	/**
-	 * Handle field loosing focus.
+	 * Handle resetting of the form.
 	 *
 	 * @param object event
 	 */
-	self._handle_field_lost_focus = function(event) {
-		var field = $(this);
-		var data = field.data('language');
-
-		// update field data for current language
-		data[self.current_language] = field.val();
-		field.data('language', data);
-
-		// unset focused field
-		self.focused_field = null;
+	self.handler.form_reset = function(event) {
+		self.reset_values();
 	};
 
 	/**
-	 * Handle reseting the form.
+	 * Handle multi-language field loosing focus.
 	 *
 	 * @param object event
 	 */
-	self._handle_form_reset = function(event) {
-		// reset fields
-		self.reset_fields(event);
+	self.handler.field_lost_focus = function(event) {
+		var field = event.target;
+		self.data.current[field.name][self.language] = field.value;
 	};
 
 	/**
-	 * Set active language
+	 * Switch multi-language fields to specified language. If no language
+	 * was specified, set to default.
 	 *
-	 * @param string language
+	 * @param string new_language
 	 */
-	self.set_language = function(language) {
-		if (self.current_language == language)
+	self.set_language = function(new_language) {
+		// if omitted we are switching to default language
+		if (new_language == undefined)
+			var new_language = language_handler.default_language;
+
+		// make sure we are not switching to same language
+		if (self.language == new_language)
 			return;
 
-		// change active button
-		var new_button = self.button_container.find('[data-short=\'' + language + '\']');
-		self.button_container.children().not(new_button).removeClass('active');
-		new_button.addClass('active');
+		console.log(new_language, self.language);
+		var new_language_is_rtl = language_handler.isRTL(new_language);
 
-		// switch language for each field
-		self.fields.each(function() {
-			var field = $(this);
-			var data = field.data('language');
+		// highlight active control
+		for (var i=0, count=self.ui.controls.length; i<count; i++) {
+			var control = self.ui.controls[i];
 
-			// store data if current language is not null
-			if (self.current_language != null)
-				data[self.current_language] = field.val();
+			if (control.dataset.short == new_language)
+				control.classList.add('active'); else
+				control.classList.remove('active');
+		}
 
-			// get data for new language from storage
-			if (language in data)
-				field.val(data[language]); else
-				field.val('');
+		// change input field values
+		for (var i=0, count=self.fields.length; i<count; i++) {
+			var field = self.fields[i];
 
-			// save old data once we switched everything
-			field.data('language', data);
+			// store current language data
+			if (self.language != null)
+				self.data.current[field.name][self.language] = field.value;
 
-			// emit signal to let other scripts know value has been changed
-			field.trigger('change');
+			// load new language data from the storage
+			if (new_language in self.data.current[field.name])
+				field.value = self.data.current[field.name][new_language]; else
+				field.value = '';
 
-			// apply proper direction
-			if (!language_handler.isRTL(language))
-				field.css('direction', 'ltr'); else
-				field.css('direction', 'rtl');
-		});
+			// apply language direction
+			if (new_language_is_rtl)
+				field.style.direction = 'rtl'; else
+				field.style.direction = 'ltr';
+		}
 
 		// store new language selection
-		self.current_language = language;
+		self.language = new_language;
 	};
 
 	/**
-	 * Function used to restore original language data on form reset event
+	 * Restore initial field values.
 	 */
-	self.reset_fields = function() {
-		self.fields.each(function() {
-			var field = $(this);
-			var data = $.extend({}, field.data('original_data'));
-			field.data('language', data);
+	self.reset_values = function() {
+		if (self.language == null)
+			return;
 
-			// get data for language from storage
-			if (self.current_language in data)
-				field.val(data[self.current_language]); else
-				field.val('');
-		});
+		for (var i=0, count=self.fields.length; i<count; i++) {
+			var field = self.fields[i];
+
+			if (self.language in seld.data.initial[field.name])
+				field.value = self.data.initial[field.name][self.language]; else
+				field.value = '';
+		}
 	};
 
-	// load languages and construct selector
-	self.init();
+	// finalize object
+	self._init();
 }

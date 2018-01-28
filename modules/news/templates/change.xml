@@ -14,25 +14,20 @@
 			<cms:language_data param="content"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="news"/></span>
 			<input
 				type="checkbox"
 				name="visible"
 				checked="$params['visible'] ? 'checked' : false"
 				cms:optional="checked"
 				/>
+			<span><cms:text constant="label_visible" module="news"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('news_add_form');
-
 		// create toolbar
 		toolbar_api
 				.createToolbar('news_add_form', '[name=content]:input')

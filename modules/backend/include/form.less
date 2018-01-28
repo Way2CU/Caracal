@@ -1,0 +1,96 @@
+/**
+ * Form and Form Elements Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.content form {
+	margin: 0;
+	padding: @form_padding;
+
+	label {
+		display: block;
+		margin-bottom: @label_spacing;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+
+		// regular label text
+		> span {
+			display: block;
+			margin-bottom: @input_spacing;
+		}
+
+		// checkbox text and box
+		&.checkbox {
+			> input {
+				display: none;
+			}
+
+			> svg {
+				display: inline-block;
+				vertical-align: middle;
+				width: 1em;
+				height: 1em;
+				margin-right: @input_spacing * 2;
+				padding: 0.1rem;
+
+				border: 1px solid @color_input_border;
+				border-radius: @control_radius;
+				background-color: @color_input_background;
+				fill: @color_input_background;
+
+				.control-transition();
+
+				html[dir=rtl] & {
+					margin-left: @input_spacing * 2;
+					margin-right: 0;
+				}
+			}
+
+			> input:checked + svg {
+				border-color: @color_input_active;
+				fill: @color_input_active;
+			}
+
+			> span {
+				display: inline-block;
+				vertical-align: middle;
+			}
+		}
+	}
+
+	// form controls
+	div.button_bar {
+		padding-top: @form_padding;
+		text-align: center;
+
+		button {
+			margin: 0 @control_spacing;
+			padding: @control_padding;
+
+			border: 0;
+			border-radius: @control_radius;
+			background-color: @color_control_regular_background;
+
+			color: @color_control_regular_text;
+			font-family: generic;
+			font-size: 1rem;
+
+			.control-transition();
+
+			&:hover {
+				background-color: lighten(@color_control_regular_background, 10);
+			}
+
+			&:disabled,
+			&:disabled:hover {
+				background-color: @color_control_disabled_background;
+				color: @color_control_disabled_text;
+			}
+		}
+	}
+}

@@ -39,29 +39,19 @@
 			/>
 		</label>
 		<label class="checkbox">
+			<input
+				type="checkbox"
+				name="ignore_address"
+				checked="$params['ignore_address] ? 'checked' : false"
+				cms:optional="checked"
+				/>
 			<span><cms:text constant="label_ignore_address" module="activity_tracker"/></span>
-			<cms:if condition="$params['ignore_address']">
-				<input
-					type="checkbox"
-					name="ignore_address"
-					checked="checked"
-				/>
-			</cms:if>
-			<cms:if condition="!$params['ignore_address']">
-				<input
-					type="checkbox"
-					name="ignore_address"
-				/>
-			</cms:if>
 		</label>
 
 		<div class="button_bar">
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 </document>

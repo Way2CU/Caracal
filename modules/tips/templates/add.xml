@@ -7,20 +7,15 @@
 			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
 		</label>
 		<label class="checkbox">
-			<span><cms:text constant="label_visible" module="tips"/></span>
 			<input type="checkbox" name="visible" checked="checked"/>
+			<span><cms:text constant="label_visible" module="tips"/></span>
 		</label>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('tips_add_form');
-
 		// create toolbar
 		toolbar_api
 				.createToolbar('tips_add_form', '[name=content]:input')

@@ -26,14 +26,14 @@ class faq extends Module {
 
 			$faq_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_faq'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=4
 				);
 
 			$faq_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_questions'),
-								URL::from_file_path($this->path.'images/questions.svg'),
+								$this->path.'images/questions.svg',
 
 								window_Open( // on click open window
 											'faq',
@@ -176,7 +176,6 @@ class faq extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'save'),
-					'cancel_action'	=> window_Close('faq_new')
 				);
 
 		$template->restore_xml();
@@ -203,7 +202,6 @@ class faq extends Module {
 						'answer'		=> $item->answer,
 						'visible' 		=> $item->visible,
 						'form_action'	=> backend_UrlMake($this->name, 'save'),
-						'cancel_action'	=> window_Close('faq_change')
 					);
 
 			$template->restore_xml();

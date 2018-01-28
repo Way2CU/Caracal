@@ -1,0 +1,75 @@
+/**
+ * Window Menu Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2017 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+// main window menu
+div.window > nav {
+	display: block;
+	min-height: 2.4rem;
+
+	background-color: mix(@color_dull, @color_bright, 10);
+	line-height: 1;
+
+	// hide empty menu
+	&:empty {
+		display: none;
+	}
+
+	div.language-selector {
+		float: right;
+
+		html[dir=rtl] & {
+			float: left;
+		}
+
+		a {
+			display: inline-block;
+			padding: 0.7rem;
+			cursor: default;
+			transition: all 0.3s;
+
+			&.active {
+				color: @color_active;
+			}
+		}
+	}
+
+	div.notebook-controls {
+		a {
+			display: inline-block;
+			padding: 0.7rem 1rem;
+			padding-bottom: 0.6rem;
+
+			border-bottom: 0.1rem solid transparent;
+			cursor: default;
+			transition: all 0.3s;
+
+			&.active {
+				color: @color_active;
+				border-bottom-color: @color_active;
+			}
+		}
+	}
+}
+
+
+div.window div.content div.main_menu {
+	.deprecated();
+	z-index: 1;
+}
+
+div.window div.content nav.main,
+div.window div.content div.main_menu {
+	position: absolute;
+	bottom: @padding_unit;
+	right: @padding_unit;
+
+	html[dir=rtl] & {
+		right: auto;
+		left: @padding_unit;
+	}
+}

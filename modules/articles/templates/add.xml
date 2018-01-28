@@ -2,8 +2,8 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form action="$params['form_action']" cms:eval="action" method="POST" id="article_add_form">
-		<div id="article_write_notebook">
-			<div>
+		<div class="notebook">
+			<div class="page" data-title="tab_general" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_text_id" module="articles"/></span>
 					<input type="text" name="text_id" class="code" style="width: 270px;" maxlength="32"/>
@@ -30,11 +30,13 @@
 					<input type="text" class="multi-language" name="title" style="width: 400px;" maxlength="255"/>
 				</label>
 				<label class="checkbox">
-					<span><cms:text constant="label_visible" module="articles"/></span>
 					<input type="checkbox" name="visible" checked="checked"/>
+					<span><cms:text constant="label_visible" module="articles"/></span>
 				</label>
 			</div>
-			<div>
+
+			<!-- Content -->
+			<div class="page" data-title="tab_content" cms:constant="data-title">
 				<label>
 					<span><cms:text constant="label_content" module="articles"/></span>
 					<textarea
@@ -46,20 +48,18 @@
 						/>
 				</label>
 			</div>
-			<div>
+
+			<!-- Preview -->
+			<div class="page" data-title="tab_preview" cms:constant="data-title">
 				<div class="markdown_preview" id="article_preview"/>
 			</div>
 		</div>
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 	<script type="text/javascript">
-		new LanguageSelector('article_add_form');
 		var converter = new Showdown.converter();
 
 		// create toolbar
@@ -68,13 +68,6 @@
 				.addControl('common', 'markdown')
 				.addControl('gallery', 'article_image')
 				.addControl('downloads', 'link');
-
-		// create notebook
-		var notebook = new Notebook('article_write_notebook');
-		notebook
-			.setPageTitle(0, language_handler.getText('articles', 'tab_general'))
-			.setPageTitle(1, language_handler.getText('articles', 'tab_content'))
-			.setPageTitle(2, language_handler.getText('articles', 'tab_preview'));
 
 		// update preview on blur
 		$('div#article_write_notebook textarea[name=content]').blur(function() {

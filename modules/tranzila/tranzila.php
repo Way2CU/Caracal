@@ -29,7 +29,7 @@ class tranzila extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_tranzila'),
-									URL::from_file_path($this->path.'images/icon.png'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'tranzila',
 												400,
@@ -131,7 +131,6 @@ class tranzila extends Module {
 
 		$params = array(
 				'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-				'cancel_action'	=> window_Close('tranzila'),
 				'confirm_url'	=> URL::make_query($this->name, 'payment-confirm'),
 				'cancel_url'	=> URL::make_query($this->name, 'payment-cancel'),
 			);

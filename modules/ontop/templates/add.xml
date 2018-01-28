@@ -32,27 +32,18 @@
 		<fieldset>
 			<legend><cms:text constant="legend_system_events" module="ontop"/></legend>
 			<label class="checkbox">
+				<input type="checkbox" name="shop_transaction_complete"/>
 				<span><cms:text constant="label_shop_transaction_complete" module="ontop"/></span>
-				<input
-					type="checkbox"
-					name="shop_transaction_complete"
-					/>
 			</label>
 			<label class="checkbox">
+				<input type="checkbox" name="contact_form_submit"/>
 				<span><cms:text constant="label_contact_form_submit" module="ontop"/></span>
-				<input
-					type="checkbox"
-					name="contact_form_submit"
-					/>
 			</label>
 		</fieldset>
 
 		<div class="button_bar">
 			<button type="submit"><cms:text constant="save"/></button>
 			<button type="reset"><cms:text constant="reset"/></button>
-			<button type="button" onclick="$params['cancel_action']" cms:eval="onclick">
-				<cms:text constant="cancel"/>
-			</button>
 		</div>
 	</form>
 </document>

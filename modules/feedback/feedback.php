@@ -30,24 +30,16 @@ class feedback extends Module {
 
 			$feedback_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_feedback'),
-					URL::from_file_path($this->path.'images/icon.svg'),
-					'javascript:void(0);',
+					$this->path.'images/icon.svg',
+					window_Open( // on click open window
+								'feedback_manage',
+								730,
+								$this->get_language_constant('title_feedback_show'),
+								true, true,
+								backend_UrlMake($this->name, 'show_feedback')
+							),
 					$level=5
 				);
-
-			$feedback_menu->addChild('', new backend_MenuItem(
-								$this->get_language_constant('menu_feedback_show'),
-								URL::from_file_path($this->path.'images/feedback_list.svg'),
-
-								window_Open( // on click open window
-											'feedback_manage',
-											730,
-											$this->get_language_constant('title_feedback_show'),
-											true, true,
-											backend_UrlMake($this->name, 'show_feedback')
-										),
-								$level=5
-							));
 
 			$backend->addMenu($this->name, $feedback_menu);
 		}

@@ -33,14 +33,14 @@ class news extends Module {
 
 			$news_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_news'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					5  // level
 				);
 
 			$news_menu->addChild(null, new backend_MenuItem(
 								$this->get_language_constant('menu_add_news'),
-								URL::from_file_path($this->path.'images/add_news.svg'),
+								$this->path.'images/add_news.svg',
 								window_Open( // on click open window
 											'news_add',
 											490,
@@ -54,7 +54,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->get_language_constant('menu_manage_news'),
-					URL::from_file_path($this->path.'images/manage_news.svg'),
+					$this->path.'images/manage_news.svg',
 					window_Open( // on click open window
 								'news',
 								520,
@@ -67,7 +67,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->get_language_constant('menu_manage_groups'),
-					URL::from_file_path($this->path.'images/manage_groups.svg'),
+					$this->path.'images/manage_groups.svg',
 					window_Open( // on click open window
 								'news_groups',
 								580,
@@ -82,7 +82,7 @@ class news extends Module {
 
 			$news_menu->addChild(null, new backend_MenuItem(
 					$this->get_language_constant('menu_news_feeds'),
-					URL::from_file_path($this->path.'images/rss.svg'),
+					$this->path.'images/rss.svg',
 					window_Open( // on click open window
 								'news_feeds',
 								700,
@@ -371,7 +371,6 @@ class news extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'news_save'),
-					'cancel_action'	=> window_Close('news_add')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
@@ -400,7 +399,6 @@ class news extends Module {
 					'content'	=> $item->content,
 					'visible'	=> $item->visible,
 					'form_action'	=> backend_UrlMake($this->name, 'news_save'),
-					'cancel_action'	=> window_Close('news_change')
 				);
 
 		$template->restore_xml();
@@ -555,7 +553,6 @@ class news extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'group_save'),
-					'cancel_action'	=> window_Close('news_group_add')
 				);
 
 		$template->restore_xml();
@@ -583,7 +580,6 @@ class news extends Module {
 						'text_id'		=> $item->text_id,
 						'title'			=> $item->title,
 						'form_action'	=> backend_UrlMake($this->name, 'group_save'),
-						'cancel_action'	=> window_Close('news_group_change')
 					);
 
 			$template->restore_xml();
@@ -705,7 +701,6 @@ class news extends Module {
 		$params = array(
 					'group'			=> $group_id,
 					'form_action'	=> backend_UrlMake($this->name, 'group_items_save'),
-					'cancel_action'	=> window_Close('news_group_items')
 				);
 
 		$template->register_tag_handler('_group_items', $this, 'tag_GroupItems');
@@ -788,7 +783,6 @@ class news extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'feed_save'),
-					'cancel_action'	=> window_Close('news_feeds_add')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');
@@ -819,7 +813,6 @@ class news extends Module {
 					'description'	=> $item->description,
 					'active'		=> $item->active,
 					'form_action'	=> backend_UrlMake($this->name, 'feed_save'),
-					'cancel_action'	=> window_Close('news_feeds_change')
 				);
 
 		$template->register_tag_handler('cms:group_list', $this, 'tag_GroupList');

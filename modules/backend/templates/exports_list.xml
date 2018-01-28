@@ -2,9 +2,9 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<!-- Window menu -->
-	<div class="main_menu">
+	<nav class="window">
 		<cms:var param="link_export"/>
-	</div>
+	</nav>
 
 	<!-- Exports list -->
 	<div class="scrollable_list modules">

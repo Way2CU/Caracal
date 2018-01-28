@@ -28,7 +28,7 @@ class fedex extends Module {
 			if (!is_null($method_menu))
 				$method_menu->addChild('', new backend_MenuItem(
 									$this->get_language_constant('menu_fedex'),
-									URL::from_file_path($this->path.'images/icon.png'),
+									$this->path.'images/icon.svg',
 									window_Open( // on click open window
 												'fedex',
 												350,
@@ -110,8 +110,7 @@ class fedex extends Module {
 		$template->set_mapped_module($this->name);
 
 		$params = array(
-						'form_action'	=> backend_UrlMake($this->name, 'save_settings'),
-						'cancel_action'	=> window_Close('fedex')
+						'form_action'	=> backend_UrlMake($this->name, 'save_settings')
 					);
 
 		$template->set_local_params($params);

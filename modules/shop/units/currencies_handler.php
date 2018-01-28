@@ -178,7 +178,6 @@ class ShopCurrenciesHandler {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'currencies', 'save'),
-					'cancel_action'	=> window_Close('shop_currencies_add')
 				);
 
 		$template->register_tag_handler('cms:currency_list', $this, 'tag_IsoCurrencyList');
@@ -311,7 +310,6 @@ class ShopCurrenciesHandler {
 		$params = array(
 					'default'		=> shop::getDefaultCurrency(),
 					'form_action'	=> backend_UrlMake($this->name, 'currencies', 'save_default'),
-					'cancel_action'	=> window_Close('shop_currencies_set_default')
 				);
 
 		$template->register_tag_handler('cms:currency_list', $this, 'tag_CurrencyList');

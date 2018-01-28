@@ -105,14 +105,14 @@ class contact_form extends Module {
 			// create menu
 			$contact_menu = new backend_MenuItem(
 					$this->get_language_constant('menu_contact'),
-					URL::from_file_path($this->path.'images/icon.svg'),
+					$this->path.'images/icon.svg',
 					'javascript:void(0);',
 					$level=5
 				);
 
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_forms'),
-								URL::from_file_path($this->path.'images/forms.svg'),
+								$this->path.'images/forms.svg',
 
 								window_Open( // on click open window
 											'contact_forms',
@@ -125,7 +125,7 @@ class contact_form extends Module {
 							));
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_manage_templates'),
-								URL::from_file_path($this->path.'images/templates.svg'),
+								$this->path.'images/templates.svg',
 
 								window_Open( // on click open window
 											'contact_form_templates',
@@ -139,7 +139,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(6);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_settings'),
-								URL::from_file_path($this->path.'images/settings.svg'),
+								$this->path.'images/settings.svg',
 
 								window_Open( // on click open window
 											'contact_form_settings',
@@ -153,7 +153,7 @@ class contact_form extends Module {
 			$contact_menu->addSeparator(5);
 			$contact_menu->addChild('', new backend_MenuItem(
 								$this->get_language_constant('menu_submissions'),
-								URL::from_file_path($this->path.'images/submissions.svg'),
+								$this->path.'images/submissions.svg',
 
 								window_Open( // on click open window
 											'contact_form_submissions',
@@ -989,7 +989,6 @@ class contact_form extends Module {
 
 		$params = array(
 						'form_action'	=> backend_UrlMake($this->name, 'settings_save'),
-						'cancel_action'	=> window_Close('contact_form_settings')
 					);
 
 		$template->restore_xml();
@@ -1131,7 +1130,6 @@ class contact_form extends Module {
 			'form'			=> $form,
 			'filename'		=> 'export.csv',
 			'form_action'	=> backend_UrlMake($this->name, 'export_submissions_commit'),
-			'cancel_action'	=> window_Close('contact_form_export')
 		);
 
 		// parse template
@@ -1342,7 +1340,6 @@ class contact_form extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'templates_save'),
-					'cancel_action'	=> window_Close('contact_form_templates_add')
 				);
 
 		$template->restore_xml();
@@ -1371,7 +1368,6 @@ class contact_form extends Module {
 						'plain_text_content'	=> $item->plain,
 						'html_content'			=> $item->html,
 						'form_action'  			=> backend_UrlMake($this->name, 'templates_save'),
-						'cancel_action'			=> window_Close('contact_form_templates_edit')
 					);
 
 			$template->restore_xml();
@@ -1516,7 +1512,6 @@ class contact_form extends Module {
 
 		$params = array(
 					'form_action'	=> backend_UrlMake($this->name, 'forms_save'),
-					'cancel_action'	=> window_Close('contact_forms_add')
 				);
 
 		$template->register_tag_handler('cms:template_list', $this, 'tag_TemplateList');
@@ -1556,7 +1551,6 @@ class contact_form extends Module {
 						'include_reply_to'	=> $item->include_reply_to,
 						'reply_to_field'	=> $item->reply_to_field,
 						'form_action'  		=> backend_UrlMake($this->name, 'forms_save'),
-						'cancel_action'		=> window_Close('contact_forms_edit')
 					);
 
 			$template->register_tag_handler('cms:template_list', $this, 'tag_TemplateList');
@@ -1806,7 +1800,6 @@ class contact_form extends Module {
 		$params = array(
 					'form'			=> $form_id,
 					'form_action'	=> backend_UrlMake($this->name, 'fieldsets_save'),
-					'cancel_action'	=> window_Close('contact_form_fieldset_add')
 				);
 
 		$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
@@ -1835,7 +1828,6 @@ class contact_form extends Module {
 					'name'			=> $item->name,
 					'legend'		=> $item->legend,
 					'form_action'	=> backend_UrlMake($this->name, 'fieldsets_save'),
-					'cancel_action'	=> window_Close('contact_form_fieldset_edit')
 				);
 
 			$template->register_tag_handler('cms:field_list', $this, 'tag_FieldList');
@@ -2029,7 +2021,6 @@ class contact_form extends Module {
 		$params = array(
 					'form'			=> $form_id,
 					'form_action'	=> backend_UrlMake($this->name, 'fields_save'),
-					'cancel_action'	=> window_Close('contact_form_fields_add')
 				);
 
 		$template->register_tag_handler('cms:field_types', $this, 'tag_FieldTypes');
@@ -2069,7 +2060,6 @@ class contact_form extends Module {
 						'checked'			=> $item->checked,
 						'autocomplete'		=> $item->autocomplete,
 						'form_action'  		=> backend_UrlMake($this->name, 'fields_save'),
-						'cancel_action'		=> window_Close('contact_form_fields_edit')
 					);
 
 			$template->register_tag_handler('cms:field_types', $this, 'tag_FieldTypes');
@@ -2255,7 +2245,6 @@ class contact_form extends Module {
 		$params = array(
 					'field'			=> $field_id,
 					'form_action'	=> backend_UrlMake($this->name, 'values_save'),
-					'cancel_action'	=> window_Close('contact_form_field_value_add')
 				);
 
 		$template->restore_xml();
@@ -2282,7 +2271,6 @@ class contact_form extends Module {
 						'name'				=> $item->name,
 						'value'				=> $item->value,
 						'form_action'  		=> backend_UrlMake($this->name, 'values_save'),
-						'cancel_action'		=> window_Close('contact_form_field_value_edit')
 					);
 
 			$template->restore_xml();
@@ -2341,7 +2329,6 @@ class contact_form extends Module {
 		$params = array(
 					'field'			=> $field_id,
 					'form_action'	=> backend_UrlMake($this->name, 'values_import_commit'),
-					'cancel_action'	=> window_Close('contact_form_field_value_import')
 				);
 
 		$template->restore_xml();

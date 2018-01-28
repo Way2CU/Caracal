@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<div id="transaction_details_notebook" class="box left" style="width: 300px;">
+	<div class="box left notebook" style="width: 300px;">
 		<!-- General tab -->
-		<div>
+		<div class="page" data-title="tab_general" cms:constant="data-title">
 			<label>
 				<span><cms:text constant="label_full_name" module="shop"/></span>
 				<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
@@ -132,7 +132,7 @@
 		</div>
 
 		<!-- Shipping tab -->
-		<div>
+		<div class="page" data-title="tab_shipping" cms:constant="data-title">
 			<label>
 				<span><cms:text constant="label_shipping_recipient" module="shop"/></span>
 				<input
@@ -213,7 +213,7 @@
 		</div>
 
 		<!-- Promotions tab -->
-		<div>
+		<div class="page" data-title="tab_promotions" cms:constant="data-title">
 			<div class="scrollable_list">
 				<div class="list_header">
 					<span class="column">
@@ -266,22 +266,5 @@
 			>
 			<cms:text constant="print"/>
 		</button>
-		<button
-			type="button"
-			onclick="$params['cancel_action']"
-			cms:eval="onclick"
-			>
-			<cms:text constant="close"/>
-		</button>
 	</div>
-
-	<script type="text/javascript">
-		var text = language_handler.getTextArray('shop', ['tab_general', 'tab_shipping', 'tab_promotions']);
-
-		var notebook = new Notebook('transaction_details_notebook');
-		notebook
-		.setPageTitle(0, text['tab_general'])
-		.setPageTitle(1, text['tab_shipping'])
-		.setPageTitle(2, text['tab_promotions']);
-	</script>
 </document>
