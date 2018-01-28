@@ -52,18 +52,17 @@ class callbox extends Module {
 			$backend->addMenu($this->name, $callbox_menu);
 		}
 
+		// include scripts
 		if (ModuleHandler::is_loaded('head_tag') && $section != 'backend' && $this->settings['include_code']) {
 			$head_tag = head_tag::get_instance();
 
-			$url = str_replace('{id}', $this->settings['account_id'], '//{id}.tctm.co/t.js');
-			$head_tag->addTag(
-						'script',
+			$url = str_replace('{id}', $this->settings['account_id'], 'https://{id}.tctm.co/t.js');
+			$head_tag->addTag('script',
 						array(
 							'src'	=> $url,
 							'type'	=> 'text/javascript',
 							'async'	=> ''
-						)
-					);
+						));
 		}
 	}
 
@@ -206,7 +205,7 @@ class callbox extends Module {
 			if ($strip_slashes)
 				$value = stripslashes($value);
 
-			$data[] = $param.'='.urlencode($value);
+			$data[] = $param.'='.rawurlencode($value);
 		}
 
 		// add visitor session id

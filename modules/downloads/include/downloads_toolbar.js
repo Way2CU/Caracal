@@ -85,7 +85,7 @@ function ToolbarExtension_Downloads() {
 	 */
 	this.loaded_DownloadsList = function(data) {
 		var component = $(this);
-		var component_window = component.closes('div.window');
+		var component_window = component.closest('div.window');
 		var language_selector = component_window.find('div.language_selector').data('selector');
 
 		if (!data.error) {

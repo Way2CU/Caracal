@@ -239,7 +239,7 @@ function utf8_wordwrap($string, $width=75, $break="\n", $cut=false) {
  * @return string
  */
 function get_qr_image($uri, $size=100, $error_correction="L") {
-	$url = urlencode($uri);
+	$url = rawurlencode($uri);
 	$result = "http://chart.apis.google.com/chart?".
 				"chld={$error_correction}|1&amp;".
 				"chs={$size}x{$size}&amp;".

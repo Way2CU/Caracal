@@ -182,11 +182,9 @@ Caracal.Dialog = function(config, constants) {
 		// create close button
 		if (self.config.include_close_button) {
 			self._close_button = document.createElement('a');
-			with (self._close_button) {
-				classList.add('close');
-				setAttribute('href', 'javascript: void(0);');
-				addEventListener('click', self.handler.close_click);
-			}
+			self._close_button.classList.add('close');
+			self._close_button.setAttribute('href', 'javascript: void(0);');
+			self._close_button.addEventListener('click', self.handler.close_click);
 			self._command_bar.appendChild(self._close_button);
 		}
 
@@ -364,10 +362,8 @@ Caracal.Dialog = function(config, constants) {
 			return self;
 
 		// detach and reattach content
-		with (self._inner_content) {
-			appendChild(element);
-			style.top = 0;  // reset scroll position
-		}
+		self._inner_content.appendChild(element);
+		self._inner_content.style.top = 0;  // reset scroll position
 
 		// set content state flag
 		self._content_loaded = true;
@@ -386,10 +382,8 @@ Caracal.Dialog = function(config, constants) {
 	 */
 	self.set_size = function(width, height) {
 		// set dialog size
-		with (self._inner_content) {
-			style.width = width;
-			style.height = height;
-		}
+		self._inner_content.style.width = width;
+		self._inner_content.style.height = height;
 
 		return self;
 	};
