@@ -290,7 +290,7 @@ class articles extends Module {
 
 		// search through items
 		foreach ($items as $item) {
-			$title = mb_split('\s', mb_strtolower($item->name[$language]));
+			$title = mb_split('\s', mb_strtolower($item->title[$language]));
 			$content = mb_split('\s', mb_strtolower($item->content[$language]));
 			$score = 0;
 			$title_matches = 0;
@@ -311,7 +311,7 @@ class articles extends Module {
 			if ($score >= $threshold)
 				$result[] = array(
 					'score'   => $score,
-					'title'   => $title,
+					'title'   => $item->title,
 					'content' => limit_words($item->content[$language], 200),
 					'id'      => $item->id,
 					'type'    => 'article',
