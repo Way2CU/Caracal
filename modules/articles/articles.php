@@ -12,6 +12,7 @@ require_once('units/manager.php');
 require_once('units/vote_manager.php');
 require_once('units/group_manager.php');
 
+use Core\Events;
 use Core\Module;
 use Core\Markdown;
 
@@ -32,6 +33,9 @@ class articles extends Module {
 		global $section;
 
 		parent::__construct(__FILE__);
+
+		// connect to search module
+		Events::connect('search', 'get-results', 'get_search_results', $this);
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
@@ -300,6 +304,86 @@ class articles extends Module {
 		// export data
 		$result['articles'] = $manager->get_items($manager->get_field_names(), array());
 		$result['groups'] = $group_manager->get_items($group_manager->get_field_names(), array());
+
+		return $result;
+	}
+
+	/**
+	 * Get search results when asked by search module
+	 *
+	 * @param array $module_list
+	 * @param string $query
+	 * @param integer $threshold
+	 * @return array
+	 */
+	public function get_search_results($module_list, $query, $threshold) {
+		global $language;
+
+		// make sure shop is in list of modules requested
+		if (!in_array($this->name, $module_list))
+			return array();
+
+		// don't bother searching for empty query string
+		if (empty($query))
+			return array();
+
+		$result = array();
+		$manager = Modules\Articles\Manager::get_instance();
+		$conditions = array(
+				'visible' => 1
+			);
+		$query = mb_strtolower($query);
+		$query_words = mb_split('\s', $query);
+		$query_count = count($query_words);
+
+		// get all items
+		$items = $manager->get_items(array('id', 'title', 'content'), $conditions);
+
+		// make sure we have items to search through
+		if (count($items) == 0)
+			return array();
+
+		// comparison function
+		$compare = function($a, $b) {
+			$score = String\Distance\Jaro::get($a, $b);
+
+			if ($score >= 0.9)
+				$result = 0; else
+				$result = strcmp($a, $b);
+
+			return $result;
+		};
+
+		// search through items
+		foreach ($items as $item) {
+			$title = mb_split('\s', mb_strtolower($item->name[$language]));
+			$content = mb_split('\s', mb_strtolower($item->content[$language]));
+			$score = 0;
+			$title_matches = 0;
+			$content_matches = 0;
+
+			// count number of matching words
+			$title_matches = count(array_uintersect($query_words, $title, $compare));
+			$content_matches = count(array_uintersect($query_words, $content, 'strcmp'));
+
+			// calculate individual scores according to their importance
+			$title_score = 100 * ($title_matches / $query_count);
+			$content_score = 50 * ($content_matches / $query_count);
+
+			// calculate final score
+			$score = (($title_score + $content_score) * 100) / (100 + 50);
+
+			// add item to result list
+			if ($score >= $threshold)
+				$result[] = array(
+					'score'   => $score,
+					'title'   => $title,
+					'content' => limit_words($item->content[$language], 200),
+					'id'      => $item->id,
+					'type'    => 'article',
+					'module'  => $this->name
+				);
+		}
 
 		return $result;
 	}
