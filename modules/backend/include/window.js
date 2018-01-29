@@ -6,8 +6,8 @@
  * window contains form automatic submit event listener is added and properly handled.
  */
 
-var Caracal = Caracal || {};
-Caracal.WindowSystem = Caracal.WindowSystem || {};
+var Caracal = Caracal || new Object();
+Caracal.WindowSystem = Caracal.WindowSystem || new Object();
 
 
 /**
