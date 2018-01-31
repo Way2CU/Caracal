@@ -138,7 +138,6 @@ Caracal.WindowSystem.LanguageSelector = function(window) {
 		if (self.language == new_language)
 			return;
 
-		console.log(new_language, self.language);
 		var new_language_is_rtl = language_handler.isRTL(new_language);
 
 		// highlight active control
