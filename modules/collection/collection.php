@@ -15,7 +15,6 @@ class collection extends Module {
 	private static $_instance;
 
 	// internal scripts
-	const TOOLBAR = 2;
 	const ANIMATION_CHAIN = 3;
 	const DIALOG = 4;
 	const SCROLLBAR = 5;
@@ -40,7 +39,6 @@ class collection extends Module {
 
 	// script files
 	private $script_files = array(
-				collection::TOOLBAR              => 'toolbar.js',
 				collection::ANIMATION_CHAIN      => 'animation_chain.js',
 				collection::DIALOG               => array('dialog.js', 'dialog.css'),
 				collection::SCROLLBAR            => 'scrollbar.js',
@@ -61,7 +59,6 @@ class collection extends Module {
 			);
 
 	private $script_names = array(
-				'toolbar'              => collection::TOOLBAR,
 				'animation_chain'      => collection::ANIMATION_CHAIN,
 				'dialog'               => collection::DIALOG,
 				'scrollbar'            => collection::SCROLLBAR,

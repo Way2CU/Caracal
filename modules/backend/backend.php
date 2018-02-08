@@ -62,6 +62,7 @@ class backend extends Module {
 		Events::register('backend', 'user-change', 1);
 		Events::register('backend', 'user-delete', 1);
 		Events::register('backend', 'user-password-change', 1);
+		Events::register('backend', 'sprite-include');
 
 		// add admin level menus
 		if ($section == 'backend') {
@@ -72,7 +73,7 @@ class backend extends Module {
 			$collection->includeScript(collection::JQUERY_EVENT_DRAG);
 			$collection->includeScript(collection::JQUERY_EXTENSIONS);
 			$collection->includeScript(collection::SHOWDOWN);
-			$collection->includeScript(collection::TOOLBAR);
+			$collection->includeScript(collection::COMMUNICATOR);
 
 			$system_menu = new backend_MenuItem(
 									$this->get_language_constant('menu_system'),
@@ -378,27 +379,23 @@ class backend extends Module {
 	public function add_meta_tags() {
 		$head_tag = head_tag::get_instance();
 
+		// add styles
 		$head_tag->addTag('link', array(
 				'href' => URL::from_file_path($this->path.'include/main.less'),
 				'rel'  => 'stylesheet/less',
 				'type' => 'text/css'
 			));
-		$head_tag->addTag('script', array(
-				'src'  => URL::from_file_path($this->path.'include/order_editor.js'),
-				'type' => 'text/javascript'
-			));
-		$head_tag->addTag('script', array(
-				'src'  => URL::from_file_path($this->path.'include/window_system.js'),
-				'type' => 'text/javascript'
-			));
-		$head_tag->addTag('script', array(
-				'src'  => URL::from_file_path($this->path.'include/notebook.js'),
-				'type' => 'text/javascript'
-			));
-		$head_tag->addTag('script', array(
-				'src'  => URL::from_file_path($this->path.'include/window.js'),
-				'type' => 'text/javascript'
-			));
+
+		// add scripts
+		$scripts = array(
+				'order_editor.js', 'window_system.js', 'toolbar.js', 'markdown.js',
+				'notebook.js', 'window.js', 'dialog.js'
+			);
+		foreach ($scripts as $script)
+			$head_tag->addTag('script', array(
+					'src'  => URL::from_file_path($this->path.'include/'.$script),
+					'type' => 'text/javascript'
+				));
 	}
 
 	/**
@@ -420,12 +417,10 @@ class backend extends Module {
 		$template = new TemplateHandler('main.xml', $this->path.'templates/');
 		$template->set_mapped_module($this->name);
 		$template->register_tag_handler('cms:menu_items', $this, 'tag_MainMenu');
+		$template->register_tag_handler('cms:sprites', $this, 'tag_Sprites');
 
 		// prepare parameters
-		$params = array(
-				'sprite'       => $this->path.'images/sprite.svg',
-				'default_icon' => $this->path.'images/system.svg'
-			);
+		$params = array();
 
 		// render template
 		$template->restore_xml();
@@ -1213,6 +1208,18 @@ class backend extends Module {
 			$template->set_local_params($params);
 			$template->parse();
 		}
+	}
+
+	/**
+	 * Include sprites and trigger event.
+	 *
+	 * @param array $tag_params
+	 * @param array $children
+	 */
+	public function tag_Sprites($tag_params, $children) {
+		print file_get_contents($this->path.'images/sprite.svg');
+		print file_get_contents($this->path.'images/system.svg');
+		Events::trigger($this->name, 'sprite-include');
 	}
 }
 

@@ -269,7 +269,10 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 		if (self.ui.content.querySelectorAll('div.notebook').length > 0)
 			self.ui.notebook = new Caracal.WindowSystem.Notebook(self);
 
-		// animate
+		// integrate toolbars
+		Caracal.Toolbar.implement(self);
+
+		// position the window
 		var top_position = start_position + Math.floor((start_height - self.ui.content.offsetHeight) / 2);
 		self.ui.container.style.top = top_position;
 		self.ui.container.classList.add('loaded');
@@ -423,11 +426,11 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 	/**
 	 * Set window icon.
 	 *
-	 * @param string background
+	 * @param string icon
 	 */
-	self.set_icon = function(background) {
-		self.icon.outerHTML = background;
-		self.ui.window_list_item.innerHTML = background;
+	self.set_icon = function(icon) {
+		self.icon.outerHTML = icon;
+		self.ui.window_list_item.innerHTML = icon;
 	};
 
 	/**
@@ -614,13 +617,11 @@ Caracal.WindowSystem.Window = function(id, width, title, url) {
 				// add event listener to iframe through timeout to avoid initial triggering on some browsers
 				setTimeout(function() {
 					iframe.addEventListener('load', function(event) {
-						var content = iframe.contents().find('body');
+						var content = iframe.contentDocument.querySelector('body');
 
-						// trigger original form event
-						self.contentLoaded(content.html());
-
-						// reset frame content in order to prevent errors with other events
-						content.html('');
+						// pass the data to even handler
+						self.handler.content_load(content.innerHTML);
+						content.innerHTML = '';
 					});
 				}, 100);
 			}

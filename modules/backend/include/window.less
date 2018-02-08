@@ -13,7 +13,7 @@ div.window {
 	background-color: @color_bright;
 	box-shadow: 0 0.1rem 0.5rem fade(@color_dark, 20);
 
-	color: mix(@color_dark, @color_bright, 70);
+	color: mix(@color_dark, @color_bright, 80);
 
 	&.visible {
 	}
@@ -28,7 +28,7 @@ div.window {
 		padding-left: calc(unit(@icon_size, px) ~'+ 1rem');
 
 		font-size: 1.1em;
-		cursor: default;
+		cursor: move;
 
 		html[dir=rtl] & {
 			padding-left: 0;
@@ -41,8 +41,8 @@ div.window {
 			top: 50%;
 			left: @padding_unit;
 
-			width: @icon_size;
-			height: @icon_size;
+			width: unit(@icon_size, px);
+			height: unit(@icon_size, px);
 			transform: translateY(-50%);
 
 			html[dir=rtl] & {
@@ -72,8 +72,13 @@ div.window {
 		line-height: 0;
 	}
 
-	&.loading div.title:after {
-		.animation-window-loading();
+	// window styles during content loading process
+	&.loading {
+		cursor: wait;
+
+		div.title:after {
+			.animation-window-loading();
+		}
 	}
 
 	&.focused div.title:after {
@@ -88,6 +93,8 @@ div.window {
 
 		line-height: 1;
 		transform: translate(-50%, -50%);
+
+		cursor: default;
 
 		// right to left support for buttons
 		html[dir=rtl] & {

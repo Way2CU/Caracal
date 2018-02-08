@@ -1,0 +1,66 @@
+/**
+ * Toolbar Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2018 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+div.window > div.content div.toolbar {
+	display: block;
+	padding: @toolbar_padding;
+
+	border: 1px solid @color_input_border;
+	border-bottom-width: 0;
+	border-radius: @input_radius @input_radius 0 0;
+	background-color: mix(@color_input_background, @color_dark, 95%);
+
+	.input-transition();
+
+	&.active {
+		border-color: @color_input_active;
+		color: @color_input_active;
+	}
+
+	// sub-containers
+	> div {
+		display: inline-block;
+		vertical-align: top;
+		margin-right: @toolbar_spacing;
+		padding-right: @toolbar_spacing;
+
+		border-right: 1px solid transparent;
+		border-color: mix(@color_input_background, @color_dark, 80%);
+
+		&:last-child {
+			margin-right: 0;
+			padding-right: 0;
+			border-right: 0;
+		}
+	}
+
+	// toolbar buttons
+	a {
+		display: inline-block;
+		vertical-align: middle;
+		padding: @toolbar_button_padding;
+		color: mix(@color_dark, @color_bright, 80);
+
+		&:hover {
+			background-color: @color_active;
+			color: @color_bright;
+		}
+
+		svg {
+			width: 1rem;
+			height: 1rem;
+			fill: currentColor;
+		}
+	}
+
+	// modify text area following toolbar
+	& + textarea {
+		border-top-width: 0;
+		border-radius: 0 0 @input_radius @input_radius;
+	}
+}

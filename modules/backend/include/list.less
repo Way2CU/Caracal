@@ -6,6 +6,7 @@
  * Author: Mladen Mijatov
  */
 
+div.dialog table.list,
 div.window table.list {
 	width: 100%;
 	border-spacing: 0;
@@ -18,9 +19,17 @@ div.window table.list {
 	}
 
 	tbody {
-		display: block;
-		height: 15em;
+		min-height: 15em;
 		overflow-y: auto;
+
+		tr.selectable {
+			cursor: pointer;
+
+			&:hover {
+				color: @color_bright;
+				background-color: @color_active;
+			}
+		}
 
 		td {
 			.container-padding();
@@ -28,6 +37,7 @@ div.window table.list {
 	}
 }
 
+div.dialog div.scrollable_list,
 div.window div.scrollable_list {
 	.deprecated();
 	color: mix(@color_dark, @color_bright, 80);
@@ -44,7 +54,7 @@ div.window div.scrollable_list {
 
 	div.list_content {
 		display: block;
-		height: 15em;
+		min-height: 15em;
 		overflow-y: auto;
 
 		span.column {

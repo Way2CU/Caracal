@@ -1,0 +1,135 @@
+/**
+ * Dialog Stylesheet
+ * Caracal Backend
+ *
+ * Copyright © 2018 Way2CU. All Rights Reserved.
+ * Author: Mladen Mijatov
+ */
+
+body > div.dialog {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	background-color: fade(black, 40%);
+	z-index: 100000000;
+
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.5s opacity;
+
+	&.visible {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	div.container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+
+		border-radius: 0.5rem 0.5rem 0 0;
+		background-color: @color_bright;
+		box-shadow: 0 0.1rem 0.5rem fade(@color_dark, 20);
+
+		color: mix(@color_dark, @color_bright, 80);
+
+		transform: translate(-50%, -50%);
+
+		// dialog title
+		div.title {
+			position: relative;
+			min-height: 1.1em;
+			.container-padding(2);
+			padding-left: calc(unit(@icon_size, px) ~'+ 1rem');
+
+			color: @color_active;
+			font-size: 1.1em;
+
+			html[dir=rtl] & {
+				padding-left: 0;
+				padding-right: calc(unit(@icon_size, px) ~'+ 1rem');
+			}
+
+			// window icon
+			> svg {
+				position: absolute;
+				top: 50%;
+				left: @padding_unit;
+
+				width: unit(@icon_size, px);
+				height: unit(@icon_size, px);
+				transform: translateY(-50%);
+
+				fill: currentColor;
+
+				html[dir=rtl] & {
+					left: auto;
+					right: @padding_unit;
+				}
+			}
+
+			// title buttons
+			a.button {
+				position: absolute;
+				top: 50%;
+				right: 0;
+
+				line-height: 1;
+				transform: translate(-50%, -50%);
+
+				cursor: default;
+
+				// right to left support for buttons
+				html[dir=rtl] & {
+					right: auto;
+					left: 0;
+					transform: translate(50%, -50%);
+				}
+
+				// icon styling
+				svg {
+					width: 1.5rem;
+					height: 1.5rem;
+				}
+
+				svg path {
+					fill: mix(@color_dark, @color_bright, 30);
+				}
+
+				&:hover svg path {
+					fill: @color_active;
+				}
+			}
+
+			&:after {
+				position: absolute;
+				height: 2px;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				content: '';
+
+				background-color: @color_active;
+				line-height: 0;
+			}
+		}
+
+		// dialog content container
+		div.content {
+			width: 850px;
+			height: 600px;
+		}
+	}
+
+	// window styles during content loading process
+	&.loading {
+		cursor: wait;
+
+		div.container div.title:after {
+			.animation-window-loading();
+		}
+	}
+}
