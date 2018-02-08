@@ -7,6 +7,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 
 
@@ -32,14 +33,12 @@ class downloads extends Module {
 				return;
 			}
 
+		// connect events
+		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
+		Events::connect('backend', 'sprite-include', 'include_sprite', $this);
+
 		// register backend
 		if (ModuleHandler::is_loaded('backend')) {
-			// add backend specific script
-			if (ModuleHandler::is_loaded('head_tag')) {
-				$head_tag = head_tag::get_instance();
-				$head_tag->addTag('script', array('src'=>URL::from_file_path($this->path.'include/downloads_toolbar.js'), 'type'=>'text/javascript'));
-			}
-
 			// create main menu entries
 			$backend = backend::get_instance();
 
@@ -194,6 +193,29 @@ class downloads extends Module {
 		$db->drop_tables($tables);
 	}
 
+	/**
+	 * Add tags to the head of rendered page when requested.
+	 */
+	public function add_meta_tags() {
+		global $section;
+
+		// we only need to add these tags for backend
+		if ($section != 'backend')
+			return;
+
+		$head_tag = head_tag::get_instance();
+		$head_tag->addTag('script', array(
+				'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
+				'type' => 'text/javascript'
+			));
+	}
+
+	/**
+	 * Include backend sprites.
+	 */
+	public function include_sprite() {
+		print file_get_contents($this->path.'images/sprite.svg');
+	}
 
 	/**
 	 * Show downloads management form

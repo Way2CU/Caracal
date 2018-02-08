@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST">
+	<form
+		action="$params['form_action']"
+		cms:eval="action"
+		method="POST"
+		enctype="multipart/form-data"
+		>
 		<label>
 			<span><cms:text constant="label_name" module="downloads"/></span>
-			<input type="text" name="name" class="multi-language" style="width: 270px;" maxlength="100"/>
+			<input
+				type="text"
+				name="name"
+				class="multi-language"
+				style="width: 270px;"
+				maxlength="100"
+				/>
 		</label>
+
 		<label>
 			<span><cms:text constant="label_description" module="downloads"/></span>
 			<textarea
 				name="description"
 				class="multi-language"
 				style="width: 360px; height: 100px;"
-			/>
+				/>
 		</label>
+
 		<label>
 			<span><cms:text constant="label_file" module="downloads"/></span>
 			<input type="hidden" name="MAX_FILE_SIZE" value="2000000000" />
 			<input type="file" name="file"/>
 		</label>
+
 		<label class="checkbox">
 			<input type="checkbox" name="visible" checked="checked"/>
 			<span><cms:text constant="label_visible" module="downloads"/></span>
