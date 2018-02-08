@@ -8,6 +8,7 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Events;
 use Core\Module;
 use Core\Markdown;
 
@@ -57,49 +58,9 @@ class gallery extends Module {
 				return;
 			}
 
-		// load module style and scripts
-		if (ModuleHandler::is_loaded('head_tag')) {
-			$head_tag = head_tag::get_instance();
-
-			// load backend files if needed
-			if ($section == 'backend') {
-				$head_tag->addTag('link',
-						array(
-							'href' => URL::from_file_path($this->path.'include/gallery.css'),
-							'rel'  => 'stylesheet',
-							'type' => 'text/css'
-						));
-				$head_tag->addTag('script',
-						array(
-							'src'  => URL::from_file_path($this->path.'include/gallery_toolbar.js'),
-							'type' => 'text/javascript'
-						));
-				$head_tag->addTag('script',
-						array(
-							'src'  => URL::from_file_path($this->path.'include/backend.js'),
-							'type' => 'text/javascript'
-						));
-
-			} else {
-				// load frontend scripts
-				$head_tag->addTag('script',
-							array(
-								'src'  => URL::from_file_path($this->path.'include/gallery.js'),
-								'type' => 'text/javascript'
-							));
-				$head_tag->addTag('script',
-							array(
-								'src'  => URL::from_file_path($this->path.'include/lightbox.js'),
-								'type' => 'text/javascript'
-							));
-				$head_tag->addTag('link',
-							array(
-								'href' => URL::from_file_path($this->path.'include/lightbox.less'),
-								'rel'  => 'stylesheet/less',
-								'type' => 'text/css'
-							));
-			}
-		}
+		// connect event for loading tags
+		Events::connect('head-tag', 'before-print', 'add_meta_tags', $this);
+		Events::connect('backend', 'sprite-include', 'include_sprite', $this);
 
 		// register backend
 		if ($section == 'backend' && ModuleHandler::is_loaded('backend')) {
@@ -373,6 +334,61 @@ class gallery extends Module {
 
 		$tables = array('gallery', 'gallery_groups', 'gallery_containers', 'gallery_group_membership');
 		$db->drop_tables($tables);
+	}
+
+	/**
+	 * Add required scripts and styles.
+	 */
+	public function add_meta_tags() {
+		global $section;
+
+		$head_tag = head_tag::get_instance();
+
+		// load backend files if needed
+		if ($section == 'backend') {
+			$head_tag->addTag('link',
+					array(
+						'href' => URL::from_file_path($this->path.'include/gallery.css'),
+						'rel'  => 'stylesheet',
+						'type' => 'text/css'
+					));
+			$head_tag->addTag('script',
+					array(
+						'src'  => URL::from_file_path($this->path.'include/toolbar.js'),
+						'type' => 'text/javascript'
+					));
+			$head_tag->addTag('script',
+					array(
+						'src'  => URL::from_file_path($this->path.'include/backend.js'),
+						'type' => 'text/javascript'
+					));
+
+		} else {
+			// load frontend scripts
+			$head_tag->addTag('script',
+						array(
+							'src'  => URL::from_file_path($this->path.'include/gallery.js'),
+							'type' => 'text/javascript'
+						));
+			$head_tag->addTag('script',
+						array(
+							'src'  => URL::from_file_path($this->path.'include/lightbox.js'),
+							'type' => 'text/javascript'
+						));
+			$head_tag->addTag('link',
+						array(
+							'href' => URL::from_file_path($this->path.'include/lightbox.less'),
+							'rel'  => 'stylesheet/less',
+							'type' => 'text/css'
+						));
+		}
+	}
+
+	/**
+	 * Handle event for showing SVG sprites in backend.
+	 */
+	public function include_sprite() {
+		print file_get_contents($this->path.'images/sprite.svg');
 	}
 
 	/**
