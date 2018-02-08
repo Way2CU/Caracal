@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="tips_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_content" module="tips"/></span>
-			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
+			<textarea
+				name="content"
+				class="multi-language"
+				data-toolbar="all"
+				style="width: 370px; height: 200px;"
+				/>
 			<cms:language_data param="content"/>
 		</label>
 
@@ -24,10 +29,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		// create toolbar
-		toolbar_api
-				.createToolbar('tips_change_form', '[name=content]:input')
-				.addControl('common', 'markdown');
-	</script>
 </document>

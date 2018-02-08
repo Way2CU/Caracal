@@ -2,7 +2,6 @@
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
 	<form
-		id="link_add_form"
 		action="$params['form_action']"
 		cms:eval="action"
 		method="POST"
@@ -35,6 +34,7 @@
 			<textarea
 				name="description"
 				class="multi-language"
+				data-toolbar="all"
 				style="width: 575px; height: 200px;"
 				/>
 		</label>
@@ -81,12 +81,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript" charset="utf-8">
-		// create toolbar
-		toolbar_api
-			.createToolbar('link_add_form', '[name=description]:input')
-			.addControl('common', 'markdown')
-			.addControl('gallery', 'article_image')
-			.addControl('downloads', 'link');
-	</script>
 </document>

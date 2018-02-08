@@ -83,7 +83,12 @@
 
 				<label>
 					<span><cms:text constant="label_description" module="shop"/></span>
-					<textarea name="description" class="multi-language" style="height: 155px;"/>
+					<textarea
+						name="description"
+						class="multi-language"
+						data-toolbar="all"
+						style="height: 155px;"
+						/>
 					<cms:language_data param="description"/>
 				</label>
 
@@ -404,12 +409,5 @@
 
 		// add colors
 		Caracal.Shop.parse_colors();
-
-		// create toolbar
-		toolbar_api
-			.createToolbar('shop_item_change_form', '[name=description]:input')
-			.addControl('common', 'markdown')
-			.addControl('gallery', 'article_image')
-			.addControl('downloads', 'link');
 	</script>
 </document>

@@ -64,7 +64,12 @@
 
 				<label>
 					<span><cms:text constant="label_description" module="shop"/></span>
-					<textarea name="description" class="multi-language" style="height: 155px;"/>
+					<textarea
+						name="description"
+						class="multi-language"
+						data-toolbar="all"
+						style="height: 155px;"
+						/>
 				</label>
 
 				<label class="horizontal">
@@ -349,12 +354,5 @@
 		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_array]');
 		new Caracal.PropertyEditor('#shop_item_add_form input[name=property_ml_array]');
 		new Caracal.PropertyEditor('#shop_item_add_form input[name=tags]');
-
-		// create toolbar
-		toolbar_api
-			.createToolbar('shop_item_add_form', '[name=description]:input')
-			.addControl('common', 'markdown')
-			.addControl('gallery', 'article_image')
-			.addControl('downloads', 'link');
 	</script>
 </document>

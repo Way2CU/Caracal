@@ -5,7 +5,6 @@
 		action="$params['form_action']"
 		cms:eval="action"
 		method="POST"
-		id="link_change_form"
 		>
 		<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 		<div>
@@ -38,6 +37,7 @@
 			<textarea
 				name="description"
 				class="multi-language"
+				data-toolbar="all"
 				style="width: 575px; height: 200px;"
 				/>
 			<cms:language_data param="description"/>
@@ -89,12 +89,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript" charset="utf-8">
-		// create toolbar
-		toolbar_api
-			.createToolbar('link_change_form', '[name=description]:input')
-			.addControl('common', 'markdown')
-			.addControl('gallery', 'article_image')
-			.addControl('downloads', 'link');
-	</script>
 </document>

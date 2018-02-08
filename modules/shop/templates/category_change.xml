@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="shop_category_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_category_parent" module="shop"/></span>
@@ -42,7 +42,12 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_description" module="shop"/></span>
-			<textarea name="description" class="multi-language" style="width: 375px; height: 170px;"/>
+			<textarea
+				name="description"
+				class="multi-language"
+				data-toolbar="all"
+				style="width: 375px; height: 170px;"
+				/>
 			<cms:language_data param="description"/>
 		</label>
 		<cms:if condition="ModuleHandler::is_loaded('gallery')">
@@ -64,12 +69,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		// create toolbar
-		toolbar_api
-				.createToolbar('shop_category_add_form', '[name=description]:input')
-				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image')
-				.addControl('downloads', 'link');
-	</script>
 </document>

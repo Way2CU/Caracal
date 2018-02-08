@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="tips_add_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<span><cms:text constant="label_content" module="tips"/></span>
-			<textarea name="content" class="multi-language" style="width: 370px; height: 200px;"/>
+			<textarea
+				name="content"
+				class="multi-language"
+				data-toolbar="all"
+				style="width: 370px; height: 200px;"
+				/>
 		</label>
 		<label class="checkbox">
 			<input type="checkbox" name="visible" checked="checked"/>
@@ -15,10 +20,4 @@
 			<button type="reset"><cms:text constant="reset"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		// create toolbar
-		toolbar_api
-				.createToolbar('tips_add_form', '[name=content]:input')
-				.addControl('common', 'markdown');
-	</script>
 </document>

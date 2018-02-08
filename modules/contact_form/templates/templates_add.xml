@@ -37,6 +37,7 @@
 					class="code multi-language"
 					rows="6"
 					cols="80"
+					data-toolbar="all"
 					style="width: 600px; height: 275px; resize: none;"
 				/>
 			</div>
@@ -61,12 +62,5 @@
 			var preview = $('div#contact_form_template_preview');
 			preview.html(converter.makeHtml($(this).val()));
 		});
-
-		// create toolbar
-		toolbar_api
-				.createToolbar('contact_form_template_add', '[name=html_content]:input')
-				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image')
-				.addControl('downloads', 'link');
 	</script>
 </document>

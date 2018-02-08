@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document SYSTEM "../../../units/schema/template.dtd">
 <document>
-	<form action="$params['form_action']" cms:eval="action" method="POST" id="image_change_form">
+	<form action="$params['form_action']" cms:eval="action" method="POST">
 		<label>
 			<input type="hidden" name="id" value="$params['id']" cms:eval="value"/>
 			<span><cms:text constant="label_text_id" module="gallery"/></span>
-			<input type="text" name="text_id" class="code" value="$params['text_id']" style="width: 270px;" maxlength="32" cms:eval="value"/>
+			<input
+				type="text"
+				name="text_id"
+				class="code"
+				value="$params['text_id']"
+				style="width: 270px;"
+				maxlength="32"
+				cms:eval="value"
+				/>
 		</label>
 		<label>
 			<span><cms:text constant="label_title" module="gallery"/></span>
@@ -30,7 +38,12 @@
 		</label>
 		<label>
 			<span><cms:text constant="label_description" module="gallery"/></span>
-			<textarea name="description" class="multi-language" style="width: 360px; height: 150px;"/>
+			<textarea
+				name="description"
+				class="multi-language"
+				data-toolbar="all"
+				style="width: 360px; height: 150px;"
+				/>
 			<cms:language_data param="description"/>
 		</label>
 		<label class="checkbox">
@@ -56,11 +69,4 @@
 			<button type="submit"><cms:text constant="save"/></button>
 		</div>
 	</form>
-	<script type="text/javascript">
-		// create toolbar
-		toolbar_api
-				.createToolbar('image_change_form', '[name=description]:input')
-				.addControl('common', 'markdown')
-				.addControl('downloads', 'link');
-	</script>
 </document>
