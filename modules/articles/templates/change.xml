@@ -54,7 +54,7 @@
 						name="content"
 						rows="5"
 						cols="40"
-						style="width: 685px; height: 250px;"
+						style="height: 250px;"
 						data-toolbar="all"
 						/>
 					<cms:language_data param="content"/>

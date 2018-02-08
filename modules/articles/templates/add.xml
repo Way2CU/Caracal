@@ -44,7 +44,7 @@
 						name="content"
 						rows="5"
 						cols="40"
-						style="width: 680px; height: 250px;"
+						style="height: 250px;"
 						data-toolbar="all"
 						/>
 				</label>
