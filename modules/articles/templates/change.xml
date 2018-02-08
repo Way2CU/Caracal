@@ -55,6 +55,7 @@
 						rows="5"
 						cols="40"
 						style="width: 685px; height: 250px;"
+						data-toolbar="all"
 						/>
 					<cms:language_data param="content"/>
 				</label>
@@ -74,13 +75,6 @@
 
 	<script type="text/javascript">
 		var converter = new Showdown.converter();
-
-		// create toolbar
-		toolbar_api
-				.createToolbar('article_change_form', '[name=content]:input')
-				.addControl('common', 'markdown')
-				.addControl('gallery', 'article_image')
-				.addControl('downloads', 'link');
 
 		// update preview on blur
 		$('div#article_write_notebook textarea[name=content]').blur(function() {
