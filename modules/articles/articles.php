@@ -354,35 +354,65 @@ class articles extends Module {
 			return $result;
 		};
 
-		// search through items
+		// collect items and do preliminary preparations
+		$maximums = array();
+		$preliminary = array();
+
 		foreach ($items as $item) {
 			$title = mb_split('\s', mb_strtolower($item->title[$language]));
-			$content = mb_split('\s', mb_strtolower($item->content[$language]));
-			$score = 0;
-			$title_matches = 0;
-			$content_matches = 0;
+			$content_words = array_count_values(mb_split('\s', mb_strtolower($item->content[$language])));
 
-			// count number of matching words
-			$title_matches = count(array_uintersect($query_words, $title, $compare));
-			$content_matches = count(array_uintersect($query_words, $content, 'strcmp'));
+			// collect matched content words
+			$matched_words = array();
+			foreach ($query_words as $word) {
+				// store matched count for current query word
+				if (array_key_exists($word, $content_words))
+					$matched_words[$word] = $content_words[$word]; else
+					$matched_words[$word] = 0;
 
+				// store larger word count
+				if ($maximums[$word] < $matched_words[$word])
+					$maximums[$word] = $matched_words[$word];
+			}
+
+			// add item to result list
+			$preliminary[] = array(
+					'id'            => $item->id,
+					'title'         => $item->title,
+					'title_matches' => count(array_uintersect($query_words, $title, $compare)),
+					'content'       => limit_words($item->content[$language], 200),
+					'content_words' => $matched_words
+				);
+		}
+
+		// maximum scores
+		$title_max = 50;
+		$content_max = 100;
+		$max_score = $title_max + $content_max;
+		$word_score = $content_max / $query_count;
+
+		// prepare results
+		foreach ($preliminary as $data) {
 			// calculate individual scores according to their importance
-			$title_score = 100 * ($title_matches / $query_count);
-			$content_score = 50 * ($content_matches / $query_count);
+			$title_score = $title_max * ($data['title_matches'] / $query_count);
+
+			$content_score = 0;
+			foreach ($data['content_words'] as $word => $count)
+				$content_score += $word_score * ($count / $maximums[$word]);
 
 			// calculate final score
-			$score = (($title_score + $content_score) * 100) / (100 + 50);
+			$score = (($title_score + $content_score) * 100) / $max_score;
 
 			// add item to result list
 			if ($score >= $threshold)
 				$result[] = array(
-					'score'   => $score,
-					'title'   => $item->title,
-					'content' => limit_words($item->content[$language], 200),
-					'id'      => $item->id,
-					'type'    => 'article',
-					'module'  => $this->name
-				);
+						'score'   => $score,
+						'id'      => $data['id'],
+						'title'   => $data['title'],
+						'content' => $data['content'],
+						'type'    => 'article',
+						'module'  => $this->name
+					);
 		}
 
 		return $result;
