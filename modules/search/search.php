@@ -79,7 +79,7 @@ class search extends Module {
 	 * Handle printing search results
 	 *
 	 * Modules need to return results in following format:
-	 * array(
+	 *		array(
 	 *			array(
 	 * 				'score'			=> 0..100	// score for this result
 	 * 				'title'			=> '',		// title to be shown in list
