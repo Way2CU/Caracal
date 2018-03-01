@@ -66,6 +66,7 @@ class CodeOptimizer {
 	 */
 	private function get_cached_name($list) {
 		$all_files = implode($list);
+		$all_files[] = _DOMAIN;  // make cache domain sensitive
 		return md5($all_files);
 	}
 
