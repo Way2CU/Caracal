@@ -1,19 +1,30 @@
 /**
- * Activity Tracker Beacon
+ * Activity Tracker Beacon JavaScript
+ * Caracal Development Framework
  *
+ * Copyright (c) 2018. by Way2CU, http://way2cu.com
+ * Author: Mladen Mijatov
+ */
+
+
+var Caracal = Caracal || new Object();
+Caracal.ActivityTracker = Caracal.ActivityTracker || new Object();
+
+
+/**
  * Object, once created, will send regular beacons back to the server. It
  * also provides an easy way to test whether some other activity is active
  * or not.
  *
- * Author: Mladen Mijatov
+ * @param string activity
+ * @param string function_name
  */
 
-function Beacon(activity, function_name, license) {
+Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	var self = this;
 
 	self._activity = activity;
 	self._function = function_name;
-	self._license = license;
 	self._interval = 900;
 	self._interval_id = null;
 
@@ -21,12 +32,13 @@ function Beacon(activity, function_name, license) {
 	self._url_path = '/index.php';
 
 	self._callback_interval = null;
+	self.handler = new Object();
 
 	/**
 	 * Complete object initialization.
 	 */
 	self.init = function() {
-		self._url = $('meta[property=base-url]').attr('content') + self._url_path;
+		self._url = document.querySelector("meta[property='base-url']").content + self._url_path;
 	};
 
 	/**
@@ -51,27 +63,27 @@ function Beacon(activity, function_name, license) {
 	 * Handle interval.
 	 */
 	self._handle_interval = function() {
-		var params = {
-				url: self._url,
-				method: 'POST',
-				context: self,
-				dataType: 'json',
-				data: {
-					section: 'activity_tracker',
-					action: 'keep_alive',
-					activity: self._activity,
-					function: self._function,
-					license: self._license
-				},
-				cache: false,
-				async: true
-			};
+
+	 	// make sure communicator is loaded
+		if (typeof Communicator != 'function') {
+			return self;
+		}
+
+		var communicator = new Communicator('activity_tracker');
+
+	 	var data = {
+	 		activity: self._activity,
+	 		function: self._function
+	 	};
 
 		// assign callback
 		if (self._callback_interval != null)
-			params.success = self._callback_interval;
+			communicator.on_success = self._callback_interval;
 
-		$.ajax(params);
+		communicator
+			.use_cache(false)
+			.set_asynchronous(true)
+			.send('keep_alive', data);
 	};
 
 	/**
@@ -101,35 +113,38 @@ function Beacon(activity, function_name, license) {
 	 * @param function callback
 	 * @return boolean
 	 */
-	self.is_alive = function(function_name, callback) {
-		var result = false;
-		var params = {
-				url: self._url,
-				method: 'POST',
-				context: self,
-				dataType: 'json',
-				data: {
-					section: 'activity_tracker',
-					action: 'is_alive',
-					activity: self._activity,
-					function: function_name,
-					license: self._license
-				},
-				cache: false,
-				async: false,
-				success: function(data) {
-					result = data;
-				}
-			};
+	self.handler.is_alive = function(function_name, callback) {
 
-		// allow asynchronous callback
+		// make sure communicator is loaded
+		if (typeof Communicator != 'function') {
+			return self;
+		}
+
+		var communicator = new Communicator('activity_tracker');
+
+	 	var result = false;
+
+		// if callback is undefined
+		var success = function(data) {
+			result = data;
+		};
+
+		var data = {
+			activity: self._activity,
+			function: function_name
+		};
+
+		communicator.on_success(success);
+
 		if (callback !== undefined) {
-			params.success = callback;
-			params.async = true;
+			communicator.on_success(callback)
 		}
 
 		// send notification
-		$.ajax(params);
+		communicator
+			.use_cache(false)
+			.set_asynchronous(true)
+			.send('is_alive', data);
 
 		return result;
 	};
@@ -153,4 +168,3 @@ function Beacon(activity, function_name, license) {
 	self.init();
 }
 
-window['Beacon'] = Beacon;
