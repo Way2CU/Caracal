@@ -283,7 +283,6 @@ class articles extends Module {
 			// insert articles from exports file
 			foreach ($data['articles'] as $article) {
 				$article_data = $manager->get_data_from_object($article);
-				error_log(var_export($article_data, true));
 				$manager->insert_item($article_data);
 			}
 		}

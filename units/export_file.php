@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Database and files export archive handle class.
+ * Database and files export archive handler class.
  *
  * This class is used for handling export files. This format was designed to
  * avoid excessive memory and CPU usage while providing convenient and easy
