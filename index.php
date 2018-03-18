@@ -20,12 +20,18 @@
  * Author: Mladen Mijatov
  */
 
+// start measuring time
+$time_start = explode(" ", microtime());
+$time_start = $time_start[0] + $time_start[1];
+
+// define base constants
 define('_BASEPATH', dirname(__FILE__));
 define('_LIBPATH', _BASEPATH.'/libraries/');
 define('_DOMAIN', $_SERVER['SERVER_NAME']);
 define('_SECURE', !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
 define('_VERSION', 0.5);
 
+// include main system components
 require_once('units/database/common.php');
 require_once('units/database/item_manager.php');
 require_once('units/system_managers.php');
@@ -44,7 +50,7 @@ require_once('units/code_optimizer.php');
 require_once('units/cache/cache.php');
 require_once('units/testing/handler.php');
 require_once('units/page_switch.php');
-require_once('units/session.php');
+require_once('units/session/manager.php');
 require_once('units/config.php');
 
 // include site config
@@ -57,6 +63,7 @@ require_once('units/gravatar.php');
 
 // make namespaces more friendly
 use Core\Cache\Manager as Cache;
+use Core\Session\Manager as Session;
 
 // set timezone as specificed in the config
 date_default_timezone_set(_TIMEZONE);
@@ -83,18 +90,12 @@ if (should_force_https()) {
 	exit();
 }
 
-// start measuring time
-$time_start = explode(" ", microtime());
-$time_start = $time_start[0] + $time_start[1];
-
 // prepare for page rendering
 Session::start();
 $page_match = SectionHandler::prepare();
 URL::unpack_values();
 
 // set default values for variables
-if (!isset($_SESSION['level']) || empty($_SESSION['level'])) $_SESSION['level'] = 0;
-if (!isset($_SESSION['logged']) || empty($_SESSION['logged'])) $_SESSION['logged'] = false;
 $section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
 
 // initialize language system and apply language
@@ -136,11 +137,10 @@ if ($cache->is_cached()) {
 }
 
 // print out copyright and timing
-$time_end = explode(" ", microtime());
-$time_end = $time_end[0] + $time_end[1];
-$time = round($time_end - $time_start, 3);
-
 if (!defined('_OMIT_STATS') && !_AJAX_REQUEST) {
+	$time_end = explode(" ", microtime());
+	$time_end = $time_end[0] + $time_end[1];
+	$time = round($time_end - $time_start, 3);
 	echo "\n<!-- Page generated with Caracal in $time second(s) -->";
 }
 
