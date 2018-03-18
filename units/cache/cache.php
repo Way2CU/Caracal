@@ -14,9 +14,8 @@ require_once('base.php');
 require_once('file_provider.php');
 require_once('memcached_provider.php');
 
-use Session;
-use TemplateHandler;
 use URL;
+use TemplateHandler;
 
 
 class Type {
