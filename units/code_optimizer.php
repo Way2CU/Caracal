@@ -140,7 +140,7 @@ class CodeOptimizer {
 						'[\'"]?'.         // trailing quotation marks
 						'\)'.             // closing `url`
 						'([;,])|ium',     // end of statement or next value
-						'url('.$directory_url.'\2)\3', $data);
+						'url('.$reference_url.'\2)\3', $data);
 				break;
 		}
 
@@ -158,12 +158,13 @@ class CodeOptimizer {
 			'url(../', $data);
 
 		// expand relative paths
+		$full_path = URL::from_file_path(dirname(dirname($file_name)));
 		$data = preg_replace(
 			'|url\('.        // `url` keyword
 			'[\'"]?\.\./'.   // parent directory
 			'([^\)"]+)'.     // path fragment
 			'[\'"]?\)|imus', // optional closing quotes, and bracket
-			'url('._BASEURL.'/'.$site_path.'\1)', $data);
+			'url('.$full_path.'/\1)', $data);
 
 		// parse most important
 		$data = str_replace("\r", '', $data);
