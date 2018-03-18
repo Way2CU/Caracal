@@ -7,6 +7,7 @@
  */
 use Core\Events;
 use Core\Module;
+use Core\Session\Manager as Session;
 
 
 class language_menu extends Module {
