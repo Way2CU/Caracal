@@ -175,12 +175,12 @@ final class Manager {
 	 *
 	 * @return string
 	 */
-	public static function login() {
+	public static function login($params=null) {
 		$result = null;
 
 		foreach (self::$login_mechanisms as $name => $mechanism) {
 			// perform authentication
-			if (!$mechanism->login())
+			if (!$mechanism->login($params))
 				continue;
 
 			// retrieve data and store session variables
