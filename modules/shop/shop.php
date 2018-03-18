@@ -2642,7 +2642,6 @@ class shop extends Module {
 			switch ($existing_user) {
 				case User::EXISTING:
 					// get managers
-					$user_manager = UserManager::get_instance();
 					$retry_manager = LoginRetryManager::get_instance();
 
 					// get user data
@@ -2651,7 +2650,7 @@ class shop extends Module {
 
 					// check credentials
 					$retry_count = $retry_manager->getRetryCount();
-					$credentials_ok = $user_manager->check_credentials($email, $password);
+					$credentials_ok = Core\Session\SystemMechanism::check_credentials($email, $password);
 
 					// get user account if sign in is valid
 					if ($credentials_ok && $retry_count <= 3)
