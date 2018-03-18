@@ -105,35 +105,6 @@ final class UserManager extends ItemManager {
 		return $result;
 	}
 
-	/**
-	 * Check if specified user credentials are valid.
-	 *
-	 * @param string $username
-	 * @param string $password
-	 * @return boolean
-	 */
-	public function check_credentials($username, $password) {
-		$result = false;
-
-		// get salt for user
-		$test_user = $this->get_single_item(array('salt'), array('username' => $username));
-
-		// check credentials
-		if (is_object($test_user)) {
-			$hashed_password = hash_hmac('sha256', $password, $test_user->salt);
-			$user = $this->get_single_item(
-						array('id'),
-						array(
-							'username'	=> $username,
-							'password'	=> $hashed_password
-						)
-					);
-
-			$result = is_object($user);
-		}
-
-		return $result;
-	}
 
 	/**
 	 * Log user in by checking credentials, and storing information
