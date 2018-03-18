@@ -105,59 +105,6 @@ final class UserManager extends ItemManager {
 		return $result;
 	}
 
-
-	/**
-	 * Log user in by checking credentials, and storing information
-	 * in current session container.
-	 *
-	 * @param string $username
-	 * @return boolean
-	 */
-	public function login_user($username) {
-		$result = false;
-
-		// get user from the database
-		$user = $this->get_single_item($this->get_field_names(), array('username' => $username));
-
-		// set session variables
-		if (is_object($user)) {
-			$_SESSION['uid'] = $user->id;
-			$_SESSION['logged'] = true;
-			$_SESSION['level'] = $user->level;
-			$_SESSION['username'] = $user->username;
-			$_SESSION['fullname'] = $user->fullname;
-			$_SESSION['first_name'] = $user->first_name;
-			$_SESSION['last_name'] = $user->last_name;
-			$result = true;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Log currently logged user out and clear session variables.
-	 *
-	 * @return boolean
-	 */
-	public function logout_user() {
-		$result = false;
-
-		if (!$_SESSION['logged'])
-			return $result;
-
-		// kill session variables
-		unset($_SESSION['uid']);
-		unset($_SESSION['username']);
-		unset($_SESSION['fullname']);
-		unset($_SESSION['first_name']);
-		unset($_SESSION['last_name']);
-		$_SESSION['level'] = 0;
-		$_SESSION['logged'] = false;
-		$result = true;
-
-		return $result;
-	}
-
 	/**
 	 * Set user as verified.
 	 *
