@@ -5,6 +5,7 @@
  */
 use Core\Events;
 use Core\Markdown;
+use Core\Session\Manager as Session;
 
 
 class Backend_UserManager {
@@ -358,11 +359,12 @@ class Backend_UserManager {
 				$user_id = $manager->get_inserted_id();
 				$manager->change_password($data['username'], $source['password']);
 
-				// log user in
-				$validation_required = $this->parent->settings['require_verified'];
-
-				if (!$validation_required)
-					$manager->login_user($data['username']);
+				// log user in if no validation is required
+				if ($this->parent->settings['require_verified'])
+					Session::login(array(
+							'username' => $data['username'],
+							'password' => $source['password']
+						));
 
 				// assign message
 				$result['message'] = $this->parent->get_language_constant('message_users_created');
@@ -1176,9 +1178,6 @@ class Backend_UserManager {
 		if (is_object($verification)) {
 			$manager->verify_user($user->username);
 			$verification_manager->delete_items(array('user' => $user->id));
-
-			// automatically log user in
-			$manager->login_user($user->username);
 		}
 	}
 }

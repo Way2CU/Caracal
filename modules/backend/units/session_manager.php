@@ -110,6 +110,7 @@ class SessionManager {
 		$password = escape_chars($_REQUEST['password']);
 		$captcha = isset($_REQUEST['captcha']) ? escape_chars($_REQUEST['captcha']) : '';
 		$lasting_session = $this->parent->get_boolean_field('lasting');
+		$login_params = array('username' => $username, 'password' => $password);
 
 		// get managers
 		$manager = UserManager::get_instance();
@@ -133,16 +134,13 @@ class SessionManager {
 		}
 
 		// check user data
-		if (Core\Session\SystemMechanism::check_credentials($username, $password) && $captcha_ok) {
+		if ($captcha_ok && Session::login($login_params) != null) {
 			// remove login retries
 			$retry_manager->clearAddress();
 
-			// reset session
+			// reset session and set new type
 			if ($lasting_session)
 				Session::change_type(SessionType::EXTENDED);
-
-			// set session variables
-			$manager->login_user($username);
 
 			// check if we need to make redirect URL
 			if (isset($_SESSION['redirect_url']))
@@ -158,7 +156,7 @@ class SessionManager {
 			$template->set_mapped_module($this->parent->name);
 
 			$params = array(
-						'message'		=> $message
+						'message' => $message
 					);
 
 			$template->restore_xml();
@@ -245,6 +243,7 @@ class SessionManager {
 		$captcha_ok = false;
 		$username = escape_chars($_REQUEST['username']);
 		$password = escape_chars($_REQUEST['password']);
+		$login_params = array('username' => $username, 'password' => $password);
 		$captcha = isset($_REQUEST['captcha']) ? escape_chars($_REQUEST['captcha']) : '';
 		$lasting_session = $this->parent->get_boolean_field('lasting');
 
@@ -278,8 +277,8 @@ class SessionManager {
 		$required = $this->parent->settings['require_verified'];
 		$verified = ($required == 1 && $manager->is_user_verified($username)) || $required == 0;
 
-		// check user credentials
-		$credentials_ok = Core\Session\SystemMechanism::check_credentials($username, $password);
+		// try to log user in
+		$credentials_ok = Session::login($login_params) != null;
 
 		// check user data
 		if ($verified && $credentials_ok && $captcha_ok) {
@@ -289,9 +288,6 @@ class SessionManager {
 			// change session type
 			if ($lasting_session)
 				Session::change_type(SessionType::EXTENDED);
-
-			// set session variables
-			$manager->login_user($username);
 
 			// return message
 			$result['message'] = $this->parent->get_language_constant('message_login_ok');
