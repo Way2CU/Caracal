@@ -4,6 +4,10 @@
  * Backend Session Manager
  */
 
+use Core\Session\Manager as Session;
+use Core\Session\Type as SessionType;
+
+
 class SessionManager {
 	private static $_instance;
 
@@ -129,7 +133,7 @@ class SessionManager {
 		}
 
 		// check user data
-		if ($manager->check_credentials($username, $password) && $captcha_ok) {
+		if (Core\Session\SystemMechanism::check_credentials($username, $password) && $captcha_ok) {
 			// remove login retries
 			$retry_manager->clearAddress();
 
@@ -275,7 +279,7 @@ class SessionManager {
 		$verified = ($required == 1 && $manager->is_user_verified($username)) || $required == 0;
 
 		// check user credentials
-		$credentials_ok = $manager->check_credentials($username, $password);
+		$credentials_ok = Core\Session\SystemMechanism::check_credentials($username, $password);
 
 		// check user data
 		if ($verified && $credentials_ok && $captcha_ok) {
