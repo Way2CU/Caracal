@@ -18,11 +18,14 @@ namespace Core\Session;
 abstract class Mechanism {
 	/**
 	 * Perform authentication and return boolean value denoting
-	 * success of the action.
+	 * success of the action. Normally this process is initiated
+	 * by sending request to `?section=session`. If optional parameters
+	 * are specified, authentication mechanism can be used manually.
 	 *
+	 * @param array $params
 	 * @return boolean
 	 */
-	public abstract function login();
+	public abstract function login($params=null);
 
 	/**
 	 * Perform logout operation and return boolean value denoting
