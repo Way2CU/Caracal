@@ -16,9 +16,15 @@ class SystemMechanism extends Mechanism {
 	 *
 	 * @return boolean
 	 */
-	public function login() {
-		$username = $_REQUEST['username'];
-		$password = $_REQUEST['password'];
+	public function login($params=null) {
+		if (is_array($params) && isset($params['username']) && isset($params['password'])) {
+			$username = $params['username'];
+			$password = $params['password'];
+
+		} else {
+			$username = $_REQUEST['username'];
+			$password = $_REQUEST['password'];
+		}
 
 		return self::check_credentials($username, $password);
 	}
