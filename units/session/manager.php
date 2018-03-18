@@ -150,7 +150,7 @@ final class Manager {
 	 * @param string $name
 	 * @param object $mechanism
 	 */
-	public static function register_login_mechanism($name, $mechanism) {
+	public static function register_login_mechanism($name, &$mechanism) {
 		// make sure mechanism doesn't already exist under same name
 		if (array_key_exists($name, self::$login_mechanisms))
 			throw new MechanismException(
@@ -158,11 +158,13 @@ final class Manager {
 			);
 
 		// make sure mechanism implements required methods
-		if (!is_subclass_of($mechanism, Mechanism))
+		if (!is_a($mechanism, 'Core\Session\Mechanism')) {
+			error_log(var_export($mechanism, true));
 			throw new MechanismException(
-				"Mechanism with specified name ('{$name}') doesn't implement".
+				"Mechanism with specified name ('{$name}') doesn't implement ".
 				"`Core\Session\Mechanism` class."
 			);
+		}
 
 		// store mechanism for later use
 		self::$login_mechanisms[$name] = $mechanism;
@@ -178,8 +180,14 @@ final class Manager {
 	public static function login($params=null) {
 		$result = null;
 
+		// make sure at least our system mechanism is loaded
+		if (count(self::$login_mechanisms) == 0) {
+			$mechanism = new SystemMechanism();
+			self::register_login_mechanism('system', $mechanism);
+		}
+
+		// perform authentication with each mechanism
 		foreach (self::$login_mechanisms as $name => $mechanism) {
-			// perform authentication
 			if (!$mechanism->login($params))
 				continue;
 

@@ -48,7 +48,7 @@ class SystemMechanism extends Mechanism {
 	 */
 	public static function check_credentials($username, $password) {
 		$result = false;
-		$manager = UserManager::get_instance();
+		$manager = \UserManager::get_instance();
 
 		// get salt for user
 		$test_user = $manager->get_single_item(array('salt'), array('username' => $username));
