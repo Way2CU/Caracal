@@ -96,6 +96,7 @@ class Manager {
 		$key .= '>opt:'.($optimize_code ? 'y' : 'n');
 		$key .= '>port:'.$_SERVER['SERVER_PORT'];
 		$key .= '>lang:'.$language;
+		$key .= '>dom:'._DOMAIN;
 		$key .= '>path:'.URL::get_request_path();
 		$key = str_replace('/', '|', $key);
 
