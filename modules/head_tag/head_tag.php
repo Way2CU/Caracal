@@ -126,7 +126,7 @@ class head_tag extends Module {
 	 * @param array $params
 	 */
 	public function addTag($name, $params) {
-		global $optimize_code;
+		global $optimize_code, $section;
 
 		$name = strtolower($name);
 		$data = array($name, $params);
@@ -138,7 +138,8 @@ class head_tag extends Module {
 
 			case 'link':
 				// include LESS JavaScript parser
-				if ((isset($params['rel']) && $params['rel'] == 'stylesheet/less') && !$optimize_code) {
+				$optimize_styles = $section == 'backend' || $optimize_code;
+				if ((isset($params['rel']) && $params['rel'] == 'stylesheet/less') && !$optimize_styles) {
 					$collection = collection::get_instance();
 					$collection->includeScript(collection::LESS);
 				}
@@ -201,12 +202,12 @@ class head_tag extends Module {
 		global $optimize_code, $section;
 
 		// determine whether we should optimize code
-		if (!defined('DEBUG')) {
-			$optimize_styles = $section == 'backend' || $optimize_code;
-			$optimize_scripts = $optimize_code && !in_array($section, array('backend', 'backend_module'));
+		if ($section != 'backend') {
+			$optimize_styles = $optimize_code && !defined('DEBUG');
+			$optimize_scripts = $optimize_code && !defined('DEBUG');
 
 		} else {
-			$optimize_styles = false;
+			$optimize_styles = true;
 			$optimize_scripts = false;
 		}
 
@@ -287,6 +288,9 @@ class head_tag extends Module {
 				// there was a problem compiling script, show tags traditional way
 				foreach ($handled_tags as $tag)
 					$this->printTag($tag);
+
+				// include only styles after failed script compilation
+				$optimizer->print_data(true, false);
 			}
 
 		} else {
