@@ -175,8 +175,8 @@ class page_info extends Module {
 	 * Method called by the page module to add elements before printing
 	 */
 	public function add_elements() {
-		global $section, $db_type, $optimize_code, $styles_path, $images_path,
-			$scripts_path, $system_styles_path, $system_images_path, $default_language;
+		global $section, $db_type, $styles_path, $images_path, $scripts_path;
+		global $system_styles_path, $system_images_path, $default_language;
 
 		$head_tag = head_tag::get_instance();
 		$collection = collection::get_instance();
