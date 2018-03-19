@@ -310,68 +310,70 @@ class CodeOptimizer {
 	}
 
 	/**
-	 * Return compiled scripts and styles.
+	 * Show compiled scripts and styles.
 	 *
 	 * @param boolean $show_styles
 	 * @param boolean $show_scripts
-	 * @return string
 	 */
 	public function print_data($show_styles=true, $show_scripts=true) {
 		global $cache_path, $include_styles;
 
-		// compile styles if needed
-		$style_cache = $cache_path.$this->get_cached_name($this->style_list).'.css';
-		if ($this->needs_recompile($style_cache, $this->style_list))
-			$this->recompile_styles($style_cache, $this->style_list);
-
-		// compile scripts
-		$script_cache = $cache_path.$this->get_cached_name($this->script_list).'.js';
-		if ($this->needs_recompile($script_cache, $this->script_list)) {
-			// send data to closure server for compilation
-			try {
-				$this->closure_compiler->compile_and_save($script_cache);
-
-			} catch (InvalidResponseError $error) {
-				throw new ScriptCompileError('Invalid response from Closure server.');
-
-			} catch (RemoteServerError $error) {
-				throw new ScriptCompileError('Server side error occurred.');
-			}
-
-			// store integrity hash
-			file_put_contents($script_cache.'.sha384', hash_file('sha384', $script_cache, true));
-
-			// report script errors
-			$error_list = $this->closure_compiler->get_errors();
-			if (count($error_list) > 0) {
-				$input_list = $this->closure_compiler->get_input_list();
-
-				foreach ($error_list as $error) {
-					$file = $input_list[$error->file];
-					$message = "JavaScript compile error in {$file} on line {$error->lineno}: {$error->error}";
-					trigger_error($message, E_USER_NOTICE);
-				}
-			}
-		}
-
-		// include styles in page or as outside resource
-		$integrity = '';
-		if (file_exists($style_cache.'.sha384'))
-			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
-
+		// compile styles if requested
 		if ($show_styles) {
+			// compile styles if needed
+			$style_cache = $cache_path.$this->get_cached_name($this->style_list).'.css';
+			if ($this->needs_recompile($style_cache, $this->style_list))
+				$this->recompile_styles($style_cache, $this->style_list);
+
+			// include styles in page or as outside resource
+			$integrity = '';
+			if (file_exists($style_cache.'.sha384'))
+				$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($style_cache.'.sha384')).'"';
+
 			if (!$include_styles)
 				print '<link type="text/css" rel="stylesheet" href="'._BASEURL.'/'.$style_cache.'"'.$integrity.'>'; else
 				print '<style type="text/css">'.file_get_contents($style_cache).'</style>';
 		}
 
-		// show javascript tags
-		$integrity = '';
-		if (file_exists($script_cache.'.sha384'))
-			$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
+		// compile scripts if requested
+		if ($show_scripts) {
+			$script_cache = $cache_path.$this->get_cached_name($this->script_list).'.js';
+			if ($this->needs_recompile($script_cache, $this->script_list)) {
+				// send data to closure server for compilation
+				try {
+					$this->closure_compiler->compile_and_save($script_cache);
 
-		if ($show_scripts)
-			print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
+				} catch (InvalidResponseError $error) {
+					throw new ScriptCompileError('Invalid response from Closure server.');
+
+				} catch (RemoteServerError $error) {
+					throw new ScriptCompileError('Server side error occurred.');
+				}
+
+				// store integrity hash
+				file_put_contents($script_cache.'.sha384', hash_file('sha384', $script_cache, true));
+
+				// report script errors
+				$error_list = $this->closure_compiler->get_errors();
+				if (count($error_list) > 0) {
+					$input_list = $this->closure_compiler->get_input_list();
+
+					foreach ($error_list as $error) {
+						$file = $input_list[$error->file];
+						$message = "JavaScript compile error in {$file} on line {$error->lineno}: {$error->error}";
+						trigger_error($message, E_USER_NOTICE);
+					}
+				}
+			}
+
+			// show javascript tags
+			$integrity = '';
+			if (file_exists($script_cache.'.sha384'))
+				$integrity = ' integrity="sha384-'.base64_encode(file_get_contents($script_cache.'.sha384')).'"';
+
+			if ($show_scripts)
+				print '<script type="text/javascript" async src="'._BASEURL.'/'.$script_cache.'"'.$integrity.'></script>';
+		}
 	}
 }
 
