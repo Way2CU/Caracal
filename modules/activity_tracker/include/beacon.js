@@ -46,7 +46,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self._create_interval = function() {
 		self._clear_interval();
-		self._interval_id = setInterval(self._handle_interval, self._interval * 1000);
+		self._interval_id = setInterval(self.handler._handle_interval, self._interval * 1000);
 	};
 
 	/**
@@ -62,7 +62,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	/**
 	 * Handle interval.
 	 */
-	self._handle_interval = function() {
+	self.handler._handle_interval = function() {
 
 	 	// make sure communicator is loaded
 		if (typeof Communicator != 'function')
@@ -112,7 +112,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 * @param function callback
 	 * @return boolean
 	 */
-	self.handler.is_alive = function(function_name, callback) {
+	self.is_alive = function(function_name, callback) {
 
 		// make sure communicator is loaded
 		if (typeof Communicator != 'function')
@@ -151,7 +151,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self.start = function() {
 		self._create_interval();
-		self._handle_interval();
+		self.handler._handle_interval();
 	};
 
 	/**
