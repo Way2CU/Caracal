@@ -65,16 +65,15 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	self._handle_interval = function() {
 
 	 	// make sure communicator is loaded
-		if (typeof Communicator != 'function') {
+		if (typeof Communicator != 'function')
 			return self;
-		}
 
 		var communicator = new Communicator('activity_tracker');
 
 	 	var data = {
-	 		activity: self._activity,
-	 		function: self._function
-	 	};
+		 		activity: self._activity,
+		 		function: self._function
+	 		};
 
 		// assign callback
 		if (self._callback_interval != null)
@@ -116,9 +115,8 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	self.handler.is_alive = function(function_name, callback) {
 
 		// make sure communicator is loaded
-		if (typeof Communicator != 'function') {
+		if (typeof Communicator != 'function')
 			return self;
-		}
 
 		var communicator = new Communicator('activity_tracker');
 
@@ -130,15 +128,14 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 		};
 
 		var data = {
-			activity: self._activity,
-			function: function_name
-		};
+				activity: self._activity,
+				function: function_name
+			};
 
 		communicator.on_success(success);
 
-		if (callback !== undefined) {
+		if (callback !== undefined)
 			communicator.on_success(callback)
-		}
 
 		// send notification
 		communicator
