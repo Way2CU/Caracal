@@ -17,6 +17,8 @@ class SystemMechanism extends Mechanism {
 	 * @return boolean
 	 */
 	public function login($params=null) {
+		$result = null;
+
 		if (is_array($params) && isset($params['username']) && isset($params['password'])) {
 			$username = $params['username'];
 			$password = $params['password'];
@@ -26,7 +28,10 @@ class SystemMechanism extends Mechanism {
 			$password = $_REQUEST['password'];
 		}
 
-		return self::check_credentials($username, $password);
+		if (self::check_credentials($username, $password))
+			$result = array('username' => $username);
+
+		return $result;
 	}
 
 	/**
@@ -75,15 +80,22 @@ class SystemMechanism extends Mechanism {
 	 *
 	 * Example return structure:
 	 *
+	 * @param array $data
 	 * @return array
 	 */
-	public function get_data() {
+	public function get_data($data) {
+		$manager = \UserManager::get_instance();
+		$user = $manager->get_single_item(
+				array('id', 'level', 'first_name', 'last_name'),
+				array('username' => $data['username'])
+			);
+
 		$result = array(
-				'uid'       => 0,
-				'level'     => 5,
-				'username'  => 'joe',
-				'fist_name' => 'Joe',
-				'last_name' => 'Manning'
+				'uid'       => $user->id,
+				'level'     => $user->level,
+				'username'  => $data['username'],
+				'fist_name' => $user->first_name,
+				'last_name' => $user->last_name
 			);
 
 		return $result;

@@ -22,8 +22,12 @@ abstract class Mechanism {
 	 * by sending request to `?section=session`. If optional parameters
 	 * are specified, authentication mechanism can be used manually.
 	 *
+	 * If successfull return value is an array containing identification
+	 * data to be passed to `get_data` method. In case authentication
+	 * failed return value is null
+	 *
 	 * @param array $params
-	 * @return boolean
+	 * @return mixed
 	 */
 	public abstract function login($params=null);
 
@@ -39,6 +43,8 @@ abstract class Mechanism {
 	 * Return associative array containing data for session variables.
 	 * This function is called immediately after successful login.
 	 *
+	 * Data provided is result from `login` call.
+	 *
 	 * Example return structure:
 	 *	array(
 	 *		'uid'       => 0,
@@ -48,9 +54,10 @@ abstract class Mechanism {
 	 *		'last_name' => 'Manning'
 	 *	);
 	 *
+	 * @param array $data
 	 * @return array
 	 */
-	public abstract function get_data();
+	public abstract function get_data($data);
 }
 
 ?>
