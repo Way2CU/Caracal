@@ -10,7 +10,7 @@
 namespace Modules\Kodkod;
 
 
-class Mechanism extends Core\Session\Mechanism {
+class Mechanism extends \Core\Session\Mechanism {
 	const ENDPOINT = 'http://localhost';
 
 	/**
