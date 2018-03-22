@@ -189,7 +189,7 @@ final class Manager {
 		// perform authentication with each mechanism
 		foreach (self::$login_mechanisms as $name => $mechanism) {
 			$login_data = $mechanism->login($params);
-			if ($login_data == null)
+			if ($login_data === null)
 				continue;
 
 			// retrieve data and store session variables
