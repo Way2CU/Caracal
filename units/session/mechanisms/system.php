@@ -79,11 +79,11 @@ class SystemMechanism extends Mechanism {
 	 */
 	public function get_data() {
 		$result = array(
-			'uid'       => 0,
-			'level'     => 5,
-			'username'  => 'joe',
-			'fist_name' => 'Joe',
-			'last_name' => 'Manning'
+				'uid'       => 0,
+				'level'     => 5,
+				'username'  => 'joe',
+				'fist_name' => 'Joe',
+				'last_name' => 'Manning'
 			);
 
 		return $result;

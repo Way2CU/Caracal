@@ -211,13 +211,6 @@ class page_info extends Module {
 							'content'	=> 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
 						));
 
-		if (!in_array('language', $this->omit_elements) && _STANDARD == 'html401')
-			$head_tag->addTag('meta',
-						array(
-							'http-equiv'	=> 'Content-Language',
-							'content'		=> join(', ', $language_list)
-						));
-
 		// robot tags
 		$head_tag->addTag('meta', array('name' => 'robots', 'content' => 'index, follow'));
 		$head_tag->addTag('meta', array('name' => 'googlebot', 'content' => 'index, follow'));
@@ -256,17 +249,6 @@ class page_info extends Module {
 								'content' 	=> $this->settings['bing_wm_tools']
 							));
 
-		}
-
-  		// copyright
-		if (!in_array('copyright', $this->omit_elements) && _STANDARD == 'html401') {
-			$copyright = Language::get_text('copyright');
-			$copyright = strip_tags($copyright);
-			$head_tag->addTag('meta',
-						array(
-							'name'		=> 'copyright',
-							'content'	=> $copyright
-						));
 		}
 
 		// favicon

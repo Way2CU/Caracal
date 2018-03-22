@@ -6,7 +6,7 @@
 		class="video"
 		width="$params['width']"
 		height="$params['height']"
-		frameborder="_STANDARD != 'html5' ? 0 : false"
+		frameborder="$document_type != 'html5' ? 0 : false"
 		src="$params['url']"
 		allowfullscreen="allowfullscreen"
 		cms:optional="frameborder,id"

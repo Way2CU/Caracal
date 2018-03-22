@@ -91,6 +91,12 @@ class TemplateHandler {
 	private $is_top_level = false;
 
 	/**
+	 * Type of template document.
+	 * @var string
+	 */
+	private $document_type = 'html5';
+
+	/**
 	 * If we should close all tags
 	 * @var boolean
 	 */
@@ -250,16 +256,12 @@ class TemplateHandler {
 			$document = $this->engine->document->tagAttrs;
 
 			// print document type
-			$type = 'html5';
 			if (isset($document['type']) && array_key_exists($document['type'], $document_types))
-				$type = $document['type'];
+				$this->document_type = $document['type'];
 
-			$document_type = $document_types[$type];
-
-			// set headers
+			// set headers and show document code
+			$document_type = $document_types[$this->document_type];
 			$this->set_headers($document_type['mime']);
-
-			// show document type
 			echo $document_type['code'];
 		}
 
@@ -826,7 +828,10 @@ class TemplateHandler {
 			return $result;
 
 		foreach ($params as $param=>$value) {
-			$is_boolean = $param == $value && _STANDARD !== 'xml' && in_array(strtolower($param), $this->boolean_attributes);
+			$is_boolean =
+				$param == $value &&
+				$this->document_type !== 'xml' &&
+				in_array(strtolower($param), $this->boolean_attributes);
 
 			if (!$is_boolean)
 				$result .= ' '.$param.'="'.$value.'"'; else
@@ -872,6 +877,7 @@ class TemplateHandler {
 		$params = $this->params;
 		$template = $this->template_params;
 		$settings = !is_null($this->module) ? $this->module->settings : array();
+		$document_type = $this->document_type;
 
 		// construct function call
 		$function = '
@@ -892,9 +898,10 @@ class TemplateHandler {
 	 * @param string $document_type
 	 */
 	private function set_headers($document_type) {
-		global $referrer_policy, $frame_options, $content_security_policy;
+		global $language, $referrer_policy, $frame_options, $content_security_policy;
 
 		header('X-Powered-By: Caracal/'._VERSION);
+		header('Content-Language: '.$language);
 		header('Content-Type: '.$document_type.'; charset=UTF-8');
 
 		if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
