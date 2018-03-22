@@ -10,6 +10,8 @@ use Core\Module;
 use Core\Session\Manager as Session;
 use Modules\Kodkod\Mechanism;
 
+require_once('units/login_mechanism.php');
+
 
 class kodkod extends Module {
 	private static $_instance;
