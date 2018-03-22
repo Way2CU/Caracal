@@ -109,7 +109,7 @@ class Jaro {
  *
  * Note: Avoid comparing longer strings.
  */
-final class JaroWinkler extends Jaro {
+class JaroWinkler extends Jaro {
 	/**
 	 * Return number of common initial characters.
 	 *
