@@ -5,6 +5,8 @@
  *
  * Author: Mladen Mijatov
  */
+use Core\Session\Manager as Session;
+
 
 final class SectionHandler {
 	private static $_instance;
@@ -159,6 +161,10 @@ final class SectionHandler {
 
 				// transfer control to module
 				$module->transfer_control($params, array());
+
+			// handle session request
+			} else if ($section == 'session') {
+				Session::handle_request();
 
 			// call backend and allow it to transfer control
 			} else if ($section == 'backend_module' && ModuleHandler::is_loaded('backend')) {

@@ -130,10 +130,6 @@ if ($cache->is_cached()) {
 		SectionHandler::transfer_control();
 		$cache->end_capture();
 
-	} else if ($section == 'session') {
-		// handle session request
-		Session::handle_request();
-
 	} else {
 		// neither page nor module were matched, show error
 		SectionHandler::show_error_page(404);
