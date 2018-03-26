@@ -186,11 +186,27 @@ final class Manager {
 		// handle the request
 		switch ($action) {
 			case 'login':
-				self::login();
+				$method = self::login();
+				$result = array(
+						'success' => !is_null($method),
+						'method'  => $method
+					);
+
+				header('Content-Type: application/json');
+				define('_OMIT_STATS', 1);
+				print(json_encode($result));
 				break;
 
 			case 'logout':
-				self::logout();
+				$method = self::logout();
+				$result = array(
+						'success' => !is_null($method),
+						'method'  => $method
+					);
+
+				header('Content-Type: application/json');
+				define('_OMIT_STATS', 1);
+				print(json_encode($result));
 				break;
 
 			default:
