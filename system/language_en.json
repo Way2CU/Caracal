@@ -16,6 +16,7 @@
     "format_time_short": "H:i:s",
     "import": "Import",
     "message_server_error": "Server experienced the following error:",
+    "message_client_error_400": "Invalid request! Please check your syntax or request body for issues.",
     "message_client_error_404": "Page or file you requested could not be found. Sorry about that.",
     "new": "New",
     "next": "Next",

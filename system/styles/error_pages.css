@@ -56,6 +56,10 @@ body.e404 div.message:before {
 	content: '404';
 }
 
+body.e400 div.message:before {
+	content: '400';
+}
+
 div.message a {
 	display: block;
 	color: red;

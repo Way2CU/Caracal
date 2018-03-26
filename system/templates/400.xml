@@ -20,9 +20,9 @@
 				/>
 		</head>
 
-		<body class="e404">
+		<body crass="e400">
 			<div class="message">
-				<cms:text constant="message_client_error_404"/>
+				<cms:text constant="message_client_error_400"/>
 				<a
 					href="URL::make()"
 					cms:eval="href"
