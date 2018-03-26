@@ -4,6 +4,7 @@
  */
 namespace Core\Session;
 use \Exception;
+use \SectionHandler;
 
 require_once('mechanism.php');
 require_once('mechanisms/system.php');
@@ -168,6 +169,34 @@ final class Manager {
 
 		// store mechanism for later use
 		self::$login_mechanisms[$name] = $mechanism;
+	}
+
+	/**
+	 * Handle request to `session` section.
+	 */
+	public static function handle_request() {
+		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
+
+		// show error if action was not specified
+		if (is_null($action)) {
+			SectionHandler::show_error_page(400);
+			return;
+		}
+
+		// handle the request
+		switch ($action) {
+			case 'login':
+				self::login();
+				break;
+
+			case 'logout':
+				self::logout();
+				break;
+
+			default:
+				SectionHandler::show_error_page(400);
+				break;
+		}
 	}
 
 	/**
