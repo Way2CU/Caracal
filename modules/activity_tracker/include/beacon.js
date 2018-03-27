@@ -23,8 +23,8 @@ Caracal.ActivityTracker = Caracal.ActivityTracker || new Object();
 Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	var self = this;
 
-	self._activity = activity;
-	self._function = function_name;
+	self._activity = null;
+	self._function = null;
 	self._interval = 900;
 	self._interval_id = null;
 
@@ -38,6 +38,9 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 * Complete object initialization.
 	 */
 	self.init = function() {
+		self._activity = activity;
+		self._function = function_name;
+
 		self._url = document.querySelector("meta[property='base-url']").content + self._url_path;
 	};
 
