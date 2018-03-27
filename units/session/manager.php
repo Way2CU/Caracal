@@ -175,7 +175,9 @@ final class Manager {
 	 * Handle request to `session` section.
 	 */
 	public static function handle_request() {
+		$result = null;
 		$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
+		$redirect_url = isset($_REQUEST['redirect_url']) ? $_REQUEST['redirect_url'] : null;
 
 		// show error if action was not specified
 		if (is_null($action)) {
@@ -192,9 +194,13 @@ final class Manager {
 						'method'  => $method
 					);
 
-				header('Content-Type: application/json');
-				define('_OMIT_STATS', 1);
-				print(json_encode($result));
+				if ($result['success'] && !is_null($redirect_url)) {
+					header('Location: '.$redirect_url);
+				} else {
+					header('Content-Type: application/json');
+					define('_OMIT_STATS', 1);
+					print(json_encode($result));
+				}
 				break;
 
 			case 'logout':
@@ -204,9 +210,13 @@ final class Manager {
 						'method'  => $method
 					);
 
-				header('Content-Type: application/json');
-				define('_OMIT_STATS', 1);
-				print(json_encode($result));
+				if ($result['success'] && !is_null($redirect_url)) {
+					header('Location: '.$redirect_url);
+				} else {
+					define('_OMIT_STATS', 1);
+					header('Content-Type: application/json');
+					print(json_encode($result));
+				}
 				break;
 
 			default:
