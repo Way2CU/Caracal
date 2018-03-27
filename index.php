@@ -2,7 +2,7 @@
 
 /**
  * Caracal Framework
- * Copyright (c) 2016. by Way2CU
+ * Copyright (c) 2018. by Way2CU
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ $page_match = SectionHandler::prepare();
 URL::unpack_values();
 
 // set default values for variables
-$section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? 'home' : fix_chars($_REQUEST['section']);
+$section = (!isset($_REQUEST['section']) || empty($_REQUEST['section'])) ? null: fix_chars($_REQUEST['section']);
 
 // initialize language system and apply language
 Language::apply_for_session();
