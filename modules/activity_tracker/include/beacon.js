@@ -27,17 +27,19 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	self._function = null;
 	self._interval = 900;
 	self._interval_id = null;
-
 	self._url = null;
 	self._url_path = '/index.php';
-
 	self._callback_interval = null;
+	self._communicator = null;
+
 	self.handler = new Object();
 
 	/**
 	 * Complete object initialization.
 	 */
 	self.init = function() {
+		self._communicator = new Communicator('activity_tracker');
+
 		self._activity = activity;
 		self._function = function_name;
 
@@ -67,12 +69,6 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self.handler._handle_interval = function() {
 
-	 	// make sure communicator is loaded
-		if (typeof Communicator != 'function')
-			return self;
-
-		var communicator = new Communicator('activity_tracker');
-
 	 	var data = {
 		 		activity: self._activity,
 		 		function: self._function
@@ -80,9 +76,9 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 
 		// assign callback
 		if (self._callback_interval != null)
-			communicator.on_success = self._callback_interval;
+			self._communicator.on_success = self._callback_interval;
 
-		communicator
+		self._communicator
 			.use_cache(false)
 			.set_asynchronous(true)
 			.send('keep_alive', data);
@@ -117,12 +113,6 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self.is_alive = function(function_name, callback) {
 
-		// make sure communicator is loaded
-		if (typeof Communicator != 'function')
-			return self;
-
-		var communicator = new Communicator('activity_tracker');
-
 	 	var result = false;
 
 		// if callback is undefined
@@ -135,13 +125,13 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 				function: function_name
 			};
 
-		communicator.on_success(success);
+		self._communicator.on_success(success);
 
 		if (callback !== undefined)
-			communicator.on_success(callback)
+			self._communicator.on_success(callback)
 
 		// send notification
-		communicator
+		self._communicator
 			.use_cache(false)
 			.set_asynchronous(true)
 			.send('is_alive', data);
