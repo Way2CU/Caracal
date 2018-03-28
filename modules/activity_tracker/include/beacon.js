@@ -74,10 +74,6 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 		 		function: self._function
 	 		};
 
-		// assign callback
-		if (self._callback_interval != null)
-			self._communicator.on_success = self._callback_interval;
-
 		self._communicator
 			.use_cache(false)
 			.set_asynchronous(true)
@@ -101,6 +97,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self.on_interval = function(callback) {
 		self._callback_interval = callback;
+		self._communicator.on_success(callback);
 		return self;
 	};
 
