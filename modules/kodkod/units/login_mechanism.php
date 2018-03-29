@@ -11,7 +11,7 @@ namespace Modules\Kodkod;
 
 
 class Mechanism extends \Core\Session\Mechanism {
-	const ENDPOINT = 'http://localhost';
+	const ENDPOINT = 'http://127.0.0.1/storage/verification';
 
 	/**
 	 * Perform authentication and return boolean value denoting
