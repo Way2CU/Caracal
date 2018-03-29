@@ -24,8 +24,8 @@ class Mechanism extends \Core\Session\Mechanism {
 		$result = null;
 		$data = array(
 				'id'      => fix_chars($_REQUEST['id']),
-				'token'   => fix_chars($_REQUEST['token'])
-				'address' => $_SERVER['REMOTE_ADDR'],
+				'token'   => fix_chars($_REQUEST['token']),
+				'address' => $_SERVER['REMOTE_ADDR']
 			);
 
 		// get data from storage service
