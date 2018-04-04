@@ -31,6 +31,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	self._url_path = '/index.php';
 	self._callback_interval = null;
 	self._communicator = null;
+	self._is_beacon_alive = null;
 
 	self.handler = new Object();
 
@@ -39,6 +40,8 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self.init = function() {
 		self._communicator = new Communicator('activity_tracker');
+		self._communicator
+			.on_success(self.handler.handle_success);
 
 		self._activity = activity;
 		self._function = function_name;
@@ -81,6 +84,15 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	};
 
 	/**
+	 * Set boolean value whether beacon is alive or not.
+	 *
+	 *	@param object data
+	 */
+	self.handler.handle_success = function(data) {
+		self._is_beacon_alive = data;
+	};
+
+	/**
 	 * Set interval to send keep alive notification to server.
 	 *
 	 * @param integer interval 	Seconds between each notification.
@@ -110,22 +122,13 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 	 */
 	self.is_alive = function(function_name, callback) {
 
-	 	var result = false;
-
-		// if callback is undefined
-		var success = function(data) {
-			result = data;
-		};
-
 		var data = {
 				activity: self._activity,
 				function: function_name
 			};
 
-		self._communicator.on_success(success);
-
 		if (callback !== undefined)
-			self._communicator.on_success(callback)
+			self._communicator.on_success(callback);
 
 		// send notification
 		self._communicator
@@ -133,7 +136,7 @@ Caracal.ActivityTracker.Beacon = function(activity, function_name) {
 			.set_asynchronous(true)
 			.send('is_alive', data);
 
-		return result;
+		return self._is_beacon_alive;
 	};
 
 	/**
