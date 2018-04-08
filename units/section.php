@@ -185,6 +185,9 @@ final class SectionHandler {
 	public static function show_error_page($error_code) {
 		global $system_template_path;
 
+		// properly set response code
+		http_response_code($error_code);
+
 		// get page error template
 		if (array_key_exists($error_code, self::$data))
 			$template = new TemplateHandler(self::$data[$error_code]); else

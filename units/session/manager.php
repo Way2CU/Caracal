@@ -195,7 +195,9 @@ final class Manager {
 					);
 
 				if ($result['success'] && !is_null($redirect_url)) {
+					http_response_code(302);
 					header('Location: '.$redirect_url);
+
 				} else {
 					header('Content-Type: application/json');
 					define('_OMIT_STATS', 1);
@@ -211,7 +213,9 @@ final class Manager {
 					);
 
 				if ($result['success'] && !is_null($redirect_url)) {
+					http_response_code(302);
 					header('Location: '.$redirect_url);
+
 				} else {
 					define('_OMIT_STATS', 1);
 					header('Content-Type: application/json');
