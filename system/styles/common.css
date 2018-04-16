@@ -29,14 +29,6 @@ button {
 	font-size: 1em;
 }
 
-a:focus,
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-	outline: none;
-}
-
 /**
  * Page switcher
  */
