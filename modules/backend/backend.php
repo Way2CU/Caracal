@@ -190,23 +190,6 @@ class backend extends Module {
 	 * @param array $children
 	 */
 	public function transfer_control($params, $children) {
-		// dead lock protection for backend module
-		if (isset($params['action']) &&	isset($_REQUEST['module']) &&
-		$_REQUEST['module'] == $this->name && $params['action'] == 'transfer_control') {
-			// skip module redirect
-			$params['backend_action'] = escape_chars($_REQUEST['backend_action']);
-
-			unset($_REQUEST['module']);
-			unset($params['action']);
-
-			// if user is not logged, redirect him to a proper place
-			if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
-				$session_manager = SessionManager::get_instance($this);
-				$session_manager->transfer_control();
-				return;
-			}
-		}
-
 		if (isset($params['action']))
 			switch ($params['action']) {
 				case 'login':
@@ -253,9 +236,21 @@ class backend extends Module {
 					$this->drawCompleteMenu();
 					break;
 
+				/**
+				 * Handle transfering flow control to other modules. As `SessionManager` by default sets action
+				 * to be `transfer_control` when `backend_module` is passed for section, this is the first piece
+				 * of code that gets called before `backend_action` parameter is set.
+				 *
+				 * Once credentials are verified `$params` variable is updated with all the required information
+				 * and then passed on to `module` specified in request parameters.
+				 *
+				 * Note: We prevent calling `transfer_control` again if the module is `backend` to avoid dead
+				 * loop. Instead we just set `backend_action` and let the switch after current one handle the
+				 * request.
+				 */
 				case 'transfer_control':
-					// if user is not logged, redirect him to a proper place
-					if (!isset($_SESSION['logged']) || !$_SESSION['logged']) {
+					// if user is not logged, let session manager handle him
+					if (!$_SESSION['logged']) {
 						$session_manager = SessionManager::get_instance($this);
 						$session_manager->transfer_control();
 						return;
@@ -270,7 +265,8 @@ class backend extends Module {
 					if (isset($_REQUEST['sub_action']))
 						$params['sub_action'] = escape_chars($_REQUEST['sub_action']);
 
-					if (ModuleHandler::is_loaded($module_name)) {
+					// transfer control to other modules
+					if (ModuleHandler::is_loaded($module_name) && $module_name != $this->name) {
 						$module = call_user_func(array($module_name, 'get_instance'));
 						$module->transfer_control($params, $children);
 					}
